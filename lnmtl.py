@@ -55,8 +55,8 @@ def crawl_pages(url):
     content = {
         'url': url,
         'novel': novel.strip(),
-        'volume_no': int(volume_no),
-        'chapter_no': int(chapter_no),
+        'volume_no': volume_no,
+        'chapter_no': chapter_no,
         'volume_title': volume.strip(),
         'chapter_title': format_text(chapter),
         'body': [ format_text(x) for x in body if x ]
@@ -78,8 +78,8 @@ def format_text(text):
 
 def save_chapter(content):
     # save to file
-    vol = str(content['volume_no'])
-    chap = str(content['chapter_no'])
+    vol = content['volume_no'].rjust(2, '0')
+    chap = content['chapter_no'].rjust(5, '0')
     file_name = path.join('_data', novel_id, vol, chap + '.json')
     if not path.exists(path.dirname(file_name)):
         makedirs(path.dirname(file_name))

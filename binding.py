@@ -34,7 +34,7 @@ def convert_to_epub(novel_id):
 
 def create_epub(novel_id, volume_no, data):
     output_path = path.join('_book', novel_id)
-    vol = str(volume_no).rjust(2, '0')
+    vol = volume_no.rjust(2, '0')
     title = data[0]['novel'] + ' Volume ' + vol
     print('Creating EPUB:', title)
 
@@ -46,7 +46,7 @@ def create_epub(novel_id, volume_no, data):
 
     chapters = []
     for item in data:
-        chapter_no = str(item['chapter_no'])
+        chapter_no = item['chapter_no']
         title = (item['chapter_title'] or '....')
         xhtml_file = 'chap_' + chapter_no.rjust(2, '0') + '.xhtml'
         body = '<h1>' + title + '</h1>'
@@ -81,6 +81,6 @@ def create_epub(novel_id, volume_no, data):
     if not path.exists(output_path):
         makedirs(output_path)
     # end if
-    file_name = novel_id + '_v' + str(volume_no) + '.epub'
+    file_name = novel_id + '_v' + volume_no + '.epub'
     epub.write_epub(path.join(output_path, file_name), book, {})
 # def
