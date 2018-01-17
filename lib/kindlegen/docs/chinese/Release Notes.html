@@ -1,0 +1,794 @@
+﻿<html><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+</head><body>
+<h2> 发行说明 </h2>
+
+<h3> Kindlegen 版本 2.9 build 1028-0897292</h3>
+<pre>
+	   - 以图像作为书脊时，支持设置页面布局属性（double page spread、facing pages、blank page）。
+	   - 已修复多个错误。
+       
+	通过以下网站查看最新的发行说明和已知问题：https://kindlegen.s3.amazonaws.com/manual.html
+</pre>
+<h3> Kindlegen 版本 2.8 build 0208-797bf75</h3>
+<pre>
+	   - 转换成XMDF文件格式的支持已被添加。更多信息，请参阅Kindle出版指南。
+	   - 已添加支持epub3 toc nav的元件。这相当于NCX（也称为NCX TOC）里的navMap元件。如果两种元件同时给出，Epub3 TOC nav元件优于NCX navMap元件。但是，如果没有特别指定NAV HTML，我们将退回NCX（如果存在的话）。如果我们不退回NCX，系统将会出错。关于EPUB3 toc nav的更多信息，请参阅<a href="http://idpf.org/epub/30/spec/epub30-contentdocs-20111011.html#sec-xhtml-nav-def-types-toc">这里</a>。
+	   - 已添加支持epub3 landmarks nav元件。这相当于OPF guide 元件。 如果两种元件同时给出，Epub3 landmarks nav元件优于OPF guide 元件。 关于EPUB3 landmarks nav 的更多信息，请参阅<a href="http://idpf.org/epub/30/spec/epub30-contentdocs-20111011.html#sec-xhtml-nav-def-types-landmarks">这里</a>。
+	   - 支持用于指定以下epub3格式的元数据
+	       - 使用程序清单中的属性指定封面图片。
+	       - 使用“rendition:layout”属性指定图书布局。
+	       - 使用“rendition:orientation”属性指定图书定向。
+	       - 指定URN格式的dc:identifier价值。
+	       - 使用marc relators 方案在“dc:creator" 元数据中精炼相关作者信息。
+	       - 使用 title-type 属性, 从多重标题中提炼出一个主标题。
+	     更多信息，请参阅 <a href="http://idpf.org/epub/30/spec/epub30-publications-20111011.html#sec-package-def">这里</a>。
+	   - 支持在NCX TOC 里查阅图像，当且仅当相同的图像在 spine里被直接提到。
+	   - 支持Galician 语言（GL,GL-ES）。
+</pre>
+
+<h3> Kindlegen 版本 2.7 build 1019-d6e4792</h3>
+<pre>
+	   - 数据URI功能支持图片和嵌入的字体，这样 他们就可以直接参考HTML 和 CSS 文件（要了解数据 URI 的更多信息，请参考 http://dataurl.net）。
+	   - 支持日语垂直渲染和多种页面书写模式。可以使用元标签，在 OPF 文件中指定值（例如：&lt;meta name=”primary-writing-mode” content=”vertical-rl” /&gt;）。有效值有 horizontal-lr、vertical-lr、horizontal-rl、vertical-rl。
+	   - 支持对开页和双跨页。可以使用 itemref 标签中的“properties”属性在 OPF 中指定值。有效值有facing-page-left、facing-page-right、page-spread-left、page-spread-right。
+	   - 有很多不同）的 HTML 标签都增加了 Mobi7 的支持（比如：class="class1 class2 class3"
+	   - 当固定格式 图书的原始分辩率的元数据未以“整数x整数”的形式指明时，KindleGen 会报错。
+	   - 验证是否为固定格式 的 图书使用了唯一的区域放大倍率 JSON。
+	   - 增加了的 KF8 和 M7 文件尺寸状态会在转换后显示。
+	   - 改善了在scenario里由于NCX 条目指向内容为“无属性”标签而导致目录生成失败的错误消息。，。
+	   - 在 HTML里，固定的问题与处理锚标签的问题相关。 (&lt;a&gt;) 内的内容中含有锚标签的问题得到妥善解决。
+	   - 适当的处理部分有，、侧边、页脚、图片、图片的说明和文章标签。
+</pre>
+
+<h3> Kindlegen 版本 2.5 build 0626-3a91e28</h3>
+<pre>
+	   - 已提高透明PNG的转换：透明PNG图像(现在转换为JEPG图像)将使用白色背景。原先使用黑色背景，但在转换时造成阅读质量降低。
+	   - 当执行CSS特性(设置上下边界)时，在Mobi7会出现的不必要的换行。此问题已被修复。
+	   - 因为左边界CSS特性的用法，导致有列点或数字列举时发生问题，但在Mobi7已解决首行缩格的问题。在Mobi7里，有列点或是数字列举时，左边界的距离会自动被忽略。在KF8里情况相同。
+	   - 已解决在创造含有索引的Mobi7书时遇到的问题(例如：字典)
+	   - 在Mobi7里，当CSS特性"显示：无"时，内建卷标无需再加入额外的空间。
+	   - 嵌入字型PostScript和Type1在有KF8支持的Kindle eInk Readers里呈现不佳。Kindlegen会提醒需注意内文中字型的用法。在阅读几本书后。Kindlegen会默认用户惯用的系统字型(特别是在eInk装置下)。
+	   - Kindlegen会忽略掉EPUB3的导航文件(特别指名使用"nav'特性)且不加入自动默认书本阅读顺序。
+	   - 已解决当dc：language标记在OPF时属性的问题(例如： id属性)。
+	   - 已解决在产生目录时，由于NCX档案里无内容的<TEXT>标记或自动标记<TEXT> </TEXT>的错误。
+	   - 已解决˙Kindle不支持原移除CSS特性(例如：行高占几个px/pt单位)。当大括号"}"为最后一个特性或是无分号时，Kindlegen会将大括号移除。此问题在Kindlegen2.5中已被修复。
+	   - 已在Kindlegen里已更新"更新说明(-releasenotes)"，用户可参阅此网址https://kindlegen.s3.amazonaws.com/manual.html。
+</pre>
+
+<h3> Kindlegen 版本 2.4 build 69900</h3>
+<pre>
+	   - 增加了在中国和日本的语言的本地化界面的支持。
+	   - 添加在Mobi "display:none" CSS属性的支持。
+	   - 拆除旧设备的软连字符，并允许他们只KF8设备可见。
+	   - 多个bug修复。
+</pre>
+
+<h3>Kindlegen 版本 2.3 build 36043</h3>
+<pre>
+	   - 支持新的 CSS 媒体类型，为 mobi 和 KF8 提供独特的风格。
+	   - 已改善漫画和儿童读物的图像质量。
+	   - 为可重排版的电子书提供双重封面图像修复。
+</pre>
+
+<h3>Kindlegen 版本 2.2 build 35621</h3>
+<pre>
+	   - 修复 kindlegen 之前版本的缺陷。
+</pre>
+
+<h3>Kindlegen 版本 2.1 build 35388</h3>
+<pre>
+	   - 已添加儿童读物和漫画支持。
+	   - 修复 kindlegen 之前版本的缺陷。
+</pre>
+
+<h3>Kindlegen 版本 2.0 build 34608</h3>
+<pre>
+	   - Kindlegen 支持 HTML5/CSS3，从而扩展为能够创建改进的 mobi。
+</pre>
+
+<h3>Kindlegen 版本 1.2 build 33307</h3>
+<pre>
+	   - 通过 NCX pageLists 或 page-map xml 添加书的页码支持。 
+	   - 将生成书的默认编码更改为“utf-8”。要在 Win-1252 中为书编码，请使用命令行选项“-western”。
+	   - 已添加拉丁语（ISO-639-1 编码：la）支持。
+	   - 已添加 AAC 文件格式作为视频/音频源的支持。
+	   - 修复 Kindlegen 旧版本的缺陷。
+</pre>
+
+<h3>Kindlegen 版本 1.1 build 99</h3>
+<pre>
+	   - 此更新可以提供了小的增强效果和缺陷修复。
+</pre>
+
+<h3>Kindlegen 版本 1.1 build 98</h3>
+<pre>
+	   - 已添加最大图像尺寸为 128KB 的支持。超过 128KB 的图像将自动重新调整以满足此新限制。
+	   - 已添加 Kindle 内容中音频和视频多媒体的支持。
+	   - 在某些情况下通过 NCX 处理修复缺陷。
+</pre>  
+
+<h3>Kindlegen 版本 1.0 build 87</h3>
+<pre>
+	   - Kindlegen 现在支持 Mac
+</pre>
+
+<h3>Kindlegen 版本 1.0 build 86</h3>
+<pre>
+	   - Kindlegen 现在支持 Linux 
+	   - 已改进图像压缩算法 
+	   - 支持 Macintosh 编码 
+	   - 已修复 NCX 相关问题 
+	   - 已添加新功能，如果控制某个图像的图像标签不存在，
+	    则插入一个缺失的图像。 
+
+	   Mobigen 6.2 build 43 的高级版本
+
+<h3>Mobigen 版本</h3>
+
+<h3>版本 6.2 build 43</h3>
+	  - 缺陷修复：无法将包含 mobigen 版本 6.2 build 42 中 -s2 选项的书上传至电子书数据库。 
+
+<h3>版本 6.2 build 42</h3>
+
+	  - 缺陷修复：NCX 目录再也不能生成错误的默认查找索引。 
+	  - 缺陷修复：HTML 数字实体在 western 电子书中适当地进行转换。 
+	  - 缺陷修复：XHTML 文件目前被解析为 HTML 内容，而不是 TEXT 内容。 
+	  - 缺陷修复：已修复的 CSS 变形：它们可能导致未关闭的标签，而不对 HTML 格式化产生影响。 
+	  - 新功能：已添加详细的模式开关。默认情况下没有详细的输出。 
+	  - 新功能：预解析 &lt;pre&gt; 标签使其能够应用在阅读器中。 
+	  - 新功能：&lt;tt&gt; 标签限制等宽字体，使等宽字体显示在没有 &lt;font face=&gt; 支持的阅读器中。 
+	  - 新功能：NCX 元数据扩展 
+
+<h3>版本 6.2 build 41</h3>
+
+	  - 缺陷修复：电子书的目录中只有第一个插图目录。 
+	  - 变更：目录文件格式版本要求已经发生变化。 
+
+<h3>版本 6.2 build 40</h3>
+
+	  - 缺陷修复：已修复结构化标签中嵌套的有序列表编号。 
+	  - 变更：现在 mobigen 总是转换复杂的 unicode 合体字。 
+
+<h3>版本 6.02 build 39</h3>
+
+	  - 变更：已改进电子书封面支持。 
+	  - 已添加 NCX 目录文件支持。 
+	  - 缺陷修复：当指定 CSS 左边距却没有左端缩进时，mobigen 崩溃。 
+
+<h3>版本 6.01 build 38</h3>
+
+	  - 缺陷修复：如果左间距设置为 0em，则文本是左对齐。 
+
+<h3>版本 6.01 build 37</h3>
+
+	  - 变更：epub 文件中有更好的电子书封面支持。 
+
+<h3>版本 6.01 build 36</h3>
+
+	  - 缺陷修复：尽管没有使用某些文件，它们仍被嵌入书中。 
+	  - 变更：已移除 -jpeg 选项，并添加相反的选项 -gif。 
+	  - 变更：目前 mobigen 退出代码的标准为：0 代表确定，1 代表警告，2 代表错误。 
+
+<h3>版本 6.01 build 35</h3>
+
+	  - 已添加使用 epub 作为源文件而创建电子书的支持 
+
+<h3>版本 6.01 build 34</h3>
+
+	  - 已在生成的电子书中添加 creator 软件的版本。 
+	  - 缺陷修复：&lt;ol&gt; 和 &lt;li&gt; 标签的某些无效组合使 mobigen 失败。这个问题已经被修复。 
+
+<h3>版本 6.01 build 33</h3>
+
+	  - 缺陷修复：如果整体尺寸超出 64K，则索引字符串（idx:string 或格式）不会适当地存储。 
+	  - 已添加法语拼写校正。 
+
+<h3>版本 6.0 build 32</h3>
+
+	  - 缺陷修复：缺失的图像文件不再在电子书中创建随机图像。 
+	  - 变更：JPEG 图像在创建电子书文件之前被清空。 
+
+<h3>版本 6.0 build 31</h3>
+
+	  - 已添加德语和意大利语拼写校正，mobigen 现在可以通过嵌入的拼写校正
+	    创建英语、德语、西班牙语和意大利语字典。 
+
+<h3>版本 6.0 build 30</h3>
+
+	  - 变更：如果没有指定嵌入的封面，
+	    则最大的 MS 图像封面指导项将被用作封面。
+
+<h3>版本 6.0 build 29</h3>
+
+	  - 缺陷修复：HTML 文件中的 &lt;STYLE&lt; 标签并非总能得到正确地解析。 
+	  - 缺陷修复：封面图像以一个四字节的边界对齐。 
+	  - 变更：现在可以检查 UTF-8 格式的源 HTML 文件。  
+	    无效的 UTF-8 遭到拒绝并不会创建。 
+	  - 已添加有序列表支持。 
+	  - 已添加新的内容输出类型支持： 
+	  - application/x-mobipocket-subscription-feed  
+	  - application/x-mobipocket-subscription-magazine 
+	  - 变更：已检测并移除 MS 缩略图封面指导项。 
+
+<h3>版本 6.0 build 28</h3>
+
+	  - 已在 &lt;x-metadata&gt; 中添加 &lt;EmbeddedCover/&gt; 标签：此标签设置的封面图像被嵌入到书中 
+	 
+<h3>版本 6.0 build 27</h3>
+
+	  - 已添加命令行 -jpeg 选项原生支持本书中的 jpeg 图像。 
+	 
+<h3>版本 5.0 build 26</h3>
+
+	  - 缺陷修复：图像转换有时生成的图像太大
+	    而超出最大记录大小。 这可能显示关于一项
+	    记录超出 Palm 设备的警告 
+	  - 已添加 -releasenotes 命令行选项 
+
+<h3>版本 5.0 build 25</h3>
+
+	  - 已添加完全排序的韩语脚本 (Hangul) 支持 
+
+<h3>版本 5.0 build 24</h3>
+
+	  - 已修复 unicode 编码范围表中的缺陷 
+
+<h3>版本 5.0 build 23</h3>
+
+	  - 已修复二进位制编码入口位置信息中的缺陷
+
+<h3>版本 5.0 build 22</h3>
+
+	  - 添加锚时已添加缺失的编码。 这避免在某些情况下
+	    内部的 href 链接至正确的匹配
+
+<h3>版本 5.0 build 21</h3>
+
+	  - 常用标点 unicode 编码表已经分成两个范围： 
+	    常用标点 - Windows 1252 
+	    常用标点 - 非 Windows 1252 
+	    以调整字体签名计算 
+	  - unicode 编码范围分析器不再考虑某些空格和 
+	    控制编码
+
+<h3>版本 5.0 build 20</h3>
+
+	  - 已添加新的 UNICODE 编码范围，使更多字符作为索引中
+	    无序的重要标点或标记而被识别
+	  - 已修改 SQL LIKE 运算法则，以便其完全不用考虑 
+	    不重要的字符
+
+<h3>版本 5.0 build 19</h3>
+
+	  - Phonetizer 中的缺陷修复（可能使长字无效） 
+	  - 更好地报告警告信息 
+	  - 已在 mobi 头文件中的特殊功能字段中添加标志， 
+	    当 lang= 属性用于 HTML 时关闭语言入侵检测
+
+<h3>版本 5.0 build 18</h3>
+
+	  - 已移除 -readerpro 选项 
+	  - 限制 -vouchers=n 为最少 6 个 vouchers 
+	  - 已将可执行文件名更改为 mobigen 
+	  - 已将生成的文件扩展名更改为 .mobi 
+	  - 元数据现在被添加至附加的标头数据，而不是第一个文本记录 
+	    （为附加的元数据留有一些空格） 
+	  - 已更改平假名和片假名大小版本的日语顺序 
+	    （它们现在按照独特的字符排序） 
+	  - 已修复 UNICODE 编码索引的排序缺陷 
+
+<h3>版本 5.0 build 17</h3>
+
+	  - 缺陷修复：在 HTML 文件中进行创建时，第一个框架集的
+	    第一个框架不能发布
+
+<h3>版本 5.0 build 16</h3>
+
+	  - 缺陷修复：在不属于字典且拥有一种语言的电子书中，
+	    索引的语言被设定为 LID_NEUTRAL。Tt 现在被设置为本书的语言 
+
+<h3>版本 5.0 alpha 15</h3>
+
+	  - prcgen 现在分析 UNICODE 编码字符的使用，并将字体签名 
+	    写入本书附加的标头数据部分。本书的文件格式版本 
+	    不受影响
+
+<h3>版本 5.0 alpha 14</h3>
+
+	  - 试验性日语整理表 
+
+<h3>版本 5.0 alpha 13</h3>
+
+	  - 使用 ExtraHeaderData 存储简短的字典名称，以便不强制
+	    对使用此名称的书执行 FFV_7 
+	  - 警告：必须重新创建所有使用简短字典名称的书 
+
+<h3>版本 5.0 alpha 12</h3>
+
+	   - 在 Jeremie 阅读器 5.0 的所有编码签入后重新编译
+
+<h3>版本 5.0 alpha 11</h3>
+
+	  - 已添加在 UNICODE 编码电子书中进行拼写校对的支持 
+
+<h3>版本 5.0 alpha 10</h3>
+
+	  - 修复仅在 body 标签之后定义的与框架集相关的缺陷 
+
+<h3>版本 5.0 alpha 9</h3>
+
+	   - 修复删除空 &lt;a&gt; 标签的代码中的缺陷
+
+<h3>版本 5.0 alpha 8</h3>
+
+	  - 空 &lt;a&gt; 标签被删除 
+
+<h3>版本 5.0 alpha 7</h3>
+
+	  - 已添加 OPF 中的 <DictionaryVeryShortName> 元数据支持 
+
+<h3>版本 5.0 alpha 6</h3>
+
+	  - 更好的 UNICODE 编码文档版本最小化 
+
+<h3>版本 5.0 alpha 5</h3>
+
+	  - 已执行 &lt;idx:key exact=yes&gt; 
+
+<h3>版本 5.0 alpha 4</h3>
+
+	  - 除非存在 ASP 页面或音频文件，否则不经常创建
+	    嵌入表
+
+<h3>版本 5.0 alpha 3</h3>
+
+	  - 更多支持 UNICODE 中的 LIKE 最优化以及支持 
+	    UNICODE 中的 JUMP 功能（标头中的默认查找关键字)
+
+<h3>版本 5.0 alpha 2</h3>
+
+	  - 已添加 UNICODE 中的 LIKE 支持
+
+<h3>版本 5.0 alpha 1</h3>
+
+	  - 支持 &lt;idx:key scriptable=yes&gt;，因此形成格式化和 
+	    javaScript 的关键字存取
+
+<h3>版本 5.0 alpha</h3>
+
+	  - 在 UNICODE 中生成索引，新的文件格式是 FFV_7 
+
+<h3>版本 4.8.9n</h3>
+
+	  - 更好的英语拼写校正表 
+	  - 更好的西班牙语拼写校正表 
+
+<h3>版本 4.8.9m</h3>
+
+	  - 已添加 -regserver 和 -unregserver 调用以注册（取消注册）类型库， 
+	    该注册只对开发 PRCGen 插件有用。 
+	    类型库之前在每次运行中自动注册， 
+	    这样能够防止 PRCGen 在没有管理权限的情况下运行 
+
+<h3>版本 4.8.9l</h3>
+
+	  - 更好的 CSS 解析：长度因其单位和值被转换成
+	    阅读器支持的单位而得到正确的解析
+	  - CSS 边距属性被适当地解析 
+
+<h3>版本 4.8.9k</h3>
+
+	  - 免费的命令行版本解析和命令行信息保持一致 
+	  - 在免费的版本中，甚至不能创建 C2 压缩代码 
+	  - 命令行解析中的缺陷修复 
+
+<h3>版本 4.8.9j</h3>
+
+	  - 缺陷修复：没有适当地检索输出代码，因此已忽略
+	  - 在读取时，所有 URL (&lt;ITEM href=&gt; in OPF &lt;A href=&gt; &lt;IMG src=&gt;) 得到适当的 URL
+	    解码，并在设置时进行 URL 编码。·HTML 中的 URL 也在需要时
+	    得到适当的解码/编码 
+	  - 适当地解析和转换字体大小 CSS 样式（pt px % 或 em）
+
+
+<h3>版本 4.8.9i</h3>
+
+	  - 已添加音频 spine 功能：如果音频文件以 spine 为准，
+     则生成一个默认的开始指导项来播放音频 
+
+<h3>版本 4.8.9h</h3>
+
+	  - 缺陷修复：build_parameters.xml 不再有 UTF16 格式 -> 需要进行
+	    某些转换，否则始终需要重新创建所有依赖包 
+
+<h3>版本 4.8.9i</h3>
+
+- 添加了音频脊柱功能：如果音频文件从脊背引用
+生成默认的启动引导项目决策audio.show
+
+<h3>版本 4.8.9h</h3>
+-缺陷修复: build_parameters.xml是不是在UTF16了 - >一些转换
+在任何时候都需要，否则所有依赖重建
+
+<h3>版本 4.8.9g</h3>
+
+	  - 缺陷修复：发布时没有 HTML 文件（但只有音频或图像）将不会打开 
+	  - 已添加 Ogg Vorbis 音频文件嵌入
+
+<h3>版本 4.8.9f</h3>
+
+	  - 缺陷修复：创建单个 HTML 文件将生成一个无效的 PRC 
+	    （BODY 标签将缺失）
+
+<h3>版本 4.8.9e</h3>
+
+	  - 缺陷修复：对于版本 4.8.9d 来说，body 将从外部 HTML 文件中的 
+	    slave 架构中移除 
+	  - 缺陷修复：OPF 中的子文档项不需要一个有效的 ID 
+
+<h3>版本 4.8.9d</h3>
+
+	  - 缺陷修复：封面页面作为额外内容被添加到第一个 HTML 文件中，
+	    以便此文件的链接能够进入封面图像 
+
+<h3>版本 4.8.9c</h3>
+
+	  - 使用 main 函数中的 _tprintf 而不是 printf 
+
+<h3>版本 4.8.9b</h3>
+
+	  - 已添加 application/vnd.mobipocket-franklin-ua-game 输出 mime 类型， 
+	    以针对不能在任何其他平台上运行的 ua 游戏
+	  - 更好的转换输入文件（如果字符在通过
+	    引进实体而发布的目标编码中没有编码，则避免字符丢失） 
+
+<h3>版本 4.8.9a</h3>
+
+	  - ASP 编译中的缺陷修复
+
+<h3>版本 4.8.8y</h3>
+
+	  - 已添加 content-type 属性至 &lt;x-metadata&gt; 输出标签， 
+	    此标签采用的值源自不同输入文件的 MIME 类型，我们可以将这些输入文件转换成 
+	    PRC，即 
+	      text/x-oeb1-document 
+	      application/x-mobipocket-subscription, 
+	      image/???, 
+	      application/msword, 
+	      application/vnd.ms-excel, 
+	      application/vnd.ms-powerpoint, 
+	      text/plain, 
+	      text/html, 
+	      application/vnd.mobipocket-game 
+
+<h3>版本 4.8.8x</h3>
+
+	  - 应用 CSS 中的字体类型属性（使用一个 &lt;FONT FACE=&gt; 标签）
+
+<h3>版本 4.8.8w</h3>
+
+	  - 图像文件现在可以被直接放置在 manifest 和 spine 中，并显示在 
+	    主流中 
+	  - 元数据在被输出至电子书之前，被转换为 
+	    发布编码 
+	  - 如果目标文件被锁定，阅读器和模拟器将失效 
+
+<h3>版本 4.8.8v</h3>
+
+	  - 转换至 EBOOK_UNICODE 
+
+<h3>版本 4.8.8u</h3>
+
+	  - 缺陷修复：嵌入具有 16 种颜色的 BMP，而不发生颜色转换 
+	  - 缺陷修复：删除 RCFile 中的尾随字节
+	  - 缺陷修复：如果存在图像索引，则使用 FFV_3，否则 embed_base 
+	    在浏览器中显示错误
+
+<h3>版本 4.8.8t</h3>
+
+	  - 改变图像处理库以提高性能 
+
+<h3>版本 4.8.8s</h3>
+
+	  - 已添加 TOC 插件
+	  - 索引创建系统现在能够解码 HTML 实体
+
+<h3>版本 4.8.8r</h3>
+
+	  - 更改为免费版本 
+	  - 新编译处理 Javascript 中的新运算符
+
+<h3>版本 4.8.8q</h3>
+
+	  - XSL 变换使用 TransformNode，而不是 TransformNodeToObjbecjt，
+	    这使得 XSL 输出为 HTML，而不再是 XML。 
+
+<h3>版本 4.8.8p</h3>
+
+	  - 缺陷修复：在 HTML 解析器中，如果格式名缺失，则自动生成格式名 
+	    的编码错误 
+
+<h3>版本 4.8.8o</h3>
+
+	  - 已更正一些 CSS 错误处理 
+	  - 现在 OPF 中每个 HTML 文件的结尾处添加一个分页符， 
+	    Microsoft Reader OEB 可读取此分页符 
+	  - 已添加一个 -shell 选项，以更好地集成 Windows Explorer 和 Mobi Emulator 
+	  - 一旦出现 ASP 解析错误，PRC 将不再被创建。
+	  - 已添加一个非文档功能：将 css 文件放入到 PRCGEN 时，
+     在相同的文件夹下生成一个带有解析的 CSS 的ump.css，以排除故障
+	  - 已添加一个新的免费创建功能，没有为免费的 PRC SDK 提供加密支持
+
+<h3>版本 4.8.8n</h3>
+
+	  - 已修复由创建 UNICODE 引入的缺陷，不能再次搜索
+	    由独立的子集或简单的子集创建的索引（版本号未发生变化）
+	  - 已添加更好的错误报告，汇报匹配错误的外部子条目 
+
+<h3>版本 4.8.8m</h3>
+
+	  - 缺陷修复：删除 4.8.8h 中引入的内存泄露
+	  - 引入一种机制以修复命令行中不完整的路径
+
+<h3>版本 4.8.8l</h3>
+
+	  - 已添加关于嵌入 media/texts 问题的几个警告
+	  - 已在 x-metadata/output 选项中添加 flatten-dynamic-dir=yes，以忽略
+	    保留其名称的嵌入文件的路径（但名称必须唯一）； 
+	    这帮助解决某些图像在 OPF 文件夹外部的问题
+	  - 已在 x-metadata/output 中添加 asp-as-binary=yes，以便 ASP 可以创建为
+	    字节编码（尽管更快，可能与阅读器更新不兼容，但适用于
+	    OEM/embedded readers/products）
+
+<h3>版本 4.8 8k</h3>
+
+	  - 已添加拼写校对 
+	  - 已修改索引顺序：空格现在是重要的字符 
+
+<h3>版本 4.8.8j</h3>
+
+	  - 所有已知的脚本被 javascript 阅读器解析，以便
+	    警告输出为无效的脚本
+
+<h3>版本 4.8.8i</h3>
+
+	  - ASP 的标头已经更新，以匹配 Interdev 生成的内容
+	  - 缺失的 codepage 现在只是警告信息
+
+<h3>版本 4.8.8h</h3>
+
+	  - 源 CSS 的 cssparser.cpp 编码中的编码转换缺陷修复
+	    已被适当地定义 
+	  - 针对 CSS 样式生成的 HTML 位于目的地编码 
+	  - 图像处理类中的小修改 
+
+<h3>版本 4.8.8g</h3>
+
+	  - 已修复下列缺陷：通过 get_manifest_item(order) 列举的文档始终得到第一个文档（只对嵌入的媒介和 ASP 有影响）
+
+<h3>版本 4.8.8f</h3>
+
+	  - 缺陷修复：在 UNICODE 中创建 HTML 文件时，使用的默认编码 
+	    源自 HTML，并适用于标题编码 
+
+<h3>版本 4.8.8e</h3>
+
+	  - 将所有记录的最大尺寸降低至 63K（之前的限制太高） 
+	    （此新限制不适用于已受限制的图像） 
+
+<h3>版本 4.8.8d</h3>
+
+	  - 已修复所有采用 OPF UTF-8 的缺陷，如果没有指定编码，将电子书创建为 UTF-8 格式
+
+<h3>版本 4.8.8c</h3>
+
+	  - 已改善 XSL 依赖包检查： 
+	      如果任何插件返回至 .xsl 作为依赖包，则插件的 xsl:import/xsl:include 
+	        由 XmlMake 进行扫描
+	      XSL 依赖包检验器具有普通编码，以便同时使用数十个
+	        相同的 XSL 搜索依赖包 
+
+<h3>版本 4.8.8b</h3>
+
+	  - 更改尾随字节的格式以获得定位信息 
+	   !!! 在我们发布任何使用脚本化条目的电子书之前，
+	   这足以使我们更改 FFV 文件格式，
+	   因为阅读器 4.8 发布时支持 FFV_6
+	   并带有错误的尾随字节格式。 !!!
+
+<h3>版本 4.8.8</h3>
+
+	  - 现在以 unicode 编码创建 prcgen 
+	  - 现在支持 &lt;x-metadata&gt; 部分的 &lt;output encoding= /&gt;，以指定
+	    精确的输出编码（仅支持 windows-1252 和 utf-8，
+	    其他格式转换为 utf-8） 
+
+<h3>版本 4.8.7b</h3>
+
+	  - 已添加通过 &lt;idx:infl&gt; 标签命名拐点的支持
+
+<h3>版本 4.8.7</h3>
+
+	  - 已添加 ASP 和嵌入的对象索引 
+	  - 已添加 -lowpriority 
+
+<h3>版本 4.8.6</h3>
+
+	  - 创建结束时生成更好的统计报告 
+	  - 通过尾随字节中的 fencing 信息，修复 ASSERTion 缺陷 
+
+<h3>版本 4.8.5c</h3>
+
+	  - 缺陷修复：在 &lt;SELECT&gt; 标签中，如果在任何选项中没有发现选定的属性，
+	    则默认值未经计算；只适用于
+	   Western（根据索引编码）的 HTML TODO 编码没有解码值
+	  - 已添加使用 SELECT multiple（多选）的警告信息 
+
+<h3>版本 4.8.5b</h3>
+
+	  - 已添加 javascript 代码（全局函数）的几项检查，以避免 prcgen 崩溃
+	  - 已添加全局函数约束（必须是带有 f_ 的前缀）以避免 
+	    稍后引起 DOM 问题。 
+
+<h3>版本 4.8.5</h3>
+
+	  - 已在 .OPF 中添加 &lt;x-metadata&gt;&lt;DefaultLookupIndex&gt; 字段
+	    （定义用于查找的索引） 
+
+<h3>版本 4.8.4b</h3>
+
+	  - prcgen 处理 mbp:persistent 的 &lt;FORM&gt; 标签 
+	    （保存设置的格式）
+	  - 已改进框架集中的 is_reachable 计算 
+
+<h3>版本 4.8.4</h3>
+
+	  - prcgen 处理 mbp:auto-submit（如果在文本字段中，
+	    使输入键的格式有效） 
+
+<h3>版本 4.8.2</h3>
+
+	  - 缺陷修复：可能在完全相同的位置关闭/打开 
+	    框架集。如果一个必要框架集的子框架集实际上不是开放性框架集，·
+	    且与开放性框架集位于一个完全相同的文件夹之下时，则出现缺陷 
+	  - 格式从错误到警告变更时必须有唯一的名称，生成一个 
+	    随机的名称，并在索引和内容中替换此名称 
+
+<h3>版本 4.8.1</h3>
+
+	  - 已添加基本的 CSS 1.0 支持（通过生成与 CSS 相关的 HTML 标签） 
+	  - 已添加 Microsoft OPF 支持：
+	    每个 HTML 文件之后的分页符，  
+	    在 spine 结束时添加非 spine manifest HTML 文件，
+	    在 spine 开始时生成封面图像，根据自定义的 MS 指导项 
+	    抑制其他 MS 指定的指导项 
+
+<h3>版本 4.8.0</h3>
+
+	  - 新索引标签句法： 
+	      &lt;idx:entry name=&gt;    （代替 type=） 
+	      &lt;idx:key name=&gt;      （代替 type=） 
+	      &lt;idx:key value=&gt;     （代替 key=） 
+	      &lt;idx:orth value=&gt;    （代替 orth=） 
+	      &lt;idx:gramgrp value=&gt; （代替 gramgrp=） 
+	  - 已添加更多数据库函数：&lt;idx:subentry&gt; 和 &lt;idx:string&gt; 
+	  - 现在通过尾随字节处理 &lt;mbp:pagebreak crossable=no&gt; 
+
+<h3>版本 4.7.7</h3>
+
+	  - 已添加 javascript 全局函数索引 
+
+<h3>版本 4.7.6</h3>
+
+	  - 当前条目信息附加至文本记录 =&gt; 转换至 FFV_6 
+	  - 不可跨越的分页符也附加至文本记录 
+	  - 生成 FFV_6 的所有 PRC 必须通过 DRM 软件的新版本 
+	    加密 
+
+<h3>版本 4.7.5</h3>
+
+	  - 已添加通过 manifest 项附加 .PDB 文件的功能  
+	    (application/x-pilot)	如果在最后的 PRC 文件中插入顺序， 
+	    您必须也在 spine 中添加它们
+	  - 已添加保护记录（允许检查文件残缺不全） 
+
+	   tbr
+	  - 在图像处理类的 PRCGEN.exe 中禁用 C++ 异常处理 
+	    （可能导致 JPEG 图像完全为黑色） 
+
+<h3>V 4.7.4</h3>
+
+	  - 缺陷修复：关于载入大量超过 32MB 文件的问题 
+	    （可能属于 Windows 缺陷） 
+
+<h3>V 4.7.3</h3>
+
+	  - 缺陷修复：在某些少数情况下，子文件中的索引不能删除
+	  - 缺陷修复：如果 string pool（字符串池）超过 64k，则删除无穷回圈无限循环 
+	    （正无限内存分配）。 
+
+<h3>版本 4.7.2</h3>
+
+	  - 已添加用户选择的属性至 slave 架构，以便一些框架能够 
+	    包含可选择的内容（一般无效，但一些出版商将 
+	    内容放在框架中） 
+
+<h3>版本 4.7.1</h3>
+
+	  - 只为缺失的图像和错误的链接显示一次错误信息 
+	  - 当 HuffDic 激活时，不再加密文本记录的尾随字节，
+	    以便阅读器可以读取。 
+	  - 更新格式以在 slave 架构格式中保存除定位信息外的所有内容 
+	  - 检测具有相同名称的格式并拒绝创建 
+	  - 是否在解析过程中检测到错误（防止生成文件） 
+	    在压缩之前创建停止 
+
+<h3>版本 4.7.0</h3>
+
+	  - 变更版本以匹配阅读器 4.7 的发布
+	  - 已添加开始类型项，以指导在给定的 url/javascript 操作中打开 
+	    电子书 
+
+<h3>版本 4.6.11</h3>
+
+	  - 如果标签中也发现 href 或 onclick 属性，
+	    则不能再删除名称和 id 属性使用名称或 id 是标准的 
+	    HTML 机制，以便命名链接并在 Javascript 中使用链接。 因此， 
+	    本阅读器需要这些属性。 
+
+<h3>版本 4.6.10</h3>
+
+	  - 已修复使用 filename.htm 链接时，
+	    防止在（不必要的）文件框架集中定义框架的缺陷 
+	  - 缺陷修复：防止在相同的 filepos 中出现多个框架集 
+	  - 注意：如果外部框架集不可跨越，且不是内部框架集，
+	    则检测到一些问题。 它不能进行编码 ==&gt; 不会出现问题，因为问题 
+	    只出现在文件的自动框架集中，且此框架集目前总是
+	    不可跨越
+
+<h3>版本 4.6.9</h3>
+
+	  - 对齐记录时忽略 UTF8 尾随字节，导致以下 
+	    记录可能对齐不当（PocketPCs 崩溃） 
+
+<h3>版本 4.6.8</h3>
+
+	  - 缺陷修复：由于最优化原则，不可跨越的属性将被忽略 
+
+<h3>版本 4.6.7</h3>
+
+	  - 已添加阅读器 pro 限制，修复一些 FDST 记录写入中的小缺陷 
+
+<h3>版本 4.6.6</h3>
+
+	  - 已添加布局重复使用和执行不到的框架集拒绝代码，这并不 
+	    更改文件格式，但可能大幅度地减小边框布局/内容记录的
+	    尺寸。 
+
+<h3>版本 4.6.5</h3>
+
+	  - 更好地生成关于 apply-xsl 插件中保存失败的错误报告 
+	  - 缺陷修复：在只有 mbp:sections 的电子书中
+	    （未保存框架集信息 =&gt; 忽略不可跨越的框架集） 
+
+<h3>版本 4.6.4</h3>
+
+	  - 只要存在框架，prc 的格式总为 FFV5（由于 
+	    auto-breadth 参数的设置总为 true） 
+
+<h3>版本 4.6.3</h3>
+
+	  - 已修复 huffdic 压缩暂时文件的缺陷（这可能引起 
+	    其他缺陷） 
+
+<h3>版本 4.6.2</h3>
+
+	  - 已添加 UTF8 基本支持，尚未有索引 
+
+<h3>版本 4.6.1</h3>
+
+	  - 已添加在 Huffman 代码输出过程中将错误写至临时文件的测试和
+	    错误报告 
+</pre>
+</body></html>

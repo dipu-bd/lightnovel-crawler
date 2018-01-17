@@ -1,0 +1,4 @@
+﻿problemi noti:
+   1. nidificato <a> i tags non potrebbero funzionare correttamente.
+   2. Avvertimento (W14003: iniziare a leggere posizione di partenza non può essere risolto) viene visualizzato da kindlegen quando non riesce a identificare la posizione iniziare a leggere il libro dalla tabella visiva dei contenuti. La logica fallisce tipicamente quando la TOC visiva è presente alla fine della spine. Si prega di ignorare l'avviso (o) hanno il TOC visiva spostato all'inizio della spine.
+

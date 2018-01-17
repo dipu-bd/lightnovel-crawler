@@ -1,0 +1,23 @@
+GEBRUIKSRECHTOVEREENKOMST VOOR SOFTWARE
+Laatst bijgewerkt: 24 oktober 2012
+
+Deze Gebruiksrechtovereenkomst voor software is een wettelijke overeenkomst tussen Amazon Digital Services, Inc. ('Amazon' en, indien samen met de partners van Amazon, 'wij' of 'ons') en de persoon of entiteit die deze overeenkomst accepteert ('u').  De software voor uitgevers en alle updates, wijzigingen en uitbreidingen voor deze software, en ook alle bijbehorende gedrukte en online te downloaden documentatie (de 'Software' is software van Amazon volgens de Gebruiksvoorwaarden van Amazon.nl en uw gebruik hiervan valt onder de overeenkomst (zoals hieronder gedefinieerd). In geval van een conflict tussen deze Gebruiksrechtovereenkomst voor software en de Gebruiksvoorwaarden van Amazon.nl, heeft deze Gebruiksrechtovereenkomst voor software de hoogste prioriteit.
+Lees deze overeenkomst, alle regels en al het beleid met betrekking tot de software voor uitgevers, de Gebruiksvoorwaarden van Amazon.nl en de Privacyverklaring van Amazon.nl (gezamenlijk de 'Overeenkomst') zorgvuldig door voordat u de software voor uitgevers downloadt of gebruikt. Als u de software downloadt of gebruikt, bent u gebonden aan de voorwaarden van deze overeenkomst. Als u niet akkoord gaat of kunt gaan met de voorwaarden van deze overeenkomst, mag u niet proberen de software te downloaden of te gebruiken.
+
+LICENTIE
+Met de software kunt u een of meer van de volgende handelingen uitvoeren: (i) documenten met bepaalde bestandstypen of -indelingen converteren naar indelingen die compatibel zijn met Kindle (dergelijke met Kindle compatibele bestanden zijn 'Content met Kindle-indeling') en (ii) content met Kindle-indeling vooraf bekijken op een pc om te controleren hoe die content eruitziet op Kindle-producten. Amazon heeft deze software ontwikkeld en stelt deze beschikbaar zodat uitgevers en auteurs content met Kindle-indeling kunnen maken voor distributie via de Kindle Winkel. U mag de software ook gebruiken voor niet-commerciële doeleinden (bijvoorbeeld voor het opmaken van werken die gratis worden gedistribueerd). Volgens de voorwaarden en bepalingen van deze overeenkomst, verleent Amazon u een herroepbare, niet-exclusieve, niet-overdraagbare en niet in sublicentie te geven licentie voor het downloaden, installeren en gebruiken van de software op een server of een pc, uitsluitend voor deze doeleinden. Voor elk commercieel gebruik van deze software buiten de geautoriseerde doeleinden om, is een afzonderlijke overeenkomst met Amazon vereist.
+
+VOORBEHOUD VAN RECHTEN
+U mag één kopie van de software maken voor back-updoeleinden. U mag de software niet gebruiken via een netwerk. Alle rechten die niet expliciet aan u zijn verleend, zijn voorbehouden aan Amazon.
+
+GEEN ILLEGAAL GEBRUIK
+De software mag alleen worden gebruikt voor legale doeleinden en op een legale manier, en u stemt ermee in alle toepasselijke wetten en voorschriften na te leven. Amazon kan alle gerapporteerde overtredingen van haar beleid naar eigen goeddunken onderzoeken en zo nodig passende maatregelen nemen, inclusief het zonder kennisgeving beëindigen van uw licentie voor het gebruik van de software.
+
+EXPORTVOORSCHRIFTEN
+U zult alle toepasselijke exportbeperkingen en -voorschriften naleven en u zult de software niet overdragen of de overdracht van de software aan een verboden land niet aanmoedigen, assisteren of goedkeuren of deze beperkingen of voorschriften op een andere manier overtreden.
+
+GEEN VERKLARING VAN AFSTAND
+Onvermogen van Amazon om deze overeenkomst strikt na te leven, mag niet worden beschouwd als een verklaring van afstand van het recht van Amazon om dergelijke bepalingen of andere bepalingen van deze overeenkomst af te dwingen. Geen enkele verklaring van afstand voor enige bepaling van deze overeenkomst is geldig, tenzij deze op schrift staat.
+
+VOLLEDIGE OVEREENKOMST EN DEELBAARHEID
+Dit is de volledige overeenkomst tussen Amazon en u met betrekking tot de software, en deze overeenkomst vervangt alle voorgaande overeenkomsten betreffende dit onderwerp. Indien een deel van deze voorwaarden onwettig, ongeldig of om enige reden onuitvoerbaar is, zal dit geen gevolgen hebben voor de geldigheid van de overige bepalingen.

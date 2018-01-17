@@ -1,0 +1,45 @@
+﻿Erstellen von Kindle-buechern - Einsteiger (nur Windows und Mac):
+---------------------------------------------------------------------------
+- Laden Sie Kindle Previewer von http://www.amazon.com/kindleformat/kindlepreviewer herunter
+- Sobald der Download beendet ist, installieren Sie den Kindle Previewer
+- Wenn Sie weitere Anleitungen zur Installation von Kindle Previewer benötigen, lesen Sie bitte http://kindlepreviewer.s3.amazonaws.com/UserGuide.pdf
+- Sobald die Installation abgeschlossen ist, starten Sie Kindle Previewer
+- Klicken Sie auf den Link "Open book" (Buch öffnen) in Kindle Previewer
+- Wählen Sie die EPUB/HTML/OPF-Datei, um sie zu Kindle eBook zu konvertieren
+- Befolgen Sie die Anweisungen, um das Buch und die Vorschau zu konvertieren
+- Das konvertierte ebook mit der Dateierweiterung ".mobi" befindet sich im Ordner "Compiled-Dateiname", im selben Ordner wie die HTML/EPUP-Quelldateien.
+
+Erstellen von Kindle ebooks - Fortgeschrittene Nutzer:
+-------------------------------------------
+Fortgeschrittene Nutzer können das Befehlzeilen-Tool verwenden, um EPUB/HTML zu Kindle ebooks zu konvertieren. Diese Schnittstelle ist für die Windows-, Mac- und Linux-Plattform verfügbar. Dieses Werkzeug kann für automatische Massenkonvertierungen verwendet werden.
+
+KindleGen für Windows (XP, Vista, 7, 8):
+
+
+1. Laden Sie die KindleGen-Zip-Datei von www.amazon.com/kindleformat/kindlegen zum Desktop herunter.
+2. Klicken Sie mit der rechten Maustaste auf die Zip-Datei, wählen Sie Extract All (Alles extrahieren), und geben Sie "c:\KindleGen" als Ordnernamen ein.
+3. Öffnen Sie einen Befehlszeilen-Prompt durch Auswahl von Startmenü > Alle Programme > Zubehör > Eingabeaufforderung. 
+4. Geben Sie "c:\KindleGen\kindlegen" ein. Anweisungen zur Ausführung von KindleGen werden angezeigt.
+5. Konvertierungsbeispiel: Um eine Datei mit der Bezeichnung "book.html" zu konvertieren, navigieren Sie zum Verzeichnis, in dem sich das Buch befindet, z.B. "cd desktop" und geben Sie "c:\KindleGen\kindlegen book.html" ein. Wenn die Konvertierung erfolgreich war, wird eine neue Datei namens "book.mobi" auf dem Desktop angezeigt.
+Bitte beachten Sie: es wird empfohlen, diese Schritte zum Ausführen von KindleGen zu befolgen. Ein Doppelklick auf das KindleGen- Symbol startet dieses Programm nicht. Führen Sie die oben genannten Befehle ohne Anführungszeichen aus.  Wenn Sie eine Datei auf die Befehlsdatei kindlegen ziehen und ablegen, wird die Datei konvertiert. Da jedoch das Ausgabeprotokoll nicht erfasst werden kann, wird diese Methode nicht empfohlen. 
+
+KindleGen für Linux 2.6 i386 :
+
+1. Laden Sie KindleGen tar.gz von www.amazon.com/kindleformat/kindlegen in einen Ordner, z.B. "Kindlegen" im Stammverzeichnis (~/KindleGen) herunter.
+2. Extrahieren Sie den Inhalt der Datei zu "~/KindleGen". Öffnen Sie das Terminal, navigieren Sie mit dem Befehl "cd ~/KindleGen" zum Ordner, der die heruntergeladene Datei beinhaltet und verwenden Sie dann den Befehl  "tar xvfz kindlegen_linux_2.6_i386_v2.tar.gz", um den Inhalt zu extrahieren.
+3. Öffnen Sie die Terminal-Anwendung und geben Sie "~/ ~/KindleGen/kindlegen" ein. Anweisungen zur Ausführung von KindleGen werden angezeigt.
+4. Um eine Datei namens "book.html" zu konvertieren, wechseln Sie zum Verzeichnis, in den sich das Buch befindet, beispielsweise "cd desktop", undd geben Sie "~/KindleGen/kindlegen book.html" ein. Wenn die Konvertierung erfolgreich war, wird eine neue Datei namens "book.mobi" auf dem Desktop angezeigt.
+5. Bitte beachten Sie: es wird empfohlen, diese Schritte zum Ausführen von KindleGen zu befolgen. Ein Doppelklick auf das KindleGen- Symbol startet dieses Programm nicht. Führen Sie die oben angeführten Befehle ohne Anführungszeichen aus.
+
+KindleGen für Mac OS 10.5 und höher als i386:
+1. Laden Sie KindleGen.zip von www.amazon.com/kindleformat/kindlegen herunter. Standardmäßig wird die Datei in den Download-Ordner heruntergeladen. 2. Extrahieren Sie die Datei. In Safari wird die Zip-Datei automatisch nach dem Herunterladen extrahiert. Wenn diese Einstellung deaktiviert wird oder wenn ein anderer Browser verwendet wurde, doppelklicken Sie auf die heruntergeladene Datei, um sie zu extrahieren.
+3. Klicken Sie auf das Spotlight-Symbol in der oberen rechten Ecke und geben Sie "Terminal" ein. Klicken Sie auf die Anwendung, um sie zu öffnen.
+4. Um die Anweisungen zur Ausführung von KindleGen einzusehen, suchen Sie das Programm kindlegen im Finder-Fenster. Übertragen Sie es per Ziehen und Ablegen in das Terminalfenster, in dem sich der Cursor befindet. Der Cursor schreibt den Pfad und bewegt sich zum Ende der Zeile. Drücken Sie die Eingabetaste, um die Anweisungen anzuzeigen. 
+5. Alternative zu Schritt 4: zeigen Sie die Anweistungen an, indem Sie den Befehl "cd ~/Downloads/KindleGen_Mac_i386_v2" in das Terminal eingeben und dann den Befehl "kindlegen" eingeben.
+6. Konvertierungsbeispiel: Um eine Datei namens "book.html" zu konvertieren, kopieren Sie "book.html" auf den Desktop. Suchen Sie im Finder-Fenster das Programm "kindlegen". Ziehen Sie es in das Terminalfenster und legen Sie es an der Cursorposition ab. Der Cursor setzt den Pfad automatisch ein und bewegt sich zum Ende der Zeile. Suchen Sie das Dokument im Finder-Fenster. Ziehen Sie es in das Terminalfenster und legen Sie es an der Cursorposition ab. Der Cursor schreibt den Pfad und bewegt sich zum Ende der Zeile. Drücken Sie die Eingabetaste. Wenn die Konvertierung erfolgreich war, wird eine neue Datei namens "book.mobi" auf dem Desktop angezeigt.
+7. Alternative zu Schritt 6: zeigen Sie die Anweistungen an, indem Sie den Befehl "cd ~/Downloads/KindleGen_Mac_i386_v2" in das Terminal eingeben und dann den Befehl "kindlegen ~/Desktop/book.html" eingeben. Wenn die Konvertierung erfolgreich war, wird eine neue Datei namens "book.mobi" auf dem Desktop angezeigt.
+8. Bitte beachten Sie: es wird empfohlen, diese Schritte zum Ausführen von KindleGen zu befolgen. Ein Doppelklick auf das KindleGen-Symbol startet dieses Programm nicht. Führen Sie die oben genannten Befehle ohne Anführungszeichen aus
+
+
+
+

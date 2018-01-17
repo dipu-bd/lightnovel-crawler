@@ -1,0 +1,4 @@
+﻿problemas conocidos:
+   1. encajar la etiqueta <a> no podria funccionar correctamente.
+   2. Kindlegen muestra mensaje de advertencia (W14003: La ubicación de inicio de la lectura no se pudo resolver)  cuando no puede identificar la ubicación de inicio de la lectura para libro de la tabla de contenido visual. La lógica falla típicamente cuando TOC visual está presente al final del lomo del libro. Por favor, ignore la advertencia (o) que la tabla de contenido visual movido al principio del lomo del libro.
+

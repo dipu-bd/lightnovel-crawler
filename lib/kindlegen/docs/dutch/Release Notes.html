@@ -1,0 +1,673 @@
+﻿<html><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+</head><body>
+<h2> Versie-informatie </h2>
+
+<h3>KindleGen versie 2.9 build 1028-0897292</h3>
+<pre>
+	   - Ondersteuning van eigenschappen voor pagina-indeling (double page spread, facing pages en blank page) wanneer opgegeven als afbeelding in rug.
+	   - Meerdere fouten verholpen.
+       
+	Zie de meest recente versie-informatie en bekende problemen op https://kindlegen.s3.amazonaws.com/manual.html
+</pre>
+
+<h3>KindleGen versie 2.8 build 0208-797bf75</h3>
+<pre>
+	   - Ondersteuning toegevoegd voor conversie van de XMDF-bestandsindeling. Raadpleeg Publiceringsrichtlijnen voor de Amazon Kindle voor meer informatie.
+	   - Ondersteuning voor navigatie-element EPUB3-inhoudsopgave toegevoegd. Dit is gelijk aan het navMap-element in de NCX (ook NCX-inhoudsopgave genoemd). Het navigatie-element EPUB3-inhoudsopgave heeft de voorkeur boven het NCX navMap-element als beide zijn opgegeven. Maar als de navigatie-HTML niet is opgegeven volgens de specificatie, proberen we terug te vallen op NCX als die bestaat. Als we niet kunnen terugvallen op NCX, wordt een fout gegenereerd. <a href="http://idpf.org/epub/30/spec/epub30-contentdocs-20111011.html#sec-xhtml-nav-def-types-toc">Hier</a> vind je meer informatie over de navigatiespecificatie EPUB3-inhoudsopgave.
+	   - Ondersteuning voor navigatie-element EPUB3-oriëntatiepunten toegevoegd. Dit is equivalent aan het OPF-navigatie-element. Het navigatie-element EPUB3-oriëntatiepunten heeft de voorkeur boven het OPF-navigatie-element als beide zijn opgegeven. <a href="http://idpf.org/epub/30/spec/epub30-contentdocs-20111011.html#sec-xhtml-nav-def-types-landmarks">Hier</a> vind je meer informatie over de navigatiespecificatie EPUB3-oriëntatiepunten.
+	   - Ondersteuning voor het opgeven van de volgende metagegevens in EPUB3-indeling
+	       - Omslagafbeelding opgeven met eigenschappenkenmerk in manifest
+	       - Indeling op boekniveau opgeven met de eigenschap “rendition:layout”
+	       -Modus op boekniveau opgeven met de eigenschap “rendition:orientation”
+	       - Waarde van “dc:identifier” opgeven in URN-indeling.
+	       - Auteurs in metagegevens “dc:creator” verfijnen met 'marc relators'-schema
+	       - Meerdere titels opgeven waarbij een van de titels als hoofdtitel is aangewezen met de eigenschap title-type.
+	     <a href="http://idpf.org/epub/30/spec/epub30-publications-20111011.html#sec-package-def">Hier</a> vind je meer informatie.
+	   - Ondersteuning voor verwijzende afbeeldingen in NCX-inhoudsopgave, maar alleen als rechtstreeks naar dezelfde afbeelding wordt verwezen in de rug.
+	   - Ondersteuning voor Galicisch (gl, gl-es)
+</pre>
+
+<h3>KindleGen versie 2.7 build 1019-d6e4792</h3>
+<pre>
+	   - Ondersteuning voor gegevens-URI's voor afbeeldingen en ingesloten lettertypen, zodat hier rechtstreeks naar kan worden verwezen in HTML- en CSS-bestanden (raadpleeg http://dataurl.net voor meer informatie over gegevens-uri).
+	   - Ondersteuning ingeschakeld voor verticale JP-weergave en meerdere schrijfmodi.  Waarden kunnen in OPF-bestanden worden opgegeven met behulp van metatags (bijv. &lt;meta name=”primary-writing-mode” content=”vertical-rl” /&gt;).  Geldige waarden zijn horizontal-lr, vertical-lr, horizontal-rl, vertical-rl.
+	   - Ondersteuning ingeschakeld voor facing pages en double page spreads. Waarden kunnen in OPF worden opgegeven met het kenmerk “properties” in de tag itemref. Geldige waarden zijn facing-page-left, facing-page-right, page-spread-left, page-spread-right.
+	   - Ondersteuning voor MOBI7 toegevoegd voor HTML-tags met meerdere klassen (bijv. class="class1 class2 class3")
+	   - KindleGen genereert een fout wanneer metagegevens voor de oorspronkelijke resolutie niet zijn opgegeven in de indeling "integer x integer" voor boeken met een vaste indeling.
+	   - Er wordt gecontroleerd of rangtelwoorden in JSON voor regiovergroting uniek zijn voor boeken met een vaste opmaak.
+	   - Waarden voor KF8- en M7-bestandsgrootte toegevoegd die worden weergegeven na de conversie.
+	   - Verbeterde foutmelding wanneer het genereren van de inhoudsopgave mislukt doordat NCX-items verwijzen naar tags met de eigenschap display:none.
+	   - Probleem opgelost met verwerking van geneste ankertags in HTML
+	   - De tags section, aside, footer, figure, figcaption en article worden correct verwerkt.
+</pre>
+
+<h3>KindleGen versie 2.5 build 0626-3a91e28</h3>
+<pre>
+	   - Verbeterde transparante PNG-conversie: transparante PNG-afbeeldingen (nu geconverteerd naar JPEG) gebruiken een witte achtergrond. Oorspronkelijk werd een zwarte achtergrond gebruikt tijdens de conversie, waardoor de leeservaring slechter werd.
+	   - Probleem met onbedoelde regeleinden in MOBI7 bij gebruik van sommige CSS-eigenschappen (“margin-top: 0px” en “margin-bottom: 0px”) is opgelost.
+	   - Problemen opgelost met inspringen bij genummerde lijsten en lijsten met opsommingstekens in MOBI7. Dit werd veroorzaakt door het gebruik van de CSS-eigenschap "margin-left" met genummerde lijsten en lijsten met opsommingstekens. In MOBI7 wordt de eigenschap margin-left genegeerd voor genummerde lijsten en lijsten met opsommingstekens. De CSS-eigenschap margin-left blijft behouden in KF8.
+	   - Problemen opgelost bij het maken van MOBI7-boeken met indexen (bijv. woordenboeken)
+	   - CSS-eigenschap “display: none” genereert niet meer een extra spatie in Mobi7 voor inline tags.
+	   - Ingesloten lettertypen van het type PostScript/Type1 worden niet in alle Kindle-readers met KF8-ondersteuning goed weergegeven. KindleGen waarschuwt voor het gebruik van deze lettertypen in content.  KindleGen maakt standaard gebruik van systeemlettertypen in dergelijke boeken (specifiek voor E Ink-apparaten).
+	   - KindleGen negeert het EPUB3-navigatiedocument (dat is opgegeven met properties=”nav” in het manifest) en voegt dit niet standaard toe aan de leesvolgorde van het boek.
+	   - Conversiefout verholpen die optreedt wanneer de tag dc:Language in OPF kenmerken heeft (bijv: id-kenmerk).
+	   - Probleem opgelost dat bij samenstellen van logische inhoudsopgave ontstaat door lege teksttags of zelfsluitende teksttags in NCX-bestand.
+	   - Problemen opgelost met het verwijderen van CSS-eigenschappen die niet worden ondersteund door Kindle (bijv. line-height in de eenheid px/pt). KindleGen verwijdert de afsluitende “}” in een bepaalde 'edge case' wanneer dit de laatste eigenschap is en deze niet wordt gevolgd door een puntkomma. Dit probleem is opgelost in Kindlegen 2.5.
+	   - Bijgewerkte optie “–releasenotes” in KindleGen verwijst gebruikers naar gedetailleerde versie-informatien op internet, op https://kindlegen.s3.amazonaws.com/manual.html.
+</pre>
+
+<h3>KindleGen versie 2.4 build 69900</h3>
+<pre>
+	   - Ondersteuning toegevoegd voor een gelokaliseerde interface in het Chinees en het Japans.
+	   - Ondersteuning toegevoegd voor de CSS-eigenschap "display:none" in MOBI.
+	   - Zachte afbreekstreepjes zijn verwijderd voor oudere apparaten. Deze zijn alleen zichtbaar op KF8-apparaten.
+	   - Meerdere fouten verholpen.
+</pre>
+
+<h3>KindleGen versie 2.3 build 36043</h3>
+<pre>
+	   - Ondersteuning voor nieuwe CSS-mediatypen voor afzonderlijke stijlen voor MOBI en KF8.
+	   - Verbeterde afbeeldingskwaliteit voor stripboeken en kinderboeken.
+	   - Fout verholpen met dubbele omslagafbeelding voor boeken met aanpasbare opmaak.
+</pre>
+
+<h3>KindleGen versie 2.2 build 35621</h3>
+<pre>
+	   - Fouten verholpen in vorige versies van KindleGen.
+</pre>
+
+<h3>KindleGen versie 2.1 build 35388</h3>
+<pre>
+	   - Ondersteuning toegevoegd voor kinderboeken en stripboeken.
+	   - Fouten verholpen in vorige versies van KindleGen.
+</pre>
+
+<h3>KindleGen versie 2.0 build 34608</h3>
+<pre>
+	   - KindleGen kan nu uitgebreide MOBI maken met ondersteuning voor HTML5/CSS3.
+</pre>
+
+<h3>KindleGen versie 1.2 build 33307</h3>
+<pre>
+	   - Ondersteuning toegevoegd voor het accepteren van paginanummers voor een boek via pageLists of page-map xml in NCX.
+	   - Standaardcodering van gegenereerde boeken is gewijzigd in "utf-8". Gebruik de opdrachtregeloptie "-western" om een boek te coderen in Win-1252.
+	   - Ondersteuning toegevoegd voor Latijn (ISO-639-1-code: la).
+	   - Ondersteuning toegevoegd voor AAC-bestandsindeling als audio-/videobron.
+	   - Fouten verholpen in oudere versie van KindleGen.
+</pre>
+
+<h3>KindleGen versie 1.1 build 99</h3>
+<pre>
+	   - Deze update bevat kleine uitbreidingen en foutoplossingen.
+</pre>
+
+<h3>KindleGen versie 1.1 build 98</h3>
+<pre>
+	   - Ondersteuning toegevoegd voor afbeeldingen van maximaal 128 kB. Afbeeldingen groter dan 128 kB worden automatisch verkleind tot deze nieuwe limiet.
+	   - Ondersteuning toegevoegd voor video- en audiomultimedia in Kindle-content.
+	   - Fouten verholpen die in bepaalde gevallen optreden bij verwerking van NCX.
+	   
+</pre>
+
+<h3>KindleGen versie 1.0 build 87</h3>
+<pre>	   - KindleGen wordt nu ondersteund op de Mac
+</pre>
+
+<h3>KindleGen versie 1.0 build 86</h3>
+<pre>	   - KindleGen wordt nu ondersteund in Linux
+	   - Verbeterd algoritme voor compressie van afbeeldingen
+	   - Ondersteuning voor Macintosh-codering
+	   - Problemen met NCX opgelost
+	   - Een functie toegevoegd om een ontbrekende afbeelding in te voegen als een afbeeldingstag verwijst 
+	     naar een afbeelding die niet bestaat
+
+	   Ontwikkeld vanuit Mobigen 6.2 build 43
+
+<h3>Versies van Mobigen</h3>
+<h3>V 6.2 build 43 </h3>
+	  - fout verholpen: boeken die zijn samengesteld met de optie -s2 met mobigen versie 6.2 build 42, kunnen niet worden geüpload naar de database met e-books.
+
+<h3>V 6.2 build 42 </h3>
+	  - fout verholpent: NCX-inhoudsopgave genereert niet meer een onjuiste zoekindex.
+	  - fout verholpen: numerieke HTML-entiteiten worden correct geconverteerd in westerse e-books.
+	  - fout verholpen: XHTML-bestanden worden nu geparseerd als HTML-content in plaats van TEXT-content.
+	  - fout verholpen: CSS-transformaties gerepareerd: deze konden leiden tot niet-gesloten tags, zonder invloed op de HTML-opmaak.
+	  - nieuw: optie voor uitgebreide modus toegevoegd. Uitvoer is standaard niet uitgebreid.
+	  - nieuw: &lt;pre&gt;-tag wordt vooraf geparseerd, zodat deze werkt in Reader.
+	  - nieuw: omloop van monospace lettertypen in &lt;tt&gt;-tags om monospace lettertypen mogelijk te maken in Readers die &lt;font face=&gt; niet ondersteunen.
+	  - nieuw: uitbreidingen van NCX-metagegevens
+
+<h3>V 6.2 build 41 </h3>
+	  - fout verholpen: alleen de eerste lijst met illustraties werd samengesteld in de inhoudsopgave van het e-book.
+	  - wijziging: vereiste bestandsindelingversie voor inhoudsopgave is gewijzigd.
+
+<h3>V 6.2 build 40 </h3>
+	  - fout verholpen: nummering van geneste gesorteerde lijst in gestructureerde tags gecorrigeerd.
+	  - wijziging: complexe Unicode-ligaturen worden nu altijd geconverteerd door mobigen.
+
+<h3>V 6.02 build 39 </h3>
+	  - wijziging: verbeterde ondersteuning voor omslag van e-book.
+	  - ondersteuning toegevoegd voor NCX-bestanden met inhoudsopgave.
+	  - fout verholpen: mobigen liep vast als een CSS-linkermarge was opgegeven zonder links inspringen.
+
+<h3>V 6.01 build 38 </h3>
+	  - fout verholpen: tekst bleef uitgelijnd als linkermarge was ingesteld op 0em.
+
+<h3>V 6.01 build 37 </h3>
+	  - wijziging: betere ondersteuning voor omslag van e-book in EPUB-bestanden.
+
+<h3>V 6.01 build 36 </h3>
+	  - fout verholpen: sommige bestanden worden ingesloten in het boek hoewel ze niet worden gebruikt.
+	  - wijziging: optie -jpeg verwijderd en optie -gif toegevoegd.
+	  - wijziging: exit-code van mobigen is nu standaard 0 voor OK, 1 voor waarschuwing, 2 voor fout.
+
+<h3>V 6.01 build 35 </h3>
+	  - de mogelijkheid toegevoegd om een e-book samen te stellen met een EPUB-bestand als bron.
+
+<h3>V 6.01 build 34 </h3>
+	  - versie van creator-software toegevoegd in het gegenereerde e-book.
+	  - fout verholpen: sommige onjuiste combinaties van &lt;ol&gt;- en &lt;li&gt;-tags zorgen dat mobigen vastloopt. Dit is opgelost.
+
+<h3>V 6.01 build 33 </h3>
+	  - fout verholpen: indexreeksen (idx:string of format) werden niet goed opgeslagen als de totale grootte meer was dan 64 kB.
+	  - Franse spellingcorrectie toegevoegd.
+
+<h3>V 6.0 build 32 </h3>
+	  - fout verholpen: bij ontbrekende afbeeldingsbestanden wordt niet meer een willekeurige afbeelding opgenomen in het e-book.
+	  - wijziging: JPEG-afbeeldingen worden opgeschoond voordat het e-bookbestand wordt samengesteld.
+
+<h3>V 6.0 build 31 </h3>
+	  - Duitse en Italiaanse spellingcorrectie toegevoegd (mobigen kan nu Engelse,
+	    Duitse, Spaanse en Italiaanse woordenboeken met ingebouwde spellingcorrectie.
+
+<h3>V 6.0 build 30 </h3>
+	  - wijziging: het grootste van de MS-navigatie-items voor de omslagafbeelding wordt 
+	    gebruikt als omslag wanneer de ingesloten omslag niet is opgegeven
+
+<h3>V 6.0 build 29 </h3>
+	  - fout verholpen: &lt;STYLE&gt;-tag in een HTML-bestand werd niet altijd correct geparseerd.
+	  - fout verholpen: omslagafbeeldingen worden uitgelijnd met een marge van vier bytes.
+	  - wijziging: HTML-bronbestanden in UTF-8 worden nu gecontroleerd.
+	    Ongeldige UTF-8 wordt geweigerd en niet samengesteld.
+	  - ondersteuning toegevoegd voor gesorteerde lijsten.
+	  - ondersteuning toegevoegd voor nieuw uitvoertype voor content:
+	  - application/x-mobipocket-subscription-feed
+	  - application/x-mobipocket-subscription-magazine
+	  - wijziging: MS-navigatie-items voor miniatuurafbeeldingen van boekomslag worden ontdekt en verwijderd.
+
+<h3>V 6.0 build 28 </h3>
+	  - tag &lt;EmbeddedCover/&gt; toegevoegd in &lt;x-metadata&gt; : deze tag stelt de afbeelding van het boekomslag in die is ingesloten in het boek
+	 
+<h3>V 6.0 build 27 </h3>
+	  - opdrachtregeloptie -jpeg toegevoegd voor ondersteuning van oorspronkelijke JPEG-afbeeldingen in het boek.
+	 
+<h3>V 5.0 build 26 </h3>
+	  - fout verholpen: bij de conversie van afbeeldingen werden soms iets te grote afbeeldingen 
+	    gemaakt voor de maximale recordgrootte. Hierdoor werd de waarschuwing getoond 
+	    dat een record te groot is voor Palm-apparaten
+	  - opdrachtregeloptie -releasenotes toegevoegd
+
+<h3>V 5.0 build 25 </h3>
+	  - ondersteuning toegevoegd voor volledig gesorteerde Koreaanse scripts (Hangul)
+
+<h3>V 5.0 build 24 </h3>
+	  - fout verholpen in tabel met unicode-bereiken
+
+<h3>V 5.0 build 23 </h3>
+	  - fout verholpen in binaire codering van positiegegevens van items
+
+<h3>V 5.0 build 22 </h3>
+	  - ontbrekende codering toegevoegd bij toevoegen van anker. Hierdoor werden interne 
+	    href-links soms niet correct gekoppeld
+
+<h3>V 5.0 build 21 </h3>
+	  - Unicode-bereik voor algemene interpunctie is opgesplitst in 2 bereiken:
+	    Algemene interpunctie - Windows 1252
+	    Algemene interpunctie - andere dan Windows 1252 voor het aanpassen 
+	    van de berekening van de lettertypehandtekening
+	  - de analysefunctie voor het unicode-bereik houdt geen 
+	    rekening meer met sommige spaties en besturingscodes
+
+<h3>V 5.0 build 20 </h3>
+	  - nieuwe Unicode-bereiken toegevoegd zodat meer tekens worden herkend 
+	    als niet-gesorteerde significante interpunctie of symbolen in indexen
+	  - SQL LIKE-algoritme gewijzigd zodat het helemaal geen rekening 
+	    houdt met niet-significante tekens
+
+<h3>V 5.0 build 19 </h3>
+	  - fout verholpen bij omzetting naar fonetische tekens (liep vast bij te lange woorden)
+	  - betere rapportage van waarschuwingen
+	  - vlag toegevoegd in veld voor speciale functies in koptekst van MOBI-bestand om taaldetectie-hacks 
+	    uit te schakelen wanneer het kenmerk lang= wordt gebruikt in de HTML
+
+<h3>V 5.0 build 18 </h3>
+	  - optie -readerpro verwijderd
+	  - -vouchers=n beperkt tot minstens 6 vouchers
+	  - naam van uitvoerbaar bestand gewijzigd in mobigen
+	  - extensie van gegenereerd bestand gewijzigd in .mobi
+	  - metagegevens worden nu toegevoegd aan extra koptekstgegevens en niet aan het eerste 
+	    tekstrecord (waarbij ruimte wordt gelaten voor extra metagegevens)
+	  - Japanse volgorde van kleine en grote versies van hiragana 
+	    en katakana gewijzigd (deze worden nu gesorteerd als afzonderlijke tekens)
+	  - fout verholpen in sortering van Unicode-indexen
+
+<h3>V 5.0 build 17 </h3>
+	  - fout verholpen: bij het samenstellen vanuit een HTML-bestand, werd het 
+	    eerste frame van de eerste frameset verwijderd uit de publicatie
+
+<h3>V 5.0 build 16 </h3>
+	  - fout verholpen: in boeken die geen woordenboeken zijn maar wel een taal hebben, 
+	    werd de taal van de indexen ingesteld op LID_NEUTRAL. Deze wordt nu ingesteld op de taal van het boek
+
+<h3>V 5.0 alfa 15 </h3>
+	  - prcgen analyseert nu het gebruik van Unicode-tekens en schrijft een lettertypehandtekening
+	    in de sectie met extra koptekstgegevens van het boek. Dit heeft geen invloed
+	    op de versie van de bestandsindeling van het boek
+
+<h3>V 5.0 alfa 14 </h3>
+	  - experimentele Japanse sorteertabellen
+
+<h3>V 5.0 alfa 13 </h3>
+	  - korte woordenboeknaam wordt opgeslagen in ExtraHeaderData, zodat boeken die deze
+	    gebruiken niet geforceerd worden naar FFV_7
+	  - waarschuwing: alle boeken die gebruikmaken van de korte woordenboeknaam, moeten opnieuw worden samengesteld
+
+<h3>V 5.0 alfa 12</h3>
+	   - recompileren nadat alle code van Jeremie's Reader 5.0 is ingecheckt
+
+<h3>V 5.0 alfa 11 </h3>
+	  - ondersteuning toegevoegd voor spellingcorrectie in Unicode-boeken
+
+<h3>V 5.0 alfa 10 </h3>
+	  - fout verholpen met betrekking tot framesets die direct na de body-tag zijn gedeclareerd.
+
+<h3>V 5.0 alfa 9</h3>
+	   - fout verholpen in de code die lege &lt;a&gt;-tags verwijdert
+
+<h3>V 5.0 alfa 8 </h3>
+	  - lege &lt;a&gt;-tags worden verwijderd
+
+<h3>V 5.0 alfa 7 </h3>
+	  - ondersteuning toegevoegd voor de metagegevens &lt;DictionaryVeryShortName&gt; in de OPF
+
+<h3>V 5.0 alfa 6 </h3>
+	  - betere versieminimalisatie voor Unicode-documenten
+
+<h3>V 5.0 alfa 5 </h3>
+	  - &lt;idx:key exact=yes&gt; geïmplementeerd
+
+<h3>V 5.0 alfa 4 </h3>
+	  - ingesloten tabel wordt gewoonlijk niet samengesteld, tenzij in het geval van ASP-pagina's of audio
+	    bestanden
+
+<h3>V 5.0 alfa 3 </h3>
+	  - aanvullende ondersteuning voor LIKE-optimisaties in Unicode + ondersteuning voor
+	    JUMP-functie in Unicode (standaard zoeksleutel in koptekst)
+
+<h3>V 5.0 alfa 2 </h3>
+	  - ondersteuning toegevoegd voor LIKE in Unicode
+
+<h3>V 5.0 alfa 1 </h3>
+	  - ondersteunt &lt;idx:key scriptable=yes&gt; en daardoor toegang met sleutel in indelingen en 
+	    Javascript
+
+<h3>V 5.0 alfa </h3>
+	  - genereert indexen in Unicode, nieuwe bestandsindeling is FFV_7
+
+<h3>V 4.8.9n </h3>
+	  - betere tabellen voor spellingcorrectie in het Engels
+	  - veel betere tabellen voor spellingcorrectie in het Spaans
+
+<h3>V 4.8.9m </h3>
+	  - de oproepen -regserver en -unregserver toegevoegd om typebibliotheek te registreren 
+	    of registratie ongedaan te maken, registratie is alleen nuttig voor het ontwikkelen van
+	    PRCGen-invoegtoepassingen. Eerder werd de typebibliotheek automatisch geregistreerd
+	    bij elke uitvoering, waardoor PRCGen niet kon worden uitgevoerd zonder beheerdersrechten
+
+<h3>V 4.8.9l </h3>
+	  - Betere parsering van CSS: lengten worden correct geparseerd met hun eenheden en waarden 
+	    worden geconverteerd met eenheden die worden ondersteund door de Reader
+	  - Marge van CSS-kenmerk wordt correct geparseerd
+
+<h3>V 4.8.9k </h3>
+	  - in gratis versie zijn opdrachtregelparsering en opdrachtregelgegevens coherent
+	  - in de gratis versie wordt C2-compressiecode niet eens samengesteld
+	  - fouten verholpen in opdrachtregelparsering
+
+<h3>V 4.8.9j </h3>
+	  - fout verholpen: uitvoercodering werd niet juist opgehaald en daarom genegeerd
+	  - Alle URL's (&lt;ITEM href=&gt; in OPF &lt;A href=&gt; &lt;IMG src=&gt;) worden correct 
+	    met HTML gedecodeerd bij het lezen en correct met HTML gecodeerd bij het instellen. URL's 
+	    in HTML worden ook correct met HTML ge(de)codeerd wanneer dat nodig is
+	  - CSS-stijl font-size (pt px % of em) wordt correct geparseerd en geconverteerd
+
+<h3>V 4.8.9i </h3>
+	  - functie toegevoegd voor audio in rug: als naar audiobestanden wordt verwezen vanuit de rug,
+	    wordt een standaard navigatie-item om te starten gegenereerd voor audio.show
+
+<h3>V 4.8.9h </h3>
+	  - fout verholpen: build_parameters.xml is niet meer in UTF16 -&gt; sommige conversies zijn nodig, 
+	    anders worden alle afhankelijkheden elke keer opnieuw samengesteld
+
+<h3>V 4.8.9g </h3>
+	  - fout verholpen: publicatie zonder HTML-bestanden (maar met alleen audio of afbeeldingen) opende niet
+	  - codering van Ogg Vorbis-audiobestanden toegevoegd
+
+<h3>V 4.8.9f </h3>
+	  - fout verholpen: bij het samenstellen van een enkel HTML-bestand werd een ongeldige PRC geproduceerd
+	    (BODY-tag ontbrak)
+
+<h3>V 4.8.9e </h3>
+	  - fout verholpen: tot versie 4.8.9d werd body verwijderd uit slave-frames in 
+	    externe HTML-bestanden
+	  - fout opgelost: onderliggende documentitems in OPF zijn ook zonder id geldig
+
+<h3>V 4.8.9d </h3>
+	  - fout opgelost: omslagpagina toegevoegd als extra content aan het eerste HTML-bestand, 
+	    zodat links naar dit bestand verwijzen naar de omslagafbeelding
+
+<h3>V 4.8.9c </h3>
+	  - _tprintf in plaats van printf gebruikt in main
+
+<h3>V 4.8.9b </h3>
+	  - uitvoer mime-type application/vnd.mobipocket-franklin-ua-game toegevoegd voor 
+	    ua-specifieke games die niet werken op een ander platform
+	  - betere conversie van invoerbestanden (geen tekenverlies als teken geen codering 
+	    heeft in doelcodering van publicatie door de introductie van entiteiten)
+
+<h3>V 4.8.9a </h3>
+	  - fouten verholpen bij compileren van ASP
+
+<h3>V 4.8.8y </h3>
+	  - kenmerk content-type toegevoegd aan uitvoertag van &lt;x-metadata&gt; waarbij de waarde 
+	    wordt opgehaald uit de MIME-typen van de verschillende invoerbestanden die we kunnen converteren naar 
+	    PRC, zoals:
+	      text/x-oeb1-document
+	      application/x-mobipocket-subscription,
+	      afbeelding/???,
+	      application/msword,
+	      application/vnd.ms-excel,
+	      application/vnd.ms-powerpoint,
+	      text/plain,
+	      text/html,
+	      application/vnd.mobipocket-game
+
+<h3>V 4.8.8x </h3>
+	  - het kenmerk font-family in CSS wordt toegepast (met behulp van een &lt;FONT FACE=&gt;-tag)
+
+<h3>V 4.8.8w </h3>
+	  - afbeeldingsbestanden kunnen nu rechtstreeks worden ingevoerd in het manifest en de rug, 
+	    en verschijnen in de hoofdstroom
+	  - metagegevens worden geconverteerd naar de codering van de publicatie, voordat ze worden 
+	    uitgevoerd naar het boek
+	  - Reader en emulator stoppen als bestand is vergrendeld
+
+<h3>V 4.8.8v </h3>
+	  - overgeschakeld naar EBOOK_UNICODE
+
+<h3>V 4.8.8u </h3>
+	  - fout verholpen: BMP met 16 kleuren wordt ingesloten zonder deze te converteren
+	  - fout verholpen: navolgende bytes in PRC-bestand verwijderen
+	  - fout verholpen: FFV_3 gebruiken als er indexen zijn voor afbeeldingen, anders is 
+	    embed_base onjuist in Reader
+
+<h3>V 4.8.8t </h3>
+	  - bibliotheek voor verwerking van afbeeldingen gewijzigd voor betere resultaten
+
+<h3>V 4.8.8s </h3>
+	  - invoegtoepassing voor inhoudsopgave toegevoegd
+	  - het systeem dat de index samenstelt, decodeert nu HTML-entiteiten
+
+<h3>V 4.8.8r </h3>
+	  - wijzigingen voor de GRATIS versie
+	  - nieuwe compilatie verwerkt nieuwe operator in Javascript
+
+<h3>V 4.8.8q </h3>
+	  - de XSL-transformatie maakt gebruik van TransformNode in plaats van TransformNodeToObjbecjt,
+	    zo kan XSL-uitvoer HTML zijn en niet meer XML.
+
+<h3>V 4.8.8p </h3>
+	  - fout verholpen: in HTML-parser was de codering van een automatisch gegenereerde 
+	    formuliernaam onjuist als de formuliernaam ontbrak
+
+<h3>V 4.8.8o </h3>
+	  - verwerking van enkele CSS-fouten gecorrigeerd
+	  - er wordt nu een pagina-einde toegevoegd aan het einde van elk HTML-bestand in de OPF 
+	    voor compatibiliteit met Microsoft Reader OEB
+	  - optie -shell toegevoegd voor betere integratie van Windows Explorer en Mobi-emulator
+	  - bij een fout bij het parseren van ASP wordt de PRC niet meer samengesteld
+	  - niet gedocumenteerde functie toegevoegd: bij het plaatsen van een .css-bestand in PRCGEN, 
+	    wordt in dezelfde map een dump.css met geparseerde CSS gegenereerd voor foutopsporing
+	  - een nieuwe GRATIS build toegevoegd GRATIS zonder ondersteuning voor codering voor de gratis PRC SDK
+
+<h3>V 4.8.8n </h3>
+	  - fout verholpen die ontstond bij het samenstellen van Unicode, indexen die werden samengesteld vanuit 
+	    onafhankelijke of enkelvoudige onderliggende items konden niet meer worden bereikt
+ (versienummer is niet gewijzigd)
+	  - betere foutenrapportage toegevoegd voor niet-overeenkomende externe subitems
+
+<h3>V 4.8.8m </h3>
+	  - fout verholpen: geheugenlekken verwijderd die ontstonden sinds versie 4.8.8h
+	  - introductie van een mechanisme voor het herstellen van onvolledige paden op de opdrachtregel
+
+<h3>V 4.8.8l </h3>
+	  - diverse waarschuwingen toegevoegd voor problemen met ingesloten media/tekst
+	  - flatten-dynamic-dir=yes toegevoegd in de optie x-metadata/output om te negeren dat paden 
+	    van ingesloten bestanden hun namen behouden (die moeten wel uniek zijn);
+	    dit voorkomt problemen wanneer sommige afbeeldingen niet in de OPF-map staan
+	  - asp-as-binary=yes toegevoegd in x-metadata/output, zodat ASP kan worden samengesteld als 
+	    bytecode (sneller, maar kan incompatibel zijn met Reader-updates; werkt echter prima
+	    voor OEM-/ingesloten Readers/producten)
+
+<h3>V 4.8.8k </h3>
+	  - spellingcorrectie toegevoegd.
+	  - gewijzigde indexsortering: spaties zijn nu significante tekens
+
+<h3>V 4.8.8j </h3>
+	  - alle bekende scripts worden geparseerd met de Javascript-parser van de Reader, 
+	    zodat waarschuwingen worden uitgevoerd voor ongeldige scripts
+
+<h3>V 4.8.8i </h3>
+	  - kopteksten van ASP zijn bijgewerkt, zodat ze overeenkomen met wat er wordt gegenereerd door Interdev
+	  - ontbrekende codepagina is nu slechts een waarschuwing
+
+<h3>V 4.8.8h </h3>
+	  - fouten verholpen bij het coderen van conversies in cssparser.cpp, codering van bron-CSS 
+	    wordt nu correct bepaald
+	  - HTML die voor CSS-stijlen wordt gegenereerd vormt nu onderdeel van de doelcodering
+	  - kleine wijzigingen in beeldverwerkingsklassen
+
+<h3>V 4.8.8g </h3>
+	  - fout verholpen waardoor documenten die werden genummerd met get_manifest_item(volgorde) 
+	    altijd het eerste document werden (alleen van invloed op ingesloten media en ASP)
+
+<h3>V 4.8.8f </h3>
+	  - fout verholpen: bij het samenstellen vanuit een HTML-bestand in Unicode is de gebruikte 
+	    standaardcodering de codering uit de HTML en deze wordt gebruikt voor de codering van de titel
+
+<h3>V 4.8.8e </h3>
+	  - maximale grootte van alle records verlaagd naar 63Ko (oude limiet was te hoog) 
+	    (deze nieuwe limiet heeft geen invloed op afbeeldingen die al beperkt waren tot die grootte)
+
+<h3>V 4.8.8d </h3>
+	  - fout verholpen waardoor OPF altijd UTF-8 werd als geen codering was opgegeven, zodat boeken werden samengesteld in UTF-8
+
+<h3>V 4.8.8c </h3>
+	  - controle van XSL-afhankelijkheden is verbeterd:
+	      als een plug-in een .xsl retourneert als afhankelijkheid, worden de bijbehorende xsl:import/xsl:include 
+	        gescand door XmlMake, 
+	      de controlefunctie voor XSL-afhankelijkheden wordt in de gemeenschappelijke code geplaatst, 
+	        zodat het zoeken naar XSL-afhankelijkheden niet tientallen keren maar slechts één keer gebeurt
+
+<h3>V 4.8.8b </h3>
+	  - indeling van navolgende bytes gewijzigd voor positiegegevens !!! 
+	   Dit is ernstig genoeg voor ons om de FFV-bestandsindeling te 
+	   wijzigen vóór de publicatie van boeken die gebruikmaken van 
+	   script-items, omdat Reader 4.8 helaas FFV_6
+	   ondersteunt met de verkeerde indeling voor navolgende bytes. !!!
+
+<h3>V 4.8.8 </h3>
+	  - prcgen is nu samengesteld in Unicode
+	  - nu ondersteuning voor &lt;output encoding= /&gt; in de sectie &lt;x-metadata&gt; 
+	    om de exacte uitvoercodering op te geven (alleen Windows-1252 en UTF-8 worden ondersteund, 
+	    alle andere worden getransformeerd naar UTF-8)
+
+<h3>V 4.8.7b </h3>
+	  - ondersteuning toegevoegd voor benoemde inflecties met de tag &lt;idx:infl&gt;
+
+<h3>V 4.8.7 </h3>
+	  - index toegevoegd voor ASP en ingesloten objecten
+	  - -lowpriority toegevoegd
+
+<h3>V 4.8.6 </h3>
+	  - betere rapportage van statistieken nadat het bestand is samengesteld
+	  - fout verholpen waardoor ASSERTion mislukt met fencing-gegevens in navolgende bytes
+
+<h3>V 4.8.5c </h3>
+	  - fout verholpen: in &lt;SELECT&gt;-tags werd de standaardwaarde niet berekend als er geen 
+	    geselecteerd kenmerk was gevonden voor een optie; waarde werd niet gedecodeerd vanuit HTML
+	   TODO-decodering werkt alleen voor Western (gebaseerd op indexcode)
+	  - waarschuwingen toegevoegd als SELECT meerdere keren wordt gebruikt
+
+<h3>V 4.8.5b </h3>
+	  - diverse controles voor Javascript-code (globale functie) toegevoegd om te voorkomen dat prcgen vastloopt
+	  - beperking toegevoegd voor globale functie (moet voorvoegsel f_ hebben) om later 
+	    een DOM-probleem te voorkomen.
+
+<h3>V 4.8.5 </h3>
+	  - het veld &lt;x-metadata&gt;&lt;DefaultLookupIndex&gt; toegevoegd in het OPF-bestand 
+	    (wordt gebruikt om de index voor zoeken te definiëren)
+
+<h3>V 4.8.4b </h3>
+	  - mbp:persistent wordt verwerkt door prcgen bij &lt;FORM&gt;-tag 
+	    (zodat formulieren worden opgeslagen in instellingen)
+	  - berekening van is_reachable voor frameset verbeterd
+
+<h3>V 4.8.4 </h3>
+	  - mbp:auto-submit wordt verwerkt door prcgen (om een formulier te valideren met een sleutel 
+	    in een tekstveld)
+
+<h3>V 4.8.2 </h3>
+	  - fout verholpen: het was mogelijk om een afsluitende/openende frameset 
+	    te hebben met exact dezelfde positie. deze fout trad op als een subframeset van een benodigde 
+	    frameset feitelijk niet benodigd was EN dezelfde positie had als een openende frameset
+	  - formulier heeft geen unieke naam: was een fout, is nu een waarschuwing, er wordt een 
+	    willekeurige naam gegenereerd en deze wordt vervangen in indexen en in content
+
+<h3>V 4.8.1 </h3>
+	  - basisondersteuning voor CSS 1.0 toegevoegd (door HTML-tags te genereren die overeenkomen met CSS)
+	  - ondersteuning toegevoegd voor Microsoft OPF:
+	    pagina-einde na elk HTML-bestand,
+	    HTML-manifestbestanden niet voor rug toegevoegd aan het einde van de rug,
+	    genereert omslagafbeelding aan het begin van de rug, op basis van aangepaste MS-navigatie-items
+	    andere MS-specifieke navigatie-items worden onderdrukt
+
+<h3>V 4.8.0 </h3>
+	  - nieuwe syntaxis voor indextags:
+	      &lt;idx:entry name=&gt;    (in plaats van type=)
+	      &lt;idx:key name=&gt;      (in plaats van type=)
+	      &lt;idx:key value=&gt;     (in plaats van key=)
+	      &lt;idx:orth value=&gt;    (in plaats van orth=)
+	      &lt;idx:gramgrp value=&gt; (in plaats van gramgrp=)
+	  - meer databasefuncties toegevoegd: &lt;idx:subentry&gt; en &lt;idx:string&gt;
+	  - &lt;mbp:pagebreak crossable=no&gt; wordt nu verwerkt met navolgende bytes
+
+<h3>V 4.7.7 </h3>
+	  - index voor globale functie in Javascript toegevoegd
+
+<h3>V 4.7.6 </h3>
+	  - huidige itemgegevens toegevoegd aan tekstrecords =&gt; overschakelen naar FFV_6
+	  - niet-overlopende pagina-einden worden ook toegevoegd aan tekstrecords
+	  - alle PRC's die worden gegenereerd met FFV_6, moeten worden gecodeerd met NIEUWE VERSIES van
+	    DRM-software
+
+<h3>V 4.7.5 </h3>
+	  "- de mogelijkheid toegevoegd om PDB-bestanden toe te voegen via manifestitems 
+	    (application/x-pilot)	je moet deze ook in de rug toevoegen als de 
+	    invoegvolgorde in het uiteindelijke PRC-bestand"
+	  - bewakingsrecord toegevoegd (om te controleren of bestanden worden afgekapt)
+
+	   tbr
+	  - het uitschakelen van de verwerking van C++-uitzonderingen in PRCGEN.exe in 
+	    verwerkingsklassen voor afbeeldingen zorgde ervoor dat JPEG-afbeeldingen volledig zwart werden)
+
+<h3>V 4.7.4 </h3>
+	  - fout verholpen: probleem met laden van bestanden in delen van meer dan 32 MB 
+	    (waarschijnlijk een fout van Windows)
+
+<h3>V 4.7.3 </h3>
+	  - fout verholpen: in sommige zeldzame gevallen werden indexen niet verwijderd uit onderliggende bestanden
+	  - fout verholpen: oneindige lus verwijderd (+ oneindige geheugentoewijzing) als een 
+	    tekenreeksgroep groter is dan 64 kB.
+
+<h3>V 4.7.2 </h3>
+	  - kenmerk user-selection toegevoegd aan slave-frames, 
+	    zodat sommige frames selecteerbare inhoud kunnen bevatten 
+	    (gewoonlijk niet nuttig, maar sommige uitgevers plaatsen content in frames)
+
+<h3>V 4.7.1 </h3>
+	  - foutmelding voor ontbrekende afbeeldingen slechts één keer tonen, voor onjuiste links ook
+	  - niet nog meer navolgende bytes van tekstrecords coderen wanneer HuffDic is geactiveerd, 
+	    zodat de Reader werkt
+	  - formulieren bijgewerkt zodat alle gegevens, behalve positiegegevens worden opgeslagen voor formulieren in slave-frames
+	  - detecteert formulieren met dezelfde naam en weigert deze samen te stellen
+	  - als er fouten optreden tijdens parseren (voorkomt dat het bestand wordt gegenereerd)
+	    samenstellen stopt vóór compressie
+
+<h3>V 4.7.0 </h3>
+	  - versie gewijzigd zodat deze overeenkomt met de release van Reader 4.7
+	  - starttype-item toegevoegd in gids om e-book te starten bij een bepaalde url/javascript
+	    actie
+
+<h3>V 4.6.11 </h3>
+	  - de kenmerken voor naam en id worden niet meer verwijderd als een kenmerk 
+	    href of onclick ook wordt aangetroffen in de tag.
+	    Gebruik van naam of id is het standaard HTML-mechanisme voor naamgeving van links en gebruik hiervan in Javascript. 
+	    Daarom heeft de Reader deze kenmerken nodig.
+
+<h3>V 4.6.10 </h3>
+	  - fout verholpen waardoor frames werden gedeclareerd in een (overbodige) 
+	    bestandsframeset bij gebruik van de link filename.htm
+	  - fout verholpen: meerdere framesets op dezelfde bestandspositie voorkomen
+	  - opmerking: enkele problemen ontdekt als de buitenste frameset 
+	    niet overloopt en niet de binnenste frameset
+	    Kan niet worden gecodeerd ==&gt; probleem treedt niet op omdat dit probleem 
+	    alleen kan optreden bij auto-frameset en deze kan altijd overlopen
+
+<h3>V 4.6.9 </h3>
+	  - navolgende UTF8-bytes werden genegeerd bij het uitlijnen van records, 
+	    zodat volgende records mogelijk onjuist werden uitgelijnd (liep vast op PocketPC's)
+
+<h3>V 4.6.8 </h3>
+	  - fout verholpen: niet-overlopend kenmerk werd genegeerd wegens optimalisaties
+
+<h3>V 4.6.7 </h3>
+	  - beperking toegevoegd voor reader pro, enkele kleine fouten verholpen bij schrijven van FDST-record
+
+<h3>V 4.6.6 </h3>
+	  - code toegevoegd voor hergebruik van indeling en weigeren van onbereikbare 
+	    frameset, de bestandsindeling wordt niet gewijzigd, maar records met 
+	    frame-indeling/content kunnen aanzienlijk kleiner worden.
+
+<h3>V 4.6.5 </h3>
+	  - betere foutenrapportage voor fout bij opslaan in invoegtoepassing apply-xsl
+	  - fout verholpen: in boeken met alleen mbp:sections 
+	    (framesetgegevens worden niet opgeslagen =&gt; niet-overlopend wordt genegeerd)
+
+<h3>V 4.6.4 </h3>
+	  - prc werd altijd gegenereerd in FFV5 zodra er één frame was 
+	    (omdat de parameter auto-breadth altijd was ingesteld op true)
+
+<h3>V 4.6.3 </h3>
+	  - fout met tijdelijk bestand voor huffdic-compressie verholpen (veroorzaakte waarschijnlijk 
+	    andere fouten)
+
+<h3>V 4.6.2 </h3>
+	  - basisondersteuning toegevoegd voor UTF8, nog geen indexen
+
+<h3>V 4.6.1 </h3>
+	  - tests en foutenrapportage toegevoegd voor schrijffouten naar tijdelijk bestand tijdens 
+	    uitvoer van Huffman-codes
+</pre>
+</body></html>

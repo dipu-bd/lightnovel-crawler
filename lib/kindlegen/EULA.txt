@@ -1,0 +1,24 @@
+﻿SOFTWARE END USER LICENSE AGREEMENT
+Last updated: October 24, 2012
+
+This Software End User License Agreement is a legal agreement between Amazon Digital Services, Inc. ("Amazon" and, together with Amazon’s Affiliates, "we" or "us") and the individual or entity accepting this Agreement (“you”).  The publisher software tools and all updates, modifications and enhancements to these tools, as well as any associated printed and online or downloadable documentation (the “Software”) are Amazon Software under the Amazon.com Conditions of Use, and your use of them is subject to the Agreement (as defined below). In the event of any conflict between this Software End Use License Agreement and the Amazon.com Conditions of Use, the terms of this Software End User License Agreement will govern.
+Please read this Agreement, all rules and policies related to the publisher software tools, the Amazon.com Conditions of Use, and the Amazon.com Privacy Notice (collectively, the "Agreement") carefully before downloading or using the publisher software tools. If you download or use the Software, you will be bound by the terms of this Agreement. If you do not or cannot agree to the terms of this Agreement, do not attempt to download or use the Software. 
+
+LICENSE 
+The Software allows you to do one or more of the following: (i) convert documents existing in certain file types or formats into Kindle-compatible formats (such Kindle-compatible files, the "Kindle Format Content"), and (ii) preview Kindle Format Content from a personal computer to evaluate how that content may appear on Kindle products. Amazon developed and makes this Software available for the purpose of allowing publishers and authors to create Kindle Format Content for distribution through the Kindle store. You may also use the Software for noncommercial purposes (e.g. to format works to be distributed at no charge). Subject to your compliance with all of the terms and conditions of this Agreement, Amazon grants to you a revocable, non-exclusive, non-assignable, non-sublicensable and non-transferable license to download, install and use the Software on a server or personal computer solely for these purposes. Any commercial use of this Software outside of the authorized purposes requires a separate agreement with Amazon.
+
+RESERVATION OF RIGHTS 
+You may make one copy of the Software for back-up purposes. You may not use the Software over a network. All rights not expressly granted to you are reserved by Amazon. 
+
+NO ILLEGAL USE 
+The Software may be used only for lawful purposes and in a lawful manner, and you agree to comply with all applicable laws and regulations. Amazon may investigate any reported violation of its policies and take any action it deems appropriate, including terminating your license to use the Software without notice. 
+
+EXPORT REGULATIONS 
+You will comply with all applicable export and re-export restrictions and regulations, and you will not transfer, or encourage, assist, or authorize the transfer of the Software to a prohibited country or otherwise in violation of any such restrictions or regulations. 
+
+NO WAIVER 
+Amazon's failure to enforce the strict performance of any provision of this Agreement will not constitute a waiver of Amazon's right to subsequently enforce such provisions or any other provisions of this Agreement. No waiver of any provision of this Agreement shall be effective unless in writing. 
+
+ENTIRE AGREEMENT AND SEVERABILITY 
+This is the entire agreement between Amazon and you regarding the Software and supersedes all prior understandings regarding such subject matter. If any term or condition of this Agreement is deemed invalid, void, or for any reason unenforceable, that part will be deemed severable and will not affect the validity and enforceability of any remaining term or condition. 
+

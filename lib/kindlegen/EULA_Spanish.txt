@@ -1,0 +1,23 @@
+﻿CONTRATO DE LICENCIA DE USUARIO FINAL DE SOFTWARE
+Última actualización el 24 de Octubre de 2012
+
+Este Contrato de Licencia de Usuario Final de Software es un contrato jurídico entre AmazonEU Sarl (“Amazon” y, junto con las Filiales de Amazon, “nosotros”) y la persona o entidad que acepta este Contrato (“usted”).  Las herramientas de software del editor y todas las actualizaciones, modificaciones y mejoras de estas herramientas, así como cualquier documentación impresa y online o descargable asociada (el “Software”) son Software de Amazon sujetas a las Condiciones de Uso de Amazon.es y el uso por parte de usted se encontrará sujeto al Contrato (según se define más adelante). En caso de cualquier conflicto entre este Contrato de Licencia de Usuario Final de Software y las Condiciones de Uso de Amazon.es, prevalecerán las condiciones de este Contrato de Licencia de Usuario Final de Software.
+Lea este Contrato, todas las normas y políticas relacionadas con las herramientas de software del editor, las Condiciones de Uso de Amazon.es y el Aviso de Privacidad de Amazon.es (de forma colectiva, el “Contrato”) con atención antes de descargar o utilizar las herramientas de software del editor. Si descarga o utiliza el Software, quedará vinculado por las condiciones de este Contrato. Si no acepta o no puede aceptar las condiciones de este Contrato, no intente descargar o utilizar el Software. 
+
+LICENCIA
+El Software le permite realizar una o más de las siguientes cosas: (i) convertir documentos existentes en determinados tipos o formatos de ficheros a formatos compatibles con Kindle (dichos ficheros compatibles con Kindle serán “Contenido con Formato de Kindle”) y (ii) visualizar previamente el Contenido con Formato de Kindle de un ordenador personal para evaluar cómo puede aparecer dicho contenido en productos de Kindle. Amazon desarrolló este Software y lo pone a su disposición con el fin de permitir a los editores y autores crear Contenido con Formato Kindle para su distribución a través de la tienda Kindle. También podrá utilizar el Software con fines no comerciales (por ejemplo, formatear trabajos que se distribuirán de forma gratuita). Sujeto al cumplimiento por parte de usted de todos los términos y condiciones de este Contrato, Amazon le otorga una licencia revocable, no exclusiva, no objeto de cesión o sublicencia y no transferible para descargar, instalar y utilizar el Software en un servidor u ordenador personal exclusivamente con estos fines. Cualquier uso comercial de este Software no incluido en los fines autorizados requerirá un contrato distinto con Amazon.
+
+RESERVA DE DERECHOS
+Podrá hacer una copia del Software con fines de recuperación. No podrá utilizar el Software en una red. Todos los derechos no otorgados expresamente a usted quedarán reservados por Amazon. 
+
+NINGÚN USO ILEGAL
+El Software sólo podrá utilizarse con fines legales y de forma legal y usted acordará cumplir todas las leyes y normativas aplicables. Amazon podrá investigar cualquier supuesta violación de sus políticas y realizar cualquier acción que considere apropiada, incluyendo la resolución de su licencia para utilizar el Software sin notificación. 
+
+NORMATIVA DE EXPORTACIÓN 
+Usted deberá cumplir todas las restricciones y normativas de exportación y reexportación aplicables y no transferirá, fomentará, ayudará ni autorizará la transferencia del Software a un país prohibido ni de otra forma que viole cualesquiera de dichas restricciones o normativas. 
+
+NO CONSTITUYE RENUNCIA
+El hecho de que Amazon no haga cumplir estrictamente cualquier disposición de este Contrato no constituirá una renuncia del derecho de Amazon a hacer cumplir de forma posterior dichas disposiciones o cualquier otra disposición del Contrato. Ninguna renuncia a ninguna disposición de este Contrato será efectiva, excepto si se realiza por escrito. 
+
+CONTRATO ÍNTEGRO Y DIVISIBILIDAD
+Éste es el Contrato íntegro entre Amazon y usted en relación con el Software y sustituye a todos los acuerdos anteriores en relación con el objeto del mismo. Si cualquier término o condición de este Contrato se considerara inválido, nulo o, por cualquier motivo, inaplicable, dicha parte se considerará separable y no afectará a la validez y aplicabilidad de ningún otro término o condición. 

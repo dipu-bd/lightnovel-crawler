@@ -1,0 +1,23 @@
+﻿SOFTWARE-ENDBENUTZER-LIZENZVEREINBARUNG
+Zuletzt geändert: 24. Oktober 2012 
+
+Diese Software-Endbenutzer-Lizenzvereinbarung ist eine rechtsverbindliche Vereinbarung zwischen Amazon EU S.à.r.l. („Amazon“ und, zusammen mit den verbundenen Unternehmen von Amazon, „wir“ oder „uns“) und der natürlichen oder juristischen Person, die diese Vereinbarung akzeptiert. („Sie“). Die Publisher Software-Tools und sämtliche Aktualisierungen, Änderungen und Erweiterungen dieser Tools, sowie jede damit zusammenhängende gedruckte und Online- oder herunterladbare Dokumentation (die „Software“) sind Amazon-Software gemäß den Amazon.de Nutzungsbedingungen, und deren Nutzung Ihrerseits unterliegt dieser Vereinbarung (wie unten definiert). Bei einem Widerspruch zwischen dieser Software-Endbenutzer-Lizenzvereinbarung und den Amazon.de Nutzungsbedingungen sind die Bedingungen dieser Software-Endbenutzer-Lizenzvereinbarung maßgebend.
+Bitte lesen Sie diese Vereinbarung, alle Regeln und Geschäftsgrundsätze bezüglich der Publisher Software-Tools, den Amazon.de Nutzungsbedingungen und der Amazon.de Datenschutzerklärung (zusammen die „Vereinbarung“) sorgfältig durch, ehe Sie die Publisher Software-Tools herunterladen oder nutzen. Mit dem Herunterladen oder der Nutzung der Software sind die Bestimmungen dieser Vereinbarung für Sie verbindlich. Wenn Sie die Bestimmungen dieser Vereinbarung nicht akzeptieren oder nicht akzeptieren können, versuchen Sie nicht, die Software herunterzuladen oder zu nutzen. 
+
+LIZENZ 
+Die Software ermöglicht Ihnen zweierlei: (i) Konvertieren von Dokumenten, die in bestimmten Dateitypen oder Formaten vorliegen, in Kindle-kompatible Formate (derartige Kindle-kompatible Dateien sind „Kindle-Format-Inhalte“), und (ii) Voransicht von Kindle-Format-Inhalten auf einem Personal Computer, um zu beurteilen, wie diese Inhalte auf Kindle-Produkten aussehen würden. Amazon hat diese Software entwickelt und verfügbar gemacht, um Verlagen und Autoren zu ermöglichen, Kindle-Format-Inhalte für den Vertrieb über den Kindle Store zu erstellen. Sie dürfen die Software auch für nichtgewerbliche Zwecke nutzen (z. B. zur Formatierung von Arbeiten, die unentgeltlich vertrieben werden). Vorbehaltlich Ihrer Einhaltung sämtlicher Bedingungen dieser Vereinbarung gewährt Amazon Ihnen einzig und allein für diese Zwecke eine widerrufliche, nicht ausschließliche, nicht abtretbare, nicht unterlizenzierbare und nicht übertragbare Lizenz zum Herunterladen, Installieren und Nutzen der Software auf einem Server oder Personal Computer. Jegliche gewerbliche Nutzung dieser Software außerhalb der genehmigten Zwecke bedarf einer gesonderten Vereinbarung mit Amazon.
+
+RECHTSVORBEHALT 
+Sie dürfen eine Kopie der Software für Sicherungszwecke anfertigen. Sie dürfen die Software nicht über ein Netzwerk nutzen. Alle Ihnen nicht ausdrücklich gewährten Rechte sind Amazon vorbehalten. 
+
+KEINE RECHTSWIDRIGE NUTZUNG 
+Die Software darf nur für rechtmäßige Zwecke und auf rechtmäßige Weise verwendet werden, und Sie verpflichten sich, alle geltenden Gesetze und Vorschriften einzuhalten. Wird Amazon eine Verletzung  ihrer Geschäftsgrundsätze gemeldet, ist Amazon berechtigt, diese Verletzung zu untersuchen und die ihres Erachtens angemessenen Maßnahmen, darunter die fristlose Kündigung Ihrer Lizenz zur Nutzung der Software, zu ergreifen.  
+
+AUSFUHRBESTIMMUNGEN 
+Sie verpflichten sich, alle anwendbaren Beschränkungen und Bestimmungen der Ausfuhr- und Wiederausfuhr einzuhalten sowie die Software nicht in ein verbotenes Land zu übertragen oder ihre Übertragung zu fördern, zu unterstützen oder zu genehmigen oder anderweitig gegen solche Beschränkungen oder Bestimmungen zu verstoßen. 
+
+KEIN RECHTSVERZICHT 
+Die Nichtdurchsetzung der strengen Einhaltung einer Bestimmung dieser Vereinbarung seitens Amazon stellt keinen Verzicht auf Amazons Rechte zur späteren Durchsetzung solcher Bestimmungen oder anderer Bestimmungen dieser Vereinbarung dar. Ein Verzicht auf eine Bestimmung dieser Vereinbarung ist nur wirksam, sofern er schriftlich erfolgt. 
+
+GESAMTE VEREINBARUNG UND SALVATORISCHE KLAUSEL 
+Dies ist die gesamte Vereinbarung zwischen Amazon und Ihnen bezüglich der Software und ersetzt alle früheren Absprachen hinsichtlich dieses Gegenstands. Wenn eine Klausel oder Bedingung in dieser Vereinbarung für ungültig, nichtig oder aus irgendeinem Grund nicht durchsetzbar befunden wird, gilt sie als abtrennbar und berührt nicht die Gültigkeit und Durchsetzbarkeit der übrigen Klauseln oder Bedingungen.  

@@ -1,0 +1,3 @@
+﻿problèmes connus:
+   1. l'étiquette <a> pourrait ne pas marcher correctement.
+   2. Message d'avertissement (W14003: L'emplacement de lecture début ne pouvait être résolue) est affiché par kindlegen quand il ne parvient pas à identifier l'emplacement de début de lecture pour le livre de la table des matières visuelle. La logique échoue généralement lorsque le TOC visuelle est présente à la fin de la spine. S'il vous plaît ignorer l'avertissement (ou) ont la table des matières visuelle déplacé au début de la spine.

@@ -1,0 +1,3 @@
+﻿Bekende problemen:
+   1. Geneste <a>-tags werken mogelijk niet correct.
+   2. Waarschuwing (W14003: The start reading location could not be resolved (Het beginpunt voor het lezen kon niet worden bepaald)) wordt in kindlegen getoond als het niet mogelijk is om het beginpunt voor lezen voor het boek op basis van de visuele inhoudsopgave vast te stellen. De logica werkt gewoonlijk niet als de visuele inhoudsopgave zich aan het einde van de boekrug bevindt. Negeer deze waarschuwing of verplaats de visuele inhoudsopgave naar het begin van de rug.

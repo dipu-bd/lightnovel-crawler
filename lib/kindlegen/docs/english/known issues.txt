@@ -1,0 +1,3 @@
+﻿Known issues:
+   1. Nested <a> tags might not work properly.
+   2. Warning message (W14003:  The start reading location could not be resolved) is displayed by kindlegen when it fails to identify start reading location for the book from visual table of contents. The logic fails typically when the visual TOC is present at the end of the spine. Please ignore the warning (or) have the visual TOC moved to the beginning in spine.

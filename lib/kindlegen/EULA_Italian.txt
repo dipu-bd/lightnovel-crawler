@@ -1,0 +1,24 @@
+﻿CONTRATTO DI LICENZA D’USO DEL SOFTWARE
+Ultimo aggiornamento 24 ottobre 2012
+
+Il Contratto di Licenza d’Uso del Software è un accordo vincolante tra Amazon EU S.à.r.l. (“Amazon” e, unitamente alle Affiliate Amazon, “noi” o “ci”) e la persona fisica o giuridica che accetta il presente Contratto (“tu”). Gli strumenti software editoriali e ogni aggiornamento, modifica o miglioramento di tali strumenti, compresa la relativa documentazione, cartacea e online o scaricabile (il “Software”), costituiscono il Software Amazon disciplinato dalle Condizioni Generali d’Uso di Amazon.it , e il loro uso da parte tua è regolato dal Contratto (come di seguito definito). In caso di conflitto tra il Contratto di Licenza d’Uso del Software e le Condizioni Generali d’Uso di Amazon.it, prevalgono i termini del presente Contratto di Licenza d’Uso del Software.
+Prima di effettuare il download o di utilizzare gli strumenti software editoriali, ti invitiamo a leggere attentamente il presente Contratto, tutte le regole e le politiche relative agli strumenti software editoriali, le Condizioni Generali d’Uso di Amazon.it , l’Informativa sulla Privacy di Amazon.it  (collettivamente il “Contratto”). Effettuando il download o utilizzando il Software, accetti integralmente i termini e le condizioni del presente Contratto. Non utilizzare o tentare di scaricare il Software se non intendi accettare i termini del presente Contratto.
+
+LICENZA
+Il Software ti permette di effettuare una o più delle seguenti operazioni: (i) convertire documenti esistenti in determinati tipi di file o formati nei formati compatibili con Kindle (tali file compatibili con Kindle sono qui di seguito definiti come i “Contenuti in formato Kindle”), e (ii) visualizzare in anteprima i Contenuti in formato Kindle da un personal computer al fine di valutare come il contenuto possa apparire sui prodotti Kindle. Amazon ha sviluppato e rende disponibile questo Software per consentire a editori e autori di creare Contenuti in Formato Kindle da distribuire attraverso il Kindle Store. Puoi utilizzare il Software anche per scopi non commerciali (ad esempio per formattare opere da distribuire gratuitamente).
+A condizione che rispetti tutti i termini e le condizioni del presente Contratto, Amazon ti concede una licenza revocabile, non esclusiva, non cedibile, non sublicenziable e non trasferibile per scaricare, installare e utilizzare il Software su un server o personal computer esclusivamente per questi fini. L’uso commerciale del presente Software per fini non autorizzati richiede un accordo separato con Amazon.
+
+DIRITTI RISERVATI
+Puoi fare una copia del Software per finalità di back-up. Non puoi utilizzare il Software su un network. Tutti i diritti che non ti sono espressamente concessi sono diritti riservati di Amazon.
+
+DIVIETO DI USO ILLECITO
+L’uso del Software è consentito solo per finalità lecite, e tu accetti di rispettare tutte le leggi e i regolamenti applicabili. Amazon si riserva il diritto di esaminare eventuali violazione delle sue politiche e di intraprendere ogni azione che ritenga opportuna, inclusa la revoca della tua licenza d’uso del Software senza preavviso.
+
+NORMATIVA SULL’ESPORTAZIONE
+Ti impegni a rispettare tutte le limitazioni e regole previste per l’esportazione e la riesportazione, e ti impegni a non traferire, incoraggiare, assistere o autorizzare il trasferimento del Software in un paese non autorizzato o che violi tali limitazioni e regole.
+
+NESSUNA RINUNCIA
+L’inattività da parte di Amazon nell’ottenere una tua stretta aderenza ai termini del presente Contratto non implica alcuna rinuncia ad uno qualsiasi dei nostri diritti, nè limita il nostro diritto di far rispettare tali disposizioni in un secondo momento. La rinuncia ad una qualsiasi disposizione del presente Contratto non sarà efficace a meno che sia formulata per iscritto.
+
+INTERO ACCORDO E CONSERVAZIONE DEL CONTRATTO
+Il presente Contratto costituisce l’intero accordo tra te e Amazon che disciplina il Software e sostituisce ogni precedente intesa avente il medesimo oggetto. Qualora una qualsiasi disposizione del presente Contratto sia considerata invalida, nulla o inefficace per qualsiasi ragione, tale disposizione sarà considerata separabile e non pregiudicherà la validità ed efficacia delle rimanenti disposizioni.

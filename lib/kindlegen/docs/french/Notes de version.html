@@ -1,0 +1,672 @@
+﻿<html><head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+</head><body>
+<h2> Notes de version </h2>
+
+<h3>Kindlegen version 2.9 build 1028-0897292</h3>
+<pre>
+	   - La prise en charge des propriétés de mise en page (double page spread, facing pages et blank page) lorsqu'elles sont indiquées sous forme d'images dans l'élément <spine>. 
+	   - Multiples corrections de bogues.
+
+    Vérifiez les dernières notes de version et problèmes connus au https://kindlegen.s3.amazonaws.com/manual.html
+</pre>
+<h3>Kindlegen version 2.8 build 0208-797bf75</h3>
+<pre>
+	   - Ajout du support de la convertion du  format de fichier de XMDF. Référez-vous  Kindle publishing guidelines  pour  plus d'informations
+	   - Ajout du support de l'élément  epub3 toc nav  a été ajouté. C'est élément est équivalent à l'élément navMap dans le NCX  (également connu sous le nom NCX toc). L’élément Epub3 toc nav est préféré à l’ élément NCX navMap lorsque les  deux sont présents. Mais si Le Nav HTML n'est pas spécifié selon la spécification, nous tenteront d’utiliser  NCX si il est présent. Si nous ne pouvons pas revenir à NCX, alors nous renverrons un message d’erreur.  Référez-vous  <a href="http://idpf.org/epub/30/spec/epub30-contentdocs-20111011.html#sec-xhtml-nav-def-types-toc">ici</a>  pour  plus d'informations sur la spécification de EPUB3 toc nav.
+	   - Support de l'élément  epub3 landmarks nav  a été ajouté . C'est équivalent  au élément OPF guide. Epub3 landmarks nav est préféré au cours L’élément OPF guide lorsque les deux sont présents. Référez-vous  <a href="http://idpf.org/epub/30/spec/epub30-contentdocs-20111011.html#sec-xhtml-nav-def-types-landmarks">ici</a> pour  plus d'informations sur la specification de EPUB3 landmarks nav.
+	   - Support des metadonnées suivantes lorsqu’elles sont spécifiés dans le format epub3
+	       - Spécification de l’image cover utilisant properties  en attribut dans le manifest
+	       - Spécification de l'orientation du livre avec la propriété“rendition:layout”
+	       - Spécification de la disposition du livre avec la propriété “rendition:orientation”
+	       - Spécification de la valeur “dc:identifier” en format URN
+	       - Gestion des  auteurs dans la metadonnées “dc:creator utilisant le plan marc relators.
+	       - Support de la gestion de plusieurs titres avec parmi eux un titre main utilisant la propriété title-type.
+	     Référez-vous  <a href="http://idpf.org/epub/30/spec/epub30-publications-20111011.html#sec-package-def">ici</a> pour  plus d'informations.
+	   - Support du référencement d’images dans la table des matieres NCX toc si et seulement si la même image est directement référencée dans le spine.
+	   - Support de la langue Gallicane (gl, gl-es)
+</pre>
+
+<h3>Kindlegen version 2.7 build 1019-d6e4792</h3>
+<pre>
+	   - Données URI supportées pour les images et les polices attachées afin qu’elles puissent être mentionnées directement dans les fichiers HTML et CSS (Pour plus d’informations sur les données uri, merci de vous reporter à http://dataurl.net).
+	   - Activation du support pour le rendu vertical du Japonais et modes d’écriture multiples.  Les valeurs peuvent être spécifiées dans les fichiers OPF en utilisant les méta-balises (ex: &lt;meta name=”primary-writing-mode” content=”vertical-rl” /&gt;).  Les valeurs valides sont horizontal-lr, vertical-lr, horizontal-rl, vertical-rl.
+	   - Activation du support des pages en face-à-face  et des doubles pages. Les valeurs peuvent être spécifiées dans les fichiers OPF  avec les attributs “properties” dans la balise itemref. Les valeurs valides sont facing-page-left, facing-page-right, page-spread-left, page-spread-right.
+	   - Ajout du support par le Mobi7 des balises HTML avec classes  multiples (par ex., class="class1 class2 class3")
+	   - Erreurs KindleGen lorsque la métadonnée de résolution originale n’est pas spécifiée dans le format "integer x integer" pour les titres en mise en page fixe.
+	   - Ordonnées valides utilisées dans la région de magnification JSON (JavaScript Object Notation) sont uniques pour les titres en mise en page fixe.
+	   - Ajout des stats de la taille des fichiers KF8 et M7 visibles après la conversion.
+	   - Message d’erreur amélioré dans le cas où la génération de la table des matières échoue à cause des entrées NCX pointant vers les balises avec display:none property.  
+	   - Correction du problème d’imbrication des balises HTML d’ancrage.
+	   - Gère de façon appropriée les balises section, aside, footer, figure, figcaption et article.
+</pre>
+
+<h3>Kindlegen version 2.5 build 0626-3a91e28</h3>
+<pre>
+	   - Amélioration de la transparence PNG de conversion: les images PNG transparentes (désormais converties au format JPEG) va utiliser un fond blanc. Cette utilisé à l'origine fond noir lors de la conversion provoquant expérience de lecture dégradée.
+	   - Les sauts de ligne non prévus dans Mobi7 lors de l'utilisation des propriétés CSS ("margin-top: 0px" et "margin-bottom: 0px") a été fixé
+	   - Résolution de problèmes d'indentation dans Mobi7 liés aux balles et aux listes numérotées. Cela était dû à l'utilisation de "margin-left" propriété CSS avec des balles et des listes numérotées. En Mobi7, le "margin-left" la propriété est ignorée pour les puces et les listes numérotées. Le même continuer à être conservées dans KF8.
+	   - Correction de problèmes liés à la création de livres avec des indices de Mobi7 (Dictionnaires, par exemple)
+	   - Propriété CSS "display: none" n'est plus induit un espace supplémentaire dans Mobi7 pour les balises inline
+	   - Les polices incorporées de type PostScript/Type1 ne rend pas bien dans les lecteurs Kindle EINK avec KF8 soutien. Kindlegen met en garde contre l'utilisation de ces polices dans le contenu. Kindlegen aussi par défaut de l'expérience utilisateur de polices système dans ces livres (spécialement pour les appareils EINK).
+	   - Kindlegen ignore gracieusement le document EPUB3 de navigation (spécifié en utilisant les propriétés = "nav" dans le manifeste) et ne pas les ajouter à l'ordre de lecture du livre par défaut.
+	   - Échec de conversion résolu lorsque dc: étiquette de langue dans OPF a des attributs (ex: attribut id).
+	   - Problème résolu dans la construction logique TOC en raison de balises de texte vides ou des étiquettes de texte à fermeture automatique dans le fichier NCX.
+	   - Problème résolu en supprimant les propriétés CSS qui ne sont pas pris en charge par Kindle (ex: line-height en px / pt unités). Kindlegen enlevé la fuite "}" dans un cas limite spécifique lorsque cela était la dernière propriété et n'a pas de point-virgule final. Le problème est résolu dans Kindlegen 2.5.
+	   - Mise à jour "-releasenotes" dans Kindlegen de signaler aux utilisateurs de notes de version détaillée hébergés sur le Web à l'adresse https://kindlegen.s3.amazonaws.com/manual.html
+</pre>
+
+<h3>Kindlegen version 2.4 build 69900</h3>
+<pre>
+	   - Ajout du support pour une interface localisée en plusieurs langues chinoise et japonaise.
+	   - Ajout du support pour "display:none" CSS Immobilier Mobi.
+	   - Suppression de soft-traits d'union pour les appareils plus anciens et leur a permis d'être visible uniquement sur KF8 appareils.
+	   - Plusieurs corrections de bugs.
+</pre>
+
+<h3>Kindlegen version 2.3 build 36043</h3>
+<pre>
+	   - Soutenu nouveaux médias au types CSS  à fournir les styles distincts au mobi et KF8.
+	   - L’amélioration du qualité de  l’image  pour les bandes dessinées et livres pour les enfants.
+	   - La corriger pour l’image de couverture double du  livre redistribuable.
+</pre>
+
+
+<h3>Kindlegen version 2.2 build 35621</h3>
+<pre>
+	   - Corrections de bogues des versions précédentes de kindlegen.
+</pre>
+
+<h3>Kindlegen version 2.1 build 35388</h3>
+<pre>
+	   - Ajout de la prise en charge des livres pour enfants et les comics.
+	   - Corrections de bogues des versions précédentes de kindlegen.
+</pre>
+
+<h3>Kindlegen version 2.0 build 34608</h3>
+<pre>
+	   - Kindlegen est étendu pour créer des mobi améliorés avec prise en charge de HTML5/CSS3.
+</pre>
+
+<h3>Kindlegen version 1.2 build 33307</h3>
+<pre>
+	   - Ajout de la prise en charge des numéros de page pour un livre via NCX pageLists ou page-map xml.
+	   - Modification de l'encodage par défaut pour les livres générés vers "utf-8". Pour coder le livre en Win-1252, utilisez l'option de ligne de commande "-western".
+	   - Ajout de la prise en charge pour la langue Latin (ISO-639-1 code: la).
+	   - Ajout de la prise en charge pour le format de fichier AAC comme source audio/vidéo.
+	   - Corrections de bogues des anciennes versions de Kindlegen.
+</pre>
+
+<h3>Kindlegen version 1.1 build 99</h3>
+<pre>
+	   - Cette mise à jour fournit des améliorations mineures et des corrections de bogues.
+</pre>
+
+<h3>Kindlegen version 1.1 build 98</h3>
+<pre>
+	   - Ajout de la prise en charge pour les tailles d'image jusqu'à 128 Ko. Les images supérieures à 128 Ko seront automatiquement réajustées pour respecter cette nouvelle limite.
+	   - Ajout de la prise en charge des médias vidéo et audio dans le contenu Kindle.
+	   - Corrections de bogues avec la gestion NCX dans certains cas.
+	   
+</pre>
+
+<h3>Kindlegen version 1.0 build 87</h3>
+<pre>	   - Kindlegen est maintenant supporté sur Mac
+</pre>
+<h3>Kindlegen version 1.0 build 86</h3>
+<pre>
+	   - Kindlegen est maintenant supporté sur Linux 
+	   - Amélioration de l'algorithme de compression d'image 
+	   - Prise en charge du codage Macintosh 
+	   - Corrections de problèmes liés à NCX 
+	   - Ajout d'une fonction pour insérer une image manquante si une balise d'image pointe vers une image qui n'existe pas 
+
+	   Développé depuis Mobigen 6.2 build 43 
+
+<h3>Mobigen versions</h3>
+<h3>V 6.2 build 43</h3>
+	  - correction de bogue : les livres construits avec l'option -s2 avec mobigen version 6.2 build 42 ne pouvaient pas être téléchargés dans ebookbase. 
+
+<h3>V 6.2 build 42</h3>
+	  - correction de bogue : la table des matières NCX ne génère plus un indexe de recherche par défaut erroné. 
+	  - correction de bogue : les entités HTML sont converties correctement dans les ebooks western. 
+	  - correction de bogue : les fichiers XHTML ne sont plus analysés en tant que contenu HTML au lieu de contenu TEXT. 
+	  - correction de bogue : transformations CSS réparées : elles pouvaient provoquer des balises non fermées, sans impact sur le formatage HTML. 
+	  - nouveau : basculement en mode texte affiché ajouté. Sortie non texte affiché par défaut. 
+	  - nouveau : pré analyse de balise &lt;pre&gt; pour la faire fonctionner dans le Lecteur. 
+	  - nouveau : emballage de style de police monospace dans des balises &lt;tt&gt; pour faire fonctionner les polices monospaces dans les lecteurs qui ne supportent pas &lt;font face=&gt;. 
+	  - nouveau : extensions de métadonnées NCX 
+
+<h3>V 6.2 build 41</h3>
+	  - correction de bogue : seulement la première liste d'illustration était construite dans la table des matières de l'ebook. 
+	  - modification : les exigences de version du format de fichier de la table des matières ont été modifiées. 
+
+<h3>V 6.2 build 40</h3>
+	  - correction de bogue : numérotation de liste ordonnée imbriquée réparée dans les balises structurées. 
+	  - modification : les ligatures unicode complexes sont maintenant toujours converties par mobigen. 
+
+<h3>V 6.02 build 39</h3>
+	  - modification : amélioration de la prise en charge de la couverture d'ebook. 
+	  - Ajout de la prise en charge des fichiers de tables des matières NCX. 
+	  - correction de bogue : mobigen plantait quand une marge gauche CSS était spécifiée mais pas de retrait à gauche. 
+
+<h3>V 6.01 build 38</h3>
+	  - correction de bogue : le texte était aligné à gauche si la marge gauche était réglée sur 0em. 
+
+<h3>V 6.01 build 37</h3>
+	  - modification : meilleure prise en charge de la couverture d'ebook dans les fichiers epub. 
+
+<h3>V 6.01 build 36</h3>
+	  - correction de bogue : certains fichiers étaient intégrés dans le livre bien que non utilisés. 
+	  - modification : option -jpeg supprimée et ajout de l'option opposée -gif. 
+	  - modification : le code de sortie mobigen est maintenant standard : 0 pour OK, 1 pour avertissement, 2 pour erreur. 
+
+<h3>V 6.01 build 35</h3>
+	  - Ajout de la capacité à construire un eBook en utilisant un fichier epub comme source. 
+
+<h3>V 6.01 build 34</h3>
+	  - Ajout de la version du logiciel créateur dans l'ebook généré. 
+	  - correction de bogue : certaines mauvaises combinaisons de balises &lt;ol&gt; et &lt;li&gt; faisaient planter mobigen. Ceci a été corrigé. 
+
+<h3>V 6.01 build 33</h3>
+	  - correction de bogue : les chaînes d'index (idx:string ou format) n'étaient pas stockées correctement si la taille totale dépassée 64 Ko. 
+	  - Ajout de la correction d'orthographe en français. 
+
+<h3>V 6.0 build 32</h3>
+	  - correction de bogue : les fichiers d'images manquants ne créent plus une image au hasard dans le livre. 
+	  - modification : les images JPEG sont nettoyées avant de construire le fichier ebook. 
+
+<h3>V 6.0 build 31</h3>
+	  - ajout de la correction d'orthographe en allemand et italien (mobigen peut maintenant construire des dictionnaires anglais,
+	  allemand, espagnol et italien avec des corrections intégrées). 
+
+<h3>V 6.0 build 30</h3>
+	  - modification : le plus volumineux des articles de guide de couverture d'image MS est choisi
+	  comme couverture si la couverture intégrée n'est pas spécifiée 
+
+<h3>V 6.0 build 29</h3>
+	  - correction de bogue : la balise &lt;STYLE&gt; dans un fichier HTML n'était pas toujours analysée correctement. 
+	  - correction de bogue : les images de couverture sont alignées sur une limite de quatre octets. 
+	  - modification : les fichiers HTML sources qui sont en UTF-8 sont désormais vérifiés.  
+	    UTF-8 non valide est refusé et non construit. 
+	  - Ajout de la prise en charge pour les listes ordonnées. 
+	  - ajout de la prise en charge pour le nouveau type de sortie de contenu : 
+	  - application/x-mobipocket-subscription-feed  
+	  - application/x-mobipocket-subscription-magazine 
+	  - modification : les articles de guide de couvertures miniatures MS sont détectés et supprimés. 
+
+<h3>V 6.0 build 28</h3>
+	  - ajout de la balise <EmbeddedCover/> dans <x-metadata> : cette balise règle l'image de couverture qui est intégrée au livre 
+	 
+<h3>V 6.0 build 27</h3>
+	  - ajout de l'option -jpeg de ligne de commande pour prendre en charge les images de manière native dans le livre. 
+	 
+<h3>V 5.0 build 26</h3>
+	  - correction de bogue : la conversion d'image produisait parfois des images légèrement trop grandes 
+	    pour la taille d'enregistrement maximale. Ceci affichait un avertissement à propos d'un enregistrement 
+	    trop grand pour les appareils Palm 
+	  - ajout de l'option de ligne de commande -releasenotes 
+
+<h3>V 5.0 build 25</h3>
+	  - ajout de la prise en charge pour les scripts coréens pleinement classés (Hangul) 
+
+<h3>V 5.0 build 24</h3>
+	  - correction de bogue dans la table de gamme unicode  
+
+<h3>V 5.0 build 23</h3>
+	  - correction de bogue dans le codage binaire de l'information de position d'entrée 
+
+<h3>V 5.0 build 22</h3>
+	  - ajout du codage manquant lors de l'ajout d'une ancre. Il évitait les liens href internes 
+	    pour correspondre correctement dans certains cas 
+
+<h3>V 5.0 build 21</h3>
+	  - La gamme unicode de ponctuation générale a été coupée en 2 gammes : 
+	    Ponctuation générale - Windows 1252 
+	    Ponctuation générale - autre que Windows 1252 
+	    pour affiner le calcul de la signature de police 
+	  - l'analyseur de gamme unicode ne prend plus en compte certains espaces et 
+	    codes de contrôles 
+
+<h3>V 5.0 build 20</h3>
+	  - ajout de nouvelles gammes UNICODE pour rendre plus de caractères reconnaissables comme 
+	    ponctuations ou symboles significatifs sans ordre dans les index 
+	  - modification de l'algorithme SQL LIKE afin qu'il ne prenne plus du tout en compte  
+	    les caractères non significatifs  
+
+<h3>V 5.0 build 19</h3>
+	  - correction de bogue dans Phonetizer (plantage sur les mots longs) 
+	  - meilleur rapport des avertissements 
+	  - ajout de restricteur dans le champ de fonctions spéciales dans l'en-tête de fichier mobi pour 
+	    éteindre les hacks de detection de langue lorsque lang= attributs sont utilisés dans HTML 
+
+<h3>V 5.0 build 18</h3>
+	  - option -readerpro supprimée 
+	  - limitation de -vouchers=n à 6 vouchers minimum 
+	  - modification du nom de l'exécutable pour mobigen 
+	  - modification de l'extension de fichier généré pour .mobi 
+	  - les métadonnées sont maintenant ajoutées dans Données d'en-tête supplémentaires et pas dans le 
+	    premier enregistrement de texte (avec un espace gauche pour métadonnées supplémentaires) 
+	  - modification du classement Japonais des petites et grandes versions d'hiragana et 
+	    katakana (ils sont classés comme caractères disctincts) 
+	  - correction de bogue de classement dans les indexes UNICODE 
+
+<h3>V 5.0 build 17</h3>
+	  - correction de bogue : lors de la construction à partir d'un fichier HTML, le premier cadre du 
+	    premier frameset a été abandonné de la publication 
+
+<h3>V 5.0 build 16</h3>
+	  - correction de bogue : dans les livres qui ne sont pas des dictionnaires mais qui ont une langue,
+	    la langue des index a été réglée sur LID_NEUTRAL. Tt est désormais réglé sur la langue du livre 
+
+<h3>V 5.0 alpha 15</h3>
+	  - prcgen analyse maintenant l'utilisation de caractère UNICODE et écrit une signature de police  
+	    dans la section données d'en-tête supplémentaires du livre. La version de format de fichier 
+	    du livre n'est pas affectée  
+
+<h3>V 5.0 alpha 14</h3>
+	  - tables de classement de japonais expérimentales 
+
+<h3>V 5.0 alpha 13</h3>
+	  - utilise ExtraHeaderData pour stocker le nom court de dictionnaire afin que les livres qui l'utilisent  
+	    ne soient pas forcés vers FFV_7 
+	  - avertissement : tous les livres utilisant le nom court de dictionnaire doivent être reconstruits 
+
+<h3>V 5.0 alpha 12</h3>
+	   - recompile après tous les enregistrements de code Jeremie's Reader 5.0
+
+<h3>V 5.0 alpha 11</h3>
+	  - ajout de la prise en charge pour la correction d'orthographe dans les livres UNICODE 
+
+<h3>V 5.0 alpha 10</h3>
+	  - correction d'un bogue lié aux ensembles de cadre déclaré juste après la balise de corps. 
+
+<h3>V 5.0 alpha 9</h3>
+	   - correction de bogue dans le code qui supprime les balises &lt;a&gt; vides
+
+<h3>V 5.0 alpha 8</h3>
+	  - balises <a> vides sont supprimées 
+
+<h3>V 5.0 alpha 7</h3>
+	  - ajout de la prise en charge pour les métadonnées <DictionaryVeryShortName> dans le OPF 
+
+<h3>V 5.0 alpha 6</h3>
+	  - meilleure minimisation de version pour les documents UNICODE 
+
+<h3>V 5.0 alpha 5</h3>
+	  - implémentation <idx:key exact=yes> 
+
+<h3>V 5.0 alpha 4</h3>
+	  - l'intégration de table n'est généralement pas construite, à moins qu'il y ait des pages ASP ou des  
+	    fichiers audio 
+
+<h3>V 5.0 alpha 3</h3>
+	  - prise en charge additionnelle pour les optimisations LIKE dans UNICODE + prise en charge pour 
+	    la fonction JUMP dans UNICODE (clé de recherche par défaut dans l'en-tête) 
+
+<h3>V 5.0 alpha 2</h3>
+	  - ajout de la prise en charge pour LIKE dans UNICODE 
+
+<h3>V 5.0 alpha 1</h3>
+	  - prise en charge <idx:key scriptable=yes> et ainsi a l'accès clé dans les formats et 
+	    javaScript 
+
+<h3>V 5.0 alpha</h3>
+	  - génération des index dans UNICODE, le nouveau format de fichier est FFV_7 
+
+<h3>V 4.8.9n
+	  - meilleures tables de correction d'orthographe en anglais 
+	  - meilleures tables de correction d'orthographe en espagnol 
+
+<h3>V 4.8.9m</h3>
+	  - ajout d'appels -regserver et -unregserver pour (dés)enregistrer la Bibliothèque de type, 
+	    l'enregistrement n'est utile que pour le développement de plug-ins PRCGen. 
+	    Précédemment, la Bibliothèque Type était enregistrée automatiquement à chaque exécution 
+	    ce qui empêchait PRCGen de s'exécuter sans les droits admin 
+
+<h3>V 4.8.9l</h3>
+	  - Meilleure analyse CSS : les longueurs sont analysées correctement avec leur unités et 
+	    leurs valeurs sont converties avec des unités supportées par le Lecteur 
+	  - La marge d'attribut CSS est analysée correctement 
+
+<h3>V 4.8.9k</h3>
+	  - l'analyse de version de ligne de commande gratuite et les infos de ligne de commande sont cohérentes 
+	  - dans la version gratuite, code de compression C2 n'est même pas construit 
+	  - corrections de bogue dans l'analyse de ligne de commande 
+
+<h3>V 4.8.9j</h3>
+	  - correction de bogue : le codage de sortie n'a pas été récupéré correctement et donc ignoré 
+	  - Toutes les URL (<ITEM href=> dans OPF &lt;A href=&gt; &lt;IMG src=&gt;) sont correctement décodées 
+	    quand elles sont lues et correctement encodées quand elles sont mises a jour. Les URL HTML sont aussi  
+	    décodées / codées correctement quand nécessaire
+	  - Analyse et conversion de taille de police style CSS correctes (pt px % ou em) 
+
+
+<h3>V 4.8.9i</h3>
+	  - Ajout de la fonction audio spine : si les fichiers audio sont référencés depuis spine un 
+	    article de guide de démarrage par défaut est généré pour faire audio.show 
+
+<h3>V 4.8.9h</h3>
+	  - correction de bogue : build_parameters.xml n'est plus dans UTF16 -&gt; certaines conversions 
+	    sont nécessaires autrement toute les dépendances sont reconstruites tout le temps 
+
+<h3>V 4.8.9g</h3>
+	  - correction de bogue : les publications sans fichiers HTML (seulement audio ou images) ne s'ouvraient pas 
+	  - ajout de l'intégration des fichiers Ogg Vorbis audio 
+
+<h3>V 4.8.9f</h3>
+	  - correction de bogue : la construction d'un seul fichier HTML produisait un PRC non valide 
+	    (la balise BODY était manquante) 
+
+<h3>V 4.8.9e</h3>
+	  - correction de bogue : pour version 4.8.9d, le corps était supprimé des cadres esclaves dans 
+	    les fichiers HTML externes 
+	  - correction de bogue : les articles de documents enfants dans OPF ne nécessitent pas un ID pour être valides 
+
+<h3>V 4.8.9d</h3>
+	  - correction de bogue : la page de couverture a été ajoutée comme contenu supplémentaire au 
+	    premier fichier HTML afin que les liens vers ce fichier pointent vers l'image de couverture à la place 
+
+<h3>V 4.8.9c</h3>
+	  - utilisez _tprintf au lieu de printf dans main 
+
+<h3>V 4.8.9b</h3>
+	  - ajout du type de mime de sortie application/vnd.mobipocket-franklin-ua-game pour 
+	    les jeux ua-specific qui ne marchent pas sur une autre plate-forme
+	  - meilleure conversion de fichiers d'entrée (évite la perte de caractères si le caractère n'a 
+	    pas de codage dans l'encodage cible de la publication par entités d'introduction) 
+
+<h3>V 4.8.9a</h3>
+	  - corrections de bogue dans la compilation ASP 
+
+<h3>V 4.8.8y</h3>
+	  - ajout de l'attribut content-type à la balise de sortie de <x-metadata> prenant 
+	    sa valeur depuis les types MIME des différents types de fichiers d'entrée. On peut a présent convertir 
+	    vers PRC, c-à-d : 
+	      text/x-oeb1-document 
+	      application/x-mobipocket-subscription, 
+	      image/???, 
+	      application/msword, 
+	      application/vnd.ms-excel, 
+	      application/vnd.ms-powerpoint, 
+	      text/plain, 
+	      text/html, 
+	      application/vnd.mobipocket-game 
+
+<h3>V 4.8.8x</h3>
+	  - l'attribut font-family dans CSS est appliqué (utilisant une balise &lt;FONT FACE=&gt;) 
+
+<h3>V 4.8.8w</h3>
+	  - les fichiers image peuvent maintenant être mis directement dans le manifeste et spine et  
+	    apparaissent dans le flux principal 
+	  - les métadonnées sont converties vers l'encodage de la publication avant d'être sorties dans 
+	    le livre 
+	  - ferme le lecteur et l'émulateur si le fichier cible est verrouillé 
+
+<h3>V 4.8.8v</h3>
+	  - basculé vers EBOOK_UNICODE 
+
+<h3>V 4.8.8u</h3>
+	  - correction de bogue : BMP de 16 couleurs inclus sans conversion  
+	  - correction de bogue : supprime les octets de queue dans PRCFile 
+	  - correction de bogue : utilise FFV_3 s'il y a des indexes pour les images sinon embed_base 
+	    est erroné dans le lecteur 
+
+<h3>V 4.8.8t</h3>
+	  - modification de la bibliothèque de traitement d'image pour de meilleures performances 
+
+<h3>V 4.8.8s</h3>
+	  - ajout du plug-in TOC 
+	  - le système de construction d'index décode maintenant les entités HTML 
+
+<h3>V 4.8.8r</h3>
+	  - modifications de la version GRATUITE 
+	  - une nouvelle compilation gère un nouvel opérateur dans Javascript 
+
+<h3>V 4.8.8q</h3>
+	  - la transformation XSL utilise TransformNode au lieu de TransformNodeToObject, 
+	    ceci permet à la sortie XSL d'être HTML et non plus XML. 
+
+<h3>V 4.8.8p</h3>
+	  - correction de bogue : dans l'analyseur HTML, l'encodage d'un nom de formulaire automatiquement 
+	    généré était erroné lorsque le nom de formulaire était manquant 
+
+<h3>V 4.8.8o</h3>
+	  - correction de certaines erreurs de gestion CSS 
+	  - désormais un saut de page est ajouté à la fin de chaque fichier HTML dans OPF pour être 
+	    compatible Microsoft Reader OEB 
+	  - ajout d'une option -shell pour une meilleure intégration Windows Explorer + Mobi Emulator 
+	  - dans le cas d'une erreur d'analyse ASP, le PRC n'est plus construit 
+	  - ajout d'une fonction non documentée : lors du placement d'un fichier .css dans PRCGEN il 
+	    génère un dump.css dans le même dossier avec le CSS analysé, pour permettre le déboguage 
+	  - ajout d'un nouveau build GRATUIT sans prise en charge de cryptage pour le PRC SDK gratuit 
+
+<h3>V 4.8.8n</h3>
+	  - correction de bogue introduit par la construction UNICODE, les index construits depuis  
+	    des enfants indépendants ou des simples enfants ne pouvaient plus être atteints 
+ (numéro de version non modifié)
+	  - ajout d'un meilleur rapport d'erreur pour les sous-entrées externes non correspondantes 
+
+<h3>V 4.8.8m</h3>
+	  - correction de bogue : fuites mémoire introduites dans 4.8.8h supprimées 
+	  - introduction d'un mécanisme qui corrige les chemins non complets dans la ligne de commande 
+
+<h3>V 4.8.8l</h3>
+	  - ajout de plusieurs avertissements pour les problèmes avec des médias/textes intégrés 
+	  - ajout de l'option flatten-dynamic-dir=yes dans x-metadata/output pour ignorer 
+	    les chemins de fichiers intégrés gardant leur nom (qui doit quand même être unique); 
+	    ceci aide à résoudre les situations où des images sont hors du dossier OPF 
+	  - ajout de asp-as-binary=yes dans x-metadata/output afin que ASP puisse être construit 
+	    en tant que code octet (plus rapide mais peut être rendu incompatible avec les mises à jour de  
+	    lecteur, mais OK pour les lecteurs/produits OEM/intégrés) 
+
+<h3>V 4.8.8k</h3>
+	  - ajout de la correction d'orthographe 
+	  - modification d'ordre d'index : les espaces sont maintenant des caractères significatifs
+
+<h3>V 4.8.8j</h3>
+	  - tous les scripts connus sont analysés avec le l'analyseur javascript de lecteur afin que 
+	    les avertissement soient des sorties pour les scripts non valides 
+
+<h3>V 4.8.8i</h3>
+	  - les en-têtes de ASP ont été mises à jour pour correspondre à ce qui est généré par Interdev 
+	  - codepage manquante est seulement un avertissement désormais 
+
+<h3>V 4.8.8h</h3>
+	  - corrections de bogue dans les convertions d'encodage dans cssparser.cpp l'encodage de source CSS 
+	    est déterminé correctement
+	  - HTML généré pour les styles CSS est dans l'encodage de destination  
+	  - modifications mineures dans les classes de traitement d'image 
+
+<h3>V 4.8.8g</h3>
+	  - correction d'un bogue où les documents énumérés dans get_manifest_item(order) 
+	    obtenaient toujours le premier document (aucun effet sauf sur les médias et ASP intégrés) 
+
+<h3>V 4.8.8f</h3>
+	  - correction de bogue : dans UNICODE lors de la construction depuis un fichier HTML, l'encodage  
+	    par défaut utilisé est celui du HTML et est utilisé pour l'encodage du titre 
+
+<h3>V 4.8.8e</h3>
+	  - taille maximum de tous les enregistrements dévaluée à 63Ko (ancienne limite trop élevée)
+	    (cette nouvelle limite n'a pas d'effet sur les images qui étaient déjà limitées) 
+
+<h3>V 4.8.8d</h3>
+	  - correction d'un bogue rendant tous les OPF UTF-8 si aucun encodage n'était spécifié, construisant ainsi les livres en UTF-8 
+
+<h3>V 4.8.8c</h3>
+	  - la vérification des dépendances XSL a été améliorée : 
+	      si un plug-in renvoie un .xsl en tant que dépendance, ses xsl:import/xsl:include 
+	        sont scannés par XmlMake 
+	     le vérificateur de dépendances XSL est mis en code commun afin d'utiliser des dizaines de fois 
+	        les mêmes dépendances de recherches XSL une fois 
+
+<h3>V 4.8.8b</h3>
+	  - modification du format des octets de queue pour des informations de position 
+	    !!! C'est assez sérieux pour que nous modifions le format de fichier FFV
+	   avant de sortir un livre utilisant des entrées scriptables car 
+	   malheureusement, le Lecteur 4.8 qui est sorti supporte FFV_6
+	   avec le mauvais format d'octets de queue. !!!
+
+<h3>V 4.8.8</h3>
+	  - prcgen est maintenant construit en unicode 
+	  - prend maintenant en charge &lt;output encoding= /&gt; dans la section &lt;x-metadata&gt;, pour spécifier 
+	    l'encodage de sortie exacte (windows-1252 et utf-8 supportés uniquement, tout le reste  
+	    est transformé en utf-8) 
+
+<h3>V 4.8.7b</h3>
+	  - ajout de la prise en charge pour les inflexions nommées via la balise &lt;idx:infl&gt; 
+
+<h3>V 4.8.7</h3>
+	  - ajout de l'index d'objets intégrés et ASP 
+	  - ajout de -lowpriority 
+
+<h3>V 4.8.6</h3>
+	  - meilleur rapport statistique à la fin de la construction  
+	  - correction de bogue d'ASSERTion échouée avec infos de séparations dans les octets de queue 
+
+<h3>V 4.8.5c</h3>
+	  - correction de bogue : dans les balises &lt;SELECT&gt;, la valeur par défaut n'était pas calculée s'il n'y  
+	    avait d'attribut sélectionné trouvé dans aucune option; la valeur n'était pas décodée du HTML  
+	   le décodage TODO fonctionne uniquement pour Western (basé sur le code des index)
+	  - ajout des avertissements si SELECT multiple est utilisé 
+
+<h3>V 4.8.5b</h3>
+	  - ajout de plusieurs vérifications de code javascript (fonction globale) pour éviter les plantages de prcgen 
+	  - ajout d'une contrainte sur la fonction globale (doit être préfixée par f_) pour éviter un problème 
+	    DOM par la suite. 
+
+<h3>V 4.8.5</h3>
+	  - ajout du champ &lt;x-metadata&gt;&lt;DefaultLookupIndex&gt; dans le .OPF 
+	    (utilisé pour définir l'index utilisé pour la recherche) 
+
+<h3>V 4.8.4b</h3>
+	  - mbp:persistent est géré par prcgen sur la balise &lt;FORM&gt; (pour faire enregistrer les formulaires réglages) 
+	  - amélioration du calcul de is_reachable sur frameset 
+
+<h3>V 4.8.4</h3>
+	  - mbp:auto-submit est géré par prcgen (pour faire que la touche entrée valide un formulaire si  
+	    dans un champ texte) 
+
+<h3>V 4.8.2</h3>
+	  - correction de bogue : il était possible d'avoir un frameset fermant/ouvrant avec 
+	    l'exacte même position. un bogue se produisait quand un sous-frameset d'un frameset nécessaire 
+	    n'existait en fait pas ET avait la même position qu'un frameset d'ouverture 
+	  - modification de formulaire doit avoir un nom unique depuis erreur à avertissement, générant un 
+	    nom au hasard et remplaçant ce nom dans les index et dans le contenu 
+
+<h3>V 4.8.1</h3>
+	  - ajout du support basique de CSS 1.0 (en générant des balises HTML correspondantes à CSS) 
+	  - ajout du support Microsoft OPF : 
+	    saut de page après chaque fichier HTML,  
+	    ajout de fichier HTML manifeste non spine à la fin de la spine,  
+	    génère image de couverture au début de la spine, basée sur les articles de guide MS personnalisés  
+	    supprime les autres articles de guide spécifiques MS 
+
+<h3>V 4.8.0</h3>
+	  - nouvelle syntaxe de balisage d'index : 
+	      &lt;idx:entry name=&gt;    (au lieu de type=) 
+	      &lt;idx:key name=&gt;      (au lieu de type=) 
+	      &lt;idx:key value=&gt;     (au lieu de key=) 
+	      &lt;idx:orth value=&gt;    (au lieu de orth=) 
+	      &lt;idx:gramgrp value=&gt; (au lieu de gramgrp=) 
+	  - plus de fonctions de base de données ajoutées : &lt;idx:subentry&gt; et &lt;idx:string&gt; 
+	  - &lt;mbp:pagebreak crossable=no&gt; est maintenant géré par les octets de queue 
+
+<h3>V 4.7.7</h3>
+	  - ajout de l'index de fonction globale javascript 
+
+<h3>V 4.7.6</h3>
+	  - information d'entrée actuelle annexée aux enregistrements texte =&gt; basculer vers FFV_6 
+	  - les sauts de page non franchissables sont aussi annexés aux enregistrements de texte  
+	  - tous les PRC générés avec FFV_6 doivent être cryptés via les NOUVELLES VERSIONS du 
+	    logiciel DRM 
+
+<h3>V 4.7.5</h3>
+	  - ajout de la capacité d'annexer les fichiers .PDB via les articles de manifeste 
+	    (application/x-pilot)	vous devez les ajouter aussi dans la spine afin de  
+	    de les insérer dans le fichier PRC final 
+	  - ajout d'enregistrement de garde (permet de vérifier la troncature de fichier) 
+
+	   tbr
+	  - désactive la gestion d'exception C++ dans PRCGEN.exe dans les classes de gestion d'images 
+	    (faisait que les images JPEG étaient complètement noires) 
+
+<h3>V 4.7.4</h3>
+	  - correction de bogue : problème lié au chargement des fichiers de plus de 32 Mo  
+	    (probablement un bogue de Windows) 
+
+<h3>V 4.7.3</h3>
+	  - correction de bogue : les index n'étaient pas dépouillés depuis les fichiers enfants dans de rares cas 
+	  - correction de bogue : boucle infinie supprimée (+allocation mémoire infinie) si un groupe de chaînes
+	    excédait 64k. 
+
+<h3>V 4.7.2</h3>
+	  - ajout de l'attribut user-selection à slave-frames afin que certains cadres puissent contenir du 
+	    contenu sélectionnable  (généralement pas utile, mais certains éditeurs placent du contenu 
+	    dans des cadres) 
+
+<h3>V 4.7.1</h3>
+	  - affiche un message d'erreur pour les images manquantes une seule fois uniquement, ainsi que pour les mauvais liens 
+	  - ne crypte plus les octets de queue des enregistrements de texte quand HuffDic est activé 
+	    afin que le lecteur fonctionne. 
+	  - formulaires mis à jour pour enregistrer tout sauf les infos de position dans les formulaires slave-frames  
+	  - détecte les formulaires avec le même nom et refuse de construire 
+	  - si des erreurs sont détectées pendant l'analyse (empêchant la génération du fichier) 
+	    la construction s'arrête avant la compression 
+
+<h3>V 4.7.0</h3>
+	  - version modifiée pour correspondre à la version de Lecteur Reader 4.7 
+	  - ajout de l'article de type de démarrage dans guide pour démarrer l'eBook à une action 
+	     url / javascript donnée 
+
+<h3>V 4.6.11</h3>
+	  - les attributs nom et id ne sont plus supprimés si un attribut href ou onclick 
+	    est aussi trouvé dans la balise. Utiliser le nom ou l'id est le mécanisme 
+	    HTML standard pour nommer les liens et les utiliser dans Javascript. Ainsi, 
+	    le lecteur nécessite ces attributs. 
+
+<h3>V 4.6.10</h3>
+	  - correction du bogue empêchant les cadres déclarés dans un fichier (non nécessaire) frameset lors
+	    de l'utilisation du lien filename.htm 
+	  - correction de bogue : empêche de multiples framesets sur le même filepos 
+	  - remarque : problèmes détectés si le frameset extérieur est non franchissable, et pas le frameset 
+	    intérieur. Il ne peut pas être codé ==> le problème ne se produit pas car  
+	    il ne peut se produire que pour le fichier auto-frameset et ce dernier est toujours franchissable 
+	    pour l'instant 
+
+<h3>V 4.6.9</h3>
+	  - les octets de queue UTF8 étaient ignorés lors de l'alignement des enregistrements, de façon à ce 
+	    que les enregistrements suivants soient potentiellement mal alignés (plantage sur PocketPCs) 
+
+<h3>V 4.6.8</h3>
+	  - correction de bogue : attribut non franchissable ignoré à cause d'optimisations 
+
+<h3>V 4.6.7</h3>
+	  - ajout de restriction pro lecteur, correction de quelques petits bogues dans l'écriture d'enregistrement FDST 
+
+<h3>V 4.6.6</h3>
+	  - ajout du code de réutilisation de mise en page et de rejet de frameset inaccessible, il ne  
+	    modifie pas le format de fichier mais peut grandement réduire la taille des enregistrements 
+	    de contenu/mise en page de cadre. 
+
+<h3>V 4.6.5</h3>
+	  - meilleur rapport d'erreur sur les échecs de sauvegarde dans le plug-in apply-xsl 
+	  - correction de bogue : dans les livres avec seulement mbp:sections 
+	    (infos frameset non enregistrées => non franchissables ignorés) 
+
+<h3>V 4.6.4</h3>
+	  - prc était toujours généré dans FFV5, dès qu'il y avait un cadre (à cause du paramètre  
+	    auto-breadth toujours réglé sur vrai) 
+
+<h3>V 4.6.3</h3>
+	  - bogue de fichier temporaire de compression huffdic corrigé (qui provoquait probablement 
+	    d'autres bogues) 
+
+<h3>V 4.6.2</h3>
+	  - ajout de la prise en charge basique de UTF8, pas encore d'index
+
+<h3>V 4.6.1</h3>
+	  - ajout du rapport de tests et d'erreur sur les erreurs d'écriture sur le fichier temp pendant la 
+	    sortie des codes Huffman 
+</pre>
+</body></html>

@@ -1,0 +1,24 @@
+﻿CONTRAT DE LICENCE POUR UTILISATEUR FINAL DE LOGICIEL
+Dernière mise à jour le 24 octobre 2012
+
+Le présent Contrat de Licence pour Utilisateur Final de Logiciel est conclu entre Amazon EU S.à.r.l (ainsi que ses sociétés affiliées « Amazon » ou « nous ») et la personne physique ou morale qui accepte le présent contrat (« vous »). Les outils logiciels de l’éditeur et toutes les mises à jour, les modifications et améliorations de ces outils, ainsi que toute documentation connexe, imprimée et en ligne ou téléchargeable (le « Logiciel ») sont des Logiciels Amazon conformément aux Conditions d’Utilisation d’Amazon.fr , et l’utilisation que vous en faites est soumise au Contrat (conformément à la définition ci-après). En cas de conflit entre le présent Contrat de Licence pour Utilisateur Final de Logiciel et les conditions d’utilisation d’Amazon.fr, les termes du Contrat de Licence pour Utilisateur Final de Logiciel prévaudront.
+Veuillez lire attentivement le présent  contrat, ainsi que toutes les règles et politiques relatives  aux outils logiciels de l’éditeur, les Conditions d’Utilisation d’Amazon.fr  et La Politique de protection des données personnellesd’Amazon.fr  (collectivement, le « Contrat ») avant de télécharger ou d’utiliser les outils logiciels de l’éditeur. Si vous téléchargez ou utilisez le Logiciel, vous serez lié par les termes du présent Contrat. Si vous n’acceptez pas ou ne pouvez accepter les termes du présent Contrat, ne tentez pas de télécharger ni d’utiliser le Logiciel.
+
+LICENCE
+Le Logiciel vous permet d’effectuer une ou plusieurs des actions suivantes : (i) convertir des documents existant dans certains types de fichiers ou de formats en formats compatibles avec Kindle (les fichiers compatibles avec Kindle étant ci-après dénommés le « Contenu au Format Kindle ») et (ii) afficher un aperçu du Contenu au Format Kindle sur un ordinateur personnel afin d’apprécier la façon dont ce contenu apparaîtra sur les produits Kindle. Amazon a développé ce logiciel qu’elle met à disposition afin de permettre aux éditeurs et aux auteurs de créer un Contenu au Format Kindle en vue de le distribuer via la boutique Kindle. Vous pouvez également utiliser ce logiciel à des fins non commerciales (pour formater des œuvres destinées à une distribution gratuite, par exemple). Sous réserve du respect de toutes les conditions du présent Contrat, Amazon vous accorde une licence révocable, non exclusive, non cessible, non sous licenciable, non transférable, vous permettant de télécharger, d’installer et d’utiliser le Logiciel sur un serveur ou sur un ordinateur personnel uniquement aux fins indiquées. Tout usage commercial du Logiciel en dehors des usages autorisés nécessite la signature d’un contrat distinct avec Amazon.
+
+RÉSERVE DE DROITS
+Vous pouvez effectuer une copie du Logiciel à des fins de sauvegarde. Vous ne pouvez pas utiliser le Logiciel sur un réseau. Amazon se réserve tous les droits qui ne vous sont pas expressément accordés.
+
+USAGE LICITE
+Le Logiciel peut être utilisé uniquement de façon et à des fins licites, et vous acceptez de respecter l’ensemble des lois et règlements applicables. Amazon peut effectuer une enquête en cas d’infraction signalée à ses règles et prendre toute mesure  qu’elle estime adaptée, y compris résilier votre licence d’utilisation du Logiciel sans préavis.
+
+RÉGLEMENTATION APPLICABLE À L’EXPORTATION
+Vous devez respecter l’ensemble des restrictions et règlements applicables en matière d’exportation et de réexportation, et ne pas transférer, ni encourager, assister ou autoriser le transfert du Logiciel vers un pays interdit ou en violation à ces restrictions ou règlements.
+
+ABSENCE DE RENONCIATION
+L’incapacité d’Amazon à faire appliquer strictement quelque disposition que ce soit du présent Contrat ne constitue pas une renonciation au droit d’Amazon de faire appliquer ultérieurement ladite disposition ou une autre disposition du présent Contrat. Toute renonciation à une disposition du présent Contrat n’aura d’effet que si elle fait l'objet d'un écrit.
+
+INTÉGRALITÉ DU CONTRATET DIVISIBILITE  
+Le présent Contrat représente l’intégralité des accords passés entre Amazon et vous concernant le Logiciel et annule et remplace tout accord antérieur concernant ledit objet. Si l'une quelconque des clauses du Contrat était considérée comme invalide, nulle ou inapplicable pour quelque raison que ce soit, ladite clause serait considérée comme divisible et n'affectera pas la validité et l’applicabilité des autres clauses du Contrat.
+ 

@@ -1,0 +1,3 @@
+﻿bekannte Probleme:
+   1. Verschachtelte <a> Bezeichnungsschilder funktionieren möglicherweise nicht ordnungsgemäß.
+   2. Warnung (W14003:  Die Anfangsleseposition könnte nicht behoben werden) wird angezeigt durch kindlegen, wenn sie Anfangsleseposition für das Buch vom Sichtinhaltsverzeichnis kennzeichnen nicht kann. Die Logik fällt gewöhnlich aus, wenn die Sicht-Startkonfiguration am Ende des spine anwesend ist. Ignorieren Sie bitte die Warnung (Oder) haben die Sicht-Startkonfiguration, die auf den Anfang im spine verschoben wird.
