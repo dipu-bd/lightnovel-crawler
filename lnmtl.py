@@ -78,8 +78,8 @@ def crawl_pages(url):
 
 def format_text(text):
     text = text.replace(u'\u00ad', '')
-    text = text.replace(u'\u201e', '&ldquo;')
-    text = text.replace(u'\u201d', '&rdquo;')
+    text = re.sub(r'\u201e[, ]*', '&ldquo;', text)
+    text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
     # text = re.sub(r'[^\x00-\x7f]', r'', text)
     return text.strip()
 # end def
