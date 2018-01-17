@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Creates an epub from LNMTL novel
+"""Crawler for LNMTL novels
 
 [LNMTL](https://lnmtl.com) is a website containing machine translated
 novels. This code will convert any given book from this site into epub.
@@ -27,7 +27,7 @@ def start():
 # end def
 
 def login():
-    print 'Attempting login: ', login_url
+    print 'Attempting login:', login_url
     browser.visit(login_url)
     browser.find_by_css('form input#email').fill(email)
     browser.find_by_css('form input#password').fill(password)
@@ -36,14 +36,14 @@ def login():
 # end def
 
 def logout():
-    print 'Attempting logout: ', logout_url
+    print 'Attempting logout:', logout_url
     browser.visit(logout_url)
     return browser.url == home_url
 # end def
 
 def crawl_pages(url):
     # visit url
-    print 'Visiting: ', url
+    print 'Visiting:', url
     if not url: return
     browser.visit(url)
     # get contents
