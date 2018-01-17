@@ -1,12 +1,14 @@
-from os import path, makedirs, listdir
+import os
+from os import path
 from subprocess import call
 import json
 from ebooklib import epub
 
 
 def convert_to_mobi(novel_id):
+    '''Converts epub file to mobi'''
     input_path = path.join('_book', novel_id)
-    for file_name in listdir(input_path):
+    for file_name in sorted(os.listdir(input_path)):
         if not file_name.endswith('.epub'):
             continue
         # end if
@@ -16,23 +18,25 @@ def convert_to_mobi(novel_id):
 # end def
 
 def convert_to_epub(novel_id):
+    '''Convert crawled data to epub'''
     input_path = path.join('_data', novel_id)
-    for vol in sorted(listdir(input_path)):
-        data = []
+    for vol in sorted(os.listdir(input_path)):
+        content = []
         full_vol = path.join(input_path, vol)
         print('Processing:', full_vol)
-        for file in sorted(listdir(full_vol)):
-            full_file = path.join(full_vol, file)
-            f = open(full_file, 'r')
-            data.append(json.load(f))
-            f.close()
+        for file_name in sorted(os.listdir(full_vol)):
+            full_file = path.join(full_vol, file_name)
+            with open(full_file, 'r') as file:
+                content.append(json.load(file))
+            # end with
         # end for
-        data.sort(key=lambda x: x['chapter_no'])
-        create_epub(novel_id, vol, data)
+        content.sort(key=lambda x: int(x['chapter_no']))
+        create_epub(novel_id, vol, content)
     # end for
 # end def
 
 def create_epub(novel_id, volume_no, data):
+    '''Creates and store epub from list of chapters'''
     output_path = path.join('_book', novel_id)
     vol = volume_no.rjust(2, '0')
     title = data[0]['novel'] + ' Volume ' + vol
@@ -44,42 +48,30 @@ def create_epub(novel_id, volume_no, data):
     book.set_language('en')
     book.add_author('Sudipto Chandra')
 
-    chapters = []
+    contents = []
     for item in data:
-        chapter_no = item['chapter_no']
         title = (item['chapter_title'] or '....')
-        xhtml_file = 'chap_' + chapter_no.rjust(2, '0') + '.xhtml'
         body = '<h1>' + title + '</h1>'
-        body += '\n'.join([ '<p>' + x + '</p>' for x in item['body']])
-        xhtml = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
-            + '<!DOCTYPE html>'\
-            + '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">'\
-            + '<head>'\
-            + '<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />'\
-            + '<title>' + item['volume_title'] + '</title>'\
-            + '</head>'\
-            + '<body style="text-align: justify">'\
-            + body \
-            + '</body>'\
-            + '</html>'
+        body += '\n'.join(['<p>' + x + '</p>' for x in item['body']])
+        file_name = 'chap_' + item['chapter_no'].rjust(2, '0') + '.xhtml'
         # add chapter
         chapter = epub.EpubHtml(
-            uid=chapter_no,
+            uid=item['chapter_no'],
             title=title,
-            file_name='chapter_' + chapter_no + '.xhtml',
+            file_name=file_name,
             content=body,
             lang='en')
         book.add_item(chapter)
-        chapters.append((chapter))
+        contents.append(chapter)
     # end for
 
-    book.toc = tuple(chapters)
+    book.toc = contents
     book.add_item(epub.EpubNcx())
     book.add_item(epub.EpubNav())
-    book.spine = ['nav'] + chapters
+    book.spine = ['nav'] + contents
 
     if not path.exists(output_path):
-        makedirs(output_path)
+        os.makedirs(output_path)
     # end if
     file_name = novel_id + '_v' + volume_no + '.epub'
     epub.write_epub(path.join(output_path, file_name), book, {})

@@ -13,6 +13,14 @@ from lnmtl_settings import *
 from binding import *
 
 
+def get_browser():
+    executable_path = path.abspath(path.join('lib/chromedriver'))
+    return Browser('chrome',
+                   headless=True,
+                   incognito=True,
+                   executable_path=executable_path)
+# end def
+
 def start():
     if login():
         crawl_pages(start_url)
@@ -48,7 +56,7 @@ def crawl_pages(url):
     volume = titles.find_by_css('.dashhead-subtitle').first.text
     chapter = titles.find_by_css('.dashhead-title').first.text
     translated = browser.find_by_css('.chapter-body .translated')
-    body = [ sentence.text for sentence in translated ]
+    body = [sentence.text for sentence in translated]
     # format contents
     volume_no = re.search(r'\d+$', volume).group()
     chapter_no = re.search(r'\d+$', url).group()
@@ -59,7 +67,7 @@ def crawl_pages(url):
         'chapter_no': chapter_no,
         'volume_title': volume.strip(),
         'chapter_title': format_text(chapter),
-        'body': [ format_text(x) for x in body if x ]
+        'body':  format_text(x) for x in body if x]
     }
     # save data
     save_chapter(content)
@@ -90,7 +98,7 @@ def save_chapter(content):
 # end def
 
 if __name__ == '__main__':
-    browser = Browser('chrome', headless=True, incognito=True)
+    browser = get_browser()
     start()
     browser.quit()
     convert_to_epub(novel_id)
