@@ -11,6 +11,10 @@ login_url = 'https://lnmtl.com/auth/login/'
 logout_url = 'https://lnmtl.com/auth/logout'
 email = 'dipu@algomatrix.co'
 password = 'twill1123'
-start_url = 'https://lnmtl.com/chapter/a-thought-through-eternity-chapter-907'
+start_url = 'https://lnmtl.com/chapter/a-thought-through-eternity-chapter-1270'
 end_url = 'https://lnmtl.com/chapter/a-thought-through-eternity-chapter-1272'
-output_path = '_data/atte'
+
+crawl_output = '_data/atte'
+epub_output = '_epub/atte'
+epub_title = 'A Thought Through Eternity'
+

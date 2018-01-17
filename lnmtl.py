@@ -22,12 +22,12 @@ def start():
         crawl_pages(start_url)
         logout()
     else:
-        print 'Failed to login'
+        print('Failed to login')
     # end with
 # end def
 
 def login():
-    print 'Attempting login:', login_url
+    print('Attempting login: ' + login_url)
     browser.visit(login_url)
     browser.find_by_css('form input#email').fill(email)
     browser.find_by_css('form input#password').fill(password)
@@ -36,14 +36,14 @@ def login():
 # end def
 
 def logout():
-    print 'Attempting logout:', logout_url
+    print('Attempting logout: ' + logout_url)
     browser.visit(logout_url)
     return browser.url == home_url
 # end def
 
 def crawl_pages(url):
     # visit url
-    print 'Visiting:', url
+    print('Visiting:' + url)
     if not url: return
     browser.visit(url)
     # get contents
@@ -76,7 +76,7 @@ def save_chapter(content):
     # save to file
     vol = str(content['volume_no'])
     chap = str(content['chapter_no'])
-    file_name = path.join(output_path, vol, chap + '.json')
+    file_name = path.join(crawl_output, vol, chap + '.json')
     if not path.exists(path.dirname(file_name)):
         makedirs(path.dirname(file_name))
     # end if
@@ -85,8 +85,54 @@ def save_chapter(content):
     # end with
 # end def
 
+def convert_to_epub():
+    for vol in sorted(listdir(crawl_output)):
+        data = []
+        full_vol = path.join(crawl_output, vol)
+        print('Processing: ' + full_vol)
+        for file in sorted(listdir(full_vol)):
+            full_file = path.join(full_vol, file)
+            f = open(full_file, 'r')
+            data.append(json.load(f))
+            f.close()
+        # end for
+        data.sort(key=lambda x: x['chapter_no'])
+        create_epub(vol, data)
+    # end for
+# end def
+
+def create_epub(volume_no, data):
+    vol = str(volume_no).rjust(2, '0')
+    title = epub_title + ' Volume ' + vol
+    print('Creating EPUB:' + title)
+    epub = pypub.Epub(title, 'Sudipto Chandra')
+    for item in data:
+        chap = str(item['chapter_no'])
+        title = 'Chapter ' + chap + ': ' + (item['chapter_title'] or '....')
+        html = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
+            + '<!DOCTYPE html>'\
+            + '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">'\
+            + '<head>'\
+            + '<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />'\
+            + '<title>' + item['volume_title'] + '</title>'\
+            + '</head>'\
+            + '<body style="text-align: justify">'\
+            + '<h1>' + title + '</h1>'\
+            + '\n'.join([ '<p>' + x + '</p>' for x in item['body']])\
+            + '</body>'\
+            + '</html>'
+        chapter = pypub.Chapter(content=html, title=title)
+        epub.add_chapter(chapter)
+    # end for
+    if not path.exists(epub_output):
+        makedirs(epub_output)
+    # end if
+    epub.create_epub(epub_output)
+# def
+
 if __name__ == '__main__':
     browser = Browser('chrome')
     start()
     browser.quit()
+    convert_to_epub()
 # end if
