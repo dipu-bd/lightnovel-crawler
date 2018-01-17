@@ -1,4 +1,4 @@
 *.pyc
 _data
-_epub
+_book
 geckodriver.log

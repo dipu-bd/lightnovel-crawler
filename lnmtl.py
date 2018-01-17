@@ -8,16 +8,19 @@ novels. This code will convert any given book from this site into epub.
 Requirements:
 > Selenium: conda install -c conda-forge selenium
 > Splinter: conda install -c metaperl splinter
+> Pypub: pip install pypub
 > Chrome Driver: https://sites.google.com/a/chromium.org/chromedriver/downloads
 > Make `chromedriver` accessible via terminal
-> Pypub: pip install pypub
+> KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
+> Make `kindlegen` accessible via terminal
 """
+from os import path, makedirs, listdir
+from subprocess import call
 import re
 import json
-from os import path, makedirs, listdir
+import pypub
 from splinter import Browser
 from lnmtl_settings import *
-import pypub
 
 
 def start():
@@ -132,9 +135,20 @@ def create_epub(volume_no, data):
     epub.create_epub(epub_output)
 # def
 
+def convert_to_mobi():
+    for file_name in listdir(epub_output):
+        if not file_name.endswith('.epub'):
+            continue
+        # end if
+        input_file = path.join(epub_output, file_name)
+        call(['kindlegen', path.abspath(input_file)])
+    # end for
+# end def
+
 if __name__ == '__main__':
     browser = Browser('chrome')
     start()
     browser.quit()
     convert_to_epub()
+    convert_to_mobi()
 # end if
