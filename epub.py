@@ -26,6 +26,7 @@ def start():
             data.append(json.load(f))
             f.close()
         # end for
+        data.sort(key=lambda x: x['chapter_no'])
         create_epub(vol, data)
     # end for
 # end def
@@ -36,7 +37,7 @@ def create_epub(volume_no, data):
     print 'Creating EPUB:', title
     epub = pypub.Epub(title, 'Sudipto Chandra')
     for item in data:
-        chap = str(item['chapter_no']).rjust(4, '0')
+        chap = str(item['chapter_no'])
         title = 'Chapter ' + chap + ': ' + (item['chapter_title'] or '....')
         html = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
             + '<!DOCTYPE html>'\
