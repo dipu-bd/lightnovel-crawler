@@ -29,7 +29,7 @@ output_path = '_data/atte'
 def start():
     if login():
         crawl_pages(start_url)
-        browser.visit(logout_url)
+        logout()
     else:
         print 'Failed to login'
     # end with
@@ -44,10 +44,16 @@ def login():
     return browser.url == home_url
 # end def
 
+def logout():
+    print 'Attempting logout: ', logout_url
+    browser.visit(logout_url)
+    return browser.url == home_url
+# end def
+
 def crawl_pages(url):
     # visit url
+    print 'Visiting: ', url
     if not url: return
-    print 'Visiting: ', browser.url
     browser.visit(url)
     # get contents
     titles = browser.find_by_css('div.dashhead-titles')
@@ -72,7 +78,7 @@ def crawl_pages(url):
     save_chapter(content)
     # move on to next
     if url.strip('/') == end_url.strip('/'): return
-    crawl_pages(browser.find_by_css('.pager .next a')[0]['href'])
+    crawl_pages(browser.find_by_css('nav .pager .next a').first['href'])
 # end def
 
 def save_chapter(content):
