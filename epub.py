@@ -12,7 +12,6 @@ import pypub
 # Settings
 input_path = '_data/atte'
 output_path = '_epub/atte'
-file_name_prefix = 'ATTE'
 epub_title = 'A Thought Through Eternity'
 
 
@@ -31,24 +30,30 @@ def start():
     # end for
 # end def
 
-def create_dir(file):
-    if not path.exists(path.dirname(file)):
-        makedirs(path.dirname(file))
-    # end if
-# end def
-
 def create_epub(volume_no, data):
-    epub = pypub.Epub(epub_title)
+    vol = str(volume_no).rjust(2, '0')
+    title = epub_title + ' Volume ' + vol
+    print 'Creating EPUB:', title
+    epub = pypub.Epub(title, 'Sudipto Chandra')
     for item in data:
-        body = '\n'.join([ '<p>' + x + '</p>' for x in item['body']])
-        body = '<div style="text-align: justify">' + body + '</div>'
-        # head = '<head><title>' + item['chapter_title'] + '</title></head>'
-        # html = '<html>' + head + body + '</html>'
-        epub.add_chapter(pypub.Chapter(content=body, title=item['chapter_title']))
+        chap = str(item['chapter_no']).rjust(4, '0')
+        title = 'Chapter ' + chap + ': ' + (item['chapter_title'] or '....')
+        html = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
+            + '<!DOCTYPE html>'\
+            + '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">'\
+            + '<head>'\
+            + '<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />'\
+            + '<title>' + item['volume_title'] + '</title>'\
+            + '</head>'\
+            + '<body style="text-align: justify">'\
+            + '<h1>' + title + '</h1>'\
+            + '\n'.join([ '<p>' + x + '</p>' for x in item['body']])\
+            + '</body>'\
+            + '</html>'
+        chapter = pypub.Chapter(content=html, title=title)
+        epub.add_chapter(chapter)
     # end for
-    file_name = file_name_prefix + '_v' + str(volume_no) + '.epub'
-    create_dir(file_name)
-    epub.create_epub(file_name)
+    epub.create_epub(path.abspath(output_path))
 # def
 
 if __name__ == '__main__':

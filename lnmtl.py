@@ -56,14 +56,13 @@ def crawl_pages(url):
     # format contents
     volume_no = re.search(r'\d+$', volume).group()
     chapter_no = re.search(r'\d+$', url).group()
-    chapter = chapter.strip()[str(chapter_no) + 2:]
     content = {
         'url': url,
         'novel': novel.strip(),
         'volume_no': int(volume_no),
         'chapter_no': int(chapter_no),
         'volume_title': volume.strip(),
-        'chapter_title': re.sub(r'[^\x00-\x7f]', r'', chapter).strip(),
+        'chapter_title': re.sub(r'[^\x00-\x7f]', r'', 'Chapter ' chapter).strip(),
         'body': [ re.sub(r'[^\x00-\x7f]', r'', x).strip() for x in body if x ]
     }
     # save data
