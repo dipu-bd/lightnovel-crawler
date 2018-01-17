@@ -13,7 +13,8 @@ def convert_to_mobi(novel_id):
             continue
         # end if
         input_file = path.join(input_path, file_name)
-        call(['kindlegen', path.abspath(input_file)])
+        kindlegen = path.join('lib', 'kindlegen', 'kindlegen')
+        call([kindlegen, input_file])
     # end for
 # end def
 

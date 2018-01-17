@@ -14,7 +14,7 @@ from binding import *
 
 
 def get_browser():
-    executable_path = path.abspath(path.join('lib/chromedriver'))
+    executable_path = path.join('lib', 'chromedriver')
     return Browser('chrome',
                    headless=True,
                    incognito=True,
