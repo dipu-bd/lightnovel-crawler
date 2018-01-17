@@ -44,10 +44,13 @@ def create_epub(novel_id, volume_no, data):
     book.set_language('en')
     book.add_author('Sudipto Chandra')
 
+    chapters = []
     for item in data:
         chapter_no = str(item['chapter_no'])
         title = (item['chapter_title'] or '....')
         xhtml_file = 'chap_' + chapter_no.rjust(2, '0') + '.xhtml'
+        body = '<h1>' + title + '</h1>'
+        body += '\n'.join([ '<p>' + x + '</p>' for x in item['body']])
         xhtml = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
             + '<!DOCTYPE html>'\
             + '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">'\
@@ -56,22 +59,24 @@ def create_epub(novel_id, volume_no, data):
             + '<title>' + item['volume_title'] + '</title>'\
             + '</head>'\
             + '<body style="text-align: justify">'\
-            + '<h1>' + title + '</h1>'\
-            + '\n'.join([ '<p>' + x + '</p>' for x in item['body']])\
+            + body \
             + '</body>'\
             + '</html>'
         # add chapter
-        book.add_item(epub.EpubHtml(
+        chapter = epub.EpubHtml(
             uid=chapter_no,
             title=title,
-            content=xhtml,
-            file_name=xhtml_file,
-            lang='en'))
+            file_name='chapter_' + chapter_no + '.xhtml',
+            content=body,
+            lang='en')
+        book.add_item(chapter)
+        chapters.append((chapter))
     # end for
 
-    book.top = book.get_items()
+    book.toc = tuple(chapters)
     book.add_item(epub.EpubNcx())
     book.add_item(epub.EpubNav())
+    book.spine = ['nav'] + chapters
 
     if not path.exists(output_path):
         makedirs(output_path)
