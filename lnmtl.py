@@ -14,15 +14,24 @@ Requirements:
 from splinter import Browser
 
 # Settings
-home_url = 'https://lnmtl.com'
-login_url = 'https://lnmtl.com/auth/login'
+home_url = 'https://lnmtl.com/'
+login_url = 'https://lnmtl.com/auth/login/'
 email = 'dipu@algomatrix.co'
 password = 'twill1123'
 start_url = 'https://lnmtl.com/chapter/a-thought-through-eternity-chapter-900'
 end_url = 'https://lnmtl.com/chapter/a-thought-through-eternity-chapter-902'
 
+
+def start():
+    if login():
+        crawl_pages(start_url)
+    else:
+        print 'Failed to login'
+    # end with
+# end def
+
 def login():
-    print('Attempting login: ', login_url)
+    print 'Attempting login: ', login_url
     browser.visit(login_url)
     browser.find_by_css('form input#email').fill(email)
     browser.find_by_css('form input#password').fill(password)
@@ -31,32 +40,28 @@ def login():
 # end def
 
 def crawl_pages(url):
-    print('Visiting: ', url)
     if not url: return
     browser.visit(url)
+    print 'Processing: ', browser.url
 
     titles = browser.find_by_css('div.dashhead-titles')
-    save_chapter({
-        novel: titles.find_by_css('.dashhead-subtitle a')[0]['title']
-        volume: titles.find_by_css('.dashhead-subtitle').first.text
-        chapter: titles.find_by_css('.dashhead-title').first.text
-        body: titles.find_by_css('.chapter-body').first.text
-    })
+    novel = titles.find_by_css('.dashhead-subtitle a')[0]['title']
+    volume = titles.find_by_css('.dashhead-subtitle').first.text
+    chapter = titles.find_by_css('.dashhead-title').first.text
+    body = browser.find_by_css('.chapter-body').first.text
+    save_chapter(novel, volume, chapter, body)
 
     if url == end_url: return
     crawl_pages(browser.find_by_css('.pager .next a')[0]['href'])
 # end def
 
-def save_chapter(data):
-    print()
-    print(novel, volume, chapter, len(body))
+def save_chapter(novel, volume, chapter, body):
+    print
+    print novel, volume, chapter, len(body)
 # end def
 
 if __name__ == '__main__':
     browser = Browser('chrome')
-    if login():
-        crawl_pages(start_url)
-    else:
-        print('Failed to login')
+    start()
     browser.quit()
 # end if
