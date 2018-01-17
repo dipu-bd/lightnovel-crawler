@@ -8,7 +8,7 @@ def convert_to_epub(input_path, output_path):
     for vol in sorted(listdir(input_path)):
         data = []
         full_vol = path.join(input_path, vol)
-        print('Processing: ' + full_vol)
+        print('Processing:', full_vol)
         for file in sorted(listdir(full_vol)):
             full_file = path.join(full_vol, file)
             f = open(full_file, 'r')
@@ -22,8 +22,8 @@ def convert_to_epub(input_path, output_path):
 
 def create_epub(volume_no, data, output_path):
     vol = str(volume_no).rjust(2, '0')
-    title = epub_title + ' Volume ' + vol
-    print('Creating EPUB:' + title)
+    title = data[0]['novel'] + ' Volume ' + vol
+    print('Creating EPUB:', title)
     epub = pypub.Epub(title, 'Sudipto Chandra')
     for item in data:
         title = (item['chapter_title'] or '....')

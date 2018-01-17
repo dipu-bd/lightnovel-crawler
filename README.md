@@ -11,9 +11,9 @@ novels. This code will convert any given book from this site into epub.
 
 ### Requirements
 
-- Selenium: conda install -c conda-forge selenium
-- Splinter: conda install -c metaperl splinter
-- Pypub: pip install pypub
+- Selenium: `pip install -U selenium`
+- Splinter: `pip install -U splinter`
+- Pypub: `pip install -U pypub`
 - Chrome Driver: https://sites.google.com/a/chromium.org/chromedriver/downloads
 - Make `chromedriver` accessible via terminal
 - KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211

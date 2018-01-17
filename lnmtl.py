@@ -23,7 +23,7 @@ def start():
 # end def
 
 def login():
-    print('Attempting login: ' + login_url)
+    print('Attempting login:', login_url)
     browser.visit(login_url)
     browser.find_by_css('form input#email').fill(email)
     browser.find_by_css('form input#password').fill(password)
@@ -32,14 +32,14 @@ def login():
 # end def
 
 def logout():
-    print('Attempting logout: ' + logout_url)
+    print('Attempting logout:', logout_url)
     browser.visit(logout_url)
     return browser.url == home_url
 # end def
 
 def crawl_pages(url):
     # visit url
-    print('Visiting:' + url)
+    print('Visiting:', url)
     if not url: return
     browser.visit(url)
     # get contents
@@ -82,7 +82,7 @@ def save_chapter(content):
 # end def
 
 if __name__ == '__main__':
-    browser = Browser('chrome')
+    browser = Browser('chrome', headless=True)
     start()
     browser.quit()
     convert_to_epub(crawl_output, epub_output)
