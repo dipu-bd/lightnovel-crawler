@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Crawler for LNMTL novels
+"""Crawler LNMTL novels and create epub files
 
 [LNMTL](https://lnmtl.com) is a website containing machine translated
 novels. This code will convert any given book from this site into epub.
@@ -10,12 +10,15 @@ Requirements:
 > Splinter: conda install -c metaperl splinter
 > Chrome Driver: https://sites.google.com/a/chromium.org/chromedriver/downloads
 > Make `chromedriver` accessible via terminal
+> Pypub: pip install pypub
 """
 import re
 import json
-from os import path, makedirs
+from os import path, makedirs, listdir
 from splinter import Browser
 from lnmtl_settings import *
+import pypub
+
 
 def start():
     if login():
@@ -62,7 +65,7 @@ def crawl_pages(url):
         'volume_no': int(volume_no),
         'chapter_no': int(chapter_no),
         'volume_title': volume.strip(),
-        'chapter_title': re.sub(r'[^\x00-\x7f]', r'', 'Chapter ' chapter).strip(),
+        'chapter_title': re.sub(r'[^\x00-\x7f]', r'', chapter).strip(),
         'body': [ re.sub(r'[^\x00-\x7f]', r'', x).strip() for x in body if x ]
     }
     # save data
@@ -107,8 +110,7 @@ def create_epub(volume_no, data):
     print('Creating EPUB:' + title)
     epub = pypub.Epub(title, 'Sudipto Chandra')
     for item in data:
-        chap = str(item['chapter_no'])
-        title = 'Chapter ' + chap + ': ' + (item['chapter_title'] or '....')
+        title = (item['chapter_title'] or '....')
         html = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
             + '<!DOCTYPE html>'\
             + '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">'\
