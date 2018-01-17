@@ -58,14 +58,22 @@ def crawl_pages(url):
         'volume_no': int(volume_no),
         'chapter_no': int(chapter_no),
         'volume_title': volume.strip(),
-        'chapter_title': re.sub(r'[^\x00-\x7f]', r'', chapter).strip(),
-        'body': [ re.sub(r'[^\x00-\x7f]', r'', x).strip() for x in body if x ]
+        'chapter_title': format_text(chapter),
+        'body': [ format_text(x) for x in body if x ]
     }
     # save data
     save_chapter(content)
     # move on to next
     if url.strip('/') == end_url.strip('/'): return
     crawl_pages(browser.find_by_css('nav .pager .next a').first['href'])
+# end def
+
+def format_text(text):
+    text = text.replace(u'\u00ad', '')
+    text = text.replace(u'\u201e', '&ldquo;')
+    text = text.replace(u'\u201d', '&rdquo;')
+    # text = re.sub(r'[^\x00-\x7f]', r'', text)
+    return text.strip()
 # end def
 
 def save_chapter(content):
