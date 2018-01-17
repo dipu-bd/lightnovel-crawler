@@ -72,7 +72,7 @@ def save_chapter(content):
     # save to file
     vol = str(content['volume_no'])
     chap = str(content['chapter_no'])
-    file_name = path.join(crawl_output, vol, chap + '.json')
+    file_name = path.join('_data', novel_id, vol, chap + '.json')
     if not path.exists(path.dirname(file_name)):
         makedirs(path.dirname(file_name))
     # end if
@@ -82,9 +82,9 @@ def save_chapter(content):
 # end def
 
 if __name__ == '__main__':
-    browser = Browser('chrome', headless=True)
+    browser = Browser('chrome', incognito=True)
     start()
     browser.quit()
-    convert_to_epub(crawl_output, epub_output)
-    convert_to_mobi(epub_output)
+    convert_to_epub(novel_id)
+    convert_to_mobi(novel_id)
 # end if

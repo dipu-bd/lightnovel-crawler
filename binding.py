@@ -1,10 +1,22 @@
 from os import path, makedirs, listdir
 from subprocess import call
 import json
-import pypub
+from ebooklib import epub
 
 
-def convert_to_epub(input_path, output_path):
+def convert_to_mobi(novel_id):
+    input_path = path.join('_book', novel_id)
+    for file_name in listdir(input_path):
+        if not file_name.endswith('.epub'):
+            continue
+        # end if
+        input_file = path.join(input_file, file_name)
+        call(['kindlegen', path.abspath(input_file)])
+    # end for
+# end def
+
+def convert_to_epub(novel_id):
+    input_path = path.join('_data', novel_id)
     for vol in sorted(listdir(input_path)):
         data = []
         full_vol = path.join(input_path, vol)
@@ -16,18 +28,26 @@ def convert_to_epub(input_path, output_path):
             f.close()
         # end for
         data.sort(key=lambda x: x['chapter_no'])
-        create_epub(vol, data, output_path)
+        create_epub(novel_id, vol, data)
     # end for
 # end def
 
-def create_epub(volume_no, data, output_path):
+def create_epub(novel_id, volume_no, data):
+    output_path = path.join('_book', novel_id)
     vol = str(volume_no).rjust(2, '0')
     title = data[0]['novel'] + ' Volume ' + vol
     print('Creating EPUB:', title)
-    epub = pypub.Epub(title, 'Sudipto Chandra')
+
+    book = epub.EpubBook()
+    book.set_identifier(novel_id + volume_no)
+    book.set_title(title)
+    book.set_language('en')
+    book.add_author('Sudipto Chandra')
+
     for item in data:
         title = (item['chapter_title'] or '....')
-        html = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
+        xhtml_file = 'chap_' + str(item['chapter_no']).rjust(2, '0') + '.xhtml'
+        xhtml = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
             + '<!DOCTYPE html>'\
             + '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">'\
             + '<head>'\
@@ -39,21 +59,18 @@ def create_epub(volume_no, data, output_path):
             + '\n'.join([ '<p>' + x + '</p>' for x in item['body']])\
             + '</body>'\
             + '</html>'
-        chapter = pypub.Chapter(content=html, title=title)
-        epub.add_chapter(chapter)
+        # add chapter
+        chapter = epub.EpubHtml(title=title, file_name=xhtml_file)
+        chapter.content = xhtml
+        book.add_item(chapter)
     # end for
+
+    book.add_item(epub.EpubNcx())
+    book.add_item(epub.EpubNav())
+
     if not path.exists(output_path):
         makedirs(output_path)
     # end if
-    epub.create_epub(output_path)
+    file_name = novel_id + '_v' + str(volume_no) + '.epub'
+    epub.write_epub(path.join(output_path, file_name), book, {})
 # def
-
-def convert_to_mobi(epub_path):
-    for file_name in listdir(epub_path):
-        if not file_name.endswith('.epub'):
-            continue
-        # end if
-        input_file = path.join(epub_path, file_name)
-        call(['kindlegen', path.abspath(input_file)])
-    # end for
-# end def
