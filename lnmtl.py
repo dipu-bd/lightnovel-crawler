@@ -67,7 +67,7 @@ def crawl_pages(url):
         'chapter_no': chapter_no,
         'volume_title': volume.strip(),
         'chapter_title': format_text(chapter),
-        'body':  format_text(x) for x in body if x]
+        'body': [format_text(x) for x in body if x.strip()]
     }
     # save data
     save_chapter(content)
