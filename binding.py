@@ -10,7 +10,7 @@ def convert_to_mobi(novel_id):
         if not file_name.endswith('.epub'):
             continue
         # end if
-        input_file = path.join(input_file, file_name)
+        input_file = path.join(input_path, file_name)
         call(['kindlegen', path.abspath(input_file)])
     # end for
 # end def
@@ -45,8 +45,9 @@ def create_epub(novel_id, volume_no, data):
     book.add_author('Sudipto Chandra')
 
     for item in data:
+        chapter_no = str(item['chapter_no'])
         title = (item['chapter_title'] or '....')
-        xhtml_file = 'chap_' + str(item['chapter_no']).rjust(2, '0') + '.xhtml'
+        xhtml_file = 'chap_' + chapter_no.rjust(2, '0') + '.xhtml'
         xhtml = '<?xml version="1.0" encoding="UTF-8" ?>\n'\
             + '<!DOCTYPE html>'\
             + '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">'\
@@ -60,11 +61,15 @@ def create_epub(novel_id, volume_no, data):
             + '</body>'\
             + '</html>'
         # add chapter
-        chapter = epub.EpubHtml(title=title, file_name=xhtml_file)
-        chapter.content = xhtml
-        book.add_item(chapter)
+        book.add_item(epub.EpubHtml(
+            uid=chapter_no,
+            title=title,
+            content=xhtml,
+            file_name=xhtml_file,
+            lang='en'))
     # end for
 
+    book.top = book.get_items()
     book.add_item(epub.EpubNcx())
     book.add_item(epub.EpubNav())
 
