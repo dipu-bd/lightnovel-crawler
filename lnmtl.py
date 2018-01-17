@@ -11,20 +11,25 @@ Requirements:
 > Chrome Driver: https://sites.google.com/a/chromium.org/chromedriver/downloads
 > Make `chromedriver` accessible via terminal
 """
+import re
+import json
+from os import path, makedirs
 from splinter import Browser
 
 # Settings
 home_url = 'https://lnmtl.com/'
 login_url = 'https://lnmtl.com/auth/login/'
+logout_url = 'https://lnmtl.com/auth/logout'
 email = 'dipu@algomatrix.co'
 password = 'twill1123'
 start_url = 'https://lnmtl.com/chapter/a-thought-through-eternity-chapter-900'
 end_url = 'https://lnmtl.com/chapter/a-thought-through-eternity-chapter-902'
-
+output_path = '_data/atte'
 
 def start():
     if login():
         crawl_pages(start_url)
+        browser.visit(logout_url)
     else:
         print 'Failed to login'
     # end with
@@ -40,24 +45,47 @@ def login():
 # end def
 
 def crawl_pages(url):
+    # visit url
     if not url: return
+    print 'Visiting: ', browser.url
     browser.visit(url)
-    print 'Processing: ', browser.url
-
+    # get contents
     titles = browser.find_by_css('div.dashhead-titles')
     novel = titles.find_by_css('.dashhead-subtitle a')[0]['title']
     volume = titles.find_by_css('.dashhead-subtitle').first.text
     chapter = titles.find_by_css('.dashhead-title').first.text
-    body = browser.find_by_css('.chapter-body').first.text
-    save_chapter(novel, volume, chapter, body)
-
-    if url == end_url: return
+    translated = browser.find_by_css('.chapter-body .translated')
+    body = [ sentence.text for sentence in translated ]
+    # format contents
+    volume_no = re.search(r'\d+$', url).group()
+    chapter_no = re.search(r'\d+$', url).group()
+    content = {
+        'url': url,
+        'novel': novel.strip(),
+        'volume_no': int(volume_no),
+        'chapter_no': int(chapter_no),
+        'volume_title': volume.strip(),
+        'chapter_title': chapter.strip(),
+        'body': [ x.strip() for x in body if x ]
+    }
+    # save data
+    save_chapter(content)
+    # move on to next
+    if url.strip('/') == end_url.strip('/'): return
     crawl_pages(browser.find_by_css('.pager .next a')[0]['href'])
 # end def
 
-def save_chapter(novel, volume, chapter, body):
-    print
-    print novel, volume, chapter, len(body)
+def save_chapter(content):
+    # save to file
+    vol = str(content['volume_no'])
+    chap = str(content['chapter_no'])
+    file_name = path.join(output_path, vol, chap + '.json')
+    if not path.exists(path.dirname(file_name)):
+        makedirs(path.dirname(file_name))
+    # end if
+    with open(file_name, 'w') as file:
+        file.write(json.dumps(content))
+    # end with
 # end def
 
 if __name__ == '__main__':
