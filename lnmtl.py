@@ -57,7 +57,7 @@ def crawl_pages(url):
     translated = browser.find_by_css('.chapter-body .translated')
     body = [ sentence.text for sentence in translated ]
     # format contents
-    volume_no = re.search(r'\d+$', url).group()
+    volume_no = re.search(r'\d+$', volume).group()
     chapter_no = re.search(r'\d+$', url).group()
     content = {
         'url': url,
@@ -66,7 +66,7 @@ def crawl_pages(url):
         'chapter_no': int(chapter_no),
         'volume_title': volume.strip(),
         'chapter_title': chapter.strip(),
-        'body': [ x.strip() for x in body if x ]
+        'body': [ re.sub(r'[^\x00-\x7f]', r'', x).strip() for x in body if x ]
     }
     # save data
     save_chapter(content)
