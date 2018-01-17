@@ -82,9 +82,9 @@ def save_chapter(content):
 # end def
 
 if __name__ == '__main__':
-    # browser = Browser('chrome', incognito=True)
-    # start()
-    # browser.quit()
+    browser = Browser('chrome', headless=True, incognito=True)
+    start()
+    browser.quit()
     convert_to_epub(novel_id)
     convert_to_mobi(novel_id)
 # end if
