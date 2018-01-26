@@ -6,6 +6,7 @@ import io
 import os
 import json
 import random
+import textwrap
 from subprocess import call
 from ebooklib import epub
 from PIL import Image, ImageFont, ImageDraw
@@ -63,19 +64,23 @@ def novel_to_kindle(input_path):
         book.add_item(epub.EpubNav())
         book.add_item(epub.EpubNcx())
         # Generate cover
-        colors = range(10, 50)
-        r = random.choice(colors)
-        g = random.choice(colors)
-        b = random.choice(colors)
-        image = Image.new('RGB', (625, 1000), (r, g, b))
+        print_title = re.sub(r'[^\x00-\x7f]|[()]', '', book_title)
+        if len(print_title) > 35:
+            print_title = print_title[:35] + '...'
+        print_title = textwrap.fill(print_title, 8)
+        print_title = '\n'.join(print_title.splitlines()[:6])
+
+        colors = range(200, 255)
+        red = random.choice(colors)
+        green = random.choice(colors)
+        blue = random.choice(colors)
+        image = Image.new('RGB', (625, 1000), (red, green, blue))
         draw = ImageDraw.Draw(image)
         font_path = os.path.abspath('lib/bookman-antiqua.ttf')
         font = ImageFont.truetype(font_path, 80)
-        draw.text((110, 200), 'Volume ' + vol, '#ccd', font=font)
+        draw.text((100, 180), 'Volume ' + vol, '#444', font=font)
         font = ImageFont.truetype(font_path, 100)
-        print_title = re.sub(' ', '\n', book_title)
-        print_title = re.sub(r'[^\x00-\x7f]|[()]', '', print_title)
-        draw.text((110, 300), print_title.strip(), '#fff', font=font)
+        draw.text((100, 280), print_title.strip(), '#000', font=font)
         bytes_io = io.BytesIO()
         image.save(bytes_io, format='PNG')
         book.set_cover(file_name='cover.png', content=bytes_io.getvalue())
