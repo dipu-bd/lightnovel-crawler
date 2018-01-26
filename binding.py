@@ -47,16 +47,13 @@ def novel_to_kindle(input_path):
             full_file = path.join(full_vol, file_name)
             item = json.load(open(full_file, 'r'))
             # add chapter
-            title = (item['chapter_title'] or '....')
-            body = '<h1>%s</h1>' % (title)
-            body += '\n'.join(['<p>%s</p>' % (x) for x in item['body']])
             xhtml_file = 'chap_%s.xhtml' % item['chapter_no'].rjust(4, '0')
             chapter = epub.EpubHtml(
-                uid=item['chapter_no'],
                 lang='en',
-                title=title,
-                content=body,
-                file_name=xhtml_file)
+                file_name=xhtml_file,
+                uid=item['chapter_no'],
+                content=item['body'] or '',
+                title=item['chapter_title'])
             book.add_item(chapter)
             contents.append(chapter)
             if not book_title:

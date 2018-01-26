@@ -62,19 +62,18 @@ def crawl_pages(url):
         translated = browser.find_by_css('.chapter-body .translated')
         # format contents
         chapter = format_text(chapter)
-        body = ''.join([format_text(x.text) for x in translated if x.text.strip()])
+        body = '\n'.join([format_text(x.text) for x in translated if x.text.strip()])
         volume_no = re.search(r'\d+$', volume).group()
         chapter_no = re.search(r'\d+$', url).group()
-        content = {
+        # save data
+        save_chapter({
             'url': url,
             'novel': novel.strip(),
             'volume_no': volume_no,
             'chapter_no': chapter_no,
             'chapter_title': chapter,
             'body': '<h1>%s</h1>%s' % (chapter, body)
-        }
-        # save data
-        save_chapter(content)
+        })
         # move on to next
         if url.strip('/') == end_url.strip('/'): break
         url = browser.find_by_css('nav .pager .next a').first['href']

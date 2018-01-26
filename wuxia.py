@@ -42,40 +42,37 @@ def meta_info():
 # end def
 
 def crawl_pages(url):
-    # visit url
-    print('Visiting:', url)
-    if not url: return
-    browser.visit(url)
-    next_link = browser.find_link_by_partial_text('Next Chapter')
-    if not next_link: return
-    # parse contents
-    chapter_no = re.search(r'\d+.?$', url).group().strip('/')
-    vol_no = str(1 + int(chapter_no) // 100)
-    articles = browser.find_by_css('div[itemprop="articleBody"] p')
-    start_index = 1
-    final_index = len(articles) - 1
-    chapter_title = articles[1].text
-    if not chapter_title.startswith('Chapter'):
-        start_index = 2
-        chapter_title = articles[2].text
-        vol_no = re.search(r'-\d+-', url).group().strip('-')
-    # end if
-    body = [articles[i].text for i in range(final_index) if i > start_index]
-    # format contents
-    content = {
-        'url': url,
-        'novel': novel_name,
-        'chapter_no': chapter_no,
-        'chapter_title': chapter_title,
-        'volume_no': vol_no,
-        'body': [x.strip() for x in body if x.strip()]
-    }
-    # save data
-    save_chapter(content)
-    # move on to next
-    if browser.url.strip('/') != end_url:
-        crawl_pages(next_link.first['href'])
-    # end if
+    while url:
+        print('Visiting:', url)
+        browser.visit(url)
+        next_link = browser.find_link_by_partial_text('Next Chapter')
+        if not next_link: break
+        # parse contents
+        chapter_no = re.search(r'\d+.?$', url).group().strip('/')
+        vol_no = str(1 + int(chapter_no) // 100)
+        if re.match(r'.*-book-\d+-chapter-\d+', url):
+            vol_no = re.search(r'-\d+-', url).group().strip('-')
+        # end if
+        articles = browser.find_by_css('div[itemprop="articleBody"] p')
+        chapter_title = articles[1].text
+        if re.match(r'Chapter \d+.*', articles[2].text):
+            chapter_title = articles[2].text
+        # end if
+        body = [x for i, x in enumerate(articles) if 0 < i < len(articles) - 1]
+        body = '\n'.join(['<p>' + x.html + '</p>' for x in body])
+        # save data
+        save_chapter({
+            'url': url,
+            'novel': novel_name,
+            'chapter_no': chapter_no,
+            'chapter_title': chapter_title,
+            'volume_no': vol_no,
+            'body': body
+        })
+        # move on to next
+        if url == end_url: break
+        url = next_link.first['href'].strip('/')
+    # end while
 # end def
 
 def save_chapter(content):
