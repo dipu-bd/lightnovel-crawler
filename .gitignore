@@ -1,4 +1,4 @@
 *.pyc
-_data
+_novel
 _book
 geckodriver.log
