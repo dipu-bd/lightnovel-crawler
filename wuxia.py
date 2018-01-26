@@ -48,7 +48,7 @@ def crawl_pages(url):
         if not next_link: break
         # parse contents
         chapter_no = re.search(r'\d+.?$', url).group().strip('/')
-        vol_no = str(1 + int(chapter_no) // 100)
+        vol_no = str(1 + (int(chapter_no) - 1) // 100)
         if re.match(r'.*-book-\d+-chapter-\d+', url):
             vol_no = re.search(r'-\d+-', url).group().strip('-')
         # end if
@@ -101,7 +101,7 @@ if __name__ == '__main__':
         end_url = '%s/%s-chapter-%s' % (home_url, novel_id, end_url)
     # end if
 
-    # browser = get_browser()
-    # start()
+    browser = get_browser()
+    start()
     novel_to_kindle(output_path)
 # end if
