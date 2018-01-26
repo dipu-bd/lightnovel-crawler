@@ -48,24 +48,32 @@ def crawl_pages(url):
     browser.visit(url)
     next_link = browser.find_link_by_partial_text('Next Chapter')
     if not next_link: return
-    # get contents
-    articles = browser.find_by_css('div[itemprop="articleBody"] p')
-    chapter_title = articles[1].text
-    body = [articles[i].text for i in range(len(articles)) if 2 <= i < len(articles) - 4]
-    # format contents
+    # parse contents
     chapter_no = re.search(r'\d+.?$', url).group().strip('/')
+    vol_no = str(1 + int(chapter_no) // 100)
+    articles = browser.find_by_css('div[itemprop="articleBody"] p')
+    start_index = 1
+    final_index = len(articles) - 1
+    chapter_title = articles[1].text
+    if not chapter_title.startswith('Chapter'):
+        start_index = 2
+        chapter_title = articles[2].text
+        vol_no = re.search(r'-\d+-', url).group().strip('-')
+    # end if
+    body = [articles[i].text for i in range(final_index) if i > start_index]
+    # format contents
     content = {
         'url': url,
         'novel': novel_name,
         'chapter_no': chapter_no,
         'chapter_title': chapter_title,
-        'volume_no': str(int(chapter_no) // 100),
+        'volume_no': vol_no,
         'body': [x.strip() for x in body if x.strip()]
     }
     # save data
     save_chapter(content)
     # move on to next
-    if chapter_no != end_chapter:
+    if browser.url.strip('/') != end_url:
         crawl_pages(next_link.first['href'])
     # end if
 # end def
@@ -85,12 +93,17 @@ def save_chapter(content):
 
 if __name__ == '__main__':
     novel_id = sys.argv[1]
-    start_chapter = sys.argv[2]
-    end_chapter = sys.argv[3] if len(sys.argv) > 3 else ''
-    output_path = path.join('_novel', novel_id)
+    start_url = sys.argv[2].strip('/')
+    end_url = sys.argv[3].strip('/') if len(sys.argv) > 3 else ''
 
+    output_path = path.join('_novel', novel_id)
     home_url = 'http://www.wuxiaworld.com/%s-index' % (novel_id)
-    start_url = '%s/%s-chapter-%s' % (home_url, novel_id, start_chapter)
+    if start_url.isdigit():
+        start_url = '%s/%s-chapter-%s' % (home_url, novel_id, start_url)
+    # end if
+    if end_url.isdigit():
+        end_url = '%s/%s-chapter-%s' % (home_url, novel_id, end_url)
+    # end if
 
     browser = get_browser()
     start()
