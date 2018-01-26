@@ -13,12 +13,13 @@ novels. This code will convert any given book from this site into epub.
 
 **Install requirements and run**:
 
-- `python wuxia.py <novel-id> <start-chapter-no> [<end-chapter-no>]`
+- `python wuxia.py <novel-id> (<start-chapter>|<start-url>) [(<end-chapter>|<end-url>)]`
 
 **Samples commands**:
 
 - `python wuxia.py awe 333`
 - `python wuxia.py awe 333 335`
+- `python wuxia.py desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
 
 ### LNMTL Crawler
 
