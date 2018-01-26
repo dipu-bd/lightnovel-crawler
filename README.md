@@ -4,7 +4,7 @@ Crawl website and convert it into EPUB files
 
 ## Crawlers
 
-### Wuxia Crawler
+### 1 Wuxia Crawler
 
 Crawler Wuxia novels and create epub/mobi files
 
@@ -21,7 +21,7 @@ novels. This code will convert any given book from this site into epub.
 - `python wuxia.py awe 333 335`
 - `python wuxia.py desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
 
-### LNMTL Crawler
+### 2 LNMTL Crawler
 
 Crawler LNMTL novels and create epub/mobi files
 
@@ -41,8 +41,8 @@ novels. This code will convert any given book from this site into epub.
 
 - Selenium: `pip install -U selenium`
 - Splinter: `pip install -U splinter`
-- Pypub: `pip install -U pypub`
-- KindleComicConverter: `pip install KindleComicConverter`
+- EbookLib: `pip install -U ebooklib`
+- KindleComicConverter: `pip install -U KindleComicConverter`
 
 ## Dependencies
 
