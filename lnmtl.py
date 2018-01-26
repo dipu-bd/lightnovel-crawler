@@ -5,13 +5,18 @@
 [LNMTL](https://lnmtl.com) is a website containing machine translated
 novels. This code will convert any given book from this site into epub.
 """
+import sys
 from os import path, makedirs
 import re
 import json
 from splinter import Browser
-from lnmtl_settings import *
-from binding import *
+from binding import novel_to_kindle
 
+home_url = 'https://lnmtl.com/'
+login_url = 'https://lnmtl.com/auth/login/'
+logout_url = 'https://lnmtl.com/auth/logout'
+email = 'dipu@algomatrix.co'
+password = 'twill1123'
 
 def get_browser():
     executable_path = path.join('lib', 'chromedriver')
@@ -88,7 +93,7 @@ def save_chapter(content):
     # save to file
     vol = content['volume_no'].rjust(2, '0')
     chap = content['chapter_no'].rjust(5, '0')
-    file_name = path.join('_data', novel_id, vol, chap + '.json')
+    file_name = path.join(output_path, vol, chap + '.json')
     if not path.exists(path.dirname(file_name)):
         makedirs(path.dirname(file_name))
     # end if
@@ -98,9 +103,17 @@ def save_chapter(content):
 # end def
 
 if __name__ == '__main__':
+    novel_id = sys.argv[1]
+    start_url = sys.argv[2]
+    end_url = sys.argv[3] if len(sys.argv) > 3 else ''
+    output_path = path.join('_novel', novel_id)
+
     browser = get_browser()
-    start()
-    browser.quit()
-    convert_to_epub(novel_id)
-    convert_to_mobi(novel_id)
+    try:
+        start()
+    finally:
+        browser.quit()
+    # end try
+
+    novel_to_kindle(output_path)
 # end if
