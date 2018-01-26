@@ -51,34 +51,34 @@ def logout():
 # end def
 
 def crawl_pages(url):
-    # visit url
-    print('Visiting:', url)
-    if not url: return
-    browser.visit(url)
-    # get contents
-    titles = browser.find_by_css('div.dashhead-titles')
-    novel = titles.find_by_css('.dashhead-subtitle a')[0]['title']
-    volume = titles.find_by_css('.dashhead-subtitle').first.text
-    chapter = titles.find_by_css('.dashhead-title').first.text
-    translated = browser.find_by_css('.chapter-body .translated')
-    body = [sentence.text for sentence in translated]
-    # format contents
-    volume_no = re.search(r'\d+$', volume).group()
-    chapter_no = re.search(r'\d+$', url).group()
-    content = {
-        'url': url,
-        'novel': novel.strip(),
-        'volume_no': volume_no,
-        'chapter_no': chapter_no,
-        'volume_title': volume.strip(),
-        'chapter_title': format_text(chapter),
-        'body': [format_text(x) for x in body if x.strip()]
-    }
-    # save data
-    save_chapter(content)
-    # move on to next
-    if url.strip('/') == end_url.strip('/'): return
-    crawl_pages(browser.find_by_css('nav .pager .next a').first['href'])
+    while url:
+        print('Visiting:', url)
+        browser.visit(url)
+        # parse contents
+        titles = browser.find_by_css('div.dashhead-titles')
+        novel = titles.find_by_css('.dashhead-subtitle a')[0]['title']
+        volume = titles.find_by_css('.dashhead-subtitle').first.text
+        chapter = titles.find_by_css('.dashhead-title').first.text
+        translated = browser.find_by_css('.chapter-body .translated')
+        # format contents
+        chapter = format_text(chapter)
+        body = ''.join([format_text(x.text) for x in translated if x.text.strip()])
+        volume_no = re.search(r'\d+$', volume).group()
+        chapter_no = re.search(r'\d+$', url).group()
+        content = {
+            'url': url,
+            'novel': novel.strip(),
+            'volume_no': volume_no,
+            'chapter_no': chapter_no,
+            'chapter_title': chapter,
+            'body': '<h1>%s</h1>%s' % (chapter, body)
+        }
+        # save data
+        save_chapter(content)
+        # move on to next
+        if url.strip('/') == end_url.strip('/'): break
+        url = browser.find_by_css('nav .pager .next a').first['href']
+    # end while
 # end def
 
 def format_text(text):
@@ -86,7 +86,7 @@ def format_text(text):
     text = re.sub(r'\u201e[, ]*', '&ldquo;', text)
     text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
     # text = re.sub(r'[^\x00-\x7f]', r'', text)
-    return text.strip()
+    return '<p>' + text.strip() + '</p>'
 # end def
 
 def save_chapter(content):
