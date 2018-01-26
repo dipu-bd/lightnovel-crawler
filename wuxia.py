@@ -27,7 +27,6 @@ def start():
     try:
         meta_info()
         crawl_pages(start_url)
-        novel_to_kindle(output_path)
     finally:
         browser.quit()
     # end try
@@ -102,6 +101,7 @@ if __name__ == '__main__':
         end_url = '%s/%s-chapter-%s' % (home_url, novel_id, end_url)
     # end if
 
-    browser = get_browser()
-    start()
+    # browser = get_browser()
+    # start()
+    novel_to_kindle(output_path)
 # end if
