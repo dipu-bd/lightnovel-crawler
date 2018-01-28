@@ -7,11 +7,11 @@ import os
 import json
 import random
 import textwrap
+from os import path
 from subprocess import call
 from ebooklib import epub
 from PIL import Image, ImageFont, ImageDraw
 
-path = os.path
 
 def epub_to_mobi(input_path):
     '''Converts epub file to mobi'''
@@ -23,6 +23,7 @@ def epub_to_mobi(input_path):
         call([kindlegen, input_file])
     # end for
 # end def
+
 
 def novel_to_kindle(input_path):
     novel_id = os.path.basename(input_path)
@@ -52,6 +53,7 @@ def novel_to_kindle(input_path):
                 uid=item['chapter_no'],
                 content=item['body'] or '',
                 title=item['chapter_title'])
+            chapter.content += '<style>%s</style>' % (open('style.css').read())
             book.add_item(chapter)
             contents.append(chapter)
             if not book_title:
@@ -69,18 +71,14 @@ def novel_to_kindle(input_path):
             print_title = print_title[:35] + '...'
         print_title = textwrap.fill(print_title, 8)
         print_title = '\n'.join(print_title.splitlines()[:6])
-
-        colors = range(200, 255)
-        red = random.choice(colors)
-        green = random.choice(colors)
-        blue = random.choice(colors)
-        image = Image.new('RGB', (660, 1000), (red, green, blue))
+        color = random.choice(range(200, 230))
+        image = Image.new('RGB', (660, 1000), (color, color, color))
         draw = ImageDraw.Draw(image)
         font_path = os.path.abspath('lib/bookman-antiqua.ttf')
         font = ImageFont.truetype(font_path, 80)
-        draw.text((120, 180), 'Volume ' + vol, '#444', font=font)
+        draw.text((120, 200), 'Volume ' + vol, '#444', font=font)
         font = ImageFont.truetype(font_path, 100)
-        draw.text((120, 280), print_title.strip(), '#000', font=font)
+        draw.text((120, 300), print_title.strip(), '#000', font=font)
         bytes_io = io.BytesIO()
         image.save(bytes_io, format='PNG')
         book.set_cover(file_name='cover.png', content=bytes_io.getvalue())
@@ -96,6 +94,7 @@ def novel_to_kindle(input_path):
     # Convert to mobi format
     epub_to_mobi(output_path)
 # end def
+
 
 def manga_to_kindle(input_path):
     '''Convert crawled data to epub'''
