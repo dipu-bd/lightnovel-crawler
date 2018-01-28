@@ -5,22 +5,11 @@
 [LNMTL](https://lnmtl.com) is a website containing machine translated
 novels. This code will convert any given book from this site into epub.
 """
-import sys
-from os import path, makedirs
 import re
-import json
-from splinter import Browser
+import sys
+from os import path
 from binding import novel_to_kindle
-
-
-def get_browser():
-    '''open a headless chrome browser in incognito mode'''
-    executable_path = path.join('lib', 'chromedriver')
-    return Browser('chrome',
-                   headless=True,
-                   incognito=True,
-                   executable_path=executable_path)
-# end def
+from helper import get_browser, save_chapter
 
 
 class WuxiaCrawler:
@@ -112,28 +101,14 @@ class WuxiaCrawler:
         # end if
         body = ''.join(['<p>' + x.html + '</p>' for x in body if x.text.strip()])
         # save data
-        self.save_chapter({
+        save_chapter({
             'url': url,
             'novel': self.novel_name,
             'chapter_no': chapter_no,
             'chapter_title': chapter_title,
             'volume_no': vol_no,
             'body': '<h1>%s</h1>%s' % (chapter_title, body)
-        })
-    # end def
-
-    def save_chapter(self, content):
-        '''save content to file'''
-        vol = content['volume_no'].rjust(2, '0')
-        chap = content['chapter_no'].rjust(5, '0')
-        file_name = path.join(self.output_path, vol, chap + '.json')
-        if not path.exists(path.dirname(file_name)):
-            makedirs(path.dirname(file_name))
-        # end if
-        print('Saving ', file_name)
-        with open(file_name, 'w') as file:
-            file.write(json.dumps(content))
-        # end with
+        }, self.output_path)
     # end def
 # end class
 
