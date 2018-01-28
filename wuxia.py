@@ -141,6 +141,6 @@ if __name__ == '__main__':
     WuxiaCrawler(
         novel_id=sys.argv[1],
         start_url=sys.argv[2] if len(sys.argv) > 2 else None,
-        end_url=sys.argv[2] if len(sys.argv) > 3 else None
+        end_url=sys.argv[3] if len(sys.argv) > 3 else None
     ).start()
 # end if
