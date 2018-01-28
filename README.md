@@ -35,13 +35,9 @@ HINTS:
 
 #### Available Sites
 
-##### 1) Wuxia Crawler
+1. **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
 
-> [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
-
-##### 2) LNMTL Crawler
-
-> [LNMTL](https://lnmtl.com) is a website containing machine translated novels. This code will convert any given book from this site into epub.
+2. **LNMTL Crawler**: [LNMTL](https://lnmtl.com) is a website containing machine translated novels. This code will convert any given book from this site into epub.
 
 ## Requirements
 
