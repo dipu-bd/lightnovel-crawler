@@ -41,7 +41,7 @@ class LNMTLCrawler:
             return None
         # end if
         if chapter.isdigit():
-            return '%s/%s-chapter-%s' % (self.home_url, self.novel_id, chapter)
+            return '%s/chapter/%s-chapter-%s' % (self.home_url, self.novel_id, chapter)
         else:
             return chapter.strip('/')
     # end def
@@ -50,14 +50,13 @@ class LNMTLCrawler:
         '''start crawling'''
         browser = get_browser()
         try:
-            if not self.start_url:
-                raise Exception('No start url')
+            if self.start_url:
+                if not self.login(browser):
+                    raise Exception('Failed to login')
+                # end if
+                self.crawl_chapters(browser)
+                self.logout(browser)
             # end if
-            if not self.login(browser):
-                raise Exception('Failed to login')
-            # end if
-            self.crawl_chapters(browser)
-            self.logout(browser)
         finally:
             browser.quit()
         # end try
@@ -71,14 +70,14 @@ class LNMTLCrawler:
         browser.find_by_css('form input#email').fill(self.email)
         browser.find_by_css('form input#password').fill(self.password)
         browser.find_by_css('form button[type="submit"]').click()
-        return browser.url == self.home_url
+        return browser.url.strip('/') == self.home_url
     # end def
 
     def logout(self, browser):
         '''logout as a good citizen'''
         print('Attempting logout:', self.logout_url)
         browser.visit(self.logout_url)
-        return browser.url == self.home_url
+        return browser.url.strip('/') == self.home_url
     # end def
 
     def crawl_chapters(self, browser):
@@ -105,10 +104,11 @@ class LNMTLCrawler:
         chapter = titles.find_by_css('.dashhead-title').first.text
         translated = browser.find_by_css('.chapter-body .translated')
         # format contents
-        body = '\n'.join([self.format_text(x.text) for x in translated if x.text.strip()])
         chapter = self.format_text(chapter)
         volume_no = re.search(r'\d+$', volume).group()
         chapter_no = re.search(r'\d+$', url).group()
+        body = [self.format_text(x.text.strip()) for x in translated]
+        body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         # save data
         save_chapter({
             'url': url,
@@ -126,7 +126,7 @@ class LNMTLCrawler:
         text = re.sub(r'\u201e[, ]*', '&ldquo;', text)
         text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
         text = re.sub(r'[ ]*,[ ]+', ', ', text)
-        return '<p>' + text.strip() + '</p>'
+        return text.strip()
     # end def
 # end class
 
