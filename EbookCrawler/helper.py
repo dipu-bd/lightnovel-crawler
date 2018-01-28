@@ -5,14 +5,16 @@ import json
 from os import path, makedirs
 from splinter import Browser
 
+CHROME_DRIVER = path.abspath(path.join(
+    path.dirname(__file__), '..', 'lib', 'chromedriver'))
+
 
 def get_browser():
     '''open a headless chrome browser in incognito mode'''
-    executable_path = path.join('lib', 'chromedriver')
     return Browser('chrome',
                    headless=True,
                    incognito=True,
-                   executable_path=executable_path)
+                   executable_path=CHROME_DRIVER)
 # end def
 
 
