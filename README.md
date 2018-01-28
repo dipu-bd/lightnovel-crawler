@@ -2,9 +2,7 @@
 
 Crawl website and convert it into EPUB files
 
-## Crawlers
-
-### Instructions
+## Instructions
 
 ```bash
 EbookCrawler:
@@ -25,7 +23,7 @@ HINTS:
 - Novel id of: `...lnmtl.../a-thought-through-eternity-chapter-573` is `a-thought-through-eternity`
 ```
 
-#### Some Examples
+### Some Examples
 
 - Make eBook only: `python . wuxia awe`
 - All chapters from 333: `python . wuxia awe 333`
@@ -33,7 +31,7 @@ HINTS:
 - Define start url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
 - Define start and end url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/ http://www.wuxiaworld.com/desolate-era-index/de-book-2-chapter-10`
 
-#### Available Sites
+### Available Sites
 
 - **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
 
