@@ -4,47 +4,44 @@ Crawl website and convert it into EPUB files
 
 ## Crawlers
 
-### 1) Wuxia Crawler
+### Instructions
 
-Crawler Wuxia novels and create epub/mobi files
+```bash
+EbookCrawler:
+  python . <site-name> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
 
-[WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean
-novels. This code will convert any given book from this site into epub.
+OPTIONS:
+site-name*   Site to crawl. Available: lnmtl, wuxia.
+novel-id*    Novel id appear in url (See HINTS)
+start-url    Url of the chapter to start
+end-url      Url of the final chapter
+end-chapter  Starting chapter
+end-chapter  Ending chapter
 
-**Install requirements and run**:
+HINTS:
+- * marked params are required
+- Do not provide any start or end chapter for just book binding
+- Novel id of: `...wuxiaworld.com/desolate-era-index/de-...` is `desolate-era`
+- Novel id of: `...lnmtl.../a-thought-through-eternity-chapter-573` is `a-thought-through-eternity`
+```
 
-- `python wuxia.py <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]`
+#### Some Examples
 
-Here `nove-id` is the id appear on url, e.g. the novel id is `desolate-era` for this url: `http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
+- Make eBook only: `python . wuxia awe`
+- All chapters from 333: `python . wuxia awe 333`
+- Chapter 333 to 335: `python . wuxia awe 333 335`
+- Define start url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
+- Define start and end url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/ http://www.wuxiaworld.com/desolate-era-index/de-book-2-chapter-10`
 
-**Samples commands**:
+#### Available Sites
 
-- Make eBook only: `python wuxia.py awe`
-- All chapters from 333: `python wuxia.py awe 333`
-- Chapter 333 to 335: `python wuxia.py awe 333 335`
-- Define start url: `python wuxia.py desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
-- Define start and end url: `python wuxia.py desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/ http://www.wuxiaworld.com/desolate-era-index/de-book-2-chapter-10`
+#### 1) Wuxia Crawler
 
-### 2) LNMTL Crawler
+> [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
 
-Crawler LNMTL novels and create epub/mobi files
+#### 2) LNMTL Crawler
 
-[LNMTL](https://lnmtl.com) is a website containing machine translated
-novels. This code will convert any given book from this site into epub.
-
-**Install requirements and run**:
-
-- `python lnmtl.py <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]`
-
-Here `nove-id` is the id appear on url, e.g. the novel id is `a-thought-through-eternity` of this url: `https://lnmtl.com/chapter/a-thought-through-eternity-chapter-573`
-
-**Samples commands**:
-
-- Make eBook only: `python wuxia.py a-thought-through-eternity`
-- All chapters from 573: `python wuxia.py a-thought-through-eternity 573`
-- Chapter 34 to 54: `python wuxia.py a-thought-through-eternity 34 54`
-- Define start url: `python wuxia.py a-thought-through-eternity https://lnmtl.com/chapter/a-thought-through-eternity-chapter-573`
-- Define start and end url: `python wuxia.py a-thought-through-eternity https://lnmtl.com/chapter/a-thought-through-eternity-chapter-573 https://lnmtl.com/chapter/a-thought-through-eternity-chapter-575`
+> [LNMTL](https://lnmtl.com) is a website containing machine translated novels. This code will convert any given book from this site into epub.
 
 ## Requirements
 
