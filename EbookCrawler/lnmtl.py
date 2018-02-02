@@ -90,7 +90,11 @@ class LNMTLCrawler:
             if url == self.end_url:
                 break
             # end if
-            url = browser.find_by_css('nav .pager .next a').first['href']
+            try:
+                url = browser.find_by_css('nav .pager .next a').first['href']
+            except:
+                url = None
+            # end try
         # end while
     # end def
 
