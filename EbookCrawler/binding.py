@@ -48,35 +48,35 @@ def novel_to_kindle(input_path):
                     uid=item['chapter_no'],
                     content=item['body'] or '',
                     title=item['chapter_title'])
-                chapter.content += '<style>%s</style>' % (open('style.css').read())
+                # chapter.content += '<style>%s</style>' % (open('style.css').read())
                 book.add_item(chapter)
                 contents.append(chapter)
                 if not book_title:
                     book_title = item['novel']
                 # end if
             # end for
-            book.spine = ['cover', 'nav'] + contents
+            book.spine = ['nav'] + contents
             book.set_title(book_title + ' Volume ' + vol)
             book.toc = contents
             book.add_item(epub.EpubNav())
             book.add_item(epub.EpubNcx())
-            # Generate cover
-            print_title = re.sub(r'[^\x00-\x7f]|[()]', '', book_title)
-            if len(print_title) > 35:
-                print_title = print_title[:35] + '...'
-            print_title = textwrap.fill(print_title, 8)
-            print_title = '\n'.join(print_title.splitlines()[:6])
-            color = random.choice(range(200, 230))
-            image = Image.new('RGB', (660, 1000), (color, color, color))
-            draw = ImageDraw.Draw(image)
-            font_path = os.path.abspath('lib/bookman-antiqua.ttf')
-            font = ImageFont.truetype(font_path, 80)
-            draw.text((120, 200), 'Volume ' + vol, '#444', font=font)
-            font = ImageFont.truetype(font_path, 100)
-            draw.text((120, 300), print_title.strip(), '#000', font=font)
-            bytes_io = io.BytesIO()
-            image.save(bytes_io, format='PNG')
-            book.set_cover(file_name='cover.png', content=bytes_io.getvalue())
+            # # Generate cover
+            # print_title = re.sub(r'[^\x00-\x7f]|[()]', '', book_title)
+            # if len(print_title) > 35:
+            #     print_title = print_title[:35] + '...'
+            # print_title = textwrap.fill(print_title, 8)
+            # print_title = '\n'.join(print_title.splitlines()[:6])
+            # color = random.choice(range(200, 230))
+            # image = Image.new('RGB', (660, 1000), (color, color, color))
+            # draw = ImageDraw.Draw(image)
+            # font_path = os.path.abspath('lib/bookman-antiqua.ttf')
+            # font = ImageFont.truetype(font_path, 80)
+            # draw.text((120, 200), 'Volume ' + vol, '#444', font=font)
+            # font = ImageFont.truetype(font_path, 100)
+            # draw.text((120, 300), print_title.strip(), '#000', font=font)
+            # bytes_io = io.BytesIO()
+            # image.save(bytes_io, format='PNG')
+            # book.set_cover(file_name='cover.png', content=bytes_io.getvalue())
             # Create epub
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
