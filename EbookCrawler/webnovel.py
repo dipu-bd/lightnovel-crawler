@@ -10,12 +10,14 @@ import sys
 import json
 import requests
 from os import path
+import concurrent.futures
 from .binding import novel_to_kindle
 from .helper import get_browser, save_chapter
 
-
 class WebNovelCrawler:
     '''Crawler for WuxiaWorld'''
+
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
     def __init__(self, novel_id, start_chapter=None, end_chapter=None):
         if not novel_id:
@@ -72,32 +74,37 @@ class WebNovelCrawler:
         if start >= len(self.chapters):
           return print('ERROR: start chapter out of bound.')
         # end if
-        for i in range(start, end):
-            chapter_id = self.chapters[i]
-            url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=' \
-              + self.csrf + '&bookId=' + self.novel_id + '&chapterId=' + chapter_id
-            print('Getting chapter...', i + 1, '[' , chapter_id, ']')
-            response = requests.get(url)
-            response.encoding = 'utf-8'
-            data = response.json()
-            novel_name = data['data']['bookInfo']['bookName']
-            author_name = data['data']['bookInfo']['authorName']
-            chapter_title = data['data']['chapterInfo']['chapterName']
-            chapter_no = data['data']['chapterInfo']['chapterIndex']
-            body = data['data']['chapterInfo']['content']
-            body = ''.join(['<p>%s</p>' % x.strip()\
-                   for x in body.split('\r\n') if len(x.strip())])
-            volume_no = ((chapter_no - 1) // 100) + 1
-            save_chapter({
-                'url': url,
-                'novel': novel_name,
-                'author': author_name,
-                'volume_no': str(volume_no),
-                'chapter_no': str(chapter_no),
-                'chapter_title': chapter_title,
-                'body': '<h1>#%d: %s</h1>%s' % (chapter_no, chapter_title, body)
-            }, self.output_path)
-        # end while
+        future_to_url = {self.executor.submit(self.parse_chapter, index):\
+            index for index in range(start, end)}
+        concurrent.futures.as_completed(future_to_url)
+    # end def
+
+    def parse_chapter(self, index):
+        chapter_id = self.chapters[index]
+        url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=' \
+            + self.csrf + '&bookId=' + self.novel_id + '&chapterId=' + chapter_id
+        print('Getting chapter...', index + 1, '[' + chapter_id + ']')
+        response = requests.get(url)
+        response.encoding = 'utf-8'
+        data = response.json()
+        novel_name = data['data']['bookInfo']['bookName']
+        author_name = data['data']['bookInfo']['authorName']
+        chapter_title = data['data']['chapterInfo']['chapterName']
+        chapter_no = data['data']['chapterInfo']['chapterIndex']
+        body = data['data']['chapterInfo']['content']
+        body = ''.join(['<p>%s</p>' % x.strip()\
+                for x in body.split('\r\n') if len(x.strip())])
+        volume_no = ((chapter_no - 1) // 100) + 1
+        save_chapter({
+            'url': url,
+            'novel': novel_name,
+            'author': author_name,
+            'volume_no': str(volume_no),
+            'chapter_no': str(chapter_no),
+            'chapter_title': chapter_title,
+            'body': '<h1>#%d: %s</h1>%s' % (chapter_no, chapter_title, body)
+        }, self.output_path)
+        return chapter_id
     # end def
 # end class
 
