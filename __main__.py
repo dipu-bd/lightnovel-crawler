@@ -4,6 +4,7 @@
 import sys
 from EbookCrawler.lnmtl import LNMTLCrawler
 from EbookCrawler.wuxia import WuxiaCrawler
+from EbookCrawler.webnovel import WebNovelCrawler
 
 
 def main():
@@ -25,6 +26,12 @@ def main():
             start_url=sys.argv[3] if len(sys.argv) > 3 else '',
             end_url=sys.argv[4] if len(sys.argv) > 4 else ''
         ).start()
+    elif site == 'webnovel':
+        WebNovelCrawler(
+            novel_id=sys.argv[2],
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else ''
+        ).start()
     else:
         show_help()
     # end if
@@ -39,7 +46,7 @@ def show_help():
           '[<end-chapter>|<end-url>]')
     print()
     print('OPTIONS:')
-    print('site-name*   Site to crawl. Available: lnmtl, wuxia.')
+    print('site-name*   Site to crawl. Available: lnmtl, wuxia, webnovel.')
     print('novel-id*    Novel id appear in url (See HINTS)')
     print('start-url    Url of the chapter to start')
     print('end-url      Url of the final chapter')

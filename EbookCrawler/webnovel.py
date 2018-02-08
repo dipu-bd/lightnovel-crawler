@@ -7,7 +7,6 @@ chinese/korean/japanese light novels. Also known as **Qidian**.
 """
 import re
 import sys
-import urllib2
 import requests
 from os import path
 from .binding import novel_to_kindle
