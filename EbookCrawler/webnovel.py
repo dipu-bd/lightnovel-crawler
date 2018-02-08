@@ -65,7 +65,7 @@ class WebNovelCrawler:
         '''get content from all chapters till the end'''
         if not self.start_chapter: return
         start = int(self.start_chapter)
-        end = int(self.end_chapter) or len(self.chapters)
+        end = int(self.end_chapter or len(self.chapters))
         start = max(start - 1, 0)
         end = min(end, len(self.chapters))
         if start >= len(self.chapters):
