@@ -26,11 +26,10 @@ def novel_to_kindle(input_path):
             book = epub.EpubBook()
             book.set_identifier(novel_id + volume_no)
             book.set_language('en')
-            book.add_author()
             # get chapters
             contents = []
-            book_title = 'Unknown'
-            book_author = 'Unknown'
+            book_title = None
+            book_author = None
             vol = volume_no.rjust(2, '0')
             full_vol = os.path.join(input_path, volume_no)
             print('Processing:', full_vol)
@@ -48,10 +47,13 @@ def novel_to_kindle(input_path):
                     title=item['chapter_title'])
                 book.add_item(chapter)
                 contents.append(chapter)
-                book_title = item['novel'] or book_title 
-                book_author = item['author'] or book_author
+                if not book_title: book_title = item['novel']
+                if not book_author and 'author' in item: book_author = item['author']
             # end for
+            book_title = book_title or 'Unknown'
+            book_author = book_author or 'Unknown'
             book.spine = ['nav'] + contents
+            book.add_author(book_author)
             book.set_title(book_title + ' Volume ' + vol)
             book.toc = contents
             book.add_item(epub.EpubNav())
