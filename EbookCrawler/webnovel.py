@@ -23,12 +23,9 @@ class WebNovelCrawler:
         # end if
 
         self.novel_id = novel_id
-        self.novel_name = 'Unknown'
-        self.author_name = 'Sudipto Chandra'
-
-        self.home_url = 'https://www.webnovel.com/book/' + novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
+        self.chapters = []
 
         self.output_path = path.join('_novel', novel_id)
     # end def
@@ -37,35 +34,35 @@ class WebNovelCrawler:
     def start(self):
         '''start crawling'''
         self.get_csrf_token()
-        self.get_meta_info()
-        self.get_chapters()
-        # novel_to_kindle(self.output_path)
+        self.get_chapter_list()
+        self.get_chapter_bodies()
+        novel_to_kindle(self.output_path)
     # end def
 
     def get_csrf_token(self):
-        '''get novel name and author'''
-        print('Visiting:', self.home_url)
+        '''get csrf token'''
+        url = 'https://www.webnovel.com/book/' + self.novel_id
+        print('Getting CSRF Token from ', url)
         session = requests.Session()
-        session.get(self.home_url)
+        session.get(url)
         cookies = session.cookies.get_dict()
         self.csrf = cookies['_csrfToken']
         print('CSRF Token =', self.csrf)
     # end def
 
-    def get_meta_info(self):
-        '''get novel name and author'''
+    def get_chapter_list(self):
+        '''get list of chapters'''
         url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=' \
               + self.csrf + '&bookId=' + self.novel_id
         print('Getting book name and chapter list...')
         response = requests.get(url)
         data = response.json()
-        self.novel_name = data['data']['bookInfo']['bookName']
         self.chapters = [x['chapterId'] for x in data['data']['chapterItems']]
         print(len(self.chapters), 'chapters found')
     # end def
 
-    def get_chapters(self):
-        '''Crawl all chapters till the end'''
+    def get_chapter_bodies(self):
+        '''get content from all chapters till the end'''
         if not self.start_chapter: return
         start = int(self.start_chapter)
         end = self.end_chapter or len(self.chapters)
@@ -81,38 +78,32 @@ class WebNovelCrawler:
             print('Getting chapter...', i + 1, '[' , chapter_id, ']')
             response = requests.get(url)
             data = response.json()
-            self.author_name = data['data']['bookInfo']['authorName']
-            break
+            novel_name = data['data']['bookInfo']['bookName']
+            author_name = data['data']['bookInfo']['authorName']
+            chapter_title = data['data']['chapterInfo']['chapterName']
+            chapter_no = data['data']['chapterInfo']['chapterIndex']
+            vol_no = ((chapter_no - 1) // 100) + 1
+            body = data['data']['chapterInfo']['content']
+            body = ''.join([self.format_paragraph(x) for x in body.split('\r\n')])
+            save_chapter({
+                'url': url,
+                'novel': novel_name,
+                'author': author_name,
+                'chapter_no': str(chapter_no),
+                'chapter_title': chapter_title,
+                'volume_no': str(vol_no),
+                'body': '<h1>#%d: %s</h1>%s' % (chapter_no, chapter_title, body)
+            }, self.output_path)
         # end while
     # end def
 
-    def parse_chapter(self, browser):
-        '''Parse the content of the chapter page'''
-        url = browser.url.strip('/')
-        chapter_no = re.search(r'\d+.?$', url).group().strip('/')
-        vol_no = str(1 + (int(chapter_no) - 1) // 100)
-        if re.match(r'.*-book-\d+-chapter-\d+', url):
-            vol_no = re.search(r'-\d+-', url).group().strip('-')
-        # end if
-        articles = browser.find_by_css('div[itemprop="articleBody"] p')
-        body = [x for x in articles][1:-1]
-        chapter_title = body[0].text
-        if re.match(r'Chapter \d+.*', body[1].text):
-            chapter_title = body[1].text
-            body = body[2:]
-        else:
-            body = body[1:]
-        # end if
-        body = ''.join(['<p>' + x.html + '</p>' for x in body if x.text.strip()])
-        # save data
-        save_chapter({
-            'url': url,
-            'novel': self.novel_name,
-            'chapter_no': chapter_no,
-            'chapter_title': chapter_title,
-            'volume_no': vol_no,
-            'body': '<h1>%s</h1>%s' % (chapter_title, body)
-        }, self.output_path)
+    def format_paragraph(self, text):
+        '''format the paragraph'''
+        text = text.replace(u'\u00e2\u0080\u00a6', '&hellip;')
+        text = text.replace(u'\u00e2\u0080\u0094', '&mdash;')
+        text = text.replace(u'\u00e2\u0080\u0099', '&rsquo;')
+        text = text.replace(u'\u00e2\u0080\u0098', '&lsquo;')
+        return '<p>' + text.strip() +'</p>'
     # end def
 # end class
 
