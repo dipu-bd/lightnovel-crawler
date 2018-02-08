@@ -17,7 +17,7 @@ from .helper import get_browser, save_chapter
 class WebNovelCrawler:
     '''Crawler for WuxiaWorld'''
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
     def __init__(self, novel_id, start_chapter=None, end_chapter=None):
         if not novel_id:
@@ -76,7 +76,8 @@ class WebNovelCrawler:
         # end if
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
-        concurrent.futures.as_completed(future_to_url)
+        # wait till finish
+        [x.result() for x in concurrent.futures.as_completed(future_to_url)]
     # end def
 
     def parse_chapter(self, index):
