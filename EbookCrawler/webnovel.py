@@ -56,6 +56,7 @@ class WebNovelCrawler:
               + self.csrf + '&bookId=' + self.novel_id
         print('Getting book name and chapter list...')
         response = requests.get(url)
+        response.encoding = 'utf-8'
         data = response.json()
         self.chapters = [x['chapterId'] for x in data['data']['chapterItems']]
         print(len(self.chapters), 'chapters found')
@@ -77,35 +78,26 @@ class WebNovelCrawler:
               + self.csrf + '&bookId=' + self.novel_id + '&chapterId=' + chapter_id
             print('Getting chapter...', i + 1, '[' , chapter_id, ']')
             response = requests.get(url)
+            response.encoding = 'utf-8'
             data = response.json()
             novel_name = data['data']['bookInfo']['bookName']
             author_name = data['data']['bookInfo']['authorName']
             chapter_title = data['data']['chapterInfo']['chapterName']
             chapter_no = data['data']['chapterInfo']['chapterIndex']
-            vol_no = ((chapter_no - 1) // 100) + 1
             body = data['data']['chapterInfo']['content']
-            body = ''.join([self.format_paragraph(x) for x in body.split('\r\n')])
+            body = ''.join(['<p>%s</p>' % x.strip()\
+                   for x in body.split('\r\n') if len(x.strip())])
+            volume_no = ((chapter_no - 1) // 100) + 1
             save_chapter({
                 'url': url,
                 'novel': novel_name,
                 'author': author_name,
+                'volume_no': str(volume_no),
                 'chapter_no': str(chapter_no),
                 'chapter_title': chapter_title,
-                'volume_no': str(vol_no),
                 'body': '<h1>#%d: %s</h1>%s' % (chapter_no, chapter_title, body)
             }, self.output_path)
         # end while
-    # end def
-
-    def format_paragraph(self, text):
-        '''format the paragraph'''
-        text = text.replace(u'\u00e2\u0080\u00a6', '&hellip;')
-        text = text.replace(u'\u00e2\u0080\u0094', '&mdash;')
-        text = text.replace(u'\u00e2\u0080\u0099', '&rsquo;')
-        text = text.replace(u'\u00e2\u0080\u0098', '&lsquo;')
-        text = text.replace(u'\u00e2\u0084\u0083', '&deg;')
-        text = text.replace(u'\u00e2', '')
-        return '<p>' + text.strip() +'</p>'
     # end def
 # end class
 
