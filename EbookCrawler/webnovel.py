@@ -7,6 +7,7 @@ chinese/korean/japanese light novels. Also known as **Qidian**.
 """
 import re
 import sys
+import json
 import requests
 from os import path
 from .binding import novel_to_kindle
@@ -54,9 +55,11 @@ class WebNovelCrawler:
         '''get novel name and author'''
         url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=' \
               + self.csrf + '&bookId=' + self.novel_id
-        print('Visiting:', url)
+        print('Getting book name and chapter list...')
         response = requests.get(url)
-        print(response.text)
+        data = response.json()
+        self.novel_name = data['data']['bookInfo']['bookName']
+        self.chapters = [x['chapterId'] for x in data['data']['chapterItems']]
     # end def
 
     def crawl_chapters(self, browser):
