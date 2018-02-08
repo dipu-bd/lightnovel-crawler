@@ -65,9 +65,9 @@ class WebNovelCrawler:
         '''get content from all chapters till the end'''
         if not self.start_chapter: return
         start = int(self.start_chapter)
-        end = self.end_chapter or len(self.chapters)
+        end = int(self.end_chapter) or len(self.chapters)
         start = max(start - 1, 0)
-        end = min(end + 1, len(self.chapters))
+        end = min(end, len(self.chapters))
         if start >= len(self.chapters):
           return print('ERROR: start chapter out of bound.')
         # end if
@@ -103,6 +103,8 @@ class WebNovelCrawler:
         text = text.replace(u'\u00e2\u0080\u0094', '&mdash;')
         text = text.replace(u'\u00e2\u0080\u0099', '&rsquo;')
         text = text.replace(u'\u00e2\u0080\u0098', '&lsquo;')
+        text = text.replace(u'\u00e2\u0084\u0083', '&deg;')
+        text = text.replace(u'\u00e2', '')
         return '<p>' + text.strip() +'</p>'
     # end def
 # end class
