@@ -5,8 +5,7 @@ import json
 from os import path, makedirs
 from splinter import Browser
 
-CHROME_DRIVER = path.abspath(path.join(
-    path.dirname(__file__), '..', 'lib', 'chromedriver'))
+CHROME_DRIVER = path.join('lib', 'chromedriver')
 
 
 def get_browser():

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Crawler LNMTL novels and create epub files
+"""Crawl WuxiaWorld novels and create epub & mobi files
 
-[LNMTL](https://lnmtl.com) is a website containing machine translated
-novels. This code will convert any given book from this site into epub.
+[WuxiaWorld](http://www.wuxiaworld.com/) is a website of english translated
+chinese/korean/japanese light novels.
 """
 import re
 import sys
@@ -28,7 +28,7 @@ class WuxiaCrawler:
         self.start_url = self.get_url_from_chapter(start_url)
         self.end_url = self.get_url_from_chapter(end_url)
 
-        self.output_path = path.abspath(path.join(path.dirname(__file__), '..', '_novel', novel_id))
+        self.output_path = path.join('_novel', novel_id)
     # end def
 
     def get_url_from_chapter(self, chapter):

@@ -11,11 +11,8 @@ from subprocess import call
 from ebooklib import epub
 from PIL import Image, ImageFont, ImageDraw
 
-KINDLEGEN_PATH = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', 'lib', 'kindlegen', 'kindlegen'))
-
-BOOK_PATH = os.path.abspath(os.path.join(
-    os.path.dirname(__file__), '..', '_book'))
+KINDLEGEN_PATH = os.path.join('lib', 'kindlegen', 'kindlegen')
+BOOK_PATH = '_book'
 
 
 def novel_to_kindle(input_path):

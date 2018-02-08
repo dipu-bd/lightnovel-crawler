@@ -32,7 +32,7 @@ class LNMTLCrawler:
         self.start_url = self.get_url_from_chapter(start_url)
         self.end_url = self.get_url_from_chapter(end_url)
 
-        self.output_path = path.abspath(path.join(path.dirname(__file__), '..', '_novel', novel_id))
+        self.output_path = path.join('_novel', novel_id)
     # end def
 
     def get_url_from_chapter(self, chapter):
