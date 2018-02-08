@@ -18,7 +18,6 @@ BOOK_PATH = '_book'
 def novel_to_kindle(input_path):
     ''''Convert novel to epub'''
     novel_id = os.path.basename(input_path)
-    output_path = os.path.join(BOOK_PATH, novel_id)
     # Create epubs by volumes
     for volume_no in sorted(os.listdir(input_path)):
         try:
@@ -59,10 +58,11 @@ def novel_to_kindle(input_path):
             book.add_item(epub.EpubNav())
             book.add_item(epub.EpubNcx())
             # Create epub
+            output_path = os.path.join(BOOK_PATH, book_title)
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
             # end if
-            file_name = novel_id + '_v' + volume_no + '.epub'
+            file_name = book_title + '_v' + volume_no + '.epub'
             file_path = os.path.join(output_path, file_name)
             print('Creating:', file_path)
             epub.write_epub(file_path, book, {})
