@@ -35,17 +35,28 @@ class WebNovelCrawler:
 
     def start(self):
         '''start crawling'''
-        self.crawl_csrf_token()
+        self.get_csrf_token()
+        self.get_meta_info()
         # novel_to_kindle(self.output_path)
     # end def
 
-    def crawl_csrf_token(self):
+    def get_csrf_token(self):
         '''get novel name and author'''
         print('Visiting:', self.home_url)
         session = requests.Session()
+        session.get(self.home_url)
         cookies = session.cookies.get_dict()
         self.csrf = cookies['_csrfToken']
-        print(cookies, self.csrf)
+        print('CSRF Token =', self.csrf)
+    # end def
+
+    def get_meta_info(self):
+        '''get novel name and author'''
+        url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=' \
+              + self.csrf + '&bookId=' + self.novel_id
+        print('Visiting:', url)
+        response = requests.get(url)
+        print(response.text)
     # end def
 
     def crawl_chapters(self, browser):
