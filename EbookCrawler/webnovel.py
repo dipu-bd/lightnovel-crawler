@@ -38,6 +38,7 @@ class WebNovelCrawler:
         '''start crawling'''
         self.get_csrf_token()
         self.get_meta_info()
+        self.get_chapters()
         # novel_to_kindle(self.output_path)
     # end def
 
@@ -60,23 +61,28 @@ class WebNovelCrawler:
         data = response.json()
         self.novel_name = data['data']['bookInfo']['bookName']
         self.chapters = [x['chapterId'] for x in data['data']['chapterItems']]
+        print(len(self.chapters), 'chapters found')
     # end def
 
-    def crawl_chapters(self, browser):
+    def get_chapters(self):
         '''Crawl all chapters till the end'''
-        url = self.start_url
-        while url:
-            print('Visiting:', url)
-            browser.visit(url)
-            next_link = browser.find_link_by_partial_text('Next Chapter')
-            if not next_link:
-                break
-            # end if
-            self.parse_chapter(browser)
-            if url == self.end_url:
-                break
-            # end if
-            url = next_link.first['href'].strip('/')
+        if not self.start_chapter: return
+        start = int(self.start_chapter)
+        end = self.end_chapter or len(self.chapters)
+        start = max(start - 1, 0)
+        end = min(end + 1, len(self.chapters))
+        if start >= len(self.chapters):
+          return print('ERROR: start chapter out of bound.')
+        # end if
+        for i in range(start, end):
+            chapter_id = self.chapters[i]
+            url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=' \
+              + self.csrf + '&bookId=' + self.novel_id + '&chapterId=' + chapter_id
+            print('Getting chapter...', i + 1, '[' , chapter_id, ']')
+            response = requests.get(url)
+            data = response.json()
+            self.author_name = data['data']['bookInfo']['authorName']
+            break
         # end while
     # end def
 
