@@ -1,6 +1,6 @@
 # Site To Epub
 
-Crawl website and convert it into EPUB files
+Crawl website and convert it into EPUB and MOBI files
 
 ## Available Sites
 
