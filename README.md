@@ -1,4 +1,4 @@
-# Site To Epub
+# LightNovels To EBook
 
 Crawl website and convert it into EPUB and MOBI files
 
