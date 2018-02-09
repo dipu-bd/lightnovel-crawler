@@ -111,6 +111,8 @@ class WebNovelCrawler:
 
     def format_text(self, text):
         '''make it a valid html'''
+        text = text.replace('<p>', '')
+        text = text.replace('</p>', '\n')
         text = text.replace('<', '&lt;')
         text = text.replace('>', '&gt;')
         return text.strip()
