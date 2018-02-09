@@ -5,9 +5,9 @@ Crawl website and convert it into EPUB files
 ## Available Sites
 
 - **Webnovel Crawler**: [WebNovel](https://www.webnovel.com) is a website of english translated
-chinese/korean/japanese light novels. Also known as **Qidian**.
+light novels. Also known as **Qidian**.
 
-- **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
+- **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese novels.
 
 - **LNMTL Crawler**: [LNMTL](https://lnmtl.com) is a website containing machine translated novels. This code will convert any given book from this site into epub.
 
