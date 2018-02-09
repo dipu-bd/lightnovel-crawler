@@ -17,6 +17,9 @@ BOOK_PATH = '_book'
 
 def novel_to_kindle(input_path):
     ''''Convert novel to epub'''
+    if not os.path.exists(input_path):
+        return print(input_path, 'does not exists')
+    # end if
     novel_id = os.path.basename(input_path)
     # Create epubs by volumes
     for volume_no in sorted(os.listdir(input_path)):

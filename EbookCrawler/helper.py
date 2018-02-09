@@ -21,11 +21,15 @@ def save_chapter(content, output_path):
     '''save content to file'''
     vol = content['volume_no'].rjust(2, '0')
     chap = content['chapter_no'].rjust(5, '0')
-    file_name = path.join(output_path, vol, chap + '.json')
-    print('Saving ', file_name)
-    if not path.exists(path.dirname(file_name)):
-        makedirs(path.dirname(file_name))
+    dir_name = path.join(output_path, vol)
+    if not path.exists(dir_name):
+        makedirs(dir_name)
     # end if
+    file_name = path.join(dir_name, chap + '.json')
+    if path.exists(file_name):
+        return print('File', file_name, 'already exists!')
+    # end while
+    print('Saving ', file_name)
     with open(file_name, 'w') as file:
         file.write(json.dumps(content))
     # end with
