@@ -9,7 +9,7 @@ EbookCrawler:
   python . <site-name> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
 
 OPTIONS:
-site-name*   Site to crawl. Available: lnmtl, wuxia.
+site-name*   Site to crawl. Available: lnmtl, wuxia, webnovel.
 novel-id*    Novel id appear in url (See HINTS)
 start-url    Url of the chapter to start
 end-url      Url of the final chapter
@@ -25,13 +25,17 @@ HINTS:
 
 ### Some Examples
 
-- Make eBook only: `python . wuxia awe`
+- Skip start index to make eBook only: `python . wuxia awe`
 - All chapters from 333: `python . wuxia awe 333`
 - Chapter 333 to 335: `python . wuxia awe 333 335`
 - Define start url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
 - Define start and end url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/ http://www.wuxiaworld.com/desolate-era-index/de-book-2-chapter-10`
+- From webnovel:  `python . webnovel 7817013305001305 1`
 
 ### Available Sites
+
+- **Webnovel Crawler**: [WebNovel](https://www.webnovel.com) is a website of english translated
+chinese/korean/japanese light novels. Also known as **Qidian**.
 
 - **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
 
