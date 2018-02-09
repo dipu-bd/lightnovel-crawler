@@ -9,7 +9,7 @@ light novels. Also known as **Qidian**.
 
 - **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese novels.
 
-- **LNMTL Crawler**: [LNMTL](https://lnmtl.com) is a website containing machine translated novels. This code will convert any given book from this site into epub.
+- **LNMTL Crawler**: [LNMTL](https://lnmtl.com) is a website containing machine translated novels.
 
 ## Instructions
 
