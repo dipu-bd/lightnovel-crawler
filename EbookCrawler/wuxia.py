@@ -86,6 +86,9 @@ class WuxiaCrawler:
         '''Parse the content of the chapter page'''
         url = browser.url.strip('/')
         chapter_no = re.search(r'chapter-\d+.*$', url)
+        if not chapter_no:
+            return print('No chapter number found!')
+        # end if
         chapter_no = chapter_no.group().strip('chapter-').strip('/')
         if not chapter_no.isdigit():
             return print('Chapter ', chapter_no, ' is not valid!')
