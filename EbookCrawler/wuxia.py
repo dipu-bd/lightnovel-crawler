@@ -62,6 +62,7 @@ class WuxiaCrawler:
         browser.visit(self.home_url)
         novel = browser.find_by_css('h1.entry-title').first.text
         self.novel_name = re.sub(r' – Index$', '', novel)
+        self.novel_name = re.sub(r'[^\x00-\xff]|[\(\)]', '', self.novel_name).strip()
     # end def
 
     def crawl_chapters(self, browser):
@@ -85,19 +86,20 @@ class WuxiaCrawler:
     def parse_chapter(self, browser):
         '''Parse the content of the chapter page'''
         url = browser.url.strip('/')
+        if url.endswith('interlude'):
+            return print('Not valid. It is an interlude.')
+        # end if
         chapter_no = re.search(r'chapter-\d+', url)
         if not chapter_no:
             return print('No chapter number found!')
         # end if
         chapter_no = chapter_no.group().strip('chapter-')
-        if not chapter_no.isdigit():
-            return print('Chapter ', chapter_no, ' is not valid!')
-        # end if
         vol_no = re.search(r'book-\d+', url)
         if vol_no:
             vol_no = vol_no.group().strip('book-')
         else:
-            vol_no = str(1 + (int(chapter_no) - 1) // 100)
+            chapter = re.search(r'\d+', chapter_no).group()
+            vol_no = str(1 + (int(chapter) - 1) // 100)
         # end if
         articles = browser.find_by_css('div[itemprop="articleBody"] p')
         body = [x for x in articles][1:-1]
