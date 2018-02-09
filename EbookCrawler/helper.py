@@ -26,9 +26,6 @@ def save_chapter(content, output_path):
         makedirs(dir_name)
     # end if
     file_name = path.join(dir_name, chap + '.json')
-    if path.exists(file_name):
-        return print('File', file_name, 'already exists!')
-    # end while
     print('Saving ', file_name)
     with open(file_name, 'w') as file:
         file.write(json.dumps(content))
