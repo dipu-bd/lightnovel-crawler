@@ -2,6 +2,15 @@
 
 Crawl website and convert it into EPUB files
 
+## Available Sites
+
+- **Webnovel Crawler**: [WebNovel](https://www.webnovel.com) is a website of english translated
+chinese/korean/japanese light novels. Also known as **Qidian**.
+
+- **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
+
+- **LNMTL Crawler**: [LNMTL](https://lnmtl.com) is a website containing machine translated novels. This code will convert any given book from this site into epub.
+
 ## Instructions
 
 ```bash
@@ -31,15 +40,6 @@ HINTS:
 - Define start url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
 - Define start and end url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/ http://www.wuxiaworld.com/desolate-era-index/de-book-2-chapter-10`
 - From webnovel:  `python . webnovel 7817013305001305 1`
-
-### Available Sites
-
-- **Webnovel Crawler**: [WebNovel](https://www.webnovel.com) is a website of english translated
-chinese/korean/japanese light novels. Also known as **Qidian**.
-
-- **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese and korean novels. This code will convert any given book from this site into epub.
-
-- **LNMTL Crawler**: [LNMTL](https://lnmtl.com) is a website containing machine translated novels. This code will convert any given book from this site into epub.
 
 ## Requirements
 
