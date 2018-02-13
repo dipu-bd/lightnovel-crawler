@@ -92,9 +92,10 @@ class WebNovelCrawler:
         author_name = data['data']['bookInfo']['authorName']
         chapter_title = data['data']['chapterInfo']['chapterName']
         chapter_no = data['data']['chapterInfo']['chapterIndex']
-        body = data['data']['chapterInfo']['content']
+        contents = data['data']['chapterInfo']['content']
+        body_parts = contents.replace('\r\n', '\n').split('\n')
         body = ''.join(['<p>%s</p>' % self.format_text(x)\
-                for x in body.split('\r\n') if len(x.strip())])
+               for x in body_parts if len(x.strip())])
         volume_no = ((chapter_no - 1) // 100) + 1
         chapter_title = self.format_text(chapter_title)
         save_chapter({
