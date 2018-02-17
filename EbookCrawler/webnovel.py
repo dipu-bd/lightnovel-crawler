@@ -93,11 +93,11 @@ class WebNovelCrawler:
         chapter_title = data['data']['chapterInfo']['chapterName']
         chapter_no = data['data']['chapterInfo']['chapterIndex']
         contents = data['data']['chapterInfo']['content']
-        body_parts = contents.replace('\r\n', '\n').split('\n')
-        body = ''.join(['<p>%s</p>' % self.format_text(x)\
-               for x in body_parts if len(x.strip())])
+        body_parts = self.format_text(contents).splitlines()
+        body = ''.join(['<p>%s</p>' % x for x in body_parts if len(x.strip())])
         volume_no = ((chapter_no - 1) // 100) + 1
         chapter_title = self.format_text(chapter_title)
+        chapter_title = '#%d: %s' % (chapter_no, chapter_title)
         save_chapter({
             'url': url,
             'novel': novel_name,
@@ -105,7 +105,7 @@ class WebNovelCrawler:
             'volume_no': str(volume_no),
             'chapter_no': str(chapter_no),
             'chapter_title': chapter_title,
-            'body': '<h1>#%d: %s</h1>%s' % (chapter_no, chapter_title, body)
+            'body': '<h1>%s</h1>%s' % (chapter_title, body)
         }, self.output_path)
         return chapter_id
     # end def
