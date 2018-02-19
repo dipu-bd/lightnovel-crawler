@@ -93,7 +93,7 @@ class WebNovelCrawler:
         chapter_title = data['data']['chapterInfo']['chapterName']
         chapter_no = data['data']['chapterInfo']['chapterIndex']
         contents = data['data']['chapterInfo']['content']
-        body_parts = self.format_text(contents).splitlines()
+        body_parts = self.format_text(contents).split('\n')
         body = ''.join(['<p>%s</p>' % x for x in body_parts if len(x.strip())])
         volume_no = ((chapter_no - 1) // 100) + 1
         chapter_title = self.format_text(chapter_title)
@@ -116,6 +116,9 @@ class WebNovelCrawler:
         text = text.replace('</p>', '\n')
         text = text.replace('<', '&lt;')
         text = text.replace('>', '&gt;')
+        text = text.replace('&lt;em&gt;', '<em>')
+        text = text.replace('&lt;/em&gt;', '</em>')
+        text = text.replace('\r\n', '\n')
         return text.strip()
     # end def
 # end class
