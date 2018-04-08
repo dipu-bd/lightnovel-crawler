@@ -37,7 +37,10 @@ class WuxiaCrawler:
             return None
         # end if
         if chapter.isdigit():
-            return '%s/%s-chapter-%s' % (self.home_url, self.novel_id, chapter)
+            print('\nError: Chapter number is not supported for WuxiaWord at this moment.',
+                  'Provide full url of the chapter, e.g.',
+                  'https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-40\n\n')
+            raise Exception('Invalid URL')
         else:
             return chapter.strip('/')
     # end def
@@ -73,11 +76,12 @@ class WuxiaCrawler:
             if not next_link:
                 break
             # end if
+            url_new = next_link.first['href'].strip('/#')
             self.parse_chapter(browser)
-            if url == self.end_url:
+            if url == url_new or url == self.end_url:
                 break
             # end if
-            url = next_link.first['href']
+            url = url_new
         # end while
     # end def
 
@@ -100,15 +104,16 @@ class WuxiaCrawler:
             vol_no = str(1 + (int(chapter) - 1) // 100)
         # end if
         novel_name = browser.find_by_css('.top-bar-area .caption h4').first.text
-        body = browser.find_by_css('.panel-default .fr-view p')
-        chapter_title = body[0].text
-        # if re.match(r'Chapter \d+.*', body[1].text):
-        #     chapter_title = body[1].text
-        #     body = body[2:]
-        # else:
-        #     body = body[1:]
-        # # end if
-        body = ''.join(['<p>' + x.html + '</p>' for i, x in enumerate(body) if i > 0 and x.text.strip()])
+        chapter_title = browser.find_by_css('.panel-default .caption h4').first.text
+        body = [x for x in browser.find_by_css('.panel-default .fr-view p')]
+        if re.match(r'(Book \d+)?.*Chapter \d+.*', body[0].text):
+            chapter_title = body[0].text
+            body = body[1:]
+        elif re.match(r'(Book \d+)?.*Chapter \d+.*', body[1].text):
+            chapter_title = body[1].text
+            body = body[2:]
+        # end if
+        body = ''.join(['<p>' + x.html + '</p>' for x in body if x.text.strip()])
         # save data
         save_chapter({
             'url': url,
