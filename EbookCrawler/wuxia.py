@@ -22,9 +22,9 @@ class WuxiaCrawler:
 
         self.novel_id = novel_id
         self.novel_name = 'Unknown'
-        self.author_name = 'Sudipto Chandra'
+        self.author_name = 'Unknown'
 
-        self.home_url = 'http://www.wuxiaworld.com/%s-index' % (novel_id)
+        self.home_url = 'http://www.wuxiaworld.com/novel/%s' % (novel_id)
         self.start_url = self.get_url_from_chapter(start_url)
         self.end_url = self.get_url_from_chapter(end_url)
 
@@ -47,7 +47,7 @@ class WuxiaCrawler:
         browser = get_browser()
         try:
             if self.start_url:
-                self.crawl_meta_info(browser)
+                # self.crawl_meta_info(browser)
                 self.crawl_chapters(browser)
             # end if
         finally:
@@ -60,9 +60,7 @@ class WuxiaCrawler:
         '''get novel name and author'''
         print('Visiting:', self.home_url)
         browser.visit(self.home_url)
-        novel = browser.find_by_css('h1.entry-title').first.text
-        self.novel_name = re.sub(r' – Index$', '', novel)
-        self.novel_name = re.sub(r'[^\x00-\xff]|[\(\)]', '', self.novel_name).strip()
+        self.novel_name = browser.find_by_css('.panel.panel-default h4').first.text
     # end def
 
     def crawl_chapters(self, browser):
@@ -71,7 +69,7 @@ class WuxiaCrawler:
         while url:
             print('Visiting:', url)
             browser.visit(url)
-            next_link = browser.find_link_by_partial_text('Next Chapter')
+            next_link = browser.find_by_css('.top-bar-area .next a')
             if not next_link:
                 break
             # end if
@@ -79,7 +77,7 @@ class WuxiaCrawler:
             if url == self.end_url:
                 break
             # end if
-            url = next_link.first['href'].strip('/')
+            url = next_link.first['href']
         # end while
     # end def
 
@@ -101,20 +99,20 @@ class WuxiaCrawler:
             chapter = re.search(r'\d+', chapter_no).group()
             vol_no = str(1 + (int(chapter) - 1) // 100)
         # end if
-        articles = browser.find_by_css('div[itemprop="articleBody"] p')
-        body = [x for x in articles][1:-1]
+        novel_name = browser.find_by_css('.top-bar-area .caption h4').first.text
+        body = browser.find_by_css('.panel-default .fr-view p')
         chapter_title = body[0].text
-        if re.match(r'Chapter \d+.*', body[1].text):
-            chapter_title = body[1].text
-            body = body[2:]
-        else:
-            body = body[1:]
-        # end if
-        body = ''.join(['<p>' + x.html + '</p>' for x in body if x.text.strip()])
+        # if re.match(r'Chapter \d+.*', body[1].text):
+        #     chapter_title = body[1].text
+        #     body = body[2:]
+        # else:
+        #     body = body[1:]
+        # # end if
+        body = ''.join(['<p>' + x.html + '</p>' for i, x in enumerate(body) if i > 0 and x.text.strip()])
         # save data
         save_chapter({
             'url': url,
-            'novel': self.novel_name,
+            'novel': novel_name,
             'chapter_no': chapter_no,
             'chapter_title': chapter_title,
             'volume_no': vol_no,
