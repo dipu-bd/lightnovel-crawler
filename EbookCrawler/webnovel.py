@@ -93,10 +93,8 @@ class WebNovelCrawler:
         chapter_title = data['data']['chapterInfo']['chapterName']
         chapter_no = data['data']['chapterInfo']['chapterIndex']
         contents = data['data']['chapterInfo']['content']
-        body_parts = self.format_text(contents).split('\n')
-        body = ''.join(['<p>%s</p>' % x for x in body_parts if len(x.strip())])
+        body_part = self.format_text(contents)
         volume_no = ((chapter_no - 1) // 100) + 1
-        chapter_title = self.format_text(chapter_title)
         chapter_title = '#%d: %s' % (chapter_no, chapter_title)
         save_chapter({
             'url': url,
@@ -105,20 +103,25 @@ class WebNovelCrawler:
             'volume_no': str(volume_no),
             'chapter_no': str(chapter_no),
             'chapter_title': chapter_title,
-            'body': '<h1>%s</h1>%s' % (chapter_title, body)
+            'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
         }, self.output_path)
         return chapter_id
     # end def
 
     def format_text(self, text):
         '''make it a valid html'''
-        text = text.replace('<p>', '')
-        text = text.replace('</p>', '\n')
-        text = text.replace('<', '&lt;')
-        text = text.replace('>', '&gt;')
-        text = text.replace('&lt;em&gt;', '<em>')
-        text = text.replace('&lt;/em&gt;', '</em>')
-        text = text.replace('\r\n', '\n')
+        if ('<p>' in text) and ('</p>' in text):
+            text = text.replace(r'[ \n\r]+', '\n')
+        else:
+            # text = text.replace('<p>', '')
+            # text = text.replace('</p>', '\n')
+            text = text.replace('<', '&lt;')
+            text = text.replace('>', '&gt;')
+            # text = text.replace('&lt;em&gt;', '<em>')
+            # text = text.replace('&lt;/em&gt;', '</em>')
+            text = text.replace(r'[ \n\r]+', '\n')
+            text = '<p>' + '</p><p>'.join(text.split('\n')) + '</p>'
+        # end if
         return text.strip()
     # end def
 # end class
