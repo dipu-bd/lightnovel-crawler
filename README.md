@@ -22,7 +22,7 @@ site-name*   Site to crawl. Available: lnmtl, wuxia, webnovel.
 novel-id*    Novel id appear in url (See HINTS)
 start-url    Url of the chapter to start
 end-url      Url of the final chapter
-end-chapter  Starting chapter
+start-chapter  Starting chapter
 end-chapter  Ending chapter
 
 HINTS:
@@ -34,12 +34,12 @@ HINTS:
 
 ### Some Examples
 
-- Skip start index to make eBook only: `python . wuxia awe`
-- All chapters from 333: `python . wuxia awe 333`
-- Chapter 333 to 335: `python . wuxia awe 333 335`
-- Define start url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/`
-- Define start and end url: `python . wuxia desolate-era http://www.wuxiaworld.com/desolate-era-index/de-book-1-chapter-1/ http://www.wuxiaworld.com/desolate-era-index/de-book-2-chapter-10`
+- Skip start index to make ebooks only: `python . wuxia desolate-era`
+- Define start url: `python . wuxia desolate-era http://www.wuxiaworld.com/novel/desolate-era/de-book-1-chapter-1/`
+- Define start and end url: `python . wuxia desolate-era http://www.wuxiaworld.com/novel/desolate-era/de-book-1-chapter-1/ http://www.wuxiaworld.com/novel/desolate-era/de-book-2-chapter-10`
+
 - From webnovel:  `python . webnovel 7817013305001305 1`
+- From chapter 4 to 88:  `python . webnovel 7817013305001305 4 88`
 
 ## Requirements
 
