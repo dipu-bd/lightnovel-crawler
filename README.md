@@ -29,10 +29,11 @@ end-chapter  Ending chapter
 HINTS:
 - * marked params are required
 - Do not provide any start or end chapter for just book binding
-- Get the `novel-id` is from the link:
-- `...wuxiaworld.com/desolate-era-index/de-...` = [Novel ID: `desolate-era`]
-- `...lnmtl.../a-thought-through-eternity-chapter-573` = [Novel ID: `a-thought-through-eternity`]
-- `...readlightnovel.../tales-of-herding-gods` = [Novel ID: `tales-of-herding-gods`]
+- Get the `novel-id` from the link. Some examples:
+  https://www.webnovel.com/book/8143258106003605/21860374051617214 = [Novel ID: `8143258106003605`]
+  https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1 = [Novel ID: `a-will-eternal`]
+  https://lnmtl.com/novel/against-the-gods = [Novel ID: `against-the-gods`]
+  https://www.readlightnovel.org/tales-of-herding-gods = [Novel ID: `tales-of-herding-gods`]
 ```
 
 ### Some Examples
