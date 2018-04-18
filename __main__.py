@@ -63,9 +63,11 @@ def show_help():
     print('HINTS:')
     print('- * marked params are required')
     print('- Do not provide any start or end chapter for just book binding')
-    print('- Novel id of: `...wuxiaworld.com/desolate-era-index/de-...` is `desolate-era`')
-    print('- Novel id of: `...lnmtl.../a-thought-through-eternity-chapter-573`',
-          'is `a-thought-through-eternity`')
+    print('- Get the `novel-id` from the link. Some examples:')
+    print('\n  https://www.webnovel.com/book/8143258106003605/21860374051617214 \n    novel_id = `8143258106003605`')
+    print('\n  https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1 \n    novel_id = `a-will-eternal`')
+    print('\n  https://lnmtl.com/novel/against-the-gods \n    novel_id = `against-the-gods`')
+    print('\n  https://www.readlightnovel.org/tales-of-herding-gods \n    novel_id = `tales-of-herding-gods`')
     print()
 # end def
 
