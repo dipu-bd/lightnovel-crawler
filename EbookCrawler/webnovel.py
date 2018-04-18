@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Crawler WebNovel novels and create epub & mobi files.
-
-[WebNovel](https://www.webnovel.com) is a website of english translated
-chinese/korean/japanese light novels. Also known as **Qidian**.
+"""
+Crawler for novels from [WebNovel](https://www.webnovel.com).
 """
 import re
 import sys

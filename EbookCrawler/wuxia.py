@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Crawl WuxiaWorld novels and create epub & mobi files
-
-[WuxiaWorld](http://www.wuxiaworld.com/) is a website of english translated
-chinese/korean/japanese light novels.
+"""
+Crawler for [WuxiaWorld](http://www.wuxiaworld.com/)
 """
 import re
 import sys

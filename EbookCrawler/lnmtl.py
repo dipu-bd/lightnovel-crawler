@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""Crawler LNMTL novels and create epub files
+"""
+Crawler for novels from [LNMTL](https://lnmtl.com).
 
-[LNMTL](https://lnmtl.com) is a website containing machine translated
-novels. This code will convert any given book from this site into epub.
+It has machine translated novels and is reeeally up to date.
 """
 import re
 import sys
