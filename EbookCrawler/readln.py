@@ -35,9 +35,12 @@ class ReadLightNovelCrawler:
 
     def start(self):
         '''start crawling'''
-        self.get_chapter_list()
-        self.get_chapter_bodies()
-        novel_to_kindle(self.output_path)
+        try:
+            self.get_chapter_list()
+            self.get_chapter_bodies()
+        finally:
+            novel_to_kindle(self.output_path)
+        # end try
     # end def
 
     def get_chapter_list(self):
