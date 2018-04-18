@@ -4,12 +4,13 @@ Crawl website and convert it into EPUB and MOBI files
 
 ## Available Sites
 
-- **Webnovel Crawler**: [WebNovel](https://www.webnovel.com) is a website of english translated
-light novels. Also known as **Qidian**.
+- **Webnovel Crawler**: [WebNovel](https://www.webnovel.com). Also known as **Qidian**.
 
-- **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/) has many translated chinese novels.
+- **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/).
 
-- **LNMTL Crawler**: [LNMTL](https://lnmtl.com) is a website containing machine translated novels.
+- **LNMTL Crawler**: [LNMTL](https://lnmtl.com) - has machine translated novels.
+
+- **ReadLN Crawler**: [ReadLightNovel](https://www.readlightnovel.org/).
 
 ## Instructions
 
@@ -18,7 +19,7 @@ EbookCrawler:
   python . <site-name> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
 
 OPTIONS:
-site-name*   Site to crawl. Available: lnmtl, wuxia, webnovel.
+site-name*   Site to crawl. Available: lnmtl, wuxia, webnovel, readln.
 novel-id*    Novel id appear in url (See HINTS)
 start-url    Url of the chapter to start
 end-url      Url of the final chapter
@@ -28,8 +29,10 @@ end-chapter  Ending chapter
 HINTS:
 - * marked params are required
 - Do not provide any start or end chapter for just book binding
-- Novel id of: `...wuxiaworld.com/desolate-era-index/de-...` is `desolate-era`
-- Novel id of: `...lnmtl.../a-thought-through-eternity-chapter-573` is `a-thought-through-eternity`
+- Get the `novel-id` is from the link:
+- `...wuxiaworld.com/desolate-era-index/de-...` = [Novel ID: `desolate-era`]
+- `...lnmtl.../a-thought-through-eternity-chapter-573` = [Novel ID: `a-thought-through-eternity`]
+- `...readlightnovel.../tales-of-herding-gods` = [Novel ID: `tales-of-herding-gods`]
 ```
 
 ### Some Examples
@@ -40,6 +43,9 @@ HINTS:
 
 - From webnovel:  `python . webnovel 7817013305001305 1`
 - From chapter 4 to 88:  `python . webnovel 7817013305001305 4 88`
+
+- From readln: `python . readln tales-of-herding-gods 1 10`
+- From lnmtl: `python . lnmtl against-the-gods 1`
 
 ## Requirements
 
