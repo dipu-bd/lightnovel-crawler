@@ -90,16 +90,16 @@ class ReadLightNovelCrawler:
 
     def parse_chapter(self, index):
         url = self.chapters[index]
-        print('Visiting ', url)
+        print('Downloading', url)
         response = requests.get(url, verify=False)
         response.encoding = 'utf-8'
         html_doc = response.text
-        print('Getting chapter body... ')
         soup = BeautifulSoup(html_doc, 'lxml')
         chapter_title = soup.select_one('.block-title h1').text
-        body_part = [p.html for p in soup.select('.chapter-content3 p')]
+        body_part = [str(p.extract()) for p in soup.select('.chapter-content3 p') if len(p.text)]
         chapter_no = index + 1
         volume_no = ((chapter_no - 1) // 100) + 1
+        body_part = ''.join(body_part)
         save_chapter({
             'url': url,
             'novel': self.novel_name,
@@ -109,23 +109,6 @@ class ReadLightNovelCrawler:
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
         }, self.output_path)
-    # end def
-
-    def format_text(self, text):
-        '''make it a valid html'''
-        if ('<p>' in text) and ('</p>' in text):
-            text = text.replace(r'[ \n\r]+', '\n')
-        else:
-            # text = text.replace('<p>', '')
-            # text = text.replace('</p>', '\n')
-            text = text.replace('<', '&lt;')
-            text = text.replace('>', '&gt;')
-            # text = text.replace('&lt;em&gt;', '<em>')
-            # text = text.replace('&lt;/em&gt;', '</em>')
-            text = text.replace(r'[ \n\r]+', '\n')
-            text = '<p>' + '</p><p>'.join(text.split('\n')) + '</p>'
-        # end if
-        return text.strip()
     # end def
 # end class
 
