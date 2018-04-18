@@ -108,9 +108,8 @@ class LNMTLCrawler:
         chapter = titles.find_by_css('.dashhead-title').first.text
         translated = browser.find_by_css('.chapter-body .translated')
         # format contents
-        chapter = self.format_text(chapter)
-        volume_no = re.search(r'\d+$', volume).group()
-        chapter_no = re.search(r'\d+$', url).group()
+        volume_no = re.search(r'VOLUME #\d+', volume).group().strip('VOLUME #')
+        chapter_no = re.search(r'chapter-\d+$', url).group().strip('chapter-')
         body = [self.format_text(x.text.strip()) for x in translated]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         # save data
