@@ -63,7 +63,3 @@ All depencencies are stored in `/lib` folder. To update them check following lin
 - Chrome Driver: https://sites.google.com/a/chromium.org/chromedriver/downloads
 - KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
 
-
-##### planned
-
-- https://www.readlightnovel.org/
