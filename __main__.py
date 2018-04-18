@@ -5,6 +5,7 @@ import sys
 from EbookCrawler.lnmtl import LNMTLCrawler
 from EbookCrawler.wuxia import WuxiaCrawler
 from EbookCrawler.webnovel import WebNovelCrawler
+from EbookCrawler.readln import ReadLightNovelCrawler
 
 
 def main():
@@ -28,6 +29,12 @@ def main():
         ).start()
     elif site == 'webnovel':
         WebNovelCrawler(
+            novel_id=sys.argv[2],
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else ''
+        ).start()
+    elif site == 'readln':
+        ReadLightNovelCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else ''
