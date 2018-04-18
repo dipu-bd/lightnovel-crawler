@@ -46,6 +46,8 @@ HINTS:
 - Selenium: `pip install -U selenium`
 - Splinter: `pip install -U splinter`
 - EbookLib: `pip install -U ebooklib`
+- BeautifulSoup4 - `pip install beautifulsoup4`
+
 <!-- - KindleComicConverter: `pip install -U KindleComicConverter` -->
 
 ## Dependencies
