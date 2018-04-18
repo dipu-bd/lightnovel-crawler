@@ -15,7 +15,7 @@ from .helper import get_browser, save_chapter
 class ReadLightNovelCrawler:
     '''Crawler for ReadLightNovel'''
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=12)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
     def __init__(self, novel_id, start_chapter=None, end_chapter=None):
         if not novel_id:
@@ -36,7 +36,7 @@ class ReadLightNovelCrawler:
     def start(self):
         '''start crawling'''
         self.get_chapter_list()
-        # self.get_chapter_bodies()
+        self.get_chapter_bodies()
         novel_to_kindle(self.output_path)
     # end def
 
@@ -59,8 +59,9 @@ class ReadLightNovelCrawler:
     def get_chapter_index(self, chapter):
       if not chapter: return None
       if chapter.isdigit():
-        if 0 < chapter <= len(self.chapters):
-          return chapter - 1
+        chapter = int(chapter)
+        if 1 <= chapter <= len(self.chapters):
+          return chapter
         else:
           raise Exception('Invalid chapter number')
         # end if
@@ -76,15 +77,15 @@ class ReadLightNovelCrawler:
     def get_chapter_bodies(self):
         '''get content from all chapters till the end'''
         self.start_chapter = self.get_chapter_index(self.start_chapter)
-        self.end_chapter = self.get_chapter_index(self.end_chapter)
-        if not self.start_chapter: return
-        start = int(self.start_chapter)
-        end = int(self.end_chapter or len(self.chapters))
-        end = min(end, len(self.chapters))
+        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
+        if self.start_chapter is None: return
+        start = self.start_chapter - 1
+        end = min(self.end_chapter, len(self.chapters))
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
         # wait till finish
         [x.result() for x in concurrent.futures.as_completed(future_to_url)]
+        print('complete')
     # end def
 
     def parse_chapter(self, index):
@@ -96,20 +97,18 @@ class ReadLightNovelCrawler:
         print('Getting chapter body... ')
         soup = BeautifulSoup(html_doc, 'lxml')
         chapter_title = soup.select_one('.block-title h1').text
+        body_part = [p.html for p in soup.select('.chapter-content3 p')]
         chapter_no = index + 1
-        body_part = self.select('.chapter-content3 p')
         volume_no = ((chapter_no - 1) // 100) + 1
-        chapter_title = '#%d: %s' % (chapter_no, chapter_title)
         save_chapter({
             'url': url,
-            'novel': novel_name,
-            'author': author_name,
+            'novel': self.novel_name,
+            'author': 'Unknown',
             'volume_no': str(volume_no),
             'chapter_no': str(chapter_no),
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
         }, self.output_path)
-        return chapter_id
     # end def
 
     def format_text(self, text):
