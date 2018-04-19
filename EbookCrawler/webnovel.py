@@ -17,6 +17,10 @@ class WebNovelCrawler:
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=12)
 
+    book_info_url = 'https://www.webnovel.com/book/%s'
+    chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
+    chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
+
     def __init__(self, novel_id, start_chapter=None, end_chapter=None):
         if not novel_id:
             raise Exception('Novel ID is required')
@@ -25,8 +29,9 @@ class WebNovelCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-        self.chapters = []
 
+        self.chapters = []
+        self.volume_no = {}
         self.output_path = path.join('_novel', novel_id)
     # end def
 
@@ -41,7 +46,7 @@ class WebNovelCrawler:
 
     def get_csrf_token(self):
         '''get csrf token'''
-        url = 'https://www.webnovel.com/book/' + self.novel_id
+        url = self.book_info_url % (self.novel_id)
         print('Getting CSRF Token from ', url)
         session = requests.Session()
         session.get(url)
@@ -52,13 +57,23 @@ class WebNovelCrawler:
 
     def get_chapter_list(self):
         '''get list of chapters'''
-        url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=' \
-              + self.csrf + '&bookId=' + self.novel_id
+        url = self.chapter_list_url % (self.csrf, self.novel_id)
         print('Getting book name and chapter list...')
         response = requests.get(url)
         response.encoding = 'utf-8'
         data = response.json()
-        self.chapters = [x['chapterId'] for x in data['data']['chapterItems']]
+        if 'chapterItems' in data['data']:
+            self.chapters = [x['chapterId'] for x in data['data']['chapterItems']]
+        elif 'volumeItems' in data['data']:
+            self.chapters = []
+            self.volume_no = {}
+            for vol in data['data']['volumeItems']:
+                for x in vol['chapterItems']:
+                    self.chapters.append(x['id'])
+                    self.volume_no[str(x['index'])] = vol['index']
+                # end for
+            # end for
+        # end if
         print(len(self.chapters), 'chapters found')
     # end def
 
@@ -80,20 +95,27 @@ class WebNovelCrawler:
 
     def parse_chapter(self, index):
         chapter_id = self.chapters[index]
-        url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=' \
-            + self.csrf + '&bookId=' + self.novel_id + '&chapterId=' + chapter_id
+        url = self.chapter_body_url % (self.csrf, self.novel_id, chapter_id)
         print('Getting chapter...', index + 1, '[' + chapter_id + ']')
         response = requests.get(url)
         response.encoding = 'utf-8'
         data = response.json()
         novel_name = data['data']['bookInfo']['bookName']
-        author_name = data['data']['bookInfo']['authorName']
+        author_name = 'Unknown'
+        if 'authorName' in data['data']['bookInfo']:
+            author_name = data['data']['bookInfo']['authorName']
+        if 'authorItems' in data['data']['bookInfo']:
+            author_name = ', '.join([x['name'] for x in data['data']['bookInfo']['authorItems']])
+        # end if
         chapter_title = data['data']['chapterInfo']['chapterName']
         chapter_no = data['data']['chapterInfo']['chapterIndex']
         contents = data['data']['chapterInfo']['content']
         body_part = self.format_text(contents)
-        volume_no = ((chapter_no - 1) // 100) + 1
         chapter_title = '#%d: %s' % (chapter_no, chapter_title)
+        volume_no = ((chapter_no - 1) // 100) + 1
+        if str(index) in self.volume_no:
+            volume_no = self.volume_no[str(index)]
+        # end if
         save_chapter({
             'url': url,
             'novel': novel_name,
