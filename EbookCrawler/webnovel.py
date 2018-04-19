@@ -130,17 +130,12 @@ class WebNovelCrawler:
 
     def format_text(self, text):
         '''make it a valid html'''
-        if ('<p>' in text) and ('</p>' in text):
-            text = text.replace(r'[ \n\r]+', '\n')
-        else:
-            # text = text.replace('<p>', '')
-            # text = text.replace('</p>', '\n')
+        text = text.replace(r'[ \n\r]+', '\n')
+        if ('<p>' not in text) or ('</p>' not in text):
             text = text.replace('<', '&lt;')
             text = text.replace('>', '&gt;')
-            # text = text.replace('&lt;em&gt;', '<em>')
-            # text = text.replace('&lt;/em&gt;', '</em>')
-            text = text.replace(r'[ \n\r]+', '\n')
-            text = '<p>' + '</p><p>'.join(text.split('\n')) + '</p>'
+            text = [x for x in text.split('\n') if len(x.strip())]
+            text = '<p>' + '</p><p>'.join(text) + '</p>'
         # end if
         return text.strip()
     # end def
