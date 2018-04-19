@@ -46,7 +46,7 @@ HINTS:
 - From chapter 4 to 88:  `python . webnovel 7817013305001305 4 88`
 
 - From readln: `python . readln tales-of-herding-gods 1 10`
-- From lnmtl: `python . lnmtl against-the-gods 1`
+- From lnmtl: `python . lnmtl against-the-gods https://lnmtl.com/chapter/against-the-gods-book-11-chapter-1105`
 
 ## Requirements
 
