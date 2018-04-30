@@ -22,8 +22,10 @@ def save_chapter(content, output_path):
     vol = content['volume_no'].rjust(2, '0')
     chap = content['chapter_no'].rjust(5, '0')
     dir_name = path.join(output_path, vol)
-    if not path.exists(dir_name):
+    try:
         makedirs(dir_name)
+    except:
+        pass
     # end if
     file_name = path.join(dir_name, chap + '.json')
     print('Saving ', file_name)

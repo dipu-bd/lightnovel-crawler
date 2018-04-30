@@ -3,7 +3,7 @@
 """Main point of execution"""
 import sys
 from EbookCrawler.lnmtl import LNMTLCrawler
-from EbookCrawler.wuxia import WuxiaCrawler
+from EbookCrawler.wuxia_v2 import WuxiaCrawler
 from EbookCrawler.webnovel import WebNovelCrawler
 from EbookCrawler.readln import ReadLightNovelCrawler
 
@@ -18,8 +18,8 @@ def main():
     if site == 'wuxia':
         WuxiaCrawler(
             novel_id=sys.argv[2],
-            start_url=sys.argv[3] if len(sys.argv) > 3 else None,
-            end_url=sys.argv[4] if len(sys.argv) > 4 else None
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else None,
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else None
         ).start()
     elif site == 'lnmtl':
         LNMTLCrawler(
