@@ -35,12 +35,12 @@ class WuxiaCrawler:
 
     def start(self):
         '''start crawling'''
-        # try:
-        self.get_chapter_list()
-        self.get_chapter_bodies()
-        # finally:
-        #    novel_to_kindle(self.output_path)
-        # end try
+        try:
+            self.get_chapter_list()
+            self.get_chapter_bodies()
+        finally:
+           novel_to_kindle(self.output_path)
+        end try
     # end def
 
     def get_chapter_list(self):
