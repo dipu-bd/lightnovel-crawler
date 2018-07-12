@@ -12,7 +12,6 @@ from PIL import Image, ImageFont, ImageDraw
 
 DIR_NAME = os.path.dirname(os.path.abspath(__file__))
 KINDLEGEN_PATH = os.path.join(DIR_NAME, 'ext', 'kindlegen')
-BOOK_PATH = '_book'
 
 try:
     from ebooklib import epub
@@ -69,7 +68,7 @@ def novel_to_kindle(input_path):
             book.add_item(epub.EpubNav())
             book.add_item(epub.EpubNcx())
             # Create epub
-            output_path = os.path.join(BOOK_PATH, book_title)
+            output_path = book_title
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
             # end if
@@ -95,7 +94,7 @@ def novel_to_kindle(input_path):
 def manga_to_kindle(input_path):
     '''Convert crawled data to epub'''
     manga_id = os.path.basename(input_path)
-    output_path = os.path.join(BOOK_PATH, manga_id)
+    output_path = manga_id
     name = ' '.join([x.capitalize() for x in manga_id.split('_')])
     if not os.path.exists(output_path):
         os.makedirs(output_path)
