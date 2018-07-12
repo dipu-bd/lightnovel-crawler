@@ -2,3 +2,6 @@
 _novel
 _book
 geckodriver.log
+build
+dist
+*.egg-info
