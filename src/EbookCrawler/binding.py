@@ -8,11 +8,19 @@ import json
 import random
 import textwrap
 from subprocess import call
-from ebooklib import epub
 from PIL import Image, ImageFont, ImageDraw
 
-KINDLEGEN_PATH = os.path.join('lib', 'kindlegen')
+DIR_NAME = os.path.dirname(os.path.abspath(__file__))
+KINDLEGEN_PATH = os.path.join(DIR_NAME,  '..', 'lib', 'kindlegen')
 BOOK_PATH = '_book'
+
+try:
+    from ebooklib import epub
+except:
+    print('Package Not Found: ebooklib. You can install it using:')
+    print('    python3 -m pip install --user --upgrade ebooklib')
+    print()
+# end try
 
 
 def novel_to_kindle(input_path):
