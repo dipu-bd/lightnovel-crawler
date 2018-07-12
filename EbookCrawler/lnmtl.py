@@ -128,7 +128,7 @@ class LNMTLCrawler:
             concurrent.futures.wait(future.result())
         # end for
 
-        self.chapters = [x['site_url'] for x in sorted(self.chapters, key=lambda x: int(x['position']))]
+        self.chapters = sorted(self.chapters, key=lambda x: int(x['position']))
         print('> [%s]' % self.novel_name, len(self.chapters), 'chapters found')
     # end def
 
@@ -162,8 +162,8 @@ class LNMTLCrawler:
           raise Exception('Invalid chapter number')
         # end if
       # end if
-      for i, link in enumerate(self.chapters):
-        if chapter == link:
+      for i, chapter in enumerate(self.chapters):
+        if chapter == chapter['site_url']:
           return i
         # end if
       # end for
@@ -184,28 +184,39 @@ class LNMTLCrawler:
         print('Finished crawling.')
     # end def
 
+    def get_volume(self, vol_id, chapter_no):
+        for index, vol in enumerate(self.volumes):
+            if vol['id'] == vol_id:
+                return vol['name'] if 'name' in vol else str(index + 1)
+            # end if
+        # end for
+        return str(int(chapter_no) // 100)
+    # end def
+
     def parse_chapter(self, index):
         '''Parse the content of the chapter page'''
-        url = browser.url
+        url = self.chapters[index]['site_url']
+        print('Crawling', url)
+        response = requests.get(url, headers=self.headers, verify=False)
+        soup = BeautifulSoup(response.text, 'lxml')
         # parse contents
-        titles = browser.find_by_css('div.dashhead-titles')
-        novel = titles.find_by_css('.dashhead-subtitle a')[0]['title']
-        volume = titles.find_by_css('.dashhead-subtitle').first.text
-        chapter = titles.find_by_css('.dashhead-title').first.text
-        translated = browser.find_by_css('.chapter-body .translated')
+        translated = soup.find_all('.chapter-body .translated')
         # format contents
-        volume_no = re.search(r'VOLUME #\d+', volume).group().strip('VOLUME #')
-        chapter_no = re.search(r'chapter-\d+$', url).group().strip('chapter-')
+        volume_no = self.chapters[index]['volume_id']
+        chapter_no = self.chapters[index]['position']
+        volume_no = self.get_volume(volume_no, chapter_no)
+        chapter_title = self.chapters[index]['title']
+        chapter_title = '#%s %s' % (chapter_no, chapter_title)
         body = [self.format_text(x.text.strip()) for x in translated]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         # save data
         save_chapter({
             'url': url,
-            'novel': novel.strip(),
+            'novel': self.novel_name,
             'volume_no': volume_no,
             'chapter_no': chapter_no,
-            'chapter_title': chapter,
-            'body': '<h1>%s</h1>%s' % (chapter, body)
+            'chapter_title': chapter_title,
+            'body': '<h1>%s</h1>%s' % (chapter_title, body)
         }, self.output_path)
     # end def
 
