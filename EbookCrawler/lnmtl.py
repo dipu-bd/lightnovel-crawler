@@ -5,13 +5,13 @@ Crawler for novels from [LNMTL](https://lnmtl.com).
 """
 import re
 import sys
+import json
 import requests
 from os import path
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .binding import novel_to_kindle
 from .helper import get_browser, save_chapter
-
 
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
@@ -44,14 +44,14 @@ class LNMTLCrawler:
         '''start crawling'''
         try:
             if self.start_chapter:
-                if not self.login():
-                    print('Failed to login')
-                else:
-                    print('Logged in.')
-                # end if
-                # self.get_chapter_list()
+                # if not self.login():
+                #     print('Failed to login')
+                # else:
+                #     print('Logged in.')
+                # # end if
+                self.get_chapter_list()
                 # self.get_chapter_bodies()
-                self.logout()
+                # self.logout()
             # end if
         finally:
             if path.exists(self.output_path):
@@ -62,7 +62,7 @@ class LNMTLCrawler:
 
     def login(self):
         '''login to LNMTL'''
-        print('Getting login page:', self.login_url)
+        print('Visiting', self.login_url)
         response = requests.get(self.login_url, headers=self.headers, verify=False)
         self.headers['cookie'] = '; '.join([x.name + '=' + x.value for x in response.cookies])
         soup = BeautifulSoup(response.text, 'lxml')
@@ -73,7 +73,7 @@ class LNMTLCrawler:
             'email': self.email,
             'password': self.password
         }
-        print('Attempting login:', self.login_url)
+        print('Attempt login...')
         response = requests.post(self.login_url, data=body, headers=headers, verify=False)
         self.headers['cookie'] = '; '.join([x.name + '=' + x.value for x in response.cookies])
         soup = BeautifulSoup(response.text, 'lxml')
@@ -83,7 +83,7 @@ class LNMTLCrawler:
 
     def logout(self):
         '''logout as a good citizen'''
-        print('Attempting logout:', self.logout_url)
+        print('Attempt logout...')
         response = requests.get(self.logout_url, headers=self.headers)
         soup = BeautifulSoup(response.text, 'lxml')
         logout = soup.select_one('a[href="%s"]' % self.logout_url)
@@ -94,25 +94,77 @@ class LNMTLCrawler:
         # end if
     # end def
 
-    def crawl_chapters(self, browser):
-        '''Crawl all chapters till the end'''
-        url = self.start_chapter
-        while url:
-            print('Visiting:', url)
-            browser.visit(url)
-            self.parse_chapter(browser)
-            if url == self.end_chapter:
-                break
+    def get_chapter_list(self):
+        '''get list of chapters'''
+        url = '%s/novel/%s' % (self.home_url, self.novel_id)
+        print('Visiting', url)
+        response = requests.get(url, headers=self.headers, verify=False)
+        soup = BeautifulSoup(response.text, 'lxml')
+        self.novel_name = soup.select_one('.novel .media .novel-name').text
+        for script in soup.find_all('script'):
+            text = script.text.strip()
+            if not text.startswith('window.lnmtl'):
+                continue
             # end if
-            try:
-                url = browser.find_by_css('nav .pager .next a').first['href']
-            except:
-                url = None
-            # end try
-        # end while
+            i,j = text.find('lnmtl.volumes = '),text.find(';lnmtl.route')
+            if i <= 0 and j <= i:
+                continue
+            # end if
+            i += len('lnmtl.volumes =')
+            self.volumes = json.loads(text[i:j].strip())
+        # end for
+        print(len(self.volumes), 'volumes found. Getting chapters...')
+
+        self.chapters = []
+        for vol in self.volumes:
+            page_url = '%s/chapter?page=1' % (self.home_url)
+            while page_url:
+                url = '%s&volumeId=%s' % (page_url, vol['id'])
+                print('Visiting', url)
+                response = requests.get(url, headers=self.headers, verify=False)
+                result = response.json()
+                page_url = result['next_page_url']
+                for chapter in result['data']:
+                    self.chapters.append(chapter['site_url'])
+                # end for
+            # end while
+        # end for
+        print('> [%s]' % self.novel_name, len(self.chapters), 'chapters found')
     # end def
 
-    def parse_chapter(self, browser):
+    def get_chapter_index(self, chapter):
+      if not chapter: return None
+      if chapter.isdigit():
+        chapter = int(chapter)
+        if 1 <= chapter <= len(self.chapters):
+          return chapter
+        else:
+          raise Exception('Invalid chapter number')
+        # end if
+      # end if
+      for i, link in enumerate(self.chapters):
+        if chapter == link:
+          return i
+        # end if
+      # end for
+      raise Exception('Invalid chapter url')
+    # end def
+
+    def get_chapter_bodies(self):
+        '''get content from all chapters till the end'''
+        self.start_chapter = self.get_chapter_index(self.start_chapter)
+        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
+        if self.start_chapter is None: return
+        start = self.start_chapter - 1
+        end = min(self.end_chapter, len(self.chapters))
+        future_to_url = {self.executor.submit(self.parse_chapter, index):\
+            index for index in range(start, end)}
+        # wait till finish
+        [x.result() for x in concurrent.futures.as_completed(future_to_url)]
+        print('Finished crawling.')
+    # end def
+
+    def parse_chapter(self, index):
         '''Parse the content of the chapter page'''
         url = browser.url
         # parse contents
