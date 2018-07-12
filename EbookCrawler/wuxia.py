@@ -123,7 +123,7 @@ class WuxiaCrawler:
 # end class
 
 if __name__ == '__main__':
-    ReadLightNovelCrawler(
+    WuxiaCrawler(
         novel_id=sys.argv[1],
         start_chapter=sys.argv[2] if len(sys.argv) > 2 else None,
         end_chapter=sys.argv[3] if len(sys.argv) > 3 else None
