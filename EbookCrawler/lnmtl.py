@@ -52,7 +52,7 @@ class LNMTLCrawler:
                 #     print('Logged in.')
                 # # end if
                 self.get_chapter_list()
-                # self.get_chapter_bodies()
+                self.get_chapter_bodies()
                 # self.logout()
             # end if
         finally:
@@ -118,25 +118,38 @@ class LNMTLCrawler:
         print(len(self.volumes), 'volumes found. Getting chapters...')
 
         self.chapters = []
-        future_to_url = {self.executor.submit(self.get_chapters_by_volume, vol['id']):\
-            vol['id'] for vol in self.volumes}
-        concurrent.futures.as_completed(future_to_url)
-        
+        future_to_url = {}
+        page_url = '%s/chapter?page=1' % (self.home_url)
+        for vol in self.volumes:
+            task = self.executor.submit(self.get_chapters_by_volume, vol['id'], page_url)
+            future_to_url[task] = vol['id']
+        # end for
+        for future in concurrent.futures.as_completed(future_to_url):
+            concurrent.futures.wait(future.result())
+        # end for
+
+        self.chapters = [x['site_url'] for x in sorted(self.chapters, key=lambda x: int(x['position']))]
         print('> [%s]' % self.novel_name, len(self.chapters), 'chapters found')
     # end def
 
-    def get_chapters_by_volume(self, vol_id):
-        page_url = '%s/chapter?page=1' % (self.home_url)
-        while page_url:
-            url = '%s&volumeId=%s' % (page_url, vol_id)
-            print('Visiting', url)
-            response = requests.get(url, headers=self.headers, verify=False)
-            result = response.json()
-            page_url = result['next_page_url']
-            for chapter in result['data']:
-                self.chapters.append(chapter['site_url'])
+    def get_chapters_by_volume(self, vol_id, page_url):
+        url = '%s&volumeId=%s' % (page_url, vol_id)
+        print('Visiting', url)
+        response = requests.get(url, headers=self.headers, verify=False)
+        result = response.json()
+        page_url = result['next_page_url']
+        for chapter in result['data']:
+            self.chapters.append(chapter)
+        # end for
+        future_to_url = {}
+        if result['current_page'] == 1:
+            for page in range(1, result['last_page']):
+                page_url = '%s/chapter?page=%s' % (self.home_url, page + 1)
+                task = self.executor.submit(self.get_chapters_by_volume, vol_id, page_url)
+                future_to_url[task] = '%s-%s' % (vol_id, page)
             # end for
-        # end while
+        # end if
+        return future_to_url
     # end def
 
     def get_chapter_index(self, chapter):
