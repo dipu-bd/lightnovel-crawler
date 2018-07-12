@@ -154,16 +154,8 @@ class LNMTLCrawler:
 
     def get_chapter_index(self, chapter):
       if not chapter: return None
-      if chapter.isdigit():
-        chapter = int(chapter)
-        if 1 <= chapter <= len(self.chapters):
-          return chapter
-        else:
-          raise Exception('Invalid chapter number')
-        # end if
-      # end if
-      for i, chapter in enumerate(self.chapters):
-        if chapter == chapter['site_url']:
+      for i, chap in enumerate(self.chapters):
+        if chap['site_url'] == chapter or chap['number'] == chapter:
           return i
         # end if
       # end for
