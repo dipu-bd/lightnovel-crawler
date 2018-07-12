@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Crawler for novels from [ReadLightNovel](https://www.readlightnovel.org).

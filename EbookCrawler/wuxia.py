@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Crawler for [WuxiaWorld](http://www.wuxiaworld.com/).

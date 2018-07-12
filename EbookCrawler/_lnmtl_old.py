@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 """
 Crawler for novels from [LNMTL](https://lnmtl.com).
+
+It has machine translated novels and is reeeally up to date.
 """
 import re
 import sys
-import requests
 from os import path
-import concurrent.futures
-from bs4 import BeautifulSoup
 from .binding import novel_to_kindle
 from .helper import get_browser, save_chapter
 
