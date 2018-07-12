@@ -48,12 +48,12 @@ def main():
 def show_help():
     '''displays help'''
     print('EbookCrawler:')
-    print('  python . <site-name> <novel-id>',
+    print('  python . <site-handle> <novel-id>',
           '[<start-chapter>|<start-url>]',
           '[<end-chapter>|<end-url>]')
     print()
     print('OPTIONS:')
-    print('  site-name*     Site to crawl. Available: lnmtl, wuxia, webnovel, readln.')
+    print('  site-handle*   Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln]')
     print('  novel-id*      Novel id appear in url (See HINTS)')
     print('  start-chapter  Starting chapter')
     print('  end-chapter    Ending chapter')
