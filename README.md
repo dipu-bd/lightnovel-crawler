@@ -90,13 +90,13 @@ Same rules described for the start chapters applies here. You can choose not to 
 **NOTE:** *If you do not provide this field, the novel will be crawled from the start chapter until the end.*
 
 
-#### Finally, some warning...
+#### Finally, some warnings...
 
-- Be a good netizen. Do not use too many instances of this program too frequently. Otherwise it might cause traffic jam to your favorite website. We do not want others to suffer for our sake, right?
+- Do not use too many instances of this program too frequently. Otherwise it might cause traffic jam to your favorite website. We do not want others to suffer for our sake, right?
 
 - Do not download too frequently from LNTML. They blocks your IP if too many consecutives requests is observed.
 
-- This program has the capability to perform DDOS attacks that can cause a website to go down. But make a promise you will do no such things!
+- This program has the capability to perform DDOS attacks that can cause a website to go down. Like a good netizen, make a promise you will do no such things!
 
 ## External Resources
 
