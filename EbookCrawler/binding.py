@@ -11,7 +11,7 @@ from subprocess import call
 from PIL import Image, ImageFont, ImageDraw
 
 DIR_NAME = os.path.dirname(os.path.abspath(__file__))
-KINDLEGEN_PATH = os.path.join(DIR_NAME, 'lib', 'kindlegen')
+KINDLEGEN_PATH = os.path.join(DIR_NAME, 'ext', 'kindlegen')
 BOOK_PATH = '_book'
 
 try:
