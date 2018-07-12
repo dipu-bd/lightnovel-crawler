@@ -16,7 +16,7 @@ from .binding import novel_to_kindle
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=3)
 
     def __init__(self, novel_id, start_chapter=None, end_chapter=None):
         if not novel_id:
