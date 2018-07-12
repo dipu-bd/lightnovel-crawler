@@ -2,9 +2,6 @@
 
 Crawls lightnovels from popular websites and converts to ebook format (only EPUB and MOBI are supported for now).
 
-## Installation
-
-
 ## Tutorial
 
 ### Installation
