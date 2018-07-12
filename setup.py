@@ -3,7 +3,7 @@
 
 from distutils.core import setup
 
-setup(name='EbookCrawler',
+setup(name='ebook-crawler',
       version='1.4',
       description='Crawls light novels and make epub and mobi',
       author='Sudipto Chandra',

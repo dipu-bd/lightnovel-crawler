@@ -11,7 +11,7 @@ from subprocess import call
 from ebooklib import epub
 from PIL import Image, ImageFont, ImageDraw
 
-KINDLEGEN_PATH = os.path.join('lib', 'kindlegen', 'kindlegen')
+KINDLEGEN_PATH = os.path.join('lib', 'kindlegen')
 BOOK_PATH = '_book'
 
 
