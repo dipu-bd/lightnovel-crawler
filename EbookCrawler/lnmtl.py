@@ -16,7 +16,7 @@ from .helper import get_browser, save_chapter
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
     def __init__(self, novel_id, start_chapter=None, end_chapter=None):
         if not novel_id:
@@ -80,7 +80,14 @@ class LNMTLCrawler:
         self.headers['cookie'] = '; '.join([x.name + '=' + x.value for x in response.cookies])
         soup = BeautifulSoup(response.text, 'lxml')
         logout = soup.select_one('a[href="%s"]' % self.logout_url)
-        return logout is not None
+        if logout is None:
+            print('-' * 80)
+            body = soup.select_one('body').text
+            print('\n\n'.join([x for x in body.split('\n\n') if len(x.strip())]))
+            print('-' * 80)
+            return False
+        # end if
+        return True
     # end def
 
     def logout(self):
