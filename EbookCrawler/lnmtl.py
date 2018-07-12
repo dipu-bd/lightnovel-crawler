@@ -46,14 +46,14 @@ class LNMTLCrawler:
         '''start crawling'''
         try:
             if self.start_chapter:
-                # if not self.login():
-                #     print('Failed to login')
-                # else:
-                #     print('Logged in.')
-                # # end if
+                if not self.login():
+                    print('Failed to login')
+                else:
+                    print('Logged in.')
+                # end if
                 self.get_chapter_list()
                 self.get_chapter_bodies()
-                # self.logout()
+                self.logout()
             # end if
         finally:
             if path.exists(self.output_path):
@@ -199,6 +199,10 @@ class LNMTLCrawler:
         print('Crawling', url)
         response = requests.get(url, headers=self.headers, verify=False)
         soup = BeautifulSoup(response.text, 'lxml')
+        logout = soup.select_one('a[href="%s"]' % self.logout_url)
+        if logout is None:
+            print('WARNING: not logged in')
+        # end if
         volume_no = self.chapters[index]['volume_id']
         chapter_no = self.chapters[index]['position']
         volume_no = self.get_volume(volume_no, chapter_no)
