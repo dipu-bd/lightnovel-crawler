@@ -1,66 +1,107 @@
 # LightNovels To EBook
 
-Crawl website and convert it into EPUB and MOBI files
+Crawls lightnovels from popular websites and converts to ebook format (only EPUB and MOBI are supported for now).
 
-## Available Sites
+## Installation
 
-- **Webnovel Crawler**: [WebNovel](https://www.webnovel.com). Also known as **Qidian**.
 
-- **Wuxia Crawler**: [WuxiaWorld](http://www.wuxiaworld.com/).
+## Tutorial
 
-- **LNMTL Crawler**: [LNMTL](https://lnmtl.com) - has machine translated novels.
+### Installation
 
-- **ReadLN Crawler**: [ReadLightNovel](https://www.readlightnovel.org/).
+To use this app, you need to have python3 installed in your computer. You can install the package using either of the following methods:
 
-## Instructions
+- Using pip:
 
 ```bash
-EbookCrawler:
-  python . <site-name> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
-
-OPTIONS:
-site-name*   Site to crawl. Available: lnmtl, wuxia, webnovel, readln.
-novel-id*    Novel id appear in url (See HINTS)
-start-url    Url of the chapter to start
-end-url      Url of the final chapter
-start-chapter  Starting chapter
-end-chapter  Ending chapter
-
-HINTS:
-- * marked params are required
-- Do not provide any start or end chapter for just book binding
-- Get the `novel-id` from the link. Some examples:
-  https://www.webnovel.com/book/8143258106003605/21860374051617214 = [Novel ID: `8143258106003605`]
-  https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1 = [Novel ID: `a-will-eternal`]
-  https://lnmtl.com/novel/against-the-gods = [Novel ID: `against-the-gods`]
-  https://www.readlightnovel.org/tales-of-herding-gods = [Novel ID: `tales-of-herding-gods`]
+$ pip install ebook-crawler
+# Or,
+$ python3 -m pip install --user ebook-crawler
 ```
 
-### Some Examples
+- Using `setup.py`:
 
-- Skip start index to make ebooks only: `python . wuxia desolate-era`
-- Define start url: `python . wuxia desolate-era http://www.wuxiaworld.com/novel/desolate-era/de-book-1-chapter-1/`
-- Define start and end url: `python . wuxia desolate-era http://www.wuxiaworld.com/novel/desolate-era/de-book-1-chapter-1/ http://www.wuxiaworld.com/novel/desolate-era/de-book-2-chapter-10`
+```bash
+$ git clone https://github.com/dipu-bd/site-to-epub/
+$ cd site-to-epub
+$ python3 setup.py install
+```
 
-- From webnovel:  `python . webnovel 7817013305001305 1`
-- From chapter 4 to 88:  `python . webnovel 7817013305001305 4 88`
+### Test it out:
 
-- From readln: `python . readln tales-of-herding-gods 1 10`
-- From lnmtl: `python . lnmtl against-the-gods https://lnmtl.com/chapter/against-the-gods-book-11-chapter-1105`
+**Open the console panel in a directory you want to download novels**. Your current directory is used to store downloaded data.
 
-## Requirements
+```
+$ ebook_crawler
 
-- Selenium: `pip install -U selenium`
-- Splinter: `pip install -U splinter`
-- EbookLib: `pip install -U ebooklib`
-- BeautifulSoup4 - `pip install beautifulsoup4`
+EbookCrawler:
+  python . <site-handle> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
+.
+.
+.
+```
+
+### Parameters to pass
+
+#### 1. Site Handle (required)
+
+The avaiable list of site handles are given below. *To request new site [create a new issues](https://github.com/dipu-bd/site-to-epub/issues) requesting it*.
+
+| Handle | Website |
+|--------|---------|
+| `webnovel` | https://www.webnovel.com |
+| `wuxia` | http://www.wuxiaworld.com |
+| `lnmtl` | https://lnmtl.com |
+| `readln` | https://www.readlightnovel.org |
+
+#### 2. Novel ID (required)
+
+To download a novel, you need to get a `novel-id`. It is usually a unique part of the url that gives you the profile page of a novel. Following table shows some examples of `novel-id`:
+
+| URL | Novel ID |
+|-----|----------|
+| https://www.webnovel.com/book/8143258106003605 | 8143258106003605 |
+| https://lnmtl.com/novel/against-the-gods | against-the-gods |
+| https://www.readlightnovel.org/tales-of-herding-gods | tales-of-herding-gods |
+| http://www.wuxiaworld.com/novel/desolate-era | desolate-era |
+
+#### 3. Start Chapter or Start URL (optional)
+
+You can provide either a chapter number or the url of a chapter (see examples below). Chapter number is usually the index of the chapter in the chapter list that is given in the website. (except for LNMLT, see below).
+
+> for LNMTL, the chapter number should be the serial number of a chapter. Some novels has extra chapters and OVAs. In that case, *the serial number might not match with the real chapter number*.
+
+If you are not sure about the chapter number, just provide an url to the chapter page.
+
+**NOTE:** *if you do not provide this field, but has already downloaded data, they will be used to bind ebooks.*
+
+> HINT: Pass `1` to start the download from the beginning.
+
+Example values:
+
+- https://www.webnovel.com/book/8143258106003605/21860374051617214
+- https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1
+- https://lnmtl.com/chapter/against-the-gods-book-11-chapter-1135
+- https://www.readlightnovel.org/tales-of-herding-gods
 
 <!-- - KindleComicConverter: `pip install -U KindleComicConverter` -->
 
-## Dependencies
+#### 4. End Chapter or End URL (optional)
 
-All depencencies are stored in `/lib` folder. To update them check following links:
+Same rules described for the start chapters applies here. You can choose not to give an end chapter. But you have to provide an end-chapter greater than the start-chapter.
 
-- Chrome Driver: https://sites.google.com/a/chromium.org/chromedriver/downloads
+**NOTE:** *If you do not provide this field, the novel will be crawled from the start chapter until the end.*
+
+
+#### Finally, some warning...
+
+- Be a good netizen. Do not use too many instances of this program too frequently. Otherwise it might cause traffic jam to your favorite website. We do not want others to suffer for our sake, right?
+
+- Do not download too frequently from LNTML. They blocks your IP if too many consecutives requests is observed.
+
+- This program has the capability to perform DDOS attacks that can cause a website to go down. But make a promise you will do no such things!
+
+## External Resources
+
 - KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
 
