@@ -10,8 +10,8 @@ import requests
 from os import path
 import concurrent.futures
 from bs4 import BeautifulSoup
+from .helper import save_chapter
 from .binding import novel_to_kindle
-from .helper import get_browser, save_chapter
 
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
