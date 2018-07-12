@@ -1,10 +1,5 @@
 beautifulsoup4==4.6.0
-chardet==3.0.4
 ebook-crawler==0.7b0
 EbookLib==0.17
-idna==2.7
-lxml==4.2.3
 Pillow==5.2.0
 requests==2.19.1
-six==1.11.0
-urllib3==1.23
