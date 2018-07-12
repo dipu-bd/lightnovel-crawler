@@ -3,7 +3,7 @@
 """Main point of execution"""
 import sys
 from EbookCrawler.lnmtl import LNMTLCrawler
-from EbookCrawler.wuxia_v2 import WuxiaCrawler
+from EbookCrawler.wuxia import WuxiaCrawler
 from EbookCrawler.webnovel import WebNovelCrawler
 from EbookCrawler.readln import ReadLightNovelCrawler
 
