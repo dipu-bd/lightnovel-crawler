@@ -16,6 +16,8 @@ from .helper import get_browser, save_chapter
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
 
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+
     def __init__(self, novel_id, start_chapter=None, end_chapter=None):
         if not novel_id:
             raise Exception('Novel ID is required')
@@ -116,20 +118,25 @@ class LNMTLCrawler:
         print(len(self.volumes), 'volumes found. Getting chapters...')
 
         self.chapters = []
-        for vol in self.volumes:
-            page_url = '%s/chapter?page=1' % (self.home_url)
-            while page_url:
-                url = '%s&volumeId=%s' % (page_url, vol['id'])
-                print('Visiting', url)
-                response = requests.get(url, headers=self.headers, verify=False)
-                result = response.json()
-                page_url = result['next_page_url']
-                for chapter in result['data']:
-                    self.chapters.append(chapter['site_url'])
-                # end for
-            # end while
-        # end for
+        future_to_url = {self.executor.submit(self.get_chapters_by_volume, vol['id']):\
+            vol['id'] for vol in self.volumes}
+        concurrent.futures.as_completed(future_to_url)
+        
         print('> [%s]' % self.novel_name, len(self.chapters), 'chapters found')
+    # end def
+
+    def get_chapters_by_volume(self, vol_id):
+        page_url = '%s/chapter?page=1' % (self.home_url)
+        while page_url:
+            url = '%s&volumeId=%s' % (page_url, vol_id)
+            print('Visiting', url)
+            response = requests.get(url, headers=self.headers, verify=False)
+            result = response.json()
+            page_url = result['next_page_url']
+            for chapter in result['data']:
+                self.chapters.append(chapter['site_url'])
+            # end for
+        # end while
     # end def
 
     def get_chapter_index(self, chapter):
