@@ -199,15 +199,13 @@ class LNMTLCrawler:
         print('Crawling', url)
         response = requests.get(url, headers=self.headers, verify=False)
         soup = BeautifulSoup(response.text, 'lxml')
-        # parse contents
-        translated = soup.find_all('.chapter-body .translated')
-        # format contents
         volume_no = self.chapters[index]['volume_id']
         chapter_no = self.chapters[index]['position']
         volume_no = self.get_volume(volume_no, chapter_no)
         chapter_title = self.chapters[index]['title']
         chapter_title = '#%s %s' % (chapter_no, chapter_title)
-        body = [self.format_text(x.text.strip()) for x in translated]
+        body = soup.select('.chapter-body .translated')
+        body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         # save data
         save_chapter({
