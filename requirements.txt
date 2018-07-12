@@ -1,5 +1,4 @@
 beautifulsoup4==4.6.0
-certifi==2018.4.16
 chardet==3.0.4
 ebook-crawler==0.7b0
 EbookLib==0.17
