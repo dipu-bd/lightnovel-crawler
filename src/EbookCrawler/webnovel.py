@@ -90,6 +90,7 @@ class WebNovelCrawler:
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
         # wait till finish
+        # True == isinstance(future_to_url, dict)
         [x.result() for x in concurrent.futures.as_completed(future_to_url)]
     # end def
 
