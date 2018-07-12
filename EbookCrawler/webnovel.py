@@ -10,7 +10,7 @@ import requests
 from os import path
 import concurrent.futures
 from .binding import novel_to_kindle
-from .helper import get_browser, save_chapter
+from .helper import save_chapter
 
 class WebNovelCrawler:
     '''Crawler for WuxiaWorld'''
