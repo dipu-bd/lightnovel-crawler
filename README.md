@@ -19,8 +19,9 @@ $ python3 -m pip install --user ebook-crawler
 - Using `setup.py`:
 
 ```bash
-$ git clone https://github.com/dipu-bd/site-to-epub/
-$ cd site-to-epub
+$ wget https://github.com/dipu-bd/site-to-epub/releases/download/v1.2/ebook_crawler-1.2.tar.gz
+$ tar -xvzf ebook_crawler-1.2.tar.gz
+$ cd ebook_crawler-1.2
 $ python3 setup.py install
 ```
 
