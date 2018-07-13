@@ -33,7 +33,7 @@ $ python3 setup.py install
 $ ebook_crawler
 
 EbookCrawler:
-  python . <site-handle> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
+  ebook_crawler <site-handle> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
 .
 .
 .
