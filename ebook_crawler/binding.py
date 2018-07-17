@@ -61,6 +61,7 @@ def novel_to_kindle(input_path):
             book.add_item(epub.EpubNav())
             book.add_item(epub.EpubNcx())
             # Create epub
+            book_title = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]',"", book_title)
             output_path = book_title
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
