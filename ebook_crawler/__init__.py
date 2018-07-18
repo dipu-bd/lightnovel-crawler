@@ -48,7 +48,7 @@ def main():
 def show_help():
     '''displays help'''
     print('EbookCrawler:')
-    print('  python . <site-handle> <novel-id>',
+    print('  ebook_crawler <site-handle> <novel-id>',
           '[<start-chapter>|<start-url>]',
           '[<end-chapter>|<end-url>]')
     print()

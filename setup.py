@@ -121,8 +121,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
 
-        'Operating System :: MacOS :: MacOS X',
-        'Operating System :: Microsoft :: Windows',
+        # 'Operating System :: MacOS :: MacOS X',
+        # 'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX'
     ],
 
