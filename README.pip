@@ -7,11 +7,11 @@ Crawls lightnovels from popular websites and converts to ebook format (only EPUB
 
 To use this app, you need to have python3 and pip installed in your computer. Install it using:
 
-$ pip install ebook-crawler
+$ pip install --upgrade ebook-crawler
 
 Or,
 
-$ python3 -m pip install --user ebook-crawler
+$ python3 -m pip install --user --upgrade ebook-crawler
 
 
 # Tutorial
