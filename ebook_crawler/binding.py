@@ -5,6 +5,7 @@ import re
 import io
 import os
 import json
+import errno
 import random
 import textwrap
 import platform
@@ -92,6 +93,18 @@ def novel_to_kindle(input_path):
         else:
             print('KindleGen does not support this OS.')
             break
+        # end if
+        # Testing alternatives
+        # try:
+        #     call(['kindlegen', '-c2', epub_file])
+        # except (OSError, Exception) as err:
+        #     if err[1].errno == errno.ENOENT:
+        #         print("Warning: kindlegen was not on your path; not generating .mobi version")
+        #         print("Visit https://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211 to install it.")
+        #     else:
+        #         raise
+        #     # end if
+        # # end try
     # end for
 # end def
 
