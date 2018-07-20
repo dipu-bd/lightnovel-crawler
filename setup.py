@@ -121,8 +121,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
 
-        # 'Operating System :: MacOS :: MacOS X',
-        # 'Operating System :: Microsoft :: Windows',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX'
     ],
 
@@ -170,7 +170,11 @@ setup(
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
     package_data={  # Optional
-        '': ['ext/kindlegen'],
+        '': [
+            'ext/kindlegen-linux',
+            'ext/kindlegen-mac',
+            'ext/kindlegen-windows'
+        ],
     },
 
     # Although 'package_data' is the preferred approach, in some case you may
