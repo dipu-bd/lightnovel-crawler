@@ -16,7 +16,7 @@ DIR_NAME = os.path.dirname(os.path.abspath(__file__))
 KINDLEGEN_PATH_MAC = os.path.join(DIR_NAME, 'ext', 'kindlegen-mac')
 KINDLEGEN_PATH_LINUX = os.path.join(DIR_NAME, 'ext', 'kindlegen-linux')
 KINDLEGEN_PATH_WINDOWS = os.path.join(DIR_NAME, 'ext', 'kindlegen-windows')
-systemOS = platform.system()
+SYSTEM_OS = platform.system()
 
 def novel_to_kindle(input_path):
     ''''Convert novel to epub'''
@@ -83,11 +83,11 @@ def novel_to_kindle(input_path):
         if not file_name.endswith('.epub'):
             continue
         epub_file = os.path.join(output_path, file_name)
-        if systemOS == 'Linux':
+        if SYSTEM_OS == 'Linux':
             call([KINDLEGEN_PATH_LINUX, epub_file])
-        elif systemOS == 'Darwin':
+        elif SYSTEM_OS == 'Darwin':
             call([KINDLEGEN_PATH_MAC, epub_file])
-        elif systemOS == 'Windows':
+        elif SYSTEM_OS == 'Windows':
             call([KINDLEGEN_PATH_WINDOWS, epub_file])
         else:
             print('KindleGen does not support this OS.')
