@@ -15,7 +15,7 @@ from .binding import novel_to_kindle
 
 
 class WuxiaCrawler:
-    '''Crawler for ReadLightNovel'''
+    '''Crawler for wuxiaworld.co'''
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
@@ -29,6 +29,8 @@ class WuxiaCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
+        if volume == '':
+            volume = False
         self.volume = volume
         self.home_url = 'https://www.wuxiaworld.com'
         self.output_path = path.join('_novel', novel_id)
@@ -59,6 +61,12 @@ class WuxiaCrawler:
         soup = BeautifulSoup(html_doc, 'lxml')
         # get book name
         self.novel_name = soup.select_one('.section-content  h4').text
+        cover = soup.find('img', {"class": "media-object"})['src']
+        self.novel_cover = cover
+        author = soup.find_all('p')[1].text
+        self.novel_author = author.lstrip('Author: ')
+        print(self.novel_author)
+        print(self.novel_cover)
         # get chapter list
         get_ch = lambda x: self.home_url + x.get('href')
         self.chapters = [get_ch(x) for x in soup.select('ul.list-chapters li.chapter-item a')]
@@ -68,7 +76,7 @@ class WuxiaCrawler:
     def get_chapter_index(self, chapter):
       if not chapter: return None
       if chapter.isdigit():
-        chapter = int(chapter)
+        chapter = int(chapter) - 1
         if 1 <= chapter <= len(self.chapters):
           return chapter
         else:
@@ -88,8 +96,8 @@ class WuxiaCrawler:
         self.start_chapter = self.get_chapter_index(self.start_chapter)
         self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
         if self.start_chapter is None: return
-        start = self.start_chapter - 1
-        end = min(self.end_chapter, len(self.chapters))
+        start = self.start_chapter 
+        end = min(self.end_chapter, len(self.chapters)) + 1
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
         # wait till finish
@@ -105,6 +113,7 @@ class WuxiaCrawler:
         html_doc = response.text
         soup = BeautifulSoup(html_doc, 'lxml')
         chapter_no = index + 1
+        volume_no = '0'
         if self.volume == False:
             volume_no = '0'
         elif (self.volume == 'True') or (self.volume == 'true') or (self.volume == 1) or (self.volume ==True):
@@ -113,7 +122,6 @@ class WuxiaCrawler:
                 volume_no = volume_no.group().strip('book-')
             else:
                 volume_no = ((chapter_no - 1) // 100) + 1
-            #end if
         #end if    
         chapter_title = soup.select_one('.panel-default .caption h4').text
         body_part = soup.select('.panel-default .fr-view p')
@@ -121,7 +129,8 @@ class WuxiaCrawler:
         save_chapter({
             'url': url,
             'novel': self.novel_name,
-            'author': 'Unknown',
+            'cover':self.novel_cover,
+            'author': self.novel_author,
             'volume_no': str(volume_no),
             'chapter_no': str(chapter_no),
             'chapter_title': chapter_title,
@@ -135,6 +144,6 @@ if __name__ == '__main__':
         novel_id=sys.argv[1],
         start_chapter=sys.argv[2] if len(sys.argv) > 2 else None,
         end_chapter=sys.argv[3] if len(sys.argv) > 3 else None,
-        volume=sys.argv[4] if len(sys.argv) > 4 else ''
+        volume=sys.argv[4] if len(sys.argv) > 4 else None
     ).start()
 # end if

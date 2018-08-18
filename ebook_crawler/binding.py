@@ -9,9 +9,11 @@ import errno
 import random
 import textwrap
 import platform
+import urllib
 from subprocess import call
 from ebooklib import epub
 from PIL import Image, ImageFont, ImageDraw
+from bs4 import BeautifulSoup
 
 DIR_NAME = os.path.dirname(os.path.abspath(__file__))
 KINDLEGEN_PATH_MAC = os.path.join(DIR_NAME, 'ext', 'kindlegen-mac')
@@ -35,6 +37,7 @@ def novel_to_kindle(input_path,volume):
         contents = []
         book_title = None
         book_author = None
+        book_cover = None
         full_vol = os.path.join(input_path)
         print('Processing:', full_vol)
         for file_name in sorted(os.listdir(full_vol)):
@@ -52,11 +55,22 @@ def novel_to_kindle(input_path,volume):
             book.add_item(chapter)
             contents.append(chapter)
             if not book_title: book_title = item['novel']
+            if not book_cover: book_cover = item['cover']
             if not book_author and 'author' in item: book_author = item['author']
         book_title = book_title or 'Unknown'
+        book_cover = book_cover or 'Unknown'
         book_author = book_author or 'Unknown'
-        book.spine = ['nav'] + contents
+        book.spine = ['cover','nav'] + contents
         book.add_author(book_author)
+        if book_cover != 'Unknown':
+            filename=book_cover.split('/')[-1]
+            print(book_cover)
+            opener = urllib.request.build_opener()
+            opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+            urllib.request.install_opener(opener)
+            urllib.request.urlretrieve(book_cover, filename)
+            book.set_cover("image.jpg", open(filename, 'rb').read())
+        #endif
         #book.set_title(book_title + ' Volume ' + vol)
         book.set_title(book_title)
         book.toc = contents
@@ -82,6 +96,7 @@ def novel_to_kindle(input_path,volume):
                 contents = []
                 book_title = None
                 book_author = None
+                book_cover = None
                 vol = volume_no.rjust(2, '0')
                 full_vol = os.path.join(input_path, volume_no)
                 print('Processing:', full_vol)
@@ -100,12 +115,19 @@ def novel_to_kindle(input_path,volume):
                     book.add_item(chapter)
                     contents.append(chapter)
                     if not book_title: book_title = item['novel']
+                    if not book_cover: book_cover = item['cover']
                     if not book_author and 'author' in item: book_author = item['author']
                 # end for
                 book_title = book_title or 'Unknown'
+                book_cover = book_cover or 'Unknown'
                 book_author = book_author or 'Unknown'
-                book.spine = ['nav'] + contents
+                book.spine = ['cover','nav'] + contents
                 book.add_author(book_author)
+                if book_cover != 'Unknown':
+                    filename=book_cover.split('/')[-1]
+                    urllib.request.urlretrieve(book_cover, filename)
+                    book.set_cover("image.jpg", open(filename, 'rb').read())
+                #endif
                 book.set_title(book_title + ' Volume ' + vol)
                 book.toc = contents
                 book.add_item(epub.EpubNav())
@@ -156,7 +178,6 @@ def novel_to_kindle(input_path,volume):
         # # end try
     # end for
 # end def
-
 
 def manga_to_kindle(input_path):
     '''Convert crawled data to epub'''

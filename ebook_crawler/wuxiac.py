@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Crawler for [WuxiaWorld](http://www.wuxiaworld.com/).
+Crawler for [WuxiaWorld.co](http://www.wuxiaworld.co/).
 """
 import re
 import sys
@@ -12,7 +12,6 @@ import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
 from .binding import novel_to_kindle
-
 
 class WuxiaCoCrawler:
     '''Crawler for wuxiaworld.co'''
@@ -29,6 +28,8 @@ class WuxiaCoCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
+        if volume == '':
+            volume = False
         self.volume = volume
         self.home_url = 'http://www.wuxiaworld.co'
         self.output_path = path.join('_novel', novel_id)
@@ -38,7 +39,6 @@ class WuxiaCoCrawler:
 
     def start(self):
         '''start crawling'''
-        #print(self.output_path)
         if path.exists(self.output_path):
             rmtree(self.output_path)
         try:
@@ -61,8 +61,9 @@ class WuxiaCoCrawler:
         # get book name
         self.novel_name = soup.select_one('h1').text
         self.novel_cover = self.home_url + soup.find('img')['src']
-        cover = soup.find_all('p')[1].text
-        self.novel_author = cover.lstrip('Author：')
+        author = soup.find_all('p')[1].text
+        self.novel_author = author.lstrip('Author：')
+        #self.novel_author = 'Unknown'
         print(self.novel_author)
         print(self.novel_cover)
         # get chapter list

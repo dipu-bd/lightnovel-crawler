@@ -117,6 +117,9 @@ class LNMTLCrawler:
         response = requests.get(url, headers=self.headers, verify=False)
         soup = BeautifulSoup(response.text, 'lxml')
         self.novel_name = soup.select_one('.novel .media .novel-name').text
+        novel_title = self.novel_name.rsplit(' ', 1)[0]
+        self.novel_cover = soup.find('img', {"title" : novel_title})['src']
+        self.novel_author = "unknown"
         for script in soup.find_all('script'):
             text = script.text.strip()
             if not text.startswith('window.lnmtl'):
@@ -229,6 +232,8 @@ class LNMTLCrawler:
         save_chapter({
             'url': url,
             'novel': self.novel_name,
+            'cover':self.novel_cover,
+            'author': self.novel_author,
             'volume_no': str(volume_no),
             'chapter_no': chapter_no,
             'chapter_title': chapter_title,
