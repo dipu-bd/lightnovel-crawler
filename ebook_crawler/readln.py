@@ -7,6 +7,7 @@ import re
 import sys
 import requests
 from os import path
+from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -17,7 +18,7 @@ class ReadLightNovelCrawler:
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None):
+    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
         if not novel_id:
             raise Exception('Novel ID is required')
         # end if
@@ -26,7 +27,7 @@ class ReadLightNovelCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-
+        self.volume = volume
         self.home_url = 'https://www.readlightnovel.org'
         self.output_path = path.join('_novel', novel_id)
 
@@ -35,11 +36,13 @@ class ReadLightNovelCrawler:
 
     def start(self):
         '''start crawling'''
+        if path.exists(self.output_path):
+            rmtree(self.output_path)
         try:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
-            novel_to_kindle(self.output_path)
+            novel_to_kindle(self.output_path, self.volume)
         # end try
     # end def
 
@@ -56,7 +59,7 @@ class ReadLightNovelCrawler:
         self.novel_name = soup.select_one('.block-title h1').text
         # get chapter list
         self.chapters = [x.get('href') for x in soup.select('.chapters .chapter-chs li a')]
-        print(' [%s]' % self.novel_name, len(self.chapters), 'chapters found')
+        print(' [%s]' % self.novel_name, len(self.chapters)+1, 'chapters found')
     # end def
 
     def get_chapter_index(self, chapter):
@@ -82,8 +85,8 @@ class ReadLightNovelCrawler:
         self.start_chapter = self.get_chapter_index(self.start_chapter)
         self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
         if self.start_chapter is None: return
-        start = self.start_chapter - 1
-        end = min(self.end_chapter, len(self.chapters))
+        start = self.start_chapter
+        end = min(self.end_chapter, len(self.chapters)) + 1
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
         # wait till finish
@@ -101,7 +104,12 @@ class ReadLightNovelCrawler:
         chapter_title = soup.select_one('.block-title h1').text
         body_part = [str(p.extract()) for p in soup.select('.chapter-content3 p') if len(p.text)]
         chapter_no = index + 1
-        volume_no = ((chapter_no - 1) // 100) + 1
+        if self.volume == False:
+            volume_no = '0'
+        elif (self.volume == 'True') or (self.volume == 'true') or (self.volume == 1) or (self.volume ==True):
+            volume_no = ((chapter_no - 1) // 100) + 1
+            #end if
+        #end if    
         body_part = ''.join(body_part)
         save_chapter({
             'url': url,

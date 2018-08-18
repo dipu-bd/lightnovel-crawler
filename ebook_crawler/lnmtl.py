@@ -8,6 +8,7 @@ import sys
 import json
 import requests
 from os import path
+from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -18,7 +19,7 @@ class LNMTLCrawler:
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=3)
 
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None):
+    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
         if not novel_id:
             raise Exception('Novel ID is required')
         # end if
@@ -27,8 +28,12 @@ class LNMTLCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-        self.output_path = path.join('_novel', novel_id)
-
+        self.output_path = path.join('_novel', novel_id)  
+        if volume == '':
+            volume = False
+        #print(volume)
+        #exit()
+        self.volume = volume
         self.home_url = 'https://lnmtl.com'
         self.login_url = 'https://lnmtl.com/auth/login'
         self.logout_url = 'https://lnmtl.com/auth/logout'
@@ -44,6 +49,8 @@ class LNMTLCrawler:
 
     def start(self):
         '''start crawling'''
+        if path.exists(self.output_path):
+            rmtree(self.output_path)
         try:
             if self.start_chapter:
                 if not self.login():
@@ -57,7 +64,7 @@ class LNMTLCrawler:
             # end if
         finally:
             if path.exists(self.output_path):
-                novel_to_kindle(self.output_path)
+                novel_to_kindle(self.output_path, self.volume)
             # end if
         # end try
     # end def
@@ -204,7 +211,15 @@ class LNMTLCrawler:
         # end if
         volume_no = self.chapters[index]['volume_id']
         chapter_no = self.chapters[index]['position']
-        volume_no = self.get_volume(volume_no, chapter_no)
+        #self.volume=False
+        #print(self.dbv)
+        if self.volume == False:
+            volume_no = '0'
+        elif (self.volume == 'True') or (self.volume == 'true') or (self.volume == 1) or (self.volume ==True):
+            volume_no = self.get_volume(volume_no, chapter_no)
+            #end if
+        #end if  
+        #print(volume_no)  
         chapter_title = self.chapters[index]['title']
         chapter_title = '#%s %s' % (chapter_no, chapter_title)
         body = soup.select('.chapter-body .translated')
@@ -214,7 +229,7 @@ class LNMTLCrawler:
         save_chapter({
             'url': url,
             'novel': self.novel_name,
-            'volume_no': volume_no,
+            'volume_no': str(volume_no),
             'chapter_no': chapter_no,
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body)
@@ -236,6 +251,7 @@ if __name__ == '__main__':
     LNMTLCrawler(
         novel_id=sys.argv[1],
         start_chapter=sys.argv[2] if len(sys.argv) > 2 else '',
-        end_chapter=sys.argv[3] if len(sys.argv) > 3 else ''
+        end_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+        volume=sys.argv[4] if len(sys.argv) > 4 else ''
     ).start()
 # end if
