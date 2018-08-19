@@ -4,6 +4,7 @@
 import sys
 from .lnmtl import LNMTLCrawler
 from .wuxia import WuxiaCrawler
+from .wuxiac import WuxiaCoCrawler
 from .webnovel import WebNovelCrawler
 from .readln import ReadLightNovelCrawler
 
@@ -18,26 +19,37 @@ def main():
     if site == 'wuxia':
         WuxiaCrawler(
             novel_id=sys.argv[2],
-            start_chapter=sys.argv[3] if len(sys.argv) > 3 else None,
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else None
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=sys.argv[5] if len(sys.argv) > 5 else '',
         ).start()
     elif site == 'lnmtl':
         LNMTLCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else ''
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=sys.argv[5] if len(sys.argv) > 5 else ''
         ).start()
     elif site == 'webnovel':
         WebNovelCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else ''
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=sys.argv[5] if len(sys.argv) > 5 else ''
         ).start()
     elif site == 'readln':
         ReadLightNovelCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else ''
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=sys.argv[5] if len(sys.argv) > 5 else ''
+        ).start()
+    elif site == 'wuxiac':
+        WuxiaCoCrawler(
+            novel_id=sys.argv[2],
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=sys.argv[5] if len(sys.argv) > 5 else ''
         ).start()
     else:
         show_help()
