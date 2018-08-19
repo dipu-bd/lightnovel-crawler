@@ -4,20 +4,19 @@
 import json
 from os import path, makedirs
 
-def save_chapter(content, output_path):
+def save_chapter(content, output_path, pack_by_volume=True):
     '''save content to file'''
-    print(content['volume_no'])
-    if content['volume_no'] == '0':
-        vol = ''
-    else :
+    dir_name = output_path 
+    if pack_by_volume:
         vol = content['volume_no'].rjust(2, '0')
-    chap = content['chapter_no'].rjust(5, '0')
-    dir_name = path.join(output_path, vol)
+        dir_name = path.join(output_path, vol)
+    # end if
     try:
         makedirs(dir_name)
     except:
         pass
     # end if
+    chap = content['chapter_no'].rjust(5, '0')
     file_name = path.join(dir_name, chap + '.json')
     print('Saving ', file_name)
     with open(file_name, 'w') as file:

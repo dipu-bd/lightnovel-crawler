@@ -7,7 +7,7 @@ import re
 import sys
 import requests
 from os import path
-from shutil import rmtree
+# from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -29,9 +29,8 @@ class WuxiaCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-        if volume == '':
-            volume = False
-        self.volume = volume
+        self.pack_by_volume = volume
+
         self.home_url = 'https://www.wuxiaworld.com'
         self.output_path = path.join('_novel', novel_id)
 
@@ -40,13 +39,13 @@ class WuxiaCrawler:
 
     def start(self):
         '''start crawling'''
-        if path.exists(self.output_path):
-            rmtree(self.output_path)
+        # if path.exists(self.output_path):
+        #     rmtree(self.output_path)
         try:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
-           novel_to_kindle(self.output_path, self.volume)
+           novel_to_kindle(self.output_path, self.pack_by_volume)
         # end try
     # end def
 
@@ -60,13 +59,15 @@ class WuxiaCrawler:
         print('Getting book name and chapter list... ')
         soup = BeautifulSoup(html_doc, 'lxml')
         # get book name
-        self.novel_name = soup.select_one('.section-content  h4').text
-        cover = soup.find('img', {"class": "media-object"})['src']
-        self.novel_cover = cover
-        author = soup.find_all('p')[1].text
-        self.novel_author = author.lstrip('Author: ')
-        print(self.novel_author)
-        print(self.novel_cover)
+        try:
+            self.novel_name = soup.select_one('.section-content  h4').text
+            cover = soup.find('img', {"class": "media-object"})['src']
+            self.novel_cover = cover
+            author = soup.find_all('p')[1].text
+            self.novel_author = author.lstrip('Author: ')
+        except:
+            pass
+        # end try
         # get chapter list
         get_ch = lambda x: self.home_url + x.get('href')
         self.chapters = [get_ch(x) for x in soup.select('ul.list-chapters li.chapter-item a')]
@@ -105,6 +106,18 @@ class WuxiaCrawler:
         print('complete')
     # end def
 
+    def get_volume(self, index):
+        url = self.chapters[index]
+        chapter_no = index + 1
+        volume_no = re.search(r'book-\d+', url)
+        if volume_no:
+            volume_no = volume_no.group().strip('book-')
+        else:
+            volume_no = ((chapter_no - 1) // 100) + 1
+        # end if
+        return volume_no
+    # end def
+
     def parse_chapter(self, index):
         url = self.chapters[index]
         print('Downloading', url)
@@ -113,16 +126,7 @@ class WuxiaCrawler:
         html_doc = response.text
         soup = BeautifulSoup(html_doc, 'lxml')
         chapter_no = index + 1
-        volume_no = '0'
-        if self.volume == False:
-            volume_no = '0'
-        elif (self.volume == 'True') or (self.volume == 'true') or (self.volume == 1) or (self.volume ==True):
-            volume_no = re.search(r'book-\d+', url)
-            if volume_no:
-                volume_no = volume_no.group().strip('book-')
-            else:
-                volume_no = ((chapter_no - 1) // 100) + 1
-        #end if    
+        volume_no = self.get_volume(index)
         chapter_title = soup.select_one('.panel-default .caption h4').text
         body_part = soup.select('.panel-default .fr-view p')
         body_part = ''.join([str(p.extract()) for p in body_part if p.text.strip()])
@@ -135,7 +139,7 @@ class WuxiaCrawler:
             'chapter_no': str(chapter_no),
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
-        }, self.output_path)
+        }, self.output_path, self.pack_by_volume)
     # end def
 # end class
 

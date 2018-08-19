@@ -7,7 +7,7 @@ import re
 import sys
 import requests
 from os import path
-from shutil import rmtree
+# from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -28,9 +28,8 @@ class ReadLightNovelCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-        if volume == '':
-            volume = False
-        self.volume = volume
+        self.pack_by_volume = volume
+
         self.home_url = 'https://www.readlightnovel.org'
         self.output_path = path.join('_novel', novel_id)
 
@@ -39,13 +38,13 @@ class ReadLightNovelCrawler:
 
     def start(self):
         '''start crawling'''
-        if path.exists(self.output_path):
-            rmtree(self.output_path)
+        # if path.exists(self.output_path):
+        #     rmtree(self.output_path)
         try:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
-            novel_to_kindle(self.output_path, self.volume)
+            novel_to_kindle(self.output_path, self.pack_by_volume)
         # end try
     # end def
 
@@ -59,16 +58,16 @@ class ReadLightNovelCrawler:
         print('Getting book name and chapter list... ')
         soup = BeautifulSoup(html_doc, 'lxml')
         # get book name
-        self.novel_name = soup.select_one('.block-title h1').text
-        self.novel_cover = soup.find('img', {"alt" : self.novel_name})['src']
-        #author = soup.find_all('p')[1].text
         self.novel_author = 'N/A'
-        #self.novel_author = 'Unknown'
-        print(self.novel_author)
-        print(self.novel_cover)
+        try:
+            self.novel_name = soup.select_one('.block-title h1').text
+            self.novel_cover = soup.find('img', {"alt" : self.novel_name})['src']
+        except:
+            pass
+        # end try
         # get chapter list
         self.chapters = [x.get('href') for x in soup.select('.chapters .chapter-chs li a')]
-        print(' [%s]' % self.novel_name, len(self.chapters)+1, 'chapters found')
+        print(' [%s]' % self.novel_name, len(self.chapters), 'chapters found')
     # end def
 
     def get_chapter_index(self, chapter):
@@ -113,12 +112,7 @@ class ReadLightNovelCrawler:
         chapter_title = soup.select_one('.block-title h1').text
         body_part = [str(p.extract()) for p in soup.select('.chapter-content3 p') if len(p.text)]
         chapter_no = index + 1
-        if self.volume == False:
-            volume_no = '0'
-        elif (self.volume == 'True') or (self.volume == 'true') or (self.volume == 1) or (self.volume ==True):
-            volume_no = ((chapter_no - 1) // 100) + 1
-            #end if
-        #end if    
+        volume_no = ((chapter_no - 1) // 100) + 1
         body_part = ''.join(body_part)
         save_chapter({
             'url': url,
@@ -129,7 +123,7 @@ class ReadLightNovelCrawler:
             'chapter_no': str(chapter_no),
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
-        }, self.output_path)
+        }, self.output_path, self.pack_by_volume)
     # end def
 # end class
 
@@ -137,6 +131,7 @@ if __name__ == '__main__':
     ReadLightNovelCrawler(
         novel_id=sys.argv[1],
         start_chapter=sys.argv[2] if len(sys.argv) > 2 else None,
-        end_chapter=sys.argv[3] if len(sys.argv) > 3 else None
+        end_chapter=sys.argv[3] if len(sys.argv) > 3 else None,
+        volume=sys.argv[4].lower() == 'true' if len(sys.argv) > 4 else ''
     ).start()
 # end if

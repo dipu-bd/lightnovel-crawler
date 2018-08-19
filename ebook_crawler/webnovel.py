@@ -21,7 +21,7 @@ class WebNovelCrawler:
     chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
     chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None):
+    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=None):
         if not novel_id:
             raise Exception('Novel ID is required')
         # end if
@@ -29,6 +29,7 @@ class WebNovelCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
+        self.pack_by_volume = volume
 
         self.chapters = []
         self.volume_no = {}
@@ -38,10 +39,13 @@ class WebNovelCrawler:
 
     def start(self):
         '''start crawling'''
-        self.get_csrf_token()
-        self.get_chapter_list()
-        self.get_chapter_bodies()
-        novel_to_kindle(self.output_path)
+        try:
+            self.get_csrf_token()
+            self.get_chapter_list()
+            self.get_chapter_bodies()
+        finally:
+            novel_to_kindle(self.output_path, self.pack_by_volume)
+        # end try
     # end def
 
     def get_csrf_token(self):
@@ -125,7 +129,7 @@ class WebNovelCrawler:
             'chapter_no': str(chapter_no),
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
-        }, self.output_path)
+        }, self.output_path, self.pack_by_volume)
         return chapter_id
     # end def
 
@@ -146,6 +150,7 @@ if __name__ == '__main__':
     WebNovelCrawler(
         novel_id=sys.argv[1],
         start_chapter=sys.argv[2] if len(sys.argv) > 2 else None,
-        end_chapter=sys.argv[3] if len(sys.argv) > 3 else None
+        end_chapter=sys.argv[3] if len(sys.argv) > 3 else None,
+        volume=sys.argv[4].lower() == 'true' if len(sys.argv) > 4 else ''
     ).start()
 # end if

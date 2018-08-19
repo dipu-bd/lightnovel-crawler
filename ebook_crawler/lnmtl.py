@@ -8,7 +8,7 @@ import sys
 import json
 import requests
 from os import path
-from shutil import rmtree
+# from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -28,12 +28,9 @@ class LNMTLCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-        self.output_path = path.join('_novel', novel_id)  
-        if volume == '':
-            volume = False
-        #print(volume)
-        #exit()
-        self.volume = volume
+        self.output_path = path.join('_novel', novel_id)
+        self.pack_by_volume = volume
+
         self.home_url = 'https://lnmtl.com'
         self.login_url = 'https://lnmtl.com/auth/login'
         self.logout_url = 'https://lnmtl.com/auth/logout'
@@ -49,8 +46,8 @@ class LNMTLCrawler:
 
     def start(self):
         '''start crawling'''
-        if path.exists(self.output_path):
-            rmtree(self.output_path)
+        # if path.exists(self.output_path):
+        #     rmtree(self.output_path)
         try:
             if self.start_chapter:
                 if not self.login():
@@ -64,7 +61,7 @@ class LNMTLCrawler:
             # end if
         finally:
             if path.exists(self.output_path):
-                novel_to_kindle(self.output_path, self.volume)
+                novel_to_kindle(self.output_path, self.pack_by_volume)
             # end if
         # end try
     # end def
@@ -116,10 +113,15 @@ class LNMTLCrawler:
         print('Visiting', url)
         response = requests.get(url, headers=self.headers, verify=False)
         soup = BeautifulSoup(response.text, 'lxml')
-        self.novel_name = soup.select_one('.novel .media .novel-name').text
-        novel_title = self.novel_name.rsplit(' ', 1)[0]
-        self.novel_cover = soup.find('img', {"title" : novel_title})['src']
-        self.novel_author = "unknown"
+        self.novel_author = 'N/A'
+        try:
+            self.novel_name = soup.select_one('.novel .media .novel-name').text
+            self.novel_name = self.novel_name.rsplit(' ', 1)[0]
+            self.novel_cover = soup.find('img', {"title" : self.novel_name})['src']
+        except:
+            self.novel_cover = None
+        # end try
+
         for script in soup.find_all('script'):
             text = script.text.strip()
             if not text.startswith('window.lnmtl'):
@@ -214,15 +216,7 @@ class LNMTLCrawler:
         # end if
         volume_no = self.chapters[index]['volume_id']
         chapter_no = self.chapters[index]['position']
-        #self.volume=False
-        #print(self.dbv)
-        if self.volume == False:
-            volume_no = '0'
-        elif (self.volume == 'True') or (self.volume == 'true') or (self.volume == 1) or (self.volume ==True):
-            volume_no = self.get_volume(volume_no, chapter_no)
-            #end if
-        #end if  
-        #print(volume_no)  
+
         chapter_title = self.chapters[index]['title']
         chapter_title = '#%s %s' % (chapter_no, chapter_title)
         body = soup.select('.chapter-body .translated')
@@ -238,7 +232,7 @@ class LNMTLCrawler:
             'chapter_no': chapter_no,
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body)
-        }, self.output_path)
+        }, self.output_path, self.pack_by_volume)
     # end def
 
     def format_text(self, text):
@@ -257,6 +251,6 @@ if __name__ == '__main__':
         novel_id=sys.argv[1],
         start_chapter=sys.argv[2] if len(sys.argv) > 2 else '',
         end_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-        volume=sys.argv[4] if len(sys.argv) > 4 else ''
+        volume=sys.argv[4].lower() == 'true' if len(sys.argv) > 4 else ''
     ).start()
 # end if

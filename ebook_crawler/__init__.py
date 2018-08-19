@@ -15,41 +15,47 @@ def main():
         return show_help()
     # end if
 
+    volume = False
+    if len(sys.argv) > 5:
+        volume = sys.argv[5]
+        volume = volume.lower() == 'true' or (volume.isdigit() and volume != 0)
+    # end if
+
     site = sys.argv[1]
     if site == 'wuxia':
         WuxiaCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=sys.argv[5] if len(sys.argv) > 5 else '',
+            volume=volume,
         ).start()
     elif site == 'lnmtl':
         LNMTLCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=sys.argv[5] if len(sys.argv) > 5 else ''
+            volume=volume,
         ).start()
     elif site == 'webnovel':
         WebNovelCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=sys.argv[5] if len(sys.argv) > 5 else ''
+            volume=volume,
         ).start()
     elif site == 'readln':
         ReadLightNovelCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=sys.argv[5] if len(sys.argv) > 5 else ''
+            volume=volume,
         ).start()
     elif site == 'wuxiac':
         WuxiaCoCrawler(
             novel_id=sys.argv[2],
             start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=sys.argv[5] if len(sys.argv) > 5 else ''
+            volume=volume,
         ).start()
     else:
         show_help()
@@ -62,15 +68,18 @@ def show_help():
     print('EbookCrawler:')
     print('  ebook_crawler <site-handle> <novel-id>',
           '[<start-chapter>|<start-url>]',
-          '[<end-chapter>|<end-url>]')
+          '[<end-chapter>|<end-url>]',
+          '[<pack-by-volumes>]')
     print()
     print('OPTIONS:')
-    print('  site-handle*   Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln]')
-    print('  novel-id*      Novel id appear in url (See HINTS)')
-    print('  start-chapter  Starting chapter')
-    print('  end-chapter    Ending chapter')
-    print('  start-url      Url of the chapter to start')
-    print('  end-url        Url of the final chapter')
+    print('  site-handle*     Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln]')
+    print('  novel-id*        Novel id appear in url (See HINTS)')
+    print('  start-chapter    Starting chapter')
+    print('  end-chapter      Ending chapter')
+    print('  start-url        Url of the chapter to start')
+    print('  end-url          Url of the final chapter')
+    print('  end-url          Url of the final chapter')
+    print('  pack-by-volumes  Whether to split the package by volumes. Accepts either [true] or [false]')
     print()
     print('HINTS:')
     print('- * marked params are required')
