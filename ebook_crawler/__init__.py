@@ -72,7 +72,7 @@ def show_help():
           '[<pack-by-volumes>]')
     print()
     print('OPTIONS:')
-    print('  site-handle*     Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln]')
+    print('  site-handle*     Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln, wuxiac]')
     print('  novel-id*        Novel id appear in url (See HINTS)')
     print('  start-chapter    Starting chapter')
     print('  end-chapter      Ending chapter')
@@ -87,7 +87,9 @@ def show_help():
     print('- Get the `novel-id` from the link. Some examples:')
     print('\n  https://www.webnovel.com/book/8143258106003605/21860374051617214 \n    novel_id = `8143258106003605`')
     print('\n  https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1 \n    novel_id = `a-will-eternal`')
+    print('\n  http://www.wuxiaworld.co/A-Will-Eternal/ \n    novel_id = `a-will-eternal`')
     print('\n  https://lnmtl.com/novel/against-the-gods \n    novel_id = `against-the-gods`')
     print('\n  https://www.readlightnovel.org/tales-of-herding-gods \n    novel_id = `tales-of-herding-gods`')
+    print('\n  http://www.wuxiaworld.co/A-Will-Eternal/ \n    novel_id = `a-will-eternal`')
     print()
 # end def
