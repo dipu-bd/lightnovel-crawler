@@ -1,5 +1,16 @@
 # LightNovels To EBook
 
+[![Python version](https://img.shields.io/pypi/pyversions/ebook-crawler.svg)](https://badge.fury.io/py/ebook-crawler)
+[![PyPI version](https://img.shields.io/pypi/v/ebook-crawler.svg)](https://badge.fury.io/py/ebook-crawler)
+[![PyPI - Format](https://img.shields.io/pypi/format/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
+[![PyPI - Status](https://img.shields.io/pypi/status/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
+[![GitHub contributors](https://img.shields.io/github/contributors/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/pulls)
+[![GitHub issues](https://img.shields.io/github/issues/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/issues)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+)
+[![GitHub](https://img.shields.io/github/license/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/blob/master/VERSION)
+
+
 Crawls lightnovels from popular websites and converts to ebook format (only EPUB and MOBI are supported for now).
 
 ## Tutorial
