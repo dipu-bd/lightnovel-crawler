@@ -11,14 +11,13 @@ from os import path
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
-from .binding import novel_to_kindle
+from .binding import novel_to_epub, novel_to_mobi
 
 class WuxiaCoCrawler:
     '''Crawler for wuxiaworld.co'''
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
-    #adding new parameter(volume) to give user option to generate single volume for all chapter or divide volume per 100 chapter
     def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
         if not novel_id:
             raise Exception('Novel ID is required')
@@ -31,7 +30,7 @@ class WuxiaCoCrawler:
         self.pack_by_volume = volume
 
         self.home_url = 'http://www.wuxiaworld.co'
-        self.output_path = path.join('_novel', novel_id)
+        self.output_path = None
 
         requests.urllib3.disable_warnings()
     # end def
@@ -44,7 +43,8 @@ class WuxiaCoCrawler:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
-           novel_to_kindle(self.output_path,self.pack_by_volume)
+            novel_to_epub(self.output_path, self.pack_by_volume)
+            novel_to_mobi(self.output_path)
         # end try
     # end def
 
@@ -66,8 +66,8 @@ class WuxiaCoCrawler:
         except:
             self.novel_author = 'N/A'
         # end try
-        # get chapter list
-        print (url)
+        self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', self.novel_name or self.novel_id)
+        # Get chapter list
         get_ch = lambda x: url + x.get('href')
         self.chapters = [get_ch(x) for x in soup.select('dd a')]
         print(self.chapters[1])
@@ -79,7 +79,7 @@ class WuxiaCoCrawler:
       if chapter.isdigit():
         chapter = int(chapter)
         if 1 <= chapter <= len(self.chapters):
-          return chapter
+          return chapter - 1
         else:
           raise Exception('Invalid chapter number')
         # end if
@@ -95,7 +95,7 @@ class WuxiaCoCrawler:
     def get_chapter_bodies(self):
         '''get content from all chapters till the end'''
         self.start_chapter = self.get_chapter_index(self.start_chapter)
-        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters) + 1
+        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
         if self.start_chapter is None: return
         start = self.start_chapter 
         end = min(self.end_chapter, len(self.chapters))

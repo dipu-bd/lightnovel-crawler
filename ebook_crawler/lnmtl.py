@@ -12,7 +12,7 @@ from os import path
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
-from .binding import novel_to_kindle
+from .binding import novel_to_epub, novel_to_mobi
 
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
@@ -28,7 +28,7 @@ class LNMTLCrawler:
         self.novel_id = novel_id
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
-        self.output_path = path.join('_novel', novel_id)
+        self.output_path = None
         self.pack_by_volume = volume
 
         self.home_url = 'https://lnmtl.com'
@@ -60,9 +60,8 @@ class LNMTLCrawler:
                 self.logout()
             # end if
         finally:
-            if path.exists(self.output_path):
-                novel_to_kindle(self.output_path, self.pack_by_volume)
-            # end if
+            novel_to_epub(self.output_path, self.pack_by_volume)
+            novel_to_mobi(self.output_path)
         # end try
     # end def
 
@@ -121,7 +120,7 @@ class LNMTLCrawler:
         except:
             self.novel_cover = None
         # end try
-
+        self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', self.novel_name or self.novel_id)
         for script in soup.find_all('script'):
             text = script.text.strip()
             if not text.startswith('window.lnmtl'):

@@ -10,7 +10,7 @@ import requests
 from os import path
 import concurrent.futures
 from .helper import save_chapter
-from .binding import novel_to_kindle
+from .binding import novel_to_epub, novel_to_mobi
 
 class WebNovelCrawler:
     '''Crawler for WuxiaWorld'''
@@ -33,7 +33,7 @@ class WebNovelCrawler:
 
         self.chapters = []
         self.volume_no = {}
-        self.output_path = path.join('_novel', novel_id)
+        self.output_path = None
     # end def
 
 
@@ -44,7 +44,8 @@ class WebNovelCrawler:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
-            novel_to_kindle(self.output_path, self.pack_by_volume)
+            novel_to_epub(self.output_path, self.pack_by_volume)
+            novel_to_mobi(self.output_path)
         # end try
     # end def
 
@@ -106,7 +107,7 @@ class WebNovelCrawler:
         response.encoding = 'utf-8'
         data = response.json()
         novel_name = data['data']['bookInfo']['bookName']
-        author_name = 'Unknown'
+        author_name = 'N/A'
         if 'authorName' in data['data']['bookInfo']:
             author_name = data['data']['bookInfo']['authorName']
         if 'authorItems' in data['data']['bookInfo']:
@@ -121,9 +122,13 @@ class WebNovelCrawler:
         if str(index) in self.volume_no:
             volume_no = self.volume_no[str(index)]
         # end if
+        if not self.output_path:
+            self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', novel_name or self.novel_id)
+        # end if
         save_chapter({
             'url': url,
             'novel': novel_name,
+            'cover': None,
             'author': author_name,
             'volume_no': str(volume_no),
             'chapter_no': str(chapter_no),

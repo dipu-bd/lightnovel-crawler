@@ -11,7 +11,7 @@ from os import path
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
-from .binding import novel_to_kindle
+from .binding import novel_to_epub, novel_to_mobi
 
 
 class WuxiaCrawler:
@@ -19,7 +19,6 @@ class WuxiaCrawler:
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
-    #adding new parameter(volume) to give user option to generate single volume for all chapter or divide volume per 100 chapter
     def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
         if not novel_id:
             raise Exception('Novel ID is required')
@@ -32,7 +31,7 @@ class WuxiaCrawler:
         self.pack_by_volume = volume
 
         self.home_url = 'https://www.wuxiaworld.com'
-        self.output_path = path.join('_novel', novel_id)
+        self.output_path = None
 
         requests.urllib3.disable_warnings()
     # end def
@@ -45,7 +44,8 @@ class WuxiaCrawler:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
-           novel_to_kindle(self.output_path, self.pack_by_volume)
+            novel_to_epub(self.output_path, self.pack_by_volume)
+            novel_to_mobi(self.output_path)
         # end try
     # end def
 
@@ -68,6 +68,7 @@ class WuxiaCrawler:
         except:
             pass
         # end try
+        self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', self.novel_name or self.novel_id)
         # get chapter list
         get_ch = lambda x: self.home_url + x.get('href')
         self.chapters = [get_ch(x) for x in soup.select('ul.list-chapters li.chapter-item a')]
@@ -77,11 +78,9 @@ class WuxiaCrawler:
     def get_chapter_index(self, chapter):
       if not chapter: return None
       if chapter.isdigit():
-        chapter = int(chapter) - 1
+        chapter = int(chapter)
         if 1 <= chapter <= len(self.chapters):
-          return chapter
-        else:
-          raise Exception('Invalid chapter number')
+          return chapter - 1
         # end if
       # end if
       for i, link in enumerate(self.chapters):

@@ -11,7 +11,7 @@ from os import path
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
-from .binding import novel_to_kindle
+from .binding import novel_to_epub, novel_to_mobi
 
 class ReadLightNovelCrawler:
     '''Crawler for ReadLightNovel'''
@@ -31,7 +31,7 @@ class ReadLightNovelCrawler:
         self.pack_by_volume = volume
 
         self.home_url = 'https://www.readlightnovel.org'
-        self.output_path = path.join('_novel', novel_id)
+        self.output_path = None
 
         requests.urllib3.disable_warnings()
     # end def
@@ -44,7 +44,8 @@ class ReadLightNovelCrawler:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
-            novel_to_kindle(self.output_path, self.pack_by_volume)
+            novel_to_epub(self.output_path, self.pack_by_volume)
+            novel_to_mobi(self.output_path)
         # end try
     # end def
 
@@ -65,6 +66,7 @@ class ReadLightNovelCrawler:
         except:
             pass
         # end try
+        self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', self.novel_name or self.novel_id)
         # get chapter list
         self.chapters = [x.get('href') for x in soup.select('.chapters .chapter-chs li a')]
         print(' [%s]' % self.novel_name, len(self.chapters), 'chapters found')
