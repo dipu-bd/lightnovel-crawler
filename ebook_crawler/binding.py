@@ -112,7 +112,7 @@ def novel_to_mobi(input_path):
             continue
         # end if
         epub_file = os.path.join(epub_path, file_name)
-        generator = lambda kindlegen: call([kindlegen, '-c2', epub_file])
+        generator = lambda kindlegen: call([kindlegen, epub_file])
         try:
             if SYSTEM_OS == 'Linux':
                 generator(KINDLEGEN_PATH_LINUX)
