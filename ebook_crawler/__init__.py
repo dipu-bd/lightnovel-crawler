@@ -15,7 +15,7 @@ def main():
         return show_help()
     # end if
 
-    volume = False
+    volume = True
     if len(sys.argv) > 5:
         volume = sys.argv[5]
         volume = volume.lower() == 'true' or (volume.isdigit() and volume != 0)
