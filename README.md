@@ -49,6 +49,7 @@ The avaiable list of site handles are given below. *To request new site [create 
 |--------|---------|
 | `webnovel` | https://www.webnovel.com |
 | `wuxia` | http://www.wuxiaworld.com |
+| `wuxiac` | http://www.wuxiaworld.co |
 | `lnmtl` | https://lnmtl.com |
 | `readln` | https://www.readlightnovel.org |
 
@@ -62,6 +63,7 @@ To download a novel, you need to get a `novel-id`. It is usually a unique part o
 | https://lnmtl.com/novel/against-the-gods | against-the-gods |
 | https://www.readlightnovel.org/tales-of-herding-gods | tales-of-herding-gods |
 | http://www.wuxiaworld.com/novel/desolate-era | desolate-era |
+| http://www.wuxiaworld.co/A-Will-Eternal/ | a-will-eternal |
 
 #### 3. Start Chapter or Start URL (optional)
 
@@ -80,7 +82,8 @@ Example values:
 - https://www.webnovel.com/book/8143258106003605/21860374051617214
 - https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1
 - https://lnmtl.com/chapter/against-the-gods-book-11-chapter-1135
-- https://www.readlightnovel.org/tales-of-herding-gods
+- https://www.readlightnovel.org/tales-of-herding-gods/chapter-35
+- http://www.wuxiaworld.co/A-Will-Eternal/1042897.html
 
 <!-- - KindleComicConverter: `pip install -U KindleComicConverter` -->
 
