@@ -6,10 +6,10 @@ from os import path, makedirs
 
 def save_chapter(content, output_path, pack_by_volume=True):
     '''save content to file'''
-    dir_name = output_path 
+    dir_name = path.join(output_path, 'json')
     if pack_by_volume:
         vol = content['volume_no'].rjust(2, '0')
-        dir_name = path.join(output_path, vol)
+        dir_name = path.join(dir_name, vol)
     # end if
     try:
         makedirs(dir_name)
