@@ -43,6 +43,7 @@ class WuxiaCoCrawler:
             self.get_chapter_list()
             self.get_chapter_bodies()
         finally:
+            self.output_path = self.output_path or self.novel_id
             novel_to_epub(self.output_path, self.pack_by_volume)
             novel_to_mobi(self.output_path)
         # end try
