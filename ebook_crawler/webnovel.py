@@ -83,20 +83,31 @@ class WebNovelCrawler:
         print(len(self.chapters), 'chapters found')
     # end def
 
+    def get_chapter_index(self, chapter):
+      if not chapter: return None
+      if chapter.isdigit():
+        chapter = int(chapter)
+        if 1 <= chapter <= len(self.chapters):
+          return chapter - 1
+        # end if
+      # end if
+      for i, ch_id in enumerate(self.chapters):
+        possible_url_substr = '/book/' + self.novel_id + '/' + ch_id
+        if possible_url_substr in chapter:
+          return i
+        # end if
+      # end for
+      raise Exception('Invalid chapter url')
+    # end def
+
     def get_chapter_bodies(self):
         '''get content from all chapters till the end'''
-        if not self.start_chapter: return
-        start = int(self.start_chapter)
-        end = int(self.end_chapter or len(self.chapters))
-        start = max(start - 1, 0)
-        end = min(end, len(self.chapters))
-        if start >= len(self.chapters):
-          return print('ERROR: start chapter out of bound.')
-        # end if
+        start = self.get_chapter_index(self.start_chapter)
+        end = self.get_chapter_index(self.end_chapter) or len(self.chapters)
+        if not start: return
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
-        # wait till finish
-        # True == isinstance(future_to_url, dict)
+        # Wait till finish
         [x.result() for x in concurrent.futures.as_completed(future_to_url)]
     # end def
 
@@ -136,7 +147,6 @@ class WebNovelCrawler:
             'chapter_title': chapter_title,
             'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
         }, self.output_path, self.pack_by_volume)
-        return chapter_id
     # end def
 
     def format_text(self, text):
