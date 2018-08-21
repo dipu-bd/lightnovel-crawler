@@ -71,12 +71,12 @@ def _bind_book(input_path, volume_no = ''):
     book.spine = ['nav'] + contents
     if book_cover != 'N/A':
         try:
-            filename=book_cover.split('/')[-1]
+            filename = os.path.join(input_path, book_cover.split('/')[-1])
             opener = urllib.request.build_opener()
             opener.addheaders = [('User-agent', 'Mozilla/5.0')]
             urllib.request.install_opener(opener)
             urllib.request.urlretrieve(book_cover, filename)
-            book.set_cover("image.jpg", open(filename, 'rb').read())
+            book.set_cover('image.jpg', open(filename, 'rb').read())
             book.spine = ['cover'] + book.spine
         except:
             print('Failed to add cover:', book_cover)
