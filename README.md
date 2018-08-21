@@ -1,7 +1,7 @@
 # LightNovels To EBook
 
-[![Python version](https://img.shields.io/pypi/pyversions/ebook-crawler.svg)](https://badge.fury.io/py/ebook-crawler)
-[![PyPI version](https://img.shields.io/pypi/v/ebook-crawler.svg)](https://badge.fury.io/py/ebook-crawler)
+[![Python version](https://img.shields.io/pypi/pyversions/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
+[![PyPI version](https://img.shields.io/pypi/v/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
 [![PyPI - Format](https://img.shields.io/pypi/format/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
 [![PyPI - Status](https://img.shields.io/pypi/status/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
 [![GitHub contributors](https://img.shields.io/github/contributors/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub)
