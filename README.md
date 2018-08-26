@@ -76,7 +76,7 @@ To download a novel, you need to get a `novel-id`. It is usually a unique part o
 | http://www.wuxiaworld.com/novel/desolate-era | desolate-era |
 | http://www.wuxiaworld.co/A-Will-Eternal/ | a-will-eternal |
 
-#### 3. Start Chapter or Start URL (optional)
+#### 3. Start Chapter or Start URL (~optional~)
 
 You can provide either a chapter number or the url of a chapter (see examples below). Chapter number is usually the index of the chapter in the chapter list that is given in the website. (except for LNMLT, see below).
 
