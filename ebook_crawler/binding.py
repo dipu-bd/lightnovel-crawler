@@ -42,6 +42,7 @@ def _bind_book(input_path, volume_no = ''):
     book = epub.EpubBook()
     book.set_language('en')
     book.set_identifier(input_path + volume_no)
+
     # get chapters
     contents = []
     book_title = 'N/A'
@@ -67,6 +68,7 @@ def _bind_book(input_path, volume_no = ''):
         book_cover = item['cover'] if 'cover' in item else book_cover
         book_author = item['author'] if 'author' in item else book_author
     # end for
+
     book.add_author(book_author)
     book.spine = ['nav'] + contents
     if book_cover != 'N/A':
@@ -83,6 +85,7 @@ def _bind_book(input_path, volume_no = ''):
             pass
         # end try
     # end if
+
     if volume_no and volume_no != '':
         vol = ' Volume ' + volume_no.rjust(2, '0')
         book.set_title(book_title + vol)
@@ -92,6 +95,7 @@ def _bind_book(input_path, volume_no = ''):
     book.toc = contents
     book.add_item(epub.EpubNav())
     book.add_item(epub.EpubNcx())
+
     # Save epub file
     epub_path = os.path.join(input_path, 'epub')
     if not os.path.exists(epub_path):
@@ -106,6 +110,10 @@ def _bind_book(input_path, volume_no = ''):
 
 def novel_to_mobi(input_path):
     epub_path = os.path.join(input_path, 'epub')
+    if not os.path.exists(epub_path):
+        print('!! Could not make mobi files. EPUB folder does not exist.')
+        return
+    # end if
     # Convert to mobi format
     for file_name in sorted(os.listdir(epub_path)):
         if not file_name.endswith('.epub'):
