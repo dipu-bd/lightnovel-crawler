@@ -88,7 +88,7 @@ class WebNovelCrawler:
       if chapter.isdigit():
         chapter = int(chapter)
         if 1 <= chapter <= len(self.chapters):
-          return chapter - 1
+          return chapter
         # end if
       # end if
       for i, ch_id in enumerate(self.chapters):
@@ -106,7 +106,7 @@ class WebNovelCrawler:
         end = self.get_chapter_index(self.end_chapter) or len(self.chapters)
         if not start: return
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
-            index for index in range(start, end)}
+            index for index in range(start-1, end)}
         # Wait till finish
         [x.result() for x in concurrent.futures.as_completed(future_to_url)]
     # end def
