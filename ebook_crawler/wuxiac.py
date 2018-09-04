@@ -19,7 +19,7 @@ class WuxiaCoCrawler:
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
     def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
-        if not novel_id:
+        if novel_id is None:
             raise Exception('Novel ID is required')
         # end if
 
@@ -76,7 +76,7 @@ class WuxiaCoCrawler:
     # end def
 
     def get_chapter_index(self, chapter):
-      if not chapter: return None
+      if chapter is None: return
       if chapter.isdigit():
         chapter = int(chapter)
         if 1 <= chapter <= len(self.chapters):
@@ -96,10 +96,10 @@ class WuxiaCoCrawler:
     def get_chapter_bodies(self):
         '''get content from all chapters till the end'''
         self.start_chapter = self.get_chapter_index(self.start_chapter)
-        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
+        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters) - 1
         if self.start_chapter is None: return
         start = self.start_chapter 
-        end = min(self.end_chapter, len(self.chapters))
+        end = min(self.end_chapter + 1, len(self.chapters))
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
         # wait till finish
