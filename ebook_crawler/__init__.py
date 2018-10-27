@@ -7,6 +7,7 @@ from .wuxia import WuxiaCrawler
 from .wuxiac import WuxiaCoCrawler
 from .webnovel import WebNovelCrawler
 from .readln import ReadLightNovelCrawler
+from .boxnovel import BoxNovelCrawler
 
 
 def main():
@@ -57,6 +58,13 @@ def main():
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
             volume=volume,
         ).start()
+    elif site == 'boxnovel':
+        BoxNovelCrawler(
+            novel_id=sys.argv[2],
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=volume,
+        ).start()
     else:
         show_help()
     # end if
@@ -72,7 +80,7 @@ def show_help():
           '[<pack-by-volumes>]')
     print()
     print('OPTIONS:')
-    print('  site-handle*     Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln, wuxiac]')
+    print('  site-handle*     Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln, wuxiac, boxnovel]')
     print('  novel-id*        Novel id appear in url (See HINTS)')
     print('  start-chapter    Starting chapter')
     print('  end-chapter      Ending chapter')
@@ -91,5 +99,6 @@ def show_help():
     print('\n  https://lnmtl.com/novel/against-the-gods \n    novel_id = `against-the-gods`')
     print('\n  https://www.readlightnovel.org/tales-of-herding-gods \n    novel_id = `tales-of-herding-gods`')
     print('\n  http://www.wuxiaworld.co/A-Will-Eternal/ \n    novel_id = `a-will-eternal`')
+    print('\n  https://boxnovel.com/novel/the-legend-of-futian/ \n    novel_id = `the-legend-of-futian`')
     print()
 # end def
