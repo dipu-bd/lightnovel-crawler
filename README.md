@@ -59,8 +59,9 @@ The avaiable list of site handles are given below. *To request new site [create 
 | Handle | Website |
 |--------|---------|
 | `webnovel` | https://www.webnovel.com |
-| `wuxia` | http://www.wuxiaworld.com |
-| `wuxiac` | http://www.wuxiaworld.co |
+| `wuxia` | https://www.wuxiaworld.com |
+| `wuxiac` | https://www.wuxiaworld.co |
+| `boxnovel` | https://boxnovel.com |
 | `lnmtl` | https://lnmtl.com |
 | `readln` | https://www.readlightnovel.org |
 
@@ -75,6 +76,7 @@ To download a novel, you need to get a `novel-id`. It is usually a unique part o
 | https://www.readlightnovel.org/tales-of-herding-gods | tales-of-herding-gods |
 | http://www.wuxiaworld.com/novel/desolate-era | desolate-era |
 | http://www.wuxiaworld.co/A-Will-Eternal/ | a-will-eternal |
+| https://boxnovel.com/novel/the-legend-of-futian/ | the-legend-of-futian |
 
 #### 3. Start Chapter or Start URL (~optional~)
 
@@ -95,6 +97,7 @@ Example values:
 - https://lnmtl.com/chapter/against-the-gods-book-11-chapter-1135
 - https://www.readlightnovel.org/tales-of-herding-gods/chapter-35
 - http://www.wuxiaworld.co/A-Will-Eternal/1042897.html
+- https://boxnovel.com/novel/the-legend-of-futian/chapter-327
 
 <!-- - KindleComicConverter: `pip install -U KindleComicConverter` -->
 
