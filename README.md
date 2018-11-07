@@ -68,3 +68,14 @@ Some websites like `novelplanet` needs `nodejs` to crawl data. Install it from:
 - Do not use too many instances of this program too frequently. Otherwise it might cause traffic jam to your favorite website. We do not want others to suffer for our sake, right?
 
 - This program has the capability to perform DDOS attacks that can cause a website to go down. Be a good netizen, and never do such a thing!
+
+## How to contribute
+
+To add new source:
+
+- First copy the `ebook_crawler/_sample.py` file.
+- Fill up the functions and rename thingies.
+- Import your source file to `__init__.py` file.
+- Add your source url inside `main` method of `__init__.py` file.
+
+That's all!
