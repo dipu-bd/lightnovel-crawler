@@ -4,6 +4,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
 [![PyPI - Format](https://img.shields.io/pypi/format/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
 [![PyPI - Status](https://img.shields.io/pypi/status/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
+<br>
 [![GitHub contributors](https://img.shields.io/github/contributors/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/pulls)
 [![GitHub issues](https://img.shields.io/github/issues/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/issues)
@@ -17,7 +18,7 @@ Crawls lightnovels from popular websites and converts to ebook format (only EPUB
 
 ### Installation
 
-To use this app, you need to have python3 installed in your computer. You can install the package using either of the following methods:
+To use this app, you need to have python3 and node.js installed in your computer. You can install the package using either of the following methods:
 
 - Using pip:
 
@@ -64,6 +65,7 @@ The avaiable list of site handles are given below. *To request new site [create 
 | `boxnovel` | https://boxnovel.com |
 | `lnmtl` | https://lnmtl.com |
 | `readln` | https://www.readlightnovel.org |
+| `novelplanet` | https://novelplanet.com |
 
 #### 2. Novel ID (required)
 
@@ -77,6 +79,7 @@ To download a novel, you need to get a `novel-id`. It is usually a unique part o
 | http://www.wuxiaworld.com/novel/desolate-era | desolate-era |
 | http://www.wuxiaworld.co/A-Will-Eternal/ | a-will-eternal |
 | https://boxnovel.com/novel/the-legend-of-futian/ | the-legend-of-futian |
+| https://novelplanet.com/Novel/The-Legendary-Moonlight-Sculptor | The-Legendary-Moonlight-Sculptor |
 
 #### 3. Start Chapter or Start URL (~optional~)
 
@@ -98,6 +101,7 @@ Example values:
 - https://www.readlightnovel.org/tales-of-herding-gods/chapter-35
 - http://www.wuxiaworld.co/A-Will-Eternal/1042897.html
 - https://boxnovel.com/novel/the-legend-of-futian/chapter-327
+- https://novelplanet.com/Novel/The-Legendary-Moonlight-Sculptor/v52c3-part1
 
 <!-- - KindleComicConverter: `pip install -U KindleComicConverter` -->
 
