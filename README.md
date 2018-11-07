@@ -11,16 +11,13 @@
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+)
 [![GitHub](https://img.shields.io/github/license/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/blob/master/VERSION)
 
-
 Crawls lightnovels from popular websites and converts to ebook format (only EPUB and MOBI are supported for now).
 
 ## Tutorial
 
 ### Installation
 
-To use this app, you need to have python3 installed in your computer. You can install the package using either of the following methods:
-
-- Using pip:
+To use this app, you need to have python3 and node.js installed in your computer. You can install the package using either of the following methods:
 
 ```bash
 $ pip install ebook-crawler
@@ -28,96 +25,57 @@ $ pip install ebook-crawler
 $ python3 -m pip install --user ebook-crawler
 ```
 
-- Using `setup.py`:
-
-```bash
-$ wget https://github.com/dipu-bd/site-to-epub/releases/download/v1.2/ebook_crawler-1.2.tar.gz
-$ tar -xvzf ebook_crawler-1.2.tar.gz
-$ cd ebook_crawler-1.2
-$ python3 setup.py install
-```
-
-### Test it out:
+### Instructions
 
 **Open the console panel in a directory you want to download novels**. Your current directory is used to store downloaded data.
 
-```
+```bash
 $ ebook_crawler
 
-EbookCrawler:
-  ebook_crawler <site-handle> <novel-id> [<start-chapter>|<start-url>] [<end-chapter>|<end-url>]
-.
-.
-.
+# With verbose output mode:
+$ ebook_crawler --verbose
 ```
 
-### Parameters to pass
-
-#### 1. Site Handle (required)
+### Available websites
 
 The avaiable list of site handles are given below. *To request new site [create a new issues](https://github.com/dipu-bd/site-to-epub/issues) requesting it*.
 
-| Handle | Website |
-|--------|---------|
-| `webnovel` | https://www.webnovel.com |
-| `wuxia` | https://www.wuxiaworld.com |
-| `wuxiac` | https://www.wuxiaworld.co |
-| `boxnovel` | https://boxnovel.com |
-| `lnmtl` | https://lnmtl.com |
-| `readln` | https://www.readlightnovel.org |
+- https://lnmtl.com
+- https://www.webnovel.com
+- https://www.wuxiaworld.com
+- https://www.wuxiaworld.co
+- https://boxnovel.com
+- https://www.readlightnovel.org
+- https://novelplanet.com
+- https://lnindo.org
+- https://www.idqidian.us
 
-#### 2. Novel ID (required)
-
-To download a novel, you need to get a `novel-id`. It is usually a unique part of the url that gives you the profile page of a novel. Following table shows some examples of `novel-id`:
-
-| URL | Novel ID |
-|-----|----------|
-| https://www.webnovel.com/book/8143258106003605 | 8143258106003605 |
-| https://lnmtl.com/novel/against-the-gods | against-the-gods |
-| https://www.readlightnovel.org/tales-of-herding-gods | tales-of-herding-gods |
-| http://www.wuxiaworld.com/novel/desolate-era | desolate-era |
-| http://www.wuxiaworld.co/A-Will-Eternal/ | a-will-eternal |
-| https://boxnovel.com/novel/the-legend-of-futian/ | the-legend-of-futian |
-
-#### 3. Start Chapter or Start URL (~optional~)
-
-You can provide either a chapter number or the url of a chapter (see examples below). Chapter number is usually the index of the chapter in the chapter list that is given in the website. (except for LNMLT, see below).
-
-> for LNMTL, the chapter number should be the serial number of a chapter. Some novels has extra chapters and OVAs. In that case, *the serial number might not match with the real chapter number*.
-
-If you are not sure about the chapter number, just provide an url to the chapter page.
-
-**NOTE:** *if you do not provide this field, but has already downloaded data, they will be used to bind ebooks.*
-
-> HINT: Pass `1` to start the download from the beginning.
-
-Example values:
-
-- https://www.webnovel.com/book/8143258106003605/21860374051617214
-- https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1
-- https://lnmtl.com/chapter/against-the-gods-book-11-chapter-1135
-- https://www.readlightnovel.org/tales-of-herding-gods/chapter-35
-- http://www.wuxiaworld.co/A-Will-Eternal/1042897.html
-- https://boxnovel.com/novel/the-legend-of-futian/chapter-327
-
-<!-- - KindleComicConverter: `pip install -U KindleComicConverter` -->
-
-#### 4. End Chapter or End URL (optional)
-
-Same rules described for the start chapters applies here. You can choose not to give an end chapter. But you have to provide an end-chapter greater than the start-chapter.
-
-**NOTE:** *If you do not provide this field, the novel will be crawled from the start chapter until the end.*
-
-
-#### Finally, some warnings...
-
-- Do not use too many instances of this program too frequently. Otherwise it might cause traffic jam to your favorite website. We do not want others to suffer for our sake, right?
-
-- Do not download too frequently from LNTML. They blocks your IP if too many consecutives requests is observed.
-
-- This program has the capability to perform DDOS attacks that can cause a website to go down. Like a good netizen, make a promise you will do no such things!
-
-## External Resources
+### For MOBI Output
 
 - KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
 
+### NodeJS
+
+Some websites like `novelplanet` needs `nodejs` to crawl data. Install it from:
+
+- Downloads: https://nodejs.org/en/download/ 
+- Linux: `curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh`
+
+#### And... be a good Netizen
+
+- Do not download too frequently from LNTML. They block your IP if too many consecutive request is observed.
+
+- Do not use too many instances of this program too frequently. Otherwise it might cause traffic jam to your favorite website. We do not want others to suffer for our sake, right?
+
+- This program has the capability to perform DDOS attacks that can cause a website to go down. Be a good netizen, and never do such a thing!
+
+## How to contribute
+
+To add new source:
+
+- First copy the `ebook_crawler/_sample.py` file.
+- Fill up the functions and rename thingies.
+- Import your source file to `__init__.py` file.
+- Add your source url inside `main` method of `__init__.py` file.
+
+That's all!

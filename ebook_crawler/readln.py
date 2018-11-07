@@ -7,7 +7,7 @@ import re
 import sys
 import requests
 from os import path
-# from shutil import rmtree
+from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -19,7 +19,7 @@ class ReadLightNovelCrawler:
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
 
     #adding new parameter(volume) to give user option to generate single volume for all chapter or divide volume per 100 chapter
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
+    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False, fresh=False):
         if not novel_id:
             raise Exception('Novel ID is required')
         # end if
@@ -29,6 +29,7 @@ class ReadLightNovelCrawler:
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
         self.pack_by_volume = volume
+        self.start_fresh = fresh
 
         self.home_url = 'https://www.readlightnovel.org'
         self.output_path = None
@@ -38,8 +39,9 @@ class ReadLightNovelCrawler:
 
     def start(self):
         '''start crawling'''
-        # if path.exists(self.output_path):
-        #     rmtree(self.output_path)
+        if self.start_fresh and path.exists(self.output_path):
+            rmtree(self.output_path)
+        # end if
         try:
             self.get_chapter_list()
             self.get_chapter_bodies()

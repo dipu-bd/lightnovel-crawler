@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Crawler for [WuxiaWorld](http://www.wuxiaworld.com/).
+Crawler for [NovelPlanet](https://novelplanet.com/).
 """
 import re
 import sys
-import requests
+import cfscrape
 from os import path
 from shutil import rmtree
 import concurrent.futures
@@ -14,13 +14,13 @@ from .helper import save_chapter
 from .binding import novel_to_epub, novel_to_mobi
 
 
-class WuxiaCrawler:
-    '''Crawler for wuxiaworld.co'''
+class NovelPlanetCrawler:
+    '''Crawler for novelplanet.com'''
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
     def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False, fresh=False):
-        if not novel_id:
+        if novel_id is None:
             raise Exception('Novel ID is required')
         # end if
 
@@ -29,12 +29,10 @@ class WuxiaCrawler:
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
         self.pack_by_volume = volume
-        self.start_fresh = fresh
-
-        self.home_url = 'https://www.wuxiaworld.com'
+        self.home_url = 'https://novelplanet.com'
         self.output_path = None
-
-        requests.urllib3.disable_warnings()
+        self.scrapper =  cfscrape.create_scraper()
+        self.start_fresh = fresh
     # end def
 
     def start(self):
@@ -49,37 +47,43 @@ class WuxiaCrawler:
             self.output_path = self.output_path or self.novel_id
             novel_to_epub(self.output_path, self.pack_by_volume)
             novel_to_mobi(self.output_path)
-        # end try
+        #end try
     # end def
 
     def get_chapter_list(self):
         '''get list of chapters'''
-        url = '%s/novel/%s' % (self.home_url, self.novel_id)
+        url = '%s/Novel/%s' % (self.home_url, self.novel_id)
         print('Visiting ', url)
-        response = requests.get(url, verify=False)
-        response.encoding = 'utf-8'
-        html_doc = response.text
+        html_doc = self.scrapper.get(url).content
         print('Getting book name and chapter list... ')
         soup = BeautifulSoup(html_doc, 'lxml')
         # get book name
         try:
-            self.novel_name = soup.select_one('.section-content  h4').text
-            cover = soup.find('img', {"class": "media-object"})['src']
-            self.novel_cover = cover
-            author = soup.find_all('p')[1].text
-            self.novel_author = author.lstrip('Author: ')
+            self.novel_name = soup.find('a',{'class':'title'}).text
+            self.novel_cover = self.home_url + soup.find("div", {"class": "post-previewInDetails"}).img['src']
+            print(self.novel_cover)
+            for span in soup.findAll("span", {"class": "infoLabel"}):
+                if span.text == 'Author:':
+                    author = span.findNext('a').text
+                    author2 = span.findNext('a').findNext('a').text
+            #check if author word is found in second <p>
+            if (author2 != 'Ongoing') or (author2 !='Completed'):
+                self.novel_author = author + ' (' + author2 + ')'
+            else:
+                self.novel_author = author
         except:
             pass
         # end try
         self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', self.novel_name or self.novel_id)
         # get chapter list
-        get_ch = lambda x: self.home_url + x.get('href')
-        self.chapters = [get_ch(x) for x in soup.select('ul.list-chapters li.chapter-item a')]
+        get_ch = lambda x: self.home_url + x.find('a')['href']
+        self.chapters = [get_ch(x) for x in soup.find_all('div', {'class':'rowChapter'})]
+        self.chapters.reverse()
         print(' [%s]' % self.novel_name, len(self.chapters), 'chapters found')
     # end def
 
     def get_chapter_index(self, chapter):
-      if chapter is None: return
+      if not chapter: return None
       if chapter.isdigit():
         chapter = int(chapter)
         if 1 <= chapter <= len(self.chapters):
@@ -97,10 +101,12 @@ class WuxiaCrawler:
     def get_chapter_bodies(self):
         '''get content from all chapters till the end'''
         self.start_chapter = self.get_chapter_index(self.start_chapter)
-        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters) - 1
+        #edit if no end url declared then end chapter is lenght of chapter -1 because index started from 0
+        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)-1
         if self.start_chapter is None: return
         start = self.start_chapter 
-        end = min(self.end_chapter + 1, len(self.chapters))
+        #edit if end url declared then end chapter must be added 1 because when using get chapter index end url has been decreased by 1
+        end = min(self.end_chapter, len(self.chapters)) + 1
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
         # wait till finish
@@ -123,14 +129,12 @@ class WuxiaCrawler:
     def parse_chapter(self, index):
         url = self.chapters[index]
         print('Downloading', url)
-        response = requests.get(url, verify=False)
-        response.encoding = 'utf-8'
-        html_doc = response.text
+        html_doc = self.scrapper.get(url).content
         soup = BeautifulSoup(html_doc, 'lxml')
         chapter_no = index + 1
         volume_no = self.get_volume(index)
-        chapter_title = soup.select_one('.panel-default .caption h4').text
-        body_part = soup.select('.panel-default .fr-view p')
+        chapter_title = soup.select_one('.container h4').text
+        body_part = soup.select('p')
         body_part = ''.join([str(p.extract()) for p in body_part if p.text.strip()])
         save_chapter({
             'url': url,
@@ -146,7 +150,7 @@ class WuxiaCrawler:
 # end class
 
 if __name__ == '__main__':
-    WuxiaCrawler(
+    NovelPlanetCrawler(
         novel_id=sys.argv[1],
         start_chapter=sys.argv[2] if len(sys.argv) > 2 else None,
         end_chapter=sys.argv[3] if len(sys.argv) > 3 else None,

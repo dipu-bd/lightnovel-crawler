@@ -1,104 +1,80 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Main point of execution"""
+"""Interactive value input"""
 import sys
-from .lnmtl import LNMTLCrawler
-from .wuxia import WuxiaCrawler
-from .wuxiac import WuxiaCoCrawler
-from .webnovel import WebNovelCrawler
-from .readln import ReadLightNovelCrawler
-from .boxnovel import BoxNovelCrawler
+import logging
+import urllib3
+from PyInquirer import prompt
+from .lnmtl import LNMTLCrawlerApp
+# from .wuxia import WuxiaCrawler
+# from .wuxiac import WuxiaCoCrawler
+# from .webnovel import WebNovelCrawler
+# from .boxnovel import BoxNovelCrawler
+# from .readln import ReadLightNovelCrawler
+# from .novelplanet import NovelPlanetCrawler
 
+def configure():
+    mode = sys.argv[1].lower() if len(sys.argv) > 1 else None
+    if mode == '-v' or mode == '--verbose':
+        print('\33[91m 🔊 IN VERBOSE MODE\33[0m')
+        print('-' * 60)
+        logging.basicConfig(level=logging.DEBUG)
+    else:
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+    # end if
+# end def
+
+def headline():
+    with open('VERSION', 'r') as f:
+        version = f.read().strip()
+    # end with
+    print('-' * 60)
+    print(' \33[1m\33[92m📒', 'Ebook Crawler 🍀', version, '\33[0m')
+    print(' 🔗\33[94m https://github.com/dipu-bd/site-to-epub', '\33[0m')
+    print(' 🙏\33[94m https://saythanks.io/to/dipu-bd', '\33[0m')
+    print('-' * 60)
+# end def
 
 def main():
-    '''main method to call'''
-    if len(sys.argv) < 3:
-        return show_help()
-    # end if
+    headline()
+    configure()
 
-    volume = True
-    if len(sys.argv) > 5:
-        volume = sys.argv[5]
-        volume = volume.lower() == 'true' or (volume.isdigit() and volume != 0)
-    # end if
+    choices = [
+        'https://lnmtl.com',
+        'https://boxnovel.com',
+        'https://novelplanet.com',
+        'https://www.webnovel.com',
+        'https://www.wuxiaworld.co',
+        'https://www.wuxiaworld.com',
+        'https://www.readlightnovel.org'
+    ]
 
-    site = sys.argv[1]
-    if site == 'wuxia':
-        WuxiaCrawler(
-            novel_id=sys.argv[2],
-            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=volume,
-        ).start()
-    elif site == 'lnmtl':
-        LNMTLCrawler(
-            novel_id=sys.argv[2],
-            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=volume,
-        ).start()
-    elif site == 'webnovel':
-        WebNovelCrawler(
-            novel_id=sys.argv[2],
-            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=volume,
-        ).start()
-    elif site == 'readln':
-        ReadLightNovelCrawler(
-            novel_id=sys.argv[2],
-            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=volume,
-        ).start()
-    elif site == 'wuxiac':
-        WuxiaCoCrawler(
-            novel_id=sys.argv[2],
-            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=volume,
-        ).start()
-    elif site == 'boxnovel':
-        BoxNovelCrawler(
-            novel_id=sys.argv[2],
-            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
-            volume=volume,
-        ).start()
-    else:
-        show_help()
+    answer = prompt([
+        {
+            'type': 'list',
+            'name': 'source',
+            'message': 'Where is the novel from?',
+            'choices': choices,
+        },
+    ])
+
+    if choices[0] == answer['source']:
+        LNMTLCrawlerApp().start()
+    elif choices[1] == answer['source']:
+        print('Not Yet Implemented: ', answer['source'])
+    elif choices[2] == answer['source']:
+        print('Not Yet Implemented: ', answer['source'])
+    elif choices[3] == answer['source']:
+        print('Not Yet Implemented: ', answer['source'])
+    elif choices[4] == answer['source']:
+        print('Not Yet Implemented: ', answer['source'])
+    elif choices[5] == answer['source']:
+        print('Not Yet Implemented: ', answer['source'])
+    elif choices[6] == answer['source']:
+        print('Not Yet Implemented: ', answer['source'])
     # end if
 # end def
 
-
-def show_help():
-    '''displays help'''
-    print('EbookCrawler:')
-    print('  ebook_crawler <site-handle> <novel-id>',
-          '[<start-chapter>|<start-url>]',
-          '[<end-chapter>|<end-url>]',
-          '[<pack-by-volumes>]')
-    print()
-    print('OPTIONS:')
-    print('  site-handle*     Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln, wuxiac, boxnovel]')
-    print('  novel-id*        Novel id appear in url (See HINTS)')
-    print('  start-chapter    Starting chapter')
-    print('  end-chapter      Ending chapter')
-    print('  start-url        Url of the chapter to start')
-    print('  end-url          Url of the final chapter')
-    print('  end-url          Url of the final chapter')
-    print('  pack-by-volumes  Whether to split the package by volumes. Accepts either [true] or [false]')
-    print()
-    print('HINTS:')
-    print('- * marked params are required')
-    print('- Do not provide any start or end chapter for just book binding')
-    print('- Get the `novel-id` from the link. Some examples:')
-    print('\n  https://www.webnovel.com/book/8143258106003605/21860374051617214 \n    novel_id = `8143258106003605`')
-    print('\n  https://www.wuxiaworld.com/novel/a-will-eternal/awe-chapter-1 \n    novel_id = `a-will-eternal`')
-    print('\n  http://www.wuxiaworld.co/A-Will-Eternal/ \n    novel_id = `a-will-eternal`')
-    print('\n  https://lnmtl.com/novel/against-the-gods \n    novel_id = `against-the-gods`')
-    print('\n  https://www.readlightnovel.org/tales-of-herding-gods \n    novel_id = `tales-of-herding-gods`')
-    print('\n  http://www.wuxiaworld.co/A-Will-Eternal/ \n    novel_id = `a-will-eternal`')
-    print('\n  https://boxnovel.com/novel/the-legend-of-futian/ \n    novel_id = `the-legend-of-futian`')
-    print()
-# end def
+if __name__ == '__main__':
+    main()
+# end if
