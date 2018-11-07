@@ -10,6 +10,7 @@ class Crawler:
     '''Blueprint for creating new crawlers'''
 
     executor = futures.ThreadPoolExecutor(max_workers=5)
+
     headers = {
         'accept': 'text/html,application/xhtml+xml,application/xml',
         'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
@@ -36,15 +37,15 @@ class Crawler:
     '''
     chapters = []
 
+    # ------------------------------------------------------------------------- #
+    # Implement these methods
+    # ------------------------------------------------------------------------- #
+
     @property
     def supports_login(self):
         '''Whether the crawler supports login() and logout method'''
         return False
     # end def
-
-    # ------------------------------------------------------------------------- #
-    # Required methods to implement
-    # ------------------------------------------------------------------------- #
 
     def login(self, email, password):
         '''Login and update cookies in `headers`'''
