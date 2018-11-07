@@ -3,3 +3,4 @@ EbookLib==0.17
 Pillow==5.2.0
 requests==2.20.0
 cfscrape==1.9.5
+PyInquirer==1.0.2

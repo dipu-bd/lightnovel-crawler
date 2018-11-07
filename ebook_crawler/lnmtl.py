@@ -11,9 +11,28 @@ from os import path
 from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
+from PyInquirer import prompt
 from .helper import save_chapter
 from .binding import novel_to_epub, novel_to_mobi
 
+class LNMTLCrawlerApp:
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+
+    home_url = 'https://lnmtl.com'
+    login_url = 'https://lnmtl.com/auth/login'
+    logout_url = 'https://lnmtl.com/auth/logout'
+    headers = {
+        'accept': 'text/html,application/xhtml+xml,application/xml',
+        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
+    }
+
+    def start(self):
+        pass
+    # end def
+
+# end class
+
+"""
 class LNMTLCrawler:
     '''Crawler for LNMTL'''
 
@@ -256,3 +275,4 @@ if __name__ == '__main__':
         volume=sys.argv[4].lower() == 'true' if len(sys.argv) > 4 else ''
     ).start()
 # end if
+"""
