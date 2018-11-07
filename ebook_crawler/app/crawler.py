@@ -17,8 +17,8 @@ class Crawler:
 
     '''Must resolve these fields inside `read_novel_info`'''
     novel_title = 'N/A'
+    novel_author = 'N/A'
     novel_cover = None
-    novel_authors = ['N/A']
 
     '''
     Each item must contain these keys:

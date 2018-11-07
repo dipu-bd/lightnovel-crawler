@@ -12,13 +12,15 @@ import re
 import shutil
 
 from bs4 import BeautifulSoup
-from PyInquirer import prompt
-from progress.spinner import Spinner
+from ebooklib import epub
+from PIL import Image, ImageDraw, ImageFont
 from progress.bar import IncrementalBar
+from progress.spinner import Spinner
+from PyInquirer import prompt
 
+from .binding import bind_epub_book, novel_to_mobi
+from .helper import clean_filename, retrieve_image
 from .validators import validateNumber
-from ..binding import novel_to_epub, novel_to_mobi
-from ..helper import clean_filename, retrieve_image
 
 logger = logging.getLogger('CRAWLER_APP')
 
@@ -41,10 +43,10 @@ class CrawlerApp:
             self.additional_configs()
             self.download_chapters()
 
-
+            self.bind_books()
         except Exception as ex:
             logger.error(ex)
-            print('Cancelled by user')
+            raise ex
         # end try
     # end def
 
@@ -94,9 +96,9 @@ class CrawlerApp:
 
     def chapter_range(self):
         choices = [
-            'Everything!',
             'Last 10 chapters',
             'First 10 chapters',
+            'Everything!',
             'Custom range using URL',
             'Custom range using index',
             'Select specific volumes',
@@ -261,18 +263,18 @@ class CrawlerApp:
             # },
             {
                 'type': 'confirm',
+                'name': 'fresh',
+                'message': 'Replace old downloads?',
+                'default': False,
+            },
+            {
+                'type': 'confirm',
                 'name': 'volume',
                 'message': 'Generate separate files for each volumes?',
                 'default': True,
             },
-            {
-                'type': 'confirm',
-                'name': 'fresh',
-                'message': 'Remove old downloads (if exists) and start afresh?',
-                'default': False,
-            },
         ])
-        self.formats = answer['formats']
+        # self.formats = answer['formats']
         self.remove_old = answer['fresh']
         self.pack_by_volume = answer['volume']
     # end def
@@ -290,11 +292,12 @@ class CrawlerApp:
                 filename = self.crawler.novel_cover.split('/')[-1]
                 filename = os.path.join(self.output_path, filename)
                 retrieve_image(self.crawler.novel_cover, filename)
+                self.book_cover = filename
                 bar.finish()
                 logger.info('Saved cover: %s', filename)
             except Exception as ex:
                 bar.finish()
-                self.crawler.novel_cover = None
+                self.book_cover = None
                 logger.warning('Failed to add cover: %s', ex)
             # end try
         # end if
@@ -304,8 +307,27 @@ class CrawlerApp:
         bar = IncrementalBar('Downloading chapters', max=len(self.chapters))
         bar.start()
         for chapter in self.chapters:
-            chapter['body'] = self.crawler.download_chapter(chapter)
-            self.save_chapter(chapter)
+            dir_name = os.path.join(self.output_path, 'json')
+            if self.pack_by_volume:
+                dir_name = os.path.join(dir_name, chapter['volume'])
+            # end if
+            chapter_name = str(chapter['id']).rjust(5, '0')
+            file_name = os.path.join(dir_name, chapter_name + '.json')
+
+            if os.path.exists(file_name):
+                logger.info('Restoring from %s', file_name)
+                with open(file_name, 'r') as file:
+                    old_chapter = json.load(file)
+                    chapter['body'] = old_chapter['body']
+                # end with
+            else:
+                logger.info('Downloading to %s', file_name)
+                chapter['body'] = self.crawler.download_chapter(chapter)
+                os.makedirs(dir_name, exist_ok=True)
+                with open(file_name, 'w') as file:
+                    file.write(json.dumps(chapter))
+                # end with
+            # end if
             bar.next()
         # end for
         bar.finish()
@@ -314,7 +336,7 @@ class CrawlerApp:
     def save_metadata(self):
         data = {
             'title': self.crawler.novel_title,
-            'authors': self.crawler.novel_authors,
+            'author': self.crawler.novel_author,
             'cover': self.crawler.novel_cover,
             'volumes': self.crawler.volumes,
             'chapters': self.crawler.chapters,
@@ -326,18 +348,25 @@ class CrawlerApp:
         # end with
     # end def
 
-    def save_chapter(self, chapter):
-        dir_name = os.path.join(self.output_path, 'json')
+    def bind_books(self):
         if self.pack_by_volume:
-            dir_name = os.path.join(dir_name, chapter['volume'])
+            bind_epub_book(
+                self,
+                chapters=self.chapters,
+            )
+        else:
+            for vol in self.crawler.volumes:
+                chapters = [
+                    x for x in self.chapters
+                    if x['volume'] == vol['title']
+                ]
+                bind_epub_book(
+                    self,
+                    chapters=chapters,
+                    volume=vol['title'],
+                )
+            # end for
         # end if
-        os.makedirs(dir_name, exist_ok=True)
-
-        chapter_name = str(chapter['id']).rjust(5, '0')
-        file_name = os.path.join(dir_name, chapter_name + '.json')
-        logger.info('Writing chapter: %s', file_name)
-        with open(file_name, 'w') as file:
-            file.write(json.dumps(chapter))
-        # end with
+        novel_to_mobi(self.output_path)
     # end def
 # end class

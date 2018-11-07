@@ -39,36 +39,38 @@ def main():
     headline()
     configure()
 
+    choices = [
+        'https://lnmtl.com',
+        'https://boxnovel.com',
+        'https://novelplanet.com',
+        'https://www.webnovel.com',
+        'https://www.wuxiaworld.co',
+        'https://www.wuxiaworld.com',
+        'https://www.readlightnovel.org'
+    ]
+
     answer = prompt([
         {
             'type': 'list',
             'name': 'source',
             'message': 'Where is the novel from?',
-            'choices': [
-                'https://lnmtl.com',
-                'https://boxnovel.com',
-                'https://novelplanet.com',
-                'https://www.webnovel.com',
-                'https://www.wuxiaworld.co',
-                'https://www.wuxiaworld.com',
-                'https://www.readlightnovel.org'
-            ]
+            'choices': choices,
         },
     ])
 
-    if 'https://lnmtl.com' == answer['source']:
+    if choices[0] == answer['source']:
         LNMTLCrawlerApp().start()
-    elif 'https://boxnovel.com' == answer['source']:
+    elif choices[1] == answer['source']:
         print('Not Yet Implemented: ', answer['source'])
-    elif 'https://novelplanet.com' == answer['source']:
+    elif choices[2] == answer['source']:
         print('Not Yet Implemented: ', answer['source'])
-    elif 'https://www.webnovel.com' == answer['source']:
+    elif choices[3] == answer['source']:
         print('Not Yet Implemented: ', answer['source'])
-    elif 'https://www.wuxiaworld.co' == answer['source']:
+    elif choices[4] == answer['source']:
         print('Not Yet Implemented: ', answer['source'])
-    elif 'https://www.wuxiaworld.com' == answer['source']:
+    elif choices[5] == answer['source']:
         print('Not Yet Implemented: ', answer['source'])
-    elif 'https://www.readlightnovel.org' == answer['source']:
+    elif choices[6] == answer['source']:
         print('Not Yet Implemented: ', answer['source'])
     # end if
 # end def

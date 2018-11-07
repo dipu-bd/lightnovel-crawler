@@ -4,105 +4,65 @@
 import re
 import io
 import os
-import json
 import errno
-import random
-import textwrap
+import logging
 import platform
 from subprocess import call
 from ebooklib import epub
-from PIL import Image, ImageFont, ImageDraw
-from bs4 import BeautifulSoup
-from .helper import retrieve_image
+from progress.spinner import Spinner
 
 DIR_NAME = os.path.dirname(os.path.abspath(__file__))
-KINDLEGEN_PATH_MAC = os.path.join(DIR_NAME, 'ext', 'kindlegen-mac')
-KINDLEGEN_PATH_LINUX = os.path.join(DIR_NAME, 'ext', 'kindlegen-linux')
-KINDLEGEN_PATH_WINDOWS = os.path.join(DIR_NAME, 'ext', 'kindlegen-windows')
+KINDLEGEN_PATH_MAC = os.path.join(DIR_NAME, '..', 'ext', 'kindlegen-mac')
+KINDLEGEN_PATH_LINUX = os.path.join(DIR_NAME, '..', 'ext', 'kindlegen-linux')
+KINDLEGEN_PATH_WINDOWS = os.path.join(DIR_NAME, '..', 'ext', 'kindlegen-windows')
 SYSTEM_OS = platform.system()
 
-def novel_to_epub(input_path, pack_by_volume):
-    ''''Convert novel to epub'''
-    if not os.path.exists(input_path):
-        return print(input_path, 'does not exists')
-    # end if
-    # Create epubs by volumes
-    if not pack_by_volume:
-        _bind_book(input_path)
-    else :
-        json_path = os.path.join(input_path, 'json')
-        for volume_no in sorted(os.listdir(json_path)):
-            _bind_book(input_path, volume_no)
-        # end for
-    #end if
-# end def
+logger = logging.getLogger('BINDER')
 
-def _bind_book(input_path, volume_no = ''):
-    # create book
+def bind_epub_book(app, chapters, volume=''):
+    bar = Spinner('Binding: %s' % volume)
+    bar.start()
+    # Create book
+    bool_title = (app.crawler.novel_title + ' ' + volume).strip()
     book = epub.EpubBook()
     book.set_language('en')
-    book.set_identifier(input_path + volume_no)
-
-    # get chapters
-    contents = []
-    book_title = 'N/A'
-    book_author = 'N/A'
-    book_cover = 'N/A'
-    full_vol = os.path.join(input_path, 'json', volume_no)
-    print('Processing:', full_vol)
-    for file_name in sorted(os.listdir(full_vol)):
-        # read data
-        full_file = os.path.join(full_vol, file_name)
-        item = json.load(open(full_file, 'r'))
-        # add chapter
-        xhtml_file = 'chap_%s.xhtml' % item['chapter_no'].rjust(4, '0')
-        chapter = epub.EpubHtml(
+    book.set_title(bool_title)
+    book.add_author(app.crawler.novel_author)
+    book.set_identifier(app.output_path + volume)
+    # Create book spine
+    if app.book_cover:
+        book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
+        book.spine = ['cover', 'nav']
+    else:
+        book.spine = ['nav']
+    # end if
+    bar.next()
+    # Make contents
+    book.toc = []
+    for chapter in chapters:
+        xhtml_file = 'chap_%s.xhtml' % str(chapter['id']).rjust(4, '0')
+        content = epub.EpubHtml(
             lang='en',
             file_name=xhtml_file,
-            uid=item['chapter_no'],
-            content=item['body'] or '',
-            title=item['chapter_title'])
-        book.add_item(chapter)
-        contents.append(chapter)
-        book_title = item['novel'] if 'novel' in item else book_title
-        book_cover = item['cover'] if 'cover' in item else book_cover
-        book_author = item['author'] if 'author' in item else book_author
+            # uid=int(chapter['id']),
+            content=chapter['body'] or '',
+            title='%s — %s' % (chapter['name'], chapter['title']),
+        )
+        book.add_item(content)
+        book.toc.append(content)
+        bar.next()
     # end for
-
-    book.add_author(book_author)
-    book.spine = ['nav'] + contents
-    if book_cover != 'N/A':
-        try:
-            filename = os.path.join(input_path, book_cover.split('/')[-1])
-            retrieve_image(book_cover, filename)
-            book.set_cover('image.jpg', open(filename, 'rb').read())
-            book.spine = ['cover'] + book.spine
-        except:
-            print('Failed to add cover:', book_cover)
-            pass
-        # end try
-    # end if
-
-    if volume_no and volume_no != '':
-        vol = ' Volume ' + volume_no.rjust(2, '0')
-        book.set_title(book_title + vol)
-    else:
-        book.set_title(book_title)
-    # end if
-    book.toc = contents
+    book.spine += book.toc
     book.add_item(epub.EpubNav())
     book.add_item(epub.EpubNcx())
-
+    bar.next()
     # Save epub file
-    epub_path = os.path.join(input_path, 'epub')
-    if not os.path.exists(epub_path):
-        os.makedirs(epub_path)
-    # end if
-    file_name = book_title + '_v' + volume_no + '.epub'
-    file_path = os.path.join(epub_path, file_name)
-    print('Creating:', file_path)
+    epub_path = os.path.join(app.output_path, 'epub')
+    file_path = os.path.join(epub_path, bool_title + '.epub')
+    logger.debug('Creating: %s', file_path)
+    os.makedirs(epub_path, exist_ok=True)
     epub.write_epub(file_path, book, {})
-    return epub_path
+    bar.finish()
 # end def
 
 def novel_to_mobi(input_path):

@@ -3,19 +3,16 @@
 """
 Crawler for novels from [LNMTL](https://lnmtl.com).
 """
-import concurrent.futures
 import json
 import logging
 import re
-import sys
-from os import path
-from shutil import rmtree
+from concurrent import futures
 
 import requests
-from bs4 import BeautifulSoup
 
-from .interface.crawler import Crawler
-from .interface.crawler_app import CrawlerApp
+from .app.crawler import Crawler
+from .app.crawler_app import CrawlerApp
+from .app.parser import Parser
 
 logger = logging.getLogger('LNMTL')
 home_url = 'https://lnmtl.com'
@@ -23,31 +20,22 @@ login_url = 'https://lnmtl.com/auth/login'
 logout_url = 'https://lnmtl.com/auth/logout'
 
 
-class LNTMLParser:
-    def __init__(self, html):
-        self.soup = BeautifulSoup(html, 'lxml')
-        self.title = None
-    # end def
-
-    def get_title(self):
-        try:
-            if not self.title:
-                SELECTOR = '.novel .media .novel-name'
-                self.title = self.soup.select_one(
-                    SELECTOR).text.rsplit(' ', 1)[0]
-            # end if
-        except:
-            self.title = 'N/A'
-        # end try
-        return self.title
-    # end def
-
+class LNTMLParser(Parser):
     def get_login_token(self):
         return self.soup.select_one('form input[name="_token"]')['value']
     # end def
 
     def has_logout_button(self):
         return self.soup.select_one('a[href="%s"]' % logout_url) is not None
+    # end def
+
+    def get_title(self):
+        try:
+            SELECTOR = '.novel .media .novel-name'
+            return self.soup.select_one(SELECTOR).text.rsplit(' ', 1)[0]
+        except:
+            return 'N/A'
+        # end try
     # end def
 
     def get_cover(self):
@@ -90,14 +78,6 @@ class LNTMLParser:
         text = re.sub(r'[ ]*,[ ]+', ', ', text)
         return text.strip()
     # end def
-
-    def display_body(self):
-        logger.debug('-' * 80)
-        body = self.soup.select_one('body').text
-        logger.debug('\n\n'.join(
-            [x for x in body.split('\n\n') if len(x.strip())]))
-        logger.debug('-' * 80)
-    # end def
 # end class
 
 
@@ -130,8 +110,7 @@ class LNTMLCrawler(Crawler):
         if LNTMLParser(response.text).has_logout_button():
             logger.warning('Logged in')
         else:
-            parser = LNMTLCrawlerApp(response.text)
-            parser.display_body()
+            LNTMLParser(response.text).print_body()
             logger.warning('Failed to login')
         # end if
     # end def
@@ -184,8 +163,8 @@ class LNTMLCrawler(Crawler):
             ): index
             for index in range(len(self.volumes))
         }
-        for future in concurrent.futures.as_completed(future_to_url):
-            concurrent.futures.wait(future.result())
+        for future in futures.as_completed(future_to_url):
+            futures.wait(future.result())
         # end for
         self.chapters = sorted(self.chapters, key=lambda x: int(x['id']))
         logger.debug(self.chapters)
