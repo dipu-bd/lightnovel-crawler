@@ -172,7 +172,7 @@ class LNMTLCrawler:
     # end def
 
     def get_chapter_index(self, chapter):
-      if not chapter: return None
+      if chapter is None: return
       for i, chap in enumerate(self.chapters):
         if chap['site_url'] == chapter or chap['number'] == chapter:
           return i
@@ -184,10 +184,10 @@ class LNMTLCrawler:
     def get_chapter_bodies(self):
         '''get content from all chapters till the end'''
         self.start_chapter = self.get_chapter_index(self.start_chapter)
-        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
+        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters) - 1
         if self.start_chapter is None: return
         start = self.start_chapter - 1
-        end = min(self.end_chapter, len(self.chapters))
+        end = min(self.end_chapter + 1, len(self.chapters))
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
             index for index in range(start, end)}
         # wait till finish

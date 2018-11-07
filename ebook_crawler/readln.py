@@ -74,11 +74,11 @@ class ReadLightNovelCrawler:
     # end def
 
     def get_chapter_index(self, chapter):
-      if not chapter: return None
+      if chapter is None: return
       if chapter.isdigit():
         chapter = int(chapter)
-        if 1 <= chapter <= len(self.chapters)-1:
-          return chapter
+        if 1 <= chapter <= len(self.chapters):
+          return chapter - 1
         else:
           raise Exception('Invalid chapter number')
         # end if
@@ -94,12 +94,12 @@ class ReadLightNovelCrawler:
     def get_chapter_bodies(self):
         '''get content from all chapters till the end'''
         self.start_chapter = self.get_chapter_index(self.start_chapter)
-        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters)
+        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters) - 1
         if self.start_chapter is None: return
         start = self.start_chapter
         end = min(self.end_chapter, len(self.chapters)) +1
         future_to_url = {self.executor.submit(self.parse_chapter, index):\
-            index for index in range(start, end)}
+            index for index in range(start, end + 1)}
         # wait till finish
         [x.result() for x in concurrent.futures.as_completed(future_to_url)]
         print('complete')
