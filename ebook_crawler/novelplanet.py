@@ -5,11 +5,9 @@ Crawler for [NovelPlanet](https://novelplanet.com/).
 """
 import re
 import sys
-#import requests
 import cfscrape
 from os import path
-#enable line below to remove all directory before start scrapping
-#from shutil import rmtree
+from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -21,7 +19,7 @@ class NovelPlanetCrawler:
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
 
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
+    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False, fresh=False):
         if novel_id is None:
             raise Exception('Novel ID is required')
         # end if
@@ -34,10 +32,14 @@ class NovelPlanetCrawler:
         self.home_url = 'https://novelplanet.com'
         self.output_path = None
         self.scrapper =  cfscrape.create_scraper()
+        self.start_fresh = fresh
     # end def
 
     def start(self):
         '''start crawling'''
+        if self.start_fresh and path.exists(self.output_path):
+            rmtree(self.output_path)
+        # end if
         try:
             self.get_chapter_list()
             self.get_chapter_bodies()

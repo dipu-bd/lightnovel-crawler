@@ -8,7 +8,7 @@ import sys
 import json
 import requests
 from os import path
-# from shutil import rmtree
+from shutil import rmtree
 import concurrent.futures
 from bs4 import BeautifulSoup
 from .helper import save_chapter
@@ -19,7 +19,7 @@ class LNMTLCrawler:
 
     executor = concurrent.futures.ThreadPoolExecutor(max_workers=3)
 
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
+    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False, fresh=False):
         if not novel_id:
             raise Exception('Novel ID is required')
         # end if
@@ -30,6 +30,7 @@ class LNMTLCrawler:
         self.end_chapter = end_chapter
         self.output_path = None
         self.pack_by_volume = volume
+        self.start_fresh = fresh
 
         self.home_url = 'https://lnmtl.com'
         self.login_url = 'https://lnmtl.com/auth/login'
@@ -46,8 +47,9 @@ class LNMTLCrawler:
 
     def start(self):
         '''start crawling'''
-        # if path.exists(self.output_path):
-        #     rmtree(self.output_path)
+        if self.start_fresh and path.exists(self.output_path):
+            rmtree(self.output_path)
+        # end if
         try:
             if self.start_chapter:
                 if not self.login():

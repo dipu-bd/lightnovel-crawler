@@ -8,6 +8,7 @@ import sys
 import json
 import requests
 from os import path
+from shutil import rmtree
 import concurrent.futures
 from .helper import save_chapter
 from .binding import novel_to_epub, novel_to_mobi
@@ -21,7 +22,7 @@ class WebNovelCrawler:
     chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
     chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=None):
+    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=None, fresh=False):
         if not novel_id:
             raise Exception('Novel ID is required')
         # end if
@@ -30,6 +31,7 @@ class WebNovelCrawler:
         self.start_chapter = start_chapter
         self.end_chapter = end_chapter
         self.pack_by_volume = volume
+        self.start_fresh = fresh
 
         self.chapters = []
         self.volume_no = {}
@@ -39,6 +41,9 @@ class WebNovelCrawler:
 
     def start(self):
         '''start crawling'''
+        if self.start_fresh and path.exists(self.output_path):
+            rmtree(self.output_path)
+        # end if
         try:
             self.get_csrf_token()
             self.get_chapter_list()

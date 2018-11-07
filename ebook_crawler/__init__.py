@@ -85,7 +85,8 @@ def show_help():
     print('  ebook_crawler <site-handle> <novel-id>',
           '[<start-chapter>|<start-url>]',
           '[<end-chapter>|<end-url>]',
-          '[<pack-by-volumes>]')
+          '[<pack-by-volumes>]',
+          '[<remove-old>]')
     print()
     print('OPTIONS:')
     print('  site-handle*     Handle of the website to crawl from: [lnmtl, wuxia, webnovel, readln, wuxiac, boxnovel, novelplanet]')
@@ -96,6 +97,7 @@ def show_help():
     print('  end-url          Url of the final chapter')
     print('  end-url          Url of the final chapter')
     print('  pack-by-volumes  Whether to split the package by volumes. Accepts either [true] or [false]')
+    print('  remove-old       Pass [true] to remove old downloads and start afresh')
     print()
     print('HINTS:')
     print('- * marked params are required')
