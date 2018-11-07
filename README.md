@@ -27,7 +27,7 @@ $ python3 -m pip install --user ebook-crawler
 
 ### Instructions
 
-**Open the console panel in a directory you want to download novels**. Your current directory is used to store downloaded data.
+*Open the console panel in a directory you want to download novels*. Your current directory is used to store downloaded data.
 
 ```bash
 $ ebook_crawler
@@ -50,11 +50,13 @@ The avaiable list of site handles are given below. *To request new site [create 
 - https://lnindo.org
 - https://www.idqidian.us
 
-### For MOBI Output
+### Additionals
+
+#### For MOBI Output
 
 - KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
 
-### NodeJS
+#### NodeJS
 
 Some websites like `novelplanet` needs `nodejs` to crawl data. Install it from:
 
@@ -74,8 +76,8 @@ Some websites like `novelplanet` needs `nodejs` to crawl data. Install it from:
 To add new source:
 
 - First copy the `ebook_crawler/_sample.py` file.
-- Fill up the functions and rename thingies.
-- Import your source file to `__init__.py` file.
+- Fill up the functions.
+- Import your file to `__init__.py` file.
 - Add your source url inside `main` method of `__init__.py` file.
 
 That's all!
