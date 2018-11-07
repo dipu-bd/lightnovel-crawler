@@ -66,6 +66,8 @@ The avaiable list of site handles are given below. *To request new site [create 
 | `lnmtl` | https://lnmtl.com |
 | `readln` | https://www.readlightnovel.org |
 | `novelplanet` | https://novelplanet.com |
+| `lnindo` | https://lnindo.org |
+| `idqidian` | https://www.idqidian.us |
 
 #### 2. Novel ID (required)
 
@@ -80,6 +82,8 @@ To download a novel, you need to get a `novel-id`. It is usually a unique part o
 | http://www.wuxiaworld.co/A-Will-Eternal/ | a-will-eternal |
 | https://boxnovel.com/novel/the-legend-of-futian/ | the-legend-of-futian |
 | https://novelplanet.com/Novel/The-Legendary-Moonlight-Sculptor | The-Legendary-Moonlight-Sculptor |
+| https://lnindo.org/novel/a-record-of-a-mortals-journey-to-immortality/ | a-record-of-a-mortals-journey-to-immortality |
+| https://www.idqidian.us/novel/release-that-witch/ | release-that-witch |
 
 #### 3. Start Chapter or Start URL (~optional~)
 
@@ -102,6 +106,8 @@ Example values:
 - http://www.wuxiaworld.co/A-Will-Eternal/1042897.html
 - https://boxnovel.com/novel/the-legend-of-futian/chapter-327
 - https://novelplanet.com/Novel/The-Legendary-Moonlight-Sculptor/v52c3-part1
+- https://lnindo.org/a-record-of-a-mortals-journey-to-immortality/rmji-chapter-1/
+- https://www.idqidian.us/release-that-witch/chapter-848
 
 <!-- - KindleComicConverter: `pip install -U KindleComicConverter` -->
 
