@@ -9,12 +9,11 @@ import errno
 import random
 import textwrap
 import platform
-#import urllib
-import cfscrape
 from subprocess import call
 from ebooklib import epub
 from PIL import Image, ImageFont, ImageDraw
 from bs4 import BeautifulSoup
+from .helper import retrieve_image
 
 DIR_NAME = os.path.dirname(os.path.abspath(__file__))
 KINDLEGEN_PATH_MAC = os.path.join(DIR_NAME, 'ext', 'kindlegen-mac')
@@ -74,13 +73,8 @@ def _bind_book(input_path, volume_no = ''):
     book.spine = ['nav'] + contents
     if book_cover != 'N/A':
         try:
-            #print(book_cover)
-            scraper = cfscrape.create_scraper()
-            cfurl = scraper.get(book_cover).content
             filename = os.path.join(input_path, book_cover.split('/')[-1])
-            #print(filename)
-            with open(filename, 'wb') as f:
-                f.write(cfurl)
+            retrieve_image(book_cover, filename)
             book.set_cover('image.jpg', open(filename, 'rb').read())
             book.spine = ['cover'] + book.spine
         except:
