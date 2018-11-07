@@ -9,7 +9,8 @@ from .webnovel import WebNovelCrawler
 from .readln import ReadLightNovelCrawler
 from .boxnovel import BoxNovelCrawler
 from .novelplanet import NovelPlanetCrawler
-
+from .idqidian import IdqidianCrawler
+from .lnindo import LnindoCrawler
 
 def main():
     '''main method to call'''
@@ -73,6 +74,20 @@ def main():
             end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
             volume=volume,
         ).start()
+    elif site == 'lnindo':
+        LnindoCrawler(
+            novel_id=sys.argv[2],
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=volume,
+        ).start()
+    elif site == 'idqidian':
+        IdqidianCrawler(
+            novel_id=sys.argv[2],
+            start_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
+            end_chapter=sys.argv[4] if len(sys.argv) > 4 else '',
+            volume=volume,
+        ).start()
     else:
         show_help()
     # end if
@@ -109,5 +124,7 @@ def show_help():
     print('\n  http://www.wuxiaworld.co/A-Will-Eternal/ \n    novel_id = `a-will-eternal`')
     print('\n  https://boxnovel.com/novel/the-legend-of-futian/ \n    novel_id = `the-legend-of-futian`')
     print('\n  https://novelplanet.com/Novel/The-Legendary-Moonlight-Sculptor \n    novel_id = `The-Legendary-Moonlight-Sculptor`')
+    print('\n  https://lnindo.org/novel/a-record-of-a-mortals-journey-to-immortality/ \n    novel_id = `a-record-of-a-mortals-journey-to-immortality`')
+    print('\n  https://www.idqidian.us/novel/release-that-witch/ \n    novel_id = `release-that-witch`')
     print()
 # end def
