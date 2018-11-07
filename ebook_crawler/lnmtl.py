@@ -4,20 +4,71 @@
 Crawler for novels from [LNMTL](https://lnmtl.com).
 """
 import re
+import logging
+import concurrent.futures
+from bs4 import BeautifulSoup
+from PyInquirer import prompt
+from .validators import validateNumber
+
 import sys
 import json
 import requests
 from os import path
 from shutil import rmtree
-import concurrent.futures
-from bs4 import BeautifulSoup
-from PyInquirer import prompt
 from .helper import save_chapter
 from .binding import novel_to_epub, novel_to_mobi
 
-class LNMTLCrawlerApp:
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+logger = logging.getLogger('LNMTL')
 
+class LNTMLParser:
+    def __init__(self, html):
+        self.soup = BeautifulSoup(html, 'lxml')
+        self.title = None
+    # end def
+
+    def get_title(self):
+        try:
+            if not self.title:
+                SELECTOR = '.novel .media .novel-name'
+                self.title = self.soup.select_one(SELECTOR).text.rsplit(' ', 1)[0]
+            # end if
+        except:
+            self.title = 'N/A'
+        # end try
+        return self.title
+    # end def
+
+    def clean_title(self):
+        return re.sub(r'[\\/*?:"<>|\']', '', self.get_title()).lower()
+    # end def
+
+    def get_cover(self):
+        try:
+            title = self.get_title()
+            return self.soup.find('img', {'title' : title})['src']
+        except:
+            return ''
+        # end try
+    # end def
+
+    def get_volumes(self):
+        for script in self.soup.find_all('script'):
+            text = script.text.strip()
+            if not text.startswith('window.lnmtl'):
+                continue
+            # end if
+            i,j = text.find('lnmtl.volumes = '),text.find(';lnmtl.route')
+            if i <= 0 and j <= i:
+                continue
+            # end if
+            i += len('lnmtl.volumes =')
+            self.volumes = json.loads(text[i:j].strip())
+        # end for
+        return self.volumes
+    # end def
+# end class
+
+class LNTMLCrawler:
     home_url = 'https://lnmtl.com'
     login_url = 'https://lnmtl.com/auth/login'
     logout_url = 'https://lnmtl.com/auth/logout'
@@ -26,10 +77,329 @@ class LNMTLCrawlerApp:
         'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
     }
 
-    def start(self):
-        pass
+    executor = concurrent.futures.ThreadPoolExecutor(max_workers=5)
+
+    def get_response(self, url):
+        return requests.get(
+            url,
+            headers=self.headers,
+            verify=False # whether to verify ssl certs for https
+        )
     # end def
 
+    def login(self, email, password):
+        '''login to LNMTL'''
+        # Get the login page
+        logger.debug('Visiting %s', self.login_url)
+        response = self.get_response(self.login_url)
+        self.headers['cookie'] = '; '.join([x.name + '=' + x.value for x in response.cookies])
+        # Send post request to login 
+        soup = BeautifulSoup(response.text, 'lxml')
+        headers = self.headers.copy()
+        headers['content-type'] = 'application/x-www-form-urlencoded'
+        body = {
+            '_token': soup.select_one('form input[name="_token"]')['value'],
+            'email': email,
+            'password': password,
+        }
+        logger.debug('Logging in...')
+        response = requests.post(
+            self.login_url,
+            data=body,
+            headers=headers,
+            verify=False
+        )
+        # Update the cookies
+        self.headers['cookie'] = '; '.join([x.name + '=' + x.value for x in response.cookies])
+        soup = BeautifulSoup(response.text, 'lxml')
+        # Check if logged in successfully
+        logout = soup.select_one('a[href="%s"]' % self.logout_url)
+        if logout is None:
+            logger.debug('-' * 80)
+            body = soup.select_one('body').text
+            logger.debug('\n\n'.join([x for x in body.split('\n\n') if len(x.strip())]))
+            logger.debug('-' * 80)
+            logger.warning('Failed to login')
+        else:
+            logger.warning('Logged in')
+            self.logged_in = True
+        # end if
+    # end def
+
+    def logout(self):
+        '''logout as a good citizen'''
+        logger.debug('Logging out...')
+        response = requests.get(self.logout_url, headers=self.headers)
+        soup = BeautifulSoup(response.text, 'lxml')
+        logout = soup.select_one('a[href="%s"]' % self.logout_url)
+        if logout is None:
+            logger.warning('Logged out.')
+        else:
+            logger.warning('Failed to logout.')
+        # end if
+        self.logged_in = False
+    # end def
+
+    def read_novel_info(self, url):
+        '''get list of chapters'''
+        logger.debug('Visiting %s', url)
+        parser = LNTMLParser(self.get_response(url).text)
+        self.novel_title = parser.get_title()
+        self.novel_cover = parser.get_cover()
+        self.volumes = parser.get_volumes()
+        logger.debug(self.volumes)
+        logger.warning('%d volumes found. Loading chapters...', len(self.volumes))
+        self.get_chapter_list()
+    # end def
+
+    def get_chapter_list(self):
+        self.chapters = []
+        page_url = '%s/chapter?page=1' % (self.home_url)
+        future_to_url = {
+            self.executor.submit(
+                self.get_chapter_list_by_volume,
+                index,
+                page_url
+            ): index
+            for index in range(len(self.volumes))
+        }
+        for future in concurrent.futures.as_completed(future_to_url):
+            concurrent.futures.wait(future.result())
+        # end for
+        self.chapters = sorted(self.chapters, key=lambda x: int(x['id']))
+        logger.debug(self.chapters)
+        logger.warning('[%s] %d chapters found', self.novel_title, len(self.chapters))
+    # end def
+
+    def get_chapter_list_by_volume(self, vol_index, page_url):
+        vol_id = self.volumes[vol_index]['id']
+        url = '%s&volumeId=%s' % (page_url, vol_id)
+        logger.debug('Visiting %s', url)
+        result = self.get_response(url).json()
+        page_url = result['next_page_url']
+        for chapter in result['data']:
+            special = '(Special)' if chapter['is_special'] == '1' else ''
+            title = 'Chapter %s %s' % (chapter['number'], special)
+            self.chapters.append({
+                'id': int(chapter['position']),
+                'name': title.strip(),
+                'title': chapter['title'],
+                'url': chapter['site_url'],
+                'volume': self.volumes[vol_index]['title'],
+            })
+        # end for
+        if result['current_page'] == 1:
+            return {
+                self.executor.submit(
+                    self.get_chapter_list_by_volume,
+                    vol_index,
+                    '%s/chapter?page=%s' % (self.home_url, page + 1)
+                ) : '%s-%s' % (vol_id, page)
+                for page in range(1, result['last_page'])
+            }
+        # end if
+        return {}
+    # end def
+# end class
+
+class LNMTLCrawlerApp:
+    crawler = LNTMLCrawler()
+
+    def start(self):
+        self.login()
+        self.novel_info()
+        self.chapter_range()
+    # end def
+
+    def login(self):
+        answer = prompt([
+            {
+                'type': 'confirm',
+                'name': 'login',
+                'message': 'Do you want to log in?',
+                'default': False
+            },
+        ])
+        if answer['login']:
+            answer = prompt([
+                {
+                    'type': 'input',
+                    'name': 'email',
+                    'message': 'Email:',
+                    'validate': lambda val: 'Email address should be not be empty'
+                    if len(val) == 0 else True,
+                },
+                {
+                    'type': 'password',
+                    'name': 'password',
+                    'message': 'Password:',
+                    'validate': lambda val: 'Password should be not be empty'
+                    if len(val) == 0 else True,
+                },
+            ])
+            self.crawler.login(answer['email'], answer['password'])
+        # end if
+    # end def
+
+    def novel_info(self):
+        answer = prompt([
+            {
+                'type': 'input',
+                'name': 'novel',
+                'message': 'What is the url of novel page?',
+                'validate': lambda val: 'Url should be not be empty'
+                    if len(val) == 0 else True,
+            },
+        ])
+        self.crawler.read_novel_info(answer['novel'].strip())
+    # end def
+
+    def chapter_range(self):
+        choices = [
+            'Everything!',
+            'Last 10 chapters',
+            'First 10 chapters',
+            'Custom range using URL',
+            'Custom range using index',
+            'Select specific volumes',
+            'Select specific chapters (warning: a large list will be displayed)'
+        ]
+        answer = prompt([
+            {
+                'type': 'list',
+                'name': 'choice',
+                'message': 'Which chapters to download?',
+                'choices': choices
+            },
+        ])
+        if choices[0] == answer['choice']:
+            pass
+        elif choices[1] == answer['choice']:
+            self.crawler.chapters = self.crawler.chapters[-10:]
+        elif choices[2] == answer['choice']:
+            self.crawler.chapters = self.crawler.chapters[:10]
+        elif choices[3] == answer['choice']:
+           self.chapter_range_urls()
+        elif choices[4] == answer['choice']:
+            self.chapter_range_numbers()
+        elif choices[5] == answer['choice']:
+            self.chapter_range_specific_volumes()
+        elif choices[6] == answer['choice']:
+            self.chapter_range_specific_chapters()
+        # end if
+        logger.debug('Selected chapters to download')
+        logger.debug(self.crawler.chapters)
+    # end def
+
+    def chapter_range_urls(self):
+        answer = prompt([
+            {
+                'type': 'input',
+                'name': 'start',
+                'message': 'Enter start url:',
+                'validate': lambda val: 'Url should be not be empty'
+                    if len(val) == 0 else True,
+            },
+            {
+                'type': 'input',
+                'name': 'stop',
+                'message': 'Enter final url:',
+                'validate': lambda val: 'Url should be not be empty'
+                    if len(val) == 0 else True,
+            },
+        ])
+        start = 0
+        stop = len(self.crawler.chapters) - 1
+        start_url = answer['start'].strip(' /')
+        stop_url = answer['stop'].strip(' /')
+        for i, chapter in  enumerate(self.crawler.chapters):
+            if chapter['url'] == start_url:
+                start = i
+            elif chapter['url'] == stop_url:
+                stop = i
+            # end if
+        # end for
+        if stop < start:
+            start, stop = stop, start
+        # end if
+        self.crawler.chapters = self.crawler.chapters[start:(stop + 1)]
+    # end def
+
+    def chapter_range_numbers(self):
+        length = len(self.crawler.chapters)
+        answer = prompt([
+            {
+                'type': 'input',
+                'name': 'start',
+                'message': 'Enter start index (1 to %d):' % length,
+                'validate': lambda val: validateNumber(val, 1, length),
+                'filter': lambda val: int(val) - 1,
+            },
+        ])
+        start = answer['start']
+        answer = prompt([
+            {
+                'type': 'input',
+                'name': 'stop',
+                'message': 'Enter final index (%d to %d):' % (start, length),
+                'validate': lambda val: validateNumber(val, start, length),
+                'filter': lambda val: int(val) - 1,
+            },
+        ])
+        stop = answer['stop']
+        self.crawler.chapters = self.crawler.chapters[start:(stop + 1)]
+    # end def
+
+    def chapter_range_specific_volumes(self):
+        answer = prompt([
+            {
+                'type': 'checkbox',
+                'name': 'volumes',
+                'message': 'Choose volumes to download',
+                'choices': [
+                    { 'name': vol['title'] }
+                    for vol in self.crawler.volumes
+                ],
+                'validate': lambda ans: 'You must choose at least one volume.' \
+                    if len(ans) == 0 else True
+            }
+        ])
+        selected = answer['volumes']
+        chapters = [
+            chap for chap in self.crawler.chapters
+            if selected.count(chap['volume']) > 0
+        ]
+        self.crawler.start_index = 0
+        self.crawler.stop_index = len(chapters)
+        self.crawler.chapters = chapters
+    # end def
+
+    def chapter_range_specific_chapters(self):
+        answer = prompt([
+            {
+                'type': 'checkbox',
+                'name': 'chapters',
+                'message': 'Choose chapters to download',
+                'choices': [
+                    { 'name': '%d - %s' % (chap['id'], chap['title']) }
+                    for chap in self.crawler.chapters
+                ],
+                'validate': lambda ans: 'You must choose at least one chapter.' \
+                    if len(ans) == 0 else True
+            }
+        ])
+        selected = [
+            int(val.split(' ')[0]) - 1
+            for val in answer['chapters']
+        ]
+        chapters = [
+            chap for chap in self.crawler.chapters
+            if selected.count(chap['id']) > 0
+        ]
+        self.crawler.start_index = 0
+        self.crawler.stop_index = len(chapters)
+        self.crawler.chapters = chapters
+    # end def
 # end class
 
 """
@@ -265,14 +635,8 @@ class LNMTLCrawler:
         return text.strip()
     # end def
 # end class
-
+"""
 
 if __name__ == '__main__':
-    LNMTLCrawler(
-        novel_id=sys.argv[1],
-        start_chapter=sys.argv[2] if len(sys.argv) > 2 else '',
-        end_chapter=sys.argv[3] if len(sys.argv) > 3 else '',
-        volume=sys.argv[4].lower() == 'true' if len(sys.argv) > 4 else ''
-    ).start()
+    LNMTLCrawlerApp().start()
 # end if
-"""
