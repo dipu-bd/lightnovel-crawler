@@ -3,175 +3,138 @@
 """
 Crawler for novels from [WebNovel](https://www.webnovel.com).
 """
-import re
-import sys
 import json
+import logging
+import re
 import requests
-from os import path
-from shutil import rmtree
-import concurrent.futures
-from .helper import save_chapter
-from .binding import novel_to_epub, novel_to_mobi
+from concurrent import futures
+from .app.crawler import Crawler
+from .app.crawler_app import CrawlerApp
 
-class WebNovelCrawler:
-    '''Crawler for WuxiaWorld'''
+logger = logging.getLogger('WEBNOVEL')
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=12)
+book_info_url = 'https://www.webnovel.com/book/%s'
+chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
+book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
+chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
+chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 
-    book_info_url = 'https://www.webnovel.com/book/%s'
-    chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
-    chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
-
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=None, fresh=False):
-        if not novel_id:
-            raise Exception('Novel ID is required')
-        # end if
-
-        self.novel_id = novel_id
-        self.start_chapter = start_chapter
-        self.end_chapter = end_chapter
-        self.pack_by_volume = volume
-        self.start_fresh = fresh
-
-        self.chapters = []
-        self.volume_no = {}
-        self.output_path = None
+class WebnovelCrawler(Crawler):
+    @property
+    def supports_login(self):
+        return False
     # end def
 
-
-    def start(self):
-        '''start crawling'''
-        if self.start_fresh and path.exists(self.output_path):
-            rmtree(self.output_path)
-        # end if
-        try:
-            self.get_csrf_token()
-            self.get_chapter_list()
-            self.get_chapter_bodies()
-        finally:
-            self.output_path = self.output_path or self.novel_id
-            novel_to_epub(self.output_path, self.pack_by_volume)
-            novel_to_mobi(self.output_path)
-        # end try
+    def login(self, email, password):
+        pass
     # end def
 
-    def get_csrf_token(self):
-        '''get csrf token'''
-        url = self.book_info_url % (self.novel_id)
-        print('Getting CSRF Token from ', url)
-        session = requests.Session()
-        session.get(url)
-        cookies = session.cookies.get_dict()
-        self.csrf = cookies['_csrfToken']
-        print('CSRF Token =', self.csrf)
+    def logout(self):
+        pass
     # end def
 
-    def get_chapter_list(self):
-        '''get list of chapters'''
-        url = self.chapter_list_url % (self.csrf, self.novel_id)
-        print('Getting book name and chapter list...')
-        response = requests.get(url)
-        response.encoding = 'utf-8'
+    def read_novel_info(self, url):
+        logger.info('Getting CSRF Token')
+        self.get_response(url)
+        self.csrf = self.cookies['_csrfToken']
+        logger.debug('CSRF Token = %s', self.csrf)
+
+        self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
+        logger.debug('Novel Id: %s', self.novel_id)
+        url = chapter_list_url % (self.csrf, self.novel_id)
+        logger.info('Downloading novel info from %s', url)
+        response = self.get_response(url)
         data = response.json()
-        if 'chapterItems' in data['data']:
-            self.chapters = [x['chapterId'] for x in data['data']['chapterItems']]
-        elif 'volumeItems' in data['data']:
-            self.chapters = []
-            self.volume_no = {}
+        logger.debug(data)
+
+        if 'bookInfo' in data['data']:
+            self.novel_title = data['data']['bookInfo']['bookName']
+            self.novel_cover = book_cover_url % self.novel_id
+        # end if
+
+        chapters = []
+        if 'volumeItems' in data['data']:
             for vol in data['data']['volumeItems']:
-                for x in vol['chapterItems']:
-                    self.chapters.append(x['id'])
-                    self.volume_no[str(x['index'])] = vol['index']
-                # end for
+                title = vol['name'].strip()
+                title = (' - ' if len(title) > 0 else '') + title
+                title = 'Volume %d%s' % (vol['index'] + 1, title)
+                self.volumes.append({
+                    'id': vol['index'],
+                    'title': title,
+                })
+                for chap in vol['chapterItems']:
+                    chap['volume'] = title
+                    chapters.append(chap)
+                # end if
+            # end for
+        elif 'chapterItems' in data['data']:
+            chapters = data['data']['chapterItems']
+            for vol in range(len(chapters) / 100):
+                self.volumes.append({
+                    'id': vol,
+                    'title': 'Volume %d' % (vol + 1),
+                })
             # end for
         # end if
-        print(len(self.chapters), 'chapters found')
+        logger.debug(self.volumes)
+        logger.info('%d volumes found', len(self.volumes))
+
+        for i, chap in enumerate(chapters):
+            title = 'Chapter '
+            self.chapters.append({
+                'id': i + 1,
+                'title': 'Chapter %d - %s' % (i + 1, chap['name']),
+                'url': chapter_body_url % (self.csrf, self.novel_id, chap['id']),
+                'volume': chap['volume'] if 'volume' in chap\
+                    else 'Volume %d' % (1 + i // 100),
+            })
+        # end for
+        logger.debug(self.chapters)
+        logger.info('%d chapters found', len(self.chapters))
     # end def
 
-    def get_chapter_index(self, chapter):
-      if chapter is None: return
-      if chapter.isdigit():
-        chapter = int(chapter)
-        if 1 <= chapter <= len(self.chapters):
-          return chapter - 1
-        # end if
-      # end if
-      for i, ch_id in enumerate(self.chapters):
-        possible_url_substr = '/book/' + self.novel_id + '/' + ch_id
-        if possible_url_substr in chapter:
-          return i
-        # end if
-      # end for
-      raise Exception('Invalid chapter url')
+    def get_chapter_index_of(self, url):
+        url = url.replace('http://', 'https://')
+        for i, chap in enumerate(self.chapters):
+            chap_url = chapter_info_url % (self.novel_id, chap['id'])
+            if url.startswith(chap_url):
+                return i
+            # end if
+        # end for
     # end def
 
-    def get_chapter_bodies(self):
-        '''get content from all chapters till the end'''
-        if self.start_chapter is None: return
-        start = self.get_chapter_index(self.start_chapter)
-        end = self.get_chapter_index(self.end_chapter) or len(self.chapters) - 1
-        future_to_url = {self.executor.submit(self.parse_chapter, index):\
-            index for index in range(start, end + 1)}
-        # Wait till finish
-        [x.result() for x in concurrent.futures.as_completed(future_to_url)]
-    # end def
+    def download_chapter_body(self, chapter):
+        url = chapter['url']
+        logger.info('Getting chapter... %s [%s]', chapter['title'], chapter['id'])
 
-    def parse_chapter(self, index):
-        chapter_id = self.chapters[index]
-        url = self.chapter_body_url % (self.csrf, self.novel_id, chapter_id)
-        print('Getting chapter...', index + 1, '[' + chapter_id + ']')
-        response = requests.get(url)
-        response.encoding = 'utf-8'
+        response = self.get_response(url)
         data = response.json()
-        novel_name = data['data']['bookInfo']['bookName']
-        author_name = 'N/A'
-        if 'authorName' in data['data']['bookInfo']:
-            author_name = data['data']['bookInfo']['authorName']
-        if 'authorItems' in data['data']['bookInfo']:
-            author_name = ', '.join([x['name'] for x in data['data']['bookInfo']['authorItems']])
-        # end if
-        chapter_title = data['data']['chapterInfo']['chapterName']
-        chapter_no = data['data']['chapterInfo']['chapterIndex']
-        contents = data['data']['chapterInfo']['content']
-        body_part = self.format_text(contents)
-        chapter_title = '#%d: %s' % (chapter_no, chapter_title)
-        volume_no = ((chapter_no - 1) // 100) + 1
-        if str(index) in self.volume_no:
-            volume_no = self.volume_no[str(index)]
-        # end if
-        if not self.output_path:
-            self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', novel_name or self.novel_id)
-        # end if
-        save_chapter({
-            'url': url,
-            'novel': novel_name,
-            'cover': None,
-            'author': author_name,
-            'volume_no': str(volume_no),
-            'chapter_no': str(chapter_no),
-            'chapter_title': chapter_title,
-            'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
-        }, self.output_path, self.pack_by_volume)
-    # end def
 
-    def format_text(self, text):
-        '''make it a valid html'''
-        text = text.replace(r'[ \n\r]+', '\n')
-        if ('<p>' not in text) or ('</p>' not in text):
-            text = text.replace('<', '&lt;')
-            text = text.replace('>', '&gt;')
-            text = [x for x in text.split('\n') if len(x.strip())]
-            text = '<p>' + '</p><p>'.join(text) + '</p>'
+        if 'authorName' in data['data']['bookInfo']:
+            self.novel_author = data['data']['bookInfo']['authorName']
+        if 'authorItems' in data['data']['bookInfo']:
+            self.novel_author = ', '.join([x['name'] for x in data['data']['bookInfo']['authorItems']])
         # end if
-        return text.strip()
+
+        body = data['data']['chapterInfo']['content']
+        body = body.replace(r'[ \n\r]+', '\n')
+        if ('<p>' not in body) or ('</p>' not in body):
+            body = body.replace('<', '&lt;')
+            body = body.replace('>', '&gt;')
+            body = [x for x in body.split('\n') if len(x.strip())]
+            body = '<p>' + '</p><p>'.join(body) + '</p>'
+        # end if
+        return body.strip()
     # end def
 # end class
 
+
+class WebnovelCrawlerApp(CrawlerApp):
+    crawler = WebnovelCrawler()
+# end class
+
+
 if __name__ == '__main__':
-    WebNovelCrawler(
-        novel_id=sys.argv[1],
-        start_chapter=sys.argv[2] if len(sys.argv) > 2 else None,
-        end_chapter=sys.argv[3] if len(sys.argv) > 3 else None,
-        volume=sys.argv[4].lower() == 'true' if len(sys.argv) > 4 else ''
-    ).start()
+    WebnovelCrawlerApp().start()
 # end if
+

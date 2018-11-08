@@ -4,23 +4,20 @@
 Interactive application to take user inputs
 """
 
-import concurrent.futures
 import json
 import logging
 import os
 import re
 import shutil
+from concurrent import futures
 
-from bs4 import BeautifulSoup
-from ebooklib import epub
-from PIL import Image, ImageDraw, ImageFont
 from progress.bar import IncrementalBar
 from progress.spinner import Spinner
 from PyInquirer import prompt
 
 from .binding import bind_epub_book, novel_to_mobi
-from .validators import validateNumber
 from .helper import retrieve_image
+from .validators import validateNumber
 
 logger = logging.getLogger('CRAWLER_APP')
 
@@ -50,7 +47,7 @@ class CrawlerApp:
             self.bind_books()
         except Exception as ex:
             logger.error(ex)
-            raise ex # TODO: suppress error
+            raise ex  # TODO: suppress error
         # end try
     # end def
 
@@ -97,7 +94,8 @@ class CrawlerApp:
 
         logger.warn('Getting novel info...')
         self.crawler.read_novel_info(answer['novel'].strip())
-        self.output_path = re.sub(r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
+        self.output_path = re.sub(
+            r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
         self.output_path = os.path.abspath(self.output_path)
 
         if os.path.exists(self.output_path):
@@ -116,50 +114,44 @@ class CrawlerApp:
         os.makedirs(self.output_path, exist_ok=True)
 
         logger.warn('Getting chapters...')
-        try:
-            file_name = os.path.join(self.output_path, 'meta.json')
-            if os.path.exists(file_name):
-                with open(file_name, 'r') as file:
-                    logger.info('Loading metadata')
-                    data = json.load(file)
-                    self.crawler.volumes = data['volumes']
-                    self.crawler.chapters = data['chapters']
-                # end with
-            if len(self.crawler.chapters) == 0:
-                logger.info('Fetching chapters')
-                self.crawler.download_chapter_list()
-                data = {
-                    'title': self.crawler.novel_title,
-                    'author': self.crawler.novel_author,
-                    'cover': self.crawler.novel_cover,
-                    'volumes': self.crawler.volumes,
-                    'chapters': self.crawler.chapters,
-                }
-                with open(file_name, 'w') as file:
-                    logger.info('Writing metadata: %s', file_name)
-                    json.dump(data, file, indent=2)
-                # end with
-            # end if
-        except Exception as ex:
-            logger.error('Failed to get chapters: %s', ex)
-        # end try
+        file_name = os.path.join(self.output_path, 'meta.json')
+        if os.path.exists(file_name):
+            with open(file_name, 'r') as file:
+                logger.info('Loading metadata')
+                data = json.load(file)
+                self.crawler.volumes = data['volumes']
+                self.crawler.chapters = data['chapters']
+            # end with
+        if len(self.crawler.chapters) == 0:
+            logger.info('Fetching chapters')
+            self.crawler.download_chapter_list()
+            data = {
+                'title': self.crawler.novel_title,
+                'author': self.crawler.novel_author,
+                'cover': self.crawler.novel_cover,
+                'volumes': self.crawler.volumes,
+                'chapters': self.crawler.chapters,
+            }
+            with open(file_name, 'w') as file:
+                logger.info('Writing metadata: %s', file_name)
+                json.dump(data, file, indent=2)
+            # end with
+        # end if
     # end def
-
 
     def chapter_range(self):
         length = len(self.crawler.chapters)
         choices = {
-            'Everything! (%d chapters)' % length: (lambda x: x),
-            'Custom range using URL': self.range_using_urls,
-            'Custom range using index': self.range_using_index,
-            'Select specific volumes': self.range_from_volumes,
-            'Select specific chapters %s' % ('(warn: very big list)' if length > 50 else '')
-                : self.range_from_chapters,
+            'Everything! (%d chapters)' % length: (lambda list: list),
+            'Custom range using URL': (lambda x: self.range_using_urls()),
+            'Custom range using index': (lambda x: self.range_using_index()),
+            'Select specific volumes': (lambda x: self.range_from_volumes()),
+            'Select specific chapters %s' % ('(warn: very big list)' if length > 50 else ''): (lambda x: self.range_from_chapters()),
         }
         if length >= 20:
             choices.update({
-                'First 10 chapters': (lambda x: x[:10]),
-                'Last 10 chapters': (lambda x: x[-10:]),
+                'First 10 chapters': (lambda list: list[:10]),
+                'Last 10 chapters': (lambda list: list[-10:]),
             })
         # end if
 
@@ -181,41 +173,34 @@ class CrawlerApp:
         # end if
     # end def
 
-    def range_using_urls(self, *args):
+    def range_using_urls(self):
+        def validator(val): return 'No such chapter found given the url' \
+            if self.crawler.get_chapter_index_of(val) < 0 else True,
+
+        def filtered(val): return self.crawler.get_chapter_index_of(val)
         answer = prompt([
             {
                 'type': 'input',
                 'name': 'start',
                 'message': 'Enter start url:',
-                'validate': lambda val: 'Url should be not be empty'
-                if len(val) == 0 else True,
+                'validate': validator,
             },
             {
                 'type': 'input',
                 'name': 'stop',
                 'message': 'Enter final url:',
-                'validate': lambda val: 'Url should be not be empty'
-                if len(val) == 0 else True,
+                'validate': validator,
             },
         ])
-        start = 0
-        stop = len(self.crawler.chapters) - 1
-        start_url = answer['start'].strip(' /')
-        stop_url = answer['stop'].strip(' /')
-        for i, chapter in enumerate(self.crawler.chapters):
-            if chapter['url'] == start_url:
-                start = i
-            elif chapter['url'] == stop_url:
-                stop = i
-            # end if
-        # end for
+        start = filtered(answer['start'])
+        stop = filtered(sanswer['stop'])
         if stop < start:
             start, stop = stop, start
         # end if
         return self.crawler.chapters[start:(stop + 1)]
     # end def
 
-    def range_using_index(self, *args):
+    def range_using_index(self):
         length = len(self.crawler.chapters)
         answer = prompt([
             {
@@ -240,7 +225,7 @@ class CrawlerApp:
         return self.crawler.chapters[start:(stop + 1)]
     # end def
 
-    def range_from_volumes(self, *args):
+    def range_from_volumes(self):
         answer = prompt([
             {
                 'type': 'checkbox',
@@ -261,7 +246,7 @@ class CrawlerApp:
         ]
     # end def
 
-    def range_from_chapters(self, *args):
+    def range_from_chapters(self):
         answer = prompt([
             {
                 'type': 'checkbox',
@@ -338,40 +323,56 @@ class CrawlerApp:
 
         bar = IncrementalBar('Downloading chapters', max=len(self.chapters))
         bar.start()
-        for chapter in self.chapters:
-            dir_name = os.path.join(self.output_path, 'json')
-            if self.pack_by_volume:
-                dir_name = os.path.join(dir_name, chapter['volume'])
-            # end if
-            os.makedirs(dir_name, exist_ok=True)
-
-            chapter_name = str(chapter['id']).rjust(5, '0')
-            file_name = os.path.join(dir_name, chapter_name + '.json')
-
-            chapter['body'] = ''
-            if os.path.exists(file_name):
-                logger.info('Restoring from %s', file_name)
-                with open(file_name, 'r') as file:
-                    old_chapter = json.load(file)
-                    chapter['body'] = old_chapter['body']
-                # end with
-            if len(chapter['body']) == 0:
-                logger.info('Downloading to %s', file_name)
-                body = self.crawler.download_chapter_body(chapter['url'])
-                if len(body) == 0:
-                    bar.clearln()
-                    logger.error('Body is empty: %s', chapter['url'])
-                else:
-                    chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
-                        chapter['volume'], chapter['title'], body)
-                # end if
-                with open(file_name, 'w') as file:
-                    file.write(json.dumps(chapter))
-                # end with
+        futures_to_check = {
+            self.crawler.executor.submit(
+                self.download_chapter_body, chapter): chapter['id']
+            for chapter in self.chapters
+        }
+        for future in futures.as_completed(futures_to_check):
+            result = future.result()
+            if result:
+                bar.clearln()
+                logger.error(result)
             # end if
             bar.next()
         # end for
         bar.finish()
+    # end def
+
+    def download_chapter_body(self, chapter):
+        result = None
+
+        dir_name = os.path.join(self.output_path, 'json')
+        if self.pack_by_volume:
+            dir_name = os.path.join(dir_name, chapter['volume'])
+        # end if
+        os.makedirs(dir_name, exist_ok=True)
+
+        chapter_name = str(chapter['id']).rjust(5, '0')
+        file_name = os.path.join(dir_name, chapter_name + '.json')
+
+        chapter['body'] = ''
+        if os.path.exists(file_name):
+            logger.info('Restoring from %s', file_name)
+            with open(file_name, 'r') as file:
+                old_chapter = json.load(file)
+                chapter['body'] = old_chapter['body']
+            # end with
+        if len(chapter['body']) == 0:
+            logger.info('Downloading to %s', file_name)
+            body = self.crawler.download_chapter_body(chapter)
+            if len(body) == 0:
+                result = 'Body is empty: ' + chapter['url']
+            else:
+                chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
+                    chapter['volume'], chapter['title'], body)
+            # end if
+            with open(file_name, 'w') as file:
+                file.write(json.dumps(chapter))
+            # end with
+        # end if
+
+        return result
     # end def
 
     def bind_books(self):

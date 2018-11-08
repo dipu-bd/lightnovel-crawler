@@ -30,7 +30,7 @@ class Crawler:
 
     '''
     Each item must contain these keys:
-    `id` - the position of the chapter
+    `id` - the index of the chapter
     `title` - the title name
     `volume` - the volume title
     `url` - the link where to download the chapter
@@ -49,12 +49,10 @@ class Crawler:
     # end def
 
     def login(self, email, password):
-        '''Login and update cookies in `headers`'''
         pass
     # end def
 
     def logout(self):
-        '''Logout and update cookies in `headers`'''
         pass
     # end def
 
@@ -66,29 +64,31 @@ class Crawler:
     def download_chapter_list(self):
         '''Download list of chapters and volumes.'''
         pass
+    # end def
 
-    def download_chapter_body(self, url):
+    def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         pass
+    # end def
+
+    def get_chapter_index_of(self, url):
+        '''Return the index of chapter by given url or -1'''
+        url = (url or '').strip(' /')
+        for i, chapter in enumerate(self.chapters):
+            if chapter['url'] == url:
+                return i
+            # end if
+        # end for
+        return -1
     # end def
 
     # ------------------------------------------------------------------------- #
     # Helper methods to be used
     # ------------------------------------------------------------------------- #
-    def build_headers(self, headers={}):
-        headers = self.headers.copy()
-        headers['cookie'] = '; '.join([
-            '%s=%s' % (x, self.cookies[x])
-            for x in self.cookies
-        ])
-        headers.update(headers or {})
-        return headers
-    # end def
-
     def get_response(self, url, incognito=False):
         response = requests.get(
             url,
-            headers=self.build_headers(),
+            headers=self._build_headers(),
             verify=False, # whether to verify ssl certs for https
         )
         self.cookies.update({
@@ -98,9 +98,11 @@ class Crawler:
         return response
     # end def
 
-    def submit_form(self, url, headers={}, **data):
-        headers = self.build_headers({
-            'content-type': 'application/x-www-form-urlencoded'
+    def submit_form(self, url, multipart=False, headers={}, **data):
+        '''Submit a form using post request'''
+        headers = self._build_headers({
+            'content-type': 'multipart/form-data' if multipart \
+                else 'application/x-www-form-urlencoded'
         })
         response = requests.post(
             url,
@@ -114,4 +116,15 @@ class Crawler:
         })
         return response
     # end def
+
+    def _build_headers(self, headers={}):
+        headers = self.headers.copy()
+        headers['cookie'] = '; '.join([
+            '%s=%s' % (x, self.cookies[x])
+            for x in self.cookies
+        ])
+        headers.update(headers or {})
+        return headers
+    # end def
+
 # end class

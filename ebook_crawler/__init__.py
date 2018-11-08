@@ -6,9 +6,9 @@ import logging
 import urllib3
 from PyInquirer import prompt
 from .lnmtl import LNMTLCrawlerApp
+from .webnovel import WebnovelCrawlerApp
 # from .wuxia import WuxiaCrawler
 # from .wuxiac import WuxiaCoCrawler
-# from .webnovel import WebNovelCrawler
 # from .boxnovel import BoxNovelCrawler
 # from .readln import ReadLightNovelCrawler
 # from .novelplanet import NovelPlanetCrawler
@@ -41,9 +41,9 @@ def main():
 
     choices = [
         'https://lnmtl.com',
+        'https://www.webnovel.com',
         'https://boxnovel.com',
         'https://novelplanet.com',
-        'https://www.webnovel.com',
         'https://www.wuxiaworld.co',
         'https://www.wuxiaworld.com',
         'https://www.readlightnovel.org'
@@ -61,7 +61,7 @@ def main():
     if choices[0] == answer['source']:
         LNMTLCrawlerApp().start()
     elif choices[1] == answer['source']:
-        print('Not Yet Implemented: ', answer['source'])
+        WebnovelCrawlerApp().start()
     elif choices[2] == answer['source']:
         print('Not Yet Implemented: ', answer['source'])
     elif choices[3] == answer['source']:

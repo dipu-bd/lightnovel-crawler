@@ -130,7 +130,7 @@ class LNTMLCrawler(Crawler):
         for future in futures.as_completed(future_to_url):
             futures.wait(future.result())
         # end for
-        self.chapters = sorted(self.chapters, key=lambda x: int(x['id']))
+        self.chapters = sorted(self.chapters, key=lambda x: x['id'])
         logger.debug(self.chapters)
         logger.info('%d chapters found', len(self.chapters))
     # end def
@@ -144,9 +144,9 @@ class LNTMLCrawler(Crawler):
         for chapter in result['data']:
             title = 'Chapter #%s - %s' % (chapter['position'], chapter['title'])
             self.chapters.append({
-                'id': int(chapter['position']),
                 'title': title,
                 'url': chapter['site_url'],
+                'id': int(chapter['position']),
                 'volume': self.volumes[vol_index]['title'],
             })
         # end for
@@ -163,9 +163,9 @@ class LNTMLCrawler(Crawler):
         return {}
     # end def
 
-    def download_chapter_body(self, url):
-        logger.info('Downloading %s', url)
-        response = self.get_response(url)
+    def download_chapter_body(self, chapter):
+        logger.info('Downloading %s', chapter['url'])
+        response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
         body = soup.select('.chapter-body .translated')
         body = [self.format_text(x.text) for x in body if x]

@@ -22,12 +22,10 @@ class SampleCrawler(Crawler):
     # end def
 
     def login(self, email, password):
-        '''Login and update cookies in `headers`'''
         pass
     # end def
 
     def logout(self):
-        '''Logout and update cookies in `headers`'''
         pass
     # end def
 
@@ -39,8 +37,14 @@ class SampleCrawler(Crawler):
     def download_chapter_list(self):
         '''Download list of chapters and volumes.'''
         pass
+    # end def
 
-    def download_chapter_body(self, url):
+    def get_chapter_index_of(self, url):
+        '''Return the index of chapter by given url or -1'''
+        pass
+    # end def
+
+    def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         pass
     # end def

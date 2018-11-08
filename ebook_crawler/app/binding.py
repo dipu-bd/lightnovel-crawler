@@ -35,12 +35,12 @@ def bind_epub_book(app, chapters, volume=''):
     # end if
     # Make contents
     book.toc = []
-    for chapter in chapters:
-        xhtml_file = 'chap_%s.xhtml' % str(chapter['id']).rjust(4, '0')
+    for i, chapter in enumerate(chapters):
+        xhtml_file = 'chap_%s.xhtml' % str(i + 1).rjust(5, '0')
         content = epub.EpubHtml(
             lang='en',
+            uid=str(i + 1),
             file_name=xhtml_file,
-            uid=str(chapter['id']),
             title=chapter['title'],
             content=chapter['body'] or '',
         )
