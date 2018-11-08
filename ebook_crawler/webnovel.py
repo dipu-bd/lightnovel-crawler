@@ -56,8 +56,11 @@ class WebnovelCrawler(Crawler):
         if 'volumeItems' in data['data']:
             for vol in data['data']['volumeItems']:
                 title = vol['name'].strip()
-                title = (' - ' if len(title) > 0 else '') + title
-                title = 'Volume %d%s' % (vol['index'] + 1, title)
+                if not (title and re.match(r'volume \d+', title.lower())):
+                    name = title
+                    title = 'Volume %d' % vol['index']
+                    title += (' - ' + name) if name else ''
+                # end if
                 self.volumes.append({
                     'id': vol['index'],
                     'title': title,
@@ -111,9 +114,12 @@ class WebnovelCrawler(Crawler):
         data = response.json()
 
         if 'authorName' in data['data']['bookInfo']:
-            self.novel_author = data['data']['bookInfo']['authorName']
+            self.novel_author = data['data']['bookInfo']['authorName'] or self.novel_author
         if 'authorItems' in data['data']['bookInfo']:
-            self.novel_author = ', '.join([x['name'] for x in data['data']['bookInfo']['authorItems']])
+            self.novel_author = ', '.join([
+                x['name'] for x in
+                data['data']['bookInfo']['authorItems']
+            ]) or self.novel_author
         # end if
 
         body = data['data']['chapterInfo']['content']

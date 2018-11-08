@@ -105,8 +105,11 @@ class LNTMLCrawler(Crawler):
             for i, vol in enumerate(volumes):
                 title = re.sub(r'[^\u0000-\u00FF]', '', vol['title'])
                 title = re.sub(r'\(\)', '', title).strip()
-                mdash = ' - ' if len(title) > 0 else ''
-                title = 'Volume %d%s%s' % (i + 1, mdash, title)
+                if not (title and re.match(r'volume \d+', title.lower())):
+                    name = title
+                    title = 'Volume %d' % (i + 1)
+                    title += (' - ' + name) if name else ''
+                # end if
                 self.volumes.append({
                     'id': vol['id'],
                     'title': title,

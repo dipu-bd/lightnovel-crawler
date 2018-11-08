@@ -114,6 +114,7 @@ class CrawlerApp:
         os.makedirs(self.output_path, exist_ok=True)
 
         logger.warn('Getting chapters...')
+        require_saving = False
         file_name = os.path.join(self.output_path, 'meta.json')
         if os.path.exists(file_name):
             with open(file_name, 'r') as file:
@@ -122,9 +123,15 @@ class CrawlerApp:
                 self.crawler.volumes = data['volumes']
                 self.crawler.chapters = data['chapters']
             # end with
+        else:
+            require_saving = True
+        # end if
         if len(self.crawler.chapters) == 0:
+            require_saving = True
             logger.info('Fetching chapters')
             self.crawler.download_chapter_list()
+        # end if
+        if require_saving:
             data = {
                 'title': self.crawler.novel_title,
                 'author': self.crawler.novel_author,
