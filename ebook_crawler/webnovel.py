@@ -8,8 +8,7 @@ import logging
 import re
 import requests
 from concurrent import futures
-from .app.crawler import Crawler
-from .app.crawler_app import CrawlerApp
+from .utils.crawler import Crawler
 
 logger = logging.getLogger('WEBNOVEL')
 

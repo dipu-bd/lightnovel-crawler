@@ -19,7 +19,7 @@ logger = logging.getLogger('BINDER')
 
 def bind_epub_book(app, chapters, volume=''):
     bool_title = (app.crawler.novel_title + ' ' + volume).strip()
-    logger.debug('Binding: %s.epub', bool_title)
+    logger.debug('Binding %s.epub', bool_title)
     # Create book
     book = epub.EpubBook()
     book.set_language('en')
@@ -53,7 +53,7 @@ def bind_epub_book(app, chapters, volume=''):
     # Save epub file
     epub_path = os.path.join(app.output_path, 'epub')
     file_path = os.path.join(epub_path, bool_title + '.epub')
-    logger.debug('Creating: %s', file_path)
+    logger.debug('Writing %s', file_path)
     os.makedirs(epub_path, exist_ok=True)
     epub.write_epub(file_path, book, {})
     logger.warn('Created: %s.epub', bool_title)
@@ -72,6 +72,7 @@ def epub_to_mobi(epub_file):
     mobi_file_name = epub_file_name.replace('.epub', '.mobi')
     mobi_file_in_epub_path = os.path.join(epub_path, mobi_file_name)
     mobi_file = os.path.join(mobi_path, mobi_file_name)
+    logger.debug('Binding %s.epub', mobi_file)
 
     fallback = None
     devnull = open(os.devnull, 'w')
@@ -115,7 +116,7 @@ def epub_to_mobi(epub_file):
     if os.path.exists(mobi_file_in_epub_path):
         os.makedirs(mobi_path, exist_ok=True)
         os.rename(mobi_file_in_epub_path, mobi_file)
-        logger.warn('Created %s', mobi_file_name)
+        logger.warn('Created: %s', mobi_file_name)
     else:
         logger.error('Failed to generate mobi for %s', epub_file_name)
     # end if

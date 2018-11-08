@@ -8,7 +8,7 @@ import logging
 import re
 from concurrent import futures
 from bs4 import BeautifulSoup
-from .models.crawler import Crawler
+from .utils.crawler import Crawler
 
 logger = logging.getLogger('LNMTL')
 
@@ -17,7 +17,7 @@ login_url = 'https://lnmtl.com/auth/login'
 logout_url = 'https://lnmtl.com/auth/logout'
 
 
-class LNTMLCrawler(Crawler):
+class LNMTLCrawler(Crawler):
     @property
     def supports_login(self):
         return True
@@ -103,8 +103,8 @@ class LNTMLCrawler(Crawler):
                 title = re.sub(r'[^\u0000-\u00FF]', '', vol['title'])
                 title = re.sub(r'\(\)', '', title).strip()
                 self.volumes.append({
-                    'id': vol['id'],
                     'title': title,
+                    'id': int(vol['number']),
                 })
             # end for
             break

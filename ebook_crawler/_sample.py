@@ -6,7 +6,7 @@ Use this sample to create new sources
 import json
 import logging
 import re
-from .app.crawler import Crawler
+from .utils.crawler import Crawler
 
 logger = logging.getLogger('CHANGE_THIS_NAME')
 

@@ -7,7 +7,6 @@ import json
 import os
 import re
 from shutil import rmtree
-
 from PyInquirer import prompt
 
 
@@ -74,7 +73,7 @@ def novel_info(app):
                 item['title'] = title + ' - ' + item['title'].title()
             # end if
             item['volume'] = item['volume'] or (1 + (item['id'] - 1) // 100)
-            item['volume_title'] = app.crawler.volumes[item['volume']]['title']
+            item['volume_title'] = app.crawler.volumes[item['volume'] - 1]['title']
         # end for
     # end if
     if require_saving:

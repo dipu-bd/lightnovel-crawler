@@ -37,18 +37,17 @@ def headline():
     print('-' * 60)
 # end def
 
-def main():
-    headline()
-    configure()
+def get_choice():
+    not_implemented = lambda: print('\n  Not yet implemented  \n') or None
 
     choices = {
-        'https://lnmtl.com': (lambda: run_app(LNMTLCrawler)),
-        'https://www.webnovel.com': (lambda: run_app(WebnovelCrawler)),
-        'https://www.wuxiaworld.com': (lambda: run_app(WuxiaCrawler)),
-        'https://novelplanet.com': (lambda: print('\n  Not yet implemented  \n')),
-        'https://www.wuxiaworld.co': (lambda: print('\n  Not yet implemented  \n')),
-        'https://boxnovel.com': (lambda: print('\n  Not yet implemented  \n')),
-        'https://www.readlightnovel.org': (lambda: print('\n  Not yet implemented  \n')),
+        'https://lnmtl.com': LNMTLCrawler,
+        'https://www.webnovel.com': WebnovelCrawler,
+        'https://www.wuxiaworld.com': WuxiaCrawler,
+        'https://www.readlightnovel.org': not_implemented,
+        'https://novelplanet.com': not_implemented,
+        'https://www.wuxiaworld.co': not_implemented,
+        'https://boxnovel.com': not_implemented,
     }
 
     answer = prompt([
@@ -59,8 +58,29 @@ def main():
             'choices': choices.keys(),
         },
     ])
-    
-    choices[answer['source']]()
+
+    return choices[answer['source']]()
+# end def
+
+def main():
+    headline()
+    configure()
+
+    error = False
+    while True:
+        try:
+            crawler = get_choice()
+            run_app(crawler)
+            error = False
+        except:
+            if error:
+                break
+            else:
+                error = True
+                print('\n⮕ Press \33[95mCtrl + C\33[0m again to exit\n')
+            # end if
+        # end try
+    # end if
 # end def
 
 if __name__ == '__main__':

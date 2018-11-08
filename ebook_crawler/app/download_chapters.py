@@ -6,57 +6,56 @@ To download chapter bodies
 import json
 import os
 from concurrent import futures
-
 from progress.bar import IncrementalBar
-
 from ..utils.helper import retrieve_image
 
 
-def download_chapters(self):
-    self.book_cover = None
-    if self.crawler.novel_cover:
-        self.logger.warn('Getting cover image...')
+def download_chapters(app):
+    app.book_cover = None
+    if app.crawler.novel_cover:
+        app.logger.warn('Getting cover image...')
         try:
-            filename = self.crawler.novel_cover.split('/')[-1]
-            filename = os.path.join(self.output_path, filename)
+            filename = app.crawler.novel_cover.split('/')[-1]
+            filename = os.path.join(app.output_path, filename)
             if not os.path.exists(filename):
-                self.logger.info('Downloading cover image')
-                retrieve_image(self.crawler.novel_cover, filename)
-                self.logger.info('Saved cover: %s', filename)
-                self.book_cover = filename
+                app.logger.info('Downloading cover image')
+                retrieve_image(app.crawler.novel_cover, filename)
+                app.logger.info('Saved cover: %s', filename)
+                app.book_cover = filename
             # end if
         except Exception as ex:
-            self.logger.error('Failed to get cover: %s', ex)
+            app.logger.error('Failed to get cover: %s', ex)
         # end try
     else:
-        self.logger.warn('No cover image.')
+        app.logger.warn('No cover image.')
     # end if
 
-    bar = IncrementalBar('Downloading chapters', max=len(self.chapters))
+    bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
     bar.start()
     futures_to_check = {
-        self.crawler.executor.submit(
-            self.download_chapter_body,
+        app.crawler.executor.submit(
+            download_chapter_body,
+            app,
             chapter,
         ): str(chapter['id'])
-        for chapter in self.chapters
+        for chapter in app.chapters
     }
     for future in futures.as_completed(futures_to_check):
         result = future.result()
         if result:
             bar.clearln()
-            self.logger.error(result)
+            app.logger.error(result)
         # end if
         bar.next()
     # end for
     bar.finish()
 # end def
 
-def download_chapter_body(self, chapter):
+def download_chapter_body(app, chapter):
     result = None
 
-    dir_name = os.path.join(self.output_path, 'json')
-    if self.pack_by_volume:
+    dir_name = os.path.join(app.output_path, 'json')
+    if app.pack_by_volume:
         dir_name = os.path.join(dir_name,
             'Volume ' + str(chapter['volume']).rjust(2, '0'))
     # end if
@@ -67,14 +66,14 @@ def download_chapter_body(self, chapter):
 
     chapter['body'] = ''
     if os.path.exists(file_name):
-        self.logger.info('Restoring from %s', file_name)
+        app.logger.info('Restoring from %s', file_name)
         with open(file_name, 'r') as file:
             old_chapter = json.load(file)
             chapter['body'] = old_chapter['body']
         # end with
     if len(chapter['body']) == 0:
-        self.logger.info('Downloading to %s', file_name)
-        body = self.crawler.download_chapter_body(chapter)
+        app.logger.info('Downloading to %s', file_name)
+        body = app.crawler.download_chapter_body(chapter)
         if len(body) == 0:
             result = 'Body is empty: ' + chapter['url']
         else:

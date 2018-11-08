@@ -5,7 +5,7 @@ To prompt if login requires
 """
 from PyInquirer import prompt
 
-def login(app):
+def login(crawler):
     answer = prompt([
         {
             'type': 'confirm',
@@ -20,17 +20,17 @@ def login(app):
                 'type': 'input',
                 'name': 'email',
                 'message': 'Email:',
-                'validate': lambda val: 'Email address should be not be empty'
-                if len(val) == 0 else True,
+                'validate': lambda val: True if len(val)
+                    else 'Email address should be not be empty'
             },
             {
                 'type': 'password',
                 'name': 'password',
                 'message': 'Password:',
-                'validate': lambda val: 'Password should be not be empty'
-                if len(val) == 0 else True,
+                'validate': lambda val: True if len(val)
+                    else 'Password should be not be empty'
             },
         ])
-        app.crawler.login(answer['email'], answer['password'])
+        crawler.login(answer['email'], answer['password'])
     # end if
 # end def

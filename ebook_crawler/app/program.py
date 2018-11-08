@@ -4,6 +4,7 @@
 The main entry point of the program
 """
 import logging
+from ..utils.crawler import Crawler
 
 from .login import login
 from .novel_info import novel_info
@@ -13,6 +14,7 @@ from .download_chapters import download_chapters
 from .bind_books import bind_books
 
 class Program:
+    crawler = Crawler()
     logger = logging.getLogger('CRAWLER_APP')
 
     def run(self, crawler):
@@ -23,7 +25,7 @@ class Program:
 
         try:
             if self.crawler.supports_login:
-                login(self)
+                login(crawler)
             # end if
 
             novel_info(self)

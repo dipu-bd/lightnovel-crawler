@@ -4,7 +4,6 @@
 To select chapters to download
 """
 from PyInquirer import prompt
-
 from ..utils.validators import validateNumber
 
 def chapter_range(app):

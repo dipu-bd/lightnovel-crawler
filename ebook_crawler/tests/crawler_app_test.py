@@ -6,8 +6,8 @@ Crawler application
 import random
 import logging
 from time import sleep
-from ebook_crawler.app.crawler import Crawler
-from ebook_crawler.app.crawler_app import CrawlerApp
+from ebook_crawler.app import run_app
+from ebook_crawler.utils.crawler import Crawler
 
 
 class TestCrawler(Crawler):
@@ -69,11 +69,6 @@ class TestCrawler(Crawler):
     # end def
 # end class
 
-
-class TestCrawlerApp(CrawlerApp):
-    crawler = TestCrawler()
-# end class
-
 def test():
     logging.basicConfig(level=logging.DEBUG)
 
@@ -81,7 +76,7 @@ def test():
     print(' RUNNING TESTS ')
     print('-' * 80)
 
-    TestCrawlerApp().start()
+    run_app(TestCrawler())
 # end def
 
 
