@@ -5,3 +5,4 @@ geckodriver.log
 build
 dist
 *.egg-info
+Test Novel

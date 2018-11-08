@@ -56,17 +56,12 @@ class WebnovelCrawler(Crawler):
         if 'volumeItems' in data['data']:
             for vol in data['data']['volumeItems']:
                 title = vol['name'].strip()
-                if not (title and re.match(r'volume \d+', title.lower())):
-                    name = title
-                    title = 'Volume %d' % vol['index']
-                    title += (' - ' + name) if name else ''
-                # end if
                 self.volumes.append({
                     'id': vol['index'],
                     'title': title,
                 })
                 for chap in vol['chapterItems']:
-                    chap['volume'] = title
+                    chap['volume'] = vol['index']
                     chapters.append(chap)
                 # end if
             # end for
@@ -83,13 +78,11 @@ class WebnovelCrawler(Crawler):
         logger.info('%d volumes found', len(self.volumes))
 
         for i, chap in enumerate(chapters):
-            title = 'Chapter '
             self.chapters.append({
                 'id': i + 1,
-                'title': 'Chapter %d - %s' % (i + 1, chap['name']),
+                'title': chap['name'].strip(),
                 'url': chapter_body_url % (self.csrf, self.novel_id, chap['id']),
-                'volume': chap['volume'] if 'volume' in chap\
-                    else 'Volume %d' % (1 + i // 100),
+                'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
             })
         # end for
         logger.debug(self.chapters)
@@ -133,14 +126,3 @@ class WebnovelCrawler(Crawler):
         return body.strip()
     # end def
 # end class
-
-
-class WebnovelCrawlerApp(CrawlerApp):
-    crawler = WebnovelCrawler()
-# end class
-
-
-if __name__ == '__main__':
-    WebnovelCrawlerApp().start()
-# end if
-

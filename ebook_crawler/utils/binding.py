@@ -57,85 +57,67 @@ def bind_epub_book(app, chapters, volume=''):
     os.makedirs(epub_path, exist_ok=True)
     epub.write_epub(file_path, book, {})
     logger.warn('Created: %s.epub', bool_title)
+    return file_path
 # end def
 
-def novel_to_mobi(input_path):
-    input_path = os.path.abspath(input_path)
-    epub_path = os.path.join(input_path, 'epub')
-    if not os.path.exists(epub_path):
+def epub_to_mobi(epub_file):
+    if not os.path.exists(epub_file):
         return
     # end if
+
+    epub_path = os.path.dirname(epub_file)
+    input_path = os.path.dirname(epub_path)
     mobi_path = os.path.join(input_path, 'mobi')
-    os.makedirs(mobi_path, exist_ok=True)
+    epub_file_name = os.path.basename(epub_file)
+    mobi_file_name = epub_file_name.replace('.epub', '.mobi')
+    mobi_file_in_epub_path = os.path.join(epub_path, mobi_file_name)
+    mobi_file = os.path.join(mobi_path, mobi_file_name)
 
-    # Convert to mobi format
-    no_kindlegen = False
+    fallback = None
     devnull = open(os.devnull, 'w')
-    for file_name in sorted(os.listdir(epub_path)):
-        if not file_name.endswith('.epub'):
-            continue
+    try:
+        kindlegen = None
+        os_name = platform.system()
+        if os_name == 'Linux':
+            kindlegen = KINDLEGEN_PATH_LINUX
+        elif os_name == 'Darwin':
+            kindlegen = KINDLEGEN_PATH_MAC
+        elif os_name == 'Windows':
+            kindlegen = KINDLEGEN_PATH_WINDOWS
+        else:
+            fallback = 'KindleGen does not support this OS.'
         # end if
+        kindlegen = os.path.join('ebook_crawler', 'ext', kindlegen)
+        subprocess.call(
+            [ os.path.abspath(kindlegen), epub_file ],
+            stdout=devnull,
+            stderr=devnull,
+        )
+    except Exception as ex:
+        fallback = '%s' % ex
+    # end try
 
-        epub_file = os.path.join(epub_path, file_name)
-
-        fallback = False
+    if fallback:
         try:
-            kindlegen = None
-            os_name = platform.system()
-            if os_name == 'Linux':
-                kindlegen = KINDLEGEN_PATH_LINUX
-            elif os_name == 'Darwin':
-                kindlegen = KINDLEGEN_PATH_MAC
-            elif os_name == 'Windows':
-                kindlegen = KINDLEGEN_PATH_WINDOWS
-            else:
-                logger.error('KindleGen does not support this OS.')
-                continue
-            # end if
-            kindlegen = os.path.join('ebook_crawler', 'ext', kindlegen)
             subprocess.call(
-                [ os.path.abspath(kindlegen), epub_file ],
+                [ 'kindlegen', epub_file ],
                 stdout=devnull,
                 stderr=devnull,
             )
-        except Exception as ex:
-            fallback = True
-            logger.debug(ex)
-        # end try
-
-        if fallback:
-            try:
-                subprocess.call(
-                    [ 'kindlegen', epub_file ],
-                    stdout=devnull,
-                    stderr=devnull,
-                )
-            except (OSError, Exception) as err:
-                no_kindlegen = no_kindlegen or (
-                    err[1].errno == errno.ENOENT
-                    if err is OSError else False
-                )
-            # end tr
-        # end if
-
-        mobi_filename = file_name.replace('.epub', '.mobi')
-        if os.path.exists(os.path.join(epub_path, mobi_filename)):
-            logger.warn('Created %s', mobi_filename)
-            os.rename(
-                os.path.join(epub_path, mobi_filename),
-                os.path.join(mobi_path, mobi_filename),
+        except (OSError, Exception) as err:
+            no_kindlegen = no_kindlegen or (
+                err[1].errno == errno.ENOENT
+                if err is OSError else False
             )
-        else:
-            logger.error('Failed to convert %s', epub_file)
-        # end if
-    # end for
-    
-    if no_kindlegen:
-        logger.warn('')
-        logger.warn('kindlegen required to generate .mobi files!')
-        logger.warn('Install it from:')
-        logger.warn('   https://www.amazon.com/gp/feature.html?ie=UTF8&docId=1000765211')
-        logger.warn('')
+        # end try
+    # end if
+
+    if os.path.exists(mobi_file_in_epub_path):
+        os.makedirs(mobi_path, exist_ok=True)
+        os.rename(mobi_file_in_epub_path, mobi_file)
+        logger.warn('Created %s', mobi_file_name)
+    else:
+        logger.error('Failed to generate mobi for %s', epub_file_name)
     # end if
 # end def
 

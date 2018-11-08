@@ -7,11 +7,8 @@ import json
 import logging
 import re
 from concurrent import futures
-
 from bs4 import BeautifulSoup
-
-from .app.crawler import Crawler
-from .app.crawler_app import CrawlerApp
+from .models.crawler import Crawler
 
 logger = logging.getLogger('LNMTL')
 
@@ -105,11 +102,6 @@ class LNTMLCrawler(Crawler):
             for i, vol in enumerate(volumes):
                 title = re.sub(r'[^\u0000-\u00FF]', '', vol['title'])
                 title = re.sub(r'\(\)', '', title).strip()
-                if not (title and re.match(r'volume \d+', title.lower())):
-                    name = title
-                    title = 'Volume %d' % (i + 1)
-                    title += (' - ' + name) if name else ''
-                # end if
                 self.volumes.append({
                     'id': vol['id'],
                     'title': title,
@@ -145,12 +137,11 @@ class LNTMLCrawler(Crawler):
         result = self.get_response(url).json()
         page_url = result['next_page_url']
         for chapter in result['data']:
-            title = 'Chapter #%s - %s' % (chapter['position'], chapter['title'])
             self.chapters.append({
-                'title': title,
                 'url': chapter['site_url'],
                 'id': int(chapter['position']),
-                'volume': self.volumes[vol_index]['title'],
+                'title': chapter['title'].strip(),
+                'volume': vol_index,
             })
         # end for
         if result['current_page'] == 1:
@@ -185,13 +176,3 @@ class LNTMLCrawler(Crawler):
         return text.strip()
     # end def
 # end class
-
-
-class LNMTLCrawlerApp(CrawlerApp):
-    crawler = LNTMLCrawler()
-# end class
-
-
-if __name__ == '__main__':
-    LNMTLCrawlerApp().start()
-# end if

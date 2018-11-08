@@ -32,7 +32,7 @@ class Crawler:
     Each item must contain these keys:
     `id` - the index of the chapter
     `title` - the title name
-    `volume` - the volume title
+    `volume` - the volume id of this chapter
     `url` - the link where to download the chapter
     `name` - the chapter name, e.g: 'Chapter 3' or 'Chapter 12 (Special)'
     '''
@@ -56,7 +56,7 @@ class Crawler:
         pass
     # end def
 
-    def read_novel_info(self):
+    def read_novel_info(self, url):
         '''Get novel title, autor, cover etc'''
         pass
     # end def
