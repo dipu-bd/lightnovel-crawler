@@ -14,7 +14,8 @@ from .app.crawler import Crawler
 from .app.crawler_app import CrawlerApp
 from .app.parser import Parser
 
-logger = logging.getLogger('LNMTL')
+LOGGER = logging.getLogger('LNMTL')
+
 home_url = 'https://lnmtl.com'
 login_url = 'https://lnmtl.com/auth/login'
 logout_url = 'https://lnmtl.com/auth/logout'
@@ -67,7 +68,7 @@ class LNTMLParser(Parser):
         body = self.soup.select('.chapter-body .translated')
         body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
-        return body
+        return body.strip()
     # end def
 
     def format_text(self, text):
@@ -90,66 +91,61 @@ class LNTMLCrawler(Crawler):
     def login(self, email, password):
         '''login to LNMTL'''
         # Get the login page
-        logger.debug('Visiting %s', login_url)
+        LOGGER.info('Visiting %s', login_url)
         response = self.get_response(login_url)
-        self.headers['cookie'] = '; '.join(
-            [x.name + '=' + x.value for x in response.cookies])
-        # Send post request to login
         parser = LNTMLParser(response.text)
-        logger.debug('Logging in...')
+        # Send post request to login
+        LOGGER.info('Logging in...')
         response = self.submit_form(
             login_url,
             email=email,
             password=password,
             _token=parser.get_login_token(),
         )
-        # Update the cookies
-        self.headers['cookie'] = '; '.join(
-            [x.name + '=' + x.value for x in response.cookies])
         # Check if logged in successfully
-        if LNTMLParser(response.text).has_logout_button():
-            logger.warning('Logged in')
+        parser = LNTMLParser(response.text)
+        if parser.has_logout_button():
+            LOGGER.warning('Logged in')
         else:
-            LNTMLParser(response.text).print_body()
-            logger.warning('Failed to login')
+            parser.print_body()
+            LOGGER.error('Failed to login')
         # end if
     # end def
 
     def logout(self):
         '''logout as a good citizen'''
-        logger.debug('Logging out...')
+        LOGGER.debug('Logging out...')
         response = self.get_response(logout_url)
-        if LNTMLParser(response.text).has_logout_button():
-            logger.warning('Failed to logout.')
+        parser = LNTMLParser(response.text)
+        if parser.has_logout_button():
+            LOGGER.error('Failed to logout.')
         else:
-            logger.warning('Logged out.')
+            LOGGER.warning('Logged out.')
         # end if
     # end def
 
     def read_novel_info(self, url):
         '''get list of chapters'''
-        logger.debug('Visiting %s', url)
+        LOGGER.info('Visiting %s', url)
         response = self.get_response(url)
         parser = LNTMLParser(response.text)
         self.novel_title = parser.get_title()
+        LOGGER.info('Novel title = %s', self.novel_title)
         self.novel_cover = parser.get_cover()
-        self.volumes = [
-            {'id': vol['id'], 'title': vol['title']}
-            for vol in parser.get_volumes()
-        ]
-        logger.debug(self.volumes)
-        logger.warning('%d volumes found. Loading chapters...',
-                       len(self.volumes))
-        self.download_chapter_list()
-    # end def
-
-    def download_chapter(self, chapter):
-        logger.debug('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        parser = LNTMLParser(response.text)
-        body = parser.get_chapter_body()
-        return '<h1>%s</h1><h2>%s</h1>\n%s' % (
-            chapter['name'], chapter['title'], body)
+        LOGGER.info('Novel cover = %s', self.novel_cover)
+        self.volumes = []
+        for i, vol in enumerate(parser.get_volumes()):
+            title = re.sub(r'[^\u0000-\u00FF]', '', vol['title'])
+            title = re.sub(r'\(\)', '', title).strip()
+            mdash = ' - ' if len(title) > 0 else ''
+            title = 'Volume %d%s%s' % (i + 1, mdash, title)
+            self.volumes.append({
+                'id': vol['id'],
+                'title': title,
+            })
+        # end for
+        LOGGER.debug(self.volumes)
+        LOGGER.info('%d volumes found.', len(self.volumes))
     # end def
 
     def download_chapter_list(self):
@@ -167,24 +163,21 @@ class LNTMLCrawler(Crawler):
             futures.wait(future.result())
         # end for
         self.chapters = sorted(self.chapters, key=lambda x: int(x['id']))
-        logger.debug(self.chapters)
-        logger.warning('[%s] %d chapters found',
-                       self.novel_title, len(self.chapters))
+        LOGGER.debug(self.chapters)
+        LOGGER.info('%d chapters found', len(self.chapters))
     # end def
 
     def download_chapter_list_of_volume(self, vol_index, page_url):
         vol_id = self.volumes[vol_index]['id']
         url = '%s&volumeId=%s' % (page_url, vol_id)
-        logger.debug('Visiting %s', url)
+        LOGGER.info('Visiting %s', url)
         result = self.get_response(url).json()
         page_url = result['next_page_url']
         for chapter in result['data']:
-            special = '(Special)' if chapter['is_special'] == '1' else ''
-            chapter_name = 'Chapter #%s%s' % (chapter['number'], special)
+            title = 'Chapter #%s - %s' % (chapter['position'], chapter['title'])
             self.chapters.append({
                 'id': int(chapter['position']),
-                'name': chapter_name,
-                'title': chapter['title'],
+                'title': title,
                 'url': chapter['site_url'],
                 'volume': self.volumes[vol_index]['title'],
             })
@@ -200,6 +193,13 @@ class LNTMLCrawler(Crawler):
             }
         # end if
         return {}
+    # end def
+
+    def download_chapter_body(self, url):
+        LOGGER.info('Downloading %s', url)
+        response = self.get_response(url)
+        parser = LNTMLParser(response.text)
+        return parser.get_chapter_body()
     # end def
 # end class
 

@@ -44,22 +44,31 @@ class SampleParser(Parser):
 class SampleCrawler(Crawler):
     @property
     def supports_login(self):
+        '''Whether the crawler supports login() and logout method'''
         return False
     # end def
 
     def login(self, email, password):
+        '''Login and update cookies in `headers`'''
         pass
     # end def
 
     def logout(self):
+        '''Logout and update cookies in `headers`'''
         pass
     # end def
 
     def read_novel_info(self):
+        '''Get novel title, autor, cover etc'''
         pass
     # end def
 
-    def download_chapter(self, url):
+    def download_chapter_list(self):
+        '''Download list of chapters and volumes.'''
+        pass
+
+    def download_chapter_body(self, url):
+        '''Download body of a single chapter and return as clean html format.'''
         pass
     # end def
 # end class

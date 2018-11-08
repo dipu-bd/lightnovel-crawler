@@ -19,8 +19,8 @@ from progress.spinner import Spinner
 from PyInquirer import prompt
 
 from .binding import bind_epub_book, novel_to_mobi
-from .helper import clean_filename, retrieve_image
 from .validators import validateNumber
+from .helper import retrieve_image
 
 logger = logging.getLogger('CRAWLER_APP')
 
@@ -37,16 +37,20 @@ class CrawlerApp:
             if self.crawler.supports_login:
                 self.login()
             # end if
-            self.novel_info()
 
+            self.novel_info()
             self.chapter_range()
             self.additional_configs()
             self.download_chapters()
 
+            if self.crawler.supports_login:
+                self.crawler.logout()
+            # end if
+
             self.bind_books()
         except Exception as ex:
             logger.error(ex)
-            raise ex
+            raise ex # TODO: suppress error
         # end try
     # end def
 
@@ -90,48 +94,94 @@ class CrawlerApp:
                 if len(val) == 0 else True,
             },
         ])
+
+        logger.warn('Getting novel info...')
         self.crawler.read_novel_info(answer['novel'].strip())
-        self.output_path = clean_filename(self.crawler.novel_title)
+        self.output_path = re.sub(r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
+        self.output_path = os.path.abspath(self.output_path)
+
+        if os.path.exists(self.output_path):
+            answer = prompt([
+                {
+                    'type': 'confirm',
+                    'name': 'fresh',
+                    'message': 'Detected existing folder. Replace it?',
+                    'default': False,
+                },
+            ])
+            if answer['fresh']:
+                shutil.rmtree(self.output_path)
+            # end if
+        # end if
+        os.makedirs(self.output_path, exist_ok=True)
+
+        logger.warn('Getting chapters...')
+        try:
+            file_name = os.path.join(self.output_path, 'meta.json')
+            if os.path.exists(file_name):
+                with open(file_name, 'r') as file:
+                    logger.info('Loading metadata')
+                    data = json.load(file)
+                    self.crawler.volumes = data['volumes']
+                    self.crawler.chapters = data['chapters']
+                # end with
+            if len(self.crawler.chapters) == 0:
+                logger.info('Fetching chapters')
+                self.crawler.download_chapter_list()
+                data = {
+                    'title': self.crawler.novel_title,
+                    'author': self.crawler.novel_author,
+                    'cover': self.crawler.novel_cover,
+                    'volumes': self.crawler.volumes,
+                    'chapters': self.crawler.chapters,
+                }
+                with open(file_name, 'w') as file:
+                    logger.info('Writing metadata: %s', file_name)
+                    json.dump(data, file, indent=2)
+                # end with
+            # end if
+        except Exception as ex:
+            logger.error('Failed to get chapters: %s', ex)
+        # end try
     # end def
 
+
     def chapter_range(self):
-        choices = [
-            'Last 10 chapters',
-            'First 10 chapters',
-            'Everything!',
-            'Custom range using URL',
-            'Custom range using index',
-            'Select specific volumes',
-            'Select specific chapters (warning: a large list will be displayed)'
-        ]
+        length = len(self.crawler.chapters)
+        choices = {
+            'Everything! (%d chapters)' % length: (lambda x: x),
+            'Custom range using URL': self.range_using_urls,
+            'Custom range using index': self.range_using_index,
+            'Select specific volumes': self.range_from_volumes,
+            'Select specific chapters %s' % ('(warn: very big list)' if length > 50 else '')
+                : self.range_from_chapters,
+        }
+        if length >= 20:
+            choices.update({
+                'First 10 chapters': (lambda x: x[:10]),
+                'Last 10 chapters': (lambda x: x[-10:]),
+            })
+        # end if
+
         answer = prompt([
             {
                 'type': 'list',
                 'name': 'choice',
                 'message': 'Which chapters to download?',
-                'choices': choices
+                'choices': choices.keys()
             },
         ])
-        if choices[0] == answer['choice']:
-            pass
-        elif choices[1] == answer['choice']:
-            self.chapters = self.crawler.chapters[-10:]
-        elif choices[2] == answer['choice']:
-            self.chapters = self.crawler.chapters[:10]
-        elif choices[3] == answer['choice']:
-            self.range_using_urls()
-        elif choices[4] == answer['choice']:
-            self.range_using_index()
-        elif choices[5] == answer['choice']:
-            self.range_from_volumes()
-        elif choices[6] == answer['choice']:
-            self.range_from_chapters()
+        self.chapters = choices[answer['choice']](self.crawler.chapters) or []
+        logger.debug('Selected chapters to download:')
+        logger.debug(self.chapters)
+        logger.info('%d chapters to be downloaded', len(self.chapters))
+
+        if not len(self.chapters):
+            raise Exception('No chapters selected')
         # end if
-        logger.debug('Selected chapters to download')
-        logger.debug(self.crawler.chapters)
     # end def
 
-    def range_using_urls(self):
+    def range_using_urls(self, *args):
         answer = prompt([
             {
                 'type': 'input',
@@ -162,10 +212,10 @@ class CrawlerApp:
         if stop < start:
             start, stop = stop, start
         # end if
-        self.chapters = self.crawler.chapters[start:(stop + 1)]
+        return self.crawler.chapters[start:(stop + 1)]
     # end def
 
-    def range_using_index(self):
+    def range_using_index(self, *args):
         length = len(self.crawler.chapters)
         answer = prompt([
             {
@@ -187,10 +237,10 @@ class CrawlerApp:
             },
         ])
         stop = answer['stop']
-        self.chapters = self.crawler.chapters[start:(stop + 1)]
+        return self.crawler.chapters[start:(stop + 1)]
     # end def
 
-    def range_from_volumes(self):
+    def range_from_volumes(self, *args):
         answer = prompt([
             {
                 'type': 'checkbox',
@@ -205,16 +255,13 @@ class CrawlerApp:
             }
         ])
         selected = answer['volumes']
-        chapters = [
+        return [
             chap for chap in self.crawler.chapters
             if selected.count(chap['volume']) > 0
         ]
-        self.crawler.start_index = 0
-        self.crawler.stop_index = len(chapters)
-        self.chapters = chapters
     # end def
 
-    def range_from_chapters(self):
+    def range_from_chapters(self, *args):
         answer = prompt([
             {
                 'type': 'checkbox',
@@ -232,13 +279,10 @@ class CrawlerApp:
             int(val.split(' ')[0]) - 1
             for val in answer['chapters']
         ]
-        chapters = [
+        return [
             chap for chap in self.crawler.chapters
             if selected.count(chap['id']) > 0
         ]
-        self.crawler.start_index = 0
-        self.crawler.stop_index = len(chapters)
-        self.chapters = chapters
     # end def
 
     def additional_configs(self):
@@ -249,7 +293,7 @@ class CrawlerApp:
             #     'choices': [
             #        { 'name': 'JSON', 'checked': True },
             #        { 'name': 'EPUB', 'checked': True },
-            #        { 'name': 'MOBI' },
+            #        { 'name': 'MOBI', 'checked': True  },
             #         # Plan for future
             #         #{ 'name': 'HTML' },
             #         #{ 'name': 'TEXT' },
@@ -263,46 +307,34 @@ class CrawlerApp:
             # },
             {
                 'type': 'confirm',
-                'name': 'fresh',
-                'message': 'Replace old downloads?',
-                'default': False,
-            },
-            {
-                'type': 'confirm',
                 'name': 'volume',
                 'message': 'Generate separate files for each volumes?',
                 'default': True,
             },
         ])
         # self.formats = answer['formats']
-        self.remove_old = answer['fresh']
         self.pack_by_volume = answer['volume']
     # end def
 
     def download_chapters(self):
-        if self.remove_old and os.path.exists(self.output_path):
-            shutil.rmtree(self.output_path)
-        # end if
-        os.makedirs(self.output_path, exist_ok=True)
-
         if self.crawler.novel_cover is not None:
+            logger.warn('Getting cover image...')
             try:
-                bar = Spinner('Downloading cover image')
-                bar.start()
                 filename = self.crawler.novel_cover.split('/')[-1]
                 filename = os.path.join(self.output_path, filename)
-                retrieve_image(self.crawler.novel_cover, filename)
                 self.book_cover = filename
-                bar.finish()
-                logger.info('Saved cover: %s', filename)
+                if not os.path.exists(self.book_cover):
+                    logger.info('Downloading cover image')
+                    retrieve_image(self.crawler.novel_cover, filename)
+                    logger.info('Saved cover: %s', filename)
+                # end if
             except Exception as ex:
-                bar.finish()
                 self.book_cover = None
-                logger.warning('Failed to add cover: %s', ex)
+                logger.error('Failed to get cover: %s', ex)
             # end try
+        else:
+            logger.warn('No cover image.')
         # end if
-
-        self.save_metadata()
 
         bar = IncrementalBar('Downloading chapters', max=len(self.chapters))
         bar.start()
@@ -311,19 +343,28 @@ class CrawlerApp:
             if self.pack_by_volume:
                 dir_name = os.path.join(dir_name, chapter['volume'])
             # end if
+            os.makedirs(dir_name, exist_ok=True)
+
             chapter_name = str(chapter['id']).rjust(5, '0')
             file_name = os.path.join(dir_name, chapter_name + '.json')
 
+            chapter['body'] = ''
             if os.path.exists(file_name):
                 logger.info('Restoring from %s', file_name)
                 with open(file_name, 'r') as file:
                     old_chapter = json.load(file)
                     chapter['body'] = old_chapter['body']
                 # end with
-            else:
+            if len(chapter['body']) == 0:
                 logger.info('Downloading to %s', file_name)
-                chapter['body'] = self.crawler.download_chapter(chapter)
-                os.makedirs(dir_name, exist_ok=True)
+                body = self.crawler.download_chapter_body(chapter['url'])
+                if len(body) == 0:
+                    bar.clearln()
+                    logger.error('Body is empty: %s', chapter['url'])
+                else:
+                    chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
+                        chapter['volume'], chapter['title'], body)
+                # end if
                 with open(file_name, 'w') as file:
                     file.write(json.dumps(chapter))
                 # end with
@@ -333,40 +374,28 @@ class CrawlerApp:
         bar.finish()
     # end def
 
-    def save_metadata(self):
-        data = {
-            'title': self.crawler.novel_title,
-            'author': self.crawler.novel_author,
-            'cover': self.crawler.novel_cover,
-            'volumes': self.crawler.volumes,
-            'chapters': self.crawler.chapters,
-        }
-        file_name = os.path.join(self.output_path, 'meta.json')
-        with open(file_name, 'w') as file:
-            logger.info('Writing metadata: %s', file_name)
-            json.dump(data, file, indent=2)
-        # end with
-    # end def
-
     def bind_books(self):
         if self.pack_by_volume:
+            for i, vol in enumerate(self.crawler.volumes):
+                chapters = [
+                    x for x in self.chapters
+                    if x['volume'] == vol['title'] and len(x['body']) > 0
+                ]
+                if len(chapters) > 0:
+                    bind_epub_book(
+                        self,
+                        chapters=chapters,
+                        volume='Volume %d' % (i + 1),
+                    )
+                # end if
+            # end for
+        else:
             bind_epub_book(
                 self,
                 chapters=self.chapters,
             )
-        else:
-            for vol in self.crawler.volumes:
-                chapters = [
-                    x for x in self.chapters
-                    if x['volume'] == vol['title']
-                ]
-                bind_epub_book(
-                    self,
-                    chapters=chapters,
-                    volume=vol['title'],
-                )
-            # end for
         # end if
+
         novel_to_mobi(self.output_path)
     # end def
 # end class
