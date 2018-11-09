@@ -56,6 +56,7 @@ def retrieve_chapter_list(crawler, output_path):
 
 def format_volume_list(crawler):
     for vol in crawler.volumes:
+        vol['chapter_count'] = 0
         title = 'Volume %d' % vol['id']
         vol['title'] = vol['title'] or title
         if not re.search(r'vol(ume)? .?\d+', vol['title'], re.IGNORECASE):
@@ -77,6 +78,7 @@ def format_chapter_list(crawler):
         for vol in crawler.volumes:
             if vol['id'] == item['volume']:
                 item['volume_title'] = vol['title']
+                vol['chapter_count'] += 1
                 break
             # end if
         # end for
@@ -98,7 +100,7 @@ def save_metadata(crawler, output_path):
 # end def
 
 def novel_info(app):
-    app.logger.warn('Retrieving novel info...')
+    app.logger.info('Retrieving novel info...')
     app.crawler.read_novel_info(get_novel_url())
 
     app.logger.info('Checking output path...')
@@ -106,7 +108,7 @@ def novel_info(app):
         re.sub(r'[\\/*?:"<>|\']', '', app.crawler.novel_title))
     check_output_path(app.output_path)
 
-    app.logger.warn('Getting chapters...')
+    app.logger.info('Getting chapters...')
     retrieve_chapter_list(app.crawler, app.output_path)
 
     format_volume_list(app.crawler)

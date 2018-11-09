@@ -94,15 +94,15 @@ class Crawler:
     # Helper methods to be used
     # ------------------------------------------------------------------------- #
     @property
-    def cookies(self):
-        return {x.name: x for x in self.scrapper.cookies}
-    # end def
-    
-    @property
     def headers(self):
         return self.scrapper.headers.copy()
     # end def
 
+    @property
+    def cookies(self):
+        return { x.name: x.value for x in self.scrapper.cookies }
+    # end def
+    
     def get_response(self, url, incognito=False):
         response = self.scrapper.get(url)
         self.cookies.update({
