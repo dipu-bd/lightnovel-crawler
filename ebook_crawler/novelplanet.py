@@ -11,7 +11,7 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_PLANET')
 
-home_url = 'https://novelplanet.com/'
+home_url = 'https://novelplanet.com'
 
 class NovelPlanetCrawler(Crawler):
     @property
@@ -31,15 +31,14 @@ class NovelPlanetCrawler(Crawler):
     def read_novel_info(self, url):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', url)
-        response = self.get_response_cf(url)
+        response = self.get_response(url)
         soup = BeautifulSoup(response.content, 'lxml')
 
         self.novel_title = soup.find('a',{'class':'title'}).text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = 'https://novelplanet.com' + soup.find("div", {"class": "post-previewInDetails"}).img['src']
+        self.novel_cover = home_url + soup.select_one('.post-previewInDetails img')['src']
         logger.info('Novel cover: %s', self.novel_cover)
-        print(self.novel_cover)
 
         for span in soup.findAll("span", {"class": "infoLabel"}):
             if span.text == 'Author:':
@@ -80,9 +79,11 @@ class NovelPlanetCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response_cf(chapter['url'])
+        response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.content, 'lxml')
-        print(soup.title.string)
+
+        logger.debug(soup.title.string)
+
         content = soup.select('p')
         body_parts = ''.join([str(p.extract()) for p in content if p.text.strip()])
 

@@ -7,7 +7,6 @@ import json
 import os
 from concurrent import futures
 from progress.bar import IncrementalBar
-from ..utils.helper import retrieve_image
 
 
 def download_chapters(app):
@@ -19,7 +18,7 @@ def download_chapters(app):
             filename = os.path.join(app.output_path, filename)
             if not os.path.exists(filename):
                 app.logger.info('Downloading cover image')
-                retrieve_image(app.crawler.novel_cover, filename)
+                app.crawler.download_cover(filename)
                 app.logger.info('Saved cover: %s', filename)
                 app.book_cover = filename
             # end if
@@ -32,6 +31,11 @@ def download_chapters(app):
 
     bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
     bar.start()
+
+    if os.getenv('debug_mode'):
+        bar.next = lambda: None
+    # end if
+
     futures_to_check = {
         app.crawler.executor.submit(
             download_chapter_body,
