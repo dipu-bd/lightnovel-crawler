@@ -45,6 +45,14 @@ class Crawler:
     # Implement these methods
     # ------------------------------------------------------------------------- #
 
+    def initialize(self):
+        pass
+    # end def
+
+    def dispose(self):
+        pass
+    # end def
+
     @property
     def supports_login(self):
         '''Whether the crawler supports login() and logout method'''

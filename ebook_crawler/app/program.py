@@ -18,10 +18,9 @@ class Program:
     logger = logging.getLogger('CRAWLER_APP')
 
     def run(self, crawler):
-        if not crawler:
-            return
-        # end if
         self.crawler = crawler
+
+        self.crawler.initialize()
 
         if self.crawler.supports_login:
             login(crawler)
@@ -37,5 +36,7 @@ class Program:
         # end if
 
         bind_books(self)
+
+        self.crawler.dispose()
     # end def
 # end class

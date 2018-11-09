@@ -6,5 +6,7 @@ Interactive application to take user inputs
 from .program import Program
 
 def run_app(crawler):
-    Program().run(crawler)
+    if crawler:
+        Program().run(crawler)
+    # end if
 # end def
