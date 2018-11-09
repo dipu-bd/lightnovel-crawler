@@ -14,6 +14,16 @@ from .wuxia import WuxiaCrawler
 # from .readln import ReadLightNovelCrawler
 # from .novelplanet import NovelPlanetCrawler
 
+choices = {
+    'https://lnmtl.com': LNMTLCrawler,
+    'https://www.webnovel.com': WebnovelCrawler,
+    'https://www.wuxiaworld.com': WuxiaCrawler,
+    'https://www.readlightnovel.org': None,
+    'https://novelplanet.com': None,
+    'https://www.wuxiaworld.co': None,
+    'https://boxnovel.com': None,
+}
+
 def configure():
     mode = sys.argv[1].lower() if len(sys.argv) > 1 else None
     if mode == '-v' or mode == '--verbose':
@@ -38,18 +48,6 @@ def headline():
 # end def
 
 def get_choice():
-    not_implemented = lambda: print('\n  Not yet implemented  \n') or None
-
-    choices = {
-        'https://lnmtl.com': LNMTLCrawler,
-        'https://www.webnovel.com': WebnovelCrawler,
-        'https://www.wuxiaworld.com': WuxiaCrawler,
-        'https://www.readlightnovel.org': not_implemented,
-        'https://novelplanet.com': not_implemented,
-        'https://www.wuxiaworld.co': not_implemented,
-        'https://boxnovel.com': not_implemented,
-    }
-
     answer = prompt([
         {
             'type': 'list',
@@ -59,7 +57,12 @@ def get_choice():
         },
     ])
 
-    return choices[answer['source']]()
+    choice = choices[answer['source']]
+    if not choice:
+        print('\n  Not yet implemented  \n')
+        return None
+    # end if
+    return choice()
 # end def
 
 def main():
@@ -72,7 +75,11 @@ def main():
             crawler = get_choice()
             run_app(crawler)
             error = False
-        except:
+            print('-' * 80, end='\n\n')
+            print('Bye... Come back soon!')
+            break
+        except Exception as ex:
+            raise ex # TODO: remove when on production
             if error:
                 break
             else:
