@@ -4,6 +4,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
 [![PyPI - Format](https://img.shields.io/pypi/format/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
 [![PyPI - Status](https://img.shields.io/pypi/status/ebook-crawler.svg)](https://pypi.org/project/ebook-crawler)
+[![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
 <br>
 [![GitHub contributors](https://img.shields.io/github/contributors/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/pulls)
