@@ -58,7 +58,7 @@ def format_volume_list(crawler):
     for vol in crawler.volumes:
         title = 'Volume %d' % vol['id']
         vol['title'] = vol['title'] or title
-        if not re.search(r'volume .?\d+', vol['title'], re.IGNORECASE):
+        if not re.search(r'vol(ume)? .?\d+', vol['title'], re.IGNORECASE):
             vol['title'] = title + ' - ' + vol['title'].title()
         # end if
     # end for
@@ -68,7 +68,7 @@ def format_chapter_list(crawler):
     for item in crawler.chapters:
         title = 'Chapter #%d' % item['id']
         item['title'] = item['title'] or title
-        if not re.search(r'chapter .?\d+', item['title'], re.IGNORECASE):
+        if not re.search(r'ch(apter)? .?\d+', item['title'], re.IGNORECASE):
             item['title'] = title + ' - ' + item['title'].title()
         # end if
 
