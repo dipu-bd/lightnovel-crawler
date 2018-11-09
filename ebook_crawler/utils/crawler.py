@@ -3,8 +3,10 @@
 """
 Crawler application
 """
-import requests
 from concurrent import futures
+import cfscrape
+import requests
+
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
@@ -21,6 +23,7 @@ class Crawler:
     novel_title = 'N/A'
     novel_author = 'N/A'
     novel_cover = None
+    scrapper = None
 
     '''
     Each item must contain these keys:
@@ -85,6 +88,13 @@ class Crawler:
     # ------------------------------------------------------------------------- #
     # Helper methods to be used
     # ------------------------------------------------------------------------- #
+    def get_response_cf(self, url, incognito=False):
+        if self.scrapper==None:
+            self.scrapper = cfscrape.create_scraper()
+        response = self.scrapper.get(url)
+        return response
+    # end def
+
     def get_response(self, url, incognito=False):
         response = requests.get(
             url,
