@@ -18,10 +18,10 @@ choices = {
     'https://lnmtl.com': LNMTLCrawler,
     'https://www.webnovel.com': WebnovelCrawler,
     'https://www.wuxiaworld.com': WuxiaCrawler,
-    'https://www.readlightnovel.org': None,
-    'https://novelplanet.com': None,
-    'https://www.wuxiaworld.co': None,
-    'https://boxnovel.com': None,
+    # 'https://www.readlightnovel.org': None,
+    # 'https://novelplanet.com': None,
+    # 'https://www.wuxiaworld.co': None,
+    # 'https://boxnovel.com': None,
 }
 
 def configure():
