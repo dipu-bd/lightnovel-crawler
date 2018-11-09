@@ -18,24 +18,38 @@ Crawls lightnovels from popular websites and converts to ebook format (only EPUB
 
 ### Installation
 
-To use this app, you need to have python3 and node.js installed in your computer. You can install the package using either of the following methods:
+You must have `python3` and `pip` installed in your computer. Install the package using:
 
 ```bash
 $ pip install ebook-crawler
+
 # Or,
 $ python3 -m pip install --user ebook-crawler
 ```
 
-### Instructions
-
-*Open the console panel in a directory you want to download novels*. Your current directory is used to store downloaded data.
+*Open the console panel in a directory you want to download novels* and run:
 
 ```bash
 $ ebook_crawler
+```
 
-# With verbose output mode:
+For extra logs, there is verbose mode:
+```bash
 $ ebook_crawler --verbose
 ```
+
+### Dependencies
+
+#### MOBI Output
+
+- KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
+
+#### NodeJS for cloudflare
+
+Some websites like `novelplanet` needs `nodejs`. Install it from:
+
+- Downloads: https://nodejs.org/en/download/ 
+- Linux: `curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh`
 
 ### Available websites
 
@@ -51,20 +65,7 @@ The avaiable list of site handles are given below. *To request new site [create 
 - https://lnindo.org
 - https://www.idqidian.us
 
-### Additionals
-
-#### For MOBI Output
-
-- KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
-
-#### NodeJS
-
-Some websites like `novelplanet` needs `nodejs` to crawl data. Install it from:
-
-- Downloads: https://nodejs.org/en/download/ 
-- Linux: `curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh`
-
-#### And... be a good Netizen
+#### Be a good Netizen
 
 - Do not download too frequently from LNTML. They block your IP if too many consecutive request is observed.
 
@@ -72,13 +73,9 @@ Some websites like `novelplanet` needs `nodejs` to crawl data. Install it from:
 
 - This program has the capability to perform DDOS attacks that can cause a website to go down. Be a good netizen, and never do such a thing!
 
-## How to contribute
+## Adding new source
 
-To add new source:
-
-- First copy the `ebook_crawler/_sample.py` file.
-- Fill up the functions.
-- Import your file to `__init__.py` file.
-- Add your source url inside `main` method of `__init__.py` file.
+- Use the [`_sample.py`](https://github.com/dipu-bd/site-to-epub/blob/master/ebook_crawler/_sample.py) as blueprint.
+- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/site-to-epub/blob/master/ebook_crawler/__init__.py).
 
 That's all!
