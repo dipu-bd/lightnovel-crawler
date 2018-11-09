@@ -10,8 +10,8 @@ import cfscrape
 
 def retrieve_image(image_url, output_file):
     try:
-        scraper = cfscrape.create_scraper()
-        cfurl = scraper.get(output_file).content
+        scrapper = cfscrape.create_scraper()
+        cfurl = scrapper.get(image_url).content
         with open(output_file, 'wb') as f:
             f.write(cfurl)
         # end with

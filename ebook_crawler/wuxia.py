@@ -37,7 +37,7 @@ class WuxiaCrawler(Crawler):
         self.novel_title = soup.select_one('.section-content  h4').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one('.media-left img.media-object')['src']
+        self.novel_cover = home_url + soup.select_one('.media-left img.media-object')['src']
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select_one('.media-body dl dt').text
