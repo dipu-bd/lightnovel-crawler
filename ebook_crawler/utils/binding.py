@@ -88,9 +88,13 @@ def epub_to_mobi(epub_file):
         else:
             fallback = 'KindleGen does not support this OS.'
         # end if
-        kindlegen = os.path.join('ebook_crawler', 'ext', kindlegen)
+
+        dir_name = os.path.dirname(__file__)
+        kindlegen = os.path.join(dir_name, '..', 'ext', kindlegen)
+        kindlegen = os.path.abspath(kindlegen)
+
         subprocess.call(
-            [ os.path.abspath(kindlegen), epub_file ],
+            [ kindlegen, epub_file ],
             stdout=devnull,
             stderr=devnull,
         )

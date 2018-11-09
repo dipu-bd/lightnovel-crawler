@@ -31,7 +31,8 @@ crawler_list = {
     'https://www.idqidian.us': IdqidianCrawler,
 }
 
-with open('VERSION', 'r') as f:
+dir_name = os.path.dirname(__file__)
+with open(os.path.join(dir_name, '..', 'VERSION'), 'r') as f:
     __version__ = f.read().strip()
 # end with
 
