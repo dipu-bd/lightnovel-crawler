@@ -19,28 +19,23 @@ class Program:
 
     def run(self, crawler):
         if not crawler:
-            return self.logger.error('Crawler is not defined')
+            return
         # end if
         self.crawler = crawler
 
-        try:
-            if self.crawler.supports_login:
-                login(crawler)
-            # end if
+        if self.crawler.supports_login:
+            login(crawler)
+        # end if
 
-            novel_info(self)
-            chapter_range(self)
-            additional_configs(self)
-            download_chapters(self)
+        novel_info(self)
+        chapter_range(self)
+        additional_configs(self)
+        download_chapters(self)
 
-            if self.crawler.supports_login:
-                self.crawler.logout()
-            # end if
+        if self.crawler.supports_login:
+            self.crawler.logout()
+        # end if
 
-            bind_books(self)
-        except Exception as ex:
-            self.logger.error(ex)
-            raise ex  # TODO: suppress error
-        # end try
+        bind_books(self)
     # end def
 # end class

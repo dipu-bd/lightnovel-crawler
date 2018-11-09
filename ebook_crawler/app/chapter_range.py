@@ -8,12 +8,13 @@ from ..utils.validators import validateNumber
 
 def chapter_range(app):
     length = len(app.crawler.chapters)
+    vol_len = len(app.crawler.volumes)
     big_list_warn = '(warn: very big list)' if length > 50 else ''
     choices = {
         'Everything! (%d chapters)' % length: lambda x: x,
         'Custom range using URL': lambda x: range_using_urls(app),
         'Custom range using index': lambda x: range_using_index(app),
-        'Select specific volumes': lambda x: range_from_volumes(app),
+        'Select specific volumes (%d volumes)' % vol_len: lambda x: range_from_volumes(app),
         'Select specific chapters ' + big_list_warn: lambda x: range_from_chapters(app),
     }
     if length >= 20:
@@ -76,7 +77,7 @@ def range_using_index(app):
             'name': 'start',
             'message': 'Enter start index (1 to %d):' % length,
             'validate': lambda val: validateNumber(val, 1, length),
-            'filter': lambda val: int(val) - 1,
+            'filter': lambda val: int(val),
         },
     ])
     start = answer['start']
@@ -86,12 +87,12 @@ def range_using_index(app):
             'name': 'stop',
             'message': 'Enter final index (%d to %d):' % (start, length),
             'validate': lambda val: validateNumber(val, start, length),
-            'filter': lambda val: int(val) - 1,
+            'filter': lambda val: int(val),
         },
     ])
     stop = answer['stop']
     app.logger.debug('Selected range: %s to %s', start, stop)
-    return app.crawler.chapters[start:(stop + 1)]
+    return app.crawler.chapters[(start - 1):stop]
 # end def
 
 def range_from_volumes(app, times=0):

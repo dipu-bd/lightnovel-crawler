@@ -54,19 +54,20 @@ class WebnovelCrawler(Crawler):
         chapters = []
         if 'volumeItems' in data['data']:
             for vol in data['data']['volumeItems']:
-                title = vol['name'].strip()
+                vol_id = vol['index'] or (len(self.volumes) + 1)
+                vol_title = vol['name'].strip() or ('Volume %d' % vol_id)
                 self.volumes.append({
-                    'id': vol['index'],
-                    'title': title,
+                    'id': vol_id,
+                    'title': vol_title,
                 })
                 for chap in vol['chapterItems']:
-                    chap['volume'] = vol['index']
+                    chap['volume'] = vol_id
                     chapters.append(chap)
                 # end if
             # end for
         elif 'chapterItems' in data['data']:
             chapters = data['data']['chapterItems']
-            for vol in range(len(chapters) / 100):
+            for vol in range(len(chapters) // 100 + 1):
                 self.volumes.append({
                     'id': vol,
                     'title': 'Volume %d' % (vol + 1),

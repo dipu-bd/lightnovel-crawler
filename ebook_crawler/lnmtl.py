@@ -104,6 +104,7 @@ class LNMTLCrawler(Crawler):
                 title = re.sub(r'\(\)', '', title).strip()
                 self.volumes.append({
                     'title': title,
+                    'download_id': vol['id'],
                     'id': int(vol['number']),
                 })
             # end for
@@ -117,10 +118,10 @@ class LNMTLCrawler(Crawler):
         future_to_url = {
             self.executor.submit(
                 self.download_chapter_list_of_volume,
-                index,
+                volume,
                 page_url
-            ): index
-            for index in range(len(self.volumes))
+            ): volume['id']
+            for volume in self.volumes
         }
         for future in futures.as_completed(future_to_url):
             futures.wait(future.result())
@@ -130,8 +131,8 @@ class LNMTLCrawler(Crawler):
         logger.info('%d chapters found', len(self.chapters))
     # end def
 
-    def download_chapter_list_of_volume(self, vol_index, page_url):
-        vol_id = self.volumes[vol_index]['id']
+    def download_chapter_list_of_volume(self, volume, page_url):
+        vol_id = volume['download_id']
         url = '%s&volumeId=%s' % (page_url, vol_id)
         logger.info('Visiting %s', url)
         result = self.get_response(url).json()
@@ -141,14 +142,14 @@ class LNMTLCrawler(Crawler):
                 'url': chapter['site_url'],
                 'id': int(chapter['position']),
                 'title': chapter['title'].strip(),
-                'volume': vol_index,
+                'volume': volume['id'],
             })
         # end for
         if result['current_page'] == 1:
             return {
                 self.executor.submit(
                     self.download_chapter_list_of_volume,
-                    vol_index,
+                    volume,
                     '%s/chapter?page=%s' % (home_url, page + 1)
                 ): '%s-%s' % (vol_id, page)
                 for page in range(1, result['last_page'])

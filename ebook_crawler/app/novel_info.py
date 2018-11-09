@@ -55,27 +55,31 @@ def novel_info(app):
     else:
         require_saving = True
     # end if
+    
     if len(app.crawler.chapters) == 0:
         require_saving = True
         app.logger.info('Fetching chapters')
         app.crawler.download_chapter_list()
-        for item in app.crawler.volumes:
-            title = 'Volume %d' % item['id']
-            item['title'] = item['title'] or title
-            if not item['title'].lower().startswith('volume'):
-                item['title'] = title + ' - ' + item['title'].title()
-            # end if
-        # end for
-        for item in app.crawler.chapters:
-            title = 'Chapter #%d' % item['id']
-            item['title'] = item['title'] or title
-            if not item['title'].lower().startswith('chapter'):
-                item['title'] = title + ' - ' + item['title'].title()
-            # end if
-            item['volume'] = item['volume'] or (1 + (item['id'] - 1) // 100)
-            item['volume_title'] = app.crawler.volumes[item['volume'] - 1]['title']
-        # end for
     # end if
+    
+    for item in app.crawler.volumes:
+        title = 'Volume %d' % item['id']
+        item['title'] = item['title'] or title
+        if not re.search(r'volume .?\d+', item['title'], re.IGNORECASE):
+            item['title'] = title + ' - ' + item['title'].title()
+        # end if
+    # end for
+    
+    for item in app.crawler.chapters:
+        title = 'Chapter #%d' % item['id']
+        item['title'] = item['title'] or title
+        if not re.search(r'chapter .?\d+', item['title'], re.IGNORECASE):
+            item['title'] = title + ' - ' + item['title'].title()
+        # end if
+        item['volume'] = item['volume'] or (1 + (item['id'] - 1) // 100)
+        item['volume_title'] = app.crawler.volumes[item['volume'] - 1]['title']
+    # end for
+
     if require_saving:
         data = {
             'title': app.crawler.novel_title,
