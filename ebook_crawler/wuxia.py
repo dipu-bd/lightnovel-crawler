@@ -3,151 +3,102 @@
 """
 Crawler for [WuxiaWorld](http://www.wuxiaworld.com/).
 """
+import json
+import logging
 import re
-import sys
-import requests
-from os import path
-# from shutil import rmtree
-import concurrent.futures
 from bs4 import BeautifulSoup
-from .helper import save_chapter
-from .binding import novel_to_epub, novel_to_mobi
+from .utils.crawler import Crawler
 
+logger = logging.getLogger('WUXIA_WORLD')
 
-class WuxiaCrawler:
-    '''Crawler for wuxiaworld.co'''
+home_url = 'https://www.wuxiaworld.com'
 
-    executor = concurrent.futures.ThreadPoolExecutor(max_workers=10)
-
-    def __init__(self, novel_id, start_chapter=None, end_chapter=None, volume=False):
-        if not novel_id:
-            raise Exception('Novel ID is required')
-        # end if
-
-        self.chapters = []
-        self.novel_id = novel_id
-        self.start_chapter = start_chapter
-        self.end_chapter = end_chapter
-        self.pack_by_volume = volume
-
-        self.home_url = 'https://www.wuxiaworld.com'
-        self.output_path = None
-
-        requests.urllib3.disable_warnings()
+class WuxiaCrawler(Crawler):
+    @property
+    def supports_login(self):
+        '''Whether the crawler supports login() and logout method'''
+        return False
     # end def
 
-    def start(self):
-        '''start crawling'''
-        # if path.exists(self.output_path):
-        #     rmtree(self.output_path)
-        try:
-            self.get_chapter_list()
-            self.get_chapter_bodies()
-        finally:
-            self.output_path = self.output_path or self.novel_id
-            novel_to_epub(self.output_path, self.pack_by_volume)
-            novel_to_mobi(self.output_path)
-        # end try
+    def login(self, email, password):
+        pass
     # end def
 
-    def get_chapter_list(self):
-        '''get list of chapters'''
-        url = '%s/novel/%s' % (self.home_url, self.novel_id)
-        print('Visiting ', url)
-        response = requests.get(url, verify=False)
-        response.encoding = 'utf-8'
-        html_doc = response.text
-        print('Getting book name and chapter list... ')
-        soup = BeautifulSoup(html_doc, 'lxml')
-        # get book name
-        try:
-            self.novel_name = soup.select_one('.section-content  h4').text
-            cover = soup.find('img', {"class": "media-object"})['src']
-            self.novel_cover = cover
-            author = soup.find_all('p')[1].text
-            self.novel_author = author.lstrip('Author: ')
-        except:
-            pass
-        # end try
-        self.output_path = re.sub('[\\\\/*?:"<>|]' or r'[\\/*?:"<>|]', '', self.novel_name or self.novel_id)
-        # get chapter list
-        get_ch = lambda x: self.home_url + x.get('href')
-        self.chapters = [get_ch(x) for x in soup.select('ul.list-chapters li.chapter-item a')]
-        print(' [%s]' % self.novel_name, len(self.chapters), 'chapters found')
+    def logout(self):
+        pass
     # end def
 
-    def get_chapter_index(self, chapter):
-      if chapter is None: return
-      if chapter.isdigit():
-        chapter = int(chapter)
-        if 1 <= chapter <= len(self.chapters):
-          return chapter - 1
-        # end if
-      # end if
-      for i, link in enumerate(self.chapters):
-        if chapter == link:
-          return i
-        # end if
-      # end for
-      raise Exception('Invalid chapter url')
+    def read_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        response = self.get_response(url)
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        self.novel_title = soup.select_one('.section-content  h4').text
+        logger.info('Novel title: %s', self.novel_title)
+
+        self.novel_cover = soup.select_one('.media-left img.media-object')['src']
+        logger.info('Novel cover: %s', self.novel_cover)
+
+        self.novel_author = soup.select_one('.media-body dl dt').text
+        self.novel_author += soup.select_one('.media-body dl dd').text
+        logger.info('Novel author: %s', self.novel_author)
+
+        for panel in soup.select('#accordion .panel-default'):
+            vol_id = int(panel.select_one('h4.panel-title .book').text)
+            vol_title = panel.select_one('h4.panel-title .title a').text
+            self.volumes.append({
+                'id': vol_id,
+                'title': vol_title,
+            })
+            for a in panel.select('ul.list-chapters li.chapter-item a'):
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'url': home_url + a['href'],
+                    'title': a.text.strip() or ('Chapter %d' % chap_id),
+                })
+            # end def
+        # end def
+
+        logger.debug(self.chapters)
+        logger.debug('%d chapters found', len(self.chapters))
     # end def
 
-    def get_chapter_bodies(self):
-        '''get content from all chapters till the end'''
-        self.start_chapter = self.get_chapter_index(self.start_chapter)
-        self.end_chapter = self.get_chapter_index(self.end_chapter) or len(self.chapters) - 1
-        if self.start_chapter is None: return
-        start = self.start_chapter 
-        end = min(self.end_chapter + 1, len(self.chapters))
-        future_to_url = {self.executor.submit(self.parse_chapter, index):\
-            index for index in range(start, end)}
-        # wait till finish
-        [x.result() for x in concurrent.futures.as_completed(future_to_url)]
-        print('complete')
+    def download_chapter_body(self, chapter):
+        '''Download body of a single chapter and return as clean html format.'''
+        logger.info('Downloading %s', chapter['url'])
+        response = self.get_response(chapter['url'])
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        body_parts = []
+        beginner = True
+        for item in soup.select('.panel-default .fr-view *'):
+            if item.name == 'hr':
+                beginner = False
+            text = item.text.strip()
+            if item.name != 'p' or text == '':
+                continue
+            if beginner and self.check_blacklist(text):
+                continue
+            beginner = False
+            body_parts.append(str(item.extract()))
+        # end for
+        return ''.join(body_parts).strip()
     # end def
 
-    def get_volume(self, index):
-        url = self.chapters[index]
-        chapter_no = index + 1
-        volume_no = re.search(r'book-\d+', url)
-        if volume_no:
-            volume_no = volume_no.group().strip('book-')
-        else:
-            volume_no = ((chapter_no - 1) // 100) + 1
-        # end if
-        return volume_no
-    # end def
-
-    def parse_chapter(self, index):
-        url = self.chapters[index]
-        print('Downloading', url)
-        response = requests.get(url, verify=False)
-        response.encoding = 'utf-8'
-        html_doc = response.text
-        soup = BeautifulSoup(html_doc, 'lxml')
-        chapter_no = index + 1
-        volume_no = self.get_volume(index)
-        chapter_title = soup.select_one('.panel-default .caption h4').text
-        body_part = soup.select('.panel-default .fr-view p')
-        body_part = ''.join([str(p.extract()) for p in body_part if p.text.strip()])
-        save_chapter({
-            'url': url,
-            'novel': self.novel_name,
-            'cover':self.novel_cover,
-            'author': self.novel_author,
-            'volume_no': str(volume_no),
-            'chapter_no': str(chapter_no),
-            'chapter_title': chapter_title,
-            'body': '<h1>%s</h1>%s' % (chapter_title, body_part)
-        }, self.output_path, self.pack_by_volume)
+    def check_blacklist(self, text):
+        blacklist = [
+            r'^(...|\u2026)$',
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ]
+        for item in blacklist:
+            if re.search(item, text, re.IGNORECASE):
+                return True
+            # end if
+        # end for
+        return False
     # end def
 # end class
-
-if __name__ == '__main__':
-    WuxiaCrawler(
-        novel_id=sys.argv[1],
-        start_chapter=sys.argv[2] if len(sys.argv) > 2 else None,
-        end_chapter=sys.argv[3] if len(sys.argv) > 3 else None,
-        volume=sys.argv[4] if len(sys.argv) > 4 else None
-    ).start()
-# end if

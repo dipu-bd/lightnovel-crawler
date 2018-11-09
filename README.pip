@@ -16,5 +16,10 @@ $ python3 -m pip install --user --upgrade ebook-crawler
 
 # Tutorial
 
-Visit https://github.com/dipu-bd/site-to-epub/ for tutorial.
+Open terminal and enter:
 
+$ ebook_crawler
+
+To enable verbose output mode:
+
+$ ebook_crawler --verbose

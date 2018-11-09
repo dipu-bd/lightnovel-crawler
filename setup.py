@@ -171,6 +171,7 @@ setup(
     # MANIFEST.in as well.
     package_data={  # Optional
         '': [
+            'VERSION',
             'ext/kindlegen-linux',
             'ext/kindlegen-mac',
             'ext/kindlegen-windows'
@@ -210,6 +211,6 @@ setup(
         'Source': 'https://github.com/dipu-bd/site-to-epub/',
         'Bug Reports': 'https://github.com/dipu-bd/site-to-epub/issues',
         # 'Funding': 'https://donate.pypi.org',
-        # 'Say Thanks!': 'http://saythanks.io/to/example',
+        'Say Thanks!': 'https://saythanks.io/to/dipu-bd',
     },
 )
