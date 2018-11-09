@@ -3,13 +3,14 @@
 """
 Use this sample to create new sources
 """
-import json
 import logging
-import re
 from .utils.crawler import Crawler
 
+# TODO: Set this to your crawler name for meaningful logging
 logger = logging.getLogger('CHANGE_THIS_NAME')
 
+# TODO: Copy this file directly to your new crawler. And fill up
+#       the methods as described in their todos
 
 class SampleCrawler(Crawler):
     @property
