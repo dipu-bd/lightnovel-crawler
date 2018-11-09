@@ -46,8 +46,9 @@ class SampleCrawler(Crawler):
 
     def download_chapter_list(self):
         '''Download list of chapters and volumes.'''
-        # TODO: If you already got chapter list inside read_novel_info,
-        #       implementing this one is not necessary. Just delete it.
+        # TODO: Use this method if you need to retrieve chapter list from
+        #       online. If you already got chapter list inside the method
+        #       `read_novel_info`, implementing this one is not necessary.
         pass
     # end def
 
@@ -55,6 +56,8 @@ class SampleCrawler(Crawler):
         '''Return the index of chapter by given url or -1'''
         # TODO: A default behavior has been implemented in the parent class.
         #       Delete this method if you want to use the default one.
+        #       By default, it returns the first index of chapter from the
+        #       `self.chapters` that has 'url' property matching the given `url`.
         pass
     # end def
 
