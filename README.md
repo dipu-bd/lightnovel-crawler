@@ -30,12 +30,12 @@ $ python3 -m pip install --user ebook-crawler
 *Open the console panel in a directory you want to download novels* and run:
 
 ```bash
-$ ebook_crawler
+$ lightnovel-crawler
 ```
 
-For extra logs, there is verbose mode:
+To view logs, there is a verbose mode:
 ```bash
-$ ebook_crawler --verbose
+$ lightnovel-crawler -v
 ```
 
 ### Dependencies
