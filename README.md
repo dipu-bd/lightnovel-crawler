@@ -12,7 +12,7 @@
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+)
 [![GitHub](https://img.shields.io/github/license/dipu-bd/site-to-epub.svg)](https://github.com/dipu-bd/site-to-epub/blob/master/VERSION)
 
-Crawls lightnovels from popular websites and converts to ebook format (only EPUB and MOBI are supported for now).
+Crawls light novels and make text, epub and mobi
 
 ## Tutorial
 
