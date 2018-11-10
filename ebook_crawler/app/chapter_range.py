@@ -102,22 +102,27 @@ def range_from_volumes(app, times=0):
             'name': 'volumes',
             'message': 'Choose volumes to download:',
             'choices': [
-                { 'name': vol['title'] }
+                {
+                    'name': '%d - %s [%d chapters]' % (
+                        vol['id'], vol['title'], vol['chapter_count'])
+                }
                 for vol in app.crawler.volumes
             ],
             'validate': lambda ans: True if len(ans) > 0 \
                 else 'You must choose at least one volume.'
         }
     ])
-    selected = answer['volumes']
+    selected = [
+        int(val.split(' ')[0])
+        for val in answer['volumes']
+    ]
     if times < 3 and len(selected) == 0:
         return range_from_volumes(app, times + 1)
     # end if
 
-    app.logger.debug('Selected range: [%s]', ', '.join(selected))
     return [
         chap for chap in app.crawler.chapters
-        if selected.count(chap['volume_title']) > 0
+        if selected.count(chap['volume']) > 0
     ]
 # end def
 
@@ -140,9 +145,6 @@ def range_from_chapters(app, times=0):
     if times < 3 and len(selected) == 0:
         return range_from_chapters(app, times + 1)
     # end if
-
-    app.logger.debug('Selected range: [%s]',
-        ', '.join([str(x) for x in selected]))
 
     return [
         chap for chap in app.crawler.chapters

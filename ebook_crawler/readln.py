@@ -39,8 +39,11 @@ class ReadLightNovelCrawler(Crawler):
 
         self.novel_cover = soup.find('img', {"alt" : self.novel_title})['src']
         logger.info('Novel cover: %s', self.novel_cover)
-
-        self.novel_author = soup.select_one("a[href*=author]").text
+        
+        try:
+            self.novel_author = soup.select_one("a[href*=author]").text.strip().title()
+        except:
+            pass
         logger.info('Novel author: %s', self.novel_author)
 
         for a in soup.select('.chapters .chapter-chs li a'):

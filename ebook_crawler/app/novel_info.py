@@ -9,8 +9,7 @@ import re
 from shutil import rmtree
 from PyInquirer import prompt
 
-
-def novel_info(app):
+def get_novel_url():
     answer = prompt([
         {
             'type': 'input',
@@ -20,14 +19,11 @@ def novel_info(app):
             if len(val) == 0 else True,
         },
     ])
+    return answer['novel'].strip()
+# end def
 
-    app.logger.warn('Getting novel info...')
-    app.crawler.read_novel_info(answer['novel'].strip())
-    app.output_path = re.sub(
-        r'[\\/*?:"<>|\']', '', app.crawler.novel_title)
-    app.output_path = os.path.abspath(app.output_path)
-
-    if os.path.exists(app.output_path):
+def check_output_path(output_path):
+    if os.path.exists(output_path):
         answer = prompt([
             {
                 'type': 'confirm',
@@ -37,60 +33,86 @@ def novel_info(app):
             },
         ])
         if answer['fresh']:
-            rmtree(app.output_path)
+            rmtree(output_path)
         # end if
     # end if
-    os.makedirs(app.output_path, exist_ok=True)
+    os.makedirs(output_path, exist_ok=True)
+# end def
 
-    app.logger.warn('Getting chapters...')
-    require_saving = False
-    file_name = os.path.join(app.output_path, 'meta.json')
+def retrieve_chapter_list(crawler, output_path):
+    file_name = os.path.join(output_path, 'meta.json')
     if os.path.exists(file_name):
         with open(file_name, 'r') as file:
-            app.logger.info('Loading metadata')
             data = json.load(file)
-            app.crawler.volumes = data['volumes']
-            app.crawler.chapters = data['chapters']
+            crawler.volumes = data['volumes']
+            crawler.chapters = data['chapters']
         # end with
-    else:
-        require_saving = True
     # end if
     
-    if len(app.crawler.chapters) == 0:
-        require_saving = True
-        app.logger.info('Fetching chapters')
-        app.crawler.download_chapter_list()
+    if len(crawler.chapters) == 0:
+        crawler.download_chapter_list()
     # end if
-    
-    for item in app.crawler.volumes:
-        title = 'Volume %d' % item['id']
-        item['title'] = item['title'] or title
-        if not re.search(r'volume .?\d+', item['title'], re.IGNORECASE):
-            item['title'] = title + ' - ' + item['title'].title()
+# end def
+
+def format_volume_list(crawler):
+    for vol in crawler.volumes:
+        vol['chapter_count'] = 0
+        title = 'Volume %d' % vol['id']
+        vol['title'] = vol['title'] or title
+        if not re.search(r'vol(ume)? .?\d+', vol['title'], re.IGNORECASE):
+            vol['title'] = title + ' - ' + vol['title'].title()
         # end if
     # end for
-    
-    for item in app.crawler.chapters:
+# end def
+
+def format_chapter_list(crawler):
+    for item in crawler.chapters:
         title = 'Chapter #%d' % item['id']
         item['title'] = item['title'] or title
-        if not re.search(r'chapter .?\d+', item['title'], re.IGNORECASE):
+        if not re.search(r'ch(apter)? .?\d+', item['title'], re.IGNORECASE):
             item['title'] = title + ' - ' + item['title'].title()
         # end if
-        item['volume'] = item['volume'] or (1 + (item['id'] - 1) // 100)
-        item['volume_title'] = app.crawler.volumes[item['volume'] - 1]['title']
-    # end for
 
-    if require_saving:
-        data = {
-            'title': app.crawler.novel_title,
-            'author': app.crawler.novel_author,
-            'cover': app.crawler.novel_cover,
-            'volumes': app.crawler.volumes,
-            'chapters': app.crawler.chapters,
-        }
-        with open(file_name, 'w') as file:
-            app.logger.info('Writing metadata: %s', file_name)
-            json.dump(data, file, indent=2)
-        # end with
-    # end if
+        item['volume'] = item['volume'] or (1 + (item['id'] - 1) // 100)
+        item['volume_title'] = 'Volume %d' % item['volume']
+        for vol in crawler.volumes:
+            if vol['id'] == item['volume']:
+                item['volume_title'] = vol['title']
+                vol['chapter_count'] += 1
+                break
+            # end if
+        # end for
+    # end for
+# end def
+
+def save_metadata(crawler, output_path):
+    file_name = os.path.join(output_path, 'meta.json')
+    data = {
+        'title': crawler.novel_title,
+        'author': crawler.novel_author,
+        'cover': crawler.novel_cover,
+        'volumes': crawler.volumes,
+        'chapters': crawler.chapters,
+    }
+    with open(file_name, 'w') as file:
+        json.dump(data, file, indent=2)
+    # end with
+# end def
+
+def novel_info(app):
+    app.logger.info('Retrieving novel info...')
+    app.crawler.read_novel_info(get_novel_url())
+
+    app.logger.info('Checking output path...')
+    app.output_path = os.path.abspath(
+        re.sub(r'[\\/*?:"<>|\']', '', app.crawler.novel_title))
+    check_output_path(app.output_path)
+
+    app.logger.info('Getting chapters...')
+    retrieve_chapter_list(app.crawler, app.output_path)
+
+    format_volume_list(app.crawler)
+    format_chapter_list(app.crawler)
+
+    save_metadata(app.crawler, app.output_path)
 # end def

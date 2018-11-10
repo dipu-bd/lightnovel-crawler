@@ -34,34 +34,44 @@ class WuxiaCoCrawler(Crawler):
         response = self.get_response(url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.select_one('h1').text
+        self.novel_title = soup.select_one('#maininfo h1').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = home_url + soup.find('img')['src']
-        logger.info('Novel cover: %s', self.novel_cover)
-
-        author = soup.find_all('p')[1].text
-        self.novel_author = author.lstrip('Author：')
+        self.novel_author = soup.select_one('#maininfo p').text.strip()
+        self.novel_author = re.sub(r'^Author[^\w]+', '', self.novel_author).strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        for a in soup.select('dd a'):
-            chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id =  chap_id//100 +1
-                vol_title =  'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
+        self.novel_cover = home_url + soup.select_one('#sidebar img')['src']
+        logger.info('Novel cover: %s', self.novel_cover)
+
+        last_vol = -1
+        volume = { 'id': 0, 'title': 'Volume 1', }
+        for item in soup.select('#list dl *'):
+            if item.name == 'dt':
+                vol = volume.copy()
+                vol['id'] += 1
+                vol['title'] = item.text.strip()
+                vol['title'] = re.sub(r'^ã\x80\x8a.*ã\x80\x8b', '', vol['title'])
+                vol['title'] = re.sub(r'^\s*Text\s*$', '', vol['title']).strip()
+                volume = vol
+            # end if
+            if item.name == 'dd':
+                a = item.select_one('a')
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': volume['id'],
+                    'url':  url + a['href'],
+                    'title': a.text.strip(),
                 })
-            #end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url':  url + a['href'],
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
-            })
+                if last_vol != volume['id']:
+                    last_vol = volume['id']
+                    self.volumes.append(volume)
+                # end if
+            # end if
         #end for
 
+        logger.debug(self.volumes)
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
     # end def

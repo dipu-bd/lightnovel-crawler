@@ -5,25 +5,18 @@ Crawler application
 """
 from concurrent import futures
 import cfscrape
-import requests
 
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
 
+    scrapper = cfscrape.create_scraper()
     executor = futures.ThreadPoolExecutor(max_workers=5)
-
-    cookies = {}
-    headers = {
-        'accept': 'text/html,application/xhtml+xml,application/xml',
-        'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36'
-    }
 
     '''Must resolve these fields inside `read_novel_info`'''
     novel_title = 'N/A'
     novel_author = 'N/A'
     novel_cover = None
-    scrapper = None
 
     '''
     Each item must contain these keys:
@@ -41,9 +34,21 @@ class Crawler:
     '''
     chapters = []
 
+    def __init__(self):
+        self.scrapper.verify = False
+    # end def
+
     # ------------------------------------------------------------------------- #
     # Implement these methods
     # ------------------------------------------------------------------------- #
+
+    def initialize(cls):
+        pass
+    # end def
+
+    def dispose(self):
+        pass
+    # end def
 
     @property
     def supports_login(self):
@@ -76,7 +81,7 @@ class Crawler:
 
     def get_chapter_index_of(self, url):
         '''Return the index of chapter by given url or -1'''
-        url = (url or '').strip(' /')
+        url = (url or '').strip().strip('/')
         for i, chapter in enumerate(self.chapters):
             if chapter['url'] == url:
                 return i
@@ -88,19 +93,18 @@ class Crawler:
     # ------------------------------------------------------------------------- #
     # Helper methods to be used
     # ------------------------------------------------------------------------- #
-    def get_response_cf(self, url, incognito=False):
-        if self.scrapper==None:
-            self.scrapper = cfscrape.create_scraper()
-        response = self.scrapper.get(url)
-        return response
+    @property
+    def headers(self):
+        return self.scrapper.headers.copy()
     # end def
 
+    @property
+    def cookies(self):
+        return { x.name: x.value for x in self.scrapper.cookies }
+    # end def
+    
     def get_response(self, url, incognito=False):
-        response = requests.get(
-            url,
-            headers=self._build_headers(),
-            verify=False, # whether to verify ssl certs for https
-        )
+        response = self.scrapper.get(url)
         self.cookies.update({
             x.name: x.value
             for x in response.cookies
@@ -110,16 +114,11 @@ class Crawler:
 
     def submit_form(self, url, multipart=False, headers={}, **data):
         '''Submit a form using post request'''
-        headers = self._build_headers({
+        headers = {
             'content-type': 'multipart/form-data' if multipart \
                 else 'application/x-www-form-urlencoded'
-        })
-        response = requests.post(
-            url,
-            data=data,
-            headers=headers,
-            verify=False, # whether to verify ssl certs for https
-        )
+        }
+        response = self.scrapper.post(url, data=data, headers=headers)
         self.cookies.update({
             x.name: x.value
             for x in response.cookies
@@ -127,14 +126,10 @@ class Crawler:
         return response
     # end def
 
-    def _build_headers(self, headers={}):
-        headers = self.headers.copy()
-        headers['cookie'] = '; '.join([
-            '%s=%s' % (x, self.cookies[x])
-            for x in self.cookies
-        ])
-        headers.update(headers or {})
-        return headers
+    def download_cover(self, output_file):
+        response = self.get_response(self.novel_cover)
+        with open(output_file, 'wb') as f:
+            f.write(response.content)
+        # end with
     # end def
-
 # end class

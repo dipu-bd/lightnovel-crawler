@@ -13,6 +13,18 @@ logger = logging.getLogger('CHANGE_THIS_NAME')
 #       the methods as described in their todos
 
 class SampleCrawler(Crawler):
+    def initialize(self):
+        # TODO: Initiaze your crawler, variables etc. It gets called at the
+        #       beginning of the app.
+        pass
+    # end def
+
+    def dispose(self):
+        # TODO: Dispose your crawler, variables etc. It gets called at the
+        #       beginning of the app.
+        pass
+    # end def
+
     @property
     def supports_login(self):
         '''Whether the crawler supports login() and logout method'''
@@ -30,9 +42,8 @@ class SampleCrawler(Crawler):
     # end def
 
     def logout(self):
-        # TODO: You can just delete this method if not necessary.
-        #       This can also be used for disposing resources, as it gets
-        #       called at the end of downloading all chapter bodies.
+        # TODO: Logout from the site. Not that necessary, but still it is
+        #       nice to logout after you are done.
         pass
     # end def
 
