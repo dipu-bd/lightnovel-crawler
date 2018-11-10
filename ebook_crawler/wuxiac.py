@@ -41,7 +41,10 @@ class WuxiaCoCrawler(Crawler):
         self.novel_author = re.sub(r'^Author[^\w]+', '', self.novel_author).strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = home_url + soup.select_one('#sidebar img')['src']
+        self.novel_cover = soup.select_one('#sidebar img')['src']
+        if not re.search(r'^https?://', self.novel_cover):
+            self.novel_cover = home_url + self.novel_cover
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
         last_vol = -1
