@@ -43,7 +43,7 @@ setup(
     # There are some restrictions on what makes a valid project name
     # specification here:
     # https://packaging.python.org/specifications/core-metadata/#name
-    name='ebook_crawler',  # Required
+    name='lightnovel-crawler',  # Required
 
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
@@ -84,7 +84,7 @@ setup(
     #
     # This field corresponds to the "Home-Page" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#home-page-optional
-    url='https://github.com/dipu-bd/site-to-epub',  # Optional
+    url='https://github.com/dipu-bd/lightnovel-crawler',  # Optional
 
     # This should be your name or the name of the organization which owns the
     # project.
@@ -149,7 +149,7 @@ setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=install_requires + ['ebook_crawler'],  # Optional
+    install_requires=install_requires + ['lightnovel_crawler'],  # Optional
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
@@ -170,7 +170,7 @@ setup(
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
     package_data={  # Optional
-        'ebook_crawler': [
+        'lightnovel_crawler': [
             '../VERSION',
             'ext/kindlegen-linux',
             'ext/kindlegen-mac',
@@ -194,9 +194,8 @@ setup(
     # executes the function `main` from this package when invoked:
     entry_points={  # Optional
         'console_scripts': [
-            'lightnovel-crawler=ebook_crawler:main',
-            'ebook-crawler=ebook_crawler:main',
-            'ebook_crawler=ebook_crawler:main',
+            'lightnovel-crawler=lightnovel_crawler:main',
+            'lncrawl=lightnovel_crawler:main',
         ],
     },
 
@@ -210,8 +209,8 @@ setup(
     # maintainers, and where to support the project financially. The key is
     # what's used to render the link text on PyPI.
     project_urls={  # Optional
-        'Source': 'https://github.com/dipu-bd/site-to-epub/',
-        'Bug Reports': 'https://github.com/dipu-bd/site-to-epub/issues',
+        'Source': 'https://github.com/dipu-bd/lightnovel-crawler/',
+        'Bug Reports': 'https://github.com/dipu-bd/lightnovel-crawler/issues',
         # 'Funding': 'https://donate.pypi.org',
         'Say Thanks!': 'https://saythanks.io/to/dipu-bd',
     },
