@@ -17,24 +17,4 @@ List of supported sites are given below.
 
 To request new site create an issue here: https://github.com/dipu-bd/site-to-epub/issues.
 
-
-To use this app, you need to have python3 and pip installed in your computer.
-Execute this command to set it up with pip:
-
-$ pip install --upgrade lightnovel-crawler
-
-Or,
-
-$ python3 -m pip install --user --upgrade lightnovel-crawler
-
-
-Next, open terminal and enter this command to run:
-
-$ lightnovel-crawler
-
-# Or
-$ lncrawl
-
-To enable verbose output mode:
-
-$ lncrawl -v
+For usage instructions visit: https://github.com/dipu-bd/lightnovel-crawler
