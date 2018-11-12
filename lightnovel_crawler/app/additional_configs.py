@@ -11,9 +11,8 @@ def additional_configs(app):
             'type': 'confirm',
             'name': 'volume',
             'message': 'Generate separate files for each volumes?',
-            'default': True,
+            'default': False,
         },
     ])
-    # self.formats = answer['formats']
     app.pack_by_volume = answer['volume']
 # end def

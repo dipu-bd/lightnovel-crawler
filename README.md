@@ -75,11 +75,3 @@ The list of crawable websites are given below. *Request new site by [creating a 
 - Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/__init__.py).
 
 That's all!
-
-### And... be a good Netizen
-
-- Do not download too frequently from LNTML. They block your IP if too many consecutive request is observed.
-
-- Do not use too many instances of this program too frequently. Otherwise it might cause traffic jam to your favorite website. We do not want others to suffer for our sake, right?
-
-- This program has the capability to perform DDOS attacks that can cause a website to go down. Be a good netizen, and never do such a thing!
