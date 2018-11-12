@@ -6,8 +6,8 @@ Crawler application
 import random
 import logging
 from time import sleep
-from ebook_crawler.app import run_app
-from ebook_crawler.utils.crawler import Crawler
+from lightnovel_crawler.app import start_app
+from lightnovel_crawler.utils.crawler import Crawler
 
 
 class TestCrawler(Crawler):
@@ -76,7 +76,9 @@ def test():
     print(' RUNNING TESTS ')
     print('-' * 80)
 
-    run_app(TestCrawler())
+    start_app({
+        'Test App': TestCrawler
+    })
 # end def
 
 
