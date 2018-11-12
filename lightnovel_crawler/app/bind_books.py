@@ -51,7 +51,8 @@ def bind_books(app):
             with open(file_name, 'w') as file:
                 body = chap['body'].replace('</p><p', '</p>\n<p')
                 soup = BeautifulSoup(body, 'lxml')
-                text = re.sub('[\r\n]+', '\r\n\r\n', soup.get_text())
+                text = '\n\n'.join(soup.stripped_strings)
+                text = re.sub('[\r\n]+', '\r\n\r\n', text)
                 file.write(text)
             # end with
         # end for
