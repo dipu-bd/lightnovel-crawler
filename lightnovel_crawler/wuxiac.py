@@ -53,8 +53,8 @@ class WuxiaCoCrawler(Crawler):
             if item.name == 'dt':
                 vol = volume.copy()
                 vol['id'] += 1
-                vol['title'] = item.text.strip()
-                vol['title'] = re.sub(r'^ã\x80\x8a.*ã\x80\x8b', '', vol['title'])
+                vol['title'] = self.format_text(item.text)
+                vol['title'] = re.sub(r'^(.*)', '', vol['title'])
                 vol['title'] = re.sub(r'^\s*Text\s*$', '', vol['title']).strip()
                 volume = vol
             # end if
@@ -65,7 +65,7 @@ class WuxiaCoCrawler(Crawler):
                     'id': chap_id,
                     'volume': volume['id'],
                     'url':  url + a['href'],
-                    'title': a.text.strip(),
+                    'title': self.format_text(a.text),
                 })
                 if last_vol != volume['id']:
                     last_vol = volume['id']
@@ -85,9 +85,44 @@ class WuxiaCoCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        body_parts = soup.find("div", {"id": "content"})
-        body_parts.script.decompose()
+        body_parts = soup.select_one('div#content').contents
+        body = []
+        beginner = True
+        for elem in body_parts:
+            if not elem.name:
+                text = self.format_text(str(elem))
+                if beginner and self.check_blacklist(text):
+                    continue
+                if len(text) > 0:
+                    beginner = False
+                    body.append(text)
+                # end if
+            # end if
+        # end for
+        return '<p>' + '</p><p>'.join(body) + '</p>'
+    # end def
 
-        return body_parts
+    def format_text(self, text):
+        text = re.sub(r'\u00e2\u0080\u0099', '\'', text)
+        text = re.sub(r'\u00e2\u009d\u00ae', '(', text)
+        text = re.sub(r'\u00e2\u009d\u00af', ')', text)
+        text = re.sub(r'\u00e2\u0080\u00a6', '...', text)
+        text = re.sub(r'\u00e2\u009d\u0084\u00ef\u00b8\u008f', '*', text)
+        return text.strip()
+    # end def
+
+    def check_blacklist(self, text):
+        text = str(text).strip()
+        blacklist = [
+            r'^(...|\u2026)$',
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ]
+        for item in blacklist:
+            if re.search(item, text, re.IGNORECASE):
+                return True
+            # end if
+        # end for
+        return False
     # end def
 # end class
