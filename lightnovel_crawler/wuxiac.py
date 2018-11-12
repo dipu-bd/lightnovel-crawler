@@ -53,7 +53,7 @@ class WuxiaCoCrawler(Crawler):
             if item.name == 'dt':
                 vol = volume.copy()
                 vol['id'] += 1
-                vol['title'] = self.format_text(item.text)
+                vol['title'] = item.text.strip()
                 vol['title'] = re.sub(r'^(.*)', '', vol['title'])
                 vol['title'] = re.sub(r'^\s*Text\s*$', '', vol['title']).strip()
                 volume = vol
@@ -65,7 +65,7 @@ class WuxiaCoCrawler(Crawler):
                     'id': chap_id,
                     'volume': volume['id'],
                     'url':  url + a['href'],
-                    'title': self.format_text(a.text),
+                    'title': a.text.strip(),
                 })
                 if last_vol != volume['id']:
                     last_vol = volume['id']
@@ -90,7 +90,7 @@ class WuxiaCoCrawler(Crawler):
         beginner = True
         for elem in body_parts:
             if not elem.name:
-                text = self.format_text(str(elem))
+                text = str(elem).strip()
                 if beginner and self.check_blacklist(text):
                     continue
                 if len(text) > 0:
@@ -102,17 +102,7 @@ class WuxiaCoCrawler(Crawler):
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 
-    def format_text(self, text):
-        text = re.sub(r'\u00e2\u0080\u0099', '\'', text)
-        text = re.sub(r'\u00e2\u009d\u00ae', '(', text)
-        text = re.sub(r'\u00e2\u009d\u00af', ')', text)
-        text = re.sub(r'\u00e2\u0080\u00a6', '...', text)
-        text = re.sub(r'\u00e2\u009d\u0084\u00ef\u00b8\u008f', '*', text)
-        return text.strip()
-    # end def
-
     def check_blacklist(self, text):
-        text = str(text).strip()
         blacklist = [
             r'^(...|\u2026)$',
             r'^translat(ed by|or)',
