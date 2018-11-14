@@ -84,9 +84,45 @@ class NovelPlanetCrawler(Crawler):
 
         logger.debug(soup.title.string)
 
+        #chapter['title'] = soup.select_one('h3').text
+        if 'Chapter' in soup.select_one('h3').text:
+            chapter['title'] = soup.select_one('h3').text
+        else:
+            chapter['title'] = chapter['title'] + ' : ' + soup.select_one('h3').text
+
         content = soup.select('p')
         body_parts = ''.join([str(p.extract()) for p in content if p.text.strip()])
 
+        if len(body_parts)==0:
+            body_parts = soup.select_one('div#divReadContent').contents
+            body = []
+            beginner = True
+            for elem in body_parts:
+                if not elem.name:
+                    text = str(elem).strip()
+                    if beginner and self.check_blacklist(text):
+                        continue
+                    if len(text) > 0:
+                        beginner = False
+                        body.append(text)
+                    # end if
+                # end if
+            # end for
+            body_parts =  '<p>' + '</p><p>'.join(body) + '</p>'
         return body_parts
+    # end def
+
+    def check_blacklist(self, text):
+        blacklist = [
+            r'^(...|\u2026)$',
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ]
+        for item in blacklist:
+            if re.search(item, text, re.IGNORECASE):
+                return True
+            # end if
+        # end for
+        return False
     # end def
 # end class
