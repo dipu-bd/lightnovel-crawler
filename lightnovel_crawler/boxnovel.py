@@ -34,7 +34,7 @@ class BoxNovelCrawler(Crawler):
         response = self.get_response(url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.title.string
+        self.novel_title = soup.select_one('h3').text.split(" ",1)[1]
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = soup.find("div", {"class": "summary_image"}).find("img")['src']
@@ -78,7 +78,20 @@ class BoxNovelCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
+        #chapter['title'] = soup.find('li', {'class':'active'}).text
         content = soup.find("div", {"class": "text-left"}).findAll("p")
+
+        title = soup.find_all(re.compile('^h[2-4]$'))
+
+        if len(title):
+            chapter['title'] = title[0].text
+        else:
+            if 'Translator' in soup.select_one('p').text:
+                chapter['title'] = soup.select_one('p').text.split("Translator",1)[0]
+            else:
+                chapter['title'] = soup.select_one('p').text
+                logger.info('Downloading %s', content.pop(0))
+
         body_parts = ''.join([str(p.extract()) for p in content if p.text.strip()])
 
         return body_parts
