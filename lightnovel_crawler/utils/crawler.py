@@ -105,6 +105,7 @@ class Crawler:
     
     def get_response(self, url, incognito=False):
         response = self.scrapper.get(url)
+        response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value
             for x in response.cookies

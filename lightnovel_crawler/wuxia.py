@@ -37,7 +37,14 @@ class WuxiaCrawler(Crawler):
         self.novel_title = soup.select_one('.section-content  h4').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one('img.media-object')['src']
+        try:
+            self.novel_cover = soup.select_one('img.media-object')['src']
+            if not re.search(r'^https?://', self.novel_cover):
+                self.novel_cover = home_url + self.novel_cover
+            # end if
+        except Exception as ex:
+            logger.debug('Failed to get cover: %s', ex)
+        # end try
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select_one('.media-body dl dt').text

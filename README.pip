@@ -1,25 +1,20 @@
-LightNovels To EBook
+Lightnovel Crawler
 -----------------------
 
-Crawls lightnovels from popular websites and converts to ebook format (only EPUB and MOBI are supported for now).
+Crawls lightnovels from various websites and converts into epub, mobi and text.
 
-# Installation
+List of supported sites are given below.
 
-To use this app, you need to have python3 and pip installed in your computer. Install it using:
+- https://lnmtl.com
+- https://www.webnovel.com
+- https://www.wuxiaworld.com
+- https://www.wuxiaworld.co
+- https://boxnovel.com
+- https://www.readlightnovel.org
+- https://novelplanet.com
+- https://lnindo.org
+- https://www.idqidian.us
 
-$ pip install --upgrade ebook-crawler
+To request new site create an issue here: https://github.com/dipu-bd/site-to-epub/issues.
 
-Or,
-
-$ python3 -m pip install --user --upgrade ebook-crawler
-
-
-# Tutorial
-
-Open terminal and enter:
-
-$ ebook_crawler
-
-To enable verbose output mode:
-
-$ ebook_crawler --verbose
+For usage instructions visit: https://github.com/dipu-bd/lightnovel-crawler

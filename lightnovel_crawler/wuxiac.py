@@ -41,7 +41,10 @@ class WuxiaCoCrawler(Crawler):
         self.novel_author = re.sub(r'^Author[^\w]+', '', self.novel_author).strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = home_url + soup.select_one('#sidebar img')['src']
+        self.novel_cover = soup.select_one('#sidebar img')['src']
+        if not re.search(r'^https?://', self.novel_cover):
+            self.novel_cover = home_url + self.novel_cover
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
         last_vol = -1
@@ -51,7 +54,7 @@ class WuxiaCoCrawler(Crawler):
                 vol = volume.copy()
                 vol['id'] += 1
                 vol['title'] = item.text.strip()
-                vol['title'] = re.sub(r'^ã\x80\x8a.*ã\x80\x8b', '', vol['title'])
+                vol['title'] = re.sub(r'^(.*)', '', vol['title'])
                 vol['title'] = re.sub(r'^\s*Text\s*$', '', vol['title']).strip()
                 volume = vol
             # end if
@@ -82,9 +85,34 @@ class WuxiaCoCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        body_parts = soup.find("div", {"id": "content"})
-        body_parts.script.decompose()
+        body_parts = soup.select_one('div#content').contents
+        body = []
+        beginner = True
+        for elem in body_parts:
+            if not elem.name:
+                text = str(elem).strip()
+                if beginner and self.check_blacklist(text):
+                    continue
+                if len(text) > 0:
+                    beginner = False
+                    body.append(text)
+                # end if
+            # end if
+        # end for
+        return '<p>' + '</p><p>'.join(body) + '</p>'
+    # end def
 
-        return body_parts
+    def check_blacklist(self, text):
+        blacklist = [
+            r'^(...|\u2026)$',
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ]
+        for item in blacklist:
+            if re.search(item, text, re.IGNORECASE):
+                return True
+            # end if
+        # end for
+        return False
     # end def
 # end class
