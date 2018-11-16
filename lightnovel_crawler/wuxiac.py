@@ -87,14 +87,13 @@ class WuxiaCoCrawler(Crawler):
 
         body_parts = soup.select_one('div#content').contents
         body = []
-        beginner = True
         for elem in body_parts:
             if not elem.name:
                 text = str(elem).strip()
-                if beginner and self.check_blacklist(text):
+                if len(body) == 0 and self.is_blacklisted(text):
                     continue
+                # end if
                 if len(text) > 0:
-                    beginner = False
                     body.append(text)
                 # end if
             # end if
@@ -102,7 +101,7 @@ class WuxiaCoCrawler(Crawler):
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 
-    def check_blacklist(self, text):
+    def is_blacklisted(self, text):
         blacklist = [
             r'^(...|\u2026)$',
             r'^translat(ed by|or)',
