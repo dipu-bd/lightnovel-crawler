@@ -48,18 +48,19 @@ class WuxiaOnlineCrawler(Crawler):
         logger.info('Novel cover: %s', self.novel_cover)
 
         last_vol = -1
-        for a in soup.select('.chapter-list .row span a'):
+        for a in reversed(soup.select('.chapter-list .row span a')):
             chap_id = len(self.chapters) + 1
-            volume = { 'id': chap_id, 'title': '', }
-            if last_vol != volume['id']:
-                last_vol = volume['id']
+            vol_id = 1 + (chap_id - 1) // 100
+            volume = { 'id': vol_id, 'title': '' }
+            if last_vol != vol_id:
                 self.volumes.append(volume)
+                last_vol = vol_id
             # end if
             self.chapters.append({
                 'id': chap_id,
+                'volume': vol_id,
+                'url':  a['href'],
                 'title': a['title'],
-                'volume': volume['id'],
-                'url':  url + a['href'],
             })
         #end for
 
@@ -74,14 +75,38 @@ class WuxiaOnlineCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        content = soup.select_one('#list_chapter .content-area')
+        parts = soup.select_one('#list_chapter .content-area')
+        body = self.extract_text_from(parts.contents)
+        body = [x for x in body if len(x) and self.not_blacklisted(x)]
+        return '<p>' + '</p><p>'.join(body) + '</p>'
+    # end def
 
-        for a in content.find_all('a'):
-            a.decompose()
+    def extract_text_from(self, contents):
+        body = []
+        for elem in contents:
+            if not elem.name:
+                body.append(str(elem).strip())
+            elif ['p', 'div'].count(elem.name):
+                body += self.extract_text_from(elem.contents)
+            elif ['strong', 'p', 'span', 'b', 'i'].count(elem.name):
+                elem.name = 'span'
+                body.append(str(elem).strip())
+            # end if
+        # end for
+        return body
+    # end def
 
-        for script in content.find_all('script'):
-            script.decompose()
-
-        return content.extract()
+    def not_blacklisted(self, text):
+        blacklist = [
+            # r'^(...|\u2026)$',
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ]
+        for item in blacklist:
+            if re.search(item, text, re.IGNORECASE):
+                return False
+            # end if
+        # end for
+        return True
     # end def
 # end class

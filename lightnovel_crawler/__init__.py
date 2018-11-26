@@ -52,7 +52,8 @@ def configure():
 # end def
 
 def headline():
-    print('\033c', end='')
+    # print('\033c', end='')    # clears the console
+
     print('-' * 60)
     print(' \33[1m\33[92m📒', 'Ebook Crawler 🍀', __version__, '\33[0m')
     print(' 🔗\33[94m https://github.com/dipu-bd/site-to-epub', '\33[0m')
