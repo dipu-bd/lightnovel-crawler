@@ -61,6 +61,7 @@ The list of crawable websites are given below. *Request new site by [creating a 
 
 - https://lnmtl.com
 - https://www.webnovel.com
+- https://wuxiaworld.online
 - https://www.wuxiaworld.com
 - https://www.wuxiaworld.co
 - https://boxnovel.com
