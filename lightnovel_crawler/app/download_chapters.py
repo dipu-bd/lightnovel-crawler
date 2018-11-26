@@ -75,15 +75,21 @@ def download_chapter_body(app, chapter):
             old_chapter = json.load(file)
             chapter['body'] = old_chapter['body']
         # end with
+    # end if
+
     if len(chapter['body']) == 0:
-        app.logger.info('Downloading to %s', file_name)
-        body = app.crawler.download_chapter_body(chapter)
+        body = ''
+        try:
+            app.logger.info('Downloading to %s', file_name)
+            body = app.crawler.download_chapter_body(chapter)
+        except Exception as err:
+            app.logger.debug(err)
+        # end try
         if len(body) == 0:
-            result = 'Body is empty: ' + chapter['url']
-        else:
-            chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
-                chapter['volume_title'], chapter['title'], body)
+            body = result = 'Body is empty: ' + chapter['url']
         # end if
+        chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
+            chapter['volume_title'], chapter['title'], body)
         with open(file_name, 'w') as file:
             file.write(json.dumps(chapter))
         # end with

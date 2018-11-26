@@ -89,8 +89,7 @@ class WuxiaOnlineCrawler(Crawler):
             elif ['p', 'div'].count(elem.name):
                 body += self.extract_text_from(elem.contents)
             elif ['strong', 'p', 'span', 'b', 'i'].count(elem.name):
-                elem.name = 'span'
-                body.append(str(elem).strip())
+                body.append(elem.text.strip())
             # end if
         # end for
         return body
@@ -99,7 +98,7 @@ class WuxiaOnlineCrawler(Crawler):
     def not_blacklisted(self, text):
         blacklist = [
             # r'^(...|\u2026)$',
-            r'^translat(ed by|or)',
+            r'^(edit|translat)(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
         for item in blacklist:
