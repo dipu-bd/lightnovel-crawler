@@ -39,6 +39,7 @@ def check_output_path(output_path):
     os.makedirs(output_path, exist_ok=True)
 # end def
 
+"""
 def retrieve_chapter_list(crawler, output_path):
     file_name = os.path.join(output_path, 'meta.json')
     if os.path.exists(file_name):
@@ -53,6 +54,7 @@ def retrieve_chapter_list(crawler, output_path):
         crawler.download_chapter_list()
     # end if
 # end def
+"""
 
 def format_volume_list(crawler):
     for vol in crawler.volumes:
@@ -109,7 +111,8 @@ def novel_info(app):
     check_output_path(app.output_path)
 
     app.logger.info('Getting chapters...')
-    retrieve_chapter_list(app.crawler, app.output_path)
+    app.crawler.download_chapter_list()
+    # retrieve_chapter_list(app.crawler, app.output_path)
 
     format_volume_list(app.crawler)
     format_chapter_list(app.crawler)
