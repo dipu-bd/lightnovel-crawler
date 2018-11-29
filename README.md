@@ -39,13 +39,6 @@ $ lncrawl
 
 > There is a verbose mode for extended logging: `lncrawl -v`
 
-### Additional dependencies
-
-Some websites like `novelplanet` needs `nodejs`. Install it from:
-
-- Downloads: https://nodejs.org/en/download/ 
-- Linux: `curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh`
-
 ### Available websites
 
 The list of crawable websites are given below. *Request new site by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues)*.
