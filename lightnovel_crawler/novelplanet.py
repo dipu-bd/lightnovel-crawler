@@ -11,7 +11,6 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_PLANET')
 
-home_url = 'https://novelplanet.com'
 
 class NovelPlanetCrawler(Crawler):
     @property
@@ -28,16 +27,17 @@ class NovelPlanetCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.content, 'lxml')
 
-        self.novel_title = soup.find('a',{'class':'title'}).text
+        self.novel_title = soup.find('a', {'class': 'title'}).text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = home_url + soup.select_one('.post-previewInDetails img')['src']
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.post-previewInDetails img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         for span in soup.findAll("span", {"class": "infoLabel"}):
@@ -51,26 +51,26 @@ class NovelPlanetCrawler(Crawler):
             self.novel_author = author
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find_all('div', {'class':'rowChapter'})
+        chapters = soup.find_all('div', {'class': 'rowChapter'})
         chapters.reverse()
 
         for x in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
-                vol_id =  chap_id//100 +1
-                vol_title =  'Volume ' + str(vol_id)
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
                 self.volumes.append({
                     'id': vol_id,
                     'title': vol_title,
                 })
-            #end if
+            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  home_url + x.find('a')['href'],
+                'url': self.absolute_url(x.find('a')['href']),
                 'title': x.find('a')['title'] or ('Chapter %d' % chap_id),
             })
-        #end for
+        # end for
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
@@ -88,12 +88,14 @@ class NovelPlanetCrawler(Crawler):
         if 'Chapter' in soup.select_one('h3').text:
             chapter['title'] = soup.select_one('h3').text
         else:
-            chapter['title'] = chapter['title'] + ' : ' + soup.select_one('h3').text
+            chapter['title'] = chapter['title'] + \
+                ' : ' + soup.select_one('h3').text
 
         content = soup.select('p')
-        body_parts = ''.join([str(p.extract()) for p in content if p.text.strip()])
+        body_parts = ''.join([str(p.extract())
+                              for p in content if p.text.strip()])
 
-        if len(body_parts)==0:
+        if len(body_parts) == 0:
             body_parts = soup.select_one('div#divReadContent').contents
             body = []
             for elem in body_parts:
@@ -107,7 +109,7 @@ class NovelPlanetCrawler(Crawler):
                     # end if
                 # end if
             # end for
-            body_parts =  '<p>' + '</p><p>'.join(body) + '</p>'
+            body_parts = '<p>' + '</p><p>'.join(body) + '</p>'
         return body_parts
     # end def
 

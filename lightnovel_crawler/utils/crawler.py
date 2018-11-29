@@ -3,6 +3,7 @@
 """
 Crawler application
 """
+import re
 from concurrent import futures
 import cfscrape
 
@@ -10,6 +11,8 @@ import cfscrape
 class Crawler:
     '''Blueprint for creating new crawlers'''
 
+    home_url = ''
+    novel_url = ''
     scrapper = cfscrape.create_scraper()
     executor = futures.ThreadPoolExecutor(max_workers=5)
 
@@ -100,9 +103,9 @@ class Crawler:
 
     @property
     def cookies(self):
-        return { x.name: x.value for x in self.scrapper.cookies }
+        return {x.name: x.value for x in self.scrapper.cookies}
     # end def
-    
+
     def get_response(self, url, incognito=False):
         response = self.scrapper.get(url)
         response.encoding = 'utf-8'
@@ -116,8 +119,8 @@ class Crawler:
     def submit_form(self, url, multipart=False, headers={}, **data):
         '''Submit a form using post request'''
         headers = {
-            'content-type': 'multipart/form-data' if multipart \
-                else 'application/x-www-form-urlencoded'
+            'content-type': 'multipart/form-data' if multipart
+            else 'application/x-www-form-urlencoded'
         }
         response = self.scrapper.post(url, data=data, headers=headers)
         self.cookies.update({
@@ -133,4 +136,14 @@ class Crawler:
             f.write(response.content)
         # end with
     # end def
+
+    def absolute_url(self, url):
+        if re.search(r'^https?://', url):
+            return url
+        elif not url:
+            return url
+        else:
+            return self.home_url + url
+        # end if
+    # end fef
 # end class

@@ -12,7 +12,6 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('LNMTL')
 
-home_url = 'https://lnmtl.com'
 login_url = 'https://lnmtl.com/auth/login'
 logout_url = 'https://lnmtl.com/auth/logout'
 
@@ -66,10 +65,10 @@ class LNMTLCrawler(Crawler):
         # end if
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''get list of chapters'''
-        logger.info('Visiting %s', url)
-        response = self.get_response(url)
+        logger.info('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
         title = soup.select_one('.novel .media .novel-name').text
@@ -114,7 +113,7 @@ class LNMTLCrawler(Crawler):
 
     def download_chapter_list(self):
         self.chapters = []
-        page_url = '%s/chapter?page=1' % home_url
+        page_url = self.absolute_url('/chapter?page=1')
         future_to_url = {
             self.executor.submit(
                 self.download_chapter_list_of_volume,
@@ -150,7 +149,7 @@ class LNMTLCrawler(Crawler):
                 self.executor.submit(
                     self.download_chapter_list_of_volume,
                     volume,
-                    '%s/chapter?page=%s' % (home_url, page + 1)
+                    self.absolute_url('/chapter?page=%s'),
                 ): '%s-%s' % (vol_id, page)
                 for page in range(1, result['last_page'])
             }

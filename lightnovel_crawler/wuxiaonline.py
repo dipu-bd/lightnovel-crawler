@@ -11,7 +11,6 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_ONLINE')
 
-home_url = 'https://wuxiaworld.online'
 
 class WuxiaOnlineCrawler(Crawler):
     @property
@@ -28,10 +27,10 @@ class WuxiaOnlineCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
         self.novel_title = soup.select_one('h1.entry-title').text
@@ -41,17 +40,15 @@ class WuxiaOnlineCrawler(Crawler):
         # self.novel_author = re.sub(r'^Author[^\w]+', '', self.novel_author).strip()
         # logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = soup.select_one('.info_image img')['src']
-        if not re.search(r'^https?://', self.novel_cover):
-            self.novel_cover = home_url + self.novel_cover
-        # end if
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.info_image img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         last_vol = -1
         for a in reversed(soup.select('.chapter-list .row span a')):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + (chap_id - 1) // 100
-            volume = { 'id': vol_id, 'title': '' }
+            volume = {'id': vol_id, 'title': ''}
             if last_vol != vol_id:
                 self.volumes.append(volume)
                 last_vol = vol_id
@@ -59,10 +56,10 @@ class WuxiaOnlineCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  a['href'],
                 'title': a['title'],
+                'url':  self.absolute_url(a['href']),
             })
-        #end for
+        # end for
 
         logger.debug(self.volumes)
         logger.debug(self.chapters)
@@ -84,12 +81,12 @@ class WuxiaOnlineCrawler(Crawler):
     def extract_text_from(self, contents):
         body = []
         for elem in contents:
-            if not elem.name:
-                body.append(str(elem).strip())
-            elif ['p', 'div'].count(elem.name):
+            if ['script', 'iframe', 'form', 'a'].count(elem.name):
+                pass
+            elif ['div'].count(elem.name):
                 body += self.extract_text_from(elem.contents)
-            elif ['strong', 'p', 'span', 'b', 'i'].count(elem.name):
-                body.append(elem.text.strip())
+            else:
+                body.append(str(elem).strip())
             # end if
         # end for
         return body
@@ -97,8 +94,6 @@ class WuxiaOnlineCrawler(Crawler):
 
     def not_blacklisted(self, text):
         blacklist = [
-            # r'^(...|\u2026)$',
-            r'^(edit|translat)(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
         for item in blacklist:

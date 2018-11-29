@@ -11,7 +11,6 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('BOXNOVEL')
 
-home_url = 'https://boxnovel.com/'
 
 class BoxNovelCrawler(Crawler):
     @property
@@ -28,16 +27,17 @@ class BoxNovelCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.select_one('h3').text.split(" ",1)[1]
+        self.novel_title = soup.select_one('h3').text.split(" ", 1)[1]
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.find("div", {"class": "summary_image"}).find("img")['src']
+        self.novel_cover = self.absolute_url(
+            soup.find('.summary_page img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.find("div", {"class": "author-content"}).findAll("a")
@@ -53,20 +53,20 @@ class BoxNovelCrawler(Crawler):
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
-                vol_id =  chap_id//100 +1
-                vol_title =  'Volume ' + str(vol_id)
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
                 self.volumes.append({
                     'id': vol_id,
                     'title': vol_title,
                 })
-            #end if
+            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  a['href'],
+                'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        #end for
+        # end for
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
@@ -87,12 +87,14 @@ class BoxNovelCrawler(Crawler):
             chapter['title'] = title[0].text
         else:
             if 'Translator' in soup.select_one('p').text:
-                chapter['title'] = soup.select_one('p').text.split("Translator",1)[0]
+                chapter['title'] = soup.select_one(
+                    'p').text.split("Translator", 1)[0]
             else:
                 chapter['title'] = soup.select_one('p').text
                 logger.info('Downloading %s', content.pop(0))
 
-        body_parts = ''.join([str(p.extract()) for p in content if p.text.strip()])
+        body_parts = ''.join([str(p.extract())
+                              for p in content if p.text.strip()])
 
         return body_parts
     # end def

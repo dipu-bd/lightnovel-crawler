@@ -18,6 +18,7 @@ book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
 chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
 chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 
+
 class WebnovelCrawler(Crawler):
     @property
     def supports_login(self):
@@ -32,12 +33,13 @@ class WebnovelCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         logger.info('Getting CSRF Token')
-        self.get_response(url)
+        self.get_response(self.novel_url)
         self.csrf = self.cookies['_csrfToken']
         logger.debug('CSRF Token = %s', self.csrf)
 
+        url = self.novel_url
         self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
         logger.debug('Novel Id: %s', self.novel_id)
         url = chapter_list_url % (self.csrf, self.novel_id)
@@ -101,7 +103,8 @@ class WebnovelCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         url = chapter['url']
-        logger.info('Getting chapter... %s [%s]', chapter['title'], chapter['id'])
+        logger.info('Getting chapter... %s [%s]',
+                    chapter['title'], chapter['id'])
 
         response = self.get_response(url)
         data = response.json()

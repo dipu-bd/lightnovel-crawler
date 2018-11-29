@@ -11,7 +11,6 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('READLIGHTNOVEL')
 
-home_url = 'https://www.readlightnovel.org/'
 
 class ReadLightNovelCrawler(Crawler):
     @property
@@ -28,45 +27,44 @@ class ReadLightNovelCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
         self.novel_title = soup.select_one('.block-title h1').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.find('img', {"alt" : self.novel_title})['src']
+        self.novel_cover = self.absolute_url(
+            soup.find('img', {'alt': self.novel_title})['src'])
         logger.info('Novel cover: %s', self.novel_cover)
-        
+
         try:
-            self.novel_author = soup.select_one("a[href*=author]").text.strip().title()
-        except:
-            pass
-        logger.info('Novel author: %s', self.novel_author)
+            self.novel_author = soup.select_one(
+                "a[href*=author]").text.strip().title()
+            logger.info('Novel author: %s', self.novel_author)
+        except Exception as err:
+            logger.debug('Failed getting author: %s', err)
+        # end try
 
         for a in soup.select('.chapters .chapter-chs li a'):
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
-                vol_id =  chap_id//100 +1
-                vol_title =  'Volume ' + str(vol_id)
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
                 self.volumes.append({
                     'id': vol_id,
                     'title': vol_title,
                 })
-            #end if
-            href = a['href'].strip()
-            if href.startswith('/'):
-                href = url + href
             # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  href,
+                'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        #end for
+        # end for
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))

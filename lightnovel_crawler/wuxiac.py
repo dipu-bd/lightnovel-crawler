@@ -11,7 +11,6 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
 
-home_url = 'https://www.wuxiaworld.co/'
 
 class WuxiaCoCrawler(Crawler):
     @property
@@ -28,34 +27,34 @@ class WuxiaCoCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
         self.novel_title = soup.select_one('#maininfo h1').text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = soup.select_one('#maininfo p').text.strip()
-        self.novel_author = re.sub(r'^Author[^\w]+', '', self.novel_author).strip()
+        self.novel_author = re.sub(
+            r'^Author[^\w]+', '', self.novel_author).strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = soup.select_one('#sidebar img')['src']
-        if not re.search(r'^https?://', self.novel_cover):
-            self.novel_cover = home_url + self.novel_cover
-        # end if
+        self.novel_cover = self.absolute_url(
+            soup.select_one('#sidebar img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         last_vol = -1
-        volume = { 'id': 0, 'title': 'Volume 1', }
+        volume = {'id': 0, 'title': 'Volume 1', }
         for item in soup.select('#list dl *'):
             if item.name == 'dt':
                 vol = volume.copy()
                 vol['id'] += 1
                 vol['title'] = item.text.strip()
                 vol['title'] = re.sub(r'^(.*)', '', vol['title'])
-                vol['title'] = re.sub(r'^\s*Text\s*$', '', vol['title']).strip()
+                vol['title'] = re.sub(
+                    r'^\s*Text\s*$', '', vol['title']).strip()
                 volume = vol
             # end if
             if item.name == 'dd':
@@ -64,15 +63,15 @@ class WuxiaCoCrawler(Crawler):
                 self.chapters.append({
                     'id': chap_id,
                     'volume': volume['id'],
-                    'url':  url + a['href'],
                     'title': a.text.strip(),
+                    'url':  self.absolute_url(a['href']),
                 })
                 if last_vol != volume['id']:
                     last_vol = volume['id']
                     self.volumes.append(volume)
                 # end if
             # end if
-        #end for
+        # end for
 
         logger.debug(self.volumes)
         logger.debug(self.chapters)

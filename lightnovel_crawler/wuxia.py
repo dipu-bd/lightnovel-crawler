@@ -11,7 +11,6 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
 
-home_url = 'https://www.wuxiaworld.com'
 
 class WuxiaCrawler(Crawler):
     @property
@@ -28,24 +27,22 @@ class WuxiaCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
         self.novel_title = soup.select_one('.section-content  h4').text
         logger.info('Novel title: %s', self.novel_title)
 
         try:
-            self.novel_cover = soup.select_one('img.media-object')['src']
-            if not re.search(r'^https?://', self.novel_cover):
-                self.novel_cover = home_url + self.novel_cover
-            # end if
+            self.novel_cover = self.absolute_url(
+                soup.select_one('img.media-object')['src'])
+            logger.info('Novel cover: %s', self.novel_cover)
         except Exception as ex:
             logger.debug('Failed to get cover: %s', ex)
         # end try
-        logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select_one('.media-body dl dt').text
         self.novel_author += soup.select_one('.media-body dl dd').text
@@ -63,7 +60,7 @@ class WuxiaCrawler(Crawler):
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
-                    'url': home_url + a['href'],
+                    'url': self.absolute_url(a['href']),
                     'title': a.text.strip() or ('Chapter %d' % chap_id),
                 })
             # end def

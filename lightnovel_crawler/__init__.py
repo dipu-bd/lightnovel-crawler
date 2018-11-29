@@ -21,22 +21,23 @@ from .idqidian import IdqidianCrawler
 from .utils.crawler import Crawler
 
 crawler_list = {
-    'https://lnmtl.com': LNMTLCrawler,
-    'https://www.webnovel.com': WebnovelCrawler,
-    'https://wuxiaworld.online': WuxiaOnlineCrawler,
-    'https://www.wuxiaworld.com': WuxiaCrawler,
-    'https://www.wuxiaworld.co': WuxiaCoCrawler,
-    'https://boxnovel.com': BoxNovelCrawler,
-    'https://novelplanet.com': NovelPlanetCrawler,
-    'https://www.readlightnovel.org': ReadLightNovelCrawler,
-    'https://lnindo.org': LnindoCrawler,
-    'https://www.idqidian.us': IdqidianCrawler,
+    'https://lnmtl.com/': LNMTLCrawler,
+    'https://www.webnovel.com/': WebnovelCrawler,
+    'https://wuxiaworld.online/': WuxiaOnlineCrawler,
+    'https://www.wuxiaworld.com/': WuxiaCrawler,
+    'https://www.wuxiaworld.co/': WuxiaCoCrawler,
+    'https://boxnovel.com/': BoxNovelCrawler,
+    'https://novelplanet.com/': NovelPlanetCrawler,
+    'https://www.readlightnovel.org/': ReadLightNovelCrawler,
+    'https://lnindo.org/': LnindoCrawler,
+    'https://www.idqidian.us/': IdqidianCrawler,
 }
 
 dir_name = os.path.dirname(__file__)
 with open(os.path.join(dir_name, '..', 'VERSION'), 'r') as f:
     __version__ = f.read().strip()
 # end with
+
 
 def configure():
     mode = sys.argv[1].lower() if len(sys.argv) > 1 else None
@@ -51,6 +52,7 @@ def configure():
     # end if
 # end def
 
+
 def headline():
     # print('\033c', end='')    # clears the console
 
@@ -61,12 +63,14 @@ def headline():
     print('-' * 60)
 # end def
 
+
 def main():
     headline()
     configure()
 
     start_app(crawler_list)
 # end def
+
 
 if __name__ == '__main__':
     main()

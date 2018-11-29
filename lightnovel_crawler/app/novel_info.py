@@ -9,18 +9,6 @@ import re
 from shutil import rmtree
 from PyInquirer import prompt
 
-def get_novel_url():
-    answer = prompt([
-        {
-            'type': 'input',
-            'name': 'novel',
-            'message': 'What is the url of novel page?',
-            'validate': lambda val: 'Url should be not be empty'
-            if len(val) == 0 else True,
-        },
-    ])
-    return answer['novel'].strip()
-# end def
 
 def check_output_path(output_path):
     if os.path.exists(output_path):
@@ -39,6 +27,7 @@ def check_output_path(output_path):
     os.makedirs(output_path, exist_ok=True)
 # end def
 
+
 """
 def retrieve_chapter_list(crawler, output_path):
     file_name = os.path.join(output_path, 'meta.json')
@@ -56,6 +45,7 @@ def retrieve_chapter_list(crawler, output_path):
 # end def
 """
 
+
 def format_volume_list(crawler):
     for vol in crawler.volumes:
         vol['chapter_count'] = 0
@@ -66,6 +56,7 @@ def format_volume_list(crawler):
         # end if
     # end for
 # end def
+
 
 def format_chapter_list(crawler):
     for item in crawler.chapters:
@@ -87,6 +78,7 @@ def format_chapter_list(crawler):
     # end for
 # end def
 
+
 def save_metadata(crawler, output_path):
     file_name = os.path.join(output_path, 'meta.json')
     data = {
@@ -101,9 +93,10 @@ def save_metadata(crawler, output_path):
     # end with
 # end def
 
+
 def novel_info(app):
     app.logger.info('Retrieving novel info...')
-    app.crawler.read_novel_info(get_novel_url())
+    app.crawler.read_novel_info()
 
     app.logger.info('Checking output path...')
     app.output_path = os.path.abspath(
