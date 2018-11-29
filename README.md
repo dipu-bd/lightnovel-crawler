@@ -21,10 +21,10 @@ Crawls light novels and make text, epub and mobi
 Make sure that you have `python3` and `pip` installed in your computer. Add this package using:
 
 ```bash
-$ pip install lightnovel-crawler
+$ pip3 install -U lightnovel-crawler
 
 # Or if it does not work, use:
-$ python3 -m pip install --user lightnovel-crawler
+$ python3 -m pip install --user -U lightnovel-crawler
 ```
 
 Next, *Open the console panel in a directory you want to store your downloaded novels* and
@@ -37,18 +37,9 @@ $ lightnovel-crawler
 $ lncrawl
 ```
 
-To view more logs, there is a verbose mode:
-```bash
-$ lncrawl -v
-```
+> There is a verbose mode for extended logging: `lncrawl -v`
 
 ### Additional dependencies
-
-#### For MOBI Output
-
-- KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
-
-#### NodeJS for cloudflare
 
 Some websites like `novelplanet` needs `nodejs`. Install it from:
 
