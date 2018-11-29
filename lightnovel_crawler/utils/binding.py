@@ -11,11 +11,8 @@ import subprocess
 from ebooklib import epub
 from progress.spinner import Spinner
 
-KINDLEGEN_PATH_MAC = 'kindlegen-mac'
-KINDLEGEN_PATH_LINUX = 'kindlegen-linux'
-KINDLEGEN_PATH_WINDOWS = 'kindlegen-windows'
-
 logger = logging.getLogger('BINDER')
+
 
 def bind_epub_book(app, chapters, volume=''):
     bool_title = (app.crawler.novel_title + ' ' + volume).strip()
@@ -60,9 +57,10 @@ def bind_epub_book(app, chapters, volume=''):
     return file_path
 # end def
 
-def epub_to_mobi(epub_file):
+
+def epub_to_mobi(kindlegen, epub_file):
     if not os.path.exists(epub_file):
-        return
+        return None
     # end if
 
     epub_path = os.path.dirname(epub_file)
@@ -74,55 +72,25 @@ def epub_to_mobi(epub_file):
     mobi_file = os.path.join(mobi_path, mobi_file_name)
     logger.debug('Binding %s.epub', mobi_file)
 
-    fallback = None
-    devnull = open(os.devnull, 'w')
     try:
-        kindlegen = None
-        os_name = platform.system()
-        if os_name == 'Linux':
-            kindlegen = KINDLEGEN_PATH_LINUX
-        elif os_name == 'Darwin':
-            kindlegen = KINDLEGEN_PATH_MAC
-        elif os_name == 'Windows':
-            kindlegen = KINDLEGEN_PATH_WINDOWS
-        else:
-            fallback = 'KindleGen does not support this OS.'
-        # end if
-
-        dir_name = os.path.dirname(__file__)
-        kindlegen = os.path.join(dir_name, '..', 'ext', kindlegen)
-        kindlegen = os.path.abspath(kindlegen)
-
+        devnull = open(os.devnull, 'w')
         subprocess.call(
-            [ kindlegen, epub_file ],
+            [kindlegen, epub_file],
             stdout=devnull,
             stderr=devnull,
         )
     except Exception as ex:
-        fallback = '%s' % ex
+        pass
     # end try
-
-    if fallback:
-        try:
-            subprocess.call(
-                [ 'kindlegen', epub_file ],
-                stdout=devnull,
-                stderr=devnull,
-            )
-        except (OSError, Exception) as err:
-            no_kindlegen = no_kindlegen or (
-                err[1].errno == errno.ENOENT
-                if err is OSError else False
-            )
-        # end try
-    # end if
 
     if os.path.exists(mobi_file_in_epub_path):
         os.makedirs(mobi_path, exist_ok=True)
         os.rename(mobi_file_in_epub_path, mobi_file)
         logger.warn('Created: %s', mobi_file_name)
+        return mobi_file_name
     else:
         logger.error('Failed to generate mobi for %s', epub_file_name)
+        return None
     # end if
 # end def
 
@@ -136,7 +104,7 @@ def manga_to_kindle(input_path):
     if not os.path.exists(output_path):
         os.makedirs(output_path)
     # end if
-    call(['kcc-c2e',
+    subprocess.call(['kcc-c2e',
           '-p', 'KPW',
           # '--forcecolor',
           # '-f', 'EPUB',
