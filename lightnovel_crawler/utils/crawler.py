@@ -45,7 +45,7 @@ class Crawler:
     # Implement these methods
     # ------------------------------------------------------------------------- #
 
-    def initialize(cls):
+    def initialize(self):
         pass
     # end def
 
@@ -145,5 +145,42 @@ class Crawler:
         else:
             return self.home_url + url
         # end if
-    # end fef
+    # end def
+
+    def extract_contents(self, contents, level=0):
+        body = []
+        for elem in contents:
+            if ['script', 'iframe', 'form', 'a', 'br'].count(elem.name):
+                pass
+            elif ['h3', 'div', 'p'].count(elem.name):
+                body += self.extract_contents(elem.contents, level + 1)
+            elif not elem.name:
+                body.append(str(elem).strip())
+            elif ['img'].count(elem.name):
+                body.append(str(elem))
+            elif elem.text.strip() != '':
+                tag = elem.name
+                text = '<%s>%s</%s>' % (tag, elem.text, tag)
+                body.append(text)
+            # end if
+        # end for
+        if level == 0:
+            return body
+        else:
+            return [x for x in body if len(x) and self.not_blacklisted(x)]
+        # end if
+    # end def
+
+    blacklist_patterns = [
+        r'^(volume|chapter) .?\d+$',
+    ]
+
+    def not_blacklisted(self, text):
+        for pattern in self.blacklist_patterns:
+            if re.search(pattern, text, re.IGNORECASE):
+                return False
+            # end if
+        # end for
+        return True
+    # end def
 # end class

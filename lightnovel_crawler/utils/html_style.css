@@ -1,0 +1,70 @@
+html, body {
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    background: #2d2d2d;
+}
+
+#content {
+    padding: 10px 20px;
+    font-size: 16px;
+    max-width: 900px;
+    margin: 10px auto;
+    font-size: 16px;
+    font-family: Georgia, serif;
+    background: white;
+    box-shadow: 0 0 10px #000, 0 0 0 1px #000;
+}
+
+main {
+    min-height: 500px;
+    padding: 0 10px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #555;
+    padding: 10px;
+    margin: 10px 0;
+    text-align: center;
+    border-bottom: 1px solid #dde;
+}
+
+h1 {
+    padding: 15px 10px;
+    margin-bottom: 15px;
+    box-shadow: 1px 2px 2px #dde;
+}
+
+.link-group {
+    padding: 10px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #dde;
+    border: 1px solid #dde;
+}
+
+.link-group a {
+    color: #39f;
+    text-decoration: none;
+}
+
+.link-group .btn {
+    color: #333;
+    display: inline-block;
+    width: 125px;
+    padding: 15px;
+    text-align: center;
+    background: #f5f5f5;
+    box-shadow: 0 0 10px #cce, 0 0 0 1px #ccc;
+}
+
+.link-group .btn:hover {
+    background: #eaeae5;
+}
+
+.link-group .btn:active {
+    box-shadow: 0 0 10px #cce inset, 0 0 0 1px #ccc;
+}

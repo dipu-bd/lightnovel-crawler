@@ -11,7 +11,7 @@ from logging import Logger
 from bs4 import BeautifulSoup
 from PyInquirer import prompt
 
-from ..utils.binding import bind_epub_book, epub_to_mobi
+from ..utils.binding import bind_html_chapter, bind_epub_book, epub_to_mobi
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 logger = Logger('BIND_BOOKS')
@@ -20,7 +20,7 @@ logger = Logger('BIND_BOOKS')
 def make_data(app):
     data = {}
     if app.pack_by_volume:
-        for i, vol in enumerate(app.crawler.volumes):
+        for vol in app.crawler.volumes:
             data['Volume %d' % vol['id']] = [
                 x for x in app.chapters
                 if x['volume'] == vol['id']
@@ -37,11 +37,11 @@ def make_data(app):
 def make_texts(app, data):
     text_files = []
     for vol in data:
+        dir_name = os.path.join(app.output_path, 'web', vol)
+        os.makedirs(dir_name, exist_ok=True)
         for chap in data[vol]:
-            dir_name = os.path.join(app.output_path, 'text', vol)
             file_name = '%s.txt' % str(chap['id']).rjust(5, '0')
             file_name = os.path.join(dir_name, file_name)
-            os.makedirs(dir_name, exist_ok=True)
             with open(file_name, 'w', encoding='utf-8') as file:
                 body = chap['body'].replace('</p><p', '</p>\n<p')
                 soup = BeautifulSoup(body, 'lxml')
@@ -56,6 +56,28 @@ def make_texts(app, data):
     return text_files
 # end def
 
+
+def make_htmls(app, data):
+    web_files = []
+    for vol in data:
+        dir_name = os.path.join(app.output_path, 'web', vol)
+        os.makedirs(dir_name, exist_ok=True)
+        for i in range(len(data[vol])):
+            chapter = data[vol][i]
+            prev_chapter = data[vol][i - 1] if i > 0 else None
+            next_chapter = data[vol][i + 1] if i + 1 < len(data[vol]) else None
+            html, file_name = bind_html_chapter(chapter, prev_chapter, next_chapter)
+
+            file_name = os.path.join(dir_name, file_name)
+            with open(file_name, 'w', encoding='utf-8') as file:
+                file.write(html)
+            # end with
+            web_files.append(file_name)
+        # end for
+    # end for
+    logger.warn('Created: %d html files', len(web_files))
+    return web_files
+# end def
 
 def make_epubs(app, data):
     epub_files = []
@@ -108,7 +130,8 @@ def make_mobis(app, epubs):
 
 def bind_books(app):
     data = make_data(app)
-    texts = make_texts(app, data)
+    make_texts(app, data)
+    make_htmls(app, data)
     epubs = make_epubs(app, data)
-    mobis = make_mobis(app, epubs)
+    make_mobis(app, epubs)
 # end def
