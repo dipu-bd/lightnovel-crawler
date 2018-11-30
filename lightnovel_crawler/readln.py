@@ -76,9 +76,6 @@ class ReadLightNovelCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.blacklist_patterns = [
-            r'^(volume|chapter) .?\d+$',
-        ]
         body_parts = soup.select_one('.chapter-content3 .desc')
         body = self.extract_contents(body_parts.contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'

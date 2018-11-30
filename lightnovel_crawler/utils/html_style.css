@@ -1,4 +1,5 @@
 html, body {
+    margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
@@ -9,7 +10,7 @@ html, body {
 #content {
     padding: 10px 20px;
     font-size: 16px;
-    max-width: 900px;
+    max-width: 800px;
     margin: 10px auto;
     font-size: 16px;
     font-family: Georgia, serif;
@@ -17,6 +18,13 @@ html, body {
     line-height: 24px;
     background: white;
     box-shadow: 0 0 10px #000, 0 0 0 1px #000;
+}
+
+@media (max-width: 850px) {
+    #content {
+        margin: 0;
+        max-width: auto;
+    }
 }
 
 main {

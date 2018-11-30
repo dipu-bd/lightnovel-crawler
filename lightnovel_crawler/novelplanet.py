@@ -91,7 +91,6 @@ class NovelPlanetCrawler(Crawler):
         # end if
 
         self.blacklist_patterns = [
-            r'^(...|\u2026)$',
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]

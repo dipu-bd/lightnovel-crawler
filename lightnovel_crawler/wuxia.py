@@ -77,7 +77,7 @@ class WuxiaCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         self.blacklist_patterns = [
-            r'^(...|\u2026)$',
+            r'^<span>(...|\u2026)</span>$',
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
