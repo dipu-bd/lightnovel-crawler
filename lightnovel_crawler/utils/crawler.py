@@ -106,6 +106,18 @@ class Crawler:
         return {x.name: x.value for x in self.scrapper.cookies}
     # end def
 
+    def absolute_url(self, url):
+        if not url or len(url) == 0:
+            return None
+        elif url.startswith('//'):
+            return 'http:' + url
+        elif url.find('//') >= 0:
+            return url
+        else:
+            return self.home_url + url
+        # end if
+    # end def
+
     def get_response(self, url, incognito=False):
         response = self.scrapper.get(url)
         response.encoding = 'utf-8'
@@ -137,18 +149,8 @@ class Crawler:
         # end with
     # end def
 
-    def absolute_url(self, url):
-        if re.search(r'^https?://', url):
-            return url
-        elif not url:
-            return url
-        else:
-            return self.home_url + url
-        # end if
-    # end def
-
     def extract_contents(self, contents, level=0):
-        body = []
+        body = [] 
         for elem in contents:
             if ['script', 'iframe', 'form', 'a', 'br'].count(elem.name):
                 pass
@@ -165,9 +167,9 @@ class Crawler:
             # end if
         # end for
         if level == 0:
-            return body
-        else:
             return [x for x in body if len(x) and self.not_blacklisted(x)]
+        else:
+            return body
         # end if
     # end def
 

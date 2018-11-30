@@ -6,16 +6,17 @@ To download chapter bodies
 import json
 import os
 from concurrent import futures
+from urllib.parse import urlparse
 from progress.bar import IncrementalBar
 
 
-def download_chapters(app):
+def downlod_cover(app):
     app.book_cover = None
     if app.crawler.novel_cover:
         app.logger.warn('Getting cover image...')
         try:
-            filename = app.crawler.novel_cover.split('/')[-1]
-            filename = os.path.join(app.output_path, filename)
+            ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
+            filename = os.path.join(app.output_path, 'cover.%s' % (ext or 'png'))
             if not os.path.exists(filename):
                 app.logger.info('Downloading cover image')
                 app.crawler.download_cover(filename)
@@ -28,32 +29,8 @@ def download_chapters(app):
     else:
         app.logger.warn('No cover image.')
     # end if
-
-    bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
-    bar.start()
-
-    if os.getenv('debug_mode'):
-        bar.next = lambda: None
-    # end if
-
-    futures_to_check = {
-        app.crawler.executor.submit(
-            download_chapter_body,
-            app,
-            chapter,
-        ): str(chapter['id'])
-        for chapter in app.chapters
-    }
-    for future in futures.as_completed(futures_to_check):
-        result = future.result()
-        if result:
-            bar.clearln()
-            app.logger.error(result)
-        # end if
-        bar.next()
-    # end for
-    bar.finish()
 # end def
+
 
 def download_chapter_body(app, chapter):
     result = None
@@ -61,7 +38,7 @@ def download_chapter_body(app, chapter):
     dir_name = os.path.join(app.output_path, 'json')
     if app.pack_by_volume:
         dir_name = os.path.join(dir_name,
-            'Volume ' + str(chapter['volume']).rjust(2, '0'))
+                                'Volume ' + str(chapter['volume']).rjust(2, '0'))
     # end if
     os.makedirs(dir_name, exist_ok=True)
 
@@ -96,4 +73,33 @@ def download_chapter_body(app, chapter):
     # end if
 
     return result
+# end def
+
+
+def download_chapters(app):
+    downlod_cover(app)
+
+    bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
+    bar.start()
+    if os.getenv('debug_mode') == 'true':
+        bar.next = lambda: None
+    # end if
+
+    futures_to_check = {
+        app.crawler.executor.submit(
+            download_chapter_body,
+            app,
+            chapter,
+        ): str(chapter['id'])
+        for chapter in app.chapters
+    }
+    for future in futures.as_completed(futures_to_check):
+        result = future.result()
+        if result:
+            bar.clearln()
+            app.logger.error(result)
+        # end if
+        bar.next()
+    # end for
+    bar.finish()
 # end def

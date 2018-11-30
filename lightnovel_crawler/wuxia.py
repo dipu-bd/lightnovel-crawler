@@ -81,23 +81,8 @@ class WuxiaCrawler(Crawler):
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
-
-        body = []
-        beginner = True
-        body_parts = soup.select('.panel-default .fr-view *').contents
-        for tag in body_parts:
-            text = str(tag).strip()
-            if tag.name == 'hr':
-                beginner = False
-            # end if
-            if beginner and not self.not_blacklisted(text):
-                continue
-            if tag.name != 'p' or text == '':
-                continue
-            beginner = False
-            body_parts.append(str(tag))
-        # end for
-        body = [x for x in body if len(x)]
-        return ''.join(body_parts).strip()
+        body_parts = soup.select_one('.panel-default .fr-view')
+        body = self.extract_contents(body_parts.contents)
+        return '<p>' + '</p><p>'.join(body) + '</p'
     # end def
 # end class
