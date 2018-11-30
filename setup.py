@@ -172,9 +172,7 @@ setup(
     package_data={  # Optional
         'lightnovel_crawler': [
             '../VERSION',
-            'ext/kindlegen-linux',
-            'ext/kindlegen-mac',
-            'ext/kindlegen-windows'
+            'utils/html_style.css',
         ],
     },
 
