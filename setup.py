@@ -56,7 +56,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='Crawls light novels and make text, epub and mobi',  # Required
+    description='Crawls light novels and make html, text, epub and mobi',  # Required
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
