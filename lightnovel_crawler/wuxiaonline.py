@@ -73,34 +73,7 @@ class WuxiaOnlineCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         parts = soup.select_one('#list_chapter .content-area')
-        body = self.extract_text_from(parts.contents)
-        body = [x for x in body if len(x) and self.not_blacklisted(x)]
+        body = self.extract_contents(parts.contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-
-    def extract_text_from(self, contents):
-        body = []
-        for elem in contents:
-            if ['script', 'iframe', 'form', 'a'].count(elem.name):
-                pass
-            elif ['div'].count(elem.name):
-                body += self.extract_text_from(elem.contents)
-            else:
-                body.append(str(elem).strip())
-            # end if
-        # end for
-        return body
-    # end def
-
-    def not_blacklisted(self, text):
-        blacklist = [
-            r'(volume|chapter) .?\d+',
-        ]
-        for item in blacklist:
-            if re.search(item, text, re.IGNORECASE):
-                return False
-            # end if
-        # end for
-        return True
     # end def
 # end class

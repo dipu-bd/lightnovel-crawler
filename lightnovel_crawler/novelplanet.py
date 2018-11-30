@@ -75,7 +75,7 @@ class NovelPlanetCrawler(Crawler):
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
     # end def
-
+    
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
@@ -84,46 +84,20 @@ class NovelPlanetCrawler(Crawler):
 
         logger.debug(soup.title.string)
 
-        #chapter['title'] = soup.select_one('h3').text
         if 'Chapter' in soup.select_one('h3').text:
             chapter['title'] = soup.select_one('h3').text
         else:
-            chapter['title'] = chapter['title'] + \
-                ' : ' + soup.select_one('h3').text
+            chapter['title'] = chapter['title'] + ' : ' + soup.select_one('h3').text
+        # end if
 
-        content = soup.select('p')
-        body_parts = ''.join([str(p.extract())
-                              for p in content if p.text.strip()])
-
-        if len(body_parts) == 0:
-            body_parts = soup.select_one('div#divReadContent').contents
-            body = []
-            for elem in body_parts:
-                if not elem.name:
-                    text = str(elem).strip()
-                    if len(body) == 0 and self.is_blacklisted(text):
-                        continue
-                    # end if
-                    if len(text) > 0:
-                        body.append(text)
-                    # end if
-                # end if
-            # end for
-            body_parts = '<p>' + '</p><p>'.join(body) + '</p>'
-        return body_parts
-    # end def
-
-    def is_blacklisted(self, text):
-        blacklist = [
+        self.blacklist_patterns = [
             r'^(...|\u2026)$',
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
-        for item in blacklist:
-            if re.search(item, text, re.IGNORECASE):
-                return True
-            # end if
-        # end for
-        return False
+
+        contents = soup.select_one('#divReadContent').contents
+        body = self.extract_contents(contents)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

@@ -84,33 +84,13 @@ class WuxiaCoCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        body_parts = soup.select_one('div#content').contents
-        body = []
-        for elem in body_parts:
-            if not elem.name:
-                text = str(elem).strip()
-                if len(body) == 0 and self.is_blacklisted(text):
-                    continue
-                # end if
-                if len(text) > 0:
-                    body.append(text)
-                # end if
-            # end if
-        # end for
-        return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-
-    def is_blacklisted(self, text):
-        blacklist = [
+        self.blacklist_patterns = [
             r'^(...|\u2026)$',
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
-        for item in blacklist:
-            if re.search(item, text, re.IGNORECASE):
-                return True
-            # end if
-        # end for
-        return False
+        body_parts = soup.select_one('div#content').contents
+        body = self.extract_contents(body_parts)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

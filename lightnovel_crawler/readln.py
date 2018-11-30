@@ -76,36 +76,11 @@ class ReadLightNovelCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        body_parts = soup.select_one('.chapter-content3 .desc')
-        body = self.extract_text_from(body_parts.contents)
-        body = [x for x in body if len(x) and self.not_blacklisted(x)]
-        return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-
-    def extract_text_from(self, contents):
-        body = []
-        for elem in contents:
-            if not elem.name:
-                body.append(str(elem).strip())
-            elif ['h3', 'p'].count(elem.name):
-                body += self.extract_text_from(elem.contents)
-            elif ['strong', 'p', 'span', 'b', 'i'].count(elem.name):
-                elem.name = 'span'
-                body.append(str(elem).strip())
-            # end if
-        # end for
-        return body
-    # end def
-
-    def not_blacklisted(self, text):
-        blacklist = [
+        self.blacklist_patterns = [
             r'^(volume|chapter) .?\d+$',
         ]
-        for item in blacklist:
-            if re.search(item, text, re.IGNORECASE):
-                return False
-            # end if
-        # end for
-        return True
+        body_parts = soup.select_one('.chapter-content3 .desc')
+        body = self.extract_contents(body_parts.contents)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
