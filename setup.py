@@ -172,7 +172,7 @@ setup(
     package_data={  # Optional
         'lightnovel_crawler': [
             '../VERSION',
-            'utils/html_style.css',
+            'binders/html_style.css',
         ],
     },
 

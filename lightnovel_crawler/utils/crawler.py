@@ -165,14 +165,14 @@ class Crawler:
     def extract_contents(self, contents, level=0):
         body = []
         for elem in contents:
-            if ['script', 'iframe', 'form', 'a', 'br', 'xml'].count(elem.name):
+            if ['script', 'iframe', 'form', 'a', 'br', 'img'].count(elem.name):
                 continue
             elif ['h3', 'div', 'p'].count(elem.name):
                 body += self.extract_contents(elem.contents, level + 1)
                 continue
             # end if
             text = ''
-            if [None, 'img'].count(elem.name):
+            if not elem.name:
                 text = str(elem).strip()
             else:
                 text = '<%s>%s</%s>' % (elem.name, elem.text.strip(), elem.name)
