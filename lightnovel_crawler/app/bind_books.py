@@ -37,7 +37,7 @@ def make_data(app):
 def make_texts(app, data):
     text_files = []
     for vol in data:
-        dir_name = os.path.join(app.output_path, 'web', vol)
+        dir_name = os.path.join(app.output_path, 'text', vol)
         os.makedirs(dir_name, exist_ok=True)
         for chap in data[vol]:
             file_name = '%s.txt' % str(chap['id']).rjust(5, '0')
@@ -60,7 +60,7 @@ def make_texts(app, data):
 def make_htmls(app, data):
     web_files = []
     for vol in data:
-        dir_name = os.path.join(app.output_path, 'web', vol)
+        dir_name = os.path.join(app.output_path, 'html', vol)
         os.makedirs(dir_name, exist_ok=True)
         for i in range(len(data[vol])):
             chapter = data[vol][i]

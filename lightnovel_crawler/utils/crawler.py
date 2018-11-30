@@ -149,30 +149,6 @@ class Crawler:
         # end with
     # end def
 
-    def extract_contents(self, contents, level=0):
-        body = [] 
-        for elem in contents:
-            if ['script', 'iframe', 'form', 'a', 'br'].count(elem.name):
-                pass
-            elif ['h3', 'div', 'p'].count(elem.name):
-                body += self.extract_contents(elem.contents, level + 1)
-            elif not elem.name:
-                body.append(str(elem).strip())
-            elif ['img'].count(elem.name):
-                body.append(str(elem))
-            elif elem.text.strip() != '':
-                tag = elem.name
-                text = '<%s>%s</%s>' % (tag, elem.text, tag)
-                body.append(text)
-            # end if
-        # end for
-        if level == 0:
-            return [x for x in body if len(x) and self.not_blacklisted(x)]
-        else:
-            return body
-        # end if
-    # end def
-
     blacklist_patterns = [
         r'^(volume|chapter) .?\d+$',
     ]
@@ -184,5 +160,38 @@ class Crawler:
             # end if
         # end for
         return True
+    # end def
+
+    def extract_contents(self, contents, level=0):
+        body = []
+        for elem in contents:
+            if ['script', 'iframe', 'form', 'a', 'br', 'xml'].count(elem.name):
+                continue
+            elif ['h3', 'div', 'p'].count(elem.name):
+                body += self.extract_contents(elem.contents, level + 1)
+                continue
+            # end if
+            text = ''
+            if [None, 'img'].count(elem.name):
+                text = str(elem).strip()
+            else:
+                text = '<%s>%s</%s>' % (elem.name, elem.text.strip(), elem.name)
+            # end if
+            patterns = [
+                re.compile(r'<!--(.|\n)*-->', re.MULTILINE),
+                re.compile(r'\[if (.|\n)*!\[endif\]', re.MULTILINE),
+            ]
+            for x in patterns:
+                text = x.sub('', text).strip()
+            # end for
+            if text:
+                body.append(text)
+            # end if
+        # end for
+        if level == 0:
+            return [x for x in body if len(x) and self.not_blacklisted(x)]
+        else:
+            return body
+        # end if
     # end def
 # end class
