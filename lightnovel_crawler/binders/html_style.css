@@ -1,27 +1,30 @@
+@import url('https://fonts.googleapis.com/css?family=Merriweather:400,400i,700,700i');
+/* */
+
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
     position: relative;
-    background: #3d3d3f;
+    background-color: #323235;
+    -webkit-font-smoothing: antialiased;
 }
 
 #content {
     padding: 10px 20px;
-    font-size: 16px;
-    max-width: 800px;
+    max-width: 850px;
     margin: 10px auto;
     font-size: 16px;
-    font-family: "Book Antiqua", Georgia, serif;
+    font-family: "Merriweather", Georgia, serif;
     text-align: justify;
-    line-height: 24px;
-    background: white;
+    line-height: 1.8;
+    border-radius: 5px;
     box-shadow: 0 0 10px #000, 0 0 0 1px #000;
-    /* border-radius: 10px; */
+    background-color: #ffffdb;
 }
 
-@media (max-width: 875px) {
+@media (max-width: 925px) {
     #content {
         margin: 5px;
         max-width: auto;
@@ -42,7 +45,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    padding: 15px 10px;
+    color: #333336;
+    font-weight: 300;
+    margin-bottom: 15px;
+}
+
+h1:after {
+    content: '-';
+    margin: 10px 30px;
+    height: 2px;
+    border-radius: 50%;
+    background: #444;
+    display: block;
+    color: transparent;
 }
 
 .link-group {
@@ -66,8 +81,8 @@ h1 {
     font-size: 18px;
     font-weight: Arial, 600;
     display: inline-block;
-    width: 150px;
-    padding: 10px 15px;
+    width: 145px;
+    padding: 5px;
     text-align: center;
     background: #f5f5f5;
     box-shadow: 1px 1px 2px #aac, 0 0 0 1px #ccc;
@@ -80,6 +95,24 @@ h1 {
 
 .link-group .btn:active {
     box-shadow: 1px 1px 2px #cce inset, 0 0 0 1px #ccc;
+}
+
+div#readpos {
+    border-radius: 10px;
+    font-weight: bold;
+    font-family: monospace;
+    color: #770;
+    font-size: 14px;
+    padding: 5px 10px;
+    background: white;
+    box-shadow: 0 0 10px #333, 0 0 0 1px #dde;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    user-select: none;
+    -webkit-user-drag: none;
+    /* min-width: 100px;
+    text-align: right; */
 }
 
 @media print {

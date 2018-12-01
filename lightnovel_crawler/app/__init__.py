@@ -13,7 +13,7 @@ from ..utils.crawler import Crawler
 class Icons:
     windows = platform.system() != 'Windows'
     BOOK = '📒 ' if windows else ''
-    CLOVER = '🍀' if windows else '#'
+    CLOVER = '🍀 ' if windows else '#'
     LINK = ' 🔗' if windows else ' -'
     HANDS = ' 🙏' if windows else ' -'
     SOUND = '🔊' if windows else '>>'

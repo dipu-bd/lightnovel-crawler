@@ -12,23 +12,39 @@ def bind_html_chapter(chapter, prev_chapter, next_chapter):
         str(prev_chapter['id']).rjust(5, '0')) if prev_chapter else '#'
     next_button = '%s.html' % str(next_chapter['id']).rjust(
         5, '0') if next_chapter else '#'
-    button_group = '''<div class="link-group">
-        <a class="btn" href="%s">Previous</a>
-        <a href="%s" target="_blank">Original Source</a>
-        <a class="btn" href="%s">Next</a>
-    </div>''' % (prev_button, chapter['url'], next_button)
+    button_group = '<div class="link-group">'
+    button_group += '<a class="btn" href="%s">Previous</a>' % prev_button
+    # button_group += '<a href="%s" target="_blank">Original Source</a>' % chapter['url']
+    button_group += '<a class="btn" href="%s">Next</a>' % next_button
+    button_group += '</div>'
+
+    script = '''
+    window.addEventListener('scroll', function(e) {
+        try {
+            var scroll = window.scrollY;
+            var height = document.body.scrollHeight - window.innerHeight + 10;
+            var percent = Math.round(100.0 * scroll / height);
+            document.getElementById('readpos').innerText = percent + '%';
+        } catch (err) {
+            // ignore
+        }
+    })
+    '''
 
     html = '<!DOCTYPE html>\n'
-    html += '<html>\n<head>'
+    html += '<html><head>'
     html += '<meta charset="utf-8"/>'
     html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>'
     html += '<title>%s</title>' % chapter['title']
     html += '<style>%s</style>' % style
-    html += '</head>\n<body>\n<div id="content">\n'
+    html += '<script>%s</script>' % script
+    html += '</head><body><div id="content">'
     html += button_group
     html += '<main>%s</main>' % chapter['body']
     html += button_group
-    html += '\n</div>\n</body>\n</html>'
+    html += '</div>'
+    html += '<div id="readpos">0%</div>'
+    html += '</body></html>'
 
     file_name = '%s.html' % str(chapter['id']).rjust(5, '0')
     return html, file_name
