@@ -3,9 +3,22 @@
 """
 Interactive application to take user inputs
 """
+import platform
+from colorama import Fore
 from PyInquirer import prompt
 from .program import Program
 from ..utils.crawler import Crawler
+
+
+class Icons:
+    windows = platform.system() != 'Windows'
+    BOOK = '📒 ' if windows else ''
+    CLOVER = '🍀' if windows else '#'
+    LINK = ' 🔗' if windows else ' -'
+    HANDS = ' 🙏' if windows else ' -'
+    SOUND = '🔊' if windows else '>>'
+    RIGHT_ARROW = '⮕' if windows else '->'
+# end def
 
 
 def check(crawler):
@@ -19,8 +32,8 @@ def get_novel_url():
             'type': 'input',
             'name': 'novel',
             'message': 'What is the url of novel page?',
-            'validate': lambda val: 'Url should be not be empty'
-            if len(val) == 0 else True,
+            'validate':  lambda val: 'Url should be not be empty' \
+                if len(val) == 0 else True,
         },
     ])
     return answer['novel'].strip()
@@ -28,7 +41,9 @@ def get_novel_url():
 
 
 def start_app(choice_list):
-    print('\n⮕ Press \33[95mCtrl + C\33[0m to exit\n')
+    print()
+    print(Icons.RIGHT_ARROW, 'Press', Fore.MAGENTA, 'Ctrl + C', Fore.RESET, 'to exit')
+    print()
 
     novel_url = get_novel_url()
 
@@ -50,12 +65,12 @@ def start_app(choice_list):
         print('Sorry! I do not recognize this website yet.')
         print('My domain is limited to these sites only:')
         for url in sorted(choice_list.keys()):
-            print(' -', url)
+            print(Fore.LIGHTGREEN_EX, Icons.RIGHT_ARROW, url, Fore.RESET)
         # end for
         print()
         print('-' * 80)
         print('Request developers to add your site at:')
-        print('  https://github.com/dipu-bd/lightnovel-crawler/issues')
+        print(Fore.CYAN, Icons.LINK, 'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
         print()
     else:
         print('-' * 80, end='\n\n')

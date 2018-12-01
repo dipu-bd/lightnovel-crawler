@@ -4,9 +4,11 @@
 import os
 import sys
 import logging
+import platform
 import requests
+from colorama import init as init_colorama, Fore, Back, Style
 
-from .app import start_app
+from .app import start_app, Icons
 
 from .lnmtl import LNMTLCrawler
 from .webnovel import WebnovelCrawler
@@ -33,6 +35,7 @@ crawler_list = {
     'https://www.idqidian.us/': IdqidianCrawler,
 }
 
+
 dir_name = os.path.dirname(__file__)
 with open(os.path.join(dir_name, '..', 'VERSION'), 'r') as f:
     __version__ = f.read().strip()
@@ -40,10 +43,12 @@ with open(os.path.join(dir_name, '..', 'VERSION'), 'r') as f:
 
 
 def configure():
+    init_colorama()
     mode = sys.argv[1].lower() if len(sys.argv) > 1 else None
+
     if mode == '-v' or mode == '--verbose':
         os.environ['debug_mode'] = 'true'
-        print('\33[91m 🔊 IN VERBOSE MODE\33[0m')
+        print(Fore.RED, Icons.SOUND, 'IN VERBOSE MODE', Fore.RESET)
         print('-' * 60)
         logging.basicConfig(level=logging.DEBUG)
     # end if
@@ -54,20 +59,18 @@ def configure():
 
 
 def headline():
-    # print('\033c', end='')    # clears the console
-
     print('-' * 60)
-    print(' \33[1m\33[92m📒', 'Ebook Crawler 🍀', __version__, '\33[0m')
-    print(' 🔗\33[94m https://github.com/dipu-bd/site-to-epub', '\33[0m')
-    print(' 🙏\33[94m https://saythanks.io/to/dipu-bd', '\33[0m')
+    print(Fore.GREEN, Icons.BOOK + 'Ebook Crawler', Icons.CLOVER + __version__, Fore.RESET)
+    print(Icons.LINK, Fore.CYAN + 'https://github.com/dipu-bd/site-to-epub' + Fore.RESET)
+    print(Icons.HANDS, Fore.CYAN + 'https://saythanks.io/to/dipu-bd' + Fore.RESET)
     print('-' * 60)
 # end def
 
 
 def main():
-    headline()
     configure()
 
+    headline()
     start_app(crawler_list)
 # end def
 

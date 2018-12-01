@@ -6,3 +6,4 @@ build
 dist
 *.egg-info
 Test Novel
+.vscode

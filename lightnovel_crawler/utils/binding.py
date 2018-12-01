@@ -79,12 +79,16 @@ def epub_to_mobi(kindlegen, epub_file):
             stdout=devnull,
             stderr=devnull,
         )
-    except Exception as ex:
+    except Exception as err:
+        logger.debug(err)
         pass
     # end try
 
     if os.path.exists(mobi_file_in_epub_path):
         os.makedirs(mobi_path, exist_ok=True)
+        if os.path.exists(mobi_file):
+            os.remove(mobi_file)
+        # end if
         os.rename(mobi_file_in_epub_path, mobi_file)
         logger.warn('Created: %s', mobi_file_name)
         return mobi_file_name

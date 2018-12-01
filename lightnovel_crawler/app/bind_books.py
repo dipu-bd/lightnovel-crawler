@@ -14,7 +14,7 @@ from PyInquirer import prompt
 from ..utils.binding import bind_epub_book, epub_to_mobi
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
-logger = Logger('Bind_Books')
+logger = Logger('BIND_BOOKS')
 
 
 def make_data(app):
@@ -42,7 +42,7 @@ def make_texts(app, data):
             file_name = '%s.txt' % str(chap['id']).rjust(5, '0')
             file_name = os.path.join(dir_name, file_name)
             os.makedirs(dir_name, exist_ok=True)
-            with open(file_name, 'w') as file:
+            with open(file_name, 'w', encoding='utf-8') as file:
                 body = chap['body'].replace('</p><p', '</p>\n<p')
                 soup = BeautifulSoup(body, 'lxml')
                 text = '\n\n'.join(soup.stripped_strings)
