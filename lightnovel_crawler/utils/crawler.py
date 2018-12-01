@@ -13,6 +13,7 @@ class Crawler:
 
     home_url = ''
     novel_url = ''
+    last_visited_url = None
     scrapper = cfscrape.create_scraper()
     executor = futures.ThreadPoolExecutor(max_workers=5)
 
@@ -113,12 +114,15 @@ class Crawler:
             return 'http:' + url
         elif url.find('//') >= 0:
             return url
-        else:
+        elif url.startswith('/'):
             return self.home_url + url
+        else:
+            return (self.last_visited_url or self.home_url) + '/' + url
         # end if
     # end def
 
     def get_response(self, url, incognito=False):
+        self.last_visited_url = url.strip('/')
         response = self.scrapper.get(url)
         response.encoding = 'utf-8'
         self.cookies.update({

@@ -5,10 +5,10 @@ Source: https://raw.githubusercontent.com/Anorov/cloudflare-scrape/master/cfscra
 import logging
 import random
 import re
-import js2py
 from copy import deepcopy
-from time import sleep
+import time
 
+import js2py
 from requests.sessions import Session
 
 try:
@@ -77,7 +77,7 @@ class CloudflareScraper(Session):
 
     def solve_cf_challenge(self, resp, **original_kwargs):
         # Cloudflare requires a delay before solving the challenge
-        sleep(self.delay)
+        start_time = time.time()
 
         body = resp.text
         parsed_url = urlparse(resp.url)
@@ -112,6 +112,11 @@ class CloudflareScraper(Session):
         # performing other types of requests even as the first request.
         method = resp.request.method
         cloudflare_kwargs["allow_redirects"] = False
+
+        # Cloudflare requires a delay before solving the challenge
+        end_time = time.time()
+        time.sleep(self.delay - (end_time - start_time))
+
         redirect = self.request(method, submit_url, **cloudflare_kwargs)
 
         redirect_location = urlparse(redirect.headers["Location"])
