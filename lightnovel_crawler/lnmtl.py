@@ -149,7 +149,7 @@ class LNMTLCrawler(Crawler):
                 self.executor.submit(
                     self.download_chapter_list_of_volume,
                     volume,
-                    self.absolute_url('/chapter?page=%s'),
+                    self.absolute_url('/chapter?page=%s' % (page + 1)),
                 ): '%s-%s' % (vol_id, page)
                 for page in range(1, result['last_page'])
             }
