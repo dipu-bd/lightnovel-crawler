@@ -6,44 +6,9 @@ To get the novel info
 import json
 import os
 import re
-from shutil import rmtree
-from PyInquirer import prompt
+import shutil
 
-
-def check_output_path(output_path):
-    if os.path.exists(output_path):
-        answer = prompt([
-            {
-                'type': 'confirm',
-                'name': 'fresh',
-                'message': 'Detected existing folder. Replace it?',
-                'default': False,
-            },
-        ])
-        if answer['fresh']:
-            rmtree(output_path)
-        # end if
-    # end if
-    os.makedirs(output_path, exist_ok=True)
-# end def
-
-
-"""
-def retrieve_chapter_list(crawler, output_path):
-    file_name = os.path.join(output_path, 'meta.json')
-    if os.path.exists(file_name):
-        with open(file_name, 'r') as file:
-            data = json.load(file)
-            crawler.volumes = data['volumes']
-            crawler.chapters = data['chapters']
-        # end with
-    # end if
-    
-    if len(crawler.chapters) == 0:
-        crawler.download_chapter_list()
-    # end if
-# end def
-"""
+from .prompts import force_replace_old
 
 
 def format_volume_list(crawler):
@@ -95,17 +60,21 @@ def save_metadata(crawler, output_path):
 
 
 def novel_info(app):
-    app.logger.info('Retrieving novel info...')
+    app.logger.warn('Retrieving novel info...')
     app.crawler.read_novel_info()
 
     app.logger.info('Checking output path...')
     app.output_path = os.path.abspath(
         re.sub(r'[\\/*?:"<>|\']', '', app.crawler.novel_title))
-    check_output_path(app.output_path)
+    if os.path.exists(app.output_path):
+        if force_replace_old():
+            shutil.rmtree(app.output_path, ignore_errors=True)
+        # end if
+    # end if
+    os.makedirs(app.output_path, exist_ok=True)
 
     app.logger.info('Getting chapters...')
     app.crawler.download_chapter_list()
-    # retrieve_chapter_list(app.crawler, app.output_path)
 
     format_volume_list(app.crawler)
     format_chapter_list(app.crawler)

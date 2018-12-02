@@ -99,6 +99,7 @@ class WebnovelCrawler(Crawler):
                 return i
             # end if
         # end for
+        return -1
     # end def
 
     def download_chapter_body(self, chapter):

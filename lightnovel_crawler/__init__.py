@@ -2,13 +2,12 @@
 # -*- coding: utf-8 -*-
 """Interactive value input"""
 import os
-import sys
 import logging
-import platform
 import requests
-from colorama import init as init_colorama, Fore, Back, Style
-
-from .app import start_app, Icons
+from colorama import init as init_colorama
+from .app import start_app
+from .app.arguments import get_args, build_parser
+from .app.display import description, epilog, debug_mode
 
 from .lnmtl import LNMTLCrawler
 from .webnovel import WebnovelCrawler
@@ -36,42 +35,39 @@ crawler_list = {
 }
 
 
-dir_name = os.path.dirname(__file__)
-with open(os.path.join(dir_name, '..', 'VERSION'), 'r') as f:
-    __version__ = f.read().strip()
-# end with
-
-
-def configure():
+def main():
     init_colorama()
-    mode = sys.argv[1].lower() if len(sys.argv) > 1 else None
 
-    if mode == '-v' or mode == '--verbose':
+    cur_dir = os.path.dirname(__file__)
+    ver_file = os.path.join(cur_dir, '..', 'VERSION')
+    with open(ver_file, 'r') as f:
+        os.environ['version'] = f.read().strip()
+    # end with
+
+    description()
+    build_parser()
+
+    args = get_args()
+    if args.log:
         os.environ['debug_mode'] = 'true'
-        print(Fore.RED, Icons.SOUND, 'IN VERBOSE MODE', Fore.RESET)
-        print('-' * 60)
-        logging.basicConfig(level=logging.DEBUG)
+        levels = [None, logging.WARN, logging.INFO, logging.DEBUG]
+        logging.basicConfig(level=levels[args.log])
+        debug_mode(args.log)
+        print(args)
     # end if
     requests.urllib3.disable_warnings(
         requests.urllib3.exceptions.InsecureRequestWarning)
     # end if
-# end def
 
+    try:
+        start_app(crawler_list)
+    except Exception as err:
+        if args.log == 3:
+            raise err
+        # end if
+    # end try
 
-def headline():
-    print('-' * 60)
-    print(Fore.GREEN, Icons.BOOK + 'Ebook Crawler', Icons.CLOVER + __version__, Fore.RESET)
-    print(Icons.LINK, Fore.CYAN + 'https://github.com/dipu-bd/site-to-epub' + Fore.RESET)
-    print(Icons.HANDS, Fore.CYAN + 'https://saythanks.io/to/dipu-bd' + Fore.RESET)
-    print('-' * 60)
-# end def
-
-
-def main():
-    configure()
-
-    headline()
-    start_app(crawler_list)
+    epilog()
 # end def
 
 
