@@ -42,7 +42,7 @@ To view list of available options:
 $ lncrawl -h
 ```
 
-> There is a verbose mode for extended logging: `lncrawl -v`
+> There is a verbose mode for extended logging: `lncrawl -lll`
 
 ### Available websites
 
