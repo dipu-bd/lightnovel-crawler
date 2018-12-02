@@ -14,7 +14,7 @@ from os import path
 # and accepts an argument to specify the text encoding
 # Python 3 only projects can skip this import
 from io import open
-from lightnovel_crawler.assets._build import pack_files, unpack_files
+from build import pack_files, unpack_files
 
 here = path.abspath(path.dirname(__file__))
 
