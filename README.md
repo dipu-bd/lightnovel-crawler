@@ -15,9 +15,9 @@ Crawls light novels and make html, text, epub and mobi
 
 ## Tutorial
 
-### Easy download
+### Easy download 🗔
 
-1. [For Windows ~ 11MB](https://github.com/dipu-bd/lightnovel-crawler/releases/download/v2.5.0/lncrawl.exe)
+<big>📦 <a href="https://github.com/dipu-bd/lightnovel-crawler/releases/download/v2.5.0/lncrawl.exe">For Windows ~ 11MB</a></big>
 
 ### Installation
 
