@@ -82,6 +82,7 @@ class WebnovelCrawler(Crawler):
         for i, chap in enumerate(chapters):
             self.chapters.append({
                 'id': i + 1,
+                'hash': chap['id'],
                 'title': chap['name'].strip(),
                 'url': chapter_body_url % (self.csrf, self.novel_id, chap['id']),
                 'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
@@ -92,14 +93,15 @@ class WebnovelCrawler(Crawler):
     # end def
 
     def get_chapter_index_of(self, url):
+        if not url: return 0
         url = url.replace('http://', 'https://')
-        for i, chap in enumerate(self.chapters):
-            chap_url = chapter_info_url % (self.novel_id, chap['id'])
+        for chap in self.chapters:
+            chap_url = chapter_info_url % (self.novel_id, chap['hash'])
             if url.startswith(chap_url):
-                return i
+                return chap['id']
             # end if
         # end for
-        return -1
+        return 0
     # end def
 
     def download_chapter_body(self, chapter):
