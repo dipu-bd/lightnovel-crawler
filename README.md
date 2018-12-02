@@ -20,7 +20,7 @@ Crawls light novels and make html, text, epub and mobi
 Make sure that you have `python3` and `pip` installed in your computer. Add this package using:
 
 ```bash
-$ pip3 install -U lightnovel-crawler
+$ pip3 install --user -U lightnovel-crawler
 
 # Or if it does not work, use:
 $ python3 -m pip install --user -U lightnovel-crawler
@@ -34,6 +34,12 @@ $ lightnovel-crawler
 
 # Or, a shortcut:
 $ lncrawl
+```
+
+To view list of available options:
+
+```bash
+$ lncrawl -h
 ```
 
 > There is a verbose mode for extended logging: `lncrawl -v`
