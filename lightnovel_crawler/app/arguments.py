@@ -9,26 +9,7 @@ class ArgReader:
     def build(self):
         parser = argparse.ArgumentParser(
             epilog='~' * LINE_SIZE,
-            usage=textwrap.dedent(
-                '''
-                    lncrawl [-h | --help]
-                        [-v | --version]
-                        [-l | --log]
-                        [-s NOVEL_PAGE | --source NOVEL_PAGE]
-                        [-f | --force]
-                        [-b | --byvol]
-                        [--login USER PASSWD]
-                        [
-                            --all |
-                            --first COUNT |
-                            --last COUNT |
-                            --volume START STOP |
-                            --range FROM TO |
-                            --page START STOP |
-                            --volumes [N [N ...]] |
-                            --chapters [URL [URL ...]]
-                        ]
-                '''),
+            usage='\tlncrawl [options...]\n\tlightnovel-crawler [options...]'
         )
         parser.add_argument('-v', '--version', action='version',
                             version='Lightnovel Crawler ' + os.environ['version'])

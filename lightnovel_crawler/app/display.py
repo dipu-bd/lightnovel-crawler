@@ -25,12 +25,13 @@ def description():
 
 
 def epilog():
+    print()
     print('-' * LINE_SIZE)
 
-    print(' ' + Icons.LINK, 'Source:', Fore.CYAN,
+    print(' ' + Icons.LINK, Fore.CYAN,
           'https://github.com/dipu-bd/lightnovel-crawler', Fore.RESET)
 
-    print(' ' + Icons.HANDS, 'Say Thanks:', Fore.CYAN,
+    print(' ' + Icons.HANDS, Fore.CYAN,
           'https://saythanks.io/to/dipu-bd', Fore.RESET)
 
     print('=' * LINE_SIZE)

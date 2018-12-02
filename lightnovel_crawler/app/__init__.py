@@ -26,13 +26,8 @@ def start_app(choice_list):
 
     if not instance:
         url_not_recognized(choice_list)
+        return
     # end if
 
-    if instance:
-        try:
-            Program().run(instance)
-        except:
-            instance = None
-        # end try
-    # end if
+    Program().run(instance)
 # end def

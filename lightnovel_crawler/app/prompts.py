@@ -122,7 +122,7 @@ def range_using_urls(crawler):
     if not (start_url and stop_url):
         def validator(val):
             try:
-                if crawler.get_chapter_index_of(val) >= 0:
+                if crawler.get_chapter_index_of(val) > 0:
                     return True
             except:
                 pass
@@ -146,10 +146,10 @@ def range_using_urls(crawler):
         stop_url = answer['stop_url']
     # end if
 
-    start = crawler.get_chapter_index_of(start_url)
-    stop = crawler.get_chapter_index_of(stop_url)
+    start = crawler.get_chapter_index_of(start_url) - 1
+    stop = crawler.get_chapter_index_of(stop_url) - 1
 
-    return start, stop if start < stop else stop, start
+    return (start, stop) if start < stop else (stop, start)
 # end def
 
 
@@ -181,14 +181,14 @@ def range_using_index(chapter_count):
                 'filter': lambda val: int(val),
             },
         ])
-        start = answer['start']
-        stop = answer['stop']
+        start = answer['start'] - 1
+        stop = answer['stop'] - 1
+    else:
+        start = start - 1
+        stop = stop - 1
     # end if
 
-    start = start - 1
-    stop = stop - 1
-
-    return start, stop if start < stop else stop, start
+    return (start, stop) if start < stop else (stop, start)
 # end def
 
 
@@ -230,7 +230,7 @@ def range_from_volumes(volumes, times=0):
 # end def
 
 
-def range_from_chapters(chapters, times=0):
+def range_from_chapters(crawler, times=0):
     selected = None
 
     if times == 0:
@@ -245,29 +245,39 @@ def range_from_chapters(chapters, times=0):
                 'message': 'Choose chapters to download:',
                 'choices': [
                     {'name': '%d - %s' % (chap['id'], chap['title'])}
-                    for chap in chapters
+                    for chap in crawler.chapters
                 ],
             }
         ])
         selected = [
-            int(val.split(' ')[0]) for val in answer['chapters']
+            int(val.split(' ')[0])
+            for val in answer['chapters']
+        ]
+    else:
+        selected = [
+            crawler.get_chapter_index_of(x)
+            for x in selected if x
         ]
     # end if
 
     if times < 3 and len(selected) == 0:
-        return range_from_chapters(chapters, times + 1)
+        return range_from_chapters(crawler, times + 1)
     # end if
+
+    selected = [
+        x for x in selected
+        if 1 <= x <= len(crawler.chapters)
+    ]
 
     return selected
 # end def
-
 
 def pack_by_volume():
     if len(sys.argv) > 1:
         return get_args().byvol
     # end if
 
-    answer = prompt([
+    answer= prompt([
         {
             'type': 'confirm',
             'name': 'volume',

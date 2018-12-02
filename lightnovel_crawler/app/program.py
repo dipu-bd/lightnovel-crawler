@@ -70,7 +70,7 @@ class Program:
             start, stop = range_using_urls(self.crawler)
             self.chapters = self.crawler.chapters[start:(stop + 1)]
         elif res == 'range':
-            start, stop = range_using_urls(self.crawler)
+            start, stop = range_using_index(chapter_count)
             self.chapters = self.crawler.chapters[start:(stop + 1)]
         elif res == 'volumes':
             selected = range_from_volumes(self.crawler.volumes)
@@ -79,10 +79,10 @@ class Program:
                 if selected.count(chap['volume']) > 0
             ]
         elif res == 'chapters':
-            selected = range_from_chapters(self.crawler.chapters)
+            selected = range_from_chapters(self.crawler)
             self.chapters = [
                 chap for chap in self.crawler.chapters
-                if selected.count(chap['id']) > 0 or selected.count(chap['url']) > 0
+                if selected.count(chap['id']) > 0
             ]
         # end if
 
