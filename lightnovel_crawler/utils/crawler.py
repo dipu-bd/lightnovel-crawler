@@ -84,14 +84,14 @@ class Crawler:
     # end def
 
     def get_chapter_index_of(self, url):
-        '''Return the index of chapter by given url or -1'''
+        '''Return the index of chapter by given url or 0'''
         url = (url or '').strip().strip('/')
-        for i, chapter in enumerate(self.chapters):
+        for chapter in self.chapters:
             if chapter['url'] == url:
-                return i
+                return chapter['id']
             # end if
         # end for
-        return -1
+        return 0
     # end def
 
     # ------------------------------------------------------------------------- #
