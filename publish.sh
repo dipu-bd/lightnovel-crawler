@@ -1,4 +1,4 @@
-VERSION=$(head -n 1 VERSION)
+VERSION=$(head -n 1 lightnovel-crawler/VERSION)
 
 git clean -xfd
 python setup.py bdist_wheel

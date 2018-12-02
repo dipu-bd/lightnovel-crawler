@@ -69,7 +69,7 @@ class TestCrawler(Crawler):
     # end def
 # end class
 
-def test():
+def run_tests():
     logging.basicConfig(level=logging.DEBUG)
 
     print('-' * 80)
@@ -83,5 +83,5 @@ def test():
 
 
 if __name__ == '__main__':
-    test()
+    run_tests()
 # end if

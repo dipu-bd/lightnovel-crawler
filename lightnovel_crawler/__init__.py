@@ -20,6 +20,7 @@ from .novelplanet import NovelPlanetCrawler
 from .lnindo import LnindoCrawler
 from .idqidian import IdqidianCrawler
 from .utils.crawler import Crawler
+from .tests.crawler_app_test import run_tests
 
 crawler_list = {
     'https://lnmtl.com/': LNMTLCrawler,
@@ -60,7 +61,11 @@ def main():
     # end if
 
     try:
-        start_app(crawler_list)
+        if args.test:
+            run_tests()
+        else:
+            start_app(crawler_list)
+        # end if
     except Exception as err:
         if args.log == 3:
             raise err

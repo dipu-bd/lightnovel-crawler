@@ -21,11 +21,11 @@ class Icons:
 
     # --------------------------------------------------- #
 
-    BOOK = '📒' if isWindows else ''
-    CLOVER = '🍀 ' if isWindows else '#'
-    LINK = '🔗' if isWindows else '-'
-    HANDS = '🙏' if isWindows else '-'
-    SOUND = '🔊' if isWindows else '>>'
-    RIGHT_ARROW = '⮕' if isWindows else '->'
+    BOOK = '📒' if not isWindows else ''
+    CLOVER = '🍀 ' if not isWindows else '#'
+    LINK = '🔗' if not isWindows else '-'
+    HANDS = '🙏' if not isWindows else '-'
+    SOUND = '🔊' if not isWindows else '>>'
+    RIGHT_ARROW = '⮕' if not isWindows else '->'
 # end def
 
