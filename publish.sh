@@ -1,4 +1,4 @@
-VERSION=$(head -n 1 lightnovel-crawler/VERSION)
+VERSION=$(head -n 1 VERSION)
 
 git clean -xfd
 
