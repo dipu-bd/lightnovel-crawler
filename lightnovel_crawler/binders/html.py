@@ -1,13 +1,12 @@
 import logging
 import os
 
+from ..assets.html_style import get_value as get_css_style
+
 logger = logging.getLogger('HTML_BINDER')
 
 
 def bind_html_chapter(chapter, prev_chapter, next_chapter):
-    with open(os.path.join(os.path.dirname(__file__), 'html_style.css')) as f:
-        style = f.read()
-    # end with
     prev_button = '%s.html' % (
         str(prev_chapter['id']).rjust(5, '0')) if prev_chapter else '#'
     next_button = '%s.html' % str(next_chapter['id']).rjust(
@@ -36,7 +35,7 @@ def bind_html_chapter(chapter, prev_chapter, next_chapter):
     html += '<meta charset="utf-8"/>'
     html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>'
     html += '<title>%s</title>' % chapter['title']
-    html += '<style>%s</style>' % style
+    html += '<style>%s</style>' % get_css_style()
     html += '<script>%s</script>' % script
     html += '</head><body><div id="content">'
     html += button_group

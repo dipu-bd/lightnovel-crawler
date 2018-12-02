@@ -112,7 +112,7 @@ def download_selection(chapter_count, volume_count):
         },
     ])
 
-    return choices[answer['choice']]
+    return keys[choices.index(answer['choice'])]
 # end def
 
 

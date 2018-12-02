@@ -8,6 +8,7 @@ from colorama import init as init_colorama
 from .app import start_app
 from .app.arguments import get_args, build_parser
 from .app.display import description, epilog, debug_mode
+from .assets.version import get_value as get_version
 
 from .lnmtl import LNMTLCrawler
 from .webnovel import WebnovelCrawler
@@ -39,11 +40,7 @@ crawler_list = {
 def main():
     init_colorama()
 
-    cur_dir = os.path.dirname(__file__)
-    ver_file = os.path.join(cur_dir, '..', 'VERSION')
-    with open(ver_file, 'r') as f:
-        os.environ['version'] = f.read().strip()
-    # end with
+    os.environ['version'] = get_version()
 
     description()
     build_parser()

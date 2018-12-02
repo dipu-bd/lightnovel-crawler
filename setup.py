@@ -14,6 +14,7 @@ from os import path
 # and accepts an argument to specify the text encoding
 # Python 3 only projects can skip this import
 from io import open
+from lightnovel_crawler.assets._build import pack_files, unpack_files
 
 here = path.abspath(path.dirname(__file__))
 
@@ -30,6 +31,8 @@ with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
+
+pack_files()
 
 setup(
     # This is the name of your project. The first time you publish this
@@ -169,12 +172,12 @@ setup(
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
-    package_data={  # Optional
-        'lightnovel_crawler': [
-            '../VERSION',
-            'binders/html_style.css',
-        ],
-    },
+    # package_data={  # Optional
+    #     'lightnovel_crawler': [
+    #         'VERSION',
+    #         'binders/html_style.css',
+    #     ],
+    # },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
@@ -213,3 +216,5 @@ setup(
         'Say Thanks!': 'https://saythanks.io/to/dipu-bd',
     },
 )
+
+unpack_files()
