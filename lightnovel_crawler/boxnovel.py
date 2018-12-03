@@ -37,7 +37,7 @@ class BoxNovelCrawler(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.find('.summary_page img')['src'])
+            soup.select_one('.summary_page img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.find("div", {"class": "author-content"}).findAll("a")

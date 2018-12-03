@@ -6,8 +6,6 @@ Crawler for novels from [WebNovel](https://www.webnovel.com).
 import json
 import logging
 import re
-import requests
-from concurrent import futures
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('WEBNOVEL')
@@ -93,7 +91,9 @@ class WebnovelCrawler(Crawler):
     # end def
 
     def get_chapter_index_of(self, url):
-        if not url: return 0
+        if not url:
+            return 0
+        # end if
         url = url.replace('http://', 'https://')
         for chap in self.chapters:
             chap_url = chapter_info_url % (self.novel_id, chap['hash'])

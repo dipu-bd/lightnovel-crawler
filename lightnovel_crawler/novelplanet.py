@@ -40,7 +40,7 @@ class NovelPlanetCrawler(Crawler):
             soup.select_one('.post-previewInDetails img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        for span in soup.findAll("span", {"class": "infoLabel"}):
+        for span in soup.find_all("span", {"class": "infoLabel"}):
             if span.text == 'Author:':
                 author = span.findNext('a').text
                 author2 = span.findNext('a').findNext('a').text

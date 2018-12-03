@@ -107,7 +107,8 @@ class Crawler:
         return {x.name: x.value for x in self.scrapper.cookies}
     # end def
 
-    def absolute_url(self, url):
+    def absolute_url(self, url, page_url=None):
+        page_url = page_url or self.last_visited_url
         if not url or len(url) == 0:
             return None
         elif url.startswith('//'):
@@ -117,7 +118,7 @@ class Crawler:
         elif url.startswith('/'):
             return self.home_url + url
         else:
-            return (self.last_visited_url or self.home_url) + '/' + url
+            return (page_url or self.home_url) + '/' + url
         # end if
     # end def
 

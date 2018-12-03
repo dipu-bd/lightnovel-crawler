@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """Interactive value input"""
 from .app import start_app
+from .utils.crawler import Crawler
+from .tests.crawler_app_test import run_tests
+
 from .lnmtl import LNMTLCrawler
 from .webnovel import WebnovelCrawler
 from .wuxiacom import WuxiaComCrawler
@@ -12,8 +15,7 @@ from .readln import ReadLightNovelCrawler
 from .novelplanet import NovelPlanetCrawler
 from .lnindo import LnindoCrawler
 from .idqidian import IdqidianCrawler
-from .utils.crawler import Crawler
-from .tests.crawler_app_test import run_tests
+from .novelspread import NovelSpreadCrawler
 
 crawler_list = {
     'https://lnmtl.com/': LNMTLCrawler,
@@ -28,6 +30,7 @@ crawler_list = {
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://lnindo.org/': LnindoCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
+    'https://www.novelspread.com/': NovelSpreadCrawler,
 }
 
 
