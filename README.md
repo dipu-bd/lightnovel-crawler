@@ -45,11 +45,43 @@ To view list of available options:
 
 ```bash
 $ lncrawl -h
+================================================================
+                   📒 Lightnovel Crawler 🍀 2.5.0
+    Download lightnovels into html, text, epub, mobi and json
+----------------------------------------------------------------
+usage:  lncrawl [options...]
+        lightnovel-crawler [options...]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
+  -l, --log             Set log levels (1 = warn, 2 = info, 3 = debug)
+  -s NOVEL_PAGE, --source NOVEL_PAGE
+                        Profile page url of the novel
+  -f, --force           Force replace any existing folder
+  -b, --byvol           Build separate books by volumes
+  --login USER PASSWD   User name/email address and password for login
+  --all                 Download all chapters
+  --first [COUNT]       Download first few chapters (default: 10)
+  --last [COUNT]        Download last few chapters (default: 10)
+  --page START STOP     The start and final chapter urls
+  --range FROM TO       The start and final chapter indexes
+  --volumes [N [N ...]]
+                        The list of volume numbers to download
+  --chapters [URL [URL ...]]
+                        A list of specific chapter urls
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
 > There is a verbose mode for extended logging: `lncrawl -lll`
 
-### Available websites
+### Adding new source
+
+- Use the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/_sample.py) as blueprint.
+- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/__init__.py).
+
+## Available websites
 
 The list of crawable websites are given below. *Request new site by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues)*.
 
@@ -63,10 +95,3 @@ The list of crawable websites are given below. *Request new site by [creating a 
 - https://novelplanet.com
 - https://lnindo.org
 - https://www.idqidian.us
-
-## Adding new source
-
-- Use the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/_sample.py) as blueprint.
-- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/__init__.py).
-
-That's all!

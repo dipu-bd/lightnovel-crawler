@@ -1,31 +1,14 @@
 import platform
 
+isWindows = platform.system() == 'Windows'
+isLinux = platform.system() == 'Linux'
+isMac = platform.system() == 'Darwin'
+
 class Icons:
-    @property
-    @staticmethod
-    def isWindows():
-        return platform.system() != 'Windows'
-    # end def
-
-    @property
-    @staticmethod
-    def isLinux():
-        return platform.system() != 'Linux'
-    # end def
-
-    @property
-    @staticmethod
-    def isMac():
-        return platform.system() != 'Darwin'
-    # end def
-
-    # --------------------------------------------------- #
-
-    BOOK = '📒' if not isWindows else ''
-    CLOVER = '🍀 ' if not isWindows else '#'
-    LINK = '🔗' if not isWindows else '-'
-    HANDS = '🙏' if not isWindows else '-'
-    SOUND = '🔊' if not isWindows else '>>'
-    RIGHT_ARROW = '⮕' if not isWindows else '->'
+    BOOK = '' if isWindows else '📒'
+    CLOVER = '#' if isWindows else '🍀 '
+    LINK = '-' if isWindows else '🔗'
+    HANDS = '-' if isWindows else '🙏'
+    SOUND = '<<' if isWindows else '🔊'
+    RIGHT_ARROW = '->' if isWindows else '⮕'
 # end def
-

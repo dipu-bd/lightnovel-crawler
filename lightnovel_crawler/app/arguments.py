@@ -12,7 +12,7 @@ class ArgReader:
             usage='\tlncrawl [options...]\n\tlightnovel-crawler [options...]'
         )
         parser.add_argument('-v', '--version', action='version',
-                            version='Lightnovel Crawler ' + os.environ['version'])
+                            version='Lightnovel Crawler ' + os.getenv('version'))
         parser.add_argument('-l', '--log', action='count',
                             help='Set log levels (1 = warn, 2 = info, 3 = debug)')
         

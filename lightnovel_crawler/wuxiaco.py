@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Crawler for [WuxiaWorld](http://www.wuxiaworld.com/).
+Crawler for [WuxiaWorld](http://www.wuxiaworld.co/).
 """
 import json
 import logging
@@ -13,24 +13,15 @@ logger = logging.getLogger('WUXIA_WORLD')
 
 
 class WuxiaCoCrawler(Crawler):
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
-        return False
-    # end def
-
-    def login(self, email, password):
-        pass
-    # end def
-
-    def logout(self):
-        pass
+    def initialize(self):
+        self.home_url = 'https://www.wuxiaworld.co/'
     # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
+        url = self.novel_url.replace('https://m', 'https://www')
+        logger.debug('Visiting %s', url)
+        response = self.get_response(url)
         soup = BeautifulSoup(response.text, 'lxml')
 
         self.novel_title = soup.select_one('#maininfo h1').text

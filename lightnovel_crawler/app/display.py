@@ -12,7 +12,7 @@ def description():
     print('=' * LINE_SIZE)
 
     title = Icons.BOOK + ' Lightnovel Crawler ' + \
-        Icons.CLOVER + os.environ['version']
+        Icons.CLOVER + os.getenv('version')
     padding = ' ' * ((LINE_SIZE - len(title)) // 2)
     print(Fore.YELLOW, padding + title, Fore.RESET)
 

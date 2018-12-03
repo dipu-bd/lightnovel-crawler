@@ -15,7 +15,7 @@ def get_novel_url():
         {
             'type': 'input',
             'name': 'novel',
-            'message': 'What is the url of novel page?',
+            'message': 'Enter the url of your novel:',
             'validate': lambda val: 'Url should be not be empty'
             if len(val) == 0 else True,
         },

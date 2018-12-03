@@ -12,25 +12,16 @@ from .utils.crawler import Crawler
 logger = logging.getLogger('WUXIA_WORLD')
 
 
-class WuxiaCrawler(Crawler):
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
-        return False
-    # end def
-
-    def login(self, email, password):
-        pass
-    # end def
-
-    def logout(self):
-        pass
+class WuxiaComCrawler(Crawler):
+    def initialize(self):
+        self.home_url = 'https://www.wuxiaworld.com/'
     # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
+        url = self.novel_url.replace('https://m', 'https://www')
+        logger.debug('Visiting %s', url)
+        response = self.get_response(url)
         soup = BeautifulSoup(response.text, 'lxml')
 
         self.novel_title = soup.select_one('.section-content  h4').text
