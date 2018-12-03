@@ -15,7 +15,7 @@ from .readln import ReadLightNovelCrawler
 from .novelplanet import NovelPlanetCrawler
 from .lnindo import LnindoCrawler
 from .idqidian import IdqidianCrawler
-from .novelspread import NovelSpreadCrawler
+from .romanticlb import RomanticLBCrawler
 
 crawler_list = {
     'https://lnmtl.com/': LNMTLCrawler,
@@ -30,7 +30,8 @@ crawler_list = {
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://lnindo.org/': LnindoCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
-    'https://www.novelspread.com/': NovelSpreadCrawler,
+    'https://m.romanticlovebooks.com/': RomanticLBCrawler,
+    'https://www.romanticlovebooks.com/': RomanticLBCrawler,
 }
 
 

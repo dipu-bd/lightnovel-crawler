@@ -24,17 +24,18 @@ class Crawler:
 
     '''
     Each item must contain these keys:
-    `title` - the title of the volume
+    `id` - 1 based index of the volume
+    `title` - the volume title (can be ignored)
     '''
     volumes = []
 
     '''
     Each item must contain these keys:
-    `id` - the index of the chapter
+    `id` - 1 based index of the chapter
     `title` - the title name
     `volume` - the volume id of this chapter
+    `volume_title` - the volume title (can be ignored)
     `url` - the link where to download the chapter
-    `name` - the chapter name, e.g: 'Chapter 3' or 'Chapter 12 (Special)'
     '''
     chapters = []
 
@@ -108,6 +109,7 @@ class Crawler:
     # end def
 
     def absolute_url(self, url, page_url=None):
+        url = (url or '').strip()
         page_url = page_url or self.last_visited_url
         if not url or len(url) == 0:
             return None
@@ -158,13 +160,13 @@ class Crawler:
         r'^(volume|chapter) .?\d+$',
     ]
 
-    def not_blacklisted(self, text):
+    def is_blacklisted(self, text):
         for pattern in self.blacklist_patterns:
             if re.search(pattern, text, re.IGNORECASE):
-                return False
+                return True
             # end if
         # end for
-        return True
+        return False
     # end def
 
     def extract_contents(self, contents, level=0):
@@ -193,10 +195,14 @@ class Crawler:
                 body.append(text)
             # end if
         # end for
-        if level == 0:
-            return [x for x in body if len(x) and self.not_blacklisted(x)]
-        else:
+        if level > 0:
             return body
         # end if
+
+        first_good = 0
+        while len(body) < first_good and self.is_blacklisted(body[first_good]):
+            first_good += 1
+        # end while
+        return body[first_good:]
     # end def
 # end class

@@ -47,7 +47,7 @@ class SampleCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         # TODO: This method must be implemented to get the `novel_title`.
         #       You may or may not set the novel_cover, novel_author, volumes
@@ -60,6 +60,15 @@ class SampleCrawler(Crawler):
         # TODO: Use this method if you need to retrieve chapter list from
         #       online. If you already got chapter list inside the method
         #       `read_novel_info`, implementing this one is not necessary.
+        #        Each volume must contain these keys:
+        #          id     : the index of the volume
+        #          volume : the volume number
+        #          volume_title: the volume title (can be ignored)
+        #        Each chapter must contain these keys:
+        #          id     : the index of the chapter
+        #          title  : the title name
+        #          volume : the volume number
+        #          url    : the link where to download the chapter
         pass
     # end def
 
