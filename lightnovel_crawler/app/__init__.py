@@ -7,7 +7,7 @@ import os
 import logging
 
 import requests
-from colorama import init as init_colorama
+from colorama import init as init_colorama, Fore
 
 from ..assets.version import get_value as get_version
 from .arguments import get_args, build_parser
@@ -30,7 +30,13 @@ def init():
     if args.log:
         os.environ['debug_mode'] = 'true'
         levels = [None, logging.WARN, logging.INFO, logging.DEBUG]
-        logging.basicConfig(level=levels[args.log])
+        logging.basicConfig(
+            level=levels[args.log],
+            format=Fore.CYAN + '%(asctime)s '
+            + Fore.RED + '[%(levelname)s] '
+            + Fore.YELLOW + '(%(name)s)\n'
+            + Fore.WHITE + '%(message)s' + Fore.RESET,
+        )
         debug_mode(args.log)
         print(args)
     # end if

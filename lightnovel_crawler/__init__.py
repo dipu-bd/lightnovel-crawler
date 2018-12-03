@@ -16,10 +16,13 @@ from .novelplanet import NovelPlanetCrawler
 from .lnindo import LnindoCrawler
 from .idqidian import IdqidianCrawler
 from .romanticlb import RomanticLBCrawler
+from .webnonline import WebnovelOnlineCrawler
 
+# Do not forget to append a slash(/) at the end
 crawler_list = {
     'https://lnmtl.com/': LNMTLCrawler,
     'https://www.webnovel.com/': WebnovelCrawler,
+    'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://m.wuxiaworld.com/': WuxiaComCrawler,

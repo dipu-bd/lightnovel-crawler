@@ -24,12 +24,15 @@ def epub_to_mobi(kindlegen, epub_file):
     logger.debug('Binding %s.epub', mobi_file)
 
     try:
-        devnull = open(os.devnull, 'w')
-        subprocess.call(
-            [kindlegen, epub_file],
-            stdout=devnull,
-            stderr=devnull,
-        )
+        isdebug = os.getenv('debug_mode') == 'true'
+        with open(os.devnull, 'w') as dumper:
+            logger.debug('')
+            subprocess.call(
+                [kindlegen, epub_file],
+                stdout=None if isdebug else dumper,
+                stderr=None if isdebug else dumper,
+            )
+        # end with
     except Exception as err:
         logger.debug(err)
         pass

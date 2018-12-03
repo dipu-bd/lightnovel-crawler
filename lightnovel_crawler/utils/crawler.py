@@ -157,7 +157,13 @@ class Crawler:
     # end def
 
     blacklist_patterns = [
-        r'^(volume|chapter) .?\d+$',
+        r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
+    ]
+    bad_tags = [
+        'script', 'iframe', 'form', 'a', 'br', 'ul', 'hr', 'img'
+    ]
+    block_tags = [
+        'h3', 'div', 'p'
     ]
 
     def is_blacklisted(self, text):
@@ -172,9 +178,9 @@ class Crawler:
     def extract_contents(self, contents, level=0):
         body = []
         for elem in contents:
-            if ['script', 'iframe', 'form', 'a', 'br', 'img'].count(elem.name):
+            if self.bad_tags.count(elem.name):
                 continue
-            elif ['h3', 'div', 'p'].count(elem.name):
+            elif self.block_tags.count(elem.name):
                 body += self.extract_contents(elem.contents, level + 1)
                 continue
             # end if
@@ -182,7 +188,8 @@ class Crawler:
             if not elem.name:
                 text = str(elem).strip()
             else:
-                text = '<%s>%s</%s>' % (elem.name, elem.text.strip(), elem.name)
+                text = '<%s>%s</%s>'
+                text = text % (elem.name, elem.text.strip(), elem.name)
             # end if
             patterns = [
                 re.compile(r'<!--(.|\n)*-->', re.MULTILINE),
@@ -199,8 +206,10 @@ class Crawler:
             return body
         # end if
 
+        body = [x for x in body if len(x.strip())]
+        length = len(body)
         first_good = 0
-        while len(body) < first_good and self.is_blacklisted(body[first_good]):
+        while first_good < length and self.is_blacklisted(body[first_good]):
             first_good += 1
         # end while
         return body[first_good:]
