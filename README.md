@@ -89,9 +89,14 @@ The list of crawable websites are given below. *Request new site by [creating a 
 - https://www.webnovel.com
 - https://wuxiaworld.online
 - https://www.wuxiaworld.com
+- https://m.wuxiaworld.com
 - https://www.wuxiaworld.co
+- https://m.wuxiaworld.co
 - https://boxnovel.com
 - https://www.readlightnovel.org
 - https://novelplanet.com
 - https://lnindo.org
 - https://www.idqidian.us
+- https://m.romanticlovebooks.com
+- https://www.romanticlovebooks.com
+- https://webnovel.online
