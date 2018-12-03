@@ -12,7 +12,7 @@ from colorama import init as init_colorama, Fore
 from ..assets.version import get_value as get_version
 from .arguments import get_args, build_parser
 from .display import (description, epilog, debug_mode, url_not_recognized,
-                      cancel_method)
+                      cancel_method, error_message)
 from .icons import Icons
 from .program import Program
 from .prompts import get_novel_url
@@ -73,6 +73,8 @@ def start_app(choice_list):
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
             raise err
+        else:
+            error_message(err)
         # end if
     # end try
 

@@ -60,6 +60,12 @@ def cancel_method():
 # end def
 
 
+def error_message(err):
+    print()
+    print(Fore.RED, Icons.ERROR, 'Error:', err, Fore.RESET)
+    print()
+# end def
+
 def url_not_recognized(choice_list):
     print()
     print('-' * LINE_SIZE)

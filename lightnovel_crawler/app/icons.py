@@ -11,4 +11,5 @@ class Icons:
     HANDS = '-' if isWindows else '🙏'
     SOUND = '<<' if isWindows else '🔊'
     RIGHT_ARROW = '->' if isWindows else '⮕'
+    ERROR = '!' if isWindows else '❗'
 # end def
