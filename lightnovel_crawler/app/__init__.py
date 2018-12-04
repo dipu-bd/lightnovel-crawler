@@ -12,21 +12,38 @@ from colorama import init as init_colorama, Fore
 from ..assets.version import get_value as get_version
 from .arguments import get_args, build_parser
 from .display import (description, epilog, debug_mode, url_not_recognized,
-                      cancel_method, error_message)
+                      cancel_method, error_message, new_version_news)
 from .icons import Icons
 from .program import Program
 from .prompts import get_novel_url
 
+logger = logging.Logger('APP_ROOT')
+
+def check_updates():
+    try:
+        logger.info('Checking version')
+        url = 'https://pypi.org/pypi/lightnovel-crawler/json'
+        res = requests.get(url, verify=False, timeout=3)
+        latest = res.json()['info']['version']
+        if get_version() != latest:
+            new_version_news(latest)
+        # end if
+    except Exception as err:
+        logger.debug(err)
+        error_message('Failed to check for update')
+    # end try
+# end def
+
 
 def init():
-    init_colorama()
-
     os.environ['version'] = get_version()
 
+    init_colorama()
     description()
-    build_parser()
 
+    build_parser()
     args = get_args()
+
     if args.log:
         os.environ['debug_mode'] = 'true'
         levels = [None, logging.WARN, logging.INFO, logging.DEBUG]
@@ -43,13 +60,14 @@ def init():
     requests.urllib3.disable_warnings(
         requests.urllib3.exceptions.InsecureRequestWarning)
     # end if
-
-    cancel_method()
 # end def
 
 
 def start_app(choice_list):
     init()
+
+    check_updates()
+    cancel_method()
 
     try:
         novel_url = get_novel_url()

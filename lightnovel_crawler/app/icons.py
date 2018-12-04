@@ -12,4 +12,5 @@ class Icons:
     SOUND = '<<' if isWindows else '🔊'
     RIGHT_ARROW = '->' if isWindows else '⮕'
     ERROR = '!' if isWindows else '❗'
+    PARTY = '$' if isWindows else '📦'
 # end def

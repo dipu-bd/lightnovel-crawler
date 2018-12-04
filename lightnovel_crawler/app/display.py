@@ -66,6 +66,17 @@ def error_message(err):
     print()
 # end def
 
+
+def new_version_news(latest):
+    print('', Icons.PARTY + Style.BRIGHT + Fore.CYAN,
+          'VERSION', Fore.RED + latest + Fore.CYAN,
+          'IS NOW AVAILABLE!', Fore.RESET)
+    print(Style.DIM, 'Upgrade using' + Style.RESET_ALL + Fore.YELLOW,
+          'pip install -U lightnovel-crawler', Fore.RESET)
+    print('-' * LINE_SIZE)
+# end def
+
+
 def url_not_recognized(choice_list):
     print()
     print('-' * LINE_SIZE)
