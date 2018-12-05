@@ -13,4 +13,10 @@ class Icons:
     RIGHT_ARROW = '->' if isWindows else '⮕'
     ERROR = '!' if isWindows else '❗'
     PARTY = '$' if isWindows else '📦'
+
+    # --------------------------------------- #
+
+    isWindows = isWindows
+    isLinux = isLinux
+    isMac = isMac
 # end def

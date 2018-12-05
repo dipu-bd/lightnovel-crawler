@@ -71,8 +71,15 @@ def new_version_news(latest):
     print('', Icons.PARTY + Style.BRIGHT + Fore.CYAN,
           'VERSION', Fore.RED + latest + Fore.CYAN,
           'IS NOW AVAILABLE!', Fore.RESET)
-    print(Style.DIM, 'Upgrade using' + Style.RESET_ALL + Fore.YELLOW,
-          'pip install -U lightnovel-crawler', Fore.RESET)
+
+    print('', Icons.RIGHT_ARROW, Style.DIM + 'To upgrade:',
+          Fore.YELLOW + 'pip install -U lightnovel-crawler', Style.RESET_ALL)
+
+    if Icons.isWindows:
+        print('', Icons.RIGHT_ARROW, Style.DIM + 'To download:',
+            Fore.YELLOW + 'https://goo.gl/sc4EZh', Style.RESET_ALL)
+    # end if
+
     print('-' * LINE_SIZE)
 # end def
 
