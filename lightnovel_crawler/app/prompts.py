@@ -26,8 +26,8 @@ def get_novel_url():
 
 
 def force_replace_old():
-    if len(sys.argv) > 1:
-        return get_args().force
+    if get_args().force:
+        return get_args().force >= 1
     # end if
     answer = prompt([
         {

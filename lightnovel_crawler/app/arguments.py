@@ -22,7 +22,7 @@ class ArgReader:
         source.add_argument('-s', '--source', dest='novel_page', type=str,
                             help='Profile page url of the novel')
 
-        parser.add_argument('-f', '--force', action='store_true',
+        parser.add_argument('-f', '--force', action='count',
                             help='Force replace any existing folder')
         parser.add_argument('-b', '--byvol', action='store_true',
                             help='Build separate books by volumes')
