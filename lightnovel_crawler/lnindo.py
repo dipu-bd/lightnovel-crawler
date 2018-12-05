@@ -45,7 +45,7 @@ class LnindoCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.find('div', {
-                             'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #3b5998; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).find_all('a')
+                             'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #3b5998; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).findAll('a')
         chapters.reverse()
 
         for a in chapters:

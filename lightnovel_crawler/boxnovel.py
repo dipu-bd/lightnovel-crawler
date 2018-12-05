@@ -33,14 +33,14 @@ class BoxNovelCrawler(Crawler):
         response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.select_one('h3').text.split(" ", 1)[1]
+        self.novel_title = soup.select_one('head title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_page img')['src'])
+            soup.select_one('.summary_image img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find("div", {"class": "author-content"}).findAll("a")
+        author = soup.find('div', {'class': 'author-content'}).findAll('a')
         if len(author) == 2:
             self.novel_author = author[0].text + ' (' + author[1].text + ')'
         else:
