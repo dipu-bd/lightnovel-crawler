@@ -84,7 +84,7 @@ def start_app(choice_list):
 
         if not instance:
             url_not_recognized(choice_list)
-            return
+            raise Exception('URL is not recognized')
         # end if
 
         Program().run(instance)
