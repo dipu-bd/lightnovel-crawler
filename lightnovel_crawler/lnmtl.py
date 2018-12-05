@@ -98,8 +98,11 @@ class LNMTLCrawler(Crawler):
             i += len('lnmtl.volumes =')
 
             volumes = json.loads(text[i:j].strip())
+            logger.debug(volumes)
+
             for i, vol in enumerate(volumes):
-                title = re.sub(r'[^\u0000-\u00FF]', '', vol['title'])
+                title = vol['title'] or ''
+                title = re.sub(r'[^\u0000-\u00FF]', '', title)
                 title = re.sub(r'\(\)', '', title).strip()
                 self.volumes.append({
                     'title': title,
