@@ -97,4 +97,8 @@ def start_app(choice_list):
     # end try
 
     epilog()
+
+    if Icons.isWindows:
+        input('Press ENTER to exit...')
+    # end if
 # end def

@@ -18,7 +18,7 @@ Crawls light novels and make html, text, epub and mobi
 
 ### Easy download
 
-📦 [lightnovel-crawler v2.5.9 for windows ~ 11MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.5.10 for windows ~ 11MB](https://goo.gl/sc4EZh)
 
 ### Installation
 
