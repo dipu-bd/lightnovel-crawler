@@ -10,11 +10,27 @@ from bs4 import BeautifulSoup
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
+search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
 
 
 class WuxiaCoCrawler(Crawler):
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.co/'
+    # end def
+
+    def search_novel(self, query):
+        '''Gets a list of {title, url} matching the given query'''
+        response = self.submit_form(search_url, data=dict(keyword=query, t=1))
+        soup = BeautifulSoup(response.text, 'lxml')
+        
+        results = []
+        for a in soup.select('.recommend a'):
+            url = self.absolute_url(a['href'])
+            title = a.select_one('.title').text.strip()
+            results.append((title, url))
+        # end for
+
+        return results
     # end def
 
     def read_novel_info(self):

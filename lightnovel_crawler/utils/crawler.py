@@ -134,7 +134,7 @@ class Crawler:
         return response
     # end def
 
-    def submit_form(self, url, multipart=False, headers={}, **data):
+    def submit_form(self, url, multipart=False, headers={}, data={}):
         '''Submit a form using post request'''
         headers = {
             'content-type': 'multipart/form-data' if multipart

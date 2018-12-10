@@ -1,3 +1,4 @@
+import re
 import sys
 
 from PyInquirer import prompt
@@ -31,8 +32,8 @@ def get_novel_url():
 # end def
 
 def get_crawlers_to_search(links):
-    if not links or len(links) == 0:
-        return []
+    if not links or len(links) <= 1:
+        return links or []
     # end if
 
     answer = prompt([
@@ -55,15 +56,17 @@ def choose_a_novel(search_results):
             'name': 'novel_url',
             'message': 'Where to search?',
             'choices': [
-                { 'name': '%d) %s (%s)' % (i, x[0], x[1]) }
-                for i, x in enumerate(search_results)
+                { 'name': '%s (%s)' % (x[0], x[1]) }
+                for x in search_results
             ],
             'validate': lambda ans: True if len(ans) > 0 \
                 else 'You must choose at least one site.'
         }
     ])
-    index = answer['novel_url'].split(')')[0]
-    return search_results[index - 1][1]
+    selected = answer['novel_url']
+    selected = re.search('(https?://.*)', selected)
+    url = selected.group(1).strip('()')
+    return url
 # end def
 
 def force_replace_old():

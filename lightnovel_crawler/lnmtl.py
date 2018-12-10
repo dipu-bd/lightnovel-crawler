@@ -15,6 +15,7 @@ logger = logging.getLogger('LNMTL')
 login_url = 'https://lnmtl.com/auth/login'
 logout_url = 'https://lnmtl.com/auth/logout'
 
+
 class LNMTLCrawler(Crawler):
     def login(self, email, password):
         '''login to LNMTL'''
@@ -27,9 +28,11 @@ class LNMTLCrawler(Crawler):
         logger.info('Logging in...')
         response = self.submit_form(
             login_url,
-            _token=token,
-            email=email,
-            password=password,
+            data=dict(
+                _token=token,
+                email=email,
+                password=password,
+            ),
         )
         # Check if logged in successfully
         soup = BeautifulSoup(response.text, 'lxml')
@@ -57,11 +60,6 @@ class LNMTLCrawler(Crawler):
         else:
             logger.warning('Logged out.')
         # end if
-    # end def
-
-    def search_novel(self, query):
-        '''Gets a list of {title, url} matching the given query'''
-        pass
     # end def
 
     def read_novel_info(self):
