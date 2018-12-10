@@ -35,7 +35,7 @@ def get_crawlers_to_search(links):
     if not links or len(links) <= 1:
         return links or []
     # end if
-
+    
     answer = prompt([
         {
             'type': 'checkbox',
@@ -46,7 +46,7 @@ def get_crawlers_to_search(links):
                 else 'You must choose at least one site.'
         }
     ])
-    return answer['sites']
+    return answer['sites'] if len(answer['sites']) else links
 # end def
 
 def choose_a_novel(search_results):
@@ -57,7 +57,7 @@ def choose_a_novel(search_results):
             'message': 'Where to search?',
             'choices': [
                 { 'name': '%s (%s)' % (x[0], x[1]) }
-                for x in search_results
+                for x in sorted(search_results)
             ],
             'validate': lambda ans: True if len(ans) > 0 \
                 else 'You must choose at least one site.'

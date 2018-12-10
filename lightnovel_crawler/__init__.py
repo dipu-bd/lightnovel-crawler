@@ -25,7 +25,7 @@ crawler_list = {
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
-    'https://m.wuxiaworld.com/': WuxiaComCrawler,
+    # 'https://m.wuxiaworld.com/': WuxiaComCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://m.wuxiaworld.co/': WuxiaCoCrawler,
     'https://boxnovel.com/': BoxNovelCrawler,

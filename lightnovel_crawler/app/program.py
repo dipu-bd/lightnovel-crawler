@@ -69,11 +69,11 @@ class Program:
 
         if not novel.startswith('http'):
             search_results = []
-            logger.warn('Searching for novels...')
             crawler_links = get_crawlers_to_search([
                 x for x in sorted(choice_list.keys())
                 if 'search_novel' in choice_list[x].__dict__
             ])
+            logger.warn('Searching for novels...')
             for link in crawler_links:
                 logger.info('Searching %s', link)
                 try:

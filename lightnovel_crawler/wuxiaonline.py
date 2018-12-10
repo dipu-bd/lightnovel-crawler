@@ -10,9 +10,25 @@ from bs4 import BeautifulSoup
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_ONLINE')
+SEARCH_URL = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
 
 
 class WuxiaOnlineCrawler(Crawler):
+    def search_novel(self, query):
+        '''Gets a list of {title, url} matching the given query'''
+        response = self.get_response(SEARCH_URL % query)
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        results = []
+        for a in soup.select('li .resultname a'):
+            url = self.absolute_url(a['href'])
+            title = a.text.strip()
+            results.append((title, url))
+        # end for
+
+        return results
+    # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         url = self.novel_url
