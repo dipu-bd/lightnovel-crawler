@@ -10,9 +10,25 @@ from bs4 import BeautifulSoup
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('READLIGHTNOVEL')
-
+search_url = 'https://www.readlightnovel.org/search/autocomplete'
 
 class ReadLightNovelCrawler(Crawler):
+    # def search_novel(self, query):
+    #     self.get_response(self.home_url)
+    #     response = self.submit_form(search_url, data={'q': query })
+    #     logger.debug(response.text)
+    #     soup = BeautifulSoup(response.text, 'lxml')
+        
+    #     results = []
+    #     for a in soup.select('li a'):
+    #         url = self.absolute_url(a['href'])
+    #         title = a.select_one('.title').text.strip()
+    #         results.append((title, url))
+    #     # end for
+
+    #     return results
+    # # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
