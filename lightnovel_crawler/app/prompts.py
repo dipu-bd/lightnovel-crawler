@@ -9,7 +9,7 @@ from .arguments import get_args
 
 def get_novel_url():
     args = get_args()
-    if args.query:
+    if args.query and len(args.query) > 1:
         return args.query
     # end if
 

@@ -67,7 +67,7 @@ class Program:
     def get_crawler_instance(self, choice_list):
         novel = get_novel_url()
 
-        if not novel.startswith('http:'):
+        if not novel.startswith('http'):
             search_results = []
             logger.warn('Searching for novels...')
             crawler_links = get_crawlers_to_search([
