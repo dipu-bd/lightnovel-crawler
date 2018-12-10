@@ -1,22 +1,23 @@
 import platform
 
-isWindows = platform.system() == 'Windows'
-isLinux = platform.system() == 'Linux'
 isMac = platform.system() == 'Darwin'
+isLinux = platform.system() == 'Linux'
+isWindows = platform.system() == 'Windows'
 
 class Icons:
-    BOOK = '' if isWindows else '📒'
-    CLOVER = '#' if isWindows else '🍀 '
-    LINK = '-' if isWindows else '🔗'
-    HANDS = '-' if isWindows else '🙏'
-    SOUND = '<<' if isWindows else '🔊'
-    RIGHT_ARROW = '->' if isWindows else '⮕'
-    ERROR = '!' if isWindows else '❗'
-    PARTY = '$' if isWindows else '📦'
+    isMac = isMac
+    isLinux = isLinux
+    isWindows = isWindows
+    hasSupport = isLinux or isMac
 
     # --------------------------------------- #
 
-    isWindows = isWindows
-    isLinux = isLinux
-    isMac = isMac
+    BOOK = '📒' if hasSupport else ''
+    CLOVER = '🍀 ' if hasSupport else '#'
+    LINK = '🔗' if hasSupport else '-'
+    HANDS = '🙏' if hasSupport else '-'
+    ERROR = '❗' if hasSupport else '!'
+    PARTY = '📦' if hasSupport else '$'
+    SOUND = '🔊' if hasSupport else '<<'
+    RIGHT_ARROW = '⮕' if hasSupport else '->'
 # end def

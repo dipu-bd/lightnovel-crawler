@@ -2,11 +2,17 @@ import sys
 
 from PyInquirer import prompt
 
+from .icons import Icons
 from .arguments import get_args
 
 
 def get_novel_url():
-    url = get_args().novel_page
+    args = get_args()
+    if args.query:
+        return args.query
+    # end if
+
+    url = args.novel_page
     if url and url.startswith('http'):
         return url
     # end if
@@ -15,8 +21,8 @@ def get_novel_url():
         {
             'type': 'input',
             'name': 'novel',
-            'message': 'Enter the url of your novel:',
-            'validate': lambda val: 'Url should be not be empty'
+            'message': 'Enter an url or novel name to find:',
+            'validate': lambda val: 'Input should not be empty'
             if len(val) == 0 else True,
         },
     ])
@@ -24,6 +30,41 @@ def get_novel_url():
     return answer['novel'].strip()
 # end def
 
+def get_crawlers_to_search(links):
+    if not links or len(links) == 0:
+        return []
+    # end if
+
+    answer = prompt([
+        {
+            'type': 'checkbox',
+            'name': 'sites',
+            'message': 'Where to search?',
+            'choices': [ { 'name': x } for x in links ],
+            'validate': lambda ans: True if len(ans) > 0 \
+                else 'You must choose at least one site.'
+        }
+    ])
+    return answer['sites']
+# end def
+
+def choose_a_novel(search_results):
+    answer = prompt([
+        {
+            'type': 'list' if Icons.hasSupport else 'rawlist',
+            'name': 'novel_url',
+            'message': 'Where to search?',
+            'choices': [
+                { 'name': '%d) %s (%s)' % (i, x[0], x[1]) }
+                for i, x in enumerate(search_results)
+            ],
+            'validate': lambda ans: True if len(ans) > 0 \
+                else 'You must choose at least one site.'
+        }
+    ])
+    index = answer['novel_url'].split(')')[0]
+    return search_results[index - 1][1]
+# end def
 
 def force_replace_old():
     if get_args().force:
@@ -105,7 +146,7 @@ def download_selection(chapter_count, volume_count):
 
     answer = prompt([
         {
-            'type': 'list',
+            'type': 'list' if Icons.hasSupport else 'rawlist',
             'name': 'choice',
             'message': 'Which chapters to download?',
             'choices': choices,
@@ -212,8 +253,8 @@ def range_from_volumes(volumes, times=0):
                     }
                     for vol in volumes
                 ],
-                'validate': lambda ans: True if len(ans) > 0
-                else 'You must choose at least one volume.'
+                'validate': lambda ans: True if len(ans) > 0 \
+                    else 'You must choose at least one volume.'
             }
         ])
         selected = [
@@ -247,6 +288,8 @@ def range_from_chapters(crawler, times=0):
                     {'name': '%d - %s' % (chap['id'], chap['title'])}
                     for chap in crawler.chapters
                 ],
+                'validate': lambda ans: True if len(ans) > 0 \
+                    else 'You must choose at least one chapter.',
             }
         ])
         selected = [

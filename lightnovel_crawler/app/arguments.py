@@ -11,16 +11,18 @@ class ArgReader:
             epilog='~' * LINE_SIZE,
             usage='\tlncrawl [options...]\n\tlightnovel-crawler [options...]'
         )
+        parser.add_argument('-l', dest='log', action='count',
+                            help='Set log levels (1 = warn, 2 = info, 3 = debug)')
         parser.add_argument('-v', '--version', action='version',
                             version='Lightnovel Crawler ' + os.getenv('version'))
-        parser.add_argument('-l', '--log', action='count',
-                            help='Set log levels (1 = warn, 2 = info, 3 = debug)')
         
         source = parser.add_mutually_exclusive_group()
-        source.add_argument('--test', action='store_true',
-                            help='Start in test environment')
+        # source.add_argument('--test', action='store_true',
+        #                     help='Start in test environment')
         source.add_argument('-s', '--source', dest='novel_page', type=str,
                             help='Profile page url of the novel')
+        source.add_argument('-q', '--query', dest='query', type=str,
+                            help='Novel query followed by list of source sites.')
 
         parser.add_argument('-f', '--force', action='count',
                             help='Force replace any existing folder')

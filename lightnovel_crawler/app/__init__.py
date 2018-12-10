@@ -15,9 +15,9 @@ from .display import (description, epilog, debug_mode, url_not_recognized,
                       cancel_method, error_message, new_version_news)
 from .icons import Icons
 from .program import Program
-from .prompts import get_novel_url
 
 logger = logging.Logger('APP_ROOT')
+
 
 def check_updates():
     try:
@@ -70,24 +70,7 @@ def start_app(choice_list):
     cancel_method()
 
     try:
-        novel_url = get_novel_url()
-
-        instance = None
-        for home_url, crawler in choice_list.items():
-            if novel_url.startswith(home_url):
-                instance = crawler()
-                instance.novel_url = novel_url
-                instance.home_url = home_url.strip('/')
-                break
-            # end if
-        # end for
-
-        if not instance:
-            url_not_recognized(choice_list)
-            raise Exception('URL is not recognized')
-        # end if
-
-        Program().run(instance)
+        Program.run(choice_list)
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
             raise err
