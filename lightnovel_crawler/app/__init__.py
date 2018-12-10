@@ -3,36 +3,85 @@
 """
 Interactive application to take user inputs
 """
-from PyInquirer import prompt
+import os
+import logging
+
+import requests
+from colorama import init as init_colorama, Fore
+
+from ..assets.version import get_value as get_version
+from .arguments import get_args, build_parser
+from .display import (description, epilog, debug_mode, url_not_recognized,
+                      cancel_method, error_message, new_version_news)
+from .icons import Icons
 from .program import Program
-from ..utils.crawler import Crawler
+
+logger = logging.Logger('APP_ROOT')
 
 
-def check(crawler):
-    return crawler.__bases__.count(Crawler) == 1
-# end for
+def check_updates():
+    try:
+        logger.info('Checking version')
+        url = 'https://pypi.org/pypi/lightnovel-crawler/json'
+        res = requests.get(url, verify=False, timeout=3)
+        latest = res.json()['info']['version']
+        if get_version() != latest:
+            new_version_news(latest)
+        # end if
+    except Exception as err:
+        logger.debug(err)
+        error_message('Failed to check for update')
+    # end try
+# end def
+
+
+def init():
+    os.environ['version'] = get_version()
+
+    init_colorama()
+    description()
+
+    build_parser()
+    args = get_args()
+
+    if args.log:
+        os.environ['debug_mode'] = 'true'
+        levels = [None, logging.WARN, logging.INFO, logging.DEBUG]
+        logging.basicConfig(
+            level=levels[args.log],
+            format=Fore.CYAN + '%(asctime)s '
+            + Fore.RED + '[%(levelname)s] '
+            + Fore.YELLOW + '(%(name)s)\n'
+            + Fore.WHITE + '%(message)s' + Fore.RESET,
+        )
+        debug_mode(args.log)
+        print(args)
+    # end if
+    requests.urllib3.disable_warnings(
+        requests.urllib3.exceptions.InsecureRequestWarning)
+    # end if
+# end def
+
 
 def start_app(choice_list):
-    print('\n⮕ Press \33[95mCtrl + C\33[0m to exit\n')
+    init()
 
-    answer = prompt([
-        {
-            'type': 'list',
-            'name': 'source',
-            'message': 'Where is the novel from?',
-            'choices': [
-                {
-                    'name': key,
-                    'disabled': False if check(choice_list[key]) \
-                        else 'Not yet implemented',
-                } for key in choice_list
-            ],
-        },
-    ])
+    check_updates()
+    cancel_method()
 
-    crawler = choice_list[answer['source']]
-    Program().run(crawler())
+    try:
+        Program.run(choice_list)
+    except Exception as err:
+        if os.getenv('debug_mode') == 'true':
+            raise err
+        else:
+            error_message(err)
+        # end if
+    # end try
 
-    print('-' * 80, end='\n\n')
-    print('Bye... Come back soon!')
+    epilog()
+
+    if Icons.isWindows:
+        input('Press ENTER to exit...')
+    # end if
 # end def

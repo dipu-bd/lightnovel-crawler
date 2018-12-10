@@ -2,29 +2,33 @@
 
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![PyPI - Format](https://img.shields.io/pypi/format/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![PyPI - Status](https://img.shields.io/pypi/status/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
-<br>
-[![GitHub contributors](https://img.shields.io/github/contributors/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/pulls)
 [![GitHub issues](https://img.shields.io/github/issues/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/issues)
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+)
-[![GitHub](https://img.shields.io/github/license/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/VERSION)
+[![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
+[![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
+<!-- [![PyPI - Format](https://img.shields.io/pypi/format/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler) -->
+<!-- [![PyPI - Status](https://img.shields.io/pypi/status/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler) -->
+<!-- [![GitHub contributors](https://img.shields.io/github/contributors/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler) -->
+<!-- [![GitHub pull requests](https://img.shields.io/github/issues-pr/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/pulls) -->
+<!-- [![GitHub closed issues](https://img.shields.io/github/issues-closed/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aclosed+) -->
+<!-- [![GitHub](https://img.shields.io/github/license/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/VERSION) -->
 
-Crawls light novels and make text, epub and mobi
+Crawls light novels and make html, text, epub and mobi
 
 ## Tutorial
+
+### Easy download
+
+📦 [lightnovel-crawler v2.5.10 for windows ~ 11MB](https://goo.gl/sc4EZh)
 
 ### Installation
 
 Make sure that you have `python3` and `pip` installed in your computer. Add this package using:
 
 ```bash
-$ pip install lightnovel-crawler
+$ pip3 install --user -U lightnovel-crawler
 
 # Or if it does not work, use:
-$ python3 -m pip install --user lightnovel-crawler
+$ python3 -m pip install --user -U lightnovel-crawler
 ```
 
 Next, *Open the console panel in a directory you want to store your downloaded novels* and
@@ -37,41 +41,62 @@ $ lightnovel-crawler
 $ lncrawl
 ```
 
-To view more logs, there is a verbose mode:
+To view list of available options:
+
 ```bash
-$ lncrawl -v
+$ lncrawl -h
+================================================================
+                   📒 Lightnovel Crawler 🍀 2.5.0
+    Download lightnovels into html, text, epub, mobi and json
+----------------------------------------------------------------
+usage:  lncrawl [options...]
+        lightnovel-crawler [options...]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -v, --version         show program's version number and exit
+  -l, --log             Set log levels (1 = warn, 2 = info, 3 = debug)
+  -s NOVEL_PAGE, --source NOVEL_PAGE
+                        Profile page url of the novel
+  -f, --force           Force replace any existing folder
+  -b, --byvol           Build separate books by volumes
+  --login USER PASSWD   User name/email address and password for login
+  --all                 Download all chapters
+  --first [COUNT]       Download first few chapters (default: 10)
+  --last [COUNT]        Download last few chapters (default: 10)
+  --page START STOP     The start and final chapter urls
+  --range FROM TO       The start and final chapter indexes
+  --volumes [N [N ...]]
+                        The list of volume numbers to download
+  --chapters [URL [URL ...]]
+                        A list of specific chapter urls
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-### Additional dependencies
+> There is a verbose mode for extended logging: `lncrawl -lll`
 
-#### For MOBI Output
+### Adding new source
 
-- KindleGen: https://www.amazon.com/gp/feature.html?docId=1000765211
+- Use the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/_sample.py) as blueprint.
+- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/__init__.py).
 
-#### NodeJS for cloudflare
-
-Some websites like `novelplanet` needs `nodejs`. Install it from:
-
-- Downloads: https://nodejs.org/en/download/ 
-- Linux: `curl -sL https://deb.nodesource.com/setup_8.x -o nodesource_setup.sh`
-
-### Available websites
+## Available websites
 
 The list of crawable websites are given below. *Request new site by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues)*.
 
 - https://lnmtl.com
 - https://www.webnovel.com
+- https://wuxiaworld.online
 - https://www.wuxiaworld.com
+- https://m.wuxiaworld.com
 - https://www.wuxiaworld.co
+- https://m.wuxiaworld.co
 - https://boxnovel.com
 - https://www.readlightnovel.org
 - https://novelplanet.com
 - https://lnindo.org
 - https://www.idqidian.us
-
-## Adding new source
-
-- Use the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/_sample.py) as blueprint.
-- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/__init__.py).
-
-That's all!
+- https://m.romanticlovebooks.com
+- https://www.romanticlovebooks.com
+- https://webnovel.online

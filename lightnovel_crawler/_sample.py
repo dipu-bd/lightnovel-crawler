@@ -25,14 +25,6 @@ class SampleCrawler(Crawler):
         pass
     # end def
 
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
-        # TODO: Pass False or delete this method if this crawler
-        #       does not support login.
-        return False
-    # end def
-
     def login(self, email, password):
         # TODO: You can just delete this method if not necessary.
         #       You can use `self.get_response` and `self.submit_form`
@@ -47,11 +39,21 @@ class SampleCrawler(Crawler):
         pass
     # end def
 
-    def read_novel_info(self, url):
+    def search_novel(self, query):
+        '''Gets a list of (title, url) matching the given query'''
+        # TODO: Use the `self.novel_url` as a query to find matching novels.
+        #       Return the search result as a list of (title, url) pair.
+        #       You may throw an Exception or empty list in case of failure.
+        pass
+    # end def
+
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         # TODO: This method must be implemented to get the `novel_title`.
+        #       Use the `self.novel_url` as the url to get info
         #       You may or may not set the novel_cover, novel_author, volumes
         #       and chapter list, but the `novel_title` must be set here.
+        #       You may throw an Exception in case of failure
         pass
     # end def
 
@@ -60,6 +62,15 @@ class SampleCrawler(Crawler):
         # TODO: Use this method if you need to retrieve chapter list from
         #       online. If you already got chapter list inside the method
         #       `read_novel_info`, implementing this one is not necessary.
+        #        Each volume must contain these keys:
+        #          id     : the index of the volume
+        #          volume : the volume number
+        #          volume_title: the volume title (can be ignored)
+        #        Each chapter must contain these keys:
+        #          id     : the index of the chapter
+        #          title  : the title name
+        #          volume : the volume number
+        #          url    : the link where to download the chapter
         pass
     # end def
 

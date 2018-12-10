@@ -6,8 +6,6 @@ Crawler for novels from [WebNovel](https://www.webnovel.com).
 import json
 import logging
 import re
-import requests
-from concurrent import futures
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('WEBNOVEL')
@@ -18,26 +16,15 @@ book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
 chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
 chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 
+
 class WebnovelCrawler(Crawler):
-    @property
-    def supports_login(self):
-        return False
-    # end def
-
-    def login(self, email, password):
-        pass
-    # end def
-
-    def logout(self):
-        pass
-    # end def
-
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         logger.info('Getting CSRF Token')
-        self.get_response(url)
+        self.get_response(self.novel_url)
         self.csrf = self.cookies['_csrfToken']
         logger.debug('CSRF Token = %s', self.csrf)
 
+        url = self.novel_url
         self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
         logger.debug('Novel Id: %s', self.novel_id)
         url = chapter_list_url % (self.csrf, self.novel_id)
@@ -80,6 +67,7 @@ class WebnovelCrawler(Crawler):
         for i, chap in enumerate(chapters):
             self.chapters.append({
                 'id': i + 1,
+                'hash': chap['id'],
                 'title': chap['name'].strip(),
                 'url': chapter_body_url % (self.csrf, self.novel_id, chap['id']),
                 'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
@@ -90,18 +78,23 @@ class WebnovelCrawler(Crawler):
     # end def
 
     def get_chapter_index_of(self, url):
+        if not url:
+            return 0
+        # end if
         url = url.replace('http://', 'https://')
-        for i, chap in enumerate(self.chapters):
-            chap_url = chapter_info_url % (self.novel_id, chap['id'])
+        for chap in self.chapters:
+            chap_url = chapter_info_url % (self.novel_id, chap['hash'])
             if url.startswith(chap_url):
-                return i
+                return chap['id']
             # end if
         # end for
+        return 0
     # end def
 
     def download_chapter_body(self, chapter):
         url = chapter['url']
-        logger.info('Getting chapter... %s [%s]', chapter['title'], chapter['id'])
+        logger.info('Getting chapter... %s [%s]',
+                    chapter['title'], chapter['id'])
 
         response = self.get_response(url)
         data = response.json()

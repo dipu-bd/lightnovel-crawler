@@ -14,6 +14,7 @@ from os import path
 # and accepts an argument to specify the text encoding
 # Python 3 only projects can skip this import
 from io import open
+from build import pack_files, unpack_files
 
 here = path.abspath(path.dirname(__file__))
 
@@ -30,6 +31,8 @@ with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
+
+pack_files()
 
 setup(
     # This is the name of your project. The first time you publish this
@@ -56,7 +59,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='Crawls light novels and make text, epub and mobi',  # Required
+    description='Crawls light novels and make html, text, epub and mobi',  # Required
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
@@ -117,9 +120,9 @@ setup(
         # Specify the Python versions you support here. In particular, ensure
         # that you indicate whether you support Python 2, Python 3 or both.
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
 
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Microsoft :: Windows',
@@ -169,14 +172,12 @@ setup(
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
-    package_data={  # Optional
-        'lightnovel_crawler': [
-            '../VERSION',
-            'ext/kindlegen-linux',
-            'ext/kindlegen-mac',
-            'ext/kindlegen-windows'
-        ],
-    },
+    # package_data={  # Optional
+    #     'lightnovel_crawler': [
+    #         'VERSION',
+    #         'binders/html_style.css',
+    #     ],
+    # },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
@@ -215,3 +216,5 @@ setup(
         'Say Thanks!': 'https://saythanks.io/to/dipu-bd',
     },
 )
+
+unpack_files()

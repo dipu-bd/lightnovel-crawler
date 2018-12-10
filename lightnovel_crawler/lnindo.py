@@ -11,30 +11,16 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('LNINDO')
 
-home_url = 'https://lnindo.org'
 
 class LnindoCrawler(Crawler):
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
-        return False
-    # end def
-
-    def login(self, email, password):
-        pass
-    # end def
-
-    def logout(self):
-        pass
-    # end def
-
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.find_all('span', {"typeof":"v:Breadcrumb"})[-1].text
+        self.novel_title = soup.find_all(
+            'span', {"typeof": "v:Breadcrumb"})[-1].text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = "https://lnindo.org/images/noavailable.jpg"
@@ -44,26 +30,27 @@ class LnindoCrawler(Crawler):
         self.novel_author = author[20:len(author)-22]
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find('div',{'style':'-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #3b5998; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).find_all('a')
+        chapters = soup.find('div', {
+                             'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #3b5998; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).findAll('a')
         chapters.reverse()
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
-                vol_id =  chap_id//100 +1
-                vol_title =  'Volume ' + str(vol_id)
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
                 self.volumes.append({
                     'id': vol_id,
                     'title': vol_title,
                 })
-            #end if
+            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  a['href'],
+                'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        #end for
+        # end for
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))

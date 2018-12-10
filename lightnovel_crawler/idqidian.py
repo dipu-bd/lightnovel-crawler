@@ -11,30 +11,16 @@ from .utils.crawler import Crawler
 
 logger = logging.getLogger('LNINDO')
 
-home_url = 'https://www.idqidian.us'
 
 class IdqidianCrawler(Crawler):
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
-        return False
-    # end def
-
-    def login(self, email, password):
-        pass
-    # end def
-
-    def logout(self):
-        pass
-    # end def
-
-    def read_novel_info(self, url):
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
+        logger.debug('Visiting %s', self.novel_url)
+        response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.find_all('span', {"typeof":"v:Breadcrumb"})[-1].text
+        self.novel_title = soup.find_all(
+            'span', {"typeof": "v:Breadcrumb"})[-1].text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = "https://www.idqidian.us/images/noavailable.jpg"
@@ -45,27 +31,27 @@ class IdqidianCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.find('div', {
-            'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #333; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).find_all(
+            'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #333; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).findAll(
             'a')
         chapters.reverse()
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
-                vol_id =  chap_id//100 +1
-                vol_title =  'Volume ' + str(vol_id)
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
                 self.volumes.append({
                     'id': vol_id,
                     'title': vol_title,
                 })
-            #end if
+            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  a['href'],
+                'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        #end for
+        # end for
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
@@ -82,7 +68,7 @@ class IdqidianCrawler(Crawler):
 
         body_parts = soup.select('p')
         body_parts = ''.join([str(p.extract()) for p in body_parts if
-                             p.text.strip() and not 'Advertisement' in p.text and not 'JavaScript!' in p.text])
+                              p.text.strip() and not 'Advertisement' in p.text and not 'JavaScript!' in p.text])
         if body_parts == '':
             texts = [str.strip(x) for x in soup.strings if str.strip(x) != '']
             unwanted_text = [str.strip(x.text) for x in soup.find_all()]
