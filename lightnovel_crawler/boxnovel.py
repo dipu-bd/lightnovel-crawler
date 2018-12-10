@@ -10,9 +10,26 @@ from bs4 import BeautifulSoup
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('BOXNOVEL')
+search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 
 class BoxNovelCrawler(Crawler):
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        response = self.get_response(search_url % query)
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        results = []
+        for a in soup.select('.post-title h4 a'):
+            results.append((
+                a.text.strip(),
+                self.absolute_url(a['href']),
+            ))
+        # end for
+
+        return results
+    # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
