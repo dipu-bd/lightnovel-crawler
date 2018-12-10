@@ -134,11 +134,11 @@ class Crawler:
         return response
     # end def
 
-    def submit_form(self, url, multipart=False, headers={}, data={}):
+    def submit_form(self, url, data={}, multipart=False, headers={}):
         '''Submit a form using post request'''
         headers = {
             'content-type': 'multipart/form-data' if multipart
-            else 'application/x-www-form-urlencoded'
+            else 'application/x-www-form-urlencoded; charset=UTF-8'
         }
         response = self.scrapper.post(url, data=data, headers=headers)
         self.cookies.update({

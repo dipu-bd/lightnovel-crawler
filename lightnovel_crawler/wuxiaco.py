@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
-SEARCH_URL = 'https://m.wuxiaworld.co/SearchBook.aspx'
+search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
 
 
 class WuxiaCoCrawler(Crawler):
@@ -20,7 +20,7 @@ class WuxiaCoCrawler(Crawler):
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
-        response = self.submit_form(SEARCH_URL, data=dict(keyword=query, t=1))
+        response = self.submit_form(search_url, data=dict(keyword=query, t=1))
         soup = BeautifulSoup(response.text, 'lxml')
         
         results = []

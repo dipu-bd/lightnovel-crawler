@@ -50,6 +50,9 @@ def get_crawlers_to_search(links):
 # end def
 
 def choose_a_novel(search_results):
+    if len(search_results) == 1:
+        return search_results[0][1]
+    # end if
     answer = prompt([
         {
             'type': 'list' if Icons.hasSupport else 'rawlist',
