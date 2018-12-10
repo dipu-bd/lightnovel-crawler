@@ -10,9 +10,25 @@ from bs4 import BeautifulSoup
 from .utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_PLANET')
-
+search_url = 'https://novelplanet.com/NovelList?name=%s'
 
 class NovelPlanetCrawler(Crawler):
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        response = self.get_response(search_url % query)
+        soup = BeautifulSoup(response.text, 'lxml')
+
+        results = []
+        for a in soup.select('.post-content a.title'):
+            results.append((
+                a.text.strip(),
+                self.absolute_url(a['href']),
+            ))
+        # end for
+
+        return results
+    # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
