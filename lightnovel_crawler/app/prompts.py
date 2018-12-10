@@ -59,7 +59,7 @@ def choose_a_novel(search_results):
             'name': 'novel_url',
             'message': 'Where to search?',
             'choices': [
-                { 'name': '%s (%s)' % (x[0], x[1]) }
+                { 'name': '%s (%s)' % x }
                 for x in sorted(search_results)
             ],
             'validate': lambda ans: True if len(ans) > 0 \

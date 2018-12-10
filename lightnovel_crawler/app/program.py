@@ -18,6 +18,7 @@ from .prompts import (choose_a_novel, download_selection,
 
 logger = logging.getLogger('CRAWLER_APP')
 
+
 class Program:
     '''Initiate the app'''
 
@@ -74,7 +75,8 @@ class Program:
                 if 'search_novel' in choice_list[x].__dict__
             ])
             _checked = {}
-            logger.warn('Searching for novels...')
+            logger.warn('Searching for novels in %d sites...',
+                        len(crawler_links))
             for link in crawler_links:
                 logger.info('Searching %s', link)
                 try:
