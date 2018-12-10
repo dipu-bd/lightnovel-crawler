@@ -73,13 +73,19 @@ class Program:
                 x for x in sorted(choice_list.keys())
                 if 'search_novel' in choice_list[x].__dict__
             ])
+            _checked = {}
             logger.warn('Searching for novels...')
             for link in crawler_links:
                 logger.info('Searching %s', link)
                 try:
-                    crawler = choice_list[link]()
-                    crawler.home_url = link.strip('/')
-                    results = crawler.search_novel(novel)
+                    crawler = choice_list[link]
+                    if crawler in _checked:
+                        continue
+                    # end if
+                    _checked[crawler] = True
+                    instance = crawler()
+                    instance.home_url = link.strip('/')
+                    results = instance.search_novel(novel)
                     search_results += results
                     logger.info('%d results found', len(results))
                 except Exception as ex:
