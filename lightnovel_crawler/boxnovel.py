@@ -13,20 +13,6 @@ logger = logging.getLogger('BOXNOVEL')
 
 
 class BoxNovelCrawler(Crawler):
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
-        return False
-    # end def
-
-    def login(self, email, password):
-        pass
-    # end def
-
-    def logout(self):
-        pass
-    # end def
-
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

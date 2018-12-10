@@ -15,13 +15,7 @@ logger = logging.getLogger('LNMTL')
 login_url = 'https://lnmtl.com/auth/login'
 logout_url = 'https://lnmtl.com/auth/logout'
 
-
 class LNMTLCrawler(Crawler):
-    @property
-    def supports_login(self):
-        return True
-    # end def
-
     def login(self, email, password):
         '''login to LNMTL'''
         # Get the login page
@@ -63,12 +57,6 @@ class LNMTLCrawler(Crawler):
         else:
             logger.warning('Logged out.')
         # end if
-    # end def
-
-    @property
-    def supports_search(self):
-        '''Whether the crawler supports search_novel() method'''
-        return True
     # end def
 
     def search_novel(self, query):

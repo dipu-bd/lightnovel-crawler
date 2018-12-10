@@ -55,24 +55,12 @@ class Crawler:
         pass
     # end def
 
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout() methods'''
-        return False
-    # end def
-
     def login(self, email, password):
         pass
     # end def
 
     def logout(self):
         pass
-    # end def
-
-    @property
-    def supports_search(self):
-        '''Whether the crawler supports search_novel() method'''
-        return False
     # end def
 
     def search_novel(self, query):

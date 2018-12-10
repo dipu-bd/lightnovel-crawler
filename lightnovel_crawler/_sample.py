@@ -25,14 +25,6 @@ class SampleCrawler(Crawler):
         pass
     # end def
 
-    @property
-    def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
-        # TODO: Pass False or delete this method if this crawler
-        #       does not support login.
-        return False
-    # end def
-
     def login(self, email, password):
         # TODO: You can just delete this method if not necessary.
         #       You can use `self.get_response` and `self.submit_form`
@@ -47,16 +39,9 @@ class SampleCrawler(Crawler):
         pass
     # end def
 
-    @property
-    def supports_search(self):
-        '''Whether the crawler supports search_novel() method'''
-        return False
-    # end def
-
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
-        # TODO: This method must be implemented if supports_search returns True
-        #       Use the `self.novel_url` as a query to find matching novels.
+        # TODO: Use the `self.novel_url` as a query to find matching novels.
         #       Return the search result as a list of (title, url) pair.
         #       You may throw an Exception or empty list in case of failure.
         pass

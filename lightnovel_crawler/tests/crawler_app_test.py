@@ -11,11 +11,6 @@ from lightnovel_crawler.utils.crawler import Crawler
 
 
 class TestCrawler(Crawler):
-    @property
-    def supports_login(self):
-        return True
-    # end def
-
     def login(self, email, password):
         print('Login has been called: email=%s, password=%s' % (email, password))
         sleep(2)
