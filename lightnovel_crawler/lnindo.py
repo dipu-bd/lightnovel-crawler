@@ -13,6 +13,20 @@ logger = logging.getLogger('LNINDO')
 
 
 class LnindoCrawler(Crawler):
+    @property
+    def supports_login(self):
+        '''Whether the crawler supports login() and logout method'''
+        return False
+    # end def
+
+    def login(self, email, password):
+        pass
+    # end def
+
+    def logout(self):
+        pass
+    # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
@@ -30,8 +44,15 @@ class LnindoCrawler(Crawler):
         self.novel_author = author[20:len(author)-22]
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find('div', {
-                             'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #3b5998; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).findAll('a')
+        #chapters = soup.find('div', {
+        #                     'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #3b5998; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).findAll('a')
+        #changed due to some change in lnindo site that create text before attribute style so the scrapper that depend on style to detect toc link broken 
+        selected = soup.findAll('div')
+        for panel in selected :
+            if len(panel.attrs)>4:
+               toc = panel
+        #endfor
+        chapters = toc.findAll('a')
         chapters.reverse()
 
         for a in chapters:
