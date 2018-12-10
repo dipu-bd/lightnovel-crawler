@@ -18,19 +18,6 @@ chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfTok
 
 
 class WebnovelCrawler(Crawler):
-    @property
-    def supports_login(self):
-        return False
-    # end def
-
-    def login(self, email, password):
-        pass
-    # end def
-
-    def logout(self):
-        pass
-    # end def
-
     def read_novel_info(self):
         logger.info('Getting CSRF Token')
         self.get_response(self.novel_url)

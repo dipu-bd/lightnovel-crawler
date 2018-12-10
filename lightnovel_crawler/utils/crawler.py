@@ -57,7 +57,7 @@ class Crawler:
 
     @property
     def supports_login(self):
-        '''Whether the crawler supports login() and logout method'''
+        '''Whether the crawler supports login() and logout() methods'''
         return False
     # end def
 
@@ -69,7 +69,18 @@ class Crawler:
         pass
     # end def
 
-    def read_novel_info(self, url):
+    @property
+    def supports_search(self):
+        '''Whether the crawler supports search_novel() method'''
+        return False
+    # end def
+
+    def search_novel(self, query):
+        '''Gets a list of {title, url} matching the given query'''
+        pass
+    # end def
+
+    def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         pass
     # end def

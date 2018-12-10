@@ -65,6 +65,17 @@ class LNMTLCrawler(Crawler):
         # end if
     # end def
 
+    @property
+    def supports_search(self):
+        '''Whether the crawler supports search_novel() method'''
+        return True
+    # end def
+
+    def search_novel(self, query):
+        '''Gets a list of {title, url} matching the given query'''
+        pass
+    # end def
+
     def read_novel_info(self):
         '''get list of chapters'''
         logger.info('Visiting %s', self.novel_url)
