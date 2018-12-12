@@ -42,28 +42,26 @@ def get_crawlers_to_search(links):
             'name': 'sites',
             'message': 'Where to search?',
             'choices': [ { 'name': x } for x in links ],
-            'validate': lambda ans: True if len(ans) > 0 \
-                else 'You must choose at least one site.'
         }
     ])
     return answer['sites'] if len(answer['sites']) else links
 # end def
 
 def choose_a_novel(search_results):
-    if len(search_results) == 1:
+    if len(search_results) == 0:
+        return ''
+    elif len(search_results) == 1:
         return search_results[0][1]
     # end if
     answer = prompt([
         {
-            'type': 'list' if Icons.hasSupport else 'rawlist',
+            'type': 'list',
             'name': 'novel_url',
             'message': 'Where to search?',
             'choices': [
-                { 'name': '%s (%s)' % x }
+                { 'name': '%s (%s)' % (x[0], x[1]) }
                 for x in sorted(search_results)
             ],
-            'validate': lambda ans: True if len(ans) > 0 \
-                else 'You must choose at least one site.'
         }
     ])
     selected = answer['novel_url']
@@ -152,7 +150,7 @@ def download_selection(chapter_count, volume_count):
 
     answer = prompt([
         {
-            'type': 'list' if Icons.hasSupport else 'rawlist',
+            'type': 'list',
             'name': 'choice',
             'message': 'Which chapters to download?',
             'choices': choices,
@@ -164,7 +162,7 @@ def download_selection(chapter_count, volume_count):
 
 
 def range_using_urls(crawler):
-    start_url, stop_url = get_args().page
+    start_url, stop_url = get_args().page or (None, None)
 
     if not (start_url and stop_url):
         def validator(val):
@@ -201,7 +199,7 @@ def range_using_urls(crawler):
 
 
 def range_using_index(chapter_count):
-    start, stop = get_args().range
+    start, stop = get_args().range or (None, None)
 
     if not (start and stop):
         def validator(val):

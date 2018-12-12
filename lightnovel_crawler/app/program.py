@@ -89,6 +89,7 @@ class Program:
                     instance.home_url = link.strip('/')
                     results = instance.search_novel(novel)
                     search_results += results
+                    logger.debug(results)
                     logger.info('%d results found', len(results))
                 except Exception as ex:
                     logger.debug(ex)
@@ -100,6 +101,9 @@ class Program:
             novel = choose_a_novel(search_results)
         # end if
 
+        if not novel:
+            raise Exception('Novel URL was not specified')
+        # end if
         for home_url, crawler in choice_list.items():
             if novel.startswith(home_url):
                 self.crawler = crawler()
