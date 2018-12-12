@@ -39,7 +39,7 @@ class Program:
 
         app.crawler.initialize()
 
-        if 'login' in app.crawler.__dict__:
+        if 'login' in app._methods:
             data = login_info()
             if data and len(data) == 2:
                 app.crawler.login(data[0], data[1])
@@ -56,7 +56,7 @@ class Program:
         app.chapter_range()
         download_chapters(app)
 
-        if 'logout' in app.crawler.__dict__:
+        if 'logout' in app._methods:
             app.crawler.logout()
         # end if
 
@@ -109,6 +109,7 @@ class Program:
                 self.crawler = crawler()
                 self.crawler.novel_url = novel
                 self.crawler.home_url = home_url.strip('/')
+                self._methods = crawler.__dict__
                 break
             # end if
         # end for
