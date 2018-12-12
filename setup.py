@@ -8,13 +8,12 @@ https://github.com/pypa/sampleproject
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
-from os import path
+from os import path, getenv
 # io.open is needed for projects that support Python 2.7
 # It ensures open() defaults to text mode with universal newlines,
 # and accepts an argument to specify the text encoding
 # Python 3 only projects can skip this import
 from io import open
-from build import pack_files, unpack_files
 
 here = path.abspath(path.dirname(__file__))
 
@@ -32,7 +31,11 @@ with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
 
-pack_files()
+if getenv('build_assets') == 'true':
+    from build import pack_files, unpack_files
+    pack_files()
+    print('>>>>>>>>>>> packed files')
+# end if
 
 setup(
     # This is the name of your project. The first time you publish this
@@ -217,4 +220,7 @@ setup(
     },
 )
 
-unpack_files()
+if getenv('build_assets') == 'true':
+    unpack_files()
+    print('>>>>>>>>>>> unpacked files')
+# end if
