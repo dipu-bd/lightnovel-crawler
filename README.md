@@ -18,7 +18,7 @@ Crawls light novels and make html, text, epub and mobi
 
 ### Easy download
 
-📦 [lightnovel-crawler v2.6.1 for windows ~ 11MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.6.2 for windows ~ 11MB](https://goo.gl/sc4EZh)
 
 ### Installation
 
@@ -46,7 +46,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================
-                   📒 Lightnovel Crawler 🍀 2.6.1
+                   📒 Lightnovel Crawler 🍀 2.6.2
     Download lightnovels into html, text, epub, mobi and json
 ----------------------------------------------------------------
 usage:  lncrawl [options...]
