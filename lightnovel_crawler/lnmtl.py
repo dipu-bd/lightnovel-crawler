@@ -76,6 +76,7 @@ class LNMTLCrawler(Crawler):
         logger.info('Novel cover = %s', self.novel_cover)
 
         self.parse_volume_list(soup)
+        self.volumes = sorted(self.volumes, key=lambda x: x['id'])
         logger.debug(self.volumes)
 
         logger.info('%d volumes found.', len(self.volumes))
@@ -139,7 +140,7 @@ class LNMTLCrawler(Crawler):
         for chapter in result['data']:
             self.chapters.append({
                 'url': chapter['site_url'],
-                'id': int(chapter['position']),
+                'id': int(chapter['number']),
                 'title': chapter['title'].strip(),
                 'volume': volume['id'],
             })
