@@ -80,8 +80,8 @@ optional arguments:
 
 ### Adding new source
 
-- Use the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/_sample.py) as blueprint.
-- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/__init__.py).
+- Create new crawler using the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/spiders/_sample.py) as blueprint.
+- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/spiders/__init__.py).
 
 ## Supported websites
 
