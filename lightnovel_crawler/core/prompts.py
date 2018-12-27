@@ -22,7 +22,7 @@ def get_novel_url():
         {
             'type': 'input',
             'name': 'novel',
-            'message': 'Enter an url or novel name to find:',
+            'message': 'Enter novel page url or a novel name:',
             'validate': lambda val: 'Input should not be empty'
             if len(val) == 0 else True,
         },

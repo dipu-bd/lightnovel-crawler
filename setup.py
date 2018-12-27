@@ -141,7 +141,12 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
+    packages=find_packages(exclude=[
+        'contrib',
+        'docs',
+        'tests',
+        'tests.*'
+    ]),  # Required
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -169,6 +174,7 @@ setup(
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
+    include_package_data=True,
     package_data={  # Optional
         'lightnovel_crawler': [
             '../LICENSE',
