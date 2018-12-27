@@ -5,6 +5,7 @@ Crawler application
 """
 import re
 from concurrent import futures
+from bs4 import BeautifulSoup
 from . import cfscrape
 
 
@@ -109,7 +110,7 @@ class Crawler:
 
     def absolute_url(self, url, page_url=None):
         url = (url or '').strip()
-        page_url = page_url or self.last_visited_url
+        page_url = (page_url or self.last_visited_url).strip('/')
         if not url or len(url) == 0:
             return None
         elif url.startswith('//'):
@@ -146,6 +147,11 @@ class Crawler:
             for x in response.cookies
         })
         return response
+    # end def
+
+    def get_soup(self, *args, **kargs):
+        response = self.get_response(*args, **kargs)
+        return BeautifulSoup(response.text, 'lxml')
     # end def
 
     def download_cover(self, output_file):

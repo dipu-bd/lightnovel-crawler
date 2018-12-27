@@ -65,7 +65,7 @@ class SampleCrawler(Crawler):
         #        Each volume must contain these keys:
         #          id     : the index of the volume
         #          volume : the volume number
-        #          volume_title: the volume title (can be ignored)
+        #          title  : the volume title (can be ignored)
         #        Each chapter must contain these keys:
         #          id     : the chapter number
         #          title  : the title name
