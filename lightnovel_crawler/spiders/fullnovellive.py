@@ -1,44 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Use this sample to create new sources
+Crawler for http://fullnovel.live/
 """
 import logging
 from ..utils.crawler import Crawler
 
 # TODO: Set this to your crawler name for meaningful logging
-logger = logging.getLogger('CHANGE_THIS_NAME')
+logger = logging.getLogger('FULLNOVEL_LIVE')
 
 # TODO: Copy this file directly to your new crawler. And fill up
 #       the methods as described in their todos
 
-class SampleCrawler(Crawler):
-    def initialize(self):
-        # TODO: Initiaze your crawler, variables etc. It gets called at the
-        #       beginning of the app.
-        pass
-    # end def
-
-    def dispose(self):
-        # TODO: Dispose your crawler, variables etc. It gets called at the
-        #       beginning of the app.
-        pass
-    # end def
-
-    def login(self, email, password):
-        # TODO: You can just delete this method if not necessary.
-        #       You can use `self.get_response` and `self.submit_form`
-        #       methods from the parent class. They maintain cookies
-        #       automatically for you.
-        pass
-    # end def
-
-    def logout(self):
-        # TODO: Logout from the site. Not that necessary, but still it is
-        #       nice to logout after you are done.
-        pass
-    # end def
-
+class FullnovelLiveCrawler(Crawler):
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
         # TODO: Use the `self.novel_url` as a query to find matching novels.
@@ -67,7 +41,7 @@ class SampleCrawler(Crawler):
         #          volume : the volume number
         #          volume_title: the volume title (can be ignored)
         #        Each chapter must contain these keys:
-        #          id     : the chapter number
+        #          id     : the index of the chapter
         #          title  : the title name
         #          volume : the volume number
         #          url    : the link where to download the chapter
