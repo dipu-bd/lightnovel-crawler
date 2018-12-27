@@ -3,7 +3,6 @@
 """Interactive value input"""
 from .core import start_app
 from .utils.crawler import Crawler
-from .tests.crawler_app_test import run_tests
 from .spiders import crawler_list
 
 def main():
