@@ -31,12 +31,6 @@ with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
 
-if getenv('build_assets') == 'true':
-    from build import pack_files, unpack_files
-    pack_files()
-    print('>>>>>>>>>>> packed files')
-# end if
-
 setup(
     # This is the name of your project. The first time you publish this
     # package, this name will be registered for you. It will determine how
@@ -175,12 +169,14 @@ setup(
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
-    # package_data={  # Optional
-    #     'lightnovel_crawler': [
-    #         'VERSION',
-    #         'binders/html_style.css',
-    #     ],
-    # },
+    package_data={  # Optional
+        'lightnovel_crawler': [
+            '../LICENSE',
+            '../VERSION',
+            '../README.md',
+            'assets/html_style.css',
+        ],
+    },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
@@ -219,8 +215,3 @@ setup(
         'Say Thanks!': 'https://saythanks.io/to/dipu-bd',
     },
 )
-
-if getenv('build_assets') == 'true':
-    unpack_files()
-    print('>>>>>>>>>>> unpacked files')
-# end if

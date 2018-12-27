@@ -7,7 +7,7 @@ import json
 import logging
 import re
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
 search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'

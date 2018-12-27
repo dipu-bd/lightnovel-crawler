@@ -19,7 +19,7 @@ from .prompts import (choose_a_novel, download_selection,
 logger = logging.getLogger('CRAWLER_APP')
 
 
-class Program:
+class App:
     '''Initiate the app'''
 
     def __init__(self, *args, **kwargs):

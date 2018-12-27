@@ -4,7 +4,7 @@
 Use this sample to create new sources
 """
 import logging
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 # TODO: Set this to your crawler name for meaningful logging
 logger = logging.getLogger('CHANGE_THIS_NAME')

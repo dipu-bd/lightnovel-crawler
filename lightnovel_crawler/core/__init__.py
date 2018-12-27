@@ -14,7 +14,7 @@ from .arguments import get_args, build_parser
 from .display import (description, epilog, debug_mode, url_not_recognized,
                       cancel_method, error_message, new_version_news)
 from .icons import Icons
-from .program import Program
+from .app import App
 
 logger = logging.Logger('APP_ROOT')
 
@@ -70,7 +70,7 @@ def start_app(choice_list):
     cancel_method()
 
     try:
-        Program.run(choice_list)
+        App.run(choice_list)
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
             raise err

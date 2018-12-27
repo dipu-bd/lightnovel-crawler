@@ -7,7 +7,7 @@ import json
 import logging
 import re
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_ONLINE')
 search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'

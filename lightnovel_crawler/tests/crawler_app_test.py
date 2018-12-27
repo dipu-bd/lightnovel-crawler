@@ -6,7 +6,7 @@ Crawler application
 import random
 import logging
 from time import sleep
-from lightnovel_crawler.app import start_app
+from lightnovel_crawler.core import start_app
 from lightnovel_crawler.utils.crawler import Crawler
 
 

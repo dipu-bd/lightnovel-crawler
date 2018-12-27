@@ -1,26 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Crawler for [boxnovel.com](https://boxnovel.com/).
+Crawler for [novelplanet.com](https://novelplanet.com/).
 """
 import json
 import logging
 import re
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
-logger = logging.getLogger('BOXNOVEL')
-search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
+logger = logging.getLogger('NOVEL_PLANET')
+search_url = 'https://novelplanet.com/NovelList?name=%s'
 
-
-class BoxNovelCrawler(Crawler):
+class NovelPlanetCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         response = self.get_response(search_url % query)
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
-        for a in soup.select('.post-title h4 a'):
+        for a in soup.select('.post-content a.title'):
             results.append((
                 a.text.strip(),
                 self.absolute_url(a['href']),
@@ -34,26 +33,30 @@ class BoxNovelCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = BeautifulSoup(response.content, 'lxml')
 
-        self.novel_title = soup.select_one('head title').text.strip()
+        self.novel_title = soup.find('a', {'class': 'title'}).text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['src'])
+            soup.select_one('.post-previewInDetails img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div', {'class': 'author-content'}).findAll('a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
+        for span in soup.find_all("span", {"class": "infoLabel"}):
+            if span.text == 'Author:':
+                author = span.findNext('a').text
+                author2 = span.findNext('a').findNext('a').text
+        # check if author word is found in second <p>
+        if (author2 != 'Ongoing') or (author2 != 'Completed'):
+            self.novel_author = author + ' (' + author2 + ')'
         else:
-            self.novel_author = author[0].text
+            self.novel_author = author
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.select('ul.main li.wp-manga-chapter a')
+        chapters = soup.find_all('div', {'class': 'rowChapter'})
         chapters.reverse()
 
-        for a in chapters:
+        for x in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
                 vol_id = chap_id//100 + 1
@@ -66,39 +69,36 @@ class BoxNovelCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
+                'url': self.absolute_url(x.find('a')['href']),
+                'title': x.find('a')['title'] or ('Chapter %d' % chap_id),
             })
         # end for
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
     # end def
-
+    
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = BeautifulSoup(response.content, 'lxml')
 
-        #chapter['title'] = soup.find('li', {'class':'active'}).text
-        content = soup.find("div", {"class": "text-left"}).findAll("p")
+        logger.debug(soup.title.string)
 
-        title = soup.find_all(re.compile('^h[2-4]$'))
-
-        if len(title):
-            chapter['title'] = title[0].text
+        if 'Chapter' in soup.select_one('h3').text:
+            chapter['title'] = soup.select_one('h3').text
         else:
-            if 'Translator' in soup.select_one('p').text:
-                chapter['title'] = soup.select_one(
-                    'p').text.split("Translator", 1)[0]
-            else:
-                chapter['title'] = soup.select_one('p').text
-                logger.info('Downloading %s', content.pop(0))
+            chapter['title'] = chapter['title'] + ' : ' + soup.select_one('h3').text
+        # end if
 
-        body_parts = ''.join([str(p.extract())
-                              for p in content if p.text.strip()])
+        self.blacklist_patterns = [
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ]
 
-        return body_parts
+        contents = soup.select_one('#divReadContent').contents
+        body = self.extract_contents(contents)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

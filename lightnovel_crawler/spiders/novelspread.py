@@ -6,7 +6,7 @@ import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVELSPREAD')
 
