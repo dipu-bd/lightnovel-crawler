@@ -6,61 +6,50 @@ Crawler for http://fullnovel.live/
 import logging
 from ..utils.crawler import Crawler
 
-# TODO: Set this to your crawler name for meaningful logging
 logger = logging.getLogger('FULLNOVEL_LIVE')
 
-# TODO: Copy this file directly to your new crawler. And fill up
-#       the methods as described in their todos
+NOVEL_SEARCH = 'http://fullnovel.live/search/%s'
 
 class FullnovelLiveCrawler(Crawler):
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
-        # TODO: Use the `self.novel_url` as a query to find matching novels.
-        #       Return the search result as a list of (title, url) pair.
-        #       You may throw an Exception or empty list in case of failure.
-        pass
+        results = []
+        soup = self.get_soup(NOVEL_SEARCH % query)
+        for a in soup.select('.grid .v-grid h4 a'):
+            results.append((
+                (a['title'] or a.text).strip(),
+                self.absolute_url(a['href'])
+            ))
+        # end for
+        return results
     # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        # TODO: This method must be implemented to get the `novel_title`.
-        #       Use the `self.novel_url` as the url to get info
-        #       You may or may not set the novel_cover, novel_author, volumes
-        #       and chapter list, but the `novel_title` must be set here.
-        #       You may throw an Exception in case of failure
-        pass
-    # end def
-
-    def download_chapter_list(self):
-        '''Download list of chapters and volumes.'''
-        # TODO: Use this method if you need to retrieve chapter list from
-        #       online. If you already got chapter list inside the method
-        #       `read_novel_info`, implementing this one is not necessary.
-        #        Each volume must contain these keys:
-        #          id     : the index of the volume
-        #          volume : the volume number
-        #          volume_title: the volume title (can be ignored)
-        #        Each chapter must contain these keys:
-        #          id     : the index of the chapter
-        #          title  : the title name
-        #          volume : the volume number
-        #          url    : the link where to download the chapter
-        pass
-    # end def
-
-    def get_chapter_index_of(self, url):
-        '''Return the index of chapter by given url or -1'''
-        # TODO: A default behavior has been implemented in the parent class.
-        #       Delete this method if you want to use the default one.
-        #       By default, it returns the first index of chapter from the
-        #       `self.chapters` that has 'url' property matching the given `url`.
-        pass
+        soup = self.get_soup(self.novel_url)
+        self.novel_title = soup.select_one('.info h1.title a').text.strip()
+        self.novel_cover = self.absolute_url(soup.select_one('.info .image img')['src'])
+        
+        self.volumes.append({
+            'id': 1,
+            'volume': 1,
+            'title': 'Volume 1',
+        })
+        for a in soup.select('.scroll-eps a'):
+            self.chapters.append({
+                'volume': 1,
+                'id': len(self.chapters) + 1,
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
+        # end for
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        # TODO: This method must be implemented. Return an empty body if
-        #       something goes wrong. You should not return None.
-        pass
+        soup = self.get_soup(chapter['url'])
+        body_parts = soup.select_one('.page .divContent')
+        body = self.extract_contents(body_parts.contents)
+        return '<p>' + '</p><p>'.join(body) + '</p'
     # end def
 # end class
