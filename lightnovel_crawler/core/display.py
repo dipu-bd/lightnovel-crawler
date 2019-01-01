@@ -52,6 +52,16 @@ def debug_mode(level):
 # end def
 
 
+def input_suppression():
+    text = Fore.RED + ' ' + Icons.ERROR + ' '
+    text += 'Input is suppressed'
+    text += Fore.RESET
+
+    print(text)
+    print('-' * LINE_SIZE)
+# end def
+
+
 def cancel_method():
     print()
     print(Icons.RIGHT_ARROW, 'Press', Fore.MAGENTA,

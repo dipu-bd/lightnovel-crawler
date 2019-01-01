@@ -18,22 +18,34 @@ def get_novel_url():
         return url
     # end if
 
-    answer = prompt([
-        {
-            'type': 'input',
-            'name': 'novel',
-            'message': 'Enter novel page url or a novel name:',
-            'validate': lambda val: 'Input should not be empty'
-            if len(val) == 0 else True,
-        },
-    ])
+    try:
+        if args.suppress:
+            raise Exception()
+        # end if
 
-    return answer['novel'].strip()
+        answer = prompt([
+            {
+                'type': 'input',
+                'name': 'novel',
+                'message': 'Enter novel page url or query novel:',
+                'validate': lambda val: 'Input should not be empty'
+                if len(val) == 0 else True,
+            },
+        ])
+        return answer['novel'].strip()
+    except:            
+        raise Exception('Novel page url or query was not given')
+    # end try
 # end def
 
 def get_crawlers_to_search(links):
+    args = get_args()
     if not links or len(links) <= 1:
         return links or []
+    # end if
+
+    if args.suppress:
+        return links
     # end if
     
     answer = prompt([
@@ -48,11 +60,18 @@ def get_crawlers_to_search(links):
 # end def
 
 def choose_a_novel(search_results):
+    args = get_args()
+
     if len(search_results) == 0:
         return ''
     elif len(search_results) == 1:
         return search_results[0][1]
     # end if
+
+    if args.suppress:
+        return search_results[0][1]
+    # end if   
+    
     answer = prompt([
         {
             'type': 'list',
@@ -71,9 +90,16 @@ def choose_a_novel(search_results):
 # end def
 
 def force_replace_old():
-    if get_args().force:
+    args = get_args()
+
+    if args.force:
         return get_args().force >= 1
     # end if
+
+    if args.suppress:
+        return False
+    # end if
+
     answer = prompt([
         {
             'type': 'confirm',
@@ -88,9 +114,15 @@ def force_replace_old():
 
 def login_info():
     args = get_args()
+
     if args.login:
         return args.login
     # end if
+
+    if args.suppress:
+        return False
+    # end if
+    
     answer = prompt([
         {
             'type': 'confirm',
@@ -99,6 +131,7 @@ def login_info():
             'default': False
         },
     ])
+
     if answer['login']:
         answer = prompt([
             {
@@ -118,6 +151,7 @@ def login_info():
         ])
         return answer['email'], answer['password']
     # end if
+
     return None
 # end if
 
@@ -125,11 +159,15 @@ def login_info():
 def download_selection(chapter_count, volume_count):
     keys = ['all', 'last', 'first', 'page', 'range', 'volumes', 'chapters']
 
-    arg = get_args()
+    args = get_args()
     for key in keys:
-        if arg.__getattribute__(key):
+        if args.__getattribute__(key):
             return key
         # end if
+    # end if
+
+    if args.suppress:
+        return keys[0]
     # end if
 
     big_list_warn = '(warn: very big list)' if chapter_count > 50 else ''
@@ -162,7 +200,12 @@ def download_selection(chapter_count, volume_count):
 
 
 def range_using_urls(crawler):
-    start_url, stop_url = get_args().page or (None, None)
+    args = get_args()
+    start_url, stop_url = args.page or (None, None)
+
+    if args.suppress:
+        return (0, len(crawler.chapters) - 1)
+    # end if
 
     if not (start_url and stop_url):
         def validator(val):
@@ -199,7 +242,13 @@ def range_using_urls(crawler):
 
 
 def range_using_index(chapter_count):
-    start, stop = get_args().range or (None, None)
+    args = get_args()
+    start, stop = args.range or (None, None)
+
+    if args.suppress:
+        return (0, chapter_count - 1)
+    # end if
+
 
     if not (start and stop):
         def validator(val):
@@ -239,9 +288,14 @@ def range_using_index(chapter_count):
 
 def range_from_volumes(volumes, times=0):
     selected = None
+    args = get_args()
 
-    if times == 0:
-        selected = get_args().volumes
+    if args.suppress:
+        selected = [x['id'] for x in volumes]
+    # end if
+
+    if times == 0 and not selected:
+        selected = args.volumes
     # end if
 
     if not selected:
@@ -277,8 +331,13 @@ def range_from_volumes(volumes, times=0):
 
 def range_from_chapters(crawler, times=0):
     selected = None
+    args = get_args()
 
-    if times == 0:
+    if args.suppress:
+        selected = crawler.chapters
+    # end if
+
+    if times == 0 and not selected:
         selected = get_args().chapters
     # end if
 
@@ -320,11 +379,17 @@ def range_from_chapters(crawler, times=0):
 # end def
 
 def pack_by_volume():
+    args = get_args()
+
     if len(sys.argv) > 1:
-        return get_args().byvol
+        return args.byvol
     # end if
 
-    answer= prompt([
+    if args.suppress:
+        return False
+    # end if
+
+    answer = prompt([
         {
             'type': 'confirm',
             'name': 'volume',
