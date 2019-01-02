@@ -13,6 +13,7 @@ from .idqidian import IdqidianCrawler
 from .romanticlb import RomanticLBCrawler
 from .webnonline import WebnovelOnlineCrawler
 from .fullnovellive import FullnovelLiveCrawler
+from .novelall import NovelAllCrawler
 
 # Do not forget to append a slash(/) at the end
 crawler_list = {
@@ -31,4 +32,5 @@ crawler_list = {
     'https://m.romanticlovebooks.com/': RomanticLBCrawler,
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,
     'http://fullnovel.live/': FullnovelLiveCrawler,
+    'https://www.novelall.com/': NovelAllCrawler,
 }
