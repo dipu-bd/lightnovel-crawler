@@ -4,7 +4,7 @@
 Use this sample to create new sources
 """
 import logging
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 # TODO: Set this to your crawler name for meaningful logging
 logger = logging.getLogger('CHANGE_THIS_NAME')
@@ -65,9 +65,9 @@ class SampleCrawler(Crawler):
         #        Each volume must contain these keys:
         #          id     : the index of the volume
         #          volume : the volume number
-        #          volume_title: the volume title (can be ignored)
+        #          title  : the volume title (can be ignored)
         #        Each chapter must contain these keys:
-        #          id     : the index of the chapter
+        #          id     : the chapter number
         #          title  : the title name
         #          volume : the volume number
         #          url    : the link where to download the chapter

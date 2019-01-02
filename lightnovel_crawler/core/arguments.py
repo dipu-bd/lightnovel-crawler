@@ -48,6 +48,10 @@ class ArgReader:
         selection.add_argument('--chapters', nargs='*', metavar='URL',
                                help='A list of specific chapter urls')
 
+
+        selection.add_argument('--suppress', action='store_true',
+                               help='Suppress input prompts (use defaults instead)')
+
         self.arguments = parser.parse_args()
 # end class
 

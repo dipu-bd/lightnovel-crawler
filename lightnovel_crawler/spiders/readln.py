@@ -1,41 +1,56 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Crawler for [Idqidian.us](https://www.idqidian.us/).
+Crawler for [readlightnovel.org](https://www.readlightnovel.org/).
 """
 import json
 import logging
 import re
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LNINDO')
+logger = logging.getLogger('READLIGHTNOVEL')
+search_url = 'https://www.readlightnovel.org/search/autocomplete'
 
+class ReadLightNovelCrawler(Crawler):
+    # def search_novel(self, query):
+    #     self.get_response(self.home_url)
+    #     response = self.submit_form(search_url, data={'q': query })
+    #     logger.debug(response.text)
+    #     soup = BeautifulSoup(response.text, 'lxml')
+        
+    #     results = []
+    #     for a in soup.select('li a'):
+    #         url = self.absolute_url(a['href'])
+    #         title = a.select_one('.title').text.strip()
+    #         results.append((title, url))
+    #     # end for
 
-class IdqidianCrawler(Crawler):
+    #     return results
+    # # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.find_all(
-            'span', {"typeof": "v:Breadcrumb"})[-1].text
+        self.novel_title = soup.select_one('.block-title h1').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = "https://www.idqidian.us/images/noavailable.jpg"
+        self.novel_cover = self.absolute_url(
+            soup.find('img', {'alt': self.novel_title})['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select('p')[3].text
-        self.novel_author = author[20:len(author)-22]
-        logger.info('Novel author: %s', self.novel_author)
+        try:
+            self.novel_author = soup.select_one(
+                "a[href*=author]").text.strip().title()
+            logger.info('Novel author: %s', self.novel_author)
+        except Exception as err:
+            logger.debug('Failed getting author: %s', err)
+        # end try
 
-        chapters = soup.find('div', {
-            'style': '-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #333; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;'}).findAll(
-            'a')
-        chapters.reverse()
-
-        for a in chapters:
+        for a in soup.select('.chapters .chapter-chs li a'):
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
                 vol_id = chap_id//100 + 1
@@ -63,20 +78,8 @@ class IdqidianCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        for a in soup.find_all('a'):
-            a.decompose()
-
-        body_parts = soup.select('p')
-        body_parts = ''.join([str(p.extract()) for p in body_parts if
-                              p.text.strip() and not 'Advertisement' in p.text and not 'JavaScript!' in p.text])
-        if body_parts == '':
-            texts = [str.strip(x) for x in soup.strings if str.strip(x) != '']
-            unwanted_text = [str.strip(x.text) for x in soup.find_all()]
-            my_texts = set(texts).difference(unwanted_text)
-            body_parts = ''.join(
-                [str(p) for p in my_texts if p.strip() and not 'Advertisement' in p and not 'JavaScript!' in p])
-        # end if
-
-        return body_parts
+        body_parts = soup.select_one('.chapter-content3 .desc')
+        body = self.extract_contents(body_parts.contents)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

@@ -12,9 +12,9 @@ from colorama import init as init_colorama, Fore
 from ..assets.version import get_value as get_version
 from .arguments import get_args, build_parser
 from .display import (description, epilog, debug_mode, url_not_recognized,
-                      cancel_method, error_message, new_version_news)
+                      cancel_method, error_message, new_version_news, input_suppression)
 from .icons import Icons
-from .program import Program
+from .app import App
 
 logger = logging.Logger('APP_ROOT')
 
@@ -57,6 +57,11 @@ def init():
         debug_mode(args.log)
         print(args)
     # end if
+
+    if args.suppress:
+        input_suppression()
+    # end if
+
     requests.urllib3.disable_warnings(
         requests.urllib3.exceptions.InsecureRequestWarning)
     # end if
@@ -70,7 +75,7 @@ def start_app(choice_list):
     cancel_method()
 
     try:
-        Program.run(choice_list)
+        App.run(choice_list)
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
             raise err

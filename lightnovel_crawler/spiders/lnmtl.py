@@ -8,7 +8,7 @@ import logging
 import re
 from concurrent import futures
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('LNMTL')
 
@@ -76,6 +76,7 @@ class LNMTLCrawler(Crawler):
         logger.info('Novel cover = %s', self.novel_cover)
 
         self.parse_volume_list(soup)
+        self.volumes = sorted(self.volumes, key=lambda x: x['id'])
         logger.debug(self.volumes)
 
         logger.info('%d volumes found.', len(self.volumes))
@@ -102,9 +103,10 @@ class LNMTLCrawler(Crawler):
                 title = re.sub(r'[^\u0000-\u00FF]', '', title)
                 title = re.sub(r'\(\)', '', title).strip()
                 self.volumes.append({
+                    'id': i,
                     'title': title,
                     'download_id': vol['id'],
-                    'id': int(vol['number']),
+                    'volume': int(vol['number'] or str(i)),
                 })
             # end for
             break
@@ -138,10 +140,10 @@ class LNMTLCrawler(Crawler):
         page_url = result['next_page_url']
         for chapter in result['data']:
             self.chapters.append({
+                'id': int(chapter['number'] or chapter['position']),
                 'url': chapter['site_url'],
-                'id': int(chapter['position']),
+                'volume': volume['volume'],
                 'title': chapter['title'].strip(),
-                'volume': volume['id'],
             })
         # end for
         if result['current_page'] == 1:

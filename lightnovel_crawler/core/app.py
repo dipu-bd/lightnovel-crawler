@@ -18,7 +18,8 @@ from .prompts import (choose_a_novel, download_selection,
 
 logger = logging.getLogger('CRAWLER_APP')
 
-class Program:
+
+class App:
     '''Initiate the app'''
 
     def __init__(self, *args, **kwargs):
@@ -38,7 +39,7 @@ class Program:
 
         app.crawler.initialize()
 
-        if 'login' in app.crawler.__dict__:
+        if 'login' in app._methods:
             data = login_info()
             if data and len(data) == 2:
                 app.crawler.login(data[0], data[1])
@@ -55,7 +56,7 @@ class Program:
         app.chapter_range()
         download_chapters(app)
 
-        if 'logout' in app.crawler.__dict__:
+        if 'logout' in app._methods:
             app.crawler.logout()
         # end if
 
@@ -73,14 +74,22 @@ class Program:
                 x for x in sorted(choice_list.keys())
                 if 'search_novel' in choice_list[x].__dict__
             ])
-            logger.warn('Searching for novels...')
+            _checked = {}
+            logger.warn('Searching for novels in %d sites...',
+                        len(crawler_links))
             for link in crawler_links:
                 logger.info('Searching %s', link)
                 try:
-                    crawler = choice_list[link]()
-                    crawler.home_url = link.strip('/')
-                    results = crawler.search_novel(novel)
+                    crawler = choice_list[link]
+                    if crawler in _checked:
+                        continue
+                    # end if
+                    _checked[crawler] = True
+                    instance = crawler()
+                    instance.home_url = link.strip('/')
+                    results = instance.search_novel(novel)
                     search_results += results
+                    logger.debug(results)
                     logger.info('%d results found', len(results))
                 except Exception as ex:
                     logger.debug(ex)
@@ -92,11 +101,15 @@ class Program:
             novel = choose_a_novel(search_results)
         # end if
 
+        if not novel:
+            raise Exception('Novel URL was not specified')
+        # end if
         for home_url, crawler in choice_list.items():
             if novel.startswith(home_url):
                 self.crawler = crawler()
                 self.crawler.novel_url = novel
                 self.crawler.home_url = home_url.strip('/')
+                self._methods = crawler.__dict__
                 break
             # end if
         # end for

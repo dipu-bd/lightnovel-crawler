@@ -62,6 +62,7 @@ def save_metadata(crawler, output_path):
 def novel_info(app):
     app.logger.warn('Retrieving novel info...')
     app.crawler.read_novel_info()
+    app.logger.warn('NOVEL: %s', app.crawler.novel_title)
 
     app.logger.info('Checking output path...')
     app.output_path = os.path.abspath(

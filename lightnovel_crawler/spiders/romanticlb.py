@@ -1,31 +1,37 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
 import logging
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WEBNOVEL_ONLINE')
+logger = logging.getLogger('ROMANTIC_LOVE_BOOKS')
 
-class WebnovelOnlineCrawler(Crawler):
+class RomanticLBCrawler(Crawler):
+    def initialize(self):
+        self.home_url = 'https://m.romanticlovebooks.com'
+    # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        url = self.novel_url
+        url = self.novel_url.replace('https://www', 'https://m')
         logger.debug('Visiting %s', url)
         response = self.get_response(url)
         soup = BeautifulSoup(response.text, 'lxml')
-
-        img = soup.select_one('main img.cover')
-        self.novel_title = img['title'].strip()
-        self.novel_cover = self.absolute_url(img['src'])
         
-        span = soup.select_one('header span.send-author-event')
-        if span:
-            self.novel_author = span.text.strip()
-        # end if
+        self.novel_title = soup.select_one('.pt-novel .pt-name').text.strip()
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.baseinfo img')['src'])
+        
+        for info in soup.select('.pt-novel .pt-info'):
+            text = info.text.strip()
+            if text.lower().startswith('author'):
+                self.novel_author = text
+                break
+            # end if
+        # end for
 
         chap_id = 0
-        for a in soup.select('#info a.on-navigate-part'):
+        for a in soup.select('#chapterlist li a'):
             vol_id = chap_id // 100 + 1
             if vol_id > len(self.volumes):
                 self.volumes.append({
@@ -38,7 +44,7 @@ class WebnovelOnlineCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'title': a.text.strip(),
+                'title': a['title'],
                 'url': self.absolute_url(a['href']),
             })
         # end for
@@ -50,17 +56,8 @@ class WebnovelOnlineCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        strong = soup.select_one('#story-content strong')
-        if strong and re.search(r'Chapter \d+', strong.text):
-            chapter['title'] = strong.text.strip()
-            logger.info('Updated title: %s', chapter['title'])
-        # end if
-
-        body_parts = soup.select_one('#story-content')
-        for x in body_parts.select('h1, h3, hr'):
-            x.decompose()
-        # end for
-        body = self.extract_contents(body_parts.contents)
+        body_parts = soup.select_one('div#BookText').contents
+        body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

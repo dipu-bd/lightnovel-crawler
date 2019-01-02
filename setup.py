@@ -8,13 +8,12 @@ https://github.com/pypa/sampleproject
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
-from os import path
+from os import path, getenv
 # io.open is needed for projects that support Python 2.7
 # It ensures open() defaults to text mode with universal newlines,
 # and accepts an argument to specify the text encoding
 # Python 3 only projects can skip this import
 from io import open
-from build import pack_files, unpack_files
 
 here = path.abspath(path.dirname(__file__))
 
@@ -31,8 +30,6 @@ with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
-
-pack_files()
 
 setup(
     # This is the name of your project. The first time you publish this
@@ -144,7 +141,12 @@ setup(
     #
     #   py_modules=["my_module"],
     #
-    packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
+    packages=find_packages(exclude=[
+        'contrib',
+        'docs',
+        'tests',
+        'tests.*'
+    ]),  # Required
 
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
@@ -172,12 +174,15 @@ setup(
     #
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
-    # package_data={  # Optional
-    #     'lightnovel_crawler': [
-    #         'VERSION',
-    #         'binders/html_style.css',
-    #     ],
-    # },
+    include_package_data=True,
+    package_data={  # Optional
+        'lightnovel_crawler': [
+            '../LICENSE',
+            '../VERSION',
+            '../README.md',
+            'assets/html_style.css',
+        ],
+    },
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
@@ -216,5 +221,3 @@ setup(
         'Say Thanks!': 'https://saythanks.io/to/dipu-bd',
     },
 )
-
-unpack_files()

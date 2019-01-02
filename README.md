@@ -18,7 +18,7 @@ Crawls light novels and make html, text, epub and mobi
 
 ### Easy download
 
-📦 [lightnovel-crawler v2.5.10 for windows ~ 11MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.6.2 for windows ~ 11MB](https://goo.gl/sc4EZh)
 
 ### Installation
 
@@ -46,7 +46,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================
-                   📒 Lightnovel Crawler 🍀 2.5.0
+                   📒 Lightnovel Crawler 🍀 2.6.2
     Download lightnovels into html, text, epub, mobi and json
 ----------------------------------------------------------------
 usage:  lncrawl [options...]
@@ -54,10 +54,12 @@ usage:  lncrawl [options...]
 
 optional arguments:
   -h, --help            show this help message and exit
+  -l                    Set log levels (1 = warn, 2 = info, 3 = debug)
   -v, --version         show program's version number and exit
-  -l, --log             Set log levels (1 = warn, 2 = info, 3 = debug)
   -s NOVEL_PAGE, --source NOVEL_PAGE
                         Profile page url of the novel
+  -q QUERY, --query QUERY
+                        Novel query followed by list of source sites.
   -f, --force           Force replace any existing folder
   -b, --byvol           Build separate books by volumes
   --login USER PASSWD   User name/email address and password for login
@@ -74,14 +76,14 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-> There is a verbose mode for extended logging: `lncrawl -lll`
+> To view extra logs, use: `lncrawl -lll`
 
 ### Adding new source
 
-- Use the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/_sample.py) as blueprint.
-- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/__init__.py).
+- Create new crawler using the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/spiders/_sample.py) as blueprint.
+- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/spiders/__init__.py).
 
-## Available websites
+## Supported websites
 
 The list of crawable websites are given below. *Request new site by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues)*.
 

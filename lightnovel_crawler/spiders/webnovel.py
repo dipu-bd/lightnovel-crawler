@@ -6,7 +6,7 @@ Crawler for novels from [WebNovel](https://www.webnovel.com).
 import json
 import logging
 import re
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WEBNOVEL')
 
@@ -15,15 +15,37 @@ chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
 book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
 chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
 chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
+search_url = 'https://www.webnovel.com/apiajax/search/AutoCompleteAjax'
 
 
 class WebnovelCrawler(Crawler):
-    def read_novel_info(self):
+    def get_csrf(self):
         logger.info('Getting CSRF Token')
-        self.get_response(self.novel_url)
+        self.get_response(self.home_url)
         self.csrf = self.cookies['_csrfToken']
         logger.debug('CSRF Token = %s', self.csrf)
+    # end def
 
+    def search_novel(self, query):
+        self.get_csrf()
+        response = self.submit_form(search_url, {
+            '_csrfToken': self.csrf,
+            'keywords': query,
+        })
+        data = response.json()
+        logger.debug(data)
+
+        results = []
+        for book in data['data']['books']:
+            url = book_info_url % book['id']
+            title = book['name']
+            results.append((title, url))
+        # end for
+        return results
+    # end def
+
+    def read_novel_info(self):
+        self.get_csrf()
         url = self.novel_url
         self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
         logger.debug('Novel Id: %s', self.novel_id)

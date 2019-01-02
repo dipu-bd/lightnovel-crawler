@@ -7,16 +7,16 @@ import json
 import logging
 import re
 from bs4 import BeautifulSoup
-from .utils.crawler import Crawler
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_ONLINE')
-SEARCH_URL = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
+search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
 
 
 class WuxiaOnlineCrawler(Crawler):
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
-        response = self.get_response(SEARCH_URL % query)
+        response = self.get_response(search_url % query)
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
