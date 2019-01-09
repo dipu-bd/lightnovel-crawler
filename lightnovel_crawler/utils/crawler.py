@@ -180,13 +180,14 @@ class Crawler:
         return False
     # end def
 
-    def extract_contents(self, contents, level=0):
+    def extract_contents(self, div, level=0):
         body = []
-        for elem in contents:
-            if self.bad_tags.count(elem.name):
-                continue
-            elif self.block_tags.count(elem.name):
-                body += self.extract_contents(elem.contents, level + 1)
+        for tag in div.select(', '.join(self.bad_tags)):
+            tag.decompose()
+        # end for
+        for elem in div.contents:
+            if self.block_tags.count(elem.name):
+                body += self.extract_contents(elem, level + 1)
                 continue
             # end if
             text = ''

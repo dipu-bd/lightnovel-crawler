@@ -10,6 +10,7 @@ logger = logging.getLogger('FULLNOVEL_LIVE')
 
 NOVEL_SEARCH = 'http://fullnovel.live/search/%s'
 
+
 class FullnovelLiveCrawler(Crawler):
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
@@ -28,8 +29,9 @@ class FullnovelLiveCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         soup = self.get_soup(self.novel_url)
         self.novel_title = soup.select_one('.info h1.title a').text.strip()
-        self.novel_cover = self.absolute_url(soup.select_one('.info .image img')['src'])
-        
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.info .image img')['src'])
+
         self.volumes.append({
             'id': 1,
             'volume': 1,
@@ -48,8 +50,8 @@ class FullnovelLiveCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         soup = self.get_soup(chapter['url'])
-        body_parts = soup.select_one('.page .divContent')
-        body = self.extract_contents(body_parts.contents)
+        contents = soup.select_one('.page .divContent')
+        body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p'
     # end def
 # end class

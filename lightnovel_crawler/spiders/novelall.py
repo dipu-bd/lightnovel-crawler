@@ -12,8 +12,9 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('NOVEL_All')
 #search_url = 'https://novelplanet.com/NovelList?name=%s'
 
+
 class NovelAllCrawler(Crawler):
-    #def search_novel(self, query):
+    # def search_novel(self, query):
     #    query = query.lower().replace(' ', '+')
     #    response = self.get_response(search_url % query)
     #    soup = BeautifulSoup(response.text, 'lxml')
@@ -35,27 +36,31 @@ class NovelAllCrawler(Crawler):
         response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.content, 'lxml')
 
-        self.novel_title = soup.find('div',{"class" : "manga-detail"}).find('h1').text
+        self.novel_title = soup.find(
+            'div', {"class": "manga-detail"}).find('h1').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.find('div',{"class" : "manga-detail"}).find('img')['src'])
+        self.novel_cover = self.absolute_url(
+            soup.find('div', {"class": "manga-detail"}).find('img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div',{"class" : "detail-info"}).find('a').text.split(',')
-        if len(author)==2:
-	        self.novel_author = author[0] + ' (' + author[1] + ')'
+        author = soup.find(
+            'div', {"class": "detail-info"}).find('a').text.split(',')
+        if len(author) == 2:
+            self.novel_author = author[0] + ' (' + author[1] + ')'
         else:
-	        self.novel_author = ' '.join(author)
-        #end if
+            self.novel_author = ' '.join(author)
+        # end if
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find('div',{"class" : "manga-detailchapter"}).findAll('a', title=True)
+        chapters = soup.find(
+            'div', {"class": "manga-detailchapter"}).findAll('a', title=True)
         chapters.reverse()
         for a in chapters:
-	        for span in a.findAll('span'):
-		        span.decompose()
-            #end for
-        #end for
+            for span in a.findAll('span'):
+                span.decompose()
+    # end for
+        # end for
         print(chapters)
 
         for x in chapters:
@@ -78,7 +83,7 @@ class NovelAllCrawler(Crawler):
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
     # end def
-    
+
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
@@ -87,9 +92,9 @@ class NovelAllCrawler(Crawler):
 
         logger.debug(soup.title.string)
 
-        #if 'Chapter' in soup.select_one('h3').text:
+        # if 'Chapter' in soup.select_one('h3').text:
         #    chapter['title'] = soup.select_one('h3').text
-        #else:
+        # else:
         #    chapter['title'] = chapter['title'] + ' : ' + soup.select_one('h3').text
         # end if
 
@@ -98,7 +103,7 @@ class NovelAllCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
 
-        contents = soup.find('div',{"class" : "reading-box"})
+        contents = soup.find('div', {"class": "reading-box"})
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

@@ -12,13 +12,14 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('READLIGHTNOVEL')
 search_url = 'https://www.readlightnovel.org/search/autocomplete'
 
+
 class ReadLightNovelCrawler(Crawler):
     # def search_novel(self, query):
     #     self.get_response(self.home_url)
     #     response = self.submit_form(search_url, data={'q': query })
     #     logger.debug(response.text)
     #     soup = BeautifulSoup(response.text, 'lxml')
-        
+
     #     results = []
     #     for a in soup.select('li a'):
     #         url = self.absolute_url(a['href'])
@@ -78,8 +79,13 @@ class ReadLightNovelCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        body_parts = soup.select_one('.chapter-content3 .desc')
-        body = self.extract_contents(body_parts.contents)
+        self.blacklist_patterns = [
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ]
+        div = soup.select_one('.chapter-content3 .desc')
+        div = div.select_one('#growfoodsmart') or div
+        body = self.extract_contents(div)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

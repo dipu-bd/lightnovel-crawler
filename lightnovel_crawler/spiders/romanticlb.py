@@ -6,6 +6,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('ROMANTIC_LOVE_BOOKS')
 
+
 class RomanticLBCrawler(Crawler):
     def initialize(self):
         self.home_url = 'https://m.romanticlovebooks.com'
@@ -17,11 +18,11 @@ class RomanticLBCrawler(Crawler):
         logger.debug('Visiting %s', url)
         response = self.get_response(url)
         soup = BeautifulSoup(response.text, 'lxml')
-        
+
         self.novel_title = soup.select_one('.pt-novel .pt-name').text.strip()
         self.novel_cover = self.absolute_url(
             soup.select_one('.baseinfo img')['src'])
-        
+
         for info in soup.select('.pt-novel .pt-info'):
             text = info.text.strip()
             if text.lower().startswith('author'):
@@ -56,8 +57,8 @@ class RomanticLBCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        body_parts = soup.select_one('div#BookText').contents
-        body = self.extract_contents(body_parts)
+        contents = soup.select_one('div#BookText')
+        body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

@@ -73,7 +73,7 @@ class WuxiaComCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
         body_parts = soup.select_one('.panel-default .fr-view')
-        body = self.extract_contents(body_parts.contents)
+        body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p'
     # end def
 # end class

@@ -22,7 +22,7 @@ class WuxiaCoCrawler(Crawler):
         '''Gets a list of {title, url} matching the given query'''
         response = self.submit_form(search_url, data=dict(keyword=query, t=1))
         soup = BeautifulSoup(response.text, 'lxml')
-        
+
         results = []
         for a in soup.select('.recommend a'):
             url = self.absolute_url(a['href'])
@@ -95,7 +95,7 @@ class WuxiaCoCrawler(Crawler):
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
-        body_parts = soup.select_one('div#content').contents
+        body_parts = soup.select_one('div#content')
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

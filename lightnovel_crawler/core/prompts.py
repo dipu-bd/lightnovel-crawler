@@ -99,7 +99,7 @@ def get_output_path(suggested_path):
     output_path = args.output_path
 
     if args.suppress:
-        output_path = output_path or suggested_path or 'LNCrawler Output'
+        output_path = output_path or suggested_path or 'Unknown Novel'
     # end if
 
     if not output_path:

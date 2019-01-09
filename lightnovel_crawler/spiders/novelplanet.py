@@ -12,6 +12,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('NOVEL_PLANET')
 search_url = 'https://novelplanet.com/NovelList?name=%s'
 
+
 class NovelPlanetCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -77,7 +78,7 @@ class NovelPlanetCrawler(Crawler):
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
     # end def
-    
+
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
@@ -89,7 +90,8 @@ class NovelPlanetCrawler(Crawler):
         if 'Chapter' in soup.select_one('h3').text:
             chapter['title'] = soup.select_one('h3').text
         else:
-            chapter['title'] = chapter['title'] + ' : ' + soup.select_one('h3').text
+            chapter['title'] = chapter['title'] + \
+                ' : ' + soup.select_one('h3').text
         # end if
 
         self.blacklist_patterns = [
@@ -97,7 +99,7 @@ class NovelPlanetCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
 
-        contents = soup.select_one('#divReadContent').contents
+        contents = soup.select_one('#divReadContent')
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

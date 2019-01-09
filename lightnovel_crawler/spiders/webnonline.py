@@ -7,6 +7,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WEBNOVEL_ONLINE')
 
+
 class WebnovelOnlineCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -18,7 +19,7 @@ class WebnovelOnlineCrawler(Crawler):
         img = soup.select_one('main img.cover')
         self.novel_title = img['title'].strip()
         self.novel_cover = self.absolute_url(img['src'])
-        
+
         span = soup.select_one('header span.send-author-event')
         if span:
             self.novel_author = span.text.strip()
@@ -56,11 +57,9 @@ class WebnovelOnlineCrawler(Crawler):
             logger.info('Updated title: %s', chapter['title'])
         # end if
 
-        body_parts = soup.select_one('#story-content')
-        for x in body_parts.select('h1, h3, hr'):
-            x.decompose()
-        # end for
-        body = self.extract_contents(body_parts.contents)
+        self.bad_tags += ['h1', 'h3', 'hr']
+        contents = soup.select_one('#story-content')
+        body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
