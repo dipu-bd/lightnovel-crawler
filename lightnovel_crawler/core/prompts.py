@@ -1,5 +1,7 @@
 import re
+import os
 import sys
+import shutil
 
 from PyInquirer import prompt
 
@@ -33,10 +35,11 @@ def get_novel_url():
             },
         ])
         return answer['novel'].strip()
-    except:            
+    except:
         raise Exception('Novel page url or query was not given')
     # end try
 # end def
+
 
 def get_crawlers_to_search(links):
     args = get_args()
@@ -47,17 +50,18 @@ def get_crawlers_to_search(links):
     if args.suppress:
         return links
     # end if
-    
+
     answer = prompt([
         {
             'type': 'checkbox',
             'name': 'sites',
             'message': 'Where to search?',
-            'choices': [ { 'name': x } for x in links ],
+            'choices': [{'name': x} for x in links],
         }
     ])
     return answer['sites'] if len(answer['sites']) else links
 # end def
+
 
 def choose_a_novel(search_results):
     args = get_args()
@@ -70,15 +74,15 @@ def choose_a_novel(search_results):
 
     if args.suppress:
         return search_results[0][1]
-    # end if   
-    
+    # end if
+
     answer = prompt([
         {
             'type': 'list',
             'name': 'novel_url',
             'message': 'Where to search?',
             'choices': [
-                { 'name': '%s (%s)' % (x[0], x[1]) }
+                {'name': '%s (%s)' % (x[0], x[1])}
                 for x in sorted(search_results)
             ],
         }
@@ -89,11 +93,46 @@ def choose_a_novel(search_results):
     return url
 # end def
 
+
+def get_output_path(suggested_path):
+    args = get_args()
+    output_path = args.output_path
+
+    if args.suppress:
+        output_path = output_path or suggested_path or 'LNCrawler Output'
+    # end if
+
+    if not output_path:
+        answer = prompt([
+            {
+                'type': 'input',
+                'name': 'output',
+                'message': 'Enter output direcotry:',
+                'default': os.path.abspath(suggested_path),
+            },
+        ])
+        output_path = answer['output']
+    # end if
+
+    output_path = os.path.abspath(output_path)
+    if os.path.exists(output_path):
+        if force_replace_old():
+            shutil.rmtree(output_path, ignore_errors=True)
+        # end if
+    # end if
+    os.makedirs(output_path, exist_ok=True)
+
+    return output_path
+# end def
+
+
 def force_replace_old():
     args = get_args()
 
     if args.force:
-        return get_args().force >= 1
+        return True
+    elif args.ignore:
+        return False
     # end if
 
     if args.suppress:
@@ -122,7 +161,7 @@ def login_info():
     if args.suppress:
         return False
     # end if
-    
+
     answer = prompt([
         {
             'type': 'confirm',
@@ -249,7 +288,6 @@ def range_using_index(chapter_count):
         return (0, chapter_count - 1)
     # end if
 
-
     if not (start and stop):
         def validator(val):
             try:
@@ -311,8 +349,8 @@ def range_from_volumes(volumes, times=0):
                     }
                     for vol in volumes
                 ],
-                'validate': lambda ans: True if len(ans) > 0 \
-                    else 'You must choose at least one volume.'
+                'validate': lambda ans: True if len(ans) > 0
+                else 'You must choose at least one volume.'
             }
         ])
         selected = [
@@ -351,8 +389,8 @@ def range_from_chapters(crawler, times=0):
                     {'name': '%d - %s' % (chap['id'], chap['title'])}
                     for chap in crawler.chapters
                 ],
-                'validate': lambda ans: True if len(ans) > 0 \
-                    else 'You must choose at least one chapter.',
+                'validate': lambda ans: True if len(ans) > 0
+                else 'You must choose at least one chapter.',
             }
         ])
         selected = [
@@ -377,6 +415,7 @@ def range_from_chapters(crawler, times=0):
 
     return selected
 # end def
+
 
 def pack_by_volume():
     args = get_args()

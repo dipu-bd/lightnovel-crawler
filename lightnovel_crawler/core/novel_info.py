@@ -3,12 +3,11 @@
 """
 To get the novel info
 """
-import json
-import os
 import re
-import shutil
+import os
+import json
 
-from .prompts import force_replace_old
+from .prompts import get_output_path
 
 
 def format_volume_list(crawler):
@@ -65,14 +64,8 @@ def novel_info(app):
     app.logger.warn('NOVEL: %s', app.crawler.novel_title)
 
     app.logger.info('Checking output path...')
-    app.output_path = os.path.abspath(
-        re.sub(r'[\\/*?:"<>|\']', '', app.crawler.novel_title))
-    if os.path.exists(app.output_path):
-        if force_replace_old():
-            shutil.rmtree(app.output_path, ignore_errors=True)
-        # end if
-    # end if
-    os.makedirs(app.output_path, exist_ok=True)
+    good_name = re.sub(r'[\\/*?:"<>|\']', '', app.crawler.novel_title)
+    app.output_path = get_output_path(os.path.join('Lightnovels', good_name))
 
     app.logger.info('Getting chapters...')
     app.crawler.download_chapter_list()

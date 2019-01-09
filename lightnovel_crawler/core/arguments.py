@@ -15,7 +15,7 @@ class ArgReader:
                             help='Set log levels (1 = warn, 2 = info, 3 = debug)')
         parser.add_argument('-v', '--version', action='version',
                             version='Lightnovel Crawler ' + os.getenv('version'))
-        
+
         source = parser.add_mutually_exclusive_group()
         # source.add_argument('--test', action='store_true',
         #                     help='Start in test environment')
@@ -24,8 +24,15 @@ class ArgReader:
         source.add_argument('-q', '--query', dest='query', type=str,
                             help='Novel query followed by list of source sites.')
 
-        parser.add_argument('-f', '--force', action='count',
-                            help='Force replace any existing folder')
+        parser.add_argument('-o', '--output', dest='output_path', type=str,
+                            help='Path where the downloads to be stored')
+
+        replacer = parser.add_mutually_exclusive_group()
+        replacer.add_argument('-f', '--force', action='store_true',
+                              help='Force replace any existing folder')
+        replacer.add_argument('-i', '--ignore', action='store_true',
+                              help='Ignore any existing folder (do not replace)')
+
         parser.add_argument('-b', '--byvol', action='store_true',
                             help='Build separate books by volumes')
 
@@ -47,7 +54,6 @@ class ArgReader:
                                help='The list of volume numbers to download')
         selection.add_argument('--chapters', nargs='*', metavar='URL',
                                help='A list of specific chapter urls')
-
 
         selection.add_argument('--suppress', action='store_true',
                                help='Suppress input prompts (use defaults instead)')
