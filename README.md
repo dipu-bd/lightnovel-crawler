@@ -5,6 +5,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/issues)
 [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
 [![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
+
 <!-- [![PyPI - Format](https://img.shields.io/pypi/format/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler) -->
 <!-- [![PyPI - Status](https://img.shields.io/pypi/status/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler) -->
 <!-- [![GitHub contributors](https://img.shields.io/github/contributors/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler) -->
@@ -31,7 +32,7 @@ $ pip3 install --user -U lightnovel-crawler
 $ python3 -m pip install --user -U lightnovel-crawler
 ```
 
-Next, *Open the console panel in a directory you want to store your downloaded novels* and
+Next, _Open the console panel in a directory you want to store your downloaded novels_ and
 run the following to open an interactive console.
 
 ```bash
@@ -85,7 +86,7 @@ optional arguments:
 
 ## Supported websites
 
-The list of crawable websites are given below. *Request new site by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues)*.
+The list of crawable websites are given below. _Request new site by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues)_.
 
 - https://lnmtl.com
 - https://www.webnovel.com
@@ -102,3 +103,5 @@ The list of crawable websites are given below. *Request new site by [creating a 
 - https://m.romanticlovebooks.com
 - https://www.romanticlovebooks.com
 - https://webnovel.online
+- http://fullnovel.live
+- https://www.novelall.com
