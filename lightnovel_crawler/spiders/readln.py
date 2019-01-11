@@ -79,13 +79,19 @@ class ReadLightNovelCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
         div = soup.select_one('.chapter-content3 .desc')
-        div = div.select_one('#growfoodsmart') or div
+        hidden = div.select_one('#growfoodsmart')
+        if hidden:
+            hidden.decompose()
+        # end if
+        
         body = self.extract_contents(div)
+        if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):
+            chapter['title'] = body[0].replace('<strong>', '').replace('</strong>', '').strip()
+            chapter['title'] = ('C' if chapter['title'].startswith('hapter') else '') + chapter['title']
+            body = body[1:]
+        # end if
+
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
