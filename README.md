@@ -63,7 +63,10 @@ optional arguments:
                         Profile page url of the novel
   -q QUERY, --query QUERY
                         Novel query followed by list of source sites.
+  -o OUTPUT_PATH, --output OUTPUT_PATH
+                        Path where the downloads to be stored
   -f, --force           Force replace any existing folder
+  -i, --ignore          Ignore any existing folder (do not replace)
   -b, --byvol           Build separate books by volumes
   --login USER PASSWD   User name/email address and password for login
   --all                 Download all chapters
@@ -75,7 +78,8 @@ optional arguments:
                         The list of volume numbers to download
   --chapters [URL [URL ...]]
                         A list of specific chapter urls
-
+  --suppress            Suppress input prompts (use defaults instead)
+  
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
