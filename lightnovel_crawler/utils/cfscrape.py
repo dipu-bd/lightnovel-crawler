@@ -102,7 +102,7 @@ class CloudflareScraper(Session):
             # technique. If you see this and are running the latest version,
             # please open a GitHub issue so I can update the code accordingly.
             raise ValueError(
-                "Unable to parse Cloudflare anti-bots page: %s %s" % (e.message, BUG_REPORT))
+                "Unable to parse Cloudflare anti-bots page: %s %s" % (str(e), BUG_REPORT))
 
         # Solve the Javascript challenge
         params["jschl_answer"] = self.solve_challenge(body, domain)
@@ -128,8 +128,8 @@ class CloudflareScraper(Session):
 
     def solve_challenge(self, body, domain):
         try:
-            js = re.search(r"setTimeout\(function\(\){\s+(var "
-                           "s,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n", body).group(1)
+            js = re.search(
+                r"setTimeout\(function\(\){\s+(var s,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n", body).group(1)
         except Exception:
             raise ValueError(
                 "Unable to identify Cloudflare IUAM Javascript on website. %s" % BUG_REPORT)
@@ -183,7 +183,7 @@ class CloudflareScraper(Session):
         try:
             resp = scraper.get(url, **kwargs)
             resp.raise_for_status()
-        except Exception as e:
+        except:
             logging.error(
                 "'%s' returned an error. Could not collect tokens." % url)
             raise
