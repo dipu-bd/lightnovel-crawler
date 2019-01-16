@@ -80,7 +80,7 @@ def choose_a_novel(search_results):
         {
             'type': 'list',
             'name': 'novel_url',
-            'message': 'Where to search?',
+            'message': 'Which one is your novel?',
             'choices': [
                 {'name': '%s (%s)' % (x[0], x[1])}
                 for x in sorted(search_results)
