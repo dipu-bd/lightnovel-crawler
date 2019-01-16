@@ -20,9 +20,9 @@ def downlod_cover(app):
             if not os.path.exists(filename):
                 app.logger.info('Downloading cover image')
                 app.crawler.download_cover(filename)
-                app.logger.info('Saved cover: %s', filename)
-                app.book_cover = filename
+                app.logger.info('Saved cover: %s', filename)                
             # end if
+            app.book_cover = filename
         except Exception as ex:
             app.logger.error('Failed to get cover: %s', ex)
         # end try
