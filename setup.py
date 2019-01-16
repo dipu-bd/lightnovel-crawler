@@ -14,19 +14,7 @@ from os import path, getenv
 # and accepts an argument to specify the text encoding
 # Python 3 only projects can skip this import
 from io import open
-
-here = path.abspath(path.dirname(__file__))
-
-# Get the long description from the README file
-with open(path.join(here, 'README.pip'), encoding='utf-8') as f:
-    long_description = f.read()
-
-# Get the long description from the README file
-with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
-    install_requires = f.readlines()
-
-with open(path.join(here, 'VERSION'), encoding='utf-8') as f:
-    current_version = f.read().strip()
+from setup_config import *
 
 # Arguments marked as "Required" below must be included for upload to PyPI.
 # Fields marked as "Optional" may be commented out.
@@ -43,7 +31,7 @@ setup(
     # There are some restrictions on what makes a valid project name
     # specification here:
     # https://packaging.python.org/specifications/core-metadata/#name
-    name='lightnovel-crawler',  # Required
+    name=package_name,  # Required
 
     # Versions should comply with PEP 440:
     # https://www.python.org/dev/peps/pep-0440/
@@ -56,7 +44,7 @@ setup(
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
     # https://packaging.python.org/specifications/core-metadata/#summary
-    description='Crawls light novels and make html, text, epub and mobi',  # Required
+    description=short_description,  # Required
 
     # This is an optional longer description of your project that represents
     # the body of text which users will see when they visit PyPI.
@@ -154,7 +142,7 @@ setup(
     #
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/en/latest/requirements.html
-    install_requires=install_requires + ['lightnovel_crawler'],  # Optional
+    install_requires=install_requires,  # Optional
 
     # List additional groups of dependencies here (e.g. development
     # dependencies). Users will be able to install these using the "extras"
@@ -175,14 +163,7 @@ setup(
     # If using Python 2.6 or earlier, then these have to be included in
     # MANIFEST.in as well.
     include_package_data=True,
-    package_data={  # Optional
-        'lightnovel_crawler': [
-            '../LICENSE',
-            '../VERSION',
-            '../README.md',
-            'assets/html_style.css',
-        ],
-    },
+    package_data=package_data,
 
     # Although 'package_data' is the preferred approach, in some case you may
     # need to place data files outside of your packages. See:
@@ -198,12 +179,7 @@ setup(
     #
     # For example, the following would provide a command called `sample` which
     # executes the function `main` from this package when invoked:
-    entry_points={  # Optional
-        'console_scripts': [
-            'lightnovel-crawler=lightnovel_crawler:main',
-            'lncrawl=lightnovel_crawler:main',
-        ],
-    },
+    entry_points=entry_points,
 
     # List additional URLs that are relevant to your project as a dict.
     #
