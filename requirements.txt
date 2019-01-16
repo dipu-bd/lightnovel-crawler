@@ -5,3 +5,4 @@ PyInquirer==1.0.3
 progress==1.4
 Js2Py==0.59
 colorama==0.4.1
+python-docx==0.8.10

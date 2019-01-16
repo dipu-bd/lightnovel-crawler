@@ -9,6 +9,7 @@ from .epub import make_epubs
 from .html import make_htmls
 from .mobi import make_mobis
 from .text import make_texts
+from .docx import make_docx
 
 logger = logging.Logger('BINDERS')
 
@@ -36,4 +37,6 @@ def bind_books(app):
     make_htmls(app, data)
     epubs = make_epubs(app, data)
     make_mobis(app, epubs)
+    
+    make_docx(app, data)
 # end def
