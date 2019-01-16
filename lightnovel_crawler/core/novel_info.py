@@ -46,6 +46,7 @@ def format_chapter_list(crawler):
 def save_metadata(crawler, output_path):
     file_name = os.path.join(output_path, 'meta.json')
     data = {
+        'url': crawler.novel_url,
         'title': crawler.novel_title,
         'author': crawler.novel_author,
         'cover': crawler.novel_cover,
