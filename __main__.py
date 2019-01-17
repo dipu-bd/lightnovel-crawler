@@ -1,2 +1,2 @@
-from lightnovel_crawler import main
+from lncrawl import main
 main()

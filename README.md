@@ -87,10 +87,12 @@ optional arguments:
 
 ### Adding new source
 
-- Create new crawler using the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/spiders/_sample.py) as blueprint.
-- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lightnovel_crawler/spiders/__init__.py).
+- Create new crawler using the [`_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/_sample.py) as blueprint.
+- Add your crawler to [`__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/__init__.py).
 
-## Supported websites
+## Supports
+
+### Websites
 
 The list of crawable websites are given below. _Request new site by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues)_.
 
@@ -111,3 +113,14 @@ The list of crawable websites are given below. _Request new site by [creating a 
 - https://webnovel.online
 - http://fullnovel.live
 - https://www.novelall.com
+
+### Output formats
+
+After crawling is done, the app builds file in following formats in the output directory.
+
+- HTML
+- TEXT
+- EPUB
+- MOBI
+- DOCX
+- PDF

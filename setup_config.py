@@ -13,13 +13,13 @@ with open(path.join(_here, 'README.pip'), encoding='utf-8') as f:
 # Get the long description from the README file
 with open(path.join(_here, 'requirements.txt'), encoding='utf-8') as f:
     install_requires = f.readlines()
-    install_requires += ['lightnovel_crawler']
+    install_requires += ['lncrawl']
 
 with open(path.join(_here, 'VERSION'), encoding='utf-8') as f:
     current_version = f.read().strip()
 
 package_data = {
-    'lightnovel_crawler': [
+    'lncrawl': [
         '../LICENSE',
         '../VERSION',
         '../README.md',
@@ -29,7 +29,7 @@ package_data = {
 
 entry_points = {
     'console_scripts': [
-        'lightnovel-crawler=lightnovel_crawler:main',
-        'lncrawl=lightnovel_crawler:main',
+        'lncrawl=lncrawl:main',
+        'lightnovel-crawler=lncrawl:main',
     ],
 }
