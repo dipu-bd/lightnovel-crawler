@@ -13,7 +13,7 @@ with open(path.join(_here, 'README.pip'), encoding='utf-8') as f:
 # Get the long description from the README file
 with open(path.join(_here, 'requirements.txt'), encoding='utf-8') as f:
     install_requires = f.readlines()
-    install_requires += ['lncrawl']
+    # install_requires += ['lightnovel-crawler']
 
 with open(path.join(_here, 'VERSION'), encoding='utf-8') as f:
     current_version = f.read().strip()

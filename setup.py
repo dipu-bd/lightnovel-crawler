@@ -5,9 +5,9 @@ See:
 https://packaging.python.org/en/latest/distributing.html
 https://github.com/pypa/sampleproject
 """
-from setuptools import setup, find_packages
+import sys
 from os import path, getenv
-from io import open
+from setuptools import setup, find_packages
 from setup_config import *
 
 setup(
