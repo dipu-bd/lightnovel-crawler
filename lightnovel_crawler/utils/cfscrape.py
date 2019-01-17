@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
 Source: https://raw.githubusercontent.com/Anorov/cloudflare-scrape/master/cfscrape/__init__.py
 """
