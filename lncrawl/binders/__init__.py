@@ -39,6 +39,6 @@ def bind_books(app):
     epubs = make_epubs(app, data)
     make_mobis(app, epubs)
 
-    make_docx(app, data)
     make_pdfs(app, data)
+    make_docx(app, data)
 # end def
