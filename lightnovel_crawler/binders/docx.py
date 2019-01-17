@@ -113,11 +113,11 @@ def bind_docx_book(app, chapters, volume=''):
         make_chapter(book, chapter)
     # end for
 
-    # Save epub file
-    epub_path = os.path.join(app.output_path, 'docx')
-    file_path = os.path.join(epub_path, book_title + '.docx')
+    # Save docx file
+    docx_path = os.path.join(app.output_path, 'docx')
+    file_path = os.path.join(docx_path, book_title + '.docx')
     logger.debug('Writing %s', file_path)
-    os.makedirs(epub_path, exist_ok=True)
+    os.makedirs(docx_path, exist_ok=True)
     book.save(file_path)
     logger.warn('Created: %s.docx', book_title)
     return file_path
