@@ -9,6 +9,7 @@ NOT_IMPLEMENTED = Exception('Not Implemented')
 class UserInterface:
     selections = ['all', 'last', 'first',
                   'page', 'range', 'volumes', 'chapters']
+    output_formats = ['epub', 'mobi', 'html', 'text', 'docx', 'pdf']
 
     def get_novel_url(self):
         '''Returns a novel page url or a query'''
@@ -34,6 +35,11 @@ class UserInterface:
         output_path = os.path.abspath(suggested_path)
         os.makedirs(output_path, exist_ok=True)
         return output_path
+    # end def
+
+    def get_output_formats(self):
+        '''Returns a set of output formats'''
+        return { x: True for x in self.output_formats }
     # end def
 
     def get_login_info(self):

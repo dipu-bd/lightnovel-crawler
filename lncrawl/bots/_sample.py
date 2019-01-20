@@ -40,6 +40,15 @@ class SampleInterface(UserInterface):
         pass
     # end def
 
+    def get_output_formats(self):
+        '''Returns a dictionary of output formats.'''
+        # The keys should be from from `self.output_formats`. Each value
+        # corresponding a key defines whether create output in that format.
+        #
+        # By default, it returns all True to all of the output formats.
+        pass
+    # end def
+
     def get_login_info(self):
         '''Returns the (email, password) pair for login'''
         # By default, returns None to skip login

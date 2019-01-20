@@ -6,6 +6,8 @@ import textwrap
 
 from .display import LINE_SIZE
 
+supported_outputs = ['epub', 'mobi', 'html', 'text', 'docx', 'pdf']
+
 
 class ArgReader:
     def build(self):
@@ -28,6 +30,10 @@ class ArgReader:
 
         parser.add_argument('-o', '--output', dest='output_path', type=str,
                             help='Path where the downloads to be stored')
+        parser.add_argument('--format', dest='output_formats', nargs='*', metavar='E',
+                            help='Ouput formats. Can be a list of the following values: ' +
+                                 ', '.join(['`%s`' % x for x in supported_outputs]) +
+                                 ' (default: `all`)')
 
         replacer = parser.add_mutually_exclusive_group()
         replacer.add_argument('-f', '--force', action='store_true',

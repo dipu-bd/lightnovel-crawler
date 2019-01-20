@@ -34,11 +34,29 @@ def make_data(app):
 
 def bind_books(app):
     data = make_data(app)
-    make_texts(app, data)
-    make_htmls(app, data)
-    epubs = make_epubs(app, data)
-    make_mobis(app, epubs)
 
-    make_pdfs(app, data)
-    make_docx(app, data)
+    fmts = app.bot.get_output_formats()
+    if fmts['text']:
+        make_texts(app, data)
+    # end if
+
+    if fmts['html']:
+        make_htmls(app, data)
+    # end if
+
+    if fmts['mobi'] or fmts['epub']:
+        epubs = make_epubs(app, data)
+
+        if fmts['mobi']:
+            make_mobis(app, epubs)
+        # end if
+    # end if
+
+    if fmts['pdf']:
+        make_pdfs(app, data)
+    # end if
+
+    if fmts['docx']:
+        make_docx(app, data)
+    # end if
 # end def

@@ -2,12 +2,11 @@
 # -*- coding: utf-8 -*-
 import os
 import textwrap
-
 from colorama import Back, Fore, Style
-
 from ..assets.icons import Icons
 
-LINE_SIZE = 64
+LINE_SIZE, _ = os.get_terminal_size()
+LINE_SIZE = 80 if LINE_SIZE > 80 else LINE_SIZE
 
 
 def description():

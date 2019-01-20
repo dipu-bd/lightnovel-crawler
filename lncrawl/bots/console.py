@@ -130,6 +130,30 @@ class ConsoleInterface(UserInterface):
         return output_path
     # end def
 
+    def get_output_formats(self):
+        '''Returns a dictionary of output formats.'''
+        args = get_args()
+
+        if args.suppress:
+            return self.output_formats
+        # end if
+
+        formats = args.output_formats
+        if not formats:
+            answer = prompt([
+                {
+                    'type': 'checkbox',
+                    'name': 'formats',
+                    'message': 'Which output formats to create?',
+                    'choices': [{'name': fmt} for fmt in self.output_formats],
+                },
+            ])
+            formats = answer['formats']
+        # end if
+
+        return {x: (formats.count(x) > 0) for x in self.output_formats}
+    # end def
+
     def force_replace_old(self):
         args = get_args()
 
