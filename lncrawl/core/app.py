@@ -6,6 +6,7 @@ The main entry point of the program
 import logging
 
 from ..binders import bind_books
+from ..spiders import crawler_list
 from ..utils.crawler import Crawler
 from .arguments import get_args
 from .downloader import download_chapters
@@ -29,11 +30,11 @@ class App:
     # end def
 
     @classmethod
-    def run(cls, choice_list):
+    def run(cls):
         app = cls()
-        app.get_crawler_instance(choice_list)
+        app.get_crawler_instance(crawler_list)
         if not app.crawler:
-            url_not_recognized(choice_list)
+            url_not_recognized(crawler_list)
             raise Exception('No crawlers are available for it yet')
         # end if
 
@@ -65,14 +66,14 @@ class App:
         app.crawler.dispose()
     # end if
 
-    def get_crawler_instance(self, choice_list):
+    def get_crawler_instance(self):
         novel = get_novel_url()
 
         if not novel.startswith('http'):
             search_results = []
             crawler_links = get_crawlers_to_search([
-                x for x in sorted(choice_list.keys())
-                if 'search_novel' in choice_list[x].__dict__
+                x for x in sorted(crawler_list.keys())
+                if 'search_novel' in crawler_list[x].__dict__
             ])
             _checked = {}
             logger.warn('Searching for novels in %d sites...',
@@ -80,7 +81,7 @@ class App:
             for link in crawler_links:
                 logger.info('Searching %s', link)
                 try:
-                    crawler = choice_list[link]
+                    crawler = crawler_list[link]
                     if crawler in _checked:
                         continue
                     # end if
@@ -104,7 +105,7 @@ class App:
         if not novel:
             raise Exception('Novel URL was not specified')
         # end if
-        for home_url, crawler in choice_list.items():
+        for home_url, crawler in crawler_list.items():
             if novel.startswith(home_url):
                 self.crawler = crawler()
                 self.crawler.novel_url = novel

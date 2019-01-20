@@ -68,14 +68,14 @@ def init():
 # end def
 
 
-def start_app(choice_list):
+def start_app():
     init()
 
     check_updates()
     cancel_method()
 
     try:
-        App.run(choice_list)
+        App.run()
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
             raise err
