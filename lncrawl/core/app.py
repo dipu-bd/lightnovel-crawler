@@ -9,7 +9,7 @@ from .arguments import get_args
 from .downloader import download_chapters
 from .novel_info import novel_info
 from .display import url_not_recognized
-from ..bots import get_bot
+from ..interfaces import get_bot
 
 logger = logging.getLogger('CRAWLER_APP')
 

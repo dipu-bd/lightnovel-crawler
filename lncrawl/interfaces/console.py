@@ -13,7 +13,12 @@ from ..utils.user_interface import UserInterface
 
 logger = logging.getLogger('CONSOLE_BOT')
 
+
 class ConsoleInterface(UserInterface):
+    def __init__(self, *args, **kwargs):
+        logger.info('Initialized console interface')
+    # end def
+
     def get_novel_url(self):
         '''Returns a novel page url or a query'''
         args = get_args()

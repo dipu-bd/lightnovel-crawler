@@ -7,6 +7,10 @@ logger = logging.getLogger('TELEGRAM_BOT')
 
 
 class TelegramInterface(UserInterface):
+    def __init__(self, *args, **kwargs):
+        logger.info('Initialized telegram interface')
+    # end def
+
     def get_novel_url(self):
         '''Returns a novel page url or a query'''
         # TODO: must be implemented
