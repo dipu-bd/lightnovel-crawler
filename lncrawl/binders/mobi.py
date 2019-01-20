@@ -4,8 +4,7 @@ import logging
 import os
 import subprocess
 
-from PyInquirer import prompt
-
+from ..core.prompts import should_fetch_kindlegen
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 logger = logging.getLogger('MOBI_BINDER')
@@ -58,20 +57,10 @@ def epub_to_mobi(kindlegen, epub_file):
 def make_mobis(app, epubs):
     kindlegen = retrieve_kindlegen()
     if not kindlegen:
-        answer = prompt([
-            {
-                'type': 'confirm',
-                'name': 'fetch',
-                'message': 'Kindlegen is required to create *.mobi files. Get it now?',
-                'default': True
-            },
-        ])
-        if not answer['fetch']:
-            logger.warn('Mobi files were not generated')
-            return
+        if should_fetch_kindlegen():
+            download_kindlegen()
+            kindlegen = retrieve_kindlegen()
         # end if
-        download_kindlegen()
-        kindlegen = retrieve_kindlegen()
         if not kindlegen:
             logger.error('Mobi files were not generated')
             return

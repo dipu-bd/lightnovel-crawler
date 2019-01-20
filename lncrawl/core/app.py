@@ -32,7 +32,7 @@ class App:
     @classmethod
     def run(cls):
         app = cls()
-        app.get_crawler_instance(crawler_list)
+        app.get_crawler_instance()
         if not app.crawler:
             url_not_recognized(crawler_list)
             raise Exception('No crawlers are available for it yet')

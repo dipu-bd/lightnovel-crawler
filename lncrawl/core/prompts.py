@@ -440,3 +440,22 @@ def pack_by_volume():
     ])
     return answer['volume']
 # end def
+
+def should_fetch_kindlegen():
+    args = get_args()
+
+    if args.suppress:
+        return True
+    # end if
+
+    answer = prompt([
+        {
+            'type': 'confirm',
+            'name': 'fetch',
+            'message': 'Kindlegen is required to create *.mobi files. Get it now?',
+            'default': True
+        },
+    ])
+
+    return answer['fetch']
+# end def
