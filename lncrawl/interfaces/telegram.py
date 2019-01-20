@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import logging
 from ..utils.user_interface import UserInterface
 
-# TODO: It is recommended to implemented all methods. But you can skip those
-#       Which return values by default.
+logger = logging.getLogger('TELEGRAM_BOT')
+
 
 class TelegramInterface(UserInterface):
     def get_novel_url(self):
@@ -32,7 +33,7 @@ class TelegramInterface(UserInterface):
         '''Returns a valid output path where the files are stored'''
         # You should return a valid absolute path. The parameter suggested_path
         # is valid but not gurranteed to exists.
-        # 
+        #
         # NOTE: If you do not want to use any pre-downloaded files, remove all
         #       contents inside of your selected output directory.
         #
