@@ -7,8 +7,6 @@ import re
 import os
 import json
 
-from .prompts import get_output_path
-
 
 def format_volume_list(crawler):
     for vol in crawler.volumes:
@@ -66,7 +64,7 @@ def novel_info(app):
 
     app.logger.info('Checking output path...')
     good_name = re.sub(r'[\\/*?:"<>|\']', '', app.crawler.novel_title)
-    app.output_path = get_output_path(os.path.join('Lightnovels', good_name))
+    app.output_path = app.bot.get_output_path(os.path.join('Lightnovels', good_name))
 
     app.logger.info('Getting chapters...')
     app.crawler.download_chapter_list()

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-The main entry point of the program
-"""
 import logging
 
 from ..binders import bind_books
@@ -12,10 +9,7 @@ from .arguments import get_args
 from .downloader import download_chapters
 from .novel_info import novel_info
 from .display import url_not_recognized
-from .prompts import (choose_a_novel, download_selection,
-                      get_crawlers_to_search, get_novel_url, login_info,
-                      pack_by_volume, range_from_chapters, range_from_volumes,
-                      range_using_index, range_using_urls)
+from ..bots import get_bot
 
 logger = logging.getLogger('CRAWLER_APP')
 
@@ -25,6 +19,7 @@ class App:
 
     def __init__(self, *args, **kwargs):
         self.logger = logger
+        self.bot = get_bot()
         self.crawler = Crawler()
         self.pack_by_volume = False
     # end def
@@ -41,7 +36,7 @@ class App:
         app.crawler.initialize()
 
         if 'login' in app._methods:
-            data = login_info()
+            data = app.bot.get_login_info()
             if data and len(data) == 2:
                 app.crawler.login(data[0], data[1])
             # end if
@@ -50,7 +45,7 @@ class App:
         novel_info(app)
 
         if len(app.crawler.volumes) > 0:
-            app.pack_by_volume = pack_by_volume()
+            app.pack_by_volume = app.bot.should_pack_by_volume()
         # end if
         logger.info('To be packed by volume = %s', app.pack_by_volume)
 
@@ -67,11 +62,11 @@ class App:
     # end if
 
     def get_crawler_instance(self):
-        novel = get_novel_url()
+        novel = self.bot.get_novel_url()
 
         if not novel.startswith('http'):
             search_results = []
-            crawler_links = get_crawlers_to_search([
+            crawler_links = self.bot.get_crawlers_to_search([
                 x for x in sorted(crawler_list.keys())
                 if 'search_novel' in crawler_list[x].__dict__
             ])
@@ -99,7 +94,7 @@ class App:
             if len(search_results) == 0:
                 raise Exception('No results for: %s' % novel)
             # end if
-            novel = choose_a_novel(search_results)
+            novel = self.bot.choose_a_novel(search_results)
         # end if
 
         if not novel:
@@ -119,7 +114,7 @@ class App:
     def chapter_range(self):
         chapter_count = len(self.crawler.chapters)
         volume_count = len(self.crawler.volumes)
-        res = download_selection(chapter_count, volume_count)
+        res = self.bot.get_range_selection(chapter_count, volume_count)
 
         arg = get_args()
         self.chapters = []
@@ -132,19 +127,19 @@ class App:
             n = arg.last or 10
             self.chapters = self.crawler.chapters[-n:]
         elif res == 'page':
-            start, stop = range_using_urls(self.crawler)
+            start, stop = self.bot.get_range_using_urls(self.crawler)
             self.chapters = self.crawler.chapters[start:(stop + 1)]
         elif res == 'range':
-            start, stop = range_using_index(chapter_count)
+            start, stop = self.bot.get_range_using_index(chapter_count)
             self.chapters = self.crawler.chapters[start:(stop + 1)]
         elif res == 'volumes':
-            selected = range_from_volumes(self.crawler.volumes)
+            selected = self.bot.get_range_from_volumes(self.crawler.volumes)
             self.chapters = [
                 chap for chap in self.crawler.chapters
                 if selected.count(chap['volume']) > 0
             ]
         elif res == 'chapters':
-            selected = range_from_chapters(self.crawler)
+            selected = self.bot.get_range_from_chapters(self.crawler)
             self.chapters = [
                 chap for chap in self.crawler.chapters
                 if selected.count(chap['id']) > 0

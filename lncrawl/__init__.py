@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 
 from .core import start_app
 from .utils.crawler import Crawler
-from .bots.telegram import telegram_bot
 
 load_dotenv()
 

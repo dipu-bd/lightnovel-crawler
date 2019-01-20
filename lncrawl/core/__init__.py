@@ -9,11 +9,12 @@ import logging
 import requests
 from colorama import init as init_colorama, Fore
 
+from ..assets.icons import Icons
 from ..assets.version import get_value as get_version
 from .arguments import get_args, build_parser
 from .display import (description, epilog, debug_mode, url_not_recognized,
                       cancel_method, error_message, new_version_news, input_suppression)
-from .icons import Icons
+
 from .app import App
 
 logger = logging.Logger('APP_ROOT')

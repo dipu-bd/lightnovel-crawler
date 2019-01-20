@@ -5,7 +5,7 @@ import textwrap
 
 from colorama import Back, Fore, Style
 
-from .icons import Icons
+from ..assets.icons import Icons
 
 LINE_SIZE = 64
 

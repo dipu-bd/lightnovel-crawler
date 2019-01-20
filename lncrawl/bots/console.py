@@ -7,7 +7,7 @@ import shutil
 
 from PyInquirer import prompt
 
-from ..utils.icons import Icons
+from ..assets.icons import Icons
 from ..core.arguments import get_args
 from ..utils.user_interface import UserInterface
 

@@ -4,7 +4,6 @@ import logging
 import os
 import subprocess
 
-from ..core.prompts import should_fetch_kindlegen
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 logger = logging.getLogger('MOBI_BINDER')
@@ -57,7 +56,7 @@ def epub_to_mobi(kindlegen, epub_file):
 def make_mobis(app, epubs):
     kindlegen = retrieve_kindlegen()
     if not kindlegen:
-        if should_fetch_kindlegen():
+        if app.bot.should_fetch_kindlegen():
             download_kindlegen()
             kindlegen = retrieve_kindlegen()
         # end if
