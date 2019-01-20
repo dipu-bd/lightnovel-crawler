@@ -7,7 +7,7 @@ import logging
 from ..utils.crawler import Crawler
 
 # TODO: Set this to your crawler name for meaningful logging
-logger = logging.getLogger('CHANGE_THIS_NAME')
+logger = logging.getLogger(__name__)
 
 # TODO: Copy this file directly to your new crawler. And fill up
 #       the methods as described in their todos

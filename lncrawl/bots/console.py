@@ -4,13 +4,14 @@ import re
 import os
 import sys
 import shutil
-
+import logging
 from PyInquirer import prompt
 
 from ..assets.icons import Icons
 from ..core.arguments import get_args
 from ..utils.user_interface import UserInterface
 
+logger = logging.getLogger('CONSOLE_BOT')
 
 class ConsoleInterface(UserInterface):
     def get_novel_url(self):

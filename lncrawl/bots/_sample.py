@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import logging
 from ..utils.user_interface import UserInterface
+
+logger = logging.getLogger(__name__)
 
 # TODO: It is recommended to implemented all methods. But you can skip those
 #       Which return values by default.
