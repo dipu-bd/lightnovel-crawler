@@ -51,27 +51,27 @@ class UserInterface:
         raise NOT_IMPLEMENTED
     # end def
 
-    def get_range_using_index(chapter_count):
+    def get_range_using_index(self, chapter_count):
         '''Returns a range selected using chapter indices'''
         raise NOT_IMPLEMENTED
     # end def
 
-    def get_range_from_volumes(volumes, times=0):
+    def get_range_from_volumes(self, volumes, times=0):
         '''Returns a range created using volume list'''
         raise NOT_IMPLEMENTED
     # end def
 
-    def range_from_chapters(crawler, times=0):
+    def get_range_from_chapters(self, crawler, times=0):
         '''Returns a range created using individual chapters'''
         raise NOT_IMPLEMENTED
     # end def
 
-    def pack_by_volume():
+    def should_pack_by_volume(self):
         '''Returns whether to generate single or multiple files by volumes'''
         return False  # False will generate a single file
     # end def
 
-    def should_fetch_kindlegen():
+    def should_fetch_kindlegen(self):
         '''Whether to fetch kindlegen if it does not exists'''
         return True  # True will download kindlegen in the user directory to use it
     # end def

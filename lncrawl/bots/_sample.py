@@ -60,34 +60,34 @@ class SampleInterface(UserInterface):
         pass
     # end def
 
-    def get_range_using_index(chapter_count):
+    def get_range_using_index(self, chapter_count):
         '''Returns a range selected using chapter indices'''
         # TODO: must be implemented
         # Should return a list of chapters to download
         pass
     # end def
 
-    def get_range_from_volumes(volumes, times=0):
+    def get_range_from_volumes(self, volumes, times=0):
         '''Returns a range created using volume list'''
         # TODO: must be implemented
         # Should return a list of chapters to download
         pass
     # end def
 
-    def range_from_chapters(crawler, times=0):
+    def get_range_from_chapters(self, crawler, times=0):
         '''Returns a range created using individual chapters'''
         # TODO: must be implemented
         # Should return a list of chapters to download
         pass
     # end def
 
-    def pack_by_volume():
+    def should_pack_by_volume(self):
         '''Returns whether to generate single or multiple files by volumes'''
         # By default, returns False to generate a single file
         pass
     # end def
 
-    def should_fetch_kindlegen():
+    def should_fetch_kindlegen(self):
         '''Whether to fetch kindlegen if it does not exists'''
         # By default, returns True to download kindlegen in the user directory to use it
         pass
