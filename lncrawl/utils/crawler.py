@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
+    _destroyed = False
 
     home_url = ''
     novel_url = ''
