@@ -2,14 +2,19 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+from ..binders import available_formats
 
 NOT_IMPLEMENTED = Exception('Not Implemented')
 
 
-class UserInterface:
+class BotInterface:
     selections = ['all', 'last', 'first',
                   'page', 'range', 'volumes', 'chapters']
-    output_formats = ['epub', 'mobi', 'html', 'text', 'docx', 'pdf']
+    
+    def start(self):
+        '''Starts this bot'''
+        raise NOT_IMPLEMENTED
+    # end def
 
     def get_novel_url(self):
         '''Returns a novel page url or a query'''
@@ -39,7 +44,7 @@ class UserInterface:
 
     def get_output_formats(self):
         '''Returns a set of output formats'''
-        return { x: True for x in self.output_formats }
+        return None
     # end def
 
     def get_login_info(self):
