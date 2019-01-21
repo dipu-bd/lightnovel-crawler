@@ -7,6 +7,7 @@ import os
 import logging
 
 import requests
+from dotenv import load_dotenv
 from colorama import init as init_colorama, Fore
 
 from ..assets.icons import Icons
@@ -16,6 +17,7 @@ from .display import (description, epilog, debug_mode, url_not_recognized,
                       cancel_method, error_message, new_version_news, input_suppression)
 
 from .app import App
+from ..bots import telegram
 
 logger = logging.Logger('APP_ROOT')
 
@@ -37,6 +39,7 @@ def check_updates():
 
 
 def init():
+    load_dotenv()
     os.environ['version'] = get_version()
 
     init_colorama()
@@ -56,7 +59,6 @@ def init():
             + Fore.WHITE + '%(message)s' + Fore.RESET,
         )
         debug_mode(args.log)
-        print(args)
     # end if
 
     if args.suppress:
@@ -76,7 +78,12 @@ def start_app():
     cancel_method()
 
     try:
-        App.run()
+        bot = os.getenv('BOT', '').lower()
+        if bot == 'telegram':
+            telegram.main()
+        else:
+            App().start()
+        # end def
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
             raise err

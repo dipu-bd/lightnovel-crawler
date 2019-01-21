@@ -11,7 +11,7 @@ from ..assets.icons import Icons
 from ..core.arguments import get_args
 from ..utils.user_interface import UserInterface
 
-logger = logging.getLogger('CONSOLE_BOT')
+logger = logging.getLogger('CONSOLE_INTERFACE')
 
 
 class ConsoleInterface(UserInterface):

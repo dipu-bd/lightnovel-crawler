@@ -3,7 +3,7 @@
 import logging
 from ..utils.user_interface import UserInterface
 
-logger = logging.getLogger('TELEGRAM_BOT')
+logger = logging.getLogger('TELEGRAM_INTERFACE')
 
 
 class TelegramInterface(UserInterface):
