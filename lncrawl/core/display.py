@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
+import logging
 import textwrap
 from colorama import Back, Fore, Style
 
@@ -43,7 +44,7 @@ def epilog():
 
 def debug_mode(level):
     text = Fore.RED + ' ' + Icons.SOUND + ' '
-    text += 'LOG LEVEL: %s' % level
+    text += 'LOG LEVEL: %s' % logging._levelToName.get(level)
     text += Fore.RESET
 
     padding = ' ' * ((LINE_SIZE - len(text)) // 2)

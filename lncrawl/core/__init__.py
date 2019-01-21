@@ -16,10 +16,7 @@ from .arguments import get_args, build_parser
 from .display import (description, epilog, debug_mode, url_not_recognized,
                       cancel_method, error_message, new_version_news, input_suppression)
 
-from .app import App
-from ..bots import telegram
-
-logger = logging.Logger('APP_ROOT')
+logger = logging.Logger('CORE')
 
 
 def check_updates():
@@ -48,7 +45,8 @@ def init():
     build_parser()
 
     level = os.getenv('LOG_LEVEL', 'NOTSET')
-    if level != 'NOTSET':
+    if level and level != 'NOTSET':
+        os.environ['debug_mode'] = 'True'
         logging.basicConfig(
             level=logging.getLevelName(level),
             format=Fore.CYAN + '%(asctime)s '
@@ -80,9 +78,11 @@ def start_app():
     try:
         bot = os.getenv('BOT', '').lower()
         if bot == 'telegram':
-            telegram.main()
+            from ..bots.telegram import TelegramBot
+            TelegramBot().start()
         else:
-            App().start()
+            from ..bots.console import ConsoleBot
+            ConsoleBot().start()
         # end def
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
