@@ -33,7 +33,9 @@ class App:
     # end def
 
     def destroy(self):
-        self.crawler.destroy()
+        if self.crawler:
+            self.crawler.destroy()
+        # end if
         logger.info('Destroyed App')
     # end def
 
