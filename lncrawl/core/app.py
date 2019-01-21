@@ -25,7 +25,6 @@ class App:
     chapters = []
     book_cover = None
     output_formats = None
-    fetch_kindlegen = True
 
     # ----------------------------------------------------------------------- #
 
