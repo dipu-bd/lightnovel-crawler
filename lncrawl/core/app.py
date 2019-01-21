@@ -24,41 +24,39 @@ class App:
         self.pack_by_volume = False
     # end def
 
-    @classmethod
-    def run(cls):
-        app = cls()
-        app.get_crawler_instance()
-        if not app.crawler:
+    def start(self):
+        self.get_crawler_instance()
+        if not self.crawler:
             url_not_recognized(crawler_list)
             raise Exception('No crawlers are available for it yet')
         # end if
 
-        app.crawler.initialize()
+        self.crawler.initialize()
 
-        if 'login' in app._methods:
-            data = app.bot.get_login_info()
+        if 'login' in self._methods:
+            data = self.bot.get_login_info()
             if data and len(data) == 2:
-                app.crawler.login(data[0], data[1])
+                self.crawler.login(data[0], data[1])
             # end if
         # end if
 
-        novel_info(app)
+        novel_info(self)
 
-        if len(app.crawler.volumes) > 0:
-            app.pack_by_volume = app.bot.should_pack_by_volume()
+        if len(self.crawler.volumes) > 0:
+            self.pack_by_volume = self.bot.should_pack_by_volume()
         # end if
-        logger.info('To be packed by volume = %s', app.pack_by_volume)
+        logger.info('To be packed by volume = %s', self.pack_by_volume)
 
-        app.chapter_range()
-        download_chapters(app)
+        self.chapter_range()
+        download_chapters(self)
 
-        if 'logout' in app._methods:
-            app.crawler.logout()
+        if 'logout' in self._methods:
+            self.crawler.logout()
         # end if
 
-        bind_books(app)
+        bind_books(self)
 
-        app.crawler.dispose()
+        self.crawler.dispose()
     # end if
 
     def get_crawler_instance(self):
