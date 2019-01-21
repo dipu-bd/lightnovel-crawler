@@ -56,10 +56,9 @@ def epub_to_mobi(kindlegen, epub_file):
 def make_mobis(app, epubs):
     kindlegen = retrieve_kindlegen()
     if not kindlegen:
-        if app.bot.should_fetch_kindlegen():
-            download_kindlegen()
-            kindlegen = retrieve_kindlegen()
-        # end if
+        # if app.bot.should_fetch_kindlegen():
+        download_kindlegen()
+        kindlegen = retrieve_kindlegen()
         if not kindlegen:
             logger.error('Mobi files were not generated')
             return
