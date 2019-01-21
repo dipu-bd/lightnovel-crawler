@@ -26,7 +26,9 @@ available_formats = [
 
 def bind_books(app, data):
     fmts = app.output_formats
-    if not fmts: fmts = available_formats
+    if not fmts:
+        fmts = { x: True for x in available_formats }
+    # end if
 
     if fmts['text']:
         make_texts(app, data)
