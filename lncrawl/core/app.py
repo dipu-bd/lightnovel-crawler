@@ -15,7 +15,6 @@ logger = logging.getLogger('APP')
 
 
 class App:
-    _methods = {}
     user_input = None
     crawler_links = None
     crawler = None
@@ -26,21 +25,24 @@ class App:
     chapters = []
     book_cover = None
     output_formats = None
+    fetch_kindlegen = True
 
-    # ------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------- #
 
     def initialize(self):
-        logger.info('Initialized')
+        logger.info('Initialized App')
     # end def
 
     def destroy(self):
         self.crawler.destroy()
-        logger.info('Destroyed')
+        logger.info('Destroyed App')
     # end def
 
-    # ------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------- #
 
     def init_search(self):
+        '''Requires: user_input'''
+        '''Produces: [crawler, output_path] or [crawler_links]'''
         if not self.user_input:
             raise Exception('User input is not valid')
         # end if
@@ -58,16 +60,19 @@ class App:
     # end def
 
     def search_novel(self):
+        '''Requires: user_input, crawler_links'''
+        '''Produces: search_results'''
         logger.warn('Searching for novels in %d sites...',
                     len(self.crawler_links))
         _checked = {}
         self.search_results = []
         for link in self.crawler_links:
-            logger.info('Searching %s', link)
+            logger.info('Searching: %s with "%s"', link, self.user_input)
             try:
                 crawler = crawler_list[link]
                 if crawler in _checked:
                     continue
+                # end if
                 _checked[crawler] = True
 
                 instance = crawler()
@@ -87,17 +92,19 @@ class App:
                     len(self.search_results), len(self.crawler_links))
     # end def
 
-    # ------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------- #
 
     def init_crawler(self, novel_url):
-        if not novel_url: return
+        '''Requires: [user_input]'''
+        '''Produces: crawler, output_path'''
+        if not novel_url:
+            return
         for home_url, crawler in crawler_list.items():
             if novel_url.startswith(home_url):
                 logger.info('Initializing crawler for: %s', home_url)
                 self.crawler = crawler()
-                self.crawler.novel_url = self.user_input
+                self.crawler.novel_url = novel_url
                 self.crawler.home_url = home_url.strip('/')
-                self.crawler.initialize()
                 break
             # end if
         # end for
@@ -105,20 +112,19 @@ class App:
             display.url_not_recognized()
             raise Exception('No crawlers were found')
         # end if
-        good_name = re.sub(r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
-        self.output_path = os.path.join('Lightnovels', good_name)
     # end def
 
+    @property
     def can_login(self):
         return 'login' in self.crawler.__dict__
     # end def
 
     def get_novel_info(self):
-        if self.can_login() and self.login_data:
+        '''Requires: crawler, login_data, output_path'''
+        self.crawler.initialize()
+
+        if self.can_login and self.login_data:
             self.crawler.login(*self.login_data)
-        # end if
-        if not os.path.exists(self.output_path):
-            raise Exception('Output path is not defined')
         # end if
 
         logger.warn('Retrieving novel info...')
@@ -130,12 +136,21 @@ class App:
 
         format_volumes(self.crawler)
         format_chapters(self.crawler)
-        save_metadata(self.crawler, self.output_path)
+
+        good_name = re.sub(r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
+        self.output_path = os.path.join('Lightnovels', good_name)
     # end def
 
     # ------------------------------------------------------------------------#
     def start_download(self):
+        '''Requires: crawler, chapters, output_path'''
+        if not os.path.exists(self.output_path):
+            raise Exception('Output path is not defined')
+        # end if
+
+        save_metadata(self.crawler, self.output_path)
         download_chapters(self)
+    
         if 'logout' in self.crawler.__dict__:
             self.crawler.logout()
         # end if
@@ -144,6 +159,7 @@ class App:
     # ------------------------------------------------------------------------#
 
     def bind_books(self):
+        '''Requires: crawler, chapters, output_path, pack_by_volume, book_cover, output_formats'''
         logger.info('Processing data for binding')
         data = {}
         if self.pack_by_volume:
@@ -159,5 +175,11 @@ class App:
         # end if
 
         bind_books(self, data)
+    # end def
+
+    # ------------------------------------------------------------------------#
+
+    def get_compressed(self):
+        pass
     # end def
 # end class
