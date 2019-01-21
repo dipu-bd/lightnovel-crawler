@@ -71,11 +71,18 @@ class TelegramBot(BotInterface):
 
     def init_app(self, bot, update):
         user = update.message.from_user
-        self.app[user.id] = App()
-        self.app[user.id].initialize()
+        if not self.app.get(user.id):
+            self.app[user.id] = App()
+            self.app[user.id].initialize()
+            update.message.reply_text('A new session is created.')
+        else:
+            update.message.reply_text('Using an ongoing session.')
+        # end if
+
         update.message.reply_text(
-            'Enter the profile page url of a lightnovel,'
-            'or a query to search your novel.'
+            'Enter a text from one of these two categories:\n'
+            '- The profile page url of a lightnovel.\n'
+            '- A query text to search your novel.'
         )
         return 'get_novel_url'
     # end def
@@ -86,6 +93,7 @@ class TelegramBot(BotInterface):
             self.app.pop(user.id).destroy()
         # end if
         update.message.reply_text('Session is cancelled')
+        return ConversationHandler.END
     # end def
 
     def get_novel_url(self, bot, update):
