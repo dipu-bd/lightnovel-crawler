@@ -13,168 +13,130 @@ logger = logging.getLogger(__name__)
 
 
 class TelegramBot(BotInterface):
+    # To save App instances against user id
+    app = dict()
+
     def start(self):
         # Create the EventHandler and pass it your bot's token.
-        updater = Updater(os.getenv('TELEGRAM_TOKEN', ''))
+        self.updater = Updater(os.getenv('TELEGRAM_TOKEN', ''))
 
         # Get the dispatcher to register handlers
-        dp = updater.dispatcher
+        dp = self.updater.dispatcher
 
-        # Add conversation handler with the states SUMBER, PHOTO, LOCATION and BIO
+        # Add a command helper for help
+        dp.add_handler(CommandHandler('help', self.show_help))
+
+        # Add conversation handler with states
         conv_handler = ConversationHandler(
-            entry_points=[ CommandHandler('start', start) ],
+            entry_points=[CommandHandler('start', self.init_app)],
+            fallbacks=[CommandHandler('cancel', self.destroy_app)],
             states={
-                'get_novel_url': [ MessageHandler(Filters.text, get_novel_url) ],
+                'get_novel_url': [MessageHandler(Filters.text, self.get_novel_url)],
+                'get_crawlers_to_search': [MessageHandler(Filters.text, self.get_crawlers_to_search)],
+                'choose_a_novel': [MessageHandler(Filters.text, self.choose_a_novel)],
+                'get_login_info': [MessageHandler(Filters.text, self.get_login_info)],
+                'get_output_path': [MessageHandler(Filters.text, self.get_output_path)],
+                'process_chapter_range': [MessageHandler(Filters.text, self.process_chapter_range)],
+                'get_output_formats': [MessageHandler(Filters.text, self.get_output_formats)],
+                'should_pack_by_volume': [MessageHandler(Filters.text, self.should_pack_by_volume)],
             },
-            fallbacks=[CommandHandler('cancel', stop)]
         )
         dp.add_handler(conv_handler)
 
         # Log all errors
-        dp.add_error_handler(handle_error)
-
-        help_handler = CommandHandler('help', show_help)
-        dp.add_handler(help_handler)
+        dp.add_error_handler(self.error_handler)
 
         # Start the Bot
-        updater.start_polling()
+        self.updater.start_polling()
 
         # Run the bot until you press Ctrl-C or the process receives SIGINT,
         # SIGTERM or SIGABRT. This should be used most of the time, since
         # start_polling() is non-blocking and will stop the bot gracefully.
-        updater.idle()
+        self.updater.idle()
     # end def
 
-    def create_app(self):
-        # TODO: must be implemented
-        self.app = App()
-        self.app.initialize()
-        # Start processing using this bot. It should use self methods to take
-        # inputs and self.app methods to process them.
+    def error_handler(self, bot, update, error):
+        """Log Errors caused by Updates."""
+        logger.warning('Error: %s\nCaused by: %s', error, update)
+    # end def
 
-        # Here is a sample algorithm
-        '''
-        self.app.user_input = self.get_novel_url()
-        self.app.init_search()
+    def show_help(self, bot, update):
+        bot.send_message(
+            chat_id=update.message.chat_id,
+            text='Type /start to create new session.\n'
+                 'Type /cancel to cancel an ongoing session.\n'
+                 'Type /progress to view progress of current session.\n'
+                 'Type /help to view this message anytime.')
+    # end def
 
-        self.app.crawler_links = self.get_crawlers_to_search()
-        self.app.search_novel()
+    def init_app(self, bot, update):
+        user = update.message.from_user
+        self.app[user.id] = App()
+        self.app[user.id].initialize()
+        update.message.reply_text(
+            'Enter the profile page url of a lightnovel,'
+            'or a query to search your novel.'
+        )
+        return 'get_novel_url'
+    # end def
 
-        self.app.init_crawler(self.choose_a_novel())
-
-        if self.app.can_login:
-            self.app.login_data = self.get_login_info()
+    def destroy_app(self, bot, update):
+        user = update.message.from_user
+        if self.app.get(user.id):
+            self.app.pop(user.id).destroy()
         # end if
-
-        self.app.get_novel_info()
-
-        self.app.output_path = self.get_output_path()
-        self.app.chapters = self.process_chapter_range()
-
-        self.app.output_formats = self.get_output_formats()
-        self.app.pack_by_volume = self.should_pack_by_volume()
-        if self.app.output_formats['mobi']:
-            self.app.fetch_kindlegen = self.should_fetch_kindlegen()
-        # end if
-
-        self.app.start_download()
-        self.app.bind_books()
-        '''
+        update.message.reply_text('Session is cancelled')
     # end def
 
-    def get_novel_url(self):
-        '''Returns a novel page url or a query'''
-        # TODO: must be implemented
-        pass
+    def get_novel_url(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_crawlers_to_search(self, links):
-        '''Returns user choice to search the choosen sites for a novel'''
-        # TODO: must be implemented
-        pass
+    def get_crawlers_to_search(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def choose_a_novel(self, search_results):
-        '''Choose a single novel url from the search result'''
-        # The search_results is an array of (novel_title, novel_url).
-        # This method should return a single novel_url only
-        #
-        # By default, returns the first search_results. Implemented it to
-        # handle multiple search_results
-        pass
+    def choose_a_novel(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_output_path(self, suggested_path):
-        '''Returns a valid output path where the files are stored'''
-        # You should return a valid absolute path. The parameter suggested_path
-        # is valid but not gurranteed to exists.
-        # 
-        # NOTE: If you do not want to use any pre-downloaded files, remove all
-        #       contents inside of your selected output directory.
-        #
-        # By default, returns a valid existing path from suggested_path
-        pass
+    def get_output_path(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_output_formats(self):
-        '''Returns a dictionary of output formats.'''
-        # The keys should be from from `self.output_formats`. Each value
-        # corresponding a key defines whether create output in that format.
-        #
-        # By default, it returns all True to all of the output formats.
-        pass
+    def get_output_formats(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_login_info(self):
-        '''Returns the (email, password) pair for login'''
-        # By default, returns None to skip login
-        pass
+    def get_login_info(self, bot, update):
+        user = update.message.from_user
     # end if
 
-    def get_range_selection(self, chapter_count, volume_count):
-        '''Returns a choice of how to select the range of chapters to downloads'''
-        # TODO: must be implemented
-        # Should return a key from `self.selections` array
-        pass
+    def get_range_selection(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_range_using_urls(self, crawler):
-        '''Returns a range of chapters using start and end urls as input'''
-        # TODO: must be implemented
-        # Should return a list of chapters to download
-        pass
+    def process_chapter_range(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_range_using_index(self, chapter_count):
-        '''Returns a range selected using chapter indices'''
-        # TODO: must be implemented
-        # Should return a list of chapters to download
-        pass
+    def get_range_using_urls(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_range_from_volumes(self, volumes, times=0):
-        '''Returns a range created using volume list'''
-        # TODO: must be implemented
-        # Should return a list of chapters to download
-        pass
+    def get_range_using_index(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def get_range_from_chapters(self, crawler, times=0):
-        '''Returns a range created using individual chapters'''
-        # TODO: must be implemented
-        # Should return a list of chapters to download
-        pass
+    def get_range_from_volumes(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def should_pack_by_volume(self):
-        '''Returns whether to generate single or multiple files by volumes'''
-        # By default, returns False to generate a single file
-        pass
+    def get_range_from_chapters(self, bot, update):
+        user = update.message.from_user
     # end def
 
-    def should_fetch_kindlegen(self):
-        '''Whether to fetch kindlegen if it does not exists'''
-        # By default, returns True to download kindlegen in the user directory to use it
-        pass
+    def should_pack_by_volume(self, bot, update):
+        user = update.message.from_user
     # end def
 # end class
