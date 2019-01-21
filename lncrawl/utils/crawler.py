@@ -4,9 +4,14 @@
 Crawler application
 """
 import re
+import os
+import logging
 from concurrent import futures
+from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from . import cfscrape
+
+logger = logging.getLogger(__name__)
 
 
 class Crawler:
@@ -44,15 +49,17 @@ class Crawler:
         self.scrapper.verify = False
     # end def
 
+    def destroy(self):
+        self._destroyed = True
+        self.scrapper.close()
+        self.executor.shutdown(False)
+    # end def
+
     # ------------------------------------------------------------------------- #
     # Implement these methods
     # ------------------------------------------------------------------------- #
 
     def initialize(self):
-        pass
-    # end def
-
-    def dispose(self):
         pass
     # end def
 
@@ -125,6 +132,7 @@ class Crawler:
     # end def
 
     def get_response(self, url, incognito=False):
+        if self._destroyed: return None
         self.last_visited_url = url.strip('/')
         response = self.scrapper.get(url)
         response.encoding = 'utf-8'
@@ -137,6 +145,7 @@ class Crawler:
 
     def submit_form(self, url, data={}, multipart=False, headers={}):
         '''Submit a form using post request'''
+        if self._destroyed: return None
         headers = {
             'content-type': 'multipart/form-data' if multipart
             else 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -160,6 +169,8 @@ class Crawler:
             f.write(response.content)
         # end with
     # end def
+
+    # ------------------------------------------------------------------------- #
 
     blacklist_patterns = [
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',

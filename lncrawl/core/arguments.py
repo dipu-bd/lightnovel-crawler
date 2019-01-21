@@ -15,8 +15,8 @@ class ArgReader:
             epilog='~' * LINE_SIZE,
             usage='\tlncrawl [options...]\n\tlightnovel-crawler [options...]'
         )
-        parser.add_argument('-l', dest='log', action='count',
-                            help='Set log levels (1 = warn, 2 = info, 3 = debug)')
+        # parser.add_argument('-l', dest='log', action='count',
+        #                     help='Set log levels (1 = warn, 2 = info, 3 = debug)')
         parser.add_argument('-v', '--version', action='version',
                             version='Lightnovel Crawler ' + os.getenv('version'))
 

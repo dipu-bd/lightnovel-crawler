@@ -5,29 +5,34 @@ To download chapter bodies
 """
 import json
 import os
+import logging
 from concurrent import futures
 from urllib.parse import urlparse
 from progress.bar import IncrementalBar
 
+logger = logging.getLogger('DOWNLOADER')
 
 def downlod_cover(app):
     app.book_cover = None
     if app.crawler.novel_cover:
-        app.logger.warn('Getting cover image...')
+        logger.warn('Getting cover image...')
         try:
             ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
             filename = os.path.join(app.output_path, 'cover.%s' % (ext or 'png'))
             if not os.path.exists(filename):
-                app.logger.info('Downloading cover image')
-                app.crawler.download_cover(filename)
-                app.logger.info('Saved cover: %s', filename)
+                logger.info('Downloading cover image')
+                response = app.crawler.get_response(app.crawler.novel_cover)
+                with open(filename, 'wb') as f:
+                    f.write(response.content)
+                # end with
+                logger.info('Saved cover: %s', filename)
             # end if
             app.book_cover = filename
         except Exception as ex:
-            app.logger.error('Failed to get cover: %s', ex)
+            logger.error('Failed to get cover: %s', ex)
         # end try
     else:
-        app.logger.warn('No cover image.')
+        logger.warn('No cover image.')
     # end if
 # end def
 
@@ -47,7 +52,7 @@ def download_chapter_body(app, chapter):
 
     chapter['body'] = ''
     if os.path.exists(file_name):
-        app.logger.info('Restoring from %s', file_name)
+        logger.info('Restoring from %s', file_name)
         with open(file_name, 'r') as file:
             old_chapter = json.load(file)
             chapter['body'] = old_chapter['body']
@@ -57,16 +62,17 @@ def download_chapter_body(app, chapter):
     if len(chapter['body']) == 0:
         body = ''
         try:
-            app.logger.info('Downloading to %s', file_name)
+            logger.info('Downloading to %s', file_name)
             body = app.crawler.download_chapter_body(chapter)
         except Exception as err:
-            app.logger.debug(err)
+            logger.debug(err)
         # end try
         if len(body) == 0:
-            body = result = 'Body is empty: ' + chapter['url']
+            result = 'Body is empty: ' + chapter['url']
+        else:
+            chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
+                chapter['volume_title'], chapter['title'], body)
         # end if
-        chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
-            chapter['volume_title'], chapter['title'], body)
         with open(file_name, 'w') as file:
             file.write(json.dumps(chapter))
         # end with
@@ -81,8 +87,9 @@ def download_chapters(app):
 
     bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
     bar.start()
-    if os.getenv('debug_mode') == 'true':
-        bar.next = lambda: None
+
+    if os.getenv('LOG_LEVEL', 'NOTSET') != 'NOTSET':
+        bar.next = lambda: None # Hide in debug mode
     # end if
 
     futures_to_check = {
@@ -97,9 +104,10 @@ def download_chapters(app):
         result = future.result()
         if result:
             bar.clearln()
-            app.logger.error(result)
+            logger.error(result)
         # end if
         bar.next()
     # end for
+
     bar.finish()
 # end def

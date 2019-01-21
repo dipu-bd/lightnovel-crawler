@@ -8,7 +8,7 @@ import os
 import json
 
 
-def format_volume_list(crawler):
+def format_volumes(crawler):
     for vol in crawler.volumes:
         vol['chapter_count'] = 0
         title = 'Volume %d' % vol['id']
@@ -20,7 +20,7 @@ def format_volume_list(crawler):
 # end def
 
 
-def format_chapter_list(crawler):
+def format_chapters(crawler):
     for item in crawler.chapters:
         title = 'Chapter #%d' % item['id']
         item['title'] = item['title'] or title
@@ -54,23 +54,4 @@ def save_metadata(crawler, output_path):
     with open(file_name, 'w') as file:
         json.dump(data, file, indent=2)
     # end with
-# end def
-
-
-def novel_info(app):
-    app.logger.warn('Retrieving novel info...')
-    app.crawler.read_novel_info()
-    app.logger.warn('NOVEL: %s', app.crawler.novel_title)
-
-    app.logger.info('Checking output path...')
-    good_name = re.sub(r'[\\/*?:"<>|\']', '', app.crawler.novel_title)
-    app.output_path = app.bot.get_output_path(os.path.join('Lightnovels', good_name))
-
-    app.logger.info('Getting chapters...')
-    app.crawler.download_chapter_list()
-
-    format_volume_list(app.crawler)
-    format_chapter_list(app.crawler)
-
-    save_metadata(app.crawler, app.output_path)
 # end def

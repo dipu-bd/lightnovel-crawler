@@ -1,156 +1,163 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import os
+import re
 import logging
 
-from ..binders import bind_books
+from . import display
 from ..spiders import crawler_list
-from ..utils.crawler import Crawler
-from .arguments import get_args
+from ..binders import bind_books
 from .downloader import download_chapters
-from .novel_info import novel_info
-from .display import url_not_recognized
-from ..interfaces import get_bot
+from .novel_info import format_volumes, format_chapters, save_metadata
 
-logger = logging.getLogger('CRAWLER_APP')
+
+logger = logging.getLogger('APP')
 
 
 class App:
-    '''Initiate the app'''
+    _methods = {}
+    user_input = None
+    crawler_links = None
+    crawler = None
+    login_data = ()
+    search_results = []
+    output_path = None
+    pack_by_volume = False
+    chapters = []
+    book_cover = None
+    output_formats = None
 
-    def __init__(self, *args, **kwargs):
-        self.logger = logger
-        self.bot = get_bot()
-        self.crawler = Crawler()
-        self.pack_by_volume = False
+    # ------------------------------------------------------------------------#
+
+    def initialize(self):
+        logger.info('Initialized')
     # end def
 
-    def start(self):
-        self.get_crawler_instance()
-        if not self.crawler:
-            url_not_recognized(crawler_list)
-            raise Exception('No crawlers are available for it yet')
+    def destroy(self):
+        self.crawler.destroy()
+        logger.info('Destroyed')
+    # end def
+
+    # ------------------------------------------------------------------------#
+
+    def init_search(self):
+        if not self.user_input:
+            raise Exception('User input is not valid')
         # end if
 
-        self.crawler.initialize()
-
-        if 'login' in self._methods:
-            data = self.bot.get_login_info()
-            if data and len(data) == 2:
-                self.crawler.login(data[0], data[1])
-            # end if
+        if self.user_input.startswith('http'):
+            logger.info('Detected URL input')
+            self.init_crawler(self.user_input)
+        else:
+            logger.info('Detected query input')
+            self.crawler_links = [
+                link for link in sorted(crawler_list.keys())
+                if 'search_novel' in crawler_list[link].__dict__
+            ]
         # end if
+    # end def
 
-        novel_info(self)
+    def search_novel(self):
+        logger.warn('Searching for novels in %d sites...',
+                    len(self.crawler_links))
+        _checked = {}
+        self.search_results = []
+        for link in self.crawler_links:
+            logger.info('Searching %s', link)
+            try:
+                crawler = crawler_list[link]
+                if crawler in _checked:
+                    continue
+                _checked[crawler] = True
 
-        if len(self.crawler.volumes) > 0:
-            self.pack_by_volume = self.bot.should_pack_by_volume()
+                instance = crawler()
+                instance.home_url = link.strip('/')
+                results = instance.search_novel(self.user_input)
+                self.search_results += results
+                logger.debug(results)
+                logger.info('%d results from %s', len(results), link)
+            except Exception as ex:
+                logger.debug(ex)
+            # end try
+        # end for
+        if len(self.search_results) == 0:
+            raise Exception('No results for: %s' % self.user_input)
         # end if
-        logger.info('To be packed by volume = %s', self.pack_by_volume)
+        logger.info('Total %d novels found from %d sites',
+                    len(self.search_results), len(self.crawler_links))
+    # end def
 
-        self.chapter_range()
-        download_chapters(self)
+    # ------------------------------------------------------------------------#
 
-        if 'logout' in self._methods:
-            self.crawler.logout()
-        # end if
-
-        bind_books(self)
-
-        self.crawler.dispose()
-    # end if
-
-    def get_crawler_instance(self):
-        novel = self.bot.get_novel_url()
-
-        if not novel.startswith('http'):
-            search_results = []
-            crawler_links = self.bot.get_crawlers_to_search([
-                x for x in sorted(crawler_list.keys())
-                if 'search_novel' in crawler_list[x].__dict__
-            ])
-            _checked = {}
-            logger.warn('Searching for novels in %d sites...',
-                        len(crawler_links))
-            for link in crawler_links:
-                logger.info('Searching %s', link)
-                try:
-                    crawler = crawler_list[link]
-                    if crawler in _checked:
-                        continue
-                    # end if
-                    _checked[crawler] = True
-                    instance = crawler()
-                    instance.home_url = link.strip('/')
-                    results = instance.search_novel(novel)
-                    search_results += results
-                    logger.debug(results)
-                    logger.info('%d results found', len(results))
-                except Exception as ex:
-                    logger.debug(ex)
-                # end try
-            # end for
-            if len(search_results) == 0:
-                raise Exception('No results for: %s' % novel)
-            # end if
-            novel = self.bot.choose_a_novel(search_results)
-        # end if
-
-        if not novel:
-            raise Exception('Novel URL was not specified')
-        # end if
+    def init_crawler(self, novel_url):
+        if not novel_url: return
         for home_url, crawler in crawler_list.items():
-            if novel.startswith(home_url):
+            if novel_url.startswith(home_url):
+                logger.info('Initializing crawler for: %s', home_url)
                 self.crawler = crawler()
-                self.crawler.novel_url = novel
+                self.crawler.novel_url = self.user_input
                 self.crawler.home_url = home_url.strip('/')
-                self._methods = crawler.__dict__
+                self.crawler.initialize()
                 break
             # end if
         # end for
+        if not self.crawler:
+            display.url_not_recognized()
+            raise Exception('No crawlers were found')
+        # end if
+        good_name = re.sub(r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
+        self.output_path = os.path.join('Lightnovels', good_name)
     # end def
 
-    def chapter_range(self):
-        chapter_count = len(self.crawler.chapters)
-        volume_count = len(self.crawler.volumes)
-        res = self.bot.get_range_selection(chapter_count, volume_count)
+    def can_login(self):
+        return 'login' in self.crawler.__dict__
+    # end def
 
-        arg = get_args()
-        self.chapters = []
-        if res == 'all':
-            self.chapters = self.crawler.chapters[:]
-        elif res == 'first':
-            n = arg.first or 10
-            self.chapters = self.crawler.chapters[:n]
-        elif res == 'last':
-            n = arg.last or 10
-            self.chapters = self.crawler.chapters[-n:]
-        elif res == 'page':
-            start, stop = self.bot.get_range_using_urls(self.crawler)
-            self.chapters = self.crawler.chapters[start:(stop + 1)]
-        elif res == 'range':
-            start, stop = self.bot.get_range_using_index(chapter_count)
-            self.chapters = self.crawler.chapters[start:(stop + 1)]
-        elif res == 'volumes':
-            selected = self.bot.get_range_from_volumes(self.crawler.volumes)
-            self.chapters = [
-                chap for chap in self.crawler.chapters
-                if selected.count(chap['volume']) > 0
-            ]
-        elif res == 'chapters':
-            selected = self.bot.get_range_from_chapters(self.crawler)
-            self.chapters = [
-                chap for chap in self.crawler.chapters
-                if selected.count(chap['id']) > 0
-            ]
+    def get_novel_info(self):
+        if self.can_login() and self.login_data:
+            self.crawler.login(*self.login_data)
+        # end if
+        if not os.path.exists(self.output_path):
+            raise Exception('Output path is not defined')
         # end if
 
-        if not len(self.chapters):
-            self.logger.error('No chapters was selected')
-            raise Exception()
+        logger.warn('Retrieving novel info...')
+        self.crawler.read_novel_info()
+        logger.warn('NOVEL: %s', self.crawler.novel_title)
+
+        logger.info('Getting chapters...')
+        self.crawler.download_chapter_list()
+
+        format_volumes(self.crawler)
+        format_chapters(self.crawler)
+        save_metadata(self.crawler, self.output_path)
+    # end def
+
+    # ------------------------------------------------------------------------#
+    def start_download(self):
+        download_chapters(self)
+        if 'logout' in self.crawler.__dict__:
+            self.crawler.logout()
+        # end if
+    # end def
+
+    # ------------------------------------------------------------------------#
+
+    def bind_books(self):
+        logger.info('Processing data for binding')
+        data = {}
+        if self.pack_by_volume:
+            for vol in self.crawler.volumes:
+                data['Volume %d' % vol['id']] = [
+                    x for x in self.chapters
+                    if x['volume'] == vol['id']
+                    and len(x['body']) > 0
+                ]
+            # end for
+        else:
+            data[''] = self.chapters
         # end if
 
-        self.logger.debug('Selected chapters to download:')
-        self.logger.debug(self.chapters)
-        self.logger.info('%d chapters to be downloaded', len(self.chapters))
+        bind_books(self, data)
     # end def
 # end class

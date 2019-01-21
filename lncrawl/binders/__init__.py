@@ -14,28 +14,20 @@ from .pdf import make_pdfs
 
 logger = logging.Logger('BINDERS')
 
-
-def make_data(app):
-    data = {}
-    if app.pack_by_volume:
-        for vol in app.crawler.volumes:
-            data['Volume %d' % vol['id']] = [
-                x for x in app.chapters
-                if x['volume'] == vol['id']
-                and len(x['body']) > 0
-            ]
-        # end for
-    else:
-        data[''] = app.chapters
-    # end if
-    return data
-# end def
+available_formats = [
+    'epub',
+    'mobi',
+    'html',
+    'text',
+    'docx',
+    'pdf',
+]
 
 
-def bind_books(app):
-    data = make_data(app)
+def bind_books(app, data):
+    fmts = app.output_formats
+    if not fmts: fmts = available_formats
 
-    fmts = app.bot.get_output_formats()
     if fmts['text']:
         make_texts(app, data)
     # end if

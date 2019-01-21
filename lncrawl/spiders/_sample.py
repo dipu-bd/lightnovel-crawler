@@ -19,12 +19,6 @@ class SampleCrawler(Crawler):
         pass
     # end def
 
-    def dispose(self):
-        # TODO: Dispose your crawler, variables etc. It gets called at the
-        #       beginning of the app.
-        pass
-    # end def
-
     def login(self, email, password):
         # TODO: You can just delete this method if not necessary.
         #       You can use `self.get_response` and `self.submit_form`

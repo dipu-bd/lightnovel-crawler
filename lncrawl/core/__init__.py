@@ -46,23 +46,23 @@ def init():
     description()
 
     build_parser()
-    args = get_args()
 
-    if args.log:
-        os.environ['debug_mode'] = 'true'
-        levels = [None, logging.WARN, logging.INFO, logging.DEBUG]
+    level = os.getenv('LOG_LEVEL', 'NOTSET')
+    if level != 'NOTSET':
         logging.basicConfig(
-            level=levels[args.log],
+            level=logging.getLevelName(level),
             format=Fore.CYAN + '%(asctime)s '
             + Fore.RED + '[%(levelname)s] '
             + Fore.YELLOW + '(%(name)s)\n'
             + Fore.WHITE + '%(message)s' + Fore.RESET,
         )
-        debug_mode(args.log)
+        debug_mode(level)
     # end if
 
+    args = get_args()
     if args.suppress:
         input_suppression()
+        print(args)
     # end if
 
     requests.urllib3.disable_warnings(

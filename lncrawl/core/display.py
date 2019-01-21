@@ -3,7 +3,9 @@
 import os
 import textwrap
 from colorama import Back, Fore, Style
+
 from ..assets.icons import Icons
+from ..spiders import crawler_list
 
 LINE_SIZE, _ = os.get_terminal_size()
 LINE_SIZE = 80 if LINE_SIZE > 80 else LINE_SIZE
@@ -40,10 +42,8 @@ def epilog():
 
 
 def debug_mode(level):
-    levels = ['', 'WARN', 'INFO', 'DEBUG']
-
     text = Fore.RED + ' ' + Icons.SOUND + ' '
-    text += 'LOG LEVEL = %s' % levels[level]
+    text += 'LOG LEVEL: %s' % level
     text += Fore.RESET
 
     padding = ' ' * ((LINE_SIZE - len(text)) // 2)
@@ -95,12 +95,12 @@ def new_version_news(latest):
 # end def
 
 
-def url_not_recognized(choice_list):
+def url_not_recognized():
     print()
     print('-' * LINE_SIZE)
     print('Sorry! I do not recognize this website yet.')
     print('My domain is limited to these sites only:')
-    for url in sorted(choice_list.keys()):
+    for url in sorted(crawler_list.keys()):
         print(Fore.LIGHTGREEN_EX, Icons.RIGHT_ARROW, url, Fore.RESET)
     # end for
     print()
