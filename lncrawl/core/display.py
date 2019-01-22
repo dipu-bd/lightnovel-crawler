@@ -44,7 +44,7 @@ def epilog():
 
 def debug_mode(level):
     text = Fore.RED + ' ' + Icons.SOUND + ' '
-    text += 'LOG LEVEL: %s' % logging._levelToName.get(level)
+    text += 'LOG LEVEL: %s' % level
     text += Fore.RESET
 
     padding = ' ' * ((LINE_SIZE - len(text)) // 2)
@@ -106,8 +106,7 @@ def url_not_recognized():
     # end for
     print()
     print('-' * LINE_SIZE)
-    print('Request developers to add your site at:')
+    print('You can request developers to add support for this site here:')
     print(Fore.CYAN, Icons.LINK,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
-    print()
 # end def
