@@ -100,12 +100,15 @@ def download_chapters(app):
         ): str(chapter['id'])
         for chapter in app.chapters
     }
+
+    app.progress = 0
     for future in futures.as_completed(futures_to_check):
         result = future.result()
         if result:
             bar.clearln()
             logger.error(result)
         # end if
+        app.progress += 1
         bar.next()
     # end for
 

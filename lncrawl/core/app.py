@@ -2,9 +2,9 @@
 # -*- coding: utf-8 -*-
 import os
 import re
+import shutil
 import logging
 
-from . import display
 from ..spiders import crawler_list
 from ..binders import bind_books
 from .downloader import download_chapters
@@ -15,6 +15,7 @@ logger = logging.getLogger('APP')
 
 
 class App:
+    progress = 0
     user_input = None
     crawler_links = None
     crawler = None
@@ -97,7 +98,7 @@ class App:
 
     def init_crawler(self, novel_url):
         '''Requires: [user_input]'''
-        '''Produces: crawler, output_path'''
+        '''Produces: crawler'''
         if not novel_url:
             return
         for home_url, crawler in crawler_list.items():
@@ -110,7 +111,6 @@ class App:
             # end if
         # end for
         if not self.crawler:
-            display.url_not_recognized()
             raise Exception('No crawlers were found')
         # end if
     # end def
@@ -121,7 +121,8 @@ class App:
     # end def
 
     def get_novel_info(self):
-        '''Requires: crawler, login_data, output_path'''
+        '''Requires: crawler, login_data'''
+        '''Produces: output_path'''
         self.crawler.initialize()
 
         if self.can_login and self.login_data:
@@ -180,7 +181,7 @@ class App:
 
     # ------------------------------------------------------------------------#
 
-    def get_compressed(self):
-        pass
+    def compress_output(self):
+        return shutil.make_archive(self.output_path, 'zip', self.output_path)
     # end def
 # end class
