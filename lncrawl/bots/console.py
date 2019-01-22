@@ -7,9 +7,11 @@ import shutil
 import logging
 from PyInquirer import prompt
 
+from ..core import display
 from ..core.app import App
 from ..assets.icons import Icons
 from ..core.arguments import get_args
+from ..spiders import crawler_list
 from ..binders import available_formats
 from ..utils.bot_interface import BotInterface
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
@@ -23,14 +25,20 @@ class ConsoleBot(BotInterface):
         self.app.initialize()
 
         self.app.user_input = self.get_novel_url()
-        self.app.init_search()
+        try:
+            self.app.init_search()
+        except:
+            return display.url_not_recognized()
+        # end if
 
-        self.app.crawler_links = self.get_crawlers_to_search()
-        self.app.search_novel()
+        if not self.app.crawler:
+            self.app.crawler_links = self.get_crawlers_to_search()
+            self.app.search_novel()
 
-        novel_url = self.choose_a_novel()
-        logger.info('Selected novel: %s' % novel_url)
-        self.app.init_crawler(novel_url)
+            novel_url = self.choose_a_novel()
+            logger.info('Selected novel: %s' % novel_url)
+            self.app.init_crawler(novel_url)
+        # end if
 
         if self.app.can_login:
             self.app.login_data = self.get_login_info()
