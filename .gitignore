@@ -12,3 +12,4 @@ env
 .env
 Lightnovels/
 windows/
+.telegram_bot_output/
