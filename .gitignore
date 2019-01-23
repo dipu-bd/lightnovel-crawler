@@ -8,3 +8,8 @@ dist
 Test Novel
 .vscode
 bundle
+env
+.env
+Lightnovels/
+windows/
+.telegram_bot_output/
