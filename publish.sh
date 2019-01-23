@@ -1,6 +1,6 @@
 VERSION=$(head -n 1 VERSION)
 
-git clean -xfd
+rm -r build dist *.egg-info
 
 python3 setup.py bdist_wheel sdist
 python3 setup_win.py
