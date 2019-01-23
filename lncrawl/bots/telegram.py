@@ -39,8 +39,6 @@ class TelegramBot(BotInterface):
             fallbacks=[
                 CommandHandler('cancel', self.destroy_app,
                                pass_user_data=True),
-                CommandHandler('progress', self.display_progress,
-                               pass_user_data=True),
             ],
             states={
                 'handle_novel_url': [
@@ -76,8 +74,12 @@ class TelegramBot(BotInterface):
                 ],
                 'handle_pack_by_volume': [
                     MessageHandler(
-                        Filters.text, self.handle_pack_by_volume, pass_user_data=True),
+                        Filters.text, self.handle_pack_by_volume, pass_job_queue=True, pass_user_data=True),
                 ],
+                'handle_downloader': [
+                    MessageHandler(
+                        Filters.text, self.handle_downloader, pass_user_data=True),
+                ]
 
                 # 'process_chapter_range': [MessageHandler(Filters.text, self.process_chapter_range)],
                 # 'get_output_formats': [MessageHandler(Filters.text, self.get_output_formats)],
@@ -107,13 +109,15 @@ class TelegramBot(BotInterface):
         update.message.reply_text(
             'Send /start to create new session.\n'
             'Send /cancel to cancel an ongoing session.\n'
-            'Send /progress to view progress of current session.\n'
             'Send /help to view this message anytime.'
         )
         return ConversationHandler.END
     # end def
 
     def destroy_app(self, bot, update, user_data):
+        if user_data.get('job'):
+            user_data.pop('job').schedule_removal()
+        # end if
         if user_data.get('app'):
             user_data.pop('app').destroy()
         # end if
@@ -317,8 +321,11 @@ class TelegramBot(BotInterface):
     def range_selection_done(self, bot, update, user_data):
         app = user_data.get('app')
         update.message.reply_text(
-            'Total %d chapters will be downloaded' % len(app.chapters)
+            'You have selected %d chapters to download' % len(app.chapters)
         )
+        if len(app.chapters) == 0:
+            return self.display_range_selection_help(bot, update)
+        # end if
         update.message.reply_text(
             'Do you want to generate a single file or split the books into volumes?',
             reply_markup=ReplyKeyboardMarkup([
@@ -379,14 +386,9 @@ class TelegramBot(BotInterface):
     #     return self.range_selection_done(bot, update, user_data)
     # # end def
 
-    def handle_pack_by_volume(self, bot, update, user_data):
+    def handle_pack_by_volume(self, bot, update, job_queue, user_data):
         app = user_data.get('app')
-
-        if user_data.get('running'):
-            return self.display_progress(bot, update, user_data)
-        # end if
-
-        user_data['running'] = True
+        user = update.message.from_user
 
         text = update.message.text
         app.pack_by_volume = text.startswith('Split')
@@ -399,40 +401,67 @@ class TelegramBot(BotInterface):
                 'I will split output files into volumes')
         # end if
 
+        job = job_queue.run_once(
+            self.process_request,
+            1,
+            context=(update, user_data),
+            name=str(user.id),
+        )
+        user_data['job'] = job
+
         update.message.reply_text(
-            'Your request has been received.\n'
-            'I won\'t be responding until I am done',
-            # 'Send /progress to view current progress, or send /cancel to stop.',
+            'Your request has been received.',
             reply_markup=ReplyKeyboardRemove()
         )
         # end if
 
-        # TODO: Start in separate thread
-
-        app.start_download()
-
-        update.message.reply_text(
-            'Download finished. Generating output files')
-        app.bind_books()
-
-        update.message.reply_text(
-            'Output file generated. Compressing output folder.')
-        
-        output_archive = app.compress_output()
-        update.message.reply_document(
-            open(output_archive, 'rb'),
-            timeout=24 * 3600, # 24 hours
-        )
-
-        return self.destroy_app(bot, update, user_data)
+        return 'handle_downloader'
     # end def
 
-    def display_progress(self, bot, update, user_data):
+    def process_request(self, bot, job):
+        update, user_data = job.context
         app = user_data.get('app')
+
+        user_data['status'] = 'Downloading "%s"' % app.crawler.novel_title
+        app.start_download()
+        update.message.reply_text('Download finished.')
+
+        user_data['status'] = 'Generating output files'
+        update.message.reply_text(user_data.get('status'))
+        app.bind_books()
+        update.message.reply_text('Output file generated.')
+
+
+        user_data['status'] = 'Compressing output folder.'
+        update.message.reply_text(user_data.get('status'))
+        app.compress_output()
+
+        update.message.reply_document(
+            open(app.archived_output, 'rb'),
+            timeout=24 * 3600, # 24 hours
+        )
         update.message.reply_text(
-            'Downloaded %d out of %d chapters.\n'
-            'You will be notified as soon as I am done.\n'
-            'Please be patient.' % (app.progress, len(app.chapters))
+            'This file will be available for 24 hours to download')
+
+        job.schedule_removal()
+        if user_data.get('job'):
+            user_data.pop('job')
+        # end if
+    # end def
+
+    def handle_downloader(self, bot, update, user_data):
+        app = user_data.get('app')
+        job = user_data.get('job')
+
+        if not job:
+            return self.destroy_app(bot, update, user_data)
+        # end if
+
+        update.message.reply_text(
+            '%s\n'
+            '%d out of %d chapters has been downloaded.\n'
+            'To terminate this session send /cancel.'
+            % (user_data.get('status'), app.progress, len(app.chapters))
         )
     # end def
 

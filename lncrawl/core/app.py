@@ -26,6 +26,7 @@ class App:
     chapters = []
     book_cover = None
     output_formats = None
+    archived_output = None
 
     # ----------------------------------------------------------------------- #
 
@@ -183,8 +184,7 @@ class App:
 
     def compress_output(self):
         logger.info('Compressing output...')
-        compressed = shutil.make_archive(self.output_path, 'zip', self.output_path)
-        logger.info('Compressed output to %s' % compressed)
-        return compressed
+        self.archived_output = shutil.make_archive(self.output_path, 'zip', self.output_path)
+        logger.info('Compressed output to %s' % self.archived_output)
     # end def
 # end class
