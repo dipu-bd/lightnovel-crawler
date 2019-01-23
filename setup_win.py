@@ -16,7 +16,7 @@ def setup_command():
 
     command = 'pyinstaller -y '
     command += '-F '  # onefile
-    command += '-i "%s/lncrawl.ico" ' % cur_dir
+    command += '-i "%s/res/lncrawl.ico" ' % cur_dir
 
     for k, paths in package_data.items():
         for v in paths:
