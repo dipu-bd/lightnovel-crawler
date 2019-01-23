@@ -12,7 +12,6 @@ from telegram.ext import (CommandHandler, ConversationHandler, Filters, Handler,
 
 from ..core.app import App
 from ..spiders import crawler_list
-from ..utils.bot_interface import BotInterface
 
 logger = logging.getLogger('TELEGRAM_BOT')
 
