@@ -88,6 +88,9 @@ class TelegramBot(BotInterface):
         )
         dp.add_handler(conv_handler)
 
+        # Fallback helper
+        dp.add_handler(MessageHandler(Filters.text, self.show_help))
+
         # Log all errors
         dp.add_error_handler(self.error_handler)
 
@@ -108,8 +111,6 @@ class TelegramBot(BotInterface):
     def show_help(self, bot, update):
         update.message.reply_text(
             'Send /start to create new session.\n'
-            'Send /cancel to cancel an ongoing session.\n'
-            'Send /help to view this message anytime.'
         )
         return ConversationHandler.END
     # end def
@@ -420,21 +421,28 @@ class TelegramBot(BotInterface):
 
     def process_request(self, bot, job):
         update, user_data = job.context
+        
         app = user_data.get('app')
+        if app:
+            user_data['status'] = 'Downloading "%s"' % app.crawler.novel_title
+            app.start_download()
+            update.message.reply_text('Download finished.')
+        # end if
 
-        user_data['status'] = 'Downloading "%s"' % app.crawler.novel_title
-        app.start_download()
-        update.message.reply_text('Download finished.')
+        app = user_data.get('app')
+        if app:
+            user_data['status'] = 'Generating output files'
+            update.message.reply_text(user_data.get('status'))
+            app.bind_books()
+            update.message.reply_text('Output file generated.')
+        # end if
 
-        user_data['status'] = 'Generating output files'
-        update.message.reply_text(user_data.get('status'))
-        app.bind_books()
-        update.message.reply_text('Output file generated.')
-
-
-        user_data['status'] = 'Compressing output folder.'
-        update.message.reply_text(user_data.get('status'))
-        app.compress_output()
+        app = user_data.get('app')
+        if app:
+            user_data['status'] = 'Compressing output folder.'
+            update.message.reply_text(user_data.get('status'))
+            app.compress_output()
+        # end if
 
         update.message.reply_document(
             open(app.archived_output, 'rb'),
@@ -443,9 +451,9 @@ class TelegramBot(BotInterface):
         update.message.reply_text(
             'This file will be available for 24 hours to download')
 
-        job.schedule_removal()
         if user_data.get('job'):
             user_data.pop('job')
+            job.schedule_removal()
         # end if
     # end def
 
@@ -465,5 +473,4 @@ class TelegramBot(BotInterface):
             % (user_data.get('status'), app.progress, len(app.chapters))
         )
     # end def
-
 # end class
