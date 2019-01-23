@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
+import re
 import os
 import shutil
 from urllib.parse import urlparse
@@ -171,11 +172,13 @@ class TelegramBot(BotInterface):
 
         buttons = []
 
-        def make_button(url): return urlparse(url).hostname
+        def make_button(i, url):
+            return '%d - %s' % (i + 1, urlparse(url).hostname)
+        # end def
         for i in range(1, len(app.crawler_links) + 1, 2):
             buttons += [[
-                make_button(app.crawler_links[i - 1]),
-                make_button(app.crawler_links[i]) if i < len(
+                make_button(i - 1, app.crawler_links[i - 1]),
+                make_button(i, app.crawler_links[i]) if i < len(
                     app.crawler_links) else '',
             ]]
         # end for
@@ -193,10 +196,17 @@ class TelegramBot(BotInterface):
 
         link = update.message.text
         if link:
-            selected_crawlers = [
-                x for x in app.crawler_links
-                if urlparse(x).hostname == link
-            ]
+            selected_crawlers = []
+            if link.isdigit():
+                selected_crawlers += [
+                    app.crawler_links[int(link) - 1]
+                ]
+            else:
+                selected_crawlers += [
+                    x for i, x in enumerate(app.crawler_links)
+                    if '%d - %s' % (i + 1, urlparse(x).hostname) == link
+                ]
+            # end if
             if len(selected_crawlers) != 0:
                 app.crawler_links = selected_crawlers
             # end if
@@ -208,7 +218,7 @@ class TelegramBot(BotInterface):
 
         app.search_novel()
         for i, (title, url) in enumerate(app.search_results):
-            title = '%s (%s)' % (title, urlparse(url).hostname)
+            title = '%d. %s (%s)' % (i + 1, title, urlparse(url).hostname)
             app.search_results[i] = title, url
         # end def
         if len(app.search_results) < 2:
@@ -304,7 +314,11 @@ class TelegramBot(BotInterface):
         return 'handle_range_selection'
     # end def
 
-    def range_selection_done(self, update):
+    def range_selection_done(self, bot, update, user_data):
+        app = user_data.get('app')
+        update.message.reply_text(
+            'Total %d chapters will be downloaded' % len(app.chapters)
+        )
         update.message.reply_text(
             'Do you want to generate a single file or split the books into volumes?',
             reply_markup=ReplyKeyboardMarkup([
@@ -317,53 +331,59 @@ class TelegramBot(BotInterface):
     def handle_range_all(self, bot, update, user_data):
         app = user_data.get('app')
         app.chapters = app.crawler.chapters[:]
-        return self.range_selection_done(update)
+        return self.range_selection_done(bot, update, user_data)
     # end def
 
     def handle_range_first(self, bot, update, user_data):
         app = user_data.get('app')
         app.chapters = app.crawler.chapters[:50]
-        return self.range_selection_done(update)
+        return self.range_selection_done(bot, update, user_data)
     # end def
 
     def handle_range_last(self, bot, update, user_data):
         app = user_data.get('app')
         app.chapters = app.crawler.chapters[-50:]
-        return self.range_selection_done(update)
+        return self.range_selection_done(bot, update, user_data)
     # end def
 
     def handle_range_volume(self, bot, update, user_data):
         app = user_data.get('app')
-        buttons = [[vol['id'] for vol in app.volumes]]
+        buttons = [str(vol['id']) for vol in app.crawler.volumes]
         update.message.reply_text(
-            'Do you want to generate a single file or split the books into volumes?',
-            reply_markup=ReplyKeyboardMarkup(buttons),
+            'I got these volumes: ' + ', '.join(buttons) +
+            '\nEnter which one these volumes you want to download separated space or commas.'
         )
-        return 'handle_pack_by_volume'
+        return 'handle_volume_selection'
     # end def
 
     def handle_volume_selection(self, bot, update, user_data):
         app = user_data.get('app')
 
-        print(update.message.text)
-        selected = []
+        text = update.message.text
+        selected = re.findall(r'\d+', text)
+        update.message.reply_text(
+            'Got the volumes: ' + ', '.join(selected),
+        )
+
+        selected = [int(x) for x in selected]
         app.chapters = [
             chap for chap in app.crawler.chapters
             if selected.count(chap['volume']) > 0
         ]
-        return self.range_selection_done(update)
+        return self.range_selection_done(bot, update, user_data)
     # end def
 
     # def handle_range_chapter(self, bot, update, user_data):
     #     app = user_data.get('app')
     #     user = update.message.from_user
+    #     return self.range_selection_done(bot, update, user_data)
     # # end def
 
     def handle_pack_by_volume(self, bot, update, user_data):
         app = user_data.get('app')
 
         if user_data.get('running'):
-            return
+            return self.display_progress(bot, update, user_data)
         # end if
 
         user_data['running'] = True
