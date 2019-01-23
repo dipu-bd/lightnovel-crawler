@@ -14,7 +14,8 @@ logger = logging.getLogger('WUXIA_WORLD')
 
 class WuxiaComCrawler(Crawler):
     def initialize(self):
-        self.home_url = 'https://www.wuxiaworld.com/'
+        #delete '/' at the end of url because it cause failure when scrap chapter url
+        self.home_url = 'https://www.wuxiaworld.com'
     # end def
 
     def read_novel_info(self):
