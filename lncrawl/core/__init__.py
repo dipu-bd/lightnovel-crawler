@@ -94,7 +94,8 @@ def start_app():
 
     epilog()
 
-    if Icons.isWindows:
+    args = get_args()
+    if Icons.isWindows and not args.suppress:
         input('Press ENTER to exit...')
     # end if
 # end def
