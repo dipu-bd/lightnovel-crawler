@@ -114,8 +114,7 @@ class TelegramBot(BotInterface):
 
     def destroy_app(self, bot, update, user_data):
         if user_data.get('app'):
-          #change destroy to pop to make it work
-            user_data.pop('app')
+            user_data.pop('app').destroy()
         # end if
         update.message.reply_text(
             'Session closed',
