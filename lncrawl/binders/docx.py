@@ -42,7 +42,7 @@ def build_paragraph(paragraph, elem):
             run = paragraph.add_run(tag.text)
             run.font.outline = True
         else:
-            paragraph.add_run(tag.text)
+            run = paragraph.add_run(tag.text)
         # end if
         run.font.name = 'Book Antiqua'
         paragraph.add_run(' ')
