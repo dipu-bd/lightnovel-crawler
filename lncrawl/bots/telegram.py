@@ -454,7 +454,8 @@ class TelegramBot(BotInterface):
         job = user_data.get('job')
 
         if not job:
-            return self.destroy_app(bot, update, user_data)
+            self.destroy_app(bot, update, user_data)
+            return self.init_app(bot, update, user_data)
         # end if
 
         update.message.reply_text(
