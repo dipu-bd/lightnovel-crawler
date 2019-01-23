@@ -17,7 +17,7 @@ from ..utils.bot_interface import BotInterface
 logger = logging.getLogger('TELEGRAM_BOT')
 
 
-class TelegramBot(BotInterface):
+class TelegramBot:
     def start(self):
         # Create the EventHandler and pass it your bot's token.
         self.updater = Updater(
@@ -97,7 +97,7 @@ class TelegramBot(BotInterface):
         # Start the Bot
         self.updater.start_polling()
 
-        logger.warn('Started Telegram bot')
+        logger.warn('Telegram bot is online!')
 
         # Run the bot until you press Ctrl-C or the process receives SIGINT,
         # SIGTERM or SIGABRT. This should be used most of the time, since

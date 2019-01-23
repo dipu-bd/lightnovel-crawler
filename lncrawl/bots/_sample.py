@@ -2,14 +2,13 @@
 # -*- coding: utf-8 -*-
 import logging
 from ..core.app import App
-from ..utils.bot_interface import BotInterface
 
 logger = logging.getLogger(__name__)
 
 # TODO: It is recommended to implemented all methods. But you can skip those
 #       Which return values by default.
 
-class SampleBot(BotInterface):
+class SampleBot:
     def start(self):
         # TODO: must be implemented
         self.app = App()

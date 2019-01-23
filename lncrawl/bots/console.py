@@ -13,13 +13,12 @@ from ..assets.icons import Icons
 from ..core.arguments import get_args
 from ..spiders import crawler_list
 from ..binders import available_formats
-from ..utils.bot_interface import BotInterface
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 logger = logging.getLogger('CONSOLE_INTERFACE')
 
 
-class ConsoleBot(BotInterface):
+class ConsoleBot:
     def start(self):
         self.app = App()
         self.app.initialize()
