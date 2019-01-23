@@ -44,8 +44,7 @@ def build_paragraph(paragraph, elem):
         else:
             run = paragraph.add_run(tag.text)
         # end if
-        #comment line below because it cause error 
-        #run.font.name = 'Book Antiqua'
+        run.font.name = 'Book Antiqua'
         paragraph.add_run(' ')
     # end for
 # end def
