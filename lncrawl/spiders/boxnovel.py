@@ -55,8 +55,8 @@ class BoxNovelCrawler(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
+            vol_id = chap_id//100 + 1
             if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
                 vol_title = 'Volume ' + str(vol_id)
                 self.volumes.append({
                     'id': vol_id,
