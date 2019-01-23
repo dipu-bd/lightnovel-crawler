@@ -182,6 +182,9 @@ class App:
     # ------------------------------------------------------------------------#
 
     def compress_output(self):
-        return shutil.make_archive(self.output_path, 'zip', self.output_path)
+        logger.info('Compressing output...')
+        compressed = shutil.make_archive(self.output_path, 'zip', self.output_path)
+        logger.info('Compressed output to %s' % compressed)
+        return compressed
     # end def
 # end class
