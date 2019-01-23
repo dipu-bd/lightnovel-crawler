@@ -10,6 +10,7 @@ import requests
 from dotenv import load_dotenv
 from colorama import init as init_colorama, Fore
 
+from ..bots import run_bot
 from ..assets.icons import Icons
 from ..assets.version import get_value as get_version
 from .arguments import get_args, build_parser
@@ -77,13 +78,7 @@ def start_app():
 
     try:
         bot = os.getenv('BOT', '').lower()
-        if bot == 'telegram':
-            from ..bots.telegram import TelegramBot
-            TelegramBot().start()
-        else:
-            from ..bots.console import ConsoleBot
-            ConsoleBot().start()
-        # end def
+        run_bot(bot)
     except Exception as err:
         if os.getenv('debug_mode') == 'true':
             raise err
