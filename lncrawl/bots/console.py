@@ -346,16 +346,18 @@ class ConsoleBot:
         '''Returns a choice of how to select the range of chapters to downloads'''
         volume_count = len(self.app.crawler.volumes)
         chapter_count = len(self.app.crawler.chapters)
+        selections = ['all', 'last', 'first', 'page', 'range', 'volumes', 'chapters']
+
 
         args = get_args()
-        for key in self.selections:
+        for key in selections:
             if args.__getattribute__(key):
                 return key
             # end if
         # end if
 
         if args.suppress:
-            return self.selections[0]
+            return selections[0]
         # end if
 
         big_list_warn = '(warn: very big list)' if chapter_count > 50 else ''
@@ -383,7 +385,7 @@ class ConsoleBot:
             },
         ])
 
-        return self.selections[choices.index(answer['choice'])]
+        return selections[choices.index(answer['choice'])]
     # end def
 
     def get_range_using_urls(self):
