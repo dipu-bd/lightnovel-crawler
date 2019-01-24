@@ -331,8 +331,15 @@ class MessageHandler:
             text = text[len('!chapter'):].strip()
             pair = text.split(' ')
             if len(pair) == 2:
-                def resolve_chapter(str):
-                    pass
+                def resolve_chapter(name):
+                    cid = 0
+                    if name.isdigit():
+                        cid = int(str)
+                    else:
+                        cid = self.app.crawler.get_chapter_index_of(name)
+                    # end if
+                    return cid - 1
+                # end def                   
                 first = resolve_chapter(pair[0])
                 second = resolve_chapter(pair[1])
                 if first > second:
