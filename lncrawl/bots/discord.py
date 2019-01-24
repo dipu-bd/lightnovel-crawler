@@ -409,9 +409,10 @@ class MessageHandler:
                 file_size /= 1024.0
             # end while
 
-            await self.send(
-                'Uploading file...%d%s' % (int(file_size), ['B', 'KB', 'MB', 'GB'][k])
-            )
+            await self.send('Uploading file... %d%s' % (
+                int(file_size * 100) / 100.0,
+                ['B', 'KB', 'MB', 'GB'][k]
+            ))
             await self.client.send_file(
                 self.user,
                 open(self.app.archived_output, 'rb'),
