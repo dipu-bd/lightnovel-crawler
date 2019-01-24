@@ -161,14 +161,13 @@ class MessageHandler:
         # end if
 
         selected = []
-        size = len(self.app.crawler_links)
         if text == '!all':
             selected = self.app.crawler_links
         else:
             for i, url in enumerate(self.app.crawler_links):
                 if str(i + 1) == text:
                     selected.append(url)
-                elif text.isdigit():
+                elif text.isdigit() or len(text) < 3:
                     pass
                 elif url.find(text) != -1:
                     selected.append(url)
@@ -232,7 +231,7 @@ class MessageHandler:
         for i, (title, url) in enumerate(self.app.search_results):
             if str(i + 1) == text:
                 selected.append(url)
-            elif text.isdigit():
+            elif text.isdigit() or len(text) < 3:
                 pass
             elif title.find(text) != -1:
                 selected.append(url)
@@ -369,24 +368,32 @@ class MessageHandler:
         )
 
         self.status = []
-        self.executors.submit(self.start_download)
-        self.state = self.report_download_progress
+        await self.start_download()
     # end def
 
-    def start_download(self):
+    async def start_download(self):
         self.app.pack_by_volume = False
 
-        self.status.append('Downloading chapters...')
+        await self.send('Downloading **%s**' % self.app.crawler.novel_title)
         self.app.start_download()
-        self.status[-1] = 'All chapters are downloaded.'
+        await self.send('All chapters are downloaded.')
 
-        self.status.append('Binding books...')
+        await self.send('Binding books...')
         self.app.bind_books()
-        self.status[-1] = 'Book binding completed.'
+        await self.send('Book binding completed.')
 
-        self.status.append('Compressing output folder...')
+        await self.send('Compressing output folder...')
         self.app.compress_output()
-        self.status[-1] = 'Compressed output folder.'
+        await self.send('Compressed output folder.')
+        
+        await self.send('Uploading file...')
+        await self.client.send_file(
+            self.user,
+            open(self.app.archived_output, 'rb'),
+            filename=os.path.basename(self.app.archived_output),
+            content='Here you go!'
+        )
+        self.destroy()
     # end def
 
     async def report_download_progress(self):
