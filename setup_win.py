@@ -15,7 +15,8 @@ def setup_command():
     cur_dir = '/'.join(dir_name.split(os.sep))
 
     command = 'pyinstaller -y '
-    command += '-F '  # onefile
+    command += '-F ' # onefile
+    command += '-n "lncrawl" '
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
 
     for k, paths in package_data.items():
@@ -29,6 +30,9 @@ def setup_command():
     # end for
 
     command += '"%s/__main__.py" ' % cur_dir
+
+    print(command)
+    print()
 
     extra = ['--distpath', os.path.join(dir_name, 'dist')]
     extra += ['--workpath', os.path.join(output, 'build')]
