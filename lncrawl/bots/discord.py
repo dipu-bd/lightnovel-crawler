@@ -393,13 +393,33 @@ class MessageHandler:
         self.app.compress_output()
         await self.send('Compressed output folder.')
         
-        await self.send('Uploading file...')
-        await self.client.send_file(
-            self.user,
-            open(self.app.archived_output, 'rb'),
-            filename=os.path.basename(self.app.archived_output),
-            content='Here you go!'
-        )
+        file_size = os.stat(self.app.archived_output).st_size
+        if file_size > 7.99 * 1024 * 1024:
+            await self.send(
+                'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
+                'Can not upload your file.\n',
+                'I am trying my best to come up with an alternative.\n'
+                'It will be available in near future.\n'
+                'Sorry for the inconvenience.'
+            )
+        else:
+            k = 0
+            while(file_size > 1024 and k < 3):
+                k += 1
+                file_size /= 1024.0
+            # end while
+
+            await self.send(
+                'Uploading file...%d%s' % (int(file_size), ['B', 'KB', 'MB', 'GB'][k])
+            )
+            await self.client.send_file(
+                self.user,
+                open(self.app.archived_output, 'rb'),
+                filename=os.path.basename(self.app.archived_output),
+                content='Here you go!'
+            )
+        # end if
+
         self.destroy()
     # end def
 
