@@ -299,17 +299,17 @@ class ConsoleBot:
         args = get_args()
 
         formats = args.output_formats
-        if not (formats or args.suppress):
-            answer = prompt([
-                {
-                    'type': 'checkbox',
-                    'name': 'formats',
-                    'message': 'Which output formats to create?',
-                    'choices': [{'name': x} for x in available_formats],
-                },
-            ])
-            formats = answer['formats']
-        # end if
+        # if not (formats or args.suppress):
+        #     answer = prompt([
+        #         {
+        #             'type': 'checkbox',
+        #             'name': 'formats',
+        #             'message': 'Which output formats to create?',
+        #             'choices': [{'name': x} for x in available_formats],
+        #         },
+        #     ])
+        #     formats = answer['formats']
+        # # end if
 
         if not formats or len(formats) == 0:
             formats = available_formats
