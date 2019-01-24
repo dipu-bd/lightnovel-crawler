@@ -25,7 +25,9 @@ def setup_command():
             src = os.path.normpath('/'.join([cur_dir, k, v]))
             src = '/'.join(src.split(os.sep))
             dst = os.path.normpath('/'.join([k, v]))
+            dst = os.path.dirname(dst)
             dst = '/'.join(dst.split(os.sep))
+            dst = (dst + '/') if dst else '.'
             command += '--add-data "%s";"%s" ' % (src, dst)
         # end for
     # end for
