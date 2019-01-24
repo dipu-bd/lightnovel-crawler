@@ -79,7 +79,7 @@ class MessageHandler:
         self.executors = ThreadPoolExecutor(1)
     # end def
 
-    def destory(self):
+    def destroy(self):
         self.client.handlers.pop(self.user.id)
         self.executors.shutdown()
         self.app.destroy()
