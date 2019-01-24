@@ -68,12 +68,6 @@ class DiscordBot(discord.Client):
         # end if
         return self.handlers.get(uid)
     # end def
-
-    def destroy_handler(self, uid):
-        if self.handlers.get(uid):
-            self.handlers.pop(uid)
-        # end if
-    # end def
 # end def
 
 
@@ -86,7 +80,8 @@ class MessageHandler:
     # end def
 
     def destory(self):
-        self.client.destroy_handler()
+        self.client.handlers.pop(self.user.id)
+        self.executors.shutdown()
         self.app.destroy()
     # end def
 
@@ -391,9 +386,7 @@ class MessageHandler:
         text = self.message.content.strip()
 
         if text == '!cancel':
-            self.executors.shutdown()
-            self.client.destroy()
-            return
+            return self.destroy()
         # end if
 
         if self.app.archived_output:
@@ -405,7 +398,7 @@ class MessageHandler:
                 filename=os.path.basename(self.app.archived_output),
                 content='Here you go!'
             )
-            self.client.destroy()
+            return self.destroy()
         # end if
 
         await self.send('\n'.join([
@@ -418,6 +411,13 @@ class MessageHandler:
     # end def
 
     async def wait_till_upload(self):
+        text = self.message.content.strip()
+
+        if text == '!cancel':
+            self.executors.shutdown()
+            return self.destroy()
+        # end if
+
         await self.send('Uploading your file. Please wait.\n' +
                   'Send `!cancel` to stop downloading')
     # end def
