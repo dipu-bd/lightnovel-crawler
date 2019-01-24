@@ -1,8 +1,8 @@
 VERSION=$(head -n 1 VERSION)
 
-git clean -xfd
+rm -r build dist *.egg-info
 
-export build_assets=true
-python setup.py bdist_wheel sdist
+python3 setup.py bdist_wheel sdist
+python3 setup_win.py
 
 twine upload "dist/lightnovel_crawler-$VERSION-py3-none-any.whl"
