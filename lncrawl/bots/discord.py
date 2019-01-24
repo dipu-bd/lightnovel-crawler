@@ -71,7 +71,7 @@ class DiscordBot(discord.Client):
 
     def destroy_handler(self, uid):
         if self.handlers.get(uid):
-            self.handlers.pop(uid).destroy()
+            self.handlers.pop(uid)
         # end if
     # end def
 # end def
@@ -393,7 +393,7 @@ class MessageHandler:
 
         if text == '!cancel':
             self.executors.shutdown(False)
-            self.client.destroy_handler(self.user.id)
+            self.client.destroy()
             return
         # end if
 
@@ -406,7 +406,7 @@ class MessageHandler:
                 filename=os.path.basename(self.app.archived_output),
                 content='Here you go!'
             )
-            self.client.destroy_handler(self.user.id)
+            self.client.destroy()
         # end if
 
         await self.send('\n'.join([
