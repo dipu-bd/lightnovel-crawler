@@ -78,12 +78,11 @@ class DiscordBot(discord.Client):
 
 
 class MessageHandler:
-    executors = ThreadPoolExecutor(1)
-
     def __init__(self, client):
         self.app = App()
         self.client = client
         self.state = None
+        self.executors = ThreadPoolExecutor(1)
     # end def
 
     def destory(self):
@@ -392,7 +391,7 @@ class MessageHandler:
         text = self.message.content.strip()
 
         if text == '!cancel':
-            self.executors.shutdown(False)
+            self.executors.shutdown()
             self.client.destroy()
             return
         # end if
@@ -419,7 +418,7 @@ class MessageHandler:
     # end def
 
     async def wait_till_upload(self):
-        self.send('Uploading your file. Please wait.\n' +
+        await self.send('Uploading your file. Please wait.\n' +
                   'Send `!cancel` to stop downloading')
     # end def
 # end class
