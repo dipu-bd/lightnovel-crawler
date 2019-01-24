@@ -367,16 +367,23 @@ class MessageHandler:
             'Send anthing to view status, or `!cancel` to cancel it'
         )
 
-        self.status = []
+        self.state = self.report_download_progress
         await self.start_download()
     # end def
 
     async def start_download(self):
         self.app.pack_by_volume = False
 
-        await self.send('Downloading **%s**' % self.app.crawler.novel_title)
+        await self.send('\n'.join([
+            'Downloading **%s**' % self.app.crawler.novel_title,
+            'I will not respond untill I am done.
+            'So sit tight and wait patiently.'
+        ]))
         self.app.start_download()
-        await self.send('All chapters are downloaded.')
+        await self.send(
+            '%d out of %d chapters has been downloaded.'
+            % (self.app.progress, len(self.app.chapters))
+        )
 
         await self.send('Binding books...')
         self.app.bind_books()
@@ -403,36 +410,6 @@ class MessageHandler:
             return self.destroy()
         # end if
 
-        if self.app.archived_output:
-            self.state = self.wait_till_upload
-            await self.send('Uploading file...')
-            await self.client.send_file(
-                self.user,
-                open(self.app.archived_output, 'rb'),
-                filename=os.path.basename(self.app.archived_output),
-                content='Here you go!'
-            )
-            return self.destroy()
-        # end if
-
-        await self.send('\n'.join([
-            'Downloading **%s**' % self.app.crawler.novel_title,
-            '%d out of %d chapters has been downloaded.' % (
-                self.app.progress, len(self.app.chapters)),
-            '\n'.join(self.status) + '\n',
-            'Send `!cancel` to stop downloading'
-        ]))
-    # end def
-
-    async def wait_till_upload(self):
-        text = self.message.content.strip()
-
-        if text == '!cancel':
-            self.executors.shutdown()
-            return self.destroy()
-        # end if
-
-        await self.send('Uploading your file. Please wait.\n' +
-                  'Send `!cancel` to stop downloading')
+        await self.send('Send `!cancel` to stop')
     # end def
 # end class
