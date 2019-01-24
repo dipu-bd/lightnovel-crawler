@@ -15,6 +15,7 @@ def setup_command():
     cur_dir = '/'.join(dir_name.split(os.sep))
 
     command = 'pyinstaller -y '
+    command += '--clean '
     command += '-F ' # onefile
     command += '-n "lncrawl" '
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
