@@ -376,8 +376,8 @@ class MessageHandler:
 
         await self.send('\n'.join([
             'Downloading **%s**' % self.app.crawler.novel_title,
-            'I will not respond untill I am done.
-            'So sit tight and wait patiently.'
+            'I will not respond untill I am done.',
+            'So sit tight and wait patiently.',
         ]))
         self.app.start_download()
         await self.send(
