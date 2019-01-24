@@ -1,8 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from .core import start_app
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except:
+    pass
+# end try
 
 def main():
+    from .core import start_app
     start_app()
 # end def
 

@@ -7,7 +7,6 @@ import os
 import logging
 
 import requests
-from dotenv import load_dotenv
 from colorama import init as init_colorama, Fore
 
 from ..bots import run_bot
@@ -37,7 +36,6 @@ def check_updates():
 
 
 def init():
-    load_dotenv()
     os.environ['version'] = get_version()
 
     init_colorama()
