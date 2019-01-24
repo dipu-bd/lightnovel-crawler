@@ -4,7 +4,9 @@ _here = path.abspath(path.dirname(__file__))
 
 package_name = 'lightnovel-crawler'
 
-short_description = 'Crawls light novels and make html, text, epub and mobi'
+short_description = 'Crawls light novels and make html, text, epub, mobi, pdf and docx'
+
+package_keywords = 'lightnovel crawler lncrawl ebook kindle download novel'
 
 # Get the long description from the README file
 with open(path.join(_here, 'README.pip'), encoding='utf-8') as f:

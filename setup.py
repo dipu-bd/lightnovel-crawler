@@ -23,7 +23,7 @@ setup(
     url='https://github.com/dipu-bd/lightnovel-crawler',
     author='Sudipto Chandra',
     author_email='dipu.sudipta@gmail.com',
-    keywords='lightnovel ebook epub mobi kindle crawl convert',
+    keywords=package_keywords,
     packages=find_packages(exclude=[
         'contrib',
         'docs',
