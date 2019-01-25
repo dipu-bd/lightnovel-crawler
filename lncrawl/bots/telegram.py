@@ -400,10 +400,10 @@ class TelegramBot:
 
         if app.pack_by_volume:
             update.message.reply_text(
-                'I will generate single output files whenever possible')
+                'I will split output files into volumes')
         else:
             update.message.reply_text(
-                'I will split output files into volumes')
+                'I will generate single output files whenever possible')
         # end if
 
         job = job_queue.run_once(
