@@ -13,3 +13,4 @@ env
 Lightnovels/
 windows/
 .telegram_bot_output/
+.discord_bot_output/

@@ -1,4 +1,2 @@
-python-dotenv==0.10.1
 python-telegram-bot==11.1
-PyDrive==1.2.1
 discord.py==0.16.12

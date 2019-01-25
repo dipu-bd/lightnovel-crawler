@@ -19,9 +19,13 @@ Crawls light novels and make html, text, epub and mobi
 
 ### Easy download
 
-📦 [lightnovel-crawler v2.6.6 for windows ~ 11MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.7.2 for windows ~ 14.3MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
+
+### Discord Bot
+
+Visit this link to install discord bot to your server: https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
 
 ### Installation
 

@@ -24,33 +24,44 @@ available_formats = [
 ]
 
 
+def process(fn, app, inp, fmt):
+    try:
+        return fn(app, inp)
+    except Exception as ex:
+        logger.debug(ex)
+        logger.warn('Failed to generate *.%s files' % fmt)
+        return None
+    # end try
+# end def
+
+
 def bind_books(app, data):
     fmts = app.output_formats
     if not fmts:
-        fmts = { x: True for x in available_formats }
+        fmts = {x: True for x in available_formats}
     # end if
 
     if fmts['text']:
-        make_texts(app, data)
+        process(make_texts, app, data, 'text')
     # end if
 
     if fmts['html']:
-        make_htmls(app, data)
+        process(make_htmls, app, data, 'html')
     # end if
 
     if fmts['mobi'] or fmts['epub']:
-        epubs = make_epubs(app, data)
+        epubs = process(make_epubs, app, data, 'epub')
 
         if fmts['mobi']:
-            make_mobis(app, epubs)
+            process(make_mobis, app, epubs, 'mobi')
         # end if
     # end if
 
     if fmts['pdf']:
-        make_pdfs(app, data)
+        process(make_pdfs, app, data, 'pdf')
     # end if
 
     if fmts['docx']:
-        make_docx(app, data)
+        process(make_docx, app, data, 'docx')
     # end if
 # end def

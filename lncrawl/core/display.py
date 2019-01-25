@@ -8,8 +8,15 @@ from colorama import Back, Fore, Style
 from ..assets.icons import Icons
 from ..spiders import crawler_list
 
-LINE_SIZE, _ = os.get_terminal_size()
-LINE_SIZE = 80 if LINE_SIZE > 80 else LINE_SIZE
+LINE_SIZE = 80
+try:
+    row, _ = os.get_terminal_size()
+    if row < LINE_SIZE:
+        LINE_SIZE = row
+    # end if
+except:
+    pass
+# end try
 
 
 def description():
