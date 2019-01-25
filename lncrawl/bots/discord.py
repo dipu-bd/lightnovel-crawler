@@ -10,6 +10,7 @@ import discord
 
 from ..core.app import App
 from ..spiders import crawler_list
+from ..utils.uploader import upload
 
 logger = logging.getLogger('DISCORD_BOT')
 
@@ -392,6 +393,10 @@ class MessageHandler:
         await self.send('Compressing output folder...')
         self.app.compress_output()
         await self.send('Compressed output folder.')
+
+        link_id = upload(self.app.archived_output)
+
+        await self.send('https://drive.google.com/open?id=%s' % link_id)
         
         file_size = os.stat(self.app.archived_output).st_size
         if file_size > 7.99 * 1024 * 1024:
