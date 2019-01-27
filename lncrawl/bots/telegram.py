@@ -449,8 +449,9 @@ class TelegramBot:
         # end if
 
         link_id = upload(app.archived_output)
-
-        update.message.reply_text('https://drive.google.com/open?id=%s' % link_id)
+        if link_id:
+            update.message.reply_text('https://drive.google.com/open?id=%s' % link_id)
+        # end if
 
         update.message.reply_document(
             open(app.archived_output, 'rb'),
