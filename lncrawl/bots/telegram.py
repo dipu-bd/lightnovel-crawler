@@ -76,16 +76,12 @@ class TelegramBot:
                     MessageHandler(
                         Filters.text, self.handle_pack_by_volume, pass_job_queue=True, pass_user_data=True),
                 ],
-                'handle_downloader': [
-                    MessageHandler(
-                        Filters.text, self.handle_downloader, pass_user_data=True),
-                ]
             },
         )
         dp.add_handler(conv_handler)
 
         # Fallback helper
-        dp.add_handler(MessageHandler(Filters.text, self.show_help))
+        dp.add_handler(MessageHandler(Filters.text, self.handle_downloader, pass_user_data=True))
 
         # Log all errors
         dp.add_error_handler(self.error_handler)
@@ -123,8 +119,6 @@ class TelegramBot:
             # remove output path
             shutil.rmtree(app.output_path, ignore_errors=True)
         # end if
-        user_data = {}
-        #print(user_data.get('app').crawler)
         update.message.reply_text(
             'Session closed',
             reply_markup=ReplyKeyboardRemove()
@@ -133,14 +127,14 @@ class TelegramBot:
     # end def
 
     def init_app(self, bot, update, user_data):
-        if not user_data.get('app'):
-            app = App()
-            app.initialize()
-            user_data['app'] = app
-            update.message.reply_text('A new session is created.')
-        else:
-            update.message.reply_text('Using an ongoing session.')
-        # end if
+        if user_data.get('app'):
+            self.destroy_app(bot, update, user_data)
+        # end def
+
+        app = App()
+        app.initialize()
+        user_data['app'] = app
+        update.message.reply_text('A new session is created.')
 
         update.message.reply_text(
             'I recognize input of these two categories:\n'
@@ -419,7 +413,7 @@ class TelegramBot:
         )
         # end if
 
-        return 'handle_downloader'
+        return ConversationHandler.END
     # end def
 
     def process_request(self, bot, job):
@@ -459,7 +453,7 @@ class TelegramBot:
         update.message.reply_text(
             'This file will be available for 24 hours to download')
 
-        return self.destroy_app(bot, update, user_data)
+        self.destroy_app(bot, update, user_data)
     # end def
 
     def handle_downloader(self, bot, update, user_data):
@@ -467,15 +461,16 @@ class TelegramBot:
         job = user_data.get('job')
 
         if not job:
-            self.destroy_app(bot, update, user_data)
-            return self.init_app(bot, update, user_data)
+            self.show_help(bot, update)
+        else:
+            update.message.reply_text(
+                '%s\n'
+                '%d out of %d chapters has been downloaded.\n'
+                'To terminate this session send /cancel.'
+                % (user_data.get('status'), app.progress, len(app.chapters))
+            )
         # end if
 
-        update.message.reply_text(
-            '%s\n'
-            '%d out of %d chapters has been downloaded.\n'
-            'To terminate this session send /cancel.'
-            % (user_data.get('status'), app.progress, len(app.chapters))
-        )
+        return ConversationHandler.END
     # end def
 # end class
