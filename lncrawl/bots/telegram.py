@@ -80,10 +80,6 @@ class TelegramBot:
                     MessageHandler(
                         Filters.text, self.handle_downloader, pass_user_data=True),
                 ]
-
-                # 'process_chapter_range': [MessageHandler(Filters.text, self.process_chapter_range)],
-                # 'get_output_formats': [MessageHandler(Filters.text, self.get_output_formats)],
-                # 'should_pack_by_volume': [MessageHandler(Filters.text, self.should_pack_by_volume)],
             },
         )
         dp.add_handler(conv_handler)
@@ -236,7 +232,7 @@ class TelegramBot:
         if len(app.search_results) < 2:
             return self.initialize_crawler(bot, update, user_data)
         else:
-            buttons = [[x] for x in app.search_results]
+            buttons = [[title] for title, url in app.search_results]
             update.message.reply_text(
                 'Choose your novel, or send /skip to choose the first one',
                 reply_markup=ReplyKeyboardMarkup(
@@ -472,7 +468,7 @@ class TelegramBot:
 
         if not job:
             self.destroy_app(bot, update, user_data)
-            return self.init_app(self, bot, update, user_data)
+            return self.init_app(bot, update, user_data)
         # end if
 
         update.message.reply_text(
