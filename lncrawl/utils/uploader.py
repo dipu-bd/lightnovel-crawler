@@ -2,12 +2,16 @@
 # -*- coding: utf-8 -*-
 """Uploader for google drive"""
 import os
+import logging
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
+logger = logging.getLogger('UPLOADER')
+
+
 def upload(file_path):
     gauth = GoogleAuth()
-    #gauth.LocalWebserverAuth()
+    # gauth.LocalWebserverAuth()
 
     # Try to load saved client credentials
     gauth.LoadCredentialsFile("mycreds.txt")
@@ -20,19 +24,25 @@ def upload(file_path):
     else:
         # Initialize the saved creds
         gauth.Authorize()
+    # end if
+
     # Save the current credentials to a file
     gauth.SaveCredentialsFile("mycreds.txt")
 
     drive = GoogleDrive(gauth)
     folder_id = '118iN1jzavVV-9flrLPZo7DOi0cuxrQ5F'
-    filename_w_ext=os.path.basename(file_path)
-    filename, file_extension=os.path.splitext(filename_w_ext)
-    #upload file to folder
-    f = drive.CreateFile({"parents": [{"kind": "drive#fileLink", "id": folder_id}]})
+    filename_w_ext = os.path.basename(file_path)
+    filename, file_extension = os.path.splitext(filename_w_ext)
+
+    # Upload file to folder
+    f = drive.CreateFile(
+        {"parents": [{"kind": "drive#fileLink", "id": folder_id}]})
     f['title'] = filename_w_ext
+
     # Make sure to add the path to the file to upload below.
     f.SetContentFile(file_path)
     f.Upload()
-    print(f['id'])
+
+    logger.info(f['id'])
     return f['id']
-#end def
+# end def
