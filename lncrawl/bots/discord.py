@@ -393,20 +393,21 @@ class MessageHandler:
         await self.send('Compressing output folder...')
         self.app.compress_output()
         await self.send('Compressed output folder.')
-
-        link_id = upload(self.app.archived_output)
-
-        await self.send('https://drive.google.com/open?id=%s' % link_id)
         
         file_size = os.stat(self.app.archived_output).st_size
         if file_size > 7.99 * 1024 * 1024:
-            await self.send(
-                'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
-                'Can not upload your file.\n',
-                'I am trying my best to come up with an alternative.\n'
-                'It will be available in near future.\n'
-                'Sorry for the inconvenience.'
-            )
+            link_id = upload(self.app.archived_output)
+            if link_id:
+                await self.send('https://drive.google.com/open?id=%s' % link_id)
+            else:
+                await self.send(
+                    'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
+                    'Can not upload your file.\n',
+                    'I am trying my best to come up with an alternative.\n'
+                    'It will be available in near future.\n'
+                    'Sorry for the inconvenience.'
+                )
+            # end if
         else:
             k = 0
             while(file_size > 1024 and k < 3):
