@@ -82,8 +82,8 @@ class MessageHandler:
 
     def destroy(self):
         self.client.handlers.pop(self.user.id)
-        self.executors.shutdown()
         self.app.destroy()
+        self.executors.shutdown()
         shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
 
@@ -158,7 +158,7 @@ class MessageHandler:
     async def handle_crawlers_to_search(self):
         text = self.message.content.strip()
         if text == '!cancel':
-            self.state = self.get_novel_url
+            await self.get_novel_url()
             return
         # end if
 
@@ -225,7 +225,7 @@ class MessageHandler:
     async def handle_search_result(self):
         text = self.message.content.strip()
         if text == '!cancel':
-            self.state = self.get_novel_url
+            await self.get_novel_url()
             return
         # end if
 
@@ -435,7 +435,9 @@ class MessageHandler:
         text = self.message.content.strip()
 
         if text == '!cancel':
-            return self.destroy()
+            await self.send('Closing the session')
+            self.destroy()
+            await self.send('Session is now closed. Type *anything* to create a new one.')
         # end if
 
         await self.send('Send `!cancel` to stop')
