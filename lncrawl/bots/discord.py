@@ -84,6 +84,7 @@ class MessageHandler:
         self.client.handlers.pop(self.user.id)
         self.executors.shutdown()
         self.app.destroy()
+        shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
 
     @asyncio.coroutine

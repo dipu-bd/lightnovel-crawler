@@ -122,7 +122,10 @@ class TelegramBot:
             user_data.pop('job').schedule_removal()
         # end if
         if user_data.get('app'):
-            user_data.pop('app').destroy()
+            app = user_data.pop('app')
+            app.destroy()
+            # remove output path
+            shutil.rmtree(app.output_path, ignore_errors=True)
         # end if
         user_data = {}
         #print(user_data.get('app').crawler)
