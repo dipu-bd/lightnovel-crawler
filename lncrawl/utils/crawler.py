@@ -16,13 +16,9 @@ logger = logging.getLogger(__name__)
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
-    _destroyed = False
-
     home_url = ''
     novel_url = ''
     last_visited_url = None
-    scrapper = cfscrape.create_scraper()
-    executor = futures.ThreadPoolExecutor(max_workers=5)
 
     '''Must resolve these fields inside `read_novel_info`'''
     novel_title = 'N/A'
@@ -36,6 +32,10 @@ class Crawler:
     '''
     volumes = []
 
+    scrapper = None
+    executor = None
+    _destroyed = False
+
     '''
     Each item must contain these keys:
     `id` - 1 based index of the chapter
@@ -47,11 +47,15 @@ class Crawler:
     chapters = []
 
     def __init__(self):
+        self.executor = futures.ThreadPoolExecutor(max_workers=5)
+        self.scrapper = cfscrape.create_scraper()
         self.scrapper.verify = False
     # end def
 
     def destroy(self):
         self._destroyed = True
+        self.volumes.clear()
+        self.chapters.clear()
         self.scrapper.close()
         self.executor.shutdown(False)
     # end def

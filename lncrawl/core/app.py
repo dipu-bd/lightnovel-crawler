@@ -38,6 +38,7 @@ class App:
         if self.crawler:
             self.crawler.destroy()
         # end if
+        self.chapters.clear()
         logger.info('Destroyed App')
     # end def
 

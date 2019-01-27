@@ -37,8 +37,7 @@ class TelegramBot:
                 CommandHandler('start', self.init_app, pass_user_data=True),
             ],
             fallbacks=[
-                CommandHandler('cancel', self.destroy_app,
-                               pass_user_data=True),
+                CommandHandler('cancel', self.destroy_app, pass_user_data=True),
             ],
             states={
                 'handle_novel_url': [
@@ -460,15 +459,15 @@ class TelegramBot:
         app = user_data.get('app')
         job = user_data.get('job')
 
-        if not job:
-            self.show_help(bot, update)
-        else:
+        if app or job:
             update.message.reply_text(
                 '%s\n'
                 '%d out of %d chapters has been downloaded.\n'
                 'To terminate this session send /cancel.'
                 % (user_data.get('status'), app.progress, len(app.chapters))
             )
+        else:
+            self.show_help(bot, update)
         # end if
 
         return ConversationHandler.END
