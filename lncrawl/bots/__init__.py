@@ -6,7 +6,7 @@ def run_bot(bot):
     if bot == 'telegram':
         from ..bots.telegram import TelegramBot
         TelegramBot().start()
-    if bot == 'discord':
+    elif bot == 'discord':
         from ..bots.discord import DiscordBot
         DiscordBot().start_bot()
     else:
