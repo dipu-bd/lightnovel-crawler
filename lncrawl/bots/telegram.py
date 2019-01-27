@@ -463,7 +463,7 @@ class TelegramBot:
         update.message.reply_text(
             'This file will be available for 24 hours to download')
 
-        self.destroy_app(bot, update, user_data)
+        return self.destroy_app(bot, update, user_data)
     # end def
 
     def handle_downloader(self, bot, update, user_data):
@@ -471,7 +471,8 @@ class TelegramBot:
         job = user_data.get('job')
 
         if not job:
-            return self.destroy_app(bot, update, user_data)
+            self.destroy_app(bot, update, user_data)
+            return self.init_app(self, bot, update, user_data)
         # end if
 
         update.message.reply_text(
