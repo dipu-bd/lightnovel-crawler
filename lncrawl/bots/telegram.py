@@ -12,6 +12,7 @@ from telegram.ext import (CommandHandler, ConversationHandler, Filters, Handler,
 
 from ..core.app import App
 from ..spiders import crawler_list
+from ..utils.uploader import upload
 
 logger = logging.getLogger('TELEGRAM_BOT')
 
@@ -123,6 +124,8 @@ class TelegramBot:
         if user_data.get('app'):
             user_data.pop('app').destroy()
         # end if
+        user_data = {}
+        #print(user_data.get('app').crawler)
         update.message.reply_text(
             'Session closed',
             reply_markup=ReplyKeyboardRemove()
@@ -397,10 +400,10 @@ class TelegramBot:
 
         if app.pack_by_volume:
             update.message.reply_text(
-                'I will generate single output files whenever possible')
+                'I will split output files into volumes')
         else:
             update.message.reply_text(
-                'I will split output files into volumes')
+                'I will generate single output files whenever possible')
         # end if
 
         job = job_queue.run_once(
@@ -444,6 +447,10 @@ class TelegramBot:
             update.message.reply_text(user_data.get('status'))
             app.compress_output()
         # end if
+
+        link_id = upload(app.archived_output)
+
+        update.message.reply_text('https://drive.google.com/open?id=%s' % link_id)
 
         update.message.reply_document(
             open(app.archived_output, 'rb'),
