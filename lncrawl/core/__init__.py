@@ -47,7 +47,7 @@ def init():
     levels = ['NOTSET', 'WARN', 'INFO', 'DEBUG']
     level = os.getenv('LOG_LEVEL')
     if not level:
-        level = levels[args.log]
+        level = levels[args.log] if args.log else 'NOTSET'
     # end if
     if level != 'NOTSET':
         os.environ['debug_mode'] = 'yes'
