@@ -36,7 +36,8 @@ class BoxNovelCrawler(Crawler):
         response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.text, 'lxml')
 
-        self.novel_title = soup.select_one('head title').text.strip()
+        #self.novel_title = soup.select_one('head title').text.strip()
+        self.novel_title = soup.find("div", {"class": "post-title"}).select_one('h3').text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
