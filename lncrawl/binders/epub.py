@@ -68,11 +68,12 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Save epub file
     epub_path = os.path.join(app.output_path, 'epub')
-    file_path = os.path.join(epub_path, book_title + '.epub')
+    file_name = (app.good_file_name + ' ' + volume).strip()
+    file_path = os.path.join(epub_path, file_name + '.epub')
     logger.debug('Writing %s', file_path)
     os.makedirs(epub_path, exist_ok=True)
     epub.write_epub(file_path, book, {})
-    logger.warn('Created: %s.epub', book_title)
+    logger.warn('Created: %s.epub', file_name)
     return file_path
 # end def
 

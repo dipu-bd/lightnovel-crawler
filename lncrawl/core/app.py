@@ -28,6 +28,7 @@ class App:
     book_cover = None
     output_formats = None
     archived_output = None
+    good_file_name = None
 
     # ----------------------------------------------------------------------- #
 
@@ -142,14 +143,14 @@ class App:
         format_volumes(self.crawler)
         format_chapters(self.crawler)
 
-        good_name = slugify(
+        self.good_file_name = slugify(
             self.crawler.novel_title,
             max_length=50,
             separator= ' ',
             lowercase=False,
             word_boundary=True,
         )
-        self.output_path = os.path.join('Lightnovels', good_name)
+        self.output_path = os.path.join('Lightnovels', self.good_file_name)
     # end def
 
     # ------------------------------------------------------------------------#
