@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import logging
+from slugify import slugify
 
 from ..spiders import crawler_list
 from ..binders import bind_books
@@ -141,7 +142,13 @@ class App:
         format_volumes(self.crawler)
         format_chapters(self.crawler)
 
-        good_name = re.sub(r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
+        good_name = slugify(
+            self.crawler.novel_title,
+            max_length=50,
+            separator= ' ',
+            lowercase=False,
+            word_boundary=True,
+        )
         self.output_path = os.path.join('Lightnovels', good_name)
     # end def
 
