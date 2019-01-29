@@ -42,10 +42,15 @@ def init():
     description()
 
     build_parser()
+    args = get_args()
 
-    level = os.getenv('LOG_LEVEL', 'NOTSET')
-    if level and level != 'NOTSET':
-        os.environ['debug_mode'] = 'True'
+    levels = ['NOTSET', 'WARN', 'INFO', 'DEBUG']
+    level = os.getenv('LOG_LEVEL')
+    if not level:
+        level = levels[args.log] if args.log else 'NOTSET'
+    # end if
+    if level != 'NOTSET':
+        os.environ['debug_mode'] = 'yes'
         logging.basicConfig(
             level=logging.getLevelName(level),
             format=Fore.CYAN + '%(asctime)s '
@@ -56,7 +61,6 @@ def init():
         debug_mode(level)
     # end if
 
-    args = get_args()
     if args.suppress:
         input_suppression()
         print(args)
@@ -78,7 +82,7 @@ def start_app():
         bot = os.getenv('BOT', '').lower()
         run_bot(bot)
     except Exception as err:
-        if os.getenv('debug_mode') == 'true':
+        if os.getenv('debug_mode') == 'yes':
             raise err
         else:
             error_message(err)

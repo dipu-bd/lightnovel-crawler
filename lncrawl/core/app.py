@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import logging
+from slugify import slugify
 
 from ..spiders import crawler_list
 from ..binders import bind_books
@@ -38,6 +39,7 @@ class App:
         if self.crawler:
             self.crawler.destroy()
         # end if
+        self.chapters.clear()
         logger.info('Destroyed App')
     # end def
 
@@ -140,7 +142,13 @@ class App:
         format_volumes(self.crawler)
         format_chapters(self.crawler)
 
-        good_name = re.sub(r'[\\/*?:"<>|\']', '', self.crawler.novel_title)
+        good_name = slugify(
+            self.crawler.novel_title,
+            max_length=50,
+            separator= ' ',
+            lowercase=False,
+            word_boundary=True,
+        )
         self.output_path = os.path.join('Lightnovels', good_name)
     # end def
 
@@ -185,6 +193,6 @@ class App:
     def compress_output(self):
         logger.info('Compressing output...')
         self.archived_output = shutil.make_archive(self.output_path, 'zip', self.output_path)
-        logger.info('Compressed output to %s' % self.archived_output)
+        logger.warn('Compressed to %s' % self.archived_output)
     # end def
 # end class

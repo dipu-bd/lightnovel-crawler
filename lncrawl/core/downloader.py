@@ -88,7 +88,7 @@ def download_chapters(app):
     bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
     bar.start()
 
-    if os.getenv('debug_mode') == 'True':
+    if os.getenv('debug_mode') == 'yes':
         bar.next = lambda: None # Hide in debug mode
     # end if
 

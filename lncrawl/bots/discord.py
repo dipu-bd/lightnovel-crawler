@@ -82,8 +82,9 @@ class MessageHandler:
 
     def destroy(self):
         self.client.handlers.pop(self.user.id)
-        self.executors.shutdown()
         self.app.destroy()
+        self.executors.shutdown()
+        shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
 
     @asyncio.coroutine
@@ -157,7 +158,7 @@ class MessageHandler:
     async def handle_crawlers_to_search(self):
         text = self.message.content.strip()
         if text == '!cancel':
-            self.state = self.get_novel_url
+            await self.get_novel_url()
             return
         # end if
 
@@ -224,7 +225,7 @@ class MessageHandler:
     async def handle_search_result(self):
         text = self.message.content.strip()
         if text == '!cancel':
-            self.state = self.get_novel_url
+            await self.get_novel_url()
             return
         # end if
 
@@ -393,20 +394,21 @@ class MessageHandler:
         await self.send('Compressing output folder...')
         self.app.compress_output()
         await self.send('Compressed output folder.')
-
-        link_id = upload(self.app.archived_output)
-
-        await self.send('https://drive.google.com/open?id=%s' % link_id)
         
         file_size = os.stat(self.app.archived_output).st_size
         if file_size > 7.99 * 1024 * 1024:
-            await self.send(
-                'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
-                'Can not upload your file.\n',
-                'I am trying my best to come up with an alternative.\n'
-                'It will be available in near future.\n'
-                'Sorry for the inconvenience.'
-            )
+            link_id = upload(self.app.archived_output)
+            if link_id:
+                await self.send('https://drive.google.com/open?id=%s' % link_id)
+            else:
+                await self.send(
+                    'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
+                    'Can not upload your file.\n',
+                    'I am trying my best to come up with an alternative.\n'
+                    'It will be available in near future.\n'
+                    'Sorry for the inconvenience.'
+                )
+            # end if
         else:
             k = 0
             while(file_size > 1024 and k < 3):
@@ -433,7 +435,9 @@ class MessageHandler:
         text = self.message.content.strip()
 
         if text == '!cancel':
-            return self.destroy()
+            await self.send('Closing the session')
+            self.destroy()
+            await self.send('Session is now closed. Type *anything* to create a new one.')
         # end if
 
         await self.send('Send `!cancel` to stop')

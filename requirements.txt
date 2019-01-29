@@ -8,3 +8,4 @@ colorama==0.4.1
 python-docx==0.8.10
 reportlab==3.4.0
 python-dotenv==0.10.1
+python-slugify==2.0.1

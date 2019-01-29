@@ -24,7 +24,7 @@ def epub_to_mobi(kindlegen, epub_file):
     logger.debug('Binding %s.epub', mobi_file)
 
     try:
-        isdebug = os.getenv('debug_mode') == 'true'
+        isdebug = os.getenv('debug_mode') == 'yes'
         with open(os.devnull, 'w') as dumper:
             logger.debug('')
             subprocess.call(
