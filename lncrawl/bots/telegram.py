@@ -12,6 +12,7 @@ from telegram.ext import (CommandHandler, ConversationHandler, Filters, Handler,
 
 from ..core.app import App
 from ..spiders import crawler_list
+from ..binders import available_formats
 from ..utils.uploader import upload
 
 logger = logging.getLogger('TELEGRAM_BOT')
@@ -404,9 +405,10 @@ class TelegramBot:
 
         update.message.reply_text(
             'In which format you want me to generate your book?',
-            reply_markup=ReplyKeyboardMarkup([
-                ['epub', 'mobi', 'pdf', 'docx', 'text', 'html', 'all']
-            ], one_time_keyboard=True),
+            reply_markup=ReplyKeyboardMarkup(
+                [['all'] + available_formats],
+                one_time_keyboard=True,
+            ),
         )
 
         return 'handle_output_format'
@@ -416,11 +418,13 @@ class TelegramBot:
         app = user_data.get('app')
         user = update.message.from_user
 
-        app.output_formats = update.message.text
-
-        update.message.reply_text(
-                'I will generate book in %s format' % app.output_formats)
-        # end if
+        text = update.message.text.strip().lower()
+        if text in available_formats:
+            app.output_formats = { text: True }
+        elif text != 'all':
+            update.message.reply_text('Sorry, I did not understand.')
+            return
+        #end if
 
         job = job_queue.run_once(
             self.process_request,
@@ -431,10 +435,10 @@ class TelegramBot:
         user_data['job'] = job
 
         update.message.reply_text(
-            'Your request has been received.',
+            'Your request has been received.'
+            'I will generate book in "%s" format' % text,
             reply_markup=ReplyKeyboardRemove()
         )
-        # end if
 
         return ConversationHandler.END
     # end def
@@ -458,41 +462,30 @@ class TelegramBot:
             update.message.reply_text('Output file generated.')
         # end if
 
-        if app.output_formats=='all':
-            app = user_data.get('app')
-            if app:
-                user_data['status'] = 'Compressing output folder.'
-                update.message.reply_text(user_data.get('status'))
-                app.compress_output()
-            # end if
-
-            link_id = upload(app.archived_output)
-            if link_id:
-                update.message.reply_text('https://drive.google.com/open?id=%s' % link_id)
-            # end if
-
-            update.message.reply_document(
-                open(app.archived_output, 'rb'),
-                timeout=24 * 3600, # 24 hours
-            )
-        else:
-            user_data['status'] = 'Uploading Output File.'
+        app = user_data.get('app')
+        if app:
+            user_data['status'] = 'Compressing output folder.'
             update.message.reply_text(user_data.get('status'))
+            app.compress_output()
+        # end if
 
-            for x in output:
-                link_id = upload(x)
-                if link_id:
-                    update.message.reply_text('The file generated can be downloaded here https://drive.google.com/open?id=%s' % link_id)
-                # end if
+
+        for archive in app.archived_outputs:
+            link_id = upload(archive)
+            if link_id:
+                update.message.reply_text(
+                    'Get your file here:'
+                    'https://drive.google.com/open?id=%s' % link_id
+                )
+            else:
                 update.message.reply_document(
-                    open(x, 'rb'),
+                    open(archive, 'rb'),
                     timeout=24 * 3600, # 24 hours
                 )
-            #end for    
-            
-
-        update.message.reply_text(
-            'This file will be available for 24 hours to download')
+                update.message.reply_text(
+                    'This file will be available for 24 hours to download')
+            # end if
+        # end for
 
         self.destroy_app(bot, update, user_data)
     # end def

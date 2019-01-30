@@ -27,7 +27,7 @@ class App:
     chapters = []
     book_cover = None
     output_formats = None
-    archived_output = None
+    archived_outputs = None
     good_file_name = None
 
     # ----------------------------------------------------------------------- #
@@ -192,8 +192,24 @@ class App:
     # ------------------------------------------------------------------------#
 
     def compress_output(self):
+        self.archived_outputs = []
         logger.info('Compressing output...')
-        self.archived_output = shutil.make_archive(self.output_path, 'zip', self.output_path)
-        logger.warn('Compressed to %s' % self.archived_output)
+        if not self.output_formats:
+            self.archived_outputs.append(
+                shutil.make_archive(self.output_path, 'zip', self.output_path)
+            )
+        else:
+            for fmt, val in self.output_formats.items():
+                if not val: continue
+                self.archived_outputs.append(
+                    shutil.make_archive(
+                        os.path.join(self.output_path, fmt),
+                        'zip',
+                        '%s (%s)' % (self.output_path, fmt)
+                    )
+                )
+            # end for
+        # end if
+        logger.warn('Compressed to: %s' % '\n\t'.join(self.archived_outputs))
     # end def
 # end class
