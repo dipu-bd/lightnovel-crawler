@@ -4,6 +4,8 @@
 To bind into ebooks
 """
 import logging
+import shutil
+import os
 
 from .epub import make_epubs
 from .html import make_htmls
@@ -36,32 +38,59 @@ def process(fn, app, inp, fmt):
 
 
 def bind_books(app, data):
-    fmts = app.output_formats
-    if not fmts:
+    text = app.output_formats
+    fmts = {}
+    if not text or text=='all':
         fmts = {x: True for x in available_formats}
-    # end if
+    else:
+        for x in available_formats:
+            if x == text:
+                fmts[x]=True
+            else:
+                fmts[x]=False
+            # end if
+        #end for    
+    #end if
 
     if fmts['text']:
         process(make_texts, app, data, 'text')
+        if text!='all':
+            logger.info('Compressing text output...')
+            text_path = os.path.join(app.output_path, 'text')
+            text_archived_output = shutil.make_archive(text_path, 'zip', app.output_path)
+            logger.warn('Compressed to %s' % text_archived_output)
+            output=[]
+            output.append(text_archived_output)
+        #end if
     # end if
 
     if fmts['html']:
-        process(make_htmls, app, data, 'html')
+        output = process(make_htmls, app, data, 'html')
+        if text!='all':
+            logger.info('Compressing html output...')
+            html_path = os.path.join(app.output_path, 'html')
+            html_archived_output = shutil.make_archive(html_path, 'zip', app.output_path)
+            logger.warn('Compressed to %s' % html_archived_output)
+            output=[]
+            output.append(html_archived_output)
+        #end if
     # end if
 
     if fmts['mobi'] or fmts['epub']:
         epubs = process(make_epubs, app, data, 'epub')
-
+        output = epubs
         if fmts['mobi']:
-            process(make_mobis, app, epubs, 'mobi')
+            output = process(make_mobis, app, epubs, 'mobi')
         # end if
     # end if
 
     if fmts['pdf']:
-        process(make_pdfs, app, data, 'pdf')
+        output = process(make_pdfs, app, data, 'pdf')
     # end if
 
     if fmts['docx']:
-        process(make_docx, app, data, 'docx')
+        output = process(make_docx, app, data, 'docx')
     # end if
+    print(output)
+    return output
 # end def

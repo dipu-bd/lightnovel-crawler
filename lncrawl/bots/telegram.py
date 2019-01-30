@@ -73,7 +73,11 @@ class TelegramBot:
                 ],
                 'handle_pack_by_volume': [
                     MessageHandler(
-                        Filters.text, self.handle_pack_by_volume, pass_job_queue=True, pass_user_data=True),
+                        Filters.text, self.handle_pack_by_volume, pass_user_data=True),
+                ],
+                'handle_output_format': [
+                    MessageHandler(
+                        Filters.text, self.handle_output_format, pass_job_queue=True, pass_user_data=True),
                 ],
             },
         )
@@ -383,7 +387,7 @@ class TelegramBot:
     #     return self.range_selection_done(bot, update, user_data)
     # # end def
 
-    def handle_pack_by_volume(self, bot, update, job_queue, user_data):
+    def handle_pack_by_volume(self, bot, update, user_data):
         app = user_data.get('app')
         user = update.message.from_user
 
@@ -396,6 +400,26 @@ class TelegramBot:
         else:
             update.message.reply_text(
                 'I will generate single output files whenever possible')
+        # end if
+
+        update.message.reply_text(
+            'In which format you want me to generate your book?',
+            reply_markup=ReplyKeyboardMarkup([
+                ['epub', 'mobi', 'pdf', 'docx', 'text', 'html', 'all']
+            ], one_time_keyboard=True),
+        )
+
+        return 'handle_output_format'
+    # end def
+
+    def handle_output_format(self, bot, update, job_queue, user_data):
+        app = user_data.get('app')
+        user = update.message.from_user
+
+        app.output_formats = update.message.text
+
+        update.message.reply_text(
+                'I will generate book in %s format' % app.output_formats)
         # end if
 
         job = job_queue.run_once(
@@ -415,6 +439,7 @@ class TelegramBot:
         return ConversationHandler.END
     # end def
 
+
     def process_request(self, bot, job):
         update, user_data = job.context
         
@@ -429,26 +454,43 @@ class TelegramBot:
         if app:
             user_data['status'] = 'Generating output files'
             update.message.reply_text(user_data.get('status'))
-            app.bind_books()
+            output = app.bind_books()
             update.message.reply_text('Output file generated.')
         # end if
 
-        app = user_data.get('app')
-        if app:
-            user_data['status'] = 'Compressing output folder.'
+        if app.output_formats=='all':
+            app = user_data.get('app')
+            if app:
+                user_data['status'] = 'Compressing output folder.'
+                update.message.reply_text(user_data.get('status'))
+                app.compress_output()
+            # end if
+
+            link_id = upload(app.archived_output)
+            if link_id:
+                update.message.reply_text('https://drive.google.com/open?id=%s' % link_id)
+            # end if
+
+            update.message.reply_document(
+                open(app.archived_output, 'rb'),
+                timeout=24 * 3600, # 24 hours
+            )
+        else:
+            user_data['status'] = 'Uploading Output File.'
             update.message.reply_text(user_data.get('status'))
-            app.compress_output()
-        # end if
 
-        link_id = upload(app.archived_output)
-        if link_id:
-            update.message.reply_text('https://drive.google.com/open?id=%s' % link_id)
-        # end if
+            for x in output:
+                link_id = upload(x)
+                if link_id:
+                    update.message.reply_text('The file generated can be downloaded here https://drive.google.com/open?id=%s' % link_id)
+                # end if
+                update.message.reply_document(
+                    open(x, 'rb'),
+                    timeout=24 * 3600, # 24 hours
+                )
+            #end for    
+            
 
-        update.message.reply_document(
-            open(app.archived_output, 'rb'),
-            timeout=24 * 3600, # 24 hours
-        )
         update.message.reply_text(
             'This file will be available for 24 hours to download')
 
