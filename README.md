@@ -20,7 +20,7 @@ Crawls light novels and make html, text, epub and mobi
 
 ### Easy download
 
-📦 [lightnovel-crawler v2.7.5 for windows ~ 15MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.7.6 for windows ~ 15MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -53,7 +53,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀 2.7.5 
+                           📒 Lightnovel Crawler 🍀 2.7.6 
             Download lightnovels into html, text, epub, mobi and json 
 --------------------------------------------------------------------------------
 usage: 	lncrawl [options...]
