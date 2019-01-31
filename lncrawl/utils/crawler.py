@@ -86,11 +86,6 @@ class Crawler:
         pass
     # end def
 
-    def download_chapter_list(self):
-        '''Download list of chapters and volumes.'''
-        pass
-    # end def
-
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         pass

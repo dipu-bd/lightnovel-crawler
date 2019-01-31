@@ -137,9 +137,6 @@ class App:
         self.crawler.read_novel_info()
         logger.warn('NOVEL: %s', self.crawler.novel_title)
 
-        logger.info('Getting chapters...')
-        self.crawler.download_chapter_list()
-
         format_volumes(self.crawler)
         format_chapters(self.crawler)
 

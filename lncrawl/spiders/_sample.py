@@ -48,14 +48,8 @@ class SampleCrawler(Crawler):
         #       You may or may not set the novel_cover, novel_author, volumes
         #       and chapter list, but the `novel_title` must be set here.
         #       You may throw an Exception in case of failure
-        pass
-    # end def
-
-    def download_chapter_list(self):
-        '''Download list of chapters and volumes.'''
-        # TODO: Use this method if you need to retrieve chapter list from
-        #       online. If you already got chapter list inside the method
-        #       `read_novel_info`, implementing this one is not necessary.
+        #
+        # TODO: Also retrieve volumes and chapters here.
         #        Each volume must contain these keys:
         #          id     : the index of the volume
         #          volume : the volume number
