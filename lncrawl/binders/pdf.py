@@ -22,12 +22,13 @@ class PdfBuilder:
         self.chapters = chapters
         self.crawler = app.crawler
         self.book_title = (self.crawler.novel_title + ' ' + volume).strip()
+        self.file_name = (app.good_file_name + ' ' + volume).strip()
     # end def
 
     def create_book(self):
-        logger.debug('Binding %s.pdf', self.book_title)
+        logger.debug('Binding %s.pdf', self.file_name)
         pdf_path = os.path.join(self.app.output_path, 'pdf')
-        file_path = os.path.join(pdf_path, self.book_title + '.pdf')
+        file_path = os.path.join(pdf_path, self.file_name + '.pdf')
         logger.debug('Writing %s', file_path)
         os.makedirs(pdf_path, exist_ok=True)
 
@@ -163,7 +164,7 @@ class PdfBuilder:
             onLaterPages=self.pagenum_generator
         )
 
-        logger.warn('Created: %s.pdf', self.book_title)
+        logger.warn('Created: %s.pdf', self.file_name)
         return self.book.filename
     # end def
 # end class

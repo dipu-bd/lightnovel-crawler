@@ -395,38 +395,40 @@ class MessageHandler:
         self.app.compress_output()
         await self.send('Compressed output folder.')
         
-        file_size = os.stat(self.app.archived_output).st_size
-        if file_size > 7.99 * 1024 * 1024:
-            link_id = upload(self.app.archived_output)
-            if link_id:
-                await self.send('https://drive.google.com/open?id=%s' % link_id)
+        for archive in self.app.archived_outputs:
+            file_size = os.stat(archive).st_size
+            if file_size > 7.99 * 1024 * 1024:
+                link_id = upload(archive)
+                if link_id:
+                    await self.send('https://drive.google.com/open?id=%s' % link_id)
+                else:
+                    await self.send(
+                        'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
+                        'Can not upload your file.\n',
+                        'I am trying my best to come up with an alternative.\n'
+                        'It will be available in near future.\n'
+                        'Sorry for the inconvenience.'
+                    )
+                # end if
             else:
-                await self.send(
-                    'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
-                    'Can not upload your file.\n',
-                    'I am trying my best to come up with an alternative.\n'
-                    'It will be available in near future.\n'
-                    'Sorry for the inconvenience.'
+                k = 0
+                while(file_size > 1024 and k < 3):
+                    k += 1
+                    file_size /= 1024.0
+                # end while
+
+                await self.send('Uploading file... %d%s' % (
+                    int(file_size * 100) / 100.0,
+                    ['B', 'KB', 'MB', 'GB'][k]
+                ))
+                await self.client.send_file(
+                    self.user,
+                    open(archive, 'rb'),
+                    filename=os.path.basename(archive),
+                    content='Here you go!'
                 )
             # end if
-        else:
-            k = 0
-            while(file_size > 1024 and k < 3):
-                k += 1
-                file_size /= 1024.0
-            # end while
-
-            await self.send('Uploading file... %d%s' % (
-                int(file_size * 100) / 100.0,
-                ['B', 'KB', 'MB', 'GB'][k]
-            ))
-            await self.client.send_file(
-                self.user,
-                open(self.app.archived_output, 'rb'),
-                filename=os.path.basename(self.app.archived_output),
-                content='Here you go!'
-            )
-        # end if
+        # end for
 
         self.destroy()
     # end def

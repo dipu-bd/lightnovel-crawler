@@ -44,6 +44,9 @@ class NovelSpreadCrawler(Crawler):
             self.novel_author += div.find('h4').text.strip()
         # end for
         logger.info('Novel author: %s', self.novel_author)
+
+        logger.info('Getting chapters...')
+        self.download_chapter_list()
     # end def
 
     def download_chapter_list(self):

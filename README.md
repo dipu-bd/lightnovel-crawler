@@ -19,7 +19,7 @@ Crawls light novels and make html, text, epub and mobi
 
 ### Easy download
 
-📦 [lightnovel-crawler v2.7.2 for windows ~ 14.3MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.7.5 for windows ~ 15MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -38,8 +38,7 @@ $ pip3 install --user -U lightnovel-crawler
 $ python3 -m pip install --user -U lightnovel-crawler
 ```
 
-Next, _Open the console panel in a directory you want to store your downloaded novels_ and
-run the following to open an interactive console.
+Next, open your terminal and enter:
 
 ```bash
 $ lightnovel-crawler
@@ -52,12 +51,12 @@ To view list of available options:
 
 ```bash
 $ lncrawl -h
-================================================================
-                   📒 Lightnovel Crawler 🍀 2.6.2
-    Download lightnovels into html, text, epub, mobi and json
-----------------------------------------------------------------
-usage:  lncrawl [options...]
-        lightnovel-crawler [options...]
+================================================================================
+                           📒 Lightnovel Crawler 🍀 2.7.5 
+            Download lightnovels into html, text, epub, mobi and json 
+--------------------------------------------------------------------------------
+usage: 	lncrawl [options...]
+	lightnovel-crawler [options...]
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -69,6 +68,9 @@ optional arguments:
                         Novel query followed by list of source sites.
   -o OUTPUT_PATH, --output OUTPUT_PATH
                         Path where the downloads to be stored
+  --format [E [E ...]]  Ouput formats. Can be a list of the following values:
+                        `epub`, `mobi`, `html`, `text`, `docx`, `pdf`
+                        (default: `all`)
   -f, --force           Force replace any existing folder
   -i, --ignore          Ignore any existing folder (do not replace)
   -b, --byvol           Build separate books by volumes
@@ -83,8 +85,8 @@ optional arguments:
   --chapters [URL [URL ...]]
                         A list of specific chapter urls
   --suppress            Suppress input prompts (use defaults instead)
-  
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
 > To view extra logs, use: `lncrawl -lll`
@@ -122,6 +124,7 @@ The list of crawable websites are given below. _Request new site by [creating a 
 
 After crawling is done, the app builds file in following formats in the output directory.
 
+- JSON (default)
 - HTML
 - TEXT
 - EPUB
