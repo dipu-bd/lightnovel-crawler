@@ -3,8 +3,13 @@
 """Uploader for google drive"""
 import os
 import logging
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
+
+try:
+    from pydrive.auth import GoogleAuth
+    from pydrive.drive import GoogleDrive
+except:
+    print('`pydrive` was not setup properly')
+# end try
 
 logger = logging.getLogger('UPLOADER')
 
