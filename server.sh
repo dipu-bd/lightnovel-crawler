@@ -5,6 +5,9 @@
 git checkout master
 git pull origin master
 
+pip3 install --user -r requirements.txt
+pip3 install --user -r requirements.bot.txt
+
 kill -9 `cat save_pid.txt`
 rm save_pid.txt
 
