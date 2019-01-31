@@ -188,48 +188,53 @@ class App:
 
     # ------------------------------------------------------------------------#
 
-    def compress_output(self, is_all=None, archive_singles=False):
+    def compress_output(self, archive_singles=False):
         logger.info('Compressing output...')
 
         # Check if whole output folder is to be archived
-        if is_all is None:
-            is_all = True
+        is_all = True
+        if self.output_formats:
             for key in available_formats:
-                if key not in self.output_formats:
+                if not self.output_formats[key]:
                     is_all = False
+                    break
                 # end if
             # end for
         # end if
+        logger.info('Compressing whole directory: %s' % bool(is_all))
 
         # Get which paths to be archived with their base names
-        path_to_archive = []
+        path_to_process = []
         if is_all:
-            path_to_archive.append((self.output_path, self.good_file_name))
+            path_to_process.append((self.output_path, self.good_file_name))
         else:
             for fmt, val in self.output_formats.items():
                 if val:
-                    path_to_archive.append((
+                    path_to_process.append((
                         os.path.join(self.output_path, fmt),
                         '%s (%s)' % (self.good_file_name, fmt),
                     ))
                 # end if
             # end for
         # end if
+        logger.info('Processing %d directories' % len(path_to_process))
 
         # Archive files
         self.archived_outputs = []
-        for path, base_name in path_to_archive:
+        for path, base_name in path_to_process:
             archived = None
             file_list = os.listdir(path)
             if len(file_list) == 0:
+                logger.info('It has no files: %s', path)
                 continue # No files to archive
             elif len(file_list) == 1 and not archive_singles:
                 logger.info('Not archiving single file inside %s' % path)
                 archived = os.path.join(path, file_list[0])
             else:
                 logger.info('Compressing %s to %s' % (path, base_name))
+                base_path = os.path.join(self.output_path, '..', base_name)
                 archived = shutil.make_archive(
-                    os.path.join(self.output_path, base_name),
+                    os.path.normpath(base_path),
                     'zip',
                     root_dir=path,
                 )
