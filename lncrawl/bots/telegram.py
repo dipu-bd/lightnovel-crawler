@@ -64,13 +64,18 @@ class TelegramBot:
                         'first', self.handle_range_first, pass_user_data=True),
                     CommandHandler(
                         'volume', self.handle_range_volume, pass_user_data=True),
-                    # CommandHandler('chapter', self.handle_range_chapter, pass_user_data = True),
+                    CommandHandler(
+                        'chapter', self.handle_range_chapter, pass_user_data = True),
                     MessageHandler(
                         Filters.text, self.display_range_selection_help),
                 ],
                 'handle_volume_selection': [
                     MessageHandler(
                         Filters.text, self.handle_volume_selection, pass_user_data=True),
+                ],
+                'handle_chapter_selection': [
+                    MessageHandler(
+                        Filters.text, self.handle_chapter_selection, pass_user_data=True),
                 ],
                 'handle_pack_by_volume': [
                     MessageHandler(
@@ -314,7 +319,7 @@ class TelegramBot:
             'Send /last to download last 50 chapters.',
             'Send /first to download first 50 chapters.',
             'Send /volume to choose specific volumes to download',
-            # 'Send /chapter to choose a chapter range to download',
+            'Send /chapter to choose a chapter range to download',
             'To tereminate this session, send /cancel.'
         ]))
         return 'handle_range_selection'
@@ -382,11 +387,34 @@ class TelegramBot:
         return self.range_selection_done(bot, update, user_data)
     # end def
 
-    # def handle_range_chapter(self, bot, update, user_data):
-    #     app = user_data.get('app')
-    #     user = update.message.from_user
-    #     return self.range_selection_done(bot, update, user_data)
-    # # end def
+    def handle_range_chapter(self, bot, update, user_data):
+        app = user_data.get('app')
+        chapters = app.crawler.chapters
+        update.message.reply_text(
+            'I got %s  chapters' %len(chapters) +
+            '\nEnter which start and end chapter you want to generate separated space or comma.',
+        )
+        return 'handle_chapter_selection'
+    # end def
+
+    def handle_chapter_selection(self, bot, update, user_data):
+        app = user_data.get('app')
+        text = update.message.text
+        selected = re.findall(r'\d+', text)
+        print(selected)
+        if len(selected)!=2:
+            update.message.reply_text('Sorry, I did not understand. Please try again')
+            return 'handle_range_chapter'
+        else: 
+            selected = [int(x) for x in selected]
+            app.chapters = app.crawler.chapters[selected[0]-1:selected[1]]
+            update.message.reply_text(
+                'Got the start chapter : %s' %selected[0] +
+                '\nThe end chapter : %s' %selected[1] +
+                '\nTotal chapter chosen is %s' %len(app.chapters),
+            )
+        return self.range_selection_done(bot, update, user_data)
+    # end def
 
     def handle_pack_by_volume(self, bot, update, user_data):
         app = user_data.get('app')
