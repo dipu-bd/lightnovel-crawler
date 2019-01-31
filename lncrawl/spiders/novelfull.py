@@ -6,15 +6,24 @@ from concurrent import futures
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_FULL')
+search_url = 'http://novelfull.com/search?keyword=%s'
 
 
 class NovelFullCrawler(Crawler):
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
-        # TODO: Use the `self.novel_url` as a query to find matching novels.
-        #       Return the search result as a list of (title, url) pair.
-        #       You may throw an Exception or empty list in case of failure.
-        pass
+        query = query.strip().lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for a in soup.select('.archive .row .truyen-title a'):
+            results.append((
+                a.text.strip(),
+                self.absolute_url(a['href']),
+            ))
+        # end for
+
+        return results
     # end def
 
     def read_novel_info(self):
