@@ -8,7 +8,7 @@ import os
 import logging
 from concurrent import futures
 from urllib.parse import urlparse
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Comment
 from . import cfscrape
 
 logger = logging.getLogger(__name__)
@@ -176,7 +176,7 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'script', 'iframe', 'form', 'a', 'br', 'ul', 'hr', 'img'
+        'script', 'iframe', 'form', 'a', 'br', 'ul', 'hr', 'img', 'ins'
     ]
     block_tags = [
         'h3', 'div', 'p'
@@ -197,6 +197,9 @@ class Crawler:
             tag.decompose()
         # end for
         for elem in div.contents:
+            if isinstance(elem, Comment):
+                continue
+            # end if
             if self.block_tags.count(elem.name):
                 body += self.extract_contents(elem, level + 1)
                 continue
