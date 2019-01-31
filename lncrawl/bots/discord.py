@@ -82,17 +82,22 @@ class MessageHandler:
 
     def destroy(self):
         self.client.handlers.pop(self.user.id)
-        self.app.destroy()
-        self.executors.shutdown()
+        try:
+            self.app.destroy()
+            self.executors.shutdown(False)
+        except Exception as err:
+            logger.debug(err)
+        # end try
         shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
 
     @asyncio.coroutine
     async def send(self, *contents):
         for text in contents:
-            if not text:
-                continue
-            await self.client.send_message(self.user, text)
+            if text:
+                await self.client.send_typing(self.user)
+                await self.client.send_message(self.user, text)
+            # end if
         # end for
     # end def
 
@@ -132,7 +137,10 @@ class MessageHandler:
                 '\n'.join(['- %s' % x for x in crawler_list.keys()]),
                 'Enter something again.')
         # end try
-
+        if len(self.app.user_input) < 4:
+            await self.send('Your query is too short')
+            return
+        # end if
         if self.app.crawler:
             await self.send('Got your page link')
             await self.get_novel_info()
@@ -193,6 +201,7 @@ class MessageHandler:
         )
 
         try:
+            await self.client.send_typing(self.user)
             self.app.search_novel()
         except:
             pass
@@ -201,7 +210,7 @@ class MessageHandler:
         if len(self.app.search_results) == 0:
             await self.send(
                 ('Sorry! Nothing found by "%s"\n' % self.app.user_input) +
-                'Send !cancel to enter your novel again.'
+                'Send `!cancel` to enter your novel again.'
             )
             await self.crawlers_to_search()
         elif len(self.app.search_results) == 1:
@@ -260,7 +269,8 @@ class MessageHandler:
 
         # TODO: Handle login here
 
-        await self.send('Getting information about your novel')
+        await self.send('Getting information about your novel...')
+        await self.client.send_typing(self.user)
         self.app.get_novel_info()
 
         # Setup output path
@@ -308,14 +318,14 @@ class MessageHandler:
         if text.startswith('!all'):
             self.app.chapters = self.app.crawler.chapters[:]
         elif text.startswith('!first'):
-            n = text.split(' ')[-1]
-            n = int(n) if n.isdigit() else 50
-            n = 50 if n < 0 else 50
+            text = text[len('!first'):].strip()
+            n = int(text) if text.isdigit() else 50
+            n = 50 if n < 0 else n
             self.app.chapters = self.app.crawler.chapters[:n]
         elif text.startswith('!last'):
-            n = text.split(' ')[-1]
-            n = int(n) if n.isdigit() else 50
-            n = 50 if n < 0 else 50
+            text = text[len('!last'):].strip()
+            n = int(text) if text.isdigit() else 50
+            n = 50 if n < 0 else n
             self.app.chapters = self.app.crawler.chapters[-n:]
         elif text.startswith('!volume'):
             text = text[len('!volume'):].strip()
@@ -340,7 +350,7 @@ class MessageHandler:
                         cid = self.app.crawler.get_chapter_index_of(name)
                     # end if
                     return cid - 1
-                # end def                   
+                # end def
                 first = resolve_chapter(pair[0])
                 second = resolve_chapter(pair[1])
                 if first > second:
@@ -366,71 +376,78 @@ class MessageHandler:
 
         await self.send(
             'Received your request. Starting download...\n' +
-            'Send anthing to view status, or `!cancel` to cancel it'
+            'Send anything to view status.\nSend `!cancel` to stop it.'
         )
 
+        self.status = ['', '']
         self.state = self.report_download_progress
-        await self.start_download()
+        try:
+            self.executors.submit(self.start_download)
+        except Exception as err:
+            logger.debug(err)
+            logger.warn('Download failure: %s' % self.user.id)
+        # end try
+        await self.client.send_typing(self.user)
     # end def
 
-    async def start_download(self):
+    def start_download(self):
         self.app.pack_by_volume = False
 
-        await self.send('\n'.join([
-            'Downloading **%s**' % self.app.crawler.novel_title,
-            'I will not respond untill I am done.',
-            'So sit tight and wait patiently.',
-        ]))
+        self.status = ['**%s**' % self.app.crawler.novel_title]
+        self.status.append('Downloading %d chapters...' %
+                           len(self.app.chapters))
         self.app.start_download()
-        await self.send(
-            '%d out of %d chapters has been downloaded.'
-            % (self.app.progress, len(self.app.chapters))
-        )
 
-        await self.send('Binding books...')
+        self.status.append('Binding books...')
         self.app.bind_books()
-        await self.send('Book binding completed.')
+        self.status[-1] = 'Book binding completed.'
 
-        await self.send('Compressing output folder...')
+        self.status.append('Compressing output folder...')
         self.app.compress_output()
-        await self.send('Compressed output folder.')
-        
-        for archive in self.app.archived_outputs:
-            file_size = os.stat(archive).st_size
-            if file_size > 7.99 * 1024 * 1024:
-                link_id = upload(archive)
-                if link_id:
-                    await self.send('https://drive.google.com/open?id=%s' % link_id)
-                else:
-                    await self.send(
-                        'The compressed file is above 8MB in size which exceeds Discord\'s limitation.\n'
-                        'Can not upload your file.\n',
-                        'I am trying my best to come up with an alternative.\n'
-                        'It will be available in near future.\n'
-                        'Sorry for the inconvenience.'
-                    )
-                # end if
-            else:
-                k = 0
-                while(file_size > 1024 and k < 3):
-                    k += 1
-                    file_size /= 1024.0
-                # end while
+        self.status[-1] = 'Compressed output folder.'
 
-                await self.send('Uploading file... %d%s' % (
-                    int(file_size * 100) / 100.0,
-                    ['B', 'KB', 'MB', 'GB'][k]
-                ))
-                await self.client.send_file(
-                    self.user,
-                    open(archive, 'rb'),
-                    filename=os.path.basename(archive),
-                    content='Here you go!'
-                )
-            # end if
+        self.status.append('Uploading files...')
+        for archive in self.app.archived_outputs:
+            asyncio.run_coroutine_threadsafe(
+                self.upload_file(archive),
+                self.client.loop
+            ).result()
         # end for
 
         self.destroy()
+    # end def
+
+    async def upload_file(self, archive):
+        file_size = os.stat(archive).st_size
+        if file_size > 7.99 * 1024 * 1024:
+            link_id = upload(archive)
+            if link_id:
+                await self.send('https://drive.google.com/open?id=%s' % link_id)
+            else:
+                await self.send(
+                    'File %s exceeds 8MB. Can not upload it.' % os.path.basename(archive))
+            # end if
+        else:
+            k = 0
+            while(file_size > 1024 and k < 3):
+                k += 1
+                file_size /= 1024.0
+            # end while
+            await self.send(
+                'Uploading %s [%d%s] ...' % (
+                    os.path.basename(archive),
+                    int(file_size * 100) / 100.0,
+                    ['B', 'KB', 'MB', 'GB'][k]
+                )
+            )
+            await self.client.send_typing(self.user)
+            await self.client.send_file(
+                self.user,
+                open(archive, 'rb'),
+                filename=os.path.basename(archive),
+                content='Here you go!',
+            )
+        # end if
     # end def
 
     async def report_download_progress(self):
@@ -440,8 +457,20 @@ class MessageHandler:
             await self.send('Closing the session')
             self.destroy()
             await self.send('Session is now closed. Type *anything* to create a new one.')
+            return
         # end if
 
-        await self.send('Send `!cancel` to stop')
+        if self.app.progress < len(self.app.chapters):
+            self.status[1] = '%d out of %d chapters has been downloaded.' % (
+                self.app.progress, len(self.app.chapters))
+        else:
+            self.status[1] = 'Download complete.'
+        # end if
+
+        await self.send(
+            '\n'.join(self.status).strip() + '\n\n' +
+            'Send `!cancel` to stop'
+        )
+        await self.client.send_typing(self.user)
     # end def
 # end class
