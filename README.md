@@ -119,6 +119,7 @@ The list of crawable websites are given below. _Request new site by [creating a 
 - https://webnovel.online
 - http://fullnovel.live
 - https://www.novelall.com
+- http://novelfull.com
 
 ### Output formats
 
