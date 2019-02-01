@@ -27,8 +27,8 @@ available_formats = [
 def process(fn, app, inp, fmt):
     try:
         return fn(app, inp)
-    except Exception as ex:
-        logger.debug(ex)
+    except Exception as err:
+        logger.debug(err)
         logger.warn('Failed to generate *.%s files' % fmt)
         return None
     # end try

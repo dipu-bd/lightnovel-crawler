@@ -5,6 +5,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/dipu-bd/lightnovel-crawler.svg)](https://github.com/dipu-bd/lightnovel-crawler/issues)
 [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
 [![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 
 <!-- [![PyPI - Format](https://img.shields.io/pypi/format/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler) -->
 <!-- [![PyPI - Status](https://img.shields.io/pypi/status/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler) -->
@@ -19,7 +20,7 @@ Crawls light novels and make html, text, epub and mobi
 
 ### Easy download
 
-📦 [lightnovel-crawler v2.7.5 for windows ~ 15MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.7.6 for windows ~ 15MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -52,7 +53,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀 2.7.5 
+                           📒 Lightnovel Crawler 🍀 2.7.6 
             Download lightnovels into html, text, epub, mobi and json 
 --------------------------------------------------------------------------------
 usage: 	lncrawl [options...]
@@ -119,6 +120,7 @@ The list of crawable websites are given below. _Request new site by [creating a 
 - https://webnovel.online
 - http://fullnovel.live
 - https://www.novelall.com
+- http://novelfull.com
 
 ### Output formats
 

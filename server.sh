@@ -1,9 +1,12 @@
-###################################################
-# Run this script in server to keep alive the bot #
-###################################################
+#####################################################
+# Run this script in [SERVER] to keep alive the bot #
+#####################################################
 
 git checkout master
 git pull origin master
+
+pip3 install --user -r requirements.txt
+pip3 install --user -r requirements.bot.txt
 
 kill -9 `cat save_pid.txt`
 rm save_pid.txt

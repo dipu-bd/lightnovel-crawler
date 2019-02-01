@@ -53,6 +53,8 @@ class ConsoleBot:
 
         self.app.start_download()
         self.app.bind_books()
+
+        # self.app.compress_output()
     # end def
 
     def process_chapter_range(self):

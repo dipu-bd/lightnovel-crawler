@@ -7,7 +7,7 @@ import logging
 from slugify import slugify
 
 from ..spiders import crawler_list
-from ..binders import bind_books
+from ..binders import bind_books, available_formats
 from .downloader import download_chapters
 from .novel_info import format_volumes, format_chapters, save_metadata
 
@@ -143,7 +143,7 @@ class App:
         self.good_file_name = slugify(
             self.crawler.novel_title,
             max_length=50,
-            separator= ' ',
+            separator=' ',
             lowercase=False,
             word_boundary=True,
         )
@@ -159,7 +159,7 @@ class App:
 
         save_metadata(self.crawler, self.output_path)
         download_chapters(self)
-    
+
         if 'logout' in self.crawler.__dict__:
             self.crawler.logout()
         # end if
@@ -188,25 +188,60 @@ class App:
 
     # ------------------------------------------------------------------------#
 
-    def compress_output(self):
-        self.archived_outputs = []
+    def compress_output(self, archive_singles=False):
         logger.info('Compressing output...')
-        if not self.output_formats:
-            self.archived_outputs.append(
-                shutil.make_archive(self.output_path, 'zip', self.output_path)
-            )
-        else:
-            for fmt, val in self.output_formats.items():
-                if not val: continue
-                self.archived_outputs.append(
-                    shutil.make_archive(
-                        os.path.join(self.output_path, fmt),
-                        'zip',
-                        '%s (%s)' % (self.output_path, fmt)
-                    )
-                )
+
+        # Check if whole output folder is to be archived
+        is_all = True
+        if self.output_formats:
+            for key in available_formats:
+                if not self.output_formats[key]:
+                    is_all = False
+                    break
+                # end if
             # end for
         # end if
-        logger.warn('Compressed to: %s' % '\n\t'.join(self.archived_outputs))
+        logger.info('Compressing whole directory: %s' % bool(is_all))
+
+        # Get which paths to be archived with their base names
+        path_to_process = []
+        if is_all:
+            path_to_process.append((self.output_path, self.good_file_name))
+        else:
+            for fmt, val in self.output_formats.items():
+                if val:
+                    path_to_process.append((
+                        os.path.join(self.output_path, fmt),
+                        '%s (%s)' % (self.good_file_name, fmt),
+                    ))
+                # end if
+            # end for
+        # end if
+        logger.info('Processing %d directories' % len(path_to_process))
+
+        # Archive files
+        self.archived_outputs = []
+        for path, base_name in path_to_process:
+            archived = None
+            file_list = os.listdir(path)
+            if len(file_list) == 0:
+                logger.info('It has no files: %s', path)
+                continue # No files to archive
+            elif len(file_list) == 1 and not archive_singles:
+                logger.info('Not archiving single file inside %s' % path)
+                archived = os.path.join(path, file_list[0])
+            else:
+                logger.info('Compressing %s to %s' % (path, base_name))
+                base_path = os.path.join(self.output_path, '..', base_name)
+                archived = shutil.make_archive(
+                    os.path.normpath(base_path),
+                    'zip',
+                    root_dir=path,
+                )
+            # end if
+            self.archived_outputs.append(archived)
+        # end for
+
+        logger.warn('Compressed: %s' % '\n\t'.join(self.archived_outputs))
     # end def
 # end class
