@@ -447,8 +447,15 @@ class TelegramBot:
         user = update.message.from_user
 
         text = update.message.text.strip().lower()
+        app.output_formats = {}
         if text in available_formats:
-            app.output_formats = { text: True }
+            for x in available_formats:
+                if x == text :
+                    app.output_formats[x] = True
+                else:
+                    app.output_formats[x] = False
+                # end if 
+            # end for
         elif text != 'all':
             update.message.reply_text('Sorry, I did not understand.')
             return
