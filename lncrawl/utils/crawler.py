@@ -16,11 +16,8 @@ logger = logging.getLogger(__name__)
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
-    home_url = ''
-    novel_url = ''
-    last_visited_url = None
 
-    '''Must resolve these fields inside `read_novel_info`'''
+    # Must resolve these fields inside `read_novel_info`
     novel_title = 'N/A'
     novel_author = 'N/A'
     novel_cover = None
@@ -32,10 +29,6 @@ class Crawler:
     '''
     volumes = []
 
-    scrapper = None
-    executor = None
-    _destroyed = False
-
     '''
     Each item must contain these keys:
     `id` - 1 based index of the chapter
@@ -45,6 +38,16 @@ class Crawler:
     `url` - the link where to download the chapter
     '''
     chapters = []
+
+    # Other stuffs - not necessary to resolve from crawler instance.
+    home_url = ''
+    novel_url = ''
+    last_visited_url = None
+
+    scrapper = None
+    executor = None
+    _destroyed = False
+
 
     def __init__(self):
         self.executor = futures.ThreadPoolExecutor(max_workers=5)
