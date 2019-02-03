@@ -26,6 +26,10 @@ Download lightnovels from various online sources and generate output in differen
   - [Supported output formats](#b4-supported-output-formats)
   - [Supported bots](#b5-supported-bots)
 - [Getting to know the project structure](#-c--getting-to-know-the-project-structure)
+  - [Initialize](#c1-initialize)
+  - [Creating bots](#c2-creating-bots)
+  - [Introducing core files](#c3-introducing-core-files)
+  - [Things to know before adding a spider](#c4-things-to-know-before-adding-a-spider)
 
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
 
@@ -240,33 +244,43 @@ When download is done, the following files can be generated:
 
 ## (C) Getting to know the project structure
 
+### C1. Initialize
+
 - The `lncrawl` is the source folder.
-- Inside `lncrawl/__init__.py` contains the execution codes.
-- This file load `.env` file and calls `lncrawl/core/__init__.py`. This files loads basic settings and checks latest version.
+- The file `lncrawl/__init__.py` loads `.env` if exists and calls `lncrawl/core/__init__.py`. This files loads basic settings and checks the latest version.
 - Next, it calls `bots/__init__.py` to start the selected bot. By default it calls the `console` bot. Otherwise, the bot specified in `.env` file will be called.
+
+### C2. Creating bots
+
 - `bots/_sample.py` is a template to create new bots.
+
+### C3. Introducing core files
+
 - Inside every bot, the `core/app.py` has to be used.
 - The `core/app.py` handles all user requests. It creates new crawler, do the crawling, and generate output files.
-- Crawlers are inside `spiders` folder. Each crawler must extend the `utils/crawler.py` class. There is a template file: `_sample.py` inside this folder. You can use it to create new crawler.
-- The `spiders/__init__.py` contains very important `crawler_list` variable, which maps the crawler class definition to url of the source.
 - When user provides an input, if it is an url, then it is matched againsts this url list, and a crawler is selected. Otherwise, it will call the search functions defined in crawler instances.
 - The `core` folder also has `arguments.py` file, which handles the user arguments to the console app.
 - The `core/novel_info.py` process the crawled novel page, like- volume list, chapter list etc.
 - The `core/downloader.py` is to download chapter list using `ThreadPoolExecutor` created by default using `5` max-workers inside `utils/crawler.py`.
-- In `utils/crawler.py`, there are lots of helper methods.
-  - **Do not keep any empty methods. Each methods should be implemented properly or removed from class definition.**
-  - You should use `self.get_soup` to download a webpage by an URL and get an instance of `BeautifulSoup`. Check other crawlers for example.
-  - `self.get_request` is to get the `response` object downloaded from given url.
-  - `self.extract_contents` method takes an soup element as input, and produces a list of HTML strings containing the paragraphs of the chapter content. Before calling this method, set the `self.blacklist_patterns`, `self.block_tags` and `self.bad_tags` to customize it.
-  - `novel_title`, `novel_author`, `novel_cover`, `volumes` and `chapters` should be set when getting novel info.
-  - The `chapters` must contain list of all chapters of the novel. Each item must contain these keys:
-    - `id`: 1 based index of the chapter
-    - `title`: the title name
-    - `volume`: the volume id of this chapter
-    - `volume_title`: the volume title (can be ignored)
-    - `url`: the link where to download the chapter
-  - If you do not provide `volume_title`, it will be resolved in post-processing stage from `volume` field.
-  - The `volumes` must contain a list of volumes. Each item must contain these keys:
-    - `id`: 1 based index of the volume
-    - `title`: the volume title (can be ignored) Create an empty volumes
-  - If you do not want to use volumes, just insert this one: `{ 'id': 1, 'title': 'Volume 1' }` and set `'volume': 1` in every chapter object.
+
+### C4. Things to know before adding a spider
+
+- Crawlers are inside `spiders` folder.
+- The `spiders/__init__.py` is very important. It has `crawler_list` variable, which maps the crawler class definition to url of the source.
+- You must use `spiders/_sample.py` as template and extend `utils/crawler.py`. It contains a lot of helpers.
+- **Do not keep any empty methods. Each methods should be implemented properly or removed from class definition.**
+- You should use `self.get_soup` to download a webpage by an URL and get an instance of `BeautifulSoup`. Check other crawlers for example.
+- `self.get_request` is to get the `response` object downloaded from given url.
+- `self.extract_contents` method takes an soup element as input, and produces a list of HTML strings containing the paragraphs of the chapter content. Before calling this method, set the `self.blacklist_patterns`, `self.block_tags` and `self.bad_tags` to customize it.
+- `novel_title`, `novel_author`, `novel_cover`, `volumes` and `chapters` should be set when getting novel info.
+- The `chapters` must contain list of all chapters of the novel. Each item must contain these keys:
+  - `id`: 1 based index of the chapter
+  - `title`: the title name
+  - `volume`: the volume id of this chapter
+  - `volume_title`: the volume title (can be ignored)
+  - `url`: the link where to download the chapter
+- If you do not provide `volume_title`, it will be resolved in post-processing stage from `volume` field.
+- The `volumes` must contain a list of volumes. Each item must contain these keys:
+  - `id`: 1 based index of the volume
+  - `title`: the volume title (can be ignored) Create an empty volumes
+- If you do not want to use volumes, just insert this one: `{ 'id': 1, 'title': 'Volume 1' }` and set `'volume': 1` in every chapter object.
