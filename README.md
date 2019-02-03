@@ -167,7 +167,7 @@ You are very welcome to contribute in this project. You can:
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
 
-The list of currently available sources are given below:
+The list of currently available sources and the future plans are given below:
 
 - [x] https://lnmtl.com
 - [x] https://www.webnovel.com
@@ -187,6 +187,20 @@ The list of currently available sources are given below:
 - [x] http://fullnovel.live
 - [x] https://www.novelall.com
 - [x] http://novelfull.com
+- [ ] http://gravitytales.com
+- [ ] http://moonbunnycafe.com/
+- [ ] https://novelonlinefree.info
+- [ ] https://m.novelspread.com
+- [ ] https://www.noveluniverse.com/
+- [ ] http://zenithnovels.com
+- [ ] https://anythingnovel.com
+- [ ] https://m.chinesefantasynovels.com
+- [ ] http://www.machinenoveltranslation.com/
+
+Rejected due to difficulty or other reasons:
+
+- [x] ~https://www.novelupdates.com~
+- [x] ~https://www.novelspread.com~
 
 ### B4. Supported output formats
 
