@@ -9,6 +9,24 @@
 
 Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx and pdf.
 
+## Table of contents
+
+- [General Usage](#-a--general-usage)
+  - [EXE (for Windows)](#a1-exe--for-windows-)
+  - [Chatbots](#a2-chatbots)
+    - [Discord](#a21-discord)
+  - [Python package (for Windows, Mac, and Linux)](#a3-python-package--for-windows--mac--and-linux-)
+  - [Run from source](#a4-run-from-source)
+  - [Available options](#a5-available-options)
+  - [Running the bot](#a6-running-the-bot)
+- [Development](#-b--development)
+  - [Adding new source](#b1-adding-new-source)
+  - [Adding new Bot](#b2-adding-new-bot)
+  - [Supported sources](#b3-supported-sources)
+  - [Supported output formats](#b4-supported-output-formats)
+  - [Supported bots](#b5-supported-bots)
+- [Getting to know the project structure](#-c--getting-to-know-the-project-structure)
+
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
 
 ## (A) General Usage
