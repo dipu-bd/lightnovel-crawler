@@ -249,17 +249,19 @@ When download is done, the following files can be generated:
 - The `lncrawl` is the source folder.
 - The file `lncrawl/__init__.py` loads `.env` if exists and calls `lncrawl/core/__init__.py`. This files loads basic settings and checks the latest version.
 - Next, it calls `bots/__init__.py` to start the selected bot. By default it calls the `console` bot. Otherwise, the bot specified in `.env` file will be called.
-
-### C2. Creating bots
-
-- `bots/_sample.py` is a template to create new bots.
+- Every bot uses an instance of `App` class from `core/app.py` to handle user request.
 
 ### C3. Introducing core files
 
-- Inside every bot, the `core/app.py` has to be used.
-- The `core/app.py` handles all user requests. It creates new crawler, do the crawling, and generate output files.
-- When user provides an input, if it is an url, then it is matched againsts this url list, and a crawler is selected. Otherwise, it will call the search functions defined in crawler instances.
-- The `core` folder also has `arguments.py` file, which handles the user arguments to the console app.
+- The `core/arguments.py` uses `ArgumentParser` from `argparse` and ensures that the arguments passed to the app is valid.
+- `core/app.py` contains class `App`. It has all necessary methods to process user requests. It creates new crawlers, do the crawling, and generate output files. The bots should use this to process user input.
+  - When user provides an input, call `init_search` method. First it checks whether the input is an url, or a search query.
+  - If it is an URL, it is matched againsts `crawler_list` from `spiders/__init__.py`. If a match found the input url is passed to `init_crawler` method.
+  - Otherwise, It will call the `search_novel` defined in crawler instances. Find out which of the search result is the desired novel by user and call `init_crawler` method.
+  - The `init_crawler` will create and initialize a crawler instance using the given url.
+  - Next, the `get_novel_info` gets called to retrieve the novel page info, like- title, author, cover, volumes and chapters.
+  - After setting the list of chapters to download in `chapters` field, bots calls `start_download`.
+  - When download finishes, it calls `bind_books`. The chat bots may use `compress_output` to compress output files into a single `zip` archive.
 - The `core/novel_info.py` process the crawled novel page, like- volume list, chapter list etc.
 - The `core/downloader.py` is to download chapter list using `ThreadPoolExecutor` created by default using `5` max-workers inside `utils/crawler.py`.
 
