@@ -27,9 +27,8 @@ Download lightnovels from various online sources and generate output in differen
   - [Supported bots](#b5-supported-bots)
 - [Getting to know the project structure](#-c--getting-to-know-the-project-structure)
   - [Initialize](#c1-initialize)
-  - [Creating bots](#c2-creating-bots)
-  - [Introducing core files](#c3-introducing-core-files)
-  - [Things to know before adding a spider](#c4-things-to-know-before-adding-a-spider)
+  - [Introducing core files](#c2-introducing-core-files)
+  - [Things to know before adding a spider](#c3-things-to-know-before-adding-a-spider)
 
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
 
@@ -251,7 +250,7 @@ When download is done, the following files can be generated:
 - Next, it calls `bots/__init__.py` to start the selected bot. By default it calls the `console` bot. Otherwise, the bot specified in `.env` file will be called.
 - Every bot uses an instance of `App` class from `core/app.py` to handle user request.
 
-### C3. Introducing core files
+### C2. Introducing core files
 
 - The `core/arguments.py` uses `ArgumentParser` from `argparse` and ensures that the arguments passed to the app is valid.
 - `core/app.py` contains class `App`. It has all necessary methods to process user requests. It creates new crawlers, do the crawling, and generate output files. The bots should use this to process user input.
@@ -265,7 +264,7 @@ When download is done, the following files can be generated:
 - The `core/novel_info.py` process the crawled novel page, like- volume list, chapter list etc.
 - The `core/downloader.py` is to download chapter list using `ThreadPoolExecutor` created by default using `5` max-workers inside `utils/crawler.py`.
 
-### C4. Things to know before adding a spider
+### C3. Things to know before adding a spider
 
 - Crawlers are inside `spiders` folder.
 - The `spiders/__init__.py` is very important. It has `crawler_list` variable, which maps the crawler class definition to url of the source.
