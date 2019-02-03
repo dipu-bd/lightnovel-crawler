@@ -183,7 +183,7 @@ You are very welcome to contribute in this project. You can:
 ### B2. Adding new Bot
 
 - Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as a standard. You can check out existing bots for idea.
-- Import your bot to [`bots/__init__.py`].
+- Import your bot to [`bots/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/__init__.py) file.
 
 ### B3. Supported sources
 
