@@ -11,17 +11,17 @@ Download lightnovels from various online sources and generate output in differen
 
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
 
-## General Usage
+## (A) General Usage
 
-### 1. EXE (for Windows)
+### A1. EXE (for Windows)
 
 📦 [lightnovel-crawler v2.7.6 for windows ~ 15MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-### 2. Chatbots
+### A2. Chatbots
 
-#### Discord
+#### A2.1 Discord
 
 Visit this link to install discord bot to your server:
 https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
@@ -30,7 +30,7 @@ Send `!help` to open the bot help message.
 
 `<!-- Add your bot here -->`
 
-### 3. Python package (for Windows, Mac, and Linux)
+### A3. Python package (for Windows, Mac, and Linux)
 
 📦 A python package named `lightnovel-crawler` is available in [pypi](https://pypi.org/project/lightnovel-crawler).
 
@@ -55,7 +55,7 @@ $ lncrawl
 
 > To view extra logs, use: `lncrawl -lll`
 
-### 4. Run from source
+### A4. Run from source
 
 - First clone the repository:
 
@@ -78,7 +78,7 @@ $ python3 __main__.py
 $ python3 .
 ```
 
-### Available options
+### A5. Available options
 
 To view list of available options:
 
@@ -122,7 +122,7 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-### Running the bot
+### A6. Running the bot
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
@@ -143,7 +143,7 @@ $ python3 .
 
 *There is a `server.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server.*
 
-## Development
+## (B) Development
 
 You are very welcome to contribute in this project. You can:
 
@@ -153,17 +153,17 @@ You are very welcome to contribute in this project. You can:
 - create new issues pointing out the bugs
 - solve existing issues.
 
-### Adding new source
+### B1. Adding new source
 
 - Create new crawler using the [`spiders/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/_sample.py) as blueprint. You can check out existing bots for idea.
 - Import your crawler to [`spiders/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/__init__.py) file.
 
-### Adding new Bot
+### B2. Adding new Bot
 
 - Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as a standard. You can check out existing bots for idea.
 - Import your bot to [`bots/__init__.py`].
 
-### Supported sources
+### B3. Supported sources
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
 
@@ -188,7 +188,7 @@ The list of currently available sources are given below:
 - [x] https://www.novelall.com
 - [x] http://novelfull.com
 
-### Supported output formats
+### B4. Supported output formats
 
 When download is done, the following files can be generated:
 
@@ -200,13 +200,13 @@ When download is done, the following files can be generated:
 - [x] DOCX
 - [x] PDF
 
-### Supported bots
+### B5. Supported bots
 
 - [x] Console Bot
 - [x] Telegram Bot
 - [x] Discord Bot
 
-### Getting to know the project structure
+## (C) Getting to know the project structure
 
 - The `lncrawl` is the source folder.
 - Inside `lncrawl/__init__.py` contains the execution codes.
