@@ -484,12 +484,12 @@ class ConsoleBot:
         selected = None
         args = get_args()
 
-        if args.suppress:
-            selected = [x['id'] for x in self.app.crawler.volumes]
+        if times == 0 and not selected:
+            selected = [int(x) for x in args.volumes]
         # end if
 
-        if times == 0 and not selected:
-            selected = args.volumes
+        if not selected and args.suppress:
+            selected = [x['id'] for x in self.app.crawler.volumes]
         # end if
 
         if not selected:
@@ -524,12 +524,12 @@ class ConsoleBot:
         selected = None
         args = get_args()
 
-        if args.suppress:
-            selected = self.app.crawler.chapters
-        # end if
-
         if times == 0 and not selected:
             selected = get_args().chapters
+        # end if
+
+        if not selected and args.suppress:
+            selected = self.app.crawler.chapters
         # end if
 
         if not selected:
