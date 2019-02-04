@@ -119,9 +119,8 @@ class App:
         # end if
     # end def
 
-    @property
-    def can_login(self):
-        return 'login' in self.crawler.__dict__
+    def can_do(self, prop_name):
+        return prop_name in self.crawler.__class__.__dict__
     # end def
 
     def get_novel_info(self):
@@ -129,7 +128,8 @@ class App:
         '''Produces: output_path'''
         self.crawler.initialize()
 
-        if self.can_login and self.login_data:
+        if self.can_do('login') and self.login_data:
+            logger.debug(self.login_data)
             self.crawler.login(*self.login_data)
         # end if
 
@@ -160,7 +160,7 @@ class App:
         save_metadata(self.crawler, self.output_path)
         download_chapters(self)
 
-        if 'logout' in self.crawler.__dict__:
+        if self.can_do('logout'):
             self.crawler.logout()
         # end if
     # end def

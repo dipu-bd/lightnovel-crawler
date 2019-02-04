@@ -39,7 +39,7 @@ class ConsoleBot:
             self.app.init_crawler(novel_url)
         # end if
 
-        if self.app.can_login:
+        if self.app.can_do('login'):
             self.app.login_data = self.get_login_info()
         # end if
 

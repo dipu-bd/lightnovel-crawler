@@ -284,7 +284,7 @@ class TelegramBot:
         update.message.reply_text(app.crawler.novel_url)
 
         # TODO: Implement login feature. Create login_info_dict of (email, password)
-        # if app.can_login:
+        # if app.can_do('login'):
         #     app.login_data = login_info_dict.get(app.crawler.home_url)
         # # end if
 
