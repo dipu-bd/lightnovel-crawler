@@ -12,13 +12,15 @@ from progress.bar import IncrementalBar
 
 logger = logging.getLogger('DOWNLOADER')
 
+
 def downlod_cover(app):
     app.book_cover = None
     if app.crawler.novel_cover:
         logger.warn('Getting cover image...')
         try:
             ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
-            filename = os.path.join(app.output_path, 'cover.%s' % (ext or 'png'))
+            filename = os.path.join(
+                app.output_path, 'cover.%s' % (ext or 'png'))
             if not os.path.exists(filename):
                 logger.info('Downloading cover image')
                 response = app.crawler.get_response(app.crawler.novel_cover)
@@ -42,8 +44,8 @@ def download_chapter_body(app, chapter):
 
     dir_name = os.path.join(app.output_path, 'json')
     if app.pack_by_volume:
-        dir_name = os.path.join(dir_name,
-                                'Volume ' + str(chapter['volume']).rjust(2, '0'))
+        vol_name = 'Volume ' + str(chapter['volume']).rjust(2, '0')
+        dir_name = os.path.join(dir_name, vol_name)
     # end if
     os.makedirs(dir_name, exist_ok=True)
 
@@ -89,7 +91,7 @@ def download_chapters(app):
     bar.start()
 
     if os.getenv('debug_mode') == 'yes':
-        bar.next = lambda: None # Hide in debug mode
+        bar.next = lambda: None  # Hide in debug mode
     # end if
 
     futures_to_check = {
