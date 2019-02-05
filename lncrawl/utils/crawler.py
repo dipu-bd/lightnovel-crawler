@@ -136,6 +136,7 @@ class Crawler:
     def get_response(self, url, incognito=False):
         if self._destroyed:
             return None
+        # end if
         self.last_visited_url = url.strip('/')
         response = self.scrapper.get(url)
         response.encoding = 'utf-8'
@@ -150,10 +151,13 @@ class Crawler:
         '''Submit a form using post request'''
         if self._destroyed:
             return None
-        headers = {
-            'content-type': 'multipart/form-data' if multipart
-            else 'application/x-www-form-urlencoded; charset=UTF-8'
-        }
+        # end if
+
+        headers.update({
+            'Content-Type': 'multipart/form-data' if multipart
+            else 'application/x-www-form-urlencoded; charset=UTF-8',
+        })
+
         response = self.scrapper.post(url, data=data, headers=headers)
         self.cookies.update({
             x.name: x.value
