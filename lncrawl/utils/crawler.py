@@ -48,7 +48,6 @@ class Crawler:
     executor = None
     _destroyed = False
 
-
     def __init__(self):
         self.executor = futures.ThreadPoolExecutor(max_workers=5)
         self.scrapper = cfscrape.create_scraper()
@@ -135,7 +134,8 @@ class Crawler:
     # end def
 
     def get_response(self, url, incognito=False):
-        if self._destroyed: return None
+        if self._destroyed:
+            return None
         self.last_visited_url = url.strip('/')
         response = self.scrapper.get(url)
         response.encoding = 'utf-8'
@@ -148,7 +148,8 @@ class Crawler:
 
     def submit_form(self, url, data={}, multipart=False, headers={}):
         '''Submit a form using post request'''
-        if self._destroyed: return None
+        if self._destroyed:
+            return None
         headers = {
             'content-type': 'multipart/form-data' if multipart
             else 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -164,6 +165,11 @@ class Crawler:
     def get_soup(self, *args, **kargs):
         response = self.get_response(*args, **kargs)
         return BeautifulSoup(response.text, 'lxml')
+    # end def
+
+    def get_json(self, *args, **kargs):
+        response = self.get_response(*args, **kargs)
+        return response.json()
     # end def
 
     def download_cover(self, output_file):
