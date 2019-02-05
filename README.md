@@ -107,7 +107,7 @@ To view list of available options:
 $ lncrawl -h
 ================================================================================
                            📒 Lightnovel Crawler 🍀 2.7.6
-            Download lightnovels into html, text, epub, mobi and json 
+            Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: 	lncrawl [options...]
 	lightnovel-crawler [options...]
@@ -162,7 +162,7 @@ $ vim .env
 $ python3 .
 ```
 
-*There is a `server.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server.*
+_There is a `server.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
 
 ## (B) Development
 
@@ -211,13 +211,13 @@ The list of currently available sources and the future plans are given below:
 - [x] https://m.novelspread.com
 - [x] https://www.novelspread.com
 - [x] http://gravitytales.com
+- [x] http://www.machinenoveltranslation.com/
 - [ ] http://moonbunnycafe.com/
 - [ ] https://novelonlinefree.info
 - [ ] https://www.noveluniverse.com/
 - [ ] http://zenithnovels.com
 - [ ] https://anythingnovel.com
 - [ ] https://m.chinesefantasynovels.com
-- [ ] http://www.machinenoveltranslation.com/
 
 Rejected due to difficulty or other reasons:
 
