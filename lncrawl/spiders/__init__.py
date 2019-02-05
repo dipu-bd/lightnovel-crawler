@@ -16,9 +16,10 @@ from .fullnovellive import FullnovelLiveCrawler
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
 from .novelspread import NovelSpreadCrawler
+from .gravitytales import GravityTalesCrawler
 
-# Do not forget to append a slash(/) at the end of the url
 crawler_list = {
+    # Do not forget to append a slash(/) at the end of the url
     'https://lnmtl.com/': LNMTLCrawler,
     'https://www.webnovel.com/': WebnovelCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
@@ -38,5 +39,6 @@ crawler_list = {
     'http://novelfull.com/': NovelFullCrawler,
     'https://m.novelspread.com/': NovelSpreadCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
+    'http://gravitytales.com/': GravityTalesCrawler,
+    # Do not forget to append a slash(/) at the end of the url
 }
-# Do not forget to append a slash(/) at the end of the url
