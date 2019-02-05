@@ -210,7 +210,7 @@ The list of currently available sources and the future plans are given below:
 - [x] http://novelfull.com
 - [x] https://m.novelspread.com
 - [x] https://www.novelspread.com
-- [ ] http://gravitytales.com
+- [x] http://gravitytales.com
 - [ ] http://moonbunnycafe.com/
 - [ ] https://novelonlinefree.info
 - [ ] https://www.noveluniverse.com/
