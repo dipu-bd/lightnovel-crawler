@@ -208,10 +208,11 @@ The list of currently available sources and the future plans are given below:
 - [x] http://fullnovel.live
 - [x] https://www.novelall.com
 - [x] http://novelfull.com
+- [x] https://m.novelspread.com
+- [x] https://www.novelspread.com
 - [ ] http://gravitytales.com
 - [ ] http://moonbunnycafe.com/
 - [ ] https://novelonlinefree.info
-- [ ] https://m.novelspread.com
 - [ ] https://www.noveluniverse.com/
 - [ ] http://zenithnovels.com
 - [ ] https://anythingnovel.com
@@ -221,7 +222,6 @@ The list of currently available sources and the future plans are given below:
 Rejected due to difficulty or other reasons:
 
 - [x] ~https://www.novelupdates.com~
-- [x] ~https://www.novelspread.com~
 
 ### B4. Supported output formats
 
