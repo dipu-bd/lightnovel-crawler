@@ -101,14 +101,14 @@ class LNMTLCrawler(Crawler):
             logger.debug(volumes)
 
             for i, vol in enumerate(volumes):
-                title = vol['title'] or ''
+                title = vol['title'] if 'title' in vol else ''
                 title = re.sub(r'[^\u0000-\u00FF]', '', title)
                 title = re.sub(r'\(\)', '', title).strip()
                 self.volumes.append({
-                    'id': i,
+                    'id': i + 1,
                     'title': title,
                     'download_id': vol['id'],
-                    'volume': int(vol['number'] or str(i)),
+                    'volume': int(vol['number']) if 'number' in vol else (i + 1),
                 })
             # end for
             break

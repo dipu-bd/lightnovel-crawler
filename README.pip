@@ -1,7 +1,7 @@
 Lightnovel Crawler
 -----------------------
 
-Crawls lightnovels from various websites and converts into epub, mobi, html and text.
+Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx and pdf.
 
 List of supported sites are given below.
 
@@ -23,7 +23,9 @@ List of supported sites are given below.
 - http://fullnovel.live
 - https://www.novelall.com
 - http://novelfull.com
+- https://m.novelspread.com
+- https://www.novelspread.com
+- http://gravitytales.com
+- http://www.machinenoveltranslation.com/
 
-To request new site create an issue here: https://github.com/dipu-bd/lightnovel-crawler/issues.
-
-For usage instructions visit: https://github.com/dipu-bd/lightnovel-crawler
+Visit https://github.com/dipu-bd/lightnovel-crawler for more details.

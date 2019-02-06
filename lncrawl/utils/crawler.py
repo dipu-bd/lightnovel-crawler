@@ -16,11 +16,8 @@ logger = logging.getLogger(__name__)
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
-    home_url = ''
-    novel_url = ''
-    last_visited_url = None
 
-    '''Must resolve these fields inside `read_novel_info`'''
+    # Must resolve these fields inside `read_novel_info`
     novel_title = 'N/A'
     novel_author = 'N/A'
     novel_cover = None
@@ -32,10 +29,6 @@ class Crawler:
     '''
     volumes = []
 
-    scrapper = None
-    executor = None
-    _destroyed = False
-
     '''
     Each item must contain these keys:
     `id` - 1 based index of the chapter
@@ -45,6 +38,15 @@ class Crawler:
     `url` - the link where to download the chapter
     '''
     chapters = []
+
+    # Other stuffs - not necessary to resolve from crawler instance.
+    home_url = ''
+    novel_url = ''
+    last_visited_url = None
+
+    scrapper = None
+    executor = None
+    _destroyed = False
 
     def __init__(self):
         self.executor = futures.ThreadPoolExecutor(max_workers=5)
@@ -132,7 +134,9 @@ class Crawler:
     # end def
 
     def get_response(self, url, incognito=False):
-        if self._destroyed: return None
+        if self._destroyed:
+            return None
+        # end if
         self.last_visited_url = url.strip('/')
         response = self.scrapper.get(url)
         response.encoding = 'utf-8'
@@ -145,11 +149,15 @@ class Crawler:
 
     def submit_form(self, url, data={}, multipart=False, headers={}):
         '''Submit a form using post request'''
-        if self._destroyed: return None
-        headers = {
-            'content-type': 'multipart/form-data' if multipart
-            else 'application/x-www-form-urlencoded; charset=UTF-8'
-        }
+        if self._destroyed:
+            return None
+        # end if
+
+        headers.update({
+            'Content-Type': 'multipart/form-data' if multipart
+            else 'application/x-www-form-urlencoded; charset=UTF-8',
+        })
+
         response = self.scrapper.post(url, data=data, headers=headers)
         self.cookies.update({
             x.name: x.value
@@ -161,6 +169,11 @@ class Crawler:
     def get_soup(self, *args, **kargs):
         response = self.get_response(*args, **kargs)
         return BeautifulSoup(response.text, 'lxml')
+    # end def
+
+    def get_json(self, *args, **kargs):
+        response = self.get_response(*args, **kargs)
+        return response.json()
     # end def
 
     def download_cover(self, output_file):

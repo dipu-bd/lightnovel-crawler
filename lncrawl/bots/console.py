@@ -39,7 +39,7 @@ class ConsoleBot:
             self.app.init_crawler(novel_url)
         # end if
 
-        if self.app.can_login:
+        if self.app.can_do('login'):
             self.app.login_data = self.get_login_info()
         # end if
 
@@ -320,13 +320,14 @@ class ConsoleBot:
         return {x: (formats.count(x) > 0) for x in available_formats}
     # end def
 
-
     def should_pack_by_volume(self):
         '''Returns whether to generate single or multiple files by volumes'''
         args = get_args()
 
-        if len(sys.argv) > 1:
-            return args.byvol
+        if args.single:
+            return False
+        elif args.multi:
+            return True
         # end if
 
         if args.suppress:
@@ -348,8 +349,8 @@ class ConsoleBot:
         '''Returns a choice of how to select the range of chapters to downloads'''
         volume_count = len(self.app.crawler.volumes)
         chapter_count = len(self.app.crawler.chapters)
-        selections = ['all', 'last', 'first', 'page', 'range', 'volumes', 'chapters']
-
+        selections = ['all', 'last', 'first',
+                      'page', 'range', 'volumes', 'chapters']
 
         args = get_args()
         for key in selections:
@@ -483,12 +484,12 @@ class ConsoleBot:
         selected = None
         args = get_args()
 
-        if args.suppress:
-            selected = [x['id'] for x in self.app.crawler.volumes]
+        if times == 0 and not selected:
+            selected = [int(x) for x in args.volumes]
         # end if
 
-        if times == 0 and not selected:
-            selected = args.volumes
+        if not selected and args.suppress:
+            selected = [x['id'] for x in self.app.crawler.volumes]
         # end if
 
         if not selected:
@@ -508,10 +509,7 @@ class ConsoleBot:
                     else 'You must choose at least one volume.'
                 }
             ])
-            selected = [
-                int(val.split(' ')[0])
-                for val in answer['volumes']
-            ]
+            selected = [int(val.split(' ')[0]) for val in answer['volumes']]
         # end if
 
         if times < 3 and len(selected) == 0:
@@ -526,12 +524,12 @@ class ConsoleBot:
         selected = None
         args = get_args()
 
-        if args.suppress:
-            selected = self.app.crawler.chapters
-        # end if
-
         if times == 0 and not selected:
             selected = get_args().chapters
+        # end if
+
+        if not selected and args.suppress:
+            selected = self.app.crawler.chapters
         # end if
 
         if not selected:

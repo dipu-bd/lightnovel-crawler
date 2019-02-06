@@ -41,8 +41,11 @@ class ArgReader:
         replacer.add_argument('-i', '--ignore', action='store_true',
                               help='Ignore any existing folder (do not replace)')
 
-        parser.add_argument('-b', '--byvol', action='store_true',
-                            help='Build separate books by volumes')
+        byvol = parser.add_mutually_exclusive_group()
+        byvol.add_argument('--single', action='store_true',
+                           help='Put everything in a single book')
+        byvol.add_argument('--multi', action='store_true',
+                           help='Build separate books by volumes')
 
         parser.add_argument('--login', nargs=2, metavar=('USER', 'PASSWD'),
                             help='User name/email address and password for login')
