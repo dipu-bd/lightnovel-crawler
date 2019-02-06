@@ -24,7 +24,7 @@ class WuxiaCoCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
-        for a in soup.select('.recommend a'):
+        for a in soup.select('.recommend .hot_sale a'):
             url = self.absolute_url(a['href'])
             title = a.select_one('.title').text.strip()
             results.append((title, url))

@@ -119,7 +119,6 @@ class Crawler:
 
     def absolute_url(self, url, page_url=None):
         url = (url or '').strip()
-        page_url = (page_url or self.last_visited_url).strip('/')
         if not url or len(url) == 0:
             return None
         elif url.startswith('//'):
@@ -128,8 +127,11 @@ class Crawler:
             return url
         elif url.startswith('/'):
             return self.home_url + url
-        else:
+        elif page_url:
+            page_url = page_url.strip('/')
             return (page_url or self.home_url) + '/' + url
+        else:
+            return url
         # end if
     # end def
 
@@ -163,6 +165,7 @@ class Crawler:
             x.name: x.value
             for x in response.cookies
         })
+
         return response
     # end def
 
