@@ -30,7 +30,11 @@ class LnindoCrawler(Crawler):
         self.novel_author = author[20:len(author)-22]
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find('blockquote',{"style" : re.compile('-moz-border-radius.*')}).findAll('a')
+        if soup.find('blockquote',{"style" : re.compile('-moz-border-radius.*')}):
+            chapters = soup.find('blockquote',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
+        else:
+            chapters = soup.find('div',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
+        #end if
         chapters.reverse()
 
         for a in chapters:
