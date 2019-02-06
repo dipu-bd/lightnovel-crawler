@@ -49,7 +49,10 @@ https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions
 
 Send `!help` to open the bot help message.
 
-`<!-- Add your bot here -->`
+#### A2.2 Telegram Bot
+
+Visit this link to get started with the telegram bot:
+https://t.me/epub_smelter_bot
 
 ### A3. Python package (for Windows, Mac, and Linux)
 
@@ -218,6 +221,7 @@ The list of currently available sources and the future plans are given below:
 - [ ] http://zenithnovels.com
 - [ ] https://anythingnovel.com
 - [ ] https://m.chinesefantasynovels.com
+- [ ] https://comrademao.com/
 
 Rejected due to difficulty or other reasons:
 
