@@ -49,6 +49,8 @@ https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions
 
 Send `!help` to open the bot help message.
 
+Telegram Bot
+https://t.me/epub_smelter_bot
 `<!-- Add your bot here -->`
 
 ### A3. Python package (for Windows, Mac, and Linux)
