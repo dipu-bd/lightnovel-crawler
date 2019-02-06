@@ -216,7 +216,7 @@ The list of currently available sources and the future plans are given below:
 - [x] http://gravitytales.com
 - [x] http://www.machinenoveltranslation.com/
 - [ ] http://moonbunnycafe.com/
-- [ ] https://novelonlinefree.info
+- [x] https://novelonlinefree.info
 - [ ] https://www.noveluniverse.com/
 - [ ] http://zenithnovels.com
 - [ ] https://anythingnovel.com
