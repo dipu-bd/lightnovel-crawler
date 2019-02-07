@@ -215,13 +215,13 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.novelspread.com
 - [x] http://gravitytales.com
 - [x] http://www.machinenoveltranslation.com/
-- [ ] http://moonbunnycafe.com/
 - [x] https://novelonlinefree.info
-- [ ] https://www.noveluniverse.com/
-- [ ] http://zenithnovels.com
-- [ ] https://anythingnovel.com
+- [x] https://anythingnovel.com
 - [ ] https://m.chinesefantasynovels.com
+- [ ] http://zenithnovels.com
 - [ ] https://comrademao.com/
+- [ ] http://moonbunnycafe.com/
+- [ ] https://www.noveluniverse.com/
 
 Rejected due to difficulty or other reasons:
 
