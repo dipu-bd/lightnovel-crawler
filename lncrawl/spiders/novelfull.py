@@ -115,7 +115,9 @@ class NovelFullCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        body = soup.select('div#chapter-content p')
+        content = soup.select_one('div#chapter-content')
+        self.clean_contents(content)
+        body = content.select('p')
         body = [str(p) for p in body if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

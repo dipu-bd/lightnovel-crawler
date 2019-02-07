@@ -207,11 +207,16 @@ class Crawler:
         return False
     # end def
 
-    def extract_contents(self, div, level=0):
-        body = []
+    def clean_contents(self, div):
         for tag in div.select(', '.join(self.bad_tags)):
             tag.decompose()
         # end for
+        return div
+    # end def
+
+    def extract_contents(self, div, level=0):
+        body = []
+        self.clean_contents(div)
         for elem in div.contents:
             if isinstance(elem, Comment):
                 continue
