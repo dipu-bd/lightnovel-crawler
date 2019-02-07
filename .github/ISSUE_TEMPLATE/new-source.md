@@ -1,10 +1,10 @@
 ---
 name: New source
 about: Suggest a new source to add
-title: Add this source
+title: Enter your desired sources here
 labels: source
 assignees: ''
 
 ---
 
-Enter your desired sources here
+
