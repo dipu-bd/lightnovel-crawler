@@ -86,7 +86,9 @@ class BoxNovelCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         #chapter['title'] = soup.find('li', {'class':'active'}).text
-        content = soup.find("div", {"class": "text-left"}).findAll("p")
+        div = soup.find("div", {"class": "text-left"})
+        self.clean_contents(div)
+        content = div.findAll("p")
 
         title = soup.find_all(re.compile('^h[2-4]$'))
 
