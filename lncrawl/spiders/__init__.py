@@ -20,6 +20,7 @@ from .gravitytales import GravityTalesCrawler
 from .machinetrans import MachineNovelTrans
 from .novelonlinefree import NovelOnlineFreeCrawler
 from .anythingnovel import AnythingNovelCrawler
+from .royalroad import RoyalRoadCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -46,5 +47,6 @@ crawler_list = {
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
     'https://novelonlinefree.info/': NovelOnlineFreeCrawler,
     'https://anythingnovel.com/': AnythingNovelCrawler,
+    'https://www.royalroad.com/': RoyalRoadCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
