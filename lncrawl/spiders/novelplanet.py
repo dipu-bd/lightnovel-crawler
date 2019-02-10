@@ -82,25 +82,23 @@ class NovelPlanetCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
+        content = soup.select_one('#divReadContent')
+        self.clean_contents(content)
 
-        if 'Chapter' in soup.select_one('h3').text:
-            chapter['title'] = soup.select_one('h3').text
-        else:
-            chapter['title'] = chapter['title'] + \
-                ' : ' + soup.select_one('h3').text
-        # end if
+        # logger.debug(soup.title.string)
+        # if 'Chapter' in soup.select_one('h3').text:
+        #     chapter['title'] = soup.select_one('h3').text
+        # else:
+        #     chapter['title'] = chapter['title'] + \
+        #         ' : ' + soup.select_one('h3').text
+        # # end if
 
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
-        contents = soup.select_one('#divReadContent')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return ''.join([
+            str(p).strip()
+            for p in content.select('p')
+            if p.text.strip()
+        ])
     # end def
 # end class
