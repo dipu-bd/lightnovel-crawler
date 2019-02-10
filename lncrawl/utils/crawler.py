@@ -119,6 +119,9 @@ class Crawler:
 
     def absolute_url(self, url, page_url=None):
         url = (url or '').strip()
+        if not page_url:
+            page_url = self.last_visited_url
+        # end if
         if not url or len(url) == 0:
             return None
         elif url.startswith('//'):
