@@ -119,6 +119,9 @@ class Crawler:
 
     def absolute_url(self, url, page_url=None):
         url = (url or '').strip()
+        if not page_url:
+            page_url = self.last_visited_url
+        # end if
         if not url or len(url) == 0:
             return None
         elif url.startswith('//'):
@@ -211,16 +214,18 @@ class Crawler:
         for tag in div.select(', '.join(self.bad_tags)):
             tag.decompose()
         # end for
+        for elem in div.contents:
+            if isinstance(elem, Comment):
+                elem.decompose()
+            # end if
+        # end for
         return div
     # end def
 
-    def extract_contents(self, div, level=0):
+    def extract_contents(self, tag, level=0):
         body = []
-        self.clean_contents(div)
-        for elem in div.contents:
-            if isinstance(elem, Comment):
-                continue
-            # end if
+        self.clean_contents(tag)
+        for elem in tag.contents:
             if self.block_tags.count(elem.name):
                 body += self.extract_contents(elem, level + 1)
                 continue

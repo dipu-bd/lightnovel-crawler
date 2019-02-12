@@ -168,11 +168,11 @@ _There is a `server.sh` script to run a bot in ubuntu servers. It will basically
 
 You are very welcome to contribute in this project. You can:
 
-- add your own sources
-- add new output formats
-- create new bots
-- create new issues pointing out the bugs
+- create new issues pointing out the bugs.
 - solve existing issues.
+- add your own sources.
+- add new output formats.
+- create new bots.
 
 ### B1. Adding new source
 
@@ -214,9 +214,9 @@ The list of currently available sources and the future plans are given below:
 - [x] http://www.machinenoveltranslation.com/
 - [x] https://novelonlinefree.info
 - [x] https://anythingnovel.com
+- [x] https://comrademao.com/
 - [ ] https://m.chinesefantasynovels.com
 - [ ] http://zenithnovels.com
-- [ ] https://comrademao.com/
 - [ ] http://moonbunnycafe.com/
 - [ ] https://www.noveluniverse.com/
 
@@ -241,3 +241,7 @@ When download is done, the following files can be generated:
 - [x] Console Bot
 - [x] Telegram Bot
 - [x] Discord Bot
+
+## (C) The project structure
+
+[Click here](https://github.com/dipu-bd/lightnovel-crawler/blob/master/CONTRIBUTING.md) to view details.

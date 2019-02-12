@@ -49,6 +49,6 @@ crawler_list = {
     'https://novelonlinefree.info/': NovelOnlineFreeCrawler,
     'https://anythingnovel.com/': AnythingNovelCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
-    'https://comrademao.com/': ComrademaoCrawler
+    'https://comrademao.com/': ComrademaoCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
