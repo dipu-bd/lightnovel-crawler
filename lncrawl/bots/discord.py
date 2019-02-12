@@ -11,6 +11,7 @@ import discord
 from ..core.app import App
 from ..spiders import crawler_list
 from ..utils.uploader import upload
+from ..binders import available_formats
 
 logger = logging.getLogger('DISCORD_BOT')
 
@@ -27,7 +28,7 @@ class DiscordBot(discord.Client):
     async def on_ready(self):
         logger.warn('Discord bot in online!')
         await self.change_presence(
-            game=discord.Game(name="above the clouds")
+            game=discord.Game(name="🔥Ready For Smelting🔥")
         )
     # end def
 
@@ -372,6 +373,51 @@ class MessageHandler:
         if len(self.app.chapters) == 0:
             await self.send('You have not selected any chapters. Please select at least one')
             return
+        # end if
+
+        await self.send('Get your range selection')
+
+        await self.display_output_selection()
+    # end def
+
+    async def display_output_selection(self):
+        await self.send('\n'.join([
+            'Now you can send the following commands choose book format you want to download:',
+            '- To download everything send `!all` or pass `!cancel` to stop.',
+            '- Send `!epub` to download in epub format. ',
+            '- Send `!mobi` to download in mobi format. ',
+            '- Send `!pdf` to download in pdf format.',
+            '- Send `!docx` to download in docx format.',
+            '- Send `!text` to download in text format.',
+            '- Send `!html` to download in html format.',
+        ]))
+        self.state = self.handle_output_selection
+    # end def
+
+    async def handle_output_selection(self):
+        text = self.message.content.strip()
+        if text.startswith('!cancel'):
+            await self.get_novel_url()
+            return
+        # end if
+        output_format = text[1:]
+        if text.startswith('!all'):
+            self.app.output_formats = None
+        else :
+            self.app.output_formats = {}
+            if output_format in available_formats:
+                for x in available_formats:
+                    if x == output_format :
+                        self.app.output_formats[x] = True
+                    else:
+                        self.app.output_formats[x] = False
+                    # end if 
+                # end for
+                await self.send('I will generate e-book in %s format' % output_format)
+            else:
+                await self.send('Sorry! I did not recognize your input. Please try again')
+                return
+            # end if
         # end if
 
         await self.send(
