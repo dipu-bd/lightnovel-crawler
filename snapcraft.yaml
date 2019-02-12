@@ -6,7 +6,8 @@ description: >
   online sources and generate different types of output, e.g.
   epub, mobi, json, html, text, docx and pdf.
 
-confinement: devmode
+grade: stable
+confinement: classic
 
 parts:
   lncrawl:
