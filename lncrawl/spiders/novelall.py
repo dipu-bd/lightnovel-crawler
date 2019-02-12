@@ -57,9 +57,8 @@ class NovelAllCrawler(Crawler):
         for a in chapters:
             for span in a.findAll('span'):
                 span.decompose()
-    # end for
+            # end for
         # end for
-        print(chapters)
 
         for x in chapters:
             chap_id = len(self.chapters) + 1
