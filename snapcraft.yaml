@@ -1,10 +1,6 @@
 name: lncrawl
-title: Lightnovel Crawler
 version: git
 summary: Lightnovel Crawler
-license: Apache 2.0
-type: app
-architectures: all
 description: >
   Lightnovel crawler is a software that can download lightnovels from a lots of
   online sources and generate different types of output, e.g.
