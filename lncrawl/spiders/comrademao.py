@@ -12,7 +12,7 @@ logger = logging.getLogger('COMRADEMAO')
 
 class ComrademaoCrawler(Crawler):
 
-    temp_chapters = []
+    #temp_chapters = []
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -33,20 +33,11 @@ class ComrademaoCrawler(Crawler):
         logger.info('Chapter list pages: %d' % page_count)
         
         logger.info('Getting chapters...')
-        #futures_to_check = {
-        #    self.executor.submit(
-        #        self.download_chapter_list,
-        #        i + 1,
-        #    ): str(i)
-        #    for i in range(page_count + 1)
-        #}
-        #[x.result() for x in futures.as_completed(futures_to_check)]
+        chapters = []
         for i in range(page_count):
-            self.download_chapter_list(i+1)
+            chapters.extend(self.download_chapter_list(i+1))
         # end for
 
-        print(self.temp_chapters)
-        chapters = self.temp_chapters
         chapters.reverse()
 
         for x in chapters:
@@ -79,8 +70,7 @@ class ComrademaoCrawler(Crawler):
         url += '/page/%s/' % page
         soup = self.get_soup(url)
         logger.debug('Crawling chapters url in page %s' % page)
-        self.temp_chapters.extend(soup.select('tbody td a'))
-        # end for
+        return soup.select('tbody td a')
     # end def
 
     def download_chapter_body(self, chapter):
@@ -90,8 +80,7 @@ class ComrademaoCrawler(Crawler):
         soup = BeautifulSoup(response.content, 'lxml')
         logger.debug(soup.title.string)
         
-        contents = soup.select('div.entry-content div.container a p')
-        print(contents)
+        contents = soup.select('div.entry-content div.container div.container a p')
         body_parts = []
         for x in contents:
             body_parts.append(x.text)
