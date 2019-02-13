@@ -22,6 +22,7 @@ from .novelonlinefree import NovelOnlineFreeCrawler
 from .anythingnovel import AnythingNovelCrawler
 from .royalroad import RoyalRoadCrawler
 from .comrademao import ComrademaoCrawler
+from .chinesefantasy import ChineseFantasyNovels
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -50,5 +51,6 @@ crawler_list = {
     'https://anythingnovel.com/': AnythingNovelCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://comrademao.com/': ComrademaoCrawler,
+    'https://m.chinesefantasynovels.com/': ChineseFantasyNovels,
     # Do not forget to append a slash(/) at the end of the url
 }
