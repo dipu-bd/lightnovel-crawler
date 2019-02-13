@@ -6,6 +6,8 @@ description: >
   online sources and generate different types of output, e.g.
   epub, mobi, json, html, text, docx and pdf.
 
+icon: res/lncrawl-icon.png
+base: core18
 grade: stable
 confinement: classic
 
@@ -13,7 +15,7 @@ parts:
   lncrawl:
     plugin: python
     python-version: python3
-    requirements: requirements.txt
+    source-type: git
     source: .
 
 apps:
