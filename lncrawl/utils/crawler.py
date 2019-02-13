@@ -214,10 +214,8 @@ class Crawler:
         for tag in div.select(', '.join(self.bad_tags)):
             tag.decompose()
         # end for
-        for elem in div.contents:
-            if isinstance(elem, Comment):
-                elem.decompose()
-            # end if
+        for elem in div(text=lambda x: isinstance(x, Comment)):
+            elem.extract()
         # end for
         return div
     # end def
