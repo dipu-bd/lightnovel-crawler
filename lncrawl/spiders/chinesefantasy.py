@@ -7,7 +7,7 @@ import re
 import logging
 import json
 
-logger = logging.getLogger('WUXIA_WORLD')
+logger = logging.getLogger('CHINESE_FANTASY_NOVELS')
 
 
 class ChineseFantasyNovels(Crawler):
