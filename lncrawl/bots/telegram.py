@@ -431,10 +431,16 @@ class TelegramBot:
                 'I will generate single output files whenever possible')
         # end if
 
+        i=0
+        new_list = [['all']]
+        while i<len(available_formats):
+            new_list.append(available_formats[i:i+2])
+            i+=2
+            
         update.message.reply_text(
             'In which format you want me to generate your book?',
             reply_markup=ReplyKeyboardMarkup(
-                [['all'] + available_formats],
+                new_list,
                 one_time_keyboard=True,
             ),
         )
