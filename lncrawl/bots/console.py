@@ -396,7 +396,7 @@ class ConsoleBot:
         args = get_args()
         start_url, stop_url = args.page or (None, None)
 
-        if args.suppress:
+        if args.suppress and not (start_url and stop_url):
             return (0, len(self.app.crawler.chapters) - 1)
         # end if
 
@@ -440,7 +440,7 @@ class ConsoleBot:
         args = get_args()
         start, stop = args.range or (None, None)
 
-        if args.suppress:
+        if args.suppress and not (start and stop):
             return (0, chapter_count - 1)
         # end if
 
