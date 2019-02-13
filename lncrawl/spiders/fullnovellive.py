@@ -32,17 +32,24 @@ class FullnovelLiveCrawler(Crawler):
         self.novel_cover = self.absolute_url(
             soup.select_one('.info .image img')['src'])
 
-        self.volumes.append({
-            'id': 1,
-            'volume': 1,
-            'title': 'Volume 1',
-        })
-        for a in soup.select('.scroll-eps a'):
+        chapters = soup.select('.scroll-eps a')
+        chapters.reverse()
+
+        for x in chapters:
+            chap_id = len(self.chapters) + 1
+            if len(self.chapters) % 100 == 0:
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
+                self.volumes.append({
+                    'id': vol_id,
+                    'title': vol_title,
+                })
+            # end if
             self.chapters.append({
-                'volume': 1,
-                'id': len(self.chapters) + 1,
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
+                'id': chap_id,
+                'volume': vol_id,
+                'url': self.absolute_url(x['href']),
+                'title': x.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
     # end def
