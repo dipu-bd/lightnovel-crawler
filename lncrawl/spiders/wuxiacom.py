@@ -6,16 +6,36 @@ Crawler for [WuxiaWorld](http://www.wuxiaworld.com/).
 import json
 import logging
 import re
+import requests
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
 
+novel_url = 'https://www.wuxiaworld.com/novel/%s'
+search_url = 'https://www.wuxiaworld.com/api/novels/search?query=%s&count=5'
+
 
 class WuxiaComCrawler(Crawler):
     def initialize(self):
-        #delete '/' at the end of url because it cause failure when scrap chapter url
         self.home_url = 'https://www.wuxiaworld.com'
+    # end def
+
+    def search_novel(self, query):
+        '''Gets a list of {title, url} matching the given query'''
+        url = search_url % query
+        logger.info('Visiting %s ...', url)
+        data = requests.get(url).json()
+        logger.debug(data)
+
+        results = []
+        for item in data['items']:
+            results.append((
+                item['name'],
+                novel_url % item['slug'],
+            ))
+        # end for
+        return results
     # end def
 
     def read_novel_info(self):
