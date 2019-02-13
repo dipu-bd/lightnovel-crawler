@@ -1,0 +1,21 @@
+name: lncrawl
+version: git
+summary: Lightnovel Crawler
+description: >
+  Lightnovel crawler is a software that can download lightnovels from a lots of
+  online sources and generate different types of output, e.g.
+  epub, mobi, json, html, text, docx and pdf.
+
+grade: stable
+confinement: classic
+
+parts:
+  lncrawl:
+    plugin: python
+    python-version: python3
+    requirements: requirements.txt
+    source: .
+
+apps:
+  lncrawl:
+    command: bin/lncrawl
