@@ -224,7 +224,10 @@ class Crawler:
 
     def extract_contents(self, tag, level=0):
         body = []
-        self.clean_contents(tag)
+        if level == 0:
+            self.clean_contents(tag)
+        # end if
+
         for elem in tag.contents:
             if self.block_tags.count(elem.name):
                 body += self.extract_contents(elem, level + 1)
@@ -248,6 +251,7 @@ class Crawler:
                 body.append(text)
             # end if
         # end for
+
         if level > 0:
             return body
         # end if

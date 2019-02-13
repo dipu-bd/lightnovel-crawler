@@ -217,8 +217,9 @@ The list of currently available sources and the future plans are given below:
 - [x] https://novelonlinefree.info
 - [x] https://anythingnovel.com
 - [x] https://comrademao.com/
-- [ ] https://m.chinesefantasynovels.com
-- [ ] http://zenithnovels.com
+- [x] https://m.chinesefantasynovels.com
+- [x] https://www.scribblehub.com
+- [x] http://zenithnovels.com
 - [ ] http://moonbunnycafe.com/
 - [ ] https://www.noveluniverse.com/
 
