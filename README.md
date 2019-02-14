@@ -213,18 +213,18 @@ The list of currently available sources and the future plans are given below:
 - [x] https://m.novelspread.com
 - [x] https://www.novelspread.com
 - [x] http://gravitytales.com
-- [x] http://www.machinenoveltranslation.com/
+- [x] http://www.machinenoveltranslation.com
 - [x] https://novelonlinefree.info
 - [x] https://anythingnovel.com
-- [x] https://comrademao.com/
+- [x] https://comrademao.com
 - [x] https://m.chinesefantasynovels.com
 - [x] https://www.scribblehub.com
 - [x] http://zenithnovels.com
-- [ ] http://moonbunnycafe.com/
-- [ ] https://www.noveluniverse.com/
+- [x] https://www.noveluniverse.com
 
 Rejected due to difficulty or other reasons:
 
+- [x] ~http://moonbunnycafe.com/~
 - [x] ~https://www.novelupdates.com~
 
 ### B4. Supported output formats
