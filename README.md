@@ -108,7 +108,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀 2.7.6
+                          📒 Lightnovel Crawler 🍀 2.7.12
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: 	lncrawl [options...]
@@ -129,7 +129,8 @@ optional arguments:
                         (default: `all`)
   -f, --force           Force replace any existing folder
   -i, --ignore          Ignore any existing folder (do not replace)
-  -b, --byvol           Build separate books by volumes
+  --single              Put everything in a single book
+  --multi               Build separate books by volumes
   --login USER PASSWD   User name/email address and password for login
   --all                 Download all chapters
   --first [COUNT]       Download first few chapters (default: 10)
