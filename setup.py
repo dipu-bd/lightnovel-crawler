@@ -19,7 +19,6 @@ setup(
     include_package_data=True,
     package_data=package_data,
     long_description=long_description,
-    long_description_content_type='text/markdown',
     url='https://github.com/dipu-bd/lightnovel-crawler',
     author='Sudipto Chandra',
     author_email='dipu.sudipta@gmail.com',
