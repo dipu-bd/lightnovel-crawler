@@ -1,6 +1,6 @@
 VERSION=$(head -n 1 VERSION)
 
-rm -r build dist *.egg-info
+rm -rf build dist *.egg-info
 
 python setup.py bdist_wheel sdist
 python setup_win.py
