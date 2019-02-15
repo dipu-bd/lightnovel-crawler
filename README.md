@@ -108,7 +108,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀 2.7.6
+                          📒 Lightnovel Crawler 🍀 2.7.12
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: 	lncrawl [options...]
@@ -129,7 +129,8 @@ optional arguments:
                         (default: `all`)
   -f, --force           Force replace any existing folder
   -i, --ignore          Ignore any existing folder (do not replace)
-  -b, --byvol           Build separate books by volumes
+  --single              Put everything in a single book
+  --multi               Build separate books by volumes
   --login USER PASSWD   User name/email address and password for login
   --all                 Download all chapters
   --first [COUNT]       Download first few chapters (default: 10)
@@ -213,18 +214,18 @@ The list of currently available sources and the future plans are given below:
 - [x] https://m.novelspread.com
 - [x] https://www.novelspread.com
 - [x] http://gravitytales.com
-- [x] http://www.machinenoveltranslation.com/
+- [x] http://www.machinenoveltranslation.com
 - [x] https://novelonlinefree.info
 - [x] https://anythingnovel.com
-- [x] https://comrademao.com/
+- [x] https://comrademao.com
 - [x] https://m.chinesefantasynovels.com
 - [x] https://www.scribblehub.com
 - [x] http://zenithnovels.com
-- [ ] http://moonbunnycafe.com/
-- [ ] https://www.noveluniverse.com/
+- [x] https://www.noveluniverse.com
 
 Rejected due to difficulty or other reasons:
 
+- [x] ~http://moonbunnycafe.com/~
 - [x] ~https://www.novelupdates.com~
 
 ### B4. Supported output formats

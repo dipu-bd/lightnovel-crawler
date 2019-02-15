@@ -9,15 +9,15 @@ short_description = 'Crawls light novels and make html, text, epub, mobi, pdf an
 package_keywords = 'lightnovel crawler lncrawl ebook kindle download novel'
 
 # Get the long description from the README file
-with open(path.join(_here, 'README.pip'), encoding='utf-8') as f:
+with open(path.join(_here, 'README.pip')) as f:
     long_description = f.read()
 
 # Get the long description from the README file
-with open(path.join(_here, 'requirements.txt'), encoding='utf-8') as f:
+with open(path.join(_here, 'requirements.txt')) as f:
     install_requires = f.readlines()
     # install_requires += ['lightnovel-crawler']
 
-with open(path.join(_here, 'VERSION'), encoding='utf-8') as f:
+with open(path.join(_here, 'VERSION')) as f:
     current_version = f.read().strip()
 
 package_data = {
