@@ -32,9 +32,12 @@ class LnindoCrawler(Crawler):
 
         if soup.find('blockquote',{"style" : re.compile('-moz-border-radius.*')}):
             chapters = soup.find('blockquote',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
-        else:
+        elif soup.find('div',{"style" : re.compile('moz-border-radius.*')}):
             chapters = soup.find('div',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
+        else:
+            chapters = soup.find('div',{"class" : 'markobar'}).findAll('a')
         #end if
+        
         chapters.reverse()
 
         for a in chapters:
