@@ -189,7 +189,7 @@ You are very welcome to contribute in this project. You can:
 
 ### B3. Supported sources
 
-> Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
+> Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
 
 The list of currently available sources and the future plans are given below:
 
