@@ -80,7 +80,11 @@ class ComrademaoCrawler(Crawler):
         soup = BeautifulSoup(response.content, 'lxml')
         logger.debug(soup.title.string)
         
-        contents = soup.select('div.entry-content div.container div.container a p')
+        if soup.select('div.entry-content div.container div.container a p'):
+            contents = soup.select('div.entry-content div.container div.container a p')
+        else:
+            contents = soup.select('div.entry-content div.container a p')
+            
         body_parts = []
         for x in contents:
             body_parts.append(x.text)
