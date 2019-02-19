@@ -7,12 +7,11 @@ import json
 import logging
 import re
 import requests
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
 
-novel_url = 'https://www.wuxiaworld.com/novel/%s'
+book_url = 'https://www.wuxiaworld.com/novel/%s'
 search_url = 'https://www.wuxiaworld.com/api/novels/search?query=%s&count=5'
 
 
@@ -32,7 +31,7 @@ class WuxiaComCrawler(Crawler):
         for item in data['items']:
             results.append((
                 item['name'],
-                novel_url % item['slug'],
+                book_url % item['slug'],
             ))
         # end for
         return results
@@ -40,10 +39,13 @@ class WuxiaComCrawler(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        url = self.novel_url.replace('https://m', 'https://www')
-        logger.debug('Visiting %s', url)
-        response = self.get_response(url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        self.novel_id = self.novel_url.split(
+            'wuxiaworld.com/novel/')[1].split('/')[0]
+        logger.info('Novel Id: %s', self.novel_id)
+
+        self.novel_url = book_url % self.novel_id
+        logger.debug('Visiting %s', self.novel_url)
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one('.section-content  h4').text
         logger.info('Novel title: %s', self.novel_title)
@@ -85,16 +87,15 @@ class WuxiaComCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         self.blacklist_patterns = [
             r'^<span>(...|\u2026)</span>$',
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
-        body_parts = soup.select_one('.panel-default .fr-view')
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p'
+        body = soup.select_one('.panel-default .fr-view')
+        self.clean_contents(body)
+        return '\n'.join([str(x) for x in body.contents])
     # end def
 # end class
