@@ -35,7 +35,7 @@ Download lightnovels from various online sources and generate output in differen
 
 ### A1. EXE (for Windows)
 
-📦 [lightnovel-crawler v2.7.8 for windows ~ 15MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.7.13 for windows ~ 15MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -189,7 +189,7 @@ You are very welcome to contribute in this project. You can:
 
 ### B3. Supported sources
 
-> Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
+> Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
 
 The list of currently available sources and the future plans are given below:
 
@@ -222,6 +222,7 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.scribblehub.com
 - [x] http://zenithnovels.com
 - [x] https://www.noveluniverse.com
+- [x] https://www.royalroad.com/
 
 Rejected due to difficulty or other reasons:
 

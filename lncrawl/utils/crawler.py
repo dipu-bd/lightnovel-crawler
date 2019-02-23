@@ -202,6 +202,9 @@ class Crawler:
     ]
 
     def is_blacklisted(self, text):
+        if len(text.strip()) == 0:
+            return True
+        # end if
         for pattern in self.blacklist_patterns:
             if re.search(pattern, text, re.IGNORECASE):
                 return True
@@ -211,11 +214,20 @@ class Crawler:
     # end def
 
     def clean_contents(self, div):
-        for tag in div.select(', '.join(self.bad_tags)):
-            tag.decompose()
-        # end for
-        for elem in div(text=lambda x: isinstance(x, Comment)):
-            elem.extract()
+        for tag in div.findAll(True):
+            if isinstance(tag, Comment):
+                # Remove comments
+                tag.extract()
+            elif tag.name in self.bad_tags:
+                # Remove bad tags
+                tag.extract()
+            elif self.is_blacklisted(tag.text):
+                # Remove blacklisted contents
+                tag.extract()
+            else:
+                # Remove attributes
+                tag.attrs = None
+            # end if
         # end for
         return div
     # end def
@@ -238,13 +250,6 @@ class Crawler:
                 text = '<%s>%s</%s>'
                 text = text % (elem.name, elem.text.strip(), elem.name)
             # end if
-            patterns = [
-                re.compile(r'<!--(.|\n)*-->', re.MULTILINE),
-                re.compile(r'\[if (.|\n)*!\[endif\]', re.MULTILINE),
-            ]
-            for x in patterns:
-                text = x.sub('', text).strip()
-            # end for
             if text:
                 body.append(text)
             # end if
@@ -252,14 +257,8 @@ class Crawler:
 
         if level > 0:
             return body
+        else:
+            return [x for x in body if len(x.strip())]
         # end if
-
-        body = [x for x in body if len(x.strip())]
-        length = len(body)
-        first_good = 0
-        while first_good < length and self.is_blacklisted(body[first_good]):
-            first_good += 1
-        # end while
-        return body[first_good:]
     # end def
 # end class
