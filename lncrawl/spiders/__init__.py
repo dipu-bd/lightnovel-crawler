@@ -26,6 +26,7 @@ from .chinesefantasy import ChineseFantasyNovels
 from .scribblehub import ScribbleHubCrawler
 from .zenithnovels import ZenithNovelsCrawler
 from .noveluniverse import NovelUniverseCrawler
+from .meionovel import MeionovelCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -58,5 +59,6 @@ crawler_list = {
     'https://www.scribblehub.com/': ScribbleHubCrawler,
     'http://zenithnovels.com/': ZenithNovelsCrawler,
     'https://www.noveluniverse.com/': NovelUniverseCrawler,
+    'https://meionovel.com/': MeionovelCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
