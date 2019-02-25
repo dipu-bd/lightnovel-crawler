@@ -6,6 +6,7 @@ isMac = platform.system() == 'Darwin'
 isLinux = platform.system() == 'Linux'
 isWindows = platform.system() == 'Windows'
 
+
 class Icons:
     isMac = isMac
     isLinux = isLinux
@@ -22,4 +23,5 @@ class Icons:
     PARTY = '📦' if hasSupport else '$'
     SOUND = '🔊' if hasSupport else '<<'
     RIGHT_ARROW = '⮕' if hasSupport else '->'
+    sparkle = '✨' if hasSupport else '*'
 # end def

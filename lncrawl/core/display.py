@@ -86,6 +86,13 @@ def error_message(err):
 # end def
 
 
+def app_complete():
+    print(Style.BRIGHT + Fore.YELLOW, Icons.sparkle,
+          'Completed the task.', Fore.RESET, Style.RESET_ALL)
+    print()
+# end def
+
+
 def new_version_news(latest):
     print('', Icons.PARTY + Style.BRIGHT + Fore.CYAN,
           'VERSION', Fore.RED + latest + Fore.CYAN,
@@ -96,7 +103,7 @@ def new_version_news(latest):
 
     if Icons.isWindows:
         print('', Icons.RIGHT_ARROW, Style.DIM + 'To download:',
-            Fore.YELLOW + 'https://goo.gl/sc4EZh', Style.RESET_ALL)
+              Fore.YELLOW + 'https://goo.gl/sc4EZh', Style.RESET_ALL)
     # end if
 
     print('-' * LINE_SIZE)

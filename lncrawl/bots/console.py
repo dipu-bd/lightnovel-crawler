@@ -9,8 +9,8 @@ from PyInquirer import prompt
 
 from ..core import display
 from ..core.app import App
-from ..assets.icons import Icons
 from ..core.arguments import get_args
+from ..assets.icons import Icons
 from ..spiders import crawler_list
 from ..binders import available_formats
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
@@ -54,7 +54,13 @@ class ConsoleBot:
         self.app.start_download()
         self.app.bind_books()
 
-        # self.app.compress_output()
+        self.app.destroy()
+        display.app_complete()
+
+        if not self.check_exit():
+            print()
+            self.start()
+        # end def
     # end def
 
     def process_chapter_range(self):
@@ -567,5 +573,24 @@ class ConsoleBot:
         ]
 
         return selected
+    # end def
+
+    def check_exit(self):
+        args = get_args()
+
+        if args.suppress:
+            return
+        # end if
+
+        answer = prompt([
+            {
+                'type': 'confirm',
+                'name': 'exit',
+                'message': 'Do you want to exit now?',
+                'default': True,
+            },
+        ])
+
+        return answer['exit']
     # end def
 # end class
