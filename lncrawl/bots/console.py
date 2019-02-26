@@ -579,7 +579,7 @@ class ConsoleBot:
         args = get_args()
 
         if args.suppress:
-            return
+            return True
         # end if
 
         answer = prompt([

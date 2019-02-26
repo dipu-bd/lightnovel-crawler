@@ -28,8 +28,8 @@ def process(fn, app, inp, fmt):
     try:
         return fn(app, inp)
     except Exception as err:
-        logger.debug('Error: %s' % err)
         logger.error('Failed to generate *.%s files' % fmt)
+        logger.debug(err)
         return None
     # end try
 # end def
