@@ -87,8 +87,8 @@ def error_message(err):
 
 
 def app_complete():
-    print(Style.BRIGHT + Fore.YELLOW, Icons.sparkle,
-          'Completed the task.', Fore.RESET, Style.RESET_ALL)
+    print(Style.BRIGHT + Fore.YELLOW + Icons.sparkle,
+          'Task completed', Fore.RESET, Style.RESET_ALL)
     print()
 # end def
 

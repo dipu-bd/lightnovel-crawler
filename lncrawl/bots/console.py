@@ -57,9 +57,11 @@ class ConsoleBot:
         self.app.destroy()
         display.app_complete()
 
-        if not self.check_exit():
-            print()
-            self.start()
+        if self.open_folder():
+            import pathlib
+            import webbrowser
+            url = pathlib.Path(self.app.output_path).as_uri()
+            webbrowser.open_new(url)
         # end def
     # end def
 
@@ -575,18 +577,18 @@ class ConsoleBot:
         return selected
     # end def
 
-    def check_exit(self):
+    def open_folder(self):
         args = get_args()
 
         if args.suppress:
-            return True
+            return False
         # end if
 
         answer = prompt([
             {
                 'type': 'confirm',
                 'name': 'exit',
-                'message': 'Do you want to exit now?',
+                'message': 'Do you want to open the folder?',
                 'default': True,
             },
         ])
