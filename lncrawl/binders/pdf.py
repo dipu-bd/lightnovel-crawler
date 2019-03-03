@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
-import io
-import os
 import base64
+import io
 import logging
+import os
+import re
 from datetime import datetime
-from weasyprint import HTML
+
+try:
+    from weasyprint import HTML
+except Exception as err:
+    logging.error(err)
+# end try
 
 logger = logging.getLogger('PDF_BINDER')
 
@@ -98,7 +103,7 @@ class PdfBuilder:
         logger.info('Added intro page')
 
         for chapter in self.chapters:
-            html_string = '<div style="text-align: justify">%s</div>' % chapter['body']
+            html_string = chapter['body']
             html = HTML(string=html_string)
             all_pages += html.render().pages
             logger.info('Added chapter %d', chapter['id'])
