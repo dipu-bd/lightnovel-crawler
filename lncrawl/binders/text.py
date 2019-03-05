@@ -4,7 +4,11 @@ import logging
 import os
 import re
 
-from bs4 import BeautifulSoup
+try:
+    from bs4 import BeautifulSoup
+except Exception as err:
+    logging.error(err)
+# end try
 
 logger = logging.getLogger('TEXT_BINDER')
 

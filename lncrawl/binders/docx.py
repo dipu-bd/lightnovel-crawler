@@ -1,21 +1,28 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
 import io
-import os
 import logging
-from bs4 import BeautifulSoup
-from docx import Document
-from docx.shared import Pt, Inches
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+import os
+import re
+
+try:
+    from bs4 import BeautifulSoup
+    from docx import Document
+    from docx.shared import Pt, Inches
+    from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
+except Exception as err:
+    logging.error(err)
+# end try
 
 logger = logging.getLogger('DOCX_BINDER')
+
 
 def stylize_paragraph(p):
     p.style.font.name = 'Book Antiqua'
     p.style.font.size = Pt(12)
     p.paragraph_format.alignment = WD_PARAGRAPH_ALIGNMENT.from_xml('both')
 # end def
+
 
 def build_paragraph(paragraph, elem):
     stylize_paragraph(paragraph)
@@ -49,6 +56,7 @@ def build_paragraph(paragraph, elem):
     # end for
 # end def
 
+
 def make_chapter(book, chapter):
     soup = BeautifulSoup(chapter['body'], 'lxml')
     for tag in soup.find('body').children:
@@ -78,7 +86,7 @@ def bind_docx_book(app, chapters, volume=''):
     book.core_properties.category = 'Lightnovel'
     book.core_properties.author = 'Lightnovel Crawler'
     book.core_properties.identifier = app.output_path + volume
-    
+
     # Create intro page
     p = book.add_heading(app.crawler.novel_title or 'N/A', 0)
     p.paragraph_format.space_before = Inches(0.25)

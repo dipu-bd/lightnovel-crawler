@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
 import io
-import os
 import logging
-from ebooklib import epub
+import os
+import re
+
+try:
+    from ebooklib import epub
+except Exception as err:
+    logging.error(err)
+# end try
 
 logger = logging.getLogger('EPUB_BINDER')
+
 
 def make_intro_page(crawler):
     html = '<div style="text-align: center; padding-top: 25%">'
@@ -22,6 +28,7 @@ def make_intro_page(crawler):
     )
 # end def
 
+
 def make_chapters(book, chapters):
     book.toc = []
     for i, chapter in enumerate(chapters):
@@ -35,7 +42,8 @@ def make_chapters(book, chapters):
         book.add_item(content)
         book.toc.append(content)
     # end for
-# end def 
+# end def
+
 
 def bind_epub_book(app, chapters, volume=''):
     book_title = (app.crawler.novel_title + ' ' + volume).strip()
@@ -76,6 +84,7 @@ def bind_epub_book(app, chapters, volume=''):
     logger.warn('Created: %s.epub', file_name)
     return file_path
 # end def
+
 
 def make_epubs(app, data):
     epub_files = []

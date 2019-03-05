@@ -222,7 +222,8 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.scribblehub.com
 - [x] http://zenithnovels.com
 - [x] https://www.noveluniverse.com
-- [x] https://www.royalroad.com/
+- [x] https://www.royalroad.com
+- [x] https://meionovel.com
 
 Rejected due to difficulty or other reasons:
 

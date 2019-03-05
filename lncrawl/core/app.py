@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import logging
 import os
 import re
 import shutil
-import logging
+
 from slugify import slugify
 
+from ..binders import available_formats, bind_books
 from ..spiders import crawler_list
-from ..binders import bind_books, available_formats
 from .downloader import download_chapters
-from .novel_info import format_volumes, format_chapters, save_metadata
-
+from .novel_info import format_chapters, format_volumes, save_metadata
 
 logger = logging.getLogger('APP')
 
@@ -226,7 +226,7 @@ class App:
             file_list = os.listdir(path)
             if len(file_list) == 0:
                 logger.info('It has no files: %s', path)
-                continue # No files to archive
+                continue  # No files to archive
             elif len(file_list) == 1 and not archive_singles:
                 logger.info('Not archiving single file inside %s' % path)
                 archived = os.path.join(path, file_list[0])
