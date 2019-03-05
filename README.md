@@ -13,17 +13,17 @@ Download lightnovels from various online sources and generate output in differen
 
 ## Table of contents
 
-- [Installation](#-a--installation)
-  - [EXE (for Windows)](#a1-exe--for-windows-)
+- [Installation](#a-installation)
+  - [EXE (for Windows)](#a1-exe--for-windows)
   - [Chatbots](#a2-chatbots)
     - [Telegram](#a21-telegram)
     - [Discord](#a22-discord)
-  - [Python package (for Windows, Mac, and Linux)](#a3-python-package--for-windows--mac--and-linux-)
+  - [Python package (for Windows, Mac, and Linux)](#a3-python-package-for-windows-mac-and-linux)
   - [Run from source](#a4-run-from-source)
-- [General Usage](#-b--general-usage)
+- [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
   - [Running the bot](#b2-running-the-bot)
-- [Development](#-c--development)
+- [Development](#c-development)
   - [Adding new source](#c1-adding-new-source)
   - [Adding new Bot](#c2-adding-new-bot)
   - [Supported sources](#c3-supported-sources)
