@@ -224,6 +224,7 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.noveluniverse.com
 - [x] https://www.royalroad.com
 - [x] https://meionovel.com
+- [x] https://worldnovel.online
 
 Rejected due to difficulty or other reasons:
 
