@@ -13,25 +13,27 @@ Download lightnovels from various online sources and generate output in differen
 
 ## Table of contents
 
-- [General Usage](#-a--general-usage)
-  - [EXE (for Windows)](#a1-exe--for-windows-)
+- [Installation](#a-installation)
+  - [EXE (for Windows)](#a1-exe--for-windows)
   - [Chatbots](#a2-chatbots)
-    - [Discord](#a21-discord)
-  - [Python package (for Windows, Mac, and Linux)](#a3-python-package--for-windows--mac--and-linux-)
+    - [Telegram](#a21-telegram)
+    - [Discord](#a22-discord)
+  - [Python package (for Windows, Mac, and Linux)](#a3-python-package-for-windows-mac-and-linux)
   - [Run from source](#a4-run-from-source)
-  - [Available options](#a5-available-options)
-  - [Running the bot](#a6-running-the-bot)
-- [Development](#-b--development)
-  - [Adding new source](#b1-adding-new-source)
-  - [Adding new Bot](#b2-adding-new-bot)
-  - [Supported sources](#b3-supported-sources)
-  - [Supported output formats](#b4-supported-output-formats)
-  - [Supported bots](#b5-supported-bots)
+- [General Usage](#b-general-usage)
+  - [Available options](#b1-available-options)
+  - [Running the bot](#b2-running-the-bot)
+- [Development](#c-development)
+  - [Adding new source](#c1-adding-new-source)
+  - [Adding new Bot](#c2-adding-new-bot)
+  - [Supported sources](#c3-supported-sources)
+  - [Supported output formats](#c4-supported-output-formats)
+  - [Supported bots](#c5-supported-bots)
 - [The project structure](https://github.com/dipu-bd/lightnovel-crawler/blob/master/CONTRIBUTING.md)
 
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
 
-## (A) General Usage
+## (A) Installation
 
 ### A1. EXE (for Windows)
 
@@ -41,17 +43,17 @@ Download lightnovels from various online sources and generate output in differen
 
 ### A2. Chatbots
 
-#### A2.1 Discord
+#### A2.1 Telegram
+
+Visit this link to get started with the telegram bot:
+https://t.me/epub_smelter_bot
+
+#### A2.2 Discord
 
 Visit this link to install discord bot to your server:
 https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
 
 Send `!help` to open the bot help message.
-
-#### A2.2 Telegram Bot
-
-Visit this link to get started with the telegram bot:
-https://t.me/epub_smelter_bot
 
 ### A3. Python package (for Windows, Mac, and Linux)
 
@@ -101,7 +103,9 @@ $ python3 __main__.py
 $ python3 .
 ```
 
-### A5. Available options
+## (B) General Usage
+
+### B1. Available options
 
 To view list of available options:
 
@@ -146,7 +150,7 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-### A6. Running the bot
+### B2. Running the bot
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
@@ -167,7 +171,7 @@ $ python3 .
 
 _There is a `server.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
 
-## (B) Development
+## (C) Development
 
 You are very welcome to contribute in this project. You can:
 
@@ -177,17 +181,17 @@ You are very welcome to contribute in this project. You can:
 - add new output formats.
 - create new bots.
 
-### B1. Adding new source
+### C1. Adding new source
 
 - Create new crawler using the [`spiders/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/_sample.py) as blueprint. You can check out existing bots for idea.
 - Import your crawler to [`spiders/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/__init__.py) file.
 
-### B2. Adding new Bot
+### C2. Adding new Bot
 
 - Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as a standard. You can check out existing bots for idea.
 - Import your bot to [`bots/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/__init__.py) file.
 
-### B3. Supported sources
+### C3. Supported sources
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
 
@@ -231,7 +235,7 @@ Rejected due to difficulty or other reasons:
 - [x] ~http://moonbunnycafe.com/~
 - [x] ~https://www.novelupdates.com~
 
-### B4. Supported output formats
+### C4. Supported output formats
 
 When download is done, the following files can be generated:
 
@@ -243,12 +247,12 @@ When download is done, the following files can be generated:
 - [x] DOCX
 - [x] PDF
 
-### B5. Supported bots
+### C5. Supported bots
 
 - [x] Console Bot
 - [x] Telegram Bot
 - [x] Discord Bot
 
-## (C) The project structure
+## (D) The project structure
 
 [Click here](https://github.com/dipu-bd/lightnovel-crawler/blob/master/CONTRIBUTING.md) to view details.
