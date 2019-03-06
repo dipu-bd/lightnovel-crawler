@@ -85,28 +85,11 @@ class BoxNovelCrawler(Crawler):
         response = self.get_response(chapter['url'])
         soup = BeautifulSoup(response.text, 'lxml')
 
-        #chapter['title'] = soup.find('li', {'class':'active'}).text
-        div = soup.find("div", {"class": "text-left"})
-        self.clean_contents(div)
-        content = div.findAll("p")
+        contents = soup.select_one('div.text-left')
 
-        # title = soup.find_all(re.compile('^h[2-4]$'))
-
-        # if len(title):
-        #     chapter['title'] = title[0].text
-        # else:
-        #     if 'Translator' in soup.select_one('p').text:
-        #         chapter['title'] = soup.select_one(
-        #             'p').text.split("Translator", 1)[0]
-        #     else:
-        #         chapter['title'] = soup.select_one('p').text
-        #         logger.info('Downloading %s', content.pop(0))
-
-        body_parts = ''.join([
-            str(p.extract())
-            for p in content if p.text.strip()
-        ])
-
-        return body_parts
+        if contents.h3:
+            contents.h3.decompose()
+            
+        return contents.prettify()
     # end def
 # end class
