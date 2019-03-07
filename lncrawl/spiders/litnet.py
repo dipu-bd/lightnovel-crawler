@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('LITNET')
-logging.basicConfig(level=logging.DEBUG)
 search_url = 'https://litnet.com/en/search?q=%s'
 
 class LitnetCrawler(Crawler):
