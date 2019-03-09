@@ -24,13 +24,13 @@ class MeionovelCrawler(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('div.lightnovel-synopsis img')['src'])
+            soup.select_one('div.lightnovel-synopsis img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = "Translated by meionovel.com"
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.select('div.lightnovel-episode ul li a')
+        chapters = soup.select('div.lightnovel-episode ul li a._link')
 
         chapters.reverse()
 
