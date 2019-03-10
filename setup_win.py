@@ -4,8 +4,9 @@ import os
 import shlex
 import shutil
 import sys
+
 from PyInstaller import __main__ as pyi
-from setup_config import package_data, current_version
+from setuptools.config import read_configuration
 
 dir_name = os.path.abspath(os.path.dirname(__file__))
 output = os.path.join(dir_name, 'windows')
@@ -16,11 +17,12 @@ def setup_command():
 
     command = 'pyinstaller -y '
     command += '--clean '
-    command += '-F ' # onefile
+    command += '-F '  # onefile
     command += '-n "lncrawl" '
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
 
-    for k, paths in package_data.items():
+    config = read_configuration('setup.cfg')
+    for k, paths in config['options']['.package_data'].items():
         for v in paths:
             src = os.path.normpath('/'.join([cur_dir, k, v]))
             src = '/'.join(src.split(os.sep))
