@@ -28,7 +28,7 @@ class ChineseFantasyNovels(Crawler):
         volumes = set([])
         for a in reversed(soup.select('dl.chapterlist a')):
             ch_title = a.text.strip()
-            ch_id = [int(x) for x in re.findall('\d+', ch_title)]
+            ch_id = [int(x) for x in re.findall(r'\d+', ch_title)]
             ch_id = ch_id[0] if len(ch_id) else len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             volumes.add(vol_id)

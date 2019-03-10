@@ -25,7 +25,7 @@ def make_texts(app, data):
                 body = chap['body'].replace('</p><p', '</p>\n<p')
                 soup = BeautifulSoup(body, 'lxml')
                 text = '\n\n'.join(soup.stripped_strings)
-                text = re.sub('[\r\n]+', '\r\n\r\n', text)
+                text = re.sub(r'[\r\n]+', '\r\n\r\n', text)
                 file.write(text)
                 text_files.append(file_name)
             # end with
