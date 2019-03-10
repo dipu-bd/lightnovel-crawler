@@ -17,7 +17,7 @@ class LnindoCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = BeautifulSoup(response.text, 'html5lib')
 
         self.novel_title = soup.find_all(
             'span', {"typeof": "v:Breadcrumb"})[-1].text
@@ -34,10 +34,11 @@ class LnindoCrawler(Crawler):
             chapters = soup.find('blockquote',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
         elif soup.find('div',{"style" : re.compile('moz-border-radius.*')}):
             chapters = soup.find('div',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
+        elif soup.select('div.markobar li a'):
+            chapters = soup.select('div.markobar li a')
         else:
-            chapters = soup.find('div',{"class" : 'markobar'}).findAll('a')
+            chapters =  soup.find('div',{'class':'sharebar'}).findNext('div',{'class':'ads'}).findNext('div').select('ul li a')
         #end if
-        
         chapters.reverse()
 
         for a in chapters:
