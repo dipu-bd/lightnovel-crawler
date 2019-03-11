@@ -21,9 +21,11 @@ class WuxiaOnlineCrawler(Crawler):
 
         results = []
         for a in soup.select('li .resultname a'):
-            url = self.absolute_url(a['href'])
-            title = a.text.strip()
-            results.append((title, url))
+
+            results.append(dict(
+                url=self.absolute_url(a['href']),
+                title=a.text.strip(),
+            ))
         # end for
 
         return results

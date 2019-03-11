@@ -22,10 +22,10 @@ class ScribbleHubCrawler(Crawler):
 
         results = []
         for a in soup.select('.search_title a'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -37,21 +37,23 @@ class ScribbleHubCrawler(Crawler):
         response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.content, 'lxml')
 
-        self.novel_title = soup.find('div',{'class':'fic_title'})['title'].strip()
+        self.novel_title = soup.find('div', {'class': 'fic_title'})[
+            'title'].strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.find('div',{'class':'fic_image'}).find('img')['src'])
+            soup.find('div', {'class': 'fic_image'}).find('img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.find('span',{'class':'auth_name_fic'}).text.strip()
+        self.novel_author = soup.find(
+            'span', {'class': 'auth_name_fic'}).text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        chapter_count = soup.find('span',{'class':'cnt_toc'}).text
+        chapter_count = soup.find('span', {'class': 'cnt_toc'}).text
         chapter_count = -1 if not chapter_count else int(chapter_count)
         page_count = ceil(chapter_count/15)
         logger.info('Chapter list pages: %d' % page_count)
-        
+
         logger.info('Getting chapters...')
         chapters = []
         for i in range(page_count):
@@ -81,7 +83,8 @@ class ScribbleHubCrawler(Crawler):
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
         logger.debug(self.volumes)
-        logger.info('%d volumes and %d chapters found' % (len(self.volumes), len(self.chapters)))
+        logger.info('%d volumes and %d chapters found' %
+                    (len(self.volumes), len(self.chapters)))
     # end def
 
     def download_chapter_list(self, page):
@@ -100,11 +103,11 @@ class ScribbleHubCrawler(Crawler):
         soup = BeautifulSoup(response.content, 'lxml')
 
         logger.debug(soup.title.string)
-        contents = soup.find('div', {'id':'chp_contents'})
+        contents = soup.find('div', {'id': 'chp_contents'})
         #body_parts = []
-        #for x in contents:
+        # for x in contents:
         #    body_parts.append(x.text)
-        #return '<p>' + '</p><p>'.join(body_parts) + '</br></p>'
+        # return '<p>' + '</p><p>'.join(body_parts) + '</br></p>'
         return contents.prettify()
-    #end def
+    # end def
 # end class

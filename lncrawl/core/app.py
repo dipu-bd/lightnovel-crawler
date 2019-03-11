@@ -24,7 +24,7 @@ class App:
         self.crawler_links = None
         self.crawler = None
         self.login_data = ()
-        self.search_results = []
+        self.search_results = dict()
         self.output_path = None
         self.pack_by_volume = False
         self.chapters = []
@@ -75,7 +75,7 @@ class App:
         logger.warn('Searching for novels in %d sites...',
                     len(self.crawler_links))
         _checked = {}
-        self.search_results = []
+        combined_results = []
         for link in self.crawler_links:
             logger.info('Searching: %s with "%s"', link, self.user_input)
             try:
@@ -88,16 +88,28 @@ class App:
                 instance = crawler()
                 instance.home_url = link.strip('/')
                 results = instance.search_novel(self.user_input)
-                self.search_results += results
+                combined_results += results
                 logger.debug(results)
                 logger.info('%d results from %s', len(results), link)
             except Exception as ex:
                 logger.debug(ex)
             # end try
         # end for
+
         if len(self.search_results) == 0:
             raise Exception('No results for: %s' % self.user_input)
         # end if
+
+        # Process combined results
+        self.search_results = dict()
+        for result in combined_results:
+            key = slugify(result['title'])
+            if key not in self.search_results:
+                self.search_results[key] = []
+            # end if
+            self.search_results[key].append(result)
+        # end for
+
         logger.info('Total %d novels found from %d sites',
                     len(self.search_results), len(self.crawler_links))
     # end def

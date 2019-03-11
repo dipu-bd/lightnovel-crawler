@@ -80,7 +80,7 @@ class Crawler:
 
     @abstractmethod
     def search_novel(self, query):
-        '''Gets a list of {title, url} matching the given query'''
+        '''Gets a list of results matching the given query'''
         pass
     # end def
 

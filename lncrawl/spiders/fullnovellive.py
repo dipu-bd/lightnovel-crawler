@@ -17,10 +17,10 @@ class FullnovelLiveCrawler(Crawler):
         results = []
         soup = self.get_soup(NOVEL_SEARCH % query)
         for a in soup.select('.grid .v-grid h4 a'):
-            results.append((
-                (a['title'] or a.text).strip(),
-                self.absolute_url(a['href'])
-            ))
+            results.append({
+                'title': (a['title'] or a.text).strip(),
+                'url': self.absolute_url(a['href'])
+            })
         # end for
         return results
     # end def

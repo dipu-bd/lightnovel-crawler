@@ -18,14 +18,14 @@ class NovelAllCrawler(Crawler):
         query = query.lower().replace(' ', '+')
         response = self.get_response(search_url % query)
         soup = BeautifulSoup(response.text, 'lxml')
-   
+
         results = []
         for a in soup.select('.cover-info p.title a'):
-            results.append((
-               a.text.strip(),
-               self.absolute_url(a['href']),
-            ))
-        #end for
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
+        # end for
         return results
     # end def
 

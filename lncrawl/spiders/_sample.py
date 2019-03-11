@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 # TODO: Copy this file directly to your new crawler. And fill up
 #       the methods as described in their todos
 
+
 class SampleCrawler(Crawler):
     def initialize(self):
         # TODO: Initiaze your crawler, variables etc. It gets called at the
@@ -34,10 +35,17 @@ class SampleCrawler(Crawler):
     # end def
 
     def search_novel(self, query):
-        '''Gets a list of (title, url) matching the given query'''
+        '''Gets a list of results matching the given query'''
         # TODO: Use the `self.novel_url` as a query to find matching novels.
-        #       Return the search result as a list of (title, url) pair.
+        #       Return the search result as a list of items, containing:
+        #         `title`      - novel name [required]
+        #         `url`        - novel url [required]
+        #         `short_info` - short description about the novel [optional]
         #       You may throw an Exception or empty list in case of failure.
+        #
+        # You can put the chapter & volume count or latest chapter names, etc.
+        # anything in the short description. Please keep it short. Otherwise,
+        # it will look bad on console.
         pass
     # end def
 
