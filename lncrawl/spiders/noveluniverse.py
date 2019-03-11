@@ -85,7 +85,7 @@ class NovelUniverseCrawler(Crawler):
 
         for a in soup.select('ul#chapters li a'):
             chapter_id = a.select_one('span').text
-            chapter_id = int([x for x in re.findall('\d+', chapter_id)][0])
+            chapter_id = int([x for x in re.findall(r'\d+', chapter_id)][0])
             volume_id = 1 + (chapter_id - 1) // 100
             chapter_title = ' '.join([
                 str(x).strip()

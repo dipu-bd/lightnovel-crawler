@@ -194,7 +194,7 @@ class ConsoleBot:
         ])
 
         selected = answer['novel_url']
-        selected = re.search('(https?://.*)', selected)
+        selected = re.search(r'(https?://.*)', selected)
         url = selected.group(1).strip('()')
         return url
     # end def

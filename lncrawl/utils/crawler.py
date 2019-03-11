@@ -17,41 +17,39 @@ logger = logging.getLogger(__name__)
 class Crawler:
     '''Blueprint for creating new crawlers'''
 
-    # Must resolve these fields inside `read_novel_info`
-    novel_title = 'N/A'
-    novel_author = 'N/A'
-    novel_cover = None
-
-    '''
-    Each item must contain these keys:
-    `id` - 1 based index of the volume
-    `title` - the volume title (can be ignored)
-    '''
-    volumes = []
-
-    '''
-    Each item must contain these keys:
-    `id` - 1 based index of the chapter
-    `title` - the title name
-    `volume` - the volume id of this chapter
-    `volume_title` - the volume title (can be ignored)
-    `url` - the link where to download the chapter
-    '''
-    chapters = []
-
-    # Other stuffs - not necessary to resolve from crawler instance.
-    home_url = ''
-    novel_url = ''
-    last_visited_url = None
-
-    scrapper = None
-    executor = None
-    _destroyed = False
-
     def __init__(self):
         self.executor = futures.ThreadPoolExecutor(max_workers=5)
         self.scrapper = cfscrape.create_scraper()
         self.scrapper.verify = False
+
+        # Must resolve these fields inside `read_novel_info`
+        self.novel_title = 'N/A'
+        self.novel_author = 'N/A'
+        self.novel_cover = None
+
+        '''
+        Each item must contain these keys:
+        `id` - 1 based index of the volume
+        `title` - the volume title (can be ignored)
+        '''
+        self.volumes = []
+
+        '''
+        Each item must contain these keys:
+        `id` - 1 based index of the chapter
+        `title` - the title name
+        `volume` - the volume id of this chapter
+        `volume_title` - the volume title (can be ignored)
+        `url` - the link where to download the chapter
+        '''
+        self.chapters = []
+
+        # Other stuffs - not necessary to resolve from crawler instance.
+        self.home_url = ''
+        self.novel_url = ''
+        self.last_visited_url = None
+
+        self._destroyed = False
     # end def
 
     def destroy(self):

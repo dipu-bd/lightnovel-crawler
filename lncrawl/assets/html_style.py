@@ -42,7 +42,7 @@ def _minify(css):
         # order is important, but we still want to discard repetitions
         properties = {}
         porder = []
-        for prop in re.findall('(.*?):(.*?)(;|$)', rule[1]):
+        for prop in re.findall(r'(.*?):(.*?)(;|$)', rule[1]):
             key = prop[0].strip().lower()
             if key not in porder:
                 porder.append(key)

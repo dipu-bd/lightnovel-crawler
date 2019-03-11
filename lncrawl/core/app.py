@@ -16,19 +16,23 @@ logger = logging.getLogger('APP')
 
 
 class App:
-    progress = 0
-    user_input = None
-    crawler_links = None
-    crawler = None
-    login_data = ()
-    search_results = []
-    output_path = None
-    pack_by_volume = False
-    chapters = []
-    book_cover = None
-    output_formats = None
-    archived_outputs = None
-    good_file_name = None
+    '''Bots are based on top of an instance of this app'''
+
+    def __init__(self):
+        self.progress = 0
+        self.user_input = None
+        self.crawler_links = None
+        self.crawler = None
+        self.login_data = ()
+        self.search_results = []
+        self.output_path = None
+        self.pack_by_volume = False
+        self.chapters = []
+        self.book_cover = None
+        self.output_formats = None
+        self.archived_outputs = None
+        self.good_file_name = None
+    # end def
 
     # ----------------------------------------------------------------------- #
 
@@ -150,7 +154,7 @@ class App:
         self.output_path = os.path.join('Lightnovels', self.good_file_name)
     # end def
 
-    # ------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------- #
     def start_download(self):
         '''Requires: crawler, chapters, output_path'''
         if not os.path.exists(self.output_path):
@@ -165,7 +169,7 @@ class App:
         # end if
     # end def
 
-    # ------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------- #
 
     def bind_books(self):
         '''Requires: crawler, chapters, output_path, pack_by_volume, book_cover, output_formats'''
@@ -186,7 +190,7 @@ class App:
         bind_books(self, data)
     # end def
 
-    # ------------------------------------------------------------------------#
+    # ----------------------------------------------------------------------- #
 
     def compress_output(self, archive_singles=False):
         logger.info('Compressing output...')

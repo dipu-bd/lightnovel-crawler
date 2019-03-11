@@ -25,7 +25,7 @@ class MachineNovelTrans(Crawler):
 
         for div in soup.select('#chapters #accordion .panel'):
             vol_title = div.select_one('h4.panel-title a').text
-            vol_id = [int(x) for x in re.findall('\d+', vol_title)]
+            vol_id = [int(x) for x in re.findall(r'\d+', vol_title)]
             vol_id = vol_id[0] if len(vol_id) else len(self.volumes) + 1
             self.volumes.append({
                 'id': vol_id,
@@ -34,7 +34,7 @@ class MachineNovelTrans(Crawler):
 
             for a in div.select('ul.navigate-page li a'):
                 ch_title = a.text
-                ch_id = [int(x) for x in re.findall('\d+', ch_title)]
+                ch_id = [int(x) for x in re.findall(r'\d+', ch_title)]
                 ch_id = ch_id[0] if len(ch_id) else len(self.chapters) + 1
                 self.chapters.append({
                     'id': ch_id,

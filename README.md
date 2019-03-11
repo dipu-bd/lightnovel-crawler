@@ -230,6 +230,7 @@ The list of currently available sources and the future plans are given below:
 - [x] https://meionovel.com
 - [x] https://worldnovel.online
 - [x] https://mtled-novels.com
+- [x] https://litnet.com
 
 Rejected due to difficulty or other reasons:
 
