@@ -231,6 +231,8 @@ The list of currently available sources and the future plans are given below:
 - [x] https://worldnovel.online
 - [x] https://mtled-novels.com
 - [x] https://litnet.com
+- [x] https://crescentmoon.blog
+- [x] https://volarenovels.com
 
 Rejected due to difficulty or other reasons:
 
