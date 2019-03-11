@@ -30,18 +30,17 @@ class LnindoCrawler(Crawler):
         self.novel_author = author[20:len(author)-22]
         logger.info('Novel author: %s', self.novel_author)
 
-        if soup.find('blockquote', {"style": re.compile(r'-moz-border-radius.*')}):
-            chapters = soup.find('blockquote', {"style": re.compile(
-                r'moz-border-radius.*')}).findAll('a')
-        elif soup.find('div', {"style": re.compile(r'moz-border-radius.*')}):
-            chapters = soup.find('div', {"style": re.compile(
-                r'moz-border-radius.*')}).findAll('a')
+        if soup.find('blockquote',{"style" : re.compile('-moz-border-radius.*')}):
+            chapters = soup.find('blockquote',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
+        elif soup.find('div',{"style" : re.compile('moz-border-radius.*')}):
+            chapters = soup.find('div',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
         elif soup.select('div.markobar li a'):
             chapters = soup.select('div.markobar li a')
+        elif soup.find('div',{'class':'sharebar'}):
+            chapters =  soup.find('div',{'class':'sharebar'}).findNext('div',{'class':'ads'}).findNext('div').select('ul li a')
         else:
-            chapters = soup.find('div', {'class': 'sharebar'}).findNext(
-                'div', {'class': 'ads'}).findNext('div').select('ul li a')
-        # end if
+            chapters =  soup.find('h4').findNextSibling('div').findNextSibling('div').findNextSibling('div').select('ul li a')
+        #end if
         chapters.reverse()
 
         for a in chapters:
