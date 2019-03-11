@@ -19,9 +19,8 @@ class VolareNovelsCrawler(Crawler):
             'header.entry-header h1.entry-title').text
         logger.info('Novel title: %s', self.novel_title)
 
-        # self.novel_author = soup.select_one('#maininfo p').text.strip()
-        # self.novel_author = re.sub(r'^Author[^\w]+', '', self.novel_author).strip()
-        # logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = soup.select('div.entry-content p')[1].text.strip()
+        logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
             soup.select_one('div.entry-content img')['src'])
@@ -79,7 +78,6 @@ class VolareNovelsCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting: %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
