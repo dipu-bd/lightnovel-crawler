@@ -34,7 +34,7 @@ def downlod_cover(app):
             logger.error('Failed to get cover: %s', ex)
         # end try
     else:
-        logger.warn('No cover image.')
+        logger.warn('Cover image was not downloaded')
     # end if
 # end def
 
