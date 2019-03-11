@@ -59,9 +59,24 @@ class DiscordBot(discord.Client):
     # end def
 
     async def handle_message(self, message):
-        user = message.author
-        handler = self.init_handler(user.id)
-        await handler.process(message)
+        try:
+            user = message.author
+            handler = self.init_handler(user.id)
+            await handler.process(message)
+        except Exception as err:
+            logger.exception(err)
+            try:
+                await self.send_message(
+                    message.channel,
+                    'Sorry! We had some trouble processing your request. Please try again.\n\n' +
+                    'Report [here](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose)' +
+                    ' if this problem continues with this message: `' +
+                    str(err) + '`'
+                )
+            except:
+                pass  # this world is doomed!!
+            # end try
+        # end try
     # end def
 
     def init_handler(self, uid):
@@ -285,10 +300,12 @@ class MessageHandler:
         self.app.output_path = output_path
 
         # Get chapter range
-        await self.send('It has %d volumes and %d chapters.' % (
-            len(self.app.crawler.volumes),
-            len(self.app.crawler.chapters)
-        ))
+        await self.send(
+            'It has %d volumes and %d chapters.' % (
+                len(self.app.crawler.volumes),
+                len(self.app.crawler.chapters)
+            )
+        )
 
         await self.display_range_selection()
     # end def
@@ -403,15 +420,15 @@ class MessageHandler:
         output_format = text[1:]
         if text.startswith('!all'):
             self.app.output_formats = None
-        else :
+        else:
             self.app.output_formats = {}
             if output_format in available_formats:
                 for x in available_formats:
-                    if x == output_format :
+                    if x == output_format:
                         self.app.output_formats[x] = True
                     else:
                         self.app.output_formats[x] = False
-                    # end if 
+                    # end if
                 # end for
                 await self.send('I will generate e-book in %s format' % output_format)
             else:
