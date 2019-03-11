@@ -47,7 +47,7 @@ def make_chapters(book, chapters):
 
 def bind_epub_book(app, chapters, volume=''):
     book_title = (app.crawler.novel_title + ' ' + volume).strip()
-    logger.debug('Binding %s.epub', book_title)
+    logger.debug('Binding epub: %s', book_title)
 
     # Create book
     book = epub.EpubBook()

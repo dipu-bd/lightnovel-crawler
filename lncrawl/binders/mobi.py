@@ -21,7 +21,7 @@ def epub_to_mobi(kindlegen, epub_file):
     mobi_file_name = epub_file_name.replace('.epub', '.mobi')
     mobi_file_in_epub_path = os.path.join(epub_path, mobi_file_name)
     mobi_file = os.path.join(mobi_path, mobi_file_name)
-    logger.debug('Binding %s.epub', mobi_file)
+    logger.debug('Binding %s', mobi_file)
 
     try:
         isdebug = os.getenv('debug_mode') == 'yes'
