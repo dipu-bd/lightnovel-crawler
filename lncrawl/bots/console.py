@@ -170,24 +170,24 @@ class ConsoleBot:
         args = get_args()
 
         # Choose a novel title
-        choices = sorted(self.app.search_results.keys())
-        selected_choice = choices[0]
+        choices = self.app.search_results
+        selected_choice = self.app.search_results[0]
         if len(choices) > 1 and not args.suppress:
             answer = prompt([
                 {
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Which one is your novel?',
-                    'choices': display.format_novel_choices(self.app, choices),
+                    'choices': display.format_novel_choices(choices),
                 }
             ])
 
             index = int(answer['novel'].split('.')[0])
-            selected_choice = choices[index - 1]
+            selected_choice = self.app.search_results[index - 1]
         # end if
 
         # Choose the novel source
-        novels = self.app.search_results[selected_choice]
+        novels = selected_choice['novels']
         selected_novel = novels[0]
         if len(novels) > 1 and not args.suppress:
             answer = prompt([
@@ -195,7 +195,7 @@ class ConsoleBot:
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Choose a source to download?',
-                    'choices': display.format_source_choices(self.app, novels),
+                    'choices': display.format_source_choices(novels),
                 }
             ])
 

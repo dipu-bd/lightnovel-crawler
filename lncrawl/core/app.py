@@ -25,12 +25,12 @@ class App:
         self.crawler_links = None
         self.crawler = None
         self.login_data = ()
-        self.search_results = dict()
+        self.search_results = []
         self.output_path = None
         self.pack_by_volume = False
         self.chapters = []
         self.book_cover = None
-        self.output_formats = None
+        self.output_formats = {}
         self.archived_outputs = None
         self.good_file_name = None
     # end def
@@ -78,8 +78,12 @@ class App:
 
         search_novels(self)
 
+        if len(self.search_results) == 0:
+            raise Exception('No results for: %s' % self.user_input)
+        # end if
+
         logger.info('Total %d novels found from %d sites',
-                    len(self.search_results.keys()), len(self.crawler_links))
+                    len(self.search_results), len(self.crawler_links))
     # end def
 
     # ----------------------------------------------------------------------- #
@@ -179,7 +183,7 @@ class App:
         is_all = True
         if self.output_formats:
             for key in available_formats:
-                if not self.output_formats[key]:
+                if not (key in self.output_formats and self.output_formats[key]):
                     is_all = False
                     break
                 # end if

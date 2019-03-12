@@ -15,12 +15,12 @@ from ..spiders import crawler_list
 logger = logging.getLogger('SEARCH_NOVEL')
 
 
-def get_search_result(app, link):
+def get_search_result(user_input, link):
     try:
         crawler = crawler_list[link]
         instance = crawler()
         instance.home_url = link.strip('/')
-        results = instance.search_novel(app.user_input)
+        results = instance.search_novel(user_input)
         logger.debug(results)
         logger.info('%d results from %s', len(results), link)
         return results
@@ -31,23 +31,31 @@ def get_search_result(app, link):
 # end def
 
 
-def process_results(app, combined_results):
-    app.search_results = dict()
-    for result in combined_results:
+def process_results(results):
+    combined = dict()
+    for result in results:
         key = slugify(result['title'])
         if len(key) <= 1:
             continue
-        elif key not in app.search_results:
-            app.search_results[key] = []
+        elif key not in combined:
+            combined[key] = []
         # end if
-        app.search_results[key].append(result)
+        combined[key].append(result)
     # end for
 
-    if len(app.search_results.keys()) == 0:
-        raise Exception('No results for: %s' % app.user_input)
-    # end if
+    processed = []
+    for key, value in combined.items():
+        value.sort(key=lambda x: x['url'])
+        processed.append({
+            'id': key,
+            'title': value[0]['title'],
+            'novels': value
+        })
+    # end for
 
-    logger.debug(app.search_results)
+    processed.sort(key=lambda x: x['id'])
+
+    return processed
 # end def
 
 
@@ -67,7 +75,7 @@ def search_novels(app):
         futures_to_check[
             executor.submit(
                 get_search_result,
-                app,
+                app.user_input,
                 link
             )
         ] = str(crawler)
@@ -90,7 +98,7 @@ def search_novels(app):
     # end for
 
     # Process combined search results
-    process_results(app, combined_results)
+    app.search_results = process_results(combined_results)
     bar.finish()
 
     executor.shutdown()
