@@ -9,6 +9,7 @@ from slugify import slugify
 
 from ..binders import available_formats, bind_books
 from ..spiders import crawler_list
+from .novel_search import search_novels
 from .downloader import download_chapters
 from .novel_info import format_chapters, format_volumes, save_metadata
 
@@ -74,44 +75,11 @@ class App:
         '''Produces: search_results'''
         logger.warn('Searching for novels in %d sites...',
                     len(self.crawler_links))
-        _checked = {}
-        combined_results = []
-        for link in self.crawler_links:
-            logger.info('Searching: %s with "%s"', link, self.user_input)
-            try:
-                crawler = crawler_list[link]
-                if crawler in _checked:
-                    continue
-                # end if
-                _checked[crawler] = True
 
-                instance = crawler()
-                instance.home_url = link.strip('/')
-                results = instance.search_novel(self.user_input)
-                combined_results += results
-                logger.debug(results)
-                logger.info('%d results from %s', len(results), link)
-            except Exception as ex:
-                logger.debug(ex)
-            # end try
-        # end for
-
-        if len(self.search_results) == 0:
-            raise Exception('No results for: %s' % self.user_input)
-        # end if
-
-        # Process combined results
-        self.search_results = dict()
-        for result in combined_results:
-            key = slugify(result['title'])
-            if key not in self.search_results:
-                self.search_results[key] = []
-            # end if
-            self.search_results[key].append(result)
-        # end for
+        search_novels(self)
 
         logger.info('Total %d novels found from %d sites',
-                    len(self.search_results), len(self.crawler_links))
+                    len(self.search_results.keys()), len(self.crawler_links))
     # end def
 
     # ----------------------------------------------------------------------- #

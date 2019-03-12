@@ -6,6 +6,7 @@ import sys
 import shutil
 import logging
 from PyInquirer import prompt
+from urllib.parse import urlparse
 
 from ..core import display
 from ..core.app import App
@@ -169,34 +170,60 @@ class ConsoleBot:
         '''Choose a single novel url from the search result'''
         args = get_args()
 
-        choices = self.app.search_results
-        if len(choices) == 0:
-            raise Exception('Lightnovel list is empty')
-        elif len(choices) == 1:
-            return choices[0][1]
+        # Choose a novel title
+        choices = sorted(self.app.search_results.keys())
+        selected_choice = choices[0]
+        if len(choices) > 1 and not args.suppress:
+            items = []
+            for index, key in enumerate(choices):
+                novels = self.app.search_results[key]
+                text = '%d. %s (%s)' % (index + 1, novels[0]['title'], key)
+                text += '\n<Found in %d sources>' % len(novels)
+                for item in novels:
+                    source = urlparse(item['url']).netloc
+                    text += '\n  - [%s] %s' % (source, item[''])
+                # end for
+                text += '\n'
+                items.append({'name': text})
+            # end for
+
+            answer = prompt([
+                {
+                    'type': 'list',
+                    'name': 'novel',
+                    'message': 'Which one is your novel?',
+                    'choices': items,
+                }
+            ])
+
+            index = int(answer['novel'].split('.')[0])
+            selected_choice = choices[index - 1]
         # end if
 
-        if args.suppress:
-            # Use the first result when input is suppressed
-            return choices[0][1]
+        # Choose the novel source
+        novels = self.app.search_results[selected_choice]
+        selected_novel = novels[0]
+        if len(novels) > 1 and not args.suppress:
+            items = []
+            for index, item in enumerate(novels):
+                text = '%d. %s' % (index + 1, item['url'])
+                items.append({'name': text})
+            # end for
+
+            answer = prompt([
+                {
+                    'type': 'list',
+                    'name': 'novel',
+                    'message': 'Choose a source to download?',
+                    'choices': items,
+                }
+            ])
+
+            index = int(answer['novel'].split('.')[0])
+            selected_novel = novels[index - 1]
         # end if
 
-        answer = prompt([
-            {
-                'type': 'list',
-                'name': 'novel_url',
-                'message': 'Which one is your novel?',
-                'choices': [
-                    {'name': '%s (%s)' % (x[0], x[1])}
-                    for x in sorted(choices)
-                ],
-            }
-        ])
-
-        selected = answer['novel_url']
-        selected = re.search(r'(https?://.*)', selected)
-        url = selected.group(1).strip('()')
-        return url
+        return selected_novel['url']
     # end def
 
     def get_login_info(self):
