@@ -29,10 +29,10 @@ class WuxiaComCrawler(Crawler):
 
         results = []
         for item in data['items']:
-            results.append(dict(
-                title=item['name'],
-                url=book_url % item['slug'],
-            ))
+            results.append({
+                'title': item['name'],
+                'url': book_url % item['slug'],
+            })
         # end for
         return results
     # end def

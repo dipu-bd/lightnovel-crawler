@@ -26,8 +26,8 @@ class WuxiaCoCrawler(Crawler):
         results = []
         for a in soup.select('.recommend .hot_sale a'):
             results.append({
-                'url': self.absolute_url(a['href']),
                 'title': a.select_one('.title').text.strip(),
+                'url': self.absolute_url(a['href']),
             })
         # end for
 

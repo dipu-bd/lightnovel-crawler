@@ -39,8 +39,8 @@ class WebnovelCrawler(Crawler):
         results = []
         for book in data['data']['books']:
             results.append({
-                'title': book_info_url % book['id'],
-                'url': book['name'],
+                'title': book['name'],
+                'url': book_info_url % book['id'],
             })
         # end for
         return results
