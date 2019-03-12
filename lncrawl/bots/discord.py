@@ -157,123 +157,143 @@ class MessageHandler:
             await self.send('Your query is too short')
             return
         # end if
+
         if self.app.crawler:
             await self.send('Got your page link')
             await self.get_novel_info()
         else:
-            await self.send('Got your query: "%s"' % self.app.user_input)
-            await self.crawlers_to_search()
+            await self.send(
+                'Searching %d sources for "%s"\n' % (
+                    len(crawler_list.keys()), self.app.user_input),
+                'Send !cancel to stop'
+            )
+            await self.display_novel_selection()
         # end if
     # end def
 
-    async def crawlers_to_search(self):
-        await self.send(
-            ('I have %d sources to search your novel:\n' % len(self.app.crawler_links)) +
-            '\n'.join([
-                '%d. <%s>' % (i + 1, url)
-                for i, url in enumerate(self.app.crawler_links)
-            ]) + '\n' +
-            'Enter name of index of the site you want to search, '
-            'or send `!all` to search in all of them.'
-        )
-        self.state = self.handle_crawlers_to_search
-    # end def
-
-    async def handle_crawlers_to_search(self):
-        text = self.message.content.strip()
-        if text == '!cancel':
-            await self.get_novel_url()
-            return
-        # end if
-
-        selected = []
-        if text == '!all':
-            selected = self.app.crawler_links
-        else:
-            for i, url in enumerate(self.app.crawler_links):
-                if str(i + 1) == text:
-                    selected.append(url)
-                elif text.isdigit() or len(text) < 3:
-                    pass
-                elif url.find(text) != -1:
-                    selected.append(url)
-                # end if
-            # end for
-        # end if
-
-        if len(selected) == 0:
-            await self.send('Sorry! I do not have it on my list')
-            await self.crawlers_to_search()
-            return
-        # end if
-
-        self.app.crawler_links = selected
-        await self.send(
-            ('Great! You have selected %d source:\n' % len(selected)) +
-            '\n'.join([
-                '- <%s>' % x for x in selected
-            ]) + '\n' +
-            'I will start searching immediately.'
-        )
-
-        try:
-            await self.client.send_typing(self.user)
-            self.app.search_novel()
-        except:
-            pass
-        # end try
+    async def display_novel_selection(self):
+        await self.client.send_typing(self.user)
+        self.app.search_novel()
 
         if len(self.app.search_results) == 0:
-            await self.send(
-                ('Sorry! Nothing found by "%s"\n' % self.app.user_input) +
-                'Send `!cancel` to enter your novel again.'
-            )
-            await self.crawlers_to_search()
-        elif len(self.app.search_results) == 1:
-            title, url = self.app.search_results[0]
-            await self.send('Found one: **%s** (%s)' % (title, url))
-            self.app.init_crawler(url)
-            await self.get_novel_info()
-        else:
-            await self.send(
-                ("Found %d novels:\n" % len(self.app.search_results)) +
-                '\n'.join([
-                    '%d. %s (<%s>)' % (i + 1, title, url)
-                    for i, (title, url) in enumerate(self.app.search_results)
-                ]) + '\n' +
-                'Which one is your novel? Enter the index or the title.'
-            )
-            self.state = self.handle_search_result
-        # end def
+            await self.send('No novels found for "%s"' % self.app.user_input)
+            return
+        # end if
+        if len(self.app.search_results) == 1:
+            self.selected_novel = self.app.search_results[0]
+            await self.display_sources_selection()
+            return
+        # end if
+
+        await self.send(
+            ('Found %d novels:\n' % len(self.app.search_results)) +
+            '\n'.join([
+                '%d. **%s** `%d sources`' % (
+                    i + 1,
+                    item['title'],
+                    len(item['novels'])
+                ) for i, item in enumerate(self.app.search_results)
+            ]) + '\n' +
+            'Enter name or index of your novel.\n' +
+            'Send `!cancel` to stop this session.'
+        )
+        self.state = self.handle_novel_selection
     # end def
 
-    async def handle_search_result(self):
+    async def handle_novel_selection(self):
+        await self.client.send_typing(self.user)
+
         text = self.message.content.strip()
         if text == '!cancel':
             await self.get_novel_url()
             return
         # end if
 
-        selected = []
-        for i, (title, url) in enumerate(self.app.search_results):
+        match_count = 0
+        selected = None
+        for i, res in enumerate(self.app.search_results):
             if str(i + 1) == text:
-                selected.append(url)
+                selected = res
+                match_count += 1
             elif text.isdigit() or len(text) < 3:
                 pass
-            elif title.find(text) != -1:
-                selected.append(url)
-            elif url.find(text) != -1:
-                selected.append(url)
+            elif res['title'].lower().find(text) != -1:
+                selected = res
+                match_count += 1
             # end if
         # end for
 
-        if len(selected) != 1:
-            await self.send('Sorry! We could not identify which one you want to download')
-        else:
-            await self.send('Selected: %s' % selected[0])
-            self.app.init_crawler(selected[0])
-            await self.get_novel_info()
+        if match_count != 1:
+            await self.send(
+                'Sorry! You should select *one* novel from the list (%d selected).' % match_count)
+            await self.display_novel_selection()
+            return
         # end if
+
+        self.selected_novel = selected
+        await self.display_sources_selection()
+    # end def
+
+    async def display_sources_selection(self):
+        await self.client.send_typing(self.user)
+        await self.send(
+            (
+                '**%s** is found in %d sources:\n' % (
+                    self.selected_novel['title'], len(self.selected_novel['novels']))
+            ) + '\n'.join([
+                '%d. <%s> %s' % (
+                    i + 1,
+                    item['url'],
+                    item['info'] if 'info' in item else ''
+                ) for i, item in enumerate(self.selected_novel['novels'])
+            ]) + '\n' +
+            'Enter index or name of your source.\n' +
+            'Send `!cancel` to stop this session.'
+        )
+        self.state = self.handle_sources_to_search
+    # end def
+
+    async def handle_sources_to_search(self):
+        if len(self.selected_novel['novels']) == 1:
+            novel = self.selected_novel['novels'][0]
+            await self.handle_search_result(novel)
+            return
+        # end if
+
+        text = self.message.content.strip()
+        if text == '!cancel':
+            await self.get_novel_url()
+            return
+        # end if
+
+        match_count = 0
+        selected = None
+        for i, res in enumerate(self.selected_novel['novels']):
+            if str(i + 1) == text:
+                selected = res
+                match_count += 1
+            elif text.isdigit() or len(text) < 3:
+                pass
+            elif res['url'].lower().find(text) != -1:
+                selected = res
+                match_count += 1
+            # end if
+        # end for
+
+        if match_count != 1:
+            await self.send(
+                'Sorry! You should select *one* source from the list (%d selected).' % match_count)
+            await self.display_sources_selection()
+            return
+        # end if
+
+        await self.handle_search_result(selected)
+    # end def
+
+    async def handle_search_result(self, novel):
+        await self.send('Selected: %s' % novel['url'])
+        self.app.init_crawler(novel['url'])
+        await self.get_novel_info()
     # end def
 
     async def get_novel_info(self):
