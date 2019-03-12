@@ -146,9 +146,10 @@ class ConsoleBot:
         links = self.app.crawler_links
         if not links:
             return None
+        # end if
 
         args = get_args()
-        if args.suppress:
+        if args.suppress or not args.sources:
             return links
         # end if
 

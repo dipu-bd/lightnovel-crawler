@@ -81,7 +81,7 @@ def search_novels(app):
         ] = str(crawler)
     # end for
 
-    bar = IncrementalBar('Finding novels', max=len(futures_to_check.keys()))
+    bar = IncrementalBar('Searching', max=len(futures_to_check.keys()))
     bar.start()
 
     if os.getenv('debug_mode') == 'yes':

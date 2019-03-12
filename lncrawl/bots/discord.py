@@ -164,7 +164,7 @@ class MessageHandler:
         else:
             await self.send(
                 'Searching %d sources for "%s"\n' % (
-                    len(crawler_list.keys()), self.app.user_input),
+                    len(self.app.crawler_links), self.app.user_input),
                 'Send !cancel to stop'
             )
             await self.display_novel_selection()

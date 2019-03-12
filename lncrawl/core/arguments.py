@@ -50,6 +50,9 @@ class ArgReader:
         parser.add_argument('--login', nargs=2, metavar=('USER', 'PASSWD'),
                             help='User name/email address and password for login')
 
+        parser.add_argument('--sources',  action='store_true',
+                            help='Display the source selection menu while searching')
+
         selection = parser.add_mutually_exclusive_group()
         selection.add_argument('--all', action='store_true',
                                help='Download all chapters')
