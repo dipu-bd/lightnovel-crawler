@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
 import logging
+import os
 import textwrap
+from urllib.parse import urlparse
+
 from colorama import Back, Fore, Style
 
 from ..assets.icons import Icons
 from ..spiders import crawler_list
 
 LINE_SIZE = 80
+
 try:
     row, _ = os.get_terminal_size()
     if row < LINE_SIZE:
@@ -123,4 +126,36 @@ def url_not_recognized():
     print('You can request developers to add support for this site here:')
     print(Fore.CYAN, Icons.LINK,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
+# end def
+
+
+def format_novel_choices(app, choices):
+    items = []
+    for index, key in enumerate(choices):
+        novels = app.search_results[key]
+        text = '%d. %s (%s)' % (index + 1, novels[0]['title'], key)
+        text += '\n%s<Found in %d sources>' % (' ' * 6, len(novels))
+        for item in novels:
+            source = urlparse(item['url']).netloc
+            short_info = item['info'] if 'info' in item else ''
+            line = '- [%s] %s' % (source, short_info)
+            text += '\n%s%s' % (' ' * 6, line.strip())
+        # end for
+        items.append({'name': text})
+    # end for
+    return items
+# end def
+
+
+def format_source_choices(app, novels):
+    items = []
+    for index, item in enumerate(novels):
+        short_info = item['info'] if 'info' in item else ''
+        text = '%d. %s' % (index + 1, item['url'])
+        if len(short_info.strip()):
+            text += '\n%s<%s>' % (' ' * 6, short_info)
+        # end if
+        items.append({'name': text})
+    # end for
+    return items
 # end def

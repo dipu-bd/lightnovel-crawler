@@ -38,9 +38,9 @@ class SampleCrawler(Crawler):
         '''Gets a list of results matching the given query'''
         # TODO: Use the `self.novel_url` as a query to find matching novels.
         #       Return the search result as a list of items, containing:
-        #         `title`      - novel name [required]
-        #         `url`        - novel url [required]
-        #         `short_info` - short description about the novel [optional]
+        #         `title` - novel name [required]
+        #         `url`   - novel url [required]
+        #         `info`  - short description about the novel [optional]
         #       You may throw an Exception or empty list in case of failure.
         #
         # You can put the chapter & volume count or latest chapter names, etc.

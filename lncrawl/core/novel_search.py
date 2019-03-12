@@ -35,7 +35,9 @@ def process_results(app, combined_results):
     app.search_results = dict()
     for result in combined_results:
         key = slugify(result['title'])
-        if key not in app.search_results:
+        if len(key) <= 1:
+            continue
+        elif key not in app.search_results:
             app.search_results[key] = []
         # end if
         app.search_results[key].append(result)

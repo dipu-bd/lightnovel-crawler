@@ -6,7 +6,6 @@ import sys
 import shutil
 import logging
 from PyInquirer import prompt
-from urllib.parse import urlparse
 
 from ..core import display
 from ..core.app import App
@@ -174,25 +173,12 @@ class ConsoleBot:
         choices = sorted(self.app.search_results.keys())
         selected_choice = choices[0]
         if len(choices) > 1 and not args.suppress:
-            items = []
-            for index, key in enumerate(choices):
-                novels = self.app.search_results[key]
-                text = '%d. %s (%s)' % (index + 1, novels[0]['title'], key)
-                text += '\n<Found in %d sources>' % len(novels)
-                for item in novels:
-                    source = urlparse(item['url']).netloc
-                    text += '\n  - [%s] %s' % (source, item[''])
-                # end for
-                text += '\n'
-                items.append({'name': text})
-            # end for
-
             answer = prompt([
                 {
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Which one is your novel?',
-                    'choices': items,
+                    'choices': display.format_novel_choices(self.app, choices),
                 }
             ])
 
@@ -204,18 +190,12 @@ class ConsoleBot:
         novels = self.app.search_results[selected_choice]
         selected_novel = novels[0]
         if len(novels) > 1 and not args.suppress:
-            items = []
-            for index, item in enumerate(novels):
-                text = '%d. %s' % (index + 1, item['url'])
-                items.append({'name': text})
-            # end for
-
             answer = prompt([
                 {
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Choose a source to download?',
-                    'choices': items,
+                    'choices': display.format_source_choices(self.app, novels),
                 }
             ])
 
