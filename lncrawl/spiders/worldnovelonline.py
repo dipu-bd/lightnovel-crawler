@@ -6,9 +6,7 @@ Crawler for [worldnovel.online](https://www.worldnovel.online/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
-from ..utils import cfscrape
 
 logger = logging.getLogger('WORLDNOVEL_ONLINE')
 search_url = 'https://www.worldnovel.online/?s=%s'
@@ -17,8 +15,7 @@ search_url = 'https://www.worldnovel.online/?s=%s'
 class WorldnovelonlineCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
         for a in soup.select('article div h3 a'):
@@ -35,8 +32,7 @@ class WorldnovelonlineCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one(
             'h1.elementor-heading-title').text.strip()
@@ -86,8 +82,7 @@ class WorldnovelonlineCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
 
@@ -108,10 +103,7 @@ class WorldnovelonlineCrawler(Crawler):
     def search_novel_info(self, url):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', url)
-        scrapper = cfscrape.create_scraper()
-        response = scrapper.get(url)
-        response.encoding = 'utf-8'
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(url)
 
         #score = soup.select_one('span.star')['data-content']
 
@@ -126,11 +118,12 @@ class WorldnovelonlineCrawler(Crawler):
 
     def trim_search_title(self, title):
         '''Trim title search result'''
-        removal_list = ["Novel","Bahasa","Indonesia"]
+        removal_list = ["Novel", "Bahasa", "Indonesia"]
         edit_string_as_list = title.split()
-        final_list = [word for word in edit_string_as_list if word not in removal_list]
+        final_list = [
+            word for word in edit_string_as_list if word not in removal_list]
         final_string = ' '.join(final_list)
 
         return final_string
-    #end def
+    # end def
 # end class
