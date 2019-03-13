@@ -39,7 +39,7 @@ class LnindoCrawler(Crawler):
         elif soup.find('div',{'class':'sharebar'}):
             chapters =  soup.find('div',{'class':'sharebar'}).findNext('div',{'class':'ads'}).findNext('div').select('ul li a')
         else:
-            chapters =  soup.find('h4').findNextSibling('div').findNextSibling('div').findNextSibling('div').select('ul li a')
+            chapters =  soup.find('h3').findNextSibling('div').findNextSibling('div').findNextSibling('div').select('ul li a')
         #end if
         chapters.reverse()
 

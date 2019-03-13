@@ -80,18 +80,20 @@ class ComrademaoCrawler(Crawler):
         soup = BeautifulSoup(response.content, 'lxml')
         logger.debug(soup.title.string)
         
-        if soup.select('div.entry-content div.container div.container a p'):
-            contents = soup.select('div.entry-content div.container div.container a p')
-        else:
-            contents = soup.select('div.entry-content div.container a p')
-            
-        body_parts = []
-        for x in contents:
-            body_parts.append(x.text)
-        #body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body_parts) + '</br></p>'
-        #body = self.extract_contents(soup.select('div.entry-content div.container a p'))
-        #return '<p>' + '</p><p>'.join(body) + '</p>'
-        #return contents
+        #if soup.select('div.entry-content div.container div.container a p'):
+        #    contents = soup.select('div.entry-content div.container div.container a p')
+        #else:
+        #    contents = soup.select('div.entry-content div.container a p')
+        
+        #contents = soup.select('div.entry-content div p')
+        #body_parts = []
+        #for x in contents:
+        #    body_parts.append(x.text)
+        
+        #return '<p>' + '</p><p>'.join(body_parts) + '</br></p>'
+        contents = soup.select_one('div.entry-content div')
+        for item in contents.findAll('div'):
+            item.decompose()
+        return contents.prettify()
     # end def
 # end class
