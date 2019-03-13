@@ -25,6 +25,7 @@ def get_search_result(user_input, link):
         logger.info('%d results from %s', len(results), link)
         return results
     except Exception as ex:
+        logger.info('Something went wrong while searching\n')
         logger.exception(ex)
         return []
     # end try
@@ -53,9 +54,9 @@ def process_results(results):
         })
     # end for
 
-    processed.sort(key=lambda x: x['id'])
+    processed.sort(key=lambda x: -len(x['novels']))
 
-    return processed
+    return processed[:20]  # Control the number of results
 # end def
 
 

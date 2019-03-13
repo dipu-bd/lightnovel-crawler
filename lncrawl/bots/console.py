@@ -179,7 +179,12 @@ class ConsoleBot:
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Which one is your novel?',
-                    'choices': display.format_novel_choices(choices),
+                    'choices': [
+                        {
+                            'name': '%d. %s [in %d sources]' % (
+                                index + 1, item['title'], len(item['novels']))
+                        } for index, item in enumerate(choices)
+                    ],
                 }
             ])
 
@@ -191,12 +196,22 @@ class ConsoleBot:
         novels = selected_choice['novels']
         selected_novel = novels[0]
         if len(novels) > 1 and not args.suppress:
+            info_sep = '\n%s: ' % (' ' * 6)
             answer = prompt([
                 {
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Choose a source to download?',
-                    'choices': display.format_source_choices(novels),
+                    'choices': [
+                        {
+                            'name': '%d. %s %s%s' % (
+                                index + 1,
+                                item['url'],
+                                info_sep if 'info' in item else '',
+                                item['info'] if 'info' in item else '',
+                            )
+                        } for index, item in enumerate(novels)
+                    ],
                 }
             ])
 
