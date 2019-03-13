@@ -8,6 +8,7 @@ import logging
 import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
+from ..utils import cfscrape
 
 logger = logging.getLogger('ROYALROAD')
 search_url = 'https://www.royalroad.com/fictions/search?keyword=%s'
@@ -24,6 +25,7 @@ class RoyalRoadCrawler(Crawler):
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
+                'info': self.search_novel_info(self.absolute_url(a['href'])),
             })
         # end for
 
@@ -94,5 +96,24 @@ class RoyalRoadCrawler(Crawler):
         #body = self.extract_contents(contents)
         # return '<p>' + '</p><p>'.join(body) + '</p>'
         return contents.prettify()
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        scrapper = cfscrape.create_scraper()
+        response = scrapper.get(url)
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.content, 'lxml')
+
+        score = soup.select_one('span.star')['data-content']
+
+        chapters = len(soup.find('tbody').findAll('a', href=True))
+
+        latest = soup.find('tbody').findAll('a', href=True)[-1].text.strip()
+
+        info = 'Score: %s, Chapter count %s, Latest: %s' % (score, chapters, latest)
+
+        return info
     # end def
 # end class
