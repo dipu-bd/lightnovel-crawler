@@ -5,6 +5,7 @@ import os
 import sys
 import shutil
 import logging
+import textwrap
 from PyInquirer import prompt
 
 from ..core import display
@@ -196,22 +197,31 @@ class ConsoleBot:
         novels = selected_choice['novels']
         selected_novel = novels[0]
         if len(novels) > 1 and not args.suppress:
-            info_sep = '\n%s: ' % (' ' * 6)
+            items = []
+            for index, item in enumerate(novels):
+                text = '%d. %s' % (index + 1, item['url'])
+                short_info = item['info'] if 'info' in item else ''
+
+                if short_info:
+                    text += '\n'.join(textwrap.wrap(
+                        short_info,
+                        width=70,
+                        initial_indent='\n' + (' ' * 6) + Icons.INFO,
+                        subsequent_indent=(' ' * 8),
+                        drop_whitespace=True,
+                        break_long_words=True,
+                    ))
+                # end if
+
+                items.append({'name': text})
+            # end for
+
             answer = prompt([
                 {
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Choose a source to download?',
-                    'choices': [
-                        {
-                            'name': '%d. %s %s%s' % (
-                                index + 1,
-                                item['url'],
-                                info_sep if 'info' in item else '',
-                                item['info'] if 'info' in item else '',
-                            )
-                        } for index, item in enumerate(novels)
-                    ],
+                    'choices': items,
                 }
             ])
 
