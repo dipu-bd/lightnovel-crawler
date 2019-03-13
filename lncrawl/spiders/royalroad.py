@@ -21,10 +21,10 @@ class RoyalRoadCrawler(Crawler):
 
         results = []
         for a in soup.select('h2.margin-bottom-10 a'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -43,7 +43,8 @@ class RoyalRoadCrawler(Crawler):
             soup.find("img", {"class": "img-offset thumbnail inline-block"})['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.find("h4", {"property": "author"}).text.strip()
+        self.novel_author = soup.find(
+            "h4", {"property": "author"}).text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.find('tbody').findAll('a', href=True)
@@ -91,7 +92,7 @@ class RoyalRoadCrawler(Crawler):
 
         contents = soup.find("div", {"class": "chapter-content"})
         #body = self.extract_contents(contents)
-        #return '<p>' + '</p><p>'.join(body) + '</p>'
+        # return '<p>' + '</p><p>'.join(body) + '</p>'
         return contents.prettify()
     # end def
 # end class

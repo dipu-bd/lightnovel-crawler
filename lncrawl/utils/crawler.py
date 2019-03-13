@@ -3,12 +3,15 @@
 """
 Crawler application
 """
-import re
-import os
 import logging
+import os
+import re
+from abc import ABC, abstractmethod
 from concurrent import futures
 from urllib.parse import urlparse
+
 from bs4 import BeautifulSoup, Comment
+
 from . import cfscrape
 
 logger = logging.getLogger(__name__)
@@ -27,21 +30,17 @@ class Crawler:
         self.novel_author = 'N/A'
         self.novel_cover = None
 
-        '''
-        Each item must contain these keys:
-        `id` - 1 based index of the volume
-        `title` - the volume title (can be ignored)
-        '''
+        # Each item must contain these keys:
+        # `id` - 1 based index of the volume
+        # `title` - the volume title (can be ignored)
         self.volumes = []
 
-        '''
-        Each item must contain these keys:
-        `id` - 1 based index of the chapter
-        `title` - the title name
-        `volume` - the volume id of this chapter
-        `volume_title` - the volume title (can be ignored)
-        `url` - the link where to download the chapter
-        '''
+        # Each item must contain these keys:
+        # `id` - 1 based index of the chapter
+        # `title` - the title name
+        # `volume` - the volume id of this chapter
+        # `volume_title` - the volume title (can be ignored)
+        # `url` - the link where to download the chapter
         self.chapters = []
 
         # Other stuffs - not necessary to resolve from crawler instance.
@@ -64,28 +63,34 @@ class Crawler:
     # Implement these methods
     # ------------------------------------------------------------------------- #
 
+    @abstractmethod
     def initialize(self):
         pass
     # end def
 
+    @abstractmethod
     def login(self, email, password):
         pass
     # end def
 
+    @abstractmethod
     def logout(self):
         pass
     # end def
 
+    @abstractmethod
     def search_novel(self, query):
-        '''Gets a list of {title, url} matching the given query'''
+        '''Gets a list of results matching the given query'''
         pass
     # end def
 
+    @abstractmethod
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         pass
     # end def
 
+    @abstractmethod
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         pass

@@ -12,13 +12,6 @@ chapter_page_url = '%s?id=%s&page_c=%d'
 
 
 class NovelUniverseCrawler(Crawler):
-    # def search_novel(self, query):
-    #     '''Gets a list of (title, url) matching the given query'''
-    #     # TODO: Use the `self.novel_url` as a query to find matching novels.
-    #     #       Return the search result as a list of (title, url) pair.
-    #     #       You may throw an Exception or empty list in case of failure.
-    #     pass
-    # # end def
 
     def read_novel_info(self):
         self.novel_id = self.novel_url.split('/')[-1].split('.')[0]

@@ -17,10 +17,10 @@ class NovelFullCrawler(Crawler):
 
         results = []
         for a in soup.select('.archive .row .truyen-title a'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -47,10 +47,11 @@ class NovelFullCrawler(Crawler):
         self.novel_author = ', '.join(authors)
         logger.info('Novel author: %s', self.novel_author)
 
-        page_count = soup.select_one('#list-chapter .pagination .last a')['data-page']
+        page_count = soup.select_one(
+            '#list-chapter .pagination .last a')['data-page']
         page_count = -1 if not page_count else int(page_count)
         logger.info('Chapter list pages: %d' % page_count)
-        
+
         logger.info('Getting chapters...')
         futures_to_check = {
             self.executor.submit(
@@ -77,7 +78,8 @@ class NovelFullCrawler(Crawler):
         # end for
         logger.debug(self.volumes)
 
-        logger.info('%d volumes and %d chapters found' % (len(self.volumes), len(self.chapters)))
+        logger.info('%d volumes and %d chapters found' %
+                    (len(self.volumes), len(self.chapters)))
     # end def
 
     def download_chapter_list(self, page):
@@ -96,7 +98,8 @@ class NovelFullCrawler(Crawler):
             # end if
 
             volume_id = 1 + (chapter_id - 1) // 100
-            match = re.findall(r'(book|vol|volume) (\d+)', title, re.IGNORECASE)
+            match = re.findall(r'(book|vol|volume) (\d+)',
+                               title, re.IGNORECASE)
             if len(match) == 1:
                 volume_id = int(match[0][1])
             # end if
@@ -116,9 +119,9 @@ class NovelFullCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('div#chapter-content')
-        for ads in content.findAll('div',{"align" : 'left'}):
+        for ads in content.findAll('div', {"align": 'left'}):
             ads.decompose()
-        for ads in content.findAll('div',{"align" : 'center'}):
+        for ads in content.findAll('div', {"align": 'center'}):
             ads.decompose()
         return content.prettify()
     # end def

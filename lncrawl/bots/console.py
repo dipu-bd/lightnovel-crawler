@@ -146,9 +146,10 @@ class ConsoleBot:
         links = self.app.crawler_links
         if not links:
             return None
+        # end if
 
         args = get_args()
-        if args.suppress:
+        if args.suppress or not args.sources:
             return links
         # end if
 
@@ -169,34 +170,41 @@ class ConsoleBot:
         '''Choose a single novel url from the search result'''
         args = get_args()
 
+        # Choose a novel title
         choices = self.app.search_results
-        if len(choices) == 0:
-            raise Exception('Lightnovel list is empty')
-        elif len(choices) == 1:
-            return choices[0][1]
+        selected_choice = self.app.search_results[0]
+        if len(choices) > 1 and not args.suppress:
+            answer = prompt([
+                {
+                    'type': 'list',
+                    'name': 'novel',
+                    'message': 'Which one is your novel?',
+                    'choices': display.format_novel_choices(choices),
+                }
+            ])
+
+            index = int(answer['novel'].split('.')[0])
+            selected_choice = self.app.search_results[index - 1]
         # end if
 
-        if args.suppress:
-            # Use the first result when input is suppressed
-            return choices[0][1]
+        # Choose the novel source
+        novels = selected_choice['novels']
+        selected_novel = novels[0]
+        if len(novels) > 1 and not args.suppress:
+            answer = prompt([
+                {
+                    'type': 'list',
+                    'name': 'novel',
+                    'message': 'Choose a source to download?',
+                    'choices': display.format_source_choices(novels),
+                }
+            ])
+
+            index = int(answer['novel'].split('.')[0])
+            selected_novel = novels[index - 1]
         # end if
 
-        answer = prompt([
-            {
-                'type': 'list',
-                'name': 'novel_url',
-                'message': 'Which one is your novel?',
-                'choices': [
-                    {'name': '%s (%s)' % (x[0], x[1])}
-                    for x in sorted(choices)
-                ],
-            }
-        ])
-
-        selected = answer['novel_url']
-        selected = re.search(r'(https?://.*)', selected)
-        url = selected.group(1).strip('()')
-        return url
+        return selected_novel['url']
     # end def
 
     def get_login_info(self):

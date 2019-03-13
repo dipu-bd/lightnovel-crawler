@@ -7,6 +7,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('LITNET')
 search_url = 'https://litnet.com/en/search?q=%s'
 
+
 class LitnetCrawler(Crawler):
 
     def search_novel(self, query):
@@ -16,10 +17,10 @@ class LitnetCrawler(Crawler):
 
         results = []
         for a in soup.select('div.l-container ul a'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -65,7 +66,9 @@ class LitnetCrawler(Crawler):
             # end if
 
             abs_url = self.last_visited_url.replace('book', 'reader')
-            chap_url = abs_url + ('?c=%s' % a.attrs['value']) if a.has_attr('value') else self.home_url + a['href']
+            chap_url = abs_url + \
+                ('?c=%s' % a.attrs['value']) if a.has_attr(
+                    'value') else self.home_url + a['href']
             self.chapters.append({
                 'id': chap_id,
                 'volume': 1,

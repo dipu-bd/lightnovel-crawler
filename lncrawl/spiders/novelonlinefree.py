@@ -17,15 +17,15 @@ class NovelOnlineFreeCrawler(Crawler):
     def search_novel(self, query):
         query1 = query.lower().replace(' ', '_')
         query2 = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % (query1,query2))
+        response = self.get_response(search_url % (query1, query2))
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
         for a in soup.select('.update_item h3 a'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -51,7 +51,8 @@ class NovelOnlineFreeCrawler(Crawler):
         self.novel_author = author + ' (' + author1 + ')'
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find('div',{'class':'chapter-list'}).find_all('div', {'class':'row'})
+        chapters = soup.find(
+            'div', {'class': 'chapter-list'}).find_all('div', {'class': 'row'})
         chapters.reverse()
 
         for x in chapters:

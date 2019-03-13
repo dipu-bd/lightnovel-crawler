@@ -9,6 +9,7 @@ from slugify import slugify
 
 from ..binders import available_formats, bind_books
 from ..spiders import crawler_list
+from .novel_search import search_novels
 from .downloader import download_chapters
 from .novel_info import format_chapters, format_volumes, save_metadata
 
@@ -29,7 +30,7 @@ class App:
         self.pack_by_volume = False
         self.chapters = []
         self.book_cover = None
-        self.output_formats = None
+        self.output_formats = {}
         self.archived_outputs = None
         self.good_file_name = None
     # end def
@@ -74,30 +75,13 @@ class App:
         '''Produces: search_results'''
         logger.warn('Searching for novels in %d sites...',
                     len(self.crawler_links))
-        _checked = {}
-        self.search_results = []
-        for link in self.crawler_links:
-            logger.info('Searching: %s with "%s"', link, self.user_input)
-            try:
-                crawler = crawler_list[link]
-                if crawler in _checked:
-                    continue
-                # end if
-                _checked[crawler] = True
 
-                instance = crawler()
-                instance.home_url = link.strip('/')
-                results = instance.search_novel(self.user_input)
-                self.search_results += results
-                logger.debug(results)
-                logger.info('%d results from %s', len(results), link)
-            except Exception as ex:
-                logger.debug(ex)
-            # end try
-        # end for
+        search_novels(self)
+
         if len(self.search_results) == 0:
             raise Exception('No results for: %s' % self.user_input)
         # end if
+
         logger.info('Total %d novels found from %d sites',
                     len(self.search_results), len(self.crawler_links))
     # end def
@@ -199,7 +183,7 @@ class App:
         is_all = True
         if self.output_formats:
             for key in available_formats:
-                if not self.output_formats[key]:
+                if not (key in self.output_formats and self.output_formats[key]):
                     is_all = False
                     break
                 # end if

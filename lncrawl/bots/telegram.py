@@ -38,22 +38,21 @@ class TelegramBot:
                 CommandHandler('start', self.init_app, pass_user_data=True),
             ],
             fallbacks=[
-                CommandHandler('cancel', self.destroy_app, pass_user_data=True),
+                CommandHandler('cancel', self.destroy_app,
+                               pass_user_data=True),
             ],
             states={
                 'handle_novel_url': [
                     MessageHandler(
                         Filters.text, self.handle_novel_url, pass_user_data=True),
                 ],
-                'handle_crawler_to_search': [
-                    CommandHandler(
-                        'skip', self.handle_crawler_to_search, pass_user_data=True),
+                'handle_select_novel': [
                     MessageHandler(
-                        Filters.text, self.handle_crawler_to_search, pass_user_data=True),
+                        Filters.text, self.handle_select_novel, pass_user_data=True),
                 ],
-                'initialize_crawler': [
+                'handle_select_source': [
                     MessageHandler(
-                        Filters.text, self.initialize_crawler, pass_user_data=True),
+                        Filters.text, self.handle_select_source, pass_user_data=True),
                 ],
                 'handle_range_selection': [
                     CommandHandler('all', self.handle_range_all,
@@ -65,7 +64,7 @@ class TelegramBot:
                     CommandHandler(
                         'volume', self.handle_range_volume, pass_user_data=True),
                     CommandHandler(
-                        'chapter', self.handle_range_chapter, pass_user_data = True),
+                        'chapter', self.handle_range_chapter, pass_user_data=True),
                     MessageHandler(
                         Filters.text, self.display_range_selection_help),
                 ],
@@ -90,7 +89,8 @@ class TelegramBot:
         dp.add_handler(conv_handler)
 
         # Fallback helper
-        dp.add_handler(MessageHandler(Filters.text, self.handle_downloader, pass_user_data=True))
+        dp.add_handler(MessageHandler(
+            Filters.text, self.handle_downloader, pass_user_data=True))
 
         # Log all errors
         dp.add_error_handler(self.error_handler)
@@ -163,7 +163,8 @@ class TelegramBot:
         except:
             update.message.reply_text(
                 'Sorry! I only recognize these sources:\n' +
-                '\n'.join(['- %s' % x for x in crawler_list.keys()]))
+                'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources'
+            )  # '\n'.join(['- %s' % x for x in crawler_list.keys()]))
             update.message.reply_text(
                 'Enter something again or send /cancel to stop.')
             return 'handle_novel_url'
@@ -172,108 +173,144 @@ class TelegramBot:
         if app.crawler:
             update.message.reply_text('Got your page link')
             return self.get_novel_info(bot, update, user_data)
-        else:
-            update.message.reply_text('Got your query text')
-            return self.show_crawlers_to_search(bot, update, user_data)
         # end if
-    # end def
 
-    def show_crawlers_to_search(self, bot, update, user_data):
-        app = user_data.get('app')
-
-        buttons = []
-
-        def make_button(i, url):
-            return '%d - %s' % (i + 1, urlparse(url).hostname)
-        # end def
-        for i in range(1, len(app.crawler_links) + 1, 2):
-            buttons += [[
-                make_button(i - 1, app.crawler_links[i - 1]),
-                make_button(i, app.crawler_links[i]) if i < len(
-                    app.crawler_links) else '',
-            ]]
-        # end for
+        if len(app.user_input) < 5:
+            update.message.reply_text(
+                'Please enter a longer query text (at least 5 letters).')
+            return 'handle_novel_url'
+        # end if
 
         update.message.reply_text(
-            'Choose where to search for your novel, \n'
-            'or send /skip to search everywhere.',
-            reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True),
+            'Searching for "%s" in %d sites. Please wait.' % (
+                app.user_input, len(app.crawler_links))
         )
-        return 'handle_crawler_to_search'
-    # end def
-
-    def handle_crawler_to_search(self, bot, update, user_data):
-        app = user_data.get('app')
-
-        link = update.message.text
-        if link:
-            selected_crawlers = []
-            if link.isdigit():
-                selected_crawlers += [
-                    app.crawler_links[int(link) - 1]
-                ]
-            else:
-                selected_crawlers += [
-                    x for i, x in enumerate(app.crawler_links)
-                    if '%d - %s' % (i + 1, urlparse(x).hostname) == link
-                ]
-            # end if
-            if len(selected_crawlers) != 0:
-                app.crawler_links = selected_crawlers
-            # end if
-        # end if
-
         update.message.reply_text(
-            'Searching for your novel in %d sites.\n'
-            'Please wait patiently or send /cancel to stop.' % len(app.crawler_links))
+            'DO NOT type anything until I reply.\n'
+            'You can only send /cancel to stop this session.'
+        )
 
         app.search_novel()
-        for i, (title, url) in enumerate(app.search_results):
-            title = '%d. %s (%s)' % (i + 1, title, urlparse(url).hostname)
-            app.search_results[i] = title, url
-        # end def
-        if len(app.search_results) < 2:
-            return self.initialize_crawler(bot, update, user_data)
-        else:
-            buttons = [[title] for title, url in app.search_results]
-            update.message.reply_text(
-                'Choose your novel, or send /skip to choose the first one',
-                reply_markup=ReplyKeyboardMarkup(
-                    buttons, one_time_keyboard=True),
-            )
-            return 'initialize_crawler'
-        # end if
+        return self.show_novel_selection(update, user_data)
     # end def
 
-    def initialize_crawler(self, bot, update, user_data):
+    def show_novel_selection(self, update, user_data):
         app = user_data.get('app')
 
-        # Resolve selected novel
-        text = update.message.text
-        novel_url = None
-        for title, url in app.search_results:
-            if text == title:
-                novel_url = url
-                break
-            # end if
-        # end for
-
-        if not novel_url:
-            if len(app.search_results) != 0:
-                novel_url = app.search_results[0][1]
-            # end if
-        # end if
-
-        if not novel_url:
+        if len(app.search_results) == 0:
             update.message.reply_text(
-                'Sorry! No novels for your query.\n'
-                'Enter something or send /cancel to stop.',
-                reply_markup=ReplyKeyboardRemove(),
+                'No results found by your query.\n'
+                'Try again or send /cancel to stop.'
             )
-            return 'handle_crawler_to_search'
+            return 'handle_novel_url'
         # end if
 
-        app.init_crawler(novel_url)
+        if len(app.search_results) == 1:
+            user_data['selected'] = app.search_results[0]
+            return self.show_source_selection(update, user_data)
+        # end if
+
+        update.message.reply_text(
+            'Choose any one of the following novels,' +
+            ' or send /cancel to stop this session.',
+            reply_markup=ReplyKeyboardMarkup([
+                [
+                    '%d. %s (in %d sources)' % (
+                        index + 1, res['title'], len(res['novels'])
+                    )
+                ] for index, res in enumerate(app.search_results[:10])
+            ], one_time_keyboard=True),
+        )
+
+        return 'handle_select_novel'
+    # end def
+
+    def handle_select_novel(self, bot, update, user_data):
+        app = user_data.get('app')
+
+        selected = None
+        text = update.message.text
+        if text:
+            if text.isdigit():
+                selected = app.search_results[int(text) - 1]
+            else:
+                for i, item in enumerate(app.search_results[:10]):
+                    sample = '%d. %s' % (i + 1, item['title'])
+                    if text.startswith(sample):
+                        selected = item
+                    elif len(text) >= 5 and text.lower() in item['title'].lower():
+                        selected = item
+                    else:
+                        continue
+                    # end if
+                    break
+                # end for
+            # end if
+        # end if
+
+        if not selected:
+            return self.show_novel_selection(update, user_data)
+        # end if
+
+        user_data['selected'] = selected
+        return self.show_source_selection(update, user_data)
+    # end def
+
+    def show_source_selection(self, update, user_data):
+        app = user_data.get('app')
+        selected = user_data.get('selected')
+
+        if len(selected['novels']) == 1:
+            app.init_crawler(selected['novels'][0]['url'])
+            return self.get_novel_info(bot, update, user_data)
+        # end if
+
+        update.message.reply_text(
+            ('Choose a source to download "%s", ' % selected['title']) +
+            'or send /cancel to stop this session.',
+            reply_markup=ReplyKeyboardMarkup([
+                [
+                    '%d. %s %s' % (
+                        index + 1,
+                        novel['url'],
+                        novel['info'] if 'info' in novel else ''
+                    )
+                ] for index, novel in enumerate(selected['novels'])
+            ], one_time_keyboard=True),
+        )
+
+        return 'handle_select_source'
+    # end def
+
+    def handle_select_source(self, bot, update, user_data):
+        app = user_data.get('app')
+        selected = user_data.get('selected')
+
+        source = None
+        text = update.message.text
+        if text:
+            if text.isdigit():
+                source = selected['novels'][int(text) - 1]
+            else:
+                for i, item in enumerate(selected['novels']):
+                    sample = '%d. %s' % (i + 1, item['url'])
+                    if text.startswith(sample):
+                        source = item
+                    elif len(text) >= 5 and text.lower() in item['url'].lower():
+                        source = item
+                    else:
+                        continue
+                    # end if
+                    break
+                # end for
+            # end if
+        # end if
+
+        if not selected:
+            return self.show_source_selection(update, user_data)
+        # end if
+
+        app.init_crawler(source['url'])
         return self.get_novel_info(bot, update, user_data)
     # end def
 
@@ -307,7 +344,8 @@ class TelegramBot:
             '%d volumes and %d chapters found.' % (
                 len(app.crawler.volumes),
                 len(app.crawler.chapters)
-            )
+            ),
+            reply_markup=ReplyKeyboardRemove()
         )
 
         return self.display_range_selection_help(bot, update)
@@ -391,7 +429,7 @@ class TelegramBot:
         app = user_data.get('app')
         chapters = app.crawler.chapters
         update.message.reply_text(
-            'I got %s  chapters' %len(chapters) +
+            'I got %s  chapters' % len(chapters) +
             '\nEnter which start and end chapter you want to generate separated space or comma.',
         )
         return 'handle_chapter_selection'
@@ -402,23 +440,23 @@ class TelegramBot:
         text = update.message.text
         selected = re.findall(r'\d+', text)
         print(selected)
-        if len(selected)!=2:
-            update.message.reply_text('Sorry, I did not understand. Please try again')
+        if len(selected) != 2:
+            update.message.reply_text(
+                'Sorry, I did not understand. Please try again')
             return 'handle_range_chapter'
-        else: 
+        else:
             selected = [int(x) for x in selected]
             app.chapters = app.crawler.chapters[selected[0]-1:selected[1]]
             update.message.reply_text(
-                'Got the start chapter : %s' %selected[0] +
-                '\nThe end chapter : %s' %selected[1] +
-                '\nTotal chapter chosen is %s' %len(app.chapters),
+                'Got the start chapter : %s' % selected[0] +
+                '\nThe end chapter : %s' % selected[1] +
+                '\nTotal chapter chosen is %s' % len(app.chapters),
             )
         return self.range_selection_done(bot, update, user_data)
     # end def
 
     def handle_pack_by_volume(self, bot, update, user_data):
         app = user_data.get('app')
-        user = update.message.from_user
 
         text = update.message.text
         app.pack_by_volume = text.startswith('Split')
@@ -431,12 +469,12 @@ class TelegramBot:
                 'I will generate single output files whenever possible')
         # end if
 
-        i=0
+        i = 0
         new_list = [['all']]
-        while i<len(available_formats):
+        while i < len(available_formats):
             new_list.append(available_formats[i:i+2])
-            i+=2
-            
+            i += 2
+
         update.message.reply_text(
             'In which format you want me to generate your book?',
             reply_markup=ReplyKeyboardMarkup(
@@ -456,19 +494,19 @@ class TelegramBot:
         app.output_formats = {}
         if text in available_formats:
             for x in available_formats:
-                if x == text :
+                if x == text:
                     app.output_formats[x] = True
                 else:
                     app.output_formats[x] = False
-                # end if 
+                # end if
             # end for
         elif text != 'all':
             update.message.reply_text('Sorry, I did not understand.')
             return
-        #end if
+        # end if
 
         job = job_queue.run_once(
-            self.process_request,
+            self.process_download_request,
             1,
             context=(update, user_data),
             name=str(user.id),
@@ -484,10 +522,9 @@ class TelegramBot:
         return ConversationHandler.END
     # end def
 
-
-    def process_request(self, bot, job):
+    def process_download_request(self, bot, job):
         update, user_data = job.context
-        
+
         app = user_data.get('app')
         if app:
             user_data['status'] = 'Downloading "%s"' % app.crawler.novel_title
@@ -499,8 +536,8 @@ class TelegramBot:
         if app:
             user_data['status'] = 'Generating output files'
             update.message.reply_text(user_data.get('status'))
-            output = app.bind_books()
-            update.message.reply_text('Output file generated.')
+            output_files = app.bind_books()
+            update.message.reply_text('Output files generated.')
         # end if
 
         app = user_data.get('app')
@@ -509,7 +546,6 @@ class TelegramBot:
             update.message.reply_text(user_data.get('status'))
             app.compress_output()
         # end if
-
 
         for archive in app.archived_outputs:
             link_id = upload(archive)
@@ -521,7 +557,7 @@ class TelegramBot:
             else:
                 update.message.reply_document(
                     open(archive, 'rb'),
-                    timeout=24 * 3600, # 24 hours
+                    timeout=24 * 3600,  # 24 hours
                 )
                 update.message.reply_text(
                     'This file will be available for 24 hours to download')

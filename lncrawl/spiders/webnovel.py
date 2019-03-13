@@ -6,6 +6,7 @@ Crawler for novels from [WebNovel](https://www.webnovel.com).
 import json
 import logging
 import re
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WEBNOVEL')
@@ -37,9 +38,10 @@ class WebnovelCrawler(Crawler):
 
         results = []
         for book in data['data']['books']:
-            url = book_info_url % book['id']
-            title = book['name']
-            results.append((title, url))
+            results.append({
+                'title': book['name'],
+                'url': book_info_url % book['id'],
+            })
         # end for
         return results
     # end def

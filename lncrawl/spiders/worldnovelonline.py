@@ -21,10 +21,10 @@ class WorldnovelonlineCrawler(Crawler):
 
         results = []
         for a in soup.select('article div h3 a'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -36,22 +36,23 @@ class WorldnovelonlineCrawler(Crawler):
         response = self.get_response(self.novel_url)
         soup = BeautifulSoup(response.content, 'lxml')
 
-        self.novel_title = soup.select_one('h1.elementor-heading-title').text.strip()
+        self.novel_title = soup.select_one(
+            'h1.elementor-heading-title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.find('div',{'class':'elementor-image'}).find('img')['src'])
+            soup.find('div', {'class': 'elementor-image'}).find('img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('div.elementor-shortcode p')[1].findAll('a')
-        if len(author)==2:
+        if len(author) == 2:
             self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else :
+        else:
             self.novel_author = ''
             for a in author:
                 self.novel_author = self.novel_author + a.text + ' '
-            #end for
-        #end if
+            # end for
+        # end if
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.select('div.lightnovel-episode ul li a')
@@ -90,15 +91,15 @@ class WorldnovelonlineCrawler(Crawler):
 
         c = soup.select('div.elementor-widget-container')
         contents = c[5]
-        for ads in contents.findAll('div',{"class" : 'code-block'}):
+        for ads in contents.findAll('div', {"class": 'code-block'}):
             ads.decompose()
-        for ads in contents.findAll('div',{"align" : 'left'}):
+        for ads in contents.findAll('div', {"align": 'left'}):
             ads.decompose()
-        for ads in contents.findAll('div',{"align" : 'center'}):
+        for ads in contents.findAll('div', {"align": 'center'}):
             ads.decompose()
         if contents.h1:
             contents.h1.decompose()
-        #end if
+        # end if
         return contents.prettify()
     # end def
 # end class

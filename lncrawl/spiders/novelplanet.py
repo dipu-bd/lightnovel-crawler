@@ -21,10 +21,10 @@ class NovelPlanetCrawler(Crawler):
 
         results = []
         for a in soup.select('.post-content a.title'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -85,27 +85,27 @@ class NovelPlanetCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#divReadContent')
-        #self.clean_contents(content)
+        # self.clean_contents(content)
 
         logger.debug(soup.title.string)
         if soup.select_one('h4').text:
             chapter['title'] = soup.select_one('h4').text
         else:
             if chapter['title'].startswith('Read'):
-                chapter['title'].replace('Read Novel ','')
-            else:    
+                chapter['title'].replace('Read Novel ', '')
+            else:
                 chapter['title'] = chapter['title']
-            # end if    
+            # end if
         # end if
-        for ads in contents.findAll('div',{"style" : 'text-align: center; margin-bottom: 10px'}):
+        for ads in contents.findAll('div', {"style": 'text-align: center; margin-bottom: 10px'}):
             ads.decompose()
 
         return contents.prettify()
 
-        #return ''.join([
+        # return ''.join([
         #    str(p).strip()
         #    for p in content.select('p')
         #    if p.text.strip()
-        #])
+        # ])
     # end def
 # end class

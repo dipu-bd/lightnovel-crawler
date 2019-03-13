@@ -21,10 +21,10 @@ class BoxNovelCrawler(Crawler):
 
         results = []
         for a in soup.select('.post-title h4 a'):
-            results.append((
-                a.text.strip(),
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -89,7 +89,7 @@ class BoxNovelCrawler(Crawler):
 
         if contents.h3:
             contents.h3.decompose()
-            
+
         return contents.prettify()
     # end def
 # end class

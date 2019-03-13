@@ -21,10 +21,10 @@ class MtledNovelsCrawler(Crawler):
 
         results = []
         for a in soup.select('div.col-lg-12 div.row div.col-lg-2 a'):
-            results.append((
-                a.img['alt'],
-                self.absolute_url(a['href']),
-            ))
+            results.append({
+                'title': a.img['alt'],
+                'url': self.absolute_url(a['href']),
+            })
         # end for
 
         return results
@@ -90,14 +90,14 @@ class MtledNovelsCrawler(Crawler):
         ]
 
         contents = soup.select('div.translated p')
-        #print(contents)
+        # print(contents)
         for p in contents:
             for span in p.findAll('span'):
                 span.unwrap()
-            #end for
-        #end for
-        #print(contents)
-        #self.clean_contents(contents)
+            # end for
+        # end for
+        # print(contents)
+        # self.clean_contents(contents)
         #body = contents.select('p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'

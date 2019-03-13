@@ -14,21 +14,6 @@ search_url = 'https://www.readlightnovel.org/search/autocomplete'
 
 
 class ReadLightNovelCrawler(Crawler):
-    # def search_novel(self, query):
-    #     self.get_response(self.home_url)
-    #     response = self.submit_form(search_url, data={'q': query })
-    #     logger.debug(response.text)
-    #     soup = BeautifulSoup(response.text, 'lxml')
-
-    #     results = []
-    #     for a in soup.select('li a'):
-    #         url = self.absolute_url(a['href'])
-    #         title = a.select_one('.title').text.strip()
-    #         results.append((title, url))
-    #     # end for
-
-    #     return results
-    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -84,11 +69,13 @@ class ReadLightNovelCrawler(Crawler):
         if hidden:
             hidden.decompose()
         # end if
-        
+
         body = self.extract_contents(div)
         if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):
-            chapter['title'] = body[0].replace('<strong>', '').replace('</strong>', '').strip()
-            chapter['title'] = ('C' if chapter['title'].startswith('hapter') else '') + chapter['title']
+            chapter['title'] = body[0].replace(
+                '<strong>', '').replace('</strong>', '').strip()
+            chapter['title'] = ('C' if chapter['title'].startswith(
+                'hapter') else '') + chapter['title']
             body = body[1:]
         # end if
 
