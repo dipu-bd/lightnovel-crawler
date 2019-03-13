@@ -16,10 +16,13 @@ class NovelFullCrawler(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select('.archive .row .truyen-title a'):
+        for div in soup.select('#list-page .archive .list-truyen > .row'):
+            a = div.select_one('.truyen-title a')
+            info = div.select_one('.text-info a .chapter-text')
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
+                'info': info.text.strip() if info else '',
             })
         # end for
 

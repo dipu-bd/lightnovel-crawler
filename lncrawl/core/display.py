@@ -90,7 +90,7 @@ def error_message(err):
 
 
 def app_complete():
-    print(Style.BRIGHT + Fore.YELLOW + Icons.sparkle,
+    print(Style.BRIGHT + Fore.YELLOW + Icons.SPARKLE,
           'Task completed', Fore.RESET, Style.RESET_ALL)
     print()
 # end def
@@ -126,35 +126,4 @@ def url_not_recognized():
     print('You can request developers to add support for this site here:')
     print(Fore.CYAN, Icons.LINK,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
-# end def
-
-
-def format_novel_choices(search_results):
-    items = []
-    for index, item in enumerate(search_results):
-        text = '%d. %s (%s)' % (index + 1, item['title'], item['id'])
-        text += '\n%s<Found in %d sources>' % (' ' * 6, len(item['novels']))
-        for novel in item['novels']:
-            source = urlparse(novel['url']).netloc
-            short_info = novel['info'] if 'info' in novel else ''
-            line = '- [%s] %s' % (source, short_info)
-            text += '\n%s%s' % (' ' * 6, line.strip())
-        # end for
-        items.append({'name': text})
-    # end for
-    return items
-# end def
-
-
-def format_source_choices(novel_list):
-    items = []
-    for index, item in enumerate(novel_list):
-        short_info = item['info'] if 'info' in item else ''
-        text = '%d. %s' % (index + 1, item['url'])
-        if len(short_info.strip()):
-            text += '\n%s<%s>' % (' ' * 6, short_info)
-        # end if
-        items.append({'name': text})
-    # end for
-    return items
 # end def

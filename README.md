@@ -197,42 +197,45 @@ You are very welcome to contribute in this project. You can:
 
 The list of currently available sources and the future plans are given below:
 
-- [x] https://lnmtl.com
-- [x] https://www.webnovel.com
-- [x] https://wuxiaworld.online
-- [x] https://www.wuxiaworld.com
-- [x] https://m.wuxiaworld.com
-- [x] https://www.wuxiaworld.co
-- [x] https://m.wuxiaworld.co
-- [x] https://boxnovel.com
-- [x] https://www.readlightnovel.org
-- [x] https://novelplanet.com
-- [x] https://lnindo.org
-- [x] https://www.idqidian.us
-- [x] https://m.romanticlovebooks.com
-- [x] https://www.romanticlovebooks.com
-- [x] https://webnovel.online
-- [x] http://fullnovel.live
-- [x] https://www.novelall.com
-- [x] http://novelfull.com
-- [x] https://m.novelspread.com
-- [x] https://www.novelspread.com
+<!-- ![search](https://img.shields.io/badge/search-disabled-lightgrey.svg) -->
+
+- [x] http://fullnovel.live ![search](https://img.shields.io/badge/search-enabled-blue.svg)
 - [x] http://gravitytales.com
+- [x] http://novelfull.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
 - [x] http://www.machinenoveltranslation.com
-- [x] https://novelonlinefree.info
-- [x] https://anythingnovel.com
-- [x] https://comrademao.com
-- [x] https://m.chinesefantasynovels.com
-- [x] https://www.scribblehub.com
 - [x] http://zenithnovels.com
-- [x] https://www.noveluniverse.com
-- [x] https://www.royalroad.com
-- [x] https://meionovel.com
-- [x] https://worldnovel.online
-- [x] https://mtled-novels.com
-- [x] https://litnet.com
+- [x] https://anythingnovel.com
+- [x] https://boxnovel.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://comrademao.com
 - [x] https://crescentmoon.blog
+- [x] https://litnet.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://lnindo.org
+- [x] https://lnmtl.com
+- [x] https://m.chinesefantasynovels.com
+- [x] https://m.novelspread.com
+- [x] https://m.romanticlovebooks.com
+- [x] https://m.wuxiaworld.co ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://m.wuxiaworld.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://meionovel.com
+- [x] https://mtled-novels.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://novelonlinefree.info ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://novelplanet.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
 - [x] https://volarenovels.com
+- [x] https://webnovel.online
+- [x] https://worldnovel.online ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://wuxiaworld.online ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.idqidian.us
+- [x] https://www.novelall.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.novelspread.com
+- [x] https://www.noveluniverse.com
+- [x] https://www.readlightnovel.org
+- [x] https://www.romanticlovebooks.com
+- [x] https://www.royalroad.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.webnovel.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+  <!-- Please keep the new entry sorted -->
 
 Rejected due to difficulty or other reasons:
 
