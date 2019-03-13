@@ -16,10 +16,13 @@ class FullnovelLiveCrawler(Crawler):
         '''Gets a list of (title, url) matching the given query'''
         results = []
         soup = self.get_soup(NOVEL_SEARCH % query)
-        for a in soup.select('.grid .v-grid h4 a'):
+        for grid in soup.select('.grid .v-grid'):
+            a = grid.select_one('h4 a')
+            info = grid.select_one('.info-line a').text
             results.append({
                 'title': (a['title'] or a.text).strip(),
-                'url': self.absolute_url(a['href'])
+                'url': self.absolute_url(a['href']),
+                'info': info
             })
         # end for
         return results
