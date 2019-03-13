@@ -20,10 +20,14 @@ class BoxNovelCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
-        for a in soup.select('.post-title h4 a'):
+        for tab in soup.select('.c-tabs-item__content'):
+            a = tab.select_one('.post-title h4 a')
+            latest = tab.select_one('.latest-chap .chapter a').text
+            votes = tab.select_one('.rating .total_votes').text
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
+                'info': 'Rating: %s, Latest: %s' % (votes, latest),
             })
         # end for
 
