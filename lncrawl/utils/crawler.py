@@ -177,7 +177,7 @@ class Crawler:
 
     def get_soup(self, *args, **kargs):
         response = self.get_response(*args, **kargs)
-        return BeautifulSoup(response.text, 'lxml')
+        return BeautifulSoup(response.content, 'lxml')
     # end def
 
     def get_json(self, *args, **kargs):
