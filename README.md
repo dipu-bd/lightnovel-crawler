@@ -199,43 +199,43 @@ The list of currently available sources and the future plans are given below:
 
 <!-- ![search](https://img.shields.io/badge/search-disabled-lightgrey.svg) -->
 
-- [x] http://fullnovel.live ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] http://fullnovel.live ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] http://gravitytales.com
-- [x] http://novelfull.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] http://novelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] http://www.machinenoveltranslation.com
 - [x] http://zenithnovels.com
 - [x] https://anythingnovel.com
-- [x] https://boxnovel.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://boxnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] https://comrademao.com
 - [x] https://crescentmoon.blog
-- [x] https://litnet.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://litnet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] https://lnindo.org
 - [x] https://lnmtl.com
 - [x] https://m.chinesefantasynovels.com
 - [x] https://m.novelspread.com
 - [x] https://m.romanticlovebooks.com
-- [x] https://m.wuxiaworld.co ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://m.wuxiaworld.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://m.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://m.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] https://meionovel.com
-- [x] https://mtled-novels.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://novelonlinefree.info ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://novelplanet.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://mtled-novels.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://novelonlinefree.info ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://novelplanet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] https://volarenovels.com
 - [x] https://webnovel.online
-- [x] https://worldnovel.online ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://wuxiaworld.online ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://wuxiaworld.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] https://www.idqidian.us
-- [x] https://www.novelall.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.novelall.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
 - [x] https://www.novelspread.com
 - [x] https://www.noveluniverse.com
 - [x] https://www.novelv.com
 - [x] https://www.readlightnovel.org
 - [x] https://www.romanticlovebooks.com
-- [x] https://www.royalroad.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://www.webnovel.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/search-enabled-blue.svg)
-- [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/search-enabled-blue.svg)
+- [x] https://www.royalroad.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://www.webnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
+- [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg?style=social)
   <!-- Please keep the new entry sorted -->
 
 Rejected due to difficulty or other reasons:
