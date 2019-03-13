@@ -218,7 +218,7 @@ class TelegramBot:
                     '%d. %s (in %d sources)' % (
                         index + 1, res['title'], len(res['novels'])
                     )
-                ] for index, res in enumerate(app.search_results[:10])
+                ] for index, res in enumerate(app.search_results)
             ], one_time_keyboard=True),
         )
 
@@ -253,10 +253,10 @@ class TelegramBot:
         # end if
 
         user_data['selected'] = selected
-        return self.show_source_selection(update, user_data)
+        return self.show_source_selection(bot, update, user_data)
     # end def
 
-    def show_source_selection(self, update, user_data):
+    def show_source_selection(self, bot, update, user_data):
         app = user_data.get('app')
         selected = user_data.get('selected')
 
@@ -554,14 +554,13 @@ class TelegramBot:
                     'Get your file here:'
                     'https://drive.google.com/open?id=%s' % link_id
                 )
-            else:
-                update.message.reply_document(
-                    open(archive, 'rb'),
-                    timeout=24 * 3600,  # 24 hours
-                )
-                update.message.reply_text(
-                    'This file will be available for 24 hours to download')
-            # end if
+            update.message.reply_document(
+                open(archive, 'rb'),
+                timeout=24 * 3600, # 24 hours
+            )
+            update.message.reply_text(
+                'This file will be available for 24 hours to download')
+            
         # end for
 
         self.destroy_app(bot, update, user_data)

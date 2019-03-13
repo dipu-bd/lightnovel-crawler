@@ -8,6 +8,7 @@ import logging
 import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
+from ..utils import cfscrape
 
 logger = logging.getLogger('WORLDNOVEL_ONLINE')
 search_url = 'https://www.worldnovel.online/?s=%s'
@@ -22,8 +23,9 @@ class WorldnovelonlineCrawler(Crawler):
         results = []
         for a in soup.select('article div h3 a'):
             results.append({
-                'title': a.text.strip(),
+                'title': self.trim_search_title(a.text.strip()),
                 'url': self.absolute_url(a['href']),
+                'info': self.search_novel_info(self.absolute_url(a['href'])),
             })
         # end for
 
@@ -102,4 +104,33 @@ class WorldnovelonlineCrawler(Crawler):
         # end if
         return contents.prettify()
     # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        scrapper = cfscrape.create_scraper()
+        response = scrapper.get(url)
+        response.encoding = 'utf-8'
+        soup = BeautifulSoup(response.content, 'lxml')
+
+        #score = soup.select_one('span.star')['data-content']
+
+        chapters = len(soup.select('div.lightnovel-episode ul li a'))
+
+        latest = soup.select('div.lightnovel-episode ul li a')[0].text.strip()
+
+        info = 'Chapter count %s, Latest: %s' % (chapters, latest)
+
+        return info
+    # end def
+
+    def trim_search_title(self, title):
+        '''Trim title search result'''
+        removal_list = ["Novel","Bahasa","Indonesia"]
+        edit_string_as_list = title.split()
+        final_list = [word for word in edit_string_as_list if word not in removal_list]
+        final_string = ' '.join(final_list)
+
+        return final_string
+    #end def
 # end class
