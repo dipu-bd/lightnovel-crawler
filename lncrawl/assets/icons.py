@@ -23,5 +23,6 @@ class Icons:
     PARTY = '📦' if hasSupport else '$'
     SOUND = '🔊' if hasSupport else '<<'
     RIGHT_ARROW = '⮕' if hasSupport else '->'
-    sparkle = '✨' if hasSupport else '*'
+    SPARKLE = '✨' if hasSupport else '*'
+    INFO = '🗩  ' if hasSupport else ': '
 # end def

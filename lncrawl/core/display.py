@@ -90,7 +90,7 @@ def error_message(err):
 
 
 def app_complete():
-    print(Style.BRIGHT + Fore.YELLOW + Icons.sparkle,
+    print(Style.BRIGHT + Fore.YELLOW + Icons.SPARKLE,
           'Task completed', Fore.RESET, Style.RESET_ALL)
     print()
 # end def
