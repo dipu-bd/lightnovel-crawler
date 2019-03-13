@@ -37,6 +37,10 @@ class WebnovelCrawler(Crawler):
         logger.debug(data)
 
         results = []
+        if 'books' not in data['data']:
+            return results
+        # end if
+
         for book in data['data']['books']:
             results.append({
                 'title': book['name'],
