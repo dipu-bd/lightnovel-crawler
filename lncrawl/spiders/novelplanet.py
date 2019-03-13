@@ -14,21 +14,22 @@ search_url = 'https://novelplanet.com/NovelList?name=%s'
 
 
 class NovelPlanetCrawler(Crawler):
-    def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+    # TODO: Disabling for now. This search is error-prone and takes a long time.
+    # def search_novel(self, query):
+    #     query = query.lower().replace(' ', '+')
+    #     response = self.get_response(search_url % query)
+    #     soup = BeautifulSoup(response.text, 'lxml')
 
-        results = []
-        for a in soup.select('.post-content a.title'):
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-            })
-        # end for
+    #     results = []
+    #     for a in soup.select('.post-content a.title'):
+    #         results.append({
+    #             'title': a.text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #         })
+    #     # end for
 
-        return results
-    # end def
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
