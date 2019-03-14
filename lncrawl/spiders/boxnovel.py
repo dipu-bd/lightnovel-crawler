@@ -6,7 +6,6 @@ Crawler for [boxnovel.com](https://boxnovel.com/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('BOXNOVEL')
@@ -16,8 +15,7 @@ search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&rele
 class BoxNovelCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
         for tab in soup.select('.c-tabs-item__content'):
@@ -37,8 +35,7 @@ class BoxNovelCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = ' '.join([
             str(x)
@@ -86,8 +83,7 @@ class BoxNovelCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')
 
