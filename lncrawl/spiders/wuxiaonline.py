@@ -20,11 +20,11 @@ class WuxiaOnlineCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
-        for a in soup.select('li .resultname a'):
-
+        for novel in soup.select('li'):          
             results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
+                'title': novel.select_one('.resultname a').text.strip(),
+                'url': self.absolute_url(novel.select_one('.resultname a')['href']),
+                'info': 'Latest chapter : %s' % novel.select_one('a:nth-of-type(2)').text.strip()
             })
         # end for
 

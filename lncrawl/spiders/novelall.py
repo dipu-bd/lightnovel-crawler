@@ -24,6 +24,7 @@ class NovelAllCrawler(Crawler):
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
+                'info': self.search_novel_info(self.absolute_url(a['href'])),
             })
         # end for
         return results
@@ -103,5 +104,22 @@ class NovelAllCrawler(Crawler):
         contents = soup.find('div', {"class": "reading-box"})
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
+
+        chapters = len(soup.find(
+            'div', {"class": "manga-detailchapter"}).findAll('a', title=True))
+
+        latest = soup.find(
+            'div', {"class": "manga-detailchapter"}).findAll('a', title=True)[0]['title'] or 'Chapter %d' % chapters
+
+        info = 'Chapter count %s, Latest: %s' % (
+            chapters, latest)
+
+        return info
     # end def
 # end class

@@ -21,10 +21,11 @@ class ScribbleHubCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
-        for a in soup.select('.search_title a'):
+        for novel in soup.select('div.search_body'):
             results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
+                'title': novel.select_one('.search_title a').text.strip(),
+                'url': novel.select_one('.search_title a')['href'],
+                'info' : novel.select_one(".search_stats").text.strip(),
             })
         # end for
 
