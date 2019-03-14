@@ -46,6 +46,12 @@ class TelegramBot:
                     MessageHandler(
                         Filters.text, self.handle_novel_url, pass_user_data=True),
                 ],
+                'handle_crawler_to_search': [
+                    CommandHandler(
+                        'skip', self.handle_crawler_to_search, pass_user_data=True),
+                    MessageHandler(
+                        Filters.text, self.handle_crawler_to_search, pass_user_data=True),
+                ],
                 'handle_select_novel': [
                     MessageHandler(
                         Filters.text, self.handle_select_novel, pass_user_data=True),
@@ -181,9 +187,59 @@ class TelegramBot:
             return 'handle_novel_url'
         # end if
 
+        update.message.reply_text('Got your query text')
+        return self.show_crawlers_to_search(bot, update, user_data)
+    # end def
+
+    def show_crawlers_to_search(self, bot, update, user_data):
+        app = user_data.get('app')
+
+        buttons = []
+
+        def make_button(i, url):
+            return '%d - %s' % (i + 1, urlparse(url).hostname)
+        # end def
+        for i in range(1, len(app.crawler_links) + 1, 2):
+            buttons += [[
+                make_button(i - 1, app.crawler_links[i - 1]),
+                make_button(i, app.crawler_links[i]) if i < len(
+                    app.crawler_links) else '',
+            ]]
+        # end for
+
+        update.message.reply_text(
+            'Choose where to search for your novel, \n'
+            'or send /skip to search everywhere.',
+            reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True),
+        )
+        return 'handle_crawler_to_search'
+    # end def
+
+    def handle_crawler_to_search(self, bot, update, user_data):
+        app = user_data.get('app')
+
+        link = update.message.text
+        if link:
+            selected_crawlers = []
+            if link.isdigit():
+                selected_crawlers += [
+                    app.crawler_links[int(link) - 1]
+                ]
+            else:
+                selected_crawlers += [
+                    x for i, x in enumerate(app.crawler_links)
+                    if '%d - %s' % (i + 1, urlparse(x).hostname) == link
+                ]
+            # end if
+            if len(selected_crawlers) != 0:
+                app.crawler_links = selected_crawlers
+            # end if
+        # end if
+
         update.message.reply_text(
             'Searching for "%s" in %d sites. Please wait.' % (
-                app.user_input, len(app.crawler_links))
+                app.user_input, len(app.crawler_links)),
+            reply_markup=ReplyKeyboardRemove(),
         )
         update.message.reply_text(
             'DO NOT type anything until I reply.\n'
@@ -191,10 +247,10 @@ class TelegramBot:
         )
 
         app.search_novel()
-        return self.show_novel_selection(update, user_data)
+        return self.show_novel_selection(bot, update, user_data)
     # end def
 
-    def show_novel_selection(self, update, user_data):
+    def show_novel_selection(self, bot, update, user_data):
         app = user_data.get('app')
 
         if len(app.search_results) == 0:
@@ -207,7 +263,7 @@ class TelegramBot:
 
         if len(app.search_results) == 1:
             user_data['selected'] = app.search_results[0]
-            return self.show_source_selection(update, user_data)
+            return self.show_source_selection(bot, update, user_data)
         # end if
 
         update.message.reply_text(
@@ -249,7 +305,7 @@ class TelegramBot:
         # end if
 
         if not selected:
-            return self.show_novel_selection(update, user_data)
+            return self.show_novel_selection(bot, update, user_data)
         # end if
 
         user_data['selected'] = selected
@@ -307,7 +363,7 @@ class TelegramBot:
         # end if
 
         if not selected:
-            return self.show_source_selection(update, user_data)
+            return self.show_source_selection(bot, update, user_data)
         # end if
 
         app.init_crawler(source['url'])
