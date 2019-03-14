@@ -218,14 +218,12 @@ The list of currently available sources and the future plans are given below:
 - [x] https://m.novelspread.com
 - [x] https://m.romanticlovebooks.com
 - [x] https://m.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://m.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://meionovel.com
 - [x] https://mtled-novels.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://novelonlinefree.info ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://novelplanet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://volarenovels.com
 - [x] https://webnovel.online
-- [x] https://worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://wuxiaworld.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.idqidian.us
 - [x] https://www.novelall.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
@@ -237,6 +235,7 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.royalroad.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.webnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
+- [x] https://www.worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 
