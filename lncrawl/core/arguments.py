@@ -75,7 +75,7 @@ class ArgReader:
         parser.add_argument('--bot', type=str, choices=supported_bots,
                             help='Select a bot. Default: console')
 
-        parser.add_argument('extra', type=parse_qs, nargs='?', metavar='EXTRA',
+        parser.add_argument('extra', type=parse_qs, nargs='?', metavar='EXTRA', default={},
                             help='To pass a query string to use as extra arguments')
 
         self.arguments = parser.parse_args()
