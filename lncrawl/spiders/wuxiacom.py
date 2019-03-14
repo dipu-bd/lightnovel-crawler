@@ -32,6 +32,7 @@ class WuxiaComCrawler(Crawler):
             results.append({
                 'title': item['name'],
                 'url': book_url % item['slug'],
+                'info': self.search_novel_info(book_url % item['slug']),
             })
         # end for
         return results
@@ -97,5 +98,36 @@ class WuxiaComCrawler(Crawler):
         body = soup.select_one('.panel-default .fr-view')
         self.clean_contents(body)
         return '\n'.join([str(x) for x in body.contents])
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
+
+        volumes = []
+        chapters = []
+        for panel in soup.select('#accordion .panel-default'):
+            vol_id = int(panel.select_one('h4.panel-title .book').text)
+            vol_title = panel.select_one('h4.panel-title .title a').text
+            volumes.append({
+                'id': vol_id,
+                'title': vol_title,
+            })
+            for a in panel.select('ul.list-chapters li.chapter-item a'):
+                chap_id = len(self.chapters) + 1
+                chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'url': self.absolute_url(a['href']),
+                    'title': a.text.strip() or ('Chapter %d' % chap_id),
+                })
+            # end for
+        # end for
+
+        info = 'Volume : %s, Chapter : %s, Latest: %s' % (
+            len(volumes), len(chapters), chapters[-1]['title'])
+
+        return info
     # end def
 # end class

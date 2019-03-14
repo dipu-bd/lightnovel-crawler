@@ -21,10 +21,13 @@ class NovelOnlineFreeCrawler(Crawler):
         soup = BeautifulSoup(response.text, 'lxml')
 
         results = []
-        for a in soup.select('.update_item h3 a'):
+        for novel in soup.select('.update_item'):
+            a = novel.select_one('h3 a')
+            info = novel.select_one('a.chapter').text.strip()
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
+                'info' : 'Last chapter : %s' % info,
             })
         # end for
 
