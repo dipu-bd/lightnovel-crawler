@@ -66,10 +66,10 @@ class CrescentMoonCrawler(Crawler):
 
         logger.debug(soup.title.string)
 
-        if soup.find("h1", {"class": "entry-title"}).text.strip():
-            chapter['title'] = soup.find("h1", {"class": "entry-title"}).text.strip()
-        else:
-            chapter['title'] = chapter['title']
+        #if soup.find("h1", {"class": "entry-title"}).text.strip():
+        #    chapter['title'] = soup.find("h1", {"class": "entry-title"}).text.strip()
+        #else:
+        #    chapter['title'] = chapter['title']
         # end if
 
         #contents = soup.select('div.entry-content p')
