@@ -32,6 +32,7 @@ from .mtlednovels import MtledNovelsCrawler
 from .litnet import LitnetCrawler
 from .crescentmoon import CrescentMoonCrawler
 from .volarenovels import VolareNovelsCrawler
+from .novelv import NovelvCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -66,9 +67,10 @@ crawler_list = {
     'https://www.noveluniverse.com/': NovelUniverseCrawler,
     'https://meionovel.com/': MeionovelCrawler,
     'https://www.worldnovel.online/': WorldnovelonlineCrawler,
-    'https://mtled-novels.com': MtledNovelsCrawler,
+    'https://mtled-novels.com/': MtledNovelsCrawler,
     'https://litnet.com/': LitnetCrawler,
-    'https://crescentmoon.blog': CrescentMoonCrawler,
-    'https://volarenovels.com': VolareNovelsCrawler,
+    'https://crescentmoon.blog/': CrescentMoonCrawler,
+    'https://volarenovels.com/': VolareNovelsCrawler,
+    'https://www.novelv.com/': NovelvCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
