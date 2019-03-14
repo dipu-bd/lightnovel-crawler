@@ -14,7 +14,6 @@ search_url = 'https://novelplanet.com/NovelList?name=%s'
 
 
 class NovelPlanetCrawler(Crawler):
-    # TODO: Disabling for now. This search is error-prone and takes a long time.
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         response = self.get_response(search_url % query)
@@ -22,10 +21,12 @@ class NovelPlanetCrawler(Crawler):
 
         results = []
         for novel in soup.select('.post-content'):
+            a = novel.select_one('a.title')
+            info = novel.select_one("div:nth-of-type(3) a").text.strip()
             results.append({
-                'title': novel.select_one('a.title').text.strip(),
-                'url': novel.select_one('a.title')['href'],
-                'info' : 'Last chapter : %s' % novel.select_one("div:nth-of-type(3) a").text.strip(),
+                'title': a.text.strip(),
+                'url': a['href'],
+                'info' : 'Last chapter : %s' % info,
             })
         # end for
         return results
