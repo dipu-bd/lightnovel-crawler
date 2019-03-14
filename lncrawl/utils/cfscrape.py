@@ -3,11 +3,11 @@
 """
 Source: https://raw.githubusercontent.com/Anorov/cloudflare-scrape/master/cfscrape/__init__.py
 """
-
 import logging
 import random
 import re
-from copy import deepcopy
+import subprocess
+import copy
 import time
 
 import js2py
@@ -18,7 +18,7 @@ try:
 except ImportError:
     from urllib.parse import urlparse
 
-__version__ = "1.9.5"
+__version__ = "1.9.6"
 
 DEFAULT_USER_AGENTS = [
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
@@ -78,7 +78,6 @@ class CloudflareScraper(Session):
         return resp
 
     def solve_cf_challenge(self, resp, **original_kwargs):
-        # Cloudflare requires a delay before solving the challenge
         start_time = time.time()
 
         body = resp.text
@@ -87,7 +86,7 @@ class CloudflareScraper(Session):
         submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (
             parsed_url.scheme, domain)
 
-        cloudflare_kwargs = deepcopy(original_kwargs)
+        cloudflare_kwargs = copy.deepcopy(original_kwargs)
         params = cloudflare_kwargs.setdefault("params", {})
         headers = cloudflare_kwargs.setdefault("headers", {})
         headers["Referer"] = resp.url
@@ -97,7 +96,6 @@ class CloudflareScraper(Session):
                 r'name="jschl_vc" value="(\w+)"', body).group(1)
             params["pass"] = re.search(
                 r'name="pass" value="(.+?)"', body).group(1)
-
         except Exception as e:
             # Something is wrong with the page.
             # This may indicate Cloudflare has changed their anti-bot
@@ -115,8 +113,8 @@ class CloudflareScraper(Session):
         method = resp.request.method
         cloudflare_kwargs["allow_redirects"] = False
 
-        # Cloudflare requires a delay before solving the challenge
         end_time = time.time()
+        # Cloudflare requires a delay before solving the challenge
         time.sleep(self.delay - (end_time - start_time))
 
         redirect = self.request(method, submit_url, **cloudflare_kwargs)
@@ -130,13 +128,14 @@ class CloudflareScraper(Session):
 
     def solve_challenge(self, body, domain):
         try:
-            js = re.search(
-                r"setTimeout\(function\(\){\s+(var s,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n", body).group(1)
+            js = re.search(r"setTimeout\(function\(\){\s+(var "
+                           "s,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n[\s\S]+?a\.value =.+?)\r?\n", body).group(1)
         except Exception:
             raise ValueError(
                 "Unable to identify Cloudflare IUAM Javascript on website. %s" % BUG_REPORT)
 
-        js = re.sub(r"a\.value = (.+ \+ t\.length).+", r"\1", js)
+        js = re.sub(
+            r"a\.value = (.+ \+ t\.length(\).toFixed\(10\))?).+", r"\1", js)
         js = re.sub(r"\s{3,}[a-z](?: = |\.).+", "",
                     js).replace("t.length", str(len(domain)))
 
@@ -148,9 +147,25 @@ class CloudflareScraper(Session):
             raise ValueError(
                 "Error parsing Cloudflare IUAM Javascript challenge. %s" % BUG_REPORT)
 
-        # Use Js2Py to solve the challenge
+        # # Use vm.runInNewContext to safely evaluate code
+        # # The sandboxed code cannot use the Node.js standard library
+        # js = "console.log(require('vm').runInNewContext('%s', Object.create(null), {timeout: 5000}));" % js
+
+        # try:
+        #     result = subprocess.check_output(["node", "-e", js]).strip()
+        # except OSError as e:
+        #     if e.errno == 2:
+        #         raise EnvironmentError("Missing Node.js runtime. Node is required and must be in the PATH (check with `node -v`). Your Node binary may be called `nodejs` rather than `node`, in which case you may need to run `apt-get install nodejs-legacy` on some Debian-based systems. (Please read the cfscrape"
+        #                                " README's Dependencies section: https://github.com/Anorov/cloudflare-scrape#dependencies.")
+        #     raise
+        # except Exception:
+        #     logging.error(
+        #         "Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
+        #     raise
+
         try:
             result = js2py.eval_js(js)
+            float(result)
         except Exception:
             raise ValueError(
                 "Cloudflare IUAM challenge returned unexpected answer. %s" % BUG_REPORT)
@@ -185,7 +200,7 @@ class CloudflareScraper(Session):
         try:
             resp = scraper.get(url, **kwargs)
             resp.raise_for_status()
-        except:
+        except Exception as e:
             logging.error(
                 "'%s' returned an error. Could not collect tokens." % url)
             raise

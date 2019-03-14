@@ -37,6 +37,7 @@ def process(fn, app, inp, fmt):
 
 def bind_books(app, data):
     fmts = app.output_formats
+
     if not fmts:
         fmts = {x: True for x in available_formats}
     # end if

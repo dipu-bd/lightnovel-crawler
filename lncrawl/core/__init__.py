@@ -66,6 +66,14 @@ def init():
         print(args)
     # end if
 
+    if args.bot:
+        os.environ['BOT'] = args.bot
+    # end if
+
+    for key, val in args.extra.items():
+        os.environ[key] = val[0]
+    # end for
+
     requests.urllib3.disable_warnings(
         requests.urllib3.exceptions.InsecureRequestWarning)
     # end if
