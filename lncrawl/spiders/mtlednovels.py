@@ -24,6 +24,7 @@ class MtledNovelsCrawler(Crawler):
             results.append({
                 'title': a.img['alt'],
                 'url': self.absolute_url(a['href']),
+                'info': self.search_novel_info(self.absolute_url(a['href'])),
             })
         # end for
 
@@ -101,5 +102,24 @@ class MtledNovelsCrawler(Crawler):
         #body = contents.select('p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
+
+        chapters = len(soup.select('div#tab-profile-2 a'))
+
+        latest = soup.select('div#tab-profile-2 a')[0]['href']
+
+        soup_chapter = self.get_soup(latest)
+        
+        latest = soup_chapter.h1.text.strip()
+
+        info = 'Chapter count %s, Latest: %s' % (
+            chapters, latest)
+
+        return info
     # end def
 # end class
