@@ -3,7 +3,7 @@
 """
 The purpose of this bot is to test the application and crawlers.
 Tests should include:
-  - Overall application flow
+  - Overall application flow: DONE
   - Each methods implemented inside crawlers
   - Each utility libraries
   - Each binder methods
@@ -45,7 +45,7 @@ class TestBot:
         app.initialize()
         print('App initialize: OK')
 
-        app.user_input = 'cultivation'
+        app.user_input = 'martial'
         app.init_search()
         print('Init search: OK')
 
