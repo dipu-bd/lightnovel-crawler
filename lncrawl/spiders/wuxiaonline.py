@@ -21,10 +21,13 @@ class WuxiaOnlineCrawler(Crawler):
 
         results = []
         for novel in soup.select('li'):          
+            a = novel.select_one('.resultname a')
+            info = novel.select_one('a:nth-of-type(2)')
+            info = info.text.strip() if info else ''
             results.append({
-                'title': novel.select_one('.resultname a').text.strip(),
-                'url': self.absolute_url(novel.select_one('.resultname a')['href']),
-                'info': 'Latest chapter : %s' % novel.select_one('a:nth-of-type(2)').text.strip()
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': 'Latest chapter : %s' % info,
             })
         # end for
 
