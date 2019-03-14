@@ -3,10 +3,11 @@
 import argparse
 import os
 import textwrap
+from urllib.parse import parse_qs
 
 from .display import LINE_SIZE
-
-supported_outputs = ['epub', 'mobi', 'html', 'text', 'docx', 'pdf']
+from ..bots import supported_bots
+from ..binders import available_formats
 
 
 class ArgReader:
@@ -28,12 +29,14 @@ class ArgReader:
         source.add_argument('-q', '--query', dest='query', type=str,
                             help='Novel query followed by list of source sites.')
 
+        parser.add_argument('--sources',  action='store_true',
+                            help='Display the source selection menu while searching')
+
         parser.add_argument('-o', '--output', dest='output_path', type=str,
                             help='Path where the downloads to be stored')
-        parser.add_argument('--format', dest='output_formats', nargs='*', metavar='E',
-                            help='Ouput formats. Can be a list of the following values: ' +
-                                 ', '.join(['`%s`' % x for x in supported_outputs]) +
-                                 ' (default: `all`)')
+        parser.add_argument('--format', dest='output_formats', nargs='+', metavar='E',
+                            choices=available_formats, default=[],
+                            help='Define which formats to output. Default: all')
 
         replacer = parser.add_mutually_exclusive_group()
         replacer.add_argument('-f', '--force', action='store_true',
@@ -49,9 +52,6 @@ class ArgReader:
 
         parser.add_argument('--login', nargs=2, metavar=('USER', 'PASSWD'),
                             help='User name/email address and password for login')
-
-        parser.add_argument('--sources',  action='store_true',
-                            help='Display the source selection menu while searching')
 
         selection = parser.add_mutually_exclusive_group()
         selection.add_argument('--all', action='store_true',
@@ -71,6 +71,12 @@ class ArgReader:
 
         parser.add_argument('--suppress', action='store_true',
                             help='Suppress input prompts (use defaults instead)')
+
+        parser.add_argument('--bot', type=str, choices=supported_bots,
+                            help='Select a bot. Default: console')
+
+        parser.add_argument('extra', type=parse_qs, nargs='?', metavar='EXTRA',
+                            help='To pass a query string to use as extra arguments')
 
         self.arguments = parser.parse_args()
 # end class
