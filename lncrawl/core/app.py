@@ -64,8 +64,9 @@ class App:
         else:
             logger.info('Detected query input')
             self.crawler_links = [
-                link for link in sorted(crawler_list.keys())
-                if 'search_novel' in crawler_list[link].__dict__
+                link
+                for link, crawler in crawler_list.items()
+                if 'search_novel' in crawler.__dict__
             ]
         # end if
     # end def
