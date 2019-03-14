@@ -242,8 +242,8 @@ The list of currently available sources and the future plans are given below:
 
 Rejected due to difficulty or other reasons:
 
-- [-] ~http://moonbunnycafe.com/~
-- [-] ~https://www.novelupdates.com~
+- ~https://www.novelupdates.com~ [does not host any novels]
+- ~http://moonbunnycafe.com/~ [does not follow uniform format]
 
 ### C4. Supported output formats
 
