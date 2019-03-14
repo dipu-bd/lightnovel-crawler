@@ -25,7 +25,7 @@ class NovelPlanetCrawler(Crawler):
             info = novel.select_one("div:nth-of-type(3) a").text.strip()
             results.append({
                 'title': a.text.strip(),
-                'url': a['href'],
+                'url': self.absolute_url(a['href']),
                 'info' : 'Last chapter : %s' % info,
             })
         # end for
