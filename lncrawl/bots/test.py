@@ -51,7 +51,7 @@ class TestBot:
 
         if not app.crawler:
             print(len(app.crawler_links), 'available crawlers to search')
-            app.crawler_links = app.crawler_links[:2]
+            app.crawler_links = app.crawler_links[:1]
             print('Selected crawler:', str(app.crawler_links[0]))
 
             app.search_novel()
