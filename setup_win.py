@@ -22,7 +22,7 @@ def setup_command():
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
 
     config = read_configuration('setup.cfg')
-    for k, paths in config['options']['.package_data'].items():
+    for k, paths in config['options']['package_data'].items():
         for v in paths:
             src = os.path.normpath('/'.join([cur_dir, k, v]))
             src = '/'.join(src.split(os.sep))
