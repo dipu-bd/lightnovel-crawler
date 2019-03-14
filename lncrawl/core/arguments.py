@@ -13,8 +13,10 @@ from ..binders import available_formats
 class ArgReader:
     def build(self):
         parser = argparse.ArgumentParser(
-            epilog='~' * LINE_SIZE,
-            usage='\tlncrawl [options...]\n\tlightnovel-crawler [options...]'
+            prog='lncrawl',
+            epilog='~'*LINE_SIZE,
+            usage='lncrawl [options...]\n'
+            '       lightnovel-crawler [options...]'
         )
         parser.add_argument('-l', dest='log', action='count',
                             help='Set log levels (1 = warn, 2 = info, 3 = debug)')
@@ -24,15 +26,15 @@ class ArgReader:
         source = parser.add_mutually_exclusive_group()
         # source.add_argument('--test', action='store_true',
         #                     help='Start in test environment')
-        source.add_argument('-s', '--source', dest='novel_page', type=str,
+        source.add_argument('-s', '--source', dest='novel_page', type=str, metavar='URL',
                             help='Profile page url of the novel')
-        source.add_argument('-q', '--query', dest='query', type=str,
+        source.add_argument('-q', '--query', dest='query', type=str, metavar='STR',
                             help='Novel query followed by list of source sites.')
 
         parser.add_argument('--sources',  action='store_true',
                             help='Display the source selection menu while searching')
 
-        parser.add_argument('-o', '--output', dest='output_path', type=str,
+        parser.add_argument('-o', '--output', dest='output_path', type=str, metavar='PATH',
                             help='Path where the downloads to be stored')
         parser.add_argument('--format', dest='output_formats', nargs='+', metavar='E',
                             choices=available_formats, default=[],
