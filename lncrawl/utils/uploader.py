@@ -52,7 +52,7 @@ def upload(file_path):
         logger.info(f['id'])
         return f['id']
     except Exception as err:
-        logger.debug(err)
+        logger.exception(err)
         return None
     # end try
 # end def

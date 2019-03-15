@@ -29,7 +29,7 @@ def process(fn, app, inp, fmt):
         return fn(app, inp)
     except Exception as err:
         logger.error('Failed to generate *.%s files' % fmt)
-        logger.debug(err)
+        logger.exception(err)
         return None
     # end try
 # end def

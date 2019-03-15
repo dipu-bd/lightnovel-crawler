@@ -31,7 +31,8 @@ def downlod_cover(app):
             # end if
             app.book_cover = filename
         except Exception as ex:
-            logger.error('Failed to get cover: %s', ex)
+            logger.info('Failed to get cover: %s', ex)
+            logger.exception(ex)
         # end try
     else:
         logger.warn('Cover image was not downloaded')
@@ -67,7 +68,7 @@ def download_chapter_body(app, chapter):
             logger.info('Downloading to %s', file_name)
             body = app.crawler.download_chapter_body(chapter)
         except Exception as err:
-            logger.debug(err)
+            logger.exception(err)
         # end try
         if len(body) == 0:
             result = 'Body is empty: ' + chapter['url']

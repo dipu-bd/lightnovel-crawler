@@ -102,7 +102,7 @@ class MessageHandler:
             self.app.destroy()
             self.executors.shutdown(False)
         except Exception as err:
-            logger.debug(err)
+            logger.exception(err)
         # end try
         shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
@@ -467,8 +467,8 @@ class MessageHandler:
         try:
             self.executors.submit(self.start_download)
         except Exception as err:
-            logger.debug(err)
             logger.warn('Download failure: %s' % self.user.id)
+            logger.exception(err)
         # end try
         await self.client.send_typing(self.user)
     # end def

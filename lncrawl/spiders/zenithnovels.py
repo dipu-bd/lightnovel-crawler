@@ -79,10 +79,14 @@ class ZenithNovelsCrawler(Crawler):
 
         entry = soup.select_one('article#the-post .entry')
 
-        self.clean_contents(entry)
-        for note in entry.select('.footnote'):
-            note.decompose()
-        # end for
+        try:
+            self.clean_contents(entry)
+            for note in entry.select('.footnote'): 
+                note.decompose()
+            # end for
+        except:
+            pass
+        # end try
 
         body = ''
         for tag in entry.children:

@@ -34,8 +34,7 @@ def epub_to_mobi(kindlegen, epub_file):
             )
         # end with
     except Exception as err:
-        logger.debug(err)
-        pass
+        logger.exception(err)
     # end try
 
     if os.path.exists(mobi_file_in_epub_path):
