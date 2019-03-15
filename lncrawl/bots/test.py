@@ -1,15 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-The purpose of this bot is to test the application and crawlers.
-Tests should include:
-  - Overall application flow: DONE
-  - Each methods implemented inside crawlers
-  - Each utility libraries
-  - Each binder methods
-Test should look for:
-  - Exceptions
-  - Unexpected outputs
+The purpose of this bot is to test the application and crawlers
 """
 import re
 import os
@@ -31,36 +23,40 @@ from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 class TestBot:
     def start(self):
-        for link, crawler in crawler_list.items():
-            print('-' * 6, 'Testing', link, '-' * 6)
+        for link in crawler_list.keys():
+            print('=' * 80)
+            print('>>>', link)
+            print('=' * 80)
+
             if link not in test_user_inputs:
-                print('<!!!!!> No inputs found:', link)
-                continue
+                raise Exception('No inputs found: %s' % link)
             # end if
+
             for entry in test_user_inputs[link]:
-                self.test_crawler(crawler, entry)
+                print('-' * 5, 'Input:', entry, '-' * 5)
+                self.test_crawler(link, entry)
+                print()
             # end for
-            print('\n')
-            print('=' * 30)
+
             print('\n')
         # end for
     # end def
 
-    def test_crawler(self, crawler, user_input):
+    def test_crawler(self, link, user_input):
         app = App()
         print('App instance: OK')
 
         app.initialize()
-        print('App initialize: OK')
+        print('App initialize: DONE')
 
         app.user_input = user_input
         app.init_search()
-        print('Init search: OK')
+        print('Init search: DONE')
 
         if not app.crawler:
             print(len(app.crawler_links), 'available crawlers to search')
-            app.crawler_links = app.crawler_links[:1]
-            print('Selected crawler:', str(app.crawler_links[0]))
+            app.crawler_links = [link]
+            print('Selected crawler:', link)
 
             app.search_novel()
             print('Search: %d results found' % len(app.search_results))
@@ -73,7 +69,11 @@ class TestBot:
             print('Top novel:', novel_url)
 
             app.init_crawler(novel_url)
-            print('Init crawler: OK')
+            print('Init crawler: DONE')
+        # end if
+
+        if not app.crawler:
+            raise Exception('No crawler initialized')
         # end if
 
         if app.can_do('login'):
@@ -81,29 +81,44 @@ class TestBot:
         # end if
 
         app.get_novel_info()
-        print('Novel info: OK')
-        print('Author:', app.crawler.novel_author)
-        print('Cover:', app.crawler.novel_cover)
         print('Title:', app.crawler.novel_title)
-        print('Volume count:', len(app.crawler.volumes))
-        print('Chapter count:', len(app.crawler.chapters))
+        print('Cover:', app.crawler.novel_cover)
+        print('Author:', app.crawler.novel_author)
+
+        if not app.crawler.novel_title:
+            raise Exception('No novel title')
+        # end if
+        
+        print('Novel info: DONE')
 
         os.makedirs(app.output_path, exist_ok=True)
         print('Output path:', app.output_path)
+
+        if len(app.crawler.volumes) == 0:
+            raise Exception('Empty volume list')
+        # end if
+        
+        if len(app.crawler.chapters) == 0:
+            raise Exception('Empty chapter list')
+        # end if
 
         app.chapters = app.crawler.chapters[:1]
         app.output_formats = {}
         app.pack_by_volume = False
 
         app.start_download()
-        print('Download: OK')
+        print('Download: DONE')
+
+        if len(app.chapters[0]['body']) < 10:
+            raise Exception('Empty body')
+        # end if
 
         app.bind_books()
-        print('Bindings: OK')
+        print('Bindings: DONE')
 
         app.destroy()
-        print('Destroy: OK')
-
+        print('Destroy: DONE')
+        
         print('-' * 6, 'Test Passed', '-' * 6)
     # end def
 # end class
