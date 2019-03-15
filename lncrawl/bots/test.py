@@ -162,7 +162,7 @@ test_user_inputs = {
     ],
     'https://litnet.com/': [
         'https://litnet.com/en/book/candy-lips-1-b106232',
-        'candy',
+        'candy lips',
     ],
     'https://lnindo.org/': [
         'https://lnindo.org/novel/true-martial-world/',
@@ -236,7 +236,7 @@ test_user_inputs = {
     ],
     'https://www.scribblehub.com/': [
         'https://www.scribblehub.com/series/10442/world-keeper/',
-        'gravekeeper'
+        'world keeper'
     ],
     'https://www.webnovel.com/': [
         'https://www.webnovel.com/book/8212987205006305/Trial-Marriage-Husband%3A-Need-to-Work-Hard',
