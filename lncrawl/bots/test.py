@@ -23,23 +23,28 @@ from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 class TestBot:
     def start(self):
-        for link in crawler_list.keys():
-            print('=' * 80)
-            print('>>>', link)
-            print('=' * 80)
+        try:
+            for link in crawler_list.keys():
+                print('=' * 80)
+                print('>>>', link)
+                print('=' * 80)
 
-            if link not in test_user_inputs:
-                raise Exception('No inputs found: %s' % link)
-            # end if
+                if link not in test_user_inputs:
+                    raise Exception('No inputs found: %s' % link)
+                # end if
 
-            for entry in test_user_inputs[link]:
-                print('-' * 5, 'Input:', entry, '-' * 5)
-                self.test_crawler(link, entry)
-                print()
+                for entry in test_user_inputs[link]:
+                    print('-' * 5, 'Input:', entry, '-' * 5)
+                    self.test_crawler(link, entry)
+                    print()
+                # end for
+
+                print('\n')
             # end for
-
-            print('\n')
-        # end for
+        except Exception:
+            print(traceback.format_exc())
+            exit(1)
+        # end try
     # end def
 
     def test_crawler(self, link, user_input):
@@ -231,7 +236,7 @@ test_user_inputs = {
     ],
     'https://www.scribblehub.com/': [
         'https://www.scribblehub.com/series/10442/world-keeper/',
-        'world'
+        'gravekeeper'
     ],
     'https://www.webnovel.com/': [
         'https://www.webnovel.com/book/8212987205006305/Trial-Marriage-Husband%3A-Need-to-Work-Hard',
