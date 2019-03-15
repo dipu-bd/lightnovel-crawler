@@ -88,7 +88,7 @@ class TestBot:
         if not app.crawler.novel_title:
             raise Exception('No novel title')
         # end if
-        
+
         print('Novel info: DONE')
 
         os.makedirs(app.output_path, exist_ok=True)
@@ -97,7 +97,7 @@ class TestBot:
         if len(app.crawler.volumes) == 0:
             raise Exception('Empty volume list')
         # end if
-        
+
         if len(app.crawler.chapters) == 0:
             raise Exception('Empty chapter list')
         # end if
@@ -118,7 +118,7 @@ class TestBot:
 
         app.destroy()
         print('Destroy: DONE')
-        
+
         print('-' * 6, 'Test Passed', '-' * 6)
     # end def
 # end class
@@ -163,7 +163,7 @@ test_user_inputs = {
         'https://lnindo.org/novel/true-martial-world/',
     ],
     'https://lnmtl.com/': [
-        'https://lnmtl.com/novel/against-the-gods',
+        'https://lnmtl.com/novel/the-strongest-dan-god',
     ],
     'https://m.chinesefantasynovels.com/': [
         'https://m.chinesefantasynovels.com/3838/',
@@ -236,10 +236,6 @@ test_user_inputs = {
     'https://www.webnovel.com/': [
         'https://www.webnovel.com/book/8212987205006305/Trial-Marriage-Husband%3A-Need-to-Work-Hard',
         'martial',
-    ],
-    'https://www.worldnovel.online/': [
-        'https://www.worldnovel.online/novel/kumo-desu-ga-nani-ka/',
-        'kumo desu ga'
     ],
     'https://www.wuxiaworld.co/': [
         'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',

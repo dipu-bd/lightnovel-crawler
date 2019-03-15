@@ -28,7 +28,7 @@ from .scribblehub import ScribbleHubCrawler
 from .volarenovels import VolareNovelsCrawler
 from .webnonline import WebnovelOnlineCrawler
 from .webnovel import WebnovelCrawler
-from .worldnovelonline import WorldnovelonlineCrawler
+# from .worldnovelonline import WorldnovelonlineCrawler
 from .wuxiaco import WuxiaCoCrawler
 from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
@@ -69,7 +69,7 @@ crawler_list = {
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://www.scribblehub.com/': ScribbleHubCrawler,
     'https://www.webnovel.com/': WebnovelCrawler,
-    'https://www.worldnovel.online/': WorldnovelonlineCrawler,
+    # 'https://www.worldnovel.online/': WorldnovelonlineCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     # Do not forget to append a slash(/) at the end of the url
