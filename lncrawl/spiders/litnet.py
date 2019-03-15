@@ -33,15 +33,21 @@ class LitnetCrawler(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         img_src = soup.select_one('div.book-view-cover img')
-        if img_src is None:
+        if not img_src:
             img_src = soup.select_one('div.book-cover img')
-        self.novel_cover = self.absolute_url(img_src['src'])
+        # end if
+        if img_src:
+            self.novel_cover = self.absolute_url(img_src['src'])
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select_one('div.book-view-info a.author')
-        if author is None:
+        if not author:
             author = soup.select_one('div.book-head-content a.book-autor')
-        self.novel_author = author.text.strip()
+        # end if
+        if author:
+            self.novel_author = author.text.strip()
+        # end if
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.find('select', {'name': 'chapter'})
@@ -50,6 +56,7 @@ class LitnetCrawler(Crawler):
         else:
             chapters = chapters.find_all('option')
             chapters = [c for c in chapters if c.attrs['value']]
+        # end if
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
