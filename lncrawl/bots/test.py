@@ -109,7 +109,7 @@ class TestBot:
         app.start_download()
         print('Download: DONE')
 
-        if len(app.chapters[0]['body']) < 10:
+        if len(app.chapters[0]['body']) < 50:
             raise Exception('Empty body')
         # end if
 
