@@ -6,7 +6,6 @@ Crawler for [novelonlinefree.info](https://novelonlinefree.info/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 from math import ceil
 
@@ -17,8 +16,7 @@ search_url = 'https://www.scribblehub.com/?s=%s&post_type=fictionposts'
 class ScribbleHubCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
         for novel in soup.select('div.search_body'):
@@ -35,8 +33,7 @@ class ScribbleHubCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.find('div', {'class': 'fic_title'})[
             'title'].strip()
@@ -100,8 +97,7 @@ class ScribbleHubCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
         contents = soup.find('div', {'id': 'chp_contents'})

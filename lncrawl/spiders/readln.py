@@ -6,7 +6,6 @@ Crawler for [readlightnovel.org](https://www.readlightnovel.org/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('READLIGHTNOVEL')
@@ -18,8 +17,7 @@ class ReadLightNovelCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one('.block-title h1').text
         logger.info('Novel title: %s', self.novel_title)
@@ -61,8 +59,7 @@ class ReadLightNovelCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         div = soup.select_one('.chapter-content3 .desc')
         hidden = div.select_one('#growfoodsmart')

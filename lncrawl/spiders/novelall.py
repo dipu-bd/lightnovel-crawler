@@ -6,7 +6,6 @@ Crawler for [novelall.com](https://www.novelall.com/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_All')
@@ -16,8 +15,7 @@ search_url = 'https://www.novelall.com/search/?name=%s'
 class NovelAllCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
         for a in soup.select('.cover-info p.title a'):
@@ -85,8 +83,7 @@ class NovelAllCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
 

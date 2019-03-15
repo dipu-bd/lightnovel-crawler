@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('ROMANTIC_LOVE_BOOKS')
@@ -16,8 +15,7 @@ class RomanticLBCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         url = self.novel_url.replace('https://www', 'https://m')
         logger.debug('Visiting %s', url)
-        response = self.get_response(url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(url)
 
         self.novel_title = soup.select_one('.pt-novel .pt-name').text.strip()
         self.novel_cover = self.absolute_url(
@@ -54,8 +52,7 @@ class RomanticLBCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div#BookText')
         body = self.extract_contents(contents)

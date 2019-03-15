@@ -3,7 +3,6 @@
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('VOLARE_NOVELS')

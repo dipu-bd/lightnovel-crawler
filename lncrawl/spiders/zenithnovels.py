@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from ..utils.crawler import Crawler
-from bs4 import BeautifulSoup
-import requests
-import re
-import logging
 import json
+import logging
+import re
+
+import requests
+
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('ZENITH_NOVELS')
 

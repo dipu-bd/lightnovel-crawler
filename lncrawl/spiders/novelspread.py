@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+import hashlib
 import json
 import logging
 import re
-import hashlib
 from concurrent.futures import ThreadPoolExecutor
-from bs4 import BeautifulSoup
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_SPREAD')

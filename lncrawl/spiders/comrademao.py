@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-from bs4 import BeautifulSoup
 import logging
 from concurrent import futures
 from ..utils.crawler import Crawler
@@ -76,8 +75,7 @@ class ComrademaoCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
         logger.debug(soup.title.string)
         
         #if soup.select('div.entry-content div.container div.container a p'):

@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 import re
 import logging
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WEBNOVEL_ONLINE')
@@ -13,8 +12,7 @@ class WebnovelOnlineCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         url = self.novel_url
         logger.debug('Visiting %s', url)
-        response = self.get_response(url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(url)
 
         img = soup.select_one('main img.cover')
         self.novel_title = img['title'].strip()
@@ -48,8 +46,7 @@ class WebnovelOnlineCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         strong = soup.select_one('#story-content strong')
         if strong and re.search(r'Chapter \d+', strong.text):

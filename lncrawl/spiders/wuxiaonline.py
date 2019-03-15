@@ -6,7 +6,6 @@ Crawler for [Wuxia World Online](https://wuxiaworld.online/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_ONLINE')
@@ -16,8 +15,7 @@ search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
 class WuxiaOnlineCrawler(Crawler):
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
         for novel in soup.select('li'):          
@@ -38,9 +36,7 @@ class WuxiaOnlineCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         url = self.novel_url
         logger.debug('Visiting %s', url)
-        response = self.get_response(url)
-        soup = BeautifulSoup(response.text, 'lxml')
-
+        soup = self.get_soup(url)
         self.novel_title = soup.select_one('h1.entry-title').text
         logger.info('Novel title: %s', self.novel_title)
 
@@ -77,8 +73,7 @@ class WuxiaOnlineCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         parts = soup.select_one('#list_chapter .content-area')
         body = self.extract_contents(parts)

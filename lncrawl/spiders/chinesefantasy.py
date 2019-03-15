@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from ..utils.crawler import Crawler
-from bs4 import BeautifulSoup
 import requests
 import re
 import logging

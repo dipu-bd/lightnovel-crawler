@@ -6,7 +6,6 @@ Crawler for [LnIndo](https://lnindo.org/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('LNINDO')
@@ -16,8 +15,7 @@ class LnindoCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'html5lib')
+        soup = self.get_soup(self.novel_url, parser='html5lib')
 
         self.novel_title = soup.find_all(
             'span', {"typeof": "v:Breadcrumb"})[-1].text
@@ -68,8 +66,7 @@ class LnindoCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         for a in soup.find_all('a'):
             a.decompose()

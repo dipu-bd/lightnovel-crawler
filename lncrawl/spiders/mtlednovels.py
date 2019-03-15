@@ -6,7 +6,6 @@ Crawler for [mtled-novels.com](https://mtled-novels.com/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('MTLED-NOVELS')
@@ -16,8 +15,7 @@ search_url = 'https://mtled-novels.com/search_novel.php?q=%s'
 class MtledNovelsCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
         for a in soup.select('div.col-lg-12 div.row div.col-lg-2 a'):
@@ -34,8 +32,7 @@ class MtledNovelsCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one('h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
@@ -74,8 +71,7 @@ class MtledNovelsCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
 
