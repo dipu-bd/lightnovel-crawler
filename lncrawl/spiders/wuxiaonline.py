@@ -18,14 +18,14 @@ class WuxiaOnlineCrawler(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for novel in soup.select('li'):          
+        for novel in soup.select('li'):
             a = novel.select_one('.resultname a')
             info = novel.select_one('a:nth-of-type(2)')
             info = info.text.strip() if info else ''
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': 'Latest chapter : %s' % info,
+                'info': 'Latest: %s' % info,
             })
         # end for
 

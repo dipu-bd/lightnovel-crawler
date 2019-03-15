@@ -13,7 +13,6 @@ search_url = 'https://www.readlightnovel.org/search/autocomplete'
 
 
 class ReadLightNovelCrawler(Crawler):
-
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

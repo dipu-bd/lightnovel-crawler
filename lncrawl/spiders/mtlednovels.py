@@ -18,15 +18,30 @@ class MtledNovelsCrawler(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select('div.col-lg-12 div.row div.col-lg-2 a'):
+        for a in soup.select('.card .row .col-lg-2 a')[:5]:
+            url = self.absolute_url(a['href'])
             results.append({
+                'url': url,
                 'title': a.img['alt'],
-                'url': self.absolute_url(a['href']),
-                'info': self.search_novel_info(self.absolute_url(a['href'])),
+                'info': self.search_novel_info(url),
             })
         # end for
 
         return results
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
+
+        chapters = soup.select('#tab-profile-2 a.chapters')
+        info = '%d chapters' % len(chapters)
+        if len(chapters) > 0:
+            info += ' | Latest: %s' % chapters[-1].text.strip()
+        # end if
+
+        return info
     # end def
 
     def read_novel_info(self):
@@ -98,24 +113,5 @@ class MtledNovelsCrawler(Crawler):
         #body = contents.select('p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        chapters = len(soup.select('div#tab-profile-2 a'))
-
-        latest = soup.select('div#tab-profile-2 a')[0]['href']
-
-        soup_chapter = self.get_soup(latest)
-        
-        latest = soup_chapter.h1.text.strip()
-
-        info = 'Chapter count %s, Latest: %s' % (
-            chapters, latest)
-
-        return info
     # end def
 # end class

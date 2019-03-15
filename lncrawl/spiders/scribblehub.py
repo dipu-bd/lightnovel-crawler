@@ -20,10 +20,12 @@ class ScribbleHubCrawler(Crawler):
 
         results = []
         for novel in soup.select('div.search_body'):
+            a = novel.select_one('.search_title a')
+            info = novel.select_one('.search_stats').text.strip()
             results.append({
-                'title': novel.select_one('.search_title a').text.strip(),
-                'url': novel.select_one('.search_title a')['href'],
-                'info' : novel.select_one(".search_stats").text.strip(),
+                'title': a.text.strip(),
+                'url': a['href'],
+                'info': info,
             })
         # end for
 

@@ -18,15 +18,30 @@ class RoyalRoadCrawler(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select('h2.margin-bottom-10 a'):
+        for a in soup.select('h2.margin-bottom-10 a')[:5]:
+            url = self.absolute_url(a['href'])
             results.append({
+                'url': url,
                 'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': self.search_novel_info(self.absolute_url(a['href'])),
+                'info': self.search_novel_info(url),
             })
         # end for
 
         return results
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
+
+        score = soup.select_one('span.star')['data-content']
+        chapters = len(soup.find('tbody').findAll('a', href=True))
+        latest = soup.find('tbody').findAll('a', href=True)[-1].text.strip()
+        info = 'Score: %s, Chapter count %s, Latest: %s' % (
+            score, chapters, latest)
+
+        return info
     # end def
 
     def read_novel_info(self):
@@ -91,22 +106,5 @@ class RoyalRoadCrawler(Crawler):
         #body = self.extract_contents(contents)
         # return '<p>' + '</p><p>'.join(body) + '</p>'
         return contents.prettify()
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        score = soup.select_one('span.star')['data-content']
-
-        chapters = len(soup.find('tbody').findAll('a', href=True))
-
-        latest = soup.find('tbody').findAll('a', href=True)[-1].text.strip()
-
-        info = 'Score: %s, Chapter count %s, Latest: %s' % (
-            score, chapters, latest)
-
-        return info
     # end def
 # end class
