@@ -51,11 +51,11 @@ def extract_kindlegen_file(extractor, file_list):
 def download_kindlegen():
     # Download the file
     url = get_url_by_platform()
-    logger.warn('Downloading kindlegen...')
+    print('Downloading kindlegen...')
     byte_array = requests.get(url).content
 
     # Extract contents
-    logger.warn('Extracting kindlegen...')
+    print('Extracting kindlegen...')
     if url.endswith('.zip'):
         with BytesIO(byte_array) as byte_stream:
             with ZipFile(byte_stream) as file:

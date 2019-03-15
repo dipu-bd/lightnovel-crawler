@@ -3,6 +3,7 @@
 import os
 import re
 import shutil
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 import logging
 import asyncio
@@ -26,7 +27,7 @@ class DiscordBot(discord.Client):
 
     @asyncio.coroutine
     async def on_ready(self):
-        logger.warn('Discord bot in online!')
+        print('Discord bot in online!')
         await self.change_presence(
             game=discord.Game(name="🔥Ready For Smelting🔥")
         )
@@ -64,7 +65,7 @@ class DiscordBot(discord.Client):
             handler = self.init_handler(user.id)
             await handler.process(message)
         except Exception as err:
-            logger.exception(err)
+            logger.debug(traceback.format_exc())
             try:
                 await self.send_message(
                     message.channel,
@@ -102,7 +103,7 @@ class MessageHandler:
             self.app.destroy()
             self.executors.shutdown(False)
         except Exception as err:
-            logger.exception(err)
+            logger.debug(traceback.format_exc())
         # end try
         shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
@@ -466,9 +467,9 @@ class MessageHandler:
         self.state = self.report_download_progress
         try:
             self.executors.submit(self.start_download)
-        except Exception as err:
+        except Exception:
             logger.warn('Download failure: %s' % self.user.id)
-            logger.exception(err)
+            logger.debug(traceback.format_exc())
         # end try
         await self.client.send_typing(self.user)
     # end def

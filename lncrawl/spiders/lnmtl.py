@@ -38,7 +38,7 @@ class LNMTLCrawler(Crawler):
         # Check if logged in successfully
         soup = BeautifulSoup(response.content, 'lxml')
         if soup.select_one('a[href="%s"]' % logout_url):
-            logger.warning('Logged in')
+            logger.warn('Logged in')
         else:
             body = soup.select_one('body').text
             logger.debug('-' * 80)
@@ -58,7 +58,7 @@ class LNMTLCrawler(Crawler):
         if soup.select_one('a[href="%s"]' % logout_url):
             logger.error('Failed to logout')
         else:
-            logger.warning('Logged out')
+            logger.warn('Logged out')
         # end if
     # end def
 

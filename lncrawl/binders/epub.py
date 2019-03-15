@@ -124,7 +124,7 @@ def bind_epub_book(app, chapters, volume=''):
     logger.debug('Writing %s', file_path)
     os.makedirs(epub_path, exist_ok=True)
     epub.write_epub(file_path, book, {})
-    logger.warn('Created: %s.epub', file_name)
+    print('Created: %s.epub' % file_name)
     return file_path
 # end def
 

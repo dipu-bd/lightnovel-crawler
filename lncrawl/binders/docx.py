@@ -136,7 +136,7 @@ def bind_docx_book(app, chapters, volume=''):
     logger.debug('Writing %s.docx', file_name)
     os.makedirs(docx_path, exist_ok=True)
     book.save(file_path)
-    logger.warn('Created: %s.docx', file_name)
+    print('Created: %s.docx' % file_name)
     return file_path
 # end def
 
