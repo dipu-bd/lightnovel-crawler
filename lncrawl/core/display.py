@@ -127,3 +127,47 @@ def url_not_recognized():
     print(Fore.CYAN, Icons.LINK,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
 # end def
+
+
+def format_short_info_of_novel(short_info):
+    if not short_info or len(short_info) == 0:
+        return ''
+    # end if
+    return '\n'.join(textwrap.wrap(
+        short_info,
+        width=70,
+        initial_indent='\n' + (' ' * 6) + Icons.INFO,
+        subsequent_indent=(' ' * 8),
+        drop_whitespace=True,
+        break_long_words=True,
+    ))
+# end def
+
+
+def format_novel_choices(choices):
+    items = []
+    for index, item in enumerate(choices):
+        text = '%d. %s [in %d sources]' % (
+            index + 1, item['title'], len(item['novels']))
+        if len(item['novels']) == 1:
+            novel = item['novels'][0]
+            short_info = novel['info'] if 'info' in novel else ''
+            text += '\n' + (' ' * 6) + '- ' + novel['url']
+            text += format_short_info_of_novel(short_info)
+        # end if
+        items.append({'name': text})
+    # end for
+    return items
+# end def
+
+
+def format_source_choices(novels):
+    items = []
+    for index, item in enumerate(novels):
+        text = '%d. %s' % (index + 1, item['url'])
+        short_info = item['info'] if 'info' in item else ''
+        text += format_short_info_of_novel(short_info)
+        items.append({'name': text})
+    # end for
+    return items
+# end def

@@ -5,7 +5,6 @@ import os
 import sys
 import shutil
 import logging
-import textwrap
 from PyInquirer import prompt
 
 from ..core import display
@@ -180,12 +179,7 @@ class ConsoleBot:
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Which one is your novel?',
-                    'choices': [
-                        {
-                            'name': '%d. %s [in %d sources]' % (
-                                index + 1, item['title'], len(item['novels']))
-                        } for index, item in enumerate(choices)
-                    ],
+                    'choices': display.format_novel_choices(choices),
                 }
             ])
 
@@ -197,31 +191,12 @@ class ConsoleBot:
         novels = selected_choice['novels']
         selected_novel = novels[0]
         if len(novels) > 1 and not args.suppress:
-            items = []
-            for index, item in enumerate(novels):
-                text = '%d. %s' % (index + 1, item['url'])
-                short_info = item['info'] if 'info' in item else ''
-
-                if short_info:
-                    text += '\n'.join(textwrap.wrap(
-                        short_info,
-                        width=70,
-                        initial_indent='\n' + (' ' * 6) + Icons.INFO,
-                        subsequent_indent=(' ' * 8),
-                        drop_whitespace=True,
-                        break_long_words=True,
-                    ))
-                # end if
-
-                items.append({'name': text})
-            # end for
-
             answer = prompt([
                 {
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Choose a source to download?',
-                    'choices': items,
+                    'choices': display.format_source_choices(novels),
                 }
             ])
 
