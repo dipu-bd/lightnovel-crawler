@@ -24,7 +24,7 @@ class NovelPlanetCrawler(Crawler):
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': 'Lastest: %s' % info,
+                'info': 'Latest: %s' % info,
             })
         # end for
         return results
