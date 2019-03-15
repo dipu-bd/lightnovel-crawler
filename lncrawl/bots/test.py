@@ -31,21 +31,29 @@ from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 class TestBot:
     def start(self):
-        try:
-            self.test_app_flow()
-        except Exception:
-            traceback.print_exc()
-        # end try
+        for link, crawler in crawler_list.items():
+            print('-' * 6, 'Testing', link, '-' * 6)
+            if link not in test_user_inputs:
+                print('<!!!!!> No inputs found:', link)
+                continue
+            # end if
+            for entry in test_user_inputs[link]:
+                self.test_crawler(crawler, entry)
+            # end for
+            print('\n')
+            print('=' * 30)
+            print('\n')
+        # end for
     # end def
 
-    def test_app_flow(self):
+    def test_crawler(self, crawler, user_input):
         app = App()
         print('App instance: OK')
 
         app.initialize()
         print('App initialize: OK')
 
-        app.user_input = 'martial'
+        app.user_input = user_input
         app.init_search()
         print('Init search: OK')
 
@@ -83,7 +91,7 @@ class TestBot:
         os.makedirs(app.output_path, exist_ok=True)
         print('Output path:', app.output_path)
 
-        app.chapters = app.crawler.chapters[:10]
+        app.chapters = app.crawler.chapters[:1]
         app.output_formats = {}
         app.pack_by_volume = False
 
@@ -99,3 +107,131 @@ class TestBot:
         print('-' * 6, 'Test Passed', '-' * 6)
     # end def
 # end class
+
+
+test_user_inputs = {
+    'http://fullnovel.live/': [
+        'http://fullnovel.live/novel-a-will-eternal',
+        'will eternal',
+    ],
+    'http://gravitytales.com/': [
+        'http://gravitytales.com/novel/chaotic-lightning-cultivation',
+    ],
+    'http://novelfull.com/': [
+        'http://novelfull.com/hidden-marriage.html',
+        'hidden',
+    ],
+    'http://www.machinenoveltranslation.com/': [
+        'http://www.machinenoveltranslation.com/a-thought-through-eternity',
+    ],
+    'http://zenithnovels.com/': [
+        'http://zenithnovels.com/infinity-armament/',
+    ],
+    'https://anythingnovel.com/': [
+        'https://anythingnovel.com/novel/king-of-gods/',
+    ],
+    'https://boxnovel.com/': [
+        'https://boxnovel.com/novel/the-rest-of-my-life-is-for-you/',
+        'cultivation chat',
+    ],
+    'https://comrademao.com/': [
+        'https://comrademao.com/novel/against-the-gods/',
+    ],
+    'https://crescentmoon.blog/': [
+        'https://crescentmoon.blog/dark-blue-and-moonlight/',
+    ],
+    'https://litnet.com/': [
+        'https://litnet.com/en/book/candy-lips-1-b106232',
+        'candy',
+    ],
+    'https://lnindo.org/': [
+        'https://lnindo.org/novel/true-martial-world/',
+    ],
+    'https://lnmtl.com/': [
+        'https://lnmtl.com/novel/against-the-gods',
+    ],
+    'https://m.chinesefantasynovels.com/': [
+        'https://m.chinesefantasynovels.com/3838/',
+    ],
+    'https://m.novelspread.com/': [
+        'https://m.novelspread.com/novel/the-legend-of-the-concubine-s-daughter-minglan',
+    ],
+    'https://m.romanticlovebooks.com/': [
+        'https://m.romanticlovebooks.com/xuanhuan/207.html',
+    ],
+    'https://m.wuxiaworld.co/': [
+        'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
+        'sword',
+    ],
+    'https://meionovel.com/': [
+        'https://meionovel.com/novel/the-legendary-mechanic/',
+    ],
+    'https://mtled-novels.com/': [
+        'https://mtled-novels.com/novels/ancient-demon-dragon-emperor',
+        'dragon'
+    ],
+    'https://novelonlinefree.info/': [
+        'https://novelonlinefree.info/novel/martial_world',
+        'martial'
+    ],
+    'https://novelplanet.com/': [
+        'https://novelplanet.com/Novel/Returning-from-the-Immortal-World',
+        'immortal'
+    ],
+    'https://volarenovels.com/': [
+        'https://volarenovels.com/adorable-creature-attacks/',
+    ],
+    'https://webnovel.online/': [
+        'https://webnovel.online/full-marks-hidden-marriage-pick-up-a-son-get-a-free-husband',
+    ],
+    'https://wuxiaworld.online/': [
+        'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
+        'marriage',
+    ],
+    'https://www.idqidian.us/': [
+        'https://www.idqidian.us/novel/peerless-martial-god/'
+    ],
+    'https://www.novelall.com/': [
+        'https://www.novelall.com/novel/Virtual-World-Close-Combat-Mage.html',
+        'combat'
+    ],
+    'https://www.novelspread.com/': [
+        'https://www.novelspread.com/novel/the-legend-of-the-concubine-s-daughter-minglan'
+    ],
+    'https://www.noveluniverse.com/': [
+        'https://www.noveluniverse.com/index/novel/info/id/15.html'
+    ],
+    'https://www.novelv.com/': [
+        'https://www.novelv.com/0/349/'
+    ],
+    'https://www.readlightnovel.org/': [
+        'https://www.readlightnovel.org/martial-god-asura'
+    ],
+    'https://www.romanticlovebooks.com/': [
+        'https://www.romanticlovebooks.com/xianxia/251.html'
+    ],
+    'https://www.royalroad.com/': [
+        'https://www.royalroad.com/fiction/21220/mother-of-learning',
+        'mother'
+    ],
+    'https://www.scribblehub.com/': [
+        'https://www.scribblehub.com/series/10442/world-keeper/',
+        'world'
+    ],
+    'https://www.webnovel.com/': [
+        'https://www.webnovel.com/book/8212987205006305/Trial-Marriage-Husband%3A-Need-to-Work-Hard',
+        'martial',
+    ],
+    'https://www.worldnovel.online/': [
+        'https://www.worldnovel.online/novel/kumo-desu-ga-nani-ka/',
+        'kumo desu ga'
+    ],
+    'https://www.wuxiaworld.co/': [
+        'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
+        'sword'
+    ],
+    'https://www.wuxiaworld.com/': [
+        'https://www.wuxiaworld.com/novel/martial-god-asura',
+        'martial',
+    ],
+}
