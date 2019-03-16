@@ -24,11 +24,11 @@ def get_search_result(user_input, link):
         logger.debug(results)
         logger.info('%d results from %s', len(results), link)
         return results
-    except Exception as ex:
-        logger.info('Something went wrong while searching\n')
-        logger.exception(ex)
-        return []
+    except Exception:
+        import traceback
+        logger.debug(traceback.format_exc())
     # end try
+    return []
 # end def
 
 

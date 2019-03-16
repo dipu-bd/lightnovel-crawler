@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from ..utils.crawler import Crawler
-from bs4 import BeautifulSoup
-import requests
-import re
-import logging
 import json
+import logging
+import re
+
+import requests
+
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('ZENITH_NOVELS')
 
@@ -78,10 +79,14 @@ class ZenithNovelsCrawler(Crawler):
 
         entry = soup.select_one('article#the-post .entry')
 
-        self.clean_contents(entry)
-        for note in entry.select('.footnote'):
-            note.decompose()
-        # end for
+        try:
+            self.clean_contents(entry)
+            for note in entry.select('.footnote'): 
+                note.decompose()
+            # end for
+        except:
+            pass
+        # end try
 
         body = ''
         for tag in entry.children:

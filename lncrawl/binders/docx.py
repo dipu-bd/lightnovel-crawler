@@ -99,15 +99,15 @@ def bind_docx_book(app, chapters, volume=''):
     r.bold = True
     r.font.size = Pt(18.0)
 
-    if app.book_cover:
+    try:
         p = book.add_paragraph()
         p.alignment = WD_PARAGRAPH_ALIGNMENT.from_xml('center')
         p.add_run().add_picture(app.book_cover, height=Inches(5))
         p.paragraph_format.space_after = Inches(0.25)
-    else:
+    except Exception as err:
         logger.info('No book cover')
         book.add_paragraph().paragraph_format.space_after = Inches(5)
-    # end if
+    # end try
 
     p = book.add_paragraph()
     p.alignment = WD_PARAGRAPH_ALIGNMENT.from_xml('center')
@@ -136,7 +136,7 @@ def bind_docx_book(app, chapters, volume=''):
     logger.debug('Writing %s.docx', file_name)
     os.makedirs(docx_path, exist_ok=True)
     book.save(file_path)
-    logger.warn('Created: %s.docx', file_name)
+    print('Created: %s.docx' % file_name)
     return file_path
 # end def
 

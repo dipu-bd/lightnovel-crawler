@@ -104,7 +104,7 @@ class TelegramBot:
         # Start the Bot
         self.updater.start_polling()
 
-        logger.warn('Telegram bot is online!')
+        print('Telegram bot is online!')
 
         # Run the bot until you press Ctrl-C or the process receives SIGINT,
         # SIGTERM or SIGABRT. This should be used most of the time, since
@@ -114,7 +114,7 @@ class TelegramBot:
 
     def error_handler(self, bot, update, error):
         """Log Errors caused by Updates."""
-        logger.warning('Error: %s\nCaused by: %s', error, update)
+        logger.warn('Error: %s\nCaused by: %s', error, update)
     # end def
 
     def show_help(self, bot, update):

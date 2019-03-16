@@ -7,13 +7,14 @@ import os
 import re
 from datetime import datetime
 
+logger = logging.getLogger('PDF_BINDER')
+
 try:
     from weasyprint import HTML
-except Exception as err:
-    logging.error(err)
+except Exception:
+    import traceback        
+    logger.debug(traceback.format_exc())
 # end try
-
-logger = logging.getLogger('PDF_BINDER')
 
 
 class PdfBuilder:
@@ -115,7 +116,7 @@ class PdfBuilder:
 
         output_file = os.path.join(pdf_path, '%s.pdf' % self.file_name)
         combined.write_pdf(output_file)
-        logger.warn('Created: %s.pdf', self.file_name)
+        print('Created: %s.pdf' % self.file_name)
 
         return output_file
     # end def

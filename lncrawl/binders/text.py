@@ -31,6 +31,6 @@ def make_texts(app, data):
             # end with
         # end for
     # end for
-    logger.warn('Created: %d text files', len(text_files))
+    print('Created: %d text files' % len(text_files))
     return text_files
 # end def

@@ -37,7 +37,7 @@ Download lightnovels from various online sources and generate output in differen
 
 ### A1. EXE (for Windows)
 
-📦 [lightnovel-crawler v2.8.4 for windows ~ 16MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.9.0 for windows ~ 16MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -218,14 +218,12 @@ The list of currently available sources and the future plans are given below:
 - [x] https://m.novelspread.com
 - [x] https://m.romanticlovebooks.com
 - [x] https://m.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://m.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://meionovel.com
 - [x] https://mtled-novels.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://novelonlinefree.info ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://novelplanet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://volarenovels.com
 - [x] https://webnovel.online
-- [x] https://worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://wuxiaworld.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.idqidian.us
 - [x] https://www.novelall.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
@@ -244,6 +242,7 @@ Rejected due to difficulty or other reasons:
 
 - ~https://www.novelupdates.com~ [does not host any novels]
 - ~http://moonbunnycafe.com/~ [does not follow uniform format]
+- ~https://www.worldnovel.online~ [website is no longer available]
 
 ### C4. Supported output formats
 

@@ -6,7 +6,9 @@ Crawler for [WuxiaWorld](http://www.wuxiaworld.co/).
 import json
 import logging
 import re
+
 from bs4 import BeautifulSoup
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
@@ -44,8 +46,7 @@ class WuxiaCoCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         url = self.novel_url.replace('https://m', 'https://www')
         logger.debug('Visiting %s', url)
-        response = self.get_response(url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(url)
 
         self.novel_title = soup.select_one('#maininfo h1').text
         logger.info('Novel title: %s', self.novel_title)

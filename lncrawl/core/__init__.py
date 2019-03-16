@@ -28,9 +28,10 @@ def check_updates():
         if get_version() != latest:
             new_version_news(latest)
         # end if
-    except Exception as err:
-        logger.debug(err)
+    except Exception:
         error_message('Failed to check for update')
+        import traceback
+        logger.debug(traceback.format_exc())
     # end try
 # end def
 

@@ -4,10 +4,12 @@
 To download chapter bodies
 """
 import json
-import os
 import logging
+import os
+import traceback
 from concurrent import futures
 from urllib.parse import urlparse
+
 from progress.bar import IncrementalBar
 
 logger = logging.getLogger('DOWNLOADER')
@@ -16,7 +18,7 @@ logger = logging.getLogger('DOWNLOADER')
 def downlod_cover(app):
     app.book_cover = None
     if app.crawler.novel_cover:
-        logger.warn('Getting cover image...')
+        logger.info('Getting cover image...')
         try:
             ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
             filename = os.path.join(
@@ -30,11 +32,12 @@ def downlod_cover(app):
                 logger.info('Saved cover: %s', filename)
             # end if
             app.book_cover = filename
-        except Exception as ex:
-            logger.error('Failed to get cover: %s', ex)
+        except Exception:
+            logger.debug(traceback.format_exc())
         # end try
-    else:
-        logger.warn('Cover image was not downloaded')
+    # end if
+    if not app.book_cover:
+        logger.warn('No cover image')
     # end if
 # end def
 
@@ -66,8 +69,8 @@ def download_chapter_body(app, chapter):
         try:
             logger.info('Downloading to %s', file_name)
             body = app.crawler.download_chapter_body(chapter)
-        except Exception as err:
-            logger.debug(err)
+        except Exception:
+            logger.debug(traceback.format_exc())
         # end try
         if len(body) == 0:
             result = 'Body is empty: ' + chapter['url']

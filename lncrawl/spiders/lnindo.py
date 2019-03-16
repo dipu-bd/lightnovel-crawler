@@ -6,21 +6,22 @@ Crawler for [LnIndo](https://lnindo.org/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('LNINDO')
+
+chapter_start_url = 'https://lnindo.org/%s/'
 
 
 class LnindoCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'html5lib')
+        soup = self.get_soup(self.novel_url, parser='html5lib')
 
         self.novel_title = soup.find_all(
             'span', {"typeof": "v:Breadcrumb"})[-1].text
+        self.novel_title = self.novel_title.split('~')[0].strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = "https://lnindo.org/images/noavailable.jpg"
@@ -30,29 +31,41 @@ class LnindoCrawler(Crawler):
         self.novel_author = author[20:len(author)-22]
         logger.info('Novel author: %s', self.novel_author)
 
-        if soup.find('blockquote',{"style" : re.compile('-moz-border-radius.*')}):
-            chapters = soup.find('blockquote',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
-        elif soup.find('div',{"style" : re.compile('moz-border-radius.*')}):
-            chapters = soup.find('div',{"style" : re.compile('moz-border-radius.*')}).findAll('a')
-        elif soup.select('div.markobar li a'):
-            chapters = soup.select('div.markobar li a')
-        elif soup.find('div',{'class':'sharebar'}):
-            chapters =  soup.find('div',{'class':'sharebar'}).findNext('div',{'class':'ads'}).findNext('div').select('ul li a')
-        else:
-            chapters =  soup.find('h3').findNextSibling('div').findNextSibling('div').findNextSibling('div').select('ul li a')
-        #end if
-        chapters.reverse()
+        # if soup.find('blockquote', {"style": re.compile('-moz-border-radius.*')}):
+        #     chapters = soup.find(
+        #         'blockquote', {"style": re.compile('moz-border-radius.*')}).findAll('a')
+        # elif soup.find('div', {"style": re.compile('moz-border-radius.*')}):
+        #     chapters = soup.find(
+        #         'div', {"style": re.compile('moz-border-radius.*')}).findAll('a')
+        # elif soup.select('div.markobar li a'):
+        #     chapters = soup.select('div.markobar li a')
+        # elif soup.find('div', {'class': 'sharebar'}):
+        #     chapters = soup.find('div', {'class': 'sharebar'}).findNext(
+        #         'div', {'class': 'ads'}).findNext('div').select('ul li a')
+        # else:
+        #     chapters = soup.find('h3').findNextSibling('div').findNextSibling(
+        #         'div').findNextSibling('div').select('ul li a')
+        # # end if
 
-        for a in chapters:
-            chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+        volumes = set([])
+        checked = set([])
+        novel_id = self.novel_url.strip('/').split('/')[-1]
+        start_url = chapter_start_url % novel_id
+
+        for a in soup.select('body div div div a'):
+            href = self.absolute_url(a['href'])
+            if href in checked:
+                continue
             # end if
+            checked.add(href)
+            if not href.startswith(start_url):
+                continue
+            # end if
+            chap_title = a.text.strip()
+            match = re.findall(r'\d+', chap_title, re.IGNORECASE)
+            chap_id = int(match[0]) if len(match) else len(self.chapters) + 1
+            vol_id = (chap_id - 1) // 100 + 1
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -60,16 +73,20 @@ class LnindoCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
+        
+        self.chapters.sort(key=lambda x: x['id'])
         logger.debug(self.chapters)
+        
+        self.volumes = [{'id': x, 'title': ''} for x in list(volumes)]
+        logger.debug(self.volumes)
+
         logger.debug('%d chapters found', len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         for a in soup.find_all('a'):
             a.decompose()

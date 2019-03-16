@@ -7,7 +7,9 @@ import json
 import logging
 import re
 from concurrent import futures
+
 from bs4 import BeautifulSoup
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('LNMTL')
@@ -21,8 +23,7 @@ class LNMTLCrawler(Crawler):
         '''login to LNMTL'''
         # Get the login page
         logger.info('Visiting %s', login_url)
-        response = self.get_response(login_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(login_url)
         token = soup.select_one('form input[name="_token"]')['value']
         # Send post request to login
         logger.info('Logging in...')
@@ -35,9 +36,9 @@ class LNMTLCrawler(Crawler):
             ),
         )
         # Check if logged in successfully
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = BeautifulSoup(response.content, 'lxml')
         if soup.select_one('a[href="%s"]' % logout_url):
-            logger.warning('Logged in')
+            logger.warn('Logged in')
         else:
             body = soup.select_one('body').text
             logger.debug('-' * 80)
@@ -53,20 +54,18 @@ class LNMTLCrawler(Crawler):
     def logout(self):
         '''logout as a good citizen'''
         logger.debug('Logging out...')
-        response = self.get_response(logout_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(logout_url)
         if soup.select_one('a[href="%s"]' % logout_url):
             logger.error('Failed to logout')
         else:
-            logger.warning('Logged out')
+            logger.warn('Logged out')
         # end if
     # end def
 
     def read_novel_info(self):
         '''get list of chapters'''
         logger.info('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         title = soup.select_one('.novel .media .novel-name').text
         self.novel_title = title.rsplit(' ', 1)[0]
@@ -163,8 +162,7 @@ class LNMTLCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
         body = soup.select('.chapter-body .translated')
         body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])

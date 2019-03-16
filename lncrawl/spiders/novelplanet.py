@@ -6,7 +6,6 @@ Crawler for [novelplanet.com](https://novelplanet.com/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_PLANET')
@@ -16,8 +15,7 @@ search_url = 'https://novelplanet.com/NovelList?name=%s'
 class NovelPlanetCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
         for novel in soup.select('.post-content'):
@@ -26,7 +24,7 @@ class NovelPlanetCrawler(Crawler):
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info' : 'Last chapter : %s' % info,
+                'info': 'Latest: %s' % info,
             })
         # end for
         return results
@@ -35,8 +33,7 @@ class NovelPlanetCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.find('a', {'class': 'title'}).text
         logger.info('Novel title: %s', self.novel_title)

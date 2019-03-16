@@ -33,9 +33,9 @@ def epub_to_mobi(kindlegen, epub_file):
                 stderr=None if isdebug else dumper,
             )
         # end with
-    except Exception as err:
-        logger.debug(err)
-        pass
+    except Exception:
+        import traceback        
+        logger.debug(traceback.format_exc())
     # end try
 
     if os.path.exists(mobi_file_in_epub_path):
@@ -44,7 +44,7 @@ def epub_to_mobi(kindlegen, epub_file):
             os.remove(mobi_file)
         # end if
         os.rename(mobi_file_in_epub_path, mobi_file)
-        logger.warn('Created: %s', mobi_file_name)
+        print('Created: %s' % mobi_file_name)
         return mobi_file_name
     else:
         logger.error('Failed to generate mobi for %s', epub_file_name)

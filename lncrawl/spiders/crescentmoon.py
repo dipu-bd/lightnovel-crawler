@@ -6,7 +6,6 @@ Crawler for [crescentmoon.blog](https://crescentmoon.blog/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('CRESCENTMOON')
@@ -16,8 +15,7 @@ class CrescentMoonCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
@@ -61,8 +59,7 @@ class CrescentMoonCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
 

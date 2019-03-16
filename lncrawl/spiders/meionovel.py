@@ -6,7 +6,6 @@ Crawler for [Meionovel](https://meionovel.com/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('MEIONOVEL')
@@ -16,8 +15,7 @@ class MeionovelCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         title = soup.select_one('h1.entry-title').text.strip()
         self.novel_title = ('%s Bahasa Indonesia by Meionovel' % title)
@@ -59,8 +57,7 @@ class MeionovelCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.entry-content')
 

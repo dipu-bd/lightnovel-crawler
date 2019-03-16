@@ -71,6 +71,6 @@ def make_htmls(app, data):
             web_files.append(file_name)
         # end for
     # end for
-    logger.warn('Created: %d html files', len(web_files))
+    print('Created: %d html files' % len(web_files))
     return web_files
 # end def

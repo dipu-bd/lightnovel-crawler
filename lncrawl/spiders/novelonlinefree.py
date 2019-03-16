@@ -6,7 +6,6 @@ Crawler for [novelonlinefree.info](https://novelonlinefree.info/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_ONLINE_FREE')
@@ -17,8 +16,7 @@ class NovelOnlineFreeCrawler(Crawler):
     def search_novel(self, query):
         query1 = query.lower().replace(' ', '_')
         query2 = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % (query1, query2))
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % (query1, query2))
 
         results = []
         for novel in soup.select('.update_item'):
@@ -27,7 +25,7 @@ class NovelOnlineFreeCrawler(Crawler):
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info' : 'Last chapter : %s' % info,
+                'info': 'Latest: %s' % info,
             })
         # end for
 
@@ -37,8 +35,7 @@ class NovelOnlineFreeCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
-        response = self.get_response(self.novel_url)
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one('h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
@@ -83,8 +80,7 @@ class NovelOnlineFreeCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
 

@@ -74,7 +74,7 @@ class App:
     def search_novel(self):
         '''Requires: user_input, crawler_links'''
         '''Produces: search_results'''
-        logger.warn('Searching for novels in %d sites...',
+        logger.info('Searching for novels in %d sites...',
                     len(self.crawler_links))
 
         search_novels(self)
@@ -122,9 +122,9 @@ class App:
             self.crawler.login(*self.login_data)
         # end if
 
-        logger.warn('Retrieving novel info...')
+        print('Retrieving novel info...')
         self.crawler.read_novel_info()
-        logger.warn('NOVEL: %s', self.crawler.novel_title)
+        print('NOVEL: %s' % self.crawler.novel_title)
 
         format_volumes(self.crawler)
         format_chapters(self.crawler)

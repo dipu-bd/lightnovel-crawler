@@ -6,7 +6,6 @@ Crawler for [novelall.com](https://www.novelall.com/).
 import json
 import logging
 import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_All')
@@ -16,18 +15,36 @@ search_url = 'https://www.novelall.com/search/?name=%s'
 class NovelAllCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        response = self.get_response(search_url % query)
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select('.cover-info p.title a'):
+        for a in soup.select('.cover-info p.title a')[:5]:
+            url = self.absolute_url(a['href'])
             results.append({
+                'url': url,
                 'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': self.search_novel_info(self.absolute_url(a['href'])),
+                'info': self.search_novel_info(url),
             })
         # end for
         return results
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
+
+        chapters = soup.select_one(
+            'div.manga-detailchapter').findAll('a', title=True)
+        info = '%d chapters' % len(chapters)
+
+        latest = soup.select_one(
+            'div.manga-detailchapter').findAll('a', title=True)
+        if latest:
+            info += ' | Latest: ' + latest[0]['title']
+        # end if
+
+        return info
     # end def
 
     def read_novel_info(self):
@@ -85,8 +102,7 @@ class NovelAllCrawler(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        response = self.get_response(chapter['url'])
-        soup = BeautifulSoup(response.content, 'lxml')
+        soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
 
@@ -104,22 +120,5 @@ class NovelAllCrawler(Crawler):
         contents = soup.find('div', {"class": "reading-box"})
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        chapters = len(soup.find(
-            'div', {"class": "manga-detailchapter"}).findAll('a', title=True))
-
-        latest = soup.find(
-            'div', {"class": "manga-detailchapter"}).findAll('a', title=True)[0]['title'] or 'Chapter %d' % chapters
-
-        info = 'Chapter count %s, Latest: %s' % (
-            chapters, latest)
-
-        return info
     # end def
 # end class

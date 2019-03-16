@@ -18,15 +18,45 @@ class WorldnovelonlineCrawler(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select('article div h3 a'):
+        for a in soup.select('article div h3 a')[:5]:
+            url = self.absolute_url(a['href'])
             results.append({
+                'url': url,
                 'title': self.trim_search_title(a.text.strip()),
-                'url': self.absolute_url(a['href']),
-                'info': self.search_novel_info(self.absolute_url(a['href'])),
+                'info': self.search_novel_info(url),
             })
         # end for
 
         return results
+    # end def
+
+    def search_novel_info(self, url):
+        '''Get novel title, autor, cover etc'''
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
+
+        #score = soup.select_one('span.star')['data-content']
+
+        chapters = soup.select('div.lightnovel-episode ul li a')
+        info = '%d chapters' % len(chapters)
+
+        if len(chapters) > 0:
+            info += ' | Latest: %s' % chapters[0].text.strip()
+        # end if
+
+        return info
+    # end def
+
+    def trim_search_title(self, title):
+        '''Trim title search result'''
+        removal_list = ['Novel', 'Bahasa', 'Indonesia']
+        edit_string_as_list = title.split()
+        final_list = [
+            word for word in edit_string_as_list
+            if word not in removal_list
+        ]
+        final_string = ' '.join(final_list)
+        return final_string
     # end def
 
     def read_novel_info(self):
@@ -98,32 +128,5 @@ class WorldnovelonlineCrawler(Crawler):
             contents.h1.decompose()
         # end if
         return contents.prettify()
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        #score = soup.select_one('span.star')['data-content']
-
-        chapters = len(soup.select('div.lightnovel-episode ul li a'))
-
-        latest = soup.select('div.lightnovel-episode ul li a')[0].text.strip()
-
-        info = 'Chapter count %s, Latest: %s' % (chapters, latest)
-
-        return info
-    # end def
-
-    def trim_search_title(self, title):
-        '''Trim title search result'''
-        removal_list = ["Novel", "Bahasa", "Indonesia"]
-        edit_string_as_list = title.split()
-        final_list = [
-            word for word in edit_string_as_list if word not in removal_list]
-        final_string = ' '.join(final_list)
-
-        return final_string
     # end def
 # end class
