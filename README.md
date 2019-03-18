@@ -235,6 +235,7 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.royalroad.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.webnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
+- [x] https://www.worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 
@@ -242,7 +243,6 @@ Rejected due to difficulty or other reasons:
 
 - ~https://www.novelupdates.com~ [does not host any novels]
 - ~http://moonbunnycafe.com/~ [does not follow uniform format]
-- ~https://www.worldnovel.online~ [website is no longer available]
 
 ### C4. Supported output formats
 
