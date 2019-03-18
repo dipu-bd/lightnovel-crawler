@@ -242,6 +242,10 @@ test_user_inputs = {
         'https://www.webnovel.com/book/8212987205006305/Trial-Marriage-Husband%3A-Need-to-Work-Hard',
         'martial',
     ],
+    'https://www.worldnovel.online/': [
+        'https://www.worldnovel.online/novel/pan-long/',
+        'cultivation'
+    ],
     'https://www.wuxiaworld.co/': [
         'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
         'sword'
