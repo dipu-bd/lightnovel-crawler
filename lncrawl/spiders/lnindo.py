@@ -52,7 +52,7 @@ class LnindoCrawler(Crawler):
         novel_id = self.novel_url.strip('/').split('/')[-1]
         start_url = chapter_start_url % novel_id
 
-        for a in soup.select('body div div div a'):
+        for a in soup.select('body a'):
             href = self.absolute_url(a['href'])
             if href in checked:
                 continue
@@ -73,10 +73,10 @@ class LnindoCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-        
+
         self.chapters.sort(key=lambda x: x['id'])
         logger.debug(self.chapters)
-        
+
         self.volumes = [{'id': x, 'title': ''} for x in list(volumes)]
         logger.debug(self.volumes)
 
