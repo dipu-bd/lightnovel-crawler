@@ -236,7 +236,7 @@ test_user_inputs = {
     ],
     'https://www.scribblehub.com/': [
         'https://www.scribblehub.com/series/10442/world-keeper/',
-        'world keeper'
+        'cultivation'
     ],
     'https://www.webnovel.com/': [
         'https://www.webnovel.com/book/8212987205006305/Trial-Marriage-Husband%3A-Need-to-Work-Hard',
