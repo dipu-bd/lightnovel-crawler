@@ -4,6 +4,7 @@ from .anythingnovel import AnythingNovelCrawler
 from .boxnovel import BoxNovelCrawler
 from .chinesefantasy import ChineseFantasyNovels
 from .comrademao import ComrademaoCrawler
+from .creativenovels import CreativeNovelsCrawler
 from .crescentmoon import CrescentMoonCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
@@ -44,6 +45,7 @@ crawler_list = {
     'https://anythingnovel.com/': AnythingNovelCrawler,
     'https://boxnovel.com/': BoxNovelCrawler,
     'https://comrademao.com/': ComrademaoCrawler,
+    'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
     'https://litnet.com/': LitnetCrawler,
     'https://lnindo.org/': LnindoCrawler,

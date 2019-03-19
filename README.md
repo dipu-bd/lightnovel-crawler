@@ -210,6 +210,7 @@ The list of currently available sources and the future plans are given below:
 - [x] https://anythingnovel.com
 - [x] https://boxnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://comrademao.com
+- [x] https://creativenovels.com
 - [x] https://crescentmoon.blog
 - [x] https://litnet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://lnindo.org

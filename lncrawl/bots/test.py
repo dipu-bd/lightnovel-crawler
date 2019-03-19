@@ -254,4 +254,7 @@ test_user_inputs = {
         'https://www.wuxiaworld.com/novel/martial-god-asura',
         'martial',
     ],
+    'https://creativenovels.com/': [
+        'https://creativenovels.com/novel/136/eternal-reverence/'
+    ]
 }
