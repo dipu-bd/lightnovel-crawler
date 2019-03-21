@@ -50,22 +50,28 @@ class LnindoCrawler(Crawler):
         volumes = set([])
         checked = set([])
         novel_id = self.novel_url.strip('/').split('/')[-1]
+        wrong = [0,3]
         start_url = chapter_start_url % novel_id
+        if len(soup.body.contents[0].contents[7].contents[0].contents[16].contents[0].select('a')) not in wrong:
+            chapters = soup.body.contents[0].contents[7].contents[0].contents[16].contents[0].select('a')
+        elif len(soup.body.contents[0].contents[7].contents[0].contents[17].contents[0].select('a'))not in wrong:
+            chapters = soup.body.contents[0].contents[7].contents[0].contents[17].contents[0].select('a')
+        elif len(soup.body.contents[0].contents[7].contents[0].contents[18].contents[0].select('a'))not in wrong:
+            chapters = soup.body.contents[0].contents[7].contents[0].contents[18].contents[0].select('a')
+        else:
+            chapters = soup.body.contents[0].contents[7].contents[0].contents[19].contents[0].select('a')
+        chapters.reverse()
 
-        for a in soup.select('body a'):
-            href = self.absolute_url(a['href'])
-            if href in checked:
-                continue
+        for a in chapters:
+            chap_id = len(self.chapters) + 1
+            if len(self.chapters) % 100 == 0:
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
+                self.volumes.append({
+                    'id': vol_id,
+                    'title': vol_title,
+                })
             # end if
-            checked.add(href)
-            if not href.startswith(start_url):
-                continue
-            # end if
-            chap_title = a.text.strip()
-            match = re.findall(r'\d+', chap_title, re.IGNORECASE)
-            chap_id = int(match[0]) if len(match) else len(self.chapters) + 1
-            vol_id = (chap_id - 1) // 100 + 1
-            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -74,12 +80,7 @@ class LnindoCrawler(Crawler):
             })
         # end for
 
-        self.chapters.sort(key=lambda x: x['id'])
         logger.debug(self.chapters)
-
-        self.volumes = [{'id': x, 'title': ''} for x in list(volumes)]
-        logger.debug(self.volumes)
-
         logger.debug('%d chapters found', len(self.chapters))
     # end def
 
