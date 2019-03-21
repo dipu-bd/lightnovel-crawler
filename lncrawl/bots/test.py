@@ -236,11 +236,15 @@ test_user_inputs = {
     ],
     'https://www.scribblehub.com/': [
         'https://www.scribblehub.com/series/10442/world-keeper/',
-        'world keeper'
+        'cultivation'
     ],
     'https://www.webnovel.com/': [
         'https://www.webnovel.com/book/8212987205006305/Trial-Marriage-Husband%3A-Need-to-Work-Hard',
         'martial',
+    ],
+    'https://www.worldnovel.online/': [
+        'https://www.worldnovel.online/novel/pan-long/',
+        'cultivation'
     ],
     'https://www.wuxiaworld.co/': [
         'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
@@ -250,4 +254,7 @@ test_user_inputs = {
         'https://www.wuxiaworld.com/novel/martial-god-asura',
         'martial',
     ],
+    'https://creativenovels.com/': [
+        'https://creativenovels.com/novel/136/eternal-reverence/'
+    ]
 }

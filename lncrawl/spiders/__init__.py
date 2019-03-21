@@ -4,6 +4,7 @@ from .anythingnovel import AnythingNovelCrawler
 from .boxnovel import BoxNovelCrawler
 from .chinesefantasy import ChineseFantasyNovels
 from .comrademao import ComrademaoCrawler
+from .creativenovels import CreativeNovelsCrawler
 from .crescentmoon import CrescentMoonCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
@@ -28,7 +29,7 @@ from .scribblehub import ScribbleHubCrawler
 from .volarenovels import VolareNovelsCrawler
 from .webnonline import WebnovelOnlineCrawler
 from .webnovel import WebnovelCrawler
-# from .worldnovelonline import WorldnovelonlineCrawler
+from .worldnovelonline import WorldnovelonlineCrawler
 from .wuxiaco import WuxiaCoCrawler
 from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
@@ -44,6 +45,7 @@ crawler_list = {
     'https://anythingnovel.com/': AnythingNovelCrawler,
     'https://boxnovel.com/': BoxNovelCrawler,
     'https://comrademao.com/': ComrademaoCrawler,
+    'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
     'https://litnet.com/': LitnetCrawler,
     'https://lnindo.org/': LnindoCrawler,
@@ -69,7 +71,7 @@ crawler_list = {
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://www.scribblehub.com/': ScribbleHubCrawler,
     'https://www.webnovel.com/': WebnovelCrawler,
-    # 'https://www.worldnovel.online/': WorldnovelonlineCrawler,
+    'https://www.worldnovel.online/': WorldnovelonlineCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     # Do not forget to append a slash(/) at the end of the url
