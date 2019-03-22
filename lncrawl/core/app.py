@@ -169,7 +169,10 @@ class App:
                 ]
             # end for
         else:
-            data[''] = self.chapters
+            first_id = self.chapters[0]['id']
+            last_id = self.chapters[-1]['id']
+            vol = 'c%s-%s' % (first_id, last_id)
+            data[vol] = self.chapters
         # end if
 
         bind_books(self, data)
