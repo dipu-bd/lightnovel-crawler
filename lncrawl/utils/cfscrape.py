@@ -96,6 +96,8 @@ class CloudflareScraper(Session):
                 r'name="jschl_vc" value="(\w+)"', body).group(1)
             params["pass"] = re.search(
                 r'name="pass" value="(.+?)"', body).group(1)
+            params["s"] = re.search(
+                r'name="s"\svalue="(?P<s_value>[^"]+)', body).group('s_value')
         except Exception as e:
             # Something is wrong with the page.
             # This may indicate Cloudflare has changed their anti-bot
