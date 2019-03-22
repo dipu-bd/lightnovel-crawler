@@ -6,19 +6,19 @@ Crawler for [novelplanet.com](https://novelplanet.com/).
 import json
 import logging
 import re
+from slugify import slugify
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_PLANET')
-search_url = 'https://novelplanet.com/NovelList?name=%s'
+search_url = 'https://novelplanet.com/NovelList?order=mostpopular&name=%s'
 
 
 class NovelPlanetCrawler(Crawler):
     def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
+        soup = self.get_soup(search_url % slugify(query))
 
         results = []
-        for novel in soup.select('.post-content'):
+        for novel in soup.select('.post-content')[:8]:
             a = novel.select_one('a.title')
             info = novel.select_one("div:nth-of-type(3) a").text.strip()
             results.append({
