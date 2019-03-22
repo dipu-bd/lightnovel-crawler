@@ -59,6 +59,11 @@ class TestBot:
         print('Init search: DONE')
 
         if not app.crawler:
+            if link not in app.crawler_links:
+                print('Search is not supported for', link)
+                return
+            # end if
+
             print(len(app.crawler_links), 'available crawlers to search')
             app.crawler_links = [link]
             print('Selected crawler:', link)
@@ -134,9 +139,9 @@ test_user_inputs = {
         'http://fullnovel.live/novel-a-will-eternal',
         'will eternal',
     ],
-    'http://gravitytales.com/': [
-        'http://gravitytales.com/novel/chaotic-lightning-cultivation',
-    ],
+    # 'http://gravitytales.com/': [
+    #     'http://gravitytales.com/novel/chaotic-lightning-cultivation',
+    # ],
     'http://novelfull.com/': [
         'http://novelfull.com/hidden-marriage.html',
         'hidden',
@@ -196,7 +201,7 @@ test_user_inputs = {
     ],
     'https://novelplanet.com/': [
         'https://novelplanet.com/Novel/Returning-from-the-Immortal-World',
-        'immortal'
+        # 'immortal'
     ],
     'https://volarenovels.com/': [
         'https://volarenovels.com/adorable-creature-attacks/',
