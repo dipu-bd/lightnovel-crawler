@@ -38,7 +38,7 @@ from .zenithnovels import ZenithNovelsCrawler
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
     'http://fullnovel.live/': FullnovelLiveCrawler,
-    'http://gravitytales.com/': GravityTalesCrawler,
+    # 'http://gravitytales.com/': GravityTalesCrawler,
     'http://novelfull.com/': NovelFullCrawler,
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
     'http://zenithnovels.com/': ZenithNovelsCrawler,

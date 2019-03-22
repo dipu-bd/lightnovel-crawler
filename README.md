@@ -203,7 +203,6 @@ The list of currently available sources and the future plans are given below:
 <!-- ![search](https://img.shields.io/badge/%F0%9F%94%8D-disabled-lightgrey.svg) -->
 
 - [x] http://fullnovel.live ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] http://gravitytales.com
 - [x] http://novelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] http://www.machinenoveltranslation.com
 - [x] http://zenithnovels.com
@@ -242,8 +241,9 @@ The list of currently available sources and the future plans are given below:
 
 Rejected due to difficulty or other reasons:
 
-- ~https://www.novelupdates.com~ [does not host any novels]
-- ~http://moonbunnycafe.com/~ [does not follow uniform format]
+- ~https://www.novelupdates.com~ `does not host any novels`
+- ~http://moonbunnycafe.com~ `does not follow uniform format`
+- ~http://gravitytales.com~ `503 Service Unavailable`
 
 ### C4. Supported output formats
 
