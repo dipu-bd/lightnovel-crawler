@@ -10,6 +10,8 @@ import shutil
 import logging
 import textwrap
 import traceback
+from time import sleep
+
 from PyInquirer import prompt
 
 from ..core import display
@@ -34,9 +36,22 @@ class TestBot:
                 # end if
 
                 for entry in test_user_inputs[link]:
-                    print('-' * 5, 'Input:', entry, '-' * 5)
-                    self.test_crawler(link, entry)
-                    print()
+                    error = None
+                    for i in range(2):
+                        error = None
+                        try:
+                            print('-' * 5, 'Input:', entry, '-' * 5)
+                            self.test_crawler(link, entry)
+                            print()
+                            break
+                        except Exception as err:
+                            error = err
+                            sleep(3)
+                        # end try
+                    # end for
+                    if error:
+                        raise error
+                    # end if
                 # end for
 
                 print('\n')
