@@ -212,7 +212,6 @@ The list of currently available sources and the future plans are given below:
 - [x] https://creativenovels.com
 - [x] https://crescentmoon.blog
 - [x] https://litnet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://lnindo.org
 - [x] https://lnmtl.com
 - [x] https://m.chinesefantasynovels.com
 - [x] https://m.novelspread.com
@@ -244,6 +243,7 @@ Rejected due to difficulty or other reasons:
 - ~https://www.novelupdates.com~ `does not host any novels`
 - ~http://moonbunnycafe.com~ `does not follow uniform format`
 - ~http://gravitytales.com~ `503 Service Unavailable`
+- ~https://lnindo.org~ `does not like being crawled`
 
 ### C4. Supported output formats
 
