@@ -14,21 +14,23 @@ search_url = 'https://novelplanet.com/NovelList?order=mostpopular&name=%s'
 
 
 class NovelPlanetCrawler(Crawler):
-    def search_novel(self, query):
-        soup = self.get_soup(search_url % slugify(query))
+    # def search_novel(self, query):
+    #     url = search_url % slugify(query)
+    #     logger.info('Visiting %s', url)
+    #     soup = self.get_soup(url)
 
-        results = []
-        for novel in soup.select('.post-content')[:8]:
-            a = novel.select_one('a.title')
-            info = novel.select_one("div:nth-of-type(3) a").text.strip()
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': 'Latest: %s' % info,
-            })
-        # end for
-        return results
-    # end def
+    #     results = []
+    #     for novel in soup.select('.post-content')[:8]:
+    #         a = novel.select_one('a.title')
+    #         info = novel.select_one("div:nth-of-type(3) a").text.strip()
+    #         results.append({
+    #             'title': a.text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #             'info': 'Latest: %s' % info,
+    #         })
+    #     # end for
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
