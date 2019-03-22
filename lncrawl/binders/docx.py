@@ -131,7 +131,12 @@ def bind_docx_book(app, chapters, volume=''):
 
     # Save docx file
     docx_path = os.path.join(app.output_path, 'docx')
-    file_name = (app.good_file_name + ' ' + volume).strip()
+    if volume == '':
+        chap = '%s-%s' % (chapters[0]['id'],chapters[-1]['id'])
+        file_name = (app.good_file_name + ' ' + chap).strip()
+    else :
+        file_name = (app.good_file_name + ' ' + volume).strip()
+    #file_name = (app.good_file_name + ' ' + volume).strip()
     file_path = os.path.join(docx_path, file_name + '.docx')
     logger.debug('Writing %s.docx', file_name)
     os.makedirs(docx_path, exist_ok=True)

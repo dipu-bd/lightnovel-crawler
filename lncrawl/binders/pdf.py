@@ -23,7 +23,12 @@ class PdfBuilder:
         self.volume = volume
         self.chapters = chapters
         self.crawler = app.crawler
-        self.file_name = (app.good_file_name + ' ' + volume).strip()
+        if volume == '':
+            chap = '%s-%s' % (chapters[0]['id'],chapters[-1]['id'])
+            self.file_name = (app.good_file_name + ' ' + chap).strip()
+        else :
+            self.file_name = (app.good_file_name + ' ' + volume).strip()
+        #self.file_name = (app.good_file_name + ' ' + volume).strip()
         self.book_title = (app.crawler.novel_title + ' ' + volume).strip()
     # end def
 

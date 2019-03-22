@@ -87,7 +87,7 @@ def make_chapters(book, chapters):
 # end def
 
 
-def bind_epub_book(app, chapters, volume=''):
+def bind_epub_book(app, chapters, volume=''): 
     book_title = (app.crawler.novel_title + ' ' + volume).strip()
     logger.debug('Binding epub: %s', book_title)
 
@@ -119,7 +119,12 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Save epub file
     epub_path = os.path.join(app.output_path, 'epub')
-    file_name = (app.good_file_name + ' ' + volume).strip()
+    if volume == '':
+        chap = '%s-%s' % (chapters[0]['id'],chapters[-1]['id'])
+        file_name = (app.good_file_name + ' ' + chap).strip()
+    else :
+        file_name = (app.good_file_name + ' ' + volume).strip()
+    #file_name = (app.good_file_name + ' ' + volume).strip()
     file_path = os.path.join(epub_path, file_name + '.epub')
     logger.debug('Writing %s', file_path)
     os.makedirs(epub_path, exist_ok=True)
