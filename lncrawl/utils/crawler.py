@@ -141,12 +141,12 @@ class Crawler:
         # end if
     # end def
 
-    def get_response(self, url, incognito=False):
+    def get_response(self, url, **kargs):
         if self._destroyed:
             return None
         # end if
         self.last_visited_url = url.strip('/')
-        response = self.scrapper.get(url)
+        response = self.scrapper.get(url, **kargs)
         response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value

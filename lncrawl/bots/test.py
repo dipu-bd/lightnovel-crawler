@@ -10,6 +10,8 @@ import shutil
 import logging
 import textwrap
 import traceback
+from time import sleep
+
 from PyInquirer import prompt
 
 from ..core import display
@@ -34,9 +36,22 @@ class TestBot:
                 # end if
 
                 for entry in test_user_inputs[link]:
-                    print('-' * 5, 'Input:', entry, '-' * 5)
-                    self.test_crawler(link, entry)
-                    print()
+                    error = None
+                    for i in range(2):
+                        error = None
+                        try:
+                            print('-' * 5, 'Input:', entry, '-' * 5)
+                            self.test_crawler(link, entry)
+                            print()
+                            break
+                        except Exception as err:
+                            error = err
+                            sleep(3)
+                        # end try
+                    # end for
+                    if error:
+                        raise error
+                    # end if
                 # end for
 
                 print('\n')
@@ -59,6 +74,11 @@ class TestBot:
         print('Init search: DONE')
 
         if not app.crawler:
+            if link not in app.crawler_links:
+                print('Search is not supported for', link)
+                return
+            # end if
+
             print(len(app.crawler_links), 'available crawlers to search')
             app.crawler_links = [link]
             print('Selected crawler:', link)
@@ -134,9 +154,9 @@ test_user_inputs = {
         'http://fullnovel.live/novel-a-will-eternal',
         'will eternal',
     ],
-    'http://gravitytales.com/': [
-        'http://gravitytales.com/novel/chaotic-lightning-cultivation',
-    ],
+    # 'http://gravitytales.com/': [
+    #     'http://gravitytales.com/novel/chaotic-lightning-cultivation',
+    # ],
     'http://novelfull.com/': [
         'http://novelfull.com/hidden-marriage.html',
         'hidden',
@@ -164,9 +184,9 @@ test_user_inputs = {
         'https://litnet.com/en/book/candy-lips-1-b106232',
         'candy lips',
     ],
-    'https://lnindo.org/': [
-        'https://lnindo.org/novel/true-martial-world/',
-    ],
+    # 'https://lnindo.org/': [
+    #     'https://lnindo.org/novel/true-martial-world/',
+    # ],
     'https://lnmtl.com/': [
         'https://lnmtl.com/novel/the-strongest-dan-god',
     ],
@@ -196,7 +216,7 @@ test_user_inputs = {
     ],
     'https://novelplanet.com/': [
         'https://novelplanet.com/Novel/Returning-from-the-Immortal-World',
-        'immortal'
+        # 'immortal'
     ],
     'https://volarenovels.com/': [
         'https://volarenovels.com/adorable-creature-attacks/',

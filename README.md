@@ -37,7 +37,7 @@ Download lightnovels from various online sources and generate output in differen
 
 ### A1. EXE (for Windows)
 
-📦 [lightnovel-crawler v2.9.0 for windows ~ 16MB](https://goo.gl/sc4EZh)
+📦 [lightnovel-crawler v2.9.3 for windows ~ 16MB](https://goo.gl/sc4EZh)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -203,7 +203,6 @@ The list of currently available sources and the future plans are given below:
 <!-- ![search](https://img.shields.io/badge/%F0%9F%94%8D-disabled-lightgrey.svg) -->
 
 - [x] http://fullnovel.live ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] http://gravitytales.com
 - [x] http://novelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] http://www.machinenoveltranslation.com
 - [x] http://zenithnovels.com
@@ -213,7 +212,6 @@ The list of currently available sources and the future plans are given below:
 - [x] https://creativenovels.com
 - [x] https://crescentmoon.blog
 - [x] https://litnet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://lnindo.org
 - [x] https://lnmtl.com
 - [x] https://m.chinesefantasynovels.com
 - [x] https://m.novelspread.com
@@ -242,8 +240,10 @@ The list of currently available sources and the future plans are given below:
 
 Rejected due to difficulty or other reasons:
 
-- ~https://www.novelupdates.com~ [does not host any novels]
-- ~http://moonbunnycafe.com/~ [does not follow uniform format]
+- ~https://www.novelupdates.com~ `does not host any novels`
+- ~http://moonbunnycafe.com~ `does not follow uniform format`
+- ~http://gravitytales.com~ `503 Service Unavailable`
+- ~https://lnindo.org~ `does not like being crawled`
 
 ### C4. Supported output formats
 

@@ -10,7 +10,6 @@ from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
 from .litnet import LitnetCrawler
-from .lnindo import LnindoCrawler
 from .lnmtl import LNMTLCrawler
 from .machinetrans import MachineNovelTrans
 from .meionovel import MeionovelCrawler
@@ -38,7 +37,7 @@ from .zenithnovels import ZenithNovelsCrawler
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
     'http://fullnovel.live/': FullnovelLiveCrawler,
-    'http://gravitytales.com/': GravityTalesCrawler,
+    # 'http://gravitytales.com/': GravityTalesCrawler,
     'http://novelfull.com/': NovelFullCrawler,
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
     'http://zenithnovels.com/': ZenithNovelsCrawler,
@@ -48,7 +47,6 @@ crawler_list = {
     'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
     'https://litnet.com/': LitnetCrawler,
-    'https://lnindo.org/': LnindoCrawler,
     'https://lnmtl.com/': LNMTLCrawler,
     'https://m.chinesefantasynovels.com/': ChineseFantasyNovels,
     'https://m.novelspread.com/': NovelSpreadCrawler,

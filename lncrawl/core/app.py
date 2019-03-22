@@ -4,6 +4,7 @@ import logging
 import os
 import re
 import shutil
+from urllib.parse import urlparse
 
 from slugify import slugify
 
@@ -136,7 +137,10 @@ class App:
             lowercase=False,
             word_boundary=True,
         )
-        self.output_path = os.path.join('Lightnovels', self.good_file_name)
+
+        source_name = slugify(urlparse(self.crawler.home_url).netloc)
+
+        self.output_path = os.path.join('Lightnovels', source_name, self.good_file_name)
     # end def
 
     # ----------------------------------------------------------------------- #
@@ -169,7 +173,10 @@ class App:
                 ]
             # end for
         else:
-            data[''] = self.chapters
+            first_id = self.chapters[0]['id']
+            last_id = self.chapters[-1]['id']
+            vol = 'c%s-%s' % (first_id, last_id)
+            data[vol] = self.chapters
         # end if
 
         bind_books(self, data)
