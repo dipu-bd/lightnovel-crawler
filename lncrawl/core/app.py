@@ -223,9 +223,10 @@ class App:
             if len(file_list) == 0:
                 logger.info('It has no files: %s', path)
                 continue  # No files to archive
-            elif len(file_list) == 1 and not archive_singles:
+            elif len(file_list) == 1 and not archive_singles and not os.path.isdir(os.path.join(path, file_list[0])):
                 logger.info('Not archiving single file inside %s' % path)
                 archived = os.path.join(path, file_list[0])
+                #print(os.path.isdir(os.path.join(path, file_list[0])))
             else:
                 logger.info('Compressing %s to %s' % (path, base_name))
                 base_path = os.path.join(self.output_path, '..', base_name)

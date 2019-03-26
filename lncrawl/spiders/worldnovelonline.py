@@ -7,6 +7,7 @@ import json
 import logging
 import re
 from ..utils.crawler import Crawler
+from operator import itemgetter, attrgetter
 
 logger = logging.getLogger('WORLDNOVEL_ONLINE')
 search_url = 'https://www.worldnovel.online/?s=%s'
@@ -85,10 +86,18 @@ class WorldnovelonlineCrawler(Crawler):
 
         chapters = soup.select('div.lightnovel-episode ul li a')
 
-        chapters.reverse()
+        temp_chapters = []
 
         for a in chapters:
-            chap_id = len(self.chapters) + 1
+            chap_id = int(re.findall('\d+', a.text.strip())[0])
+            temp_chapters.append({
+                'id' : chap_id,
+                'url': a['href'],
+                'title' : a.text.strip()})
+        # end for
+
+        for a in sorted(temp_chapters, key=itemgetter('id')):
+            chap_id = a['id']
             if len(self.chapters) % 100 == 0:
                 vol_id = chap_id//100 + 1
                 vol_title = 'Volume ' + str(vol_id)
@@ -98,10 +107,10 @@ class WorldnovelonlineCrawler(Crawler):
                 })
             # end if
             self.chapters.append({
-                'id': chap_id,
+                'id': a['id'],
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
+                'url':  a['url'],
+                'title': a['title'],
             })
         # end for
 
@@ -115,17 +124,19 @@ class WorldnovelonlineCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
-
-        c = soup.select('div.elementor-widget-container')
-        contents = c[5]
-        for ads in contents.findAll('div', {"class": 'code-block'}):
-            ads.decompose()
-        for ads in contents.findAll('div', {"align": 'left'}):
-            ads.decompose()
-        for ads in contents.findAll('div', {"align": 'center'}):
-            ads.decompose()
-        if contents.h1:
-            contents.h1.decompose()
+        #content = soup.find('div',{'data-element_type':'theme-post-content.default'}).soup.select('div.elementor-widget-container')
+        contents = soup.find('div',{'data-element_type':'theme-post-content.default'})
+        if contents.findAll('div', {"class": 'code-block'}):
+            for ads in contents.findAll('div', {"class": 'code-block'}):
+                ads.decompose()
+        if contents.findAll('div', {"align": 'left'}):     
+            for ads in contents.findAll('div', {"align": 'left'}):
+                ads.decompose()
+        if contents.findAll('div', {"align": 'center'}):
+            for ads in contents.findAll('div', {"align": 'center'}):
+                ads.decompose()
+        #if contents.h1:
+        #    contents.h1.decompose()
         # end if
         return contents.prettify()
     # end def

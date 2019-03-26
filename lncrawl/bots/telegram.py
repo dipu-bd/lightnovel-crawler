@@ -60,6 +60,10 @@ class TelegramBot:
                     MessageHandler(
                         Filters.text, self.handle_select_source, pass_user_data=True),
                 ],
+                'handle_delete_cache': [
+                    MessageHandler(
+                        Filters.text, self.handle_delete_cache, pass_user_data=True),
+                ],
                 'handle_range_selection': [
                     CommandHandler('all', self.handle_range_all,
                                    pass_user_data=True),
@@ -132,7 +136,7 @@ class TelegramBot:
             app = user_data.pop('app')
             app.destroy()
             # remove output path
-            shutil.rmtree(app.output_path, ignore_errors=True)
+            #shutil.rmtree(app.output_path, ignore_errors=True)
         # end if
         update.message.reply_text(
             'Session closed',
@@ -384,16 +388,38 @@ class TelegramBot:
         update.message.reply_text('Reading novel info...')
         app.get_novel_info()
 
-        # Setup output path
-        output_path = os.path.join('.telegram_bot_output', str(user.id))
-        output_path = os.path.join(
-            output_path, os.path.basename(app.output_path))
-        output_path = os.path.abspath(output_path)
-        if os.path.exists(output_path):
-            shutil.rmtree(output_path, ignore_errors=True)
+        if os.path.exists(app.output_path):
+            update.message.reply_text(
+                'Local cache found do you want to use it',
+                reply_markup=ReplyKeyboardMarkup([
+                    ['Yes', 'No']
+                ], one_time_keyboard=True),
+            )
+            return 'handle_delete_cache'
+        else :
+            os.makedirs(app.output_path, exist_ok=True)
+            # Get chapter range
+            update.message.reply_text(
+                '%d volumes and %d chapters found.' % (
+                    len(app.crawler.volumes),
+                    len(app.crawler.chapters)
+                ),
+                reply_markup=ReplyKeyboardRemove()
+            )
+            return self.display_range_selection_help(bot, update)
         # end if
-        os.makedirs(output_path, exist_ok=True)
-        app.output_path = output_path
+    # end def
+
+    def handle_delete_cache(self, bot, update, user_data):
+        app = user_data.get('app')
+        user = update.message.from_user
+        text = update.message.text
+        if text.startswith('No'):
+            if os.path.exists(app.output_path):
+                shutil.rmtree(app.output_path, ignore_errors=True)
+            os.makedirs(app.output_path, exist_ok=True)
+            # end if
+        # end if
 
         # Get chapter range
         update.message.reply_text(
@@ -403,7 +429,6 @@ class TelegramBot:
             ),
             reply_markup=ReplyKeyboardRemove()
         )
-
         return self.display_range_selection_help(bot, update)
     # end def
 
@@ -614,8 +639,10 @@ class TelegramBot:
                 open(archive, 'rb'),
                 timeout=24 * 3600, # 24 hours
             )
+            if os.path.exists(archive):
+                os.remove(archive)
             update.message.reply_text(
-                'This file will be available for 24 hours to download')
+                'This file will be deleted on server')
             
         # end for
 
