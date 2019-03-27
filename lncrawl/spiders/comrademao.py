@@ -89,7 +89,8 @@ class ComrademaoCrawler(Crawler):
         #    body_parts.append(x.text)
         
         #return '<p>' + '</p><p>'.join(body_parts) + '</br></p>'
-        contents = soup.select_one('div.entry-content div')
+        #contents = soup.select_one('div.entry-content div')
+        contents = soup.find("div", attrs={"readability":True})
         for item in contents.findAll('div'):
             item.decompose()
         return contents.prettify()
