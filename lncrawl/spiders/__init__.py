@@ -35,6 +35,7 @@ from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
 from .zenithnovels import ZenithNovelsCrawler
 from .yukinovel import YukiNovelCrawler
+from .fourscanlation import FourScanlationCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -76,5 +77,6 @@ crawler_list = {
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://yukinovel.me': YukiNovelCrawler,
+    'https://4scanlation.xyz/' : FourScanlationCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
