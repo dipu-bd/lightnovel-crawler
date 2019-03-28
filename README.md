@@ -237,6 +237,8 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
+- [x] https://yukinovel.me
+- [x] https://4scanlation.xyz
 
 Rejected due to difficulty or other reasons:
 

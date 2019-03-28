@@ -11,6 +11,7 @@ from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
+from .lnindo import LnindoCrawler
 from .machinetrans import MachineNovelTrans
 from .meionovel import MeionovelCrawler
 from .mtlednovels import MtledNovelsCrawler
@@ -33,6 +34,8 @@ from .wuxiaco import WuxiaCoCrawler
 from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
 from .zenithnovels import ZenithNovelsCrawler
+from .yukinovel import YukiNovelCrawler
+from .fourscanlation import FourScanlationCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -60,6 +63,7 @@ crawler_list = {
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
+    'https://lnindo.org/' : LnindoCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.noveluniverse.com/': NovelUniverseCrawler,
@@ -72,5 +76,7 @@ crawler_list = {
     'https://www.worldnovel.online/': WorldnovelonlineCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
+    'https://yukinovel.me': YukiNovelCrawler,
+    'https://4scanlation.xyz/' : FourScanlationCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
