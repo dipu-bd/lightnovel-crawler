@@ -32,12 +32,13 @@ class TestBot:
                 print('=' * 80)
 
                 if link not in test_user_inputs:
-                    raise Exception('No inputs found: %s' % link)
+                    print('No inputs found: %s\n' % link)
+                    continue
                 # end if
 
                 for entry in test_user_inputs[link]:
                     error = None
-                    for i in range(2):
+                    for i in range(3):
                         error = None
                         try:
                             print('-' * 5, 'Input:', entry, '-' * 5)
