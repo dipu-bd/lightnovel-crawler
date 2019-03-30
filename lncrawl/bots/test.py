@@ -10,6 +10,7 @@ import shutil
 import logging
 import textwrap
 import traceback
+from random import random
 from time import sleep
 
 from PyInquirer import prompt
@@ -26,7 +27,7 @@ from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 class TestBot:
     def start(self):
         try:
-            for link in crawler_list.keys():
+            for link in sorted(crawler_list.keys(), key=lambda x: random()):
                 print('=' * 80)
                 print('>>>', link)
                 print('=' * 80)
@@ -47,7 +48,7 @@ class TestBot:
                             break
                         except Exception as err:
                             error = err
-                            sleep(3)
+                            sleep(6 - 3 * i)
                         # end try
                     # end for
                     if error:
@@ -155,9 +156,9 @@ test_user_inputs = {
         'http://fullnovel.live/novel-a-will-eternal',
         'will eternal',
     ],
-    # 'http://gravitytales.com/': [
-    #     'http://gravitytales.com/novel/chaotic-lightning-cultivation',
-    # ],
+    'http://gravitytales.com/': [
+        'http://gravitytales.com/novel/chaotic-lightning-cultivation',
+    ],
     'http://novelfull.com/': [
         'http://novelfull.com/hidden-marriage.html',
         'hidden',
