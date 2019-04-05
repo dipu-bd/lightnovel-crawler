@@ -89,11 +89,12 @@ class WorldnovelonlineCrawler(Crawler):
         temp_chapters = []
 
         for a in chapters:
-            if re.findall('\d+', a.text.strip().lower().split("chapter",1)[1]):
+            try:
                 chap_id = int(re.findall('\d+', a.text.strip().lower().split("chapter",1)[1])[0]) 
-            else :
+                print('success trying')
+            except:
                 chap_id = len(temp_chapters) + 1
-            # end if
+            # end try
             temp_chapters.append({
                 'id' : chap_id,
                 'url': a['href'],
