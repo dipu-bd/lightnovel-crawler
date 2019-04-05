@@ -90,9 +90,14 @@ class ComrademaoCrawler(Crawler):
         
         #return '<p>' + '</p><p>'.join(body_parts) + '</br></p>'
         #contents = soup.select_one('div.entry-content div')
-        contents = soup.find("div", attrs={"readability":True})
+        if soup.find("div", attrs={"readability":True}):
+            contents = soup.find("div", attrs={"readability":True})
+        else:
+            contents = soup.find("article")
+        # end if
         for item in contents.findAll('div'):
             item.decompose()
+        # end for
         return contents.prettify()
     # end def
 # end class
