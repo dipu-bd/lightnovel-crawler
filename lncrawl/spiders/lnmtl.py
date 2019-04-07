@@ -101,8 +101,12 @@ class LNMTLCrawler(Crawler):
 
             for i, vol in enumerate(volumes):
                 title = vol['title'] if 'title' in vol else ''
-                title = re.sub(r'[^\u0000-\u00FF]', '', title)
-                title = re.sub(r'\(\)', '', title).strip()
+                try:
+                    title = re.sub(r'[^\u0000-\u00FF]', '', title)
+                    title = re.sub(r'\(\)', '', title).strip()
+                except:
+                    print("An exception occurred") 
+                # end try
                 self.volumes.append({
                     'id': i + 1,
                     'title': title,

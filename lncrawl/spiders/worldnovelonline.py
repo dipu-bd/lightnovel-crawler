@@ -89,11 +89,12 @@ class WorldnovelonlineCrawler(Crawler):
         temp_chapters = []
 
         for a in chapters:
-            if re.findall('\d+', a.text.strip()):
-                chap_id = int(re.findall('\d+', a.text.strip())[0]) 
-            else :
+            try:
+                chap_id = int(re.findall('\d+', a.text.strip().lower().split("chapter",1)[1])[0]) 
+                print('success trying')
+            except:
                 chap_id = len(temp_chapters) + 1
-            # end if
+            # end try
             temp_chapters.append({
                 'id' : chap_id,
                 'url': a['href'],
@@ -116,6 +117,26 @@ class WorldnovelonlineCrawler(Crawler):
                 'url':  a['url'],
                 'title': a['title'],
             })
+        # end for
+
+        #chapters.reverse()
+        
+        #for a in chapters:
+        #    chap_id = len(self.chapters) + 1
+        #    if len(self.chapters) % 100 == 0:
+        #        vol_id = chap_id//100 + 1
+        #        vol_title = 'Volume ' + str(vol_id)
+        #        self.volumes.append({
+        #            'id': vol_id,
+        #            'title': vol_title,
+        #        })
+            # end if
+        #    self.chapters.append({
+        #        'id': chap_id,
+        #        'volume': vol_id,
+        #        'url':  self.absolute_url(a['href']),
+        #        'title': a.text.strip() or ('Chapter %d' % chap_id),
+        #    })
         # end for
 
         logger.debug(self.chapters)
