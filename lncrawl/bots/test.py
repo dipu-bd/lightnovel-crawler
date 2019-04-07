@@ -244,8 +244,8 @@ test_user_inputs = {
         'https://novelplanet.com/Novel/Returning-from-the-Immortal-World',
         # 'immortal'
     ],
-    'https://volarenovels.com/': [
-        'https://volarenovels.com/adorable-creature-attacks/',
+    'https://www.volarenovels.com/': [
+        'https://www.volarenovels.com/novel/adorable-creature-attacks',
     ],
     'https://webnovel.online/': [
         'https://webnovel.online/full-marks-hidden-marriage-pick-up-a-son-get-a-free-husband',
