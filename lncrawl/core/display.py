@@ -106,7 +106,7 @@ def new_version_news(latest):
 
     if Icons.isWindows:
         print('', Icons.RIGHT_ARROW, Style.DIM + 'To download:',
-              Fore.YELLOW + 'https://goo.gl/sc4EZh', Style.RESET_ALL)
+              Fore.YELLOW + 'http://bit.ly/2I1XzeN', Style.RESET_ALL)
     # end if
 
     print('-' * LINE_SIZE)
