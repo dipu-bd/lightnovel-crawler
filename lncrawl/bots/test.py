@@ -26,10 +26,12 @@ from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 class TestBot:
     def start(self):
+        error_list = []
         try:
-            for link in sorted(crawler_list.keys(), key=lambda x: random()):
+            randomized = sorted(crawler_list.keys(), key=lambda x: random())
+            for index, link in enumerate(randomized):
                 print('=' * 80)
-                print('>>>', link)
+                print('>>>', index, ':', link)
                 print('=' * 80)
 
                 if link not in test_user_inputs:
@@ -48,21 +50,43 @@ class TestBot:
                             break
                         except Exception as err:
                             error = err
+                            error_list.append(err)
                             sleep(6 - 3 * i)
                         # end try
                     # end for
                     if error:
-                        raise error
+                        print(error, '\n')
+                        print(traceback.print_tb(error.__traceback__))
                     # end if
                 # end for
-
                 print('\n')
             # end for
-        except Exception:
-            print(traceback.format_exc())
-            exit(1)
+        except Exception as err:
+            error_list.append(err)
         # end try
+
+        if len(error_list):
+            self.show_errors(error_list)
+            exit(1)
+        # end if
     # end def
+    
+    def show_errors(self, error_list):
+        print('=' * 80)
+        print('%d errors found\n' % len(error_list))
+        print('-'* 80)
+
+        for i, e in enumerate(error_list):
+            print('Error #%d: %s' % (i + 1, e))
+            print('-'* 80)
+            print(traceback.print_tb(e.__traceback__))
+            print('-'* 80)
+        # end for
+
+        print()
+        print('=' * 80)
+        print()
+    # end_def
 
     def test_crawler(self, link, user_input):
         app = App()
