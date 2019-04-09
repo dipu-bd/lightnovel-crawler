@@ -36,7 +36,7 @@ class WorldnovelonlineCrawler(Crawler):
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        # score = soup.select_one('span.star')['data-content']
+        #score = soup.select_one('span.star')['data-content']
 
         chapters = soup.select('div.lightnovel-episode ul li a')
         info = '%d chapters' % len(chapters)
@@ -84,47 +84,69 @@ class WorldnovelonlineCrawler(Crawler):
         # end if
         logger.info('Novel author: %s', self.novel_author)
 
-        temp_volumes = dict()
-        chapter_list = soup.select('div.lightnovel-episode ul li a')
-        for a in reversed(chapter_list):
-            chap_title = a.text.strip()
-            chap_title = chap_title.replace('Bahasa Indonesia', '').strip()
+        chapters = soup.select('div.lightnovel-episode ul li a')
 
-            # loop chapter_list in reverse, otherwise the following two lines won't work
-            chap_id = len(self.chapters) + 1
-            vol_id = 1 + (chap_id - 1)//100
+        temp_chapters = []
 
-            try:
-                matcher = re.search(r'(book|vol|volume)\s(\d+)', chap_title, re.I)
-                if matcher:
-                    vol_title = matcher[0]
-                    vol_id = int(re.search(r'\d+$', vol_title)[0])
-                    temp_volumes[vol_id] = vol_title
-                # end if
-            except:
-                pass # just ignore it
-            # end try
-            temp_volumes[vol_id] = 'Volume %d' % vol_id
-
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': chap_title,
-                'url':  self.absolute_url(a['href']),
-            })
+        for a in chapters:
+            if 'book' in a.text.strip().lower():
+                chap_id = len(temp_chapters) + 1
+                descending = True
+            else:
+                try:
+                    chap_id = int(re.findall('\d+', a.text.strip().lower().split("chapter",1)[1])[0]) 
+                    print('success trying')
+                except:
+                    chap_id = len(temp_chapters) + 1
+                    descending = True
+                # end try
+            temp_chapters.append({
+                'id' : chap_id,
+                'url': a['href'],
+                'title' : a.text.strip()})
         # end for
 
-        self.chapters.sort(key=lambda x: x['id'])
+        if descending:
+            temp_chapters.reverse()
+            for a in temp_chapters:
+                chap_id = len(self.chapters) + 1
+                if len(self.chapters) % 100 == 0:
+                    vol_id = chap_id//100 + 1
+                    vol_title = 'Volume ' + str(vol_id)
+                    self.volumes.append({
+                        'id': vol_id,
+                        'title': vol_title,
+                    })
+               # end if
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'url':  self.absolute_url(a['url']),
+                    'title': a['title'],
+                })
+            # end for
+        else :
+            for a in sorted(temp_chapters, key=itemgetter('id')):
+                chap_id = a['id']
+                if len(self.chapters) % 100 == 0:
+                    vol_id = chap_id//100 + 1
+                    vol_title = 'Volume ' + str(vol_id)
+                    self.volumes.append({
+                        'id': vol_id,
+                        'title': vol_title,
+                    })
+                # end if
+                self.chapters.append({
+                    'id': a['id'],
+                    'volume': vol_id,
+                    'url':  a['url'],
+                    'title': a['title'],
+                })
+            #end for
+        #end if
+
         logger.debug(self.chapters)
-
-        self.volumes = [
-            {'id': _id, 'title': title}
-            for _id, title in sorted(temp_volumes.items())
-        ]
-        logger.debug(self.volumes)
-
-        logger.debug('%d volumes and %d chapters found',
-                     len(self.volumes), len(self.chapters))
+        logger.debug('%d chapters found', len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):
@@ -133,19 +155,18 @@ class WorldnovelonlineCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
-        # content = soup.find('div',{'data-element_type':'theme-post-content.default'}).soup.select('div.elementor-widget-container')
-        contents = soup.find(
-            'div', {'data-element_type': 'theme-post-content.default'})
+        #content = soup.find('div',{'data-element_type':'theme-post-content.default'}).soup.select('div.elementor-widget-container')
+        contents = soup.find('div',{'data-element_type':'theme-post-content.default'})
         if contents.findAll('div', {"class": 'code-block'}):
             for ads in contents.findAll('div', {"class": 'code-block'}):
                 ads.decompose()
-        if contents.findAll('div', {"align": 'left'}):
+        if contents.findAll('div', {"align": 'left'}):     
             for ads in contents.findAll('div', {"align": 'left'}):
                 ads.decompose()
         if contents.findAll('div', {"align": 'center'}):
             for ads in contents.findAll('div', {"align": 'center'}):
                 ads.decompose()
-        # if contents.h1:
+        #if contents.h1:
         #    contents.h1.decompose()
         # end if
         return contents.prettify()

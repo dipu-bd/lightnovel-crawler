@@ -2,8 +2,11 @@
 # -*- coding: utf-8 -*-
 import re
 import logging
+import json
+import urllib.parse
 from concurrent import futures
 from ..utils.crawler import Crawler
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger('COMRADEMAO')
 #search_url = 'http://novelfull.com/search?keyword=%s'
@@ -27,14 +30,31 @@ class ComrademaoCrawler(Crawler):
         self.novel_author = soup.find('div',{'class':'author'}).text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        page_count = soup.find('span',{'class':'dots'}).findNext('a').text
-        page_count = -1 if not page_count else int(page_count)
-        logger.info('Chapter list pages: %d' % page_count)
+        #page_count = soup.find('span',{'class':'dots'}).findNext('a').text
+        #page_count = -1 if not page_count else int(page_count)
+        #logger.info('Chapter list pages: %d' % page_count)
+
+        the_url = soup.find("link",{"rel":"shortlink"})['href']
         
+        p_id = urllib.parse.parse_qs(urllib.parse.urlparse(the_url).query)['p'][0]
+
+        js = self.scrapper.post("https://comrademao.com/wp-admin/admin-ajax.php?action=movie_datatables&p2m=%s" % p_id)
+
+        data = js.json()
+
+        chapter_count = data['recordsTotal']
+
+        url = "https://comrademao.com/wp-admin/admin-ajax.php?action=movie_datatables&p2m=%s&length=%s" % (p_id,chapter_count) 
+
+        js = self.scrapper.post(url)
+
+        data = js.json()
+
         logger.info('Getting chapters...')
         chapters = []
-        for i in range(page_count):
-            chapters.extend(self.download_chapter_list(i+1))
+        for chapter in data['data']:
+            link = BeautifulSoup(chapter[1],'lxml').find('a')
+            chapters.append(link)
         # end for
 
         chapters.reverse()
@@ -63,13 +83,17 @@ class ComrademaoCrawler(Crawler):
         logger.info('%d volumes and %d chapters found' % (len(self.volumes), len(self.chapters)))
     # end def
 
-    def download_chapter_list(self, page):
-        '''Download list of chapters and volumes.'''
-        url = self.novel_url.split('?')[0].strip('/')
-        url += '/page/%s/' % page
-        soup = self.get_soup(url)
-        logger.debug('Crawling chapters url in page %s' % page)
-        return soup.select('tbody td a')
+    #def download_chapter_list(self, page, p_id):
+    #    '''Download list of chapters and volumes.'''
+    #    url = "https://comrademao.com/wp-admin/admin-ajax.php?action=movie_datatables&p2m=%s&draw=%s" % (p_id,page) 
+    #    js = self.scrapper.post(url)
+    #    data = js.json()
+    #    mini_chapters = []
+    #    for chapter in data['data']:
+    #        link = BeautifulSoup(chapter[1],'lxml').find('a')
+    #        mini_chapters.append(link)
+    #    logger.debug('Crawling chapters url in page %s' % page)
+    #    return mini_chapters
     # end def
 
     def download_chapter_body(self, chapter):
