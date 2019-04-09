@@ -15,7 +15,7 @@ def format_volumes(crawler):
         if not ('title' in vol and vol['title']):
             vol['title'] = title
         # end if
-        if not re.search(r'vol(ume)? .?\d+', vol['title'], re.IGNORECASE):
+        if not re.search(r'(book|vol|volume) .?\d+', vol['title'], re.IGNORECASE):
             vol['title'] = title + ' - ' + vol['title'].title()
         # end if
     # end for

@@ -198,7 +198,7 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'script', 'iframe', 'form', 'a', 'br', 'ul', 'hr', 'img', 'ins'
+        'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins'
     ]
     block_tags = [
         'h3', 'div', 'p'
@@ -219,17 +219,13 @@ class Crawler:
     def clean_contents(self, div):
         for tag in div.findAll(True):
             if isinstance(tag, Comment):
-                # Remove comments
-                tag.extract()
+                tag.extract()   # Remove comments
             elif tag.name in self.bad_tags:
-                # Remove bad tags
-                tag.extract()
+                tag.extract()   # Remove bad tags
             elif self.is_blacklisted(tag.text):
-                # Remove blacklisted contents
-                tag.extract()
+                tag.extract()   # Remove blacklisted contents
             else:
-                # Remove attributes
-                tag.attrs = None
+                tag.attrs = None    # Remove attributes
             # end if
         # end for
         return div

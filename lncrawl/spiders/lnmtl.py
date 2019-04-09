@@ -8,6 +8,7 @@ import logging
 import re
 from concurrent import futures
 
+import js2py
 from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
@@ -71,51 +72,73 @@ class LNMTLCrawler(Crawler):
         self.novel_title = title.rsplit(' ', 1)[0]
         logger.debug('Novel title = %s', self.novel_title)
 
-        self.novel_cover = soup.find('img', {'title': self.novel_title})['src']
+        try:
+            self.novel_cover = self.absolute_url(soup.find(
+                'img', {'title': self.novel_title})['src'])
+        except:
+            pass  # novel cover is not so important to raise errors
+        # end try
         logger.info('Novel cover = %s', self.novel_cover)
 
         self.parse_volume_list(soup)
+
         self.volumes = sorted(self.volumes, key=lambda x: x['id'])
         logger.debug(self.volumes)
-        logger.info('%d volumes found.', len(self.volumes))
 
         logger.info('Getting chapters...')
         self.download_chapter_list()
+
+        logger.info('%d volumes and %d chapters found.',
+                    len(self.volumes), len(self.chapters))
     # end def
 
     def parse_volume_list(self, soup):
         self.volumes = []
+        matcher_regex = [
+            r'^window\.lnmtl = ',
+            r'lnmtl\.firstResponse =',
+            r'lnmtl\.volumes =',
+        ]
         for script in soup.find_all('script'):
             text = script.text.strip()
-            if not text.startswith('window.lnmtl'):
+
+            mismatch = False
+            for match in matcher_regex:
+                if not re.search(match, text):
+                    mismatch = True
+                    break
+                # end if
+            # end for
+            if mismatch:
                 continue
             # end if
-            i, j = text.find('lnmtl.volumes = '), text.find(';lnmtl.route')
-            if i <= 0 and j <= i:
-                continue
-            # end if
-            i += len('lnmtl.volumes =')
 
-            volumes = json.loads(text[i:j].strip())
-            logger.debug(volumes)
+            try:
+                data = js2py.eval_js(
+                    '(function() {' + text + 'return window.lnmtl;})()').to_dict()
+                logger.debug(data.keys())
 
-            for i, vol in enumerate(volumes):
-                title = vol['title'] if 'title' in vol else ''
-                try:
+                for i, vol in enumerate(data['volumes']):
+                    logger.debug(vol)
+                    title = vol['title'] if 'title' in vol and vol['title'] else ''
                     title = re.sub(r'[^\u0000-\u00FF]', '', title)
                     title = re.sub(r'\(\)', '', title).strip()
-                except:
-                    print("An exception occurred") 
-                # end try
-                self.volumes.append({
-                    'id': i + 1,
-                    'title': title,
-                    'download_id': vol['id'],
-                    'volume': int(vol['number']) if 'number' in vol else (i + 1),
-                })
-            # end for
-            break
+                    self.volumes.append({
+                        'id': i + 1,
+                        'title': title,
+                        'download_id': vol['id'],
+                        'volume': int(vol['number']) if 'number' in vol else (i + 1),
+                    })
+                # end for
+            except Exception as err:
+                logger.info('Failed parsing one possible batch')
+                logger.debug(err)
+            # end try
         # end for
+
+        if len(self.volumes) == 0:
+            raise Exception('Failed parsing volume list')
+        # end if
     # end def
 
     def download_chapter_list(self):

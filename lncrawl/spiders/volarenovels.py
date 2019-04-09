@@ -15,60 +15,51 @@ class VolareNovelsCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one(
-            'header.entry-header h1.entry-title').text
+            '#content-container h3.title').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select('div.entry-content p')[1].text.strip()
+        try:
+            self.novel_author = soup.select('#content-container .p-tb-10-rl-30 p')[1].text.strip()
+        except:
+            pass  # not so important to raise errors
+        # end try
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.entry-content img')['src'])
+        try:
+            self.novel_cover = self.absolute_url(
+                soup.select_one('#content-container .md-d-table img')['src'])
+        except:
+            pass  # not so important to raise errors
+        # end try
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
         chapter_urls = set([])
-        for span in soup.select('.entry-content .collapseomatic'):
-            vol_title = span.text.strip()
+        for div in soup.select('#TableOfContents #accordion .panel'):
             vol_id = len(self.volumes) + 1
+            vol_title = div.select_one('h4.panel-title .title a').text.strip()
+
+            try:
+                vol_id = int(div.select('h4.panel-title span')[0].text.strip())
+            except:
+                pass
+            # end try
+
             self.volumes.append({
                 'id': vol_id,
                 'title': vol_title,
             })
-            content_id = '#target-%s a' % span['id']
-            for a in soup.select(content_id):
-                href = self.absolute_url(a['href'])
+            for a in div.select('.list-chapters li a'):
+                chap_id = len(self.chapters) + 1
                 self.chapters.append({
-                    'id': len(self.chapters) + 1,
+                    'id': chap_id,
                     'volume': vol_id,
                     'title': a.text.strip(),
-                    'url': href,
+                    'url': self.absolute_url(a['href']),
                 })
                 chapter_urls.add(a['href'])
             # end for
         # end for
-
-        # Add other chapter entries if available
-        has_others = False
-        vol_id = len(self.volumes) + 1
-        for a in soup.select('.entry-content p a'):
-            href = self.absolute_url(a['href'])
-            if href in chapter_urls or not href.startswith(self.novel_url):
-                continue
-            # end if
-            self.chapters.append({
-                'id': len(self.chapters) + 1,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url': href,
-            })
-            has_others = True
-        # end for
-        if has_others:
-            self.volumes.append({
-                'id': vol_id,
-                'title': '',
-            })
-        # end if
 
         logger.debug(self.volumes)
         logger.debug(self.chapters)
@@ -79,19 +70,8 @@ class VolareNovelsCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info('Visiting: %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        embedded_content = soup.select_one(
-            '.entry-content blockquote.wp-embedded-content a')
-        if embedded_content:
-            embed_url = embedded_content['href']
-            logger.info('Visiting more: %s', embed_url)
-            soup = self.get_soup(embed_url)
-        # end if
-
-        content = soup.select_one('.entry-content')
-        self.clean_contents(content)
-        body = content.select('p')
-        body = [str(p) for p in body if p.text.strip()]
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        content = soup.select_one('.panel .panel-body .fr-view')
+        # self.clean_contents(content)
+        return str(content)
     # end def
 # end class
