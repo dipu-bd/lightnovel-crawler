@@ -35,19 +35,13 @@ class ComrademaoCrawler(Crawler):
         #logger.info('Chapter list pages: %d' % page_count)
 
         the_url = soup.find("link",{"rel":"shortlink"})['href']
-        
         p_id = urllib.parse.parse_qs(urllib.parse.urlparse(the_url).query)['p'][0]
-
         js = self.scrapper.post("https://comrademao.com/wp-admin/admin-ajax.php?action=movie_datatables&p2m=%s" % p_id)
-
         data = js.json()
-
+        
         chapter_count = data['recordsTotal']
-
         url = "https://comrademao.com/wp-admin/admin-ajax.php?action=movie_datatables&p2m=%s&length=%s" % (p_id,chapter_count) 
-
         js = self.scrapper.post(url)
-
         data = js.json()
 
         logger.info('Getting chapters...')
