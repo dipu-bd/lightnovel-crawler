@@ -22,7 +22,7 @@ class ReadNovelFullCrawler(Crawler):
         for result in soup.select('div.col-novel-main div.list.list-novel div.row')[:5]:
             url = self.absolute_url(result.select_one('h3.novel-title a')['href'])
             title = result.select_one('h3.novel-title a')['title']
-            last_chapter = result.select_one('span.chr-text')
+            last_chapter = result.select_one('span.chr-text').text.strip()
             results.append({
                 'url': url,
                 'title': title,
@@ -94,9 +94,9 @@ class ReadNovelFullCrawler(Crawler):
 
         logger.debug(chapter['title'])
 
-        contents = soup.select_one('div.cha-content .cha-words')
+        contents = soup.find('hr',{'class':'chr-end'}).findNextSiblings('div')[0]
         
-        for div in contents.findAll('div',{'class':'ads-holder'}):
+        for div in contents.findAll('div',{'class':'text-center'}):
             div.decompose()
 
         return contents
