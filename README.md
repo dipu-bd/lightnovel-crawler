@@ -230,9 +230,11 @@ The list of currently available sources and the future plans are given below:
 - [x] https://www.noveluniverse.com
 - [x] https://www.novelv.com
 - [x] https://www.readlightnovel.org
+- [x] https://www.readnovelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.romanticlovebooks.com
 - [x] https://www.royalroad.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
+- [x] https://www.tapread.com
 - [x] https://www.webnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
