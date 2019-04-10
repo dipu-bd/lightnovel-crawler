@@ -25,11 +25,11 @@ from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 
 class TestBot:
-    error_list = set([])
+    error_list = []
 
     def start(self):
         try:
-            self.error_list = set([])
+            self.error_list = []
             randomized = sorted(crawler_list.keys(), key=lambda x: random())
             for index, link in enumerate(randomized):
                 print('=' * 80)
@@ -42,6 +42,7 @@ class TestBot:
                 # end if
 
                 for entry in self.test_user_inputs[link]:
+                    errors = []
                     for i in range(2):  # try before failing
                         try:
                             print('-' * 5, 'Input:', entry, '-' * 5)
@@ -49,16 +50,19 @@ class TestBot:
                             print()
                             break
                         except Exception as err:
-                            traceback.print_exc()
-                            self.error_list.add((link, err))
+                            errors.append(err)
                             time.sleep(6 - 3 * i)
                         # end try
                     # end for
+                    if len(errors):
+                        print(errors[-1])
+                        print(traceback.print_tb(errors[-1].__traceback__))
+                        self.error_list += [(link, x) for x in errors]
                 # end for
                 print('\n')
             # end for
         except Exception as err:
-            self.error_list.add((None, err))
+            self.error_list.append(('', err))
         finally:
             if len(self.error_list):
                 self.show_errors()
