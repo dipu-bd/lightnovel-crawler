@@ -45,7 +45,7 @@ class ComrademaoCrawler(Crawler):
             a = BeautifulSoup(chapter[1], 'lxml').find('a')
 
             chap_id = len(self.chapters) + 1
-            vol_id = chap_id // 100 + 1
+            vol_id = (chap_id - 1) // 100 + 1
 
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id, 'title': ''})

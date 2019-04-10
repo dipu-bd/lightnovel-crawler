@@ -87,7 +87,7 @@ class WorldnovelonlineCrawler(Crawler):
         chapters = soup.select('div.lightnovel-episode ul li a')
 
         temp_chapters = []
-
+        descending = False
         for a in chapters:
             if 'book' in a.text.strip().lower():
                 chap_id = len(temp_chapters) + 1
@@ -110,42 +110,27 @@ class WorldnovelonlineCrawler(Crawler):
 
         if descending:
             temp_chapters.reverse()
-            for a in temp_chapters:
-                chap_id = len(self.chapters) + 1
-                if len(self.chapters) % 100 == 0:
-                    vol_id = chap_id//100 + 1
-                    vol_title = 'Volume ' + str(vol_id)
-                    self.volumes.append({
-                        'id': vol_id,
-                        'title': vol_title,
-                    })
-               # end if
-                self.chapters.append({
-                    'id': chap_id,
-                    'volume': vol_id,
-                    'url':  self.absolute_url(a['url']),
-                    'title': a['title'],
-                })
-            # end for
         else:
-            for a in sorted(temp_chapters, key=itemgetter('id')):
-                chap_id = a['id']
-                if len(self.chapters) % 100 == 0:
-                    vol_id = chap_id//100 + 1
-                    vol_title = 'Volume ' + str(vol_id)
-                    self.volumes.append({
-                        'id': vol_id,
-                        'title': vol_title,
-                    })
-                # end if
-                self.chapters.append({
-                    'id': a['id'],
-                    'volume': vol_id,
-                    'url':  a['url'],
-                    'title': a['title'],
-                })
-            # end for
+            temp_chapters.sort(key=itemgetter('id'))
         # end if
+
+        for a in temp_chapters:
+            chap_id = len(self.chapters) + 1
+            if len(self.chapters) % 100 == 0:
+                vol_id = (chap_id - 1) // 100 + 1
+                vol_title = 'Volume ' + str(vol_id)
+                self.volumes.append({
+                    'id': vol_id,
+                    'title': vol_title,
+                })
+            # end if
+            self.chapters.append({
+                'id': chap_id,
+                'volume': vol_id,
+                'url':  self.absolute_url(a['url']),
+                'title': a['title'],
+            })
+        # end for
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
