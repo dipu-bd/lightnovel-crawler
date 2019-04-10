@@ -23,9 +23,11 @@ from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
 from .novelv import NovelvCrawler
 from .readln import ReadLightNovelCrawler
+from .readnovelfull import ReadNovelFullCrawler
 from .romanticlb import RomanticLBCrawler
 from .royalroad import RoyalRoadCrawler
 from .scribblehub import ScribbleHubCrawler
+from .tapread import TapreadCrawler
 from .volarenovels import VolareNovelsCrawler
 from .webnonline import WebnovelOnlineCrawler
 from .webnovel import WebnovelCrawler
@@ -61,7 +63,6 @@ crawler_list = {
     'https://mtled-novels.com/': MtledNovelsCrawler,
     'https://novelonlinefree.info/': NovelOnlineFreeCrawler,
     'https://novelplanet.com/': NovelPlanetCrawler,
-    # 'https://volarenovels.com/': VolareNovelsCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
@@ -70,9 +71,11 @@ crawler_list = {
     'https://www.noveluniverse.com/': NovelUniverseCrawler,
     'https://www.novelv.com/': NovelvCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
+    'https://readnovelfull.com/' : ReadNovelFullCrawler,
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://www.scribblehub.com/': ScribbleHubCrawler,
+    'https://www.tapread.com/' : TapreadCrawler,
     'https://www.volarenovels.com/': VolareNovelsCrawler,
     'https://www.webnovel.com/': WebnovelCrawler,
     'https://www.worldnovel.online/': WorldnovelonlineCrawler,
