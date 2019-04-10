@@ -94,16 +94,18 @@ class WorldnovelonlineCrawler(Crawler):
                 descending = True
             else:
                 try:
-                    chap_id = int(re.findall('\d+', a.text.strip().lower().split("chapter",1)[1])[0]) 
-                    print('success trying')
+                    chap_id = int(re.findall(
+                        r'\d+', a.text.lower().split('chapter', 1)[1])[0])
                 except:
                     chap_id = len(temp_chapters) + 1
                     descending = True
                 # end try
+            # end if
             temp_chapters.append({
-                'id' : chap_id,
+                'id': chap_id,
                 'url': a['href'],
-                'title' : a.text.strip()})
+                'title': a.text.strip(),
+            })
         # end for
 
         if descending:
@@ -125,7 +127,7 @@ class WorldnovelonlineCrawler(Crawler):
                     'title': a['title'],
                 })
             # end for
-        else :
+        else:
             for a in sorted(temp_chapters, key=itemgetter('id')):
                 chap_id = a['id']
                 if len(self.chapters) % 100 == 0:
@@ -142,8 +144,8 @@ class WorldnovelonlineCrawler(Crawler):
                     'url':  a['url'],
                     'title': a['title'],
                 })
-            #end for
-        #end if
+            # end for
+        # end if
 
         logger.debug(self.chapters)
         logger.debug('%d chapters found', len(self.chapters))
@@ -156,17 +158,18 @@ class WorldnovelonlineCrawler(Crawler):
 
         logger.debug(soup.title.string)
         #content = soup.find('div',{'data-element_type':'theme-post-content.default'}).soup.select('div.elementor-widget-container')
-        contents = soup.find('div',{'data-element_type':'theme-post-content.default'})
-        if contents.findAll('div', {"class": 'code-block'}):
-            for ads in contents.findAll('div', {"class": 'code-block'}):
+        contents = soup.find(
+            'div', {'data-element_type': 'theme-post-content.default'})
+        if contents.findAll('div', {'class': 'code-block'}):
+            for ads in contents.findAll('div', {'class': 'code-block'}):
                 ads.decompose()
-        if contents.findAll('div', {"align": 'left'}):     
-            for ads in contents.findAll('div', {"align": 'left'}):
+        if contents.findAll('div', {'align': 'left'}):
+            for ads in contents.findAll('div', {'align': 'left'}):
                 ads.decompose()
-        if contents.findAll('div', {"align": 'center'}):
-            for ads in contents.findAll('div', {"align": 'center'}):
+        if contents.findAll('div', {'align': 'center'}):
+            for ads in contents.findAll('div', {'align': 'center'}):
                 ads.decompose()
-        #if contents.h1:
+        # if contents.h1:
         #    contents.h1.decompose()
         # end if
         return contents.prettify()
