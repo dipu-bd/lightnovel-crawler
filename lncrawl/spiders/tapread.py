@@ -12,6 +12,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('TAPREAD')
 
+
 class TapreadCrawler(Crawler):
 
     def read_novel_info(self):
@@ -22,15 +23,18 @@ class TapreadCrawler(Crawler):
         self.novel_title = soup.select_one('p.book-name').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = 'https:%s' % soup.select_one('img.book-face-img')['src']
+        self.novel_cover = 'https:%s' % soup.select_one(
+            'img.book-face-img')['src']
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select_one('span.author-name').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        book_id = urllib.parse.parse_qs(urllib.parse.urlparse(self.novel_url).query)['bookId'][0]
+        book_id = urllib.parse.parse_qs(
+            urllib.parse.urlparse(self.novel_url).query)['bookId'][0]
 
-        js = self.scrapper.post("https://www.tapread.com/book/contents?bookId=%s" % book_id)
+        js = self.scrapper.post(
+            "https://www.tapread.com/book/contents?bookId=%s" % book_id)
 
         data = js.json()
 
@@ -49,7 +53,7 @@ class TapreadCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url': 'https://www.tapread.com/book/chapter?bookId=%s&chapterId=%s' % (x['bookId'],x['chapterId']),
+                'url': 'https://www.tapread.com/book/chapter?bookId=%s&chapterId=%s' % (x['bookId'], x['chapterId']),
                 'title': x['chapterName'],
             })
         # end for
@@ -68,7 +72,7 @@ class TapreadCrawler(Crawler):
 
         logger.debug(data['result']['chapterName'])
 
-        contents = BeautifulSoup(data['result']['content'],'lxml')
+        contents = BeautifulSoup(data['result']['content'], 'lxml')
 
         return contents.prettify()
     # end def

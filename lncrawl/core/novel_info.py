@@ -24,7 +24,7 @@ def format_volumes(crawler):
 
 def format_chapters(crawler):
     for item in crawler.chapters:
-        title = 'Chapter #%d' % item['id']
+        title = '#%d' % item['id']
         if not ('title' in item and item['title']):
             item['title'] = title
         # end if
