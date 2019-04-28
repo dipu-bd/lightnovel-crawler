@@ -1,10 +1,10 @@
 language: python
 python:
-  - "3.5"
-  - "3.6"
+  - '3.5'
+  - '3.6'
 
 # command to install dependencies!
-install: "pip install -r requirements.txt && pip install -r requirements_bot.txt"
+install: 'pip install -r requirements.txt'
 
 # command to run tests!
 script: python __main__.py --bot test

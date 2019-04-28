@@ -91,7 +91,7 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 - Open command prompt inside of the project folder and install requirements:
 
 ```bash
-$ pip install --user -r requirements.txt
+$ pip3 install --user -r requirements.txt
 ```
 
 - Run the program:
@@ -160,8 +160,8 @@ There are two chatbots available at this moment: Telegram and Discord. To run yo
 # Clone this repository
 $ git clone https://github.com/dipu-bd/lightnovel-crawler
 # Install requirements
-$ pip install --user -r requirements.txt
-$ pip install --user -r bot_requirements.txt
+$ pip3 install --user -r requirements.txt
+$ pip3 install --user -r bot_requirements.txt
 # Edit the environment variables
 # You should give your API keys and log info here
 # Also specify which bot server you want to run
