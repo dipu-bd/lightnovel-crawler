@@ -37,7 +37,7 @@ class NovelPlanetCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find('a', {'class': 'title'}).text
+        self.novel_title = soup.select_one('section a.title').text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
