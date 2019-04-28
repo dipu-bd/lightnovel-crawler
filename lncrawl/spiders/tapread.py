@@ -20,15 +20,26 @@ class TapreadCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('p.book-name').text.strip()
+        self.novel_title = soup.select_one(
+            '.book-info .book-name').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = 'https:%s' % soup.select_one(
-            'img.book-face-img')['src']
+            '.book-container .book-img img')['src']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one('span.author-name').text.strip()
-        logger.info('Novel author: %s', self.novel_author)
+        try:
+            self.novel_author = []
+            for person in soup.select('.book-info .person-info div'):
+                label = person.select_one('span.label').text.strip(' :')
+                name = person.select_one('span.name').text.strip()
+                self.novel_author.append('%s: %s' % (label, name))
+            # end for
+            self.novel_author = ', '.join(self.novel_author)
+        except:
+            pass
+        # end try
+        logger.info(self.novel_author)
 
         book_id = urllib.parse.parse_qs(
             urllib.parse.urlparse(self.novel_url).query)['bookId'][0]
