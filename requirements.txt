@@ -1,6 +1,6 @@
 beautifulsoup4==4.6.3
 EbookLib==0.17
-requests==2.20.1
+requests==2.21.0
 PyInquirer==1.0.3
 progress==1.4
 Js2Py==0.59
