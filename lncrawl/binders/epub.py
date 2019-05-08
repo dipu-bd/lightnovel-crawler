@@ -103,12 +103,15 @@ def bind_epub_book(app, chapters, volume=''):
     book.add_item(intro_page)
 
     # Create book spine
-    book.spine = [intro_page, 'nav']
-    # if app.book_cover:
-    #     book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
-    #     book.spine = ['cover', intro_page, 'nav']
-    # else:
-    #     book.spine = [intro_page, 'nav']
+    # book.spine = [intro_page, 'nav']
+    if app.book_cover:
+        try :
+            book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
+            book.spine = ['cover', intro_page, 'nav']
+        except :
+            print("failed add cover")
+    else:
+        book.spine = [intro_page, 'nav']
     # end if
 
     # Create chapters
