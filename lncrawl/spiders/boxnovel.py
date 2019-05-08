@@ -90,6 +90,9 @@ class BoxNovelCrawler(Crawler):
         if contents.h3:
             contents.h3.decompose()
 
+        for codeblock in contents.findAll('div',{'class':'code-block'}):
+            codeblock.decompose()
+
         return contents.prettify()
     # end def
 # end class
