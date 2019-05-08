@@ -3,69 +3,82 @@
 import json
 import logging
 import re
+from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('4SCANLATION')
+novel_page = 'https://4scanlation.xyz/%s'
 
 
 class FourScanlationCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
+        path_fragments = urlparse(self.novel_url).path.split('/')
+        novel_hash = path_fragments[1]
+        if novel_hash == 'category':
+            novel_hash = path_fragments[2]
+        # end if
+        self.novel_url = novel_page % novel_hash
+
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.entry-title').text
+        self.novel_title = soup.select_one('header h1').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = "Translated by 4scanlation"
+        self.novel_author = "Source: 4scanlation"
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.page-header-image.grid-container.grid-parent img')['src'])
+        possible_image = soup.select_one('#primary article img.wp-post-image')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
-        chapters = soup.select('p a')[1:-2]
-
+        chapters = soup.select('article.page p a')
         for a in chapters:
-            if a.text.strip().lower().startswith('prolog') or a.text.strip().lower().startswith('chapter'):
-                chap_id = len(self.chapters) + 1
-                if len(self.chapters) % 100 == 0:
-                    vol_id = chap_id//100 + 1
-                    vol_title = 'Volume ' + str(vol_id)
-                    self.volumes.append({
-                        'id': vol_id,
-                        'title': vol_title,
-                    })
-                # end if
-                self.chapters.append({
-                    'id': chap_id,
-                    'volume': vol_id,
-                    'url':  self.absolute_url(a['href']),
-                    'title': a.text.strip() or ('Chapter %d' % chap_id),
-                })
+            possible_url = a['href'].lower()
+            if not possible_url.startswith(self.novel_url):
+                continue
             # end if
+            chap_id = 1 + len(self.chapters)
+            if len(self.chapters) % 100 == 0:
+                vol_id = 1 + (chap_id - 1) // 100
+                self.volumes.append({'id': vol_id})
+            # end if
+            self.chapters.append({
+                'id': chap_id,
+                'volume': vol_id,
+                'title': a.text.strip(),
+                'url':  self.absolute_url(a['href']),
+            })
         # end for
 
         logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
+        logger.debug(self.volumes)
+
+        logger.debug('%d chapters & %d volumes found',
+                     len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        contents = soup.select_one('div.entry-content')
+        contents = soup.select_one('article div.entry-content')
 
         for d in contents.findAll('div'):
             d.decompose()
         # end for
 
-        chapter['title'] = soup.select_one('h1.entry-title').text
+        try:
+            chapter['title'] = soup.select_one('header h1').text
+            logger.debug(chapter['title'])
+        except:
+            pass
+        # end try
 
-        logger.debug(chapter['title'])
-        
-        return contents.prettify()
+        return str(contents)
     # end def
 # end class
