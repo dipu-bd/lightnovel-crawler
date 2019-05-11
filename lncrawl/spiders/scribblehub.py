@@ -6,6 +6,7 @@ Crawler for [novelonlinefree.info](https://novelonlinefree.info/).
 import json
 import logging
 import re
+from urllib.parse import quote
 from ..utils.crawler import Crawler
 from math import ceil
 
@@ -15,8 +16,9 @@ search_url = 'https://www.scribblehub.com/?s=%s&post_type=fictionposts'
 
 class ScribbleHubCrawler(Crawler):
     def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
+        url = search_url % quote(query.lower())
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
 
         results = []
         for novel in soup.select('div.search_body'):
@@ -24,11 +26,10 @@ class ScribbleHubCrawler(Crawler):
             info = novel.select_one('.search_stats').text.strip()
             results.append({
                 'title': a.text.strip(),
-                'url': a['href'],
+                'url': self.absolute_url(a['href']),
                 'info': info,
             })
         # end for
-
         return results
     # end def
 
