@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from .anythingnovel import AnythingNovelCrawler
+from .bestlightnovel import BestLightNovel
 from .boxnovel import BoxNovelCrawler
 from .chinesefantasy import ChineseFantasyNovels
 from .comrademao import ComrademaoCrawler
 from .creativenovels import CreativeNovelsCrawler
 from .crescentmoon import CrescentMoonCrawler
+from .fourscanlation import FourScanlationCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
@@ -14,9 +16,9 @@ from .lnmtl import LNMTLCrawler
 from .machinetrans import MachineNovelTrans
 from .meionovel import MeionovelCrawler
 from .mtlednovels import MtledNovelsCrawler
+from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
-from .bestlightnovel import BestLightNovel
 from .novelplanet import NovelPlanetCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
@@ -34,9 +36,8 @@ from .worldnovelonline import WorldnovelonlineCrawler
 from .wuxiaco import WuxiaCoCrawler
 from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
-from .zenithnovels import ZenithNovelsCrawler
 from .yukinovel import YukiNovelCrawler
-from .fourscanlation import FourScanlationCrawler
+from .zenithnovels import ZenithNovelsCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -47,6 +48,7 @@ crawler_list = {
     'http://zenithnovels.com/': ZenithNovelsCrawler,
     'https://4scanlation.xyz/': FourScanlationCrawler,
     'https://anythingnovel.com/': AnythingNovelCrawler,
+    'https://bestlightnovel.com/': BestLightNovel,
     'https://boxnovel.com/': BoxNovelCrawler,
     'https://comrademao.com/': ComrademaoCrawler,
     'https://creativenovels.com/': CreativeNovelsCrawler,
@@ -59,7 +61,7 @@ crawler_list = {
     'https://m.wuxiaworld.co/': WuxiaCoCrawler,
     'https://meionovel.com/': MeionovelCrawler,
     'https://mtled-novels.com/': MtledNovelsCrawler,
-    'https://bestlightnovel.com/': BestLightNovel,
+    'https://myoniyonitranslations.com/': MyOniyOniTranslation,
     'https://novelplanet.com/': NovelPlanetCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,

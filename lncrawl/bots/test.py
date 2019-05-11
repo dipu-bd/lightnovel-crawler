@@ -311,5 +311,10 @@ class TestBot:
             'https://readnovelfull.com/lord-of-all-realms.html',
             'cultivation'
         ],
+        'https://myoniyonitranslations.com/': [
+            'https://myoniyonitranslations.com/top-management/',
+            'https://myoniyonitranslations.com/lm-chapter-277-279/',
+            'https://myoniyonitranslations.com/category/kill-the-hero/'
+        ]
     }
 # end class
