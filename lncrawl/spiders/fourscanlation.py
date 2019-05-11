@@ -22,7 +22,16 @@ class FourScanlationCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('header h1').text
+        possible_titles = [
+            soup.select_one('header h1'),
+            soup.select_one('.header-post-title-class'),
+        ]
+        for pos in possible_titles:
+            if pos:
+                self.novel_title = pos.text
+                break
+            # end if
+        # end for
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = "Source: 4scanlation"
