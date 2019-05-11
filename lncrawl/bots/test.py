@@ -208,9 +208,6 @@ class TestBot:
             'https://litnet.com/en/book/candy-lips-1-b106232',
             'candy lips',
         ],
-        # 'https://lnindo.org/': [
-        #     'https://lnindo.org/novel/true-martial-world/',
-        # ],
         'https://lnmtl.com/': [
             'https://lnmtl.com/novel/the-strongest-dan-god',
         ],
@@ -234,8 +231,8 @@ class TestBot:
             'https://mtled-novels.com/novels/ancient-demon-dragon-emperor',
             'dragon'
         ],
-        'https://novelonlinefree.info/': [
-            'https://novelonlinefree.info/novel/martial_world',
+        'https://bestlightnovel.com/': [
+            'https://bestlightnovel.com/novel_888103800',
             'martial'
         ],
         'https://novelplanet.com/': [

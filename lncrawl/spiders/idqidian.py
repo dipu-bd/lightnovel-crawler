@@ -8,7 +8,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LNINDO')
+logger = logging.getLogger('IDQIDIAN')
 
 
 class IdqidianCrawler(Crawler):

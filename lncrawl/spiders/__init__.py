@@ -11,13 +11,12 @@ from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
-from .lnindo import LnindoCrawler
 from .machinetrans import MachineNovelTrans
 from .meionovel import MeionovelCrawler
 from .mtlednovels import MtledNovelsCrawler
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
-from .novelonlinefree import NovelOnlineFreeCrawler
+from .bestlightnovel import BestLightNovel
 from .novelplanet import NovelPlanetCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
@@ -60,7 +59,7 @@ crawler_list = {
     'https://m.wuxiaworld.co/': WuxiaCoCrawler,
     'https://meionovel.com/': MeionovelCrawler,
     'https://mtled-novels.com/': MtledNovelsCrawler,
-    'https://novelonlinefree.info/': NovelOnlineFreeCrawler,
+    'https://bestlightnovel.com/': BestLightNovel,
     'https://novelplanet.com/': NovelPlanetCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
@@ -81,6 +80,5 @@ crawler_list = {
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://yukinovel.me/': YukiNovelCrawler,
-    # 'https://lnindo.org/' : LnindoCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
