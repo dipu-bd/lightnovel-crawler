@@ -60,19 +60,9 @@ class ScribbleHubCrawler(Crawler):
         for i in range(page_count):
             chapters.extend(self.download_chapter_list(i+1))
         # end for
-
-        chapters.reverse()
-
-        for x in chapters:
+        for x in reversed(chapters):
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            vol_id = len(self.chapters)//100 + 1
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -80,10 +70,14 @@ class ScribbleHubCrawler(Crawler):
                 'title': x.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
         logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
+
+        self.volumes = [
+            {'id': x + 1}
+            for x in range(len(self.chapters) // 100 + 1)
+        ]
         logger.debug(self.volumes)
+
         logger.info('%d volumes and %d chapters found' %
                     (len(self.volumes), len(self.chapters)))
     # end def
