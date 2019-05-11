@@ -42,7 +42,9 @@ from .zenithnovels import ZenithNovelsCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
-    'http://fullnovel.live/': FullnovelLiveCrawler,
+    # 'http://fullnovel.live/': FullnovelLiveCrawler,
+    # 'https://www.noveluniverse.com/': NovelUniverseCrawler,
+    # 'https://www.novelv.com/': NovelvCrawler,
     'http://gravitytales.com/': GravityTalesCrawler,
     'http://novelfull.com/': NovelFullCrawler,
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
@@ -71,8 +73,6 @@ crawler_list = {
     'https://www.idqidian.us/': IdqidianCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
-    'https://www.noveluniverse.com/': NovelUniverseCrawler,
-    'https://www.novelv.com/': NovelvCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
