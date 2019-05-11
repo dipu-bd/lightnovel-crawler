@@ -14,11 +14,11 @@ Download lightnovels from various online sources and generate output in differen
 ## Table of contents
 
 - [Installation](#a-installation)
-  - [EXE (for Windows)](#a1-exe--for-windows)
-  - [Chatbots](#a2-chatbots)
-    - [Telegram](#a21-telegram)
-    - [Discord](#a22-discord)
-  - [Python package (for Windows, Mac, and Linux)](#a3-python-package-for-windows-mac-and-linux)
+  - [EXE (for Windows)](#a1-exe-windows)
+  - [PIP (for Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+  - [Chatbots](#a3-chatbots)
+    - [Telegram](#a31-telegram)
+    - [Discord](#a32-discord)
   - [Run from source](#a4-run-from-source)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
@@ -35,27 +35,15 @@ Download lightnovels from various online sources and generate output in differen
 
 ## (A) Installation
 
-### A1. EXE (for Windows)
+### A1. EXE (Windows)
 
-📦 [lightnovel-crawler v2.9.4 for windows ~ 16MB](http://bit.ly/2I1XzeN)
+📦 [lightnovel-crawler v2.9.7 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-### A2. Chatbots
+_PDF and DOCX generation is disabled for EXE build. It works on (pip)[#a3-pip-for-windows-mac-and-linux] though._
 
-#### A2.1 Telegram
-
-Visit this link to get started with the telegram bot:
-https://t.me/epub_smelter_bot
-
-#### A2.2 Discord
-
-Visit this link to install discord bot to your server:
-https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
-
-Send `!help` to open the bot help message.
-
-### A3. Python package (for Windows, Mac, and Linux)
+### A2. PIP (Windows, Mac, and Linux)
 
 📦 A python package named `lightnovel-crawler` is available in [pypi](https://pypi.org/project/lightnovel-crawler).
 
@@ -69,6 +57,8 @@ $ pip install --user -U lightnovel-crawler
 
 Remember, in some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
 
+**FOR WINDOWS USER** Download and install the GTK3-Runtime from https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
+
 Next, open your terminal and enter:
 
 ```bash
@@ -79,6 +69,20 @@ $ lncrawl
 ```
 
 > To view extra logs, use: `lncrawl -lll`
+
+### A3. Chatbots
+
+#### A3.1 Telegram
+
+Visit this link to get started with the telegram bot:
+https://t.me/epub_smelter_bot
+
+#### A3.2 Discord
+
+Visit this link to install discord bot to your server:
+https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
+
+Send `!help` to open the bot help message.
 
 ### A4. Run from source
 
