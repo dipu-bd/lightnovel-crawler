@@ -3,26 +3,26 @@
 """
 Source: https://raw.githubusercontent.com/Anorov/cloudflare-scrape/master/cfscrape/__init__.py
 """
-import copy
 import json
 import logging
-import os
 import random
 import re
 import ssl
 import subprocess
+import copy
 import time
+import os
 from base64 import b64encode
 from collections import OrderedDict
 
+from requests.sessions import Session
 from requests.compat import urlparse, urlunparse
 from requests.exceptions import RequestException
-from requests.sessions import Session
 
-from ..assets.user_agents import user_agents
 
 __version__ = "2.0.3"
 
+from ..assets.user_agents import user_agents
 
 DEFAULT_USER_AGENT = random.choice(user_agents)
 
@@ -99,8 +99,7 @@ class CloudflareScraper(Session):
         )
 
     def request(self, method, url, *args, **kwargs):
-        resp = super(CloudflareScraper, self).request(
-            method, url, *args, **kwargs)
+        resp = super(CloudflareScraper, self).request(method, url, *args, **kwargs)
 
         # Check if Cloudflare captcha challenge is presented
         if self.is_cloudflare_captcha_challenge(resp):
@@ -128,8 +127,7 @@ class CloudflareScraper(Session):
         body = resp.text
         parsed_url = urlparse(resp.url)
         domain = parsed_url.netloc
-        submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (
-            parsed_url.scheme, domain)
+        submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (parsed_url.scheme, domain)
 
         cloudflare_kwargs = copy.deepcopy(original_kwargs)
 
@@ -138,8 +136,7 @@ class CloudflareScraper(Session):
 
         try:
             params = cloudflare_kwargs["params"] = OrderedDict(
-                re.findall(
-                    r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
+                re.findall(r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
             )
 
             for k in ("jschl_vc", "pass"):
@@ -197,8 +194,7 @@ class CloudflareScraper(Session):
 
             # The challenge requires `document.getElementById` to get this content.
             # Future proofing would require escaping newlines and double quotes
-            innerHTML = re.search(
-                r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
+            innerHTML = re.search(r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
             innerHTML = innerHTML.group(1) if innerHTML else ""
 
             # Prefix the challenge with a fake document object.
@@ -266,8 +262,7 @@ class CloudflareScraper(Session):
                 )
             raise
         except Exception:
-            logging.error(
-                "Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
+            logging.error("Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
             raise
 
         try:
@@ -316,8 +311,7 @@ class CloudflareScraper(Session):
             resp = scraper.get(url, **kwargs)
             resp.raise_for_status()
         except Exception:
-            logging.error(
-                "'%s' returned an error. Could not collect tokens." % url)
+            logging.error("'%s' returned an error. Could not collect tokens." % url)
             raise
 
         domain = urlparse(resp.url).netloc
@@ -347,8 +341,7 @@ class CloudflareScraper(Session):
         """
         Convenience function for building a Cookie HTTP header value.
         """
-        tokens, user_agent = cls.get_tokens(
-            url, user_agent=user_agent, **kwargs)
+        tokens, user_agent = cls.get_tokens(url, user_agent=user_agent, **kwargs)
         return "; ".join("=".join(pair) for pair in tokens.items()), user_agent
 
 

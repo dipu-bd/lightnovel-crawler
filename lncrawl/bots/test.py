@@ -3,24 +3,25 @@
 """
 The purpose of this bot is to test the application and crawlers
 """
-import re
-import os
-import sys
-import shutil
 import logging
-import time
+import os
+import re
+import shutil
+import sys
 import textwrap
+import time
 import traceback
 from random import random
 
 from PyInquirer import prompt
 
+from ..assets.icons import Icons
+from ..binders import available_formats
 from ..core import display
 from ..core.app import App
 from ..core.arguments import get_args
-from ..assets.icons import Icons
 from ..spiders import crawler_list
-from ..binders import available_formats
+from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 
@@ -50,7 +51,11 @@ class TestBot:
                             print()
                             errors = []
                             break
+                        except CloudflareCaptchaError:
+                            traceback.print_exc()
+                            break
                         except Exception as err:
+                            traceback.print_exc()
                             traces = traceback.format_tb(err.__traceback__)
                             errors.append('> Input: %s\n%s\n%s' %
                                           (entry, err, ''.join(traces)))
@@ -58,7 +63,6 @@ class TestBot:
                         # end try
                     # end for
                     if len(errors):
-                        print(errors[-1])
                         if link not in self.allerrors:
                             self.allerrors[link] = []
                         # end if
@@ -253,10 +257,6 @@ class TestBot:
         'https://webnovel.online/': [
             'https://webnovel.online/full-marks-hidden-marriage-pick-up-a-son-get-a-free-husband',
         ],
-        'https://wuxiaworld.online/': [
-            'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
-            'cultivation',
-        ],
         'https://www.idqidian.us/': [
             'https://www.idqidian.us/novel/peerless-martial-god/'
         ],
@@ -321,6 +321,10 @@ class TestBot:
         'https://novel.babelchain.org/': [
             'https://novel.babelchain.org/books/my-fiancee-is-a-stunning-ceo/',
             'martial god AsurA'
+        ],
+        'https://wuxiaworld.online/': [
+            'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
+            'cultivation',
         ],
         # 'https://www.novelv.com/': [
         #     'https://www.novelv.com/0/349/'
