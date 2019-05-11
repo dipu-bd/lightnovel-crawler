@@ -37,7 +37,7 @@ Download lightnovels from various online sources and generate output in differen
 
 ### A1. EXE (Windows)
 
-📦 [lightnovel-crawler v2.9.7 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+📦 [lightnovel-crawler v2.9.9 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -116,7 +116,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.9.0
+                           📒 Lightnovel Crawler 🍀2.9.9
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
