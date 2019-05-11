@@ -137,6 +137,13 @@ class TestBot:
 
             app.init_crawler(novel_url)
             print('Init crawler: DONE')
+
+            app.get_novel_info()
+            print('Novel info: DONE')
+            if not app.crawler.novel_title:
+                raise Exception('No novel title')
+                # end if
+            return
         # end if
 
         if not app.crawler:
@@ -169,7 +176,7 @@ class TestBot:
             raise Exception('Empty chapter list')
         # end if
 
-        app.chapters = app.crawler.chapters[:1]
+        app.chapters = app.crawler.chapters[:2]
         app.output_formats = {}
         app.pack_by_volume = False
 
