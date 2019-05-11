@@ -6,9 +6,11 @@ Crawler for [crescentmoon.blog](https://crescentmoon.blog/).
 import json
 import logging
 import re
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('CRESCENTMOON')
+
 
 class CrescentMoonCrawler(Crawler):
 
@@ -27,8 +29,8 @@ class CrescentMoonCrawler(Crawler):
         self.novel_author = soup.select('div.entry-content p')[2].text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        a=soup.select('div.entry-content p')
-        for idx,item in enumerate(a):
+        a = soup.select('div.entry-content p')
+        for idx, item in enumerate(a):
             if "table of contents" in item.text.strip().lower():
                 toc = a[idx+1]
 
@@ -63,17 +65,17 @@ class CrescentMoonCrawler(Crawler):
 
         logger.debug(soup.title.string)
 
-        #if soup.find("h1", {"class": "entry-title"}).text.strip():
+        # if soup.find("h1", {"class": "entry-title"}).text.strip():
         #    chapter['title'] = soup.find("h1", {"class": "entry-title"}).text.strip()
-        #else:
+        # else:
         #    chapter['title'] = chapter['title']
         # end if
 
         #contents = soup.select('div.entry-content p')
         #contents = contents[:-1]
         #body = self.extract_contents(contents)
-        #return '<p>' + '</p><p>'.join(body) + '</p>'
-        #return contents.prettify()
+        # return '<p>' + '</p><p>'.join(body) + '</p>'
+        # return contents.prettify()
         body = []
         contents = soup.select('div.entry-content p')
         contents = contents[:-1]

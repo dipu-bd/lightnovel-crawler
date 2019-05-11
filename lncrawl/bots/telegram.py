@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
-import re
 import os
+import re
 import shutil
 from urllib.parse import urlparse
 
-from telegram import (ReplyKeyboardMarkup, ReplyKeyboardRemove)
-from telegram.ext import (CommandHandler, ConversationHandler, Filters, Handler,
-                          MessageHandler, RegexHandler, Updater)
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram.ext import (CommandHandler, ConversationHandler, Filters,
+                          Handler, MessageHandler, RegexHandler, Updater)
 
+from ..binders import available_formats
 from ..core.app import App
 from ..spiders import crawler_list
-from ..binders import available_formats
 from ..utils.uploader import upload
 
 logger = logging.getLogger('TELEGRAM_BOT')
@@ -396,7 +396,7 @@ class TelegramBot:
                 ], one_time_keyboard=True),
             )
             return 'handle_delete_cache'
-        else :
+        else:
             os.makedirs(app.output_path, exist_ok=True)
             # Get chapter range
             update.message.reply_text(
@@ -637,13 +637,13 @@ class TelegramBot:
                 )
             update.message.reply_document(
                 open(archive, 'rb'),
-                timeout=24 * 3600, # 24 hours
+                timeout=24 * 3600,  # 24 hours
             )
             if os.path.exists(archive):
                 os.remove(archive)
             update.message.reply_text(
                 'This file will be deleted on server')
-            
+
         # end for
 
         self.destroy_app(bot, update, user_data)

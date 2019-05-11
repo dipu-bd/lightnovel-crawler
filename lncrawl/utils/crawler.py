@@ -6,7 +6,7 @@ Crawler application
 import logging
 import os
 import re
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from concurrent import futures
 from urllib.parse import urlparse
 

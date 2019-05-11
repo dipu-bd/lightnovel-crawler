@@ -3,8 +3,10 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+
 from bs4 import Comment
+
+from ..utils.crawler import Crawler
 
 logger = logging.getLogger('YUKI_NOVEL')
 
@@ -75,7 +77,7 @@ class YukiNovelCrawler(Crawler):
         # end if
 
         logger.debug(chapter['title'])
-        
+
         return contents.prettify()
     # end def
 # end class
