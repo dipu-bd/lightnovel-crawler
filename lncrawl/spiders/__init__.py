@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from .anythingnovel import AnythingNovelCrawler
+from .babelchain import BabelchainCrawler
 from .bestlightnovel import BestLightNovel
 from .boxnovel import BoxNovelCrawler
 from .chinesefantasy import ChineseFantasyNovels
@@ -62,6 +63,7 @@ crawler_list = {
     'https://meionovel.com/': MeionovelCrawler,
     'https://mtled-novels.com/': MtledNovelsCrawler,
     'https://myoniyonitranslations.com/': MyOniyOniTranslation,
+    'https://novel.babelchain.org/': BabelchainCrawler,
     'https://novelplanet.com/': NovelPlanetCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,

@@ -315,6 +315,10 @@ class TestBot:
             'https://myoniyonitranslations.com/top-management/',
             'https://myoniyonitranslations.com/lm-chapter-277-279/',
             'https://myoniyonitranslations.com/category/kill-the-hero/'
+        ],
+        'https://novel.babelchain.org/': [
+            'https://novel.babelchain.org/books/my-fiancee-is-a-stunning-ceo/',
+            'martial god AsurA'
         ]
     }
 # end class

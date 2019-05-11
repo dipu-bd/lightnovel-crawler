@@ -222,6 +222,7 @@ The list of currently available sources and the future plans are given below:
 - [x] https://meionovel.com
 - [x] https://mtled-novels.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://myoniyonitranslations.com
+- [x] https://novel.babelchain.org ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://novelplanet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
 - [x] https://volarenovels.com
 - [x] https://webnovel.online
