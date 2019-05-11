@@ -37,7 +37,7 @@ class MyOniyOniTranslation(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         possible_authors = []
-        for p in soup.select('#cs-content .x-column.x-1-2 p'):
+        for p in soup.select('.x-container .x-column.x-1-2 p'):
             if re.match(r'author|trans|edit', p.text, re.I):
                 possible_authors.append(p.text.strip())
             # end if
@@ -48,26 +48,41 @@ class MyOniyOniTranslation(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('#cs-content img.x-img')['src'])
+            soup.select_one('.x-container img.x-img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
-        for div in soup.select('#cs-content .x-accordion .x-accordion-group'):
-            a = div.select_one('a.x-accordion-toggle')
-            vol_id = len(self.volumes) + 1
-            self.volumes.append({
-                'id': vol_id,
-                'title': a.text.strip()
-            })
-            for chap in div.select('.x-accordion-body a'):
-                self.chapters.append({
-                    'volume': vol_id,
-                    'id': len(self.chapters) + 1,
-                    'title': chap.text.strip(' []'),
-                    'url':  self.absolute_url(chap['href']),
+        accordian = soup.select('.x-container .x-accordion .x-accordion-group')
+        if accordian:
+            for div in accordian:
+                a = div.select_one('a.x-accordion-toggle')
+                vol_id = len(self.volumes) + 1
+                self.volumes.append({
+                    'id': vol_id,
+                    'title': a.text.strip()
                 })
+                for chap in div.select('.x-accordion-body a'):
+                    self.chapters.append({
+                        'volume': vol_id,
+                        'id': len(self.chapters) + 1,
+                        'title': chap.text.strip(' []'),
+                        'url': self.absolute_url(chap['href']),
+                    })
+                # end for
             # end for
-        # end for
+        else:
+            self.volumes.append({'id': 1})
+            for a in soup.select('.entry-content p a'):
+                if a['href'].startswith(self.novel_url):
+                    self.chapters.append({
+                        'volume': 1,
+                        'id': len(self.chapters) + 1,
+                        'title': a.text.strip(' []'),
+                        'url': self.absolute_url(a['href'])
+                    })
+                # end if
+            # end for
+        # end if
 
         logger.debug(self.chapters)
         logger.debug(self.volumes)
