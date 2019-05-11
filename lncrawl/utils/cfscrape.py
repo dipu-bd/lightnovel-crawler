@@ -3,45 +3,47 @@
 """
 Source: https://raw.githubusercontent.com/Anorov/cloudflare-scrape/master/cfscrape/__init__.py
 """
+import copy
+import json
 import logging
+import os
 import random
 import re
+import ssl
 import subprocess
-import copy
 import time
-
-import js2py
-from requests.sessions import Session
-from requests.compat import urlparse, urlunparse
 from base64 import b64encode
 from collections import OrderedDict
 
-__version__ = "2.0.0"
+from requests.compat import urlparse, urlunparse
+from requests.exceptions import RequestException
+from requests.sessions import Session
 
-DEFAULT_USER_AGENTS = [
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",
-    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Ubuntu Chromium/65.0.3325.181 Chrome/65.0.3325.181 Safari/537.36",
-    "Mozilla/5.0 (Linux; Android 7.0; Moto G (5) Build/NPPS25.137-93-8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.137 Mobile Safari/537.36",
-    "Mozilla/5.0 (iPhone; CPU iPhone OS 7_0_4 like Mac OS X) AppleWebKit/537.51.1 (KHTML, like Gecko) Version/7.0 Mobile/11B554a Safari/9537.53",
-    "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:60.0) Gecko/20100101 Firefox/60.0",
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:59.0) Gecko/20100101 Firefox/59.0",
-    "Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:57.0) Gecko/20100101 Firefox/57.0"
-]
+from ..assets.user_agents import user_agents
 
-DEFAULT_USER_AGENT = random.choice(DEFAULT_USER_AGENTS)
+__version__ = "2.0.3"
 
-DEFAULT_HEADERS = OrderedDict((
-    ("Host", None),
-    ("Connection", "keep-alive"),
-    ("Upgrade-Insecure-Requests", "1"),
-    ("User-Agent", DEFAULT_USER_AGENT),
-    ("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8"),
-    ("Accept-Language", "en-US,en;q=0.9"),
-    ("Accept-Encoding", "gzip, deflate")
-))
+
+DEFAULT_USER_AGENT = random.choice(user_agents)
+
+DEFAULT_HEADERS = OrderedDict(
+    (
+        ("Host", None),
+        ("Connection", "keep-alive"),
+        ("Upgrade-Insecure-Requests", "1"),
+        ("User-Agent", DEFAULT_USER_AGENT),
+        (
+            "Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+        ),
+        ("Accept-Language", "en-US,en;q=0.9"),
+        ("Accept-Encoding", "gzip, deflate"),
+    )
+)
 
 BUG_REPORT = """\
 Cloudflare may have changed their technique, or there may be a bug in the script.
+
 Please read https://github.com/Anorov/cloudflare-scrape#updates, then file a \
 bug report at https://github.com/Anorov/cloudflare-scrape/issues."\
 """
@@ -51,19 +53,28 @@ The challenge answer was not properly accepted by Cloudflare. This can occur if 
 the target website is under heavy load, or if Cloudflare is experiencing issues. You can
 potentially resolve this by increasing the challenge answer delay (default: 8 seconds). \
 For example: cfscrape.create_scraper(delay=15)
+
 If increasing the delay does not help, please open a GitHub issue at \
 https://github.com/Anorov/cloudflare-scrape/issues\
 """
+
+
+class CloudflareError(RequestException):
+    pass
+
+
+class CloudflareCaptchaError(CloudflareError):
+    pass
 
 
 class CloudflareScraper(Session):
     def __init__(self, *args, **kwargs):
         self.delay = kwargs.pop("delay", None)
         # Use headers with a random User-Agent if no custom headers have been set
-        headers = OrderedDict(kwargs.pop('headers', DEFAULT_HEADERS))
+        headers = OrderedDict(kwargs.pop("headers", DEFAULT_HEADERS))
 
         # Set the User-Agent header if it was not provided
-        headers.setdefault('User-Agent', DEFAULT_USER_AGENT)
+        headers.setdefault("User-Agent", DEFAULT_USER_AGENT)
 
         super(CloudflareScraper, self).__init__(*args, **kwargs)
 
@@ -71,7 +82,7 @@ class CloudflareScraper(Session):
         self.headers = headers
 
     @staticmethod
-    def is_cloudflare_challenge(resp):
+    def is_cloudflare_iuam_challenge(resp):
         return (
             resp.status_code in (503, 429)
             and resp.headers.get("Server", "").startswith("cloudflare")
@@ -79,15 +90,37 @@ class CloudflareScraper(Session):
             and b"jschl_answer" in resp.content
         )
 
+    @staticmethod
+    def is_cloudflare_captcha_challenge(resp):
+        return (
+            resp.status_code == 403
+            and resp.headers.get("Server", "").startswith("cloudflare")
+            and b"/cdn-cgi/l/chk_captcha" in resp.content
+        )
+
     def request(self, method, url, *args, **kwargs):
         resp = super(CloudflareScraper, self).request(
             method, url, *args, **kwargs)
 
-        # Check if Cloudflare anti-bot is on
-        if self.is_cloudflare_challenge(resp):
+        # Check if Cloudflare captcha challenge is presented
+        if self.is_cloudflare_captcha_challenge(resp):
+            self.handle_captcha_challenge(resp, url)
+
+        # Check if Cloudflare anti-bot "I'm Under Attack Mode" is enabled
+        if self.is_cloudflare_iuam_challenge(resp):
             resp = self.solve_cf_challenge(resp, **kwargs)
 
         return resp
+
+    def handle_captcha_challenge(self, resp, url):
+        error = (
+            "Cloudflare captcha challenge presented for %s (cfscrape cannot solve captchas)"
+            % urlparse(url).netloc
+        )
+        if ssl.OPENSSL_VERSION_NUMBER < 0x10101000:
+            error += ". Your OpenSSL version is lower than 1.1.1. Please upgrade your OpenSSL library and recompile Python."
+
+        raise CloudflareCaptchaError(error, response=resp)
 
     def solve_cf_challenge(self, resp, **original_kwargs):
         start_time = time.time()
@@ -104,21 +137,23 @@ class CloudflareScraper(Session):
         headers["Referer"] = resp.url
 
         try:
-            params = cloudflare_kwargs['params'] = OrderedDict(
+            params = cloudflare_kwargs["params"] = OrderedDict(
                 re.findall(
                     r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
             )
 
-            for k in ('jschl_vc', 'pass'):
+            for k in ("jschl_vc", "pass"):
                 if k not in params:
-                    raise ValueError('%s is missing from challenge form' % k)
+                    raise ValueError("%s is missing from challenge form" % k)
         except Exception as e:
             # Something is wrong with the page.
             # This may indicate Cloudflare has changed their anti-bot
             # technique. If you see this and are running the latest version,
             # please open a GitHub issue so I can update the code accordingly.
             raise ValueError(
-                "Unable to parse Cloudflare anti-bots page: %s %s" % (e.message, BUG_REPORT))
+                "Unable to parse Cloudflare anti-bot IUAM page: %s %s"
+                % (e.message, BUG_REPORT)
+            )
 
         # Solve the Javascript challenge
         answer, delay = self.solve_challenge(body, domain)
@@ -136,6 +171,7 @@ class CloudflareScraper(Session):
         # Send the challenge response and handle the redirect manually
         redirect = self.request(method, submit_url, **cloudflare_kwargs)
         redirect_location = urlparse(redirect.headers["Location"])
+
         if not redirect_location.netloc:
             redirect_url = urlunparse(
                 (
@@ -144,7 +180,7 @@ class CloudflareScraper(Session):
                     redirect_location.path,
                     redirect_location.params,
                     redirect_location.query,
-                    redirect_location.fragment
+                    redirect_location.fragment,
                 )
             )
             return self.request(method, redirect_url, **original_kwargs)
@@ -155,13 +191,15 @@ class CloudflareScraper(Session):
             challenge, ms = re.search(
                 r"setTimeout\(function\(\){\s*(var "
                 r"s,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n[\s\S]+?a\.value\s*=.+?)\r?\n"
-                "(?:[^{<>]*},\s*(\d{4,}))?", body).groups()
+                r"(?:[^{<>]*},\s*(\d{4,}))?",
+                body,
+            ).groups()
 
             # The challenge requires `document.getElementById` to get this content.
             # Future proofing would require escaping newlines and double quotes
             innerHTML = re.search(
                 r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
-            innerHTML = innerHTML.group(1) if innerHTML else ''
+            innerHTML = innerHTML.group(1) if innerHTML else ""
 
             # Prefix the challenge with a fake document object.
             # Interpolate the domain, div contents, and JS challenge.
@@ -175,19 +213,27 @@ class CloudflareScraper(Session):
                       return {"innerHTML": "%s"};
                     }
                   };
+
                 %s; a.value
-            """ % (domain, innerHTML, challenge)
+            """ % (
+                domain,
+                innerHTML,
+                challenge,
+            )
             # Encode the challenge for security while preserving quotes and spacing.
             challenge = b64encode(challenge.encode("utf-8")).decode("ascii")
             # Use the provided delay, parsed delay, or default to 8 secs
             delay = self.delay or (float(ms) / float(1000) if ms else 8)
         except Exception:
             raise ValueError(
-                "Unable to identify Cloudflare IUAM Javascript on website. %s" % BUG_REPORT)
+                "Unable to identify Cloudflare IUAM Javascript on website. %s"
+                % BUG_REPORT
+            )
 
         # Use vm.runInNewContext to safely evaluate code
         # The sandboxed code cannot use the Node.js standard library
-        js = """\
+        js = (
+            """\
             var atob = Object.setPrototypeOf(function (str) {\
                 try {\
                     return Buffer.from("" + str, "base64").toString("binary");\
@@ -204,14 +250,20 @@ class CloudflareScraper(Session):
             process.stdout.write(String(\
                 require("vm").runInNewContext(challenge, context, options)\
             ));\
-        """ % challenge
+        """
+            % challenge
+        )
 
         try:
-            result = js2py.eval_js(js)
+            result = subprocess.check_output(
+                ["node", "-e", js], stdin=subprocess.PIPE, stderr=subprocess.PIPE
+            )
         except OSError as e:
             if e.errno == 2:
-                raise EnvironmentError("Missing Node.js runtime. Node is required and must be in the PATH (check with `node -v`). Your Node binary may be called `nodejs` rather than `node`, in which case you may need to run `apt-get install nodejs-legacy` on some Debian-based systems. (Please read the cfscrape"
-                                       " README's Dependencies section: https://github.com/Anorov/cloudflare-scrape#dependencies.")
+                raise EnvironmentError(
+                    "Missing Node.js runtime. Node is required and must be in the PATH (check with `node -v`). Your Node binary may be called `nodejs` rather than `node`, in which case you may need to run `apt-get install nodejs-legacy` on some Debian-based systems. (Please read the cfscrape"
+                    " README's Dependencies section: https://github.com/Anorov/cloudflare-scrape#dependencies."
+                )
             raise
         except Exception:
             logging.error(
@@ -222,7 +274,8 @@ class CloudflareScraper(Session):
             float(result)
         except Exception:
             raise ValueError(
-                "Cloudflare IUAM challenge returned unexpected answer. %s" % BUG_REPORT)
+                "Cloudflare IUAM challenge returned unexpected answer. %s" % BUG_REPORT
+            )
 
         return result, delay
 
@@ -234,8 +287,16 @@ class CloudflareScraper(Session):
         scraper = cls(**kwargs)
 
         if sess:
-            attrs = ["auth", "cert", "cookies", "headers",
-                     "hooks", "params", "proxies", "data"]
+            attrs = [
+                "auth",
+                "cert",
+                "cookies",
+                "headers",
+                "hooks",
+                "params",
+                "proxies",
+                "data",
+            ]
             for attr in attrs:
                 val = getattr(sess, attr, None)
                 if val:
@@ -254,7 +315,7 @@ class CloudflareScraper(Session):
         try:
             resp = scraper.get(url, **kwargs)
             resp.raise_for_status()
-        except Exception as e:
+        except Exception:
             logging.error(
                 "'%s' returned an error. Could not collect tokens." % url)
             raise
@@ -268,13 +329,17 @@ class CloudflareScraper(Session):
                 break
         else:
             raise ValueError(
-                "Unable to find Cloudflare cookies. Does the site actually have Cloudflare IUAM (\"I'm Under Attack Mode\") enabled?")
+                'Unable to find Cloudflare cookies. Does the site actually have Cloudflare IUAM ("I\'m Under Attack Mode") enabled?'
+            )
 
-        return ({
-            "__cfduid": scraper.cookies.get("__cfduid", "", domain=cookie_domain),
-            "cf_clearance": scraper.cookies.get("cf_clearance", "", domain=cookie_domain)
-        },
-            scraper.headers["User-Agent"]
+        return (
+            {
+                "__cfduid": scraper.cookies.get("__cfduid", "", domain=cookie_domain),
+                "cf_clearance": scraper.cookies.get(
+                    "cf_clearance", "", domain=cookie_domain
+                ),
+            },
+            scraper.headers["User-Agent"],
         )
 
     @classmethod
