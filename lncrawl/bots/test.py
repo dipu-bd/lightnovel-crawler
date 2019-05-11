@@ -25,11 +25,11 @@ from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 
 class TestBot:
-    error_list = []
+    allerrors = dict()
 
     def start(self):
         try:
-            self.error_list = []
+            self.allerrors = dict()
             randomized = sorted(crawler_list.keys(), key=lambda x: random())
             for index, link in enumerate(randomized):
                 print('=' * 80)
@@ -48,23 +48,29 @@ class TestBot:
                             print('-' * 5, 'Input:', entry, '-' * 5)
                             self.test_crawler(link, entry)
                             print()
+                            errors = []
                             break
                         except Exception as err:
-                            errors.append(err)
+                            traces = traceback.format_tb(err.__traceback__)
+                            errors.append('> Input: %s\n%s\n%s' %
+                                          (entry, err, ''.join(traces)))
                             time.sleep(6 - 3 * i)
                         # end try
                     # end for
                     if len(errors):
                         print(errors[-1])
-                        print(traceback.print_tb(errors[-1].__traceback__))
-                        self.error_list += [(link, x) for x in errors]
+                        if link not in self.allerrors:
+                            self.allerrors[link] = []
+                        # end if
+                        self.allerrors[link] += errors
+                    # end if
                 # end for
                 print('\n')
             # end for
-        except Exception as err:
-            self.error_list.append(('', err))
+        except:
+            traceback.print_exc()
         finally:
-            if len(self.error_list):
+            if len(self.allerrors):
                 self.show_errors()
                 exit(1)
             # end if
@@ -73,14 +79,20 @@ class TestBot:
 
     def show_errors(self):
         print('=' * 80)
-        print('%d errors found\n' % len(self.error_list))
+        print('Failed sources (%d):\n' % len(self.allerrors.keys()))
+        [print(x) for x in sorted(self.allerrors.keys())]
         print('-' * 80)
+        print()
 
-        for i, (link, err) in enumerate(self.error_list):
-            print('Error #%d: %s (%s)' % (i + 1, err, link))
-            print('-' * 80)
-            print(traceback.print_tb(err.__traceback__))
-            print('-' * 80)
+        num = 0
+        for key in sorted(self.allerrors.keys()):
+            for err in set(self.allerrors[key]):
+                num += 1
+                print('-' * 80)
+                print('Error #%d: %s' % (num, key))
+                print('-' * 80)
+                print(err)
+            # end for
         # end for
 
         print()
@@ -174,10 +186,6 @@ class TestBot:
     # end def
 
     test_user_inputs = {
-        'http://fullnovel.live/': [
-            'http://fullnovel.live/novel-a-will-eternal',
-            'will eternal',
-        ],
         'http://gravitytales.com/': [
             'http://gravitytales.com/novel/chaotic-lightning-cultivation',
         ],
@@ -247,7 +255,7 @@ class TestBot:
         ],
         'https://wuxiaworld.online/': [
             'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
-            'marriage',
+            'cultivation',
         ],
         'https://www.idqidian.us/': [
             'https://www.idqidian.us/novel/peerless-martial-god/'
@@ -258,12 +266,6 @@ class TestBot:
         ],
         'https://www.novelspread.com/': [
             'https://www.novelspread.com/novel/the-legend-of-the-concubine-s-daughter-minglan'
-        ],
-        'https://www.noveluniverse.com/': [
-            'https://www.noveluniverse.com/index/novel/info/id/15.html'
-        ],
-        'https://www.novelv.com/': [
-            'https://www.novelv.com/0/349/'
         ],
         'https://www.readlightnovel.org/': [
             'https://www.readlightnovel.org/martial-god-asura'
@@ -299,7 +301,7 @@ class TestBot:
             'https://creativenovels.com/novel/136/eternal-reverence/',
         ],
         'https://www.tapread.com/': [
-            'https://www.tapread.com/book/index?bookId=80',
+            'https://www.tapread.com/book/detail?bookId=80',
         ],
         'https://4scanlation.xyz/': [
             'https://4scanlation.xyz/instant-messiah/',
@@ -319,6 +321,16 @@ class TestBot:
         'https://novel.babelchain.org/': [
             'https://novel.babelchain.org/books/my-fiancee-is-a-stunning-ceo/',
             'martial god AsurA'
-        ]
+        ],
+        # 'https://www.novelv.com/': [
+        #     'https://www.novelv.com/0/349/'
+        # ],
+        # 'http://fullnovel.live/': [
+        #     'http://fullnovel.live/novel-a-will-eternal',
+        #     'will eternal',
+        # ],
+        # 'https://www.noveluniverse.com/': [
+        #     'https://www.noveluniverse.com/index/novel/info/id/15.html'
+        # ],
     }
 # end class
