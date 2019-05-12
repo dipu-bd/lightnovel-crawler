@@ -41,7 +41,7 @@ Download lightnovels from various online sources and generate output in differen
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-_PDF and DOCX generation is disabled for EXE build. It works on (pip)[#a3-pip-for-windows-mac-and-linux] though._
+_PDF and DOCX generation is disabled for EXE build. It only works with_ (pip)[#a3-pip-for-windows-mac-and-linux].
 
 ### A2. PIP (Windows, Mac, and Linux)
 
@@ -57,7 +57,7 @@ $ pip install --user -U lightnovel-crawler
 
 Remember, in some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
 
-**FOR WINDOWS USER** Download and install the GTK3-Runtime from https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
+> **To Windows users:** Download and install the GTK3-Runtime from https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
 
 Next, open your terminal and enter:
 
