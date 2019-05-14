@@ -203,57 +203,59 @@ You are very welcome to contribute in this project. You can:
 
 The list of currently available sources and the future plans are given below:
 
-<!-- ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg) -->
-<!-- ![search](https://img.shields.io/badge/%F0%9F%94%8D-disabled-lightgrey.svg) -->
+| Link                                   | Searching |
+| -------------------------------------- | :-------: |
+| http://novelfull.com                   |     ✔     |
+| http://www.machinenoveltranslation.com |           |
+| http://zenithnovels.com                |           |
+| https://4scanlation.xyz                |           |
+| https://anythingnovel.com              |           |
+| https://bestlightnovel.com             |     ✔     |
+| https://boxnovel.com                   |     ✔     |
+| https://comrademao.com                 |           |
+| https://creativenovels.com             |           |
+| https://crescentmoon.blog              |           |
+| https://indomtl.com                    |     ✔     |
+| https://litnet.com                     |     ✔     |
+| https://lnmtl.com                      |           |
+| https://m.chinesefantasynovels.com     |           |
+| https://m.novelspread.com              |           |
+| https://m.romanticlovebooks.com        |           |
+| https://m.wuxiaworld.co                |     ✔     |
+| https://meionovel.com                  |           |
+| https://mtled-novels.com               |     ✔     |
+| https://myoniyonitranslations.com      |           |
+| https://novel.babelchain.org           |     ✔     |
+| https://novelplanet.com                |     ✔     |
+| https://volarenovels.com               |           |
+| https://webnovel.online                |           |
+| https://wuxiaworld.online              |     ✔     |
+| https://www.idqidian.us                |           |
+| https://www.novelall.com               |     ✔     |
+| https://www.novelspread.com            |           |
+| https://www.readlightnovel.org         |           |
+| https://www.readnovelfull.com          |     ✔     |
+| https://www.romanticlovebooks.com      |           |
+| https://www.royalroad.com              |     ✔     |
+| https://www.scribblehub.com            |     ✔     |
+| https://www.tapread.com                |           |
+| https://www.webnovel.com               |     ✔     |
+| https://www.worldnovel.online          |     ✔     |
+| https://www.wuxiaworld.co              |     ✔     |
+| https://www.wuxiaworld.com             |     ✔     |
+| https://yukinovel.me                   |           |
 
-- [x] http://novelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] http://www.machinenoveltranslation.com
-- [x] http://zenithnovels.com
-- [x] https://4scanlation.xyz
-- [x] https://anythingnovel.com
-- [x] https://bestlightnovel.com (Formerly https://novelonlinefree.info) ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://boxnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://comrademao.com
-- [x] https://creativenovels.com
-- [x] https://crescentmoon.blog
-- [x] https://litnet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://lnmtl.com
-- [x] https://m.chinesefantasynovels.com
-- [x] https://m.novelspread.com
-- [x] https://m.romanticlovebooks.com
-- [x] https://m.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://meionovel.com
-- [x] https://mtled-novels.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://myoniyonitranslations.com
-- [x] https://novel.babelchain.org ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://novelplanet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://volarenovels.com
-- [x] https://webnovel.online
-- [x] https://wuxiaworld.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.idqidian.us
-- [x] https://www.novelall.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.novelspread.com
-- [x] https://www.readlightnovel.org
-- [x] https://www.readnovelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.romanticlovebooks.com
-- [x] https://www.royalroad.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.tapread.com
-- [x] https://www.webnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://yukinovel.me
+Rejected:
 
-Rejected due to difficulty or other reasons:
-
-- ~http://fullnovel.live~ `403 - Forbidden: Access is denied`
-- ~https://www.novelupdates.com~ `does not host any novels`
-- ~http://moonbunnycafe.com~ `does not follow uniform format`
-- ~http://gravitytales.com~ `503 Service Unavailable`
-- ~https://www.novelv.com~ `site down`
-- ~https://www.noveluniverse.com~ `site down`
-- ~https://lnindo.org~ `does not like being crawled`
+| Rejected Link                    | Reason                              |
+| -------------------------------- | ----------------------------------- |
+| ~http://fullnovel.live~          | `403 - Forbidden: Access is denied` |
+| ~https://www.novelupdates~.com~  | `Does not host any novels`          |
+| ~http://moonbunnycafe.com~       | `Does not follow uniform format`    |
+| ~http://gravitytales.com~        | `503 Service Unavailable`           |
+| ~https://www.novelv.com~         | `Site is down`                      |
+| ~https://www.noveluniverse~.com~ | `Site is down`                      |
+| ~https://lnindo.org~             | `Does not like being crawled`       |
 
 ### C4. Supported output formats
 

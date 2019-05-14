@@ -39,12 +39,14 @@ from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
+from .indomtl import IndoMTLCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
     # 'http://fullnovel.live/': FullnovelLiveCrawler,
     # 'https://www.noveluniverse.com/': NovelUniverseCrawler,
     # 'https://www.novelv.com/': NovelvCrawler,
+    'https://indomtl.com/': IndoMTLCrawler,
     'http://gravitytales.com/': GravityTalesCrawler,
     'http://novelfull.com/': NovelFullCrawler,
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
