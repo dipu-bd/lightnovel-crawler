@@ -333,6 +333,10 @@ class TestBot:
             'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
             'cultivation',
         ],
+        'https://indomtl.com': [
+            'https://indomtl.com/war-sovereign-soaring-the-heavens/',
+            'cultivation chat',
+        ]
         # 'https://www.novelv.com/': [
         #     'https://www.novelv.com/0/349/'
         # ],
