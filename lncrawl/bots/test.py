@@ -43,31 +43,23 @@ class TestBot:
                 # end if
 
                 for entry in self.test_user_inputs[link]:
-                    errors = []
-                    for i in range(2):  # try before failing
-                        try:
-                            print('-' * 5, 'Input:', entry, '-' * 5)
-                            self.test_crawler(link, entry)
-                            print()
-                            errors = []
-                            break
-                        except CloudflareCaptchaError:
-                            traceback.print_exc()
-                            break
-                        except Exception as err:
-                            traceback.print_exc()
-                            traces = traceback.format_tb(err.__traceback__)
-                            errors.append('> Input: %s\n%s\n%s' %
-                                          (entry, err, ''.join(traces)))
-                            time.sleep(6 - 3 * i)
-                        # end try
-                    # end for
-                    if len(errors):
+                    try:
+                        print('-' * 5, 'Input:', entry, '-' * 5)
+                        self.test_crawler(link, entry)
+                        print()
+                    except CloudflareCaptchaError:
+                        traceback.print_exc()
+                        break
+                    except Exception as err:
+                        traceback.print_exc()
+                        traces = traceback.format_tb(err.__traceback__)
                         if link not in self.allerrors:
                             self.allerrors[link] = []
                         # end if
-                        self.allerrors[link] += errors
-                    # end if
+                        self.allerrors[link].append(
+                            '> Input: %s\n%s\n%s' % (entry, err, ''.join(traces))
+                        )
+                    # end try
                 # end for
                 print('\n')
             # end for
