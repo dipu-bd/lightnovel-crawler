@@ -204,7 +204,7 @@ You are very welcome to contribute in this project. You can:
 
 The list of currently available sources and the future plans are given below:
 
-| Link                                   | Searching |
+| Available Links                        | Searching |
 | -------------------------------------- | :-------: |
 | http://novelfull.com                   |     ✔     |
 | http://www.machinenoveltranslation.com |           |
@@ -219,7 +219,6 @@ The list of currently available sources and the future plans are given below:
 | https://indomtl.com                    |     ✔     |
 | https://litnet.com                     |     ✔     |
 | https://lnmtl.com                      |           |
-| https://m.chinesefantasynovels.com     |           |
 | https://m.novelspread.com              |           |
 | https://m.romanticlovebooks.com        |           |
 | https://m.wuxiaworld.co                |     ✔     |
@@ -248,15 +247,16 @@ The list of currently available sources and the future plans are given below:
 
 Rejected:
 
-| Rejected Link                    | Reason                              |
-| -------------------------------- | ----------------------------------- |
-| ~http://fullnovel.live~          | `403 - Forbidden: Access is denied` |
-| ~https://www.novelupdates~.com~  | `Does not host any novels`          |
-| ~http://moonbunnycafe.com~       | `Does not follow uniform format`    |
-| ~http://gravitytales.com~        | `503 Service Unavailable`           |
-| ~https://www.novelv.com~         | `Site is down`                      |
-| ~https://www.noveluniverse~.com~ | `Site is down`                      |
-| ~https://lnindo.org~             | `Does not like being crawled`       |
+| Rejected Links                     | Reason                              |
+| ---------------------------------- | ----------------------------------- |
+| http://fullnovel.live              | `403 - Forbidden: Access is denied` |
+| https://www.novelupdates.com       | `Does not host any novels`          |
+| http://moonbunnycafe.com           | `Does not follow uniform format`    |
+| http://gravitytales.com            | `503 Service Unavailable`           |
+| https://www.novelv.com             | `Site is down`                      |
+| https://www.noveluniverse.com      | `Site is down`                      |
+| https://lnindo.org                 | `Does not like being crawled`       |
+| https://m.chinesefantasynovels.com | `Site is down`                      |
 
 ### C4. Supported output formats
 
