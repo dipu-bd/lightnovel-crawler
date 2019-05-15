@@ -3,6 +3,7 @@
 """
 The purpose of this bot is to test the application and crawlers
 """
+import io
 import logging
 import os
 import re
@@ -24,13 +25,18 @@ from ..spiders import crawler_list
 from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
+# For colorama
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
+                              encoding=sys.stdout.encoding,
+                              errors='ignore',
+                              line_buffering=True)
+
 
 class TestBot:
     allerrors = dict()
 
     def start(self):
         try:
-            self.allerrors = dict()
             randomized = sorted(crawler_list.keys(), key=lambda x: random())
             for index, link in enumerate(randomized):
                 print('=' * 80)

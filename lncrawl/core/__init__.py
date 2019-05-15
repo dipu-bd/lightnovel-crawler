@@ -3,10 +3,8 @@
 """
 Interactive application to take user inputs
 """
-import io
 import logging
 import os
-import sys
 
 import requests
 from colorama import Fore
@@ -43,10 +41,6 @@ def check_updates():
 def init():
     os.environ['version'] = get_version()
 
-    sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
-                                  encoding=sys.stdout.encoding,
-                                  errors='ignore',
-                                  line_buffering=True)
     init_colorama()
     description()
 
