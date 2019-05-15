@@ -50,18 +50,7 @@ class CreativeNovelsCrawler(Crawler):
                 view_id=self.novel_id
             )
         )
-        self.parse_chapter_list(response.content.decode('utf8'))
-        '''
-        success.
-        define.
-        https://creativenovels.com/71/chapter-1-miserable-otaku/.
-        data.
-        Chapter 1: Miserable Otaku.
-        data.
-        December 7, 2016.
-        end_data.
-        https://creativenovels.com/71/chapter-2-level-up-coup/.data.Chapter 2: Level Up Coup.data.December 7, 2016.end_data
-        '''
+        self.parse_chapter_list(response.content.decode('utf-8'))
     # end def
 
     def parse_chapter_list(self, content):
