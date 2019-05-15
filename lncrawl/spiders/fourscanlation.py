@@ -45,7 +45,7 @@ class FourScanlationCrawler(Crawler):
 
         # Extract volume-wise chapter entries
         for a in soup.select('article.page p a'):
-            possible_url = a['href'].lower()
+            possible_url = self.absolute_url(a['href'].lower())
             if not possible_url.startswith(self.novel_url):
                 continue
             # end if
@@ -54,8 +54,8 @@ class FourScanlationCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'url':  possible_url,
                 'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
             })
         # end for
         logger.debug(self.chapters)

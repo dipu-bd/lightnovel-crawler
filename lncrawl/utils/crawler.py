@@ -128,7 +128,7 @@ class Crawler:
         if not url or len(url) == 0:
             return None
         elif url.startswith('//'):
-            return 'http:' + url
+            return self.home_url.split(':')[0] + ':' + url
         elif url.find('//') >= 0:
             return url
         elif url.startswith('/'):

@@ -73,14 +73,16 @@ class MyOniyOniTranslation(Crawler):
         else:
             self.volumes.append({'id': 1})
             for a in soup.select('.entry-content p a'):
-                if a['href'].startswith(self.novel_url):
-                    self.chapters.append({
-                        'volume': 1,
-                        'id': len(self.chapters) + 1,
-                        'title': a.text.strip(' []'),
-                        'url': self.absolute_url(a['href'])
-                    })
+                possible_url = self.absolute_url(a['href'].lower())
+                if not possible_url.startswith(self.novel_url):
+                    continue
                 # end if
+                self.chapters.append({
+                    'volume': 1,
+                    'id': len(self.chapters) + 1,
+                    'url': possible_url,
+                    'title': a.text.strip(' []'),
+                })
             # end for
         # end if
 
