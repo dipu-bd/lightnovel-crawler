@@ -69,6 +69,7 @@ class TestBot:
                 # end for
                 print('\n')
             # end for
+            exit(0)
         except:
             traceback.print_exc()
         finally:
@@ -334,7 +335,8 @@ class TestBot:
         'https://indomtl.com': [
             'https://indomtl.com/war-sovereign-soaring-the-heavens/',
             'cultivation chat',
-        ]
+        ],
+        #
         # 'https://www.novelv.com/': [
         #     'https://www.novelv.com/0/349/'
         # ],
