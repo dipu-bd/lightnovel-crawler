@@ -1,0 +1,23 @@
+environment:
+  matrix:
+    - PYTHON: C:\Python37-x64
+    - PYTHON: C:\Python36-x64
+    - PYTHON: C:\Python35-x64
+
+init:
+  - SET PATH=%PYTHON%;%PATH%
+
+install:
+  - python -m pip install -r requirements.txt
+
+build: false
+
+test_script:
+  - python __main__.py --bot test
+
+branches:
+  only:
+    - master
+
+cache:
+  - '%LOCALAPPDATA%\pip\Cache'
