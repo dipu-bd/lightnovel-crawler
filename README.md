@@ -12,11 +12,13 @@
 
 Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx and pdf.
 
+> **Join the discord server I just opened recently: https://discord.gg/DHevEf**
+
 ## Table of contents
 
 - [Installation](#a-installation)
-  - [EXE (for Windows)](#a1-exe-windows)
-  - [PIP (for Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+  - [EXE (Windows)](#a1-exe-windows)
+  - [PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
   - [Chatbots](#a3-chatbots)
     - [Telegram](#a31-telegram)
     - [Discord](#a32-discord)
@@ -42,7 +44,7 @@ Download lightnovels from various online sources and generate output in differen
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-_PDF and DOCX generation is disabled for EXE build. It only works with_ (pip)[#a3-pip-for-windows-mac-and-linux].
+_PDF and DOCX generation is disabled for EXE build. It only works with `pip`_
 
 ### A2. PIP (Windows, Mac, and Linux)
 
