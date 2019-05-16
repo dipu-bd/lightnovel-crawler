@@ -12,7 +12,7 @@
 
 Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx and pdf.
 
-> **Join the discord server I just opened recently: https://discord.gg/DHevEf**
+> **Join the discord server I just opened recently: https://discord.gg/7A5Hktx**
 
 ## Table of contents
 
