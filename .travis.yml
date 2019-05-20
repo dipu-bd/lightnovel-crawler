@@ -6,12 +6,10 @@ python:
   - "3.6"
   - "3.5"
   - nightly
-  - pypy3.5-6.0
 
 matrix:
   allow_failures:
     - python: nightly
-    - python: pypy3.5-6.0
     - os: osx
   fast_finish: true
 
