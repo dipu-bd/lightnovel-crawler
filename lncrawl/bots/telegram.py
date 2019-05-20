@@ -36,6 +36,8 @@ class TelegramBot:
         conv_handler = ConversationHandler(
             entry_points=[
                 CommandHandler('start', self.init_app, pass_user_data=True),
+                MessageHandler(
+                    Filters.text, self.handle_novel_url, pass_user_data=True),
             ],
             fallbacks=[
                 CommandHandler('cancel', self.destroy_app,
@@ -165,7 +167,13 @@ class TelegramBot:
     # end def
 
     def handle_novel_url(self, bot, update, user_data):
-        app = user_data.get('app')
+        if user_data.get('app'):
+            app = user_data.get('app')
+        else :
+            app = App()
+            app.initialize()
+            user_data['app'] = app
+        # end if
         app.user_input = update.message.text.strip()
 
         try:
@@ -660,8 +668,8 @@ class TelegramBot:
                 'To terminate this session send /cancel.'
                 % (user_data.get('status'), app.progress, len(app.chapters))
             )
-        else:
-            self.show_help(bot, update)
+        # else:
+        #     self.show_help(bot, update)
         # end if
 
         return ConversationHandler.END
