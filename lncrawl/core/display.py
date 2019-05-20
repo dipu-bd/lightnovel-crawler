@@ -30,7 +30,7 @@ def description():
     padding = ' ' * ((LINE_SIZE - len(title)) // 2)
     print(Fore.YELLOW, padding + title, Fore.RESET)
 
-    desc = 'Download lightnovels into html, text, epub, mobi and json'
+    desc = 'https://github.com/dipu-bd/lightnovel-crawler'
     padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
     print(Style.DIM, padding + desc, Style.RESET_ALL)
 
@@ -43,7 +43,7 @@ def epilog():
     print('-' * LINE_SIZE)
 
     print(' ' + Icons.LINK, Fore.CYAN,
-          'https://github.com/dipu-bd/lightnovel-crawler', Fore.RESET)
+          'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
 
     print(' ' + Icons.HANDS, Fore.CYAN,
           'https://saythanks.io/to/dipu-bd', Fore.RESET)
@@ -101,11 +101,11 @@ def new_version_news(latest):
           'VERSION', Fore.RED + latest + Fore.CYAN,
           'IS NOW AVAILABLE!', Fore.RESET)
 
-    print('', Icons.RIGHT_ARROW, Style.DIM + 'To upgrade:',
+    print('', Icons.RIGHT_ARROW, Style.DIM + 'Upgrade:',
           Fore.YELLOW + 'pip install -U lightnovel-crawler', Style.RESET_ALL)
 
     if Icons.isWindows:
-        print('', Icons.RIGHT_ARROW, Style.DIM + 'To download:',
+        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download EXE:',
               Fore.YELLOW + 'http://bit.ly/2I1XzeN', Style.RESET_ALL)
     # end if
 

@@ -6,7 +6,7 @@ Crawler application
 import logging
 import os
 import re
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from concurrent import futures
 from urllib.parse import urlparse
 
@@ -128,7 +128,7 @@ class Crawler:
         if not url or len(url) == 0:
             return None
         elif url.startswith('//'):
-            return 'http:' + url
+            return self.home_url.split(':')[0] + ':' + url
         elif url.find('//') >= 0:
             return url
         elif url.startswith('/'):

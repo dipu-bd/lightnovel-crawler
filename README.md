@@ -1,8 +1,9 @@
 # Lightnovel Crawler
 
+[![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
+[![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
 [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
@@ -11,14 +12,16 @@
 
 Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx and pdf.
 
+> **Join the discord server I just opened recently: https://discord.gg/7A5Hktx**
+
 ## Table of contents
 
 - [Installation](#a-installation)
-  - [EXE (for Windows)](#a1-exe--for-windows)
-  - [Chatbots](#a2-chatbots)
-    - [Telegram](#a21-telegram)
-    - [Discord](#a22-discord)
-  - [Python package (for Windows, Mac, and Linux)](#a3-python-package-for-windows-mac-and-linux)
+  - [EXE (Windows)](#a1-exe-windows)
+  - [PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+  - [Chatbots](#a3-chatbots)
+    - [Telegram](#a31-telegram)
+    - [Discord](#a32-discord)
   - [Run from source](#a4-run-from-source)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
@@ -35,27 +38,15 @@ Download lightnovels from various online sources and generate output in differen
 
 ## (A) Installation
 
-### A1. EXE (for Windows)
+### A1. EXE (Windows)
 
-📦 [lightnovel-crawler v2.9.4 for windows ~ 16MB](http://bit.ly/2I1XzeN)
+📦 [lightnovel-crawler v2.9.10 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-### A2. Chatbots
+_PDF and DOCX generation is disabled for EXE build. It only works with `pip`_
 
-#### A2.1 Telegram
-
-Visit this link to get started with the telegram bot:
-https://t.me/epub_smelter_bot
-
-#### A2.2 Discord
-
-Visit this link to install discord bot to your server:
-https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
-
-Send `!help` to open the bot help message.
-
-### A3. Python package (for Windows, Mac, and Linux)
+### A2. PIP (Windows, Mac, and Linux)
 
 📦 A python package named `lightnovel-crawler` is available in [pypi](https://pypi.org/project/lightnovel-crawler).
 
@@ -69,6 +60,8 @@ $ pip install --user -U lightnovel-crawler
 
 Remember, in some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
 
+> **To Windows users:** Download and install the GTK3-Runtime from https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
+
 Next, open your terminal and enter:
 
 ```bash
@@ -79,6 +72,20 @@ $ lncrawl
 ```
 
 > To view extra logs, use: `lncrawl -lll`
+
+### A3. Chatbots
+
+#### A3.1 Telegram
+
+Visit this link to get started with the telegram bot:
+https://t.me/epub_smelter_bot
+
+#### A3.2 Discord
+
+Visit this link to install discord bot to your server:
+https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
+
+Send `!help` to open the bot help message.
 
 ### A4. Run from source
 
@@ -112,7 +119,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.9.0
+                           📒 Lightnovel Crawler 🍀2.9.10
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -199,55 +206,59 @@ You are very welcome to contribute in this project. You can:
 
 The list of currently available sources and the future plans are given below:
 
-<!-- ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg) -->
-<!-- ![search](https://img.shields.io/badge/%F0%9F%94%8D-disabled-lightgrey.svg) -->
+| Available Links                        | Searching |
+| -------------------------------------- | :-------: |
+| http://novelfull.com                   |     ✔     |
+| http://www.machinenoveltranslation.com |           |
+| http://zenithnovels.com                |           |
+| https://4scanlation.xyz                |           |
+| https://anythingnovel.com              |           |
+| https://bestlightnovel.com             |     ✔     |
+| https://boxnovel.com                   |     ✔     |
+| https://comrademao.com                 |           |
+| https://creativenovels.com             |           |
+| https://crescentmoon.blog              |           |
+| https://indomtl.com                    |     ✔     |
+| https://litnet.com                     |     ✔     |
+| https://lnmtl.com                      |           |
+| https://m.novelspread.com              |           |
+| https://m.romanticlovebooks.com        |           |
+| https://m.wuxiaworld.co                |     ✔     |
+| https://meionovel.com                  |           |
+| https://mtled-novels.com               |     ✔     |
+| https://myoniyonitranslations.com      |           |
+| https://novel.babelchain.org           |     ✔     |
+| https://novelplanet.com                |     ✔     |
+| https://volarenovels.com               |           |
+| https://webnovel.online                |           |
+| https://wuxiaworld.online              |     ✔     |
+| https://www.idqidian.us                |           |
+| https://www.novelall.com               |     ✔     |
+| https://www.novelspread.com            |           |
+| https://www.readlightnovel.org         |           |
+| https://www.readnovelfull.com          |     ✔     |
+| https://www.romanticlovebooks.com      |           |
+| https://www.royalroad.com              |     ✔     |
+| https://www.scribblehub.com            |     ✔     |
+| https://www.tapread.com                |           |
+| https://www.webnovel.com               |     ✔     |
+| https://www.worldnovel.online          |     ✔     |
+| https://www.wuxiaworld.co              |     ✔     |
+| https://www.wuxiaworld.com             |     ✔     |
+| https://yukinovel.me                   |           |
 
-- [x] http://fullnovel.live ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] http://novelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] http://www.machinenoveltranslation.com
-- [x] http://zenithnovels.com
-- [x] https://anythingnovel.com
-- [x] https://boxnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://comrademao.com
-- [x] https://creativenovels.com
-- [x] https://crescentmoon.blog
-- [x] https://litnet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://lnmtl.com
-- [x] https://m.chinesefantasynovels.com
-- [x] https://m.novelspread.com
-- [x] https://m.romanticlovebooks.com
-- [x] https://m.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://meionovel.com
-- [x] https://mtled-novels.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://novelonlinefree.info ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://novelplanet.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://volarenovels.com
-- [x] https://webnovel.online
-- [x] https://wuxiaworld.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.idqidian.us
-- [x] https://www.novelall.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.novelspread.com
-- [x] https://www.noveluniverse.com
-- [x] https://www.novelv.com
-- [x] https://www.readlightnovel.org
-- [x] https://www.readnovelfull.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.romanticlovebooks.com
-- [x] https://www.royalroad.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.scribblehub.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.tapread.com
-- [x] https://www.webnovel.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.worldnovel.online ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.wuxiaworld.co ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://www.wuxiaworld.com ![search](https://img.shields.io/badge/%F0%9F%94%8D-enabled-blue.svg)
-- [x] https://yukinovel.me
-- [x] https://4scanlation.xyz
+Rejected:
 
-Rejected due to difficulty or other reasons:
-
-- ~https://www.novelupdates.com~ `does not host any novels`
-- ~http://moonbunnycafe.com~ `does not follow uniform format`
-- ~http://gravitytales.com~ `503 Service Unavailable`
-- ~https://lnindo.org~ `does not like being crawled`
+| Rejected Links                     | Reason                              |
+| ---------------------------------- | ----------------------------------- |
+| http://fullnovel.live              | `403 - Forbidden: Access is denied` |
+| https://www.novelupdates.com       | `Does not host any novels`          |
+| http://moonbunnycafe.com           | `Does not follow uniform format`    |
+| http://gravitytales.com            | `503 Service Unavailable`           |
+| https://www.novelv.com             | `Site is down`                      |
+| https://www.noveluniverse.com      | `Site is down`                      |
+| https://lnindo.org                 | `Does not like being crawled`       |
+| https://m.chinesefantasynovels.com | `Site is down`                      |
 
 ### C4. Supported output formats
 

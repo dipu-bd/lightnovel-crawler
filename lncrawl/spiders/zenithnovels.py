@@ -81,7 +81,7 @@ class ZenithNovelsCrawler(Crawler):
 
         try:
             self.clean_contents(entry)
-            for note in entry.select('.footnote'): 
+            for note in entry.select('.footnote'):
                 note.decompose()
             # end for
         except:

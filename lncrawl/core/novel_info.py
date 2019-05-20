@@ -15,7 +15,7 @@ def format_volumes(crawler):
         if not ('title' in vol and vol['title']):
             vol['title'] = title
         # end if
-        if not re.search(r'(book|vol|volume) .?\d+', vol['title'], re.IGNORECASE):
+        if not re.search(r'(book|vol|volume) .?\d+', vol['title'], re.I):
             vol['title'] = title + ' - ' + vol['title'].title()
         # end if
     # end for
@@ -28,7 +28,7 @@ def format_chapters(crawler):
         if not ('title' in item and item['title']):
             item['title'] = title
         # end if
-        if not re.search(r'ch(apter)? .?\d+', item['title'], re.IGNORECASE):
+        if not re.search(r'((ch(apter)?) )?.?\d+', item['title'], re.I):
             item['title'] = title + ' - ' + item['title'].title()
         # end if
         if not item['volume']:

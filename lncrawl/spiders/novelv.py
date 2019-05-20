@@ -33,8 +33,8 @@ class NovelvCrawler(Crawler):
 
         volumes = set([])
         for a in soup.select('.panel-default ul.list-charts li a'):
-            chapter_url = self.absolute_url(a['href'])
-            if not chapter_url.startswith(self.novel_url):
+            possible_url = self.absolute_url(a['href'].lower())
+            if not possible_url.startswith(self.novel_url):
                 continue
             # end if
 
@@ -45,7 +45,7 @@ class NovelvCrawler(Crawler):
             self.chapters.append({
                 'id': chapter_id,
                 'title': a.text.strip(),
-                'url': chapter_url,
+                'url': possible_url,
                 'volume': volume_id,
             })
         # end for

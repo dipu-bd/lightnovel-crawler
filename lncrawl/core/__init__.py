@@ -3,18 +3,20 @@
 """
 Interactive application to take user inputs
 """
-import os
 import logging
+import os
 
 import requests
-from colorama import init as init_colorama, Fore
+from colorama import Fore
+from colorama import init as init_colorama
 
-from ..bots import run_bot
 from ..assets.icons import Icons
 from ..assets.version import get_value as get_version
-from .arguments import get_args, build_parser
-from .display import (description, epilog, debug_mode, url_not_recognized,
-                      cancel_method, error_message, new_version_news, input_suppression)
+from ..bots import run_bot
+from .arguments import build_parser, get_args
+from .display import (cancel_method, debug_mode, description, epilog,
+                      error_message, input_suppression, new_version_news,
+                      url_not_recognized)
 
 logger = logging.Logger('CORE')
 
@@ -100,7 +102,7 @@ def start_app():
 
     epilog()
 
-    if Icons.isWindows and not get_args().suppress:
-        input('Press ENTER to exit...')
-    # end if
+    # if Icons.isWindows and get_args().suppress is False:
+    #     input('Press ENTER to exit...')
+    # # end if
 # end def

@@ -3,33 +3,40 @@
 """
 The purpose of this bot is to test the application and crawlers
 """
-import re
-import os
-import sys
-import shutil
+import io
 import logging
-import time
+import os
+import re
+import shutil
+import sys
 import textwrap
+import time
 import traceback
 from random import random
 
 from PyInquirer import prompt
 
+from ..assets.icons import Icons
+from ..binders import available_formats
 from ..core import display
 from ..core.app import App
 from ..core.arguments import get_args
-from ..assets.icons import Icons
 from ..spiders import crawler_list
-from ..binders import available_formats
+from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
+
+# For colorama
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
+                              encoding=sys.stdout.encoding,
+                              errors='ignore',
+                              line_buffering=True)
 
 
 class TestBot:
-    error_list = []
+    allerrors = dict()
 
     def start(self):
         try:
-            self.error_list = []
             randomized = sorted(crawler_list.keys(), key=lambda x: random())
             for index, link in enumerate(randomized):
                 print('=' * 80)
@@ -42,29 +49,31 @@ class TestBot:
                 # end if
 
                 for entry in self.test_user_inputs[link]:
-                    errors = []
-                    for i in range(2):  # try before failing
-                        try:
-                            print('-' * 5, 'Input:', entry, '-' * 5)
-                            self.test_crawler(link, entry)
-                            print()
-                            break
-                        except Exception as err:
-                            errors.append(err)
-                            time.sleep(6 - 3 * i)
-                        # end try
-                    # end for
-                    if len(errors):
-                        print(errors[-1])
-                        print(traceback.print_tb(errors[-1].__traceback__))
-                        self.error_list += [(link, x) for x in errors]
+                    try:
+                        print('-' * 5, 'Input:', entry, '-' * 5)
+                        self.test_crawler(link, entry)
+                        print()
+                    except CloudflareCaptchaError:
+                        traceback.print_exc()
+                        break
+                    except Exception as err:
+                        traceback.print_exc()
+                        traces = traceback.format_tb(err.__traceback__)
+                        if link not in self.allerrors:
+                            self.allerrors[link] = []
+                        # end if
+                        self.allerrors[link].append(
+                            '> Input: %s\n%s\n%s' % (entry, err, ''.join(traces))
+                        )
+                    # end try
                 # end for
                 print('\n')
             # end for
-        except Exception as err:
-            self.error_list.append(('', err))
+            exit(0)
+        except:
+            traceback.print_exc()
         finally:
-            if len(self.error_list):
+            if len(self.allerrors):
                 self.show_errors()
                 exit(1)
             # end if
@@ -73,14 +82,20 @@ class TestBot:
 
     def show_errors(self):
         print('=' * 80)
-        print('%d errors found\n' % len(self.error_list))
+        print('Failed sources (%d):\n' % len(self.allerrors.keys()))
+        [print(x) for x in sorted(self.allerrors.keys())]
         print('-' * 80)
+        print()
 
-        for i, (link, err) in enumerate(self.error_list):
-            print('Error #%d: %s (%s)' % (i + 1, err, link))
-            print('-' * 80)
-            print(traceback.print_tb(err.__traceback__))
-            print('-' * 80)
+        num = 0
+        for key in sorted(self.allerrors.keys()):
+            for err in set(self.allerrors[key]):
+                num += 1
+                print('-' * 80)
+                print('Error #%d: %s' % (num, key))
+                print('-' * 80)
+                print(err)
+            # end for
         # end for
 
         print()
@@ -121,6 +136,13 @@ class TestBot:
 
             app.init_crawler(novel_url)
             print('Init crawler: DONE')
+
+            app.get_novel_info()
+            print('Novel info: DONE')
+            if not app.crawler.novel_title:
+                raise Exception('No novel title')
+                # end if
+            return
         # end if
 
         if not app.crawler:
@@ -153,7 +175,7 @@ class TestBot:
             raise Exception('Empty chapter list')
         # end if
 
-        app.chapters = app.crawler.chapters[:1]
+        app.chapters = app.crawler.chapters[:2]
         app.output_formats = {}
         app.pack_by_volume = False
 
@@ -174,10 +196,6 @@ class TestBot:
     # end def
 
     test_user_inputs = {
-        'http://fullnovel.live/': [
-            'http://fullnovel.live/novel-a-will-eternal',
-            'will eternal',
-        ],
         'http://gravitytales.com/': [
             'http://gravitytales.com/novel/chaotic-lightning-cultivation',
         ],
@@ -208,9 +226,6 @@ class TestBot:
             'https://litnet.com/en/book/candy-lips-1-b106232',
             'candy lips',
         ],
-        # 'https://lnindo.org/': [
-        #     'https://lnindo.org/novel/true-martial-world/',
-        # ],
         'https://lnmtl.com/': [
             'https://lnmtl.com/novel/the-strongest-dan-god',
         ],
@@ -234,8 +249,8 @@ class TestBot:
             'https://mtled-novels.com/novels/ancient-demon-dragon-emperor',
             'dragon'
         ],
-        'https://novelonlinefree.info/': [
-            'https://novelonlinefree.info/novel/martial_world',
+        'https://bestlightnovel.com/': [
+            'https://bestlightnovel.com/novel_888103800',
             'martial'
         ],
         'https://novelplanet.com/': [
@@ -248,10 +263,6 @@ class TestBot:
         'https://webnovel.online/': [
             'https://webnovel.online/full-marks-hidden-marriage-pick-up-a-son-get-a-free-husband',
         ],
-        'https://wuxiaworld.online/': [
-            'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
-            'marriage',
-        ],
         'https://www.idqidian.us/': [
             'https://www.idqidian.us/novel/peerless-martial-god/'
         ],
@@ -261,12 +272,6 @@ class TestBot:
         ],
         'https://www.novelspread.com/': [
             'https://www.novelspread.com/novel/the-legend-of-the-concubine-s-daughter-minglan'
-        ],
-        'https://www.noveluniverse.com/': [
-            'https://www.noveluniverse.com/index/novel/info/id/15.html'
-        ],
-        'https://www.novelv.com/': [
-            'https://www.novelv.com/0/349/'
         ],
         'https://www.readlightnovel.org/': [
             'https://www.readlightnovel.org/martial-god-asura'
@@ -302,7 +307,7 @@ class TestBot:
             'https://creativenovels.com/novel/136/eternal-reverence/',
         ],
         'https://www.tapread.com/': [
-            'https://www.tapread.com/book/index?bookId=80',
+            'https://www.tapread.com/book/detail?bookId=80',
         ],
         'https://4scanlation.xyz/': [
             'https://4scanlation.xyz/instant-messiah/',
@@ -314,5 +319,33 @@ class TestBot:
             'https://readnovelfull.com/lord-of-all-realms.html',
             'cultivation'
         ],
+        'https://myoniyonitranslations.com/': [
+            'https://myoniyonitranslations.com/top-management/',
+            'https://myoniyonitranslations.com/lm-chapter-277-279/',
+            'https://myoniyonitranslations.com/category/kill-the-hero/'
+        ],
+        'https://novel.babelchain.org/': [
+            'https://novel.babelchain.org/books/my-fiancee-is-a-stunning-ceo/',
+            'martial god AsurA'
+        ],
+        'https://wuxiaworld.online/': [
+            'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
+            'cultivation',
+        ],
+        'https://indomtl.com': [
+            'https://indomtl.com/war-sovereign-soaring-the-heavens/',
+            'cultivation chat',
+        ],
+        #
+        # 'https://www.novelv.com/': [
+        #     'https://www.novelv.com/0/349/'
+        # ],
+        # 'http://fullnovel.live/': [
+        #     'http://fullnovel.live/novel-a-will-eternal',
+        #     'will eternal',
+        # ],
+        # 'https://www.noveluniverse.com/': [
+        #     'https://www.noveluniverse.com/index/novel/info/id/15.html'
+        # ],
     }
 # end class

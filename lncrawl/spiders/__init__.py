@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from .anythingnovel import AnythingNovelCrawler
+from .babelchain import BabelchainCrawler
+from .bestlightnovel import BestLightNovel
 from .boxnovel import BoxNovelCrawler
 from .chinesefantasy import ChineseFantasyNovels
 from .comrademao import ComrademaoCrawler
 from .creativenovels import CreativeNovelsCrawler
 from .crescentmoon import CrescentMoonCrawler
+from .fourscanlation import FourScanlationCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
-from .lnindo import LnindoCrawler
 from .machinetrans import MachineNovelTrans
 from .meionovel import MeionovelCrawler
 from .mtlednovels import MtledNovelsCrawler
+from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
-from .novelonlinefree import NovelOnlineFreeCrawler
 from .novelplanet import NovelPlanetCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
@@ -35,32 +37,37 @@ from .worldnovelonline import WorldnovelonlineCrawler
 from .wuxiaco import WuxiaCoCrawler
 from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
-from .zenithnovels import ZenithNovelsCrawler
 from .yukinovel import YukiNovelCrawler
-from .fourscanlation import FourScanlationCrawler
+from .zenithnovels import ZenithNovelsCrawler
+from .indomtl import IndoMTLCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
-    'http://fullnovel.live/': FullnovelLiveCrawler,
+    # 'http://fullnovel.live/': FullnovelLiveCrawler,
+    # 'https://www.noveluniverse.com/': NovelUniverseCrawler,
+    # 'https://www.novelv.com/': NovelvCrawler,
+    # 'https://m.chinesefantasynovels.com/': ChineseFantasyNovels,
+    'https://indomtl.com/': IndoMTLCrawler,
     'http://gravitytales.com/': GravityTalesCrawler,
     'http://novelfull.com/': NovelFullCrawler,
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
     'http://zenithnovels.com/': ZenithNovelsCrawler,
     'https://4scanlation.xyz/': FourScanlationCrawler,
     'https://anythingnovel.com/': AnythingNovelCrawler,
+    'https://bestlightnovel.com/': BestLightNovel,
     'https://boxnovel.com/': BoxNovelCrawler,
     'https://comrademao.com/': ComrademaoCrawler,
     'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
     'https://litnet.com/': LitnetCrawler,
     'https://lnmtl.com/': LNMTLCrawler,
-    'https://m.chinesefantasynovels.com/': ChineseFantasyNovels,
     'https://m.novelspread.com/': NovelSpreadCrawler,
     'https://m.romanticlovebooks.com/': RomanticLBCrawler,
     'https://m.wuxiaworld.co/': WuxiaCoCrawler,
     'https://meionovel.com/': MeionovelCrawler,
     'https://mtled-novels.com/': MtledNovelsCrawler,
-    'https://novelonlinefree.info/': NovelOnlineFreeCrawler,
+    'https://myoniyonitranslations.com/': MyOniyOniTranslation,
+    'https://novel.babelchain.org/': BabelchainCrawler,
     'https://novelplanet.com/': NovelPlanetCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
@@ -68,8 +75,6 @@ crawler_list = {
     'https://www.idqidian.us/': IdqidianCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
-    'https://www.noveluniverse.com/': NovelUniverseCrawler,
-    'https://www.novelv.com/': NovelvCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
@@ -81,6 +86,5 @@ crawler_list = {
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://yukinovel.me/': YukiNovelCrawler,
-    # 'https://lnindo.org/' : LnindoCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }

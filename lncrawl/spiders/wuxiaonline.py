@@ -13,24 +13,25 @@ search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
 
 
 class WuxiaOnlineCrawler(Crawler):
-    def search_novel(self, query):
-        '''Gets a list of {title, url} matching the given query'''
-        soup = self.get_soup(search_url % query)
+    # DISABLING DUE TO CLOUDEFLARE CAPTCHA CHALLENGE
+    # def search_novel(self, query):
+    #     '''Gets a list of {title, url} matching the given query'''
+    #     soup = self.get_soup(search_url % query)
 
-        results = []
-        for novel in soup.select('li'):
-            a = novel.select_one('.resultname a')
-            info = novel.select_one('a:nth-of-type(2)')
-            info = info.text.strip() if info else ''
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': 'Latest: %s' % info,
-            })
-        # end for
+    #     results = []
+    #     for novel in soup.select('li'):
+    #         a = novel.select_one('.resultname a')
+    #         info = novel.select_one('a:nth-of-type(2)')
+    #         info = info.text.strip() if info else ''
+    #         results.append({
+    #             'title': a.text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #             'info': 'Latest: %s' % info,
+    #         })
+    #     # end for
 
-        return results
-    # end def
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

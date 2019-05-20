@@ -158,7 +158,7 @@ class ConsoleBot:
                 'type': 'checkbox',
                 'name': 'sites',
                 'message': 'Where to search?',
-                'choices': [{'name': x} for x in links],
+                'choices': [{'name': x} for x in sorted(links)],
             }
         ])
 
@@ -500,7 +500,7 @@ class ConsoleBot:
         selected = None
         args = get_args()
 
-        if times == 0 and not selected:
+        if times == 0 and args.volumes:
             selected = [int(x) for x in args.volumes]
         # end if
 

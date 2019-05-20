@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import json
 import logging
 import re
 from urllib.parse import urlparse
@@ -23,7 +22,16 @@ class FourScanlationCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('header h1').text
+        possible_titles = [
+            soup.select_one('header h1'),
+            soup.select_one('.header-post-title-class'),
+        ]
+        for pos in possible_titles:
+            if pos:
+                self.novel_title = pos.text
+                break
+            # end if
+        # end for
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = "Source: 4scanlation"
@@ -36,26 +44,26 @@ class FourScanlationCrawler(Crawler):
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
-        chapters = soup.select('article.page p a')
-        for a in chapters:
-            possible_url = a['href'].lower()
+        for a in soup.select('article.page p a'):
+            possible_url = self.absolute_url(a['href'].lower())
             if not possible_url.startswith(self.novel_url):
                 continue
             # end if
             chap_id = 1 + len(self.chapters)
-            if len(self.chapters) % 100 == 0:
-                vol_id = 1 + (chap_id - 1) // 100
-                self.volumes.append({'id': vol_id})
-            # end if
+            vol_id = 1 + len(self.chapters) // 100
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'url':  possible_url,
                 'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
             })
         # end for
-
         logger.debug(self.chapters)
+
+        self.volumes = [
+            {'id': x + 1}
+            for x in range(len(self.chapters) // 100 + 1)
+        ]
         logger.debug(self.volumes)
 
         logger.debug('%d chapters & %d volumes found',

@@ -6,6 +6,7 @@ Crawler for [Meionovel](https://meionovel.com/).
 import json
 import logging
 import re
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('MEIONOVEL')
@@ -67,6 +68,6 @@ class MeionovelCrawler(Crawler):
 
         body.append(signature)
 
-        return '<p>' + '</p><p>'.join(body) + '</p>' 
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
