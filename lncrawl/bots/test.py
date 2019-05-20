@@ -76,6 +76,8 @@ class TestBot:
         finally:
             if len(self.allerrors):
                 self.show_errors()
+            # end if
+            if len([x for x in self.allerrors.keys() if x not in self.allowed_failures]):
                 exit(1)
             # end if
         # end try
@@ -256,7 +258,7 @@ class TestBot:
         ],
         'https://novelplanet.com/': [
             'https://novelplanet.com/Novel/Returning-from-the-Immortal-World',
-            # 'immortal'
+            'immortal'
         ],
         'https://www.volarenovels.com/': [
             'https://www.volarenovels.com/novel/adorable-creature-attacks',
@@ -333,16 +335,21 @@ class TestBot:
             'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
             'cultivation',
         ],
-        #
-        # 'https://www.novelv.com/': [
-        #     'https://www.novelv.com/0/349/'
-        # ],
-        # 'http://fullnovel.live/': [
-        #     'http://fullnovel.live/novel-a-will-eternal',
-        #     'will eternal',
-        # ],
-        # 'https://www.noveluniverse.com/': [
-        #     'https://www.noveluniverse.com/index/novel/info/id/15.html'
-        # ],
+        'https://www.novelv.com/': [
+            'https://www.novelv.com/0/349/'
+        ],
+        'http://fullnovel.live/': [
+            'http://fullnovel.live/novel-a-will-eternal',
+            'will eternal',
+        ],
+        'https://www.noveluniverse.com/': [
+            'https://www.noveluniverse.com/index/novel/info/id/15.html'
+        ],
     }
+
+    allowed_failures = [
+        'https://m.chinesefantasynovels.com/',
+        'https://4scanlation.xyz/',
+        'https://novel.babelchain.org/',
+    ]
 # end class
