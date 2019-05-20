@@ -218,7 +218,6 @@ The list of currently available sources and the future plans are given below:
 | https://comrademao.com                 |           |
 | https://creativenovels.com             |           |
 | https://crescentmoon.blog              |           |
-| https://indomtl.com                    |     ✔     |
 | https://litnet.com                     |     ✔     |
 | https://lnmtl.com                      |           |
 | https://m.novelspread.com              |           |
@@ -257,8 +256,9 @@ Rejected:
 | http://gravitytales.com            | `503 Service Unavailable`           |
 | https://www.novelv.com             | `Site is down`                      |
 | https://www.noveluniverse.com      | `Site is down`                      |
-| https://lnindo.org                 | `Does not like being crawled`       |
 | https://m.chinesefantasynovels.com | `Site is down`                      |
+| https://lnindo.org                 | `Does not like to be crawled`       |
+| https://indomtl.com                | `Does not like to be crawled`       |
 
 ### C4. Supported output formats
 
