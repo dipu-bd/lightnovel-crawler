@@ -206,59 +206,59 @@ You are very welcome to contribute in this project. You can:
 
 The list of currently available sources and the future plans are given below:
 
-| Available Links                        | Searching |
-| -------------------------------------- | :-------: |
-| http://novelfull.com                   |     ✔     |
-| http://www.machinenoveltranslation.com |           |
-| http://zenithnovels.com                |           |
-| https://4scanlation.xyz                |           |
-| https://anythingnovel.com              |           |
-| https://bestlightnovel.com             |     ✔     |
-| https://boxnovel.com                   |     ✔     |
-| https://comrademao.com                 |           |
-| https://creativenovels.com             |           |
-| https://crescentmoon.blog              |           |
-| https://indomtl.com                    |     ✔     |
-| https://litnet.com                     |     ✔     |
-| https://lnmtl.com                      |           |
-| https://m.novelspread.com              |           |
-| https://m.romanticlovebooks.com        |           |
-| https://m.wuxiaworld.co                |     ✔     |
-| https://meionovel.com                  |           |
-| https://mtled-novels.com               |     ✔     |
-| https://myoniyonitranslations.com      |           |
-| https://novel.babelchain.org           |     ✔     |
-| https://novelplanet.com                |     ✔     |
-| https://volarenovels.com               |           |
-| https://webnovel.online                |           |
-| https://wuxiaworld.online              |     ✔     |
-| https://www.idqidian.us                |           |
-| https://www.novelall.com               |     ✔     |
-| https://www.novelspread.com            |           |
-| https://www.readlightnovel.org         |           |
-| https://www.readnovelfull.com          |     ✔     |
-| https://www.romanticlovebooks.com      |           |
-| https://www.royalroad.com              |     ✔     |
-| https://www.scribblehub.com            |     ✔     |
-| https://www.tapread.com                |           |
-| https://www.webnovel.com               |     ✔     |
-| https://www.worldnovel.online          |     ✔     |
-| https://www.wuxiaworld.co              |     ✔     |
-| https://www.wuxiaworld.com             |     ✔     |
-| https://yukinovel.me                   |           |
+| Available Sources                      | Search Enable |
+| -------------------------------------- | :-----------: |
+| http://novelfull.com                   |       ✔       |
+| http://www.machinenoveltranslation.com |               |
+| http://zenithnovels.com                |               |
+| https://4scanlation.xyz                |               |
+| https://anythingnovel.com              |               |
+| https://bestlightnovel.com             |       ✔       |
+| https://boxnovel.com                   |       ✔       |
+| https://comrademao.com                 |               |
+| https://creativenovels.com             |               |
+| https://crescentmoon.blog              |               |
+| https://litnet.com                     |       ✔       |
+| https://lnmtl.com                      |               |
+| https://m.chinesefantasynovels.com     |               |
+| https://m.novelspread.com              |               |
+| https://m.romanticlovebooks.com        |               |
+| https://m.wuxiaworld.co                |       ✔       |
+| https://meionovel.com                  |               |
+| https://mtled-novels.com               |       ✔       |
+| https://myoniyonitranslations.com      |               |
+| https://novel.babelchain.org           |       ✔       |
+| https://novelplanet.com                |       ✔       |
+| https://volarenovels.com               |               |
+| https://webnovel.online                |               |
+| https://wuxiaworld.online              |       ✔       |
+| https://www.idqidian.us                |               |
+| https://www.novelall.com               |       ✔       |
+| https://www.novelspread.com            |               |
+| https://www.readlightnovel.org         |               |
+| https://www.readnovelfull.com          |       ✔       |
+| https://www.romanticlovebooks.com      |               |
+| https://www.royalroad.com              |       ✔       |
+| https://www.scribblehub.com            |       ✔       |
+| https://www.tapread.com                |               |
+| https://www.webnovel.com               |       ✔       |
+| https://www.worldnovel.online          |       ✔       |
+| https://www.wuxiaworld.co              |       ✔       |
+| https://www.wuxiaworld.com             |       ✔       |
+| https://yukinovel.me                   |               |
 
 Rejected:
 
-| Rejected Links                     | Reason                              |
-| ---------------------------------- | ----------------------------------- |
-| http://fullnovel.live              | `403 - Forbidden: Access is denied` |
-| https://www.novelupdates.com       | `Does not host any novels`          |
-| http://moonbunnycafe.com           | `Does not follow uniform format`    |
-| http://gravitytales.com            | `503 Service Unavailable`           |
-| https://www.novelv.com             | `Site is down`                      |
-| https://www.noveluniverse.com      | `Site is down`                      |
-| https://lnindo.org                 | `Does not like being crawled`       |
-| https://m.chinesefantasynovels.com | `Site is down`                      |
+| Rejected Sources              | Reason                              |
+| ----------------------------- | ----------------------------------- |
+| http://fullnovel.live         | `403 - Forbidden: Access is denied` |
+| http://gravitytales.com       | `503 Service Unavailable`           |
+| http://moonbunnycafe.com      | `Does not follow uniform format`    |
+| https://indomtl.com           | `Does not like to be crawled`       |
+| https://lnindo.org            | `Does not like to be crawled`       |
+| https://www.noveluniverse.com | `Site is down`                      |
+| https://www.novelupdates.com  | `Does not host any novels`          |
+| https://www.novelv.com        | `Site is down`                      |
 
 ### C4. Supported output formats
 
