@@ -4,6 +4,7 @@ import re
 import logging
 from concurrent import futures
 from ..utils.crawler import Crawler
+import urllib.parse
 
 logger = logging.getLogger('CREATIVE_NOVELS')
 
@@ -15,12 +16,17 @@ class CreativeNovelsCrawler(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        self.novel_id = re.findall(r'\/\d+\/', self.novel_url)[0]
-        self.novel_id = int(self.novel_id.strip('/'))
-        logger.info('Id: %d', self.novel_id)
+        #self.novel_id = re.findall(r'\/\d+\/', self.novel_url)[0]
+        #self.novel_id = int(self.novel_id.strip('/'))
+
 
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
+
+        shortlink = soup.find("link",{"rel":"shortlink"})['href']
+        self.novel_id = urllib.parse.parse_qs(
+            urllib.parse.urlparse(shortlink).query)['p'][0]
+        logger.info('Id: %s', self.novel_id)
 
         self.novel_title = soup.select_one('head title').text
         self.novel_title = self.novel_title.split('–')[0].strip()
