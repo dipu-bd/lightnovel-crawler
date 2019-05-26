@@ -213,6 +213,7 @@ The list of currently available sources and the future plans are given below:
 | http://zenithnovels.com                |               |
 | https://4scanlation.xyz                |               |
 | https://anythingnovel.com              |               |
+| https://babelnovel.com/                |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
 | https://boxnovel.com                   |       ✔       |
 | https://comrademao.com                 |               |
@@ -227,7 +228,6 @@ The list of currently available sources and the future plans are given below:
 | https://meionovel.com                  |               |
 | https://mtled-novels.com               |       ✔       |
 | https://myoniyonitranslations.com      |               |
-| https://novel.babelchain.org           |       ✔       |
 | https://novelplanet.com                |       ✔       |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |

@@ -24,12 +24,12 @@ def downlod_cover(app):
             filename = os.path.join(
                 app.output_path, 'cover.%s' % (ext or 'png'))
             if not os.path.exists(filename):
-                logger.info('Downloading cover image')
+                logger.debug('Downloading cover image')
                 response = app.crawler.get_response(app.crawler.novel_cover)
                 with open(filename, 'wb') as f:
                     f.write(response.content)
                 # end with
-                logger.info('Saved cover: %s', filename)
+                logger.debug('Saved cover: %s', filename)
             # end if
             app.book_cover = filename
         except Exception:
@@ -57,7 +57,7 @@ def download_chapter_body(app, chapter):
 
     chapter['body'] = ''
     if os.path.exists(file_name):
-        logger.info('Restoring from %s', file_name)
+        logger.debug('Restoring from %s', file_name)
         with open(file_name, 'r') as file:
             old_chapter = json.load(file)
             chapter['body'] = old_chapter['body']
@@ -67,7 +67,7 @@ def download_chapter_body(app, chapter):
     if len(chapter['body']) == 0:
         body = ''
         try:
-            logger.info('Downloading to %s', file_name)
+            logger.debug('Downloading to %s', file_name)
             body = app.crawler.download_chapter_body(chapter)
         except Exception:
             logger.debug(traceback.format_exc())

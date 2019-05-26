@@ -327,8 +327,8 @@ class TestBot:
             'https://myoniyonitranslations.com/lm-chapter-277-279/',
             'https://myoniyonitranslations.com/category/kill-the-hero/'
         ],
-        'https://novel.babelchain.org/': [
-            'https://novel.babelchain.org/books/my-fiancee-is-a-stunning-ceo/',
+        'https://babelnovel.com/': [
+            'https://babelnovel.com/books/my-fiancee-is-a-stunning-ceo/',
             'martial god AsurA'
         ],
         'https://wuxiaworld.online/': [
