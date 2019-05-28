@@ -277,7 +277,7 @@ class TestBot:
             'https://www.novelspread.com/novel/the-legend-of-the-concubine-s-daughter-minglan'
         ],
         'https://www.readlightnovel.org/': [
-            'https://www.readlightnovel.org/martial-god-asura'
+            'https://www.readlightnovel.org/top-furious-doctor-soldier'
         ],
         'https://www.romanticlovebooks.com/': [
             'https://www.romanticlovebooks.com/xianxia/251.html'
@@ -327,8 +327,8 @@ class TestBot:
             'https://myoniyonitranslations.com/lm-chapter-277-279/',
             'https://myoniyonitranslations.com/category/kill-the-hero/'
         ],
-        'https://novel.babelchain.org/': [
-            'https://novel.babelchain.org/books/my-fiancee-is-a-stunning-ceo/',
+        'https://babelnovel.com/': [
+            'https://babelnovel.com/books/my-fiancee-is-a-stunning-ceo/',
             'martial god AsurA'
         ],
         'https://wuxiaworld.online/': [
@@ -348,8 +348,7 @@ class TestBot:
     }
 
     allowed_failures = [
-        'https://m.chinesefantasynovels.com/',
         'https://4scanlation.xyz/',
-        'https://novel.babelchain.org/',
+        'https://m.chinesefantasynovels.com/',
     ]
 # end class

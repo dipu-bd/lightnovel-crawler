@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
 import logging
-from urllib.parse import urlparse, quote
+import re
+from urllib.parse import quote, urlparse
+
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('BABELCHAIN')
-search_url = 'https://novel.babelchain.org/api/books?page=0&pageSize=10&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
-novel_page_url = 'https://novel.babelchain.org/api/books/%s'
-chapter_list_url = 'https://novel.babelchain.org/api/books/%s/chapters?bookId=%s&fields=id,name,canonicalName,hasContent'
-chapter_page_url = 'https://novel.babelchain.org/books/%s/chapters/%s'
-chapter_json_url = 'https://novel.babelchain.org/api/books/%s/chapters/%s?ignoreTopic=true'
+logger = logging.getLogger('BABELNOVEL')
+
+search_url = 'https://babelnovel.com/api/books?page=0&pageSize=10&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
+novel_page_url = 'https://babelnovel.com/api/books/%s'
+chapter_list_url = 'https://babelnovel.com/api/books/%s/chapters?bookId=%s&page=0&pageSize=999999&fields=id,name,canonicalName,hasContent'
+chapter_json_url = 'https://babelnovel.com/api/books/%s/chapters/%s?ignoreTopic=true'
+chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 
-class BabelchainCrawler(Crawler):
+class BabelNovelCrawler(Crawler):
     def search_novel(self, query):
-        query = query.lower()
-        query = '(name:*%s* OR alias:*%s*)' % (query, query)
-        url = search_url % quote(query)
+        url = search_url % quote(query.lower())
         logger.debug('Visiting %s', url)
         data = self.get_json(url)
 

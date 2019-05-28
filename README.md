@@ -40,7 +40,7 @@ Download lightnovels from various online sources and generate output in differen
 
 ### A1. EXE (Windows)
 
-📦 [lightnovel-crawler v2.9.10 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+📦 [lightnovel-crawler v2.9.11 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -211,8 +211,8 @@ The list of currently available sources and the future plans are given below:
 | http://novelfull.com                   |       ✔       |
 | http://www.machinenoveltranslation.com |               |
 | http://zenithnovels.com                |               |
-| https://4scanlation.xyz                |               |
 | https://anythingnovel.com              |               |
+| https://babelnovel.com/                |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
 | https://boxnovel.com                   |       ✔       |
 | https://comrademao.com                 |               |
@@ -227,7 +227,6 @@ The list of currently available sources and the future plans are given below:
 | https://meionovel.com                  |               |
 | https://mtled-novels.com               |       ✔       |
 | https://myoniyonitranslations.com      |               |
-| https://novel.babelchain.org           |       ✔       |
 | https://novelplanet.com                |       ✔       |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
@@ -251,6 +250,7 @@ Rejected:
 
 | Rejected Sources              | Reason                              |
 | ----------------------------- | ----------------------------------- |
+| https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://gravitytales.com       | `503 Service Unavailable`           |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
