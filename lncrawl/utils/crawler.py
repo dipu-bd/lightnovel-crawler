@@ -21,7 +21,7 @@ class Crawler:
     '''Blueprint for creating new crawlers'''
 
     def __init__(self):
-        self.executor = futures.ThreadPoolExecutor(max_workers=5)
+        self.executor = futures.ThreadPoolExecutor(max_workers=7)
         self.scrapper = cfscrape.create_scraper()
         self.scrapper.verify = False
 
@@ -198,7 +198,7 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins'
+        'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins', 'button', 'input'
     ]
     block_tags = [
         'h3', 'div', 'p'
@@ -217,6 +217,7 @@ class Crawler:
     # end def
 
     def clean_contents(self, div):
+        div.attrs = None
         for tag in div.findAll(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
