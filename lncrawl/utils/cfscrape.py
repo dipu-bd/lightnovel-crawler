@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Source: https://raw.githubusercontent.com/Anorov/cloudflare-scrape/master/cfscrape/__init__.py
 """
-import json
 import logging
 import random
 import re
@@ -16,13 +14,15 @@ from base64 import b64encode
 from collections import OrderedDict
 
 from requests.sessions import Session
+from requests.adapters import HTTPAdapter
 from requests.compat import urlparse, urlunparse
 from requests.exceptions import RequestException
 
-
-__version__ = "2.0.3"
+from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
 
 from ..assets.user_agents import user_agents
+
+__version__ = "2.0.7"
 
 DEFAULT_USER_AGENT = random.choice(user_agents)
 
@@ -43,7 +43,6 @@ DEFAULT_HEADERS = OrderedDict(
 
 BUG_REPORT = """\
 Cloudflare may have changed their technique, or there may be a bug in the script.
-
 Please read https://github.com/Anorov/cloudflare-scrape#updates, then file a \
 bug report at https://github.com/Anorov/cloudflare-scrape/issues."\
 """
@@ -53,10 +52,27 @@ The challenge answer was not properly accepted by Cloudflare. This can occur if 
 the target website is under heavy load, or if Cloudflare is experiencing issues. You can
 potentially resolve this by increasing the challenge answer delay (default: 8 seconds). \
 For example: cfscrape.create_scraper(delay=15)
-
 If increasing the delay does not help, please open a GitHub issue at \
 https://github.com/Anorov/cloudflare-scrape/issues\
 """
+
+# Remove a few problematic TLSv1.0 ciphers from the defaults
+DEFAULT_CIPHERS += ":!ECDHE+SHA:!AES128-SHA"
+
+
+class CloudflareAdapter(HTTPAdapter):
+    """ HTTPS adapter that creates a SSL context with custom ciphers """
+
+    def get_connection(self, *args, **kwargs):
+        conn = super(CloudflareAdapter, self).get_connection(*args, **kwargs)
+
+        if conn.conn_kw.get("ssl_context"):
+            conn.conn_kw["ssl_context"].set_ciphers(DEFAULT_CIPHERS)
+        else:
+            context = create_urllib3_context(ciphers=DEFAULT_CIPHERS)
+            conn.conn_kw["ssl_context"] = context
+
+        return conn
 
 
 class CloudflareError(RequestException):
@@ -81,6 +97,8 @@ class CloudflareScraper(Session):
         # Define headers to force using an OrderedDict and preserve header order
         self.headers = headers
 
+        self.mount("https://", CloudflareAdapter())
+
     @staticmethod
     def is_cloudflare_iuam_challenge(resp):
         return (
@@ -99,7 +117,8 @@ class CloudflareScraper(Session):
         )
 
     def request(self, method, url, *args, **kwargs):
-        resp = super(CloudflareScraper, self).request(method, url, *args, **kwargs)
+        resp = super(CloudflareScraper, self).request(
+            method, url, *args, **kwargs)
 
         # Check if Cloudflare captcha challenge is presented
         if self.is_cloudflare_captcha_challenge(resp):
@@ -110,6 +129,13 @@ class CloudflareScraper(Session):
             resp = self.solve_cf_challenge(resp, **kwargs)
 
         return resp
+
+    def cloudflare_is_bypassed(self, url, resp=None):
+        cookie_domain = ".{}".format(urlparse(url).netloc)
+        return (
+            self.cookies.get("cf_clearance", None, domain=cookie_domain) or
+            (resp and resp.cookies.get("cf_clearance", None, domain=cookie_domain))
+        )
 
     def handle_captcha_challenge(self, resp, url):
         error = (
@@ -127,7 +153,8 @@ class CloudflareScraper(Session):
         body = resp.text
         parsed_url = urlparse(resp.url)
         domain = parsed_url.netloc
-        submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (parsed_url.scheme, domain)
+        submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (
+            parsed_url.scheme, domain)
 
         cloudflare_kwargs = copy.deepcopy(original_kwargs)
 
@@ -136,7 +163,8 @@ class CloudflareScraper(Session):
 
         try:
             params = cloudflare_kwargs["params"] = OrderedDict(
-                re.findall(r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
+                re.findall(
+                    r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
             )
 
             for k in ("jschl_vc", "pass"):
@@ -194,7 +222,8 @@ class CloudflareScraper(Session):
 
             # The challenge requires `document.getElementById` to get this content.
             # Future proofing would require escaping newlines and double quotes
-            innerHTML = re.search(r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
+            innerHTML = re.search(
+                r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
             innerHTML = innerHTML.group(1) if innerHTML else ""
 
             # Prefix the challenge with a fake document object.
@@ -209,7 +238,6 @@ class CloudflareScraper(Session):
                       return {"innerHTML": "%s"};
                     }
                   };
-
                 %s; a.value
             """ % (
                 domain,
@@ -262,7 +290,8 @@ class CloudflareScraper(Session):
                 )
             raise
         except Exception:
-            logging.error("Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
+            logging.error(
+                "Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
             raise
 
         try:
@@ -311,7 +340,8 @@ class CloudflareScraper(Session):
             resp = scraper.get(url, **kwargs)
             resp.raise_for_status()
         except Exception:
-            logging.error("'%s' returned an error. Could not collect tokens." % url)
+            logging.error(
+                "'%s' returned an error. Could not collect tokens." % url)
             raise
 
         domain = urlparse(resp.url).netloc
@@ -341,7 +371,8 @@ class CloudflareScraper(Session):
         """
         Convenience function for building a Cookie HTTP header value.
         """
-        tokens, user_agent = cls.get_tokens(url, user_agent=user_agent, **kwargs)
+        tokens, user_agent = cls.get_tokens(
+            url, user_agent=user_agent, **kwargs)
         return "; ".join("=".join(pair) for pair in tokens.items()), user_agent
 
 
