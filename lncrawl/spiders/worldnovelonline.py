@@ -143,8 +143,19 @@ class WorldnovelonlineCrawler(Crawler):
 
         logger.debug(soup.title.string)
         #content = soup.find('div',{'data-element_type':'theme-post-content.default'}).soup.select('div.elementor-widget-container')
-        contents = soup.find(
-            'div', {'data-element_type': 'theme-post-content.default'})
+        #contents = soup.find(
+        #    'div', {'data-element_type': 'theme-post-content.default'})
+        if soup.find('div',{'class':'entry-content'}):
+            contents = soup.find('div',{'class':'entry-content'})
+        elif soup.find('div',{'class':'fr-view'}):
+            contents = soup.find('div',{'class':'fr-view'})
+
+        if contents.findAll('script'):
+            for ads in contents.findAll('script'):
+                ads.decompose()
+        if contents.findAll('ins'):
+            for ads in contents.findAll('ins'):
+                ads.decompose()
         if contents.findAll('div', {'class': 'code-block'}):
             for ads in contents.findAll('div', {'class': 'code-block'}):
                 ads.decompose()
