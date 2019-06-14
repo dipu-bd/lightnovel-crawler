@@ -10,7 +10,7 @@
 
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
-Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx and pdf.
+Downloads lightnovels from various online sources and generates books in these formats: epub, mobi, json, html, text, docx and pdf.
 
 > **Join the discord server I just opened recently: https://discord.gg/7A5Hktx**
 
@@ -208,6 +208,7 @@ The list of currently available sources and the future plans are given below:
 
 | Available Sources                      | Search Enable |
 | -------------------------------------- | :-----------: |
+| http://gravitytales.com                |               |
 | http://novelfull.com                   |       ✔       |
 | http://www.machinenoveltranslation.com |               |
 | http://zenithnovels.com                |               |
@@ -228,6 +229,7 @@ The list of currently available sources and the future plans are given below:
 | https://mtled-novels.com               |       ✔       |
 | https://myoniyonitranslations.com      |               |
 | https://novelplanet.com                |       ✔       |
+| https://novelraw.blogspot.com          |               |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
 | https://wuxiaworld.online              |       ✔       |
@@ -252,7 +254,6 @@ Rejected:
 | ----------------------------- | ----------------------------------- |
 | https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
-| http://gravitytales.com       | `503 Service Unavailable`           |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
