@@ -17,9 +17,9 @@ Downloads lightnovels from various online sources and generates books in these f
 ## Table of contents
 
 - [Installation](#a-installation)
-  - [EXE (Windows)](#a1-exe-windows)
-  - [PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-  - [Pydroid (Android)](#a3-pydroid-3-android)
+  - [⏬ EXE (Windows)](#a1-exe-windows)
+  - [📦 PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+  - [📱 Pydroid (Android)](#a3-pydroid-3-android)
   - [Chatbots](#a4-chatbots)
     - [Telegram](#a41-telegram)
     - [Discord](#a42-discord)
@@ -41,7 +41,7 @@ Downloads lightnovels from various online sources and generates books in these f
 
 ### A1. EXE (Windows)
 
-⏬ [lightnovel-crawler v2.9.12 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+⏬ [lightnovel-crawler v2.9.13 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -137,7 +137,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.9.12
+                           📒 Lightnovel Crawler 🍀2.9.13
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
