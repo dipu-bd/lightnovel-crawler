@@ -41,7 +41,7 @@ Downloads lightnovels from various online sources and generates books in these f
 
 ### A1. EXE (Windows)
 
-📦 [lightnovel-crawler v2.9.12 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+⏬ [lightnovel-crawler v2.9.12 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -76,18 +76,18 @@ $ lncrawl
 
 ### A3. Pydroid 3 (Android)
 
-You can run this app in you android phones too. Here are the steps to do:
+📱 You can run this app in your android phones too. Here are the steps to do:
 
-- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3&hl=en) in from playstore.
-- Open the app app and navigate to `Pip` from the drawer menu.
-- Type `lightnovel-crawler` in place of `Library name` and press the `Install` button
+- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3&hl=en) from playstore.
+- Open the app and navigate to **Pip** from the drawer menu.
+- Type `lightnovel-crawler` in place of `Library name` and press the `Install` button.
 - To reinstall or remove the installed package:
-  - Go to `Libraries` tab inside `Pip` page (left of `Install` tab)
-  - Find `lightnovel-crawler` and press the `Uninstall` button
-  - Then go over to `Install` tab again to install the latest version.
-- To use the app, select `Terminal` from the drawer menu. A console will appear.
+  - Go to _Libraries_ tab inside **Pip** page (left of _Install_ tab).
+  - Find `lightnovel-crawler` and press the `Uninstall` button.
+  - Then go over to _Install_ tab again to install the latest version.
+- To use the app, select **Terminal** from the drawer menu. A console will appear.
 - Type `lncrawl` to start.
-- You navigate up using <kbd>Volume UP + W</kbd> and down using <kbd>Volume UP + S</kbd>.
+- You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 
 > Here is a video that might help: https://youtu.be/I20IO4dGTJ8
 
