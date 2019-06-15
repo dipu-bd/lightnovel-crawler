@@ -119,7 +119,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.9.10
+                           📒 Lightnovel Crawler 🍀2.9.12
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]

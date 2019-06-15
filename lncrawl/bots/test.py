@@ -328,7 +328,7 @@ class TestBot:
             'https://myoniyonitranslations.com/category/kill-the-hero/'
         ],
         'https://babelnovel.com/': [
-            'https://babelnovel.com/books/my-fiancee-is-a-stunning-ceo/',
+            'https://babelnovel.com/books/poison-genius-consort',
             'martial god AsurA'
         ],
         'https://wuxiaworld.online/': [

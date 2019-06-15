@@ -17,6 +17,9 @@ chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 class BabelNovelCrawler(Crawler):
     def search_novel(self, query):
+        # to get cookies and session info
+        self.get_response(self.home_url)
+
         url = search_url % quote(query.lower())
         logger.debug('Visiting %s', url)
         data = self.get_json(url)
@@ -36,6 +39,9 @@ class BabelNovelCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
+        # to get cookies and session info
+        self.get_response(self.home_url)
+
         # Determine cannonical novel name
         path_fragments = urlparse(self.novel_url).path.split('/')
         if path_fragments[1] == 'books':
