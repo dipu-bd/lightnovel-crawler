@@ -24,28 +24,11 @@ class WorldnovelonlineCrawler(Crawler):
             results.append({
                 'url': url,
                 'title': self.trim_search_title(a.text.strip()),
-                'info': self.search_novel_info(url),
+                # 'info': self.search_novel_info(url),
             })
         # end for
 
         return results
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        #score = soup.select_one('span.star')['data-content']
-
-        chapters = soup.select('div.lightnovel-episode ul li a')
-        info = '%d chapters' % len(chapters)
-
-        if len(chapters) > 0:
-            info += ' | Latest: %s' % chapters[0].text.strip()
-        # end if
-
-        return info
     # end def
 
     def trim_search_title(self, title):
@@ -59,6 +42,25 @@ class WorldnovelonlineCrawler(Crawler):
         final_string = ' '.join(final_list)
         return final_string
     # end def
+
+    # Disabled: response time is too long to get extra info
+    #
+    # def search_novel_info(self, url):
+    #     '''Get novel title, autor, cover etc'''
+    #     logger.debug('Visiting %s', url)
+    #     soup = self.get_soup(url)
+
+    #     #score = soup.select_one('span.star')['data-content']
+
+    #     chapters = soup.select('div.lightnovel-episode ul li a')
+    #     info = '%d chapters' % len(chapters)
+
+    #     if len(chapters) > 0:
+    #         info += ' | Latest: %s' % chapters[0].text.strip()
+    #     # end if
+
+    #     return info
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -143,12 +145,12 @@ class WorldnovelonlineCrawler(Crawler):
 
         logger.debug(soup.title.string)
         #content = soup.find('div',{'data-element_type':'theme-post-content.default'}).soup.select('div.elementor-widget-container')
-        #contents = soup.find(
+        # contents = soup.find(
         #    'div', {'data-element_type': 'theme-post-content.default'})
-        if soup.find('div',{'class':'entry-content'}):
-            contents = soup.find('div',{'class':'entry-content'})
-        elif soup.find('div',{'class':'fr-view'}):
-            contents = soup.find('div',{'class':'fr-view'})
+        if soup.find('div', {'class': 'entry-content'}):
+            contents = soup.find('div', {'class': 'entry-content'})
+        elif soup.find('div', {'class': 'fr-view'}):
+            contents = soup.find('div', {'class': 'fr-view'})
 
         if contents.findAll('script'):
             for ads in contents.findAll('script'):

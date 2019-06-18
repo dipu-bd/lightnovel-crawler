@@ -39,6 +39,7 @@ from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
+from .novelraw import NovelRawCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -63,6 +64,7 @@ crawler_list = {
     'https://mtled-novels.com/': MtledNovelsCrawler,
     'https://myoniyonitranslations.com/': MyOniyOniTranslation,
     'https://novelplanet.com/': NovelPlanetCrawler,
+    'https://novelraw.blogspot.com/': NovelRawCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,

@@ -103,22 +103,8 @@ class NovelAllCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        logger.debug(soup.title.string)
-
-        # if 'Chapter' in soup.select_one('h3').text:
-        #    chapter['title'] = soup.select_one('h3').text
-        # else:
-        #    chapter['title'] = chapter['title'] + ' : ' + soup.select_one('h3').text
-        # end if
-
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
-        contents = soup.find('div', {"class": "reading-box"})
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        contents = soup.find('div', {'class': 'reading-box'})
+        self.clean_contents(contents)
+        return str(contents)
     # end def
 # end class

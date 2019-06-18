@@ -7,12 +7,14 @@ import os
 import re
 from datetime import datetime
 
+from progress.bar import IncrementalBar
+
 logger = logging.getLogger('PDF_BINDER')
 
 try:
     from weasyprint import HTML
 except Exception:
-    import traceback        
+    import traceback
     logger.debug(traceback.format_exc())
 # end try
 
@@ -100,6 +102,13 @@ class PdfBuilder:
 
         all_pages = []
 
+        bar = IncrementalBar('Adding chapters to PDF', max=len(self.chapters))
+        bar.start()
+
+        if os.getenv('debug_mode') == 'yes':
+            bar.next = lambda: None  # Hide in debug mode
+        # end if
+
         html = HTML(string=self.create_intro())
         all_pages += html.render().pages
         logger.info('Added intro page')
@@ -109,7 +118,10 @@ class PdfBuilder:
             html = HTML(string=html_string)
             all_pages += html.render().pages
             logger.info('Added chapter %d', chapter['id'])
+            bar.next()
         # end for
+
+        bar.finish()
 
         html = HTML(string=self.make_metadata())
         combined = html.render().copy(all_pages)

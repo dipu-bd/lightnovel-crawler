@@ -328,7 +328,7 @@ class TestBot:
             'https://myoniyonitranslations.com/category/kill-the-hero/'
         ],
         'https://babelnovel.com/': [
-            'https://babelnovel.com/books/my-fiancee-is-a-stunning-ceo/',
+            'https://babelnovel.com/books/poison-genius-consort',
             'martial god AsurA'
         ],
         'https://wuxiaworld.online/': [
@@ -345,6 +345,9 @@ class TestBot:
         'https://www.noveluniverse.com/': [
             'https://www.noveluniverse.com/index/novel/info/id/15.html'
         ],
+        'https://novelraw.blogspot.com': [
+            'https://novelraw.blogspot.com/2019/03/dragon-king-son-in-law-mtl.html'
+        ]
     }
 
     allowed_failures = [

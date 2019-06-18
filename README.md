@@ -10,19 +10,20 @@
 
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
-Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx and pdf.
+Downloads lightnovels from various online sources and generates books in these formats: epub, mobi, json, html, text, docx and pdf.
 
 > **Join the discord server I just opened recently: https://discord.gg/7A5Hktx**
 
 ## Table of contents
 
 - [Installation](#a-installation)
-  - [EXE (Windows)](#a1-exe-windows)
-  - [PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-  - [Chatbots](#a3-chatbots)
-    - [Telegram](#a31-telegram)
-    - [Discord](#a32-discord)
-  - [Run from source](#a4-run-from-source)
+  - [⏬ EXE (Windows)](#a1-exe-windows)
+  - [📦 PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+  - [📱 Pydroid (Android)](#a3-pydroid-3-android)
+  - [Chatbots](#a4-chatbots)
+    - [Telegram](#a41-telegram)
+    - [Discord](#a42-discord)
+  - [Run from source](#a5-run-from-source)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
   - [Running the bot](#b2-running-the-bot)
@@ -40,7 +41,7 @@ Download lightnovels from various online sources and generate output in differen
 
 ### A1. EXE (Windows)
 
-📦 [lightnovel-crawler v2.9.11 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+⏬ [lightnovel-crawler v2.9.13 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -73,21 +74,38 @@ $ lncrawl
 
 > To view extra logs, use: `lncrawl -lll`
 
-### A3. Chatbots
+### A3. Pydroid 3 (Android)
 
-#### A3.1 Telegram
+📱 You can run this app in your android phones too. Here are the steps to do:
+
+- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3&hl=en) from playstore.
+- Open the app and navigate to **Pip** from the drawer menu.
+- Type `lightnovel-crawler` in place of `Library name` and press the `Install` button.
+- To reinstall or remove the installed package:
+  - Go to _Libraries_ tab inside **Pip** page (left of _Install_ tab).
+  - Find `lightnovel-crawler` and press the `Uninstall` button.
+  - Then go over to _Install_ tab again to install the latest version.
+- To use the app, select **Terminal** from the drawer menu. A console will appear.
+- Type `lncrawl` to start.
+- You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
+
+> Here is a video that might help: https://youtu.be/I20IO4dGTJ8
+
+### A4. Chatbots
+
+#### A4.1 Telegram
 
 Visit this link to get started with the telegram bot:
 https://t.me/epub_smelter_bot
 
-#### A3.2 Discord
+#### A4.2 Discord
 
 Visit this link to install discord bot to your server:
 https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
 
 Send `!help` to open the bot help message.
 
-### A4. Run from source
+### A5. Run from source
 
 - First clone the repository:
 
@@ -119,7 +137,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.9.10
+                           📒 Lightnovel Crawler 🍀2.9.13
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -208,6 +226,7 @@ The list of currently available sources and the future plans are given below:
 
 | Available Sources                      | Search Enable |
 | -------------------------------------- | :-----------: |
+| http://gravitytales.com                |               |
 | http://novelfull.com                   |       ✔       |
 | http://www.machinenoveltranslation.com |               |
 | http://zenithnovels.com                |               |
@@ -228,6 +247,7 @@ The list of currently available sources and the future plans are given below:
 | https://mtled-novels.com               |       ✔       |
 | https://myoniyonitranslations.com      |               |
 | https://novelplanet.com                |       ✔       |
+| https://novelraw.blogspot.com          |               |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
 | https://wuxiaworld.online              |       ✔       |
@@ -252,7 +272,6 @@ Rejected:
 | ----------------------------- | ----------------------------------- |
 | https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
-| http://gravitytales.com       | `503 Service Unavailable`           |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
