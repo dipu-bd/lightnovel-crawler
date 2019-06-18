@@ -166,41 +166,52 @@ class TelegramBot:
         return 'handle_novel_url'
     # end def
 
-    def handle_novel_url(self, bot, update, user_data):
-        if user_data.get('app'):
+    ef handle_novel_url(self, bot, update, user_data):
+        if user_data.get('job'):
             app = user_data.get('app')
-        else :
-            app = App()
-            app.initialize()
-            user_data['app'] = app
-        # end if
-        app.user_input = update.message.text.strip()
-
-        try:
-            app.init_search()
-        except:
+            job = user_data.get('job')
             update.message.reply_text(
-                'Sorry! I only recognize these sources:\n' +
-                'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources'
-            )  # '\n'.join(['- %s' % x for x in crawler_list.keys()]))
-            update.message.reply_text(
-                'Enter something again or send /cancel to stop.')
-            return 'handle_novel_url'
-        # end try
+                '%s\n'
+                '%d out of %d chapters has been downloaded.\n'
+                'To terminate this session send /cancel.'
+                % (user_data.get('status'), app.progress, len(app.chapters))
+            )
+        else:
+            if user_data.get('app'):
+                app = user_data.get('app')
+            else :
+                app = App()
+                app.initialize()
+                user_data['app'] = app
+            # end if
+            app.user_input = update.message.text.strip()
 
-        if app.crawler:
-            update.message.reply_text('Got your page link')
-            return self.get_novel_info(bot, update, user_data)
-        # end if
+            try:
+                app.init_search()
+            except:
+                update.message.reply_text(
+                    'Sorry! I only recognize these sources:\n' +
+                    'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources'
+                )  # '\n'.join(['- %s' % x for x in crawler_list.keys()]))
+                update.message.reply_text(
+                    'Enter something again or send /cancel to stop.')
+                return 'handle_novel_url'
+            # end try
 
-        if len(app.user_input) < 5:
-            update.message.reply_text(
-                'Please enter a longer query text (at least 5 letters).')
-            return 'handle_novel_url'
-        # end if
+            if app.crawler:
+                update.message.reply_text('Got your page link')
+                return self.get_novel_info(bot, update, user_data)
+            # end if
 
-        update.message.reply_text('Got your query text')
-        return self.show_crawlers_to_search(bot, update, user_data)
+            if len(app.user_input) < 5:
+                update.message.reply_text(
+                    'Please enter a longer query text (at least 5 letters).')
+                return 'handle_novel_url'
+            # end if
+
+            update.message.reply_text('Got your query text')
+            return self.show_crawlers_to_search(bot, update, user_data)
+        #end if
     # end def
 
     def show_crawlers_to_search(self, bot, update, user_data):
