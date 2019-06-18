@@ -43,7 +43,6 @@ class BabelNovelCrawler(Crawler):
     def read_novel_info(self):
         # to get cookies and session info
         self.parse_content_css(self.home_url)
-        self.get_response(self.home_url)
 
         # Determine cannonical novel name
         path_fragments = urlparse(self.novel_url).path.split('/')
@@ -121,7 +120,6 @@ class BabelNovelCrawler(Crawler):
 
         soup = BeautifulSoup(data['data']['content'], 'lxml')
         for tag in soup.select(self.bad_selectors):
-            logger.debug(str(tag))
             tag.extract()
         # end for
 
