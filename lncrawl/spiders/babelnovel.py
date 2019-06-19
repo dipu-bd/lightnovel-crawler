@@ -1,8 +1,10 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
 import re
-from urllib.parse import quote, urlparse
+import json
+from urllib.parse import quote, urlparse, unquote
+
+from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
 
@@ -40,7 +42,7 @@ class BabelNovelCrawler(Crawler):
 
     def read_novel_info(self):
         # to get cookies and session info
-        self.get_response(self.home_url)
+        self.parse_content_css(self.home_url)
 
         # Determine cannonical novel name
         path_fragments = urlparse(self.novel_url).path.split('/')
@@ -81,25 +83,52 @@ class BabelNovelCrawler(Crawler):
                 'json_url': chapter_json_url % (self.novel_hash, item['canonicalName']),
             })
         # end for
-
-        logger.debug(self.chapters)
+        # logger.debug(self.chapters)
 
         self.volumes = [
             {'id': x + 1}
             for x in range(len(self.chapters) // 100 + 1)
         ]
-        logger.debug(self.volumes)
+        # logger.debug(self.volumes)
 
         logger.info('%d volumes and %d chapters found',
                     len(self.volumes), len(self.chapters))
     # end def
 
+    def parse_content_css(self, url):
+        soup = self.get_soup(url)
+        for script in soup.select('script'):
+            text = script.text.strip()
+            if not text.startswith('window.__STATE__'):
+                continue
+            # end if
+            content = re.findall('"[^"]+"', text, re.MULTILINE)[0][1:-1]
+            data = json.loads(unquote(content))
+            cssUrl = self.absolute_url(data['chapterDetailStore']['cssUrl'])
+            logger.info('Getting %s', cssUrl)
+            css = self.get_response(cssUrl).text
+            baddies = css.split('\n')[-1].split('{')[0].strip()
+            self.bad_selectors = baddies
+            break
+        # end for
+        logger.info('Bad selectors: %s', self.bad_selectors)
+    # end def
+
     def download_chapter_body(self, chapter):
         logger.info('Visiting %s', chapter['json_url'])
         data = self.get_json(chapter['json_url'])
-        content = data['data']['content']
-        content = re.sub(r'<\/?blockquote>', '', content)
-        body = [p.strip() for p in content.split('\n\n') if p.strip()]
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+
+        soup = BeautifulSoup(data['data']['content'], 'lxml')
+        for tag in soup.select(self.bad_selectors):
+            tag.extract()
+        # end for
+
+        body = soup.find('body')
+        self.clean_contents(body)
+
+        for tag in body.contents:
+            tag.name = 'p'
+        # end for
+        return str(body)
     # end def
 # end class
