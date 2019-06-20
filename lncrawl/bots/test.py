@@ -89,7 +89,7 @@ class TestBot:
 
     def post_on_github(self, message):
         # Check if there is already an issue younger than a week
-        issues = find_issues('travis-ci-report')
+        issues = find_issues('bot-report')
         if len(issues):
             time = int(issues[0]['title'].split('~')[-1].strip())
             diff = datetime.utcnow().timestamp() - time
@@ -100,7 +100,7 @@ class TestBot:
         # end if
 
         # Create new issue with appropriate label
-        title = '[Python %d.%d] Travis CI Bug Report ~ %s' % (
+        title = '[Python %d.%d] Test Bot Report ~ %s' % (
             sys.version_info.major,
             sys.version_info.minor,
             datetime.utcnow().strftime('%s')
@@ -108,7 +108,7 @@ class TestBot:
         post_issue(
             title,
             '```\n%s\n```' % message,
-            ['travis-ci-report']
+            ['bot-report']
         )
     # end def
 
