@@ -6,6 +6,7 @@ The purpose of this bot is to test the application and crawlers
 import io
 import logging
 import os
+import platform
 import re
 import shutil
 import sys
@@ -88,21 +89,27 @@ class TestBot:
     # end def
 
     def post_on_github(self, message):
+        if sys.version_info.minor != 6:
+            print('Not Python 3.6... skipping.')
+            return
+        # end if
+
         # Check if there is already an issue younger than a week
         issues = find_issues('bot-report')
         if len(issues):
             time = int(issues[0]['title'].split('~')[-1].strip())
             diff = datetime.utcnow().timestamp() - time
             if diff < 7 * 24 * 3600:
-                print('Detected an open issue younger than a week...skipping.')
+                print('Detected an open issue younger than a week... skipping.')
                 return
             # end if
         # end if
 
         # Create new issue with appropriate label
-        title = '[Python %d.%d] Test Bot Report ~ %s' % (
+        title = '[Test Bot][Python %d.%d][%s] Report ~ %s' % (
             sys.version_info.major,
             sys.version_info.minor,
+            platform.system(),
             datetime.utcnow().strftime('%s')
         )
         post_issue(
