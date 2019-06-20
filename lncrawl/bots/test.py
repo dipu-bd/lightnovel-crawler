@@ -88,12 +88,13 @@ class TestBot:
     # end def
 
     def post_on_github(self, message):
-        # Check if there is already an issue younger than 7 days
+        # Check if there is already an issue younger than a week
         issues = find_issues('travis-ci-report')
         if len(issues):
             time = int(issues[0]['title'].split('~')[-1].strip())
             diff = datetime.utcnow().timestamp() - time
-            if diff < 6 * 24 * 3600:
+            if diff < 7 * 24 * 3600:
+                print('Detected an open issue younger than a week...skipping.')
                 return
             # end if
         # end if

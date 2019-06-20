@@ -40,6 +40,7 @@ def post_issue(title, body=None, labels=None):
     else:
         logger.info('Could not create Issue {0:s}'.format(title))
         logger.debug('Response:\n%s\n' % r.content)
+        raise Exception('Failed to create issue')
     # end if
 # end def
 
