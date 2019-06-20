@@ -12,6 +12,7 @@ import sys
 import textwrap
 import time
 import traceback
+from datetime import datetime
 from random import random
 
 from PyInquirer import prompt
@@ -24,6 +25,7 @@ from ..core.arguments import get_args
 from ..spiders import crawler_list
 from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
+from ..utils.make_github_issue import post as github_post
 
 # For colorama
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
@@ -75,7 +77,13 @@ class TestBot:
             traceback.print_exc()
         finally:
             if len(self.allerrors):
-                self.show_errors()
+                message = self.error_message()
+                print(message)
+                github_post(
+                    'Travis CI Bug Report [%s]' % datetime.now(),
+                    '```\n%s\n```' % message,
+                    ['bug', 'travis-ci-report']
+                )
             # end if
             if len([x for x in self.allerrors.keys() if x not in self.allowed_failures]):
                 exit(1)
@@ -83,27 +91,25 @@ class TestBot:
         # end try
     # end def
 
-    def show_errors(self):
-        print('=' * 80)
-        print('Failed sources (%d):\n' % len(self.allerrors.keys()))
-        [print(x) for x in sorted(self.allerrors.keys())]
-        print('-' * 80)
-        print()
+    def error_message(self):
+        output = '=' * 80 + '\n'
+        output += 'Failed sources (%d):\n' % len(self.allerrors.keys())
+        output += '\n'.join(sorted(self.allerrors.keys())) + '\n'
+        output += '-' * 80 + '\n\n'
 
         num = 0
         for key in sorted(self.allerrors.keys()):
             for err in set(self.allerrors[key]):
                 num += 1
-                print('-' * 80)
-                print('Error #%d: %s' % (num, key))
-                print('-' * 80)
-                print(err)
+                output += '-' * 80 + '\n'
+                output += 'Error #%d: %s\n' % (num, key)
+                output += '-' * 80 + '\n'
+                output += err + '\n'
             # end for
         # end for
 
-        print()
-        print('=' * 80)
-        print()
+        output += '\n' + '=' * 80 + '\n'
+        return output
     # end_def
 
     def test_crawler(self, link, user_input):
