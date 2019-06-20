@@ -25,7 +25,7 @@ from ..core.arguments import get_args
 from ..spiders import crawler_list
 from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
-from ..utils.make_github_issue import post as github_post
+from ..utils.make_github_issue import find_issues, post_issue
 
 # For colorama
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
@@ -79,16 +79,36 @@ class TestBot:
             if len(self.allerrors):
                 message = self.error_message()
                 print(message)
-                github_post(
-                    'Travis CI Bug Report [%s]' % datetime.now(),
-                    '```\n%s\n```' % message,
-                    ['bug', 'travis-ci-report']
-                )
+                self.post_on_github(message)
             # end if
             if len([x for x in self.allerrors.keys() if x not in self.allowed_failures]):
                 exit(1)
             # end if
         # end try
+    # end def
+
+    def post_on_github(self, message):
+        # Check if there is already an issue younger than 7 days
+        issues = find_issues('travis-ci-report')
+        if len(issues):
+            time = int(issues[0]['title'].split('~')[-1].strip())
+            diff = datetime.utcnow().timestamp() - time
+            if diff < 6 * 24 * 3600:
+                return
+            # end if
+        # end if
+
+        # Create new issue with appropriate label
+        title = '[Python %d.%d] Travis CI Bug Report ~ %s' % (
+            sys.version_info.major,
+            sys.version_info.minor,
+            datetime.utcnow().strftime('%s')
+        )
+        post_issue(
+            title,
+            '```\n%s\n```' % message,
+            ['travis-ci-report']
+        )
     # end def
 
     def error_message(self):
