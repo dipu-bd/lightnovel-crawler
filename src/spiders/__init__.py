@@ -40,6 +40,7 @@ from .wuxiaonline import WuxiaOnlineCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
 from .novelraw import NovelRawCrawler
+from .lightnovelonline import LightNovelOnline
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -54,6 +55,7 @@ crawler_list = {
     'https://comrademao.com/': ComrademaoCrawler,
     'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
+    'https://light-novel.online/': LightNovelOnline,
     'https://litnet.com/': LitnetCrawler,
     'https://lnmtl.com/': LNMTLCrawler,
     'https://m.chinesefantasynovels.com/': ChineseFantasyNovels,

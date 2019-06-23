@@ -237,6 +237,7 @@ The list of currently available sources and the future plans are given below:
 | https://comrademao.com                 |               |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
+| https://light-novel.online/            |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |
 | https://m.chinesefantasynovels.com     |               |

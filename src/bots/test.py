@@ -381,6 +381,10 @@ class TestBot:
         ],
         'https://novelraw.blogspot.com': [
             'https://novelraw.blogspot.com/2019/03/dragon-king-son-in-law-mtl.html'
+        ],
+        'https://light-novel.online/': [
+            'https://light-novel.online/great-tyrannical-deity',
+            'tyrannical'
         ]
     }
 
