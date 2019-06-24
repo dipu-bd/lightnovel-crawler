@@ -225,6 +225,8 @@ class Crawler:
                 tag.extract()   # Remove bad tags
             elif self.is_blacklisted(tag.text):
                 tag.extract()   # Remove blacklisted contents
+            elif len(tag.getText().strip()) == 0:
+                tag.extract()   # Remove empty tags
             else:
                 tag.attrs = None    # Remove attributes
             # end if

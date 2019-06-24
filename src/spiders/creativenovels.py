@@ -94,17 +94,17 @@ class CreativeNovelsCrawler(Crawler):
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        content = soup.select_one('article .entry-content')
-        for div in content.select('.announcements_crn'):
-            div.decompose()
+        body = soup.select_one('article .entry-content')
+        for tag in body.select('.announcements_crn'):
+            tag.decompose()
         # end for
-        for b in content.select('b'):
-            if b['style'] == 'color:transparent;':
+        for b in body.select('b'):
+            if b.get('style') == 'color:transparent;':
                 b.decompose()
             # end if
         # end for
 
-        self.clean_contents(content)
-        return str(content)
+        self.clean_contents(body)
+        return str(body)
     # end def
 # end class
