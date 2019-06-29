@@ -4,7 +4,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
+<!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
 
@@ -234,7 +234,6 @@ The list of currently available sources and the future plans are given below:
 | https://babelnovel.com/                |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
 | https://boxnovel.com                   |       ✔       |
-| https://comrademao.com                 |               |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
 | https://light-novel.online/            |       ✔       |
@@ -279,6 +278,7 @@ Rejected:
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
+| https://comrademao.com        | `Removed on request of the owner`   |
 
 ### C4. Supported output formats
 
