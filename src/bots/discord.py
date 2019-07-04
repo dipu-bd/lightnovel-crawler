@@ -28,9 +28,8 @@ class DiscordBot(discord.Client):
     @asyncio.coroutine
     async def on_ready(self):
         print('Discord bot in online!')
-        await self.change_presence(
-            game=discord.Game(name="🔥Ready For Smelting🔥")
-        )
+        activity = discord.Game(name="🔥Ready For Smelting🔥")
+        await self.change_presence(status=discord.Status.online, activity=activity)
     # end def
 
     @asyncio.coroutine
@@ -41,7 +40,7 @@ class DiscordBot(discord.Client):
         if message.author.bot:
             return  # Other bots are not edible
         # end if
-        if message.channel.is_private:
+        if isinstance(message.channel, discord.abc.PrivateChannel):
             await self.handle_message(message)
         elif message.content == '!lncrawl':
             await self.handle_message(message)
@@ -53,8 +52,7 @@ class DiscordBot(discord.Client):
     # end def
 
     async def public_help(self, message):
-        await self.send_message(
-            message.channel,
+        await message.channel.send(
             'Enter `!lncrawl` to start a new session of **Lightnovel Crawler**'
         )
     # end def
@@ -67,8 +65,7 @@ class DiscordBot(discord.Client):
         except Exception as err:
             logger.debug(traceback.format_exc())
             try:
-                await self.send_message(
-                    message.channel,
+                await message.channel.send(
                     'Sorry! We had some trouble processing your request. Please try again.\n\n' +
                     'Report [here](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose)' +
                     ' if this problem continues with this message: `' +
@@ -112,8 +109,9 @@ class MessageHandler:
     async def send(self, *contents):
         for text in contents:
             if text:
-                await self.client.send_typing(self.user)
-                await self.client.send_message(self.user, text)
+                #await self.client.send_typing(self.user)
+                async with self.message.channel.typing():
+                    await self.message.channel.send(text)
             # end if
         # end for
     # end def
@@ -173,84 +171,83 @@ class MessageHandler:
     # end def
 
     async def display_novel_selection(self):
-        await self.client.send_typing(self.user)
-        self.app.search_novel()
+        async with self.message.channel.typing():
+            self.app.search_novel()
 
-        if len(self.app.search_results) == 0:
-            await self.send('No novels found for "%s"' % self.app.user_input)
-            return
-        # end if
-        if len(self.app.search_results) == 1:
-            self.selected_novel = self.app.search_results[0]
-            await self.display_sources_selection()
-            return
-        # end if
+            if len(self.app.search_results) == 0:
+                await self.send('No novels found for "%s"' % self.app.user_input)
+                return
+            # end if
+            if len(self.app.search_results) == 1:
+                self.selected_novel = self.app.search_results[0]
+                await self.display_sources_selection()
+                return
+            # end if
 
-        await self.send(
-            ('Found %d novels:\n' % len(self.app.search_results)) +
-            '\n'.join([
-                '%d. **%s** `%d sources`' % (
-                    i + 1,
-                    item['title'],
-                    len(item['novels'])
-                ) for i, item in enumerate(self.app.search_results)
-            ]) + '\n' +
-            'Enter name or index of your novel.\n' +
-            'Send `!cancel` to stop this session.'
-        )
-        self.state = self.handle_novel_selection
+            await self.send(
+                ('Found %d novels:\n' % len(self.app.search_results)) +
+                '\n'.join([
+                    '%d. **%s** `%d sources`' % (
+                        i + 1,
+                        item['title'],
+                        len(item['novels'])
+                    ) for i, item in enumerate(self.app.search_results)
+                ]) + '\n' +
+                'Enter name or index of your novel.\n' +
+                'Send `!cancel` to stop this session.'
+            )
+            self.state = self.handle_novel_selection
     # end def
 
     async def handle_novel_selection(self):
-        await self.client.send_typing(self.user)
-
         text = self.message.content.strip()
-        if text == '!cancel':
+        if text.startswith('!cancel'):
             await self.get_novel_url()
             return
         # end if
 
-        match_count = 0
-        selected = None
-        for i, res in enumerate(self.app.search_results):
-            if str(i + 1) == text:
-                selected = res
-                match_count += 1
-            elif text.isdigit() or len(text) < 3:
-                pass
-            elif res['title'].lower().find(text) != -1:
-                selected = res
-                match_count += 1
+        async with self.message.channel.typing():
+            match_count = 0
+            selected = None
+            for i, res in enumerate(self.app.search_results):
+                if str(i + 1) == text:
+                    selected = res
+                    match_count += 1
+                elif text.isdigit() or len(text) < 3:
+                    pass
+                elif res['title'].lower().find(text) != -1:
+                    selected = res
+                    match_count += 1
+                # end if
+            # end for
+
+            if match_count != 1:
+                await self.send(
+                    'Sorry! You should select *one* novel from the list (%d selected).' % match_count)
+                await self.display_novel_selection()
+                return
             # end if
-        # end for
 
-        if match_count != 1:
-            await self.send(
-                'Sorry! You should select *one* novel from the list (%d selected).' % match_count)
-            await self.display_novel_selection()
-            return
-        # end if
-
-        self.selected_novel = selected
-        await self.display_sources_selection()
+            self.selected_novel = selected
+            await self.display_sources_selection()
     # end def
 
     async def display_sources_selection(self):
-        await self.client.send_typing(self.user)
-        await self.send(
-            (
-                '**%s** is found in %d sources:\n' % (
-                    self.selected_novel['title'], len(self.selected_novel['novels']))
-            ) + '\n'.join([
-                '%d. <%s> %s' % (
-                    i + 1,
-                    item['url'],
-                    item['info'] if 'info' in item else ''
-                ) for i, item in enumerate(self.selected_novel['novels'])
-            ]) + '\n' +
-            'Enter index or name of your source.\n' +
-            'Send `!cancel` to stop this session.'
-        )
+        async with self.message.channel.typing():
+            await self.send(
+                (
+                    '**%s** is found in %d sources:\n' % (
+                        self.selected_novel['title'], len(self.selected_novel['novels']))
+                ) + '\n'.join([
+                    '%d. <%s> %s' % (
+                        i + 1,
+                        item['url'],
+                        item['info'] if 'info' in item else ''
+                    ) for i, item in enumerate(self.selected_novel['novels'])
+                ]) + '\n' +
+                'Enter index or name of your source.\n' +
+                'Send `!cancel` to stop this session.'
+            )
         self.state = self.handle_sources_to_search
     # end def
 
@@ -262,7 +259,7 @@ class MessageHandler:
         # end if
 
         text = self.message.content.strip()
-        if text == '!cancel':
+        if text.startswith('!cancel'):
             await self.get_novel_url()
             return
         # end if
@@ -307,26 +304,26 @@ class MessageHandler:
         # TODO: Handle login here
 
         await self.send('Getting information about your novel...')
-        await self.client.send_typing(self.user)
-        self.app.get_novel_info()
+        async with self.message.channel.typing():
+            self.app.get_novel_info()
 
-        # Setup output path
-        good_name = os.path.basename(self.app.output_path)
-        output_path = os.path.abspath(
-            os.path.join('.discord_bot_output', str(self.user.id), good_name))
-        if os.path.exists(output_path):
-            shutil.rmtree(output_path, ignore_errors=True)
-        # end if
-        os.makedirs(output_path, exist_ok=True)
-        self.app.output_path = output_path
+            # Setup output path
+            good_name = os.path.basename(self.app.output_path)
+            output_path = os.path.abspath(
+                os.path.join('.discord_bot_output', str(self.user.id), good_name))
+            if os.path.exists(output_path):
+                shutil.rmtree(output_path, ignore_errors=True)
+            # end if
+            os.makedirs(output_path, exist_ok=True)
+            self.app.output_path = output_path
 
-        # Get chapter range
-        await self.send(
-            'It has %d volumes and %d chapters.' % (
-                len(self.app.crawler.volumes),
-                len(self.app.crawler.chapters)
+            # Get chapter range
+            await self.send(
+                'It has %d volumes and %d chapters.' % (
+                    len(self.app.crawler.volumes),
+                    len(self.app.crawler.chapters)
+                )
             )
-        )
 
         await self.display_range_selection()
     # end def
@@ -471,7 +468,7 @@ class MessageHandler:
             logger.warn('Download failure: %s' % self.user.id)
             logger.debug(traceback.format_exc())
         # end try
-        await self.client.send_typing(self.user)
+        #async with self.message.channel.typing():
     # end def
 
     def start_download(self):
@@ -504,12 +501,14 @@ class MessageHandler:
     async def upload_file(self, archive):
         file_size = os.stat(archive).st_size
         if file_size > 7.99 * 1024 * 1024:
-            link_id = upload(archive)
+            await self.send(
+                    'File %s exceeds 8MB. Uploading To Google Drive.' % os.path.basename(archive))
+            description = 'Generated By : Discord Bot Ebook Smelter' 
+            link_id = upload(archive,description)
             if link_id:
                 await self.send('https://drive.google.com/open?id=%s' % link_id)
             else:
-                await self.send(
-                    'File %s exceeds 8MB. Can not upload it.' % os.path.basename(archive))
+                await self.send('Failed to upload to google drive')
             # end if
         else:
             k = 0
@@ -524,13 +523,21 @@ class MessageHandler:
                     ['B', 'KB', 'MB', 'GB'][k]
                 )
             )
-            await self.client.send_typing(self.user)
-            await self.client.send_file(
-                self.user,
-                open(archive, 'rb'),
-                filename=os.path.basename(archive),
-                content='Here you go!',
-            )
+            async with self.message.channel.typing():
+                #await message.channel.send('Hello', file=discord.File('cool.png', 'testing.png'))
+                await self.message.channel.send(
+                    'Here you go ! ', 
+                    file=discord.File(
+                        open(archive, 'rb'),
+                        os.path.basename(archive)
+                        )
+                    )
+                #await self.message.channel.send_file(
+                #    self.user,
+                #    open(archive, 'rb'),
+                #    filename=os.path.basename(archive),
+                #    content='Here you go!',
+                #)
         # end if
     # end def
 
@@ -544,17 +551,18 @@ class MessageHandler:
             return
         # end if
 
-        if self.app.progress < len(self.app.chapters):
-            self.status[1] = '%d out of %d chapters has been downloaded.' % (
-                self.app.progress, len(self.app.chapters))
-        else:
-            self.status[1] = 'Download complete.'
-        # end if
+        async with self.message.channel.typing():
+            if self.app.progress < len(self.app.chapters):
+                self.status[1] = '%d out of %d chapters has been downloaded.' % (
+                    self.app.progress, len(self.app.chapters))
+            else:
+                self.status[1] = 'Download complete.'
+            # end if
 
-        await self.send(
-            '\n'.join(self.status).strip() + '\n\n' +
-            'Send `!cancel` to stop'
-        )
-        await self.client.send_typing(self.user)
+            await self.send(
+                '\n'.join(self.status).strip() + '\n\n' +
+                'Send `!cancel` to stop'
+            )
+        #await self.client.typing(self.user)
     # end def
 # end class
