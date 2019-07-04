@@ -4,7 +4,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
+<!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
 
@@ -41,7 +41,7 @@ Downloads lightnovels from various online sources and generates books in these f
 
 ### A1. EXE (Windows)
 
-⏬ [lightnovel-crawler v2.9.13 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+⏬ [lightnovel-crawler v2.10.0 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -137,7 +137,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.9.13
+                           📒 Lightnovel Crawler 🍀2.10.0
             Download lightnovels into html, text, epub, mobi and json
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -234,9 +234,9 @@ The list of currently available sources and the future plans are given below:
 | https://babelnovel.com/                |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
 | https://boxnovel.com                   |       ✔       |
-| https://comrademao.com                 |               |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
+| https://light-novel.online/            |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |
 | https://m.chinesefantasynovels.com     |               |
@@ -278,6 +278,7 @@ Rejected:
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
+| https://comrademao.com        | `Removed on request of the owner`   |
 
 ### C4. Supported output formats
 

@@ -19,11 +19,10 @@ class CreativeNovelsCrawler(Crawler):
         #self.novel_id = re.findall(r'\/\d+\/', self.novel_url)[0]
         #self.novel_id = int(self.novel_id.strip('/'))
 
-
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        shortlink = soup.find("link",{"rel":"shortlink"})['href']
+        shortlink = soup.find("link", {"rel": "shortlink"})['href']
         self.novel_id = urllib.parse.parse_qs(
             urllib.parse.urlparse(shortlink).query)['p'][0]
         logger.info('Id: %s', self.novel_id)
@@ -95,15 +94,17 @@ class CreativeNovelsCrawler(Crawler):
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        content = soup.select_one('article .entry-content')
-        for ad in content.select('.code-block'):
-            ad.decompose()
+        body = soup.select_one('article .entry-content')
+        for tag in body.select('.announcements_crn'):
+            tag.decompose()
+        # end for
+        for b in body.select('b'):
+            if b.get('style') == 'color:transparent;':
+                b.decompose()
+            # end if
         # end for
 
-        return ''.join([
-            str(p.extract())
-            for p in content.select('p')
-            if p.text.strip()
-        ])
+        self.clean_contents(body)
+        return str(body)
     # end def
 # end class
