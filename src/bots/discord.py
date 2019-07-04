@@ -110,8 +110,8 @@ class MessageHandler:
         for text in contents:
             if text:
                 #await self.client.send_typing(self.user)
-                async with self.message.channel.typing():
-                    await self.message.channel.send(text)
+                async with self.user.typing():
+                    await self.user.send(text)
             # end if
         # end for
     # end def
@@ -121,6 +121,7 @@ class MessageHandler:
         self.message = message
         self.user = message.author
         if not self.state:
+            await message.channel.send("I'll Message you Privately <@%s>" % self.user.id)
             await self.send(
                 '-' * 80 + '\n' +
                 ('Hello %s\n' % self.user.name) +
@@ -171,7 +172,7 @@ class MessageHandler:
     # end def
 
     async def display_novel_selection(self):
-        async with self.message.channel.typing():
+        async with self.user.typing():
             self.app.search_novel()
 
             if len(self.app.search_results) == 0:
@@ -206,7 +207,7 @@ class MessageHandler:
             return
         # end if
 
-        async with self.message.channel.typing():
+        async with self.user.typing():
             match_count = 0
             selected = None
             for i, res in enumerate(self.app.search_results):
@@ -233,7 +234,7 @@ class MessageHandler:
     # end def
 
     async def display_sources_selection(self):
-        async with self.message.channel.typing():
+        async with self.user.typing():
             await self.send(
                 (
                     '**%s** is found in %d sources:\n' % (
@@ -304,7 +305,7 @@ class MessageHandler:
         # TODO: Handle login here
 
         await self.send('Getting information about your novel...')
-        async with self.message.channel.typing():
+        async with self.user.typing():
             self.app.get_novel_info()
 
             # Setup output path
@@ -468,7 +469,6 @@ class MessageHandler:
             logger.warn('Download failure: %s' % self.user.id)
             logger.debug(traceback.format_exc())
         # end try
-        #async with self.message.channel.typing():
     # end def
 
     def start_download(self):
@@ -523,21 +523,15 @@ class MessageHandler:
                     ['B', 'KB', 'MB', 'GB'][k]
                 )
             )
-            async with self.message.channel.typing():
+            async with self.user.typing():
                 #await message.channel.send('Hello', file=discord.File('cool.png', 'testing.png'))
-                await self.message.channel.send(
+                await self.user.send(
                     'Here you go ! ', 
                     file=discord.File(
                         open(archive, 'rb'),
                         os.path.basename(archive)
                         )
                     )
-                #await self.message.channel.send_file(
-                #    self.user,
-                #    open(archive, 'rb'),
-                #    filename=os.path.basename(archive),
-                #    content='Here you go!',
-                #)
         # end if
     # end def
 
@@ -551,7 +545,7 @@ class MessageHandler:
             return
         # end if
 
-        async with self.message.channel.typing():
+        async with self.user.typing():
             if self.app.progress < len(self.app.chapters):
                 self.status[1] = '%d out of %d chapters has been downloaded.' % (
                     self.app.progress, len(self.app.chapters))
@@ -563,6 +557,5 @@ class MessageHandler:
                 '\n'.join(self.status).strip() + '\n\n' +
                 'Send `!cancel` to stop'
             )
-        #await self.client.typing(self.user)
     # end def
 # end class
