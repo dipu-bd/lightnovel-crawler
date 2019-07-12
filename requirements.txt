@@ -10,5 +10,6 @@ python-docx==0.8.10
 python-dotenv==0.10.3
 python-slugify==3.0.2
 cairocffi==0.9.0
+CairoSVG==2.4.0
 WeasyPrint==48
 racovimge==0.9
