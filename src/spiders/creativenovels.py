@@ -81,10 +81,8 @@ class CreativeNovelsCrawler(Crawler):
                 'volume': vol_id,
             })
         # end for
-        logger.debug(self.chapters)
 
         self.volumes = [{'id': x} for x in set(self.volumes)]
-        logger.debug(self.volumes)
 
         logger.info('%d chapters and %d volumes found',
                     len(self.chapters), len(self.volumes))

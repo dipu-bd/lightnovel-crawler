@@ -58,13 +58,11 @@ class FourScanlationCrawler(Crawler):
                 'title': a.text.strip(),
             })
         # end for
-        logger.debug(self.chapters)
 
         self.volumes = [
             {'id': x + 1}
             for x in range(len(self.chapters) // 100 + 1)
         ]
-        logger.debug(self.volumes)
 
         logger.debug('%d chapters & %d volumes found',
                      len(self.chapters), len(self.volumes))

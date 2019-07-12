@@ -59,8 +59,6 @@ class GravityTalesCrawler(Crawler):
             for x in volumes
         ]
 
-        logger.debug(self.chapters)
-        logger.debug(self.volumes)
         logger.debug('%d chapters and %d volumes found',
                      len(self.chapters), len(self.volumes))
     # end def

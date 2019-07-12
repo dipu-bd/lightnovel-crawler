@@ -65,9 +65,6 @@ class BestLightNovel(Crawler):
             })
         # end for
 
-        logger.debug(self.chapters)
-        logger.debug(self.volumes)
-
         logger.debug('%d volumes & %d chapters found',
                      len(self.volumes), len(self.chapters))
     # end def

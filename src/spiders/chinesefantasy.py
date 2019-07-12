@@ -38,10 +38,8 @@ class ChineseFantasyNovels(Crawler):
                 'url': self.absolute_url(a['href']),
             })
         # end def
-        logger.debug(self.chapters)
 
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
-        logger.debug(self.volumes)
 
         logger.info('%d volumes and %d chapters found',
                     len(self.volumes), len(self.chapters))

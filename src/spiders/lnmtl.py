@@ -81,9 +81,7 @@ class LNMTLCrawler(Crawler):
         logger.info('Novel cover = %s', self.novel_cover)
 
         self.parse_volume_list(soup)
-
         self.volumes = sorted(self.volumes, key=lambda x: x['id'])
-        logger.debug(self.volumes)
 
         logger.info('Getting chapters...')
         self.download_chapter_list()

@@ -88,9 +88,8 @@ class WuxiaCoCrawler(Crawler):
             # end if
         # end for
 
-        logger.debug(self.volumes)
-        logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
+        logger.info('%d chapters and %d volumes found',
+                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_body(self, chapter):

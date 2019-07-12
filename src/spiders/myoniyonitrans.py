@@ -86,9 +86,6 @@ class MyOniyOniTranslation(Crawler):
             # end for
         # end if
 
-        logger.debug(self.chapters)
-        logger.debug(self.volumes)
-
         logger.debug('%d chapters & %d volumes found',
                      len(self.chapters), len(self.volumes))
     # end def
