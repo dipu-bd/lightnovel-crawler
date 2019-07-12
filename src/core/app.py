@@ -12,7 +12,7 @@ from ..binders import available_formats, bind_books
 from ..spiders import crawler_list
 from .novel_search import search_novels
 from .downloader import download_chapters
-from .novel_info import format_chapters, format_volumes, save_metadata
+from .novel_info import format_novel, save_metadata
 
 logger = logging.getLogger('APP')
 
@@ -124,11 +124,11 @@ class App:
         # end if
 
         print('Retrieving novel info...')
+        print(self.crawler.novel_url)
         self.crawler.read_novel_info()
         print('NOVEL: %s' % self.crawler.novel_title)
 
-        format_volumes(self.crawler)
-        format_chapters(self.crawler)
+        format_novel(self.crawler)
 
         self.good_file_name = slugify(
             self.crawler.novel_title,
