@@ -117,5 +117,6 @@ def download_chapters(app):
         bar.next()
     # end for
 
-    bar.finish()
+    bar.clearln()
+    print('Downloaded %d chapters', len(app.chapters))
 # end def
