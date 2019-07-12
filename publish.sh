@@ -1,3 +1,5 @@
+#!/bin/bash
+
 VERSION=$(head -n 1 VERSION)
 
 rm -rf build dist *.egg-info __pycache__

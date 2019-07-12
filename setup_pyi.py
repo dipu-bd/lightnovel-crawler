@@ -4,6 +4,7 @@ import os
 import shlex
 import shutil
 import sys
+import platform
 
 from PyInstaller import __main__ as pyi
 from setuptools.config import read_configuration
@@ -22,6 +23,7 @@ def setup_command():
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
 
     config = read_configuration('setup.cfg')
+    sep = ';' if platform.system() == 'Windows' else ':'
     for k, paths in config['options']['package_data'].items():
         for v in paths:
             src = os.path.normpath('/'.join([cur_dir, k, v]))
@@ -30,7 +32,7 @@ def setup_command():
             dst = os.path.dirname(dst)
             dst = '/'.join(dst.split(os.sep))
             dst = (dst + '/') if dst else '.'
-            command += '--add-data "%s";"%s" ' % (src, dst)
+            command += '--add-data "%s%s%s" ' % (src, sep, dst)
         # end for
     # end for
 
