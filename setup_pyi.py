@@ -49,7 +49,7 @@ def setup_command():
 # end def
 
 
-def main():
+def package():
     shutil.rmtree(output, ignore_errors=True)
     os.makedirs(output, exist_ok=True)
     setup_command()
@@ -59,5 +59,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    package()
 # end if
