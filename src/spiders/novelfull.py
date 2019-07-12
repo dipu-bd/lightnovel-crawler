@@ -126,6 +126,7 @@ class NovelFullCrawler(Crawler):
             ads.decompose()
         for ads in content.findAll('div', {"align": 'center'}):
             ads.decompose()
-        return content.prettify()
+        self.clean_contents(content)
+        return str(content)
     # end def
 # end class
