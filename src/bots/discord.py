@@ -46,7 +46,7 @@ class DiscordBot(discord.Client):
             await self.handle_message(message)
         elif message.content == self.signal + 'lncrawl':
             await self.handle_message(message)
-        elif message.content == self.signal + 'help':
+        elif message.content == '!help':
             await self.public_help(message)
         else:
             return  # It goes over the head
