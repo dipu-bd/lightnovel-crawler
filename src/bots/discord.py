@@ -50,11 +50,10 @@ class DiscordBot(discord.Client):
                 'Enter `%slncrawl` to start a new session of **Lightnovel Crawler**' % self.signal
             )
         elif message.content == self.signal + 'lncrawl':
+            uid = message.author.id
             await self.send_public_text(
-                message,
-                "I will message you privately <@%s>" % message.author.id
-            )
-            handler = self.handlers.get(message.author.uid)
+                message, "I will message you privately <@%s>" % uid)
+            handler = self.handlers.get(uid)
             if handler:
                 handler.destroy()
             # end if
@@ -177,7 +176,7 @@ class MessageHandler:
             await self.send(
                 'Searching %d sources for "%s"\n' % (
                     len(self.app.crawler_links), self.app.user_input),
-                'Send !cancel to stop'
+                'Please do not type anything before I reply!'
             )
             await self.display_novel_selection()
         # end if
