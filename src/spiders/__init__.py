@@ -26,6 +26,7 @@ from .noveluniverse import NovelUniverseCrawler
 from .novelv import NovelvCrawler
 from .readln import ReadLightNovelCrawler
 from .readnovelfull import ReadNovelFullCrawler
+from .rebirthonline import RebirthOnlineCrawler
 from .romanticlb import RomanticLBCrawler
 from .royalroad import RoyalRoadCrawler
 from .scribblehub import ScribbleHubCrawler
@@ -73,6 +74,7 @@ crawler_list = {
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
+    'https://www.rebirth.online/': RebirthOnlineCrawler,
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://www.scribblehub.com/': ScribbleHubCrawler,
