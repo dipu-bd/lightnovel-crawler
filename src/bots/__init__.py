@@ -20,10 +20,8 @@ def run_bot(bot):
         from ..bots.telegram import TelegramBot
         TelegramBot().start()
     elif bot == 'discord':
-        while True:
-            from ..bots.discord import DiscordBot
-            DiscordBot().start_bot()
-        # end while
+        from ..bots.discord import DiscordBot
+        DiscordBot().start_bot()
     elif bot == 'test':
         from ..bots.test import TestBot
         TestBot().start()

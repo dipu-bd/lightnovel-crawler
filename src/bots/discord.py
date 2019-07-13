@@ -45,6 +45,11 @@ class DiscordBot(discord.Client):
         if isinstance(message.channel, discord.abc.PrivateChannel):
             await self.handle_message(message)
         elif message.content == self.signal + 'lncrawl':
+            async with self.message.channel.typing():
+                if self.handlers.get(message.author.uid):
+                    self.handlers.pop(message.author.uid).destroy()
+                # end if
+            # end with
             await self.handle_message(message)
         elif message.content == '!help':
             await self.public_help(message)
@@ -97,14 +102,15 @@ class MessageHandler:
     # end def
 
     def destroy(self):
-        self.client.handlers.pop(self.user.id)
         try:
             self.app.destroy()
             self.executors.shutdown(False)
         except Exception as err:
             logger.debug(traceback.format_exc())
+        finally:
+            self.client.handlers.pop(self.user.id)
+            shutil.rmtree(self.app.output_path, ignore_errors=True)
         # end try
-        shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
 
     @asyncio.coroutine
