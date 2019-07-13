@@ -44,24 +44,29 @@ class DiscordBot(discord.Client):
         # end if
         if isinstance(message.channel, discord.abc.PrivateChannel):
             await self.handle_message(message)
-        elif message.content == self.signal + 'lncrawl':
-            async with self.message.channel.typing():
-                if self.handlers.get(message.author.uid):
-                    self.handlers.pop(message.author.uid).destroy()
-                # end if
-            # end with
-            await self.handle_message(message)
         elif message.content == '!help':
-            await self.public_help(message)
+            await self.send_public_text(
+                message,
+                'Enter `%slncrawl` to start a new session of **Lightnovel Crawler**' % self.signal
+            )
+        elif message.content == self.signal + 'lncrawl':
+            await self.send_public_text(
+                message,
+                "I will message you privately <@%s>" % message.author.id
+            )
+            handler = self.handlers.get(message.author.uid)
+            if handler:
+                handler.destroy()
+            # end if
+            await self.handle_message(message)
         else:
             return  # It goes over the head
         # end if
     # end def
 
-    async def public_help(self, message):
-        await message.channel.send(
-            'Enter `' + self.signal + 'lncrawl` to start a new session of **Lightnovel Crawler**'
-        )
+    async def send_public_text(self, message, text):
+        async with message.channel.typing():
+            await message.channel.send(text)
     # end def
 
     async def handle_message(self, message):
@@ -129,7 +134,6 @@ class MessageHandler:
         self.message = message
         self.user = message.author
         if not self.state:
-            await message.channel.send("I'll Message you Privately <@%s>" % self.user.id)
             await self.send(
                 '-' * 80 + '\n' +
                 ('Hello %s\n' % self.user.name) +
