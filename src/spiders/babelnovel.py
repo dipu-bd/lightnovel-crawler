@@ -10,7 +10,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('BABELNOVEL')
 
-search_url = 'https://babelnovel.com/api/books?page=0&pageSize=10&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
+search_url = 'https://babelnovel.com/api/books?page=0&pageSize=8&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
 novel_page_url = 'https://babelnovel.com/api/books/%s'
 chapter_list_url = 'https://babelnovel.com/api/books/%s/chapters?bookId=%s&page=0&pageSize=999999&fields=id,name,canonicalName,hasContent'
 chapter_json_url = 'https://babelnovel.com/api/books/%s/chapters/%s?ignoreTopic=true'
@@ -83,13 +83,11 @@ class BabelNovelCrawler(Crawler):
                 'json_url': chapter_json_url % (self.novel_hash, item['canonicalName']),
             })
         # end for
-        # logger.debug(self.chapters)
 
         self.volumes = [
             {'id': x + 1}
             for x in range(len(self.chapters) // 100 + 1)
         ]
-        # logger.debug(self.volumes)
 
         logger.info('%d volumes and %d chapters found',
                     len(self.volumes), len(self.chapters))

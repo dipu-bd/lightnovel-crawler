@@ -10,6 +10,7 @@ import traceback
 from concurrent import futures
 from urllib.parse import urlparse
 
+import racovimge
 from progress.bar import IncrementalBar
 
 logger = logging.getLogger('DOWNLOADER')
@@ -21,8 +22,7 @@ def downlod_cover(app):
         logger.info('Getting cover image...')
         try:
             ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
-            filename = os.path.join(
-                app.output_path, 'cover.%s' % (ext or 'png'))
+            filename = os.path.join(app.output_path, 'cover.%s' % (ext or 'png'))
             if not os.path.exists(filename):
                 logger.debug('Downloading cover image')
                 response = app.crawler.get_response(app.crawler.novel_cover)
@@ -32,7 +32,22 @@ def downlod_cover(app):
                 logger.debug('Saved cover: %s', filename)
             # end if
             app.book_cover = filename
-        except Exception:
+        except:
+            logger.debug(traceback.format_exc())
+        # end try
+    # end if
+    if not app.book_cover:
+        logger.info('Generating cover image...')
+        try:
+            from cairosvg import svg2png
+            filename = os.path.join(app.output_path, 'cover.png')
+            svg = racovimge.random(
+                app.crawler.novel_title,
+                app.crawler.novel_author or '',
+            )
+            png = svg2png(bytestring=svg, write_to=filename)
+            app.book_cover = filename
+        except:
             logger.debug(traceback.format_exc())
         # end try
     # end if
@@ -58,7 +73,7 @@ def download_chapter_body(app, chapter):
     chapter['body'] = ''
     if os.path.exists(file_name):
         logger.debug('Restoring from %s', file_name)
-        with open(file_name, 'r') as file:
+        with open(file_name, 'r', encoding="utf-8") as file:
             old_chapter = json.load(file)
             chapter['body'] = old_chapter['body']
         # end with
@@ -76,9 +91,11 @@ def download_chapter_body(app, chapter):
             result = 'Body is empty: ' + chapter['url']
         else:
             chapter['body'] = '<h3>%s</h3><h1>%s</h1>\n%s' % (
-                chapter['volume_title'], chapter['title'], body)
+                chapter['volume_title'], chapter['title'],
+                app.crawler.cleanup_text(body)
+            )
         # end if
-        with open(file_name, 'w') as file:
+        with open(file_name, 'w', encoding="utf-8") as file:
             file.write(json.dumps(chapter))
         # end with
     # end if
@@ -118,4 +135,5 @@ def download_chapters(app):
     # end for
 
     bar.finish()
+    print('Downloaded %d chapters' % len(app.chapters))
 # end def

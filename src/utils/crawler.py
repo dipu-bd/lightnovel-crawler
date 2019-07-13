@@ -263,4 +263,8 @@ class Crawler:
             return [x for x in body if len(x.strip())]
         # end if
     # end def
+
+    def cleanup_text(self, text):
+        return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]', '', str(text), flags=re.UNICODE)
+    # end def
 # end class

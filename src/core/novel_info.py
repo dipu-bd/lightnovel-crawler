@@ -6,9 +6,18 @@ To get the novel info
 import re
 import os
 import json
+from ..utils.crawler import Crawler
 
 
-def format_volumes(crawler):
+def format_novel(crawler: Crawler):
+    crawler.novel_title = crawler.cleanup_text(crawler.novel_title)
+    crawler.novel_author = crawler.cleanup_text(crawler.novel_author)
+    format_volumes(crawler)
+    format_chapters(crawler)
+# end def
+
+
+def format_volumes(crawler: Crawler):
     for vol in crawler.volumes:
         vol['chapter_count'] = 0
         title = 'Volume %d' % vol['id']
@@ -18,11 +27,12 @@ def format_volumes(crawler):
         if not re.search(r'(book|vol|volume) .?\d+', vol['title'], re.I):
             vol['title'] = title + ' - ' + vol['title'].title()
         # end if
+        vol['title'] = crawler.cleanup_text(vol['title'])
     # end for
 # end def
 
 
-def format_chapters(crawler):
+def format_chapters(crawler: Crawler):
     for item in crawler.chapters:
         title = '#%d' % item['id']
         if not ('title' in item and item['title']):
@@ -42,6 +52,8 @@ def format_chapters(crawler):
                 break
             # end if
         # end for
+        item['title'] = crawler.cleanup_text(item['title'])
+        item['volume_title'] = crawler.cleanup_text(item['volume_title'])
     # end for
 # end def
 
@@ -56,7 +68,7 @@ def save_metadata(crawler, output_path):
         'volumes': crawler.volumes,
         'chapters': crawler.chapters,
     }
-    with open(file_name, 'w') as file:
+    with open(file_name, 'w', encoding="utf-8") as file:
         json.dump(data, file, indent=2)
     # end with
 # end def

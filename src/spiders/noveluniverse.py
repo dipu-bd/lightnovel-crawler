@@ -60,13 +60,10 @@ class NovelUniverseCrawler(Crawler):
         [x.result() for x in futures.as_completed(tasks)]
 
         self.chapters.sort(key=lambda x: x['id'])
-        logger.debug(self.chapters)
-
         self.volumes = [
             {'id': x, 'title': ''}
             for x in set(self.volumes)
         ]
-        logger.debug(self.volumes)
 
         logger.info('%d chapters and %d volumes found',
                     len(self.chapters), len(self.volumes))

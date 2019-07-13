@@ -109,19 +109,22 @@ class PdfBuilder:
             bar.next = lambda: None  # Hide in debug mode
         # end if
 
-        html = HTML(string=self.create_intro())
-        all_pages += html.render().pages
-        logger.info('Added intro page')
-
-        for chapter in self.chapters:
-            html_string = chapter['body']
-            html = HTML(string=html_string)
+        try:
+            html = HTML(string=self.create_intro())
             all_pages += html.render().pages
-            logger.info('Added chapter %d', chapter['id'])
-            bar.next()
-        # end for
+            logger.info('Added intro page')
 
-        bar.finish()
+            for chapter in self.chapters:
+                html_string = chapter['body']
+                html = HTML(string=html_string)
+                all_pages += html.render().pages
+                logger.info('Added chapter %d', chapter['id'])
+                bar.next()
+            # end for
+        finally:
+            bar.clearln()
+            # bar.finish()
+        # end try
 
         html = HTML(string=self.make_metadata())
         combined = html.render().copy(all_pages)
