@@ -256,6 +256,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.novelspread.com            |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
+| https://www.rebirth.online/            |               |
 | https://www.romanticlovebooks.com      |               |
 | https://www.royalroad.com              |       ✔       |
 | https://www.scribblehub.com            |       ✔       |
@@ -270,15 +271,15 @@ Rejected:
 
 | Rejected Sources              | Reason                              |
 | ----------------------------- | ----------------------------------- |
-| https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
+| https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
+| https://comrademao.com        | `Removed on request of the owner`   |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
-| https://comrademao.com        | `Removed on request of the owner`   |
 
 ### C4. Supported output formats
 
