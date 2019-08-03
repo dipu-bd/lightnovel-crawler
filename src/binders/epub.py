@@ -72,7 +72,8 @@ def make_intro_page(app):
 
 
 def make_chapters(book, chapters):
-    book.toc = []
+    toc = []
+    volume = []
     for i, chapter in enumerate(chapters):
         xhtml_file = 'chap_%s.xhtml' % str(i + 1).rjust(5, '0')
         content = epub.EpubHtml(
@@ -82,12 +83,22 @@ def make_chapters(book, chapters):
             content=chapter['body'] or '',
         )
         book.add_item(content)
-        book.toc.append(content)
+        volume.append(content)
+        book.spine.append(content)
+        # separate chapters by volume
+        if i + 1 == len(chapters) or chapter['volume'] != chapters[i + 1]['volume']:
+            toc.append((
+                epub.Section(chapter['volume_title'], href=volume[0].file_name),
+                tuple(volume)
+            ))
+            volume = []
+        # end if
     # end for
+    book.toc = tuple(toc)
 # end def
 
 
-def bind_epub_book(app, chapters, volume=''): 
+def bind_epub_book(app, chapters, volume=''):
     book_title = (app.crawler.novel_title + ' ' + volume).strip()
     logger.debug('Binding epub: %s', book_title)
 
@@ -103,7 +114,7 @@ def bind_epub_book(app, chapters, volume=''):
     book.add_item(intro_page)
 
     # Create book spine
-    try :
+    try:
         book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
         book.spine = ['cover', intro_page, 'nav']
     except Exception as err:
@@ -114,9 +125,8 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Create chapters
     make_chapters(book, chapters)
-    book.spine += book.toc
-    book.add_item(epub.EpubNav())
     book.add_item(epub.EpubNcx())
+    book.add_item(epub.EpubNav())
 
     # Save epub file
     epub_path = os.path.join(app.output_path, 'epub')
