@@ -87,7 +87,7 @@ $ lncrawl
   - `pkg install libxml2 libxslt libiconv libcrypt libffi zlib libjpeg-turbo`
   - `pip install -U lightnovel-crawler` to install the latest version of this app.
 - Now exit the console and relaunch it.
-- Type `cd storage` to navigate to storage folder.
+- Type `cd ~/storage/downloads` to store novels there.
 - Type `lncrawl` to start.
 - You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 - Run `pip install -U lightnovel-crawler` again to install the latest updates.
