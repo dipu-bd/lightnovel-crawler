@@ -231,12 +231,12 @@ The list of currently available sources and the future plans are given below:
 | http://www.machinenoveltranslation.com |               |
 | http://zenithnovels.com                |               |
 | https://anythingnovel.com              |               |
-| https://babelnovel.com/                |       ✔       |
+| https://babelnovel.com                 |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
 | https://boxnovel.com                   |       ✔       |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
-| https://light-novel.online/            |       ✔       |
+| https://light-novel.online             |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |
 | https://m.chinesefantasynovels.com     |               |
@@ -256,11 +256,12 @@ The list of currently available sources and the future plans are given below:
 | https://www.novelspread.com            |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
-| https://www.rebirth.online/            |               |
+| https://www.rebirth.online             |               |
 | https://www.romanticlovebooks.com      |               |
 | https://www.royalroad.com              |       ✔       |
 | https://www.scribblehub.com            |       ✔       |
 | https://www.tapread.com                |               |
+| https://www.wattpad.com                |               |
 | https://www.webnovel.com               |       ✔       |
 | https://www.worldnovel.online          |       ✔       |
 | https://www.wuxiaworld.co              |       ✔       |
