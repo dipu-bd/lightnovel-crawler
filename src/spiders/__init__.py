@@ -20,6 +20,7 @@ from .mtlednovels import MtledNovelsCrawler
 from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
+from .novelgo import NovelGoCrawler
 from .novelplanet import NovelPlanetCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
@@ -73,6 +74,7 @@ crawler_list = {
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
+    'https://novelgo.id/': NovelGoCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://www.rebirth.online/': RebirthOnlineCrawler,
@@ -86,7 +88,7 @@ crawler_list = {
     'https://www.worldnovel.online/': WorldnovelonlineCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
-    'https://yukinovel.me/': YukiNovelCrawler,
+    'https://yukinovel.id/': YukiNovelCrawler,
     # 'http://fullnovel.live/': FullnovelLiveCrawler,
     # 'https://comrademao.com/': ComrademaoCrawler,
     # 'https://4scanlation.xyz/': FourScanlationCrawler,
