@@ -12,18 +12,19 @@
 
 Downloads lightnovels from various online sources and generates books in these formats: epub, mobi, json, html, text, docx and pdf.
 
-> **Join the discord server I just opened recently: https://discord.gg/7A5Hktx**
+> **Join our discord server: https://discord.gg/7A5Hktx**
 
 ## Table of contents
 
 - [Installation](#a-installation)
   - [⏬ EXE (Windows)](#a1-exe-windows)
   - [📦 PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-  - [📱 Pydroid (Android)](#a3-pydroid-3-android)
-  - [Chatbots](#a4-chatbots)
-    - [Telegram](#a41-telegram)
-    - [Discord](#a42-discord)
-  - [Run from source](#a5-run-from-source)
+  - [📱 Termux (Android)](#a3-termux-android)
+  - [📱 Pydroid (Android)](#a4-pydroid-3-android)
+  - [Chatbots](#a5-chatbots)
+    - [Telegram](#a51-telegram)
+    - [Discord](#a52-discord)
+  - [Run from source](#a6-run-from-source)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
   - [Running the bot](#b2-running-the-bot)
@@ -74,11 +75,28 @@ $ lncrawl
 
 > To view extra logs, use: `lncrawl -lll`
 
-### A3. Pydroid 3 (Android)
+### A3. Termux (Android)
 
-📱 You can run this app in your android phones too. Here are the steps to do:
+📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
-- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3&hl=en) from playstore.
+- Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
+- Open the app and run these commands one by one:
+  - `apt update && apt upgrade`
+  - `termux-setup-storage`
+  - `pkg install ndk-sysroot make python zlib clang`
+  - `pkg install libxml2 libxslt libiconv libcrypt libffi zlib libjpeg-turbo`
+  - `pip install -U lightnovel-crawler` to install the latest version of this app.
+- Now exit the console and relaunch it.
+- Type `cd ~/storage/downloads` to store novels there.
+- Type `lncrawl` to start.
+- You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
+- Run `pip install -U lightnovel-crawler` again to install the latest updates.
+
+### A4. Pydroid 3 (Android)
+
+📱 Alternative to easy Termux is Pydroid3. It is a bit faster but harder to use and no _run-in-backgroud_ support.
+
+- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3) from playstore.
 - Open the app and navigate to **Pip** from the drawer menu.
 - Type `lightnovel-crawler` in place of `Library name` and press the `Install` button.
 - To reinstall or remove the installed package:
@@ -91,21 +109,23 @@ $ lncrawl
 
 > Here is a video that might help: https://youtu.be/I20IO4dGTJ8
 
-### A4. Chatbots
+### A5. Chatbots
 
-#### A4.1 Telegram
+#### A5.1 Telegram
 
 Visit this link to get started with the telegram bot:
 https://t.me/epub_smelter_bot
 
-#### A4.2 Discord
+#### A5.2 Discord
 
-Visit this link to install discord bot to your server:
+Join our server: https://discord.gg/7A5Hktx
+
+Or, visit this link to install discord bot to your own server:
 https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
 
 Send `!help` to open the bot help message.
 
-### A5. Run from source
+### A6. Run from source
 
 - First clone the repository:
 
@@ -231,12 +251,12 @@ The list of currently available sources and the future plans are given below:
 | http://www.machinenoveltranslation.com |               |
 | http://zenithnovels.com                |               |
 | https://anythingnovel.com              |               |
-| https://babelnovel.com/                |       ✔       |
+| https://babelnovel.com                 |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
 | https://boxnovel.com                   |       ✔       |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
-| https://light-novel.online/            |       ✔       |
+| https://light-novel.online             |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |
 | https://m.chinesefantasynovels.com     |               |
@@ -256,11 +276,12 @@ The list of currently available sources and the future plans are given below:
 | https://www.novelspread.com            |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
-| https://www.rebirth.online/            |               |
+| https://www.rebirth.online             |               |
 | https://www.romanticlovebooks.com      |               |
 | https://www.royalroad.com              |       ✔       |
 | https://www.scribblehub.com            |       ✔       |
 | https://www.tapread.com                |               |
+| https://www.wattpad.com                |               |
 | https://www.webnovel.com               |       ✔       |
 | https://www.worldnovel.online          |       ✔       |
 | https://www.wuxiaworld.co              |       ✔       |

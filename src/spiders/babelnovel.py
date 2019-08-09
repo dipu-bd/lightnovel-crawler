@@ -5,6 +5,7 @@ import json
 from urllib.parse import quote, urlparse, unquote
 
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 
 from ..utils.crawler import Crawler
 
@@ -19,11 +20,11 @@ chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 class BabelNovelCrawler(Crawler):
     def search_novel(self, query):
-        # to get cookies and session info
+        # to get cookies
         self.get_response(self.home_url)
 
         url = search_url % quote(query.lower())
-        logger.debug('Visiting %s', url)
+        logger.debug('Visiting: %s', url)
         data = self.get_json(url)
 
         results = []
@@ -31,10 +32,14 @@ class BabelNovelCrawler(Crawler):
             if not item['canonicalName']:
                 continue
             # end if
+            info = None
+            if item['lastChapter']:
+                info = 'Latest: %s' % item['lastChapter']['name']
+            # end if
             results.append({
                 'title': item['name'],
                 'url': novel_page_url % item['canonicalName'],
-                'info': 'Latest: %s' % item['lastChapter']['name'],
+                'info': info,
             })
         # end for
         return results
@@ -125,8 +130,15 @@ class BabelNovelCrawler(Crawler):
         self.clean_contents(body)
 
         for tag in body.contents:
-            tag.name = 'p'
+            if not str(tag).strip():
+                tag.extract()
+            elif isinstance(tag, Tag):
+                tag.name = 'p'
+            # end if
         # end for
-        return str(body)
+
+        result = str(body)
+        result = re.sub(r'\n\n', '<br><br>', result)
+        return result
     # end def
 # end class
