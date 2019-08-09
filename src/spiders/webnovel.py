@@ -138,6 +138,7 @@ class WebnovelCrawler(Crawler):
         body = data['data']['chapterInfo']['content']
         body = body.replace(r'[ \n\r]+', '\n')
         if ('<p>' not in body) or ('</p>' not in body):
+            body = re.sub('<pirate>(.*?)</pirate>','',body)
             body = body.replace('<', '&lt;')
             body = body.replace('>', '&gt;')
             body = [x for x in body.split('\n') if len(x.strip())]
