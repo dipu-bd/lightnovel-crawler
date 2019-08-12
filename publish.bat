@@ -18,8 +18,8 @@ python setup.py package bdist_wheel sdist
 python -m pip install twine 
 twine upload "dist/lightnovel_crawler-%VERSION%-py3-none-any.whl" 
 
-git tag -d "v%VERSION%" 
-git tag -a "v%VERSION%" -m "Version %VERSION%" 
+REM git tag -d "v%VERSION%" 
+REM git tag -a "v%VERSION%" -m "Version %VERSION%" 
 
 CALL venv\Scripts\deactivate.bat
 
