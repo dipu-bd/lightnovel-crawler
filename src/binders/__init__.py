@@ -34,7 +34,7 @@ depends_on_epub = [
     'rb',
     'snb',
     'tcr',
-    'html'
+    'html',
 ]
 available_formats = depends_on_none + depends_on_epub
 
