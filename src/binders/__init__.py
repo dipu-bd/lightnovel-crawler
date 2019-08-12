@@ -14,9 +14,9 @@ from .calibre import make_calibres
 logger = logging.Logger('BINDERS')
 
 depends_on_none = [
+    'epub',
     'text',
     'web',
-    'epub',
 ]
 depends_on_epub = [
     'docx',
@@ -30,11 +30,11 @@ depends_on_epub = [
     'lrf',
     'oeb',
     'pdb',
-    'pml',
     'rb',
     'snb',
     'tcr',
-    'html',
+    # 'pml',
+    # 'html',
 ]
 available_formats = depends_on_none + depends_on_epub
 
@@ -44,21 +44,23 @@ def bind_books(app, data):
         app.output_formats = {x: True for x in available_formats}
     # end if
 
+    # Resolve formats to output maintaining dependencies
     formats = []
     for x in depends_on_epub:
         if app.output_formats[x]:
-            formats[:0] = [x]
+            formats.append(x)
             app.output_formats['epub'] = True
         # end if
     # end for
     for x in depends_on_none:
         if app.output_formats[x]:
-            formats[:0] = [x]
+            formats.append(x)
         # end if
     # end for
 
+    # Generate output files
     outputs = dict()
-    for fmt in formats:
+    for fmt in reversed(formats):
         try:
             if fmt == 'text':
                 outputs[fmt] = make_texts(app, data)
@@ -74,4 +76,6 @@ def bind_books(app, data):
             logger.debug(traceback.format_exc())
         # end try
     # end for
+
+    return outputs
 # end def

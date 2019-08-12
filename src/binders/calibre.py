@@ -11,6 +11,10 @@ CALIBRE_LINK = 'https://calibre-ebook.com/download'
 
 
 def run_ebook_convert(*args):
+    '''
+    Calls `ebook-convert` with given args
+    Visit https://manual.calibre-ebook.com/generated/en/ebook-convert.html for argument list.
+    '''
     try:
         isdebug = os.getenv('debug_mode') == 'yes'
         with open(os.devnull, 'w') as dumper:
@@ -43,11 +47,14 @@ def epub_to_calibre(app, epub_file, out_fmt):
     out_file_name = file_name_without_ext + '.' + out_fmt
     out_file = os.path.join(out_path, out_file_name)
 
+    os.makedirs(out_path, exist_ok=True)
+
     logger.debug('Converting "%s" to "%s"', epub_file, out_file)
 
     args = [
         epub_file,
         out_file,
+        '--unsmarten-punctuation',
         '--no-chapters-in-toc',
         '--title', file_name_without_ext,
         '--authors', app.crawler.novel_author,
@@ -55,11 +62,10 @@ def epub_to_calibre(app, epub_file, out_fmt):
         '--publisher', app.crawler.home_url,
         '--book-producer', 'Lightnovel Crawler',
     ]
+    if app.book_cover:
+        args += ['--cover', app.book_cover]
     if out_fmt == 'pdf':
         args += ['--pdf-page-numbers']
-    # end if
-    if out_fmt == 'mobi':
-        args += ['--personal-doc']
     # end if
 
     run_ebook_convert(*args)
