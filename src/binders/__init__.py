@@ -4,66 +4,74 @@
 To bind into ebooks
 """
 import logging
+import traceback
 
 from .epub import make_epubs
-from .html import make_htmls
-from .mobi import make_mobis
+from .web import make_webs
 from .text import make_texts
-from .docx import make_docx
-from .pdf import make_pdfs
+from .calibre import make_calibres
 
 logger = logging.Logger('BINDERS')
 
-available_formats = [
-    'epub',
-    'mobi',
-    'html',
+depends_on_none = [
     'text',
-    'docx',
-    'pdf',
+    'web',
+    'epub',
 ]
-
-
-def process(fn, app, inp, fmt):
-    try:
-        return fn(app, inp)
-    except Exception:
-        logger.info('Failed to generate *.%s files' % fmt)
-        import traceback        
-        logger.debug(traceback.format_exc())
-        return None
-    # end try
-# end def
+depends_on_epub = [
+    'docx',
+    'mobi',
+    'pdf',
+    'rtf',
+    'txt',
+    'azw3',
+    'fb2',
+    'lit',
+    'lrf',
+    'oeb',
+    'pdb',
+    'pml',
+    'rb',
+    'snb',
+    'tcr',
+    'html'
+]
+available_formats = depends_on_none + depends_on_epub
 
 
 def bind_books(app, data):
-    fmts = app.output_formats
-
-    if not fmts:
-        fmts = {x: True for x in available_formats}
+    if not app.output_formats:
+        app.output_formats = {x: True for x in available_formats}
     # end if
 
-    if fmts['text']:
-        process(make_texts, app, data, 'text')
-    # end if
-
-    if fmts['html']:
-        process(make_htmls, app, data, 'html')
-    # end if
-
-    if fmts['mobi'] or fmts['epub']:
-        epubs = process(make_epubs, app, data, 'epub')
-
-        if fmts['mobi']:
-            process(make_mobis, app, epubs, 'mobi')
+    formats = []
+    for x in depends_on_epub:
+        if app.output_formats[x]:
+            formats[:0] = [x]
+            app.output_formats['epub'] = True
         # end if
-    # end if
+    # end for
+    for x in depends_on_none:
+        if app.output_formats[x]:
+            formats[:0] = [x]
+        # end if
+    # end for
 
-    if fmts['pdf']:
-        process(make_pdfs, app, data, 'pdf')
-    # end if
-
-    if fmts['docx']:
-        process(make_docx, app, data, 'docx')
-    # end if
+    outputs = dict()
+    for fmt in formats:
+        try:
+            if fmt == 'text':
+                outputs[fmt] = make_texts(app, data)
+            elif fmt == 'web':
+                outputs[fmt] = make_webs(app, data)
+            elif fmt == 'epub':
+                outputs[fmt] = make_epubs(app, data)
+            else:
+                outputs[fmt] = make_calibres(app, outputs['epub'], fmt)
+            # end if
+        except Exception as err:
+            logger.warn('Failed to generate "%s": %s' % (fmt, err))
+            logger.debug(traceback.format_exc())
+        # end try
+    # end for
 # end def

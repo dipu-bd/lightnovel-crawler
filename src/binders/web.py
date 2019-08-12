@@ -5,7 +5,7 @@ import os
 
 from ..assets.html_style import get_value as get_css_style
 
-logger = logging.getLogger('HTML_BINDER')
+logger = logging.getLogger('WEB_BINDER')
 
 
 def bind_html_chapter(chapter, prev_chapter, next_chapter):
@@ -52,10 +52,10 @@ def bind_html_chapter(chapter, prev_chapter, next_chapter):
 # end def
 
 
-def make_htmls(app, data):
+def make_webs(app, data):
     web_files = []
     for vol in data:
-        dir_name = os.path.join(app.output_path, 'html', vol)
+        dir_name = os.path.join(app.output_path, 'web', vol)
         os.makedirs(dir_name, exist_ok=True)
         for i in range(len(data[vol])):
             chapter = data[vol][i]
@@ -71,6 +71,6 @@ def make_htmls(app, data):
             web_files.append(file_name)
         # end for
     # end for
-    print('Created: %d html files' % len(web_files))
+    print('Created: %d web files' % len(web_files))
     return web_files
 # end def
