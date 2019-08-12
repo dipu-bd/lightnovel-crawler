@@ -10,7 +10,7 @@ python3 -m venv venv
 python -m pip install --upgrade pip
 
 python3 -m pip install wheel
-python3 -m pip install pyinstaller
+python3 -m pip install PyInstaller
 python3 -m pip install -r requirements.txt
 
 python3 setup.py bdist_wheel sdist package

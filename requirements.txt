@@ -1,15 +1,12 @@
 # App requirements
+python-dotenv==0.10.3
 beautifulsoup4==4.7.1
-EbookLib==0.17.1
 requests==2.22.0
+racovimge==0.9
+python-slugify==3.0.2
+cssutils==1.0.2
 PyInquirer==1.0.3
+colorama==0.4.1
 progress==1.5
 Js2Py==0.66
-colorama==0.4.1
-python-docx==0.8.10
-python-dotenv==0.10.3
-python-slugify==3.0.2
-cairocffi==0.9.0
-CairoSVG==2.4.0
-WeasyPrint==48
-racovimge==0.9
+EbookLib==0.17.1
