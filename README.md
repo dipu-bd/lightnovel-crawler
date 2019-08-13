@@ -10,9 +10,11 @@
 
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
-Downloads lightnovels from various online sources and generates books in these formats: epub, mobi, json, html, text, docx and pdf.
+Downloads lightnovels from various online sources and generates ebooks in many formats.
 
-> **Join our discord server: https://discord.gg/7A5Hktx**
+> **Discord: https://discord.gg/7A5Hktx**
+
+> **Telegram: https://t.me/epub_smelter_bot**
 
 ## Table of contents
 
@@ -39,6 +41,8 @@ Downloads lightnovels from various online sources and generates books in these f
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
 
 ## (A) Installation
+
+**This application uses _Calibre_ to convert ebooks. Install it from https://calibre-ebook.com/download**
 
 ### A1. EXE (Windows)
 
@@ -298,6 +302,7 @@ Rejected:
 | https://comrademao.com        | `Removed on request of the owner`   |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
+| https://novelgo.id/           | `Removed on request of the owner`   |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
@@ -307,12 +312,25 @@ Rejected:
 When download is done, the following files can be generated:
 
 - [x] JSON (default)
-- [x] HTML
 - [x] TEXT
+- [x] WEB
 - [x] EPUB
-- [x] MOBI
 - [x] DOCX
+- [x] MOBI
 - [x] PDF
+- [x] RTF
+- [x] TXT
+- [x] AZW3
+- [x] FB2
+- [x] LIT
+- [x] LRF
+- [x] OEB
+- [x] PDB
+- [x] PML
+- [x] RB
+- [x] SNB
+- [x] TCR
+- [x] HTML
 
 ### C5. Supported bots
 

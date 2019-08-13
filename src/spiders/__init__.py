@@ -74,7 +74,6 @@ crawler_list = {
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
-    'https://novelgo.id/': NovelGoCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://www.rebirth.online/': RebirthOnlineCrawler,
@@ -90,8 +89,9 @@ crawler_list = {
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://yukinovel.id/': YukiNovelCrawler,
     # 'http://fullnovel.live/': FullnovelLiveCrawler,
-    # 'https://comrademao.com/': ComrademaoCrawler,
     # 'https://4scanlation.xyz/': FourScanlationCrawler,
+    # 'https://comrademao.com/': ComrademaoCrawler,
+    # 'https://novelgo.id/': NovelGoCrawler,
     # 'https://www.noveluniverse.com/': NovelUniverseCrawler,
     # 'https://www.novelv.com/': NovelvCrawler,
     # Do not forget to append a slash(/) at the end of the url

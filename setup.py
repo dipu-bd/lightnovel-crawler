@@ -17,6 +17,10 @@ else:
     from pathlib import Path
     from setuptools import config, setup
 
+    def parse_version(filename):
+        return open(filename, 'r').read().strip()
+    # end def
+
     def parse_requirements(filename):
         """Return requirements from requirements file."""
         # Ref: https://stackoverflow.com/a/42033122/
@@ -28,6 +32,7 @@ else:
 
     config.read_configuration('setup.cfg')
     setup(
+        version=parse_version('VERSION'),
         install_requires=parse_requirements('requirements.txt'),
     )
 

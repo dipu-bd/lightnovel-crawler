@@ -391,6 +391,9 @@ class TestBot:
         ],
         'https://www.wattpad.com/': [
             'https://www.wattpad.com/story/87505567-loving-mr-jerkface-%E2%9C%94%EF%B8%8F'
+        ],
+        'https://novelgo.id/': [
+            'https://novelgo.id/novel/the-mightiest-leveling-system/'
         ]
     }
 
