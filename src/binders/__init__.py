@@ -40,27 +40,19 @@ available_formats = depends_on_none + depends_on_epub
 
 
 def bind_books(app, data):
-    if not app.output_formats:
-        app.output_formats = {x: True for x in available_formats}
+    out_formats = app.output_formats
+    if not out_formats:
+        out_formats = {x: True for x in available_formats}
     # end if
 
     # Resolve formats to output maintaining dependencies
-    formats = []
-    for x in depends_on_epub:
-        if app.output_formats[x]:
-            formats.append(x)
-            app.output_formats['epub'] = True
-        # end if
-    # end for
-    for x in depends_on_none:
-        if app.output_formats[x]:
-            formats.append(x)
-        # end if
-    # end for
+    after_epub = [x for x in depends_on_epub if out_formats[x]]
+    out_formats['epub'] = out_formats['epub'] or len(after_epub)
+    after_any = [x for x in depends_on_none if out_formats[x]]
 
     # Generate output files
     outputs = dict()
-    for fmt in reversed(formats):
+    for fmt in (after_any + after_epub):
         try:
             if fmt == 'text':
                 outputs[fmt] = make_texts(app, data)
