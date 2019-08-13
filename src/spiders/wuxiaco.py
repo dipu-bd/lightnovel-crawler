@@ -67,9 +67,9 @@ class WuxiaCoCrawler(Crawler):
                 vol = volume.copy()
                 vol['id'] += 1
                 vol['title'] = item.text.strip()
-                vol['title'] = re.sub(r'^(.*)', '', vol['title'])
-                vol['title'] = re.sub(
-                    r'^\s*Text\s*$', '', vol['title']).strip()
+                #vol['title'] = re.sub(r'^(.*)', '', vol['title'])
+                #vol['title'] = re.sub(
+                #    r'^\s*Text\s*$', '', vol['title']).strip()
                 volume = vol
             # end if
             if item.name == 'dd':
