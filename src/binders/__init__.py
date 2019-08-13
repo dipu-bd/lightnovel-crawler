@@ -47,8 +47,8 @@ def bind_books(app, data):
 
     # Resolve formats to output maintaining dependencies
     after_epub = [x for x in depends_on_epub if out_formats[x]]
-    out_formats['epub'] = out_formats['epub'] or len(after_epub)
-    after_any = [x for x in depends_on_none if out_formats[x]]
+    need_epub = 'epub' if len(after_epub) else None
+    after_any = [x for x in depends_on_none if out_formats[x] or x == need_epub]
 
     # Generate output files
     outputs = dict()
