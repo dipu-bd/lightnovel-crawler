@@ -270,7 +270,6 @@ The list of currently available sources and the future plans are given below:
 | https://meionovel.com                  |               |
 | https://mtled-novels.com               |       ✔       |
 | https://myoniyonitranslations.com      |               |
-| https://novelgo.id/                    |               |
 | https://novelplanet.com                |       ✔       |
 | https://novelraw.blogspot.com          |               |
 | https://volarenovels.com               |               |
@@ -303,6 +302,7 @@ Rejected:
 | https://comrademao.com        | `Removed on request of the owner`   |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
+| https://novelgo.id/           | `Removed on request of the owner`   |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
