@@ -61,11 +61,12 @@ def epub_to_calibre(app, epub_file, out_fmt):
         '--series', app.crawler.novel_title,
         '--publisher', app.crawler.home_url,
         '--book-producer', 'Lightnovel Crawler',
+        '--enable-heuristics', '--disable-renumber-headings',
     ]
     if app.book_cover:
         args += ['--cover', app.book_cover]
     if out_fmt == 'pdf':
-        args += ['--pdf-page-numbers']
+        args += ['--pdf-page-numbers','--paper-size', 'a4']
     # end if
 
     run_ebook_convert(*args)
