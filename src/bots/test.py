@@ -66,8 +66,7 @@ class TestBot:
                             self.allerrors[link] = []
                         # end if
                         self.allerrors[link].append(
-                            '> Input: %s\n%s\n%s' % (
-                                entry, err, ''.join(traces))
+                            '> Input: %s\n%s\n%s' % (entry, err, ''.join(traces))
                         )
                     # end try
                 # end for

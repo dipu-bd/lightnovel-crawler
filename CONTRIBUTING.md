@@ -42,3 +42,7 @@
   - `id`: 1 based index of the volume
   - `title`: the volume title (can be ignored) Create an empty volumes
 - If you do not want to use volumes, just insert this one: `{ 'id': 1, 'title': 'Volume 1' }` and set `'volume': 1` in every chapter object.
+
+## Want to know more?
+
+- Ask about anything on the discord server
