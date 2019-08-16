@@ -276,6 +276,7 @@ The list of currently available sources and the future plans are given below:
 | https://webnovel.online                |               |
 | https://wuxiaworld.online              |       ✔       |
 | https://www.idqidian.us                |               |
+| https://www.jieruihao.cn/              |               |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
 | https://www.readlightnovel.org         |               |

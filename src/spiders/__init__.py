@@ -74,7 +74,7 @@ crawler_list = {
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
-    'https://www.jieruihao.cn': JieruihaoCrawler,
+    'https://www.jieruihao.cn/': JieruihaoCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,

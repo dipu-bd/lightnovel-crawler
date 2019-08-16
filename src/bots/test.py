@@ -386,6 +386,9 @@ class TestBot:
         'https://www.rebirth.online/': [
             'https://www.rebirth.online/novel/the-good-for-nothing-seventh-young-lady'
         ],
+        'https://www.jieruihao.cn/': [
+            'https://www.jieruihao.cn/novel/against-the-gods/',
+        ],
         'https://www.wattpad.com/': [
             'https://www.wattpad.com/story/87505567-loving-mr-jerkface-%E2%9C%94%EF%B8%8F'
         ],
