@@ -42,8 +42,8 @@ def downlod_cover(app):
             from cairosvg import svg2png
             filename = os.path.join(app.output_path, 'cover.png')
             svg = racovimge.random(
-                app.crawler.novel_title,
-                app.crawler.novel_author or '',
+                title=app.crawler.novel_title,
+                author=app.crawler.novel_author or '',
             )
             png = svg2png(bytestring=svg, write_to=filename)
             app.book_cover = filename
