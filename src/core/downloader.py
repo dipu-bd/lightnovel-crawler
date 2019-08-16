@@ -6,7 +6,6 @@ To download chapter bodies
 import json
 import logging
 import os
-import traceback
 from concurrent import futures
 from urllib.parse import urlparse
 
@@ -33,7 +32,7 @@ def downlod_cover(app):
             # end if
             app.book_cover = filename
         except:
-            logger.debug(traceback.format_exc())
+            logger.exception('Failed to download cover image')
         # end try
     # end if
     if not app.book_cover:
@@ -48,7 +47,7 @@ def downlod_cover(app):
             png = svg2png(bytestring=svg, write_to=filename)
             app.book_cover = filename
         except:
-            logger.debug(traceback.format_exc())
+            logger.exception('Failed to generate cover image')
         # end try
     # end if
     if not app.book_cover:
@@ -84,13 +83,13 @@ def download_chapter_body(app, chapter):
         try:
             logger.debug('Downloading to %s', file_name)
             body = app.crawler.download_chapter_body(chapter)
-        except Exception:
-            logger.debug(traceback.format_exc())
+        except:
+            logger.exception('Failed to download chapter body')
         # end try
         if len(body) == 0:
             result = 'Body is empty: ' + chapter['url']
         else:
-            chapter['body'] = '<h1><small>%s</small><br>%s</h1>\n%s' % (
+            chapter['body'] = '<h1><small style="font-size: 14px">%s</small><br>%s</h1>\n%s' % (
                 chapter['volume_title'], chapter['title'],
                 app.crawler.cleanup_text(body)
             )

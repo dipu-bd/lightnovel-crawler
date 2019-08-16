@@ -9,14 +9,14 @@ import base64
 try:
     from ebooklib import epub
 except Exception as err:
-    logging.error(err)
+    logging.fatal('Failed to import `ebooklib`')
 # end try
 
 logger = logging.getLogger('EPUB_BINDER')
 
 
 def make_cover_image(app):
-    if not app.book_cover:
+    if not (app.book_cover and os.path.isfile(app.book_cover)):
         return None
     # end if
     logger.info('Creating cover: %s', app.book_cover)
@@ -117,7 +117,9 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Create intro page
     cover_image = make_cover_image(app)
-    book.add_item(cover_image)
+    if cover_image:
+        book.add_item(cover_image)
+    # end if
     intro_page = make_intro_page(app, cover_image)
     book.add_item(intro_page)
 
@@ -126,9 +128,8 @@ def bind_epub_book(app, chapters, volume=''):
         book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
         book.spine = ['cover', intro_page, 'nav']
     except Exception as err:
-        logger.warn('No cover image')
         book.spine = [intro_page, 'nav']
-        logger.error(err)
+        logger.exception('No cover image')
     # end if
 
     # Create chapters
