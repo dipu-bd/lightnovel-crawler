@@ -10,7 +10,7 @@ CALL venv\Scripts\activate.bat
 python -m pip install --upgrade pip
 
 python -m pip install wheel 
-python -m pip install PyInstaller 
+python -m pip install PyInstaller
 python -m pip install -r requirements.txt 
 
 python setup.py package bdist_wheel sdist 

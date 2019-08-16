@@ -64,7 +64,7 @@ crawler_list = {
     'https://m.novelspread.com/': NovelSpreadCrawler,
     'https://m.romanticlovebooks.com/': RomanticLBCrawler,
     'https://m.wuxiaworld.co/': WuxiaCoCrawler,
-    'https://meionovel.com/': MeionovelCrawler,
+    'https://meionovel.id/': MeionovelCrawler,
     'https://mtled-novels.com/': MtledNovelsCrawler,
     'https://myoniyonitranslations.com/': MyOniyOniTranslation,
     'https://novelplanet.com/': NovelPlanetCrawler,

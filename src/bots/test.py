@@ -279,8 +279,8 @@ class TestBot:
             'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
             'sword',
         ],
-        'https://meionovel.com/': [
-            'https://meionovel.com/novel/the-legendary-mechanic/',
+        'https://meionovel.id/': [
+            'https://meionovel.id/novel/the-legendary-mechanic/',
         ],
         'https://mtled-novels.com/': [
             'https://mtled-novels.com/novels/ancient-demon-dragon-emperor',
