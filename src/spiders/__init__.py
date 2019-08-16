@@ -90,6 +90,7 @@ crawler_list = {
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://yukinovel.id/': YukiNovelCrawler,
+    'https://yukinovel.me/': YukiNovelCrawler,
     # 'https://novelgo.id/': NovelGoCrawler,
     # 'http://fullnovel.live/': FullnovelLiveCrawler,
     # 'https://comrademao.com/': ComrademaoCrawler,

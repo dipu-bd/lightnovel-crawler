@@ -349,9 +349,6 @@ class TestBot:
         'https://4scanlation.xyz/': [
             'https://4scanlation.xyz/instant-messiah/',
         ],
-        'https://yukinovel.me/': [
-            'https://yukinovel.me/novel/the-second-coming-of-avarice/',
-        ],
         'https://readnovelfull.com/': [
             'https://readnovelfull.com/lord-of-all-realms.html',
             'cultivation'
@@ -394,7 +391,10 @@ class TestBot:
         ],
         'https://novelgo.id/': [
             'https://novelgo.id/novel/the-mightiest-leveling-system/'
-        ]
+        ],
+        'https://yukinovel.me/': [
+            'https://yukinovel.me/novel/the-second-coming-of-avarice/',
+        ],
     }
 
     allowed_failures = [
