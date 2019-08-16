@@ -430,13 +430,12 @@ class MessageHandler:
     async def display_output_selection(self):
         await self.send('\n'.join([
             'Now you can send the following commands choose book format you want to download:',
+            '- Output format now supported is docx,mobi,pdf,rtf,txt,azw3,fb2,lit,lrf,oeb,pdb,rb,snb,tcr,epub,text,web',
             '- To download everything send `!all` or pass `!cancel` to stop.',
-            '- Send `!epub` to download in epub format. ',
+            '- or pass supported ootput format after ! command like example bellow',
             '- Send `!mobi` to download in mobi format. ',
             '- Send `!pdf` to download in pdf format.',
-            '- Send `!docx` to download in docx format.',
-            '- Send `!text` to download in text format.',
-            '- Send `!html` to download in html format.',
+            '- Send `!{supported output format}',
         ]))
         self.state = self.handle_output_selection
     # end def
