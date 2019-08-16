@@ -56,7 +56,7 @@ class WuxiaComCrawler(Crawler):
                 soup.select_one('img.media-object')['src'])
             logger.info('Novel cover: %s', self.novel_cover)
         except Exception as ex:
-            logger.debug('Failed to get cover: %s', ex)
+            logger.exception('Failed to get cover: %s', self.novel_url)
         # end try
 
         self.novel_author = soup.select_one('.media-body dl dt').text
