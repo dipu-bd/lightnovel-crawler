@@ -398,7 +398,10 @@ class TestBot:
     }
 
     allowed_failures = [
+        'https://www.tapread.com/'
         'https://4scanlation.xyz/',
         'https://m.chinesefantasynovels.com/',
+        'https://m.romanticlovebooks.com/',
+        'https://www.romanticlovebooks.com/',
     ]
 # end class
