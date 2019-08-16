@@ -12,6 +12,7 @@ from .fourscanlation import FourScanlationCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
+from .jieruihao import JieruihaoCrawler
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
 from .machinetrans import MachineNovelTrans
@@ -20,7 +21,7 @@ from .mtlednovels import MtledNovelsCrawler
 from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
-from .novelgo import NovelGoCrawler
+#from .novelgo import NovelGoCrawler
 from .novelplanet import NovelPlanetCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
@@ -73,7 +74,9 @@ crawler_list = {
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
+    'https://www.jieruihao.cn' : JieruihaoCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
+    # 'https://novelgo.id/': NovelGoCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://www.rebirth.online/': RebirthOnlineCrawler,
@@ -89,9 +92,8 @@ crawler_list = {
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://yukinovel.id/': YukiNovelCrawler,
     # 'http://fullnovel.live/': FullnovelLiveCrawler,
-    # 'https://4scanlation.xyz/': FourScanlationCrawler,
     # 'https://comrademao.com/': ComrademaoCrawler,
-    # 'https://novelgo.id/': NovelGoCrawler,
+    # 'https://4scanlation.xyz/': FourScanlationCrawler,
     # 'https://www.noveluniverse.com/': NovelUniverseCrawler,
     # 'https://www.novelv.com/': NovelvCrawler,
     # Do not forget to append a slash(/) at the end of the url
