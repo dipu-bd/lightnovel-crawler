@@ -7,7 +7,7 @@ rm -rf venv build dist *.egg-info __pycache__
 python3 -m venv venv
 . venv/bin/activate
 
-python -m pip install --upgrade pip
+python -m pip install -U pip==19.2.1
 
 python3 -m pip install wheel
 python3 -m pip install PyInstaller

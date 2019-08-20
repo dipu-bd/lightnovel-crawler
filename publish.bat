@@ -7,7 +7,7 @@ RD /S /Q "dist" "venv" "build" "__pycache__" "lightnovel_crawler.egg-info" &
 python -m venv venv
 CALL venv\Scripts\activate.bat
 
-python -m pip install --upgrade pip
+python -m pip install -U pip==19.2.1
 
 python -m pip install wheel 
 python -m pip install PyInstaller
