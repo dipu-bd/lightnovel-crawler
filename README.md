@@ -46,17 +46,15 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 
 ### A1. EXE (Windows)
 
-⏬ [lightnovel-crawler v2.10.0 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+⏬ [lightnovel-crawler v2.13.6 for windows ~ 15MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-_PDF and DOCX generation is disabled for EXE build. It only works with `pip`_
-
 ### A2. PIP (Windows, Mac, and Linux)
 
-📦 A python package named `lightnovel-crawler` is available in [pypi](https://pypi.org/project/lightnovel-crawler).
+📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
-> Make sure you have installed `python 3.5` or above and have `pip` enabled. Visit these links for installating python and pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [Mac](https://itsevans.com/install-pip-osx/). Feel free ask me if you are stuck.
+> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free ask on the Discord server if you are stuck.
 
 To install this app or to update installed one via `pip`, just run:
 
@@ -65,8 +63,6 @@ $ pip install --user -U lightnovel-crawler
 ```
 
 Remember, in some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
-
-> **To Windows users:** Download and install the GTK3-Runtime from https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
 
 Next, open your terminal and enter:
 
@@ -89,6 +85,7 @@ $ lncrawl
   - `termux-setup-storage`
   - `pkg install ndk-sysroot make python zlib clang`
   - `pkg install libxml2 libxslt libiconv libcrypt libffi zlib libjpeg-turbo`
+  - `pkg install nodejs-lts`
   - `pip install -U lightnovel-crawler` to install the latest version of this app.
 - Now exit the console and relaunch it.
 - Type `cd ~/storage/downloads` to store novels there.
@@ -140,16 +137,16 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 - Open command prompt inside of the project folder and install requirements:
 
 ```bash
-$ pip3 install --user -r requirements.txt
+$ pip install --user -r requirements.txt
 ```
 
-- Run the program:
+- Run the program (use python v3.5 or higher):
 
 ```bash
-$ python3 __main__.py
+$ python __main__.py
 
 # Or, in short,
-$ python3 .
+$ python .
 ```
 
 ## (B) General Usage
@@ -161,8 +158,8 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.10.0
-            Download lightnovels into html, text, epub, mobi and json
+                           📒 Lightnovel Crawler 🍀2.13.6 
+                  https://github.com/dipu-bd/lightnovel-crawler 
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
        lightnovel-crawler [options...]
@@ -292,7 +289,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.worldnovel.online          |       ✔       |
 | https://www.wuxiaworld.co              |       ✔       |
 | https://www.wuxiaworld.com             |       ✔       |
-| https://yukinovel.me                   |               |
+| https://yukinovel.id                   |               |
 
 Rejected:
 
