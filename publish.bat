@@ -2,23 +2,26 @@
 
 SET /P VERSION=<src\VERSION
 
-RD /S /Q "dist" "venv" "build" "__pycache__" "lightnovel_crawler.egg-info" &
+SET PY=python
+SET PIP=%PY% -m pip --disable-pip-version-check
 
-python -m venv venv
+RD /S /Q "dist" "venv" "build" "lightnovel_crawler.egg-info" &
+
+%PY% -m venv venv
 CALL venv\Scripts\activate.bat
 
-python -m pip install -U pip==19.2.1
+%PIP% install -U pip==19.2.1
 
-python -m pip install wheel 
-python -m pip install PyInstaller
-python -m pip install -r requirements.txt 
+%PIP% install wheel 
+%PIP% install PyInstaller
+%PIP% install -r requirements.txt 
 
-python setup.py package bdist_wheel sdist 
+%PY% setup.py clean bdist_wheel sdist package 
 
 CALL venv\Scripts\deactivate.bat
-RD /S /Q "venv" "build" "__pycache__" "lightnovel_crawler.egg-info" &
+RD /S /Q "venv" "build" "lightnovel_crawler.egg-info" &
 
-python -m pip install twine 
+%PIP% install twine 
 twine upload "dist\lightnovel_crawler-%VERSION%-py3-none-any.whl" 
 
 ECHO ON

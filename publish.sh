@@ -2,23 +2,26 @@
 
 VERSION=$(head -n 1 src/VERSION)
 
-rm -rf venv build dist *.egg-info __pycache__
+PY=python3
+PIP=$PY -m pip --disable-pip-version-check
 
-python3 -m venv venv
+rm -rfv venv build dist *.egg-info
+
+$PY -m venv venv
 . venv/bin/activate
 
-python -m pip install -U pip==19.2.1
+$PIP install -U pip==19.2.1
 
-python3 -m pip install wheel
-python3 -m pip install PyInstaller
-python3 -m pip install -r requirements.txt
+$PIP install wheel
+$PIP install PyInstaller
+$PIP install -r requirements.txt
 
-python3 setup.py bdist_wheel sdist package
+$PY setup.py clean bdist_wheel sdist package
 
 deactivate
-rm -rf venv build *.egg-info __pycache__
+rm -rfv venv build *.egg-info
 
-python3 -m pip install twine
+$PIP install twine
 twine upload "dist/lightnovel_crawler-$VERSION-py3-none-any.whl"
 
-# END
+# FINISHED

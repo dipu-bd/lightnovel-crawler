@@ -23,9 +23,9 @@ def setup_command():
     command += '-F '  # onefile
     command += '-n "lncrawl" '
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
-    command += '--version-file "%s/src/VERSION" ' % cur_dir
+    #command += '--version-file "%s/src/VERSION" ' % cur_dir
 
-    sep = ';' if platform.system() == 'Windows' else ':'
+    data_sep = ';' if platform.system() == 'Windows' else ':'
     py_matcher = re.compile(r'\.pyc?$', flags=re.I)
     assets_dir = Path(os.path.join(cur_dir, 'src', 'assets'))
     for f in assets_dir.glob('**/*.*'):
@@ -36,9 +36,10 @@ def setup_command():
         src = '/'.join(src.split(os.sep))
         dst = str(f.parent.relative_to(cur_dir))
         dst = '/'.join(dst.split(os.sep))
-        command += '--add-data "%s%s%s" ' % (src, sep, dst)
+        command += '--add-data "%s%s%s" ' % (src, data_sep, dst)
     # end for
-    command += '--add-data "%s/src/VERSION%s." ' % (cur_dir, sep)
+    src = '/'.join(cur_dir.split(os.sep))
+    command += '--add-data "%s/src/VERSION%ssrc" ' % (src, data_sep)
 
     command += '"%s/__main__.py" ' % cur_dir
 
