@@ -26,7 +26,8 @@ else:
         # Ref: https://stackoverflow.com/a/42033122/
         requirements = open(filename, 'r').read().strip().split('\n')
         requirements = [r.strip() for r in requirements]
-        requirements = [r for r in sorted(requirements) if r and not r.startswith('#')]
+        requirements = [r for r in sorted(
+            requirements) if r and not r.startswith('#')]
         return requirements
     # end def
 

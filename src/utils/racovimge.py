@@ -19,7 +19,13 @@ import tempfile
 import textwrap
 
 import jinja2
-from cairosvg import svg2png
+
+try:
+    from cairosvg import svg2png
+except:
+    pass  # ignore it
+# end try
+
 
 logger = logging.getLogger(__name__)
 
@@ -58,7 +64,7 @@ def wrap(text, width):
         text, break_long_words=False, break_on_hyphens=False, width=width)
 
 
-env = jinja2.Environment(loader=jinja2.PackageLoader('racovimge'))
+env = jinja2.Environment(loader=jinja2.PackageLoader(__name__))
 env.filters['wrap'] = wrap
 env.filters['rgb'] = to_rgb
 

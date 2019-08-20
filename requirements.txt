@@ -10,4 +10,5 @@ progress==1.5
 Js2Py==0.66
 EbookLib==0.17.1
 cairosvg==2.4.0
-#racovimge==0.9
+Jinja2==2.10.1
+# racovimge==0.9
