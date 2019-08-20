@@ -66,7 +66,8 @@ class TestBot:
                             self.allerrors[link] = []
                         # end if
                         self.allerrors[link].append(
-                            '> Input: %s\n%s\n%s' % (entry, err, ''.join(traces))
+                            '> Input: %s\n%s\n%s' % (
+                                entry, err, ''.join(traces))
                         )
                     # end try
                 # end for
@@ -397,6 +398,9 @@ class TestBot:
         'https://yukinovel.me/': [
             'https://yukinovel.me/novel/the-second-coming-of-avarice/',
         ],
+        'https://www.asianhobbyist.com/': [
+            'https://www.asianhobbyist.com/series/that-time-i-got-reincarnated-as-a-slime/'
+        ]
     }
 
     allowed_failures = [

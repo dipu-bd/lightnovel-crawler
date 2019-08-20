@@ -275,6 +275,7 @@ The list of currently available sources and the future plans are given below:
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
 | https://wuxiaworld.online              |       ✔       |
+| https://www.asianhobbyist.com          |               |
 | https://www.idqidian.us                |               |
 | https://www.jieruihao.cn/              |               |
 | https://www.novelall.com               |       ✔       |
