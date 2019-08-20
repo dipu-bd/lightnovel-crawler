@@ -19,7 +19,7 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 ## Table of contents
 
 - [Installation](#a-installation)
-  - [⏬ EXE (Windows)](#a1-exe-windows)
+  - [⏬ Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
   - [📦 PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
   - [📱 Termux (Android)](#a3-termux-android)
   - [📱 Pydroid (Android)](#a4-pydroid-3-android)
@@ -44,9 +44,11 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 
 **This application uses _Calibre_ to convert ebooks. Install it from https://calibre-ebook.com/download**
 
-### A1. EXE (Windows)
+### A1. Standalone Bundle (Windows, Linux)
 
-⏬ [lightnovel-crawler v2.13.6 for windows ~ 15MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.13.6 ~ 15MB](http://bit.ly/2I1XzeN)
+
+⏬ **Linux**: [lightnovel-crawler v2.13.6 ~ 21MB](http://bit.ly/2LaB9HB)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
