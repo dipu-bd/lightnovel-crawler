@@ -21,7 +21,8 @@ def downlod_cover(app):
         logger.info('Getting cover image...')
         try:
             ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
-            filename = os.path.join(app.output_path, 'cover.%s' % (ext or 'png'))
+            filename = os.path.join(
+                app.output_path, 'cover.%s' % (ext or 'png'))
             if not os.path.exists(filename):
                 logger.debug('Downloading cover image')
                 response = app.crawler.get_response(app.crawler.novel_cover)
@@ -93,6 +94,8 @@ def download_chapter_body(app, chapter):
                 chapter['volume_title'], chapter['title'],
                 app.crawler.cleanup_text(body)
             )
+            chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
+                chapter['url'], chapter['url'])
         # end if
         with open(file_name, 'w', encoding="utf-8") as file:
             file.write(json.dumps(chapter))
