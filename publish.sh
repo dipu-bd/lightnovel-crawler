@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=$(head -n 1 VERSION)
+VERSION=$(head -n 1 src/VERSION)
 
 rm -rf venv build dist *.egg-info __pycache__
 

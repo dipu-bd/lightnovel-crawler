@@ -33,7 +33,7 @@ else:
 
     config.read_configuration('setup.cfg')
     setup(
-        version=parse_version('VERSION'),
+        version=parse_version('src/VERSION'),
         install_requires=parse_requirements('requirements.txt'),
     )
 

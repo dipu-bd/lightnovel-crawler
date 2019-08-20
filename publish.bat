@@ -1,6 +1,6 @@
 @ECHO OFF 
 
-SET /P VERSION=<VERSION
+SET /P VERSION=<src\VERSION
 
 RD /S /Q "dist" "venv" "build" "__pycache__" "lightnovel_crawler.egg-info" &
 
@@ -16,7 +16,7 @@ python -m pip install -r requirements.txt
 python setup.py package bdist_wheel sdist 
 
 python -m pip install twine 
-twine upload "dist/lightnovel_crawler-%VERSION%-py3-none-any.whl" 
+twine upload "dist\lightnovel_crawler-%VERSION%-py3-none-any.whl" 
 
 REM git tag -d "v%VERSION%" 
 REM git tag -a "v%VERSION%" -m "Version %VERSION%" 

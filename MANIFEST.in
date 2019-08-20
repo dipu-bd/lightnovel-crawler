@@ -1,2 +1,2 @@
-include VERSION
+include src/VERSION
 recursive-include src/assets *.*

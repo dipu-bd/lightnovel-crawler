@@ -20,10 +20,10 @@ def setup_command():
 
     command = 'pyinstaller -y '
     command += '--clean '
-    # command += '-F '  # onefile
+    command += '-F '  # onefile
     command += '-n "lncrawl" '
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
-    command += '--version-file "%s/VERSION" ' % cur_dir
+    command += '--version-file "%s/src/VERSION" ' % cur_dir
 
     sep = ';' if platform.system() == 'Windows' else ':'
     py_matcher = re.compile(r'\.pyc?$', flags=re.I)
