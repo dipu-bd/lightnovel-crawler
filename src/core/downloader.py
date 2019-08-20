@@ -9,7 +9,7 @@ import os
 from concurrent import futures
 from urllib.parse import urlparse
 
-import racovimge
+from ..utils.racovimge import generate_image
 from progress.bar import IncrementalBar
 
 logger = logging.getLogger('DOWNLOADER')
@@ -39,13 +39,12 @@ def downlod_cover(app):
     if not app.book_cover:
         logger.info('Generating cover image...')
         try:
-            from cairosvg import svg2png
             filename = os.path.join(app.output_path, 'cover.png')
-            svg = racovimge.random(
+            generate_image(
+                write_to=filename,
                 title=app.crawler.novel_title,
                 author=app.crawler.novel_author or '',
             )
-            png = svg2png(bytestring=svg, write_to=filename)
             app.book_cover = filename
         except:
             logger.exception('Failed to generate cover image')

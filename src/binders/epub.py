@@ -38,7 +38,7 @@ def make_intro_page(app, cover_image):
     github_url = 'https://github.com/dipu-bd/lightnovel-crawler'
 
     intro_html = '<div style="%s">' % ';'.join([
-        'min-height: 7in',
+        'min-height: 6.5in',
         'display: flex',
         'text-align: center',
         'flex-direction: column',
@@ -56,8 +56,13 @@ def make_intro_page(app, cover_image):
     )
 
     if cover_image:
-        intro_html += '<div><img id="cover" src="%s" height="4in" style="%s"></div>' % (
-            cover_image.file_name, 'object-fit: contain; object-position: center center')
+        intro_html += '<img id="cover" src="%s" style="%s">' % (
+            cover_image.file_name, '; '.join([
+                'min-height: 3.5in',
+                'max-height: 4.5in',
+                'object-fit: contain',
+                'object-position: center center'
+            ]))
     # end if
 
     intro_html += '''
@@ -94,7 +99,8 @@ def make_chapters(book, chapters):
         # separate chapters by volume
         if i + 1 == len(chapters) or chapter['volume'] != chapters[i + 1]['volume']:
             toc.append((
-                epub.Section(chapter['volume_title'], href=volume[0].file_name),
+                epub.Section(chapter['volume_title'],
+                             href=volume[0].file_name),
                 tuple(volume)
             ))
             volume = []
