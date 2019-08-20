@@ -15,12 +15,10 @@ python3 -m pip install -r requirements.txt
 
 python3 setup.py bdist_wheel sdist package
 
+deactivate
+rm -rf venv build *.egg-info __pycache__
+
 python3 -m pip install twine
 twine upload "dist/lightnovel_crawler-$VERSION-py3-none-any.whl"
 
-#git tag -d "v$VERSION"
-#git tag -a "v$VERSION" -m "Version $VERSION"
-
-deactivate
-
-rm -rf venv build *.egg-info __pycache__
+# END

@@ -38,7 +38,7 @@ def setup_command():
         dst = '/'.join(dst.split(os.sep))
         command += '--add-data "%s%s%s" ' % (src, sep, dst)
     # end for
-    command += '--add-data "%s/VERSION%s." ' % (cur_dir, sep)
+    command += '--add-data "%s/src/VERSION%s." ' % (cur_dir, sep)
 
     command += '"%s/__main__.py" ' % cur_dir
 
