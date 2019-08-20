@@ -2,8 +2,8 @@
 
 VERSION=$(head -n 1 src/VERSION)
 
-PY=python3
-PIP=$PY -m pip --disable-pip-version-check
+PY="python3"
+PIP="$PY -m pip --disable-pip-version-check"
 
 rm -rfv venv build dist *.egg-info
 
