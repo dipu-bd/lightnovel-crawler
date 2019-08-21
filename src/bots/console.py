@@ -104,8 +104,24 @@ class ConsoleBot:
 
         logger.debug('Selected chapters:')
         logger.debug(chapters)
-        logger.info('%d chapters to be downloaded', len(chapters))
+        if not args.suppress:
+            answer = prompt([
+                {
+                    'type': 'list',
+                    'name': 'continue',
+                    'message': '%d chapters selected' % len(chapters),
+                    'choices': [
+                        'Continue',
+                        'Change selection'
+                    ],
+                }
+            ])
+            if answer['continue'] == 'Change selection':
+                return self.process_chapter_range()
+            # end if
+        # end if
 
+        logger.info('%d chapters to be downloaded', len(chapters))
         return chapters
     # end def
 
