@@ -196,11 +196,14 @@ class ConsoleBot:
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Choose a source to download?',
-                    'choices': display.format_source_choices(novels),
+                    'choices': ['0. Back'] + display.format_source_choices(novels),
                 }
             ])
 
             index = int(answer['novel'].split('.')[0])
+            if index == 0:
+                return self.choose_a_novel()
+            # end if
             selected_novel = novels[index - 1]
         # end if
 
