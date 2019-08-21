@@ -5,18 +5,27 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('KISSLIGHTNOVEL')
-search_url = 'https://kisslightnovels.info/wp-admin/admin-ajax.php'
+search_url = 'https://kisslightnovels.info/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 
 class KissLightNovels(Crawler):
     def search_novel(self, query):
-        body = {
-            'action': 'wp-manga-search-manga',
-            'title': query,
-        }
-        response = self.submit_form(search_url, body)
-        data = response.json()
-        return data['data']
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for tab in soup.select('.c-tabs-item__content'):
+            a = tab.select_one('.post-title h4 a')
+            latest = tab.select_one('.latest-chap .chapter a').text
+            votes = tab.select_one('.rating .total_votes').text
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (latest, votes),
+            })
+        # end for
+
+        return results
     # end def
 
     def read_novel_info(self):
