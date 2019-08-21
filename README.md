@@ -47,9 +47,11 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 ### A1. Standalone Bundle (Windows, Linux)
 
 ⏬ **Windows**: [lightnovel-crawler v2.13.6 ~ 15MB](http://bit.ly/2I1XzeN)
+
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
 ⏬ **Linux**: [lightnovel-crawler v2.13.6 ~ 21MB](http://bit.ly/2LaB9HB)
+
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
 ### A2. PIP (Windows, Mac, and Linux)
@@ -160,8 +162,8 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.13.6 
-                  https://github.com/dipu-bd/lightnovel-crawler 
+                           📒 Lightnovel Crawler 🍀2.13.6
+                  https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
        lightnovel-crawler [options...]
@@ -259,6 +261,7 @@ The list of currently available sources and the future plans are given below:
 | https://boxnovel.com                   |       ✔       |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
+| https://kisslightnovels.info           |       ✔       |
 | https://light-novel.online             |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |

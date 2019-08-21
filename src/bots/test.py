@@ -400,7 +400,10 @@ class TestBot:
         ],
         'https://www.asianhobbyist.com/': [
             'https://www.asianhobbyist.com/series/that-time-i-got-reincarnated-as-a-slime/'
-        ]
+        ],
+        'https://kisslightnovels.info/': [
+            'https://kisslightnovels.info/novel/dual-cultivation-novel/'
+        ],
     }
 
     allowed_failures = [
