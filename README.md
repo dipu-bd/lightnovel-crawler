@@ -47,10 +47,10 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 ### A1. Standalone Bundle (Windows, Linux)
 
 ⏬ **Windows**: [lightnovel-crawler v2.13.6 ~ 15MB](http://bit.ly/2I1XzeN)
+> In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
 ⏬ **Linux**: [lightnovel-crawler v2.13.6 ~ 21MB](http://bit.ly/2LaB9HB)
-
-> In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
+> Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
 ### A2. PIP (Windows, Mac, and Linux)
 
