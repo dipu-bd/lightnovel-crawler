@@ -64,7 +64,9 @@ def wrap(text, width):
         text, break_long_words=False, break_on_hyphens=False, width=width)
 
 
-env = jinja2.Environment(loader=jinja2.PackageLoader(__name__))
+template_dir = os.path.abspath(str(ROOT / 'templates'))
+env = jinja2.Environment(
+    loader=jinja2.FileSystemLoader(searchpath=template_dir))
 env.filters['wrap'] = wrap
 env.filters['rgb'] = to_rgb
 
