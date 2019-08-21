@@ -32,14 +32,15 @@ class KissLightNovels(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['src'])
+            soup.select_one('.tab-summary .summary_image img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div', {'class': 'author-content'}).findAll('a')
+        author = soup.select('.tab-summary .author-content a')
         if len(author) == 2:
             self.novel_author = author[0].text + ' (' + author[1].text + ')'
         else:
             self.novel_author = author[0].text
+        # end if
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.select('ul.main li.wp-manga-chapter a')
@@ -71,11 +72,22 @@ class KissLightNovels(Crawler):
 
         contents = soup.select_one('div.text-left')
 
+        if contents.select_one('#divReadContent'):
+            chapter['title'] = contents.select_one('h4').text
+            contents = contents.select_one('#divReadContent')
+        # end if
+
+        if contents.select_one('#snippet-box'):
+            contents.select_one('#snippet-box').decompose()
+        # end if
+
         if contents.h3:
             contents.h3.decompose()
+        # end if
 
         for codeblock in contents.findAll('div', {'class': 'code-block'}):
             codeblock.decompose()
+        # end for
 
         self.clean_contents(contents)
         return str(contents)
