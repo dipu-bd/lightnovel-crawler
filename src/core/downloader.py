@@ -89,8 +89,8 @@ def download_chapter_body(app, chapter):
         if len(body) == 0:
             result = 'Body is empty: ' + chapter['url']
         else:
-            chapter['body'] = '<h1><small style="font-size: 14px">%s</small><br>%s</h1>\n%s' % (
-                chapter['volume_title'], chapter['title'],
+            chapter['body'] = '<h1>%s</h1>\n%s' % (
+                chapter['title'],
                 app.crawler.cleanup_text(body)
             )
             chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
