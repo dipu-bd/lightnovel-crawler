@@ -66,7 +66,12 @@ def epub_to_calibre(app, epub_file, out_fmt):
     if app.book_cover:
         args += ['--cover', app.book_cover]
     if out_fmt == 'pdf':
-        args += ['--pdf-page-numbers','--paper-size', 'a4']
+        args += [
+            '--paper-size', 'a4',
+            '--pdf-page-numbers',
+            '--pdf-hyphenate',
+            '--pdf-header-template', '<p style="text-align:center; color:#555; font-size:0.9em">⦗ _TITLE_ &mdash; _SECTION_ ⦘</p>',
+        ]
     # end if
 
     run_ebook_convert(*args)
@@ -87,7 +92,8 @@ def make_calibres(app, epubs, out_fmt):
     # end if
 
     if not run_ebook_convert('--version'):
-        logger.error('Install Calibre to generate %s: %s', out_fmt, CALIBRE_LINK),
+        logger.error('Install Calibre to generate %s: %s',
+                     out_fmt, CALIBRE_LINK),
         return
     # end if
 
