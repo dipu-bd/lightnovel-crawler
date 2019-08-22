@@ -58,8 +58,8 @@ def make_intro_page(app, cover_image):
     if cover_image:
         intro_html += '<img id="cover" src="%s" style="%s">' % (
             cover_image.file_name, '; '.join([
-                'min-height: 3.5in',
-                'max-height: 4.5in',
+                'max-height: 65%',
+                'min-height: 3.0in',
                 'object-fit: contain',
                 'object-position: center center'
             ]))
@@ -133,7 +133,7 @@ def bind_epub_book(app, chapters, volume=''):
     try:
         book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
         book.spine = ['cover', intro_page, 'nav']
-    except Exception as err:
+    except:
         book.spine = [intro_page, 'nav']
         logger.exception('No cover image')
     # end if
