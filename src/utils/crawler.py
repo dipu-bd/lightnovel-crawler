@@ -198,7 +198,8 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins', 'button', 'input', 'amp-auto-ads'
+        'noscript', 'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins',
+        'button', 'input', 'amp-auto-ads', 'pirate'
     ]
     block_tags = [
         'h3', 'div', 'p'

@@ -3,7 +3,6 @@
 import os
 import re
 import shutil
-import traceback
 from concurrent.futures import ThreadPoolExecutor
 import logging
 import asyncio
@@ -74,7 +73,7 @@ class DiscordBot(discord.Client):
             handler = self.init_handler(user.id)
             await handler.process(message)
         except Exception as err:
-            logger.debug(traceback.format_exc())
+            logger.exception('While handling this message: %s', message)
             try:
                 await message.channel.send(
                     'Sorry! We had some trouble processing your request. Please try again.\n\n' +
@@ -109,8 +108,8 @@ class MessageHandler:
         try:
             self.app.destroy()
             self.executors.shutdown(False)
-        except Exception as err:
-            logger.debug(traceback.format_exc())
+        except:
+            logger.exception('While destroying MessageHandler')
         finally:
             self.client.handlers.pop(self.user.id)
             shutil.rmtree(self.app.output_path, ignore_errors=True)
@@ -476,8 +475,7 @@ class MessageHandler:
         try:
             self.executors.submit(self.start_download)
         except Exception:
-            logger.warn('Download failure: %s' % self.user.id)
-            logger.debug(traceback.format_exc())
+            logger.exception('Download failure: %s', self.user.id)
         # end try
     # end def
 

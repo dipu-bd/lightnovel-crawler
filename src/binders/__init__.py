@@ -64,8 +64,7 @@ def bind_books(app, data):
                 outputs[fmt] = make_calibres(app, outputs['epub'], fmt)
             # end if
         except Exception as err:
-            logger.warn('Failed to generate "%s": %s' % (fmt, err))
-            logger.debug(traceback.format_exc())
+            logger.exception('Failed to generate "%s": %s' % (fmt, err))
         # end try
     # end for
 

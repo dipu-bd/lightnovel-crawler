@@ -279,8 +279,8 @@ class TestBot:
             'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
             'sword',
         ],
-        'https://meionovel.com/': [
-            'https://meionovel.com/novel/the-legendary-mechanic/',
+        'https://meionovel.id/': [
+            'https://meionovel.id/novel/the-legendary-mechanic/',
         ],
         'https://mtled-novels.com/': [
             'https://mtled-novels.com/novels/ancient-demon-dragon-emperor',
@@ -349,9 +349,6 @@ class TestBot:
         'https://4scanlation.xyz/': [
             'https://4scanlation.xyz/instant-messiah/',
         ],
-        'https://yukinovel.me/': [
-            'https://yukinovel.me/novel/the-second-coming-of-avarice/',
-        ],
         'https://readnovelfull.com/': [
             'https://readnovelfull.com/lord-of-all-realms.html',
             'cultivation'
@@ -389,16 +386,31 @@ class TestBot:
         'https://www.rebirth.online/': [
             'https://www.rebirth.online/novel/the-good-for-nothing-seventh-young-lady'
         ],
+        'https://www.jieruihao.cn/': [
+            'https://www.jieruihao.cn/novel/against-the-gods/',
+        ],
         'https://www.wattpad.com/': [
             'https://www.wattpad.com/story/87505567-loving-mr-jerkface-%E2%9C%94%EF%B8%8F'
         ],
         'https://novelgo.id/': [
             'https://novelgo.id/novel/the-mightiest-leveling-system/'
-        ]
+        ],
+        'https://yukinovel.me/': [
+            'https://yukinovel.me/novel/the-second-coming-of-avarice/',
+        ],
+        'https://www.asianhobbyist.com/': [
+            'https://www.asianhobbyist.com/series/that-time-i-got-reincarnated-as-a-slime/'
+        ],
+        'https://kisslightnovels.info/': [
+            'https://kisslightnovels.info/novel/dual-cultivation-novel/'
+        ],
     }
 
     allowed_failures = [
+        'https://www.tapread.com/'
         'https://4scanlation.xyz/',
         'https://m.chinesefantasynovels.com/',
+        'https://m.romanticlovebooks.com/',
+        'https://www.romanticlovebooks.com/',
     ]
 # end class

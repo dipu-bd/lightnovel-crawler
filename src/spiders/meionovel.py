@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [Meionovel](https://meionovel.com/).
-"""
 import json
 import logging
 import re
@@ -64,7 +61,7 @@ class MeionovelCrawler(Crawler):
 
         body = self.extract_contents(body_parts)
 
-        signature = '</br>Kunjungi web kami yaitu <a href="https://meionovel.com">meionovel.com</a>'
+        signature = '</br>Kunjungi web kami yaitu <a href="https://meionovel.id">meionovel.id</a>'
 
         body.append(signature)
 

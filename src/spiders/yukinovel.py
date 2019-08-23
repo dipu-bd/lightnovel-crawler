@@ -12,8 +12,13 @@ logger = logging.getLogger('YUKI_NOVEL')
 
 
 class YukiNovelCrawler(Crawler):
+    def initialize(self):
+        self.home_url = 'https://yukinovel.id/'
+    # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
+        url = self.novel_url.replace('https://yukinovel.me', 'https://yukinovel.id')
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 

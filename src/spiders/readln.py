@@ -30,7 +30,7 @@ class ReadLightNovelCrawler(Crawler):
                 "a[href*=author]").text.strip().title()
             logger.info('Novel author: %s', self.novel_author)
         except Exception as err:
-            logger.debug('Failed getting author: %s', err)
+            logger.exception('Failed getting author: %s', self.novel_url)
         # end try
 
         for a in soup.select('.chapters .chapter-chs li a'):

@@ -104,8 +104,24 @@ class ConsoleBot:
 
         logger.debug('Selected chapters:')
         logger.debug(chapters)
-        logger.info('%d chapters to be downloaded', len(chapters))
+        if not args.suppress:
+            answer = prompt([
+                {
+                    'type': 'list',
+                    'name': 'continue',
+                    'message': '%d chapters selected' % len(chapters),
+                    'choices': [
+                        'Continue',
+                        'Change selection'
+                    ],
+                }
+            ])
+            if answer['continue'] == 'Change selection':
+                return self.process_chapter_range()
+            # end if
+        # end if
 
+        logger.info('%d chapters to be downloaded', len(chapters))
         return chapters
     # end def
 
@@ -196,11 +212,14 @@ class ConsoleBot:
                     'type': 'list',
                     'name': 'novel',
                     'message': 'Choose a source to download?',
-                    'choices': display.format_source_choices(novels),
+                    'choices': ['0. Back'] + display.format_source_choices(novels),
                 }
             ])
 
             index = int(answer['novel'].split('.')[0])
+            if index == 0:
+                return self.choose_a_novel()
+            # end if
             selected_novel = novels[index - 1]
         # end if
 

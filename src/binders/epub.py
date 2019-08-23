@@ -9,14 +9,14 @@ import base64
 try:
     from ebooklib import epub
 except Exception as err:
-    logging.error(err)
+    logging.fatal('Failed to import `ebooklib`')
 # end try
 
 logger = logging.getLogger('EPUB_BINDER')
 
 
 def make_cover_image(app):
-    if not app.book_cover:
+    if not (app.book_cover and os.path.isfile(app.book_cover)):
         return None
     # end if
     logger.info('Creating cover: %s', app.book_cover)
@@ -38,7 +38,7 @@ def make_intro_page(app, cover_image):
     github_url = 'https://github.com/dipu-bd/lightnovel-crawler'
 
     intro_html = '<div style="%s">' % ';'.join([
-        'min-height: 7in',
+        'min-height: 6.5in',
         'display: flex',
         'text-align: center',
         'flex-direction: column',
@@ -56,8 +56,13 @@ def make_intro_page(app, cover_image):
     )
 
     if cover_image:
-        intro_html += '<div><img id="cover" src="%s" height="4in" style="%s"></div>' % (
-            cover_image.file_name, 'object-fit: contain; object-position: center center')
+        intro_html += '<img id="cover" src="%s" style="%s">' % (
+            cover_image.file_name, '; '.join([
+                'max-height: 65%',
+                'min-height: 3.0in',
+                'object-fit: contain',
+                'object-position: center center'
+            ]))
     # end if
 
     intro_html += '''
@@ -94,7 +99,8 @@ def make_chapters(book, chapters):
         # separate chapters by volume
         if i + 1 == len(chapters) or chapter['volume'] != chapters[i + 1]['volume']:
             toc.append((
-                epub.Section(chapter['volume_title'], href=volume[0].file_name),
+                epub.Section(chapter['volume_title'],
+                             href=volume[0].file_name),
                 tuple(volume)
             ))
             volume = []
@@ -117,7 +123,9 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Create intro page
     cover_image = make_cover_image(app)
-    book.add_item(cover_image)
+    if cover_image:
+        book.add_item(cover_image)
+    # end if
     intro_page = make_intro_page(app, cover_image)
     book.add_item(intro_page)
 
@@ -125,10 +133,9 @@ def bind_epub_book(app, chapters, volume=''):
     try:
         book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
         book.spine = ['cover', intro_page, 'nav']
-    except Exception as err:
-        logger.warn('No cover image')
+    except:
         book.spine = [intro_page, 'nav']
-        logger.error(err)
+        logger.exception('No cover image')
     # end if
 
     # Create chapters

@@ -43,6 +43,7 @@ DEFAULT_HEADERS = OrderedDict(
 
 BUG_REPORT = """\
 Cloudflare may have changed their technique, or there may be a bug in the script.
+
 Please read https://github.com/Anorov/cloudflare-scrape#updates, then file a \
 bug report at https://github.com/Anorov/cloudflare-scrape/issues."\
 """
@@ -52,12 +53,13 @@ The challenge answer was not properly accepted by Cloudflare. This can occur if 
 the target website is under heavy load, or if Cloudflare is experiencing issues. You can
 potentially resolve this by increasing the challenge answer delay (default: 8 seconds). \
 For example: cfscrape.create_scraper(delay=15)
+
 If increasing the delay does not help, please open a GitHub issue at \
 https://github.com/Anorov/cloudflare-scrape/issues\
 """
 
 # Remove a few problematic TLSv1.0 ciphers from the defaults
-DEFAULT_CIPHERS += ":!ECDHE+SHA:!AES128-SHA"
+DEFAULT_CIPHERS += ":!ECDHE+SHA:!AES128-SHA:!AESCCM:!DHE:!ARIA"
 
 
 class CloudflareAdapter(HTTPAdapter):
@@ -117,8 +119,7 @@ class CloudflareScraper(Session):
         )
 
     def request(self, method, url, *args, **kwargs):
-        resp = super(CloudflareScraper, self).request(
-            method, url, *args, **kwargs)
+        resp = super(CloudflareScraper, self).request(method, url, *args, **kwargs)
 
         # Check if Cloudflare captcha challenge is presented
         if self.is_cloudflare_captcha_challenge(resp):
@@ -153,8 +154,7 @@ class CloudflareScraper(Session):
         body = resp.text
         parsed_url = urlparse(resp.url)
         domain = parsed_url.netloc
-        submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (
-            parsed_url.scheme, domain)
+        submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (parsed_url.scheme, domain)
 
         cloudflare_kwargs = copy.deepcopy(original_kwargs)
 
@@ -163,8 +163,7 @@ class CloudflareScraper(Session):
 
         try:
             params = cloudflare_kwargs["params"] = OrderedDict(
-                re.findall(
-                    r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
+                re.findall(r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
             )
 
             for k in ("jschl_vc", "pass"):
@@ -222,8 +221,7 @@ class CloudflareScraper(Session):
 
             # The challenge requires `document.getElementById` to get this content.
             # Future proofing would require escaping newlines and double quotes
-            innerHTML = re.search(
-                r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
+            innerHTML = re.search(r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
             innerHTML = innerHTML.group(1) if innerHTML else ""
 
             # Prefix the challenge with a fake document object.
@@ -238,6 +236,7 @@ class CloudflareScraper(Session):
                       return {"innerHTML": "%s"};
                     }
                   };
+
                 %s; a.value
             """ % (
                 domain,
@@ -290,8 +289,7 @@ class CloudflareScraper(Session):
                 )
             raise
         except Exception:
-            logging.error(
-                "Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
+            logging.error("Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
             raise
 
         try:
@@ -340,8 +338,7 @@ class CloudflareScraper(Session):
             resp = scraper.get(url, **kwargs)
             resp.raise_for_status()
         except Exception:
-            logging.error(
-                "'%s' returned an error. Could not collect tokens." % url)
+            logging.error("'%s' returned an error. Could not collect tokens." % url)
             raise
 
         domain = urlparse(resp.url).netloc
@@ -371,8 +368,7 @@ class CloudflareScraper(Session):
         """
         Convenience function for building a Cookie HTTP header value.
         """
-        tokens, user_agent = cls.get_tokens(
-            url, user_agent=user_agent, **kwargs)
+        tokens, user_agent = cls.get_tokens(url, user_agent=user_agent, **kwargs)
         return "; ".join("=".join(pair) for pair in tokens.items()), user_agent
 
 

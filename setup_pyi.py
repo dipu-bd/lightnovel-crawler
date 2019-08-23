@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
+import platform
+import re
 import shlex
 import shutil
 import sys
-import platform
+from pathlib import Path
 
 from PyInstaller import __main__ as pyi
 from setuptools.config import read_configuration
@@ -21,20 +23,23 @@ def setup_command():
     command += '-F '  # onefile
     command += '-n "lncrawl" '
     command += '-i "%s/res/lncrawl.ico" ' % cur_dir
+    #command += '--version-file "%s/src/VERSION" ' % cur_dir
 
-    config = read_configuration('setup.cfg')
-    sep = ';' if platform.system() == 'Windows' else ':'
-    for k, paths in config['options']['package_data'].items():
-        for v in paths:
-            src = os.path.normpath('/'.join([cur_dir, k, v]))
-            src = '/'.join(src.split(os.sep))
-            dst = os.path.normpath('/'.join([k, v]))
-            dst = os.path.dirname(dst)
-            dst = '/'.join(dst.split(os.sep))
-            dst = (dst + '/') if dst else '.'
-            command += '--add-data "%s%s%s" ' % (src, sep, dst)
-        # end for
+    data_sep = ';' if platform.system() == 'Windows' else ':'
+    py_matcher = re.compile(r'\.pyc?$', flags=re.I)
+    assets_dir = Path(os.path.join(cur_dir, 'src', 'assets'))
+    for f in assets_dir.glob('**/*.*'):
+        src = str(f)
+        if py_matcher.search(src):
+            continue
+        # end if
+        src = '/'.join(src.split(os.sep))
+        dst = str(f.parent.relative_to(cur_dir))
+        dst = '/'.join(dst.split(os.sep))
+        command += '--add-data "%s%s%s" ' % (src, data_sep, dst)
     # end for
+    src = '/'.join(cur_dir.split(os.sep))
+    command += '--add-data "%s/src/VERSION%ssrc" ' % (src, data_sep)
 
     command += '"%s/__main__.py" ' % cur_dir
 

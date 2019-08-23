@@ -129,8 +129,7 @@ class LNMTLCrawler(Crawler):
                     })
                 # end for
             except Exception as err:
-                logger.info('Failed parsing one possible batch')
-                logger.debug(err)
+                logger.exception('Failed parsing one possible batch')
             # end try
         # end for
 

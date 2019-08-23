@@ -6,11 +6,10 @@ To download chapter bodies
 import json
 import logging
 import os
-import traceback
 from concurrent import futures
 from urllib.parse import urlparse
 
-import racovimge
+from ..utils.racovimge import generate_image
 from progress.bar import IncrementalBar
 
 logger = logging.getLogger('DOWNLOADER')
@@ -22,7 +21,8 @@ def downlod_cover(app):
         logger.info('Getting cover image...')
         try:
             ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
-            filename = os.path.join(app.output_path, 'cover.%s' % (ext or 'png'))
+            filename = os.path.join(
+                app.output_path, 'cover.%s' % (ext or 'png'))
             if not os.path.exists(filename):
                 logger.debug('Downloading cover image')
                 response = app.crawler.get_response(app.crawler.novel_cover)
@@ -33,22 +33,21 @@ def downlod_cover(app):
             # end if
             app.book_cover = filename
         except:
-            logger.debug(traceback.format_exc())
+            logger.exception('Failed to download cover image')
         # end try
     # end if
     if not app.book_cover:
         logger.info('Generating cover image...')
         try:
-            from cairosvg import svg2png
             filename = os.path.join(app.output_path, 'cover.png')
-            svg = racovimge.random(
+            generate_image(
+                write_to=filename,
                 title=app.crawler.novel_title,
                 author=app.crawler.novel_author or '',
             )
-            png = svg2png(bytestring=svg, write_to=filename)
             app.book_cover = filename
         except:
-            logger.debug(traceback.format_exc())
+            logger.exception('Failed to generate cover image')
         # end try
     # end if
     if not app.book_cover:
@@ -84,16 +83,18 @@ def download_chapter_body(app, chapter):
         try:
             logger.debug('Downloading to %s', file_name)
             body = app.crawler.download_chapter_body(chapter)
-        except Exception:
-            logger.debug(traceback.format_exc())
+        except:
+            logger.exception('Failed to download chapter body')
         # end try
         if len(body) == 0:
             result = 'Body is empty: ' + chapter['url']
         else:
-            chapter['body'] = '<h4>%s</h4><h1>%s</h1>\n%s' % (
-                chapter['volume_title'], chapter['title'],
+            chapter['body'] = '<h1>%s</h1>\n%s' % (
+                chapter['title'],
                 app.crawler.cleanup_text(body)
             )
+            chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
+                chapter['url'], chapter['url'])
         # end if
         with open(file_name, 'w', encoding="utf-8") as file:
             file.write(json.dumps(chapter))

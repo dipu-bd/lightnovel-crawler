@@ -54,7 +54,7 @@ class LightNovelOnline(Crawler):
             last_page = soup.select('ul.pagingnation li a')[-1]['title']
             page_count = int(last_page.split(' ')[-1])
         except Exception as err:
-            logger.debug('Failed to get page-count: %s', err)
+            logger.exception('Failed to get page-count: %s', self.novel_url)
         # end try
         logger.info('Total pages: %d', page_count)
 

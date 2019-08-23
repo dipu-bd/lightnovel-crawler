@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import os.path
 
 if sys.version_info[:2] < (3, 5):
     raise RuntimeError(
@@ -18,7 +19,8 @@ else:
     from setuptools import config, setup
 
     def parse_version(filename):
-        return open(filename, 'r').read().strip()
+        with open(filename, 'r') as f:
+            return f.read().strip()
     # end def
 
     def parse_requirements(filename):
@@ -26,13 +28,14 @@ else:
         # Ref: https://stackoverflow.com/a/42033122/
         requirements = open(filename, 'r').read().strip().split('\n')
         requirements = [r.strip() for r in requirements]
-        requirements = [r for r in sorted(requirements) if r and not r.startswith('#')]
+        requirements = [r for r in sorted(
+            requirements) if r and not r.startswith('#')]
         return requirements
     # end def
 
     config.read_configuration('setup.cfg')
     setup(
-        version=parse_version('VERSION'),
+        version=parse_version(os.path.join('src', 'VERSION')),
         install_requires=parse_requirements('requirements.txt'),
     )
 

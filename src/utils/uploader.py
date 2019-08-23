@@ -52,8 +52,7 @@ def upload(file_path):
         logger.info(f['id'])
         return f['id']
     except Exception:
-        import traceback
-        logger.debug(traceback.format_exc())
+        logger.exception('Failed to upload %s', file_path)
     # end try
     return None
 # end def

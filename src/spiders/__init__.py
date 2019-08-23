@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from .anythingnovel import AnythingNovelCrawler
+from .asianhobbyist import AsianHobbyistCrawler
 from .babelnovel import BabelNovelCrawler
 from .bestlightnovel import BestLightNovel
 from .boxnovel import BoxNovelCrawler
@@ -13,6 +14,7 @@ from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
 from .jieruihao import JieruihaoCrawler
+from .lightnovelonline import LightNovelOnline
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
 from .machinetrans import MachineNovelTrans
@@ -21,8 +23,9 @@ from .mtlednovels import MtledNovelsCrawler
 from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
-#from .novelgo import NovelGoCrawler
+from .novelgo import NovelGoCrawler
 from .novelplanet import NovelPlanetCrawler
+from .novelraw import NovelRawCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
 from .novelv import NovelvCrawler
@@ -43,8 +46,7 @@ from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
-from .novelraw import NovelRawCrawler
-from .lightnovelonline import LightNovelOnline
+from .kisslightnovels import KissLightNovels
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -58,6 +60,7 @@ crawler_list = {
     'https://boxnovel.com/': BoxNovelCrawler,
     'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
+    'https://kisslightnovels.info/': KissLightNovels,
     'https://light-novel.online/': LightNovelOnline,
     'https://litnet.com/': LitnetCrawler,
     'https://lnmtl.com/': LNMTLCrawler,
@@ -65,7 +68,7 @@ crawler_list = {
     'https://m.novelspread.com/': NovelSpreadCrawler,
     'https://m.romanticlovebooks.com/': RomanticLBCrawler,
     'https://m.wuxiaworld.co/': WuxiaCoCrawler,
-    'https://meionovel.com/': MeionovelCrawler,
+    'https://meionovel.id/': MeionovelCrawler,
     'https://mtled-novels.com/': MtledNovelsCrawler,
     'https://myoniyonitranslations.com/': MyOniyOniTranslation,
     'https://novelplanet.com/': NovelPlanetCrawler,
@@ -73,10 +76,10 @@ crawler_list = {
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
+    'https://www.asianhobbyist.com/': AsianHobbyistCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
-    'https://www.jieruihao.cn' : JieruihaoCrawler,
+    'https://www.jieruihao.cn/': JieruihaoCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
-    # 'https://novelgo.id/': NovelGoCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://www.rebirth.online/': RebirthOnlineCrawler,
@@ -91,6 +94,8 @@ crawler_list = {
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
     'https://yukinovel.id/': YukiNovelCrawler,
+    'https://yukinovel.me/': YukiNovelCrawler,
+    # 'https://novelgo.id/': NovelGoCrawler,
     # 'http://fullnovel.live/': FullnovelLiveCrawler,
     # 'https://comrademao.com/': ComrademaoCrawler,
     # 'https://4scanlation.xyz/': FourScanlationCrawler,
