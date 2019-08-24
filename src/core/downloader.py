@@ -9,6 +9,7 @@ import os
 from concurrent import futures
 from urllib.parse import urlparse
 
+from ..core.arguments import get_args
 from ..utils.racovimge import generate_image
 from progress.bar import IncrementalBar
 
@@ -93,8 +94,10 @@ def download_chapter_body(app, chapter):
                 chapter['title'],
                 app.crawler.cleanup_text(body)
             )
-            chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
-                chapter['url'], chapter['url'])
+            if get_args().add_source_url:
+                chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
+                    chapter['url'], chapter['url'])
+            # end if
         # end if
         with open(file_name, 'w', encoding="utf-8") as file:
             file.write(json.dumps(chapter))

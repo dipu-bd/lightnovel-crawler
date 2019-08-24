@@ -74,6 +74,9 @@ class ArgReader:
         parser.add_argument('--suppress', action='store_true',
                             help='Suppress input prompts (use defaults instead)')
 
+        parser.add_argument('--add-source-url', action='store_true',
+                            help='Add source url at the end of each chapter')
+
         parser.add_argument('--bot', type=str, choices=supported_bots,
                             help='Select a bot. Default: console')
 
