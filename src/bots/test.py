@@ -407,6 +407,7 @@ class TestBot:
     }
 
     allowed_failures = [
+        'https://www.worldnovel.online/',
         'https://www.tapread.com/'
         'https://4scanlation.xyz/',
         'https://m.chinesefantasynovels.com/',
