@@ -10,50 +10,77 @@ from concurrent import futures
 from urllib.parse import urlparse
 
 from ..core.arguments import get_args
-from ..utils.racovimge import generate_image
+from ..utils.racovimge import random_cover
 from progress.bar import IncrementalBar
 
 logger = logging.getLogger('DOWNLOADER')
 
+try:
+    from cairosvg import svg2png
+except:
+    logger.exception(
+        'CairoSVG was not loaded properly. SVG to PNG conversion will fail.')
+    pass  # ignore it
+# end try
 
-def downlod_cover(app):
-    app.book_cover = None
-    if app.crawler.novel_cover:
-        logger.info('Getting cover image...')
-        try:
-            ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
-            filename = os.path.join(
-                app.output_path, 'cover.%s' % (ext or 'png'))
-            if not os.path.exists(filename):
-                logger.debug('Downloading cover image')
-                response = app.crawler.get_response(app.crawler.novel_cover)
-                with open(filename, 'wb') as f:
-                    f.write(response.content)
-                # end with
-                logger.debug('Saved cover: %s', filename)
-            # end if
-            app.book_cover = filename
-        except:
-            logger.exception('Failed to download cover image')
-        # end try
+
+def download_cover(app):
+    if not app.crawler.novel_cover:
+        return None
     # end if
-    if not app.book_cover:
-        logger.info('Generating cover image...')
-        try:
-            filename = os.path.join(app.output_path, 'cover.png')
-            generate_image(
-                write_to=filename,
-                title=app.crawler.novel_title,
-                author=app.crawler.novel_author or '',
-            )
-            app.book_cover = filename
-        except:
-            logger.exception('Failed to generate cover image')
-        # end try
-    # end if
-    if not app.book_cover:
-        logger.warn('No cover image')
-    # end if
+
+    filename = None
+    try:
+        ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
+        filename = os.path.join(app.output_path, 'cover.' + (ext or 'png'))
+        if os.path.exists(filename):
+            return filename
+        # end if
+    except:
+        logger.exception('Failed to locate cover image: %s -> %s',
+                         app.crawler.novel_cover, app.output_path)
+        return None
+    # end try
+
+    try:
+        logger.info('Downloading cover image...')
+        response = app.crawler.get_response(app.crawler.novel_cover)
+        with open(filename, 'wb') as f:
+            f.write(response.content)
+            logger.debug('Saved cover: %s', filename)
+        # end with
+        return filename
+    except:
+        logger.exception('Failed to download cover image: %s -> %s',
+                         app.crawler.novel_cover, filename)
+        return None
+    # end try
+# end def
+
+
+def generate_cover(app):
+    logger.info('Generating cover image...')
+    try:
+        svg_file = os.path.join(app.output_path, 'cover.svg')
+        svg = random_cover(
+            title=app.crawler.novel_title,
+            author=app.crawler.novel_author,
+        )
+
+        with open(svg_file, 'w') as f:
+            f.write(svg)
+            logger.debug('Saved a random cover.svg')
+        # end with
+
+        png_file = os.path.join(app.output_path, 'cover.png')
+        svg2png(bytestring=svg.encode('utf-8'), write_to=png_file)
+        logger.debug('Converted cover.svg to cover.png')
+
+        return png_file
+    except:
+        logger.exception('Failed to generate cover image: %s', app.output_path)
+        return None
+    # end try
 # end def
 
 
@@ -109,7 +136,14 @@ def download_chapter_body(app, chapter):
 
 
 def download_chapters(app):
-    downlod_cover(app)
+    # download or generate cover
+    app.book_cover = download_cover(app)
+    if not app.book_cover:
+        app.book_cover = generate_cover(app)
+    # end if
+    if not app.book_cover:
+        logger.warn('No cover image')
+    # end if
 
     bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
     bar.start()

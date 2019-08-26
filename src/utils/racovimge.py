@@ -20,12 +20,6 @@ import textwrap
 
 import jinja2
 
-try:
-    from cairosvg import svg2png
-except:
-    pass  # ignore it
-# end try
-
 
 logger = logging.getLogger(__name__)
 
@@ -75,14 +69,15 @@ env.filters['rgb'] = to_rgb
 # Covers
 ###############################################################################
 
-def random(title, author):
-    font_size_title = 96
-    font_size_author = 48
+def random_cover(title, author):
+    font_size_title = 120
+    font_size_author = 52
     font = rand.choice(fonts)
     template = rand.choice(templates)
     colors = rand.choice(color_schemes)
     color1, color2, color3, color4, color5 = colors
 
+    author = author.split('; ') if isinstance(author, str) else author
     authors = [author] if isinstance(author, str) else author
     authors = authors[:3] if authors else []
 
@@ -119,19 +114,4 @@ def random(title, author):
     )
 
     return env.get_template(template + '.svg').render(**kargs)
-# end def
-
-
-def generate_image(title, author, write_to):
-    author = author.split(', ') if author else 'N/A'
-    svg = random(title, author)
-
-    # save svg
-    svg_output = write_to[:-3] + 'svg'
-    with open(svg_output, 'w') as f:
-        f.write(svg)
-    # end with
-
-    # save png
-    svg2png(bytestring=svg.encode('utf-8'), write_to=write_to)
 # end def
