@@ -346,8 +346,8 @@ class TestBot:
         'https://www.tapread.com/': [
             'https://www.tapread.com/book/detail?bookId=80',
         ],
-        'https://4scanlation.xyz/': [
-            'https://4scanlation.xyz/instant-messiah/',
+        'https://4scanlation.com/': [
+            'https://4scanlation.com/isekai-kenkokuki/'
         ],
         'https://readnovelfull.com/': [
             'https://readnovelfull.com/lord-of-all-realms.html',
