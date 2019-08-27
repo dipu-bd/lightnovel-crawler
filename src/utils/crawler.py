@@ -121,7 +121,7 @@ class Crawler:
     # end def
 
     def absolute_url(self, url, page_url=None):
-        url = (url or '').strip()
+        url = (url or '').strip().lower()
         if not page_url:
             page_url = self.last_visited_url
         # end if
@@ -139,6 +139,13 @@ class Crawler:
         else:
             return url
         # end if
+    # end def
+
+    def is_relative_url(self, url):
+        page = urlparse(self.novel_url)
+        url = urlparse(url)
+        return (page.hostname == url.hostname
+                and url.path.startswith(page.path))
     # end def
 
     def get_response(self, url, **kargs):
