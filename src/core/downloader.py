@@ -45,6 +45,7 @@ def download_cover(app):
     try:
         logger.info('Downloading cover image...')
         response = app.crawler.get_response(app.crawler.novel_cover)
+        assert response.status_code == 200
         with open(filename, 'wb') as f:
             f.write(response.content)
             logger.debug('Saved cover: %s', filename)
