@@ -9,8 +9,9 @@ Original source: https://github.com/anqxyr/racovimge
 ###############################################################################
 
 import base64
+import html
 import logging
-import os.path
+import os
 import pathlib
 import random as rand
 import shutil
@@ -70,14 +71,16 @@ env.filters['rgb'] = to_rgb
 ###############################################################################
 
 def random_cover(title, author):
-    font_size_title = 120
-    font_size_author = 52
+    font_size_title = 96
+    font_size_author = 48
     font = rand.choice(fonts)
     template = rand.choice(templates)
     colors = rand.choice(color_schemes)
     color1, color2, color3, color4, color5 = colors
 
-    author = author.split('; ') if isinstance(author, str) else author
+    title = html.escape(title)
+    author = html.escape(author)
+    author = author.split(', ') if isinstance(author, str) else author
     authors = [author] if isinstance(author, str) else author
     authors = authors[:3] if authors else []
 
