@@ -294,7 +294,6 @@ The list of currently available sources and the future plans are given below:
 | https://www.worldnovel.online          |       ✔       |
 | https://www.wuxiaworld.co              |       ✔       |
 | https://www.wuxiaworld.com             |       ✔       |
-| https://yukinovel.id                   |               |
 
 Rejected:
 
@@ -303,13 +302,14 @@ Rejected:
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
 | https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
-| https://comrademao.com        | `Removed on request of the owner`   |
+| https://comrademao.com        | `Removed`                           |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
-| https://novelgo.id/           | `Removed on request of the owner`   |
+| https://novelgo.id/           | `Removed`                           |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
+| https://yukinovel.id          | `Removed`                           |
 
 ### C4. Supported output formats
 
