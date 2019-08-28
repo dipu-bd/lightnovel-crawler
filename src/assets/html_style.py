@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
 import re
+from pathlib import Path
 
-with open(os.path.join(os.path.dirname(__file__), 'html_style.css')) as f:
+ROOT = Path(__file__).parent
+
+with open(str(ROOT / 'html_style.css'), 'r') as f:
     style = f.read()
 # end with
 
@@ -16,14 +18,11 @@ def get_value():
 def _minify(css):
     result = ''
 
-    # remove comments - this will break a lot of hacks :-P
-    # preserve IE<6 comment hack
-    # css = re.sub(r'\s*/\*\s*\*/', "$$HACK1$$", css)
+    # remove comments - this will break IE<6 comment hacks
     css = re.sub(r'/\*[\s\S]*?\*/', "", css)
-    # css = css.replace("$$HACK1$$", '/**/')  # preserve IE<6 comment hack
 
     # url() doesn't need quotes
-    css = re.sub(r'url\((["\'])([^)]*)\1\)', r'url(\2)', css)
+    #css = re.sub(r'url\((["\'])([^)]*)\1\)', r'url(\2)', css)
 
     # spaces may be safely collapsed as generated content will collapse them anyway
     css = re.sub(r'\s+', ' ', css)
