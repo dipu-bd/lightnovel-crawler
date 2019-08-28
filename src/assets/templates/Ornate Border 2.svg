@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/2000/xlink" width="1200" height="1600" viewBox="0 0 1200 1600" xml:space="preserve">
+<svg width="1200" height="1600" viewBox="0 0 1200 1600" xml:space="preserve">
    <defs>
       <style type="text/css">
          <![CDATA[
@@ -218,9 +218,7 @@
             <path id="path57870" d="m 107.93656,496.17394 0.006,383.82606 5.055,0 0,-538.91029 -5.055,0 -0.006,155.07823 0,0.006"/>
             <path id="path58674" d="m 92.816561,496.17394 0,383.82606 5.0625,0 0,-538.91029 -5.0625,0 0,155.08423"/>
          </g>
-         <use id="use95706" width="1200" height="1600" x="0" y="0" transform="matrix(-1,0,0,1,1200,0)" xlink:href="#g95501"/>
       </g>
-      <use id="use95915" width="1200" height="1600" x="0" y="0" transform="matrix(1,0,0,-1,0,1600)" xlink:href="#g95708"/>
    </g>
    <text y="300" style="font-size:{{ font_size }}px;font-weight:bold;fill:{{ color5 }}">
       {%- for line in title|wrap(20) %} <tspan x="600" dx="0" dy="{{ font_size }}" font-family="{{ font }}" text-anchor="middle">{{ line }}</tspan> {%- endfor %}

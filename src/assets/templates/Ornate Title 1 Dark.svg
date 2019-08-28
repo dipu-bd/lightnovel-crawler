@@ -1,5 +1,5 @@
 <?xml version="1.0" standalone="no"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/2000/xlink" width="1200" height="1600" viewBox="0 0 1200 1600" xml:space="preserve">
+<svg width="1200" height="1600" viewBox="0 0 1200 1600" xml:space="preserve">
    <defs>
       <style type="text/css">
          <![CDATA[
@@ -37,7 +37,6 @@
          <path id="path23734" d="m 605.38074,332.57848 c -2.60367,-3.82388 -5.35426,-6.3745 -5.3665,-6.39491 0,0 -2.79139,2.58327 -5.39098,6.38267 1.57526,5.63584 4.32584,12.20623 5.37466,23.51057 1.06513,-11.30434 3.80348,-17.87881 5.38282,-23.49833"/>
          <path id="path23736" d="m 599.99792,322.04137 c -3.53822,-2.65672 -7.52942,-5.01145 -11.04315,-6.79892 10.79829,6.75403 10.79829,17.79718 11.04315,21.07421 0.25302,-3.28927 0.25302,-14.32018 11.05947,-21.07013 -3.52189,1.78339 -7.50493,4.12179 -11.05947,6.79484"/>
       </g>
-      <use id="use3981" width="1200" height="1600" x="0" y="0" transform="matrix(1,0,0,-1,0,{{ 850 + font_size * title|wrap(20)|length }})" xlink:href="#g3954"/>
    </g>
    <text y="410" style="font-size:{{ font_size }}px;font-weight:bold;fill:{{ color1 }}">
       {%- for line in title|wrap(20) %} <tspan x="600" dx="0" dy="{{ font_size }}" font-family="{{ font }}" text-anchor="middle">{{ line }}</tspan> {%- endfor %}
