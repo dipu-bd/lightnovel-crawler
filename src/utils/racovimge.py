@@ -12,34 +12,28 @@ import base64
 import html
 import logging
 import os
-import pathlib
 import random as rand
-import shutil
-import subprocess
-import tempfile
 import textwrap
+from pathlib import Path
 
-import jinja2
+from jinja2 import Environment, FileSystemLoader
 
-
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('RACOVIMGE')
 
 
 ###############################################################################
 # Templates and Color Schemes
 ###############################################################################
 
-asset_path = os.path.join(__file__, '..', '..', 'assets')
-ROOT = pathlib.Path(os.path.normpath(asset_path))
+ROOT = Path(__file__).parent.parent / 'assets'
 
 templates = [i.stem for i in (ROOT / 'templates').glob('*.svg')]
 
+fonts = ROOT / 'fonts'
+fonts = [str(i) for i in fonts.glob('*.*') if i.suffix in ('.ttf', '.otf')]
+
 with (ROOT / 'colors.txt').open() as file:
     color_schemes = [i.split() for i in file.read().split('\n')]
-
-fonts = ROOT / 'fonts'
-fonts = [i for i in fonts.glob('*.*') if i.suffix in ('.ttf', '.otf')]
-fonts = [str(i.resolve()) for i in fonts]
 
 
 ###############################################################################
@@ -60,8 +54,7 @@ def wrap(text, width):
 
 
 template_dir = os.path.abspath(str(ROOT / 'templates'))
-env = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(searchpath=template_dir))
+env = Environment(loader=FileSystemLoader(searchpath=template_dir))
 env.filters['wrap'] = wrap
 env.filters['rgb'] = to_rgb
 
@@ -89,7 +82,7 @@ def random_cover(title, author):
         ttf='application/x-font-ttf'
     )
 
-    font = pathlib.Path(font)
+    font = Path(font)
     with font.open('rb') as file:
         font_data = file.read()
         font_data = base64.b64encode(font_data).decode('utf-8')

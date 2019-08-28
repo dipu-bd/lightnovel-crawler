@@ -11,7 +11,7 @@ from pathlib import Path
 from PyInstaller import __main__ as pyi
 from setuptools.config import read_configuration
 
-ROOT = Path(os.path.dirname(__file__))
+ROOT = Path(__file__).parent
 unix_root = '/'.join(str(ROOT).split(os.sep))
 
 
