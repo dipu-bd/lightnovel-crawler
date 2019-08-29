@@ -329,7 +329,7 @@ class TestBot:
             'martial',
         ],
         'https://www.worldnovel.online/': [
-            'https://www.worldnovel.online/novel/pan-long/',
+            'https://www.worldnovel.online/novel/solo-leveling/',
             'cultivation'
         ],
         'https://www.wuxiaworld.co/': [
