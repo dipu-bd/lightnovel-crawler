@@ -63,7 +63,7 @@ def gather_data_files():
     command += '--add-data "%s/src/VERSION%ssrc" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
-    site_packages = list(ROOT.glob('venv/lib/python*/site-packages'))[0]
+    site_packages = list(ROOT.glob('venv/**/site-packages'))[0]
     site_packages = '/'.join(str(site_packages).split(os.sep))
     command += '--add-data "%s/cairosvg/VERSION%s." ' % (
         site_packages, os.pathsep)
