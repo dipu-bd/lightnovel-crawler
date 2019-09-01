@@ -50,7 +50,7 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-⏬ **Linux**: [lightnovel-crawler v2.14.1 ~ 16MB](http://bit.ly/2LaB9HB)
+⏬ **Linux**: [lightnovel-crawler v2.14.2 ~ 21MB](http://bit.ly/2LaB9HB)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
