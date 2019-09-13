@@ -329,7 +329,7 @@ class TestBot:
             'martial',
         ],
         'https://www.worldnovel.online/': [
-            'https://www.worldnovel.online/novel/pan-long/',
+            'https://www.worldnovel.online/novel/solo-leveling/',
             'cultivation'
         ],
         'https://www.wuxiaworld.co/': [
@@ -346,8 +346,8 @@ class TestBot:
         'https://www.tapread.com/': [
             'https://www.tapread.com/book/detail?bookId=80',
         ],
-        'https://4scanlation.xyz/': [
-            'https://4scanlation.xyz/instant-messiah/',
+        'https://4scanlation.com/': [
+            'https://4scanlation.com/isekai-kenkokuki/'
         ],
         'https://readnovelfull.com/': [
             'https://readnovelfull.com/lord-of-all-realms.html',
@@ -407,6 +407,7 @@ class TestBot:
     }
 
     allowed_failures = [
+        'https://www.worldnovel.online/',
         'https://www.tapread.com/'
         'https://4scanlation.xyz/',
         'https://m.chinesefantasynovels.com/',

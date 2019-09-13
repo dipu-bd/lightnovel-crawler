@@ -3,6 +3,7 @@
 import re
 import json
 import logging
+from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('GRAVITY_TALES')
@@ -16,7 +17,7 @@ class GravityTalesCrawler(Crawler):
         logger.debug('Visiting %s' % self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_id = self.novel_url.strip('/').split('/')[-1]
+        self.novel_id = urlparse(self.novel_url).path.split('/')[-1]
         logger.info('Novel ID: %s' % self.novel_id)
 
         self.novel_title = ' '.join([
@@ -29,8 +30,14 @@ class GravityTalesCrawler(Crawler):
         self.novel_cover = cover_image_url % self.novel_id
         logger.info('Novel cover: %s' % self.novel_cover)
 
-        self.novel_author = 'Translator: ' + \
-            soup.select_one('.main-content h4').text
+        possible_authors = []
+        for p in soup.select('.main-content .desc p'):
+            if re.search(r'(author|translator)', p.text, re.I):
+                text = re.sub(', ', ' & ', p.text).strip()
+                possible_authors.append(text)
+            # end if
+        # end for
+        self.novel_author = ', '.join(possible_authors)
         logger.info(self.novel_author)
 
         self.get_chapters_list()

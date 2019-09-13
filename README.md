@@ -46,11 +46,11 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.13.6 ~ 15MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.14.2 ~ 15MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-⏬ **Linux**: [lightnovel-crawler v2.13.6 ~ 21MB](http://bit.ly/2LaB9HB)
+⏬ **Linux**: [lightnovel-crawler v2.14.2 ~ 21MB](http://bit.ly/2LaB9HB)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
@@ -162,7 +162,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.13.6
+                           📒 Lightnovel Crawler 🍀2.14.2
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -196,6 +196,7 @@ optional arguments:
   --chapters [URL [URL ...]]
                         A list of specific chapter urls
   --suppress            Suppress input prompts (use defaults instead)
+  --add-source-url      Add source url at the end of each chapter
   --bot {console,telegram,discord,test}
                         Select a bot. Default: console
 
@@ -294,7 +295,6 @@ The list of currently available sources and the future plans are given below:
 | https://www.worldnovel.online          |       ✔       |
 | https://www.wuxiaworld.co              |       ✔       |
 | https://www.wuxiaworld.com             |       ✔       |
-| https://yukinovel.id                   |               |
 
 Rejected:
 
@@ -303,13 +303,14 @@ Rejected:
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
 | https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
-| https://comrademao.com        | `Removed on request of the owner`   |
+| https://comrademao.com        | `Removed`                           |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
-| https://novelgo.id/           | `Removed on request of the owner`   |
+| https://novelgo.id/           | `Removed`                           |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
+| https://yukinovel.id          | `Removed`                           |
 
 ### C4. Supported output formats
 

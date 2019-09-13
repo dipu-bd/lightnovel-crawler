@@ -9,42 +9,31 @@ Original source: https://github.com/anqxyr/racovimge
 ###############################################################################
 
 import base64
+import html
 import logging
-import os.path
-import pathlib
+import os
 import random as rand
-import shutil
-import subprocess
-import tempfile
 import textwrap
+from pathlib import Path
 
-import jinja2
+from jinja2 import Environment, FileSystemLoader
 
-try:
-    from cairosvg import svg2png
-except:
-    pass  # ignore it
-# end try
-
-
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('RACOVIMGE')
 
 
 ###############################################################################
 # Templates and Color Schemes
 ###############################################################################
 
-asset_path = os.path.join(__file__, '..', '..', 'assets')
-ROOT = pathlib.Path(os.path.normpath(asset_path))
+ROOT = Path(__file__).parent.parent / 'assets'
 
 templates = [i.stem for i in (ROOT / 'templates').glob('*.svg')]
 
+fonts = ROOT / 'fonts'
+fonts = [str(i) for i in fonts.glob('*.*') if i.suffix in ('.ttf', '.otf')]
+
 with (ROOT / 'colors.txt').open() as file:
     color_schemes = [i.split() for i in file.read().split('\n')]
-
-fonts = ROOT / 'fonts'
-fonts = [i for i in fonts.glob('*.*') if i.suffix in ('.ttf', '.otf')]
-fonts = [str(i.resolve()) for i in fonts]
 
 
 ###############################################################################
@@ -65,8 +54,7 @@ def wrap(text, width):
 
 
 template_dir = os.path.abspath(str(ROOT / 'templates'))
-env = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(searchpath=template_dir))
+env = Environment(loader=FileSystemLoader(searchpath=template_dir))
 env.filters['wrap'] = wrap
 env.filters['rgb'] = to_rgb
 
@@ -75,7 +63,7 @@ env.filters['rgb'] = to_rgb
 # Covers
 ###############################################################################
 
-def random(title, author):
+def random_cover(title, author):
     font_size_title = 96
     font_size_author = 48
     font = rand.choice(fonts)
@@ -83,6 +71,9 @@ def random(title, author):
     colors = rand.choice(color_schemes)
     color1, color2, color3, color4, color5 = colors
 
+    title = html.escape(title)
+    author = html.escape(author)
+    author = author.split(', ') if isinstance(author, str) else author
     authors = [author] if isinstance(author, str) else author
     authors = authors[:3] if authors else []
 
@@ -91,7 +82,7 @@ def random(title, author):
         ttf='application/x-font-ttf'
     )
 
-    font = pathlib.Path(font)
+    font = Path(font)
     with font.open('rb') as file:
         font_data = file.read()
         font_data = base64.b64encode(font_data).decode('utf-8')
@@ -119,19 +110,4 @@ def random(title, author):
     )
 
     return env.get_template(template + '.svg').render(**kargs)
-# end def
-
-
-def generate_image(title, author, write_to):
-    author = author.split(', ') if author else 'N/A'
-    svg = random(title, author)
-
-    # save svg
-    svg_output = write_to[:-3] + 'svg'
-    with open(svg_output, 'w') as f:
-        f.write(svg)
-    # end with
-
-    # save png
-    svg2png(bytestring=svg.encode('utf-8'), write_to=write_to)
 # end def
