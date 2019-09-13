@@ -392,7 +392,7 @@ class MessageHandler:
                 def resolve_chapter(name):
                     cid = 0
                     if name.isdigit():
-                        cid = int(str)
+                        cid = int(name)
                     else:
                         cid = self.app.crawler.get_chapter_index_of(name)
                     # end if
