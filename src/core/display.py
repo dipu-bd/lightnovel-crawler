@@ -109,7 +109,7 @@ def new_version_news(latest):
               Fore.YELLOW + 'http://bit.ly/2I1XzeN', Style.RESET_ALL)
     elif Icons.isLinux:
         print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'http://bit.ly/2LaB9HB', Style.RESET_ALL)        
+              Fore.YELLOW + 'http://bit.ly/2LaB9HB', Style.RESET_ALL)
     # end if
 
     print('-' * LINE_SIZE)
@@ -127,6 +127,19 @@ def url_not_recognized():
     print()
     print('-' * LINE_SIZE)
     print('You can request developers to add support for this site here:')
+    print(Fore.CYAN, Icons.LINK,
+          'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
+# end def
+
+
+def url_rejected(reason):
+    print()
+    print('-' * LINE_SIZE)
+    print('Sorry! I do not support this website.')
+    print('Reason: ' + reason)
+    print()
+    print('-' * LINE_SIZE)
+    print('You can try other available sources or create an issue if you find something\nhas went wrong:')
     print(Fore.CYAN, Icons.LINK,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
 # end def
