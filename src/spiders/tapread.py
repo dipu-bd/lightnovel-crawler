@@ -21,28 +21,18 @@ class TapreadCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one(
-            '.book-info .book-name').text.strip()
+            'div.book-name').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = 'https:%s' % soup.select_one(
-            '.book-container .book-img img')['src']
+        self.novel_cover = 'https:%s' % soup.select_one('div.book-img img')['src']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        try:
-            self.novel_author = []
-            for person in soup.select('.book-info .person-info div'):
-                label = person.select_one('span.label').text.strip(' :')
-                name = person.select_one('span.name').text.strip()
-                self.novel_author.append('%s: %s' % (label, name))
-            # end for
-            self.novel_author = ', '.join(self.novel_author)
-        except:
-            pass
-        # end try
+        regex = re.compile(r'[\n\r\t]')
+        self.novel_author = regex.sub("", soup.select_one('div.author').text.strip() + ' ' + soup.select_one('div.translator').text.strip())
         logger.info(self.novel_author)
 
-        book_id = urllib.parse.parse_qs(
-            urllib.parse.urlparse(self.novel_url).query)['bookId'][0]
+        path = urllib.parse.urlsplit(self.novel_url)[2]
+        book_id = path.split('/')[3]
 
         js = self.scrapper.post(
             "https://www.tapread.com/book/contents?bookId=%s" % book_id)

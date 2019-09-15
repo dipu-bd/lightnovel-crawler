@@ -23,6 +23,7 @@ from .mtlednovels import MtledNovelsCrawler
 from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
+from .novelonlinefull import NovelOnlineFullCrawler
 from .novelgo import NovelGoCrawler
 from .novelplanet import NovelPlanetCrawler
 from .novelraw import NovelRawCrawler
@@ -72,6 +73,7 @@ crawler_list = {
     'https://meionovel.id/': MeionovelCrawler,
     'https://mtled-novels.com/': MtledNovelsCrawler,
     'https://myoniyonitranslations.com/': MyOniyOniTranslation,
+    'https://novelonlinefull.com': NovelOnlineFullCrawler,
     'https://novelplanet.com/': NovelPlanetCrawler,
     'https://novelraw.blogspot.com/': NovelRawCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
