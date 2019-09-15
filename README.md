@@ -273,6 +273,7 @@ The list of currently available sources and the future plans are given below:
 | https://meionovel.com                  |               |
 | https://mtled-novels.com               |       ✔       |
 | https://myoniyonitranslations.com      |               |
+| https://novelonlinefull.com            |       ✔       |
 | https://novelplanet.com                |       ✔       |
 | https://novelraw.blogspot.com          |               |
 | https://volarenovels.com               |               |

@@ -404,6 +404,9 @@ class TestBot:
         'https://kisslightnovels.info/': [
             'https://kisslightnovels.info/novel/dual-cultivation-novel/'
         ],
+        'https://novelonlinefull.com/': [
+            'https://novelonlinefull.com/novel/abo1520855001564322110'
+        ]
     }
 
     allowed_failures = [

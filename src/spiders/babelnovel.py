@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 import re
-import json
 from concurrent import futures
-from urllib.parse import quote, urlparse, unquote
+from urllib.parse import quote, unquote, urlparse
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
