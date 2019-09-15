@@ -22,6 +22,12 @@ logger = logging.getLogger('CONSOLE_INTERFACE')
 
 class ConsoleBot:
     def start(self):
+        args = get_args()
+        if args.list_sources:
+            display.url_supported_list()
+            return
+        # end if
+
         self.app = App()
         self.app.initialize()
 
@@ -146,8 +152,12 @@ class ConsoleBot:
         # end if
 
         url = args.novel_page
-        if url and url.startswith('http'):
-            return url
+        if url:
+            if re.match(r'^http://.+\..+$', url):
+                return url
+            else:
+                raise Exception('Invalid URL of novel page')
+            # end if
         # end if
 
         try:
