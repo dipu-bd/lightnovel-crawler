@@ -18,7 +18,7 @@ logger = logging.getLogger('DOWNLOADER')
 try:
     from cairosvg import svg2png
 except:
-    logger.exception(
+    logger.warning(
         'CairoSVG was not loaded properly. SVG to PNG conversion will fail.')
     pass  # ignore it
 # end try
