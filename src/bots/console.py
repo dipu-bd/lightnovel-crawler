@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
-import os
-import sys
-import shutil
 import logging
+import os
+import re
+import shutil
+import sys
+from urllib.parse import urlparse
+
 from PyInquirer import prompt
 
+from ..assets.icons import Icons
+from ..binders import available_formats
 from ..core import display
 from ..core.app import App
 from ..core.arguments import get_args
-from ..assets.icons import Icons
-from ..spiders import crawler_list
-from ..binders import available_formats
+from ..spiders import crawler_list, rejected_sources
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 
 logger = logging.getLogger('CONSOLE_INTERFACE')
@@ -20,16 +22,33 @@ logger = logging.getLogger('CONSOLE_INTERFACE')
 
 class ConsoleBot:
     def start(self):
+        args = get_args()
+        if args.list_sources:
+            display.url_supported_list()
+            return
+        # end if
+
         self.app = App()
         self.app.initialize()
 
+        # Process user input
         self.app.user_input = self.get_novel_url()
         try:
             self.app.init_search()
         except:
-            return display.url_not_recognized()
+            if self.app.user_input.startswith('http'):
+                url = urlparse(self.app.user_input)
+                url = '%s://%s/' % (url.scheme, url.hostname)
+                if url in rejected_sources:
+                    display.url_rejected(rejected_sources[url])
+                    return
+                # end if
+            # end if
+            display.url_not_recognized()
+            return
         # end if
 
+        # Search novel and initialize crawler
         if not self.app.crawler:
             self.app.crawler_links = self.get_crawlers_to_search()
             self.app.search_novel()
@@ -133,8 +152,12 @@ class ConsoleBot:
         # end if
 
         url = args.novel_page
-        if url and url.startswith('http'):
-            return url
+        if url:
+            if re.match(r'^http://.+\..+$', url):
+                return url
+            else:
+                raise Exception('Invalid URL of novel page')
+            # end if
         # end if
 
         try:

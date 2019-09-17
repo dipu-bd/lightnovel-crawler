@@ -95,6 +95,7 @@ class App:
         '''Produces: crawler'''
         if not novel_url:
             return
+        # end if
         for home_url, crawler in crawler_list.items():
             if novel_url.startswith(home_url):
                 logger.info('Initializing crawler for: %s', home_url)
@@ -140,7 +141,8 @@ class App:
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
 
-        self.output_path = os.path.join('Lightnovels', source_name, self.good_file_name)
+        self.output_path = os.path.join(
+            'Lightnovels', source_name, self.good_file_name)
     # end def
 
     # ----------------------------------------------------------------------- #

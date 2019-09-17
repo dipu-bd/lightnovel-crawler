@@ -28,7 +28,7 @@ from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 from ..utils.make_github_issue import find_issues, post_issue
 
-# For colorama
+# For colorama in
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
                               encoding=sys.stdout.encoding,
                               errors='ignore',
@@ -121,8 +121,11 @@ class TestBot:
 
     def error_message(self):
         output = '=' * 80 + '\n'
-        output += 'Failed sources (%d):\n' % len(self.allerrors.keys())
-        output += '\n'.join(sorted(self.allerrors.keys())) + '\n'
+        output += 'Failed sources (%d):\n' % (len(self.allerrors.keys()))
+        for source in sorted(self.allerrors.keys()):
+            output += '- ' + source
+            output += ' (allowed)\n' if source in self.allowed_failures else '\n'
+        # end for
         output += '-' * 80 + '\n\n'
 
         num = 0
@@ -404,6 +407,9 @@ class TestBot:
         'https://kisslightnovels.info/': [
             'https://kisslightnovels.info/novel/dual-cultivation-novel/'
         ],
+        'https://novelonlinefull.com/': [
+            'https://novelonlinefull.com/novel/abo1520855001564322110'
+        ]
     }
 
     allowed_failures = [
