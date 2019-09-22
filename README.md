@@ -10,20 +10,23 @@
 
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
-Downloads lightnovels from various online sources and generates books in these formats: epub, mobi, json, html, text, docx and pdf.
+Downloads lightnovels from various online sources and generates ebooks in many formats.
 
-> **Join the discord server I just opened recently: https://discord.gg/7A5Hktx**
+> **Discord: https://discord.gg/7A5Hktx**
+
+> **Telegram: https://t.me/epub_smelter_bot**
 
 ## Table of contents
 
 - [Installation](#a-installation)
-  - [⏬ EXE (Windows)](#a1-exe-windows)
+  - [⏬ Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
   - [📦 PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-  - [📱 Pydroid (Android)](#a3-pydroid-3-android)
-  - [Chatbots](#a4-chatbots)
-    - [Telegram](#a41-telegram)
-    - [Discord](#a42-discord)
-  - [Run from source](#a5-run-from-source)
+  - [📱 Termux (Android)](#a3-termux-android)
+  - [📱 Pydroid (Android)](#a4-pydroid-3-android)
+  - [Chatbots](#a5-chatbots)
+    - [Telegram](#a51-telegram)
+    - [Discord](#a52-discord)
+  - [Run from source](#a6-run-from-source)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
   - [Running the bot](#b2-running-the-bot)
@@ -39,19 +42,23 @@ Downloads lightnovels from various online sources and generates books in these f
 
 ## (A) Installation
 
-### A1. EXE (Windows)
+**This application uses _Calibre_ to convert ebooks. Install it from https://calibre-ebook.com/download**
 
-⏬ [lightnovel-crawler v2.10.0 for windows ~ 14.2MB](http://bit.ly/2I1XzeN)
+### A1. Standalone Bundle (Windows, Linux)
+
+⏬ **Windows**: [lightnovel-crawler v2.14.2 ~ 15MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-_PDF and DOCX generation is disabled for EXE build. It only works with `pip`_
+⏬ **Linux**: [lightnovel-crawler v2.14.2 ~ 21MB](http://bit.ly/2LaB9HB)
+
+> Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
 ### A2. PIP (Windows, Mac, and Linux)
 
-📦 A python package named `lightnovel-crawler` is available in [pypi](https://pypi.org/project/lightnovel-crawler).
+📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
-> Make sure you have installed `python 3.5` or above and have `pip` enabled. Visit these links for installating python and pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [Mac](https://itsevans.com/install-pip-osx/). Feel free ask me if you are stuck.
+> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free ask on the Discord server if you are stuck.
 
 To install this app or to update installed one via `pip`, just run:
 
@@ -60,8 +67,6 @@ $ pip install --user -U lightnovel-crawler
 ```
 
 Remember, in some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
-
-> **To Windows users:** Download and install the GTK3-Runtime from https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases
 
 Next, open your terminal and enter:
 
@@ -74,11 +79,29 @@ $ lncrawl
 
 > To view extra logs, use: `lncrawl -lll`
 
-### A3. Pydroid 3 (Android)
+### A3. Termux (Android)
 
-📱 You can run this app in your android phones too. Here are the steps to do:
+📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
-- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3&hl=en) from playstore.
+- Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
+- Open the app and run these commands one by one:
+  - `apt update && apt upgrade`
+  - `termux-setup-storage`
+  - `pkg install ndk-sysroot make python zlib clang`
+  - `pkg install libxml2 libxslt libiconv libcrypt libffi zlib libjpeg-turbo`
+  - `pkg install nodejs-lts`
+  - `pip install -U lightnovel-crawler` to install the latest version of this app.
+- Now exit the console and relaunch it.
+- Type `cd ~/storage/downloads` to store novels there.
+- Type `lncrawl` to start.
+- You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
+- Run `pip install -U lightnovel-crawler` again to install the latest updates.
+
+### A4. Pydroid 3 (Android)
+
+📱 Alternative to easy Termux is Pydroid3. It is a bit faster but harder to use and no _run-in-backgroud_ support.
+
+- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3) from playstore.
 - Open the app and navigate to **Pip** from the drawer menu.
 - Type `lightnovel-crawler` in place of `Library name` and press the `Install` button.
 - To reinstall or remove the installed package:
@@ -91,21 +114,23 @@ $ lncrawl
 
 > Here is a video that might help: https://youtu.be/I20IO4dGTJ8
 
-### A4. Chatbots
+### A5. Chatbots
 
-#### A4.1 Telegram
+#### A5.1 Telegram
 
 Visit this link to get started with the telegram bot:
 https://t.me/epub_smelter_bot
 
-#### A4.2 Discord
+#### A5.2 Discord
 
-Visit this link to install discord bot to your server:
+Join our server: https://discord.gg/7A5Hktx
+
+Or, visit this link to install discord bot to your own server:
 https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
 
 Send `!help` to open the bot help message.
 
-### A5. Run from source
+### A6. Run from source
 
 - First clone the repository:
 
@@ -116,16 +141,16 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 - Open command prompt inside of the project folder and install requirements:
 
 ```bash
-$ pip3 install --user -r requirements.txt
+$ pip install --user -r requirements.txt
 ```
 
-- Run the program:
+- Run the program (use python v3.5 or higher):
 
 ```bash
-$ python3 __main__.py
+$ python __main__.py
 
 # Or, in short,
-$ python3 .
+$ python .
 ```
 
 ## (B) General Usage
@@ -137,29 +162,27 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.10.0
-            Download lightnovels into html, text, epub, mobi and json
+                           📒 Lightnovel Crawler 🍀2.15.0
+                  https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
        lightnovel-crawler [options...]
 
 positional arguments:
   EXTRA                 To pass a query string to use as extra arguments
+                        (intended to use in chatbots)
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l                    Set log levels (1 = warn, 2 = info, 3 = debug)
   -v, --version         show program's version number and exit
+  -l                    Set log levels. (-l = warn, -ll = info, -lll = debug)
+  --bot {console,telegram,discord,test}
+                        Select a bot. Default: console
+  --list-sources        Display a list of available sources
+  --suppress            Suppress all input prompts and use defaults
   -s URL, --source URL  Profile page url of the novel
-  -q STR, --query STR   Novel query followed by list of source sites.
-  --sources             Display the source selection menu while searching
-  -o PATH, --output PATH
-                        Path where the downloads to be stored
-  --format E [E ...]    Define which formats to output. Default: all
   -f, --force           Force replace any existing folder
   -i, --ignore          Ignore any existing folder (do not replace)
-  --single              Put everything in a single book
-  --multi               Build separate books by volumes
   --login USER PASSWD   User name/email address and password for login
   --all                 Download all chapters
   --first [COUNT]       Download first few chapters (default: 10)
@@ -170,9 +193,13 @@ optional arguments:
                         The list of volume numbers to download
   --chapters [URL [URL ...]]
                         A list of specific chapter urls
-  --suppress            Suppress input prompts (use defaults instead)
-  --bot {console,telegram,discord,test}
-                        Select a bot. Default: console
+
+  -o PATH, --output PATH
+                        Path where the downloads to be stored
+  --format E [E ...]    Define which formats to output. Default: all
+  --add-source-url      Add source url at the end of each chapter
+  --single              Put everything in a single book
+  --multi               Build separate books by volumes
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
@@ -231,12 +258,13 @@ The list of currently available sources and the future plans are given below:
 | http://www.machinenoveltranslation.com |               |
 | http://zenithnovels.com                |               |
 | https://anythingnovel.com              |               |
-| https://babelnovel.com/                |       ✔       |
+| https://babelnovel.com                 |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
 | https://boxnovel.com                   |       ✔       |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
-| https://light-novel.online/            |       ✔       |
+| https://kisslightnovels.info           |       ✔       |
+| https://light-novel.online             |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |
 | https://m.chinesefantasynovels.com     |               |
@@ -246,51 +274,70 @@ The list of currently available sources and the future plans are given below:
 | https://meionovel.com                  |               |
 | https://mtled-novels.com               |       ✔       |
 | https://myoniyonitranslations.com      |               |
+| https://novelonlinefull.com            |       ✔       |
 | https://novelplanet.com                |       ✔       |
 | https://novelraw.blogspot.com          |               |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
 | https://wuxiaworld.online              |       ✔       |
+| https://www.asianhobbyist.com          |               |
 | https://www.idqidian.us                |               |
+| https://www.jieruihao.cn/              |               |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
+| https://www.rebirth.online             |               |
 | https://www.romanticlovebooks.com      |               |
 | https://www.royalroad.com              |       ✔       |
 | https://www.scribblehub.com            |       ✔       |
 | https://www.tapread.com                |               |
+| https://www.wattpad.com                |               |
 | https://www.webnovel.com               |       ✔       |
 | https://www.worldnovel.online          |       ✔       |
 | https://www.wuxiaworld.co              |       ✔       |
 | https://www.wuxiaworld.com             |       ✔       |
-| https://yukinovel.me                   |               |
 
 Rejected:
 
 | Rejected Sources              | Reason                              |
 | ----------------------------- | ----------------------------------- |
-| https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
+| https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
+| https://comrademao.com        | `Removed`                           |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
+| https://novelgo.id/           | `Removed`                           |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
-| https://comrademao.com        | `Removed on request of the owner`   |
+| https://yukinovel.id          | `Removed`                           |
 
 ### C4. Supported output formats
 
 When download is done, the following files can be generated:
 
 - [x] JSON (default)
-- [x] HTML
 - [x] TEXT
+- [x] WEB
 - [x] EPUB
-- [x] MOBI
 - [x] DOCX
+- [x] MOBI
 - [x] PDF
+- [x] RTF
+- [x] TXT
+- [x] AZW3
+- [x] FB2
+- [x] LIT
+- [x] LRF
+- [x] OEB
+- [x] PDB
+- [x] PML
+- [x] RB
+- [x] SNB
+- [x] TCR
+- [x] HTML
 
 ### C5. Supported bots
 

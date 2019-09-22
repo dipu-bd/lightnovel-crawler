@@ -121,7 +121,7 @@ class Crawler:
     # end def
 
     def absolute_url(self, url, page_url=None):
-        url = (url or '').strip()
+        url = (url or '').strip().lower()
         if not page_url:
             page_url = self.last_visited_url
         # end if
@@ -139,6 +139,13 @@ class Crawler:
         else:
             return url
         # end if
+    # end def
+
+    def is_relative_url(self, url):
+        page = urlparse(self.novel_url)
+        url = urlparse(url)
+        return (page.hostname == url.hostname
+                and url.path.startswith(page.path))
     # end def
 
     def get_response(self, url, **kargs):
@@ -198,7 +205,8 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins', 'button', 'input', 'amp-auto-ads'
+        'noscript', 'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins',
+        'button', 'input', 'amp-auto-ads', 'pirate'
     ]
     block_tags = [
         'h3', 'div', 'p'
@@ -262,5 +270,9 @@ class Crawler:
         else:
             return [x for x in body if len(x.strip())]
         # end if
+    # end def
+
+    def cleanup_text(self, text):
+        return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]', '', str(text), flags=re.UNICODE)
     # end def
 # end class

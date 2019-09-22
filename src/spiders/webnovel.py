@@ -89,8 +89,6 @@ class WebnovelCrawler(Crawler):
                 })
             # end for
         # end if
-        logger.debug(self.volumes)
-        logger.info('%d volumes found', len(self.volumes))
 
         for i, chap in enumerate(chapters):
             self.chapters.append({
@@ -101,8 +99,9 @@ class WebnovelCrawler(Crawler):
                 'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
             })
         # end for
-        logger.debug(self.chapters)
-        logger.info('%d chapters found', len(self.chapters))
+
+        logger.info('%d volumes and %d chapters found',
+                    len(self.volumes), len(self.chapters))
     # end def
 
     def get_chapter_index_of(self, url):
@@ -139,6 +138,7 @@ class WebnovelCrawler(Crawler):
         body = data['data']['chapterInfo']['content']
         body = body.replace(r'[ \n\r]+', '\n')
         if ('<p>' not in body) or ('</p>' not in body):
+            body = re.sub('<pirate>(.*?)</pirate>','',body)
             body = body.replace('<', '&lt;')
             body = body.replace('>', '&gt;')
             body = [x for x in body.split('\n') if len(x.strip())]

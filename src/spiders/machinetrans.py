@@ -45,8 +45,6 @@ class MachineNovelTrans(Crawler):
             # end for
         # end for
 
-        logger.debug(self.chapters)
-        logger.debug(self.volumes)
         logger.debug('%d chapters and %d volumes found',
                      len(self.chapters), len(self.volumes))
     # end def

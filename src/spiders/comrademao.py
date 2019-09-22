@@ -21,7 +21,8 @@ class ComrademaoCrawler(Crawler):
             soup.find('div', {'class': 'wrap-thumbnail'}).find('img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.find('div', {'class': 'author'}).text.strip()
+        self.novel_author = soup.find('div', {'class': 'author'}).text
+        self.novel_author = re.sub(' & ', ', ', self.novel_author.strip())
         logger.info('Novel author: %s', self.novel_author)
 
         page_count = soup.find('span', {'class': 'dots'}).findNext('a').text
@@ -50,12 +51,12 @@ class ComrademaoCrawler(Crawler):
                 self.chapters.append(chap)
             # end for
         # end for
-        logger.debug(self.chapters)
 
-        self.volumes = [{'id': i + 1} for i in range(1 + len(self.chapters) // 100)]
-        logger.debug(self.volumes)
+        self.volumes = [{'id': i + 1}
+                        for i in range(1 + len(self.chapters) // 100)]
 
-        logger.info('%d volumes and %d chapters found', len(self.volumes), len(self.chapters))
+        logger.info('%d volumes and %d chapters found',
+                    len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_list(self, page):

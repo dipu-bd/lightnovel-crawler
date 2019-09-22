@@ -28,7 +28,7 @@ from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 from ..utils.make_github_issue import find_issues, post_issue
 
-# For colorama
+# For colorama in
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
                               encoding=sys.stdout.encoding,
                               errors='ignore',
@@ -121,8 +121,11 @@ class TestBot:
 
     def error_message(self):
         output = '=' * 80 + '\n'
-        output += 'Failed sources (%d):\n' % len(self.allerrors.keys())
-        output += '\n'.join(sorted(self.allerrors.keys())) + '\n'
+        output += 'Failed sources (%d):\n' % (len(self.allerrors.keys()))
+        for source in sorted(self.allerrors.keys()):
+            output += '- ' + source
+            output += ' (allowed)\n' if source in self.allowed_failures else '\n'
+        # end for
         output += '-' * 80 + '\n\n'
 
         num = 0
@@ -279,8 +282,8 @@ class TestBot:
             'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
             'sword',
         ],
-        'https://meionovel.com/': [
-            'https://meionovel.com/novel/the-legendary-mechanic/',
+        'https://meionovel.id/': [
+            'https://meionovel.id/novel/the-legendary-mechanic/',
         ],
         'https://mtled-novels.com/': [
             'https://mtled-novels.com/novels/ancient-demon-dragon-emperor',
@@ -329,7 +332,7 @@ class TestBot:
             'martial',
         ],
         'https://www.worldnovel.online/': [
-            'https://www.worldnovel.online/novel/pan-long/',
+            'https://www.worldnovel.online/novel/solo-leveling/',
             'cultivation'
         ],
         'https://www.wuxiaworld.co/': [
@@ -346,11 +349,8 @@ class TestBot:
         'https://www.tapread.com/': [
             'https://www.tapread.com/book/detail?bookId=80',
         ],
-        'https://4scanlation.xyz/': [
-            'https://4scanlation.xyz/instant-messiah/',
-        ],
-        'https://yukinovel.me/': [
-            'https://yukinovel.me/novel/the-second-coming-of-avarice/',
+        'https://4scanlation.com/': [
+            'https://4scanlation.com/isekai-kenkokuki/'
         ],
         'https://readnovelfull.com/': [
             'https://readnovelfull.com/lord-of-all-realms.html',
@@ -379,17 +379,45 @@ class TestBot:
         'https://www.noveluniverse.com/': [
             'https://www.noveluniverse.com/index/novel/info/id/15.html'
         ],
-        'https://novelraw.blogspot.com': [
+        'https://novelraw.blogspot.com/': [
             'https://novelraw.blogspot.com/2019/03/dragon-king-son-in-law-mtl.html'
         ],
         'https://light-novel.online/': [
             'https://light-novel.online/great-tyrannical-deity',
             'tyrannical'
+        ],
+        'https://www.rebirth.online/': [
+            'https://www.rebirth.online/novel/the-good-for-nothing-seventh-young-lady'
+        ],
+        'https://www.jieruihao.cn/': [
+            'https://www.jieruihao.cn/novel/against-the-gods/',
+        ],
+        'https://www.wattpad.com/': [
+            'https://www.wattpad.com/story/87505567-loving-mr-jerkface-%E2%9C%94%EF%B8%8F'
+        ],
+        'https://novelgo.id/': [
+            'https://novelgo.id/novel/the-mightiest-leveling-system/'
+        ],
+        'https://yukinovel.me/': [
+            'https://yukinovel.me/novel/the-second-coming-of-avarice/',
+        ],
+        'https://www.asianhobbyist.com/': [
+            'https://www.asianhobbyist.com/series/that-time-i-got-reincarnated-as-a-slime/'
+        ],
+        'https://kisslightnovels.info/': [
+            'https://kisslightnovels.info/novel/dual-cultivation-novel/'
+        ],
+        'https://novelonlinefull.com/': [
+            'https://novelonlinefull.com/novel/abo1520855001564322110'
         ]
     }
 
     allowed_failures = [
+        'https://www.worldnovel.online/',
+        'https://www.tapread.com/'
         'https://4scanlation.xyz/',
         'https://m.chinesefantasynovels.com/',
+        'https://m.romanticlovebooks.com/',
+        'https://www.romanticlovebooks.com/',
     ]
 # end class

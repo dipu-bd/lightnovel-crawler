@@ -1,0 +1,22 @@
+<?xml version="1.0" standalone="no"?>
+<svg width="1200" height="1600" viewBox="0 0 1200 1600" xml:space="preserve">
+  <defs>
+    <style type="text/css">
+      <![CDATA[
+      @font-face {
+        font-family: "{{ font }}";
+        src: url("data:{{ font_type }};charset=utf-8;base64,{{ font_data }}");
+      }
+    ]]>
+    </style>
+  </defs>
+  <rect width="1200" height="1600" x="0" y="0" style="fill:{{ color1 }}"/>
+  <rect width="40" height="1600" x="260" y="0" style="fill:{{ color2 }}"/>
+  <rect width="1200" height="40" x="0" y="400" style="fill:{{ color2 }}"/>
+  <text y="{{ 360 - font_size * title|wrap(16)|length }}" style="font-size:{{ font_size }}px;font-weight:bold;fill:{{ color5 }}">
+    {%- for line in title|wrap(16) %} <tspan x="340" dx="0" dy="{{ font_size }}" font-family="{{ font }}" text-anchor="start">{{ line }}</tspan> {%- endfor %}
+  </text>
+  <text y="480" style="font-size:{{ font_size_author }}px;font-weight:bold;fill:{{ color5 }}">
+    {%- for author in authors %} <tspan x="340" dx="0" dy="{{ font_size_author }}" font-family="{{ font }}" text-anchor="start">{{ author }}</tspan> {%- endfor %}
+  </text>
+</svg>

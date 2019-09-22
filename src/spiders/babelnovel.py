@@ -1,29 +1,31 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 import re
-import json
-from urllib.parse import quote, urlparse, unquote
+from concurrent import futures
+from urllib.parse import quote, unquote, urlparse
 
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('BABELNOVEL')
 
-search_url = 'https://babelnovel.com/api/books?page=0&pageSize=10&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
+search_url = 'https://babelnovel.com/api/books?page=0&pageSize=8&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
 novel_page_url = 'https://babelnovel.com/api/books/%s'
-chapter_list_url = 'https://babelnovel.com/api/books/%s/chapters?bookId=%s&page=0&pageSize=999999&fields=id,name,canonicalName,hasContent'
+chapter_list_url = 'https://babelnovel.com/api/books/%s/chapters?bookId=%s&page=%d&pageSize=100&fields=id,name,canonicalName,hasContent'
 chapter_json_url = 'https://babelnovel.com/api/books/%s/chapters/%s?ignoreTopic=true'
 chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 
 class BabelNovelCrawler(Crawler):
     def search_novel(self, query):
-        # to get cookies and session info
+        # to get cookies
         self.get_response(self.home_url)
 
         url = search_url % quote(query.lower())
-        logger.debug('Visiting %s', url)
+        logger.debug('Visiting: %s', url)
         data = self.get_json(url)
 
         results = []
@@ -31,10 +33,14 @@ class BabelNovelCrawler(Crawler):
             if not item['canonicalName']:
                 continue
             # end if
+            info = None
+            if item['lastChapter']:
+                info = 'Latest: %s' % item['lastChapter']['name']
+            # end if
             results.append({
                 'title': item['name'],
                 'url': novel_page_url % item['canonicalName'],
-                'info': 'Latest: %s' % item['lastChapter']['name'],
+                'info': info,
             })
         # end for
         return results
@@ -66,33 +72,51 @@ class BabelNovelCrawler(Crawler):
         self.novel_cover = data['data']['cover']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        list_url = chapter_list_url % (self.novel_id, self.novel_id)
+        chapter_count = int(data['data']['chapterCount'])
+        self.get_list_of_chapters(chapter_count)
+    # end def
+
+    def get_list_of_chapters(self, chapter_count):
+        futures_to_check = dict()
+        temp_chapters = dict()
+        for page in range(1 + chapter_count // 100):
+            list_url = chapter_list_url % (self.novel_id, self.novel_id, page)
+            future = self.executor.submit(self.parse_chapter_item, list_url)
+            futures_to_check[future] = str(page)
+        # end for
+        for future in futures.as_completed(futures_to_check):
+            page = int(futures_to_check[future])
+            temp_chapters[page] = future.result()
+        # end for
+        for page in sorted(temp_chapters.keys()):
+            self.volumes.append({'id': page + 1})
+            for chap in temp_chapters[page]:
+                chap['volume'] = page + 1
+                chap['id'] = 1 + len(self.chapters)
+                self.chapters.append(chap)
+            # end for
+        # end for
+
+        logger.info('%d volumes and %d chapters found',
+                    len(self.volumes), len(self.chapters))
+    # end def
+
+    def parse_chapter_item(self, list_url):
         logger.debug('Visiting %s', list_url)
         data = self.get_json(list_url)
-
+        chapters = list()
         for item in data['data']:
             # if not item['hasContent']:
             #     logger.debug('No content: %s', item['name'])
             #     continue
             # # end if
-            self.chapters.append({
-                'id': len(self.chapters) + 1,
-                'volume': len(self.chapters)//100 + 1,
+            chapters.append({
                 'title': item['name'],
                 'url': chapter_page_url % (self.novel_hash, item['canonicalName']),
                 'json_url': chapter_json_url % (self.novel_hash, item['canonicalName']),
             })
         # end for
-        # logger.debug(self.chapters)
-
-        self.volumes = [
-            {'id': x + 1}
-            for x in range(len(self.chapters) // 100 + 1)
-        ]
-        # logger.debug(self.volumes)
-
-        logger.info('%d volumes and %d chapters found',
-                    len(self.volumes), len(self.chapters))
+        return chapters
     # end def
 
     def parse_content_css(self, url):
@@ -127,8 +151,15 @@ class BabelNovelCrawler(Crawler):
         self.clean_contents(body)
 
         for tag in body.contents:
-            tag.name = 'p'
+            if not str(tag).strip():
+                tag.extract()
+            elif isinstance(tag, Tag):
+                tag.name = 'p'
+            # end if
         # end for
-        return str(body)
+
+        result = str(body)
+        result = re.sub(r'\n\n', '<br><br>', result)
+        return result
     # end def
 # end class

@@ -105,25 +105,47 @@ def new_version_news(latest):
           Fore.YELLOW + 'pip install -U lightnovel-crawler', Style.RESET_ALL)
 
     if Icons.isWindows:
-        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download EXE:',
+        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
               Fore.YELLOW + 'http://bit.ly/2I1XzeN', Style.RESET_ALL)
+    elif Icons.isLinux:
+        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
+              Fore.YELLOW + 'http://bit.ly/2LaB9HB', Style.RESET_ALL)
     # end if
 
     print('-' * LINE_SIZE)
 # end def
 
 
-def url_not_recognized():
-    print()
-    print('-' * LINE_SIZE)
-    print('Sorry! I do not recognize this website yet.')
-    print('My domain is limited to these sites only:')
+def url_supported_list():
+    print('Supported sources:')
     for url in sorted(crawler_list.keys()):
         print(Fore.LIGHTGREEN_EX, Icons.RIGHT_ARROW, url, Fore.RESET)
     # end for
+# end def
+
+
+def url_not_recognized():
+    print()
+    print(Fore.RED, Icons.ERROR,
+          'Sorry! I do not recognize this website yet.', Fore.RESET)
+    print()
+    print('-' * LINE_SIZE)
+    url_supported_list()
     print()
     print('-' * LINE_SIZE)
     print('You can request developers to add support for this site here:')
+    print(Fore.CYAN, Icons.LINK,
+          'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
+# end def
+
+
+def url_rejected(reason):
+    print()
+    print(Fore.RED, Icons.ERROR, 'Sorry! I do not support this website.', Fore.RESET)
+    print(Fore.RED, Icons.EMPTY, 'Reason:', reason, Fore.RESET)
+    print()
+    print('-' * LINE_SIZE)
+    print('You can try other available sources or create an issue if you find something\nhas went wrong:')
     print(Fore.CYAN, Icons.LINK,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
 # end def

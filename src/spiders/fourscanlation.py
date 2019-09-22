@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('4SCANLATION')
-novel_page = 'https://4scanlation.xyz/%s'
+novel_page = 'https://4scanlation.com/%s'
 
 
 class FourScanlationCrawler(Crawler):
@@ -22,16 +22,10 @@ class FourScanlationCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_titles = [
-            soup.select_one('header h1'),
-            soup.select_one('.header-post-title-class'),
-        ]
-        for pos in possible_titles:
-            if pos:
-                self.novel_title = pos.text
-                break
-            # end if
-        # end for
+        self.novel_title = soup.select_one(', '.join([
+            'header h1',
+            '.header-post-title-class',
+        ])).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = "Source: 4scanlation"
@@ -44,13 +38,15 @@ class FourScanlationCrawler(Crawler):
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
+        volumes = set()
         for a in soup.select('article.page p a'):
-            possible_url = self.absolute_url(a['href'].lower())
-            if not possible_url.startswith(self.novel_url):
+            possible_url = self.absolute_url(a['href'])
+            if not self.is_relative_url(possible_url):
                 continue
             # end if
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -58,13 +54,7 @@ class FourScanlationCrawler(Crawler):
                 'title': a.text.strip(),
             })
         # end for
-        logger.debug(self.chapters)
-
-        self.volumes = [
-            {'id': x + 1}
-            for x in range(len(self.chapters) // 100 + 1)
-        ]
-        logger.debug(self.volumes)
+        self.volumes = [{'id': i} for i in volumes]
 
         logger.debug('%d chapters & %d volumes found',
                      len(self.chapters), len(self.volumes))

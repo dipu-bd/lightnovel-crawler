@@ -49,13 +49,11 @@ class NovelvCrawler(Crawler):
                 'volume': volume_id,
             })
         # end for
-        logger.debug(self.chapters)
 
         self.volumes = [
             {'id': x, 'title': ''}
             for x in list(volumes)
         ]
-        logger.debug(self.volumes)
 
         logger.info('%d volumes and %d chapters found' %
                     (len(self.volumes), len(self.chapters)))

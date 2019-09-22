@@ -37,7 +37,7 @@ class BestLightNovel(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        #self.novel_title = soup.select_one('h1.entry-title').text.strip()
+        # self.novel_title = soup.select_one('h1.entry-title').text.strip()
         self.novel_title = soup.select_one('div.entry-header h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -64,9 +64,6 @@ class BestLightNovel(Crawler):
                 'url': self.absolute_url(a['href']),
             })
         # end for
-
-        logger.debug(self.chapters)
-        logger.debug(self.volumes)
 
         logger.debug('%d volumes & %d chapters found',
                      len(self.volumes), len(self.chapters))

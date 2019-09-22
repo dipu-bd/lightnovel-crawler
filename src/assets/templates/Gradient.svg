@@ -1,0 +1,25 @@
+<?xml version="1.0" standalone="no"?>
+<svg width="1200" height="1600" viewBox="0 0 1200 1600" xml:space="preserve">
+  <defs>
+    <style type="text/css">
+      <![CDATA[
+      @font-face {
+        font-family: "{{ font }}";
+        src: url("data:{{ font_type }};charset=utf-8;base64,{{ font_data }}");
+      }
+    ]]>
+    </style>
+    <linearGradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+      <stop offset="0%" style="stop-color:{{ color2|rgb }};stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:{{ color1|rgb }};stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:{{ color2|rgb }};stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1600" x="0" y="0" fill="url(#grad1)"/>
+  <text y="200" style="font-size:{{ font_size }}px;font-weight:bold;fill:{{ color5 }}">
+    {%- for line in title|wrap(20) %} <tspan x="600" dx="0" dy="{{ font_size }}" font-family="{{ font }}" text-anchor="middle">{{ line }}</tspan> {%- endfor %}
+  </text>
+  <text y="1500" style="font-size:{{ font_size_author }}px;font-weight:bold;fill:{{ color5 }}">
+    {%- for author in authors %} <tspan x="600" dx="0" dy="-{{ font_size_author }}" font-family="{{ font }}" text-anchor="middle">{{ author }}</tspan> {%- endfor %}
+  </text>
+</svg>

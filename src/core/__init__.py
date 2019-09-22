@@ -13,29 +13,12 @@ from colorama import init as init_colorama
 from ..assets.icons import Icons
 from ..assets.version import get_value as get_version
 from ..bots import run_bot
+from ..utils.update_checker import check_updates
 from .arguments import build_parser, get_args
 from .display import (cancel_method, debug_mode, description, epilog,
-                      error_message, input_suppression, new_version_news,
-                      url_not_recognized)
+                      error_message, input_suppression, url_not_recognized)
 
 logger = logging.Logger('CORE')
-
-
-def check_updates():
-    try:
-        logger.info('Checking version')
-        url = 'https://pypi.org/pypi/lightnovel-crawler/json'
-        res = requests.get(url, verify=False, timeout=3)
-        latest = res.json()['info']['version']
-        if get_version() != latest:
-            new_version_news(latest)
-        # end if
-    except Exception:
-        error_message('Failed to check for update')
-        import traceback
-        logger.debug(traceback.format_exc())
-    # end try
-# end def
 
 
 def init():

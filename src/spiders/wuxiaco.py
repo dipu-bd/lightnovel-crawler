@@ -67,9 +67,9 @@ class WuxiaCoCrawler(Crawler):
                 vol = volume.copy()
                 vol['id'] += 1
                 vol['title'] = item.text.strip()
-                vol['title'] = re.sub(r'^(.*)', '', vol['title'])
-                vol['title'] = re.sub(
-                    r'^\s*Text\s*$', '', vol['title']).strip()
+                #vol['title'] = re.sub(r'^(.*)', '', vol['title'])
+                #vol['title'] = re.sub(
+                #    r'^\s*Text\s*$', '', vol['title']).strip()
                 volume = vol
             # end if
             if item.name == 'dd':
@@ -88,9 +88,8 @@ class WuxiaCoCrawler(Crawler):
             # end if
         # end for
 
-        logger.debug(self.volumes)
-        logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
+        logger.info('%d chapters and %d volumes found',
+                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_body(self, chapter):

@@ -16,3 +16,5 @@ windows/
 .discord_bot_output/
 mycreds.txt
 venv
+*.log
+save_pid.txt

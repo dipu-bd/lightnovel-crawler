@@ -67,7 +67,6 @@ class NovelFullCrawler(Crawler):
 
         logger.info('Sorting chapters...')
         self.chapters.sort(key=lambda x: x['id'])
-        logger.debug(self.chapters)
 
         logger.info('Adding volumes...')
         mini = self.chapters[0]['volume']
@@ -79,7 +78,6 @@ class NovelFullCrawler(Crawler):
                 'volume': str(i),
             })
         # end for
-        logger.debug(self.volumes)
 
         logger.info('%d volumes and %d chapters found' %
                     (len(self.volumes), len(self.chapters)))
@@ -126,6 +124,7 @@ class NovelFullCrawler(Crawler):
             ads.decompose()
         for ads in content.findAll('div', {"align": 'center'}):
             ads.decompose()
-        return content.prettify()
+        self.clean_contents(content)
+        return str(content)
     # end def
 # end class

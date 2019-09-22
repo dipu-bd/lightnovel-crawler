@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
+from pathlib import Path
 
-cur_dir = os.path.dirname(__file__)
-ver_file = os.path.join(cur_dir, '..', '..', 'VERSION')
-with open(ver_file, 'r') as f:
+ROOT = Path(__file__).parent.parent
+
+with open(str(ROOT / 'VERSION'), 'r') as f:
     version = f.read().strip()
 # end with
 

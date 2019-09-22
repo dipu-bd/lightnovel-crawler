@@ -12,7 +12,7 @@ from ..binders import available_formats, bind_books
 from ..spiders import crawler_list
 from .novel_search import search_novels
 from .downloader import download_chapters
-from .novel_info import format_chapters, format_volumes, save_metadata
+from .novel_info import format_novel, save_metadata
 
 logger = logging.getLogger('APP')
 
@@ -95,6 +95,7 @@ class App:
         '''Produces: crawler'''
         if not novel_url:
             return
+        # end if
         for home_url, crawler in crawler_list.items():
             if novel_url.startswith(home_url):
                 logger.info('Initializing crawler for: %s', home_url)
@@ -124,11 +125,11 @@ class App:
         # end if
 
         print('Retrieving novel info...')
+        print(self.crawler.novel_url)
         self.crawler.read_novel_info()
         print('NOVEL: %s' % self.crawler.novel_title)
 
-        format_volumes(self.crawler)
-        format_chapters(self.crawler)
+        format_novel(self.crawler)
 
         self.good_file_name = slugify(
             self.crawler.novel_title,
@@ -140,7 +141,8 @@ class App:
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
 
-        self.output_path = os.path.join('Lightnovels', source_name, self.good_file_name)
+        self.output_path = os.path.join(
+            'Lightnovels', source_name, self.good_file_name)
     # end def
 
     # ----------------------------------------------------------------------- #

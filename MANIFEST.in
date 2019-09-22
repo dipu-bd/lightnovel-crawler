@@ -1,0 +1,2 @@
+include src/VERSION
+recursive-include src *.*

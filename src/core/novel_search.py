@@ -56,7 +56,7 @@ def process_results(results):
 
     processed.sort(key=lambda x: -len(x['novels']))
 
-    return processed[:20]  # Control the number of results
+    return processed[:15]  # Control the number of results
 # end def
 
 
@@ -100,7 +100,9 @@ def search_novels(app):
 
     # Process combined search results
     app.search_results = process_results(combined_results)
+    bar.clearln()
     bar.finish()
+    print('Found %d results' % len(app.search_results))
 
     executor.shutdown()
 # end def

@@ -81,9 +81,7 @@ class LNMTLCrawler(Crawler):
         logger.info('Novel cover = %s', self.novel_cover)
 
         self.parse_volume_list(soup)
-
         self.volumes = sorted(self.volumes, key=lambda x: x['id'])
-        logger.debug(self.volumes)
 
         logger.info('Getting chapters...')
         self.download_chapter_list()
@@ -131,8 +129,7 @@ class LNMTLCrawler(Crawler):
                     })
                 # end for
             except Exception as err:
-                logger.info('Failed parsing one possible batch')
-                logger.debug(err)
+                logger.exception('Failed parsing one possible batch')
             # end try
         # end for
 

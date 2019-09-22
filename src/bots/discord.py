@@ -3,7 +3,6 @@
 import os
 import re
 import shutil
-import traceback
 from concurrent.futures import ThreadPoolExecutor
 import logging
 import asyncio
@@ -20,6 +19,8 @@ logger = logging.getLogger('DISCORD_BOT')
 class DiscordBot(discord.Client):
     # Store user message handlers
     handlers = dict()
+    # The special signal character for crawler commands
+    signal = os.getenv('DISCORD_SIGNAL_CHAR') or '!'
 
     def start_bot(self):
         self.run(os.getenv('DISCORD_TOKEN'))
@@ -42,19 +43,28 @@ class DiscordBot(discord.Client):
         # end if
         if isinstance(message.channel, discord.abc.PrivateChannel):
             await self.handle_message(message)
-        elif message.content == '!lncrawl':
-            await self.handle_message(message)
         elif message.content == '!help':
-            await self.public_help(message)
+            await self.send_public_text(
+                message,
+                'Enter `%slncrawl` to start a new session of **Lightnovel Crawler**' % self.signal
+            )
+        elif message.content == self.signal + 'lncrawl':
+            uid = message.author.id
+            await self.send_public_text(
+                message, "I will message you privately <@%s>" % uid)
+            handler = self.handlers.get(uid)
+            if handler:
+                handler.destroy()
+            # end if
+            await self.handle_message(message)
         else:
             return  # It goes over the head
         # end if
     # end def
 
-    async def public_help(self, message):
-        await message.channel.send(
-            'Enter `!lncrawl` to start a new session of **Lightnovel Crawler**'
-        )
+    async def send_public_text(self, message, text):
+        async with message.channel.typing():
+            await message.channel.send(text)
     # end def
 
     async def handle_message(self, message):
@@ -63,7 +73,7 @@ class DiscordBot(discord.Client):
             handler = self.init_handler(user.id)
             await handler.process(message)
         except Exception as err:
-            logger.debug(traceback.format_exc())
+            logger.exception('While handling this message: %s', message)
             try:
                 await message.channel.send(
                     'Sorry! We had some trouble processing your request. Please try again.\n\n' +
@@ -95,21 +105,22 @@ class MessageHandler:
     # end def
 
     def destroy(self):
-        self.client.handlers.pop(self.user.id)
         try:
             self.app.destroy()
             self.executors.shutdown(False)
-        except Exception as err:
-            logger.debug(traceback.format_exc())
+        except:
+            logger.exception('While destroying MessageHandler')
+        finally:
+            self.client.handlers.pop(self.user.id)
+            shutil.rmtree(self.app.output_path, ignore_errors=True)
         # end try
-        shutil.rmtree(self.app.output_path, ignore_errors=True)
     # end def
 
     @asyncio.coroutine
     async def send(self, *contents):
         for text in contents:
             if text:
-                #await self.client.send_typing(self.user)
+                # await self.client.send_typing(self.user)
                 async with self.user.typing():
                     await self.user.send(text)
             # end if
@@ -121,7 +132,6 @@ class MessageHandler:
         self.message = message
         self.user = message.author
         if not self.state:
-            await message.channel.send("I'll Message you Privately <@%s>" % self.user.id)
             await self.send(
                 '-' * 80 + '\n' +
                 ('Hello %s\n' % self.user.name) +
@@ -165,7 +175,7 @@ class MessageHandler:
             await self.send(
                 'Searching %d sources for "%s"\n' % (
                     len(self.app.crawler_links), self.app.user_input),
-                'Send !cancel to stop'
+                'Please do not type anything before I reply!'
             )
             await self.display_novel_selection()
         # end if
@@ -382,7 +392,7 @@ class MessageHandler:
                 def resolve_chapter(name):
                     cid = 0
                     if name.isdigit():
-                        cid = int(str)
+                        cid = int(name)
                     else:
                         cid = self.app.crawler.get_chapter_index_of(name)
                     # end if
@@ -419,13 +429,12 @@ class MessageHandler:
     async def display_output_selection(self):
         await self.send('\n'.join([
             'Now you can send the following commands choose book format you want to download:',
+            '- Output format now supported is docx,mobi,pdf,rtf,txt,azw3,fb2,lit,lrf,oeb,pdb,rb,snb,tcr,epub,text,web',
             '- To download everything send `!all` or pass `!cancel` to stop.',
-            '- Send `!epub` to download in epub format. ',
+            '- or pass supported ootput format after ! command like example bellow',
             '- Send `!mobi` to download in mobi format. ',
             '- Send `!pdf` to download in pdf format.',
-            '- Send `!docx` to download in docx format.',
-            '- Send `!text` to download in text format.',
-            '- Send `!html` to download in html format.',
+            '- Send `!{supported output format}',
         ]))
         self.state = self.handle_output_selection
     # end def
@@ -466,8 +475,7 @@ class MessageHandler:
         try:
             self.executors.submit(self.start_download)
         except Exception:
-            logger.warn('Download failure: %s' % self.user.id)
-            logger.debug(traceback.format_exc())
+            logger.exception('Download failure: %s', self.user.id)
         # end try
     # end def
 
@@ -502,9 +510,9 @@ class MessageHandler:
         file_size = os.stat(archive).st_size
         if file_size > 7.99 * 1024 * 1024:
             await self.send(
-                    'File %s exceeds 8MB. Uploading To Google Drive.' % os.path.basename(archive))
-            description = 'Generated By : Discord Bot Ebook Smelter' 
-            link_id = upload(archive,description)
+                'File %s exceeds 8MB. Uploading To Google Drive.' % os.path.basename(archive))
+            description = 'Generated By : Discord Bot Ebook Smelter'
+            link_id = upload(archive, description)
             if link_id:
                 await self.send('https://drive.google.com/open?id=%s' % link_id)
             else:
@@ -524,14 +532,14 @@ class MessageHandler:
                 )
             )
             async with self.user.typing():
-                #await message.channel.send('Hello', file=discord.File('cool.png', 'testing.png'))
+                # await message.channel.send('Hello', file=discord.File('cool.png', 'testing.png'))
                 await self.user.send(
-                    'Here you go ! ', 
+                    'Here you go ! ',
                     file=discord.File(
                         open(archive, 'rb'),
                         os.path.basename(archive)
-                        )
                     )
+                )
         # end if
     # end def
 
