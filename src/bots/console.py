@@ -153,7 +153,7 @@ class ConsoleBot:
 
         url = args.novel_page
         if url:
-            if re.match(r'^http://.+\..+$', url):
+            if re.match(r'^https?://.+\..+$', url):
                 return url
             else:
                 raise Exception('Invalid URL of novel page')

@@ -46,7 +46,7 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.14.2 ~ 15MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.15.1 ~ 15MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -162,7 +162,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.14.2
+                           📒 Lightnovel Crawler 🍀2.15.1
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -170,21 +170,19 @@ usage: lncrawl [options...]
 
 positional arguments:
   EXTRA                 To pass a query string to use as extra arguments
+                        (intended to use in chatbots)
 
 optional arguments:
   -h, --help            show this help message and exit
-  -l                    Set log levels (1 = warn, 2 = info, 3 = debug)
   -v, --version         show program's version number and exit
+  -l                    Set log levels. (-l = warn, -ll = info, -lll = debug)
+  --bot {console,telegram,discord,test}
+                        Select a bot. Default: console
+  --list-sources        Display a list of available sources
+  --suppress            Suppress all input prompts and use defaults
   -s URL, --source URL  Profile page url of the novel
-  -q STR, --query STR   Novel query followed by list of source sites.
-  --sources             Display the source selection menu while searching
-  -o PATH, --output PATH
-                        Path where the downloads to be stored
-  --format E [E ...]    Define which formats to output. Default: all
   -f, --force           Force replace any existing folder
   -i, --ignore          Ignore any existing folder (do not replace)
-  --single              Put everything in a single book
-  --multi               Build separate books by volumes
   --login USER PASSWD   User name/email address and password for login
   --all                 Download all chapters
   --first [COUNT]       Download first few chapters (default: 10)
@@ -195,10 +193,13 @@ optional arguments:
                         The list of volume numbers to download
   --chapters [URL [URL ...]]
                         A list of specific chapter urls
-  --suppress            Suppress input prompts (use defaults instead)
+
+  -o PATH, --output PATH
+                        Path where the downloads to be stored
+  --format E [E ...]    Define which formats to output. Default: all
   --add-source-url      Add source url at the end of each chapter
-  --bot {console,telegram,discord,test}
-                        Select a bot. Default: console
+  --single              Put everything in a single book
+  --multi               Build separate books by volumes
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
