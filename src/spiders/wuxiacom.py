@@ -7,6 +7,7 @@ import json
 import logging
 import re
 import requests
+from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
@@ -127,11 +128,15 @@ class WuxiaComCrawler(Crawler):
         body = soup.select_one('#chapter-content')
         if not body:
             body = soup.select_one('.panel-default .fr-view')
+        else:
+            soup.select_one('#chapterContent')
         # end if
 
-        for nav in body.select('.chapter-nav'):
-            nav.extract()
-        # end for
+        if body.select('.chapter-nav'):
+            for nav in body.select('.chapter-nav'):
+                nav.extract()
+            # end for
+        #end if
 
         self.blacklist_patterns = [
             r'^<span>(...|\u2026)</span>$',

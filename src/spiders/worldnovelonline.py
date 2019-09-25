@@ -9,6 +9,7 @@ import re
 from ..utils.crawler import Crawler
 import urllib.parse
 from operator import itemgetter, attrgetter
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger('WORLDNOVEL_ONLINE')
 search_url = 'https://www.worldnovel.online/?s=%s'
@@ -144,18 +145,25 @@ class WorldnovelonlineCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
-        if soup.select_one('div.post-content'):
-            contents = soup.select_one('div.post-content') 
-        else: 
-            contents = soup.select_one('div#chapter-content')
+        #if soup.select_one('div.post-content'):
+        #    contents = soup.select_one('div.post-content') 
+        #else: 
+        #    contents = soup.select_one('div#chapter-content')
         #if contents is None:
         #    contents = '<p>Something Wrong Happened</p>'
-        for block in contents.select('div.code-block'):
-            block.decompose()
-        for nav in contents.select('div.wp-post-navigation'):
-            nav.decompose()
-        if contents.em:
-            contents.em.decompose()
+        #for block in contents.select('div.code-block'):
+        #    block.decompose()
+        #for nav in contents.select('div.wp-post-navigation'):
+        #    nav.decompose()
+        #if contents.em:
+        #    contents.em.decompose()
+        if soup.select_one('div.cha-content') :
+            contents = soup.select_one('div.cha-content') 
+        elif soup.select_one('div#content'): 
+            contents = soup.select_one('div#content')
+        else:
+            body = '<p>Something Wrong Happened, check source at %s</p>' % chapter['url']
+            contents = BeautifulSoup(body,'lxml')
         return contents.prettify()
     # end def
 # end class
