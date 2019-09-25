@@ -21,7 +21,7 @@ class Crawler:
     '''Blueprint for creating new crawlers'''
 
     def __init__(self):
-        self.executor = futures.ThreadPoolExecutor(max_workers=7)
+        self.executor = futures.ThreadPoolExecutor(max_workers=2)
         self.scrapper = cfscrape.create_scraper()
         self.scrapper.verify = False
 
@@ -235,8 +235,8 @@ class Crawler:
                 tag.extract()   # Remove blacklisted contents
             elif len(tag.getText().strip()) == 0:
                 tag.extract()   # Remove empty tags
-            else:
-                tag.attrs = None    # Remove attributes
+            elif hasattr(tag, 'attrs'):
+                tag.attrs = {}    # Remove attributes
             # end if
         # end for
         return div
