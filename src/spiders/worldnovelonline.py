@@ -161,9 +161,15 @@ class WorldnovelonlineCrawler(Crawler):
             contents = soup.select_one('div.cha-content') 
         elif soup.select_one('div#content'): 
             contents = soup.select_one('div#content')
+        elif soup.select_one('div.entry-content.cl'):
+            contents = soup.select_one('div.entry-content.cl')
         else:
             body = '<p>Something Wrong Happened, check source at %s</p>' % chapter['url']
             contents = BeautifulSoup(body,'lxml')
+
+        for codeblock in contents.findAll('div', {'class': 'code-block'}):
+            codeblock.decompose()
+
         return contents.prettify()
     # end def
 # end class

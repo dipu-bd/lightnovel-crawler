@@ -142,23 +142,23 @@ class BabelNovelCrawler(Crawler):
         logger.info('Visiting %s', chapter['json_url'])
         data = self.get_json(chapter['json_url'])
 
-        #soup = BeautifulSoup(data['data']['content'], 'lxml')
-        #for tag in soup.select(self.bad_selectors):
-        #    tag.extract()
+        soup = BeautifulSoup(data['data']['content'], 'lxml')
+        for tag in soup.select(self.bad_selectors):
+            tag.extract()
         # end for
 
-        #body = soup.find('body')
-        #self.clean_contents(body)
+        body = soup.find('body')
+        self.clean_contents(body)
 
-        #for tag in body.contents:
-        #    if not str(tag).strip():
-        #        tag.extract()
-        #    elif isinstance(tag, Tag):
-        #        tag.name = 'p'
-            # end if
+        for tag in body.contents:
+            if not str(tag).strip():
+                tag.extract()
+            elif isinstance(tag, Tag):
+                tag.name = 'p'
+           # end if
         # end for
-
-        body = data['data']['content']
+        print(body)
+        #body = data['data']['content']
         result = str(body)
         result = re.sub(r'\n\n', '<br><br>', result)
         return result
