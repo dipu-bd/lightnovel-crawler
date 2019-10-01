@@ -157,7 +157,7 @@ class BabelNovelCrawler(Crawler):
                 tag.name = 'p'
            # end if
         # end for
-        print(body)
+        
         #body = data['data']['content']
         result = str(body)
         result = re.sub(r'\n\n', '<br><br>', result)
