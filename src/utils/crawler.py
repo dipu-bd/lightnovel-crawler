@@ -225,7 +225,7 @@ class Crawler:
     # end def
 
     def clean_contents(self, div):
-        div.attrs = None
+        #div.attrs = None
         for tag in div.findAll(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
