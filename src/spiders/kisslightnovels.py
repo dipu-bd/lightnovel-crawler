@@ -41,7 +41,7 @@ class KissLightNovels(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.tab-summary .summary_image img')['data-src'])
+            soup.select_one('.tab-summary .summary_image img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('.tab-summary .author-content a')
