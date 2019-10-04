@@ -50,51 +50,32 @@ class NovelFullCrawler(Crawler):
         self.novel_author = ', '.join(authors)
         logger.info('Novel author: %s', self.novel_author)
 
-        #page_count = soup.select_one(
-        #    '#list-chapter .pagination .last a')['data-page']
-        #page_count = -1 if not page_count else int(page_count)
-        #logger.info('Chapter list pages: %d' % page_count)
+        page_count = soup.select_one(
+            '#list-chapter .pagination .last a')['data-page']
+        page_count = -1 if not page_count else int(page_count)
+        logger.info('Chapter list pages: %d' % page_count)
 
-        #logger.info('Getting chapters...')
-        #futures_to_check = {
-        #    self.executor.submit(
-        #        self.download_chapter_list,
-        #        i + 1,
-        #    ): str(i)
-        #    for i in range(page_count + 1)
-        #}
-        #[x.result() for x in futures.as_completed(futures_to_check)]
+        logger.info('Getting chapters...')
+        futures_to_check = {
+            self.executor.submit(
+                self.download_chapter_list,
+                i + 1,
+            ): str(i)
+            for i in range(page_count + 1)
+        }
+        [x.result() for x in futures.as_completed(futures_to_check)]
 
-        #logger.info('Sorting chapters...')
-        #self.chapters.sort(key=lambda x: x['id'])
+        logger.info('Sorting chapters...')
+        self.chapters.sort(key=lambda x: x['id'])
 
-        #logger.info('Adding volumes...')
-        #mini = self.chapters[0]['volume']
-        #maxi = self.chapters[-1]['volume']
-        #for i in range(mini, maxi + 1):
-        #    self.volumes.append({
-        #        'id': i,
-        #        'title': 'Volume %d' % i,
-        #        'volume': str(i),
-        #    })
-        # end for
-        chapters = soup.select('ul.list-chapter li a')
-        
-        for x in chapters:
-            chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url': self.absolute_url(x['href']),
-                'title': x.text.strip() or ('Chapter %d' % chap_id),
+        logger.info('Adding volumes...')
+        mini = self.chapters[0]['volume']
+        maxi = self.chapters[-1]['volume']
+        for i in range(mini, maxi + 1):
+            self.volumes.append({
+                'id': i,
+                'title': 'Volume %d' % i,
+                'volume': str(i),
             })
         # end for
 
