@@ -1,0 +1,44 @@
+{
+  "name": "lightnovel crawler",
+  "description": "Downloads lightnovels from various online sources and generates ebooks in many formats.",
+  "keywords": [
+    "discord",
+    "bot",
+    "telegram",
+    "novel",
+    "lightnovel",
+    "crawler"
+  ],
+  "website": "https://github.com/dipu-bd/lightnovel-crawler",
+  "logo": "https://github.com/dipu-bd/lightnovel-crawler/raw/master/res/lncrawl-icon.png",
+  "env": {
+    "LOG_LEVEL": {
+      "description": "Available levels: NOTSET, WARN, INFO, DEBUG, FATAL, ERROR",
+      "value": "INFO",
+      "required": true
+    },
+    "BOT": {
+      "description": "available: console, discord, telegram",
+      "value": "discord",
+      "required": true
+    },
+    "TELEGRAM_TOKEN": {
+      "description": "Telegram token, only required if BOT is set to telegram",
+      "required": false
+    },
+    "DISCORD_TOKEN": {
+      "description": "Discord token, only required if BOT is set to discord",
+      "required": false
+    },
+    "DISCORD_SIGNAL_CHAR": {
+      "description": "Discord command prefix, only required if BOT is set to discord",
+      "required": false,
+      "value": "!"
+    }
+  },
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-python"
+    }
+  ]
+}
