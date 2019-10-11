@@ -12,3 +12,8 @@ EbookLib==0.17.1
 Jinja2==2.10.1
 cairosvg==2.4.0
 # racovimge==0.9
+
+# Bot requirements
+PyDrive==1.2.1
+discord.py==1.2.3
+python-telegram-bot==11.1.0

@@ -27,6 +27,7 @@ Downloads lightnovels from various online sources and generates ebooks in many f
     - [Telegram](#a51-telegram)
     - [Discord](#a52-discord)
   - [Run from source](#a6-run-from-source)
+  - [Heroku Deployment](#a7-heroku-deployment)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
   - [Running the bot](#b2-running-the-bot)
@@ -152,6 +153,12 @@ $ python __main__.py
 # Or, in short,
 $ python .
 ```
+
+### A7. Heroku Deployment
+
+Simply fill out the environment variables and you get a running instance.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
 
 ## (B) General Usage
 
