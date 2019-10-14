@@ -10,13 +10,12 @@ import requests
 from colorama import Fore
 from colorama import init as init_colorama
 
-from ..assets.icons import Icons
 from ..assets.version import get_value as get_version
 from ..bots import run_bot
 from ..utils.update_checker import check_updates
-from .arguments import build_parser, get_args
+from .arguments import get_args
 from .display import (cancel_method, debug_mode, description, epilog,
-                      error_message, input_suppression, url_not_recognized)
+                      error_message, input_suppression)
 
 logger = logging.Logger('CORE')
 
@@ -27,7 +26,6 @@ def init():
     init_colorama()
     description()
 
-    build_parser()
     args = get_args()
 
     levels = ['NOTSET', 'WARN', 'INFO', 'DEBUG']
