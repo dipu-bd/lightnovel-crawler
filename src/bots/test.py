@@ -225,7 +225,7 @@ class TestBot:
 
     test_user_inputs = {
         'http://gravitytales.com/': [
-            'http://gravitytales.com/novel/chaotic-lightning-cultivation',
+            'http://gravitytales.com/posts/novel/a-dragons-curiosity'
         ],
         'http://novelfull.com/': [
             'http://novelfull.com/hidden-marriage.html',
