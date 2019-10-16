@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
-import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('KISSLIGHTNOVEL')
@@ -33,15 +32,11 @@ class KissLightNovels(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.post-title h3').contents
-            if not x.name
-        ]).strip()
+        self.novel_title = soup.select_one('.post-title h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.tab-summary .summary_image img')['src'])
+            soup.select_one('.summary_image a img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('.tab-summary .author-content a')

@@ -10,6 +10,8 @@ from ..utils.crawler import Crawler
 
 
 def format_novel(crawler: Crawler):
+    crawler.novel_title = crawler.novel_title.strip()
+    crawler.novel_author = crawler.novel_author.strip()
     # crawler.novel_title = crawler.cleanup_text(crawler.novel_title)
     # crawler.novel_author = crawler.cleanup_text(crawler.novel_author)
     format_volumes(crawler)
