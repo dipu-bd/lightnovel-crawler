@@ -133,7 +133,7 @@ def bind_epub_book(app, chapters, volume=''):
     try:
         book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
         book.spine = ['cover', intro_page, 'nav']
-    except:
+    except Exception:
         book.spine = [intro_page, 'nav']
         logger.exception('No cover image')
     # end if
