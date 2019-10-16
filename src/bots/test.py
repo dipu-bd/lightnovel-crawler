@@ -335,7 +335,7 @@ class TestBot:
             'https://creativenovels.com/novel/136/eternal-reverence/',
         ],
         'https://www.tapread.com/': [
-            'https://www.tapread.com/book/detail?bookId=80',
+            'http://www.tapread.com/book/detail/80',
         ],
         'https://4scanlation.com/': [
             'https://4scanlation.com/isekai-kenkokuki/'
