@@ -48,6 +48,7 @@ from .wuxiaonline import WuxiaOnlineCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
 from .kisslightnovels import KissLightNovels
+from .qidiancom import QidianComCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -96,6 +97,7 @@ crawler_list = {
     'https://www.worldnovel.online/': WorldnovelonlineCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
+    'https://book.qidian.com/': QidianComCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
 

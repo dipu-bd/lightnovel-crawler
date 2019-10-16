@@ -8,6 +8,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
 
+<!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
 Downloads lightnovels from various online sources and generates ebooks in many formats.
@@ -267,6 +268,7 @@ The list of currently available sources and the future plans are given below:
 | https://anythingnovel.com              |               |
 | https://babelnovel.com                 |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
+| https://book.qidian.com                |               |
 | https://boxnovel.com                   |       ✔       |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
@@ -292,6 +294,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.jieruihao.cn/              |               |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
+| https://www.qidian.com                 |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
 | https://www.rebirth.online             |               |
