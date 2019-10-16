@@ -120,6 +120,7 @@ class BabelNovelCrawler(Crawler):
     # end def
 
     def parse_content_css(self, url):
+        self.bad_selectors = None
         soup = self.get_soup(url)
         for script in soup.select('script'):
             text = script.text.strip()
@@ -143,9 +144,11 @@ class BabelNovelCrawler(Crawler):
         data = self.get_json(chapter['json_url'])
 
         soup = BeautifulSoup(data['data']['content'], 'lxml')
-        for tag in soup.select(self.bad_selectors):
-            tag.extract()
-        # end for
+        if self.bad_selectors:
+            for tag in soup.select(self.bad_selectors):
+                tag.extract()
+            # end for
+        # end if
 
         body = soup.find('body')
         self.clean_contents(body)
@@ -157,8 +160,8 @@ class BabelNovelCrawler(Crawler):
                 tag.name = 'p'
             # end if
         # end for
-        
-        #body = data['data']['content']
+
+        # body = data['data']['content']
         result = str(body)
         result = re.sub(r'\n\n', '<br><br>', result)
         return result

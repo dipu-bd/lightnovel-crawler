@@ -41,8 +41,10 @@ class WorldnovelonlineCrawler(Crawler):
             '.breadcrumb-item.active').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('img[data-src*="/images/"]')['data-src'])
+        possible_cover = soup.select_one('img.lazy[alt*="Thumbnail"]')
+        if possible_cover:
+            self.novel_cover = self.absolute_url(possible_cover['data-src'])
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select_one(
