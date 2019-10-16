@@ -230,10 +230,10 @@ class Crawler:
                 tag.extract()   # Remove comments
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
-            elif self.is_blacklisted(tag.text):
-                tag.extract()   # Remove blacklisted contents
             elif not tag.text.strip():
                 tag.extract()   # Remove empty tags
+            elif self.is_blacklisted(tag.text):
+                tag.extract()   # Remove blacklisted contents
             elif hasattr(tag, 'attrs'):
                 tag.attrs = {}    # Remove attributes
             # end if
