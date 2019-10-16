@@ -17,7 +17,7 @@ try:
     if row < LINE_SIZE:
         LINE_SIZE = row
     # end if
-except:
+except Exception:
     pass
 # end try
 

@@ -75,7 +75,7 @@ class LNMTLCrawler(Crawler):
         try:
             self.novel_cover = self.absolute_url(soup.find(
                 'img', {'title': self.novel_title})['src'])
-        except:
+        except Exception:
             pass  # novel cover is not so important to raise errors
         # end try
         logger.info('Novel cover = %s', self.novel_cover)

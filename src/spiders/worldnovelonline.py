@@ -82,7 +82,7 @@ class WorldnovelonlineCrawler(Crawler):
                     try:
                         chap_id = int(re.findall(
                             r'\d+', a.text.lower().split('chapter', 1)[1])[0])
-                    except:
+                    except Exception:
                         chap_id = len(temp_chapters) + 1
                         descending = True
                     # end try

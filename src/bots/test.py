@@ -4,28 +4,16 @@
 The purpose of this bot is to test the application and crawlers
 """
 import io
-import logging
 import os
 import platform
-import re
-import shutil
 import sys
-import textwrap
-import time
 import traceback
 from datetime import datetime
 from random import random
 
-from PyInquirer import prompt
-
-from ..assets.icons import Icons
-from ..binders import available_formats
-from ..core import display
 from ..core.app import App
-from ..core.arguments import get_args
 from ..spiders import crawler_list
 from ..utils.cfscrape import CloudflareCaptchaError
-from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
 from ..utils.make_github_issue import find_issues, post_issue
 
 # For colorama in
@@ -74,7 +62,7 @@ class TestBot:
                 print('\n')
             # end for
             exit(0)
-        except:
+        except Exception:
             traceback.print_exc()
         finally:
             if len(self.allerrors):
@@ -358,8 +346,7 @@ class TestBot:
         ],
         'https://myoniyonitranslations.com/': [
             'https://myoniyonitranslations.com/top-management/',
-            'https://myoniyonitranslations.com/lm-chapter-277-279/',
-            'https://myoniyonitranslations.com/category/kill-the-hero/'
+            'https://myoniyonitranslations.com/category/god-of-tennis',
         ],
         'https://babelnovel.com/': [
             'https://babelnovel.com/books/poison-genius-consort',
@@ -387,7 +374,7 @@ class TestBot:
             'tyrannical'
         ],
         'https://www.rebirth.online/': [
-            'https://www.rebirth.online/novel/the-good-for-nothing-seventh-young-lady'
+            'https://www.rebirth.online/novel/upside-down'
         ],
         'https://www.jieruihao.cn/': [
             'https://www.jieruihao.cn/novel/against-the-gods/',
