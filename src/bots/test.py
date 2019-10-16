@@ -335,6 +335,9 @@ class TestBot:
             'https://creativenovels.com/novel/136/eternal-reverence/',
         ],
         'https://www.tapread.com/': [
+            'https://www.tapread.com/book/detail/80',
+        ],
+        'http://www.tapread.com/': [
             'http://www.tapread.com/book/detail/80',
         ],
         'https://4scanlation.com/': [
@@ -400,8 +403,6 @@ class TestBot:
     }
 
     allowed_failures = [
-        'https://www.worldnovel.online/',
-        'https://www.tapread.com/'
         'https://4scanlation.xyz/',
         'https://m.chinesefantasynovels.com/',
         'https://m.romanticlovebooks.com/',

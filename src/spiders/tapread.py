@@ -4,7 +4,6 @@
 Crawler for [tapread.com](https://www.tapread.com/).
 """
 import logging
-import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
@@ -15,7 +14,6 @@ chapter_url = 'https://www.tapread.com/book/chapter?bookId=%s&chapterId=%s'
 
 
 class TapreadCrawler(Crawler):
-
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

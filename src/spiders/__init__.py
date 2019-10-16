@@ -55,11 +55,13 @@ crawler_list = {
     'http://gravitytales.com/': GravityTalesCrawler,
     'http://novelfull.com/': NovelFullCrawler,
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
+    'http://www.tapread.com/': TapreadCrawler,
     'http://zenithnovels.com/': ZenithNovelsCrawler,
     'https://4scanlation.com/': FourScanlationCrawler,
     'https://anythingnovel.com/': AnythingNovelCrawler,
     'https://babelnovel.com/': BabelNovelCrawler,
     'https://bestlightnovel.com/': BestLightNovel,
+    'https://book.qidian.com/': QidianComCrawler,
     'https://boxnovel.com/': BoxNovelCrawler,
     'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
@@ -97,7 +99,6 @@ crawler_list = {
     'https://www.worldnovel.online/': WorldnovelonlineCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
-    'https://book.qidian.com/': QidianComCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
 
