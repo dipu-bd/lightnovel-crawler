@@ -54,7 +54,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-⏬ **Linux**: [lightnovel-crawler v2.14.2 ~ 21MB](http://bit.ly/2LaB9HB)
+⏬ **Linux**: [lightnovel-crawler v2.16.0 ~ 27MB](http://bit.ly/2LaB9HB)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
@@ -62,7 +62,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
-> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free ask on the Discord server if you are stuck.
+> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
 
 To install this app or to update installed one via `pip`, just run:
 
