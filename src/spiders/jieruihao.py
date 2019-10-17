@@ -3,17 +3,12 @@
 """
 Crawler for [Jieruihao](https://www.jieruihao.cn).
 """
-import json
 import logging
-import re
-import cssutils
-import urllib.parse
-
-from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('JIE_RUI_HAO')
+
 
 class JieruihaoCrawler(Crawler):
     def initialize(self):
@@ -25,7 +20,8 @@ class JieruihaoCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.page-title').text.strip().replace('Category: ','')
+        raw_title = soup.select_one('h1.page-title').text
+        self.novel_title = raw_title.strip().replace('Category: ', '')
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = ""
@@ -58,7 +54,7 @@ class JieruihaoCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
+        '''Download body of a single chapter and return as clean html format'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 

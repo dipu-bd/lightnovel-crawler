@@ -7,6 +7,7 @@ import json
 import logging
 import re
 import requests
+from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
@@ -86,7 +87,7 @@ class WuxiaComCrawler(Crawler):
             self.novel_cover = self.absolute_url(
                 soup.select_one('img.media-object')['src'])
             logger.info('Novel cover: %s', self.novel_cover)
-        except:
+        except Exception:
             logger.debug('Failed to get cover: %s', self.novel_url)
         # end try
 
@@ -120,16 +121,22 @@ class WuxiaComCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
+        '''Download body of a single chapter and return as clean html format'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        body = soup.select_one('#chapter-content')
+        body = soup.select_one('#chapterContent')
+        if not body:
+            body = soup.select_one('#chapter-content')
+        # end if
         if not body:
             body = soup.select_one('.panel-default .fr-view')
         # end if
+        if not body:
+            return ''
+        # end if
 
-        for nav in body.select('.chapter-nav'):
+        for nav in (soup.select('.chapter-nav') or []):
             nav.extract()
         # end for
 

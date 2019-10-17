@@ -1,43 +1,34 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import re
-import json
 import logging
-from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('GRAVITY_TALES')
 
 cover_image_url = 'https://cdn.gravitytales.com/images/covers/%s.jpg'
+novel_toc_url = 'http://gravitytales.com/novel/%s'
 chapter_list_url = 'http://gravitytales.com/novel/%s/chapters'
 
 
 class GravityTalesCrawler(Crawler):
     def read_novel_info(self):
+        self.novel_id = re.split(r'\/(novel|post)\/', self.novel_url)[2]
+        self.novel_id = self.novel_id.split('/')[0]
+        logger.info('Novel id: %s' % self.novel_id)
+
+        self.novel_url = novel_toc_url % self.novel_id
         logger.debug('Visiting %s' % self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_id = urlparse(self.novel_url).path.split('/')[-1]
-        logger.info('Novel ID: %s' % self.novel_id)
-
-        self.novel_title = ' '.join([
-            str(x) for x in
-            soup.select_one('.main-content h3').contents
-            if not x.name
-        ]).strip()
+        [x.extract() for x in soup.select('.main-content h3 > *')]
+        self.novel_title = soup.select_one('.main-content h3').text.strip()
         logger.info('Novel title: %s' % self.novel_title)
 
         self.novel_cover = cover_image_url % self.novel_id
         logger.info('Novel cover: %s' % self.novel_cover)
 
-        possible_authors = []
-        for p in soup.select('.main-content .desc p'):
-            if re.search(r'(author|translator)', p.text, re.I):
-                text = re.sub(', ', ' & ', p.text).strip()
-                possible_authors.append(text)
-            # end if
-        # end for
-        self.novel_author = ', '.join(possible_authors)
+        self.novel_author = soup.select_one('.main-content h4').text.strip()
         logger.info(self.novel_author)
 
         self.get_chapters_list()
@@ -48,26 +39,28 @@ class GravityTalesCrawler(Crawler):
         logger.info('Visiting %s' % url)
         soup = self.get_soup(url)
 
-        volumes = set([])
-        for a in soup.select('table td a'):
-            ch_id = len(self.chapters) + 1
-            vol_id = 1 + (ch_id - 1) // 100
-            volumes.add(vol_id)
-            self.chapters.append({
-                'id': ch_id,
-                'volume': vol_id,
-                'url': a['href'],
-                'title': a.text.strip()
+        for a in soup.select('#chaptergroups li a'):
+            vol_id = len(self.volumes) + 1
+            self.volumes.append({
+                'id': vol_id,
+                'title': a.text.strip(),
+                'title_lock': True,
+                '_tid': (a['href']),
             })
+
+            for a in soup.select(a['href'] + ' td a'):
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'url': self.absolute_url(a['href']),
+                    'title': a.text.strip(),
+                    'title_lock': True,
+                })
         # end for
 
-        self.volumes = [
-            {'id': x, 'title': ''}
-            for x in volumes
-        ]
-
-        logger.debug('%d chapters and %d volumes found',
-                     len(self.chapters), len(self.volumes))
+        logger.info('%d chapters and %d volumes found',
+                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_body(self, chapter):

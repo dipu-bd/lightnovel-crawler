@@ -17,7 +17,7 @@ logger = logging.getLogger('DOWNLOADER')
 
 try:
     from cairosvg import svg2png
-except:
+except Exception:
     logger.warning(
         'CairoSVG was not loaded properly. SVG to PNG conversion will fail.')
     pass  # ignore it
@@ -36,7 +36,7 @@ def download_cover(app):
         if os.path.exists(filename):
             return filename
         # end if
-    except:
+    except Exception:
         logger.exception('Failed to locate cover image: %s -> %s',
                          app.crawler.novel_cover, app.output_path)
         return None
@@ -51,7 +51,7 @@ def download_cover(app):
             logger.debug('Saved cover: %s', filename)
         # end with
         return filename
-    except:
+    except Exception:
         logger.exception('Failed to download cover image: %s -> %s',
                          app.crawler.novel_cover, filename)
         return None
@@ -78,7 +78,7 @@ def generate_cover(app):
         logger.debug('Converted cover.svg to cover.png')
 
         return png_file
-    except:
+    except Exception:
         logger.exception('Failed to generate cover image: %s', app.output_path)
         return None
     # end try
@@ -112,16 +112,16 @@ def download_chapter_body(app, chapter):
         try:
             logger.debug('Downloading to %s', file_name)
             body = app.crawler.download_chapter_body(chapter)
-        except:
+        except Exception:
             logger.exception('Failed to download chapter body')
         # end try
         if len(body) == 0:
             result = 'Body is empty: ' + chapter['url']
         else:
-            chapter['body'] = '<h1>%s</h1>\n%s' % (
-                chapter['title'],
-                app.crawler.cleanup_text(body)
-            )
+            if not('body_lock' in chapter and chapter['body_lock']):
+                body = app.crawler.cleanup_text(body)
+            # end if
+            chapter['body'] = '<h1>%s</h1>\n%s' % (chapter['title'], body)
             if get_args().add_source_url:
                 chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
                     chapter['url'], chapter['url'])

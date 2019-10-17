@@ -35,7 +35,7 @@ class CreativeNovelsCrawler(Crawler):
             self.novel_cover = self.absolute_url(soup.select_one(
                 '.x-bar-content-area img.book_cover')['src'])
             logger.info('Novel Cover: %s', self.novel_cover)
-        except:
+        except Exception:
             pass
         # end try
 

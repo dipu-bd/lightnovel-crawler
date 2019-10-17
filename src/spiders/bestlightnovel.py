@@ -47,7 +47,7 @@ class BestLightNovel(Crawler):
             }).json()
             self.novel_cover = novel_data[0]['image']
             self.novel_author = novel_data[0]['author']
-        except:
+        except Exception:
             logger.debug('Failed getting novel info.\n%s', Exception)
         # end try
 

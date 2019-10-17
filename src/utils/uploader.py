@@ -4,14 +4,15 @@
 import os
 import logging
 
+logger = logging.getLogger('UPLOADER')
+
+
 try:
     from pydrive.auth import GoogleAuth
     from pydrive.drive import GoogleDrive
-except:
-    print('`pydrive` was not setup properly')
+except Exception:
+    logger.error('`pydrive` was not setup properly')
 # end try
-
-logger = logging.getLogger('UPLOADER')
 
 
 def upload(file_path):
