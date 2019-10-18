@@ -4,7 +4,6 @@
 Crawler application
 """
 import logging
-import os
 import re
 from abc import abstractmethod
 from concurrent import futures
@@ -121,7 +120,7 @@ class Crawler:
     # end def
 
     def absolute_url(self, url, page_url=None):
-        url = (url or '').strip().lower()
+        url = (url or '').strip()
         if not page_url:
             page_url = self.last_visited_url
         # end if
@@ -225,16 +224,16 @@ class Crawler:
     # end def
 
     def clean_contents(self, div):
-        #div.attrs = None
+        # div.attrs = None
         for tag in div.findAll(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
+            elif not tag.text.strip():
+                tag.extract()   # Remove empty tags
             elif self.is_blacklisted(tag.text):
                 tag.extract()   # Remove blacklisted contents
-            elif len(tag.getText().strip()) == 0:
-                tag.extract()   # Remove empty tags
             elif hasattr(tag, 'attrs'):
                 tag.attrs = {}    # Remove attributes
             # end if
@@ -273,6 +272,7 @@ class Crawler:
     # end def
 
     def cleanup_text(self, text):
-        return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]', '', str(text), flags=re.UNICODE)
+        return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]',
+                      '', str(text), flags=re.UNICODE)
     # end def
 # end class

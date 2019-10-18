@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [WuxiaWorld](http://www.wuxiaworld.co/).
-"""
-import json
 import logging
 import re
 
@@ -15,11 +11,8 @@ logger = logging.getLogger('REBIRTH_ONLINE')
 
 book_url = 'https://www.rebirth.online/novel/%s'
 
-class RebirthOnlineCrawler(Crawler):
-    def initialize(self):
-        self.home_url = 'https://www.rebirth.online/'
-    # end def
 
+class RebirthOnlineCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         self.novel_id = self.novel_url.split(
@@ -33,9 +26,12 @@ class RebirthOnlineCrawler(Crawler):
         self.novel_title = soup.select_one('h2.entry-title a').text
         logger.info('Novel title: %s', self.novel_title)
 
-        translator = soup.find('h3',{'class':'section-title'}).findNext('p').text
-        author = soup.find('h3',{'class':'section-title'}).findNext('p').findNext('p').text
-        self.novel_author = 'Author : %s, Translator: %s' %(author,translator)
+        translator = soup.find(
+            'h3', {'class': 'section-title'}).findNext('p').text
+        author = soup.find('h3', {'class': 'section-title'}
+                           ).findNext('p').findNext('p').text
+        self.novel_author = 'Author : %s, Translator: %s' % (
+            author, translator)
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = None
@@ -43,7 +39,7 @@ class RebirthOnlineCrawler(Crawler):
 
         last_vol = -1
         volume = {'id': 0, 'title': 'Volume 1', }
-        for item in soup.find('div',{'class':'table_of_content'}).findAll('ul'):
+        for item in soup.find('div', {'class': 'table_of_content'}).findAll('ul'):
             vol = volume.copy()
             vol['id'] += 1
             vol['title'] = 'Book %s' % vol['id']
@@ -77,11 +73,13 @@ class RebirthOnlineCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
 
-        if len(soup.findAll('br'))>10:
+        if len(soup.findAll('br')) > 10:
             contents = soup.find('br').parent
-        else :
-            remove = ['http://www.rebirth.online','support Content Creators','content-copying bots','Firefox Reader\'s Mode','content-stealing websites','rebirthonlineworld@gmail.com']
-            contents = soup.find('div',{'class':'obstruction'}).select('p')
+        else:
+            remove = ['http://www.rebirth.online', 'support Content Creators', 'content-copying bots',
+                      'Firefox Reader\'s Mode', 'content-stealing websites', 'rebirthonlineworld@gmail.com',
+                      'PayPal or Patreon', 'available for Patreons', 'Join us on Discord', 'enjoy this novel']
+            contents = soup.find('div', {'class': 'obstruction'}).select('p')
             for content in contents:
                 for item in remove:
                     if item in content.text:
@@ -89,10 +87,10 @@ class RebirthOnlineCrawler(Crawler):
                     # end if
                 # end for
             # end for
-            tmp =''
+            tmp = ''
             for content in contents:
                 tmp = tmp + '<p>' + content.text + '</p>'
-                contents = BeautifulSoup(tmp,'lxml')
+                contents = BeautifulSoup(tmp, 'lxml')
             # end for
         # end if
 

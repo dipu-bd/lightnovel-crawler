@@ -4,18 +4,15 @@ import logging
 import os
 import re
 import shutil
-import sys
 from urllib.parse import urlparse
 
 from PyInquirer import prompt
 
-from ..assets.icons import Icons
 from ..binders import available_formats
 from ..core import display
 from ..core.app import App
 from ..core.arguments import get_args
-from ..spiders import crawler_list, rejected_sources
-from ..utils.kindlegen_download import download_kindlegen, retrieve_kindlegen
+from ..spiders import rejected_sources
 
 logger = logging.getLogger('CONSOLE_INTERFACE')
 
@@ -35,7 +32,7 @@ class ConsoleBot:
         self.app.user_input = self.get_novel_url()
         try:
             self.app.init_search()
-        except:
+        except Exception:
             if self.app.user_input.startswith('http'):
                 url = urlparse(self.app.user_input)
                 url = '%s://%s/' % (url.scheme, url.hostname)
@@ -175,7 +172,7 @@ class ConsoleBot:
                 },
             ])
             return answer['novel'].strip()
-        except:
+        except Exception:
             raise Exception('Novel page url or query was not given')
         # end try
     # end def
@@ -404,7 +401,9 @@ class ConsoleBot:
     # end def
 
     def get_range_selection(self):
-        '''Returns a choice of how to select the range of chapters to downloads'''
+        '''
+        Returns a choice of how to select the range of chapters to downloads
+        '''
         volume_count = len(self.app.crawler.volumes)
         chapter_count = len(self.app.crawler.chapters)
         selections = ['all', 'last', 'first',
@@ -463,7 +462,7 @@ class ConsoleBot:
                 try:
                     if self.app.crawler.get_chapter_index_of(val) > 0:
                         return True
-                except:
+                except Exception:
                     pass
                 return 'No such chapter found given the url'
             # end def
@@ -507,9 +506,9 @@ class ConsoleBot:
                 try:
                     if 1 <= int(val) <= chapter_count:
                         return True
-                except:
+                except Exception:
                     pass
-                return 'Please enter an integer between 1 and %d' % chapter_count
+                return 'Enter an integer between 1 and %d' % chapter_count
             # end def
             answer = prompt([
                 {

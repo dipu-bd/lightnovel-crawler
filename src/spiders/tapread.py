@@ -3,78 +3,71 @@
 """
 Crawler for [tapread.com](https://www.tapread.com/).
 """
-import json
 import logging
-import re
-import urllib.parse
-from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('TAPREAD')
 
+chapter_list_url = 'https://www.tapread.com/book/contents?bookId=%s'
+chapter_url = 'https://www.tapread.com/book/chapter?bookId=%s&chapterId=%s'
+
 
 class TapreadCrawler(Crawler):
-
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'div.book-name').text.strip()
+        self.novel_title = soup.select_one('.book-name').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = 'https:%s' % soup.select_one('div.book-img img')['src']
+        try:
+            self.novel_cover = self.absolute_url(
+                soup.select_one('img.bg-img, img.cover-img, .book-img img')['src'])
+        except Exception:
+            pass
+        # end try
         logger.info('Novel cover: %s', self.novel_cover)
 
-        regex = re.compile(r'[\n\r\t]')
-        self.novel_author = regex.sub("", soup.select_one('div.author').text.strip() + ' ' + soup.select_one('div.translator').text.strip())
+        try:
+            possible_authors = []
+            for div in soup.select('.author, .translator'):
+                possible_authors.append(
+                    ': '.join([x.strip() for x in div.text.split(':')]))
+            # end for
+            self.novel_author = ', '.join(possible_authors)
+        except Exception:
+            pass
+        # end try
         logger.info(self.novel_author)
 
-        path = urllib.parse.urlsplit(self.novel_url)[2]
+        path = urlparse(self.novel_url).path
         book_id = path.split('/')[3]
+        data = self.get_json(chapter_list_url % book_id)
 
-        js = self.scrapper.post(
-            "https://www.tapread.com/book/contents?bookId=%s" % book_id)
-
-        data = js.json()
-
-        chapters = data['result']['chapterList']
-
-        for x in chapters:
-            chap_id = x['chapterNo']
-            if len(self.chapters) % 100 == 0:
-                vol_id = int(chap_id)//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+        volumes = set()
+        for chap in data['result']['chapterList']:
+            chap_id = chap['chapterNo']
+            vol_id = (chap_id - 1) // 100 + 1
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url': 'https://www.tapread.com/book/chapter?bookId=%s&chapterId=%s' % (x['bookId'], x['chapterId']),
-                'title': x['chapterName'],
+                'title': chap['chapterName'],
+                'url': chapter_url % (chap['bookId'], chap['chapterId']),
             })
         # end for
 
-        logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
+        self.volumes = [{'id': x} for x in volumes]
+        logger.debug('%d volumes & %d chapters found',
+                     len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
+        '''Download body of a single chapter and return as clean html format'''
         logger.info('Downloading %s', chapter['url'])
-
-        js = self.scrapper.post(chapter['url'])
-
-        data = js.json()
-
-        logger.debug(data['result']['chapterName'])
-
-        contents = BeautifulSoup(data['result']['content'], 'lxml')
-
-        return contents.prettify()
+        data = self.get_json(chapter['url'])
+        return data['result']['content']
     # end def
 # end class

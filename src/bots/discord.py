@@ -81,7 +81,7 @@ class DiscordBot(discord.Client):
                     ' if this problem continues with this message: `' +
                     str(err) + '`'
                 )
-            except:
+            except Exception:
                 pass  # this world is doomed!!
             # end try
         # end try
@@ -108,7 +108,7 @@ class MessageHandler:
         try:
             self.app.destroy()
             self.executors.shutdown(False)
-        except:
+        except Exception:
             logger.exception('While destroying MessageHandler')
         finally:
             self.client.handlers.pop(self.user.id)
@@ -157,7 +157,7 @@ class MessageHandler:
         try:
             self.app.user_input = self.message.content.strip()
             self.app.init_search()
-        except:
+        except Exception:
             await self.send(
                 'Sorry! I only know these sources:\n' +
                 '\n'.join(['- %s' % x for x in crawler_list.keys()]),

@@ -8,6 +8,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
 
+<!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
 Downloads lightnovels from various online sources and generates ebooks in many formats.
@@ -27,6 +28,7 @@ Downloads lightnovels from various online sources and generates ebooks in many f
     - [Telegram](#a51-telegram)
     - [Discord](#a52-discord)
   - [Run from source](#a6-run-from-source)
+  - [Heroku Deployment](#a7-heroku-deployment)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
   - [Running the bot](#b2-running-the-bot)
@@ -42,15 +44,17 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 
 ## (A) Installation
 
-**This application uses _Calibre_ to convert ebooks. Install it from https://calibre-ebook.com/download**
+**This application uses _Calibre_ to convert ebooks.** <br>
+**Install it from https://calibre-ebook.com/download** <br>
+Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.15.1 ~ 15MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.16.0 ~ 21MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-⏬ **Linux**: [lightnovel-crawler v2.14.2 ~ 21MB](http://bit.ly/2LaB9HB)
+⏬ **Linux**: [lightnovel-crawler v2.16.0 ~ 27MB](http://bit.ly/2LaB9HB)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
@@ -58,7 +62,7 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 
 📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
-> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free ask on the Discord server if you are stuck.
+> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
 
 To install this app or to update installed one via `pip`, just run:
 
@@ -153,6 +157,12 @@ $ python __main__.py
 $ python .
 ```
 
+### A7. Heroku Deployment
+
+Simply fill out the environment variables and you get a running instance.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
 ## (B) General Usage
 
 ### B1. Available options
@@ -162,44 +172,37 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.15.1
+                           📒 Lightnovel Crawler 🍀2.16.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
        lightnovel-crawler [options...]
 
-positional arguments:
-  EXTRA                 To pass a query string to use as extra arguments
-                        (intended to use in chatbots)
-
 optional arguments:
   -h, --help            show this help message and exit
-  -v, --version         show program's version number and exit
-  -l                    Set log levels. (-l = warn, -ll = info, -lll = debug)
-  --bot {console,telegram,discord,test}
-                        Select a bot. Default: console
-  --list-sources        Display a list of available sources
-  --suppress            Suppress all input prompts and use defaults
-  -s URL, --source URL  Profile page url of the novel
-  -f, --force           Force replace any existing folder
-  -i, --ignore          Ignore any existing folder (do not replace)
-  --login USER PASSWD   User name/email address and password for login
-  --all                 Download all chapters
-  --first [COUNT]       Download first few chapters (default: 10)
-  --last [COUNT]        Download last few chapters (default: 10)
-  --page START STOP     The start and final chapter urls
-  --range FROM TO       The start and final chapter indexes
-  --volumes [N [N ...]]
-                        The list of volume numbers to download
-  --chapters [URL [URL ...]]
-                        A list of specific chapter urls
 
-  -o PATH, --output PATH
-                        Path where the downloads to be stored
-  --format E [E ...]    Define which formats to output. Default: all
-  --add-source-url      Add source url at the end of each chapter
-  --single              Put everything in a single book
-  --multi               Build separate books by volumes
+  -v, --version         show program's version number and exit
+  -l                    Set log levels. (-l = warn, -ll = info, -lll = debug).
+  --list-sources        Display a list of available sources.
+  -s URL, --source URL  Profile page url of the novel.
+  -f, --force           Force replace any existing folder.
+  -i, --ignore          Ignore any existing folder (do not replace).
+  --login USER PASSWD.  User name/email address and password for login.
+  --all                 Download all chapters.
+  --first [COUNT]       Download first few chapters (default: 10).
+  --last [COUNT]        Download last few chapters (default: 10).
+  --page START STOP.    The start and final chapter urls.
+  --range FROM TO.      The start and final chapter indexes.
+  --volumes [N [N ...]]
+                        The list of volume numbers to download.
+  --chapters [URL [URL ...]]
+                        A list of specific chapter urls.
+  --bot {console,telegram,discord,test}
+                        Select a bot. Default: console.
+  --suppress            Suppress all input prompts and use defaults.
+  ENV                   [chatbots only] Pass query string at the end of all
+                        options. It will be use instead of .env file. Sample:
+                        "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
@@ -260,6 +263,7 @@ The list of currently available sources and the future plans are given below:
 | https://anythingnovel.com              |               |
 | https://babelnovel.com                 |       ✔       |
 | https://bestlightnovel.com             |       ✔       |
+| https://book.qidian.com                |               |
 | https://boxnovel.com                   |       ✔       |
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
@@ -285,6 +289,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.jieruihao.cn/              |               |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
+| https://www.qidian.com                 |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
 | https://www.rebirth.online             |               |

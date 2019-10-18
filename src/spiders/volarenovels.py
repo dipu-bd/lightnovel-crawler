@@ -20,7 +20,7 @@ class VolareNovelsCrawler(Crawler):
 
         try:
             self.novel_author = soup.select('#content-container .p-tb-10-rl-30 p')[1].text.strip()
-        except:
+        except Exception:
             pass  # not so important to raise errors
         # end try
         logger.info('Novel author: %s', self.novel_author)
@@ -28,7 +28,7 @@ class VolareNovelsCrawler(Crawler):
         try:
             self.novel_cover = self.absolute_url(
                 soup.select_one('#content-container .md-d-table img')['src'])
-        except:
+        except Exception:
             pass  # not so important to raise errors
         # end try
         logger.info('Novel cover: %s', self.novel_cover)
@@ -41,7 +41,7 @@ class VolareNovelsCrawler(Crawler):
 
             try:
                 vol_id = int(div.select('h4.panel-title span')[0].text.strip())
-            except:
+            except Exception:
                 pass
             # end try
 

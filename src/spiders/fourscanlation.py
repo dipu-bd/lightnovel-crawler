@@ -73,7 +73,7 @@ class FourScanlationCrawler(Crawler):
         try:
             chapter['title'] = soup.select_one('header h1').text
             logger.debug(chapter['title'])
-        except:
+        except Exception:
             pass
         # end try
 
