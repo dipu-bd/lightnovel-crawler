@@ -14,4 +14,4 @@ touch bot.log
 nohup python3.6 . > bot.log 2>&1 &
 echo $! > save_pid.txt
 
-tail -f bot.log
+#tail -f bot.log
