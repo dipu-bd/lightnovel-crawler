@@ -1,10 +1,7 @@
-FROM python:3.6-alpine
+FROM ubuntu:bionic
 LABEL maintainer="Sudipto Chandra"
 
 WORKDIR /usr/src/app
-
-RUN apk add --no-cache g++ gcc cairo-dev jpeg-dev libxslt-dev openssl-dev
-RUN pip install --no-cache-dir -U lightnovel-crawler
 
 COPY mycreds.txt mycreds.txt
 
@@ -24,5 +21,20 @@ ENV DISCORD_TOKEN=${discord_token}
 
 ARG discord_signal_char=!
 ENV DISCORD_SIGNAL_CHAR=${discord_signal_char}
+
+RUN apt-get update
+
+RUN apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+  && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+ENV LANG en_US.utf8
+
+RUN apt-get update
+
+RUN apt-get install -y python3-pip python3-dev
+
+RUN pip3 install --upgrade pip
+
+RUN pip3 install lightnovel-crawler
 
 CMD [ "lncrawl" ]

@@ -1,7 +1,15 @@
 #!/bin/sh
 
+export BOT=console
+export LOG_LEVEL=INFO
+
 # Load environment variables
-export $(grep -v '^#' .env | xargs -d '\n')
+if [ -f ".env" ]; then
+  export $(grep -v '^#' .env | xargs -d '\n')
+else
+  echo "No .env file found"
+  exit 1
+fi
 
 # Build the docker image
 docker build -t lncrawl . \
@@ -12,7 +20,10 @@ docker build -t lncrawl . \
   --build-arg "discord_signal_char=${DISCORD_SIGNAL_CHAR}"
 
 # Run as a container
-docker run --rm --name lncrawl-bot -itd lncrawl
+docker stop lncrawl-${BOT}
+docker run --rm \
+  --name lncrawl-${BOT} \
+  -itd lncrawl
 
 # Unload environment variables
 unset $(grep -v '^#' .env | sed -E 's/(.*)=.*/\1/' | xargs)
