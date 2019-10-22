@@ -399,6 +399,9 @@ class TestBot:
         ],
         'https://novelonlinefull.com/': [
             'https://novelonlinefull.com/novel/abo1520855001564322110'
+        ],
+        'https://www.machine-translation.org/': [
+            'https://www.machine-translation.org/novel/bace21c9b10d34e9/world-of-cultivation.html'
         ]
     }
 

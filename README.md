@@ -287,6 +287,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.asianhobbyist.com          |               |
 | https://www.idqidian.us                |               |
 | https://www.jieruihao.cn/              |               |
+| https://www.machine-translation.org    |       ✔       |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
 | https://www.qidian.com                 |               |
