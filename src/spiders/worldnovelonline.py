@@ -6,7 +6,7 @@ Crawler for [worldnovel.online](https://www.worldnovel.online/).
 import logging
 import re
 from urllib.parse import quote, urlparse
-
+import urllib.parse
 from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
@@ -51,7 +51,9 @@ class WorldnovelonlineCrawler(Crawler):
             'a[href*="/authorr/"]').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        book_id = soup.select_one('span.js-add-bookmark')['data-novel']
+        path = urllib.parse.urlsplit(self.novel_url)[2]
+        book_id = path.split('/')[2]
+        #book_id = soup.select_one('span.js-add-bookmark')['data-novel']
         logger.info('Bookid = %s' % book_id)
 
         list_url = chapter_list_url % book_id
@@ -142,7 +144,7 @@ class WorldnovelonlineCrawler(Crawler):
             return ''
         # end if
 
-        self.clean_contents(contents)
+        #self.clean_contents(contents)
 
         for codeblock in contents.select('div.code-block'):
             codeblock.decompose()
