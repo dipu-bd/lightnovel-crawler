@@ -287,9 +287,9 @@ The list of currently available sources and the future plans are given below:
 | https://wuxiaworld.online              |       ✔       |
 | https://www.asianhobbyist.com          |               |
 | https://www.idqidian.us                |               |
-| https://www.jieruihao.cn/              |               |
+| https://www.jieruihao.cn               |               |
 | https://www.machine-translation.org    |       ✔       |
-| https://www.mtlnovel.com/              |       ✔       |
+| https://www.mtlnovel.com               |       ✔       |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
 | https://www.qidian.com                 |               |
@@ -300,7 +300,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.royalroad.com              |       ✔       |
 | https://www.scribblehub.com            |       ✔       |
 | https://www.tapread.com                |               |
-| https://www.translateindo.com/         |               |
+| https://www.translateindo.com          |               |
 | https://www.wattpad.com                |               |
 | https://www.webnovel.com               |       ✔       |
 | https://www.worldnovel.online          |       ✔       |
@@ -313,7 +313,7 @@ Rejected:
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
-| https://4scanlation.xyz       | `ERR_SSL_PROTOCOL_ERROR`            |
+| https://4scanlation.xyz       | `Domain expired`                    |
 | https://comrademao.com        | `Removed`                           |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
