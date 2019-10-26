@@ -38,9 +38,9 @@ class MtlnovelCrawler(Crawler):
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        chapters = soup.select('div.info-wrap div')[1].text.replace('Chapters','')
+        chapters = soup.select('div.info-wrap div')[1].text.replace('Chapters', '')
         info = '%s chapters' % chapters
-        #if len(chapters) > 0:
+        # if len(chapters) > 0:
         #    info += ' | Latest: %s' % chapters[-1].text.strip()
         # end if
 
@@ -98,10 +98,10 @@ class MtlnovelCrawler(Crawler):
 
         contents = soup.select('div.post-content p.en')
         # print(contents)
-        #for p in contents:
+        # for p in contents:
         #    for span in p.findAll('span'):
         #        span.unwrap()
-            # end for
+        # end for
         # end for
         # print(contents)
         # self.clean_contents(contents)
