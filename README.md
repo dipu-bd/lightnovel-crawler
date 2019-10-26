@@ -283,11 +283,13 @@ The list of currently available sources and the future plans are given below:
 | https://novelraw.blogspot.com          |               |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
+| https://wordexcerpt.com/               |               |
 | https://wuxiaworld.online              |       ✔       |
 | https://www.asianhobbyist.com          |               |
 | https://www.idqidian.us                |               |
 | https://www.jieruihao.cn/              |               |
 | https://www.machine-translation.org    |       ✔       |
+| https://www.mtlnovel.com/              |       ✔       |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
 | https://www.qidian.com                 |               |
@@ -298,6 +300,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.royalroad.com              |       ✔       |
 | https://www.scribblehub.com            |       ✔       |
 | https://www.tapread.com                |               |
+| https://www.translateindo.com/         |               |
 | https://www.wattpad.com                |               |
 | https://www.webnovel.com               |       ✔       |
 | https://www.worldnovel.online          |       ✔       |
