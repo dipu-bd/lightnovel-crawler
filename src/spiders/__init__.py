@@ -39,6 +39,7 @@ from .romanticlb import RomanticLBCrawler
 from .royalroad import RoyalRoadCrawler
 from .scribblehub import ScribbleHubCrawler
 from .tapread import TapreadCrawler
+from .translateindo import TranslateIndoCrawler
 from .volarenovels import VolareNovelsCrawler
 from .wattpad import WattpadCrawler
 from .webnonline import WebnovelOnlineCrawler
@@ -99,6 +100,7 @@ crawler_list = {
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://www.scribblehub.com/': ScribbleHubCrawler,
     'https://www.tapread.com/': TapreadCrawler,
+    'https://www.translateindo.com/': TranslateIndoCrawler,
     'https://www.volarenovels.com/': VolareNovelsCrawler,
     'https://www.wattpad.com/': WattpadCrawler,
     'https://www.webnovel.com/': WebnovelCrawler,
