@@ -39,28 +39,36 @@ class FanFictionCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('#profile_top b.xcontrast_txt').text.strip()
+        self.novel_title = soup.select_one('#profile_top b.xcontrast_txt, #content b').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('#profile_top img.cimage')['src'])
+        possible_image = soup.select_one('#profile_top img.cimage')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select_one('#profile_top a[href*="/u/"]').text.strip()
+        self.novel_author = soup.select_one(
+            '#profile_top, #content').select_one('a[href*="/u/"]').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_id = urlparse(self.novel_url).path.split('/')[2]
         logger.info('Novel id: %s', self.novel_id)
 
-        origin_book = soup.select('#pre_story_links a')[-1]
-        self.volumes.append({
-            'id': 1,
-            'title_lock': True,
-            'title': origin_book.text.strip(),
-        })
+        if soup.select_one('#pre_story_links'):
+            origin_book = soup.select('#pre_story_links a')[-1]
+            self.volumes.append({
+                'id': 1,
+                'title_lock': True,
+                'title': origin_book.text.strip(),
+            })
+        else:
+            self.volumes.append({'id': 1})
+        # end if
 
-        if soup.select_one('#chap_select'):
-            for option in soup.select_one('#chap_select').select('option'):
+        chapter_select = soup.select_one('#chap_select, select#jump')
+        if chapter_select:
+            for option in chapter_select.select('option'):
                 self.chapters.append({
                     'volume': 1,
                     'id': int(option['value']),
@@ -86,7 +94,7 @@ class FanFictionCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        contents = soup.select_one('#storytext')
+        contents = soup.select_one('#storytext, #storycontent')
 
         for p in contents.select('p[style="text-align:center;"]'):
             p.decompose()

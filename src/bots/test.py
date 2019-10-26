@@ -402,6 +402,9 @@ class TestBot:
         ],
         'https://www.machine-translation.org/': [
             'https://www.machine-translation.org/novel/bace21c9b10d34e9/world-of-cultivation.html'
+        ],
+        'https://www.fanfiction.net/': [
+            'https://www.fanfiction.net/s/7268451/1/Facebook-For-wizards'
         ]
     }
 
