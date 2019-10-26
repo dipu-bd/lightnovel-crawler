@@ -14,25 +14,24 @@ from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
 from .jieruihao import JieruihaoCrawler
-from .kisslightnovels import KissLightNovels
 from .lightnovelonline import LightNovelOnline
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
-from .machinetransorg import MachineTransOrg
 from .machinetrans import MachineNovelTrans
+from .machinetransorg import MachineTransOrg
 from .meionovel import MeionovelCrawler
 from .mtlednovels import MtledNovelsCrawler
+from .mtlnovel import MtlnovelCrawler
 from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
-from .novelgo import NovelGoCrawler
 from .novelonlinefull import NovelOnlineFullCrawler
+from .novelgo import NovelGoCrawler
 from .novelplanet import NovelPlanetCrawler
 from .novelraw import NovelRawCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
 from .novelv import NovelvCrawler
-from .qidiancom import QidianComCrawler
 from .readln import ReadLightNovelCrawler
 from .readnovelfull import ReadNovelFullCrawler
 from .rebirthonline import RebirthOnlineCrawler
@@ -44,12 +43,15 @@ from .volarenovels import VolareNovelsCrawler
 from .wattpad import WattpadCrawler
 from .webnonline import WebnovelOnlineCrawler
 from .webnovel import WebnovelCrawler
+from .wordexcerpt import WordExcerptCrawler
 from .worldnovelonline import WorldnovelonlineCrawler
 from .wuxiaco import WuxiaCoCrawler
 from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
+from .kisslightnovels import KissLightNovels
+from .qidiancom import QidianComCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -82,11 +84,13 @@ crawler_list = {
     'https://novelraw.blogspot.com/': NovelRawCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
+    'https://wordexcerpt.com/': WordExcerptCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.asianhobbyist.com/': AsianHobbyistCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
     'https://www.jieruihao.cn/': JieruihaoCrawler,
     'https://www.machine-translation.org': MachineTransOrg,
+    'https://www.mtlnovel.com/' : MtlnovelCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
