@@ -36,8 +36,9 @@ Downloads lightnovels from various online sources and generates ebooks in many f
   - [Adding new source](#c1-adding-new-source)
   - [Adding new Bot](#c2-adding-new-bot)
   - [Supported sources](#c3-supported-sources)
-  - [Supported output formats](#c4-supported-output-formats)
-  - [Supported bots](#c5-supported-bots)
+  - [Rejected sources](#c4-rejected-sources)
+  - [Supported output formats](#c5-supported-output-formats)  
+  - [Supported bots](#c6-supported-bots)
 - [The project structure](https://github.com/dipu-bd/lightnovel-crawler/blob/master/CONTRIBUTING.md)
 
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
@@ -50,7 +51,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.16.0 ~ 21MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.16.1 ~ 21MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -250,9 +251,9 @@ You are very welcome to contribute in this project. You can:
 
 ### C3. Supported sources
 
-> Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose). Or, [make a pull request](https://github.com/dipu-bd/lightnovel-crawler/compare) by adding a new source.
+> Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
-The list of currently available sources and the future plans are given below:
+The list of currently available sources are given below:
 
 | Available Sources                      | Search Enable |
 | -------------------------------------- | :-----------: |
@@ -307,7 +308,7 @@ The list of currently available sources and the future plans are given below:
 | https://www.wuxiaworld.co              |       ✔       |
 | https://www.wuxiaworld.com             |       ✔       |
 
-Rejected:
+### C4. Rejected sources
 
 | Rejected Sources              | Reason                              |
 | ----------------------------- | ----------------------------------- |
@@ -323,7 +324,7 @@ Rejected:
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
 
-### C4. Supported output formats
+### C5. Supported output formats
 
 When download is done, the following files can be generated:
 
@@ -348,7 +349,7 @@ When download is done, the following files can be generated:
 - [x] TCR
 - [x] HTML
 
-### C5. Supported bots
+### C6. Supported bots
 
 - [x] Console Bot
 - [x] Telegram Bot
