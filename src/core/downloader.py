@@ -7,11 +7,14 @@ import json
 import logging
 import os
 from concurrent import futures
+from io import BytesIO
 from urllib.parse import urlparse
+
+from PIL import Image
+from progress.bar import IncrementalBar
 
 from ..core.arguments import get_args
 from ..utils.racovimge import random_cover
-from progress.bar import IncrementalBar
 
 logger = logging.getLogger('DOWNLOADER')
 
@@ -31,8 +34,7 @@ def download_cover(app):
 
     filename = None
     try:
-        ext = urlparse(app.crawler.novel_cover).path.split('.')[-1]
-        filename = os.path.join(app.output_path, 'cover.' + (ext or 'png'))
+        filename = os.path.join(app.output_path, 'cover.png')
         if os.path.exists(filename):
             return filename
         # end if
@@ -46,10 +48,9 @@ def download_cover(app):
         logger.info('Downloading cover image...')
         response = app.crawler.get_response(app.crawler.novel_cover)
         assert response.status_code == 200
-        with open(filename, 'wb') as f:
-            f.write(response.content)
-            logger.debug('Saved cover: %s', filename)
-        # end with
+        img = Image.open(BytesIO(response.content))
+        img.save(filename)
+        logger.debug('Saved cover: %s', filename)
         return filename
     except Exception:
         logger.exception('Failed to download cover image: %s -> %s',

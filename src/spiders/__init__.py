@@ -9,11 +9,13 @@ from .chinesefantasy import ChineseFantasyNovels
 from .comrademao import ComrademaoCrawler
 from .creativenovels import CreativeNovelsCrawler
 from .crescentmoon import CrescentMoonCrawler
+from .fanfiction import FanFictionCrawler
 from .fourscanlation import FourScanlationCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
 from .jieruihao import JieruihaoCrawler
+from .kisslightnovels import KissLightNovels
 from .lightnovelonline import LightNovelOnline
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
@@ -25,13 +27,14 @@ from .mtlnovel import MtlnovelCrawler
 from .myoniyonitrans import MyOniyOniTranslation
 from .novelall import NovelAllCrawler
 from .novelfull import NovelFullCrawler
-from .novelonlinefull import NovelOnlineFullCrawler
 from .novelgo import NovelGoCrawler
+from .novelonlinefull import NovelOnlineFullCrawler
 from .novelplanet import NovelPlanetCrawler
 from .novelraw import NovelRawCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
 from .novelv import NovelvCrawler
+from .qidiancom import QidianComCrawler
 from .readln import ReadLightNovelCrawler
 from .readnovelfull import ReadNovelFullCrawler
 from .rebirthonline import RebirthOnlineCrawler
@@ -51,8 +54,6 @@ from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
-from .kisslightnovels import KissLightNovels
-from .qidiancom import QidianComCrawler
 
 crawler_list = {
     # Do not forget to append a slash(/) at the end of the url
@@ -61,7 +62,6 @@ crawler_list = {
     'http://www.machinenoveltranslation.com/': MachineNovelTrans,
     'http://www.tapread.com/': TapreadCrawler,
     'http://zenithnovels.com/': ZenithNovelsCrawler,
-    'https://4scanlation.com/': FourScanlationCrawler,
     'https://anythingnovel.com/': AnythingNovelCrawler,
     'https://babelnovel.com/': BabelNovelCrawler,
     'https://bestlightnovel.com/': BestLightNovel,
@@ -88,10 +88,11 @@ crawler_list = {
     'https://wordexcerpt.com/': WordExcerptCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.asianhobbyist.com/': AsianHobbyistCrawler,
+    'https://www.fanfiction.net/': FanFictionCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
     'https://www.jieruihao.cn/': JieruihaoCrawler,
     'https://www.machine-translation.org': MachineTransOrg,
-    'https://www.mtlnovel.com/' : MtlnovelCrawler,
+    'https://www.mtlnovel.com/': MtlnovelCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
@@ -114,7 +115,7 @@ rejected_sources = {
     # Do not forget to append a slash(/) at the end of the url
     'http://fullnovel.live/': '403 - Forbidden: Access is denied',
     'http://moonbunnycafe.com/': 'Does not follow uniform format',
-    'https://4scanlation.xyz/': 'ERR_SSL_PROTOCOL_ERROR',
+    'https://4scanlation.com/': 'Domain expired',
     'https://comrademao.com/': 'Removed by owner',
     'https://indomtl.com/': 'Does not like to be crawled',
     'https://lnindo.org/': 'Does not like to be crawled',

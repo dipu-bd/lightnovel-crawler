@@ -340,9 +340,6 @@ class TestBot:
         'http://www.tapread.com/': [
             'http://www.tapread.com/book/detail/80',
         ],
-        'https://4scanlation.com/': [
-            'https://4scanlation.com/isekai-kenkokuki/'
-        ],
         'https://readnovelfull.com/': [
             'https://readnovelfull.com/lord-of-all-realms.html',
             'cultivation'
@@ -402,11 +399,22 @@ class TestBot:
         ],
         'https://www.machine-translation.org/': [
             'https://www.machine-translation.org/novel/bace21c9b10d34e9/world-of-cultivation.html'
+        ],
+        'https://www.fanfiction.net/': [
+            'https://www.fanfiction.net/s/7268451/1/Facebook-For-wizards'
+        ],
+        'https://www.mtlnovel.com/': [
+            'https://www.mtlnovel.com/trapped-in-a-typical-idol-drama/'
+        ],
+        'https://wordexcerpt.com/': [
+            'https://wordexcerpt.com/series/transmigration-raising-the-child-of-the-male-lead-boss/'
+        ],
+        'https://www.translateindo.com/': [
+            'https://www.translateindo.com/demon-wang-golden-status-favoured-fei/'
         ]
     }
 
     allowed_failures = [
-        'https://4scanlation.xyz/',
         'https://m.chinesefantasynovels.com/',
         'https://m.romanticlovebooks.com/',
         'https://www.romanticlovebooks.com/',
