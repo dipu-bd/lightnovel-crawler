@@ -14,6 +14,7 @@ from .fourscanlation import FourScanlationCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
 from .idqidian import IdqidianCrawler
+from .idmtlnovel import IdMtlnovelCrawler
 from .jieruihao import JieruihaoCrawler
 from .kisslightnovels import KissLightNovels
 from .lightnovelonline import LightNovelOnline
@@ -41,6 +42,7 @@ from .rebirthonline import RebirthOnlineCrawler
 from .romanticlb import RomanticLBCrawler
 from .royalroad import RoyalRoadCrawler
 from .scribblehub import ScribbleHubCrawler
+from .shinsori import ShinsoriCrawler
 from .tapread import TapreadCrawler
 from .translateindo import TranslateIndoCrawler
 from .volarenovels import VolareNovelsCrawler
@@ -69,6 +71,7 @@ crawler_list = {
     'https://boxnovel.com/': BoxNovelCrawler,
     'https://creativenovels.com/': CreativeNovelsCrawler,
     'https://crescentmoon.blog/': CrescentMoonCrawler,
+    'https://id.mtlnovel.com/': IdMtlnovelCrawler,
     'https://kisslightnovels.info/': KissLightNovels,
     'https://light-novel.online/': LightNovelOnline,
     'https://litnet.com/': LitnetCrawler,
@@ -100,6 +103,7 @@ crawler_list = {
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://www.scribblehub.com/': ScribbleHubCrawler,
+    'https://www.shinsori.com/': ShinsoriCrawler,
     'https://www.tapread.com/': TapreadCrawler,
     'https://www.translateindo.com/': TranslateIndoCrawler,
     'https://www.volarenovels.com/': VolareNovelsCrawler,
