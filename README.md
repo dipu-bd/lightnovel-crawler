@@ -301,7 +301,7 @@ The list of currently available sources are given below:
 | https://www.romanticlovebooks.com      |               |
 | https://www.royalroad.com              |       ✔       |
 | https://www.scribblehub.com            |       ✔       |
-| https://www.shinsori.com               |       ✔       |
+| https://www.shinsori.com               |               |
 | https://www.tapread.com                |               |
 | https://www.translateindo.com          |               |
 | https://www.wattpad.com                |               |
