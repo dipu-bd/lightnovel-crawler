@@ -40,6 +40,7 @@ from .rebirthonline import RebirthOnlineCrawler
 from .romanticlb import RomanticLBCrawler
 from .royalroad import RoyalRoadCrawler
 from .scribblehub import ScribbleHubCrawler
+from .shinsori import ShinsoriCrawler
 from .tapread import TapreadCrawler
 from .translateindo import TranslateIndoCrawler
 from .volarenovels import VolareNovelsCrawler
@@ -103,6 +104,7 @@ crawler_list = {
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,
     'https://www.royalroad.com/': RoyalRoadCrawler,
     'https://www.scribblehub.com/': ScribbleHubCrawler,
+    'https://www.shinsori.com/': ShinsoriCrawler,
     'https://www.tapread.com/': TapreadCrawler,
     'https://www.translateindo.com/': TranslateIndoCrawler,
     'https://www.volarenovels.com/': VolareNovelsCrawler,
