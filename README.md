@@ -49,6 +49,8 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 **Install it from https://calibre-ebook.com/download** <br>
 Without it, you will only get output in epub, text, and web formats.
 
+Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/
+
 ### A1. Standalone Bundle (Windows, Linux)
 
 ⏬ **Windows**: [lightnovel-crawler v2.16.1 ~ 21MB](http://bit.ly/2I1XzeN)
