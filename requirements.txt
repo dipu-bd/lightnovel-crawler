@@ -1,4 +1,5 @@
 # App requirements
+win_unicode_console==0.5
 python-dotenv==0.10.3
 beautifulsoup4==4.8.1
 requests==2.22.0
