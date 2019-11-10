@@ -71,6 +71,8 @@ def gather_data_files():
         site_packages, os.pathsep)
     command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (
         site_packages, os.pathsep)
+    command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
+        site_packages, os.pathsep)
 
     return command
 # end def
