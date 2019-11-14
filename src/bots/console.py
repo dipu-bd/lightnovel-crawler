@@ -340,15 +340,28 @@ class ConsoleBot:
             return False
         # end if
 
+        # answer = prompt([
+        #     {
+        #         'type': 'confirm',
+        #         'name': 'force',
+        #         'message': 'Detected existing folder. Replace it?',
+        #         'default': False,
+        #     },
+        # ])
+        # return answer['force']
+
         answer = prompt([
             {
-                'type': 'confirm',
-                'name': 'force',
-                'message': 'Detected existing folder. Replace it?',
-                'default': False,
+                'type': 'list',
+                'name': 'replace',
+                'message': 'What to do with existing folder?',
+                'choices': [
+                    'Remove old folder and start fresh',
+                    'Download remaining chapters only',
+                ],
             },
         ])
-        return answer['force']
+        return answer['replace'].startswith('remove')
     # end def
 
     def get_output_formats(self):
@@ -356,17 +369,17 @@ class ConsoleBot:
         args = get_args()
 
         formats = args.output_formats
-        # if not (formats or args.suppress):
-        #     answer = prompt([
-        #         {
-        #             'type': 'checkbox',
-        #             'name': 'formats',
-        #             'message': 'Which output formats to create?',
-        #             'choices': [{'name': x} for x in available_formats],
-        #         },
-        #     ])
-        #     formats = answer['formats']
-        # # end if
+        if not (formats or args.suppress):
+            answer = prompt([
+                {
+                    'type': 'checkbox',
+                    'name': 'formats',
+                    'message': 'Which output formats to create?',
+                    'choices': [{'name': x} for x in available_formats],
+                },
+            ])
+            formats = answer['formats']
+        # end if
 
         if not formats or len(formats) == 0:
             formats = available_formats
@@ -389,15 +402,28 @@ class ConsoleBot:
             return False
         # end if
 
+        # answer = prompt([
+        #     {
+        #         'type': 'confirm',
+        #         'name': 'volume',
+        #         'message': 'Split file by volumes?',
+        #         'default': False,
+        #     },
+        # ])
+        # return answer['volume']
+
         answer = prompt([
             {
-                'type': 'confirm',
-                'name': 'volume',
-                'message': 'Generate separate files for each volumes?',
-                'default': False,
+                'type': 'list',
+                'name': 'split',
+                'message': 'How many files to generate?',
+                'choices': [
+                    'Pack everything into a single file',
+                    'Split by volume into multiple files'
+                ],
             },
         ])
-        return answer['volume']
+        return answer['split'].startswith('Split')
     # end def
 
     def get_range_selection(self):
@@ -637,7 +663,7 @@ class ConsoleBot:
             {
                 'type': 'confirm',
                 'name': 'exit',
-                'message': 'Do you want to open the folder?',
+                'message': 'Open the output folder?',
                 'default': True,
             },
         ])
