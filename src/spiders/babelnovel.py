@@ -14,7 +14,7 @@ logger = logging.getLogger('BABELNOVEL')
 
 search_url = 'https://babelnovel.com/api/books?page=0&pageSize=8&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
 novel_page_url = 'https://babelnovel.com/api/books/%s'
-chapter_list_url = 'https://babelnovel.com/api/books/%s/chapters?bookId=%s&page=%d&pageSize=100&fields=id,name,canonicalName,hasContent,isBought,isFree'
+chapter_list_url = 'https://babelnovel.com/api/books/%s/chapters?bookId=%s&page=%d&pageSize=100&fields=id,name,canonicalName,hasContent,isBought,isFree,isLimitFree'
 chapter_json_url = 'https://babelnovel.com/api/books/%s/chapters/%s?ignoreTopic=true'
 chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
@@ -106,7 +106,7 @@ class BabelNovelCrawler(Crawler):
         data = self.get_json(list_url)
         chapters = list()
         for item in data['data']:
-            if not (item['isFree'] or item['isBought']):
+            if not (item['isFree'] or item['isLimitFree'] or item['isBought']):
                 continue
             # end if
             chapters.append({
