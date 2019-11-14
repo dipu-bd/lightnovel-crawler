@@ -151,8 +151,8 @@ class WebnovelCrawler(Crawler):
             # end if
             return body.strip()
         elif 'contents' in chapter_info:
-            body = [x['paragraphId'] for x in chapter_info['contents']]
-            return '<p>' + '</p><p>'.join(body) + '</p>'
+            body = [x['content'] for x in chapter_info['contents']]
+            return ''.join(body)
         # end if
 
         return None
