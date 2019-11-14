@@ -13,8 +13,8 @@ from .fanfiction import FanFictionCrawler
 from .fourscanlation import FourScanlationCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
-from .idqidian import IdqidianCrawler
 from .idmtlnovel import IdMtlnovelCrawler
+from .idqidian import IdqidianCrawler
 from .jieruihao import JieruihaoCrawler
 from .kisslightnovels import KissLightNovels
 from .lightnovelonline import LightNovelOnline
@@ -87,6 +87,7 @@ crawler_list = {
     'https://novelonlinefull.com/': NovelOnlineFullCrawler,
     'https://novelplanet.com/': NovelPlanetCrawler,
     'https://novelraw.blogspot.com/': NovelRawCrawler,
+    'https://ranobelib.me/': RanobeLibCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://wordexcerpt.com/': WordExcerptCrawler,
@@ -99,7 +100,6 @@ crawler_list = {
     'https://www.mtlnovel.com/': MtlnovelCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
-    'https://ranobelib.me/': RanobeLibCrawler,
     'https://www.readlightnovel.org/': ReadLightNovelCrawler,
     'https://www.rebirth.online/': RebirthOnlineCrawler,
     'https://www.romanticlovebooks.com/': RomanticLBCrawler,

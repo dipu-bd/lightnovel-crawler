@@ -411,7 +411,10 @@ class TestBot:
         ],
         'https://www.translateindo.com/': [
             'https://www.translateindo.com/demon-wang-golden-status-favoured-fei/'
-        ]
+        ],
+        'https://ranobelib.me/': [
+            'https://ranobelib.me/solo-leveling'
+        ],
     }
 
     allowed_failures = [

@@ -285,9 +285,10 @@ The list of currently available sources are given below:
 | https://novelonlinefull.com            |       ✔       |
 | https://novelplanet.com                |       ✔       |
 | https://novelraw.blogspot.com          |               |
+| https://ranobelib.me                   |               |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
-| https://wordexcerpt.com/               |               |
+| https://wordexcerpt.com                |               |
 | https://wuxiaworld.online              |       ✔       |
 | https://www.asianhobbyist.com          |               |
 | https://www.idqidian.us                |               |
