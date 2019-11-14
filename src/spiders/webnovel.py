@@ -54,21 +54,21 @@ class WebnovelCrawler(Crawler):
         self.get_csrf()
         url = self.novel_url
         self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
-        logger.debug('Novel Id: %s', self.novel_id)
+        logger.info('Novel Id: %s', self.novel_id)
+
         url = chapter_list_url % (self.csrf, self.novel_id)
         logger.info('Downloading novel info from %s', url)
         response = self.get_response(url)
-        data = response.json()
-        logger.debug(data)
+        data = response.json()['data']
 
-        if 'bookInfo' in data['data']:
-            self.novel_title = data['data']['bookInfo']['bookName']
+        if 'bookInfo' in data:
+            self.novel_title = data['bookInfo']['bookName']
             self.novel_cover = book_cover_url % self.novel_id
         # end if
 
-        chapters = []
-        if 'volumeItems' in data['data']:
-            for vol in data['data']['volumeItems']:
+        chapterItems = []
+        if 'volumeItems' in data:
+            for vol in data['volumeItems']:
                 vol_id = vol['index'] or (len(self.volumes) + 1)
                 vol_title = vol['name'].strip() or ('Volume %d' % vol_id)
                 self.volumes.append({
@@ -77,12 +77,12 @@ class WebnovelCrawler(Crawler):
                 })
                 for chap in vol['chapterItems']:
                     chap['volume'] = vol_id
-                    chapters.append(chap)
+                    chapterItems.append(chap)
                 # end if
             # end for
-        elif 'chapterItems' in data['data']:
-            chapters = data['data']['chapterItems']
-            for vol in range(len(chapters) // 100 + 1):
+        elif 'chapterItems' in data:
+            chapterItems = data['chapterItems']
+            for vol in range(len(chapterItems) // 100 + 1):
                 self.volumes.append({
                     'id': vol,
                     'title': 'Volume %d' % (vol + 1),
@@ -90,7 +90,10 @@ class WebnovelCrawler(Crawler):
             # end for
         # end if
 
-        for i, chap in enumerate(chapters):
+        for i, chap in enumerate(chapterItems):
+            if chap['isVip'] > 0:
+                continue
+            # end if
             self.chapters.append({
                 'id': i + 1,
                 'hash': chap['id'],
@@ -124,26 +127,34 @@ class WebnovelCrawler(Crawler):
                     chapter['title'], chapter['id'])
 
         response = self.get_response(url)
-        data = response.json()
+        data = response.json()['data']
 
-        if 'authorName' in data['data']['bookInfo']:
-            self.novel_author = data['data']['bookInfo']['authorName'] or self.novel_author
-        if 'authorItems' in data['data']['bookInfo']:
+        if 'authorName' in data['bookInfo']:
+            self.novel_author = data['bookInfo']['authorName'] or self.novel_author
+        if 'authorItems' in data['bookInfo']:
             self.novel_author = ', '.join([
                 x['name'] for x in
-                data['data']['bookInfo']['authorItems']
+                data['bookInfo']['authorItems']
             ]) or self.novel_author
         # end if
 
-        body = data['data']['chapterInfo']['content']
-        body = body.replace(r'[ \n\r]+', '\n')
-        if ('<p>' not in body) or ('</p>' not in body):
-            body = re.sub('<pirate>(.*?)</pirate>','',body)
-            body = body.replace('<', '&lt;')
-            body = body.replace('>', '&gt;')
-            body = [x for x in body.split('\n') if len(x.strip())]
-            body = '<p>' + '</p><p>'.join(body) + '</p>'
+        chapter_info = data['chapterInfo']
+        if 'content' in chapter_info:
+            body = chapter_info['content']
+            body = body.replace(r'[ \n\r]+', '\n')
+            if ('<p>' not in body) or ('</p>' not in body):
+                body = re.sub('<pirate>(.*?)</pirate>', '', body)
+                body = body.replace('<', '&lt;')
+                body = body.replace('>', '&gt;')
+                body = [x for x in body.split('\n') if len(x.strip())]
+                body = '<p>' + '</p><p>'.join(body) + '</p>'
+            # end if
+            return body.strip()
+        elif 'contents' in chapter_info:
+            body = [x['paragraphId'] for x in chapter_info['contents']]
+            return '<p>' + '</p><p>'.join(body) + '</p>'
         # end if
-        return body.strip()
+
+        return None
     # end def
 # end class
