@@ -5,6 +5,7 @@ Crawler for [worldnovel.online](https://www.worldnovel.online/).
 """
 import logging
 import re
+import json
 from urllib.parse import quote, urlparse
 import urllib.parse
 from bs4 import BeautifulSoup
@@ -14,7 +15,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('WORLDNOVEL_ONLINE')
 
 search_url = 'https://www.worldnovel.online/wp-json/writerist/v1/novel/search?keyword=%s'
-chapter_list_url = "https://www.worldnovel.online/wp-json/writerist/v1/chapters?category=%s&perpage=4000&order=ASC&paged=1"
+chapter_list_url = "https://www.worldnovel.online/wp-json/writerist/v1/chapters?category=%s&perpage=100&order=ASC&paged=%s"
 
 
 class WorldnovelonlineCrawler(Crawler):
@@ -56,9 +57,16 @@ class WorldnovelonlineCrawler(Crawler):
         #book_id = soup.select_one('span.js-add-bookmark')['data-novel']
         logger.info('Bookid = %s' % book_id)
 
-        list_url = chapter_list_url % book_id
-        logger.debug('Visiting %s', list_url)
-        data = self.get_json(list_url)
+        page = len(soup.select('div.d-flex div.jump-to.mr-2'))
+
+        data = []
+
+        for  x in range(page):
+            list_url = chapter_list_url % (book_id,x+1)
+            logger.debug('Visiting %s', list_url)
+            data.extend(self.get_json(list_url))
+        # end for
+
 
         # if 'code' in data and data['code'] == 'rest_no_route':
         #     chapters = soup.select('div.lightnovel-episode ul li a')
