@@ -94,12 +94,15 @@ class ReadNovelFullCrawler(Crawler):
 
         logger.debug(chapter['title'])
 
-        contents = soup.find(
-            'hr', {'class': 'chr-end'}).findNextSiblings('div')[0]
+        #contents = soup.find(
+        #    'hr', {'class': 'chr-end'}).findNextSiblings('div')[0]
 
-        for div in contents.findAll('div', {'class': 'text-center'}):
-            div.decompose()
-
-        return contents
+        #for div in contents.findAll('div', {'class': 'text-center'}):
+        #    div.decompose()
+        contents = soup.select('div.cha-words p')
+        
+        body = [str(p) for p in contents if p.text.strip()]
+        
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
