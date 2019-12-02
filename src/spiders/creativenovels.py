@@ -52,7 +52,8 @@ class CreativeNovelsCrawler(Crawler):
             chapter_list_url,
             data=dict(
                 action='crn_chapter_list',
-                view_id=self.novel_id
+                view_id=self.novel_id,
+                s='5b0f05c825'
             )
         )
         self.parse_chapter_list(response.content.decode('utf-8'))
