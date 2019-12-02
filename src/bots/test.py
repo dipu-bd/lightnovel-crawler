@@ -35,7 +35,7 @@ class TestBot:
                 print('=' * 80)
 
                 if link not in self.test_user_inputs:
-                    print('No inputs found: %s\n' % link)
+                    self.allerrors[link] = ['No test for: %s\n' % link]
                     continue
                 # end if
 
@@ -46,7 +46,6 @@ class TestBot:
                         print()
                     except CloudflareCaptchaError:
                         traceback.print_exc()
-                        break
                     except Exception as err:
                         traceback.print_exc()
                         traces = traceback.format_tb(err.__traceback__)
@@ -54,8 +53,7 @@ class TestBot:
                             self.allerrors[link] = []
                         # end if
                         self.allerrors[link].append(
-                            '> Input: %s\n%s\n%s' % (
-                                entry, err, ''.join(traces))
+                            '> Input: %s\n%s\n%s' % (entry, err, ''.join(traces))
                         )
                     # end try
                 # end for
@@ -65,15 +63,23 @@ class TestBot:
         except Exception:
             traceback.print_exc()
         finally:
-            if len(self.allerrors):
-                message = self.error_message()
-                print(message)
+            self.finalize()
+        # end try
+    # end def
+
+    def finalize(self):
+        if len(self.allerrors):
+            message = self.error_message()
+            print(message)
+            error_count = len([
+                x for x in self.allerrors.keys()
+                if x in randomized and x not in self.allowed_failures
+            ])
+            if error_count > 0:
                 self.post_on_github(message)
-            # end if
-            if len([x for x in self.allerrors.keys() if x not in self.allowed_failures]):
                 exit(1)
             # end if
-        # end try
+        # end if
     # end def
 
     def post_on_github(self, message):
@@ -349,7 +355,7 @@ class TestBot:
             'https://myoniyonitranslations.com/category/god-of-tennis',
         ],
         'https://babelnovel.com/': [
-            'https://babelnovel.com/books/poison-genius-consort',
+            'https://babelnovel.com/books/against-the-gods',
             'martial god AsurA'
         ],
         'https://wuxiaworld.online/': [
@@ -411,7 +417,10 @@ class TestBot:
         ],
         'https://www.translateindo.com/': [
             'https://www.translateindo.com/demon-wang-golden-status-favoured-fei/'
-        ]
+        ],
+        'https://ranobelib.me/': [
+            'https://ranobelib.me/solo-leveling'
+        ],
     }
 
     allowed_failures = [

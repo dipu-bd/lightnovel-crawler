@@ -6,9 +6,10 @@ Interactive application to take user inputs
 import logging
 import os
 
+import colorama
 import requests
+import win_unicode_console
 from colorama import Fore
-from colorama import init as init_colorama
 
 from ..assets.version import get_value as get_version
 from ..bots import run_bot
@@ -23,7 +24,8 @@ logger = logging.Logger('CORE')
 def init():
     os.environ['version'] = get_version()
 
-    init_colorama()
+    win_unicode_console.enable()
+    colorama.init()
     description()
 
     args = get_args()

@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('FAN_FICTION')
-chapter_url = 'https://www.fanfiction.net/s/6291747/%s'
+chapter_url = 'https://www.fanfiction.net/s/%s/%s'
 search_url = 'https://www.fanfiction.net/search/?keywords=%s&type=story&match=title&ready=1&categoryid=202'
 
 
@@ -73,7 +73,7 @@ class FanFictionCrawler(Crawler):
                     'volume': 1,
                     'id': int(option['value']),
                     'title': option.text.strip(),
-                    'url':  chapter_url % option['value'],
+                    'url':  chapter_url % (self.novel_id, option['value']),
                     'title_lock': True,
                 })
             # end for

@@ -23,6 +23,6 @@ def check_updates():
             new_version_news(latest_version)
         # end if
     except Exception:
-        logger.exception('Failed to check for update')
+        logger.warn('Failed to check for update')
     # end try
 # end def

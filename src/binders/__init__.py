@@ -39,7 +39,7 @@ depends_on_epub = [
 available_formats = depends_on_none + depends_on_epub
 
 
-def bind_books(app, data):
+def generate_books(app, data):
     out_formats = app.output_formats
     if not out_formats:
         out_formats = {x: True for x in available_formats}

@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 from slugify import slugify
 
-from ..binders import available_formats, bind_books
+from ..binders import available_formats, generate_books
 from ..spiders import crawler_list
 from .novel_search import search_novels
 from .downloader import download_chapters
@@ -181,7 +181,7 @@ class App:
             data[vol] = self.chapters
         # end if
 
-        bind_books(self, data)
+        generate_books(self, data)
     # end def
 
     # ----------------------------------------------------------------------- #

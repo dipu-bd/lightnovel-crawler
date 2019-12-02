@@ -37,7 +37,7 @@ Downloads lightnovels from various online sources and generates ebooks in many f
   - [Adding new Bot](#c2-adding-new-bot)
   - [Supported sources](#c3-supported-sources)
   - [Rejected sources](#c4-rejected-sources)
-  - [Supported output formats](#c5-supported-output-formats)  
+  - [Supported output formats](#c5-supported-output-formats)
   - [Supported bots](#c6-supported-bots)
 - [The project structure](https://github.com/dipu-bd/lightnovel-crawler/blob/master/CONTRIBUTING.md)
 
@@ -49,9 +49,11 @@ Downloads lightnovels from various online sources and generates ebooks in many f
 **Install it from https://calibre-ebook.com/download** <br>
 Without it, you will only get output in epub, text, and web formats.
 
+Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/
+
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.16.1 ~ 21MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.16.2 ~ 21MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -283,9 +285,10 @@ The list of currently available sources are given below:
 | https://novelonlinefull.com            |       ✔       |
 | https://novelplanet.com                |       ✔       |
 | https://novelraw.blogspot.com          |               |
+| https://ranobelib.me                   |               |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
-| https://wordexcerpt.com/               |               |
+| https://wordexcerpt.com                |               |
 | https://wuxiaworld.online              |       ✔       |
 | https://www.asianhobbyist.com          |               |
 | https://www.idqidian.us                |               |
