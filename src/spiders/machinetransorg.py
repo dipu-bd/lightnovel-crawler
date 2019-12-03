@@ -32,34 +32,33 @@ class MachineTransOrg(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.title h3 b').text
+        self.novel_title = soup.select_one('div.title h3 b').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one('.title h3 span').text
+        self.novel_author = soup.select_one('div.title h3 span').text
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
             soup.select_one('.book-img img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        for div in reversed(soup.select('.article-main .slide-box')):
-            vol_id = len(self.volumes) + 1
-            vol_title = div.select_one('p.v-name').text.strip()
-            self.volumes.append({
-                'id': vol_id,
-                'title': vol_title,
-            })
-
-            for a in reversed(div.select('.slide-item a')):
-                ch_title = a.text.strip()
-                ch_id = len(self.chapters) + 1
-                self.chapters.append({
-                    'id': ch_id,
-                    'volume': vol_id,
-                    'title': ch_title,
-                    'url':  self.absolute_url(a['href']),
+        for a in reversed(soup.select('div.slide-item a')):
+            ch_title = a.text.strip()
+            ch_id = len(self.chapters) + 1
+            if len(self.chapters) % 100 == 0:
+                vol_id = ch_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
+                self.volumes.append({
+                    'id': vol_id,
+                    'title': vol_title,
                 })
-            # end for
+            # end if
+            self.chapters.append({
+                'id': ch_id,
+                'volume': vol_id,
+                'title': ch_title,
+                'url':  self.absolute_url(a['href']),
+            })
         # end for
 
         logger.debug('%d chapters and %d volumes found',
