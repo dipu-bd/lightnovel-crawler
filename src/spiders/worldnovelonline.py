@@ -61,12 +61,11 @@ class WorldnovelonlineCrawler(Crawler):
 
         data = []
 
-        for  x in range(page):
-            list_url = chapter_list_url % (book_id,x+1)
+        for x in range(page):
+            list_url = chapter_list_url % (book_id, x+1)
             logger.debug('Visiting %s', list_url)
             data.extend(self.get_json(list_url))
         # end for
-
 
         # if 'code' in data and data['code'] == 'rest_no_route':
         #     chapters = soup.select('div.lightnovel-episode ul li a')
@@ -152,7 +151,7 @@ class WorldnovelonlineCrawler(Crawler):
             return ''
         # end if
 
-        #self.clean_contents(contents)
+        # self.clean_contents(contents)
 
         for codeblock in contents.select('div.code-block'):
             codeblock.decompose()
