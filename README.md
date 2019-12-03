@@ -291,6 +291,7 @@ The list of currently available sources are given below:
 | https://wordexcerpt.com                |               |
 | https://wuxiaworld.online              |       ✔       |
 | https://www.asianhobbyist.com          |               |
+| https://www.flying-lines.com           |               |
 | https://www.idqidian.us                |               |
 | https://www.jieruihao.cn               |               |
 | https://www.machine-translation.org    |       ✔       |
