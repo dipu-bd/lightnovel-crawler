@@ -18,6 +18,7 @@ from .idmtlnovel import IdMtlnovelCrawler
 from .idqidian import IdqidianCrawler
 from .jieruihao import JieruihaoCrawler
 from .kisslightnovels import KissLightNovels
+from .kissnovel import KissNovelCrawler
 from .lightnovelonline import LightNovelOnline
 from .litnet import LitnetCrawler
 from .lnmtl import LNMTLCrawler
@@ -33,6 +34,7 @@ from .novelgo import NovelGoCrawler
 from .novelonlinefull import NovelOnlineFullCrawler
 from .novelplanet import NovelPlanetCrawler
 from .novelraw import NovelRawCrawler
+from .novelringan import NovelRinganCrawler
 from .novelspread import NovelSpreadCrawler
 from .noveluniverse import NovelUniverseCrawler
 from .novelv import NovelvCrawler
@@ -56,6 +58,7 @@ from .worldnovelonline import WorldnovelonlineCrawler
 from .wuxiaco import WuxiaCoCrawler
 from .wuxiacom import WuxiaComCrawler
 from .wuxiaonline import WuxiaOnlineCrawler
+from .wuxiasite import WuxiaSiteCrawler
 from .yukinovel import YukiNovelCrawler
 from .zenithnovels import ZenithNovelsCrawler
 
@@ -75,6 +78,7 @@ crawler_list = {
     'https://crescentmoon.blog/': CrescentMoonCrawler,
     'https://id.mtlnovel.com/': IdMtlnovelCrawler,
     'https://kisslightnovels.info/': KissLightNovels,
+    'https://kiss-novel.com/': KissNovelCrawler,
     'https://light-novel.online/': LightNovelOnline,
     'https://litnet.com/': LitnetCrawler,
     'https://lnmtl.com/': LNMTLCrawler,
@@ -88,6 +92,7 @@ crawler_list = {
     'https://novelonlinefull.com/': NovelOnlineFullCrawler,
     'https://novelplanet.com/': NovelPlanetCrawler,
     'https://novelraw.blogspot.com/': NovelRawCrawler,
+    'https://novelringan.com/': NovelRinganCrawler,
     'https://ranobelib.me/': RanobeLibCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
@@ -116,6 +121,7 @@ crawler_list = {
     'https://www.worldnovel.online/': WorldnovelonlineCrawler,
     'https://www.wuxiaworld.co/': WuxiaCoCrawler,
     'https://www.wuxiaworld.com/': WuxiaComCrawler,
+    'https://wuxiaworld.site/': WuxiaSiteCrawler,
     # Do not forget to append a slash(/) at the end of the url
 }
 
