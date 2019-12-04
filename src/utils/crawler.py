@@ -183,7 +183,8 @@ class Crawler:
 
     def get_soup(self, *args, parser='lxml', **kargs):
         response = self.get_response(*args, **kargs)
-        return BeautifulSoup(response.content, parser)
+        html = response.content.decode('utf-8', 'ignore')
+        return BeautifulSoup(html, parser)
     # end def
 
     def get_json(self, *args, **kargs):
@@ -224,7 +225,10 @@ class Crawler:
     # end def
 
     def clean_contents(self, div):
-        # div.attrs = None
+        if not div:
+            return div
+        # end if
+        div.attrs = {}
         for tag in div.findAll(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments

@@ -9,11 +9,13 @@ git pull origin master
 
 $PY -m pip install --user -r requirements.txt
 
-kill -9 `cat save_pid.txt`
-rm save_pid.txt
+if [ -f "save_pid.txt" ]; then
+    kill `cat save_pid.txt`
+    rm -rf save_pid.txt
+fi
 
 touch bot.log
 nohup $PY . > bot.log 2>&1 &
 echo $! > save_pid.txt
 
-#tail -f bot.log
+tail -f bot.log

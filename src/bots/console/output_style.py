@@ -81,7 +81,7 @@ def force_replace_old(self):
             ],
         },
     ])
-    return answer['replace'].startswith('remove')
+    return answer['replace'].startswith('Remove')
 # end def
 
 
@@ -106,7 +106,7 @@ def get_output_formats(self):
         formats = available_formats
     # end if
 
-    return {x: (formats.count(x) > 0) for x in available_formats}
+    return {x: (x in formats) for x in available_formats}
 # end def
 
 

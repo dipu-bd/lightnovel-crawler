@@ -10,6 +10,7 @@ from .comrademao import ComrademaoCrawler
 from .creativenovels import CreativeNovelsCrawler
 from .crescentmoon import CrescentMoonCrawler
 from .fanfiction import FanFictionCrawler
+from .flyinglines import FlyingLinesCrawler
 from .fourscanlation import FourScanlationCrawler
 from .fullnovellive import FullnovelLiveCrawler
 from .gravitytales import GravityTalesCrawler
@@ -94,6 +95,7 @@ crawler_list = {
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://www.asianhobbyist.com/': AsianHobbyistCrawler,
     'https://www.fanfiction.net/': FanFictionCrawler,
+    'https://www.flying-lines.com/': FlyingLinesCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
     'https://www.jieruihao.cn/': JieruihaoCrawler,
     'https://www.machine-translation.org': MachineTransOrg,
