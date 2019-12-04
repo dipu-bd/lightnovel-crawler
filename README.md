@@ -272,6 +272,7 @@ The list of currently available sources are given below:
 | https://crescentmoon.blog              |               |
 | https://id.mtlnovel.com                |       ✔       |
 | https://kisslightnovels.info           |       ✔       |
+| https://kiss-novel.com                 |               |
 | https://light-novel.online             |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |
@@ -298,6 +299,7 @@ The list of currently available sources are given below:
 | https://www.mtlnovel.com               |       ✔       |
 | https://www.novelall.com               |       ✔       |
 | https://www.novelspread.com            |               |
+| https://www.novelringan.com            |               |
 | https://www.qidian.com                 |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
@@ -313,6 +315,7 @@ The list of currently available sources are given below:
 | https://www.worldnovel.online          |       ✔       |
 | https://www.wuxiaworld.co              |       ✔       |
 | https://www.wuxiaworld.com             |       ✔       |
+| https://www.wuxiaworld.site            |       ✔       |
 
 ### C4. Rejected sources
 
