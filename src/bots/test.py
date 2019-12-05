@@ -121,7 +121,12 @@ class TestBot:
         output += 'Failed sources (%d):\n' % (len(self.allerrors.keys()))
         for source in sorted(self.allerrors.keys()):
             output += '- ' + source
-            output += ' (allowed)\n' if source in self.allowed_failures else '\n'
+            if source in self.allowed_failures:
+                output += ' (allowed)'
+            elif source not in self.test_user_inputs:
+                output += ' (no tests)'
+            # end if
+            output += '\n'
         # end for
         output += '-' * 80 + '\n\n'
 
@@ -341,7 +346,7 @@ class TestBot:
             'martial',
         ],
         'https://creativenovels.com/': [
-            'https://creativenovels.com/novel/136/eternal-reverence/',
+            'https://creativenovels.com/novel/eternal-reverence/',
         ],
         'https://www.tapread.com/': [
             'https://www.tapread.com/book/detail/80',
@@ -401,7 +406,7 @@ class TestBot:
             'https://www.asianhobbyist.com/series/that-time-i-got-reincarnated-as-a-slime/'
         ],
         'https://kisslightnovels.info/': [
-            'https://kisslightnovels.info/novel/dual-cultivation-novel/'
+            'https://kisslightnovels.info/novel/solo-leveling/'
         ],
         'https://novelonlinefull.com/': [
             'https://novelonlinefull.com/novel/abo1520855001564322110'
@@ -424,6 +429,27 @@ class TestBot:
         'https://ranobelib.me/': [
             'https://ranobelib.me/solo-leveling'
         ],
+        'https://novelringan.com/': [
+            'https://novelringan.com/series/the-most-loving-marriage-in-history-master-mus-pampered-wife/'
+        ],
+        'https://wuxiaworld.site/': [
+            'https://wuxiaworld.site/novel/only-i-level-up/'
+        ],
+        'https://id.mtlnovel.com/': [
+            'https://id.mtlnovel.com/the-strongest-plane-becomes-god/'
+        ],
+        'https://www.shinsori.com/': [
+            'https://www.shinsori.com/akuyaku-reijou-ni-nanka-narimasen/'
+        ],
+        'https://www.machine-translation.org/': [
+            'https://www.machine-translation.org/novel/11edeb45c3cdd86c/alchemy-emperor-of-the-divine-dao-updated.html'
+        ],
+        'https://www.flying-lines.com/': [
+            'https://www.flying-lines.com/novel/one-useless-rebirth'
+        ],
+        'https://book.qidian.com/': [
+            'https://book.qidian.com/info/1010734492'
+        ]
     }
 
     allowed_failures = [
