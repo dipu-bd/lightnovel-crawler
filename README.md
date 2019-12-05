@@ -294,7 +294,6 @@ The list of currently available sources are given below:
 | https://www.asianhobbyist.com          |               |
 | https://www.flying-lines.com           |               |
 | https://www.idqidian.us                |               |
-| https://www.jieruihao.cn               |               |
 | https://www.machine-translation.org    |       ✔       |
 | https://www.mtlnovel.com               |       ✔       |
 | https://www.novelall.com               |       ✔       |
@@ -328,6 +327,7 @@ The list of currently available sources are given below:
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://novelgo.id/           | `Removed`                           |
+| https://www.jieruihao.cn      | `Unavailable`                       |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |

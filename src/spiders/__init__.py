@@ -102,7 +102,6 @@ crawler_list = {
     'https://www.fanfiction.net/': FanFictionCrawler,
     'https://www.flying-lines.com/': FlyingLinesCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
-    'https://www.jieruihao.cn/': JieruihaoCrawler,
     'https://www.machine-translation.org': MachineTransOrg,
     'https://www.mtlnovel.com/': MtlnovelCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
@@ -138,5 +137,6 @@ rejected_sources = {
     'https://www.novelupdates.com/': 'Does not host any novels',
     'https://www.novelv.com/': 'Site is down',
     'https://yukinovel.id/': 'Removed by owner',
+    'https://www.jieruihao.cn/': 'Unavailable',
     # Do not forget to append a slash(/) at the end of the url
 }
