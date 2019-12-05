@@ -57,7 +57,7 @@ Also, you have to install **node.js** to access cloudflare enabled sites (e.g. h
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
-⏬ **Linux**: [lightnovel-crawler v2.16.0 ~ 27MB](http://bit.ly/2LaB9HB)
+⏬ **Linux**: [lightnovel-crawler v2.17.0 ~ 24MB](http://bit.ly/2LaB9HB)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
