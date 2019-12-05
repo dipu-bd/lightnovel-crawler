@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import re
 import logging
+import re
 from concurrent import futures
+from urllib.parse import parse_qs, urlparse
+
 from ..utils.crawler import Crawler
-import urllib.parse
 
 logger = logging.getLogger('CREATIVE_NOVELS')
 
 chapter_list_url = 'https://creativenovels.com/wp-admin/admin-ajax.php'
+chapter_s_regex = r'var chapter_list_summon = {"ajaxurl":"https:\/\/creativenovels.com\/wp-admin\/admin-ajax.php","security":"([^"]+)"}'
 
 
 class CreativeNovelsCrawler(Crawler):
@@ -23,8 +25,7 @@ class CreativeNovelsCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         shortlink = soup.find("link", {"rel": "shortlink"})['href']
-        self.novel_id = urllib.parse.parse_qs(
-            urllib.parse.urlparse(shortlink).query)['p'][0]
+        self.novel_id = parse_qs(urlparse(shortlink).query)['p'][0]
         logger.info('Id: %s', self.novel_id)
 
         self.novel_title = soup.select_one('head title').text
@@ -48,12 +49,27 @@ class CreativeNovelsCrawler(Crawler):
         # end for
         logger.info(self.novel_author)
 
+        list_security_key = ''
+        for script in soup.select('script'):
+            text = script.text
+            if 'var chapter_list_summon' not in text:
+                continue
+            # end if
+            p = re.findall(r'"([^"]+)"', text)
+            if p[0] == 'ajaxurl' and p[1] == 'https:\\/\\/creativenovels.com\\/wp-admin\\/admin-ajax.php':
+                if p[2] == 'security':
+                    list_security_key = p[3]
+                # end if
+            # end if
+        # end for
+        logger.debug('Chapter list security = %s', list_security_key)
+
         response = self.submit_form(
             chapter_list_url,
             data=dict(
                 action='crn_chapter_list',
                 view_id=self.novel_id,
-                s='5b0f05c825'
+                s=list_security_key
             )
         )
         self.parse_chapter_list(response.content.decode('utf-8'))
