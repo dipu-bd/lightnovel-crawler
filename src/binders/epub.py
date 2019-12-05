@@ -135,7 +135,7 @@ def bind_epub_book(app, chapters, volume=''):
         book.spine = ['cover', intro_page, 'nav']
     except Exception:
         book.spine = [intro_page, 'nav']
-        logger.exception('No cover image')
+        logger.warn('No cover image')
     # end if
 
     # Create chapters

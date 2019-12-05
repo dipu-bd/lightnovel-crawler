@@ -22,13 +22,11 @@ class RanobeLibCrawler(Crawler):
             soup.select_one('.manga__image img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        try:
-            self.novel_author = soup.select_one(
-                "a[href*=author]").text.strip().title()
-            logger.info('Novel author: %s', self.novel_author)
-        except Exception as err:
-            logger.exception('Failed getting author: %s', self.novel_url)
-        # end try
+        novel_link = soup.select_one("a[href*=author]")
+        if novel_link:
+            self.novel_author = novel_link.text.strip().title()
+        # end if
+        logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.select('.chapter-item')
         chapters.reverse()

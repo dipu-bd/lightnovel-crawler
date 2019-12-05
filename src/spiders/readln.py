@@ -25,13 +25,11 @@ class ReadLightNovelCrawler(Crawler):
             soup.find('img', {'alt': self.novel_title})['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        try:
-            self.novel_author = soup.select_one(
-                "a[href*=author]").text.strip().title()
-            logger.info('Novel author: %s', self.novel_author)
-        except Exception as err:
-            logger.exception('Failed getting author: %s', self.novel_url)
-        # end try
+        author_link = soup.select_one("a[href*=author]")
+        if author_link:
+            self.novel_author = author_link.text.strip().title()
+        # end if
+        logger.info('Novel author: %s', self.novel_author)
 
         for a in soup.select('.chapters .chapter-chs li a'):
             chap_id = len(self.chapters) + 1
