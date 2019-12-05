@@ -107,7 +107,7 @@ class BabelNovelCrawler(Crawler):
         data = self.get_json(list_url)
         chapters = list()
         for item in data['data']:
-            if not (item['isFree'] or item['isLimitFree'] or item['isBought']):
+            if not (item['isFree']): # or item['isLimitFree'] or item['isBought']):
                 continue
             # end if
             chapters.append({
@@ -142,6 +142,8 @@ class BabelNovelCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info('Visiting %s', chapter['json_url'])
         data = self.get_json(chapter['json_url'])
+
+        print(data)
 
         soup = BeautifulSoup(data['data']['content'], 'lxml')
         if self.bad_selectors:
