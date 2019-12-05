@@ -32,7 +32,11 @@ class KissLightNovels(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.post-title h1').text.strip()
+        title_tag = soup.select_one('.post-title h1')
+        for badge in title_tag.select('.manga-title-badges'):
+            badge.decompose()
+        # end for
+        self.novel_title = title_tag.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
