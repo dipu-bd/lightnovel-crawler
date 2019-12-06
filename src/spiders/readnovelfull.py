@@ -83,26 +83,17 @@ class ReadNovelFullCrawler(Crawler):
                 'title': x['title'] or ('Chapter %d' % chap_id),
             })
         # end for
-        logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
+
+        logger.debug('%d volumes & %d chapters found',
+                     len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        logger.debug(chapter['title'])
-
-        #contents = soup.find(
-        #    'hr', {'class': 'chr-end'}).findNextSiblings('div')[0]
-
-        #for div in contents.findAll('div', {'class': 'text-center'}):
-        #    div.decompose()
-        contents = soup.select('div.cha-words p')
-        
+        contents = soup.select('div.cha-words p, #chr-content p')
         body = [str(p) for p in contents if p.text.strip()]
-        
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
