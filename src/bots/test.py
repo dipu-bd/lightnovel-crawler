@@ -449,12 +449,21 @@ class TestBot:
         ],
         'https://book.qidian.com/': [
             'https://book.qidian.com/info/1010734492'
+        ],
+        'https://kiss-novel.com/': [
+            'https://kiss-novel.com/the-invincible-dragon-emperor'
+        ],
+        'https://www.machine-translation.org/': [
+            'https://www.machine-translation.org/novel/bf6de1ec4ec16e13/the-mightiest-system.html'
         ]
     }
 
     allowed_failures = [
+        'https://ranobelib.me/',
         'https://m.chinesefantasynovels.com/',
         'https://m.romanticlovebooks.com/',
         'https://www.romanticlovebooks.com/',
+        'https://readnovelfull.com/',
+        'https://book.qidian.com/'
     ]
 # end class
