@@ -441,9 +441,6 @@ class TestBot:
         'https://www.shinsori.com/': [
             'https://www.shinsori.com/akuyaku-reijou-ni-nanka-narimasen/'
         ],
-        'https://www.machine-translation.org/': [
-            'https://www.machine-translation.org/novel/11edeb45c3cdd86c/alchemy-emperor-of-the-divine-dao-updated.html'
-        ],
         'https://www.flying-lines.com/': [
             'https://www.flying-lines.com/novel/one-useless-rebirth'
         ],
@@ -454,7 +451,7 @@ class TestBot:
             'https://kiss-novel.com/the-invincible-dragon-emperor'
         ],
         'https://www.machine-translation.org/': [
-            'https://www.machine-translation.org/novel/bf6de1ec4ec16e13/the-mightiest-system.html'
+            'https://www.machine-translation.org/novel/a5eee127d75da0d2/long-live-summons.html'
         ]
     }
 
