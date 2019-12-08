@@ -16,7 +16,7 @@ search_url = 'https://babelnovel.com/api/books?page=0&pageSize=8&fields=id,name,
 novel_page_url = 'https://babelnovel.com/api/books/%s'
 chapter_list_url = 'https://babelnovel.com/api/books/%s/chapters?bookId=%s&page=%d&pageSize=100&fields=id,name,canonicalName,hasContent,isBought,isFree,isLimitFree'
 chapter_json_url = 'https://babelnovel.com/api/books/%s/chapters/%s/content'
-#https://babelnovel.com/api/books/f337b876-f246-40c9-9bcf-d7f31db00296/chapters/ac1ebce2-e62e-4176-a2e7-6012c606ded4/content
+# https://babelnovel.com/api/books/f337b876-f246-40c9-9bcf-d7f31db00296/chapters/ac1ebce2-e62e-4176-a2e7-6012c606ded4/content
 chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 
@@ -107,7 +107,7 @@ class BabelNovelCrawler(Crawler):
         data = self.get_json(list_url)
         chapters = list()
         for item in data['data']:
-            if not (item['isFree']): # or item['isLimitFree'] or item['isBought']):
+            if not (item['isFree']):  # or item['isLimitFree'] or item['isBought']):
                 continue
             # end if
             chapters.append({
@@ -120,30 +120,25 @@ class BabelNovelCrawler(Crawler):
     # end def
 
     def parse_content_css(self, url):
-        self.bad_selectors = None
-        soup = self.get_soup(url)
-        for script in soup.select('script'):
-            text = script.text.strip()
-            if not text.startswith('window.__STATE__'):
-                continue
-            # end if
-            content = re.findall('"[^"]+"', text, re.MULTILINE)[0][1:-1]
-            data = json.loads(unquote(content))
+        try:
+            soup = self.get_soup(url)
+            content = re.findall('window.__STATE__ = "([^"]+)"', str(soup), re.MULTILINE)
+            data = json.loads(unquote(content[0]))
             cssUrl = self.absolute_url(data['chapterDetailStore']['cssUrl'])
             logger.info('Getting %s', cssUrl)
             css = self.get_response(cssUrl).text
             baddies = css.split('\n')[-1].split('{')[0].strip()
             self.bad_selectors = baddies
-            break
+            logger.info('Bad selectors: %s', self.bad_selectors)
+        except:
+            self.bad_selectors = []
+            logger.exception('Fail to get bad selectors')
         # end for
-        logger.info('Bad selectors: %s', self.bad_selectors)
     # end def
 
     def download_chapter_body(self, chapter):
         logger.info('Visiting %s', chapter['json_url'])
         data = self.get_json(chapter['json_url'])
-
-        print(data)
 
         soup = BeautifulSoup(data['data']['content'], 'lxml')
         if self.bad_selectors:
