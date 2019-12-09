@@ -28,11 +28,11 @@ class TestBot:
 
     def start(self):
         try:
-            self.randomized = sorted(
+            randomized = sorted(
                 crawler_list.keys(),
                 key=lambda x: random()
             )
-            for index, link in enumerate(self.randomized):
+            for index, link in enumerate(randomized):
                 print('=' * 80)
                 print('>>>', index, ':', link)
                 print('=' * 80)
@@ -76,7 +76,7 @@ class TestBot:
             print(message)
             error_count = len([
                 x for x in self.allerrors.keys()
-                if x in self.randomized and x not in self.allowed_failures
+                if x in self.test_user_inputs and x not in self.allowed_failures
             ])
             if error_count > 0:
                 self.post_on_github(message)
