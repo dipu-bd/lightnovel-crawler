@@ -102,7 +102,7 @@ crawler_list = {
     'https://www.fanfiction.net/': FanFictionCrawler,
     'https://www.flying-lines.com/': FlyingLinesCrawler,
     'https://www.idqidian.us/': IdqidianCrawler,
-    'https://www.machine-translation.org': MachineTransOrg,
+    'https://www.machine-translation.org/': MachineTransOrg,
     'https://www.mtlnovel.com/': MtlnovelCrawler,
     'https://www.novelall.com/': NovelAllCrawler,
     'https://www.novelspread.com/': NovelSpreadCrawler,
