@@ -141,20 +141,29 @@ class WebnovelCrawler(Crawler):
         chapter_info = data['chapterInfo']
         if 'content' in chapter_info:
             body = chapter_info['content']
-            body = body.replace(r'[ \n\r]+', '\n')
-            if ('<p>' not in body) or ('</p>' not in body):
-                body = re.sub('<pirate>(.*?)</pirate>', '', body)
-                body = body.replace('<', '&lt;')
-                body = body.replace('>', '&gt;')
-                body = [x for x in body.split('\n') if len(x.strip())]
-                body = '<p>' + '</p><p>'.join(body) + '</p>'
-            # end if
-            return body.strip()
+            body = re.sub(r'[\n\r]+', '\n', body)
+            return self.format_text(body)
         elif 'contents' in chapter_info:
-            body = [x['content'] for x in chapter_info['contents'] if x['content'].strip()]
-            return '<p>' + '</p><p>'.join(body) + '</p>'
+            body = [
+                re.sub(r'[\n\r]+', '\n', x['content'])
+                for x in chapter_info['contents']
+                if x['content'].strip()
+            ]
+            return self.format_text('\n'.join(body))
         # end if
 
         return None
+    # end def
+
+    def format_text(self, text):
+        text = re.sub(r'Find authorized novels in Webnovel(.*)for visiting\.', '', text, re.MULTILINE)
+        text = re.sub(r'\<pirate\>(.*?)\<\/pirate\>', '', text, re.MULTILINE)
+        if not (('<p>' in text) and ('</p>' in text)):
+            text = re.sub(r'<', '&lt;', text)
+            text = re.sub(r'>', '&gt;', text)
+            text = [x.strip() for x in text.split('\n') if x.strip()]
+            text = '<p>' + '</p><p>'.join(text) + '</p>'
+        # end if
+        return text.strip()
     # end def
 # end class
