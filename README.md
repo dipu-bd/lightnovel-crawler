@@ -4,18 +4,17 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
-[![SayThanks.io](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/dipu-bd)
 
+<!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
 Downloads lightnovels from various online sources and generates ebooks in many formats.
 
-> **Discord: https://discord.gg/7A5Hktx**
+> **Discord: [https://discord.gg/7A5Hktx](https://discord.gg/7A5Hktx)**
 
-> **Telegram: https://t.me/epub_smelter_bot**
+> **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
 
 ## Table of contents
 
@@ -23,15 +22,15 @@ Downloads lightnovels from various online sources and generates ebooks in many f
   - [⏬ Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
   - [📦 PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
   - [📱 Termux (Android)](#a3-termux-android)
-  - [📱 Pydroid (Android)](#a4-pydroid-3-android)
-  - [Chatbots](#a5-chatbots)
-    - [Telegram](#a51-telegram)
-    - [Discord](#a52-discord)
-  - [Run from source](#a6-run-from-source)
-  - [Heroku Deployment](#a7-heroku-deployment)
+  - [Chatbots](#a4-chatbots)
+    - [Telegram](#a41-telegram)
+    - [Discord](#a42-discord)
+  - [Run from source](#a5-run-from-source)
+  - [Heroku Deployment](#a6-heroku-deployment)
 - [General Usage](#b-general-usage)
   - [Available options](#b1-available-options)
-  - [Running the bot](#b2-running-the-bot)
+  - [Example usage](#b2-example-usage)
+  - [Running the bot](#b3-running-the-bot)
 - [Development](#c-development)
   - [Adding new source](#c1-adding-new-source)
   - [Adding new Bot](#c2-adding-new-bot)
@@ -39,7 +38,6 @@ Downloads lightnovels from various online sources and generates ebooks in many f
   - [Rejected sources](#c4-rejected-sources)
   - [Supported output formats](#c5-supported-output-formats)
   - [Supported bots](#c6-supported-bots)
-- [The project structure](https://github.com/dipu-bd/lightnovel-crawler/blob/master/CONTRIBUTING.md)
 
 <img src="res/lncrawl-icon.png" width="128px" align="right"/>
 
@@ -104,31 +102,14 @@ $ lncrawl
 - You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 - Run `pip install -U lightnovel-crawler` again to install the latest updates.
 
-### A4. Pydroid 3 (Android)
+### A4. Chatbots
 
-📱 Alternative to easy Termux is Pydroid3. It is a bit faster but harder to use and no _run-in-backgroud_ support.
-
-- Install [Pydriod 3](https://play.google.com/store/apps/details?id=ru.iiec.pydroid3) from playstore.
-- Open the app and navigate to **Pip** from the drawer menu.
-- Type `lightnovel-crawler` in place of `Library name` and press the `Install` button.
-- To reinstall or remove the installed package:
-  - Go to _Libraries_ tab inside **Pip** page (left of _Install_ tab).
-  - Find `lightnovel-crawler` and press the `Uninstall` button.
-  - Then go over to _Install_ tab again to install the latest version.
-- To use the app, select **Terminal** from the drawer menu. A console will appear.
-- Type `lncrawl` to start.
-- You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
-
-> Here is a video that might help: https://youtu.be/I20IO4dGTJ8
-
-### A5. Chatbots
-
-#### A5.1 Telegram
+#### A4.1 Telegram
 
 Visit this link to get started with the telegram bot:
 https://t.me/epub_smelter_bot
 
-#### A5.2 Discord
+#### A4.2 Discord
 
 Join our server: https://discord.gg/7A5Hktx
 
@@ -137,7 +118,7 @@ https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions
 
 Send `!help` to open the bot help message.
 
-### A6. Run from source
+### A5. Run from source
 
 - First clone the repository:
 
@@ -160,7 +141,7 @@ $ python __main__.py
 $ python .
 ```
 
-### A7. Heroku Deployment
+### A6. Heroku Deployment
 
 Simply fill out the environment variables and you get a running instance.
 
@@ -175,7 +156,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.17.0
+                           📒 Lightnovel Crawler 🍀2.17.2
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -188,9 +169,17 @@ optional arguments:
   -l                    Set log levels. (-l = warn, -ll = info, -lll = debug).
   --list-sources        Display a list of available sources.
   -s URL, --source URL  Profile page url of the novel.
+  -q STR, --query STR   Novel query followed by list of source sites.
+  -x, --sources         Display the source selection menu while searching.
+  --login USER PASSWD   User name/email address and password for login.
+  -o PATH, --output PATH
+                        Path where the downloads to be stored.
+  --format E [E ...]    Define which formats to output. Default: all.
+  --add-source-url      Add source url at the end of each chapter.
+  --single              Put everything in a single book.
+  --multi               Build separate books by volumes.
   -f, --force           Force replace any existing folder.
   -i, --ignore          Ignore any existing folder (do not replace).
-  --login USER PASSWD.  User name/email address and password for login.
   --all                 Download all chapters.
   --first [COUNT]       Download first few chapters (default: 10).
   --last [COUNT]        Download last few chapters (default: 10).
@@ -210,7 +199,37 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-### B2. Running the bot
+### B2. Example Usage
+
+Open your console and type `lncrawl --version` first to check if you have installed it properly.
+Here are some example usage of the app:
+
+- To start an interactive session: `lncrawl`
+
+- To download using an url: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/`
+- To search novels: `lncrawl -q "Strongest Sword God"`
+- To search novels from selected sources: `lncrawl -q "Strongest Sword God" --sources`
+
+- To download all chapters: `lncrawl --all`
+- To download first 25 chapters: `lncrawl --first 25`
+- To download all between two chapters: `lncrawl --range 10 30`
+- To download all between two chapter links: `lncrawl https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/chapter-2205 https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/chapter-2211`
+- To download a specific volumes: `lncrawl --volumes 2 3`
+
+- To define output path: `lncrawl -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god"`
+- To delete the output folder if exists: `lncrawl -f`
+- To ignore the output folder if exists: `lncrawl -i`
+- To resume download where is has been left previously: `lncrawl -i`
+- To specify output formats: `lncrawl --format epub pdf mobi`
+
+- To display list of supported sources: `lncrawl ---list-sources`
+
+- If you provide an option in the argument, it will skip it in the interactive session.
+  If you want to disable all interactive prompts, pass `--suppress` at the end.
+
+- You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
+
+### B3. Running the bot
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
@@ -243,12 +262,14 @@ You are very welcome to contribute in this project. You can:
 
 ### C1. Adding new source
 
-- Create new crawler using the [`spiders/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/_sample.py) as blueprint. You can check out existing bots for idea.
+- Create new crawler using the [`spiders/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/_sample.py) as template.
 - Import your crawler to [`spiders/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/__init__.py) file.
+- Update [Supported sources](#c3-supported-sources) section in `README.md`
+- Add some test inputs to `test_user_inputs` variable in `src/bots/test.py`
 
 ### C2. Adding new Bot
 
-- Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as a standard. You can check out existing bots for idea.
+- Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as template.
 - Import your bot to [`bots/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/__init__.py) file.
 
 ### C3. Supported sources
@@ -337,33 +358,29 @@ The list of currently available sources are given below:
 
 When download is done, the following files can be generated:
 
-- [x] JSON (default)
-- [x] TEXT
-- [x] WEB
-- [x] EPUB
-- [x] DOCX
-- [x] MOBI
-- [x] PDF
-- [x] RTF
-- [x] TXT
-- [x] AZW3
-- [x] FB2
-- [x] LIT
-- [x] LRF
-- [x] OEB
-- [x] PDB
-- [x] PML
-- [x] RB
-- [x] SNB
-- [x] TCR
-- [x] HTML
+- JSON (default)
+- TEXT
+- WEB
+- EPUB
+- DOCX
+- MOBI
+- PDF
+- RTF
+- TXT
+- AZW3
+- FB2
+- LIT
+- LRF
+- OEB
+- PDB
+- PML
+- RB
+- SNB
+- TCR
+- HTML
 
 ### C6. Supported bots
 
-- [x] Console Bot
-- [x] Telegram Bot
-- [x] Discord Bot
-
-## (D) The project structure
-
-[Click here](https://github.com/dipu-bd/lightnovel-crawler/blob/master/CONTRIBUTING.md) to view details.
+- Console Bot
+- Telegram Bot
+- Discord Bot

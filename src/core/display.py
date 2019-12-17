@@ -42,11 +42,11 @@ def epilog():
     print()
     print('-' * LINE_SIZE)
 
+    # print(' ' + Icons.HANDS, Fore.CYAN,
+    #       'https://discord.gg/7A5Hktx', Fore.RESET)
+
     print(' ' + Icons.LINK, Fore.CYAN,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
-
-    print(' ' + Icons.HANDS, Fore.CYAN,
-          'https://saythanks.io/to/dipu-bd', Fore.RESET)
 
     print('=' * LINE_SIZE)
 # end def
