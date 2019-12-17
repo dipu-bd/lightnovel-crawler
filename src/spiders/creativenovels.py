@@ -113,10 +113,11 @@ class CreativeNovelsCrawler(Crawler):
         for tag in body.select('.announcements_crn'):
             tag.decompose()
         # end for
-        for b in body.select('b'):
-            if b.get('style') == 'color:transparent;':
-                b.decompose()
-            # end if
+        for span in body.find_all('span'):
+            span.decompose()
+        # end for
+        for span in body.find_all('style'):
+            span.decompose()
         # end for
 
         self.clean_contents(body)
