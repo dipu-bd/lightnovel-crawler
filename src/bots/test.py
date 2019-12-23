@@ -4,6 +4,7 @@
 The purpose of this bot is to test the application and crawlers
 """
 import io
+import logging
 import os
 import platform
 import sys
@@ -11,20 +12,26 @@ import traceback
 from datetime import datetime
 from random import random
 
+import colorama
+
 from ..core.app import App
 from ..spiders import crawler_list
 from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.make_github_issue import find_issues, post_issue
 
-# For colorama in
-sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
-                              encoding=sys.stdout.encoding,
-                              errors='ignore',
-                              line_buffering=True)
-
 
 class TestBot:
     allerrors = dict()
+
+    def __init__(self):
+        colorama.deinit()
+        logging.basicConfig(level=logging.DEBUG)
+        # For colorama in
+        # sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
+        #                               encoding=sys.stdout.encoding,
+        #                               errors='ignore',
+        #                               line_buffering=True)
+    # end def
 
     def start(self):
         try:
@@ -290,8 +297,8 @@ class TestBot:
             'https://meionovel.id/novel/the-legendary-mechanic/',
         ],
         'https://mtled-novels.com/': [
-            'https://mtled-novels.com/novels/ancient-demon-dragon-emperor',
-            'dragon'
+            'https://mtled-novels.com/novels/martial-god-asura/',
+            'martial'
         ],
         'https://bestlightnovel.com/': [
             'https://bestlightnovel.com/novel_888103800',
