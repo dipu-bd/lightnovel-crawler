@@ -49,6 +49,8 @@ class TestBot:
                         print()
                     except CloudflareCaptchaError:
                         traceback.print_exc()
+                    except ConnectionError:
+                        traceback.print_exc()
                     except Exception as err:
                         traceback.print_exc()
                         traces = traceback.format_tb(err.__traceback__)
@@ -462,11 +464,11 @@ class TestBot:
     }
 
     allowed_failures = [
-        'https://ranobelib.me/',
-        'https://m.chinesefantasynovels.com/',
-        'https://m.romanticlovebooks.com/',
-        'https://www.romanticlovebooks.com/',
-        'https://readnovelfull.com/',
-        'https://book.qidian.com/'
+        # 'https://ranobelib.me/',
+        # 'https://m.chinesefantasynovels.com/',
+        # 'https://m.romanticlovebooks.com/',
+        # 'https://www.romanticlovebooks.com/',
+        # 'https://readnovelfull.com/',
+        # 'https://book.qidian.com/'
     ]
 # end class

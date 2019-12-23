@@ -184,7 +184,11 @@ class Crawler:
     def get_soup(self, *args, parser='lxml', **kargs):
         response = self.get_response(*args, **kargs)
         html = response.content.decode('utf-8', 'ignore')
-        return BeautifulSoup(html, parser)
+        soup = BeautifulSoup(html, parser)
+        if not soup.find('body'):
+            raise ConnectionError('HTML document was not loaded properly')
+        # end if
+        return soup
     # end def
 
     def get_json(self, *args, **kargs):
