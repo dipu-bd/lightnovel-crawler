@@ -456,6 +456,9 @@ class TestBot:
         'https://www.aixdzs.com/': [
             'https://www.aixdzs.com/d/66/66746/'
         ],
+        'https://webnovelonline.com/': [
+            'https://webnovelonline.com/novel/the_anarchic_consort'
+        ],
     }
 
     allowed_failures = [

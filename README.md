@@ -310,6 +310,7 @@ The list of currently available sources are given below:
 | https://ranobelib.me                   |               |
 | https://volarenovels.com               |               |
 | https://webnovel.online                |               |
+| https://webnovelonline.com             |               |
 | https://wordexcerpt.com                |               |
 | https://wuxiaworld.online              |       ✔       |
 | https://www.aixdzs.com                 |               |

@@ -51,8 +51,9 @@ from .tapread import TapreadCrawler
 from .translateindo import TranslateIndoCrawler
 from .volarenovels import VolareNovelsCrawler
 from .wattpad import WattpadCrawler
-from .webnonline import WebnovelOnlineCrawler
 from .webnovel import WebnovelCrawler
+from .webnovelonline import WebnovelOnlineCrawler
+from .webnovelonlinecom import WebnovelOnlineDotComCrawler
 from .wordexcerpt import WordExcerptCrawler
 from .worldnovelonline import WorldnovelonlineCrawler
 from .wuxiaco import WuxiaCoCrawler
@@ -96,6 +97,7 @@ crawler_list = {
     'https://ranobelib.me/': RanobeLibCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
+    'https://webnovelonline.com/': WebnovelOnlineDotComCrawler,
     'https://wordexcerpt.com/': WordExcerptCrawler,
     'https://wuxiaworld.online/': WuxiaOnlineCrawler,
     'https://wuxiaworld.site/': WuxiaSiteCrawler,
