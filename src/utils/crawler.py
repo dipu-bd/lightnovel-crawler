@@ -205,7 +205,7 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'noscript', 'script', 'iframe', 'form', 'br', 'hr', 'img', 'ins',
+        'noscript', 'script', 'iframe', 'form', 'hr', 'img', 'ins',
         'button', 'input', 'amp-auto-ads', 'pirate'
     ]
     block_tags = [
@@ -232,6 +232,11 @@ class Crawler:
         for tag in div.findAll(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
+            elif tag.name == 'br':
+                prev = tag.findPreviousSibling() if 'findPreviousSibling' in dir(tag) else None
+                if prev and prev.name == 'br':
+                    tag.extract()
+                # end if
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
             elif not tag.text.strip():
