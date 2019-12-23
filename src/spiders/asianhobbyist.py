@@ -45,8 +45,6 @@ class AsianHobbyistCrawler(Crawler):
                 'url':  self.absolute_url(a['href']),
             })
         # end for
-
-        logger.debug('%d chapters found', len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

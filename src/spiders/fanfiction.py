@@ -82,9 +82,6 @@ class FanFictionCrawler(Crawler):
                 'url':  self.novel_url,
             })
         # end if
-
-        logger.debug('%d volumes && %d chapters found',
-                     len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

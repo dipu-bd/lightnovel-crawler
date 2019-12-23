@@ -74,9 +74,6 @@ class WordExcerptCrawler(Crawler):
                 })
             # end for
         # end if
-
-        logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

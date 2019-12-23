@@ -79,9 +79,6 @@ class NovelRawCrawler(Crawler):
         self.volumes = [
             {'id': x + 1} for x in range(len(self.chapters) // 100 + 1)
         ]
-
-        logger.info('%d volumes and %d chapters found',
-                    len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_list(self, index):

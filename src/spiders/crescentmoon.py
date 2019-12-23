@@ -53,9 +53,6 @@ class CrescentMoonCrawler(Crawler):
                 'title': x.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
-        logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

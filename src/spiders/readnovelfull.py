@@ -83,9 +83,6 @@ class ReadNovelFullCrawler(Crawler):
                 'title': x['title'] or ('Chapter %d' % chap_id),
             })
         # end for
-
-        logger.debug('%d volumes & %d chapters found',
-                     len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

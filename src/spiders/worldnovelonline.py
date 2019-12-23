@@ -129,9 +129,6 @@ class WorldnovelonlineCrawler(Crawler):
         # end for
 
         self.volumes = [{'id': x} for x in volumes]
-
-        logger.debug('%d volumes and %d chapters found',
-                     len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

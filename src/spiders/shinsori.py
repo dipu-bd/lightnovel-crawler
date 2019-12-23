@@ -53,10 +53,6 @@ class ShinsoriCrawler(Crawler):
             {'id': x + 1}
             for x in range(len(self.chapters) // 100 + 1)
         ]
-        
-
-        logger.debug(self.chapters)
-        logger.debug('%d chapters found', len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

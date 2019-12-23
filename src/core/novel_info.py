@@ -54,7 +54,7 @@ def format_chapters(crawler: Crawler):
         #     # end if
         #     item['title'] = crawler.cleanup_text(item['title'])
         # # end if
-        
+
         if not item['volume']:
             item['volume'] = (1 + (item['id'] - 1) // 100)
         # end if

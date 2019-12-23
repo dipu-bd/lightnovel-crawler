@@ -54,9 +54,6 @@ class ComrademaoCrawler(Crawler):
 
         self.volumes = [{'id': i + 1}
                         for i in range(1 + len(self.chapters) // 100)]
-
-        logger.info('%d volumes and %d chapters found',
-                    len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_list(self, page):

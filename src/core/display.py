@@ -126,16 +126,16 @@ def url_supported_list():
 
 def url_not_recognized():
     print()
-    print(Fore.RED, Icons.ERROR,
-          'Sorry! I do not recognize this website yet.', Fore.RESET)
+    print(Fore.RED, Icons.ERROR, 'Sorry! I do not recognize this website yet.', Fore.RESET)
     print()
     print('-' * LINE_SIZE)
-    url_supported_list()
+    print('You can find a list of supported and rejected sources here:')
+    print(Fore.CYAN, Icons.LINK,
+          'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources', Fore.RESET)
     print()
     print('-' * LINE_SIZE)
     print('You can request developers to add support for this site here:')
-    print(Fore.CYAN, Icons.LINK,
-          'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
+    print(Fore.CYAN, Icons.LINK, 'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
 # end def
 
 

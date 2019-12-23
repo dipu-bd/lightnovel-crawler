@@ -102,9 +102,6 @@ class WebnovelCrawler(Crawler):
                 'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
             })
         # end for
-
-        logger.info('%d volumes and %d chapters found',
-                    len(self.volumes), len(self.chapters))
     # end def
 
     def get_chapter_index_of(self, url):

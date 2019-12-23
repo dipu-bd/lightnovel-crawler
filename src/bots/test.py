@@ -4,7 +4,6 @@
 The purpose of this bot is to test the application and crawlers
 """
 import io
-import logging
 import os
 import platform
 import sys
@@ -12,18 +11,16 @@ import traceback
 from datetime import datetime
 from random import random
 
-import colorama
-
 from ..core.app import App
 from ..spiders import crawler_list
 from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.make_github_issue import find_issues, post_issue
 
 # For colorama in
-sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
-                              encoding=sys.stdout.encoding,
-                              errors='ignore',
-                              line_buffering=True)
+# sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
+#                               encoding=sys.stdout.encoding,
+#                               errors='ignore',
+#                               line_buffering=True)
 
 
 class TestBot:

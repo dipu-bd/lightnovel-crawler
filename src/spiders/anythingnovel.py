@@ -36,9 +36,6 @@ class AnythingNovelCrawler(Crawler):
 
         self.chapters.sort(key=lambda x: x['id'])
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
-
-        logger.info('%d volumes and %d chapters found',
-                    len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

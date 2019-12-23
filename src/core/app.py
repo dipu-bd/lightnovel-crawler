@@ -128,6 +128,8 @@ class App:
         print(self.crawler.novel_url)
         self.crawler.read_novel_info()
         print('NOVEL: %s' % self.crawler.novel_title)
+        print('%d volumes and %d chapters found' %
+              (len(self.crawler.volumes), len(self.crawler.chapters)))
 
         format_novel(self.crawler)
 
