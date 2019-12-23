@@ -205,7 +205,7 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'noscript', 'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins',
+        'noscript', 'script', 'iframe', 'form', 'br', 'hr', 'img', 'ins',
         'button', 'input', 'amp-auto-ads', 'pirate'
     ]
     block_tags = [
