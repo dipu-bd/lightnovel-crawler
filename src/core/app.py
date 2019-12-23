@@ -131,13 +131,15 @@ class App:
 
         format_novel(self.crawler)
 
-        self.good_file_name = slugify(
-            self.crawler.novel_title,
-            max_length=50,
-            separator=' ',
-            lowercase=False,
-            word_boundary=True,
-        )
+        if not self.good_file_name:
+            self.good_file_name = slugify(
+                self.crawler.novel_title,
+                max_length=50,
+                separator=' ',
+                lowercase=False,
+                word_boundary=True,
+            )
+        # end if
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
 

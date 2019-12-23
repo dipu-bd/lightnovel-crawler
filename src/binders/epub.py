@@ -145,7 +145,10 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Save epub file
     epub_path = os.path.join(app.output_path, 'epub')
-    file_name = (app.good_file_name + ' ' + volume).strip()
+    file_name = app.good_file_name
+    if not app.no_append_after_filename:
+        file_name += ' ' + volume
+    # end if
     file_path = os.path.join(epub_path, file_name + '.epub')
     logger.debug('Writing %s', file_path)
     os.makedirs(epub_path, exist_ok=True)

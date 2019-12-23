@@ -76,8 +76,6 @@ _builder = Args(group=[
     Args('--login', nargs=2, metavar=('USER', 'PASSWD'),
          help='User name/email address and password for login.'),
 
-    Args('-o', '--output', dest='output_path', type=str, metavar='PATH',
-         help='Path where the downloads to be stored.'),
     Args('--format', dest='output_formats', nargs='+', metavar='E',
          choices=available_formats, default=list(),
          help='Define which formats to output. Default: all.'),
@@ -89,6 +87,13 @@ _builder = Args(group=[
         Args('--multi', action='store_true',
              help='Build separate books by volumes.'),
     ]),
+    
+    Args('-o', '--output', dest='output_path', type=str, metavar='PATH',
+         help='Path where the downloads to be stored.'),
+    Args('--filename', type=str, metavar='NAME',
+         help='Set the output file name'),
+    Args('--filename-only', action='store_true',
+         help='Skip appending chapter range with file name'),
 
     Args(mutex=[
         Args('-f', '--force', action='store_true',
