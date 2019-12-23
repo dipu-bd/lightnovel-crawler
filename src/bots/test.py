@@ -19,19 +19,15 @@ from ..spiders import crawler_list
 from ..utils.cfscrape import CloudflareCaptchaError
 from ..utils.make_github_issue import find_issues, post_issue
 
+# For colorama in
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
+                              encoding=sys.stdout.encoding,
+                              errors='ignore',
+                              line_buffering=True)
+
 
 class TestBot:
     allerrors = dict()
-
-    def __init__(self):
-        colorama.deinit()
-        logging.basicConfig(level=logging.DEBUG)
-        # For colorama in
-        # sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
-        #                               encoding=sys.stdout.encoding,
-        #                               errors='ignore',
-        #                               line_buffering=True)
-    # end def
 
     def start(self):
         try:

@@ -14,7 +14,7 @@ install:
 build: false
 
 test_script:
-  - python __main__.py --bot test
+  - python __main__.py --bot test -lll
 
 branches:
   only:

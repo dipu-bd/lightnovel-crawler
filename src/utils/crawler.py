@@ -158,6 +158,7 @@ class Crawler:
             x.name: x.value
             for x in response.cookies
         })
+        response.raise_for_status()
         return response
     # end def
 
@@ -173,11 +174,12 @@ class Crawler:
         })
 
         response = self.scrapper.post(url, data=data, headers=headers)
+        response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value
             for x in response.cookies
         })
-
+        response.raise_for_status()
         return response
     # end def
 
