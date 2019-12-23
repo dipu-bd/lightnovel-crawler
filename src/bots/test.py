@@ -452,7 +452,10 @@ class TestBot:
         ],
         'https://www.machine-translation.org/': [
             'https://www.machine-translation.org/novel/a5eee127d75da0d2/long-live-summons.html'
-        ]
+        ],
+        'https://www.aixdzs.com/': [
+            'https://www.aixdzs.com/d/66/66746/'
+        ],
     }
 
     allowed_failures = [

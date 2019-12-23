@@ -292,8 +292,8 @@ The list of currently available sources are given below:
 | https://creativenovels.com             |               |
 | https://crescentmoon.blog              |               |
 | https://id.mtlnovel.com                |       ✔       |
-| https://kisslightnovels.info           |       ✔       |
 | https://kiss-novel.com                 |               |
+| https://kisslightnovels.info           |       ✔       |
 | https://light-novel.online             |       ✔       |
 | https://litnet.com                     |       ✔       |
 | https://lnmtl.com                      |               |
@@ -312,14 +312,15 @@ The list of currently available sources are given below:
 | https://webnovel.online                |               |
 | https://wordexcerpt.com                |               |
 | https://wuxiaworld.online              |       ✔       |
+| https://www.aixdzs.com                 |               |
 | https://www.asianhobbyist.com          |               |
 | https://www.flying-lines.com           |               |
 | https://www.idqidian.us                |               |
 | https://www.machine-translation.org    |       ✔       |
 | https://www.mtlnovel.com               |       ✔       |
 | https://www.novelall.com               |       ✔       |
-| https://www.novelspread.com            |               |
 | https://www.novelringan.com            |               |
+| https://www.novelspread.com            |               |
 | https://www.qidian.com                 |               |
 | https://www.readlightnovel.org         |               |
 | https://www.readnovelfull.com          |       ✔       |
