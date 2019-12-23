@@ -23,15 +23,18 @@ def format_volumes(crawler: Crawler):
     for vol in crawler.volumes:
         vol['chapter_count'] = 0
         title = 'Volume %d' % vol['id']
-        if not('title_lock' in vol and vol['title_lock']):
-            if not ('title' in vol and vol['title']):
-                vol['title'] = title
-            # end if
-            if not re.search(r'(book|vol|volume) .?\d+', vol['title'], re.I):
-                vol['title'] = title + ' - ' + vol['title'].title()
-            # end if
-            vol['title'] = crawler.cleanup_text(vol['title'])
+        if not ('title' in vol and vol['title']):
+            vol['title'] = title
         # end if
+        # if not('title_lock' in vol and vol['title_lock']):
+        #     if not ('title' in vol and vol['title']):
+        #         vol['title'] = title
+        #     # end if
+        #     if not re.search(r'(book|vol|volume) .?\d+', vol['title'], re.I):
+        #         vol['title'] = title + ' - ' + vol['title'].title()
+        #     # end if
+        #     vol['title'] = crawler.cleanup_text(vol['title'])
+        # # end if
     # end for
 # end def
 
@@ -39,15 +42,19 @@ def format_volumes(crawler: Crawler):
 def format_chapters(crawler: Crawler):
     for item in crawler.chapters:
         title = '#%d' % item['id']
-        if not('title_lock' in item and item['title_lock']):
-            if not ('title' in item and item['title']):
-                item['title'] = title
-            # end if
-            if not re.search(r'((ch(apter)?) )?.?\d+', item['title'], re.I):
-                item['title'] = title + ' - ' + item['title'].title()
-            # end if
-            item['title'] = crawler.cleanup_text(item['title'])
+        if not ('title' in item and item['title']):
+            item['title'] = title
         # end if
+        # if not('title_lock' in item and item['title_lock']):
+        #     if not ('title' in item and item['title']):
+        #         item['title'] = title
+        #     # end if
+        #     if not re.search(r'((ch(apter)?) )?.?\d+', item['title'], re.I):
+        #         item['title'] = title + ' - ' + item['title'].title()
+        #     # end if
+        #     item['title'] = crawler.cleanup_text(item['title'])
+        # # end if
+        
         if not item['volume']:
             item['volume'] = (1 + (item['id'] - 1) // 100)
         # end if

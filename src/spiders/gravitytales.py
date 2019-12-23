@@ -44,7 +44,6 @@ class GravityTalesCrawler(Crawler):
             self.volumes.append({
                 'id': vol_id,
                 'title': a.text.strip(),
-                'title_lock': True,
                 '_tid': (a['href']),
             })
 
@@ -55,7 +54,6 @@ class GravityTalesCrawler(Crawler):
                     'volume': vol_id,
                     'url': self.absolute_url(a['href']),
                     'title': a.text.strip(),
-                    'title_lock': True,
                 })
         # end for
 

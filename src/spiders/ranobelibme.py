@@ -49,7 +49,6 @@ class RanobeLibCrawler(Crawler):
                 'volume': vol_id,
                 'url':  self.absolute_url(link['href']),
                 'title': chapter_title,
-                'title_lock': True,
             })
         # end for
 

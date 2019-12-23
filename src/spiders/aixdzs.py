@@ -48,7 +48,6 @@ class AixdzsCrawler(Crawler):
                 'volume': vol_id,
                 'title': a.text,
                 'url': self.absolute_url(a['href'], page_url=chapter_url),
-                'title_lock': True,
             })
         # end def
 

@@ -59,7 +59,6 @@ class FanFictionCrawler(Crawler):
             origin_book = soup.select('#pre_story_links a')[-1]
             self.volumes.append({
                 'id': 1,
-                'title_lock': True,
                 'title': origin_book.text.strip(),
             })
         else:
@@ -74,7 +73,6 @@ class FanFictionCrawler(Crawler):
                     'id': int(option['value']),
                     'title': option.text.strip(),
                     'url':  chapter_url % (self.novel_id, option['value']),
-                    'title_lock': True,
                 })
             # end for
         else:

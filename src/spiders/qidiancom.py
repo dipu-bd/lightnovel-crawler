@@ -35,7 +35,6 @@ class QidianComCrawler(Crawler):
             self.volumes.append({
                 'id': len(self.volumes) + 1,
                 'title': vol_title.text.strip(),
-                'title_lock': True,
             })
             for li in volume.select('li'):
                 a = li.select_one('a')
@@ -57,7 +56,6 @@ class QidianComCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         chapter['body_lock'] = True
-        chapter['title_lock'] = True
         chapter['title'] = soup.select_one('h3.j_chapterName').text.strip()
         return soup.select_one('div.j_readContent').extract()
     # end def
