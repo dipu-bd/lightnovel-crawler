@@ -223,10 +223,5 @@ test_user_inputs = {
 }
 
 allowed_failures = [
-    # 'https://ranobelib.me/',
-    # 'https://m.chinesefantasynovels.com/',
-    # 'https://m.romanticlovebooks.com/',
-    # 'https://www.romanticlovebooks.com/',
-    # 'https://readnovelfull.com/',
-    # 'https://book.qidian.com/'
+    'https://ranobelib.me/',
 ]

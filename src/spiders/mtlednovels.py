@@ -6,13 +6,53 @@ Crawler for [mtled-novels.com](https://mtled-novels.com/).
 import json
 import logging
 import re
+from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('MTLED-NOVELS')
 search_url = 'https://mtled-novels.com/search_novel.php?q=%s'
+login_url = 'https://mtled-novels.com/login/ajax/checklogin.php'
+logout_url = 'https://mtled-novels.com/login/logout.php'
 
 
 class MtledNovelsCrawler(Crawler):
+    def login(self, username, password):
+        '''login to LNMTL'''
+        # Get the login page
+        logger.info('Visiting %s', self.home_url)
+        self.get_response(self.home_url)
+
+        # Send post request to login
+        logger.info('Logging in...')
+        response = self.submit_form(
+            login_url,
+            data=dict(
+                myusername=username,
+                mypassword=password,
+                remember=0,
+            ),
+        )
+
+        # Check if logged in successfully
+        data = response.json()
+        logger.debug(data)
+        if 'response' in data and data['response'] == 'true':
+            print('Logged In')
+        else:
+            soup = BeautifulSoup(data['response'], 'lxml')
+            soup.find('button').extract()
+            error = soup.find('div').text.strip()
+            raise PermissionError(error)
+        # end if
+    # end def
+
+    def logout(self):
+        '''logout as a good citizen'''
+        logger.debug('Logging out...')
+        self.get_response(logout_url)
+        print('Logged out')
+    # end def
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)

@@ -30,7 +30,7 @@ def get_login_info(self):
             {
                 'type': 'input',
                 'name': 'email',
-                'message': 'Email:',
+                'message': 'Username/Email:',
                 'validate': lambda val: True if len(val)
                 else 'Email address should be not be empty'
             },
