@@ -34,6 +34,7 @@ class App:
         self.output_formats = {}
         self.archived_outputs = None
         self.good_file_name = None
+        self.no_append_after_filename = False
     # end def
 
     # ----------------------------------------------------------------------- #

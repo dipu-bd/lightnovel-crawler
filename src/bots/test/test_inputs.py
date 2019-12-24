@@ -87,7 +87,7 @@ test_user_inputs = {
         'mother'
     ],
     'https://www.scribblehub.com/': [
-        'https://www.scribblehub.com/series/10442/world-keeper/',
+        'https://www.scribblehub.com/series/73550/modern-life-of-the-exalted-immortal/',
         'cultivation'
     ],
     'https://www.webnovel.com/': [
@@ -96,7 +96,7 @@ test_user_inputs = {
     ],
     'https://www.worldnovel.online/': [
         'https://www.worldnovel.online/novel/solo-leveling/',
-        'cultivation'
+        'second coming of gluttony'
     ],
     'https://www.wuxiaworld.co/': [
         'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
@@ -124,7 +124,7 @@ test_user_inputs = {
         'https://myoniyonitranslations.com/category/god-of-tennis',
     ],
     'https://babelnovel.com/': [
-        'https://babelnovel.com/books/against-the-gods',
+        'https://babelnovel.com/books/ceo-let-me-go',
         'martial god AsurA'
     ],
     'https://wuxiaworld.online/': [
@@ -209,7 +209,7 @@ test_user_inputs = {
         'https://book.qidian.com/info/1010734492'
     ],
     'https://kiss-novel.com/': [
-        'https://kiss-novel.com/the-invincible-dragon-emperor'
+        'https://kiss-novel.com/the-first-order'
     ],
     'https://www.machine-translation.org/': [
         'https://www.machine-translation.org/novel/a5eee127d75da0d2/long-live-summons.html'
