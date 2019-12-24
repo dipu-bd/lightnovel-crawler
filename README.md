@@ -51,9 +51,11 @@ Also, you have to install **node.js** to access cloudflare enabled sites (e.g. h
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.17.1 ~ 21MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.18.0 ~ 21MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
+
+_To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
 ⏬ **Linux**: [lightnovel-crawler v2.17.0 ~ 24MB](http://bit.ly/2LaB9HB)
 
@@ -156,7 +158,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.17.2
+                           📒 Lightnovel Crawler 🍀2.18.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -172,12 +174,14 @@ optional arguments:
   -q STR, --query STR   Novel query followed by list of source sites.
   -x, --sources         Display the source selection menu while searching.
   --login USER PASSWD   User name/email address and password for login.
-  -o PATH, --output PATH
-                        Path where the downloads to be stored.
   --format E [E ...]    Define which formats to output. Default: all.
   --add-source-url      Add source url at the end of each chapter.
   --single              Put everything in a single book.
   --multi               Build separate books by volumes.
+  -o PATH, --output PATH
+                        Path where the downloads to be stored.
+  --filename NAME       Set the output file name
+  --filename-only       Skip appending chapter range with file name
   -f, --force           Force replace any existing folder.
   -i, --ignore          Ignore any existing folder (do not replace).
   --all                 Download all chapters.
@@ -278,66 +282,66 @@ You are very welcome to contribute in this project. You can:
 
 The list of currently available sources are given below:
 
-| Available Sources                      | Search Enable |
-| -------------------------------------- | :-----------: |
-| http://gravitytales.com                |               |
-| http://novelfull.com                   |       ✔       |
-| http://www.machinenoveltranslation.com |               |
-| http://zenithnovels.com                |               |
-| https://anythingnovel.com              |               |
-| https://babelnovel.com                 |       ✔       |
-| https://bestlightnovel.com             |       ✔       |
-| https://book.qidian.com                |               |
-| https://boxnovel.com                   |       ✔       |
-| https://creativenovels.com             |               |
-| https://crescentmoon.blog              |               |
-| https://id.mtlnovel.com                |       ✔       |
-| https://kiss-novel.com                 |               |
-| https://kisslightnovels.info           |       ✔       |
-| https://light-novel.online             |       ✔       |
-| https://litnet.com                     |       ✔       |
-| https://lnmtl.com                      |               |
-| https://m.chinesefantasynovels.com     |               |
-| https://m.novelspread.com              |               |
-| https://m.romanticlovebooks.com        |               |
-| https://m.wuxiaworld.co                |       ✔       |
-| https://meionovel.com                  |               |
-| https://mtled-novels.com               |       ✔       |
-| https://myoniyonitranslations.com      |               |
-| https://novelonlinefull.com            |       ✔       |
-| https://novelplanet.com                |       ✔       |
-| https://novelraw.blogspot.com          |               |
-| https://ranobelib.me                   |               |
-| https://volarenovels.com               |               |
-| https://webnovel.online                |               |
-| https://webnovelonline.com             |               |
-| https://wordexcerpt.com                |               |
-| https://wuxiaworld.online              |       ✔       |
-| https://www.aixdzs.com                 |               |
-| https://www.asianhobbyist.com          |               |
-| https://www.flying-lines.com           |               |
-| https://www.idqidian.us                |               |
-| https://www.machine-translation.org    |       ✔       |
-| https://www.mtlnovel.com               |       ✔       |
-| https://www.novelall.com               |       ✔       |
-| https://www.novelringan.com            |               |
-| https://www.novelspread.com            |               |
-| https://www.qidian.com                 |               |
-| https://www.readlightnovel.org         |               |
-| https://www.readnovelfull.com          |       ✔       |
-| https://www.rebirth.online             |               |
-| https://www.romanticlovebooks.com      |               |
-| https://www.royalroad.com              |       ✔       |
-| https://www.scribblehub.com            |       ✔       |
-| https://www.shinsori.com               |               |
-| https://www.tapread.com                |               |
-| https://www.translateindo.com          |               |
-| https://www.wattpad.com                |               |
-| https://www.webnovel.com               |       ✔       |
-| https://www.worldnovel.online          |       ✔       |
-| https://www.wuxiaworld.co              |       ✔       |
-| https://www.wuxiaworld.com             |       ✔       |
-| https://www.wuxiaworld.site            |       ✔       |
+| Available Sources                      | Can Search | Can Login |
+| -------------------------------------- | :--------: | :-------: |
+| http://gravitytales.com                |            |           |
+| http://novelfull.com                   |     ✔      |           |
+| http://www.machinenoveltranslation.com |            |           |
+| http://zenithnovels.com                |            |           |
+| https://anythingnovel.com              |            |           |
+| https://babelnovel.com                 |     ✔      |           |
+| https://bestlightnovel.com             |     ✔      |           |
+| https://book.qidian.com                |            |           |
+| https://boxnovel.com                   |     ✔      |           |
+| https://creativenovels.com             |            |           |
+| https://crescentmoon.blog              |            |           |
+| https://id.mtlnovel.com                |     ✔      |           |
+| https://kiss-novel.com                 |            |           |
+| https://kisslightnovels.info           |     ✔      |           |
+| https://light-novel.online             |     ✔      |           |
+| https://litnet.com                     |     ✔      |           |
+| https://lnmtl.com                      |            |     ✔     |
+| https://m.chinesefantasynovels.com     |            |           |
+| https://m.novelspread.com              |            |           |
+| https://m.romanticlovebooks.com        |            |           |
+| https://m.wuxiaworld.co                |     ✔      |           |
+| https://meionovel.com                  |            |           |
+| https://mtled-novels.com               |     ✔      |     ✔     |
+| https://myoniyonitranslations.com      |            |           |
+| https://novelonlinefull.com            |     ✔      |           |
+| https://novelplanet.com                |     ✔      |           |
+| https://novelraw.blogspot.com          |            |           |
+| https://ranobelib.me                   |            |           |
+| https://volarenovels.com               |            |           |
+| https://webnovel.online                |            |           |
+| https://webnovelonline.com             |            |           |
+| https://wordexcerpt.com                |            |           |
+| https://wuxiaworld.online              |     ✔      |           |
+| https://www.aixdzs.com                 |            |           |
+| https://www.asianhobbyist.com          |            |           |
+| https://www.flying-lines.com           |            |           |
+| https://www.idqidian.us                |            |           |
+| https://www.machine-translation.org    |     ✔      |           |
+| https://www.mtlnovel.com               |     ✔      |           |
+| https://www.novelall.com               |     ✔      |           |
+| https://www.novelringan.com            |            |           |
+| https://www.novelspread.com            |            |           |
+| https://www.qidian.com                 |            |           |
+| https://www.readlightnovel.org         |            |           |
+| https://www.readnovelfull.com          |     ✔      |           |
+| https://www.rebirth.online             |            |           |
+| https://www.romanticlovebooks.com      |            |           |
+| https://www.royalroad.com              |     ✔      |           |
+| https://www.scribblehub.com            |     ✔      |           |
+| https://www.shinsori.com               |            |           |
+| https://www.tapread.com                |            |           |
+| https://www.translateindo.com          |            |           |
+| https://www.wattpad.com                |            |           |
+| https://www.webnovel.com               |     ✔      |           |
+| https://www.worldnovel.online          |     ✔      |           |
+| https://www.wuxiaworld.co              |     ✔      |           |
+| https://www.wuxiaworld.com             |     ✔      |           |
+| https://www.wuxiaworld.site            |     ✔      |           |
 
 ### C4. Rejected sources
 
