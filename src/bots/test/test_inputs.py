@@ -49,8 +49,8 @@ test_user_inputs = {
         'https://meionovel.id/novel/the-legendary-mechanic/',
     ],
     'https://mtled-novels.com/': [
-        'https://mtled-novels.com/novels/martial-god-asura/',
-        'martial'
+        'https://mtled-novels.com/novels/great-ruler/',
+        'great ruler'
     ],
     'https://bestlightnovel.com/': [
         'https://bestlightnovel.com/novel_888103800',
@@ -188,7 +188,7 @@ test_user_inputs = {
         'https://www.translateindo.com/demon-wang-golden-status-favoured-fei/'
     ],
     'https://ranobelib.me/': [
-        'https://ranobelib.me/solo-leveling'
+        'https://ranobelib.me/sozvezdie-klinka'
     ],
     'https://novelringan.com/': [
         'https://novelringan.com/series/the-most-loving-marriage-in-history-master-mus-pampered-wife/'

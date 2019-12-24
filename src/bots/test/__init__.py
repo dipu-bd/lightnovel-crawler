@@ -74,6 +74,7 @@ class TestBot:
             if error_count > 0:
                 message = self.build_message()
                 self.post_on_github(message)
+                raise Exception(message)
             # end if
         # end if
         # end try
@@ -100,8 +101,9 @@ class TestBot:
                 errors += err + '\n'
             # end for
         # end for
+        message += '-' * 80 + '\n'
         errors += '\n' + '=' * 80 + '\n'
-        message += '-' * 80 + '\n\n'
-        return '\n%s```%s```\n' % (message, errors)
+        body = '\n%s\n```\n%s\n```\n' % (message, errors)
+        return body
     # end_def
 # end class
