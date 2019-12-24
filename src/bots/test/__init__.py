@@ -2,17 +2,22 @@
 """
 The purpose of this bot is to test the application and crawlers
 """
+import io
+import sys
 import traceback
 from random import random
 
+from ...assets.icons import isWindows
 from ...spiders import crawler_list
 from ...utils.cfscrape import CloudflareCaptchaError
 
-# For colorama in
-# sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
-#                               encoding=sys.stdout.encoding,
-#                               errors='ignore',
-#                               line_buffering=True)
+# For colorama in Windows
+if isWindows:
+    sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
+                                  encoding=sys.stdout.encoding,
+                                  errors='ignore',
+                                  line_buffering=True)
+# end if
 
 
 class TestBot:
