@@ -223,5 +223,5 @@ test_user_inputs = {
 }
 
 allowed_failures = [
-    # 'https://ranobelib.me/',
+    'https://ranobelib.me/',
 ]
