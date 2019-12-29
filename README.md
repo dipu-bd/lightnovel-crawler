@@ -312,6 +312,7 @@ The list of currently available sources are given below:
 | https://novelplanet.com                |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
 | https://ranobelib.me                   |            |           |
+| https://tomotranslations.com           |            |           |
 | https://volarenovels.com               |            |           |
 | https://webnovel.online                |            |           |
 | https://webnovelonline.com             |            |           |

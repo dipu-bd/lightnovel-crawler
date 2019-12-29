@@ -48,6 +48,7 @@ from .royalroad import RoyalRoadCrawler
 from .scribblehub import ScribbleHubCrawler
 from .shinsori import ShinsoriCrawler
 from .tapread import TapreadCrawler
+from .tomotrans import TomoTransCrawler
 from .translateindo import TranslateIndoCrawler
 from .volarenovels import VolareNovelsCrawler
 from .wattpad import WattpadCrawler
@@ -96,6 +97,7 @@ crawler_list = {
     'https://novelringan.com/': NovelRinganCrawler,
     'https://ranobelib.me/': RanobeLibCrawler,
     'https://readnovelfull.com/': ReadNovelFullCrawler,
+    'https://tomotranslations.com/': TomoTransCrawler,
     'https://webnovel.online/': WebnovelOnlineCrawler,
     'https://webnovelonline.com/': WebnovelOnlineDotComCrawler,
     'https://wordexcerpt.com/': WordExcerptCrawler,
