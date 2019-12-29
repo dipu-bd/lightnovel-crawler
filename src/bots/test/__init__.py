@@ -79,9 +79,10 @@ class TestBot:
             if error_count > 0:
                 message = self.build_message()
                 self.post_on_github(message)
-                raise Exception(message)
+                print()
+                print(message)
+                exit(1)
             # end if
-        # end if
         # end try
     # end def
 
