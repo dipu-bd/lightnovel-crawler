@@ -8,7 +8,13 @@ logger = logging.getLogger('QIDIAN_COM')
 chapter_list_url = 'https://book.qidian.com/ajax/book/category?_csrfToken=%s&bookId=%s'
 chapter_details_url = 'https://read.qidian.com/chapter/%s'
 
+
 class QidianComCrawler(Crawler):
+    base_url = [
+        'https://www.qidian.com/',
+        'https://book.qidian.com/',
+    ]
+
     def initialize(self):
         self.home_url = 'https://www.qidian.com/'
     # end def
@@ -17,7 +23,7 @@ class QidianComCrawler(Crawler):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
-        
+
         self.novel_title = soup.select_one('.book-info h1 em').text
         logger.info('Novel title: %s', self.novel_title)
 

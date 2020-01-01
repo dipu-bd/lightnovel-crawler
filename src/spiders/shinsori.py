@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [shinsori.com](https://www.shinsori.com/).
-"""
 import json
 import logging
 import re
@@ -12,6 +9,7 @@ logger = logging.getLogger('SHINSORI')
 
 
 class ShinsoriCrawler(Crawler):
+    base_url = 'https://www.shinsori.com/'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -24,16 +22,17 @@ class ShinsoriCrawler(Crawler):
         self.novel_cover = None
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = 'Author : %s, Translator: Shinsori' % soup.select('div.entry.clearfix p strong')[1].next_sibling.strip()
+        self.novel_author = 'Author : %s, Translator: Shinsori' % soup.select(
+            'div.entry.clearfix p strong')[1].next_sibling.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        #get pagination range
+        # get pagination range
         p_range = int(soup.select('ul.lcp_paginator li')[-2].text)
 
         chapters = []
-        #get chapter list by looping pagination range
+        # get chapter list by looping pagination range
         for x in range(p_range):
-            p_url = '%s?lcp_page0=%d#lcp_instance_0 x+1' % (self.novel_url,x+1)
+            p_url = '%s?lcp_page0=%d#lcp_instance_0 x+1' % (self.novel_url, x+1)
             p_soup = self.get_soup(p_url)
             chapters.extend(p_soup.select('ul.lcp_catlist')[1].select('li a'))
         # end for
@@ -64,22 +63,22 @@ class ShinsoriCrawler(Crawler):
 
         content = soup.select_one('div.entry-content')
 
-        #remove div with no class
+        # remove div with no class
         for item in content.findAll('div', attrs={'class': None}):
             item.decompose()
 
-        #remove style
+        # remove style
         for item in content.findAll('style'):
             item.decompose()
 
         subs = 'tab'
-        #remove all div that has class but not relevant
+        # remove all div that has class but not relevant
         for item in content.findAll('div'):
             res = [x for x in item['class'] if re.search(subs, x)]
-            if len(res)==0:
+            if len(res) == 0:
                 item.extract()
 
-        #remove p with attribute style
+        # remove p with attribute style
         for item in content.findAll('p'):
             if item.has_attr('style'):
                 item.decompose()

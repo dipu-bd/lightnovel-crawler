@@ -8,6 +8,8 @@ logger = logging.getLogger('WEBNOVEL_ONLINE')
 
 
 class WebnovelOnlineCrawler(Crawler):
+    base_url = 'https://webnovel.online/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         url = self.novel_url

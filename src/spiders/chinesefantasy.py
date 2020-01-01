@@ -10,6 +10,8 @@ logger = logging.getLogger('CHINESE_FANTASY_NOVELS')
 
 
 class ChineseFantasyNovels(Crawler):
+    base_url = 'https://m.chinesefantasynovels.com/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         if not self.novel_url.endswith('/'):

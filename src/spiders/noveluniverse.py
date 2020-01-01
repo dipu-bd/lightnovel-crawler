@@ -12,6 +12,7 @@ chapter_page_url = '%s?id=%s&page_c=%d'
 
 
 class NovelUniverseCrawler(Crawler):
+    base_url = 'https://www.noveluniverse.com/'
 
     def read_novel_info(self):
         self.novel_id = self.novel_url.split('/')[-1].split('.')[0]

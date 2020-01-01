@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [novelplanet.com](https://novelplanet.com/).
-"""
 import json
 import logging
 import re
@@ -14,6 +11,8 @@ search_url = 'https://novelplanet.com/NovelList?order=mostpopular&name=%s'
 
 
 class NovelPlanetCrawler(Crawler):
+    base_url = 'https://novelplanet.com/'
+
     # def search_novel(self, query):
     #     url = search_url % slugify(query)
     #     logger.info('Visiting %s', url)

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [Wuxia World Online](https://wuxiaworld.online/).
-"""
 import json
 import logging
 import re
@@ -13,6 +10,8 @@ search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
 
 
 class WuxiaOnlineCrawler(Crawler):
+    base_url = 'https://wuxiaworld.online/'
+
     # DISABLING DUE TO CLOUDEFLARE CAPTCHA CHALLENGE
     # def search_novel(self, query):
     #     '''Gets a list of {title, url} matching the given query'''

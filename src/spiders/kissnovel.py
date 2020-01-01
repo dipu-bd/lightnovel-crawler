@@ -1,37 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [boxnovel.com](https://boxnovel.com/).
-"""
 import json
 import logging
 import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('KISS-NOVEL')
-#search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-
 
 
 class KissNovelCrawler(Crawler):
-    #def search_novel(self, query):
-    #    query = query.lower().replace(' ', '+')
-    #    soup = self.get_soup(search_url % query)
-
-    #    results = []
-    #    for tab in soup.select('.c-tabs-item__content'):
-    #        a = tab.select_one('.post-title h4 a')
-    #        latest = tab.select_one('.latest-chap .chapter a').text
-    #        votes = tab.select_one('.rating .total_votes').text
-    #        results.append({
-    #            'title': a.text.strip(),
-    #            'url': self.absolute_url(a['href']),
-    #            'info': '%s | Rating: %s' % (latest, votes),
-    #        })
-        # end for
-
-    #    return results
-    # end def
+    base_url = 'https://kiss-novel.com/'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -64,7 +42,7 @@ class KissNovelCrawler(Crawler):
         chapters = []
 
         for i in range(page_count):
-            url = chapters_page_url % (self.novel_url,str(i+1))
+            url = chapters_page_url % (self.novel_url, str(i+1))
             logger.debug('Visiting %s', url)
             soup = self.get_soup(url)
             chapters.extend(soup.select('ul.main li.wp-manga-chapter a'))
@@ -100,12 +78,12 @@ class KissNovelCrawler(Crawler):
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
 
-        #if contents.h3:
+        # if contents.h3:
         #    contents.h3.decompose()
 
-        #for codeblock in contents.findAll('div', {'class': 'code-block'}):
+        # for codeblock in contents.findAll('div', {'class': 'code-block'}):
         #    codeblock.decompose()
 
-        #return contents.prettify()
+        # return contents.prettify()
     # end def
 # end class

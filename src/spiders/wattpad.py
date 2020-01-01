@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [boxnovel.com](https://boxnovel.com/).
-"""
 import json
 import logging
 import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WATTPAD')
-#search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 
 class WattpadCrawler(Crawler):
+    base_url = 'https://www.wattpad.com/'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -32,7 +29,7 @@ class WattpadCrawler(Crawler):
         description = soup.select('h2.description')[0].get_text()
 
         chapters = soup.select('ul.table-of-contents a')
-        #chapters.reverse()
+        # chapters.reverse()
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -58,7 +55,7 @@ class WattpadCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
 
         soup = self.get_soup(chapter['url'])
-        pages = int(re.search('[1-9]',re.search('("pages":)([1-9])', str(soup)).group(0)).group(0))
+        pages = int(re.search('[1-9]', re.search('("pages":)([1-9])', str(soup)).group(0)).group(0))
         chapter['title'] = soup.select('h2')[0].get_text().strip()
         contents = []
         for i in range(1, pages+1):

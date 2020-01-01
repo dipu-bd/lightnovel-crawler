@@ -10,6 +10,8 @@ logger = logging.getLogger('MEIONOVEL')
 
 
 class MeionovelCrawler(Crawler):
+    base_url = 'https://meionovel.id/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

@@ -10,6 +10,8 @@ novel_page = 'https://4scanlation.com/%s'
 
 
 class FourScanlationCrawler(Crawler):
+    base_url = 'https://4scanlation.com/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         path_fragments = urlparse(self.novel_url).path.split('/')

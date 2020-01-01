@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [bestlightnovel](https://bestlightnovel.com/).
-"""
 import logging
 import re
 from bs4 import BeautifulSoup
@@ -14,6 +11,8 @@ novel_page_url = 'https://bestlightnovel.com/novel_%s'
 
 
 class BestLightNovel(Crawler):
+    base_url = 'https://bestlightnovel.com/'
+
     def search_novel(self, query):
         response = self.submit_form(search_url, {
             'searchword': query

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [translateindo.com](https://www.translateindo.com/).
-"""
 import logging
 import re
 from urllib.parse import quote, urlparse
@@ -18,7 +15,9 @@ logger = logging.getLogger('TRANSLATEINDO')
 
 
 class TranslateIndoCrawler(Crawler):
-    #def search_novel(self, query):
+    base_url = 'https://www.translateindo.com/'
+
+    # def search_novel(self, query):
     #    data = self.get_json(search_url % quote(query))
 
     #    results = []
@@ -46,7 +45,8 @@ class TranslateIndoCrawler(Crawler):
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one('div.entry-content p span').text.strip().replace('Author: ','')
+        self.novel_author = soup.select_one(
+            'div.entry-content p span').text.strip().replace('Author: ', '')
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.select_one('div#comments').find_previous_sibling('div').select('a')

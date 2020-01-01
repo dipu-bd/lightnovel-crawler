@@ -14,6 +14,8 @@ novel_url = 'http://zenithnovels.com/%s/'
 
 
 class ZenithNovelsCrawler(Crawler):
+    base_url = 'http://zenithnovels.com/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         self.novel_id = re.search(

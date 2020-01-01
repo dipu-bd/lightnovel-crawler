@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [readlightnovel.org](https://www.readlightnovel.org/).
-"""
 import json
 import logging
 import re
@@ -10,7 +7,10 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVELRINGAN')
 
+
 class NovelRinganCrawler(Crawler):
+    base_url = 'https://novelringan.com/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
@@ -25,7 +25,6 @@ class NovelRinganCrawler(Crawler):
 
         self.novel_author = 'Translated by novelringan.com'
         logger.info('Novel author: %s', self.novel_author)
-        
 
         for a in reversed(soup.select('.bxcl ul li a')):
             chap_id = len(self.chapters) + 1

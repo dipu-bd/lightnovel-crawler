@@ -11,6 +11,11 @@ ajaxchapter_url = 'https://www.romanticlovebooks.com/home/index/ajaxchapter'
 
 
 class RomanticLBCrawler(Crawler):
+    base_url = [
+        'https://m.romanticlovebooks.com/',
+        'https://www.romanticlovebooks.com/',
+    ]
+
     def initialize(self):
         self.home_url = 'https://www.romanticlovebooks.com/'
     # end def

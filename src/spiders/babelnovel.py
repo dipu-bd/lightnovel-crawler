@@ -21,6 +21,8 @@ chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 
 class BabelNovelCrawler(Crawler):
+    base_url = 'https://babelnovel.com/'
+
     def search_novel(self, query):
         # to get cookies
         self.get_response(self.home_url)

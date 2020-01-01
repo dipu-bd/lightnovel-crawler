@@ -9,6 +9,7 @@ logger = logging.getLogger('COMRADEMAO')
 
 
 class ComrademaoCrawler(Crawler):
+    base_url = 'https://comrademao.com/'
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)

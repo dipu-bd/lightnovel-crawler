@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [mtlnovel.com](https://www.mtlnovel.com/).
-"""
 import json
 import logging
 import re
@@ -13,6 +10,8 @@ search_url = 'https://www.mtlnovel.com/wp-admin/admin-ajax.php?action=autosugges
 
 
 class MtlnovelCrawler(Crawler):
+    base_url = 'https://www.mtlnovel.com/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
         #soup = self.get_soup(search_url % query)

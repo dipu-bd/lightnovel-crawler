@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [WuxiaWorld](http://www.wuxiaworld.co/).
-"""
 import json
 import logging
 import re
@@ -16,6 +13,11 @@ search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
 
 
 class WuxiaCoCrawler(Crawler):
+    base_url = [
+        'http://www.wuxiaworld.co/',
+        'https://m.wuxiaworld.co/',
+    ]
+
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.co/'
     # end def
@@ -68,7 +70,7 @@ class WuxiaCoCrawler(Crawler):
                 vol['id'] += 1
                 vol['title'] = item.text.strip()
                 #vol['title'] = re.sub(r'^(.*)', '', vol['title'])
-                #vol['title'] = re.sub(
+                # vol['title'] = re.sub(
                 #    r'^\s*Text\s*$', '', vol['title']).strip()
                 volume = vol
             # end if

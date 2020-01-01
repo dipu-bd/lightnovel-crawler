@@ -13,6 +13,8 @@ novel_page_url = 'https://light-novel.online/%s?page=%d'
 
 
 class LightNovelOnline(Crawler):
+    base_url = 'https://light-novel.online/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)

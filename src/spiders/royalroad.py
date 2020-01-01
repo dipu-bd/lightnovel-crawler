@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [novelonlinefree.info](https://novelonlinefree.info/).
-"""
 import json
 import logging
 import re
@@ -13,6 +10,8 @@ search_url = 'https://www.royalroad.com/fictions/search?keyword=%s'
 
 
 class RoyalRoadCrawler(Crawler):
+    base_url = 'https://www.royalroad.com/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)

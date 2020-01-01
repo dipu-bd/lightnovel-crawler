@@ -11,6 +11,8 @@ search_url = 'https://www.machine-translation.org/novel/search/?keywords=%s'
 
 
 class MachineTransOrg(Crawler):
+    base_url = 'https://www.machine-translation.org/'
+
     def search_novel(self, query):
         url = search_url % quote(query.lower())
         logger.debug('Visiting: %s', url)

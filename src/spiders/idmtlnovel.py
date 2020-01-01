@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [id.mtlnovel.com](https://id.mtlnovel.com/).
-"""
 import json
 import logging
 import re
@@ -11,7 +8,10 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('IDMTLNOVEL')
 search_url = 'https://id.mtlnovel.com/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
 
+
 class IdMtlnovelCrawler(Crawler):
+    base_url = 'https://id.mtlnovel.com/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
         #soup = self.get_soup(search_url % query)
@@ -37,9 +37,9 @@ class IdMtlnovelCrawler(Crawler):
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        chapters = soup.select('div.info-wrap div')[1].text.replace('Chapters','')
+        chapters = soup.select('div.info-wrap div')[1].text.replace('Chapters', '')
         info = '%s chapters' % chapters
-        #if len(chapters) > 0:
+        # if len(chapters) > 0:
         #    info += ' | Latest: %s' % chapters[-1].text.strip()
         # end if
 
@@ -94,10 +94,10 @@ class IdMtlnovelCrawler(Crawler):
 
         contents = soup.select('div.post-content p.en')
         # print(contents)
-        #for p in contents:
+        # for p in contents:
         #    for span in p.findAll('span'):
         #        span.unwrap()
-            # end for
+        # end for
         # end for
         # print(contents)
         # self.clean_contents(contents)

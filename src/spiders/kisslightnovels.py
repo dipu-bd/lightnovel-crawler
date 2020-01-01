@@ -8,6 +8,8 @@ search_url = 'https://kisslightnovels.info/?s=%s&post_type=wp-manga&author=&arti
 
 
 class KissLightNovels(Crawler):
+    base_url = 'https://kisslightnovels.info/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)

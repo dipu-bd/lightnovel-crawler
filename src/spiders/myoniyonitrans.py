@@ -10,6 +10,8 @@ novel_page = 'https://myoniyonitranslations.com/%s'
 
 
 class MyOniyOniTranslation(Crawler):
+    base_url = 'https://myoniyonitranslations.com/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         path_fragments = urlparse(self.novel_url).path.split('/')

@@ -15,6 +15,8 @@ chapter_list_url = 'https://read.aixdzs.com/%s'
 
 
 class AixdzsCrawler(Crawler):
+    base_url = 'https://www.aixdzs.com'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         if not self.novel_url.endswith('/'):
@@ -25,13 +27,13 @@ class AixdzsCrawler(Crawler):
 
         self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_cover)
-        
+
         self.novel_title = soup.select_one('meta[property="og:novel:book_name"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = soup.select_one('meta[property="og:novel:author"]')['content']
         logger.info('%s', self.novel_author)
-        
+
         parsed_url = urlparse(self.novel_url)
         parsed_path = parsed_url.path.strip('/').split('/')
         chapter_url = chapter_list_url % ('/'.join(parsed_path[1:]))

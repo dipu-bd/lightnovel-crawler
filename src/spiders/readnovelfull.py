@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [novelall.com](https://www.novelall.com/).
-"""
 import json
 import logging
 import re
@@ -10,9 +7,12 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('READNOVELFULL')
 search_url = 'https://readnovelfull.com/search?keyword=%s'
+full_chapter_url = 'https://readnovelfull.com/ajax/chapter-archive?novelId=%s'
 
 
 class ReadNovelFullCrawler(Crawler):
+    base_url = 'https://readnovelfull.com/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
@@ -55,10 +55,10 @@ class ReadNovelFullCrawler(Crawler):
 
         novel_id = soup.select_one('div#rating')['data-novel-id']
 
-        chapter_url = 'https://readnovelfull.com/ajax/chapter-archive?novelId=%s' % novel_id
+        chapter_url = full_chapter_url % novel_id
+        logger.debug('Visiting %s', chapter_url)
 
         chapter_soup = self.get_soup(chapter_url)
-
         chapters = chapter_soup.select('li a')
         for a in chapters:
             for span in a.findAll('span'):

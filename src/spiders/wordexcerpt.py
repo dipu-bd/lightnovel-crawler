@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [mtlnovel.com](https://www.mtlnovel.com/).
-"""
 import json
 import logging
 import re
@@ -13,6 +10,7 @@ search_url = 'https://wordexcerpt.com/?s=%s&post_type=wp-manga'
 
 
 class WordExcerptCrawler(Crawler):
+    base_url = 'https://wordexcerpt.com/'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -26,7 +24,8 @@ class WordExcerptCrawler(Crawler):
             soup.select_one('div.summary_image a img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = 'Author : %s, Translator : %s' % (soup.select_one('div.author-content a').text,soup.select_one('div.artist-content a').text)
+        self.novel_author = 'Author : %s, Translator : %s' % (soup.select_one(
+            'div.author-content a').text, soup.select_one('div.artist-content a').text)
         logger.info('Novel author: %s', self.novel_author)
 
         if soup.select('ul.sub-chap'):
@@ -84,7 +83,7 @@ class WordExcerptCrawler(Crawler):
         logger.debug(soup.title.string)
 
         contents = soup.select('div.text-left p')
-        
+
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

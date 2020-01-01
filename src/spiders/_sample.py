@@ -14,6 +14,9 @@ logger = logging.getLogger(__name__)
 
 
 class SampleCrawler(Crawler):
+    # TODO: provide a base url for the source
+    base_url = ['http://sample.url/']
+
     def initialize(self):
         # TODO: Initiaze your crawler, variables etc. It gets called at the
         #       beginning of the app.

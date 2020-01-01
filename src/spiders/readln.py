@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [readlightnovel.org](https://www.readlightnovel.org/).
-"""
 import json
 import logging
 import re
@@ -13,6 +10,8 @@ search_url = 'https://www.readlightnovel.org/search/autocomplete'
 
 
 class ReadLightNovelCrawler(Crawler):
+    base_url = 'https://www.readlightnovel.org/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

@@ -11,9 +11,7 @@ logger = logging.getLogger('JIE_RUI_HAO')
 
 
 class JieruihaoCrawler(Crawler):
-    def initialize(self):
-        self.home_url = 'https://www.jieruihao.cn'
-    # end def
+    base_url = 'https://www.jieruihao.cn'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

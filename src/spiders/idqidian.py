@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [Idqidian.us](https://www.idqidian.us/).
-"""
 import json
 import logging
 import re
@@ -12,6 +9,8 @@ logger = logging.getLogger('IDQIDIAN')
 
 
 class IdqidianCrawler(Crawler):
+    base_url = 'https://www.idqidian.us/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

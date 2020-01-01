@@ -12,6 +12,8 @@ logger = logging.getLogger('YUKI_NOVEL')
 
 
 class YukiNovelCrawler(Crawler):
+    base_url = 'https://yukinovel.id/'
+
     def initialize(self):
         self.home_url = 'https://yukinovel.id/'
     # end def

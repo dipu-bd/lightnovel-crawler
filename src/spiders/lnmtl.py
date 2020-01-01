@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for novels from [LNMTL](https://lnmtl.com).
-"""
 import json
 import logging
 import re
@@ -20,6 +17,8 @@ logout_url = 'https://lnmtl.com/auth/logout'
 
 
 class LNMTLCrawler(Crawler):
+    base_url = 'https://lnmtl.com/'
+
     def login(self, email, password):
         '''login to LNMTL'''
         # Get the login page

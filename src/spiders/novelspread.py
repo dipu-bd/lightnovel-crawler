@@ -16,6 +16,8 @@ chapter_body_url = 'https://api.novelspread.com/api/novel/%s/chapter/%d/content?
 
 
 class NovelSpreadCrawler(Crawler):
+    base_url = 'https://www.novelspread.com/'
+
     def make_cover_url(self, image):
         a = '360'
         b = '512'

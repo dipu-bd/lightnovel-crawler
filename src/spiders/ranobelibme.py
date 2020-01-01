@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [ranobelib.me](https://www.ranobelib.me/).
-"""
 import logging
 from ..utils.crawler import Crawler
 import re
@@ -11,6 +8,8 @@ logger = logging.getLogger("RANOBE_LIB_ME")
 
 
 class RanobeLibCrawler(Crawler):
+    base_url = 'https://www.ranobelib.me/'
+
     def read_novel_info(self):
         logger.info('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)

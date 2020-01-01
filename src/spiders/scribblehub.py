@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [novelonlinefree.info](https://novelonlinefree.info/).
-"""
 import json
 import logging
 import re
@@ -15,6 +12,8 @@ search_url = 'https://www.scribblehub.com/?s=%s&post_type=fictionposts'
 
 
 class ScribbleHubCrawler(Crawler):
+    base_url = 'https://www.scribblehub.com/'
+
     def search_novel(self, query):
         url = search_url % quote(query.lower())
         logger.debug('Visiting %s', url)

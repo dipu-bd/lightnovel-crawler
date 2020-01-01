@@ -10,6 +10,8 @@ search_url = 'http://novelfull.com/search?keyword=%s'
 
 
 class NovelFullCrawler(Crawler):
+    base_url = 'http://novelfull.com/'
+
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
         query = query.strip().lower().replace(' ', '+')

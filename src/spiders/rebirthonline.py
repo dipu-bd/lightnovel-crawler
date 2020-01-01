@@ -13,6 +13,8 @@ book_url = 'https://www.rebirth.online/novel/%s'
 
 
 class RebirthOnlineCrawler(Crawler):
+    base_url = 'https://www.rebirth.online/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         self.novel_id = self.novel_url.split(

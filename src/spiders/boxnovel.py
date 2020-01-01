@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [boxnovel.com](https://boxnovel.com/).
-"""
 import json
 import logging
 import re
@@ -13,6 +10,8 @@ search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&rele
 
 
 class BoxNovelCrawler(Crawler):
+    base_url = 'https://boxnovel.com/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)

@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for novels from [WebNovel](https://www.webnovel.com).
-"""
 import json
 import logging
 import re
@@ -20,6 +17,8 @@ search_url = 'https://www.webnovel.com/apiajax/search/AutoCompleteAjax'
 
 
 class WebnovelCrawler(Crawler):
+    base_url = 'https://www.webnovel.com'
+
     def get_csrf(self):
         logger.info('Getting CSRF Token')
         self.get_response(self.home_url)
@@ -153,7 +152,8 @@ class WebnovelCrawler(Crawler):
     # end def
 
     def format_text(self, text):
-        text = re.sub(r'Find authorized novels in Webnovel(.*)for visiting\.', '', text, re.MULTILINE)
+        text = re.sub(r'Find authorized novels in Webnovel(.*)for visiting\.',
+                      '', text, re.MULTILINE)
         text = re.sub(r'\<pirate\>(.*?)\<\/pirate\>', '', text, re.MULTILINE)
         if not (('<p>' in text) and ('</p>' in text)):
             text = re.sub(r'<', '&lt;', text)

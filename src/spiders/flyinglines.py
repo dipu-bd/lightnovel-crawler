@@ -12,6 +12,8 @@ chapter_body_url = 'https://www.flying-lines.com/h5/novel/%s/%s?accessToken=&isF
 
 
 class FlyingLinesCrawler(Crawler):
+    base_url = 'https://www.flying-lines.com/'
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

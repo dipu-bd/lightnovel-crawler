@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [mtled-novels.com](https://mtled-novels.com/).
-"""
 import json
 import logging
 import re
@@ -16,6 +13,8 @@ logout_url = 'https://mtled-novels.com/login/logout.php'
 
 
 class MtledNovelsCrawler(Crawler):
+    base_url = 'https://mtled-novels.com/'
+
     def login(self, username, password):
         '''login to LNMTL'''
         # Get the login page

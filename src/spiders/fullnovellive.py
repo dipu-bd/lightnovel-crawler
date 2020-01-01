@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for http://fullnovel.live/
-"""
 import logging
 from ..utils.crawler import Crawler
 
@@ -12,6 +9,8 @@ NOVEL_SEARCH = 'http://fullnovel.live/search/%s'
 
 
 class FullnovelLiveCrawler(Crawler):
+    base_url = 'http://fullnovel.live/'
+
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
         results = []

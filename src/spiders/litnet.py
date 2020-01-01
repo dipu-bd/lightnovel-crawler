@@ -8,6 +8,7 @@ search_url = 'https://litnet.com/en/search?q=%s'
 
 
 class LitnetCrawler(Crawler):
+    base_url = 'https://litnet.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')

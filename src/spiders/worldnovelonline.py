@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [worldnovel.online](https://www.worldnovel.online/).
-"""
 import logging
 import re
 import json
@@ -19,6 +16,8 @@ chapter_list_url = "https://www.worldnovel.online/wp-json/writerist/v1/chapters?
 
 
 class WorldnovelonlineCrawler(Crawler):
+    base_url = 'https://www.worldnovel.online/'
+
     def search_novel(self, query):
         data = self.get_json(search_url % quote(query))
 

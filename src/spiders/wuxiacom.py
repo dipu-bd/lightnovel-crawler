@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [WuxiaWorld](http://www.wuxiaworld.com/).
-"""
 import json
 import logging
 import re
@@ -17,6 +14,8 @@ search_url = 'https://www.wuxiaworld.com/api/novels/search?query=%s&count=5'
 
 
 class WuxiaComCrawler(Crawler):
+    base_url = ['https://www.wuxiaworld.com/']
+
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.com'
     # end def

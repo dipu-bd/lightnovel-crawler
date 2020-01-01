@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [NovelGo](https://novelgo.id/).
-"""
 import json
 import logging
 import re
@@ -15,23 +12,22 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_GO')
 
+
 class NovelGoCrawler(Crawler):
-    def initialize(self):
-        self.home_url = 'https://novelgo.id/'
-    # end def
+    base_url = 'https://novelgo.id/'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find('h2',{'class':'novel-title'}).text.strip()
+        self.novel_title = soup.find('h2', {'class': 'novel-title'}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = soup.select_one('div.noveils-current-author a').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        thumbnail = soup.find("div", {"class":"novel-thumbnail"})['style']
+        thumbnail = soup.find("div", {"class": "novel-thumbnail"})['style']
         style = cssutils.parseStyle(thumbnail)
         url = style['background-image']
 
@@ -43,7 +39,7 @@ class NovelGoCrawler(Crawler):
         book_id = path.split('/')[2]
         chapter_list = js = self.scrapper.post(
             'https://novelgo.id/wp-admin/admin-ajax.php?action=LoadChapter&post=%s' % book_id).content
-        soup_chapter = BeautifulSoup(chapter_list,'lxml')
+        soup_chapter = BeautifulSoup(chapter_list, 'lxml')
 
         chapters = soup_chapter.select('ul li a')
 
@@ -78,7 +74,7 @@ class NovelGoCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
 
-        contents = soup.find('div',{'id':'chapter-post-content'}).findAll('p')
+        contents = soup.find('div', {'id': 'chapter-post-content'}).findAll('p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

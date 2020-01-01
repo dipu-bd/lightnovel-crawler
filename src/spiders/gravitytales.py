@@ -12,6 +12,8 @@ chapter_list_url = 'http://gravitytales.com/novel/%s/chapters'
 
 
 class GravityTalesCrawler(Crawler):
+    base_url = 'http://gravitytales.com/'
+
     def read_novel_info(self):
         self.novel_id = re.split(r'\/(novel|post)\/', self.novel_url)[2]
         self.novel_id = self.novel_id.split('/')[0]

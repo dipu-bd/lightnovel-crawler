@@ -15,6 +15,8 @@ chapter_list_url = 'https://novelraw.blogspot.com/feeds/posts/default/-/%s?alt=j
 
 
 class NovelRawCrawler(Crawler):
+    base_url = 'https://novelraw.blogspot.com/'
+
     def read_novel_info(self):
         # Determine cannonical novel name
         logger.debug('Visiting %s', self.novel_url)

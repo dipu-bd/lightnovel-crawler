@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Crawler for [crescentmoon.blog](https://crescentmoon.blog/).
-"""
 import json
 import logging
 import re
@@ -13,6 +10,7 @@ logger = logging.getLogger('CRESCENTMOON')
 
 
 class CrescentMoonCrawler(Crawler):
+    base_url = 'https://crescentmoon.blog/'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

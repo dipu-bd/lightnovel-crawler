@@ -12,6 +12,8 @@ search_url = 'https://www.fanfiction.net/search/?keywords=%s&type=story&match=ti
 
 
 class FanFictionCrawler(Crawler):
+    base_url = 'https://www.fanfiction.net/'
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)

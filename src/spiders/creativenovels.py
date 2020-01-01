@@ -14,7 +14,7 @@ chapter_s_regex = r'var chapter_list_summon = {"ajaxurl":"https:\/\/creativenove
 
 
 class CreativeNovelsCrawler(Crawler):
-    '''Crawler for https://creativenovels.com'''
+    base_url = 'https://creativenovels.com/'
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
