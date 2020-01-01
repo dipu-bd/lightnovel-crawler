@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Crawler for [Jieruihao](https://www.jieruihao.cn).

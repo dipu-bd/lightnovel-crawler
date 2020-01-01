@@ -267,14 +267,13 @@ You are very welcome to contribute in this project. You can:
 ### C1. Adding new source
 
 - Create new crawler using the [`spiders/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/_sample.py) as template.
-- Import your crawler to [`spiders/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/spiders/__init__.py) file.
 - Update [Supported sources](#c3-supported-sources) section in `README.md`
-- Add some test inputs to `test_user_inputs` variable in `src/bots/test.py`
+- Add some test inputs to `test_user_inputs` variable in `src/bots/test/test_inputs.py`
 
 ### C2. Adding new Bot
 
 - Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as template.
-- Import your bot to [`bots/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/__init__.py) file.
+- Import bot to [`bots/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/__init__.py) file.
 
 ### C3. Supported sources
 

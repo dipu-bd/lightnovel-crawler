@@ -1,3 +1,7 @@
+allowed_failures = [
+    'https://ranobelib.me/',
+]
+
 test_user_inputs = {
     'http://gravitytales.com/': [
         'http://gravitytales.com/posts/novel/a-dragons-curiosity'
@@ -221,7 +225,3 @@ test_user_inputs = {
         'https://webnovelonline.com/novel/the_anarchic_consort'
     ],
 }
-
-allowed_failures = [
-    'https://ranobelib.me/',
-]
