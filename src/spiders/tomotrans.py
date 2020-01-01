@@ -52,11 +52,13 @@ class TomoTransCrawler(Crawler):
 
         body = ''
         for tag in soup.select('article section.entry > *'):
-            if tag.name == 'hr' and 'class' in tag and 'is-style-dots' in tag['class']:
-                break
+            if tag.name == 'hr' and tag.has_attr("class") and 'is-style-dots' in tag.get('class'):
+                body += '<p>—————–</p>'
             elif tag.name == 'p':
                 if tag.find('strong'):
                     chapter['title'] = tag.text.strip()
+                elif tag.find('a') and re.match(r'Previous|Next', tag.find('a').text):
+                    pass
                 else:
                     body += str(tag)
                 # end if
