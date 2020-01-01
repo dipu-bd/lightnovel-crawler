@@ -22,7 +22,6 @@ from ..utils.crawler import Crawler
 rejected_sources = {
     'http://fullnovel.live/': "403 - Forbidden: Access is denied",
     'http://moonbunnycafe.com/': "Does not follow uniform format",
-    # 'https://4scanlation.com/': "Domain expired",
     'https://comrademao.com/': "Removed by owner",
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
@@ -32,6 +31,7 @@ rejected_sources = {
     'https://www.novelv.com/': "Site is down",
     'https://yukinovel.id/': "Removed by owner",
     'https://www.jieruihao.cn/': "Unavailable",
+    'https://myoniyonitranslations.com/': "522 - Connection timed out",
 }
 
 # this list will be auto-generated
