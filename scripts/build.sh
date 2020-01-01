@@ -21,7 +21,4 @@ $PY setup.py clean bdist_wheel sdist package
 deactivate
 rm -rf venv build *.egg-info
 
-$PIP install twine
-twine upload "dist/lightnovel_crawler-$VERSION-py3-none-any.whl"
-
 # FINISHED
