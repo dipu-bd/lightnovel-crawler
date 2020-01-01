@@ -81,9 +81,7 @@ class WuxiaSiteCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        contents = soup.select('div.cha-words p')
-
+        contents = soup.select('.text-left p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
