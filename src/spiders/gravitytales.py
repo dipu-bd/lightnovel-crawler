@@ -38,6 +38,9 @@ class GravityTalesCrawler(Crawler):
         url = chapter_list_url % self.novel_id
         logger.info('Visiting %s' % url)
         soup = self.get_soup(url)
+        
+        unwanted_default_group = soup.find("li", {"class": "active"})
+        unwanted_default_group.extract()
 
         for a in soup.select('#chaptergroups li a'):
             vol_id = len(self.volumes) + 1
