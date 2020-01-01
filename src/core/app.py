@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 from slugify import slugify
 
 from ..binders import available_formats, generate_books
-from ..spiders import crawler_list
+from ..sources import crawler_list
 from .novel_search import search_novels
 from .downloader import download_chapters
 from .novel_info import format_novel, save_metadata

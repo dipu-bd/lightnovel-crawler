@@ -8,7 +8,7 @@ import traceback
 from random import random
 
 from ...assets.icons import isWindows
-from ...spiders import crawler_list
+from ...sources import crawler_list
 from ...utils.cfscrape import CloudflareCaptchaError
 
 # For colorama in Windows

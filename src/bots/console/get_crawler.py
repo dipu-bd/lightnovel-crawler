@@ -5,7 +5,7 @@ from PyInquirer import prompt
 
 from ...core import display
 from ...core.arguments import get_args
-from ...spiders import rejected_sources
+from ...sources import rejected_sources
 
 
 def get_novel_url(self):

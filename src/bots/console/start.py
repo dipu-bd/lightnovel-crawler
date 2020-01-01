@@ -6,7 +6,7 @@ from PyInquirer import prompt
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
-from ...spiders import rejected_sources
+from ...sources import rejected_sources
 
 
 def start(self):

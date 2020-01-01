@@ -9,7 +9,7 @@ from concurrent import futures
 from slugify import slugify
 from progress.bar import IncrementalBar
 
-from ..spiders import crawler_list
+from ..sources import crawler_list
 
 logger = logging.getLogger('SEARCH_NOVEL')
 
