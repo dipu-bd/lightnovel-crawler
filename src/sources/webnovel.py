@@ -95,7 +95,7 @@ class WebnovelCrawler(Crawler):
             self.chapters.append({
                 'id': i + 1,
                 'hash': chap['id'],
-                'title': chap['name'].strip(),
+                'title': 'Chapter %s: %s' % (chap['index'], chap['name'].strip()),
                 'url': chapter_body_url % (self.csrf, self.novel_id, chap['id']),
                 'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
             })
