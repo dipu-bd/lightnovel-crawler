@@ -44,8 +44,9 @@ class TranslateIndoCrawler(Crawler):
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one(
-            'div.entry-content p span').text.strip().replace('Author: ', '')
+        self.novel_author = soup.select_one('div.entry-content p span').text
+        self.novel_author = re.sub(r'[\(\s\)]+', ' ', self.novel_author).strip()
+        self.novel_author = re.sub('Author: ', '', self.novel_author)
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.select_one('div#comments').find_previous_sibling('div').select('a')
