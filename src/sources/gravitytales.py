@@ -39,7 +39,7 @@ class GravityTalesCrawler(Crawler):
         url = chapter_list_url % self.novel_id
         logger.info('Visiting %s' % url)
         soup = self.get_soup(url)
-        
+
         unwanted_default_group = soup.find("li", {"class": "active"})
         unwanted_default_group.extract()
 
@@ -56,8 +56,8 @@ class GravityTalesCrawler(Crawler):
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
-                    'url': self.absolute_url(a['href']),
                     'title': a.text.strip(),
+                    'url': self.absolute_url(a['href']),
                 })
         # end for
 
@@ -70,8 +70,23 @@ class GravityTalesCrawler(Crawler):
         logger.info('Downloading %s' % chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        body_parts = soup.select_one('#chapterContent')
-        body = self.extract_contents(body_parts)
+        # body_parts = soup.select_one('#chapterContent')
+        # body = self.extract_contents(body_parts)
+
+        body = []
+        for div in soup.select('#chapterContent > *'):
+            text = div.text.strip()
+            if not text:  # text is empty
+                continue
+            # end if
+            stripped_text = ' '.join(re.findall(r'[\w\d]+', text)).lower()
+            stripped_title = ' '.join(re.findall(r'[\w\d]+', chapter['title'])).lower()
+            if stripped_text == stripped_title:
+                continue
+            # end if
+            body.append(text)
+        # end for
+
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

@@ -37,9 +37,9 @@ def download_cover(app):
         if os.path.exists(filename):
             return filename
         # end if
-    except Exception:
-        logger.exception('Failed to locate cover image: %s -> %s',
-                         app.crawler.novel_cover, app.output_path)
+    except Exception as ex:
+        logger.warn('Failed to locate cover image: %s -> %s (%s)',
+                    app.crawler.novel_cover, app.output_path, str(ex))
         return None
     # end try
 
@@ -51,9 +51,9 @@ def download_cover(app):
         img.save(filename)
         logger.debug('Saved cover: %s', filename)
         return filename
-    except Exception:
-        logger.exception('Failed to download cover image: %s -> %s',
-                         app.crawler.novel_cover, filename)
+    except Exception as ex:
+        logger.warn('Failed to download cover image: %s -> %s (%s)',
+                    app.crawler.novel_cover, filename, str(ex))
         return None
     # end try
 # end def
