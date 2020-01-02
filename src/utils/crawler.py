@@ -150,6 +150,9 @@ class Crawler:
         if self._destroyed:
             return None
         # end if
+        kargs = kargs or dict()
+        kargs['verify'] = kargs.get('verify', False)
+        kargs['timeout'] = kargs.get('timeout', 15)  # in seconds
         self.last_visited_url = url.strip('/')
         response = self.scrapper.get(url, **kargs)
         response.encoding = 'utf-8'
