@@ -288,6 +288,7 @@ The list of currently available sources are given below:
 | http://www.machinenoveltranslation.com |            |           |
 | http://www.tiknovel.com                |            |           |
 | http://zenithnovels.com                |            |           |
+| https://4scanlation.xyz                |            |           |
 | https://anythingnovel.com              |            |           |
 | https://babelnovel.com                 |     ✔      |           |
 | https://bestlightnovel.com             |     ✔      |           |
@@ -299,6 +300,7 @@ The list of currently available sources are given below:
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
 | https://light-novel.online             |     ✔      |           |
+| https://listnovel.com                  |            |           |
 | https://litnet.com                     |     ✔      |           |
 | https://lnmtl.com                      |            |     ✔     |
 | https://m.chinesefantasynovels.com     |            |           |
@@ -350,7 +352,6 @@ The list of currently available sources are given below:
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
-| https://4scanlation.xyz       | `Domain expired`                    |
 | https://comrademao.com        | `Removed`                           |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
