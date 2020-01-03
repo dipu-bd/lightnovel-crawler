@@ -55,20 +55,22 @@ class FourScanlationCrawler(Crawler):
                 'title': a.text.strip(),
             })
         # end for
-        self.volumes = [{'id': i} for i in volumes]
 
-        logger.debug('%d chapters & %d volumes found',
-                     len(self.chapters), len(self.volumes))
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
+
         contents = soup.select_one('article div.entry-content')
+        if not contents:
+            return ''
+        # end if
 
         for d in contents.findAll('div'):
-            d.decompose()
+            d.extract()
         # end for
 
         try:
@@ -78,6 +80,6 @@ class FourScanlationCrawler(Crawler):
             pass
         # end try
 
-        return str(contents)
+        return str(contents or '')
     # end def
 # end class

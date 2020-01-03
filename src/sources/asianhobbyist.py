@@ -1,7 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Use this sample to create new sources
-"""
 import logging
 import re
 

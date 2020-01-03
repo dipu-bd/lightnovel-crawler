@@ -286,6 +286,7 @@ The list of currently available sources are given below:
 | http://gravitytales.com                |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://www.machinenoveltranslation.com |            |           |
+| http://www.tiknovel.com                |            |           |
 | http://zenithnovels.com                |            |           |
 | https://anythingnovel.com              |            |           |
 | https://babelnovel.com                 |     ✔      |           |

@@ -90,6 +90,9 @@ class SampleCrawler(Crawler):
         # TODO: [MUST IMPLEMENT] Download body of a single chapter and return a
         #       clean html format. You may use `chapter['url']` here.
         #
+        # NOTE: Set `chapter['body_lock'] = True` to disable post-formatting.
+        #       It can be useful in non-english sources, e.g. aixdzs, qidiancom, tiknovel
+        #
         #       Return an empty body if anything goes wrong. But you should not return `None`.
         pass
     # end def

@@ -47,6 +47,11 @@ test_user_inputs = {
     ],
     'https://m.wuxiaworld.co/': [
         'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
+    ],
+    'http://www.tiknovel.com/': [
+        'http://www.tiknovel.com/book/index?id=3313',
+    ],
+    'https://www.wuxiaworld.co/': [
         'sword',
     ],
     'https://meionovel.id/': [
@@ -223,5 +228,8 @@ test_user_inputs = {
     ],
     'https://webnovelonline.com/': [
         'https://webnovelonline.com/novel/the_anarchic_consort'
+    ],
+    'https://4scanlation.com/tensei-shitara-slime-datta-ken-wn/': [
+        'https://4scanlation.com/tensei-shitara-slime-datta-ken-wn/'
     ],
 }
