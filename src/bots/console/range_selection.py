@@ -164,8 +164,9 @@ def get_range_from_volumes(self, times=0):
                 'message': 'Choose volumes to download:',
                 'choices': [
                     {
-                        'name': '%d - %s [%d chapters]' % (
-                            vol['id'], vol['title'], vol['chapter_count'])
+                        'name': '%d - %s (Chapter %d-%d) [%d chapters]' % (
+                            vol['id'], vol['title'], vol['start_chapter'],
+                            vol['final_chapter'], vol['chapter_count'])
                     }
                     for vol in self.app.crawler.volumes
                 ],

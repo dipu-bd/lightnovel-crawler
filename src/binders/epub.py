@@ -51,7 +51,7 @@ def make_intro_page(app, cover_image):
         </div>
     ''' % (
         app.crawler.novel_title or 'N/A',
-        app.crawler.novel_author or 'N/A',
+        app.crawler.novel_author or app.crawler.home_url,
     )
 
     if cover_image:

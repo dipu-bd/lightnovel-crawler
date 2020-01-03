@@ -172,7 +172,9 @@ class App:
         data = {}
         if self.pack_by_volume:
             for vol in self.crawler.volumes:
-                data['Volume %d' % vol['id']] = [
+                # filename_suffix = 'Volume %d' % vol['id']
+                filename_suffix = 'Chapter %d-%d' % (vol['start_chapter'], vol['final_chapter'])
+                data[filename_suffix] = [
                     x for x in self.chapters
                     if x['volume'] == vol['id']
                     and len(x['body']) > 0

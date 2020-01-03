@@ -21,19 +21,12 @@ def format_novel(crawler: Crawler):
 def format_volumes(crawler: Crawler):
     for vol in crawler.volumes:
         vol['chapter_count'] = 0
+        vol['final_chapter'] = 0
+        vol['start_chapter'] = 1e8
         title = 'Volume %d' % vol['id']
         if not ('title' in vol and vol['title']):
             vol['title'] = title
         # end if
-        # if not('title_lock' in vol and vol['title_lock']):
-        #     if not ('title' in vol and vol['title']):
-        #         vol['title'] = title
-        #     # end if
-        #     if not re.search(r'(book|vol|volume) .?\d+', vol['title'], re.I):
-        #         vol['title'] = title + ' - ' + vol['title'].title()
-        #     # end if
-        #     vol['title'] = crawler.cleanup_text(vol['title'])
-        # # end if
     # end for
 # end def
 
@@ -44,27 +37,19 @@ def format_chapters(crawler: Crawler):
         if not ('title' in item and item['title']):
             item['title'] = title
         # end if
-        # if not('title_lock' in item and item['title_lock']):
-        #     if not ('title' in item and item['title']):
-        #         item['title'] = title
-        #     # end if
-        #     if not re.search(r'((ch(apter)?) )?.?\d+', item['title'], re.I):
-        #         item['title'] = title + ' - ' + item['title'].title()
-        #     # end if
-        #     item['title'] = crawler.cleanup_text(item['title'])
-        # # end if
 
-        if not item['volume']:
-            item['volume'] = (1 + (item['id'] - 1) // 100)
+        volume = [x for x in crawler.volumes if x['id'] == item['volume']]
+        if len(volume) == 0:
+            raise Exception('Unknown volume %s for chapter %s', item['volume'], item['id'])
+        else:
+            volume = volume[0]
         # end if
-        item['volume_title'] = 'Volume %d' % item['volume']
-        for vol in crawler.volumes:
-            if vol['id'] == item['volume']:
-                item['volume_title'] = vol['title']
-                vol['chapter_count'] += 1
-                break
-            # end if
-        # end for
+
+        item['volume_title'] = volume['title']
+
+        volume['chapter_count'] += 1
+        volume['final_chapter'] = item['id'] if volume['final_chapter'] < item['id'] else volume['final_chapter']
+        volume['start_chapter'] = item['id'] if volume['start_chapter'] > item['id'] else volume['start_chapter']
     # end for
 # end def
 
