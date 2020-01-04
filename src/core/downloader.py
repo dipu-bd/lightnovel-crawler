@@ -68,7 +68,7 @@ def generate_cover(app):
             author=app.crawler.novel_author,
         )
 
-        with open(svg_file, 'w') as f:
+        with open(svg_file, 'w', encoding='utf-8') as f:
             f.write(svg)
             logger.debug('Saved a random cover.svg')
         # end with

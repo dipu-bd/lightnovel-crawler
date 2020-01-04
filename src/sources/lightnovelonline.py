@@ -84,9 +84,6 @@ class LightNovelOnline(Crawler):
 
         self.volumes = [{'id': i + 1}
                         for i in range(1 + len(self.chapters) // 100)]
-
-        logger.debug('%d chapters & %d volumes found',
-                     len(self.chapters), len(self.volumes))
     # end def
 
     def extract_chapter_list(self, page):

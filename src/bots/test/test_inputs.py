@@ -1,5 +1,6 @@
 allowed_failures = [
     'https://ranobelib.me/',
+    'https://webnovelindonesia.com/',
 ]
 
 test_user_inputs = {
@@ -242,5 +243,11 @@ test_user_inputs = {
     ],
     'http://liberspark.com/': [
         'http://liberspark.com/novel/black-irons-glory'
-    ]
+    ],
+    'https://webnovelindonesia.com/': [
+        'https://webnovelindonesia.com/nv/almighty-student'
+    ],
+    'https://webnovelindonesia.com/': [
+        'https://webnovelindonesia.com/nv/almighty-student'
+    ],
 }

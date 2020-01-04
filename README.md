@@ -318,6 +318,7 @@ The list of currently available sources are given below:
 | https://tomotranslations.com           |            |           |
 | https://volarenovels.com               |            |           |
 | https://webnovel.online                |            |           |
+| https://webnovelindonesia.com          |            |           |
 | https://webnovelonline.com             |            |           |
 | https://wordexcerpt.com                |            |           |
 | https://wuxiaworld.online              |     ✔      |           |

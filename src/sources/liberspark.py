@@ -14,7 +14,9 @@ class LiberSparkCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one('.novel-main-wrapper h1')
-        possible_title.find('span').extract()
+        for bad in possible_title.select('span'):
+            bad.extract()
+        # end for
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -45,7 +47,6 @@ class LiberSparkCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         body = ''
-        title_found = False
         for p in soup.select('#reader-content > p'):
             for strong in p.select('strong'):
                 strong.name = 'span'
