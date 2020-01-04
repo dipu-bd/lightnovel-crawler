@@ -105,7 +105,6 @@ test_user_inputs = {
     ],
     'https://www.worldnovel.online/': [
         'https://www.worldnovel.online/novel/solo-leveling/',
-        'gluttony'
     ],
     'https://www.wuxiaworld.co/': [
         'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
@@ -229,7 +228,13 @@ test_user_inputs = {
     'https://webnovelonline.com/': [
         'https://webnovelonline.com/novel/the_anarchic_consort'
     ],
-    'https://4scanlation.com/tensei-shitara-slime-datta-ken-wn/': [
+    'https://4scanlation.com/': [
         'https://4scanlation.com/tensei-shitara-slime-datta-ken-wn/'
     ],
+    'https://listnovel.com/': [
+        'https://listnovel.com/novel/my-sassy-crown-princess/'
+    ],
+    'https://tomotranslations.com/': [
+        'https://tomotranslations.com/this-hero-is-invincible-but-too-cautious/'
+    ]
 }
