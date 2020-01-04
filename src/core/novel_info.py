@@ -40,7 +40,7 @@ def format_chapters(crawler: Crawler):
 
         volume = [x for x in crawler.volumes if x['id'] == item['volume']]
         if len(volume) == 0:
-            raise Exception('Unknown volume %s for chapter %s', item['volume'], item['id'])
+            raise Exception('Unknown volume %s for chapter %s' % (item['volume'], item['id']))
         else:
             volume = volume[0]
         # end if

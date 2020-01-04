@@ -236,5 +236,8 @@ test_user_inputs = {
     ],
     'https://tomotranslations.com/': [
         'https://tomotranslations.com/this-hero-is-invincible-but-too-cautious/'
-    ]
+    ],
+    'https://www.wuxialeague.com/': [
+        'https://www.wuxialeague.com/novel/245/'
+    ],
 }

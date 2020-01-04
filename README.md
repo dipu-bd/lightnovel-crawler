@@ -342,6 +342,7 @@ The list of currently available sources are given below:
 | https://www.wattpad.com                |            |           |
 | https://www.webnovel.com               |     ✔      |           |
 | https://www.worldnovel.online          |     ✔      |           |
+| https://www.wuxialeague.com            |            |           |
 | https://www.wuxiaworld.co              |     ✔      |           |
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
