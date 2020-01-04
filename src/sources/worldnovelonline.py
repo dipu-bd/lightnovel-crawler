@@ -17,19 +17,18 @@ chapter_list_url = "https://www.worldnovel.online/wp-json/writerist/v1/chapters?
 class WorldnovelonlineCrawler(Crawler):
     base_url = 'https://www.worldnovel.online/'
 
-    def search_novel(self, query):
-        data = self.get_json(search_url % quote(query))
-
-        results = []
-        for item in data:
-            results.append({
-                'url': item['permalink'],
-                'title': item['post_title'],
-            })
-        # end for
-
-        return results
-    # end def
+    # Disabled because it takes too long to respond
+    # def search_novel(self, query):
+    #     data = self.get_json(search_url % quote(query))
+    #     results = []
+    #     for item in data:
+    #         results.append({
+    #             'url': item['permalink'],
+    #             'title': item['post_title'],
+    #         })
+    #     # end for
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
