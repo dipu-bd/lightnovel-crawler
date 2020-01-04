@@ -7,6 +7,8 @@ import sys
 import traceback
 from random import random
 
+from requests import ConnectionError
+
 from ...assets.icons import isWindows
 from ...sources import crawler_list
 from ...utils.cfscrape import CloudflareCaptchaError
