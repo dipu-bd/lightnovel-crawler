@@ -284,6 +284,7 @@ The list of currently available sources are given below:
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
 | http://gravitytales.com                |            |           |
+| http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://www.machinenoveltranslation.com |            |           |
 | http://www.tiknovel.com                |            |           |

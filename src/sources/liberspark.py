@@ -3,27 +3,28 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIA_LEAGUE')
+logger = logging.getLogger('LIBER_SPARK')
 
 
-class WuxiaLeagueCrawler(Crawler):
-    base_url = 'https://www.wuxialeague.com/'
+class LiberSparkCrawler(Crawler):
+    base_url = 'http://liberspark.com/'
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('#bookinfo .d_title h1').text
+        possible_title = soup.select_one('.novel-main-wrapper h1')
+        possible_title.find('span').extract()
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one('#bookimg img')['src'])
+        self.novel_cover = self.absolute_url(soup.select_one('#uploaded-cover-image')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        possible_authors = [a.text for a in soup.select('#bookinfo a[href*="/author/"]')]
-        self.novel_author = ', '.join(possible_authors)
+        self.novel_author = soup.select_one('.novel-author-info a h4').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        for a in soup.select('#chapterList li a'):
+        for a in reversed(soup.select('#novel-chapters-list td a')):
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
@@ -45,16 +46,20 @@ class WuxiaLeagueCrawler(Crawler):
 
         body = ''
         title_found = False
-        for p in soup.select('#TextContent > p'):
-            if not p.text.strip():
-                continue
+        for p in soup.select('#reader-content > p'):
+            for strong in p.select('strong'):
+                strong.name = 'span'
+            # end for
+            if p.text.strip():
+                body += str(p).strip()
             # end if
-            clean_first = ''.join(re.findall(r'([a-z0-9]+)', p.text.lower()))
-            clean_title = ''.join(re.findall(r'([a-z0-9]+)', chapter['title'].lower()))
-            if clean_first == clean_title:
-                continue
+        # end for
+
+        body += '<p>*******</p>'
+        for p in soup.select('#authors_note > p'):
+            if p.text.strip():
+                body += str(p).strip()
             # end if
-            body += str(p).strip()
         # end for
 
         return body

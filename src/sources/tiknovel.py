@@ -10,7 +10,7 @@ logger = logging.getLogger('TIKNOVEL')
 chapter_details_url = 'http://www.tiknovel.com/book/ajaxchap'
 
 
-class AsianHobbyistCrawler(Crawler):
+class TikNovelCrawler(Crawler):
     base_url = 'http://www.tiknovel.com/'
 
     def read_novel_info(self):

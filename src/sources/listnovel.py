@@ -8,7 +8,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('LIST_NOVEL')
 
 
-class FlyingLinesCrawler(Crawler):
+class ListNovelCrawler(Crawler):
     base_url = 'https://listnovel.com/'
 
     def read_novel_info(self):

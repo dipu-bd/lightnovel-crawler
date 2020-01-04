@@ -240,4 +240,7 @@ test_user_inputs = {
     'https://www.wuxialeague.com/': [
         'https://www.wuxialeague.com/novel/245/'
     ],
+    'http://liberspark.com/': [
+        'http://liberspark.com/novel/black-irons-glory'
+    ]
 }
