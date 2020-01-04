@@ -105,7 +105,7 @@ test_user_inputs = {
     ],
     'https://www.worldnovel.online/': [
         'https://www.worldnovel.online/novel/solo-leveling/',
-        'second coming of gluttony'
+        'gluttony'
     ],
     'https://www.wuxiaworld.co/': [
         'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
@@ -215,7 +215,7 @@ test_user_inputs = {
         'https://www.flying-lines.com/novel/one-useless-rebirth'
     ],
     'https://book.qidian.com/': [
-        'https://book.qidian.com/info/1010734492'
+        'https://book.qidian.com/info/1016597088'
     ],
     'https://kiss-novel.com/': [
         'https://kiss-novel.com/the-first-order'

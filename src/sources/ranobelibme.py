@@ -7,7 +7,7 @@ logger = logging.getLogger("RANOBE_LIB_ME")
 
 
 class RanobeLibCrawler(Crawler):
-    base_url = 'https://www.ranobelib.me/'
+    base_url = 'https://ranobelib.me/'
 
     def read_novel_info(self):
         logger.info('Visiting %s', self.novel_url)

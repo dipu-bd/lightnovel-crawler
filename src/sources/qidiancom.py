@@ -10,8 +10,8 @@ chapter_details_url = 'https://read.qidian.com/chapter/%s'
 
 class QidianComCrawler(Crawler):
     base_url = [
-        'https://www.qidian.com/',
         'https://book.qidian.com/',
+        # 'https://www.qidian.com/',
     ]
 
     def initialize(self):
