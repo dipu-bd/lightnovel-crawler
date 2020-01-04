@@ -7,7 +7,7 @@ import sys
 import traceback
 from random import random
 
-from requests import ConnectionError
+from urllib3.exceptions import HTTPError
 
 from ...assets.icons import isWindows
 from ...sources import crawler_list
@@ -54,7 +54,7 @@ class TestBot:
                         print()
                     except CloudflareCaptchaError:
                         traceback.print_exc()
-                    except ConnectionError:
+                    except HTTPError:
                         traceback.print_exc()
                     except Exception as err:
                         traceback.print_exc()

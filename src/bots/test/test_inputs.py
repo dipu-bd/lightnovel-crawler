@@ -1,5 +1,6 @@
 allowed_failures = [
     'https://ranobelib.me/',
+    'https://www.aixdzs.com/',
     'https://webnovelindonesia.com/',
 ]
 
