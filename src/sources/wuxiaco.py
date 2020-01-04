@@ -13,7 +13,7 @@ search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
 
 class WuxiaCoCrawler(Crawler):
     base_url = [
-        'http://www.wuxiaworld.co/',
+        'https://www.wuxiaworld.co/',
         'https://m.wuxiaworld.co/',
     ]
 
