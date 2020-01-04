@@ -77,7 +77,7 @@ def test_crawler(self, link, user_input):
     # end if
 
     app.chapters = app.crawler.chapters[:2]
-    app.output_formats = {}
+    app.output_formats = {'pdf': True}
     app.pack_by_volume = False
 
     app.start_download()

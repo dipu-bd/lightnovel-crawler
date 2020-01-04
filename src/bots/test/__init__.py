@@ -13,10 +13,17 @@ from ...assets.icons import isWindows
 from ...sources import crawler_list
 from ...utils.cfscrape import CloudflareCaptchaError
 
-# For colorama in Windows
+
 if isWindows:
+    # To match with system's stdout encoding
     sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
                                   encoding=sys.stdout.encoding,
+                                  errors='ignore',
+                                  line_buffering=True)
+
+    # To match with system's stderr encoding
+    sys.stderr = io.TextIOWrapper(sys.stderr.detach(),
+                                  encoding=sys.stderr.encoding,
                                   errors='ignore',
                                   line_buffering=True)
 # end if
@@ -63,9 +70,7 @@ class TestBot:
                             self.allerrors[link] = []
                         # end if
                         self.allerrors[link].append(
-                            '> Input: %s\n%s\n%s' % (
-                                entry, err, ''.join(traces))
-                        )
+                            '> Input: %s\n%s\n%s' % (entry, err, ''.join(traces)))
                     # end try
                 # end for
                 print('\n')
