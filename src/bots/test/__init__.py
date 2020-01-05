@@ -91,6 +91,7 @@ class TestBot:
                 exit(1)
             # end if
         # end try
+        exit(0)  # to escape colorama errors
     # end def
 
     def build_message(self):
