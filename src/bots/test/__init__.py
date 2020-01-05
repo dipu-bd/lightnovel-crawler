@@ -14,19 +14,19 @@ from ...sources import crawler_list
 from ...utils.cfscrape import CloudflareCaptchaError
 
 
-if isWindows:
-    # To match with system's stdout encoding
-    sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
-                                  encoding=sys.stdout.encoding,
-                                  errors='ignore',
-                                  line_buffering=True)
+# if isWindows:
+#     # To match with system's stdout encoding
+#     sys.stdout = io.TextIOWrapper(sys.stdout.detach(),
+#                                   encoding=sys.stdout.encoding,
+#                                   errors='ignore',
+#                                   line_buffering=True)
 
-    # To match with system's stderr encoding
-    sys.stderr = io.TextIOWrapper(sys.stderr.detach(),
-                                  encoding=sys.stderr.encoding,
-                                  errors='ignore',
-                                  line_buffering=True)
-# end if
+#     # To match with system's stderr encoding
+#     sys.stderr = io.TextIOWrapper(sys.stderr.detach(),
+#                                   encoding=sys.stderr.encoding,
+#                                   errors='ignore',
+#                                   line_buffering=True)
+# # end if
 
 
 class TestBot:
