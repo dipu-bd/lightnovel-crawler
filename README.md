@@ -51,7 +51,7 @@ Also, you have to install **node.js** to access cloudflare enabled sites (e.g. h
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.18.0 ~ 21MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.19.0 ~ 21.5MB](http://bit.ly/2I1XzeN)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -158,7 +158,7 @@ To view list of available options:
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.18.0
+                           📒 Lightnovel Crawler 🍀2.19.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -266,7 +266,7 @@ You are very welcome to contribute in this project. You can:
 
 ### C1. Adding new source
 
-- Create new crawler using the [`sources/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/sources/_sample.py) as template.
+- Create new crawler using the [`sources/_template_.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/sources/_template_.py) as template.
 - Update [Supported sources](#c3-supported-sources) section in `README.md`
 - Add some test inputs to `test_user_inputs` variable in `src/bots/test/test_inputs.py`
 
