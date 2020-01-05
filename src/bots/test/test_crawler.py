@@ -2,6 +2,7 @@
 import os
 
 from ...core.app import App
+from ...binders import available_formats
 
 
 def test_crawler(self, link, user_input):
@@ -77,7 +78,8 @@ def test_crawler(self, link, user_input):
     # end if
 
     app.chapters = app.crawler.chapters[:2]
-    app.output_formats = {'pdf': True}
+    app.output_formats = {x: False for x in available_formats}
+    app.output_formats['pdf'] = True
     app.pack_by_volume = False
 
     app.start_download()

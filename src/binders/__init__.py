@@ -41,8 +41,9 @@ available_formats = depends_on_none + depends_on_epub
 def generate_books(app, data):
     out_formats = app.output_formats
     if not out_formats:
-        out_formats = {x: True for x in available_formats}
+        out_formats = {}
     # end if
+    out_formats = {x: out_formats.get(x, False) for x in available_formats}
 
     # Resolve formats to output maintaining dependencies
     after_epub = [x for x in depends_on_epub if out_formats[x]]

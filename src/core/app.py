@@ -196,15 +196,7 @@ class App:
         logger.info('Compressing output...')
 
         # Check if whole output folder is to be archived
-        is_all = True
-        if self.output_formats:
-            for key in available_formats:
-                if not (key in self.output_formats and self.output_formats[key]):
-                    is_all = False
-                    break
-                # end if
-            # end for
-        # end if
+        is_all = len([k in available_formats for k in self.output_formats.keys()]) > 0
         logger.info('Compressing whole directory: %s' % bool(is_all))
 
         # Get which paths to be archived with their base names
