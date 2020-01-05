@@ -9,8 +9,8 @@ test_user_inputs = {
         'http://gravitytales.com/posts/novel/a-dragons-curiosity'
     ],
     'http://novelfull.com/': [
-        'http://novelfull.com/hidden-marriage.html',
-        'hidden',
+        'http://novelfull.com/dungeon-defense.html',
+        'Sinister Ex Girlfriend',
     ],
     'http://www.machinenoveltranslation.com/': [
         'http://www.machinenoveltranslation.com/a-thought-through-eternity',
