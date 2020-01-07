@@ -251,4 +251,7 @@ test_user_inputs = {
     'https://webnovelindonesia.com/': [
         'https://webnovelindonesia.com/nv/almighty-student'
     ],
+    'http://tiknovel.com/': [
+        'http://tiknovel.com/book/index?id=717'
+    ]
 }
