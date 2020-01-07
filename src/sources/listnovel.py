@@ -17,7 +17,9 @@ class ListNovelCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one('.post-title h1')
-        possible_title.find('span').extract()
+        for span in possible_title.select('span'):
+            span.extract()
+        # end for
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
