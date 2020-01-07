@@ -50,10 +50,9 @@ class NovelFullCrawler(Crawler):
         # end for
         self.novel_author = ', '.join(authors)
         logger.info('Novel author: %s', self.novel_author)
-
-        page_count = soup.select_one(
-            '#list-chapter .pagination .last a')['data-page']
-        page_count = -1 if not page_count else int(page_count)
+        
+        pagination_link = soup.select_one('#list-chapter .pagination .last a')
+        page_count = int(pagination_link['data-page']) if pagination_link else 0
         logger.info('Chapter list pages: %d' % page_count)
 
         logger.info('Getting chapters...')
