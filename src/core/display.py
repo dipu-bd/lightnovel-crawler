@@ -105,7 +105,7 @@ def new_version_news(latest):
 
     if Icons.isWindows:
         print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'http://bit.ly/2I1XzeN', Style.RESET_ALL)
+              Fore.YELLOW + 'https://rebrand.ly/lncrawl', Style.RESET_ALL)
     elif Icons.isLinux:
         print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
               Fore.YELLOW + 'http://bit.ly/2LaB9HB', Style.RESET_ALL)

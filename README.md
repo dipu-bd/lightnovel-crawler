@@ -6,7 +6,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler)](https://github.com/dipu-bd/lightnovel-crawler)
-[![Download win](https://img.shields.io/badge/%E2%AE%9F-lncrawl.exe-red)](http://bit.ly/2I1XzeN)
+[![Download win](https://img.shields.io/badge/%E2%AE%9F-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
 
 <!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
@@ -53,7 +53,7 @@ Also, you have to install **node.js** to access cloudflare enabled sites (e.g. h
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.19.1 ~ 21.5MB](http://bit.ly/2I1XzeN)
+⏬ **Windows**: [lightnovel-crawler v2.19.1 ~ 21.5MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
