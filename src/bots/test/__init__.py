@@ -66,13 +66,14 @@ class TestBot:
         finally:
             error_count = len([
                 x for x in self.allerrors.keys()
-                if x in self.test_user_inputs and x not in self.allowed_failures
+                if x in self.test_user_inputs
+                and x not in self.allowed_failures
             ])
             if error_count > 0:
                 message = self.build_message()
-                self.post_on_github(message)
                 print()
                 print(message)
+                self.post_on_github(message)
                 exit(1)
             # end if
         # end try

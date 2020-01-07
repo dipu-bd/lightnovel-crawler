@@ -96,7 +96,7 @@ def post_on_github(self, message):
         sys.version_info.major,
         sys.version_info.minor,
         platform.system(),
-        datetime.utcnow().strftime('%s')
+        datetime.utcnow().strftime('%x %X')
     )
     post_issue(title, message, ['bot-report'])
 # end def
