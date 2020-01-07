@@ -1,4 +1,4 @@
-# Lightnovel Crawler
+# Lightnovel Crawler [![Download win](https://img.shields.io/badge/%E2%AE%9F-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
 
 [![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
 [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
@@ -6,7 +6,6 @@
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler)](https://github.com/dipu-bd/lightnovel-crawler)
-[![Download win](https://img.shields.io/badge/%E2%AE%9F-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
 
 <!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
