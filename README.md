@@ -1,4 +1,4 @@
-# Lightnovel Crawler [![Download win](https://img.shields.io/badge/%E2%AE%9F-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
+# Lightnovel Crawler [![Download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
 
 [![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
 [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
