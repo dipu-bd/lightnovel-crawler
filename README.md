@@ -1,4 +1,4 @@
-# Lightnovel Crawler
+# Lightnovel Crawler [![pip package](https://img.shields.io/badge/%F0%9F%93%A6-pip-blue)](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown)](https://rebrand.ly/lncrawl-linux)
 
 [![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
 [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
@@ -6,7 +6,6 @@
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler)](https://github.com/dipu-bd/lightnovel-crawler)
-[![Download win](https://img.shields.io/badge/%E2%AE%9F-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
 
 <!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
@@ -59,7 +58,7 @@ Also, you have to install **node.js** to access cloudflare enabled sites (e.g. h
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
-⏬ **Linux**: [lightnovel-crawler v2.17.0 ~ 24MB](http://bit.ly/2LaB9HB)
+⏬ **Linux**: [lightnovel-crawler v2.17.0 ~ 24MB](https://rebrand.ly/lncrawl-linux)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
