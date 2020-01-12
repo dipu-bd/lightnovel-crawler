@@ -241,8 +241,8 @@ class Crawler:
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
             elif tag.name == 'br':
-                prev = tag.findPreviousSibling() if 'findPreviousSibling' in dir(tag) else None
-                if prev and prev.name == 'br':
+                next_tag = getattr(tag, 'next_sibling')
+                if next_tag and getattr(next_tag, 'name') == 'br':
                     tag.extract()
                 # end if
             elif tag.name in self.bad_tags:
