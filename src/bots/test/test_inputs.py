@@ -135,7 +135,7 @@ test_user_inputs = {
     ],
     'https://babelnovel.com/': [
         'https://babelnovel.com/books/ceo-let-me-go',
-        'martial god AsurA'
+        'dazzle Good'
     ],
     'https://wuxiaworld.online/': [
         'https://wuxiaworld.online/trial-marriage-husband-need-to-work-hard',
