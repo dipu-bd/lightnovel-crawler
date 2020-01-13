@@ -32,7 +32,6 @@ rejected_sources = {
     'https://yukinovel.id/': "Removed by owner",
     'https://www.jieruihao.cn/': "Unavailable",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
-    'https://www.worldnovel.online/': 'Site down',
 }
 
 # this list will be auto-generated
