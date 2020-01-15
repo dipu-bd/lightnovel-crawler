@@ -27,6 +27,7 @@ class Crawler:
         self.novel_title = 'N/A'
         self.novel_author = 'N/A'
         self.novel_cover = None
+        self.is_rtl = False
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume

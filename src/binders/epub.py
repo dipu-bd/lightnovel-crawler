@@ -91,6 +91,7 @@ def make_chapters(book, chapters):
             file_name=xhtml_file,
             title=chapter['title'],
             content=str(chapter['body'] or ''),
+            direction=book.direction,
         )
         book.add_item(content)
         volume.append(content)
@@ -118,6 +119,7 @@ def bind_epub_book(app, chapters, volume=''):
     book.set_title(book_title)
     book.add_author(app.crawler.novel_author)
     book.set_identifier(app.output_path + volume)
+    book.set_direction('rtl' if app.crawler.is_rtl else 'default')
 
     # Create intro page
     cover_image = make_cover_image(app)

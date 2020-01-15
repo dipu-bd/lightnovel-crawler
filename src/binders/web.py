@@ -32,7 +32,7 @@ def bind_html_chapter(chapter, prev_chapter, next_chapter):
     '''
 
     html = '<!DOCTYPE html>\n'
-    html += '<html><head>'
+    html += '<html dir="%s"><head>' % ('rtl' if app.crawler.is_rtl else 'ltr')
     html += '<meta charset="utf-8"/>'
     html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>'
     html += '<title>%s</title>' % chapter['title']
