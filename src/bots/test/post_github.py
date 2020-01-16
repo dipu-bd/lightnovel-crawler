@@ -9,15 +9,25 @@ from urllib.parse import urlencode
 
 import requests
 
+from ...assets.user_agents import user_agents
+
 logger = logging.getLogger('MAKE_GITHUB_ISSUE')
 
 # Authentication for user filing issue
 USERNAME = os.getenv('GITHUB_USERNAME')
-PASSWORD = os.getenv('GITHUB_PASSWORD')
+# PASSWORD = os.getenv('GITHUB_PASSWORD')  # deprecated
+TOKEN = os.getenv('GITHUB_TOKEN')  # must have read/write access to repo
 
 # The repository to add this issue to
 REPO_OWNER = 'dipu-bd'
 REPO_NAME = 'lightnovel-crawler'
+
+# Headers
+headers = {
+    "User-Agent": user_agents[0],
+    "Authorization": "token %s" % TOKEN,
+    "Accept": "application/vnd.github.golden-comet-preview+json"
+}
 
 
 def find_issues(labels=None):
@@ -34,8 +44,8 @@ def find_issues(labels=None):
     }
 
     # Get issues
-    r = session.get(url + '?' + urlencode(data))
-    if 200 <= r.status_code <= 300:
+    r = session.get(url + '?' + urlencode(data), headers=headers)
+    if r.ok:
         logger.info('Successfully retrieved issues')
         return r.json()
     else:
@@ -49,25 +59,27 @@ def find_issues(labels=None):
 def post_issue(title, body=None, labels=None):
     '''Create an issue on github.com using the given parameters.'''
     # Our url to create issues via POST
-    url = 'https://api.github.com/repos/%s/%s/issues' % (REPO_OWNER, REPO_NAME)
+    url = 'https://api.github.com/repos/%s/%s/import/issues' % (REPO_OWNER, REPO_NAME)
 
     # Create an authenticated session to create the issue
     session = requests.Session()
-    session.auth = (USERNAME, PASSWORD)
+    # session.auth = (USERNAME, PASSWORD)
 
     # Create our issue
-    issue = {
-        'title': title,
-        'body': body,
-        'labels': labels
-    }
+    payload = json.dumps({
+        'issue': {
+            'title': title,
+            'body': body,
+            'labels': labels,
+        }
+    })
 
     # Add the issue to our repository
-    r = session.post(url, json.dumps(issue))
-    if r.status_code == 201:
-        logger.info('Successfully created Issue {0:s}'.format(title))
+    r = session.post(url, data=payload, headers=headers)
+    if r.ok:
+        logger.info('Successfully created Issue %s' % title)
     else:
-        logger.info('Could not create Issue {0:s}'.format(title))
+        logger.info('Could not create Issue %s' % title)
         logger.debug('Response:\n%s\n' % r.content)
         raise Exception('Failed to create issue')
     # end if
