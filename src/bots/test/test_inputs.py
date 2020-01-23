@@ -51,7 +51,7 @@ test_user_inputs = {
         'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
     ],
     'http://www.tiknovel.com/': [
-        'http://www.tiknovel.com/book/index?id=3313',
+        'http://www.tiknovel.com/book/index?id=717',
     ],
     'https://www.wuxiaworld.co/': [
         'sword',
