@@ -94,13 +94,7 @@ class RoyalRoadCrawler(Crawler):
 
         contents = soup.find("div", {"class": "chapter-content"})
 
-        # self.blacklist_patterns = [
-        #     r'^translat(ed by|or)',
-        #     r'(volume|chapter) .?\d+',
-        # ]        
-        #body = self.extract_contents(contents)
-        # return '<p>' + '</p><p>'.join(body) + '</p>'
-
+        self.clean_contents(contents)
         return str(contents)
     # end def
 # end class
