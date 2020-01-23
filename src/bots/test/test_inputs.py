@@ -112,6 +112,9 @@ test_user_inputs = {
         'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
         'sword'
     ],
+    'https://rewayat.club/': [
+        'https://rewayat.club/novel/almighty-sword-domain/'
+    ],
     'https://www.wuxiaworld.com/': [
         'https://www.wuxiaworld.com/novel/martial-god-asura',
         'martial',
