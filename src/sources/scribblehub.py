@@ -91,10 +91,12 @@ class ScribbleHubCrawler(Crawler):
 
         logger.debug(soup.title.string)
         contents = soup.find('div', {'id': 'chp_contents'})
+        
         #body_parts = []
         # for x in contents:
         #    body_parts.append(x.text)
         # return '<p>' + '</p><p>'.join(body_parts) + '</br></p>'
-        return contents.prettify()
+
+        return str(contents)
     # end def
 # end class

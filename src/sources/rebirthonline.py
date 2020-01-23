@@ -91,6 +91,6 @@ class RebirthOnlineCrawler(Crawler):
             # end for
         # end if
 
-        return contents.prettify()
+        return str(contents)
     # end def
 # end class

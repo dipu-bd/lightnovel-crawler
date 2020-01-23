@@ -93,10 +93,11 @@ class NovelPlanetCrawler(Crawler):
                 chapter['title'] = chapter['title']
             # end if
         # end if
+        
         for ads in contents.findAll('div', {"style": 'text-align: center; margin-bottom: 10px'}):
             ads.decompose()
 
-        return contents.prettify()
+        return str(contents)
 
         # return ''.join([
         #    str(p).strip()

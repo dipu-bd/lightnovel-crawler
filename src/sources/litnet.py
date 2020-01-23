@@ -90,6 +90,6 @@ class LitnetCrawler(Crawler):
         contents = soup.select_one('div.reader-text')
         if contents is None:
             contents = soup.select_one('div.demo-txt')
-        return contents.prettify()
+        return str(contents)
     # end def
 # end class

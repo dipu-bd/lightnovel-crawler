@@ -69,7 +69,8 @@ class CrescentMoonCrawler(Crawler):
         #contents = contents[:-1]
         #body = self.extract_contents(contents)
         # return '<p>' + '</p><p>'.join(body) + '</p>'
-        # return contents.prettify()
+        # return str(contents)
+
         body = []
         contents = soup.select('div.entry-content p')
         contents = contents[:-1]

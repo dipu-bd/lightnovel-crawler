@@ -83,6 +83,6 @@ class KissNovelCrawler(Crawler):
         # for codeblock in contents.findAll('div', {'class': 'code-block'}):
         #    codeblock.decompose()
 
-        # return contents.prettify()
+        # return str(contents)
     # end def
 # end class

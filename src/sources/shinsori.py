@@ -82,6 +82,6 @@ class ShinsoriCrawler(Crawler):
             if item.has_attr('style'):
                 item.decompose()
 
-        return content.prettify()
+        return str(content)
     # end def
 # end class
