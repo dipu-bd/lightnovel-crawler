@@ -2,14 +2,33 @@
 import json
 import logging
 import re
-
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MEIONOVEL')
+logger = logging.getLogger('NOVELSROCK')
+search_url = 'https://novelsrock.com/?s=%s&post_type=wp-manga'
 
 
-class MeionovelCrawler(Crawler):
-    base_url = 'https://meionovel.id/'
+class NovelsRockCrawler(Crawler):
+    base_url = 'https://novelsrock.com/'
+
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for tab in soup.select('.c-tabs-item__content'):
+            a = tab.select_one('.post-title h4 a')
+            latest = tab.select_one('.latest-chap .chapter a').text
+            votes = tab.select_one('.rating .total_votes').text
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (latest, votes),
+            })
+        # end for
+
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -18,7 +37,7 @@ class MeionovelCrawler(Crawler):
 
         self.novel_title = ' '.join([
             str(x)
-            for x in soup.select_one('.post-title h3').contents
+            for x in soup.select_one('.post-title h1').contents
             if not x.name
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
@@ -69,14 +88,6 @@ class MeionovelCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')
-
-        for img in contents.findAll('img'):
-            if img.has_attr('data-lazy-src'):
-                src_url = img['data-lazy-src']
-                parent = img.parent
-                img.decompose()
-                new_tag = soup.new_tag("img", src=src_url)
-                parent.append(new_tag)
 
         if contents.h3:
             contents.h3.decompose()
