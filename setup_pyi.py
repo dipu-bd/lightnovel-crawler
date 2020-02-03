@@ -32,6 +32,7 @@ def setup_command():
     command += '-n "lncrawl" '
     command += '-i "%s/res/lncrawl.ico" ' % unix_root
     command += gather_data_files()
+    command += gather_hidden_imports()
     command += '"%s/__main__.py" ' % unix_root
 
     print(command)
@@ -48,13 +49,9 @@ def setup_command():
 def gather_data_files():
     command = ''
 
-    # add data files of my project
-    py_matcher = re.compile(r'\.pyc?$', flags=re.I)
-    for f in (ROOT / 'src' / 'assets').glob('**/*.*'):
+    # add data files of this project
+    for f in (ROOT / 'src').glob('**/*.*'):
         src = str(f)
-        if py_matcher.search(src):
-            continue
-        # end if
         src = '/'.join(src.split(os.sep))
         dst = str(f.parent.relative_to(ROOT))
         dst = '/'.join(dst.split(os.sep))
@@ -73,6 +70,21 @@ def gather_data_files():
         site_packages, os.pathsep)
     command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
         site_packages, os.pathsep)
+
+    return command
+# end def
+
+
+def gather_hidden_imports():
+    command = ''
+
+    # add hidden imports of this project
+    for f in (ROOT / 'src' / 'sources').glob('*.py'):
+        if os.path.isfile(f) and re.match(r'^([^_.][^.]+).py[c]?$', f.name):
+            module_name = f.name[:-3]
+            command += '--hidden-import "src.sources.%s" ' % module_name
+        # end if
+    # end for
 
     return command
 # end def

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
 import os
@@ -9,7 +8,7 @@ from urllib.parse import urlparse
 from slugify import slugify
 
 from ..binders import available_formats, generate_books
-from ..spiders import crawler_list
+from ..sources import crawler_list
 from .novel_search import search_novels
 from .downloader import download_chapters
 from .novel_info import format_novel, save_metadata
@@ -34,6 +33,7 @@ class App:
         self.output_formats = {}
         self.archived_outputs = None
         self.good_file_name = None
+        self.no_append_after_filename = False
     # end def
 
     # ----------------------------------------------------------------------- #
@@ -128,16 +128,20 @@ class App:
         print(self.crawler.novel_url)
         self.crawler.read_novel_info()
         print('NOVEL: %s' % self.crawler.novel_title)
+        print('%d volumes and %d chapters found' %
+              (len(self.crawler.volumes), len(self.crawler.chapters)))
 
         format_novel(self.crawler)
 
-        self.good_file_name = slugify(
-            self.crawler.novel_title,
-            max_length=50,
-            separator=' ',
-            lowercase=False,
-            word_boundary=True,
-        )
+        if not self.good_file_name:
+            self.good_file_name = slugify(
+                self.crawler.novel_title,
+                max_length=50,
+                separator=' ',
+                lowercase=False,
+                word_boundary=True,
+            )
+        # end if
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
 
@@ -168,7 +172,9 @@ class App:
         data = {}
         if self.pack_by_volume:
             for vol in self.crawler.volumes:
-                data['Volume %d' % vol['id']] = [
+                # filename_suffix = 'Volume %d' % vol['id']
+                filename_suffix = 'Chapter %d-%d' % (vol['start_chapter'], vol['final_chapter'])
+                data[filename_suffix] = [
                     x for x in self.chapters
                     if x['volume'] == vol['id']
                     and len(x['body']) > 0
@@ -190,15 +196,7 @@ class App:
         logger.info('Compressing output...')
 
         # Check if whole output folder is to be archived
-        is_all = True
-        if self.output_formats:
-            for key in available_formats:
-                if not (key in self.output_formats and self.output_formats[key]):
-                    is_all = False
-                    break
-                # end if
-            # end for
-        # end if
+        is_all = len([k in available_formats for k in self.output_formats.keys()]) > 0
         logger.info('Compressing whole directory: %s' % bool(is_all))
 
         # Get which paths to be archived with their base names

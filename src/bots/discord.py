@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 import re
@@ -9,7 +8,7 @@ import asyncio
 import discord
 
 from ..core.app import App
-from ..spiders import crawler_list
+from ..sources import crawler_list
 from ..utils.uploader import upload
 from ..binders import available_formats
 

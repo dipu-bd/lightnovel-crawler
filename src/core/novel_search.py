@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 To search for novels in selected sources
@@ -10,7 +9,7 @@ from concurrent import futures
 from slugify import slugify
 from progress.bar import IncrementalBar
 
-from ..spiders import crawler_list
+from ..sources import crawler_list
 
 logger = logging.getLogger('SEARCH_NOVEL')
 

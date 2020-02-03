@@ -1,19 +1,21 @@
 environment:
   matrix:
+    - PYTHON: C:\Python38-x64
     - PYTHON: C:\Python37-x64
     - PYTHON: C:\Python36-x64
     - PYTHON: C:\Python35-x64
 
 init:
-  - SET PATH=%PYTHON%;%PATH%
+  - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
+  - SET PYTHONIOENCODING=utf-8
 
 install:
-  - python -m pip install -r requirements.txt
+  - python -m pip install --no-cache-dir  -r requirements.txt
 
 build: false
 
 test_script:
-  - python __main__.py --bot test
+  - python __main__.py --bot test -lll
 
 branches:
   only:

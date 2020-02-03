@@ -1,3 +1,0 @@
-# Setup requirements
-wheel
-PyInstaller

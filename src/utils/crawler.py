@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
 Crawler application
@@ -28,6 +27,7 @@ class Crawler:
         self.novel_title = 'N/A'
         self.novel_author = 'N/A'
         self.novel_cover = None
+        self.is_rtl = False
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume
@@ -151,6 +151,9 @@ class Crawler:
         if self._destroyed:
             return None
         # end if
+        kargs = kargs or dict()
+        kargs['verify'] = kargs.get('verify', False)
+        kargs['timeout'] = kargs.get('timeout', 150)  # in seconds
         self.last_visited_url = url.strip('/')
         response = self.scrapper.get(url, **kargs)
         response.encoding = 'utf-8'
@@ -158,6 +161,7 @@ class Crawler:
             x.name: x.value
             for x in response.cookies
         })
+        response.raise_for_status()
         return response
     # end def
 
@@ -173,18 +177,23 @@ class Crawler:
         })
 
         response = self.scrapper.post(url, data=data, headers=headers)
+        response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value
             for x in response.cookies
         })
-
+        response.raise_for_status()
         return response
     # end def
 
     def get_soup(self, *args, parser='lxml', **kargs):
         response = self.get_response(*args, **kargs)
         html = response.content.decode('utf-8', 'ignore')
-        return BeautifulSoup(html, parser)
+        soup = BeautifulSoup(html, parser)
+        if not soup.find('body'):
+            raise ConnectionError('HTML document was not loaded properly')
+        # end if
+        return soup
     # end def
 
     def get_json(self, *args, **kargs):
@@ -205,7 +214,7 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'noscript', 'script', 'iframe', 'form', 'br', 'ul', 'hr', 'img', 'ins',
+        'noscript', 'script', 'iframe', 'form', 'hr', 'img', 'ins',
         'button', 'input', 'amp-auto-ads', 'pirate'
     ]
     block_tags = [
@@ -232,6 +241,11 @@ class Crawler:
         for tag in div.findAll(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
+            elif tag.name == 'br':
+                next_tag = getattr(tag, 'next_sibling')
+                if next_tag and getattr(next_tag, 'name') == 'br':
+                    tag.extract()
+                # end if
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
             elif not tag.text.strip():

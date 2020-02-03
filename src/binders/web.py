@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
 import os
@@ -8,7 +7,7 @@ from ..assets.html_style import get_value as get_css_style
 logger = logging.getLogger('WEB_BINDER')
 
 
-def bind_html_chapter(chapter, prev_chapter, next_chapter):
+def bind_html_chapter(chapter, prev_chapter, next_chapter, direction='ltr'):
     prev_button = '%s.html' % (
         str(prev_chapter['id']).rjust(5, '0')) if prev_chapter else '#'
     next_button = '%s.html' % str(next_chapter['id']).rjust(
@@ -33,7 +32,7 @@ def bind_html_chapter(chapter, prev_chapter, next_chapter):
     '''
 
     html = '<!DOCTYPE html>\n'
-    html += '<html><head>'
+    html += '<html dir="%s"><head>' % direction
     html += '<meta charset="utf-8"/>'
     html += '<meta name="viewport" content="width=device-width, initial-scale=1"/>'
     html += '<title>%s</title>' % chapter['title']
@@ -61,8 +60,9 @@ def make_webs(app, data):
             chapter = data[vol][i]
             prev_chapter = data[vol][i - 1] if i > 0 else None
             next_chapter = data[vol][i + 1] if i + 1 < len(data[vol]) else None
+            direction = 'rtl' if app.crawler.is_rtl else 'ltr'
             html, file_name = bind_html_chapter(
-                chapter, prev_chapter, next_chapter)
+                chapter, prev_chapter, next_chapter, direction)
 
             file_name = os.path.join(dir_name, file_name)
             with open(file_name, 'w', encoding='utf-8') as file:

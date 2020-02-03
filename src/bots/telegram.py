@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
 import os
@@ -12,7 +11,7 @@ from telegram.ext import (CommandHandler, ConversationHandler, Filters,
 
 from ..binders import available_formats
 from ..core.app import App
-from ..spiders import crawler_list
+from ..sources import crawler_list
 from ..utils.uploader import upload
 
 logger = logging.getLogger('TELEGRAM_BOT')
@@ -654,17 +653,17 @@ class TelegramBot:
                     'Get your file here:'
                     'https://drive.google.com/open?id=%s' % link_id
                 )
-                
+
             file_size = os.stat(archive).st_size
             if file_size < 49.99 * 1024 * 1024:
                 update.message.reply_document(
                     open(archive, 'rb'),
-                    timeout=24 * 3600, # 24 hours
+                    timeout=24 * 3600,  # 24 hours
                 )
             else:
                 update.message.reply_text(
                     'File size more than 50 MB so cannot be sent via telegram bot api check google drive link only')
-                
+
             if os.path.exists(archive):
                 os.remove(archive)
             update.message.reply_text(

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
 import shutil
@@ -96,14 +95,14 @@ def get_output_formats(self):
                 'type': 'checkbox',
                 'name': 'formats',
                 'message': 'Which output formats to create?',
-                'choices': [{'name': x} for x in available_formats],
+                'choices': [{'name': x, 'checked': x == 'epub'} for x in available_formats],
             },
         ])
         formats = answer['formats']
     # end if
 
     if not formats or len(formats) == 0:
-        formats = available_formats
+        formats = ['epub']  # default to epub if none selected
     # end if
 
     return {x: (x in formats) for x in available_formats}

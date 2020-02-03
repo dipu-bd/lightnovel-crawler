@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import io
 import logging
@@ -52,7 +51,7 @@ def make_intro_page(app, cover_image):
         </div>
     ''' % (
         app.crawler.novel_title or 'N/A',
-        app.crawler.novel_author or 'N/A',
+        app.crawler.novel_author or app.crawler.home_url,
     )
 
     if cover_image:
@@ -91,7 +90,8 @@ def make_chapters(book, chapters):
             # uid=str(i + 1),
             file_name=xhtml_file,
             title=chapter['title'],
-            content=chapter['body'] or '',
+            content=str(chapter['body'] or ''),
+            direction=book.direction,
         )
         book.add_item(content)
         volume.append(content)
@@ -99,8 +99,7 @@ def make_chapters(book, chapters):
         # separate chapters by volume
         if i + 1 == len(chapters) or chapter['volume'] != chapters[i + 1]['volume']:
             toc.append((
-                epub.Section(chapter['volume_title'],
-                             href=volume[0].file_name),
+                epub.Section(chapter['volume_title'], href=volume[0].file_name),
                 tuple(volume)
             ))
             volume = []
@@ -120,6 +119,7 @@ def bind_epub_book(app, chapters, volume=''):
     book.set_title(book_title)
     book.add_author(app.crawler.novel_author)
     book.set_identifier(app.output_path + volume)
+    book.set_direction('rtl' if app.crawler.is_rtl else 'default')
 
     # Create intro page
     cover_image = make_cover_image(app)
@@ -135,7 +135,7 @@ def bind_epub_book(app, chapters, volume=''):
         book.spine = ['cover', intro_page, 'nav']
     except Exception:
         book.spine = [intro_page, 'nav']
-        logger.exception('No cover image')
+        logger.warn('No cover image')
     # end if
 
     # Create chapters
@@ -145,7 +145,10 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Save epub file
     epub_path = os.path.join(app.output_path, 'epub')
-    file_name = (app.good_file_name + ' ' + volume).strip()
+    file_name = app.good_file_name
+    if not app.no_append_after_filename:
+        file_name += ' ' + volume
+    # end if
     file_path = os.path.join(epub_path, file_name + '.epub')
     logger.debug('Writing %s', file_path)
     os.makedirs(epub_path, exist_ok=True)

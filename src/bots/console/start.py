@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from urllib.parse import urlparse
 
@@ -7,7 +6,7 @@ from PyInquirer import prompt
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
-from ...spiders import rejected_sources
+from ...sources import rejected_sources
 
 
 def start(self):
@@ -19,6 +18,10 @@ def start(self):
 
     self.app = App()
     self.app.initialize()
+
+    # Set filename if provided
+    self.app.good_file_name = (args.filename or '').strip()
+    self.app.no_append_after_filename = args.filename_only
 
     # Process user input
     self.app.user_input = self.get_novel_url()

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from PyInquirer import prompt
 from ...core.arguments import get_args
@@ -30,7 +29,7 @@ def get_login_info(self):
             {
                 'type': 'input',
                 'name': 'email',
-                'message': 'Email:',
+                'message': 'Username/Email:',
                 'validate': lambda val: True if len(val)
                 else 'Email address should be not be empty'
             },

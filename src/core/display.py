@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import logging
 import os
@@ -8,7 +7,7 @@ from urllib.parse import urlparse
 from colorama import Back, Fore, Style
 
 from ..assets.icons import Icons
-from ..spiders import crawler_list
+from ..sources import crawler_list
 
 LINE_SIZE = 80
 
@@ -42,11 +41,11 @@ def epilog():
     print()
     print('-' * LINE_SIZE)
 
+    # print(' ' + Icons.HANDS, Fore.CYAN,
+    #       'https://discord.gg/7A5Hktx', Fore.RESET)
+
     print(' ' + Icons.LINK, Fore.CYAN,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
-
-    print(' ' + Icons.HANDS, Fore.CYAN,
-          'https://saythanks.io/to/dipu-bd', Fore.RESET)
 
     print('=' * LINE_SIZE)
 # end def
@@ -106,10 +105,10 @@ def new_version_news(latest):
 
     if Icons.isWindows:
         print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'http://bit.ly/2I1XzeN', Style.RESET_ALL)
+              Fore.YELLOW + 'https://rebrand.ly/lncrawl', Style.RESET_ALL)
     elif Icons.isLinux:
         print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'http://bit.ly/2LaB9HB', Style.RESET_ALL)
+              Fore.YELLOW + 'https://rebrand.ly/lncrawl-linux', Style.RESET_ALL)
     # end if
 
     print('-' * LINE_SIZE)
@@ -126,16 +125,16 @@ def url_supported_list():
 
 def url_not_recognized():
     print()
-    print(Fore.RED, Icons.ERROR,
-          'Sorry! I do not recognize this website yet.', Fore.RESET)
+    print(Fore.RED, Icons.ERROR, 'Sorry! I do not recognize this website yet.', Fore.RESET)
     print()
     print('-' * LINE_SIZE)
-    url_supported_list()
+    print('You can find a list of supported and rejected sources here:')
+    print(Fore.CYAN, Icons.LINK,
+          'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources', Fore.RESET)
     print()
     print('-' * LINE_SIZE)
     print('You can request developers to add support for this site here:')
-    print(Fore.CYAN, Icons.LINK,
-          'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
+    print(Fore.CYAN, Icons.LINK, 'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
 # end def
 
 

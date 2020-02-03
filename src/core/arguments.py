@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import argparse
 import os
@@ -67,38 +66,40 @@ _builder = Args(group=[
     Args(mutex=[
         Args('-s', '--source', dest='novel_page', type=str, metavar='URL',
              help='Profile page url of the novel.'),
-        Args(group=[
-            Args('-q', '--query', dest='query', type=str, metavar='STR',
-                 help='Novel query followed by list of source sites.'),
-            Args('-x', '--sources', dest='sources', action='store_true',
-                 help='Display the source selection menu while searching.'),
-        ]),
+        Args('-q', '--query', dest='query', type=str, metavar='STR',
+             help='Novel query followed by list of source sites.'),
     ]),
+    Args('-x', '--sources', dest='sources', action='store_true',
+         help='Display the source selection menu while searching.'),
 
-    Args(group=[
-        Args('-o', '--output', dest='output_path', type=str, metavar='PATH',
-             help='Path where the downloads to be stored.'),
-        Args('--format', dest='output_formats', nargs='+', metavar='E',
-             choices=available_formats, default=list(),
-             help='Define which formats to output. Default: all.'),
-        Args('--add-source-url', action='store_true',
-             help='Add source url at the end of each chapter.'),
-        Args(mutex=[
-            Args('--single', action='store_true',
-                 help='Put everything in a single book.'),
-            Args('--multi', action='store_true',
-                 help='Build separate books by volumes.'),
-        ]),
+    Args('--login', nargs=2, metavar=('USER', 'PASSWD'),
+         help='User name/email address and password for login.'),
+
+    Args('--format', dest='output_formats', nargs='+', metavar='E',
+         choices=available_formats, default=list(),
+         help='Define which formats to output. Default: all.'),
+    Args('--add-source-url', action='store_true',
+         help='Add source url at the end of each chapter.'),
+    Args(mutex=[
+        Args('--single', action='store_true',
+             help='Put everything in a single book.'),
+        Args('--multi', action='store_true',
+             help='Build separate books by volumes.'),
     ]),
+    
+    Args('-o', '--output', dest='output_path', type=str, metavar='PATH',
+         help='Path where the downloads to be stored.'),
+    Args('--filename', type=str, metavar='NAME',
+         help='Set the output file name'),
+    Args('--filename-only', action='store_true',
+         help='Skip appending chapter range with file name'),
+
     Args(mutex=[
         Args('-f', '--force', action='store_true',
              help='Force replace any existing folder.'),
         Args('-i', '--ignore', action='store_true',
              help='Ignore any existing folder (do not replace).'),
     ]),
-
-    Args('--login', nargs=2, metavar=('USER', 'PASSWD.'),
-         help='User name/email address and password for login.'),
 
     Args(mutex=[
         Args('--all', action='store_true',
