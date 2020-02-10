@@ -297,6 +297,7 @@ The list of currently available sources are given below:
 | https://bestlightnovel.com             |     ✔      |           |
 | https://book.qidian.com                |            |           |
 | https://boxnovel.com                   |     ✔      |           |
+| http://boxnovel.org                    |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
 | https://id.mtlnovel.com                |     ✔      |           |

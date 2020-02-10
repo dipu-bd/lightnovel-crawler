@@ -256,5 +256,8 @@ test_user_inputs = {
     ],
     'http://tiknovel.com/': [
         'http://tiknovel.com/book/index?id=717'
+    ],
+    'http://boxnovel.org/': [
+        'http://boxnovel.org/novel/martial-god-asura'
     ]
 }
