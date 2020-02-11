@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from enum import IntEnum
+from enum import IntEnum, auto
 
 
 class Author:
     '''Details of a author of a novel'''
 
     class Type(IntEnum):
-        UNKNOWN = 0
-        AUTHOR = 1
-        ARTIST = 2
-        TRANSLATOR = 3
-        EDITOR = 4
+        UNKNOWN = auto()
+        AUTHOR = auto()
+        ARTIST = auto()
+        TRANSLATOR = auto()
+        EDITOR = auto()
 
     def __init__(self, name: str, author_type: Type = Type.UNKNOWN) -> None:
         super().__init__()

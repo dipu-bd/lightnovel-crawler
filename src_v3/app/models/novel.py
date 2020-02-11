@@ -6,12 +6,12 @@ from .author import Author
 class Novel:
     '''Details of a novel'''
 
-    def __init__(self, url: str) -> None:
+    def __init__(self, url: str, name: str = None, details: str = None, cover_url: str = None) -> None:
         super().__init__()
         self.url: str = url
-        self.cover_url: str = None
-        self.name: str = None
-        self.details: str = None
+        self.name: str = name
+        self.details: str = details
+        self.cover_url: str = cover_url
         self.authors: List[Author] = []
 
     def __str__(self) -> str:

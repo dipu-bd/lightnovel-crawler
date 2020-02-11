@@ -85,7 +85,3 @@ class TestConfig(unittest.TestCase):
                          DEFAULT_CONFIG['logging']['loggers']['']['level'])
         self.assertListEqual(Config().logging.root_log_handlers,
                              DEFAULT_CONFIG['logging']['loggers']['']['handlers'])
-
-
-if __name__ == "__main__":
-    unittest.main()
