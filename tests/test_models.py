@@ -45,6 +45,13 @@ class TestModels(unittest.TestCase):
         self.assertEqual(novel.details, 'this is detail')
         self.assertEqual(novel.name, 'Novel Name')
         self.assertEqual(novel.cover_url, 'some cover link')
+        self.assertEqual(novel.language, Language.UNKNOWN)
+
+    def test_language_enum(self):
+        self.assertEqual(Language.UNKNOWN.name, 'UNKNOWN')
+        self.assertEqual(Language.UNKNOWN.value, '')
+        self.assertEqual(Language.ENGLISH.value, 'en')
+        self.assertEqual(Language.CHINESE.value, 'zh')
 
     def test_volume_instance(self):
         novel = Novel('any url')

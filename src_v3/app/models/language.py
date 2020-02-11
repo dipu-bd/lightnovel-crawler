@@ -4,6 +4,7 @@ from enum import Enum
 
 
 class Language(Enum):
+    UNKNOWN = ''
     ARABIC = 'ar'
     BENGALI = 'bn'
     CHINESE = 'zh'

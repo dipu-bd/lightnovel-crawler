@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .author import Author
+from .language import Language
 
 
 class Novel:
@@ -13,6 +14,7 @@ class Novel:
         self.details: str = details
         self.cover_url: str = cover_url
         self.authors: List[Author] = []
+        self.language: Language = Language.UNKNOWN
 
     def __str__(self) -> str:
         return f"<Novel url:'{self.url}'>"
