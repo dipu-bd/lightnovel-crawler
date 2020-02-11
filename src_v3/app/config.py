@@ -24,7 +24,6 @@ class Config(metaclass=Singleton):
 
         # Initialize logger
         logging.config.dictConfig(self.logging.section)
-        logging.info("Log initialized")
 
     def load(self) -> None:
         '''Loads config from a file'''
@@ -47,6 +46,14 @@ class Config(metaclass=Singleton):
     class __Section__(metaclass=Singleton):
         def __init__(self, data: Mapping[str, Any]):
             setattr(self, 'section', data)
+
+    class _Arguments(metaclass=Singleton):
+        def __init__(self):
+            setattr(self, 'section', get_args().__dict__)
+
+        @property
+        def config(self):
+            return self.section.get('config')
 
     class _Defaults(__Section__):
         @property
@@ -72,17 +79,20 @@ class Config(metaclass=Singleton):
             return self.loggers.get('', {}).get('handlers', [])
 
     @property
-    def defaults(self) -> Optional[_Defaults]:
+    def arguments(self) -> _Arguments:
+        return self._Arguments()
+
+    @property
+    def defaults(self) -> _Defaults:
         return self._Defaults(self.config['defaults'])
 
     @property
-    def logging(self) -> Optional[_Logging]:
+    def logging(self) -> _Logging:
         return self._Logging(self.config['logging'])
 
     @property
     def config_file(self) -> str:
         if not hasattr(self, '_config_file_'):
             fname = str(self.defaults.work_directory / 'config.json')
-            fname = get_args().config or fname
-            setattr(self, '_config_file_', fname)
+            setattr(self, '_config_file_', self.arguments.config or fname)
         return getattr(self, '_config_file_', '')
