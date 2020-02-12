@@ -51,7 +51,11 @@ class TestModels(unittest.TestCase):
         self.assertEqual(Language.UNKNOWN.name, 'UNKNOWN')
         self.assertEqual(Language.UNKNOWN.value, '')
         self.assertEqual(Language.ENGLISH.value, 'en')
-        self.assertEqual(Language.CHINESE.value, 'zh')
+        self.assertEqual(Language.CHINESE, 'zh')
+        self.assertEqual(Language.UNKNOWN, '')
+        self.assertEqual(Language.UNKNOWN, Language.UNKNOWN)
+        self.assertEqual(str(Language.UNKNOWN), '')
+        self.assertEqual(str(Language.CHINESE), 'zh')
 
     def test_volume_instance(self):
         novel = Novel('any url')
@@ -102,3 +106,10 @@ class TestModels(unittest.TestCase):
         self.assertEqual(chapter.url, 'url')
         self.assertListEqual(chapter.authors, [Author('name')])
         self.assertEqual(chapter.body, '<html>')
+
+    def test_text_direction(self):
+        self.assertEqual(TextDirection.LTR.name, 'LTR')
+        self.assertEqual(TextDirection.RTL.value, 'rtl')
+        self.assertEqual(str(TextDirection.LTR), 'ltr')
+        self.assertEqual(TextDirection.RTL, 'rtl')
+        self.assertEqual(TextDirection.LTR, TextDirection.LTR)

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from enum import Enum
+from ...meta import StrEnum
 
 
-class Language(Enum):
+class Language(StrEnum):
     UNKNOWN = ''
     ARABIC = 'ar'
     BENGALI = 'bn'
