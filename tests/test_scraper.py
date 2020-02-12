@@ -2,8 +2,8 @@
 
 import unittest
 
-from src_v3.app.scraper import *
-from src_v3.app.models import TextDirection
+from src.app.scraper import *
+from src.app.models import TextDirection
 
 
 class TestScrapers(unittest.TestCase):

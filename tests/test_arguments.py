@@ -9,7 +9,7 @@ import unittest
 import logging
 from argparse import ArgumentParser, ArgumentError
 
-from src_v3.app.arguments import _build
+from src.app.arguments import _build
 
 
 class TestArguments(unittest.TestCase):

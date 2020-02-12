@@ -8,8 +8,8 @@ import tempfile
 import unittest
 import logging
 
-from src_v3.app import Config
-from src_v3.assets import DEFAULT_CONFIG
+from src.app import Config
+from src.assets import DEFAULT_CONFIG
 
 
 class TestConfig(unittest.TestCase):

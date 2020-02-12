@@ -8,7 +8,7 @@ import tempfile
 import unittest
 import logging
 
-from src_v3.app.models import *
+from src.app.models import *
 
 
 class TestModels(unittest.TestCase):
