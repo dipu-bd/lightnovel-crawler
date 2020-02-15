@@ -25,13 +25,15 @@ rejected_sources = {
     'https://comrademao.com/': "Removed by owner",
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
+    'https://myoniyonitranslations.com/': "522 - Connection timed out",
     'https://novelgo.id/': "Removed by owner",
+    'https://novelsrock.com/': '404 - Not Found',
+    'https://www.flying-lines.com/': 'Obfuscated content',
+    'https://www.jieruihao.cn/': "Unavailable",
     'https://www.noveluniverse.com/': "Site is down",
     'https://www.novelupdates.com/': "Does not host any novels",
     'https://www.novelv.com/': "Site is down",
     'https://yukinovel.id/': "Removed by owner",
-    'https://www.jieruihao.cn/': "Unavailable",
-    'https://myoniyonitranslations.com/': "522 - Connection timed out",
 }
 
 # this list will be auto-generated

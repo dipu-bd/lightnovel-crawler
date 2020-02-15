@@ -327,7 +327,6 @@ The list of currently available sources are given below:
 | https://wuxiaworld.online              |     ✔      |           |
 | https://www.aixdzs.com                 |            |           |
 | https://www.asianhobbyist.com          |            |           |
-| https://www.flying-lines.com           |            |           |
 | https://www.idqidian.us                |            |           |
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
@@ -363,6 +362,8 @@ The list of currently available sources are given below:
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://novelgo.id/           | `Removed`                           |
+| https://novelsrock.com        | `404 - Not Found`                   |
+| https://www.flying-lines.com  | `Obfuscated content`                |
 | https://www.jieruihao.cn      | `Unavailable`                       |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |

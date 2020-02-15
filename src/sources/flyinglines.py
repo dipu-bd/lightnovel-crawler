@@ -7,7 +7,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('FLYING LINES')
 
-chapter_body_url = 'https://www.flying-lines.com/h5/novel/%s/%s?accessToken=&isFirstEnter=1'
+chapter_body_url = 'https://www.flying-lines.com/h5/novel/%s/%s?accessToken=&isFirstEnter=1&webdriver=0'
 
 
 class FlyingLinesCrawler(Crawler):
@@ -52,7 +52,9 @@ class FlyingLinesCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         url = chapter_body_url % (self.novel_id, chapter['id'])
         logger.info('Downloading %s', url)
-        data = self.get_json(url)
+        response = self.submit_form(url)
+        data = response.json()
+        print(data)
         return data['data']['content']
     # end def
 # end class
