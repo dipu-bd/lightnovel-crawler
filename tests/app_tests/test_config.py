@@ -14,10 +14,6 @@ from src.assets import DEFAULT_CONFIG
 
 class TestConfig(unittest.TestCase):
 
-    def tearDown(self):
-        logging.shutdown()
-        return super().tearDown()
-
     def test_config_is_singleton(self):
         '''Test if config is a singleton'''
         instance1 = Config()

@@ -12,9 +12,6 @@ from src.app.models import *
 
 
 class TestModels(unittest.TestCase):
-    def tearDown(self):
-        logging.shutdown()
-        return super().tearDown()
 
     def test_novel_instance(self):
         url = 'some link'

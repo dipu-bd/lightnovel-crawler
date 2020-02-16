@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import atexit
 import json
 import logging
 import logging.config
@@ -16,6 +16,9 @@ class Config(metaclass=Singleton):
     '''Access and manage app configurations'''
 
     def __init__(self) -> None:
+        # Cleanup at exit
+        atexit.register(self.close)
+
         # Load default configuration
         self.config = dict(DEFAULT_CONFIG)
 
@@ -24,6 +27,10 @@ class Config(metaclass=Singleton):
 
         # Initialize logger
         logging.config.dictConfig(self.logging.section)
+
+    def close(self):
+        self.save()
+        logging.shutdown()
 
     def load(self) -> None:
         '''Loads config from a file'''

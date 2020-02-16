@@ -7,6 +7,7 @@ from src.app.models import TextDirection
 
 
 class TestScrapers(unittest.TestCase):
+
     def test_request_types(self):
         self.assertEqual(RequestType.CREATE_NOVEL_INSTANCE.name,
                          'CREATE_NOVEL_INSTANCE')

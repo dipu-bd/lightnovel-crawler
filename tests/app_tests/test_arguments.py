@@ -13,6 +13,7 @@ from src.app.arguments import _build
 
 
 class TestArguments(unittest.TestCase):
+
     def test_build_arguments(self):
         parser = ArgumentParser()
         args = [
