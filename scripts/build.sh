@@ -15,6 +15,7 @@ $PIP install -U pip==19.2.1
 $PIP install wheel
 $PIP install PyInstaller
 $PIP install -r requirements.txt
+$PIP install cairosvg
 
 $PY setup.py clean bdist_wheel sdist package
 

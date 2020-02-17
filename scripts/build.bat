@@ -15,6 +15,7 @@ CALL venv\Scripts\activate.bat
 %PIP% install wheel
 %PIP% install PyInstaller
 %PIP% install -r requirements.txt
+%PIP% install cairosvg
 
 %PY% setup.py clean bdist_wheel sdist package
 
