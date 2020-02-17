@@ -20,9 +20,10 @@ logger = logging.getLogger('DOWNLOADER')
 try:
     from cairosvg import svg2png
 except Exception:
-    logger.warning(
-        'CairoSVG was not loaded properly. SVG to PNG conversion will fail.')
-    pass  # ignore it
+    svg2png = None
+    logger.warn('CairoSVG was not found.' +
+                'Install it to generate random cover image:\n' +
+                '    pip install cairosvg')
 # end try
 
 
@@ -61,6 +62,9 @@ def download_cover(app):
 
 def generate_cover(app):
     logger.info('Generating cover image...')
+    if svg2png is None:
+        return
+    # end if
     try:
         svg_file = os.path.join(app.output_path, 'cover.svg')
         svg = random_cover(
