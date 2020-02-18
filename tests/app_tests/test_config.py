@@ -81,3 +81,15 @@ class TestConfig(unittest.TestCase):
                          DEFAULT_CONFIG['logging']['loggers']['']['level'])
         self.assertListEqual(Config().logging.root_log_handlers,
                              DEFAULT_CONFIG['logging']['loggers']['']['handlers'])
+
+    def test_work_directory_setter(self):
+        directory = Config().defaults.work_directory
+        modified_name = 'Lightnovel Crawler [test_work_directory_setter]'
+        modified = directory / '..' / modified_name
+        Config().defaults.work_directory = modified
+        expected_value = directory.parent / modified_name
+        self.addCleanup(shutil.rmtree, expected_value)
+        self.assertEqual(expected_value, Config().defaults.work_directory)
+        self.assertTrue(os.path.exists(expected_value))
+        Config().defaults.work_directory = directory
+        self.assertEqual(directory, Config().defaults.work_directory)
