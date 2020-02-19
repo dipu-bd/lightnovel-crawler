@@ -6,15 +6,36 @@ from .colors import Color
 
 # Docs: https://docs.python.org/3/library/configparser.html
 DEFAULT_CONFIG = {
-    # Default or uncategorized configurations
-    'defaults': {
-        'work_directory': str(Path.home() / 'Documents' / 'Lightnovels'),
+    # Browser configuration
+    'browser': {
+        'concurrent_requests': 5,
+        'soup_parser': 'html5lib',
+        'response_timeout': None,
+        'stream_chunk_size': 50 * 1024,
+        'cloudscraper': {
+            #
+            # Configure cloudscraper instance
+            # Docs: https://github.com/VeNoMouS/cloudscraper
+            #
+            'debug': False,
+            'allow_brotli': False,
+            'browser': {
+                'browser': 'firefox',
+                'mobile': False
+            },
+            'delay': None,
+            'interpreter': 'native',
+            'recaptcha': None,
+        },
     },
 
-    # Configuration for logging
-    # Docs: https://docs.python.org/3.5/library/logging.config.html#configuration-dictionary-schema
-    # Example: https://stackoverflow.com/a/7507842/1583052
+    # Logger configuration
     'logging': {
+        #
+        # Configure logging
+        # Docs: https://docs.python.org/3.5/library/logging.config.html#configuration-dictionary-schema
+        # Example: https://stackoverflow.com/a/7507842/1583052
+        #
         'version': 1,
         'disable_existing_loggers': True,
         'formatters': {
