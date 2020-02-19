@@ -73,6 +73,9 @@ class TestArguments(unittest.TestCase):
         self.assertEqual(arg.exclusive, 'two')
         with self.assertRaises(SystemExit):
             with self.assertRaises(ArgumentError):
+                # disable error log from parser
+                setattr(parser, 'error', lambda x: sys.exit())
+                # parse invalid mutex group
                 parser.parse_args(['--mututally', 'one', '--exclusive', 'two'])
 
     def test_duplicate_arguments(self):
