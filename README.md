@@ -11,7 +11,7 @@
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
-Downloads lightnovels from various online sources and generates ebooks in many formats.
+An app to download novels from online sources and generate e-books.
 
 > **Discord: [https://discord.gg/7A5Hktx](https://discord.gg/7A5Hktx)**
 
