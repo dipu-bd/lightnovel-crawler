@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from typing import Any, Union
+from typing import Union
 
 from bs4 import BeautifulSoup
 from requests import Response
 
 from .content_type import ContentType
-from .context import AppContext
 from .request_type import RequestType
 
 

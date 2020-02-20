@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from typing import List
+
 from .author import Author
 from .language import Language
 
@@ -7,7 +9,12 @@ from .language import Language
 class Novel:
     '''Details of a novel'''
 
-    def __init__(self, url: str, name: str = None, details: str = None, cover_url: str = None) -> None:
+    def __init__(
+            self,
+            url: str,
+            name: str = None,
+            details: str = None,
+            cover_url: str = None) -> None:
         super().__init__()
         self.url: str = url
         self.name: str = name

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from pathlib import Path
 from .colors import Color
 
 # Docs: https://docs.python.org/3/library/configparser.html

@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import sys
-import os
-import json
-import shutil
-import tempfile
-import unittest
-import logging
-from argparse import ArgumentParser, ArgumentError
+from argparse import ArgumentError, ArgumentParser
+
+import pytest
 
 from src.app.arguments import _build
 
 
-class TestArguments(unittest.TestCase):
+class TestArguments:
 
     def test_build_arguments(self):
         parser = ArgumentParser()
@@ -22,7 +18,7 @@ class TestArguments(unittest.TestCase):
         ]
         _build(args, parser)
         cfg = parser.parse_args(['--config', 'some file'])
-        self.assertEqual(cfg.config, 'some file')
+        assert cfg.config == 'some file'
 
     def test_value_error(self):
         parser = ArgumentParser()
@@ -30,7 +26,7 @@ class TestArguments(unittest.TestCase):
             ('bad value'),
             dict(args=('--config')),
         ]
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             _build(args, parser)
 
     def test_argument_group(self):
@@ -45,14 +41,14 @@ class TestArguments(unittest.TestCase):
         ]
         _build(args, parser)
         arg = parser.parse_args(['--group', 'one'])
-        self.assertEqual(arg.group, 'one')
-        self.assertIsNone(arg.arg)
+        assert arg.group == 'one'
+        assert arg.arg is None
         arg = parser.parse_args(['--arg', 'two'])
-        self.assertIsNone(arg.group)
-        self.assertEqual(arg.arg, 'two')
+        assert arg.group is None
+        assert arg.arg == 'two'
         arg = parser.parse_args(['--group', 'one', '--arg', 'two'])
-        self.assertEqual(arg.group, 'one')
-        self.assertEqual(arg.arg, 'two')
+        assert arg.group == 'one'
+        assert arg.arg == 'two'
 
     def test_mutually_exclusive_argument(self):
         parser = ArgumentParser()
@@ -66,13 +62,13 @@ class TestArguments(unittest.TestCase):
         ]
         _build(args, parser)
         arg = parser.parse_args(['--mututally', 'one'])
-        self.assertEqual(arg.mututally, 'one')
-        self.assertIsNone(arg.exclusive)
+        assert arg.mututally == 'one'
+        assert arg.exclusive is None
         arg = parser.parse_args(['--exclusive', 'two'])
-        self.assertIsNone(arg.mututally)
-        self.assertEqual(arg.exclusive, 'two')
-        with self.assertRaises(SystemExit):
-            with self.assertRaises(ArgumentError):
+        assert arg.mututally is None
+        assert arg.exclusive == 'two'
+        with pytest.raises(SystemExit):
+            with pytest.raises(ArgumentError):
                 # disable error log from parser
                 setattr(parser, 'error', lambda x: sys.exit())
                 # parse invalid mutex group
@@ -85,7 +81,7 @@ class TestArguments(unittest.TestCase):
             dict(args=('--aaarg')),
             dict(args=('--aaarg')),
         ]
-        with self.assertRaises(ArgumentError):
+        with pytest.raises(ArgumentError):
             _build(args, parser)
 
     def test_multi_level_of_hierarchy(self):
@@ -131,5 +127,5 @@ class TestArguments(unittest.TestCase):
         args = [
             dict(args=3),
         ]
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             _build(args, parser)

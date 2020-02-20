@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 from requests import Response
 from urllib3 import HTTPResponse
 
-from .. import CONFIG
+from ..config import CONFIG
 
 
 class BrowserResponse:

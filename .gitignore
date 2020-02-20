@@ -18,3 +18,4 @@ mycreds.txt
 venv
 *.log
 save_pid.txt
+.tox/

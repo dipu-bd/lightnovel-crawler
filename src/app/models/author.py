@@ -3,19 +3,23 @@
 from enum import IntEnum, auto
 
 
+class AuthorType(IntEnum):
+    UNKNOWN = auto()
+    AUTHOR = auto()
+    ARTIST = auto()
+    TRANSLATOR = auto()
+    EDITOR = auto()
+
+
 class Author:
     '''Details of a author of a novel'''
 
-    class Type(IntEnum):
-        UNKNOWN = auto()
-        AUTHOR = auto()
-        ARTIST = auto()
-        TRANSLATOR = auto()
-        EDITOR = auto()
-
-    def __init__(self, name: str, author_type: Type = Type.UNKNOWN) -> None:
+    def __init__(
+            self,
+            name: str,
+            author_type: AuthorType = AuthorType.UNKNOWN) -> None:
         super().__init__()
-        self.type: Type = author_type
+        self.type: AuthorType = author_type
         self.name: str = '-' if name is None else name
 
     def __str__(self):

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+import os
 from argparse import ArgumentParser, Namespace
 
 from ..assets import get_version
@@ -19,11 +21,8 @@ _parser = ArgumentParser(
 _arguments = [
     dict(args=('-v', '--version'), action='version',
          version='Lightnovel Crawler ' + get_version()),
-    dict(args=('--config'), dest='config', metavar='CONFIG_FILE',
+    dict(args=('-c, --config'), dest='config', metavar='CONFIG_FILE',
          help='The config file path'),
-    dict(args=('method'), nargs='?', default='app',
-         choices=['app', 'bot', 'configure'],
-         help='The method name (default: app)'),
 ]
 
 
@@ -51,8 +50,13 @@ def _build(arguments: list = None, parser: ArgumentParser = None):
 
 
 def get_args() -> Namespace:
+    args = sys.argv[1:]
+    if os.getenv('MODE') == 'TEST':
+        args = []
+
     global _parsed_args
     if _parsed_args is None:
         _build()
-        _parsed_args = _parser.parse_args()
+        _parsed_args = _parser.parse_args(args)
+
     return _parsed_args

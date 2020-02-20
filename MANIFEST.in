@@ -1,2 +1,2 @@
-include src/VERSION
+include LICENSE README.md src/VERSION requirements.txt requirements-dev.txt
 recursive-include src *.*

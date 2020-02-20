@@ -3,7 +3,7 @@
 from abc import ABCMeta, abstractmethod, abstractstaticmethod
 from typing import Generator, List, Union
 
-from ..models import *
+from ..models import Author, Chapter, Language, Novel, Volume
 from .context import AppContext
 from .request import Request, RequestType
 

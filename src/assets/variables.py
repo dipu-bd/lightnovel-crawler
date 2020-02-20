@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 import platform
 
 from .version import get_value as get_version

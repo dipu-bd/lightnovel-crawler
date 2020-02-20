@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .variables import *
+from .variables import isLinux, isMac
 
 
 class Icons:

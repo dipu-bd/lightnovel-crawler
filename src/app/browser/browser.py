@@ -3,14 +3,12 @@
 import atexit
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
-from typing import *
+from typing import Any, Mapping
 
 from cloudscraper import CloudScraper, create_scraper
 
-from ..utility import reformat_url
+from ..config import CONFIG
 from .response import BrowserResponse
-
-from .. import CONFIG
 
 
 class Browser(object):
@@ -42,7 +40,12 @@ class Browser(object):
         future = self.executor.submit(self.client.get, url, **kwargs)
         return BrowserResponse(future, timeout)
 
-    def post(self, url, body: Mapping[str, Any] = None, multipart: bool = False, **kwargs) -> BrowserResponse:
+    def post(self,
+             url,
+             body: Mapping[str,
+                           Any] = None,
+             multipart: bool = False,
+             **kwargs) -> BrowserResponse:
         if not body:
             body = {}
 

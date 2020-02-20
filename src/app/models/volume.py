@@ -6,7 +6,12 @@ from .novel import Novel
 class Volume:
     '''Details of a volume (collection of chapters) of a novel'''
 
-    def __init__(self, novel: Novel, serial: int, name: str = None, details: str = None) -> None:
+    def __init__(
+            self,
+            novel: Novel,
+            serial: int,
+            name: str = None,
+            details: str = None) -> None:
         super().__init__()
         self.novel: Novel = novel
         self.serial: int = serial

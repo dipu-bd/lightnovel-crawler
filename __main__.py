@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from src.app.models import *
 from src.app.config import CONFIG
+from src.app.models import Author, Chapter, Language, Novel, TextDirection, Volume
 
 CONFIG.save()
-print(CONFIG.defaults.work_directory)
+print(CONFIG.work_directory)
 print(CONFIG.logging.root_log_level)
 print(CONFIG.logging.root_log_handlers)
 
