@@ -12,6 +12,7 @@ env
 .env
 Lightnovels/
 windows/
+.pyi/
 .telegram_bot_output/
 .discord_bot_output/
 mycreds.txt

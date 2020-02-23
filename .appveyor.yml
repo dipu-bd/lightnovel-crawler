@@ -1,9 +1,9 @@
 environment:
   matrix:
-    - PYTHON: C:\Python38-x64
-    - PYTHON: C:\Python37-x64
-    - PYTHON: C:\Python36-x64
     - PYTHON: C:\Python35-x64
+    - PYTHON: C:\Python36-x64
+    - PYTHON: C:\Python37-x64
+    - PYTHON: C:\Python38-x64
 
 init:
   - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
@@ -11,11 +11,13 @@ init:
 
 install:
   - python -m pip install --no-cache-dir  -r requirements.txt
+  - python -m pip install --no-cache-dir  -r requirements-dev.txt
 
 build: false
 
 test_script:
-  - python __main__.py --bot test -lll
+  - make lint
+  - make test
 
 branches:
   only:

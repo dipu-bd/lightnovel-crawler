@@ -12,11 +12,19 @@ from PyInstaller import __main__ as pyi
 from setuptools.config import read_configuration
 
 ROOT = Path(__file__).parent
+pyi_root = ROOT / '.pyi'
+
 unix_root = '/'.join(str(ROOT).split(os.sep))
 
 
+def read_version():
+    filename = ROOT / 'src' / 'VERSION'
+    with open(filename, 'r') as f:
+        return f.read().strip()
+
+
 def package():
-    output = str(ROOT / 'windows')
+    output = str(pyi_root)
     shutil.rmtree(output, ignore_errors=True)
     os.makedirs(output, exist_ok=True)
     setup_command()
@@ -29,7 +37,7 @@ def setup_command():
     command = 'pyinstaller -y '
     command += '--clean '
     command += '-F '  # onefile
-    command += '-n "lncrawl" '
+    command += '-n "lncrawl_v%s" ' % read_version()
     command += '-i "%s/res/lncrawl.ico" ' % unix_root
     command += gather_data_files()
     command += gather_hidden_imports()
@@ -39,8 +47,8 @@ def setup_command():
     print()
 
     extra = ['--distpath', str(ROOT / 'dist')]
-    extra += ['--specpath', str(ROOT / 'windows')]
-    extra += ['--workpath', str(ROOT / 'windows' / 'build')]
+    extra += ['--specpath', str(pyi_root)]
+    extra += ['--workpath', str(pyi_root / 'build')]
 
     sys.argv = shlex.split(command) + extra
 # end def
@@ -57,6 +65,7 @@ def gather_data_files():
         dst = '/'.join(dst.split(os.sep))
         command += '--add-data "%s%s%s" ' % (src, os.pathsep, dst)
     # end for
+
     command += '--add-data "%s/src/VERSION%ssrc" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
