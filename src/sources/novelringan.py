@@ -49,6 +49,7 @@ class NovelRinganCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
+        soup.select_one('#bacotan').extract()
         contents = soup.select('.entry-content p')
 
         body = [str(p) for p in contents if p.text.strip()]
