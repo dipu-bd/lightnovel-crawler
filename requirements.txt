@@ -11,6 +11,7 @@ progress==1.5
 Js2Py==0.67
 EbookLib==0.17.1
 Jinja2==2.10.3
+pillow==6.2.2
 # cfscrape==2.1.1
 
 # Bot requirements
