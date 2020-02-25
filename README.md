@@ -58,7 +58,7 @@ Also, you have to install **node.js** to access cloudflare enabled sites (e.g. h
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
-⏬ **Linux**: [lightnovel-crawler v2.17.0 ~ 24MB](https://rebrand.ly/lncrawl-linux)
+⏬ **Linux**: [lightnovel-crawler v2.19.4 24MB](https://rebrand.ly/lncrawl-linux)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
