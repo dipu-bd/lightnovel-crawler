@@ -22,7 +22,7 @@ from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
 
 from ..assets.user_agents import user_agents
 
-__version__ = "2.0.7"
+__version__ = "2.1.1"
 
 DEFAULT_USER_AGENT = random.choice(user_agents)
 
@@ -120,7 +120,8 @@ class CloudflareScraper(Session):
         )
 
     def request(self, method, url, *args, **kwargs):
-        resp = super(CloudflareScraper, self).request(method, url, *args, **kwargs)
+        resp = super(CloudflareScraper, self).request(
+            method, url, *args, **kwargs)
 
         # Check if Cloudflare captcha challenge is presented
         if self.is_cloudflare_captcha_challenge(resp):
@@ -155,10 +156,15 @@ class CloudflareScraper(Session):
         body = resp.text
         parsed_url = urlparse(resp.url)
         domain = parsed_url.netloc
-        #submit_url = "%s://%s/cdn-cgi/l/chk_jschl" % (parsed_url.scheme, domain)
+        challenge_form = re.search(
+            r'\<form.*?id=\"challenge-form\".*?\/form\>', body, flags=re.S).group(0)  # find challenge form
+        method = re.search(r'method=\"(.*?)\"',
+                           challenge_form, flags=re.S).group(1)
         if self.org_method is None:
             self.org_method = resp.request.method
-        submit_url = "%s://%s/%s" % (parsed_url.scheme, domain, re.findall('\<form id=\"challenge-form\" action=\"\/(.*)\?', resp.text)[0])
+        submit_url = "%s://%s%s" % (parsed_url.scheme,
+                                    domain,
+                                    re.search(r'action=\"(.*?)\"', challenge_form, flags=re.S).group(1).split('?')[0])
 
         cloudflare_kwargs = copy.deepcopy(original_kwargs)
 
@@ -166,18 +172,32 @@ class CloudflareScraper(Session):
         headers["Referer"] = resp.url
 
         try:
-            #params = cloudflare_kwargs["params"] = OrderedDict(
-            cloudflare_kwargs["data"] = OrderedDict(
-                re.findall(r'name="(s|jschl_vc|pass)"(?: [^<>]*)? value="(.+?)"', body)
-            )
+            cloudflare_kwargs["params"] = dict()
+            cloudflare_kwargs["data"] = dict()
+            if len(re.search(r'action=\"(.*?)\"', challenge_form, flags=re.S).group(1).split('?')) != 1:
+                for param in re.search(r'action=\"(.*?)\"', challenge_form, flags=re.S).group(1).split('?')[1].split('&'):
+                    cloudflare_kwargs["params"].update(
+                        {param.split('=')[0]: param.split('=')[1]})
 
-            params = cloudflare_kwargs["params"] = {'__cf_chl_jschl_tk__': re.findall(
-                '\<form id=\"challenge-form\" action=\".*\?__cf_chl_jschl_tk__=(.*?)\"', resp.text)[0]}
+            for input_ in re.findall(r'\<input.*?(?:\/>|\<\/input\>)', challenge_form, flags=re.S):
+                if re.search(r'name=\"(.*?)\"', input_, flags=re.S).group(1) != 'jschl_answer':
+                    if method == 'POST':
+                        cloudflare_kwargs["data"].update({re.search(r'name=\"(.*?)\"', input_, flags=re.S).group(1):
+                                                          re.search(r'value=\"(.*?)\"', input_, flags=re.S).group(1)})
+                    elif method == 'GET':
+                        cloudflare_kwargs["params"].update({re.search(r'name=\"(.*?)\"', input_, flags=re.S).group(1):
+                                                            re.search(r'value=\"(.*?)\"', input_, flags=re.S).group(1)})
+            if method == 'POST':
+                for k in ("jschl_vc", "pass"):
+                    if k not in cloudflare_kwargs["data"]:
+                        raise ValueError(
+                            "%s is missing from challenge form" % k)
+            elif method == 'GET':
+                for k in ("jschl_vc", "pass"):
+                    if k not in cloudflare_kwargs["params"]:
+                        raise ValueError(
+                            "%s is missing from challenge form" % k)
 
-            for k in ("jschl_vc", "pass"):
-                #if k not in params:
-                if k not in cloudflare_kwargs["data"]:
-                    raise ValueError("%s is missing from challenge form" % k)
         except Exception as e:
             # Something is wrong with the page.
             # This may indicate Cloudflare has changed their anti-bot
@@ -185,19 +205,19 @@ class CloudflareScraper(Session):
             # please open a GitHub issue so I can update the code accordingly.
             raise ValueError(
                 "Unable to parse Cloudflare anti-bot IUAM page: %s %s"
-                % (e.message, BUG_REPORT)
+                % (e, BUG_REPORT)
             )
 
         # Solve the Javascript challenge
         answer, delay = self.solve_challenge(body, domain)
-        #params["jschl_answer"] = answer
-        cloudflare_kwargs["data"]["jschl_answer"] = answer
+        if method == 'POST':
+            cloudflare_kwargs["data"]["jschl_answer"] = answer
+        elif method == 'GET':
+            cloudflare_kwargs["params"]["jschl_answer"] = answer
 
         # Requests transforms any request into a GET after a redirect,
         # so the redirect has to be handled manually here to allow for
         # performing other types of requests even as the first request.
-        #method = resp.request.method
-        method = re.findall(r'\<form id=\"challenge-form\" action=\"\/.*\?.*method=\"(.*?)\"',body)[0]
         cloudflare_kwargs["allow_redirects"] = False
 
         # Cloudflare requires a delay before solving the challenge
@@ -221,22 +241,40 @@ class CloudflareScraper(Session):
                 )
                 return self.request(method, redirect_url, **original_kwargs)
             return self.request(method, redirect.headers["Location"], **original_kwargs)
+        elif "Set-Cookie" in redirect.headers:
+            if 'cf_clearance' in redirect.headers['Set-Cookie']:
+                resp = self.request(
+                    self.org_method, submit_url, cookies=redirect.cookies)
+                return resp
+            else:
+                return self.request(method, submit_url, **original_kwargs)
         else:
-            return self.request(self.org_method, submit_url, **cloudflare_kwargs)
+            resp = self.request(self.org_method, submit_url,
+                                **cloudflare_kwargs)
+            return resp
 
     def solve_challenge(self, body, domain):
         try:
+            javascript = re.search(r'\<script type\=\"text\/javascript\"\>\n(.*?)\<\/script\>',
+                                   body, flags=re.S).group(1)  # find javascript
+
             challenge, ms = re.search(
                 r"setTimeout\(function\(\){\s*(var "
                 r"s,t,o,p,b,r,e,a,k,i,n,g,f.+?\r?\n[\s\S]+?a\.value\s*=.+?)\r?\n"
                 r"(?:[^{<>]*},\s*(\d{4,}))?",
-                body,
+                javascript, flags=re.S
             ).groups()
 
             # The challenge requires `document.getElementById` to get this content.
             # Future proofing would require escaping newlines and double quotes
-            innerHTML = re.search(r"<div(?: [^<>]*)? id=\"cf-dn.*?\">([^<>]*)", body)
-            innerHTML = innerHTML.group(1) if innerHTML else ""
+            innerHTML = ''
+            for i in javascript.split(';'):
+                # from what i found out from pld example K var in
+                if i.strip().split('=')[0].strip() == 'k':
+                    # javafunction is for innerHTML this code to find it
+                    k = i.strip().split('=')[1].strip(' \'')
+                    innerHTML = re.search(
+                        r'\<div.*?id\=\"'+k+r'\".*?\>(.*?)\<\/div\>', body).group(1)  # find innerHTML
 
             # Prefix the challenge with a fake document object.
             # Interpolate the domain, div contents, and JS challenge.
@@ -250,6 +288,7 @@ class CloudflareScraper(Session):
                       return {"innerHTML": "%s"};
                     }
                   };
+
                 %s; a.value
             """ % (
                 domain,
@@ -289,11 +328,18 @@ class CloudflareScraper(Session):
         """
             % challenge
         )
+        stderr = ''
 
         try:
-            result = subprocess.check_output(
-                ["node", "-e", js], stdin=subprocess.PIPE, stderr=subprocess.PIPE
+            node = subprocess.Popen(
+                ["node", "-e", js], stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                universal_newlines=True
             )
+            result, stderr = node.communicate()
+            if node.returncode != 0:
+                stderr = "Node.js Exception:\n%s" % (stderr or None)
+                raise subprocess.CalledProcessError(
+                    node.returncode, "node -e ...", stderr)
         except OSError as e:
             if e.errno == 2:
                 raise EnvironmentError(
@@ -302,7 +348,8 @@ class CloudflareScraper(Session):
                 )
             raise
         except Exception:
-            logging.error("Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
+            logging.error(
+                "Error executing Cloudflare IUAM Javascript. %s" % BUG_REPORT)
             raise
 
         try:
@@ -351,7 +398,8 @@ class CloudflareScraper(Session):
             resp = scraper.get(url, **kwargs)
             resp.raise_for_status()
         except Exception:
-            logging.error("'%s' returned an error. Could not collect tokens." % url)
+            logging.error(
+                "'%s' returned an error. Could not collect tokens." % url)
             raise
 
         domain = urlparse(resp.url).netloc
@@ -381,7 +429,8 @@ class CloudflareScraper(Session):
         """
         Convenience function for building a Cookie HTTP header value.
         """
-        tokens, user_agent = cls.get_tokens(url, user_agent=user_agent, **kwargs)
+        tokens, user_agent = cls.get_tokens(
+            url, user_agent=user_agent, **kwargs)
         return "; ".join("=".join(pair) for pair in tokens.items()), user_agent
 
 

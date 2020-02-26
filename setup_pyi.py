@@ -84,6 +84,7 @@ def gather_hidden_imports():
             module_name = f.name[:-3]
             command += '--hidden-import "src.sources.%s" ' % module_name
         # end if
+        command += '--hidden-import pkg_resources.py2_warn '
     # end for
 
     return command

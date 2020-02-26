@@ -16,7 +16,7 @@ class RoyalRoadCrawler(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select('h2.margin-bottom-10 a')[:5]:
+        for a in soup.select('h2.fiction-title a')[:5]:
             url = self.absolute_url(a['href'])
             results.append({
                 'url': url,

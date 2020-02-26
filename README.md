@@ -11,7 +11,7 @@
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
-Downloads lightnovels from various online sources and generates ebooks in many formats.
+An app to download novels from online sources and generate e-books.
 
 > **Discord: [https://discord.gg/7A5Hktx](https://discord.gg/7A5Hktx)**
 
@@ -52,7 +52,7 @@ Also, you have to install **node.js** to access cloudflare enabled sites (e.g. h
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.19.1 ~ 21.5MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.19.2 ~ 22MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -154,7 +154,8 @@ Simply fill out the environment variables and you get a running instance.
 
 ### B1. Available options
 
-To view list of available options:
+<details>
+  <summary>Click to know how to view list of available options</summary>
 
 ```bash
 $ lncrawl -h
@@ -204,8 +205,13 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
+</details>
+
 ### B2. Example Usage
 
+<details>
+  <summary>Click to view contents</summary><br>
+  
 Open your console and type `lncrawl --version` first to check if you have installed it properly.
 Here are some example usage of the app:
 
@@ -234,6 +240,8 @@ Here are some example usage of the app:
 
 - You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
 
+</details>
+  
 ### B3. Running the bot
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
@@ -280,7 +288,8 @@ You are very welcome to contribute in this project. You can:
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
-The list of currently available sources are given below:
+<details>
+<summary>Click to view the list of available sources</summary>
 
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
@@ -297,6 +306,7 @@ The list of currently available sources are given below:
 | https://bestlightnovel.com             |     ✔      |           |
 | https://book.qidian.com                |            |           |
 | https://boxnovel.com                   |     ✔      |           |
+| http://boxnovel.org                    |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
 | https://id.mtlnovel.com                |     ✔      |           |
@@ -326,7 +336,6 @@ The list of currently available sources are given below:
 | https://wuxiaworld.online              |     ✔      |           |
 | https://www.aixdzs.com                 |            |           |
 | https://www.asianhobbyist.com          |            |           |
-| https://www.flying-lines.com           |            |           |
 | https://www.idqidian.us                |            |           |
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
@@ -351,9 +360,13 @@ The list of currently available sources are given below:
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
 | https://rewayat.club                   |            |           |
+</details>
 
 ### C4. Rejected sources
 
+<details>
+<summary>Click to view rejected source</summary>
+  
 | Rejected Sources              | Reason                              |
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
@@ -362,15 +375,20 @@ The list of currently available sources are given below:
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://novelgo.id/           | `Removed`                           |
+| https://novelsrock.com        | `404 - Not Found`                   |
+| https://www.flying-lines.com  | `Obfuscated content`                |
 | https://www.jieruihao.cn      | `Unavailable`                       |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
 
+</details>
+
 ### C5. Supported output formats
 
-When download is done, the following files can be generated:
+<details>
+<summary>Click to view supported output formats</summary>
 
 - JSON (default)
 - TEXT
@@ -392,6 +410,8 @@ When download is done, the following files can be generated:
 - SNB
 - TCR
 - HTML
+
+</details>
 
 ### C6. Supported bots
 
