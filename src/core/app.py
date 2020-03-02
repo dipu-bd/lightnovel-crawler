@@ -239,6 +239,6 @@ class App:
             self.archived_outputs.append(archived)
         # end for
 
-        logger.warn('Compressed: %s' % '\n\t'.join(self.archived_outputs))
+        logger.info('Compressed: %s' % '\n\t'.join(self.archived_outputs))
     # end def
 # end class

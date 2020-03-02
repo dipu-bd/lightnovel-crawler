@@ -134,7 +134,7 @@ class MessageHandler:
             await self.send(
                 '-' * 80 + '\n' +
                 ('Hello %s\n' % self.user.name) +
-                '*Lets make reading lightnovels great again!*\n' +
+                # '*Lets make reading lightnovels great again!*\n' +
                 '-' * 80 + '\n'
             )
             self.state = self.get_novel_url
@@ -493,13 +493,29 @@ class MessageHandler:
         self.app.compress_output()
         self.status[-1] = 'Compressed output folder.'
 
-        self.status.append('Uploading files...')
-        for archive in self.app.archived_outputs:
-            asyncio.run_coroutine_threadsafe(
-                self.upload_file(archive),
-                self.client.loop
-            ).result()
-        # end for
+        public_path = os.getenv('PUBLIC_DATA_PATH', None)
+        public_ip = os.getenv('PUBLIC_ADDRESS', None)
+        if public_ip and public_path and os.path.exists(public_path):
+            self.status.append('Publishing files...')
+            folder = os.path.join(public_path, self.user.id, self.app.good_file_name)
+            os.makedirs(folder, exist_ok=True)
+            download_url = public_ip.strip('/') + '/' + folder.replace(os.sep, '/')
+            self.status.append('Download files from:')
+            for src in self.app.archived_outputs:
+                file_name = os.path.basename(src)
+                dst = os.path.join(folder, file_name)
+                shutil.copy(src, dst)
+                self.status.append(download_url + '/' + file_name)
+            # end for
+        else:
+            self.status.append('Uploading files...')
+            for archive in self.app.archived_outputs:
+                asyncio.run_coroutine_threadsafe(
+                    self.upload_file(archive),
+                    self.client.loop
+                ).result()
+            # end for
+        # end if
 
         self.destroy()
     # end def
