@@ -109,7 +109,7 @@ class WuxiaComCrawler(Crawler):
                     'id': chap_id,
                     'volume': vol_id,
                     'url': self.absolute_url(a['href']),
-                    'title': a.text.strip() or ('Chapter %d' % chap_id),
+                    'title': a.text.strip(),
                 })
             # end def
         # end def
