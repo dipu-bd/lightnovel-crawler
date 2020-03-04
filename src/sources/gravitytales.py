@@ -22,7 +22,8 @@ class GravityTalesCrawler(Crawler):
         logger.debug('Visiting %s' % self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        [x.extract() for x in soup.select('.main-content h3 > *')]
+        for tag in soup.select('.main-content h3 > *'):
+            tag.extract()
         self.novel_title = soup.select_one('.main-content h3').text.strip()
         logger.info('Novel title: %s' % self.novel_title)
 
@@ -32,17 +33,15 @@ class GravityTalesCrawler(Crawler):
         self.novel_author = soup.select_one('.main-content h4').text.strip()
         logger.info(self.novel_author)
 
-        self.get_chapters_list()
+        self.get_chapter_list()
     # end def
 
-    def get_chapters_list(self):
+    def get_chapter_list(self):
         url = chapter_list_url % self.novel_id
         logger.info('Visiting %s' % url)
         soup = self.get_soup(url)
 
-        unwanted_default_group = soup.find("li", {"class": "active"})
-        unwanted_default_group.extract()
-
+        # For each tabs...
         for a in soup.select('#chaptergroups li a'):
             vol_id = len(self.volumes) + 1
             self.volumes.append({
@@ -51,7 +50,8 @@ class GravityTalesCrawler(Crawler):
                 '_tid': (a['href']),
             })
 
-            for a in soup.select(a['href'] + ' td a'):
+            # ...get every chapters
+            for a in soup.select_one(a['href']).select('table td a'):
                 chap_id = len(self.chapters) + 1
                 self.chapters.append({
                     'id': chap_id,
@@ -69,24 +69,12 @@ class GravityTalesCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s' % chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        # body_parts = soup.select_one('#chapterContent')
-        # body = self.extract_contents(body_parts)
-
-        body = []
-        for div in soup.select('#chapterContent > *'):
-            text = div.text.strip()
-            if not text:  # text is empty
-                continue
+        body = soup.select_one('#chapterContent')
+        for tag in body.contents:
+            if hasattr(tag, 'attrs'):
+                setattr(tag, 'attrs', {})    # clear attributes
             # end if
-            stripped_text = ' '.join(re.findall(r'[\w\d]+', text)).lower()
-            stripped_title = ' '.join(re.findall(r'[\w\d]+', chapter['title'])).lower()
-            if stripped_text == stripped_title:
-                continue
-            # end if
-            body.append(text)
         # end for
-
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return str(body)
     # end def
 # end class
