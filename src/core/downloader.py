@@ -21,7 +21,7 @@ try:
     from cairosvg import svg2png
 except Exception:
     svg2png = None
-    logger.warn('CairoSVG was not found.' +
+    logger.info('CairoSVG was not found.' +
                 'Install it to generate random cover image:\n' +
                 '    pip install cairosvg')
 # end try
