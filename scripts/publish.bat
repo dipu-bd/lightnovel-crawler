@@ -2,6 +2,9 @@
 
 SET /P VERSION=<src\VERSION
 
+SET PY=python
+SET PIP=%PY% -m pip --disable-pip-version-check
+
 REM CALL scripts\build.bat
 
 %PIP% install twine
