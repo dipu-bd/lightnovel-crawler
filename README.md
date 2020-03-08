@@ -361,7 +361,6 @@ The list of currently available sources are given below:
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
-| https://comrademao.com        | `Removed`                           |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://novelgo.id/           | `Removed`                           |
