@@ -1,7 +1,10 @@
+from base64 import decodestring as b64decode
+
 allowed_failures = [
     'https://ranobelib.me/',
     'https://www.aixdzs.com/',
     'https://webnovelindonesia.com/',
+    b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 ]
 
 test_user_inputs = {
