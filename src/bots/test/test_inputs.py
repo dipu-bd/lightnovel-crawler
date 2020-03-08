@@ -25,9 +25,6 @@ test_user_inputs = {
         'https://boxnovel.com/novel/the-rest-of-my-life-is-for-you/',
         'cultivation chat',
     ],
-    'https://comrademao.com/': [
-        'https://comrademao.com/novel/against-the-gods/',
-    ],
     'https://crescentmoon.blog/': [
         'https://crescentmoon.blog/dark-blue-and-moonlight/',
     ],

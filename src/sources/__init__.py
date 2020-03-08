@@ -22,7 +22,6 @@ from ..utils.crawler import Crawler
 rejected_sources = {
     'http://fullnovel.live/': "403 - Forbidden: Access is denied",
     'http://moonbunnycafe.com/': "Does not follow uniform format",
-    'https://comrademao.com/': "Removed by owner",
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
