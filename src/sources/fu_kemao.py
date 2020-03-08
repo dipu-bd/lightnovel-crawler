@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
-import re
-import base64
 import logging
-from urllib.parse import quote_plus
+import re
+from base64 import decodestring as b64decode
 from concurrent import futures
+from urllib.parse import quote_plus
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-novel_search_url = base64.decodestring(
-    "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8/cG9zdF90eXBlPW5vdmVsJnM9".encode('utf-8')).decode('utf-8')
+novel_search_url = b64decode(
+    "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8/cG9zdF90eXBlPW5vdmVsJnM9".encode()).decode()
 
 
 class Fu_kCom_ademao(Crawler):
-    base_url = base64.decodestring(
-        "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode('utf-8')).decode('utf-8')
+    base_url = b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 
     def search_novel(self, query):
         url = novel_search_url + quote_plus(query)
