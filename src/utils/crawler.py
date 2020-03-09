@@ -4,13 +4,14 @@ Crawler application
 """
 import logging
 import re
+import ssl
 from abc import abstractmethod
 from concurrent import futures
 from urllib.parse import urlparse
 
+import cloudscraper
+from requests import Session
 from bs4 import BeautifulSoup, Comment
-
-from . import cfscrape
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +20,18 @@ class Crawler:
     '''Blueprint for creating new crawlers'''
 
     def __init__(self):
+        self._destroyed = False
         self.executor = futures.ThreadPoolExecutor(max_workers=2)
-        self.scrapper = cfscrape.create_scraper()
-        self.scrapper.verify = False
+
+        # Initialize cloudscrapper
+        self.scrapper = cloudscraper.create_scraper(
+            browser={
+                'browser': 'firefox',
+                'mobile': False
+            }
+        )
+        adapter = self.scrapper.get_adapter('https://')
+        adapter.ssl_context.check_hostname = False
 
         # Must resolve these fields inside `read_novel_info`
         self.novel_title = 'N/A'
@@ -46,8 +56,6 @@ class Crawler:
         self.home_url = ''
         self.novel_url = ''
         self.last_visited_url = None
-
-        self._destroyed = False
     # end def
 
     def destroy(self):
