@@ -63,10 +63,10 @@ class MachineNovelTrans(Crawler):
 
     def format_text(self, text):
         '''formats the text and remove bad characters'''
-        text = text.replace(u'\u00ad', '')
-        text = re.sub(r'\u201e[, ]*', '&ldquo;', text)
-        text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
-        text = re.sub(r'[ ]*,[ ]+', ', ', text)
+        text = re.sub(r'\u00ad', '', text, flags=re.UNICODE)
+        text = re.sub(r'\u201e[, ]*', '&ldquo;', text, flags=re.UNICODE)
+        text = re.sub(r'\u201d[, ]*', '&rdquo;', text, flags=re.UNICODE)
+        text = re.sub(r'[ ]*,[ ]+', ', ', text, flags=re.UNICODE)
         return text.strip()
     # end def
 # end class
