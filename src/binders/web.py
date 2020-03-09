@@ -31,6 +31,11 @@ def bind_html_chapter(chapter, prev_chapter, next_chapter, direction='ltr'):
     })
     '''
 
+    main_body = chapter['body']
+    if not main_body:
+        main_body = '<h1>%s</h1><p>No contents</p>' % chapter['title']
+    # end if
+
     html = '<!DOCTYPE html>\n'
     html += '<html dir="%s"><head>' % direction
     html += '<meta charset="utf-8"/>'
@@ -40,7 +45,7 @@ def bind_html_chapter(chapter, prev_chapter, next_chapter, direction='ltr'):
     html += '<script>%s</script>' % script
     html += '</head><body><div id="content">'
     html += button_group
-    html += '<main>%s</main>' % chapter['body']
+    html += '<main>%s</main>' % main_body
     html += button_group
     html += '</div>'
     html += '<div id="readpos">0%</div>'

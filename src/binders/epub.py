@@ -85,12 +85,15 @@ def make_chapters(book, chapters):
     toc = []
     volume = []
     for i, chapter in enumerate(chapters):
+        if not chapter['body']:
+            continue
+        # end if
         xhtml_file = 'chap_%s.xhtml' % str(i + 1).rjust(5, '0')
         content = epub.EpubHtml(
             # uid=str(i + 1),
             file_name=xhtml_file,
             title=chapter['title'],
-            content=str(chapter['body'] or ''),
+            content=str(chapter['body']),
             direction=book.direction,
         )
         book.add_item(content)
@@ -99,7 +102,8 @@ def make_chapters(book, chapters):
         # separate chapters by volume
         if i + 1 == len(chapters) or chapter['volume'] != chapters[i + 1]['volume']:
             toc.append((
-                epub.Section(chapter['volume_title'], href=volume[0].file_name),
+                epub.Section(chapter['volume_title'],
+                             href=volume[0].file_name),
                 tuple(volume)
             ))
             volume = []
