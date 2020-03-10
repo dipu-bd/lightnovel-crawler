@@ -118,7 +118,6 @@ class LNMTLCrawler(Crawler):
                         'id': i + 1,
                         'title': title,
                         'download_id': vol['id'],
-                        'volume': int(vol.get('number') or (i + 1)),
                     })
                 # end for
             except Exception as err:
@@ -149,7 +148,7 @@ class LNMTLCrawler(Crawler):
             for chapter in possible_chapters[volume['id']]:
                 chap = chapter.copy()
                 chap['id'] = len(self.chapters) + 1
-                chap['volume'] = volume['volume']
+                chap['volume'] = volume['id']
                 self.chapters.append(chap)
             # end for
         # end for
