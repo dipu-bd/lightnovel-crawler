@@ -4,7 +4,6 @@ Crawler application
 """
 import logging
 import re
-import ssl
 from abc import abstractmethod
 from concurrent import futures
 from urllib.parse import urlparse
@@ -24,14 +23,12 @@ class Crawler:
         self.executor = futures.ThreadPoolExecutor(max_workers=2)
 
         # Initialize cloudscrapper
-        self.scrapper = cloudscraper.create_scraper(
+        self.scraper = cloudscraper.create_scraper(
             browser={
                 'browser': 'firefox',
                 'mobile': False
             }
         )
-        adapter = self.scrapper.get_adapter('https://')
-        adapter.ssl_context.check_hostname = False
 
         # Must resolve these fields inside `read_novel_info`
         self.novel_title = 'N/A'
@@ -62,7 +59,7 @@ class Crawler:
         self._destroyed = True
         self.volumes.clear()
         self.chapters.clear()
-        self.scrapper.close()
+        self.scraper.close()
         self.executor.shutdown(False)
     # end def
 
@@ -119,12 +116,12 @@ class Crawler:
     # ------------------------------------------------------------------------- #
     @property
     def headers(self):
-        return self.scrapper.headers.copy()
+        return self.scraper.headers.copy()
     # end def
 
     @property
     def cookies(self):
-        return {x.name: x.value for x in self.scrapper.cookies}
+        return {x.name: x.value for x in self.scraper.cookies}
     # end def
 
     def absolute_url(self, url, page_url=None):
@@ -160,10 +157,10 @@ class Crawler:
             return None
         # end if
         kargs = kargs or dict()
-        kargs['verify'] = kargs.get('verify', False)
+        # kargs['verify'] = kargs.get('verify', False)
         kargs['timeout'] = kargs.get('timeout', 150)  # in seconds
         self.last_visited_url = url.strip('/')
-        response = self.scrapper.get(url, **kargs)
+        response = self.scraper.get(url, **kargs)
         response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value
@@ -184,7 +181,7 @@ class Crawler:
             else 'application/x-www-form-urlencoded; charset=UTF-8',
         })
 
-        response = self.scrapper.post(url, data=data, headers=headers)
+        response = self.scraper.post(url, data=data, headers=headers)
         response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value

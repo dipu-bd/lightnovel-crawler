@@ -20,10 +20,12 @@ class NovelGoCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find('h2', {'class': 'novel-title'}).text.strip()
+        self.novel_title = soup.find(
+            'h2', {'class': 'novel-title'}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one('div.noveils-current-author a').text.strip()
+        self.novel_author = soup.select_one(
+            'div.noveils-current-author a').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         thumbnail = soup.find("div", {"class": "novel-thumbnail"})['style']
@@ -36,7 +38,7 @@ class NovelGoCrawler(Crawler):
 
         path = urllib.parse.urlsplit(self.novel_url)[2]
         book_id = path.split('/')[2]
-        chapter_list = js = self.scrapper.post(
+        chapter_list = js = self.scraper.post(
             'https://novelgo.id/wp-admin/admin-ajax.php?action=LoadChapter&post=%s' % book_id).content
         soup_chapter = BeautifulSoup(chapter_list, 'lxml')
 
@@ -73,7 +75,8 @@ class NovelGoCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
 
-        contents = soup.find('div', {'id': 'chapter-post-content'}).findAll('p')
+        contents = soup.find(
+            'div', {'id': 'chapter-post-content'}).findAll('p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
