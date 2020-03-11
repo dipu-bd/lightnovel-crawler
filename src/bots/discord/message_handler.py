@@ -33,13 +33,15 @@ class MessageHandler:
 
     def destroy(self):
         try:
+            self.client.handlers.pop(str(self.user.id))
+            self.send_sync('Closing current session...')
+            self.executor.shutdown(wait=False)
             self.app.destroy()
-            self.executor.shutdown(True)
+            shutil.rmtree(self.app.output_path, ignore_errors=True)
         except Exception:
             logger.exception('While destroying MessageHandler')
         finally:
-            self.client.handlers.pop(self.user.id)
-            shutil.rmtree(self.app.output_path, ignore_errors=True)
+            self.send_sync('Session closed. Send *start* to start over')
         # end try
     # end def
 
@@ -80,10 +82,7 @@ class MessageHandler:
         text = self.message.content.strip()
 
         if text == '!cancel':
-            self.send_sync('Closing the session')
-            self.destroy()
-            self.send_sync(
-                'Session is now closed. Send *start* to create a new one.')
+            self.executor.submit(self.destroy)
             return
         # end if
 
@@ -110,15 +109,25 @@ class MessageHandler:
 
     def handle_novel_url(self):
         self.state = self.busy_state
+
+        text = self.message.content.strip()
+        if text == '!cancel':
+            self.executor.submit(self.destroy)
+            return
+        # end if
+
         try:
             self.app.user_input = self.message.content.strip()
             self.app.init_search()
         except Exception:
-            self.send_sync(
-                'Sorry! I only know these sources:\n' +
-                '\n'.join(['- %s' % x for x in crawler_list.keys()]),
-                'Enter something again.')
+            self.send_sync('\n'.join([
+                'Sorry! I do not recognize this sources yet.',
+                'See list of supported sources here:',
+                'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources',
+            ]))
+            self.get_novel_url()
         # end try
+
         if len(self.app.user_input) < 4:
             self.send_sync('Your query is too short')
             self.state = self.handle_novel_url
@@ -132,7 +141,6 @@ class MessageHandler:
             self.send_sync(
                 'Searching %d sources for "%s"\n' % (
                     len(self.app.crawler_links), self.app.user_input),
-                'Please do not type anything before I reply!'
             )
             self.display_novel_selection()
         # end if
@@ -142,29 +150,26 @@ class MessageHandler:
         self.app.search_novel()
 
         if len(self.app.search_results) == 0:
-            self.send_sync('No novels found for "%s"' %
-                           self.app.user_input)
-            return
-        # end if
-        if len(self.app.search_results) == 1:
+            self.send_sync('No novels found for "%s"' % self.app.user_input)
+            self.state = self.handle_novel_url
+        elif len(self.app.search_results) == 1:
             self.selected_novel = self.app.search_results[0]
             self.display_sources_selection()
-            return
-        # end if
-
-        self.send_sync(
-            ('Found %d novels:\n' % len(self.app.search_results)) +
-            '\n'.join([
+        else:
+            self.send_sync('\n'.join([
+                'Found %d novels:\n' % len(self.app.search_results)
+            ] + [
                 '%d. **%s** `%d sources`' % (
                     i + 1,
                     item['title'],
                     len(item['novels'])
                 ) for i, item in enumerate(self.app.search_results)
-            ]) + '\n' +
-            'Enter name or index of your novel.\n' +
-            'Send `!cancel` to stop this session.'
-        )
-        self.state = self.handle_novel_selection
+            ] + [
+                'Enter name or index of your novel.',
+                'Send `!cancel` to stop this session.'
+            ]))
+            self.state = self.handle_novel_selection
+        # end if
     # end def
 
     def handle_novel_selection(self):
@@ -202,20 +207,19 @@ class MessageHandler:
     # end def
 
     def display_sources_selection(self):
-        self.send_sync(
-            (
-                '**%s** is found in %d sources:\n' % (
-                    self.selected_novel['title'], len(self.selected_novel['novels']))
-            ) + '\n'.join([
-                '%d. <%s> %s' % (
-                    i + 1,
-                    item['url'],
-                    item['info'] if 'info' in item else ''
-                ) for i, item in enumerate(self.selected_novel['novels'])
-            ]) + '\n' +
-            'Enter index or name of your source.\n' +
-            'Send `!cancel` to stop this session.'
-        )
+        self.send_sync('\n'.join([
+            '**%s** is found in %d sources:\n' % (
+                self.selected_novel['title'], len(self.selected_novel['novels']))
+        ] + [
+            '%d. <%s> %s' % (
+                i + 1,
+                item['url'],
+                item['info'] if 'info' in item else ''
+            ) for i, item in enumerate(self.selected_novel['novels'])
+        ] + [
+            'Enter index or name of your source.',
+            'Send `!cancel` to stop this session.',
+        ]))
         self.state = self.handle_sources_to_search
     # end def
 
@@ -224,14 +228,12 @@ class MessageHandler:
 
         if len(self.selected_novel['novels']) == 1:
             novel = self.selected_novel['novels'][0]
-            self.handle_search_result(novel)
-            return
+            return self.handle_search_result(novel)
         # end if
 
         text = self.message.content.strip()
         if text.startswith('!cancel'):
-            self.get_novel_url()
-            return
+            return self.get_novel_url()
         # end if
 
         match_count = 0
@@ -251,8 +253,7 @@ class MessageHandler:
         if match_count != 1:
             self.send_sync(
                 'Sorry! You should select *one* source from the list (%d selected).' % match_count)
-            self.display_sources_selection()
-            return
+            return self.display_sources_selection()
         # end if
 
         self.handle_search_result(selected)
@@ -276,11 +277,11 @@ class MessageHandler:
         # TODO: Handle login here
 
         self.send_sync('Getting information about your novel...')
-        self.state = self.busy_state
         self.executor.submit(self.download_novel_info)
     # end def
 
     def download_novel_info(self):
+        self.state = self.busy_state
         self.app.get_novel_info()
 
         # Setup output path
@@ -475,7 +476,7 @@ class MessageHandler:
             # end for
         # end if
 
-        self.destroy()
+        self.executor.submit(self.destroy)
     # end def
 
     def publish_files(self):
