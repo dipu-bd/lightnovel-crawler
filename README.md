@@ -154,9 +154,6 @@ Simply fill out the environment variables and you get a running instance.
 
 ### B1. Available options
 
-<details>
-  <summary>Click to know how to view list of available options</summary>
-
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -205,13 +202,8 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-</details>
-
 ### B2. Example Usage
 
-<details>
-  <summary>Click to view contents</summary><br>
-  
 Open your console and type `lncrawl --version` first to check if you have installed it properly.
 Here are some example usage of the app:
 
@@ -240,8 +232,6 @@ Here are some example usage of the app:
 
 - You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
 
-</details>
-  
 ### B3. Running the bot
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
@@ -287,9 +277,6 @@ You are very welcome to contribute in this project. You can:
 ### C3. Supported sources
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
-
-<details>
-<summary>Click to view the list of available sources</summary>
 
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
@@ -361,13 +348,8 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.site            |     ✔      |           |
 | https://rewayat.club                   |            |           |
 
-</details>
-
 ### C4. Rejected sources
 
-<details>
-<summary>Click to view rejected source</summary>
-  
 | Rejected Sources              | Reason                              |
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
@@ -383,12 +365,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
 
-</details>
-
 ### C5. Supported output formats
-
-<details>
-<summary>Click to view supported output formats</summary>
 
 - JSON (default)
 - TEXT
@@ -410,8 +387,6 @@ You are very welcome to contribute in this project. You can:
 - SNB
 - TCR
 - HTML
-
-</details>
 
 ### C6. Supported bots
 
