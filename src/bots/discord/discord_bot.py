@@ -6,7 +6,6 @@ import queue
 import re
 import shutil
 from concurrent.futures import ThreadPoolExecutor
-from typing import Dict
 
 import discord
 
@@ -21,7 +20,7 @@ logger = logging.getLogger('DISCORD_BOT')
 
 
 class DiscordBot(discord.Client):
-    handlers: Dict[str, MessageHandler] = {}
+    handlers = {}
 
     def start_bot(self):
         self.run(os.getenv('DISCORD_TOKEN'))
