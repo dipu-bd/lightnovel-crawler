@@ -89,8 +89,12 @@ class WuxiaComCrawler(Crawler):
             logger.debug('Failed to get cover: %s', self.novel_url)
         # end try
 
-        self.novel_author = soup.select_one('.media-body dl dt').text
-        self.novel_author += soup.select_one('.media-body dl dd').text
+        authors = ''
+        for d in soup.select_one('.media-body dl, .novel-body').select('dt, dd'):
+            authors += d.text.strip()
+            authors += ' ' if d.name == 'dt' else '; '
+        # end for
+        self.novel_author = authors.strip().strip(';')
         logger.info('Novel author: %s', self.novel_author)
 
         for panel in soup.select('#accordion .panel-default'):
