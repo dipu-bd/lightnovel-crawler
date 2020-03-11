@@ -27,11 +27,6 @@ class DiscordBot(discord.Client):
         self.run(os.getenv('DISCORD_TOKEN'))
     # end def
 
-    async def close(self):
-        self.executor.shutdown(wait=False)
-        await super().close()
-    # end def
-
     async def on_ready(self):
         print('Discord bot in online!')
         activity = discord.Activity(name='🔥%slncrawl🔥' % signal,
