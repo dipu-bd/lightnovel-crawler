@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import atexit
+import json
 from concurrent.futures import Future
 from threading import Lock
 from typing import Union
@@ -44,7 +45,7 @@ class BrowserResponse:
 
     @property
     def encoding(self):
-        return self.response.apparent_encoding
+        return self.response.encoding or self.response.apparent_encoding
 
     @property
     def raw(self) -> HTTPResponse:
@@ -56,15 +57,20 @@ class BrowserResponse:
 
     @property
     def text(self) -> str:
-        return self.response.text
+        return self.content.decode(
+            encoding=self.encoding,
+            errors='ignore',
+        )
 
     @property
     def json(self) -> dict:
-        return self.response.json()
+        try:
+            return json.loads(self.text)
+        except json.JSONDecodeError:
+            return None
 
     @property
     def soup(self) -> BeautifulSoup:
         parser: str = CONFIG.browser.soup_parser
-        # html = self.content().decode(encoding='utf-8', errors='ignore')
         soup = BeautifulSoup(markup=self.text, features=parser)
         return soup

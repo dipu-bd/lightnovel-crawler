@@ -3,9 +3,10 @@
 import atexit
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
-from typing import Any, Mapping
+from typing import Any, MutableMapping, Union
 
 from cloudscraper import CloudScraper, create_scraper
+from requests.cookies import RequestsCookieJar
 
 from ..config import CONFIG
 from .response import BrowserResponse
@@ -24,6 +25,7 @@ class Browser(object):
         # Initialize internal client
         cs_config = CONFIG.browser.cloudscraper
         self.client: CloudScraper = create_scraper(**cs_config)
+        # self.client.get_adapter('https://').ssl_context.check_hostname = False
 
     def __exit__(self):
         if hasattr(self, 'client'):
@@ -32,8 +34,8 @@ class Browser(object):
             self.executor.shutdown(True)
 
     @property
-    def cookies(self) -> Mapping[Any, Any]:
-        return self.client.cookies.get_dict()
+    def cookies(self) -> Union[RequestsCookieJar, MutableMapping[str, str]]:
+        return self.client.cookies
 
     def get(self, url: str, **kwargs) -> BrowserResponse:
         timeout = kwargs.get('timeout', None)
@@ -42,8 +44,7 @@ class Browser(object):
 
     def post(self,
              url,
-             body: Mapping[str,
-                           Any] = None,
+             body: MutableMapping[str, Any] = None,
              multipart: bool = False,
              **kwargs) -> BrowserResponse:
         if not body:

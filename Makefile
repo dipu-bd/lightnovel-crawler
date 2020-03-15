@@ -34,7 +34,8 @@ coverage:
 	coveralls
 
 clean:
-	rm -fr build dist .egg src.egg-info report.xml coverage.xml
+	rm -rfv build dist .egg src.egg-info report.xml coverage.xml
+	rm -rfv **/__pycache__
 
 build:
 	make clean
