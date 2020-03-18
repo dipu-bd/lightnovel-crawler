@@ -5,6 +5,8 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor
 from typing import Any, MutableMapping, Union
 
+from requests import Session
+from requests.adapters import HTTPAdapter
 from cloudscraper import CloudScraper, create_scraper
 from requests.cookies import RequestsCookieJar
 
@@ -13,25 +15,35 @@ from .response import BrowserResponse
 
 
 class Browser(object):
+
     def __new__(cls, *args, **kwargs):
         instance = super(Browser, cls).__new__(cls, *args, **kwargs)
         atexit.register(instance.__exit__)
         return instance
 
-    def __init__(self, workers: int = 5):
-        # Initialize class variables
+    def __init__(self, workers: int = 5, engine: str = None):
         self.executor: ThreadPoolExecutor = ThreadPoolExecutor(workers)
-
-        # Initialize internal client
-        cs_config = CONFIG.browser.cloudscraper
-        self.client: CloudScraper = create_scraper(**cs_config)
-        # self.client.get_adapter('https://').ssl_context.check_hostname = False
+        self.load_engine(engine)
 
     def __exit__(self):
         if hasattr(self, 'client'):
             self.client.close()
         if hasattr(self, 'executor'):
             self.executor.shutdown(True)
+
+    def load_engine(self, engine: str = None):
+        if not isinstance(engine, str):
+            engine = CONFIG.browser.engine
+
+        if engine == 'requests':
+            self.client: Session = Session()
+        elif engine == 'cloudscraper':
+            cs_config = CONFIG.browser.cloudscraper
+            self.client: CloudScraper = create_scraper(**cs_config)
+            # self.client.get_adapter('https://').ssl_context.check_hostname = False
+        # TODO: add support for firefox, chrome, safari web engines
+        else:
+            raise NameError('Unrecognized web-engine: %s' % engine)
 
     @property
     def cookies(self) -> Union[RequestsCookieJar, MutableMapping[str, str]]:

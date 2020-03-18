@@ -43,5 +43,9 @@ class _Browser(__Section__):
         self.save()
 
     @property
+    def engine(self) -> str:
+        return self.__data__.get('engine', 'cloudscraper')
+
+    @property
     def cloudscraper(self) -> dict:
         return self.__data__.get('cloudscraper', {})

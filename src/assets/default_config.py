@@ -7,6 +7,7 @@ from .colors import Color
 DEFAULT_CONFIG = {
     # Browser configuration
     'browser': {
+        'engine': 'cloudscraper',
         'concurrent_requests': 5,
         'soup_parser': 'html5lib',
         'response_timeout': None,
