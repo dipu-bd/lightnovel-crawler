@@ -3,19 +3,10 @@
 import pytest
 
 from src.app.models import TextDirection
-from src.app.scraper import (AppContext, ContentType, GeneratorType, Request,
-                             RequestType, Scraper)
+from src.app.scraper import AppContext, GeneratorType, Scraper, ScrapStep
 
 
 class TestScrapers:
-
-    def test_request_types(self):
-        assert RequestType.CREATE_NOVEL_INSTANCE.name == 'CREATE_NOVEL_INSTANCE'
-        assert RequestType.INITIALIZE.value == 1
-
-    def test_content_types(self):
-        assert ContentType.SOUP.name == 'SOUP'
-        assert ContentType.RESPONSE.value == 3
 
     def test_context(self):
         context = AppContext()
@@ -24,15 +15,6 @@ class TestScrapers:
         assert context.volumes == []
         assert context.text_direction == TextDirection.LTR
         assert context != AppContext()
-
-    def test_request(self):
-        request = Request(op=RequestType.INITIALIZE,
-                          content={'some': 'body'})
-        assert request.op == RequestType.INITIALIZE
-        assert request.content_type == ContentType.JSON
-        assert request.soup is None
-        assert request.json == {'some': 'body'}
-        assert request.response is None
 
     def test_scrapper_instance(self):
         class Dummy(Scraper):
@@ -67,14 +49,14 @@ class TestScrapers:
                 pass
 
             def process(self) -> GeneratorType:
-                some = yield RequestType.INITIALIZE
+                some = yield ScrapStep.INITIALIZE
                 assert some == 'body'
                 another = yield 42
                 assert another == 'last'
 
         dummy = Dummy()
         gen = dummy.process()
-        assert next(gen) == RequestType.INITIALIZE
+        assert next(gen) == ScrapStep.INITIALIZE
         assert gen.send('body') == 42
         with pytest.raises(StopIteration):
             gen.send('last')

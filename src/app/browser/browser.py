@@ -21,8 +21,8 @@ class Browser(object):
         atexit.register(instance.__exit__)
         return instance
 
-    def __init__(self, workers: int = 5, engine: str = None):
-        self.executor: ThreadPoolExecutor = ThreadPoolExecutor(workers)
+    def __init__(self, workers: int = None, engine: str = None):
+        self.init_executor(workers)
         self.load_engine(engine)
 
     def __exit__(self):
@@ -30,6 +30,13 @@ class Browser(object):
             self.client.close()
         if hasattr(self, 'executor'):
             self.executor.shutdown(True)
+
+    def init_executor(self, workers: int = None):
+        if not isinstance(workers, int) or workers <= 0:
+            workers = CONFIG.browser.concurrent_requests
+        if hasattr(self, 'executor'):
+            self.executor.shutdown(wait=False)
+        self.executor: ThreadPoolExecutor = ThreadPoolExecutor(workers)
 
     def load_engine(self, engine: str = None):
         if not isinstance(engine, str):
@@ -52,10 +59,10 @@ class Browser(object):
     def get(self, url: str, **kwargs) -> BrowserResponse:
         timeout = kwargs.get('timeout', None)
         future = self.executor.submit(self.client.get, url, **kwargs)
-        return BrowserResponse(future, timeout)
+        return BrowserResponse(url, future, timeout)
 
     def post(self,
-             url,
+             url: str,
              body: MutableMapping[str, Any] = None,
              multipart: bool = False,
              **kwargs) -> BrowserResponse:
@@ -72,7 +79,7 @@ class Browser(object):
         kwargs['headers'] = headers
         timeout = kwargs.get('timeout', None)
         future = self.executor.submit(self.client.post, url, **kwargs)
-        return BrowserResponse(future, timeout)
+        return BrowserResponse(url, future, timeout)
 
     def download(self, url: str, filepath: str = None, **kwargs) -> str:
         if filepath is None:

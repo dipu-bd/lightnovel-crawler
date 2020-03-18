@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from abc import ABCMeta, abstractmethod, abstractstaticmethod
-from typing import Generator, List, Union
+from typing import Generator, List, Callable
 
-from ..models import Author, Chapter, Language, Novel, Volume
+from ..browser import BrowserResponse
 from .context import AppContext
-from .request import Request, RequestType
+from .scrap_step import ScrapStep
 
-YieldType = Union[Novel, Volume, Chapter, Author, Language, RequestType]
-SendType = Request
+YieldType = ScrapStep
+SendType = BrowserResponse
 GeneratorType = Generator[YieldType, SendType, None]
 
 

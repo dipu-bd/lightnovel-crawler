@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import List
 
+from ..browser import Browser
 from ..binders import OutputFormat
 from ..models import Chapter, Novel, Volume, TextDirection
 
@@ -25,3 +26,5 @@ class AppContext:
         self.filename_prefix: str = None
         self.filename_suffix: str = None
         self.output_formats: List[OutputFormat] = [OutputFormat.EPUB]
+
+        self.browser: Browser = Browser()

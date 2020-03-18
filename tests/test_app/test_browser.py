@@ -30,6 +30,7 @@ class TestBrowser:
                       json=json_data)
         res = b.get(test_url)
         assert res is not None
+        assert res.url == test_url
         assert res.encoding is not None
         assert res.response.status_code == 204
         assert res.json == json_data
@@ -119,6 +120,7 @@ class TestBrowser:
                           headers=headers)
         res = b.get(test_url)
         assert res is not None
+        assert res.url == test_url
         assert res.response.cookies is not None
         assert res.response.cookies.get('test') == 'second'
         assert res.response.cookies.get('another') == 'fall'

@@ -15,8 +15,9 @@ from ..config import CONFIG
 
 class BrowserResponse:
 
-    def __init__(self, future: Future, timeout: Union[int, float] = 0):
+    def __init__(self, url: str, future: Future, timeout: Union[int, float] = 0):
         self.__lock = Lock()
+        self.__url = url
         self.__resolve(future, timeout)
 
     def __resolve(self, future: Future, timeout: Union[int, float]):
@@ -32,6 +33,10 @@ class BrowserResponse:
             self._error = e
         finally:
             self.__lock.release()
+
+    @property
+    def url(self) -> str:
+        return self.__url
 
     @property
     def response(self) -> Response:
