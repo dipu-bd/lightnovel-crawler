@@ -8,6 +8,6 @@ PIP="$PY -m pip --disable-pip-version-check"
 # . scripts/build.sh
 
 $PIP install twine
-twine upload "dist/lightnovel_crawler-$VERSION-py3-none-any.whl"
+$PY -m twine upload "dist/lightnovel_crawler-$VERSION-py3-none-any.whl"
 
 # FINISHED
