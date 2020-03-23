@@ -47,7 +47,7 @@ class MessageHandler:
             self.send_sync('Closing current session...')
             self.executor.shutdown(wait=False)
             self.app.destroy()
-            shutil.rmtree(self.app.output_path, ignore_errors=True)
+            # shutil.rmtree(self.app.output_path, ignore_errors=True)
         except Exception:
             logger.exception('While destroying MessageHandler')
         finally:
