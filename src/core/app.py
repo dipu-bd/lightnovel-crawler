@@ -197,7 +197,7 @@ class App:
 
         # Get which paths to be archived with their base names
         path_to_process = []
-        for fmt in available_formats + ['json']:
+        for fmt in available_formats:
             root_dir = os.path.join(self.output_path, fmt)
             if os.path.isdir(root_dir):
                 path_to_process.append([
