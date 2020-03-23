@@ -16,7 +16,7 @@ windows/
 .telegram_bot_output/
 .discord_bot_output/
 mycreds.txt
-/venv
+/venv*/
 *.log
 save_pid.txt
 /.tox
