@@ -5,6 +5,7 @@ import os
 import queue
 import re
 import shutil
+from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
 
 import discord
@@ -35,6 +36,7 @@ class DiscordBot(discord.Client):
     # end def
 
     async def on_message(self, message):
+        self.cleanup_handlers()
         if message.author == self.user:
             return  # I am not crazy to talk with myself
         # end if
@@ -82,4 +84,18 @@ class DiscordBot(discord.Client):
             logger.exception('While handling this message: %s', message)
         # end try
     # end def
-# end def
+
+    async def cleanup_handlers(self):
+        try:
+            cur_time = datetime.now()
+            for uid, handler in self.handlers.items():
+                last_time = getattr(handler, 'last_activity', cur_time)
+                if (cur_time - last_time).days > 1:
+                    handler.destroy()
+                # end if
+            # end for
+        except Exception:
+            logger.exception('Failed to cleanup handlers')
+        # end try
+    # end def
+# end class
