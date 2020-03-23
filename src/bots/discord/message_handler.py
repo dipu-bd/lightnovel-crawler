@@ -11,13 +11,20 @@ from urllib.parse import quote
 
 import discord
 
-from ...binders import available_formats
 from ...core.app import App
 from ...sources import crawler_list
 from ...utils.uploader import upload
 from .config import max_workers, public_ip, public_path
 
 logger = logging.getLogger('DISCORD_BOT')
+
+available_formats = [
+    'epub',
+    'text',
+    'web',
+    'mobi',
+    'pdf',
+]
 
 
 class MessageHandler:
@@ -116,7 +123,7 @@ class MessageHandler:
         #     'What are you looking for?'
         # )
         self.send_sync(
-            'Send me an URL of novel info page with chapter list'
+            'Send me an URL of novel info page with chapter list!'
         )
         self.state = self.handle_novel_url
     # end def
@@ -278,12 +285,6 @@ class MessageHandler:
     # ---------------------------------------------------------------------- #
 
     def get_novel_info(self):
-        if not self.app.crawler:
-            self.send_sync('Could not find any crawler to get your novel')
-            self.state = self.get_novel_info
-            return
-        # end if
-
         # TODO: Handle login here
 
         self.send_sync('Getting information about your novel...')
@@ -303,7 +304,7 @@ class MessageHandler:
         output_path = os.path.join(root, str(self.user.id), good_name)
         if os.path.exists(output_path):
             shutil.rmtree(output_path, ignore_errors=True)
-        end if
+        # end if
 
         os.makedirs(output_path, exist_ok=True)
         self.app.output_path = output_path
@@ -312,12 +313,6 @@ class MessageHandler:
     # end def
 
     def display_range_selection(self):
-        self.send_sync(
-            'It has %d volumes and %d chapters.' % (
-                len(self.app.crawler.volumes),
-                len(self.app.crawler.chapters)
-            )
-        )
         self.send_sync('\n'.join([
             'Now you choose what to download:',
             '- Send `!cancel` to stop this session.',
@@ -327,6 +322,12 @@ class MessageHandler:
             '- Send `volume 2 5` to download download volume 2 and 5. Pass as many numbers you need.',
             '- Send `chapter 110 120` to download chapter 110 to 120. Only two numbers are accepted.',
         ]))
+        self.send_sync(
+            '**It has `%d` volumes and `%d` chapters.**' % (
+                len(self.app.crawler.volumes),
+                len(self.app.crawler.chapters)
+            )
+        )
         self.state = self.handle_range_selection
     # end def
 
@@ -429,26 +430,16 @@ class MessageHandler:
             self.get_novel_url()
             return
         # end if
-        if text.startswith('!all'):
-            self.app.output_formats = None
-        else:
-            output_format = set(re.findall(
-                '|'.join(available_formats),
-                text.lower()
-            ))
-            if len(output_format):
-                self.app.output_formats = {
-                    x: (x in output_format)
-                    for x in available_formats
-                }
-                self.send_sync('I will generate e-book in (%s) format' %
-                               (', ' .join(output_format)))
-            else:
-                self.send_sync('Sorry! I did not recognize your input. Please try again')
-                self.state = self.handle_output_selection
-                return
-            # end if
+
+        output_format = set(re.findall('|'.join(available_formats), text.lower()))
+        if not len(output_format):
+            output_format = set(available_formats)
+            self.send_sync('Sorry! I did not recognize your input. ' +
+                           'By default, I shall generate in (%s) formats.' % (', ' .join(output_format)))
         # end if
+
+        self.app.output_formats = {x: (x in output_format) for x in available_formats}
+        self.send_sync('I will generate e-book in (%s) format' % (', ' .join(output_format)))
 
         self.send_sync('\n'.join([
             'Starting download...',
