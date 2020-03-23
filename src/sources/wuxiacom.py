@@ -78,7 +78,7 @@ class WuxiaComCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.section-content  h4').text
+        self.novel_title = soup.select_one('.section-content h2').text
         logger.info('Novel title: %s', self.novel_title)
 
         try:
