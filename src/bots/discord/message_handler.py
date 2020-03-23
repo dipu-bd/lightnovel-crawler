@@ -487,8 +487,8 @@ class MessageHandler:
         try:
             download_url = '%s/%s/%s' % (public_ip.strip('/'),
                                          quote(str(self.user.id)),
-                                         os.path.basename(self.app.output_path))
-            self.send_sync('Download files from:\n' + quote(download_url))
+                                         quote(os.path.basename(self.app.output_path)))
+            self.send_sync('Download files from:\n' + download_url)
         except Exception:
             logger.exception('Fail to publish')
         # end try
