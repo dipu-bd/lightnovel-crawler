@@ -59,7 +59,7 @@ class MessageHandler:
         self.message = message
         self.user = message.author
         if not self.state:
-            self.state = self.handle_novel_url
+            self.state = self.get_novel_url
         # end if
         self.state()
     # end def
@@ -134,11 +134,6 @@ class MessageHandler:
         text = self.message.content.strip()
         if text == '!cancel':
             self.executor.submit(self.destroy)
-            return
-        # end if
-
-        if text == 'start' or text.includes('lncrawl'):
-            self.get_novel_url()
             return
         # end if
 
