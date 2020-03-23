@@ -13,6 +13,8 @@ from setuptools.config import read_configuration
 
 ROOT = Path(__file__).parent
 unix_root = '/'.join(str(ROOT).split(os.sep))
+site_packages = list(ROOT.glob('venv/**/site-packages'))[0]
+unix_site_packages = '/'.join(str(site_packages).split(os.sep))
 
 
 def package():
@@ -26,11 +28,16 @@ def package():
 
 
 def setup_command():
-    command = 'pyinstaller -y '
+    command = 'pyinstaller '
+    command += '--onefile '  # onefile
     command += '--clean '
-    command += '-F '  # onefile
-    command += '-n "lncrawl" '
-    command += '-i "%s/res/lncrawl.ico" ' % unix_root
+    command += '--noconfirm '
+    command += '--name "lncrawl" '
+    command += '--icon "%s/res/lncrawl.ico" ' % unix_root
+    command += '--distpath "%s" ' % str(ROOT / 'dist')
+    command += '--specpath "%s" ' % str(ROOT / 'windows')
+    command += '--workpath "%s" ' % str(ROOT / 'windows' / 'build')
+
     command += gather_data_files()
     command += gather_hidden_imports()
     command += '"%s/__main__.py" ' % unix_root
@@ -38,11 +45,7 @@ def setup_command():
     print(command)
     print()
 
-    extra = ['--distpath', str(ROOT / 'dist')]
-    extra += ['--specpath', str(ROOT / 'windows')]
-    extra += ['--workpath', str(ROOT / 'windows' / 'build')]
-
-    sys.argv = shlex.split(command) + extra
+    sys.argv = shlex.split(command)
 # end def
 
 
@@ -60,16 +63,16 @@ def gather_data_files():
     command += '--add-data "%s/src/VERSION%ssrc" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
-    site_packages = list(ROOT.glob('venv/**/site-packages'))[0]
-    site_packages = '/'.join(str(site_packages).split(os.sep))
     command += '--add-data "%s/cairosvg/VERSION%s." ' % (
-        site_packages, os.pathsep)
+        unix_site_packages, os.pathsep)
     command += '--add-data "%s/cairocffi/VERSION%scairocffi" ' % (
-        site_packages, os.pathsep)
+        unix_site_packages, os.pathsep)
     command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (
-        site_packages, os.pathsep)
+        unix_site_packages, os.pathsep)
     command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
-        site_packages, os.pathsep)
+        unix_site_packages, os.pathsep)
+    command += '--add-data "%s/cloudscraper%scloudscraper" ' % (
+        unix_site_packages, os.pathsep)
 
     return command
 # end def
@@ -80,12 +83,12 @@ def gather_hidden_imports():
 
     # add hidden imports of this project
     for f in (ROOT / 'src' / 'sources').glob('*.py'):
-        if os.path.isfile(f) and re.match(r'^([^_.][^.]+).py[c]?$', f.name):
+        if os.path.isfile(f) and re.match(r'^([^_.][^.]+).py$', f.name):
             module_name = f.name[:-3]
             command += '--hidden-import "src.sources.%s" ' % module_name
         # end if
-        command += '--hidden-import pkg_resources.py2_warn '
     # end for
+    command += '--hidden-import "pkg_resources.py2_warn" '
 
     return command
 # end def
