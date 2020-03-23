@@ -192,53 +192,50 @@ class App:
 
     # ----------------------------------------------------------------------- #
 
-    def compress_output(self, archive_singles=False):
+    def compress_books(self, archive_singles=False):
         logger.info('Compressing output...')
-
-        # Check if whole output folder is to be archived
-        is_all = len([k in available_formats for k in self.output_formats.keys()]) > 0
-        logger.info('Compressing whole directory: %s' % bool(is_all))
 
         # Get which paths to be archived with their base names
         path_to_process = []
-        if is_all:
-            path_to_process.append((self.output_path, self.good_file_name))
-        else:
-            for fmt, val in self.output_formats.items():
-                if val:
-                    path_to_process.append((
-                        os.path.join(self.output_path, fmt),
-                        '%s (%s)' % (self.good_file_name, fmt),
-                    ))
-                # end if
-            # end for
-        # end if
-        logger.info('Processing %d directories' % len(path_to_process))
+        for fmt in available_formats + ['json']:
+            root_dir = os.path.join(self.output_path, fmt)
+            if os.path.isdir(root_dir):
+                path_to_process.append([
+                    root_dir,
+                    self.good_file_name + ' (' + fmt + ')'
+                ])
+            # end if
+        # end for
 
         # Archive files
         self.archived_outputs = []
-        for path, base_name in path_to_process:
-            archived = None
-            file_list = os.listdir(path)
+        for root_dir, output_name in path_to_process:
+            file_list = os.listdir(root_dir)
             if len(file_list) == 0:
-                logger.info('It has no files: %s', path)
-                continue  # No files to archive
-            elif len(file_list) == 1 and not archive_singles and not os.path.isdir(os.path.join(path, file_list[0])):
-                logger.info('Not archiving single file inside %s' % path)
-                archived = os.path.join(path, file_list[0])
-                #print(os.path.isdir(os.path.join(path, file_list[0])))
-            else:
-                logger.info('Compressing %s to %s' % (path, base_name))
-                base_path = os.path.join(self.output_path, '..', base_name)
-                archived = shutil.make_archive(
-                    os.path.normpath(base_path),
-                    'zip',
-                    root_dir=path,
-                )
+                logger.info('It has no files: %s', root_dir)
+                continue
             # end if
-            self.archived_outputs.append(archived)
-        # end for
 
-        logger.info('Compressed: %s' % '\n\t'.join(self.archived_outputs))
+            archived_file = None
+            if len(file_list) == 1 and not archive_singles \
+                    and not os.path.isdir(os.path.join(root_dir, file_list[0])):
+                logger.info('Not archiving single file inside %s' % root_dir)
+                archived_file = os.path.join(root_dir, file_list[0])
+            else:
+                base_path = os.path.join(self.output_path, output_name)
+                logger.info('Compressing %s to %s' % (root_dir, base_path))
+                archived_file = shutil.make_archive(
+                    base_path,
+                    format='zip',
+                    root_dir=root_dir,
+                )
+                print('Compressed:', os.path.basename(archived_file))
+            # end if
+
+            if archived_file:
+                self.archived_outputs.append(archived_file)
+            # end if
+        # end for
     # end def
+
 # end class
