@@ -9,12 +9,20 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (CommandHandler, ConversationHandler, Filters,
                           Handler, MessageHandler, RegexHandler, Updater)
 
-from ..binders import available_formats
 from ..core.app import App
 from ..sources import crawler_list
 from ..utils.uploader import upload
 
 logger = logging.getLogger('TELEGRAM_BOT')
+
+
+available_formats = [
+    'epub',
+    'text',
+    'web',
+    'mobi',
+    'pdf',
+]
 
 
 class TelegramBot:
