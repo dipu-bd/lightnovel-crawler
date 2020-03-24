@@ -98,17 +98,14 @@ class MessageHandler:
         # end if
 
         self.send_sync(random.choice([
+            'Send !cancel to stop this session.'
             'Please wait...',
             'Processing, give me more time...',
             'I am just a bot. Please be patient...',
             'Waiting for more RAM...',
             'A little bit longer...',
-            'Don\'t panic...',
             'I\'ll be with you in a bit...',
             'Patience! This is difficult, you know...',
-            'Downloading more RAM...',
-            'Whatever you do, don\'t look behind you...',
-            'The internet is full... Please wait...',
         ]))
     # end def
 
