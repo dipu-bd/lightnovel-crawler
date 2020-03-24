@@ -85,7 +85,7 @@ class DiscordBot(discord.Client):
         # end try
     # end def
 
-    async def cleanup_handlers(self):
+    def cleanup_handlers(self):
         try:
             cur_time = datetime.now()
             for uid, handler in self.handlers.items():
