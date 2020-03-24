@@ -3,10 +3,11 @@ import asyncio
 import logging
 import os
 import queue
+import random
 import re
 import shutil
-from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
 import discord
 
@@ -49,6 +50,12 @@ class DiscordBot(discord.Client):
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
                 # end if
+                await self.send_public_text(message, random.choices([
+                    "Sending you a direct message",
+                    "Let's talk in private",
+                    "Check your direct messages",
+                    "Look out for DM",
+                ]))
                 await self.handle_message(message)
             elif isinstance(message.channel, discord.abc.PrivateChannel):
                 await self.handle_message(message)
@@ -60,7 +67,7 @@ class DiscordBot(discord.Client):
 
     async def send_public_text(self, message, text):
         async with message.channel.typing():
-            await message.channel.send(text)
+            await message.channel.send(text + " <@%s>" % message.author.id)
     # end def
 
     async def handle_message(self, message):
