@@ -35,15 +35,15 @@ class Fu_kCom_ademao(Crawler):
         # logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h3.entry-title').text.strip()
+        self.novel_title = soup.select_one('#recentnovels h5').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('#thumbnail img')['src'])
+            soup.select_one('#recentnovels amp-img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one('#Publisher a')['href']
-        logger.info('Novel author: %s', self.novel_author)
+        # self.novel_author = soup.select_one('#Publisher a')['href']
+        # logger.info('Novel author: %s', self.novel_author)
 
         page_count = 1
         pagination = soup.select_one('.pagination')
@@ -55,7 +55,7 @@ class Fu_kCom_ademao(Crawler):
 
         def parse_chapter_list(soup):
             temp_list = []
-            for a in soup.select('.chapter-list td a'):
+            for a in soup.select('#chapterList td a'):
                 temp_list.append({
                     'title': a.text.strip(),
                     'url': self.absolute_url(a['href']),
@@ -110,15 +110,13 @@ class Fu_kCom_ademao(Crawler):
         soup = self.get_soup(chapter['url'])
         # logger.debug(soup.title.string)
 
-        contents = soup.find("div", attrs={"readability": True})
-        if not contents:
-            contents = soup.find("article")
-        # end if
+        body = soup.select_one("#content, article")
 
-        for tag in soup.findAll(attrs={"class": True}):
-            tag.extract()
-        # end for
+        paragraphs = []
+        for p in body.select('p'):
+            if 'class' not in p.attrs and p.text.strip():
+                paragraphs.append(str(p))
 
-        return str(contents)
+        return ''.join(paragraphs)
     # end def
 # end class
