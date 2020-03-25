@@ -50,7 +50,7 @@ class DiscordBot(discord.Client):
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
                 # end if
-                await self.send_public_text(message, random.choices([
+                await self.send_public_text(message, random.choice([
                     "Sending you a direct message",
                     "Let's talk in private",
                     "Check your direct messages",
@@ -67,7 +67,7 @@ class DiscordBot(discord.Client):
 
     async def send_public_text(self, message, text):
         async with message.channel.typing():
-            await message.channel.send(text + " <@%s>" % message.author.id)
+            await message.channel.send(text + (" <@%s>" % str(message.author.id)))
     # end def
 
     async def handle_message(self, message):
