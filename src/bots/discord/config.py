@@ -22,7 +22,7 @@ logging.config.dictConfig({
     'disable_existing_loggers': True,
     'formatters': {
         'console': {
-            'format': f'{Fore.CYAN}%(asctime)s{Fore.RESET} {Fore.BLUE}%(levelname)-8s{Fore.RESET} %(message)s',
+            'format': f'{Fore.CYAN}%(asctime)s{Fore.RESET} {Fore.GREEN}%(levelname)-8s{Fore.RESET} %(message)s',
             'datefmt': '%H:%M:%S',
         },
         'file': {
@@ -42,6 +42,7 @@ logging.config.dictConfig({
             'filename': 'logs/discord-bot.log',
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
+            'encoding': 'utf-8',
         },
     },
     'loggers': {
