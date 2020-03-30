@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import asyncio
 import logging
+import logging.config
 import os
 import queue
 import random
@@ -18,7 +19,7 @@ from ...utils.uploader import upload
 from .config import signal
 from .message_handler import MessageHandler
 
-logger = logging.getLogger('DISCORD_BOT')
+logger = logging.getLogger(__name__)
 
 
 class DiscordBot(discord.Client):
@@ -30,7 +31,7 @@ class DiscordBot(discord.Client):
 
     async def on_ready(self):
         print('Discord bot in online!')
-        activity = discord.Activity(name='🔥%slncrawl🔥' % signal,
+        activity = discord.Activity(name='for 🔥%slncrawl🔥' % signal,
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)

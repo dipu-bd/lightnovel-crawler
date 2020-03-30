@@ -48,7 +48,7 @@ An app to download novels from online sources and generate e-books.
 **Install it from https://calibre-ebook.com/download** <br>
 Without it, you will only get output in epub, text, and web formats.
 
-Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/
+<!-- Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/ -->
 
 ### A1. Standalone Bundle (Windows, Linux)
 

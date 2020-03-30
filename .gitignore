@@ -20,3 +20,4 @@ mycreds.txt
 *.log
 save_pid.txt
 /.tox
+/logs

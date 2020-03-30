@@ -5,8 +5,8 @@ import os
 import random
 import re
 import shutil
-from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from urllib.parse import quote
 
 import discord
@@ -16,7 +16,7 @@ from ...sources import crawler_list
 from ...utils.uploader import upload
 from .config import max_workers, public_ip, public_path
 
-logger = logging.getLogger('DISCORD_BOT')
+logger = logging.getLogger(__name__)
 
 available_formats = [
     'epub',
@@ -61,7 +61,13 @@ class MessageHandler:
         if not self.state:
             self.state = self.get_novel_url
         # end if
-        self.state()
+        try:
+            self.state()
+        except Exception as ex:
+            logger.exception('Failed to process state')
+            self.send_sync('Something went wrong!\n`%s`' % str(ex))
+            self.executor.submit(self.destroy)
+        # end try
     # end def
 
     # ---------------------------------------------------------------------- #
@@ -98,7 +104,7 @@ class MessageHandler:
         # end if
 
         self.send_sync(random.choice([
-            'Send !cancel to stop this session.'
+            'Send !cancel to stop this session.',
             'Please wait...',
             'Processing, give me more time...',
             'I am just a bot. Please be patient...',
@@ -290,7 +296,13 @@ class MessageHandler:
 
     def download_novel_info(self):
         self.state = self.busy_state
-        self.app.get_novel_info()
+        try:
+            self.app.get_novel_info()
+        except Exception as ex:
+            logger.exception('Failed to get novel info')
+            self.send_sync('Failed to get novel info.\n`%s`' % str(ex))
+            self.executor.submit(self.destroy)
+        # end try
 
         # Setup output path
         root = os.path.abspath('.discord_bot_output')
@@ -452,32 +464,38 @@ class MessageHandler:
     def start_download(self):
         self.app.pack_by_volume = False
 
-        self.send_sync(
-            '**%s**' % self.app.crawler.novel_title,
-            'Downloading %d chapters...' % len(self.app.chapters),
-        )
-        self.app.start_download()
-        self.send_sync('Download complete.')
+        try:
+            self.send_sync(
+                '**%s**' % self.app.crawler.novel_title,
+                'Downloading %d chapters...' % len(self.app.chapters),
+            )
+            self.app.start_download()
+            self.send_sync('Download complete.')
 
-        self.send_sync('Binding books...')
-        self.app.bind_books()
-        self.send_sync('Book binding completed.')
+            self.send_sync('Binding books...')
+            self.app.bind_books()
+            self.send_sync('Book binding completed.')
 
-        self.send_sync('Compressing output folder...')
-        self.app.compress_books()
-        self.send_sync('Compressed output folder.')
+            self.send_sync('Compressing output folder...')
+            self.app.compress_books()
+            self.send_sync('Compressed output folder.')
 
-        if public_ip and public_path and os.path.exists(public_path):
-            self.send_sync('Publishing files...')
-            self.publish_files()
-        else:
-            self.send_sync('Uploading files...')
-            for archive in self.app.archived_outputs:
-                self.upload_file(archive)
-            # end for
-        # end if
-
-        self.executor.submit(self.destroy)
+            if public_ip and public_path and os.path.exists(public_path):
+                self.send_sync('Publishing files...')
+                self.publish_files()
+            else:
+                self.send_sync('Uploading files...')
+                for archive in self.app.archived_outputs:
+                    self.upload_file(archive)
+                # end for
+            # end if
+        except Exception as ex:
+            logger.exception('Failed to download')
+            self.send_sync('Download failed!\n`%s`' % str(ex))
+            self.executor.submit(self.destroy)
+        finally:
+            self.executor.submit(self.destroy)
+        # end try
     # end def
 
     def publish_files(self):
