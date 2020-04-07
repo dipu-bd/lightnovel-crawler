@@ -26,6 +26,8 @@ available_formats = [
     'pdf',
 ]
 
+disable_search = os.getenv('DISCORD_DISABLE_SEARCH') == 'true'
+
 
 class MessageHandler:
     def __init__(self, client):
@@ -119,15 +121,18 @@ class MessageHandler:
 
     def get_novel_url(self):
         self.state = self.busy_state
-        # self.send_sync(
-        #     'I recognize these two categories:\n'
-        #     '- Profile page url of a lightnovel.\n'
-        #     '- A query to search your lightnovel.',
-        #     'What are you looking for?'
-        # )
-        self.send_sync(
-            'Send me an URL of novel info page with chapter list!'
-        )
+        if disable_search:
+            self.send_sync(
+                'Send me an URL of novel info page with chapter list!'
+            )
+        else:
+            self.send_sync(
+                'I recognize these two categories:\n'
+                '- Profile page url of a lightnovel.\n'
+                '- A query to search your lightnovel.',
+                'What are you looking for?'
+            )
+        # end if
         self.state = self.handle_novel_url
     # end def
 
@@ -160,130 +165,137 @@ class MessageHandler:
             self.state = self.handle_novel_url
             self.get_novel_url()
         else:
-            self.send_sync(
-                'Sorry! I can not do searching.\n'
-                'Please use Google to find your novel first'
-            )
-            # self.send_sync(
-            #     'Searching %d sources for "%s"\n' % (
-            #         len(self.app.crawler_links), self.app.user_input),
-            # )
-            self.get_novel_url()
+            if disable_search:
+                self.send_sync(
+                    'Sorry! I can not do searching.\n'
+                    'Please use Google to find your novel first'
+                )
+                self.get_novel_url()
+            else:
+                self.send_sync(
+                    'Searching %d sources for "%s"\n' % (
+                        len(self.app.crawler_links), self.app.user_input),
+                )
+                self.display_novel_selection()
+            # end if
         # end if
     # end def
 
     # ------------------------------------------------------------ #
-    # SEARCHING -- it is disabled for bot to save power
+    # SEARCHING -- skips if DISCORD_DISABLE_SEARCH is 'true'
     # ------------------------------------------------------------ #
-    class ___disabled___:
-        def display_novel_selection(self):
-            self.app.search_novel()
-            if len(self.app.search_results) == 0:
-                self.send_sync('No novels found for "%s"' % self.app.user_input)
-                self.state = self.handle_novel_url
-            elif len(self.app.search_results) == 1:
-                self.selected_novel = self.app.search_results[0]
-                self.display_sources_selection()
-            else:
-                self.send_sync('\n'.join([
-                    'Found %d novels:\n' % len(self.app.search_results)
-                ] + [
-                    '%d. **%s** `%d sources`' % (
-                        i + 1,
-                        item['title'],
-                        len(item['novels'])
-                    ) for i, item in enumerate(self.app.search_results)
-                ] + [
-                    'Enter name or index of your novel.',
-                    'Send `!cancel` to stop this session.'
-                ]))
-                self.state = self.handle_novel_selection
-            # end if
-        # end def
 
-        def handle_novel_selection(self):
-            self.state = self.busy_state
-            text = self.message.content.strip()
-            if text.startswith('!cancel'):
-                self.get_novel_url()
-                return
-            # end if
-            match_count = 0
-            selected = None
-            for i, res in enumerate(self.app.search_results):
-                if str(i + 1) == text:
-                    selected = res
-                    match_count += 1
-                elif text.isdigit() or len(text) < 3:
-                    pass
-                elif res['title'].lower().find(text) != -1:
-                    selected = res
-                    match_count += 1
-                # end if
-            # end for
-            if match_count != 1:
-                self.send_sync(
-                    'Sorry! You should select *one* novel from the list (%d selected).' % match_count)
-                self.display_novel_selection()
-                return
-            # end if
-            self.selected_novel = selected
+    def display_novel_selection(self):
+        self.app.search_novel()
+
+        if len(self.app.search_results) == 0:
+            self.send_sync('No novels found for "%s"' % self.app.user_input)
+            self.state = self.handle_novel_url
+        elif len(self.app.search_results) == 1:
+            self.selected_novel = self.app.search_results[0]
             self.display_sources_selection()
-        # end def
-
-        def display_sources_selection(self):
+        else:
             self.send_sync('\n'.join([
-                '**%s** is found in %d sources:\n' % (
-                    self.selected_novel['title'], len(self.selected_novel['novels']))
+                'Found %d novels:\n' % len(self.app.search_results)
             ] + [
-                '%d. <%s> %s' % (
+                '%d. **%s** `%d sources`' % (
                     i + 1,
-                    item['url'],
-                    item['info'] if 'info' in item else ''
-                ) for i, item in enumerate(self.selected_novel['novels'])
+                    item['title'],
+                    len(item['novels'])
+                ) for i, item in enumerate(self.app.search_results)
             ] + [
-                'Enter index or name of your source.',
-                'Send `!cancel` to stop this session.',
+                'Enter name or index of your novel.',
+                'Send `!cancel` to stop this session.'
             ]))
-            self.state = self.handle_sources_to_search
-        # end def
+            self.state = self.handle_novel_selection
+        # end if
+    # end def
 
-        def handle_sources_to_search(self):
-            self.state = self.busy_state
-            if len(self.selected_novel['novels']) == 1:
-                novel = self.selected_novel['novels'][0]
-                return self.handle_search_result(novel)
-            # end if
-            text = self.message.content.strip()
-            if text.startswith('!cancel'):
-                return self.get_novel_url()
-            # end if
-            match_count = 0
-            selected = None
-            for i, res in enumerate(self.selected_novel['novels']):
-                if str(i + 1) == text:
-                    selected = res
-                    match_count += 1
-                elif text.isdigit() or len(text) < 3:
-                    pass
-                elif res['url'].lower().find(text) != -1:
-                    selected = res
-                    match_count += 1
-                # end if
-            # end for
-            if match_count != 1:
-                self.send_sync(
-                    'Sorry! You should select *one* source from the list (%d selected).' % match_count)
-                return self.display_sources_selection()
-            # end if
-            self.handle_search_result(selected)
-        # end def
+    def handle_novel_selection(self):
+        self.state = self.busy_state
 
-        def handle_search_result(self, novel):
-            self.send_sync('Selected: %s' % novel['url'])
-            self.app.init_crawler(novel['url'])
-            self.get_novel_info()
-        # end def
+        text = self.message.content.strip()
+        if text.startswith('!cancel'):
+            self.get_novel_url()
+            return
+        # end if
+        match_count = 0
+        selected = None
+        for i, res in enumerate(self.app.search_results):
+            if str(i + 1) == text:
+                selected = res
+                match_count += 1
+            elif text.isdigit() or len(text) < 3:
+                pass
+            elif res['title'].lower().find(text) != -1:
+                selected = res
+                match_count += 1
+            # end if
+        # end for
+        if match_count != 1:
+            self.send_sync(
+                'Sorry! You should select *one* novel from the list (%d selected).' % match_count)
+            self.display_novel_selection()
+            return
+        # end if
+        self.selected_novel = selected
+        self.display_sources_selection()
+    # end def
+
+    def display_sources_selection(self):
+        self.send_sync('\n'.join([
+            '**%s** is found in %d sources:\n' % (
+                self.selected_novel['title'], len(self.selected_novel['novels']))
+        ] + [
+            '%d. <%s> %s' % (
+                i + 1,
+                item['url'],
+                item['info'] if 'info' in item else ''
+            ) for i, item in enumerate(self.selected_novel['novels'])
+        ] + [
+            'Enter index or name of your source.',
+            'Send `!cancel` to stop this session.',
+        ]))
+        self.state = self.handle_sources_to_search
+    # end def
+
+    def handle_sources_to_search(self):
+        self.state = self.busy_state
+
+        if len(self.selected_novel['novels']) == 1:
+            novel = self.selected_novel['novels'][0]
+            return self.handle_search_result(novel)
+        # end if
+        text = self.message.content.strip()
+        if text.startswith('!cancel'):
+            return self.get_novel_url()
+        # end if
+        match_count = 0
+        selected = None
+        for i, res in enumerate(self.selected_novel['novels']):
+            if str(i + 1) == text:
+                selected = res
+                match_count += 1
+            elif text.isdigit() or len(text) < 3:
+                pass
+            elif res['url'].lower().find(text) != -1:
+                selected = res
+                match_count += 1
+            # end if
+        # end for
+        if match_count != 1:
+            self.send_sync(
+                'Sorry! You should select *one* source from the list (%d selected).' % match_count)
+            return self.display_sources_selection()
+        # end if
+        self.handle_search_result(selected)
+    # end def
+
+    def handle_search_result(self, novel):
+        self.send_sync('Selected: %s' % novel['url'])
+        self.app.init_crawler(novel['url'])
+        self.get_novel_info()
+    # end def
 
     # ---------------------------------------------------------------------- #
 
