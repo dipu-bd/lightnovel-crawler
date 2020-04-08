@@ -46,16 +46,15 @@ class DiscordBot(discord.Client):
             return  # Other bots are not edible
         # end if
         try:
-            if message.content == signal + 'lncrawl':
+            text = message.content
+            if text[0] == signal and text.split(signal) == 2:
                 uid = message.author.id
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
                 # end if
                 await self.send_public_text(message, random.choice([
-                    "Sending you a direct message",
-                    "Let's talk in private",
-                    "Check your direct messages",
-                    "Look out for DM",
+                    "Sending you a private message",
+                    "Look for direct message",
                 ]))
                 await self.handle_message(message)
             elif isinstance(message.channel, discord.abc.PrivateChannel):
