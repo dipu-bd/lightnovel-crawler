@@ -6,7 +6,7 @@ import logging
 import re
 from abc import abstractmethod
 from concurrent import futures
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 import cloudscraper
 from requests import Session
@@ -129,20 +129,7 @@ class Crawler:
         if not page_url:
             page_url = self.last_visited_url
         # end if
-        if not url or len(url) == 0:
-            return None
-        elif url.startswith('//'):
-            return self.home_url.split(':')[0] + ':' + url
-        elif url.find('//') >= 0:
-            return url
-        elif url.startswith('/'):
-            return self.home_url + url
-        elif page_url:
-            page_url = page_url.strip('/')
-            return (page_url or self.home_url) + '/' + url
-        else:
-            return url
-        # end if
+        return urljoin(page_url, url)
     # end def
 
     def is_relative_url(self, url):
@@ -193,6 +180,10 @@ class Crawler:
 
     def get_soup(self, *args, parser='lxml', **kargs):
         response = self.get_response(*args, **kargs)
+        return self.make_soup(response)
+    # end def
+
+    def make_soup(self, response, parser='lxml'):
         html = response.content.decode('utf-8', 'ignore')
         soup = BeautifulSoup(html, parser)
         if not soup.find('body'):

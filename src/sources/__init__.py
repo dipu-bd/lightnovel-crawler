@@ -26,7 +26,6 @@ rejected_sources = {
     'https://lnindo.org/': "Does not like to be crawled",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
     'https://novelgo.id/': "Removed by owner",
-    'https://novelsrock.com/': '404 - Not Found',
     'https://www.flying-lines.com/': 'Obfuscated content',
     'https://www.jieruihao.cn/': "Unavailable",
     'https://www.noveluniverse.com/': "Site is down",

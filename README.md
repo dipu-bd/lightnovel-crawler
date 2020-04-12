@@ -280,6 +280,7 @@ You are very welcome to contribute in this project. You can:
 
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
+| http://boxnovel.org                    |     ✔      |           |
 | http://gravitytales.com                |            |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
@@ -293,7 +294,6 @@ You are very welcome to contribute in this project. You can:
 | https://bestlightnovel.com             |     ✔      |           |
 | https://book.qidian.com                |            |           |
 | https://boxnovel.com                   |     ✔      |           |
-| http://boxnovel.org                    |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
 | https://id.mtlnovel.com                |     ✔      |           |
@@ -313,7 +313,9 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefull.com            |     ✔      |           |
 | https://novelplanet.com                |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
+| https://novelsrock.com                 |            |           |
 | https://ranobelib.me                   |            |           |
+| https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
 | https://volarenovels.com               |            |           |
 | https://webnovel.online                |            |           |
@@ -346,7 +348,6 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.co              |     ✔      |           |
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
-| https://rewayat.club                   |            |           |
 
 ### C4. Rejected sources
 
@@ -357,7 +358,6 @@ You are very welcome to contribute in this project. You can:
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://novelgo.id/           | `Removed`                           |
-| https://novelsrock.com        | `404 - Not Found`                   |
 | https://www.flying-lines.com  | `Obfuscated content`                |
 | https://www.jieruihao.cn      | `Unavailable`                       |
 | https://www.noveluniverse.com | `Site is down`                      |
