@@ -364,6 +364,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
+| https://anythingnovel.com/    | `Site broken`                       |
 
 ### C5. Supported output formats
 

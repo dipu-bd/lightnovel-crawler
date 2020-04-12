@@ -16,15 +16,20 @@ class WordExcerptCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('div.post-title h1').text.strip()
+        self.novel_title = soup.select_one('.post-title h1, .c-manga-title h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.summary_image a img')['data-src'])
+        possible_img = soup.select_one('.summary_image img')
+        if possible_img:
+            if possible_img.has_attr('data-src'):
+                self.novel_cover = self.absolute_url(possible_img['data-src'])
+            if possible_img.has_attr('src'):
+                self.novel_cover = self.absolute_url(possible_img['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = 'Author : %s, Translator : %s' % (soup.select_one(
-            'div.author-content a').text, soup.select_one('div.artist-content a').text)
+        possible_author = soup.select_one('.author-content a, .profile-manga a[href*="/author/"]')
+        if possible_author:
+            self.novel_author = possible_author.text
         logger.info('Novel author: %s', self.novel_author)
 
         if soup.select('ul.sub-chap'):
@@ -44,7 +49,7 @@ class WordExcerptCrawler(Crawler):
                         'id': chap_id,
                         'volume': volume['id'],
                         'url':  chapter['href'],
-                        'title': chapter.text.strip() or ('Chapter %d' % chap_id),
+                        'title': chapter.text.strip(),
                     })
                     if last_vol != volume['id']:
                         last_vol = volume['id']
@@ -68,7 +73,7 @@ class WordExcerptCrawler(Crawler):
                     'id': chap_id,
                     'volume': vol_id,
                     'url':  chapter['href'],
-                    'title': chapter.text.strip() or ('Chapter %d' % chap_id),
+                    'title': chapter.text.strip(),
                 })
             # end for
         # end if
@@ -78,11 +83,8 @@ class WordExcerptCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        logger.debug(soup.title.string)
-
+        # logger.debug(soup.title.string)
         contents = soup.select('div.text-left p')
-
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
