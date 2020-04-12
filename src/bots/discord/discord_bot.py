@@ -60,7 +60,9 @@ class DiscordBot(discord.Client):
             self.cleanup_handlers()
 
             text = message.content
-            if text[0] == signal and len(text.split(signal)) == 2:
+            if isinstance(message.channel, discord.abc.PrivateChannel):
+                await self.handle_message(message)
+            elif text[0] == signal and len(text.split(signal)) == 2:
                 uid = message.author.id
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
@@ -69,8 +71,6 @@ class DiscordBot(discord.Client):
                     "Sending you a private message",
                     "Look for direct message",
                 ]))
-                await self.handle_message(message)
-            elif isinstance(message.channel, discord.abc.PrivateChannel):
                 await self.handle_message(message)
             # end if
         except IndexError as ex:
