@@ -12,6 +12,7 @@ from datetime import datetime
 
 import discord
 
+from ...core.arguments import get_args
 from ...binders import available_formats
 from ...core.app import App
 from ...sources import crawler_list
@@ -23,13 +24,23 @@ logger = logging.getLogger(__name__)
 
 
 class DiscordBot(discord.Client):
-    handlers = {}
+    def __init__(self, *args, loop=None, **options):
+        options['shard_id'] = get_args().shard_id
+        options['shard_count'] = get_args().shard_count
+        options['heartbeat_timeout'] = 300
+        options['guild_subscriptions'] = False
+        options['fetch_offline_members'] = False
+        super().__init__(*args, loop=loop, **options)
+    # end def
 
     def start_bot(self):
         self.run(os.getenv('DISCORD_TOKEN'))
     # end def
 
     async def on_ready(self):
+        # Initialize handler cache
+        self.handlers = {}
+
         print('Discord bot in online!')
         activity = discord.Activity(name='for 🔥%slncrawl🔥' % signal,
                                     type=discord.ActivityType.watching)
@@ -38,7 +49,6 @@ class DiscordBot(discord.Client):
     # end def
 
     async def on_message(self, message):
-        self.cleanup_handlers()
         if message.author == self.user:
             return  # I am not crazy to talk with myself
         # end if
@@ -46,8 +56,11 @@ class DiscordBot(discord.Client):
             return  # Other bots are not edible
         # end if
         try:
+            # Cleanup unused handlers
+            self.cleanup_handlers()
+
             text = message.content
-            if text[0] == signal and text.split(signal) == 2:
+            if text[0] == signal and len(text.split(signal)) == 2:
                 uid = message.author.id
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
@@ -60,6 +73,8 @@ class DiscordBot(discord.Client):
             elif isinstance(message.channel, discord.abc.PrivateChannel):
                 await self.handle_message(message)
             # end if
+        except IndexError as ex:
+            logger.exception('Index error reported', ex)
         except Exception:
             logger.exception('Something went wrong processing message')
         # end try
