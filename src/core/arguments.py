@@ -86,7 +86,7 @@ _builder = Args(group=[
         Args('--multi', action='store_true',
              help='Build separate books by volumes.'),
     ]),
-    
+
     Args('-o', '--output', dest='output_path', type=str, metavar='PATH',
          help='Path where the downloads to be stored.'),
     Args('--filename', type=str, metavar='NAME',
@@ -104,9 +104,9 @@ _builder = Args(group=[
     Args(mutex=[
         Args('--all', action='store_true',
              help='Download all chapters.'),
-        Args('--first', type=int, nargs='?', metavar='COUNT',
+        Args('--first', type=int, nargs='?', metavar='COUNT', default=10,
              help='Download first few chapters (default: 10).'),
-        Args('--last', type=int, nargs='?', metavar='COUNT',
+        Args('--last', type=int, nargs='?', metavar='COUNT', default=10,
              help='Download last few chapters (default: 10).'),
         Args('--page', type=str, nargs=2, metavar=('START', 'STOP.'),
              help='The start and final chapter urls.'),
@@ -120,6 +120,10 @@ _builder = Args(group=[
 
     Args('--bot', type=str, choices=supported_bots,
          help='Select a bot. Default: console.'),
+    Args('--shard-id', type=int, nargs='?', default=0,
+         help='Discord bot shard id (default: 0)'),
+    Args('--shard-count', type=int, nargs='?', default=1,
+         help='Discord bot shard counts (default: 1)'),
 
     Args('--suppress', action='store_true',
          help='Suppress all input prompts and use defaults.'),
