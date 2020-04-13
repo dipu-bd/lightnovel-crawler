@@ -2,6 +2,7 @@
 import os
 import logging.config
 from colorama import Fore
+from ...core.arguments import get_args
 
 # The special signal character for crawler commands
 signal = os.getenv('DISCORD_SIGNAL_CHAR') or '!'
@@ -39,7 +40,7 @@ logging.config.dictConfig({
         'file': {
             'formatter': 'file',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'logs/discord-bot.log',
+            'filename': 'logs/discord-bot_%s.log' % (get_args().shard_id),
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
             'encoding': 'utf-8',

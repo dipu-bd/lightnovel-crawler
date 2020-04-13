@@ -8,6 +8,14 @@ allowed_failures = [
 ]
 
 test_user_inputs = {
+    b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode(): [
+        b64decode(
+            "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS9ub3ZlbC90c3VydWdpLW5vLWpvb3UtdG8tcmFrdWluLW5vLWtvLw==".encode()).decode()
+    ],
+    'https://novelsrock.com/': [
+        'https://novelsrock.com/novel/the-returner/',
+        'kuro'
+    ],
     'http://gravitytales.com/': [
         'http://gravitytales.com/posts/novel/a-dragons-curiosity'
     ],
@@ -47,14 +55,14 @@ test_user_inputs = {
     'https://m.romanticlovebooks.com/': [
         'https://m.romanticlovebooks.com/xuanhuan/207.html',
     ],
-    'https://m.wuxiaworld.co/': [
-        'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
-    ],
     'http://www.tiknovel.com/': [
         'http://www.tiknovel.com/book/index?id=717',
     ],
     'https://www.wuxiaworld.co/': [
         'sword',
+    ],
+    'https://m.wuxiaworld.co/': [
+        'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
     ],
     'https://meionovel.id/': [
         'https://meionovel.id/novel/the-legendary-mechanic/',
