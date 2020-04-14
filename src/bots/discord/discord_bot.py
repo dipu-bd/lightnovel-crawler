@@ -62,7 +62,7 @@ class DiscordBot(discord.Client):
             text = message.content
             if isinstance(message.channel, discord.abc.PrivateChannel):
                 await self.handle_message(message)
-            elif text[0] == signal and len(text.split(signal)) == 2:
+            elif text.startswith(signal) and len(text.split(signal)) == 2:
                 uid = message.author.id
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
