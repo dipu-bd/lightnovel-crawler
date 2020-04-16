@@ -13,7 +13,7 @@
 
 An app to download novels from online sources and generate e-books.
 
-> **Discord: [https://discord.gg/7A5Hktx](https://discord.gg/7A5Hktx)**
+> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)**
 
 > **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
 
