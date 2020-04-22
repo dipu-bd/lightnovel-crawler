@@ -91,7 +91,7 @@ class IdMtlnovelCrawler(Crawler):
 
         logger.debug(soup.title.string)
 
-        contents = soup.select('div.post-content p.en')
+        contents = soup.select('div.par p')
         # print(contents)
         # for p in contents:
         #    for span in p.findAll('span'):
