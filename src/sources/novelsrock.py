@@ -6,6 +6,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVELSROCK')
 search_url = 'https://novelsrock.com/?s=%s&post_type=wp-manga'
+post_chapter_url = 'https://novelsrock.com/wp-admin/admin-ajax.php'
 
 
 class NovelsRockCrawler(Crawler):
@@ -16,7 +17,7 @@ class NovelsRockCrawler(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for tab in soup.select('.c-tabs-item__content'):
+        for tab in soup.select('.c-tabs-item__content')[:10]:
             a = tab.select_one('.post-title h4 a')
             latest = tab.select_one('.latest-chap .chapter a').text
             votes = tab.select_one('.rating .total_votes').text
@@ -31,7 +32,6 @@ class NovelsRockCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -46,55 +46,53 @@ class NovelsRockCrawler(Crawler):
             soup.select_one('.summary_image img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div', {'class': 'author-content'}).findAll('a')
+        author = soup.select('.author-content a')
         if len(author) == 2:
             self.novel_author = author[0].text + ' (' + author[1].text + ')'
         else:
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
-        
-        content_area = soup.select_one(' .page-content-listing')
+        self.novel_id = soup.select_one(
+            '.wp-manga-action-button[data-action=bookmark]')['data-post']
+        logger.info('Novel id: %s', self.novel_id)
 
-        for span in content_area.findAll('span'):
+        for span in soup.select('.page-content-listing span'):
             span.decompose()
 
-        chapters = content_area.select('ul.main li.wp-manga-chapter a')
-
-        chapters.reverse()
-
-        for a in chapters:
+        logger.info('Sending post request to %s', post_chapter_url)
+        response = self.submit_form(post_chapter_url, data={
+            'action': 'manga_get_chapters',
+            'manga': int(self.novel_id)
+        })
+        soup = self.make_soup(response)
+        for a in reversed(soup.select('.wp-manga-chapter > a')):
             chap_id = len(self.chapters) + 1
-            vol_id = chap_id//100 + 1
+            vol_id = chap_id // 100 + 1
             if len(self.chapters) % 100 == 0:
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+                self.volumes.append({'id': vol_id})
             # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        contents = soup.select_one('div.text-left')
+        contents = soup.select('div.reading-content p')
 
-        if contents.h3:
-            contents.h3.decompose()
+        body = []
+        for p in contents:
+            for ad in p.select('h3, .code-block, .adsense-code'):
+                ad.decompose()
+            body.append(str(p))
 
-        for codeblock in contents.findAll('div', {'class': 'code-block'}):
-            codeblock.decompose()
-
-        return str(contents)
+        return ''.join(body)
     # end def
 # end class

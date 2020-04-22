@@ -51,36 +51,37 @@ class MtledNovelsCrawler(Crawler):
         print('Logged out')
     # end def
 
-    def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
+    # TODO: disabled search for cloudflare issue
+    # def search_novel(self, query):
+    #     query = query.lower().replace(' ', '+')
+    #     soup = self.get_soup(search_url % query)
 
-        results = []
-        for a in soup.select('.card .row .col-lg-2 a')[:5]:
-            url = self.absolute_url(a['href'])
-            results.append({
-                'url': url,
-                'title': a.img['alt'],
-                'info': self.search_novel_info(url),
-            })
-        # end for
+    #     results = []
+    #     for a in soup.select('.card .row .col-lg-2 a')[:5]:
+    #         url = self.absolute_url(a['href'])
+    #         results.append({
+    #             'url': url,
+    #             'title': a.img['alt'],
+    #             'info': self.search_novel_info(url),
+    #         })
+    #     # end for
 
-        return results
-    # end def
+    #     return results
+    # # end def
 
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
+    # def search_novel_info(self, url):
+    #     '''Get novel title, autor, cover etc'''
+    #     logger.debug('Visiting %s', url)
+    #     soup = self.get_soup(url)
 
-        chapters = soup.select('#tab-profile-2 a.chapters')
-        info = '%d chapters' % len(chapters)
-        if len(chapters) > 0:
-            info += ' | Latest: %s' % chapters[-1].text.strip()
-        # end if
+    #     chapters = soup.select('#tab-profile-2 a.chapters')
+    #     info = '%d chapters' % len(chapters)
+    #     if len(chapters) > 0:
+    #         info += ' | Latest: %s' % chapters[-1].text.strip()
+    #     # end if
 
-        return info
-    # end def
+    #     return info
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

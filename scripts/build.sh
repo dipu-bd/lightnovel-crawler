@@ -10,12 +10,11 @@ rm -rf venv build dist *.egg-info
 $PY -m venv venv
 . venv/bin/activate
 
-$PIP install -U pip==19.2.1
+$PIP install -U pip==20.0.2
+$PIP install -U setuptools wheel
 
-$PIP install wheel
-$PIP install PyInstaller
+$PIP install PyInstaller cairosvg
 $PIP install -r requirements.txt
-$PIP install cairosvg
 
 $PY setup.py clean bdist_wheel sdist package
 

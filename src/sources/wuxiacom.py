@@ -78,7 +78,7 @@ class WuxiaComCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.section-content  h4').text
+        self.novel_title = soup.select_one('.section-content h2').text
         logger.info('Novel title: %s', self.novel_title)
 
         try:
@@ -89,8 +89,12 @@ class WuxiaComCrawler(Crawler):
             logger.debug('Failed to get cover: %s', self.novel_url)
         # end try
 
-        self.novel_author = soup.select_one('.media-body dl dt').text
-        self.novel_author += soup.select_one('.media-body dl dd').text
+        authors = ''
+        for d in soup.select_one('.media-body dl, .novel-body').select('dt, dd'):
+            authors += d.text.strip()
+            authors += ' ' if d.name == 'dt' else '; '
+        # end for
+        self.novel_author = authors.strip().strip(';')
         logger.info('Novel author: %s', self.novel_author)
 
         for panel in soup.select('#accordion .panel-default'):
@@ -109,7 +113,7 @@ class WuxiaComCrawler(Crawler):
                     'id': chap_id,
                     'volume': vol_id,
                     'url': self.absolute_url(a['href']),
-                    'title': a.text.strip() or ('Chapter %d' % chap_id),
+                    'title': a.text.strip(),
                 })
             # end def
         # end def

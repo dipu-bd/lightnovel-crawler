@@ -55,7 +55,6 @@ def format_chapters(crawler: Crawler):
 
 
 def save_metadata(crawler, output_path):
-    file_name = os.path.join(output_path, 'meta.json')
     data = {
         'url': crawler.novel_url,
         'title': crawler.novel_title,
@@ -65,6 +64,8 @@ def save_metadata(crawler, output_path):
         'chapters': crawler.chapters,
         'rtl': crawler.is_rtl,
     }
+    file_name = os.path.join(output_path, 'json', 'meta.json')
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
     with open(file_name, 'w', encoding="utf-8") as file:
         json.dump(data, file, indent=2)
     # end with

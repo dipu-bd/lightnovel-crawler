@@ -22,12 +22,11 @@ from ..utils.crawler import Crawler
 rejected_sources = {
     'http://fullnovel.live/': "403 - Forbidden: Access is denied",
     'http://moonbunnycafe.com/': "Does not follow uniform format",
-    'https://comrademao.com/': "Removed by owner",
+    'https://anythingnovel.com/': 'Site broken',
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
     'https://novelgo.id/': "Removed by owner",
-    'https://novelsrock.com/': '404 - Not Found',
     'https://www.flying-lines.com/': 'Obfuscated content',
     'https://www.jieruihao.cn/': "Unavailable",
     'https://www.noveluniverse.com/': "Site is down",

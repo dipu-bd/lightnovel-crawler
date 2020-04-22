@@ -10,12 +10,11 @@ RD /S /Q "dist" "venv" "build" "lightnovel_crawler.egg-info" &
 %PY% -m venv venv
 CALL venv\Scripts\activate.bat
 
-%PIP% install -U pip==19.2.1
+%PIP% install -U pip==20.0.2
+%PIP% install -U wheel setuptools
 
-%PIP% install wheel
-%PIP% install PyInstaller
+%PIP% install PyInstaller cairosvg
 %PIP% install -r requirements.txt
-%PIP% install cairosvg
 
 %PY% setup.py clean bdist_wheel sdist package
 

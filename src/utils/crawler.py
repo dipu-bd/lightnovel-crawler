@@ -6,11 +6,11 @@ import logging
 import re
 from abc import abstractmethod
 from concurrent import futures
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
+import cloudscraper
+from requests import Session
 from bs4 import BeautifulSoup, Comment
-
-from . import cfscrape
 
 logger = logging.getLogger(__name__)
 
@@ -19,9 +19,16 @@ class Crawler:
     '''Blueprint for creating new crawlers'''
 
     def __init__(self):
+        self._destroyed = False
         self.executor = futures.ThreadPoolExecutor(max_workers=2)
-        self.scrapper = cfscrape.create_scraper()
-        self.scrapper.verify = False
+
+        # Initialize cloudscrapper
+        self.scraper = cloudscraper.create_scraper(
+            browser={
+                'browser': 'firefox',
+                'mobile': False
+            }
+        )
 
         # Must resolve these fields inside `read_novel_info`
         self.novel_title = 'N/A'
@@ -46,15 +53,13 @@ class Crawler:
         self.home_url = ''
         self.novel_url = ''
         self.last_visited_url = None
-
-        self._destroyed = False
     # end def
 
     def destroy(self):
         self._destroyed = True
         self.volumes.clear()
         self.chapters.clear()
-        self.scrapper.close()
+        self.scraper.close()
         self.executor.shutdown(False)
     # end def
 
@@ -111,12 +116,12 @@ class Crawler:
     # ------------------------------------------------------------------------- #
     @property
     def headers(self):
-        return self.scrapper.headers.copy()
+        return self.scraper.headers.copy()
     # end def
 
     @property
     def cookies(self):
-        return {x.name: x.value for x in self.scrapper.cookies}
+        return {x.name: x.value for x in self.scraper.cookies}
     # end def
 
     def absolute_url(self, url, page_url=None):
@@ -124,20 +129,7 @@ class Crawler:
         if not page_url:
             page_url = self.last_visited_url
         # end if
-        if not url or len(url) == 0:
-            return None
-        elif url.startswith('//'):
-            return self.home_url.split(':')[0] + ':' + url
-        elif url.find('//') >= 0:
-            return url
-        elif url.startswith('/'):
-            return self.home_url + url
-        elif page_url:
-            page_url = page_url.strip('/')
-            return (page_url or self.home_url) + '/' + url
-        else:
-            return url
-        # end if
+        return urljoin(page_url, url)
     # end def
 
     def is_relative_url(self, url):
@@ -152,10 +144,10 @@ class Crawler:
             return None
         # end if
         kargs = kargs or dict()
-        kargs['verify'] = kargs.get('verify', False)
+        # kargs['verify'] = kargs.get('verify', False)
         kargs['timeout'] = kargs.get('timeout', 150)  # in seconds
         self.last_visited_url = url.strip('/')
-        response = self.scrapper.get(url, **kargs)
+        response = self.scraper.get(url, **kargs)
         response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value
@@ -176,7 +168,7 @@ class Crawler:
             else 'application/x-www-form-urlencoded; charset=UTF-8',
         })
 
-        response = self.scrapper.post(url, data=data, headers=headers)
+        response = self.scraper.post(url, data=data, headers=headers)
         response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value
@@ -188,6 +180,10 @@ class Crawler:
 
     def get_soup(self, *args, parser='lxml', **kargs):
         response = self.get_response(*args, **kargs)
+        return self.make_soup(response)
+    # end def
+
+    def make_soup(self, response, parser='lxml'):
         html = response.content.decode('utf-8', 'ignore')
         soup = BeautifulSoup(html, parser)
         if not soup.find('body'):

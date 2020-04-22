@@ -64,6 +64,7 @@ def start(self):
 
     self.app.start_download()
     self.app.bind_books()
+    self.app.compress_books()
 
     self.app.destroy()
     display.app_complete()

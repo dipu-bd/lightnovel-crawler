@@ -109,18 +109,15 @@ class LNMTLCrawler(Crawler):
             try:
                 data = js2py.eval_js(
                     '(function() {' + text + 'return window.lnmtl;})()').to_dict()
-                logger.debug(data.keys())
 
                 for i, vol in enumerate(data['volumes']):
-                    logger.debug(vol)
-                    title = vol['title'] if 'title' in vol and vol['title'] else ''
+                    title = vol.get('title', '') or ''
                     title = re.sub(r'[^\u0000-\u00FF]', '', title)
                     title = re.sub(r'\(\)', '', title).strip()
                     self.volumes.append({
                         'id': i + 1,
                         'title': title,
                         'download_id': vol['id'],
-                        'volume': int(vol['number']) if 'number' in vol else (i + 1),
                     })
                 # end for
             except Exception as err:
@@ -134,47 +131,55 @@ class LNMTLCrawler(Crawler):
     # end def
 
     def download_chapter_list(self):
-        self.chapters = []
-        page_url = self.absolute_url('/chapter?page=1')
-        future_to_url = {
+        futures_to_wait = [
             self.executor.submit(
-                self.download_chapter_list_of_volume,
-                volume,
-                page_url
-            ): volume['id']
-            for volume in self.volumes
-        }
-        for future in futures.as_completed(future_to_url):
-            futures.wait(future.result())
+                self.download_chapters_per_volume,
+                volume
+            ) for volume in self.volumes
+        ]
+
+        possible_chapters = {}
+        for future in futures.as_completed(futures_to_wait):
+            vol_id, chapters = future.result()
+            possible_chapters[vol_id] = chapters
         # end for
-        self.chapters = sorted(self.chapters, key=lambda x: x['id'])
+
+        for volume in self.volumes:
+            for chapter in possible_chapters[volume['id']]:
+                chap = chapter.copy()
+                chap['id'] = len(self.chapters) + 1
+                chap['volume'] = volume['id']
+                self.chapters.append(chap)
+            # end for
+        # end for
     # end def
 
-    def download_chapter_list_of_volume(self, volume, page_url):
-        vol_id = volume['download_id']
-        url = '%s&volumeId=%s' % (page_url, vol_id)
-        logger.info('Visiting %s', url)
-        result = self.get_response(url).json()
-        page_url = result['next_page_url']
+    def download_chapters_per_volume(self, volume, page=1):
+        url = self.absolute_url(
+            '/chapter?page=%s&volumeId=%s' % (page, volume['download_id']))
+        logger.info('Getting json: %s', url)
+        result = self.get_json(url)
+
+        chapters = []
         for chapter in result['data']:
-            self.chapters.append({
-                'id': int(chapter['number'] or chapter['position']),
+            title = chapter.get('title') or ''
+            if chapter.get('number'):
+                title = '#%s %s' % (chapter.get('number'), title)
+            # end if
+            chapters.append({
+                'title': title,
                 'url': chapter['site_url'],
-                'volume': volume['volume'],
-                'title': chapter['title'].strip(),
             })
         # end for
-        if result['current_page'] == 1:
-            return {
-                self.executor.submit(
-                    self.download_chapter_list_of_volume,
-                    volume,
-                    self.absolute_url('/chapter?page=%s' % (page + 1)),
-                ): '%s-%s' % (vol_id, page)
-                for page in range(1, result['last_page'])
-            }
+
+        if page != 1:
+            return chapters
         # end if
-        return {}
+
+        for page in range(2, result['last_page'] + 1):
+            chapters += self.download_chapters_per_volume(volume, page)
+        # end for
+        return volume['id'], chapters
     # end def
 
     def download_chapter_body(self, chapter):

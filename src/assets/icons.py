@@ -22,7 +22,7 @@ class Icons:
     ERROR = '❗' if hasSupport else '!'
     PARTY = '📦' if hasSupport else '$'
     SOUND = '🔊' if hasSupport else '<<'
-    RIGHT_ARROW = '⮕' if hasSupport else '->'
     SPARKLE = '✨' if hasSupport else '*'
-    INFO = '🗩  ' if hasSupport else ': '
+    INFO = '💁  ' if hasSupport else ': '
+    RIGHT_ARROW = '➡' if hasSupport else '->'
 # end def

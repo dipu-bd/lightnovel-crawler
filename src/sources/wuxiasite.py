@@ -11,24 +11,25 @@ search_url = 'https://wuxiaworld.site/?s=%s&post_type=wp-manga'
 class WuxiaSiteCrawler(Crawler):
     base_url = 'https://wuxiaworld.site/'
 
-    def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
+    # TODO: disabled due to cloudflare issue
+    # def search_novel(self, query):
+    #     query = query.lower().replace(' ', '+')
+    #     soup = self.get_soup(search_url % query)
 
-        results = []
-        for tab in soup.select('.c-tabs-item__content'):
-            a = tab.select_one('.post-title h4 a')
-            latest = tab.select_one('.latest-chap .chapter a').text
-            votes = tab.select_one('.rating .total_votes').text
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': '%s | Rating: %s' % (latest, votes),
-            })
-        # end for
+    #     results = []
+    #     for tab in soup.select('.c-tabs-item__content'):
+    #         a = tab.select_one('.post-title h4 a')
+    #         latest = tab.select_one('.latest-chap .chapter a').text
+    #         votes = tab.select_one('.rating .total_votes').text
+    #         results.append({
+    #             'title': a.text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #             'info': '%s | Rating: %s' % (latest, votes),
+    #         })
+    #     # end for
 
-        return results
-    # end def
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -42,11 +43,17 @@ class WuxiaSiteCrawler(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['data-src'])
+        possible_img = soup.select_one('.summary_image img')
+        if possible_img:
+            if possible_img.has_attr('data-src'):
+                self.novel_cover = self.absolute_url(possible_img['data-src'])
+            elif possible_img.has_attr('srcset'):
+                self.novel_cover = self.absolute_url(possible_img['srcset'].split(',')[0])
+            elif possible_img.has_attr('src'):
+                self.novel_cover = self.absolute_url(possible_img['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div', {'class': 'author-content'}).findAll('a')
+        author = soup.select('.author-content a')
         if len(author) == 2:
             self.novel_author = author[0].text + ' (' + author[1].text + ')'
         else:

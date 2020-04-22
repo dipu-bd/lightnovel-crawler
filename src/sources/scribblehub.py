@@ -13,23 +13,24 @@ search_url = 'https://www.scribblehub.com/?s=%s&post_type=fictionposts'
 class ScribbleHubCrawler(Crawler):
     base_url = 'https://www.scribblehub.com/'
 
-    def search_novel(self, query):
-        url = search_url % quote(query.lower())
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
+    # TODO: disabled due to cloudflare issue
+    # def search_novel(self, query):
+    #     url = search_url % quote(query.lower())
+    #     logger.debug('Visiting %s', url)
+    #     soup = self.get_soup(url)
 
-        results = []
-        for novel in soup.select('div.search_body'):
-            a = novel.select_one('.search_title a')
-            info = novel.select_one('.search_stats').text.strip()
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': info,
-            })
-        # end for
-        return results
-    # end def
+    #     results = []
+    #     for novel in soup.select('div.search_body'):
+    #         a = novel.select_one('.search_title a')
+    #         info = novel.select_one('.search_stats').text.strip()
+    #         results.append({
+    #             'title': a.text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #             'info': info,
+    #         })
+    #     # end for
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -91,7 +92,7 @@ class ScribbleHubCrawler(Crawler):
 
         logger.debug(soup.title.string)
         contents = soup.find('div', {'id': 'chp_contents'})
-        
+
         #body_parts = []
         # for x in contents:
         #    body_parts.append(x.text)

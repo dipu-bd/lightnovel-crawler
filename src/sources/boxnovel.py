@@ -42,11 +42,12 @@ class BoxNovelCrawler(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['src'])
+        probable_img = soup.select_one('.summary_image img')
+        if probable_img:
+            self.novel_cover = self.absolute_url(probable_img['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div', {'class': 'author-content'}).findAll('a')
+        author = soup.select('.author-content a')
         if len(author) == 2:
             self.novel_author = author[0].text + ' (' + author[1].text + ')'
         else:
@@ -54,9 +55,7 @@ class BoxNovelCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.select('ul.main li.wp-manga-chapter a')
-        chapters.reverse()
-
-        for a in chapters:
+        for a in reversed(chapters):
             chap_id = len(self.chapters) + 1
             vol_id = chap_id//100 + 1
             if len(self.chapters) % 100 == 0:
@@ -81,12 +80,8 @@ class BoxNovelCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')
-
-        if contents.h3:
-            contents.h3.decompose()
-
-        for codeblock in contents.findAll('div', {'class': 'code-block'}):
-            codeblock.decompose()
+        for bad in contents.select('h3, .code-block'):
+            bad.decompose()
 
         return str(contents)
     # end def

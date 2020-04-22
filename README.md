@@ -48,17 +48,17 @@ An app to download novels from online sources and generate e-books.
 **Install it from https://calibre-ebook.com/download** <br>
 Without it, you will only get output in epub, text, and web formats.
 
-Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/
+<!-- Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/ -->
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.19.2 ~ 22MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.20.0 ~ 22MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
-⏬ **Linux**: [lightnovel-crawler v2.17.0 ~ 24MB](https://rebrand.ly/lncrawl-linux)
+⏬ **Linux**: [lightnovel-crawler v2.19.4 ~ 24MB](https://rebrand.ly/lncrawl-linux)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
@@ -154,13 +154,10 @@ Simply fill out the environment variables and you get a running instance.
 
 ### B1. Available options
 
-<details>
-  <summary>Click to know how to view list of available options</summary>
-
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.19.0
+                           📒 Lightnovel Crawler 🍀2.20.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -205,13 +202,8 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-</details>
-
 ### B2. Example Usage
 
-<details>
-  <summary>Click to view contents</summary><br>
-  
 Open your console and type `lncrawl --version` first to check if you have installed it properly.
 Here are some example usage of the app:
 
@@ -240,8 +232,6 @@ Here are some example usage of the app:
 
 - You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
 
-</details>
-  
 ### B3. Running the bot
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
@@ -288,11 +278,9 @@ You are very welcome to contribute in this project. You can:
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
-<details>
-<summary>Click to view the list of available sources</summary>
-
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
+| http://boxnovel.org                    |     ✔      |           |
 | http://gravitytales.com                |            |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
@@ -306,7 +294,6 @@ You are very welcome to contribute in this project. You can:
 | https://bestlightnovel.com             |     ✔      |           |
 | https://book.qidian.com                |            |           |
 | https://boxnovel.com                   |     ✔      |           |
-| http://boxnovel.org                    |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
 | https://id.mtlnovel.com                |     ✔      |           |
@@ -326,7 +313,9 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefull.com            |     ✔      |           |
 | https://novelplanet.com                |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
+| https://novelsrock.com                 |            |           |
 | https://ranobelib.me                   |            |           |
+| https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
 | https://volarenovels.com               |            |           |
 | https://webnovel.online                |            |           |
@@ -359,36 +348,25 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.co              |     ✔      |           |
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
-| https://rewayat.club                   |            |           |
-</details>
 
 ### C4. Rejected sources
 
-<details>
-<summary>Click to view rejected source</summary>
-  
 | Rejected Sources              | Reason                              |
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
-| https://comrademao.com        | `Removed`                           |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://novelgo.id/           | `Removed`                           |
-| https://novelsrock.com        | `404 - Not Found`                   |
 | https://www.flying-lines.com  | `Obfuscated content`                |
 | https://www.jieruihao.cn      | `Unavailable`                       |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
-
-</details>
+| https://anythingnovel.com/    | `Site broken`                       |
 
 ### C5. Supported output formats
-
-<details>
-<summary>Click to view supported output formats</summary>
 
 - JSON (default)
 - TEXT
@@ -410,8 +388,6 @@ You are very welcome to contribute in this project. You can:
 - SNB
 - TCR
 - HTML
-
-</details>
 
 ### C6. Supported bots
 

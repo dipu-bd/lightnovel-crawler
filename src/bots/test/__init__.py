@@ -9,10 +9,10 @@ from random import random
 
 from requests import RequestException
 from urllib3.exceptions import HTTPError
+from cloudscraper.exceptions import cloudflare_exceptions
 
 from ...assets.icons import isWindows
 from ...sources import crawler_list
-from ...utils.cfscrape import CloudflareCaptchaError
 
 
 class TestBot:
@@ -45,7 +45,15 @@ class TestBot:
                         print('-' * 5, 'Input:', entry, '-' * 5)
                         self.test_crawler(link, entry)
                         print()
-                    except CloudflareCaptchaError:
+                    except cloudflare_exceptions.Cloudflare_Loop_Protection:
+                        traceback.print_exc()
+                    except cloudflare_exceptions.Cloudflare_Block:
+                        traceback.print_exc()
+                    except cloudflare_exceptions.Cloudflare_Error_IUAM:
+                        traceback.print_exc()
+                    except cloudflare_exceptions.Cloudflare_Error_reCaptcha:
+                        traceback.print_exc()
+                    except cloudflare_exceptions.Cloudflare_reCaptcha_Provider:
                         traceback.print_exc()
                     except RequestException:
                         traceback.print_exc()

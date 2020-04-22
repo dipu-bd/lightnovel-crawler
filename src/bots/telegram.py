@@ -9,12 +9,20 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (CommandHandler, ConversationHandler, Filters,
                           Handler, MessageHandler, RegexHandler, Updater)
 
-from ..binders import available_formats
 from ..core.app import App
 from ..sources import crawler_list
 from ..utils.uploader import upload
 
 logger = logging.getLogger('TELEGRAM_BOT')
+
+
+available_formats = [
+    'epub',
+    'text',
+    'web',
+    'mobi',
+    'pdf',
+]
 
 
 class TelegramBot:
@@ -643,17 +651,10 @@ class TelegramBot:
         if app:
             user_data['status'] = 'Compressing output folder.'
             update.message.reply_text(user_data.get('status'))
-            app.compress_output()
+            app.compress_books()
         # end if
 
         for archive in app.archived_outputs:
-            link_id = upload(archive)
-            if link_id:
-                update.message.reply_text(
-                    'Get your file here:'
-                    'https://drive.google.com/open?id=%s' % link_id
-                )
-
             file_size = os.stat(archive).st_size
             if file_size < 49.99 * 1024 * 1024:
                 update.message.reply_document(
@@ -662,13 +663,21 @@ class TelegramBot:
                 )
             else:
                 update.message.reply_text(
-                    'File size more than 50 MB so cannot be sent via telegram bot api check google drive link only')
+                    'File size more than 50 MB so cannot be sent via telegram bot.\n' +
+                    'Uploading to google drive...')
+                link_id = upload(archive)
+                if link_id:
+                    update.message.reply_text(
+                        'Get your file here:'
+                        'https://drive.google.com/open?id=%s' % link_id
+                    )
+                # end if
+            # end if
 
-            if os.path.exists(archive):
-                os.remove(archive)
-            update.message.reply_text(
-                'This file will be deleted on server')
-
+            # if os.path.exists(archive):
+            #     os.remove(archive)
+            # update.message.reply_text(
+            #     'This file will be deleted on server')
         # end for
 
         self.destroy_app(bot, update, user_data)
