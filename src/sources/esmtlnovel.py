@@ -4,12 +4,12 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MTLNOVEL')
-search_url = 'https://www.mtlnovel.com/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
+logger = logging.getLogger('IDMTLNOVEL')
+search_url = 'https://es.mtlnovel.com/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
 
 
-class MtlnovelCrawler(Crawler):
-    base_url = 'https://www.mtlnovel.com/'
+class EsMtlnovelCrawler(Crawler):
+    base_url = 'https://es.mtlnovel.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
@@ -20,7 +20,7 @@ class MtlnovelCrawler(Crawler):
 
         results = []
         for item in data:
-            url = self.absolute_url("https://www.mtlnovel.com/?p=%s" % item['id'])
+            url = self.absolute_url("https://es.mtlnovel.com/?p=%s" % item['id'])
             results.append({
                 'url': url,
                 'title': item['title'],
