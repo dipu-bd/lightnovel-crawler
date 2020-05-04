@@ -33,6 +33,7 @@ rejected_sources = {
     'https://www.novelupdates.com/': "Does not host any novels",
     'https://www.novelv.com/': "Site is down",
     'https://yukinovel.id/': "Removed by owner",
+    'https://www.rebirth.online/': 'Site moved',
 }
 
 # this list will be auto-generated
