@@ -20,7 +20,7 @@ logger = logging.getLogger('RACOVIMGE')
 try:
     import jinja2
 except ImportError:
-    logger.warn('Jinja2 is required for cover generation:\n\tpip install Jinja2')
+    logger.info('Jinja2 is required for cover generation:\n\tpip install Jinja2')
 
 ###############################################################################
 # Templates and Color Schemes

@@ -34,6 +34,7 @@ rejected_sources = {
     'https://www.novelv.com/': "Site is down",
     'https://yukinovel.id/': "Removed by owner",
     'https://www.rebirth.online/': 'Site moved',
+    'https://mtled-novels.com/': 'Domain is expired',
 }
 
 # this list will be auto-generated
