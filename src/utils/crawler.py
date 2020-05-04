@@ -191,12 +191,13 @@ class Crawler:
         return response
     # end def
 
-    def get_soup(self, *args, parser='lxml', **kargs):
-        response = self.get_response(*args, **kargs)
-        return self.make_soup(response)
+    def get_soup(self, *args, **kwargs):
+        parser = kwargs.pop('parser', 'html5lib')
+        response = self.get_response(*args, **kwargs)
+        return self.make_soup(response, parser)
     # end def
 
-    def make_soup(self, response, parser='lxml'):
+    def make_soup(self, response, parser='html5lib'):
         html = response.content.decode('utf-8', 'ignore')
         soup = BeautifulSoup(html, parser)
         if not soup.find('body'):
