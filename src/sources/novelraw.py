@@ -21,12 +21,10 @@ class NovelRawCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        for script in soup.select('#tgtPost script'):
-            text = script.text.strip()
-            pre = 'var label="'
-            post = '";'
-            if text.startswith(pre) and text.endswith(post):
-                self.novel_title = text[len(pre):-len(post)]
+        for script in soup.select('script[type="text/javaScript"]'):
+            text = re.findall(r'var label="([^"]+)";', str(script))
+            if len(text) == 1:
+                self.novel_title = text[0].strip()
                 break
             # end if
         # end for
