@@ -15,10 +15,12 @@ import random as rand
 import textwrap
 from pathlib import Path
 
-from jinja2 import Environment, FileSystemLoader
-
 logger = logging.getLogger('RACOVIMGE')
 
+try:
+    from jinja2 import Environment, FileSystemLoader
+except ImportError:
+    logger.warn('Jinja2 is required for cover generation:\n\tpip install Jinja2')
 
 ###############################################################################
 # Templates and Color Schemes

@@ -2,7 +2,9 @@
 import json
 import logging
 import re
+
 from slugify import slugify
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_PLANET')
@@ -93,7 +95,7 @@ class NovelPlanetCrawler(Crawler):
                 chapter['title'] = chapter['title']
             # end if
         # end if
-        
+
         for ads in contents.findAll('div', {"style": 'text-align: center; margin-bottom: 10px'}):
             ads.decompose()
 
