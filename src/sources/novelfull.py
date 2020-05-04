@@ -5,11 +5,14 @@ from concurrent import futures
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_FULL')
-search_url = 'http://novelfull.com/search?keyword=%s'
+search_url = 'https://novelfull.com/search?keyword=%s'
 
 
 class NovelFullCrawler(Crawler):
-    base_url = 'http://novelfull.com/'
+    base_url = [
+        'http://novelfull.com/',
+        'https://novelfull.com/',
+    ]
 
     def search_novel(self, query):
         '''Gets a list of (title, url) matching the given query'''
@@ -50,7 +53,7 @@ class NovelFullCrawler(Crawler):
         # end for
         self.novel_author = ', '.join(authors)
         logger.info('Novel author: %s', self.novel_author)
-        
+
         pagination_link = soup.select_one('#list-chapter .pagination .last a')
         page_count = int(pagination_link['data-page']) if pagination_link else 0
         logger.info('Chapter list pages: %d' % page_count)
