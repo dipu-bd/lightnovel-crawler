@@ -5,13 +5,21 @@ from urllib.parse import parse_qsl, urlparse
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WWW_TIKNOVEL')
+logger = logging.getLogger('9KQW')
 
-chapter_details_url = 'http://www.tiknovel.com/book/ajaxchap'
+chapter_details_url = 'https://9kqw.com/book/ajaxchap'
 
 
 class TikNovelCrawler(Crawler):
-    base_url = 'http://www.tiknovel.com/'
+    base_url = [
+        'https://9kqw.com/',
+        'http://www.tiknovel.com/',
+        'https://www.tiknovel.com/',
+    ]
+
+    def initialize(self):
+        self.base_url = 'https://9kqw.com/'
+    # end def
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)

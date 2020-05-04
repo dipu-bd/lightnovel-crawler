@@ -289,6 +289,7 @@ You are very welcome to contribute in this project. You can:
 | http://www.tiknovel.com                |            |           |
 | http://zenithnovels.com                |            |           |
 | https://4scanlation.xyz                |            |           |
+| https://9kqw.com                       |     ✔      |           |
 | https://anythingnovel.com              |            |           |
 | https://babelnovel.com                 |     ✔      |           |
 | https://bestlightnovel.com             |     ✔      |           |
