@@ -192,14 +192,14 @@ class Crawler:
     # end def
 
     def get_soup(self, *args, **kwargs):
-        parser = kwargs.pop('parser', 'html5lib')
+        parser = kwargs.pop('parser', None)
         response = self.get_response(*args, **kwargs)
         return self.make_soup(response, parser)
     # end def
 
-    def make_soup(self, response, parser='html5lib'):
+    def make_soup(self, response, parser=None):
         html = response.content.decode('utf-8', 'ignore')
-        soup = BeautifulSoup(html, parser)
+        soup = BeautifulSoup(html, parser or 'lxml')
         if not soup.find('body'):
             raise ConnectionError('HTML document was not loaded properly')
         # end if
