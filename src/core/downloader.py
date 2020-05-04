@@ -13,9 +13,13 @@ from PIL import Image
 from progress.bar import IncrementalBar
 
 from ..core.arguments import get_args
-from ..utils.racovimge import random_cover
 
 logger = logging.getLogger('DOWNLOADER')
+
+try:
+    from ..utils.racovimge import random_cover
+except ImportError as err:
+    logger.debug(err)
 
 try:
     from cairosvg import svg2png

@@ -1,0 +1,5 @@
+Js2Py
+PyInstaller
+cairosvg
+setuptools
+wheel
