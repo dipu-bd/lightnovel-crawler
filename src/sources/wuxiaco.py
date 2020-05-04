@@ -3,8 +3,6 @@ import json
 import logging
 import re
 
-from bs4 import BeautifulSoup
-
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
@@ -24,7 +22,7 @@ class WuxiaCoCrawler(Crawler):
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
         response = self.submit_form(search_url, data=dict(keyword=query, t=1))
-        soup = BeautifulSoup(response.text, 'lxml')
+        soup = self.make_soup(response)
 
         results = []
         for div in soup.select('.recommend .hot_sale'):
@@ -80,7 +78,7 @@ class WuxiaCoCrawler(Crawler):
                     'id': chap_id,
                     'volume': volume['id'],
                     'title': a.text.strip(),
-                    'url':  self.absolute_url(a['href']),
+                    'url':  self.absolute_url(a['href'], url),
                 })
                 if last_vol != volume['id']:
                     last_vol = volume['id']
