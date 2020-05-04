@@ -2,8 +2,6 @@
 import json
 import logging
 import re
-import requests
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
@@ -23,7 +21,7 @@ class WuxiaComCrawler(Crawler):
         '''Gets a list of {title, url} matching the given query'''
         url = search_url % query
         logger.info('Visiting %s ...', url)
-        data = requests.get(url).json()
+        data = self.get_json(url)
         logger.debug(data)
 
         results = []

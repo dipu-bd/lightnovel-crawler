@@ -7,11 +7,14 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('TIKNOVEL')
 
-chapter_details_url = 'http://tiknovel.com/book/ajaxchap'
+chapter_details_url = 'https://tiknovel.com/book/ajaxchap'
 
 
 class TikNovelCrawler(Crawler):
-    base_url = 'http://tiknovel.com/'
+    base_url = [
+        'http://tiknovel.com/',
+        'https://tiknovel.com/',
+    ]
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)

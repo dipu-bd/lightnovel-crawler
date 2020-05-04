@@ -12,15 +12,23 @@ test_user_inputs = {
         b64decode(
             "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS9ub3ZlbC90c3VydWdpLW5vLWpvb3UtdG8tcmFrdWluLW5vLWtvLw==".encode()).decode()
     ],
+    'https://es.mtlnovel.com/': [
+        'https://es.mtlnovel.com/being-a-hamster-in-the-apocalypse-is-a-breeze/',
+    ],
+    'https://fr.mtlnovel.com/': [
+        'https://fr.mtlnovel.com/being-a-hamster-in-the-apocalypse-is-a-breeze/',
+    ],
     'https://novelsrock.com/': [
-        'https://novelsrock.com/novel/the-returner/',
+        'https://novelsrock.com/novel/the-man-from-hell-2/',
         'kuro'
     ],
     'http://gravitytales.com/': [
         'http://gravitytales.com/posts/novel/a-dragons-curiosity'
     ],
+    'https://novelfull.com/': [
+        'https://novelfull.com/dungeon-defense.html',
+    ],
     'http://novelfull.com/': [
-        'http://novelfull.com/dungeon-defense.html',
         'Sinister Ex Girlfriend',
     ],
     'http://www.machinenoveltranslation.com/': [

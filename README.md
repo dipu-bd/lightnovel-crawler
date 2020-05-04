@@ -289,6 +289,7 @@ You are very welcome to contribute in this project. You can:
 | http://www.tiknovel.com                |            |           |
 | http://zenithnovels.com                |            |           |
 | https://4scanlation.xyz                |            |           |
+| https://9kqw.com                       |     ✔      |           |
 | https://anythingnovel.com              |            |           |
 | https://babelnovel.com                 |     ✔      |           |
 | https://bestlightnovel.com             |     ✔      |           |
@@ -296,6 +297,8 @@ You are very welcome to contribute in this project. You can:
 | https://boxnovel.com                   |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
+| https://es.mtlnovel.com                |     ✔      |           |
+| https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
@@ -308,8 +311,8 @@ You are very welcome to contribute in this project. You can:
 | https://m.romanticlovebooks.com        |            |           |
 | https://m.wuxiaworld.co                |     ✔      |           |
 | https://meionovel.com                  |            |           |
-| https://mtled-novels.com               |     ✔      |     ✔     |
 | https://myoniyonitranslations.com      |            |           |
+| https://novelfull.com                  |     ✔      |           |
 | https://novelonlinefull.com            |     ✔      |           |
 | https://novelplanet.com                |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
@@ -334,7 +337,6 @@ You are very welcome to contribute in this project. You can:
 | https://www.qidian.com                 |            |           |
 | https://www.readlightnovel.org         |            |           |
 | https://www.readnovelfull.com          |     ✔      |           |
-| https://www.rebirth.online             |            |           |
 | https://www.romanticlovebooks.com      |            |           |
 | https://www.royalroad.com              |     ✔      |           |
 | https://www.scribblehub.com            |     ✔      |           |
@@ -348,8 +350,6 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.co              |     ✔      |           |
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
-| https://es.mtlnovel.com                |     ✔      |           |
-| https://fr.mtlnovel.com                |     ✔      |           |
 
 ### C4. Rejected sources
 
@@ -357,8 +357,10 @@ You are very welcome to contribute in this project. You can:
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
+| https://anythingnovel.com     | `Site broken`                       |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
+| https://mtled-novels.com      | `Domain is expired`                 |
 | https://novelgo.id/           | `Removed`                           |
 | https://www.flying-lines.com  | `Obfuscated content`                |
 | https://www.jieruihao.cn      | `Unavailable`                       |
@@ -366,7 +368,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
-| https://anythingnovel.com/    | `Site broken`                       |
+| https://www.rebirth.online    | `Site moved`                        |
 
 ### C5. Supported output formats
 
