@@ -2,10 +2,12 @@
 import json
 import logging
 import re
+from urllib.parse import quote_plus
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVELSROCK')
-search_url = 'https://novelsrock.com/?s=%s&post_type=wp-manga'
+search_url = 'https://novelsrock.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult='
 post_chapter_url = 'https://novelsrock.com/wp-admin/admin-ajax.php'
 
 
@@ -13,12 +15,12 @@ class NovelsRockCrawler(Crawler):
     base_url = 'https://novelsrock.com/'
 
     def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
+        query = quote_plus(query.lower())
         soup = self.get_soup(search_url % query)
 
         results = []
         for tab in soup.select('.c-tabs-item__content')[:10]:
-            a = tab.select_one('.post-title h4 a')
+            a = tab.select_one('.post-title .h4 a')
             latest = tab.select_one('.latest-chap .chapter a').text
             votes = tab.select_one('.rating .total_votes').text
             results.append({
