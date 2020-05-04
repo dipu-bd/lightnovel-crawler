@@ -19,7 +19,7 @@ test_user_inputs = {
         'https://fr.mtlnovel.com/being-a-hamster-in-the-apocalypse-is-a-breeze/',
     ],
     'https://novelsrock.com/': [
-        'https://novelsrock.com/novel/the-returner/',
+        'https://novelsrock.com/novel/the-man-from-hell-2/',
         'kuro'
     ],
     'http://gravitytales.com/': [

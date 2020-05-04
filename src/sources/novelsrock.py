@@ -42,8 +42,11 @@ class NovelsRockCrawler(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['data-src'])
+        try:
+            self.novel_cover = self.absolute_url(
+                soup.select_one('.summary_image img')['data-src'])
+        except Exception:
+            pass
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('.author-content a')
