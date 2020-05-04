@@ -55,7 +55,7 @@ test_user_inputs = {
         'candy lips',
     ],
     'https://lnmtl.com/': [
-        'https://lnmtl.com/novel/the-strongest-dan-god',
+        'https://lnmtl.com/novel/i-really-just-want-to-die',
     ],
     'https://m.chinesefantasynovels.com/': [
         'https://m.chinesefantasynovels.com/3838/',
