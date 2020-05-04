@@ -4,6 +4,9 @@ allowed_failures = [
     'https://ranobelib.me/',
     'https://www.aixdzs.com/',
     'https://webnovelindonesia.com/',
+    'http://tiknovel.com/',
+    'http://www.tiknovel.com/',
+    'https://www.tiknovel.com/',
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 ]
 
@@ -63,8 +66,8 @@ test_user_inputs = {
     'https://m.romanticlovebooks.com/': [
         'https://m.romanticlovebooks.com/xuanhuan/207.html',
     ],
-    'http://www.tiknovel.com/': [
-        'http://www.tiknovel.com/book/index?id=717',
+    'https://9kqw.com/': [
+        'https://9kqw.com/book/index?id=717',
     ],
     'https://www.wuxiaworld.co/': [
         'sword',
@@ -171,7 +174,7 @@ test_user_inputs = {
         'https://www.noveluniverse.com/index/novel/info/id/15.html'
     ],
     'https://novelraw.blogspot.com/': [
-        'https://novelraw.blogspot.com/2019/03/dragon-king-son-in-law-mtl.html'
+        'https://novelraw.blogspot.com/2019/02/another-worlds-versatile-crafting.html'
     ],
     'https://light-novel.online/': [
         'https://light-novel.online/great-tyrannical-deity',
@@ -270,8 +273,8 @@ test_user_inputs = {
     'https://webnovelindonesia.com/': [
         'https://webnovelindonesia.com/nv/almighty-student'
     ],
-    'http://tiknovel.com/': [
-        'http://tiknovel.com/book/index?id=717'
+    'https://tiknovel.com/': [
+        'https://tiknovel.com/book/index?id=717'
     ],
     'http://boxnovel.org/': [
         'http://boxnovel.org/novel/martial-god-asura'
