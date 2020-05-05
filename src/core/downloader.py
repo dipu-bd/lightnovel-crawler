@@ -123,7 +123,7 @@ def download_chapter_body(app, chapter):
         except Exception:
             logger.exception('Failed to download chapter body')
         # end try
-        if len(body) == 0:
+        if not body:
             result = 'Body is empty: ' + chapter['url']
         else:
             if not('body_lock' in chapter and chapter['body_lock']):

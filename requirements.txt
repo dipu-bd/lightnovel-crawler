@@ -2,7 +2,7 @@
 ascii==3.6
 win_unicode_console==0.5
 python-dotenv==0.13.0
-beautifulsoup4==4.9.0
+beautifulsoup4==4.8.2
 requests==2.23.0
 python-slugify==4.0.0
 cssutils==1.0.2

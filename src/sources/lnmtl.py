@@ -92,13 +92,8 @@ class LNMTLCrawler(Crawler):
             r'lnmtl\.firstResponse =',
             r'lnmtl\.volumes =',
         ]
-        for script in soup.find_all('script'):
-            text = re.findall(r'<script.*>(.*)</script>', str(script))
-            if len(text) != 1:
-                break
-            else:
-                text = text[0]
-            # end if
+        for script in soup.select('script'):
+            text = script.text.strip()
 
             mismatch = False
             for match in matcher_regex:
