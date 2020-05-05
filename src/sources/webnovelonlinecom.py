@@ -53,6 +53,6 @@ class WebnovelOnlineDotComCrawler(Crawler):
             return '<p>' + '</p><p>'.join(content.split('\n\n')) + '</p>'
         # end for
 
-        return None
+        return ''
     # end def
 # end class

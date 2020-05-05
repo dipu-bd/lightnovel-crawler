@@ -35,11 +35,12 @@ class Fu_kCom_ademao(Crawler):
         # logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('#recentnovels h5').text.strip()
+        self.novel_title = soup.select_one(
+            '#novel-info h5, #recentnovels h5').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('#recentnovels amp-img')['src'])
+            soup.select_one('#novel-info amp-img, #recentnovels amp-img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # self.novel_author = soup.select_one('#Publisher a')['href']
