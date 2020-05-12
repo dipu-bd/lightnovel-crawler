@@ -1,4 +1,4 @@
-# General requirements
+# Requirements for PIP package
 cloudscraper
 beautifulsoup4
 html5lib
@@ -6,7 +6,3 @@ cchardet
 python-slugify
 EbookLib
 PyYAML
-
-# Bot requirements
-discord.py
-python-telegram-bot

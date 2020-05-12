@@ -1,6 +1,8 @@
 #!/usr/bin/env python
-import sys
 import os
+import sys
+
+from src import VERSION
 
 cur_dir = os.path.dirname(__file__)
 
@@ -9,12 +11,6 @@ def long_description():
     filename = os.path.join(cur_dir, 'README.md')
     with open(filename, 'r') as f:
         return f.read()
-
-
-def read_version():
-    filename = os.path.join(cur_dir, 'src', 'VERSION')
-    with open(filename, 'r') as f:
-        return f.read().strip()
 
 
 def read_requirements(filename):
@@ -41,12 +37,12 @@ def run_setup():
         license='Apache 2.0',
         license_file='LICENSE',
 
-        version=read_version(),
+        version=VERSION,
         install_requires=read_requirements(
-            os.path.join(cur_dir, 'requirements.txt')),
+            os.path.join(cur_dir, 'requirements-pip.txt')),
         tests_require=read_requirements(
             os.path.join(cur_dir, 'requirements-dev.txt')),
-        packages=['src'],
+        packages=find_packages(),
         package_dir={'lnc': 'src'},
         include_package_data=True,
 

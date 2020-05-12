@@ -8,11 +8,11 @@ from .language import Language
 from .text_direction import TextDirection
 
 __all__ = [
-    Author,
-    AuthorType,
-    Chapter,
-    Volume,
-    Novel,
-    Language,
-    TextDirection,
+    'Author',
+    'AuthorType',
+    'Chapter',
+    'Volume',
+    'Novel',
+    'Language',
+    'TextDirection',
 ]

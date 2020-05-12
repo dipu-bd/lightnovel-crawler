@@ -36,7 +36,7 @@ coverage:
 
 clean:
 	rm -rfv build dist .egg src.egg-info report.xml coverage.xml
-	rm -rfv **/__pycache__
+	find src -type d -name '__pycache__' | xargs rm -rfv
 
 build:
 	make clean

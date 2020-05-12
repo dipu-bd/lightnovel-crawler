@@ -3,7 +3,7 @@ import sys
 import os
 from argparse import ArgumentParser, Namespace
 
-from ..assets import get_version
+from ..version import VERSION
 
 _parsed_args = None
 
@@ -20,7 +20,7 @@ _parser = ArgumentParser(
 # Use list for a simple group
 _arguments = [
     dict(args=('-v', '--version'), action='version',
-         version='Lightnovel Crawler ' + get_version()),
+         version='Lightnovel Crawler ' + VERSION),
     dict(args=('-c, --config'), dest='config', metavar='CONFIG_FILE',
          help='The config file path'),
 ]

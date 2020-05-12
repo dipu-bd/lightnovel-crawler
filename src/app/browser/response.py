@@ -2,9 +2,8 @@
 
 import atexit
 import json
-from concurrent.futures import Future
-from threading import Lock
-from typing import Union
+import logging
+from typing import Any, List, Mapping, Union
 
 from bs4 import BeautifulSoup
 from requests import Response
@@ -12,49 +11,36 @@ from urllib3 import HTTPResponse
 
 from ..config import CONFIG
 
+logger = logging.getLogger(__name__)
+
 
 class BrowserResponse:
 
-    def __init__(self, url: str, future: Future, timeout: Union[int, float] = 0):
-        self.__lock = Lock()
+    def __init__(self, resp: Response, url: str, kwargs: dict):
+        atexit.register(resp.close)
         self.__url = url
-        self.__resolve(future, timeout)
-
-    def __resolve(self, future: Future, timeout: Union[int, float]):
-        if timeout is not None and timeout <= 0:
-            timeout = CONFIG.browser.response_timeout
-        try:
-            self.__lock.acquire()
-            resp: Response = future.result(timeout)
-            resp.raise_for_status()
-            self._resp = resp
-            atexit.register(self._resp.close)
-        except Exception as e:
-            self._error = e
-        finally:
-            self.__lock.release()
+        self.__request = kwargs
+        self.__response: Response = resp
+        self.__encoding = self.response.encoding or self.response.apparent_encoding
 
     @property
     def url(self) -> str:
         return self.__url
 
-    @property
-    def response(self) -> Response:
-        with self.__lock:
-            if hasattr(self, '_resp'):
-                return self._resp
-            elif hasattr(self, '_error'):
-                raise self._error
-            else:
-                raise ValueError('No response or error')
+    def url_args(self) -> Mapping[str, Any]:
+        return self.__url_args
 
     @property
-    def encoding(self):
-        return self.response.encoding or self.response.apparent_encoding
+    def response(self) -> Response:
+        return self.__response
 
     @property
     def raw(self) -> HTTPResponse:
         return self.response.raw
+
+    @property
+    def encoding(self):
+        return self.__encoding
 
     @property
     def content(self) -> bytes:
@@ -75,7 +61,9 @@ class BrowserResponse:
             return None
 
     @property
+    def parser(self) -> str:
+        return CONFIG.get('browser/parser')
+
+    @property
     def soup(self) -> BeautifulSoup:
-        parser: str = CONFIG.browser.soup_parser
-        soup = BeautifulSoup(markup=self.text, features=parser)
-        return soup
+        return BeautifulSoup(markup=self.text, features=self.parser)
