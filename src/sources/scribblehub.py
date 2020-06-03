@@ -91,7 +91,7 @@ class ScribbleHubCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         logger.debug(soup.title.string)
-        contents = soup.find('div', {'id': 'chp_contents'})
+        contents = soup.find('div', {'id': 'chp_raw'})
 
         #body_parts = []
         # for x in contents:
