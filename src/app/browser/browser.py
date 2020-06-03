@@ -18,7 +18,7 @@ __all__ = [
 logger = logging.getLogger(__name__)
 
 
-class Browser(object):
+class Browser:
     def __init__(self):
         atexit.register(self.close)
         self.client: CloudScraper = create_scraper(

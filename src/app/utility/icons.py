@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
-from .variables import isLinux, isMac
+import platform
+
+isMac = platform.system() == 'Darwin'
+isLinux = platform.system() == 'Linux'
+isWindows = platform.system() == 'Windows'
 
 
 class Icons:

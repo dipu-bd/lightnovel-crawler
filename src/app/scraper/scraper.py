@@ -1,25 +1,37 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABCMeta, abstractmethod, abstractstaticmethod
-from typing import Generator, List, Callable
+from abc import ABCMeta, abstractmethod
+from typing import List
+from urllib.parse import urlparse
 
-from ..browser import BrowserResponse
+from ..browser import BrowserResponse, ParallelBrowser
+from ..models import Chapter, Novel
 from .context import AppContext
 from .scrap_step import ScrapStep
 
-YieldType = ScrapStep
-SendType = BrowserResponse
-GeneratorType = Generator[YieldType, SendType, None]
 
+class Scraper(ParallelBrowser, metaclass=ABCMeta):
+    base_urls: List[str] = []
 
-class Scraper(metaclass=ABCMeta):
-    def __init__(self):
-        self.context: AppContext = AppContext()
-
-    @abstractstaticmethod
-    def base_urls(self) -> List[str]:
-        raise NotImplementedError
+    def __init__(self, name: str):
+        super().__init__(scraper_id=name)
 
     @abstractmethod
-    def process(self) -> GeneratorType:
-        raise NotImplementedError
+    def initialize(self) -> None:
+        pass
+
+    @abstractmethod
+    def login(self, email, password) -> None:
+        pass
+
+    @abstractmethod
+    def search_novel(self, query) -> List[Novel]:
+        pass
+
+    @abstractmethod
+    def fetch_novel_info(self) -> Novel:
+        pass
+
+    @abstractmethod
+    def fetch_chapter_content(self, chapter) -> Chapter:
+        pass

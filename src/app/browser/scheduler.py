@@ -15,7 +15,7 @@ host_semaphores = dict()
 semaphore = BoundedSemaphore(CONFIG.get('concurrency/max_connections'))
 
 
-class ConnectionControl():
+class ConnectionControl:
     '''Controls concurrent connections per instance
 
     If 'timeout' is None (the default), the default timeout is used.
