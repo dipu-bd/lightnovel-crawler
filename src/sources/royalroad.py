@@ -55,7 +55,8 @@ class RoyalRoadCrawler(Crawler):
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.find(
-            "h4", {"property": "author"}).text.strip()
+            "span", {"property": "name"}).text.strip()
+        print(self.novel_author)
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.find('tbody').findAll('a', href=True)
