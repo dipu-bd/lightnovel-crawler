@@ -88,8 +88,18 @@ class ReadNovelFullCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('div.cha-words p, #chr-content p')
-        body = [str(p) for p in contents if p.text.strip()]
+        root = soup.find('div', id='chr-content')
+
+        if not root:
+            return ''
+        # end if
+
+        body = [
+            t
+            for t in root.find_all(text=True)
+            if t.parent.name not in self.bad_tags and t.strip()
+        ]
+
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
