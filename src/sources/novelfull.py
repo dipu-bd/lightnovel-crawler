@@ -10,6 +10,7 @@ search_url = 'https://novelfull.com/search?keyword=%s'
 RE_CHAPTER = r'(?:ch(apter))? (\d+)'
 RE_VOLUME = r'(?:book|vol|volume) (\d+)'
 
+
 class NovelFullCrawler(Crawler):
     base_url = [
         'http://novelfull.com/',
@@ -124,4 +125,6 @@ class NovelFullCrawler(Crawler):
         self.clean_contents(content)
         return str(content)
     # end def
+
+
 # end class
