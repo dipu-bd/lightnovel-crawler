@@ -19,10 +19,10 @@ class LightNovelOnline(Crawler):
         soup = self.get_soup(search_url % query)
         results = []
 
+        if soup.get_text(strip=True) == 'Sorry! No novel founded!':
+            return results
+        # end if
         for tr in soup.select('tr'):
-            if tr.get_text(strip=True) == 'Sorry! No novel founded!':
-                return results
-
             a = tr.select('td a')
             results.append({
                 'title': a[0].text.strip(),
