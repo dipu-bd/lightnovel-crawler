@@ -6,7 +6,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_ONLINE_FULL')
 search_url = 'https://novelonlinefull.com/getsearchstory'
-novel_page_url = 'https://novelonlinefull.com/novel_%s'
+novel_page_url = 'https://novelonlinefull.com/novel/%s'
 
 
 class NovelOnlineFullCrawler(Crawler):
@@ -23,7 +23,7 @@ class NovelOnlineFullCrawler(Crawler):
             titleSoup = BeautifulSoup(novel['name'], 'lxml')
             results.append({
                 'title': titleSoup.body.text.title(),
-                'url': novel_page_url % novel['id_encode'],
+                'url': novel_page_url % novel['nameunsigned'],
                 'info': 'Latest: %s' % novel['lastchapter'],
             })
         # end for

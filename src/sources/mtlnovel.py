@@ -20,7 +20,7 @@ class MtlnovelCrawler(Crawler):
 
         results = []
         for item in data:
-            url = self.absolute_url("https://www.mtlnovel.com/?p=%s" % item['id'])
+            url = item['permalink']
             results.append({
                 'url': url,
                 'title': item['title'],
