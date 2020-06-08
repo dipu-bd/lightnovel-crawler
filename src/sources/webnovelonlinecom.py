@@ -45,7 +45,7 @@ class WebnovelOnlineDotComCrawler(Crawler):
 
         for script in soup.select('script'):
             text = script.string
-            if not script.contents or not text.startswith('window._INITIAL_DATA_'):
+            if not text or not text.startswith('window._INITIAL_DATA_'):
                 continue
             # end if
             content = re.findall(r',"chapter":(".+")},', text)[0]

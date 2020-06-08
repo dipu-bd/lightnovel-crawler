@@ -25,7 +25,7 @@ class NovelRawCrawler(Crawler):
             if not script.contents:
                 continue
 
-            text = re.findall(r'var label="([^"]+)";', str(script))
+            text = re.findall(r'var label="([^"]+)";', script.string)
             if len(text) == 1:
                 self.novel_title = text[0].strip()
                 break
