@@ -113,8 +113,8 @@ class WuxiaComCrawler(Crawler):
                     'url': self.absolute_url(a['href']),
                     'title': a.text.strip(),
                 })
-            # end def
-        # end def
+            # end for
+        # end for
     # end def
 
     def download_chapter_body(self, chapter):
