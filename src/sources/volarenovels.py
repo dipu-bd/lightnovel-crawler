@@ -113,11 +113,10 @@ class VolareNovelsCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('.fr-view:not(.hidden)')
 
-        for el in content.select(
+        for bad in content.select(
             '.chapter-nav, .hidden-text, .__cf_email__, p[data-f-id=\'pbf\'], span[style*="font-size: 0"]'
         ):
-            logger.debug("Removing el: %s", el)
-            el.decompose()
+            bad.decompose()
         # end for
 
         return str(content)
