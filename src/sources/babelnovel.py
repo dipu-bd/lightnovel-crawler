@@ -75,7 +75,7 @@ class BabelNovelCrawler(Crawler):
         self.novel_cover = data['data']['cover']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        chapter_count = int(data['data']['chapterCount'])
+        chapter_count = int(data['data']['releasedChapterCount'])
         self.get_list_of_chapters(chapter_count)
     # end def
 
