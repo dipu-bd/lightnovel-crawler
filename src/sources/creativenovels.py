@@ -50,10 +50,11 @@ class CreativeNovelsCrawler(Crawler):
 
         list_security_key = ''
         for script in soup.select('script'):
-            text = script.text
-            if 'var chapter_list_summon' not in text:
+            text = script.string
+            if not script.contents or 'var chapter_list_summon' not in text:
                 continue
             # end if
+
             p = re.findall(r'"([^"]+)"', text)
             if p[0] == 'ajaxurl' and p[1] == 'https:\\/\\/creativenovels.com\\/wp-admin\\/admin-ajax.php':
                 if p[2] == 'security':
