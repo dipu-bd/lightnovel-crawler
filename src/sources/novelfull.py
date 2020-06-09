@@ -26,14 +26,17 @@ class NovelFullCrawler(Crawler):
         for div in soup.select('#list-page .archive .list-truyen > .row'):
             a = div.select_one('.truyen-title a')
             info = div.select_one('.text-info a .chapter-text')
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': info.text.strip() if info else '',
-            })
+            results.append(
+                {
+                    'title': a.text.strip(),
+                    'url': self.absolute_url(a['href']),
+                    'info': info.text.strip() if info else '',
+                }
+            )
         # end for
 
         return results
+
     # end def
 
     def read_novel_info(self):
@@ -63,10 +66,7 @@ class NovelFullCrawler(Crawler):
 
         logger.info('Getting chapters...')
         futures_to_check = {
-            self.executor.submit(
-                self.download_chapter_list,
-                i + 1,
-            ): str(i)
+            self.executor.submit(self.download_chapter_list, i + 1,): str(i)
             for i in range(page_count + 1)
         }
         [x.result() for x in futures.as_completed(futures_to_check)]
@@ -78,12 +78,11 @@ class NovelFullCrawler(Crawler):
         mini = self.chapters[0]['volume']
         maxi = self.chapters[-1]['volume']
         for i in range(mini, maxi + 1):
-            self.volumes.append({
-                'id': i,
-                'title': 'Volume %d' % i,
-                'volume': str(i),
-            })
+            self.volumes.append(
+                {'id': i, 'title': 'Volume %d' % i, 'volume': str(i),}
+            )
         # end for
+
     # end def
 
     def download_chapter_list(self, page):
@@ -94,14 +93,20 @@ class NovelFullCrawler(Crawler):
 
         for a in soup.select('ul.list-chapter li a'):
             title = a['title'].strip()
-            match = re.match(RE_CHAPTER, title, re.IGNORECASE)
-            chapter_id = (
-                match is not None and int(match.group(2)) or len(self.chapters) + 1
-            )
-            match = re.match(RE_VOLUME, title, re.IGNORECASE)
-            volume_id = (
-                match is not None and int(match.group(2)) or 1 + (chapter_id - 1) // 100
-            )
+            prev_ch_vol = self.chapters[-1]['volume'] if self.chapters else None
+            chapter_id = len(self.chapters) + 1
+            volume_id = (chapter_id - 1) // 100 + 1
+            ch_match = re.search(RE_CHAPTER, title, re.IGNORECASE)
+            vol_match = re.search(RE_VOLUME, title, re.IGNORECASE)
+
+            if ch_match:
+                chapter_id = int(ch_match.group(2))
+
+            _v_id = vol_match.group(1) if vol_match else None
+            if _v_id and (
+                not prev_ch_vol or _v_id == prev_ch_vol or _v_id == prev_ch_vol + 1
+            ):
+                volume_id = int(_v_id)
 
             data = {
                 'title': title,
@@ -111,6 +116,7 @@ class NovelFullCrawler(Crawler):
             }
             self.chapters.append(data)
         # end for
+
     # end def
 
     def download_chapter_body(self, chapter):
@@ -124,6 +130,7 @@ class NovelFullCrawler(Crawler):
             ads.decompose()
         self.clean_contents(content)
         return str(content)
+
     # end def
 
 
