@@ -22,7 +22,10 @@ class NovelRawCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         for script in soup.select('script[type="text/javaScript"]'):
-            text = re.findall(r'var label="([^"]+)";', str(script))
+            if not script.contents:
+                continue
+
+            text = re.findall(r'var label="([^"]+)";', script.string)
             if len(text) == 1:
                 self.novel_title = text[0].strip()
                 break
