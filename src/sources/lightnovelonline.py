@@ -17,8 +17,11 @@ class LightNovelOnline(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
-
         results = []
+
+        if soup.get_text(strip=True) == 'Sorry! No novel founded!':
+            return results
+        # end if
         for tr in soup.select('tr'):
             a = tr.select('td a')
             results.append({
@@ -54,7 +57,7 @@ class LightNovelOnline(Crawler):
         try:
             last_page = soup.select('ul.pagingnation li a')[-1]['title']
             page_count = int(last_page.split(' ')[-1])
-        except Exception as err:
+        except Exception as _:
             logger.exception('Failed to get page-count: %s', self.novel_url)
         # end try
         logger.info('Total pages: %d', page_count)
