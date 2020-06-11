@@ -36,7 +36,7 @@ def upload(file_path):
         gauth.SaveCredentialsFile("mycreds.txt")
 
         drive = GoogleDrive(gauth)
-        folder_id = '118iN1jzavVV-9flrLPZo7DOi0cuxrQ5F'
+        folder_id = os.getenv('GOOGLE_DRIVE_FOLDER_ID')
         filename_w_ext = os.path.basename(file_path)
         filename, file_extension = os.path.splitext(filename_w_ext)
 
