@@ -14,13 +14,14 @@ except Exception:
 # end try
 
 
-def upload(file_path):
+def upload(file_path, description=None):
     try:
         gauth = GoogleAuth()
         # gauth.LocalWebserverAuth()
 
         # Try to load saved client credentials
-        gauth.LoadCredentialsFile("mycreds.txt")
+        credential_file = os.getenv('GOOGLE_DRIVE_CREDENTIAL_FILE')
+        gauth.LoadCredentialsFile(credential_file)
         if gauth.credentials is None:
             # Authenticate if they're not there
             gauth.LocalWebserverAuth()
@@ -33,10 +34,10 @@ def upload(file_path):
         # end if
 
         # Save the current credentials to a file
-        gauth.SaveCredentialsFile("mycreds.txt")
+        gauth.SaveCredentialsFile(credential_file)
 
         drive = GoogleDrive(gauth)
-        folder_id = '118iN1jzavVV-9flrLPZo7DOi0cuxrQ5F'
+        folder_id = os.getenv('GOOGLE_DRIVE_FOLDER_ID')
         filename_w_ext = os.path.basename(file_path)
         filename, file_extension = os.path.splitext(filename_w_ext)
 
