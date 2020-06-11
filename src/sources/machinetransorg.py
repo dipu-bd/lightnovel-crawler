@@ -18,7 +18,7 @@ class MachineTransOrg(Crawler):
         soup = self.get_soup(url)
 
         results = []
-        for li in soup.select('.book-list-info li'):
+        for li in soup.select('.book-list-info > ul > li'):
             results.append({
                 'title': li.select_one('a h4 b').text.strip(),
                 'url': self.absolute_url(li.select_one('.book-img a')['href']),

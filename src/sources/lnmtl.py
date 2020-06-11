@@ -27,12 +27,7 @@ class LNMTLCrawler(Crawler):
         # Send post request to login
         logger.info('Logging in...')
         response = self.submit_form(
-            login_url,
-            data=dict(
-                _token=token,
-                email=email,
-                password=password,
-            ),
+            login_url, data=dict(_token=token, email=email, password=password,),
         )
         # Check if logged in successfully
         soup = BeautifulSoup(response.content, 'lxml')
@@ -41,13 +36,13 @@ class LNMTLCrawler(Crawler):
         else:
             body = soup.select_one('body').text
             logger.debug('-' * 80)
-            logger.debug('\n\n'.join([
-                x for x in body.split('\n\n')
-                if len(x.strip()) > 0
-            ]))
+            logger.debug(
+                '\n\n'.join([x for x in body.split('\n\n') if len(x.strip()) > 0])
+            )
             logger.debug('-' * 80)
             logger.error('Failed to login')
         # end if
+
     # end def
 
     def logout(self):
@@ -59,6 +54,7 @@ class LNMTLCrawler(Crawler):
         else:
             print('Logged out')
         # end if
+
     # end def
 
     def read_novel_info(self):
@@ -71,8 +67,9 @@ class LNMTLCrawler(Crawler):
         logger.debug('Novel title = %s', self.novel_title)
 
         try:
-            self.novel_cover = self.absolute_url(soup.find(
-                'img', {'title': self.novel_title})['src'])
+            self.novel_cover = self.absolute_url(
+                soup.find('img', {'title': self.novel_title})['src']
+            )
         except Exception:
             pass  # novel cover is not so important to raise errors
         # end try
@@ -83,59 +80,39 @@ class LNMTLCrawler(Crawler):
 
         logger.info('Getting chapters...')
         self.download_chapter_list()
+
     # end def
 
     def parse_volume_list(self, soup):
         self.volumes = []
-        matcher_regex = [
-            r'^window\.lnmtl = ',
-            r'lnmtl\.firstResponse =',
-            r'lnmtl\.volumes =',
-        ]
-        for script in soup.select('script'):
-            text = script.text.strip()
+        script = soup.find(name='main').find_next_sibling(name='script').string
 
-            mismatch = False
-            for match in matcher_regex:
-                if not re.search(match, text):
-                    mismatch = True
-                    break
-                # end if
+        try:
+            data = js2py.eval_js(
+                '(function() {' + script + 'return window.lnmtl;})()'
+            ).to_dict()
+            for i, vol in enumerate(data['volumes']):
+                title = vol.get('title', '') or ''
+                title = re.sub(r'[^\u0000-\u00FF]', '', title)
+                title = re.sub(r'\(\)', '', title).strip()
+                self.volumes.append(
+                    {'id': i + 1, 'title': title, 'download_id': vol['id'],}
+                )
             # end for
-            if mismatch:
-                continue
-            # end if
-
-            try:
-                data = js2py.eval_js(
-                    '(function() {' + text + 'return window.lnmtl;})()').to_dict()
-
-                for i, vol in enumerate(data['volumes']):
-                    title = vol.get('title', '') or ''
-                    title = re.sub(r'[^\u0000-\u00FF]', '', title)
-                    title = re.sub(r'\(\)', '', title).strip()
-                    self.volumes.append({
-                        'id': i + 1,
-                        'title': title,
-                        'download_id': vol['id'],
-                    })
-                # end for
-            except Exception as err:
-                logger.exception('Failed parsing one possible batch')
-            # end try
-        # end for
+        except Exception as _:
+            logger.exception('Failed parsing one possible batch')
+        # end try
 
         if len(self.volumes) == 0:
             raise Exception('Failed parsing volume list')
         # end if
+
     # end def
 
     def download_chapter_list(self):
         futures_to_wait = [
-            self.executor.submit(
-                self.download_chapters_per_volume,
-                volume
-            ) for volume in self.volumes
+            self.executor.submit(self.download_chapters_per_volume, volume)
+            for volume in self.volumes
         ]
 
         possible_chapters = {}
@@ -152,11 +129,13 @@ class LNMTLCrawler(Crawler):
                 self.chapters.append(chap)
             # end for
         # end for
+
     # end def
 
     def download_chapters_per_volume(self, volume, page=1):
         url = self.absolute_url(
-            '/chapter?page=%s&volumeId=%s' % (page, volume['download_id']))
+            '/chapter?page=%s&volumeId=%s' % (page, volume['download_id'])
+        )
         logger.info('Getting json: %s', url)
         result = self.get_json(url)
 
@@ -166,10 +145,9 @@ class LNMTLCrawler(Crawler):
             if chapter.get('number'):
                 title = '#%s %s' % (chapter.get('number'), title)
             # end if
-            chapters.append({
-                'title': title,
-                'url': chapter['site_url'],
-            })
+            chapters.append(
+                {'title': title, 'url': chapter['site_url'],}
+            )
         # end for
 
         if page != 1:
@@ -180,6 +158,7 @@ class LNMTLCrawler(Crawler):
             chapters += self.download_chapters_per_volume(volume, page)
         # end for
         return volume['id'], chapters
+
     # end def
 
     def download_chapter_body(self, chapter):
@@ -189,6 +168,7 @@ class LNMTLCrawler(Crawler):
         body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         return body.strip()
+
     # end def
 
     def format_text(self, text):
@@ -198,5 +178,8 @@ class LNMTLCrawler(Crawler):
         text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
         text = re.sub(r'[ ]*,[ ]+', ', ', text)
         return text.strip()
+
     # end def
+
+
 # end class

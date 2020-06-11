@@ -80,7 +80,7 @@ class BoxNovelCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block'):
+        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
             bad.decompose()
 
         return str(contents)

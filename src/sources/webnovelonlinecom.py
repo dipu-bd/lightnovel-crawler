@@ -44,8 +44,8 @@ class WebnovelOnlineDotComCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         for script in soup.select('script'):
-            text = script.text.strip()
-            if not text.startswith('window._INITIAL_DATA_'):
+            text = script.string
+            if not text or not text.startswith('window._INITIAL_DATA_'):
                 continue
             # end if
             content = re.findall(r',"chapter":(".+")},', text)[0]
