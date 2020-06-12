@@ -14,7 +14,7 @@ except Exception:
 # end try
 
 
-def upload(file_path):
+def upload(file_path, description=None):
     try:
         gauth = GoogleAuth()
         # gauth.LocalWebserverAuth()
