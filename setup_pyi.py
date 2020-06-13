@@ -53,14 +53,14 @@ def gather_data_files():
     command = ''
 
     # add data files of this project
-    for f in (ROOT / 'src').glob('**/*.*'):
+    for f in (ROOT / 'lncrawl').glob('**/*.*'):
         src = str(f)
         src = '/'.join(src.split(os.sep))
         dst = str(f.parent.relative_to(ROOT))
         dst = '/'.join(dst.split(os.sep))
         command += '--add-data "%s%s%s" ' % (src, os.pathsep, dst)
     # end for
-    command += '--add-data "%s/src/VERSION%ssrc" ' % (unix_root, os.pathsep)
+    command += '--add-data "%s/lncrawl/VERSION%lncrawl" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
     command += '--add-data "%s/cairosvg/VERSION%s." ' % (
@@ -82,10 +82,10 @@ def gather_hidden_imports():
     command = ''
 
     # add hidden imports of this project
-    for f in (ROOT / 'src' / 'sources').glob('*.py'):
+    for f in (ROOT / 'lncrawl' / 'sources').glob('*.py'):
         if os.path.isfile(f) and re.match(r'^([^_.][^.]+).py$', f.name):
             module_name = f.name[:-3]
-            command += '--hidden-import "src.sources.%s" ' % module_name
+            command += '--hidden-import "lncrawl.sources.%s" ' % module_name
         # end if
     # end for
     command += '--hidden-import "pkg_resources.py2_warn" '

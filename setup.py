@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import os.path
+from setuptools import setup, find_packages
 
 if sys.version_info[:2] < (3, 5):
     raise RuntimeError(
@@ -35,8 +36,20 @@ else:
 
     config.read_configuration('setup.cfg')
     setup(
-        version=parse_version(os.path.join('src', 'VERSION')),
+        name="lncrawl",
+        version=parse_version(os.path.join('lncrawl', 'VERSION')),
+        packages=find_packages(),
         install_requires=parse_requirements('requirements.txt'),
+        # metadata to display on PyPI
+        author="dipu-bd",
+        description="An app to download novels from online sources and generate e-books.",
+        keywords="lightnovel epub scraper web-scraper lncrawl",
+        url="https://github.com/dipu-bd/lightnovel-crawler",
+        project_urls={
+            "Bug Tracker": "https://github.com/dipu-bd/lightnovel-crawler/issues",
+            "Documentation": "https://github.com/dipu-bd/lightnovel-crawler/blob/master/README.md",
+            "Source Code": "https://github.com/dipu-bd/lightnovel-crawler",
+        },
     )
 
     if run_pyi:
