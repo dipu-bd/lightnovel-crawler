@@ -60,13 +60,13 @@ def gather_data_files():
     # add data files of this project
     for f in (ROOT / 'src').glob('**/*.*'):
         src = str(f)
-        src = '/'.join(src.split(os.sep))
+        src = '/'.join(lncrawl.split(os.sep))
         dst = str(f.parent.relative_to(ROOT))
         dst = '/'.join(dst.split(os.sep))
         command += '--add-data "%s%s%s" ' % (src, os.pathsep, dst)
     # end for
 
-    command += '--add-data "%s/src/VERSION%ssrc" ' % (unix_root, os.pathsep)
+    command += '--add-data "%s/lncrawl/VERSION%ssrc" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
     site_packages = list(ROOT.glob('venv/**/site-packages'))[0]
@@ -91,7 +91,7 @@ def gather_hidden_imports():
     for f in (ROOT / 'src' / 'sources').glob('*.py'):
         if os.path.isfile(f) and re.match(r'^([^_.][^.]+).py[c]?$', f.name):
             module_name = f.name[:-3]
-            command += '--hidden-import "src.sources.%s" ' % module_name
+            command += '--hidden-import "lncrawl.sources.%s" ' % module_name
         # end if
     # end for
 

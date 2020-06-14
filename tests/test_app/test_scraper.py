@@ -2,8 +2,8 @@
 
 import pytest
 
-from src.app.models import TextDirection
-from src.app.scraper import AppContext, GeneratorType, Scraper, ScrapStep
+from lncrawl.app.models import TextDirection
+from lncrawl.app.scraper import AppContext, GeneratorType, Scraper, ScrapStep
 
 
 class TestScrapers:

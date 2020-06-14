@@ -5,7 +5,7 @@ from argparse import ArgumentError, ArgumentParser
 
 import pytest
 
-from src.app.arguments import _build
+from lncrawl.app.arguments import _build
 
 
 class TestArguments:

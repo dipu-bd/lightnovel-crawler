@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from src.app.config import CONFIG
-from src.app.models import Author, Chapter, Language, Novel, TextDirection, Volume
+from lncrawl.app.config import CONFIG
+from lncrawl.app.models import Author, Chapter, Language, Novel, TextDirection, Volume
 
 CONFIG.save()
 print(CONFIG.work_directory)

@@ -9,7 +9,7 @@ from urllib.parse import parse_qsl
 import requests
 import responses
 
-from src.app.browser import Browser
+from lncrawl.app.browser import Browser
 
 test_url = 'http://test.domain'
 
