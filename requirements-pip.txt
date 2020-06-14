@@ -1,8 +1,0 @@
-# Requirements for PIP package
-cloudscraper
-beautifulsoup4
-html5lib
-cchardet
-python-slugify
-EbookLib
-PyYAML

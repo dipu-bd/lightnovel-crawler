@@ -1,0 +1,33 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+cloudscraper = "*"
+beautifulsoup4 = "*"
+html5lib = "*"
+cchardet = "*"
+python-slugify = "*"
+ebooklib = "*"
+pyyaml = "*"
+lxml = "*"
+
+[dev-packages]
+"discord.py" = "*"
+python-telegram-bot = "*"
+pyinstaller = "*"
+pytest = "*"
+pytest-env = "*"
+responses = "*"
+flake8 = "*"
+tox = "*"
+autopep8 = "*"
+polling = "*"
+pytest-watch = "*"
+pytest-timeout = "*"
+pytest-forked = "*"
+pytest-xdist = "*"
+pytest-cov = "*"
+coverage = "*"
+coveralls = "*"

@@ -1,12 +1,20 @@
-# General requirements
-cloudscraper
-beautifulsoup4
-html5lib
-cchardet
-python-slugify
-EbookLib
-PyYAML
-
-# Bot requirements
-discord.py
-python-telegram-bot
+-i https://pypi.python.org/simple
+beautifulsoup4==4.9.1
+cchardet==2.1.6
+certifi==2020.4.5.2
+chardet==3.0.4
+cloudscraper==1.2.40
+ebooklib==0.17.1
+html5lib==1.0.1
+idna==2.9; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+lxml==4.5.1
+pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'
+python-slugify==4.0.0
+pyyaml==5.3.1
+requests-toolbelt==0.9.1
+requests==2.23.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'
+six==1.15.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'
+soupsieve==2.0.1; python_version >= '3.5'
+text-unidecode==1.3
+urllib3==1.25.9; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'
+webencodings==0.5.1
