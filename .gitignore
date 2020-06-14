@@ -3,6 +3,8 @@
 /.vscode
 /*_bot_output
 /venv*
+mycreds.txt
+client_secrets.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

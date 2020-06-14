@@ -28,15 +28,16 @@ lock ::
 
 lint ::
 	@echo "Stop the build if there are Python syntax errors or undefined names"
-	flake8 --count --ignore="E501" --statistics lncrawl tests 
+	pipenv run flake8 --count --ignore="E501" --statistics lncrawl tests 
 	@echo "exit-zero treats all errors as warnings."
-	flake8 --count  --exit-zero --max-complexity=10 --max-line-length=120 --statistics lncrawl tests 
+	pipenv run flake8 --count  --exit-zero --max-complexity=10 --max-line-length=120 --statistics lncrawl tests 
 
 format ::
 	@echo "Automatic reformatting"
-	autopep8 -aaa --in-place --max-line-length=80 --recursive lncrawl tests
+	pipenv run autopep8 -aaa --in-place --max-line-length=80 --recursive lncrawl tests
 
 clean ::
+	@echo "--- Cleaning auto-generated files ---"
 	@$(DEL) report.xml coverage.xml
 	@$(RMDIR) build dist .tox .egg lightnovel_crawler.egg-info
 	make clean_pycache
@@ -50,31 +51,29 @@ clean_pycache ::
 endif
 
 test ::
-	@echo "This runs all of the tests."
-	tox --parallel auto
+	@echo "--- Running all tests ---"
+	pipenv run tox --parallel auto
 
 watch ::
-	@echo "This automatically selects and re-executes only tests affected by recent changes."
-	ptw -- --testmon
+	@echo "--- Select recent changes and re-run tests ---"
+	pipenv run ptw -- --testmon
 
 retry ::
-	@echo "This will retry failed tests on every file change."
-	py.test -n auto --forked --looponfail
+	@echo "--- Retry failed tests on every file change ---"
+	pipenv run py.test -n auto --forked --looponfail
 
 ci ::
-	py.test -n 8 --forked --junitxml=report.xml
+	@echo "--- Generate a test report ---"
+	pipenv run py.test -n 8 --forked --junitxml=report.xml
 
 coverage ::
-	py.test --cov-config=.coveragerc --verbose --cov-report=term --cov-report=xml --cov=lncrawl tests
-	coveralls
+	@echo "--- Generate a test coverage ---"
+	pipenv run py.test --cov-config=.coveragerc --verbose --cov-report=term --cov-report=xml --cov=lncrawl tests
+	pipenv run coveralls
 
 build ::
 	make clean lint
 	$(PYTHON) setup.py sdist bdist_wheel --universal
-
-install ::
-	$(PIP) uninstall -y lightnovel-crawler
-	$(PIP) setup.py install
 
 publish ::
 	make build
@@ -87,3 +86,6 @@ publish_test ::
 	$(PIP) install 'twine>=1.5.0'
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 	make clean
+
+run ::
+	@pipenv run python .

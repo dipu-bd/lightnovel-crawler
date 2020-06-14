@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ...meta import StrEnum
+from ..utility.str_enum import StrEnum
 
 
 class TextDirection(StrEnum):
