@@ -1,60 +1,85 @@
 # Default task: init
+ifeq ($(OS),Windows_NT)
+    COPY := copy
+    DEL := del
+	RMDIR := rd /S /Q
+	PYTHON := python
+	PIP := $(PYTHON) -m pip
+else
+    COPY := cp
+    DEL := rm -fv
+	RMDIR := rm -rfv
+	PYTHON := python3
+	PIP := $(PYTHON) -m pip
+endif
 
-init:
-	pip install -U pip
-	pip install -r requirements.txt
-	pip install wheel
 
-test:
+init ::
+	$(PYTHON) -m pipenv shell
+
+setup ::
+	$(PIP) install --user -U pip
+	$(PIP) install --user -U pipenv
+	$(PYTHON) -m pipenv install --three
+
+lint ::
+	# Stop the build if there are Python syntax errors or undefined names
+	flake8 --count --ignore="E501" --statistics lncrawl tests 
+	# exit-zero treats all errors as warnings.
+	flake8 --count  --exit-zero --max-complexity=10 --max-line-length=120 --statistics lncrawl tests 
+
+format ::
+	# Automatic reformatting
+	autopep8 -aaa --in-place --max-line-length=80 --recursive lncrawl tests
+
+clean ::
+	@$(DEL) report.xml coverage.xml
+	@$(RMDIR) build dist .tox .egg lightnovel_crawler.egg-info
+	make clean_pycache
+
+ifeq ($(OS),Windows_NT)
+clean_pycache ::
+	@for /F "delims=" %%I in ('dir "." /AD /B /S 2^>nul ^| findstr /E /I /R "__pycache__"') do @rd /Q /S "%%I" 2>nul
+else
+clean_pycache ::
+	find . -type d -name '__pycache__' | xargs rm -rfv
+endif
+
+test ::
 	# This runs all of the tests.
 	tox --parallel auto
 
-watch:
+watch ::
 	# This automatically selects and re-executes only tests affected by recent changes.
 	ptw -- --testmon
 
-retry:
+retry ::
 	# This will retry failed tests on every file change.
 	py.test -n auto --forked --looponfail
 
-ci:
+ci ::
 	py.test -n 8 --forked --junitxml=report.xml
 
-lint:
-	# Stop the build if there are Python syntax errors or undefined names
-	flake8 --count --ignore="E501" --statistics src tests 
-	# exit-zero treats all errors as warnings.
-	flake8 --count  --exit-zero --max-complexity=10 --max-line-length=120 --statistics src tests 
-
-format:
-	# Automatic reformatting
-	autopep8 -aaa --in-place --max-line-length=80 --recursive src tests
-
-coverage:
-	py.test --cov-config=.coveragerc --verbose --cov-report=term --cov-report=xml --cov=src tests
+coverage ::
+	py.test --cov-config=.coveragerc --verbose --cov-report=term --cov-report=xml --cov=lncrawl tests
 	coveralls
 
-clean:
-	rm -rfv build dist .egg lncrawl.egg-info report.xml coverage.xml
-	find src -type d -name '__pycache__' | xargs rm -rfv
+build ::
+	make clean lint
+	$(PYTHON) setup.py sdist bdist_wheel --universal
 
-build:
-	make clean
-	make lint
-	python3 setup.py sdist bdist_wheel --universal
+install ::
+	$(PIP) uninstall -y lightnovel-crawler
+	$(PIP) setup.py install
 
-install:
-	pip3 uninstall -y lightnovel-crawler
-	python3 setup.py install
-
-publish:
+publish ::
 	make build
-	pip3 install 'twine>=1.5.0'
+	$(PIP) install 'twine>=1.5.0'
 	twine upload dist/*
 	make clean
 
-publish_test:
+publish_test ::
 	make build
-	pip3 install 'twine>=1.5.0'
+	$(PIP) install 'twine>=1.5.0'
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
 	make clean
