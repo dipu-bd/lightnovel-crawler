@@ -15,21 +15,25 @@ endif
 
 
 init ::
-	$(PYTHON) -m pipenv shell
+	pipenv shell --anyway
 
 setup ::
-	$(PIP) install --user -U pip
 	$(PIP) install --user -U pipenv
-	$(PYTHON) -m pipenv install --three
+	pipenv install --three
+
+lock ::
+	pipenv lock
+	pipenv lock -r > requirements.txt
+	pipenv lock -r --dev-only > dev-requirements.txt
 
 lint ::
-	# Stop the build if there are Python syntax errors or undefined names
+	@echo "Stop the build if there are Python syntax errors or undefined names"
 	flake8 --count --ignore="E501" --statistics lncrawl tests 
-	# exit-zero treats all errors as warnings.
+	@echo "exit-zero treats all errors as warnings."
 	flake8 --count  --exit-zero --max-complexity=10 --max-line-length=120 --statistics lncrawl tests 
 
 format ::
-	# Automatic reformatting
+	@echo "Automatic reformatting"
 	autopep8 -aaa --in-place --max-line-length=80 --recursive lncrawl tests
 
 clean ::
@@ -46,15 +50,15 @@ clean_pycache ::
 endif
 
 test ::
-	# This runs all of the tests.
+	@echo "This runs all of the tests."
 	tox --parallel auto
 
 watch ::
-	# This automatically selects and re-executes only tests affected by recent changes.
+	@echo "This automatically selects and re-executes only tests affected by recent changes."
 	ptw -- --testmon
 
 retry ::
-	# This will retry failed tests on every file change.
+	@echo "This will retry failed tests on every file change."
 	py.test -n auto --forked --looponfail
 
 ci ::

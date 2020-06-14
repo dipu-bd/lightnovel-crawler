@@ -1,6 +1,6 @@
 @ECHO OFF 
 
-SET /P VERSION=<src\VERSION
+SET /P VERSION=<lncrawl\VERSION
 
 SET PY=python
 SET PIP=%PY% -m pip --disable-pip-version-check

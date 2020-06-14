@@ -1,8 +1,9 @@
 #!/usr/bin/env python
 import os
+import re
 import sys
 
-from src import VERSION
+from lncrawl import VERSION
 
 cur_dir = os.path.dirname(__file__)
 
@@ -18,7 +19,7 @@ def read_requirements(filename):
     with open(filename, 'r') as f:
         requirements = [r.strip() for r in f.readlines()]
         requirements = [r for r in requirements
-                        if r and not r.startswith('#')]
+                        if r and re.match('^[\w\d].*$', r)]
         return requirements
 
 
@@ -39,18 +40,18 @@ def run_setup():
 
         version=VERSION,
         install_requires=read_requirements(
-            os.path.join(cur_dir, 'requirements-pip.txt')),
+            os.path.join(cur_dir, 'requirements.txt')),
         tests_require=read_requirements(
-            os.path.join(cur_dir, 'requirements-dev.txt')),
+            os.path.join(cur_dir, 'dev-requirements.txt')),
         packages=find_packages(),
-        package_dir={'lnc': 'src'},
+        package_dir={'lnc': 'lncrawl'},
         include_package_data=True,
 
         entry_points={
             'console_scripts': [
-                'lnc = src:main',
-                'lncrawl = src:main',
-                'lightnovel-crawler = src:main',
+                'lnc = lncrawl:main',
+                'lncrawl = lncrawl:main',
+                'lightnovel-crawler = lncrawl:main',
             ],
         },
 

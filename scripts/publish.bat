@@ -1,6 +1,6 @@
 @ECHO OFF 
 
-SET /P VERSION=<src\VERSION
+SET /P VERSION=<lncrawl\VERSION
 
 REM CALL scripts\build.bat
 

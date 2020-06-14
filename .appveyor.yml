@@ -11,7 +11,7 @@ init:
 
 install:
   - python -m pip install --no-cache-dir  -r requirements.txt
-  - python -m pip install --no-cache-dir  -r requirements-dev.txt
+  - python -m pip install --no-cache-dir  -r dev-requirements.txt
 
 build: false
 
