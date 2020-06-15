@@ -1,30 +1,57 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from lncrawl.app.config import CONFIG
-from lncrawl.app.models import *
-from lncrawl.app.browser import *
+try:
+    from lncrawl import sources
+    print(sources.scraper_list)
+    print(sources.scraper_list[0].base_urls)
+    print(sources.get_scraper_by_url('https://lnmtl.com/novel/dragon-of-the-root'))
+    print(sources.get_scraper_by_name('lnmtl'))
+finally:
+    print()
 
-print(CONFIG.get('browser/parser/cloudscraper'))
-print(CONFIG.get('logging/version'))
-print(CONFIG.get('logging/loggers/level'))
-print()
+try:
+    from lncrawl.app.config import CONFIG
+    print(CONFIG.get('browser/parser/cloudscraper'))
+    print(CONFIG.get('logging/version'))
+    print(CONFIG.get('logging/loggers/level'))
+finally:
+    print()
 
-print(Language.ENGLISH)
-print(Author('Sudipto Chandra', AuthorType.AUTHOR))
-print(Chapter(Volume(Novel('http://www.google.com'), 2), 10))
-print()
+try:
+    from lncrawl.app.models import *
+    print(Language.ENGLISH)
+    print(Author('Sudipto Chandra', AuthorType.AUTHOR))
+    print(Chapter(Volume(Novel('http://www.google.com'), 2), 10))
+finally:
+    print()
 
-b = Browser()
-duck = b.get('https://duckduckgo.com/')
-print(duck)
-print(duck.soup.select_one('link[rel="canonical"]')['href'])
-print()
+# try:
+#     from lncrawl.app.browser import Browser
+#     b = Browser()
+#     duck = b.get('https://duckduckgo.com/')
+#     print(duck)
+#     print(duck.soup.select_value('link[rel="canonical"]', value_of='href'))
+#     print(duck.soup.find_value('meta', {'name': 'viewport'}, value_of='content'))
+# finally:
+#     print()
 
-ab = AsyncBrowser()
-for i in range(2):
-    novel = ab.get('https://api.duckduckgo.com/?q=novel&format=json')
-    anything = ab.get('https://api.duckduckgo.com/?q=anything&format=json')
-    print(novel.result().json['AbstractURL'])
-    print(anything.result().json['AbstractURL'])
-print()
+# try:
+#     from lncrawl.app.browser import AsyncBrowser
+#     ab = AsyncBrowser()
+#     novel = ab.get('https://api.duckduckgo.com/?q=novel&format=json')
+#     anything = ab.get('https://api.duckduckgo.com/?q=anything&format=json')
+#     print(novel.result().json['AbstractURL'])
+#     print(anything.result().json['AbstractURL'])
+# finally:
+#     print()
+
+
+try:
+    from lncrawl.app.scraper.context import AppContext
+    context = AppContext('https://lnmtl.com/novel/dragon-of-the-root')
+
+    print(context)
+    print(context.get_scraper().fetch_novel_info(context.toc_url))
+finally:
+    print()

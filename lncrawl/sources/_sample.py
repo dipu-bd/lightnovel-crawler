@@ -1,25 +1,26 @@
 # -*- coding: utf-8 -*-
 
-import logging
 from typing import List
 
-from ..app.models import Chapter, Novel
-from ..app.scraper import Scraper
-
-logger = logging.getLogger(__name__)
+from ..app.models import *
+from ..app.scraper.scraper import Scraper
 
 
 class SampleScraper(Scraper):
     base_urls = ['http://sample.url/']
 
-    def login(self, email, password) -> None:
+    def initialize(self) -> None:  # Optional method
+        self.log.info('never use print() method')
         pass
 
-    def search_novel(self, query) -> List[Novel]:
+    def login(self, email: str, password: str) -> None:  # Optional method
         pass
 
-    def fetch_novel_info(self) -> Novel:
-        pass
+    def search_novel(self, query: str) -> List[Novel]:  # Optional method
+        return []
 
-    def fetch_chapter_content(self, chapter) -> Chapter:
-        pass
+    def fetch_novel_info(self, url: str) -> Novel:  # Must be implemented
+        raise NotImplementedError()
+
+    def fetch_chapter_content(self, chapter: Chapter) -> Chapter:  # Must be implemented
+        raise NotImplementedError()

@@ -5,7 +5,7 @@ from typing import List
 
 from ...sources import get_scraper_by_url
 from ..binders import OutputFormat
-from ..models import Chapter, Novel, TextDirection, Volume
+from ..models import *
 from .scraper import Scraper
 
 

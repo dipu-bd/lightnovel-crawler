@@ -21,6 +21,14 @@ from urllib.parse import urlparse
 
 from ..app.scraper.scraper import Scraper
 
+__all__ = [
+    'scraper_list',
+    'rejected_sources',
+    'is_rejected_source',
+    'get_scraper_by_url',
+    'get_scraper_by_name'
+]
+
 # This list will be auto-generated
 scraper_list: List[Scraper] = []
 
@@ -44,17 +52,16 @@ def raise_if_rejected(url: str) -> None:
 def get_scraper_by_url(url: str) -> Union[Scraper, None]:
     raise_if_rejected(url)
     parsed_url = urlparse(url)
-    hostname = parsed_url.scheme + '//' + parsed_url.netloc
     for scraper in scraper_list:
-        for base_hostname in scraper.base_urls:
-            if base_hostname == hostname:
+        for base_url in scraper.base_urls:
+            if urlparse(base_url).netloc == parsed_url.netloc:
                 return scraper
     return None
 
 
 def get_scraper_by_name(name: str) -> Union[Scraper, None]:
     for scraper in scraper_list:
-        if scraper.__name__ == name:
+        if getattr(scraper, 'name', '') == name:
             return scraper
     return None
 
@@ -98,6 +105,7 @@ for file_path in glob(_sources_folder + '/**/*.py', recursive=True):
         if any([is_rejected_source(url) for url in new_base_urls]):
             continue  # do not add rejected scraper
 
-        instance: Scraper = scraper(scraper.__name__)
+        scraper_name = module_name.split('.')[-1]
+        instance: Scraper = scraper(scraper_name)
         instance.base_urls = new_base_urls
         scraper_list.append(instance)

@@ -4,11 +4,11 @@ import json
 import logging
 from typing import Any, List, Mapping, Union
 
-from bs4 import BeautifulSoup
 from requests import Response
 from urllib3 import HTTPResponse
 
 from ..config import CONFIG
+from .soup_ex import ExtendedSoup
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,7 @@ class BrowserResponse:
         return self.__json
 
     @property
-    def soup(self) -> BeautifulSoup:
+    def soup(self) -> ExtendedSoup:
         if not hasattr(self, '__soup'):
-            self.__soup = BeautifulSoup(markup=self.text, features=self.parser)
+            self.__soup = ExtendedSoup(markup=self.text, features=self.parser)
         return self.__soup
