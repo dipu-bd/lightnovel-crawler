@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import atexit
 import json
 import logging
 from typing import Any, List, Mapping, Union
@@ -16,30 +15,22 @@ logger = logging.getLogger(__name__)
 
 class BrowserResponse:
 
-    def __init__(self, resp: Response, url: str, kwargs: dict):
-        atexit.register(resp.close)
+    def __init__(self, url: str, resp: Response):
         self.__url = url
-        self.__request = kwargs
         self.__response: Response = resp
-        self.__encoding = self.response.encoding or self.response.apparent_encoding
+        self.__encoding = resp.encoding or resp.apparent_encoding
+        self.parser: str = CONFIG.get('browser/parser')
 
     @property
     def url(self) -> str:
         return self.__url
-
-    def url_args(self) -> Mapping[str, Any]:
-        return self.__url_args
 
     @property
     def response(self) -> Response:
         return self.__response
 
     @property
-    def raw(self) -> HTTPResponse:
-        return self.response.raw
-
-    @property
-    def encoding(self):
+    def encoding(self) -> str:
         return self.__encoding
 
     @property
@@ -48,22 +39,21 @@ class BrowserResponse:
 
     @property
     def text(self) -> str:
-        return self.content.decode(
-            encoding=self.encoding,
-            errors='ignore',
-        )
+        if not hasattr(self, '__text'):
+            self.__text = self.content.decode(encoding=self.encoding, errors='ignore')
+        return self.__text
 
     @property
     def json(self) -> dict:
-        try:
-            return json.loads(self.text)
-        except json.JSONDecodeError:
-            return None
-
-    @property
-    def parser(self) -> str:
-        return CONFIG.get('browser/parser')
+        if not hasattr(self, '__json'):
+            try:
+                self.__json = json.loads(self.text)
+            except json.JSONDecodeError:
+                self.__json = {}
+        return self.__json
 
     @property
     def soup(self) -> BeautifulSoup:
-        return BeautifulSoup(markup=self.text, features=self.parser)
+        if not hasattr(self, '__soup'):
+            self.__soup = BeautifulSoup(markup=self.text, features=self.parser)
+        return self.__soup

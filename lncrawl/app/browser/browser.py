@@ -21,9 +21,8 @@ logger = logging.getLogger(__name__)
 class Browser:
     def __init__(self):
         atexit.register(self.close)
-        self.client: CloudScraper = create_scraper(
-            **CONFIG.get('browser/cloudscraper', {})
-        )
+        config = CONFIG.get('browser/cloudscraper', {})
+        self.client: CloudScraper = create_scraper(**config)
 
     @property
     def stream_chunk_size(self) -> int:
@@ -37,7 +36,7 @@ class Browser:
         with ConnectionControl(url):
             resp = self.client.get(url, **kwargs)
             resp.raise_for_status()
-            return BrowserResponse(resp, url, kwargs)
+            return BrowserResponse(url, resp)
 
     def post(self,
              url: str,
@@ -55,7 +54,7 @@ class Browser:
 
             resp = self.client.post(url, **kwargs)
             resp.raise_for_status()
-            return BrowserResponse(resp, url, kwargs)
+            return BrowserResponse(url, resp)
 
     def download(self, url: str, filepath: str = None, **kwargs) -> str:
         with ConnectionControl(url):

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from .browser import Browser
-from .parallel import ParallelBrowser
 from .response import BrowserResponse
+from .async_browser import AsyncBrowser
 
 __all__ = [
     'Browser',
-    'ParallelBrowser',
+    'AsyncBrowser',
     'BrowserResponse'
 ]

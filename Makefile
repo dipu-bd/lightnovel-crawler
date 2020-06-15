@@ -19,7 +19,7 @@ init ::
 
 setup ::
 	$(PIP) install --user -U pipenv
-	pipenv install --three
+	pipenv install
 
 lock ::
 	pipenv lock
