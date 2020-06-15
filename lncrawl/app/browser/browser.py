@@ -44,14 +44,13 @@ class Browser:
              multipart: bool = False,
              **kwargs) -> BrowserResponse:
         with ConnectionControl(url):
-            body = kwargs.setdefault('body', {})
             headers = kwargs.setdefault('headers', {})
-
             if multipart:
                 headers['Content-Type'] = 'multipart/form-data'
             elif 'Content-Type' not in headers:
                 headers['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
 
+            kwargs['data'] = body or {}
             resp = self.client.post(url, **kwargs)
             resp.raise_for_status()
             return BrowserResponse(url, resp)

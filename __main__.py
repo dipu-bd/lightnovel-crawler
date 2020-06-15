@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
 try:
     from lncrawl import sources
     print(sources.scraper_list)
@@ -52,6 +55,7 @@ try:
     context = AppContext('https://lnmtl.com/novel/dragon-of-the-root')
 
     print(context)
+    print(context.get_scraper().login('dipu@gmail.com', 'password'))
     print(context.get_scraper().fetch_novel_info(context.toc_url))
 finally:
     print()

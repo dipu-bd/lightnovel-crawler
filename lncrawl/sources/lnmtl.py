@@ -12,10 +12,10 @@ LOGOUT_URL = 'https://lnmtl.com/auth/logout'
 class LNMTLScraper(Scraper):
     base_urls = ['https://lnmtl.com/']
 
-    def login(self, email: str, password: str) -> None:
+    def login(self, email: str, password: str) -> bool:
         soup = self.get_sync(LOGIN_URL).soup
         token = soup.select_value('form input[name="_token"]', value_of='value')
-        self.log.debug('Login token: {}', token)
+        self.log.debug('Login token: %s', token)
 
         soup = self.post_sync(LOGIN_URL, body={
             '_token': token,
@@ -26,6 +26,8 @@ class LNMTLScraper(Scraper):
         if not soup.find('a', {'href': LOGOUT_URL}):
             error = soup.select_value('.has-error .help-block', value_of='text')
             raise Exception(error or 'Failed to login')
+
+        return True
 
     def fetch_novel_info(self, url: str) -> Novel:
         soup = self.get_sync(url).soup
