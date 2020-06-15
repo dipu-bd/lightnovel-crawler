@@ -15,7 +15,8 @@ import importlib
 import os
 import re
 import sys
-from typing import List, Union, Mapping
+from glob import glob
+from typing import List, Mapping, Union
 from urllib.parse import urlparse
 
 from ..app.scraper.scraper import Scraper
@@ -62,16 +63,18 @@ def get_scraper_by_name(name: str) -> Union[Scraper, None]:
 _module_regex = re.compile(r'^([^_.][^.]+).py[c]?$', re.IGNORECASE)
 _url_regex = re.compile(r'^^(https?|ftp)://[^\s/$.?#].[^\s]*$', re.I)
 
-for entry in os.listdir(__path__[0]):
-    file_path = os.path.join(__path__[0], entry)
+_sources_folder = __path__[0]
+for file_path in glob(_sources_folder + '/**/*.py', recursive=True):
     if not os.path.isfile(file_path):
         continue
 
-    regex_result = _module_regex.match(entry)
-    if regex_result.groupcount() != 1:  # does not contains a module
+    file_name = os.path.basename(file_path)
+    regex_result = _module_regex.match(file_name)
+    if not regex_result:  # does not contains a module
         continue
 
-    module_name = regex_result.group(1)
+    rel_path = file_path[len(_sources_folder) + 1:-3]
+    module_name = rel_path.replace(os.sep, '.')
     module = importlib.import_module('.' + module_name, package=__package__)
 
     for key in dir(module):
