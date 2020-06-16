@@ -26,10 +26,9 @@ class ConnectionControl:
     def __init__(self, url: str, timeout: float = None):
         self.timeout = timeout
         self.hostname = urlparse(url).netloc
-        self.config = CONFIG.default('concurrency/per_host', self.hostname)
-        self.max_connections = self.config['max_connections']
+        self.max_connections = CONFIG.get('concurrency/per_host/max_connections')
         if timeout is None or timeout < 0:
-            self.timeout = self.config['semaphore_timeout']
+            self.timeout = CONFIG.get('concurrency/per_host/semaphore_timeout')
 
     def __enter__(self):
         start_time = time.time()

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import atexit
-import collections
 import logging
 import os
 from typing import Any, Mapping
@@ -39,16 +38,16 @@ class _Config:
         },
         'concurrency': {
             'max_connections': 1000,
+            'max_workers': 10,
             'per_host': {
-                'default': {
-                    'max_connections': 10,
-                    'semaphore_timeout': 5 * 60,  # in seconds
-                }
-            },
-            'per_crawler': {
-                'default': {
-                    'workers': 10,
-                }
+                'max_connections': 10,
+                'semaphore_timeout': 5 * 60,  # seconds
+            }
+        },
+        'sources': {
+            # override source specific config here
+            'en.lnmtl': {
+                'max_workers': 10
             }
         },
         'logging': {
@@ -122,20 +121,19 @@ class _Config:
             logging.exception('Failed to save config')
 
     def get(self, path: PathType, default: Any = None) -> Any:
-        return DictUtils.resolve(self.__dict__, path, default)
+        return DictUtils.get_value(self.__dict__, path, default)
 
     def put(self, path: PathType, value: Any) -> None:
         DictUtils.put_value(self.__dict__, path, value)
 
-    def default(self, path: PathType, override_key: str, fallback: Any = None) -> Any:
-        config = DictUtils.resolve(self.__dict__, path, default={})
-        default = config.get('default', fallback)
-        if override_key not in config:
-            return default
-        override = config[override_key]
-        if isinstance(default, dict) and isinstance(override, dict):
-            return DictUtils.merge({}, default, override)
-        return override
+    def scraper(self, scraper_name: str, path: PathType, fallback: Any = None) -> Any:
+        '''Returns config specific to a source'''
+        scraper = self.get(['sources', scraper_name, path])
+        if isinstance(scraper, dict):
+            default = self.get(path, {})
+            if isinstance(default, dict):
+                return DictUtils.merge({}, default, scraper)
+        return scraper
 
 
 CONFIG = _Config()

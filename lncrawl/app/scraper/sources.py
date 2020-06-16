@@ -1,14 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Auto imports all crawlers from the current package directory.
-To be recognized, your crawler file should meet following conditions:
-    - file does not starts with an underscore
-    - file ends with .py extension
-    - file contains a class that extends `app.scraper.scraper.Scraper`
-    - the class extending `app.scraper.scraper.Scraper` has a global variable `base_urls`
-    - `base_urls` contains a list of urls supported by the crawler
-
-For example, see any of the files inside this directory.
+Auto imports all crawlers from the lncrawl.sources
 """
 
 import importlib
@@ -71,7 +63,8 @@ for file_path in glob(sources_folder + '/**/*.py', recursive=True):
         continue
 
     rel_path = file_path[len(sources_folder) + 1:-3]
-    module_name = sources.__package__ + '.' + rel_path.replace(os.sep, '.')
+    scraper_name = rel_path.replace(os.sep, '.')
+    module_name = sources.__package__ + '.' + scraper_name
     module = importlib.import_module(module_name, package=__package__)
 
     for key in dir(module):
@@ -95,7 +88,6 @@ for file_path in glob(sources_folder + '/**/*.py', recursive=True):
         if any([is_rejected_source(url) for url in new_base_urls]):
             continue  # do not add rejected scraper
 
-        scraper_name = module_name.split('.')[-1]
         instance: Scraper = scraper(scraper_name)
         instance.base_urls = new_base_urls
         scraper_list.append(instance)

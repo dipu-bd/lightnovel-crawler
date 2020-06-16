@@ -48,9 +48,11 @@ class TestBrowser:
         assert res is not None
         assert res.response.status_code == 203
         assert res.encoding is not None
-        assert res.json is None
+        assert res.json == {}
         assert res.soup is not None
         assert res.soup.find('p').text == 'secret text'
+        assert res.soup.find_value('p') == 'secret text'
+        assert res.soup.select_value('p') == 'secret text'
 
     @responses.activate
     def test_get_empty_content(self):
@@ -62,7 +64,7 @@ class TestBrowser:
         assert res is not None
         assert res.response.status_code == 200
         assert res.encoding is not None
-        assert res.json is None
+        assert res.json == {}
         assert res.soup is not None
         assert res.soup.body.text == ''
 
@@ -72,10 +74,9 @@ class TestBrowser:
         responses.add(responses.GET,
                       test_url,
                       status=500)
-        res = b.get(test_url)
-        assert res is not None
         with pytest.raises(requests.HTTPError):
-            assert res.response is not None
+            res = b.get(test_url)
+            assert res is None
 
     @responses.activate
     def test_get_headers(self):
@@ -107,8 +108,8 @@ class TestBrowser:
         assert res.response.cookies is not None
         assert res.response.cookies.get('alpha') == 'test'
         assert res.response.cookies.get('test') == 'cookie'
-        assert b.cookies.get('alpha') == 'test'
-        assert b.cookies.get('test') == 'cookie'
+        assert b.client.cookies.get('alpha') == 'test'
+        assert b.client.cookies.get('test') == 'cookie'
 
         # Second set of cookie
         headers = [
@@ -124,6 +125,6 @@ class TestBrowser:
         assert res.response.cookies is not None
         assert res.response.cookies.get('test') == 'second'
         assert res.response.cookies.get('another') == 'fall'
-        assert b.cookies.get('alpha') == 'test'
-        assert b.cookies.get('test') == 'second'
-        assert b.cookies.get('another') == 'fall'
+        assert b.client.cookies.get('alpha') == 'test'
+        assert b.client.cookies.get('test') == 'second'
+        assert b.client.cookies.get('another') == 'fall'

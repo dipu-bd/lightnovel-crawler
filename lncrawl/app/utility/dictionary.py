@@ -44,7 +44,7 @@ class DictUtils:
         return False
 
     @staticmethod
-    def resolve(target: dict, path: PathType, default: Any = None) -> dict:
+    def get_value(target: dict, path: PathType, default: Any = None) -> dict:
         keys = DictUtils.get_keys(path)
         if len(keys) > 0:
             for key in keys:

@@ -2,8 +2,8 @@
 
 from typing import List
 
-from ..app.models import *
-from ..app.scraper.scraper import Scraper
+from lncrawl.app.models import *
+from lncrawl.app.scraper.scraper import Scraper
 
 LOGIN_URL = 'https://lnmtl.com/auth/login'
 LOGOUT_URL = 'https://lnmtl.com/auth/logout'

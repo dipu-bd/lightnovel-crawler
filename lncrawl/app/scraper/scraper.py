@@ -16,8 +16,7 @@ class Scraper(AsyncBrowser, metaclass=ABCMeta):
     def __init__(self, name: str):
         self.name = name
         self.log = logging.getLogger(name)
-        self._config = CONFIG.default('concurrency/per_crawler', name)
-        super().__init__(self._config.get('workers', 20))
+        super().__init__(CONFIG.scraper(name, 'concurrency/max_workers'))
 
     def initialize(self) -> None:
         pass

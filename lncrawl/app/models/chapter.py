@@ -10,12 +10,7 @@ from .volume import Volume
 class Chapter:
     '''Details of a chapter of a novel'''
 
-    def __init__(
-            self,
-            volume: Volume,
-            serial: int,
-            url: str = '',
-            name: str = None) -> None:
+    def __init__(self, volume: Volume, serial: int, url: str = '', name: str = None) -> None:
         super().__init__()
         self.volume: Volume = volume
         self.serial: int = serial

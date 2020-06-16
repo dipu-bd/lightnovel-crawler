@@ -8,10 +8,11 @@ class TestModels:
     def test_novel_instance(self):
         url = 'some link'
         novel1 = Novel(url)
-        novel2 = Novel(url, name='any name')
+        novel2 = Novel(url)
+        novel2.name = 'any'
         assert novel1 == novel2
         assert novel1.url == url
-        assert novel1 != Novel('some other link')
+        assert novel1 != Novel('other link')
 
     def test_author_instance(self):
         author1 = Author('John Snow')
@@ -23,10 +24,10 @@ class TestModels:
         assert author1.type == AuthorType.UNKNOWN
 
     def test_novel_properties(self):
-        novel = Novel('some url',
-                      details='this is detail',
-                      name='Novel Name',
-                      cover_url='some cover link')
+        novel = Novel('some url')
+        novel.details = 'this is detail'
+        novel.name = 'Novel Name'
+        novel.cover_url = 'some cover link'
         novel.authors.append(Author('name'))
         assert novel == Novel('some url')
         assert novel.authors == [Author('name')]
@@ -79,10 +80,7 @@ class TestModels:
     def test_chapter_properties(self):
         novel = Novel('any url')
         volume = Volume(novel, serial=2)
-        chapter = Chapter(volume,
-                          serial=235,
-                          url='url',
-                          name='chapter')
+        chapter = Chapter(volume, serial=235, url='url', name='chapter')
         chapter.authors.append(Author('name'))
         chapter.body = '<html>'
         assert volume == chapter.volume
