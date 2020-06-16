@@ -10,8 +10,8 @@ PyInquirer==1.0.3
 colorama==0.4.3
 progress==1.5
 Js2Py==0.70
-EbookLib==0.17.1 
-pillow==7.1.2
+EbookLib==0.17.1
+pillow==6.2.2
 cloudscraper>=1.2.40
 lxml==4.5.1
 

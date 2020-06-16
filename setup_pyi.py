@@ -60,7 +60,7 @@ def gather_data_files():
         dst = '/'.join(dst.split(os.sep))
         command += '--add-data "%s%s%s" ' % (src, os.pathsep, dst)
     # end for
-    command += '--add-data "%s/lncrawl/VERSION%lncrawl" ' % (unix_root, os.pathsep)
+    command += '--add-data "%s/lncrawl/VERSION%slncrawl" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
     command += '--add-data "%s/cairosvg/VERSION%s." ' % (
@@ -72,6 +72,8 @@ def gather_data_files():
     command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
         unix_site_packages, os.pathsep)
     command += '--add-data "%s/cloudscraper%scloudscraper" ' % (
+        unix_site_packages, os.pathsep)
+    command += '--add-data "%s/wcwidth/version.json%swcwidth" ' % (
         unix_site_packages, os.pathsep)
 
     return command
