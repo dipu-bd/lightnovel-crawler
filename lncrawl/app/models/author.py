@@ -33,4 +33,4 @@ class Author:
 
     @name.setter
     def name(self, value):
-        self._name = value.strip()
+        self._name = value.strip() if value else 'N/A'

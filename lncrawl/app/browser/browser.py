@@ -15,6 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 class Browser:
+
+    # TODO: Add a cache manager to cache results for a while
+
     def __init__(self):
         atexit.register(self.close)
         config = CONFIG.get('browser/cloudscraper', {})

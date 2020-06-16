@@ -5,14 +5,6 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-try:
-    from lncrawl.app.scraper import sources
-    print(sources.scraper_list)
-    print(sources.scraper_list[0].base_urls)
-    print(sources.get_scraper_by_url('https://lnmtl.com/novel/dragon-of-the-root'))
-    print(sources.get_scraper_by_name('lnmtl'))
-finally:
-    print()
 
 try:
     from lncrawl.app.config import CONFIG
@@ -25,8 +17,14 @@ finally:
 try:
     from lncrawl.app.models import *
     print(Language.ENGLISH)
-    print(Author('Sudipto Chandra', AuthorType.AUTHOR))
-    print(Chapter(Volume(Novel('http://www.google.com'), 2), 10))
+    author = Author('Sudipto Chandra', AuthorType.AUTHOR)
+    print(author)
+    novel = Novel('http://www.google.com')
+    print(novel)
+    volume = Volume(novel, 2)
+    print(volume)
+    chapter = Chapter(volume, 10, 'body_url')
+    print(chapter)
 finally:
     print()
 
@@ -52,11 +50,23 @@ finally:
 
 
 try:
+    from lncrawl.app.scraper import sources
+    print(sources.scraper_list)
+    print(sources.scraper_list[0].base_urls)
+    print(sources.get_scraper_by_url('https://lnmtl.com/novel/dragon-of-the-root'))
+    print(sources.get_scraper_by_name('lnmtl'))
+finally:
+    print()
+
+try:
     from lncrawl.app.scraper import Context
     context = Context('https://lnmtl.com/novel/dragon-of-the-root')
-
+    context.login_id = 'dipu@gmail.com'
+    context.login_password = 'password'
     print(context)
-    # print(context.scraper.login('dipu@gmail.com', 'password'))
-    print(context.scraper.fetch_novel_info(context.toc_url))
+
+    # context.login()
+    context.fetch_info()
+    print(context.novel)
 finally:
     print()

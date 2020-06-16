@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 from ..browser import AsyncBrowser
 from ..config import CONFIG
 from ..models import Chapter, Novel
+from .context import Context
 
 
 class Scraper(AsyncBrowser, metaclass=ABCMeta):
@@ -16,21 +17,21 @@ class Scraper(AsyncBrowser, metaclass=ABCMeta):
     def __init__(self, name: str):
         self.name = name
         self.log = logging.getLogger(name)
-        super().__init__(CONFIG.scraper(name, 'concurrency/max_workers'))
+        super().__init__(CONFIG.scraper(name, 'concurrency/per_scraper/workers'))
 
     def initialize(self) -> None:
         pass
 
-    def login(self, email: str, password: str) -> None:
+    def login(self, ctx: Context) -> None:
         pass
 
-    def search_novel(self, query: str) -> List[Novel]:
+    def search_novels(self, ctx: Context) -> None:
         return []
 
     @abstractmethod
-    def fetch_novel_info(self, url: str) -> Novel:
+    def fetch_info(self, ctx: Context) -> None:
         raise NotImplementedError()
 
-    @ abstractmethod
-    def fetch_chapter_content(self, chapter: Chapter) -> Chapter:
+    @abstractmethod
+    def fetch_chapter(self, ctx: Context, chapter: Chapter) -> None:
         raise NotImplementedError()

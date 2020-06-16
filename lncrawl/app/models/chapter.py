@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from typing import List
+from urllib.parse import urljoin
 
-from .author import Author
 from .novel import Novel
 from .volume import Volume
 
@@ -10,17 +9,13 @@ from .volume import Volume
 class Chapter:
     '''Details of a chapter of a novel'''
 
-    def __init__(self, volume: Volume, serial: int, url: str = '', name: str = None) -> None:
+    def __init__(self, volume: Volume, serial: int, body_url: str) -> None:
         super().__init__()
         self.volume: Volume = volume
         self.serial: int = serial
-        self.url: str = url
-        self.name: str = name
+        self.name: str = f'Chapter {serial:03}'
+        self.body_url: str = body_url
         self.body: str = None
-        self.authors: List[Author] = []
-
-    def __str__(self) -> str:
-        return f"<Chapter serial:{self.serial} volume:{self.volume}>"
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Chapter):
@@ -28,6 +23,29 @@ class Chapter:
         else:
             return super().__eq__(other)
 
+    def __str__(self) -> str:
+        return f"<Chapter volume_name:'{self.volume.name}' serial:{self.serial} name:'{self.name}' url:'{self.body_url}' has_body:{self.has_body}>"
+
     @property
     def novel(self) -> Novel:
         return self.volume.novel
+
+    @property
+    def has_body(self) -> bool:
+        return not self.body
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        self._name = value.strip() if value else 'N/A'
+
+    @property
+    def body_url(self):
+        return self._body_url
+
+    @body_url.setter
+    def body_url(self, value):
+        self._body_url = urljoin(self.novel.url, value) if value else ''

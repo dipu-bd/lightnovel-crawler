@@ -5,7 +5,7 @@ from argparse import ArgumentError, ArgumentParser
 
 import pytest
 
-from lncrawl.app.arguments import _build
+from lncrawl.app.utility.arg_builder import build_args
 
 
 class TestArguments:
@@ -16,7 +16,7 @@ class TestArguments:
             dict(args=('-v', '--version'), action='version', version='1.0'),
             dict(args=('--config')),
         ]
-        _build(args, parser)
+        build_args(parser, args)
         cfg = parser.parse_args(['--config', 'some file'])
         assert cfg.config == 'some file'
 
@@ -27,7 +27,7 @@ class TestArguments:
             dict(args=('--config')),
         ]
         with pytest.raises(ValueError):
-            _build(args, parser)
+            build_args(parser, args)
 
     def test_argument_group(self):
         parser = ArgumentParser()
@@ -39,7 +39,7 @@ class TestArguments:
                 dict(args=('--more')),
             ]
         ]
-        _build(args, parser)
+        build_args(parser, args)
         arg = parser.parse_args(['--group', 'one'])
         assert arg.group == 'one'
         assert arg.arg is None
@@ -60,7 +60,7 @@ class TestArguments:
                 dict(args=('--more')),
             )
         ]
-        _build(args, parser)
+        build_args(parser, args)
         arg = parser.parse_args(['--mututally', 'one'])
         assert arg.mututally == 'one'
         assert arg.exclusive is None
@@ -82,7 +82,7 @@ class TestArguments:
             dict(args=('--aaarg')),
         ]
         with pytest.raises(ArgumentError):
-            _build(args, parser)
+            build_args(parser, args)
 
     def test_multi_level_of_hierarchy(self):
         parser = ArgumentParser()
@@ -111,7 +111,7 @@ class TestArguments:
                 dict(args='--group_2'),
             ]
         ]
-        _build(args, parser)
+        build_args(parser, args)
 
     def test_args_with_list_and_single_values(self):
         parser = ArgumentParser()
@@ -120,7 +120,7 @@ class TestArguments:
             dict(args=('--bracket')),
             dict(args=('-m', '--multi')),
         ]
-        _build(args, parser)
+        build_args(parser, args)
 
     def test_args_with_non_str_values(self):
         parser = ArgumentParser()
@@ -128,4 +128,4 @@ class TestArguments:
             dict(args=3),
         ]
         with pytest.raises(TypeError):
-            _build(args, parser)
+            build_args(parser, args)

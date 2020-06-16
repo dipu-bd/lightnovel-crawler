@@ -1,23 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from typing import List
 from urllib.parse import urljoin
-
-from .author import Author
-from .language import Language
 
 
 class Novel:
     '''Details of a novel'''
 
     def __init__(self, url: str) -> None:
-        super().__init__()
         self.url: str = url
         self.name: str = ''
         self.details: str = ''
         self.cover_url: str = ''
-        self.authors: List[Author] = []
-        self.language: Language = Language.UNKNOWN
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Novel):
@@ -26,13 +19,7 @@ class Novel:
             return super().__eq__(other)
 
     def __str__(self) -> str:
-        attrs = ' '.join([
-            f"url='{self.url}'",
-            f"name='{self.name}'",
-            f"cover_url='{self.cover_url}'",
-            f"authors=[{', '.join([str(x) for x in self.authors])}",
-        ])
-        return f"<Novel {attrs}]'>\n{self.details}"
+        return f"<Novel url='{self.url}' name='{self.name}' cover_url='{self.cover_url}'>"
 
     @property
     def name(self):
@@ -40,7 +27,7 @@ class Novel:
 
     @name.setter
     def name(self, value):
-        self._name = value.strip()
+        self._name = value.strip() if value else 'N/A'
 
     @property
     def cover_url(self):
@@ -48,4 +35,4 @@ class Novel:
 
     @cover_url.setter
     def cover_url(self, value):
-        self._cover_url = urljoin(self.url, value)
+        self._cover_url = urljoin(self.url, value) if value else ''

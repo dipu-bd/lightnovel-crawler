@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-import sys
 import os
+import sys
 from argparse import ArgumentParser, Namespace
 
 from ..version import VERSION
+from .utility.arg_builder import arg_builder
 
 _parsed_args = None
 
@@ -26,29 +27,6 @@ _arguments = [
 ]
 
 
-def _build(arguments: list = None, parser: ArgumentParser = None):
-    if arguments is None:
-        arguments: list = globals().get('_arguments')
-    if parser is None:
-        parser: ArgumentParser = globals().get('_parser')
-    for kwarg in arguments:
-        if isinstance(kwarg, dict):
-            args = kwarg.pop('args', tuple())
-            if isinstance(args, tuple):
-                args = list(args)
-            elif not isinstance(args, list):
-                args = [args]
-            parser.add_argument(*args, **kwarg)
-        elif isinstance(kwarg, list):
-            group = parser.add_argument_group()
-            _build(kwarg, group)
-        elif isinstance(kwarg, tuple):
-            mutex = parser.add_mutually_exclusive_group()
-            _build(kwarg, mutex)
-        else:
-            raise ValueError(f"{type(kwarg)}[{kwarg}]")
-
-
 def get_args() -> Namespace:
     args = sys.argv[1:]
     if os.getenv('MODE') == 'TEST':
@@ -56,7 +34,7 @@ def get_args() -> Namespace:
 
     global _parsed_args
     if _parsed_args is None:
-        _build()
+        global _parser, _arguments
+        build_args(_parser, _arguments)
         _parsed_args = _parser.parse_args(args)
-
     return _parsed_args
