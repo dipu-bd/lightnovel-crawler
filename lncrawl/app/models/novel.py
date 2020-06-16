@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from urllib.parse import urljoin
+from ..utility.url_utils import UrlUtils
 
 
 class Novel:
     '''Details of a novel'''
 
     def __init__(self, url: str) -> None:
-        self.url: str = url
+        self.url: str = url.strip('/')
         self.name: str = ''
         self.details: str = ''
         self.cover_url: str = ''
@@ -35,4 +35,4 @@ class Novel:
 
     @cover_url.setter
     def cover_url(self, value):
-        self._cover_url = urljoin(self.url, value) if value else ''
+        self._cover_url = UrlUtils.join(self.url, value) if value else ''

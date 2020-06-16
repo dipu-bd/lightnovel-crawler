@@ -24,17 +24,14 @@ class TestModels:
         assert author1.type == AuthorType.UNKNOWN
 
     def test_novel_properties(self):
-        novel = Novel('some url')
-        novel.details = 'this is detail'
-        novel.name = 'Novel Name'
-        novel.cover_url = 'some cover link'
-        novel.authors.append(Author('name'))
-        assert novel == Novel('some url')
-        assert novel.authors == [Author('name')]
-        assert novel.details == 'this is detail'
+        novel = Novel('http://any.url/path')
+        novel.details = 'this is details'
+        novel.name = ' Novel Name '
+        novel.cover_url = '/cover/url'
+        assert novel == Novel('http://any.url/path/')
+        assert novel.details == 'this is details'
         assert novel.name == 'Novel Name'
-        assert novel.cover_url == 'some cover link'
-        assert novel.language == Language.UNKNOWN
+        assert novel.cover_url == 'http://any.url/cover/url'
 
     def test_language_enum(self):
         assert Language.UNKNOWN.name == 'UNKNOWN'
@@ -47,50 +44,46 @@ class TestModels:
         assert str(Language.CHINESE) == 'zh'
 
     def test_volume_instance(self):
-        novel = Novel('any url')
+        novel = Novel('http://any.url/path')
         volume = Volume(novel, serial=2)
         assert volume == volume
         assert volume == Volume(novel, 2)
-        assert volume == Volume(Novel('any url'), 2)
+        assert volume == Volume(Novel('http://any.url/path'), 2)
         assert volume != Volume(novel, 3)
-        assert volume != Volume(Novel('other url'), 2)
+        assert volume != Volume(Novel('http://other.url/path'), 2)
 
     def test_volume_properties(self):
-        novel = Novel('any url')
-        volume = Volume(novel, serial=2,
-                        name='vol',
-                        details='details')
+        novel = Novel('http://any.url')
+        volume = Volume(novel, serial=2)
         assert volume.serial == 2
         assert volume.novel == novel
-        assert volume.novel == Novel('any url')
-        assert volume.details == 'details'
-        assert volume.name == 'vol'
+        assert volume.novel == Novel('http://any.url')
+        assert volume.details == ''
+        assert volume.name == 'Volume 02'
 
     def test_chapter_instance(self):
-        novel = Novel('any url')
+        novel = Novel('http://any.url/path')
         volume = Volume(novel, serial=2)
         chapter = Chapter(volume, serial=205)
         assert chapter == chapter
         assert chapter == Chapter(volume, 205)
         assert chapter != Chapter(volume, 25)
         assert chapter != Chapter(Volume(novel, 3), 205)
-        assert chapter != Chapter(Volume(Novel('an url'), 2), 205)
-        assert chapter == Chapter(Volume(Novel('any url'), 2), 205)
+        assert chapter != Chapter(Volume(Novel('http://any.url'), 2), 205)
+        assert chapter == Chapter(Volume(Novel('http://any.url/path'), 2), 205)
 
     def test_chapter_properties(self):
-        novel = Novel('any url')
+        novel = Novel('http://any.url/path')
         volume = Volume(novel, serial=2)
-        chapter = Chapter(volume, serial=235, url='url', name='chapter')
-        chapter.authors.append(Author('name'))
+        chapter = Chapter(volume, serial=235, body_url='body/url')
         chapter.body = '<html>'
         assert volume == chapter.volume
         assert novel == chapter.novel
         assert chapter.serial == 235
         assert chapter.volume.serial == 2
-        assert chapter.novel.url == 'any url'
-        assert chapter.name == 'chapter'
-        assert chapter.url == 'url'
-        assert chapter.authors == [Author('name')]
+        assert chapter.novel.url == 'http://any.url/path'
+        assert chapter.name == 'Chapter 235'
+        assert chapter.body_url == 'http://any.url/path/body/url'
         assert chapter.body == '<html>'
 
     def test_text_direction(self):

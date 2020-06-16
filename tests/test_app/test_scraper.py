@@ -11,9 +11,10 @@ from lncrawl.app.scraper.scraper import Scraper
 class TestScrapers:
 
     def test_context(self):
-        context = Context('http://novel.toc.url')
-        assert context != Context('http://novel.toc.url')
-        assert context.novel is None
+        url = 'http://novel.toc.url'
+        context = Context(url)
+        assert context != Context('http://other.url')
+        assert context.novel == Novel(url)
         assert context.chapters == []
         assert context.volumes == []
         assert context.text_direction == TextDirection.LTR
@@ -27,10 +28,10 @@ class TestScrapers:
             def base_urls(self):
                 return ['http://some.url']
 
-            def fetch_novel_info(self, url: str) -> Novel:
+            def fetch_info(self, ctx):
                 raise NotImplementedError()
 
-            def fetch_chapter_content(self, chapter: Chapter) -> Chapter:
+            def fetch_chapter(self, ctx, chapter):
                 raise NotImplementedError()
 
         dummy = Dummy('dummy')

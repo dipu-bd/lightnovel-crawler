@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from urllib.parse import urljoin
-
+from ..utility.url_utils import UrlUtils
 from .novel import Novel
 from .volume import Volume
 
@@ -9,8 +8,7 @@ from .volume import Volume
 class Chapter:
     '''Details of a chapter of a novel'''
 
-    def __init__(self, volume: Volume, serial: int, body_url: str) -> None:
-        super().__init__()
+    def __init__(self, volume: Volume, serial: int, body_url: str = '') -> None:
         self.volume: Volume = volume
         self.serial: int = serial
         self.name: str = f'Chapter {serial:03}'
@@ -48,4 +46,4 @@ class Chapter:
 
     @body_url.setter
     def body_url(self, value):
-        self._body_url = urljoin(self.novel.url, value) if value else ''
+        self._body_url = UrlUtils.join(self.novel.url, value) if value else ''

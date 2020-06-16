@@ -14,7 +14,7 @@ class Volume:
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Volume):
-            return self.serial == other.serial
+            return self.serial == other.serial and self.novel == other.novel
         else:
             return super().__eq__(other)
 
