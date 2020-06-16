@@ -6,9 +6,10 @@ import os
 from typing import Any, Mapping
 
 import yaml
+from atomicwrites import atomic_write
 
 from .utility.colors import Color
-from .utility.dictionary import DictUtils, PathType
+from .utility.dict_utils import DictUtils, PathType
 
 
 class _Config:
@@ -116,7 +117,7 @@ class _Config:
             self.__opened_file__ = self.__config_files__[1]
         try:
             os.makedirs(os.path.dirname(self.__opened_file__), exist_ok=True)
-            with open(self.__opened_file__, 'w', encoding='utf-8') as fp:
+            with atomic_write(self.__opened_file__, overwrite=True) as fp:
                 yaml.safe_dump(self.__dict__, fp)
                 logging.info(f'Saved config to {self.__opened_file__}')
         except Exception:

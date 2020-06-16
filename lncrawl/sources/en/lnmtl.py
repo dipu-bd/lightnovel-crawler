@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import re
 from typing import List
-
+import js2py
 from lncrawl.app.models import *
 from lncrawl.app.scraper import Scraper, Context
 
@@ -40,14 +41,27 @@ class LNMTLScraper(Scraper):
         ctx.novel.cover_url = soup.select_value('.novel .media img', value_of='src')
         ctx.novel.details = str(soup.select_one('.novel .media .description')).strip()
 
+        ctx.novel.name = re.sub('[^\u0000-\u00FF]', '', ctx.novel.name)
+
         # Find authors
         for dl in soup.select('.panel-default .panel-body dl'):
             key = dl.find('dt').text
             if key == 'Authors':
                 value = dl.find('dd').text
-                ctx.authors.append(Author(value, author_type=AuthorType.AUTHOR))
+                author = Author(value, AuthorType.AUTHOR)
+                ctx.authors.add(author)
 
         # Parse volumes
+        script = soup.find(name='main').find_next_sibling(name='script').string
+        data = js2py.eval_js("window = {}; lnmtl = {};" + script + "; lnmtl;").to_dict()
+
+        future_chapters = []
+        for i, item in enumerate(data['volumes']):
+            serial = item.get('number', i)
+            vol = ctx.add_volume(serial)
+            vol.name = item.get('title', '') or ''
+            vol.extra.update(item)
+
         # Parse chapters
 
     def fetch_chapter(self, ctx: Context, chapter: Chapter) -> None:

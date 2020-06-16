@@ -18,6 +18,9 @@ class Author:
         self.type: AuthorType = author_type
         self.name: str = '-' if name is None else name
 
+    def __hash__(self):
+        return hash((self.type, self.name))
+
     def __eq__(self, other):
         if isinstance(other, Author):
             return self.name == other.name and self.type == other.type

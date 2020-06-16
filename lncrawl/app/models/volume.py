@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from typing import Any
+
 from .novel import Novel
 
 
@@ -9,8 +11,12 @@ class Volume:
     def __init__(self, novel: Novel, serial: int) -> None:
         self.novel = novel
         self.serial: int = serial
-        self.name: str = f'Volume {serial:02}'
+        self.name: str = "Volume %02s" % serial
         self.details: str = ''
+        self.extra = dict()
+
+    def __hash__(self):
+        return hash((self.serial, self.novel))
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Volume):
@@ -28,3 +34,9 @@ class Volume:
     @name.setter
     def name(self, value):
         self._name = value.strip() if value else 'N/A'
+
+    def get_extra(self, key: str):
+        return self.extra[key]
+
+    def put_extra(self, key: str, val: Any):
+        self.extra[key] = val

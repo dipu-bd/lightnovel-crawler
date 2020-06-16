@@ -8,15 +8,15 @@ from lncrawl.app.scraper.context import Context
 from lncrawl.app.scraper.scraper import Scraper
 
 
-class TestScrapers:
+class TestScraper:
 
-    def test_context(self):
+    def test_context_instance(self):
         url = 'http://novel.toc.url'
         context = Context(url)
         assert context != Context('http://other.url')
         assert context.novel == Novel(url)
-        assert context.chapters == []
-        assert context.volumes == []
+        assert isinstance(context.volumes, set)
+        assert isinstance(context.chapters, set)
         assert context.text_direction == TextDirection.LTR
 
     def test_scraper_config(self):

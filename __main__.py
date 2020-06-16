@@ -68,5 +68,7 @@ try:
     # context.login()
     context.fetch_info()
     print(context.novel)
+    print([str(x) for x in context.volumes])
+    print([str(x) for x in context.chapters])
 finally:
     print()

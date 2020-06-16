@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from typing import Any
+
 from ..utility.url_utils import UrlUtils
 
 
@@ -11,6 +13,9 @@ class Novel:
         self.name: str = ''
         self.details: str = ''
         self.cover_url: str = ''
+
+    def __hash__(self):
+        return hash(self.url)
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Novel):
@@ -36,3 +41,9 @@ class Novel:
     @cover_url.setter
     def cover_url(self, value):
         self._cover_url = UrlUtils.join(self.url, value) if value else ''
+
+    def get_extra(self, key: str):
+        return self.extra[key]
+
+    def put_extra(self, key: str, val: Any):
+        self.extra[key] = val

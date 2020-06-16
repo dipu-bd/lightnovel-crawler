@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from typing import Any
+
 from ..utility.url_utils import UrlUtils
 from .novel import Novel
 from .volume import Volume
@@ -11,9 +13,13 @@ class Chapter:
     def __init__(self, volume: Volume, serial: int, body_url: str = '') -> None:
         self.volume: Volume = volume
         self.serial: int = serial
-        self.name: str = f'Chapter {serial:03}'
+        self.name: str = "Chapter  %03s" % serial
         self.body_url: str = body_url
         self.body: str = None
+        self.extra = dict()
+
+    def __hash__(self):
+        return hash((self.serial, self.volume))
 
     def __eq__(self, other) -> bool:
         if isinstance(other, Chapter):
@@ -47,3 +53,9 @@ class Chapter:
     @body_url.setter
     def body_url(self, value):
         self._body_url = UrlUtils.join(self.novel.url, value) if value else ''
+
+    def get_extra(self, key: str):
+        return self.extra[key]
+
+    def put_extra(self, key: str, val: Any):
+        self.extra[key] = val

@@ -22,6 +22,8 @@ class TestModels:
         assert author1 != Author('John Snow', author_type=AuthorType.ARTIST)
         assert author1.name == 'John Snow'
         assert author1.type == AuthorType.UNKNOWN
+        assert isinstance(hash(author1), int)
+        assert hash(author1) == hash(author2)
 
     def test_novel_properties(self):
         novel = Novel('http://any.url/path')
@@ -32,6 +34,7 @@ class TestModels:
         assert novel.details == 'this is details'
         assert novel.name == 'Novel Name'
         assert novel.cover_url == 'http://any.url/cover/url'
+        assert isinstance(hash(novel), int)
 
     def test_language_enum(self):
         assert Language.UNKNOWN.name == 'UNKNOWN'
@@ -46,11 +49,16 @@ class TestModels:
     def test_volume_instance(self):
         novel = Novel('http://any.url/path')
         volume = Volume(novel, serial=2)
+        volume2 = Volume(Novel('http://any.url/path'), 2)
+        volume3 = Volume(Novel('http://other.url/path'), 2)
         assert volume == volume
         assert volume == Volume(novel, 2)
-        assert volume == Volume(Novel('http://any.url/path'), 2)
+        assert volume == volume2
         assert volume != Volume(novel, 3)
-        assert volume != Volume(Novel('http://other.url/path'), 2)
+        assert volume != volume3
+        assert isinstance(hash(volume), int)
+        assert hash(volume) == hash(volume2)
+        assert hash(volume) != hash(volume3)
 
     def test_volume_properties(self):
         novel = Novel('http://any.url')
@@ -65,12 +73,19 @@ class TestModels:
         novel = Novel('http://any.url/path')
         volume = Volume(novel, serial=2)
         chapter = Chapter(volume, serial=205)
+        chapter2 = Chapter(volume, 205)
+        chapter3 = Chapter(Volume(novel, 3), 205)
+        chapter4 = Chapter(Volume(Novel('http://any.url/path'), 2), 205)
         assert chapter == chapter
-        assert chapter == Chapter(volume, 205)
+        assert chapter == chapter2
         assert chapter != Chapter(volume, 25)
-        assert chapter != Chapter(Volume(novel, 3), 205)
+        assert chapter != chapter3
         assert chapter != Chapter(Volume(Novel('http://any.url'), 2), 205)
-        assert chapter == Chapter(Volume(Novel('http://any.url/path'), 2), 205)
+        assert chapter == chapter4
+        assert isinstance(hash(chapter), int)
+        assert hash(chapter) == hash(chapter2)
+        assert hash(chapter) != hash(chapter3)
+        assert hash(chapter) == hash(chapter4)
 
     def test_chapter_properties(self):
         novel = Novel('http://any.url/path')
