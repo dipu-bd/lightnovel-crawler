@@ -21,10 +21,10 @@ setup ::
 	$(PIP) install --user -U pipenv
 	pipenv install --dev
 
-lock ::
+requirements ::
 	pipenv lock
-	pipenv lock -r > requirements.txt
-	pipenv lock -r --dev-only > dev-requirements.txt
+	@pipenv lock -r > requirements.txt
+	@pipenv lock -r --dev-only > dev-requirements.txt
 
 lint ::
 	@echo "Stop the build if there are Python syntax errors or undefined names"

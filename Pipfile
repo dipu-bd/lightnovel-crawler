@@ -12,6 +12,8 @@ python-slugify = "*"
 ebooklib = "*"
 pyyaml = "*"
 lxml = "*"
+js2py = "*"
+atomicwrites = "*"
 
 [dev-packages]
 "discord.py" = "*"
