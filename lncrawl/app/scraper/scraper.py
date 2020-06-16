@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from abc import ABCMeta, abstractmethod
+from abc import ABC, abstractmethod
 from typing import List
 from urllib.parse import urlparse
 
@@ -11,7 +11,7 @@ from ..models import Chapter, Novel
 from .context import Context
 
 
-class Scraper(AsyncBrowser, metaclass=ABCMeta):
+class Scraper(AsyncBrowser, ABC):
     base_urls: List[str] = []
 
     def __init__(self, name: str):

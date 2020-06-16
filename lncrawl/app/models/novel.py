@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ..utility.url_utils import UrlUtils
+from ..utility import UrlUtils
 
 
 class Novel:

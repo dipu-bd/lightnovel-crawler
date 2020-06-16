@@ -102,7 +102,7 @@ class Context:
 
     def get_chapter(self, serial: int, volume: Volume = None) -> Union[Chapter, None]:
         if volume is not None:
-            probe = Chapter(self.volume, serial)
+            probe = Chapter(volume, serial)
             temp = self.chapters.intersection(set([probe]))
             return temp.pop() if len(temp) == 1 else None
         for chapter in self.chapters:
@@ -110,13 +110,13 @@ class Context:
                 return chapter
         return None
 
-    def add_chapter(self, serial: int = None, volume: Volume = None) -> Volume:
+    def add_chapter(self, serial: int = None, volume: Volume = None) -> Chapter:
         if serial is None:
             serial = self.max_chapter_serial + 1
         chapter = self.get_chapter(serial, volume)
         if chapter is None:
             if volume is None:
-                volume = self.add_volume((serial - 1) / 100)
+                volume = self.add_volume(1 + (serial - 1) / 100)
             chapter = Chapter(volume, serial)
             self.chapters.add(chapter)
         return chapter

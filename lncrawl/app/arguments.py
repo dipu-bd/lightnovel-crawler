@@ -4,7 +4,7 @@ import sys
 from argparse import ArgumentParser, Namespace
 
 from ..version import VERSION
-from .utility.arg_builder import arg_builder
+from .utility.arg_builder import build_args
 
 _parsed_args = None
 

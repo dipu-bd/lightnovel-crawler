@@ -2,7 +2,7 @@
 
 from typing import Any
 
-from ..utility.url_utils import UrlUtils
+from ..utility import UrlUtils
 from .novel import Novel
 from .volume import Volume
 
@@ -12,10 +12,10 @@ class Chapter:
 
     def __init__(self, volume: Volume, serial: int, body_url: str = '') -> None:
         self.volume: Volume = volume
-        self.serial: int = serial
-        self.name: str = "Chapter  %03s" % serial
+        self.serial: int = int(serial)
+        self.name: str = ''
         self.body_url: str = body_url
-        self.body: str = None
+        self.body: str = ''
         self.extra = dict()
 
     def __hash__(self):
@@ -28,7 +28,7 @@ class Chapter:
             return super().__eq__(other)
 
     def __str__(self) -> str:
-        return f"<Chapter volume_name:'{self.volume.name}' serial:{self.serial} name:'{self.name}' url:'{self.body_url}' has_body:{self.has_body}>"
+        return f"<Chapter serial:{self.serial} name:'{self.name}' url:'{self.body_url}' volume:'{self.volume.name}' body_len:{len(self.body)}>"
 
     @property
     def novel(self) -> Novel:
@@ -44,7 +44,10 @@ class Chapter:
 
     @name.setter
     def name(self, value):
-        self._name = value.strip() if value else 'N/A'
+        if value:
+            self._name = value.strip()
+        else:
+            self._name = "Chapter %03d" % self.serial
 
     @property
     def body_url(self):

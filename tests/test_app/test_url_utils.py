@@ -2,7 +2,7 @@
 
 import pytest
 
-from lncrawl.app.utility.url_utils import UrlUtils
+from lncrawl.app.utility import UrlUtils
 
 
 class TestUrlUtils:

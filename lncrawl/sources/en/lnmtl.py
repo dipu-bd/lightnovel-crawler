@@ -2,9 +2,12 @@
 
 import re
 from typing import List
+
 import js2py
+
 from lncrawl.app.models import *
-from lncrawl.app.scraper import Scraper, Context
+from lncrawl.app.scraper import Context, Scraper
+from lncrawl.app.utility import TextUtils, UrlUtils
 
 LOGIN_URL = 'https://lnmtl.com/auth/login'
 LOGOUT_URL = 'https://lnmtl.com/auth/logout'
@@ -40,8 +43,7 @@ class LNMTLScraper(Scraper):
         ctx.novel.name = soup.select_value('.novel .media .novel-name', value_of='text')
         ctx.novel.cover_url = soup.select_value('.novel .media img', value_of='src')
         ctx.novel.details = str(soup.select_one('.novel .media .description')).strip()
-
-        ctx.novel.name = re.sub('[^\u0000-\u00FF]', '', ctx.novel.name)
+        ctx.novel.name = TextUtils.latin_only(ctx.novel.name)
 
         # Find authors
         for dl in soup.select('.panel-default .panel-body dl'):
@@ -55,14 +57,39 @@ class LNMTLScraper(Scraper):
         script = soup.find(name='main').find_next_sibling(name='script').string
         data = js2py.eval_js("window = {}; lnmtl = {};" + script + "; lnmtl;").to_dict()
 
-        future_chapters = []
+        ctx._futures = []
         for i, item in enumerate(data['volumes']):
-            serial = item.get('number', i)
+            serial = int(item.get('number', i + 1))
             vol = ctx.add_volume(serial)
-            vol.name = item.get('title', '') or ''
-            vol.extra.update(item)
+            vol.extra = item
+            vol.name = TextUtils.latin_only(item.get('title', ''))
 
-        # Parse chapters
+            f = self.submit_task(self.fetch_chapter_list, ctx, data['route'], vol)
+            ctx._futures.append(f)
+
+        # Wait for all chapters
+        while ctx._futures:
+            ctx._futures.pop(0).result()
+        delattr(ctx, '_futures')
+
+    def fetch_chapter_list(self, ctx: Context, url: str, volume: Volume, page=1):
+        url = UrlUtils.format(url, query={
+            'page': page,
+            'volumeId': volume.get_extra('id')
+        })
+        result = self.get_sync(url).json
+
+        for i, item in enumerate(result['data']):
+            serial = volume.serial * 100 + i + 1
+            serial = int(item.get('number', serial))
+            chap = ctx.add_chapter(serial, volume)
+            chap.extra = item
+            chap.body_url = item.get('site_url', '')
+            chap.name = TextUtils.latin_only(item.get('title', ''))
+
+        if page < result.get('last_page', page):
+            f = self.submit_task(self.fetch_chapter_list, ctx, url, volume, page + 1)
+            ctx._futures.append(f)
 
     def fetch_chapter(self, ctx: Context, chapter: Chapter) -> None:
         raise NotImplementedError()

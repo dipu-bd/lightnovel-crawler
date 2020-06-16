@@ -8,8 +8,7 @@ from typing import Any, Mapping
 import yaml
 from atomicwrites import atomic_write
 
-from .utility.colors import Color
-from .utility.dict_utils import DictUtils, PathType
+from .utility import Color, DictUtils, PathType
 
 
 class _Config:

@@ -10,8 +10,8 @@ class Volume:
 
     def __init__(self, novel: Novel, serial: int) -> None:
         self.novel = novel
-        self.serial: int = serial
-        self.name: str = "Volume %02s" % serial
+        self.serial: int = int(serial)
+        self.name: str = ''
         self.details: str = ''
         self.extra = dict()
 
@@ -25,7 +25,7 @@ class Volume:
             return super().__eq__(other)
 
     def __str__(self) -> str:
-        return f"<Volume novel_name:'{self.novel.name}' serial:{self.serial} name:'{self.name}'>"
+        return f"<Volume serial:{self.serial} name:'{self.name}' novel:'{self.novel.name}'>"
 
     @property
     def name(self):
@@ -33,10 +33,13 @@ class Volume:
 
     @name.setter
     def name(self, value):
-        self._name = value.strip() if value else 'N/A'
+        if value:
+            self._name = value.strip()
+        else:
+            self._name = "Volume %02d" % self.serial
 
     def get_extra(self, key: str):
-        return self.extra[key]
+        return self.extra.get(key, '')
 
     def put_extra(self, key: str, val: Any):
         self.extra[key] = val
