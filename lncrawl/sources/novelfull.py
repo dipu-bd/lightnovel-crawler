@@ -6,8 +6,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger('NOVEL_FULL')
 search_url = 'https://novelfull.com/search?keyword=%s'
-# avoid compiling regex inside the loop
-RE_CHAPTER = r'(?:ch(apter))? (\d+)'
+
 RE_VOLUME = r'(?:book|vol|volume) (\d+)'
 
 
@@ -93,20 +92,15 @@ class NovelFullCrawler(Crawler):
 
         for a in soup.select('ul.list-chapter li a'):
             title = a['title'].strip()
-            prev_ch_vol = self.chapters[-1]['volume'] if self.chapters else None
             chapter_id = len(self.chapters) + 1
             volume_id = (chapter_id - 1) // 100 + 1
-            ch_match = re.search(RE_CHAPTER, title, re.IGNORECASE)
-            vol_match = re.search(RE_VOLUME, title, re.IGNORECASE)
+            pc = self.chapters[-1] if self.chapters else None
 
-            if ch_match:
-                chapter_id = int(ch_match.group(2))
-
-            _v_id = vol_match.group(1) if vol_match else None
-            if _v_id and (
-                not prev_ch_vol or _v_id == prev_ch_vol or _v_id == prev_ch_vol + 1
-            ):
-                volume_id = int(_v_id)
+            if pc and (match := re.search(RE_VOLUME, title, re.IGNORECASE)):
+                _vol_id = int(match.group(1))
+                pv = pc['volume']
+                if not pv or (_vol_id == pv or _vol_id == pv + 1):
+                    volume_id = _vol_id
 
             data = {
                 'title': title,
