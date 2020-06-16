@@ -281,7 +281,6 @@ You are very welcome to contribute in this project. You can:
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
 | http://boxnovel.org                    |     ✔      |           |
-| http://gravitytales.com                |            |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://tiknovel.com                    |            |           |
@@ -314,7 +313,6 @@ You are very welcome to contribute in this project. You can:
 | https://myoniyonitranslations.com      |            |           |
 | https://novelfull.com                  |     ✔      |           |
 | https://novelonlinefull.com            |     ✔      |           |
-| https://novelplanet.com                |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
 | https://novelsrock.com                 |            |           |
 | https://ranobelib.me                   |            |           |
@@ -369,6 +367,8 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
 | https://www.rebirth.online    | `Site moved`                        |
+| http://gravitytales.com       | `Redirects to webnovel.com`         |
+| https://novelplanet.com       | `Site is closed`                    |
 
 ### C5. Supported output formats
 

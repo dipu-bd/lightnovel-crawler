@@ -20,6 +20,8 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 rejected_sources = {
+    'https://novelplanet.com/': 'Site is closed',
+    'http://gravitytales.com/': 'Redirects to webnovel.com',
     'http://fullnovel.live/': "403 - Forbidden: Access is denied",
     'http://moonbunnycafe.com/': "Does not follow uniform format",
     'https://anythingnovel.com/': 'Site broken',
