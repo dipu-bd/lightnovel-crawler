@@ -19,7 +19,7 @@ init ::
 
 setup ::
 	$(PIP) install --user -U pipenv
-	pipenv install
+	pipenv install --dev
 
 lock ::
 	pipenv lock
@@ -38,16 +38,17 @@ format ::
 
 clean ::
 	@echo "--- Cleaning auto-generated files ---"
+	@make clean_pycache
 	@$(DEL) report.xml coverage.xml
 	@$(RMDIR) build dist .tox .egg lightnovel_crawler.egg-info
-	make clean_pycache
+
 
 ifeq ($(OS),Windows_NT)
 clean_pycache ::
-	@for /F "delims=" %%I in ('dir "." /AD /B /S 2^>nul ^| findstr /E /I /R "__pycache__"') do @rd /Q /S "%%I" 2>nul
+	@$(RMDIR) $(shell dir "." /AD /B /S | findstr /E /I /R "__pycache__")
 else
 clean_pycache ::
-	find . -type d -name '__pycache__' | xargs rm -rfv
+	@$(RMDIR) $(shell find "." -type d -name "__pycache__")
 endif
 
 test ::
@@ -72,20 +73,20 @@ coverage ::
 	pipenv run coveralls
 
 build ::
-	make clean lint
+	@make clean lint
 	$(PYTHON) setup.py sdist bdist_wheel --universal
 
 publish ::
-	make build
+	@make build
 	$(PIP) install 'twine>=1.5.0'
 	twine upload dist/*
-	make clean
+	@make clean
 
 publish_test ::
-	make build
+	@make build
 	$(PIP) install 'twine>=1.5.0'
 	twine upload --repository-url https://test.pypi.org/legacy/ dist/*
-	make clean
+	@make clean
 
 run ::
 	@pipenv run python .

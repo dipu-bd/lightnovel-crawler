@@ -11,10 +11,6 @@ from ..config import CONFIG
 from .response import BrowserResponse
 from .scheduler import ConnectionControl
 
-__all__ = [
-    'Browser'
-]
-
 logger = logging.getLogger(__name__)
 
 

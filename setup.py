@@ -10,13 +10,13 @@ cur_dir = os.path.dirname(__file__)
 
 def long_description():
     filename = os.path.join(cur_dir, 'README.md')
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf8') as f:
         return f.read()
 
 
 def read_requirements(filename):
     # Ref: https://stackoverflow.com/a/42033122/
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf8') as f:
         requirements = [r.strip() for r in f.readlines()]
         requirements = [r for r in requirements
                         if r and re.match('^[\w\d].*$', r)]

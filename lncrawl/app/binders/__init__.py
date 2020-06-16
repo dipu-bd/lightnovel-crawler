@@ -1,5 +1,3 @@
-from .output_format import OutputFormat
+# -*- coding: utf-8 -*-
 
-__all__ = [
-    'OutputFormat'
-]
+from .output_format import OutputFormat

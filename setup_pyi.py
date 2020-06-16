@@ -19,7 +19,7 @@ unix_root = '/'.join(str(ROOT).split(os.sep))
 
 def read_version():
     filename = ROOT / 'lncrawl' / 'VERSION'
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf8') as f:
         return f.read().strip()
 
 
@@ -88,9 +88,9 @@ def gather_hidden_imports():
     command = ''
 
     # add hidden imports of this project
-    for f in (ROOT / 'lncrawl' / 'sources').glob('*.py'):
+    for f in (ROOT / 'lncrawl' / 'sources').glob('**/*.py', recursive=True):
         if os.path.isfile(f) and re.match(r'^([^_.][^.]+).py[c]?$', f.name):
-            module_name = f.name[:-3]
+            module_name = f.name[:-3].replace(os.sep, '.')
             command += '--hidden-import "lncrawl.sources.%s" ' % module_name
         # end if
     # end for

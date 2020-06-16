@@ -5,7 +5,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 try:
-    from lncrawl import sources
+    from lncrawl.app.scraper import sources
     print(sources.scraper_list)
     print(sources.scraper_list[0].base_urls)
     print(sources.get_scraper_by_url('https://lnmtl.com/novel/dragon-of-the-root'))
@@ -51,11 +51,11 @@ finally:
 
 
 try:
-    from lncrawl.app.scraper.context import AppContext
-    context = AppContext('https://lnmtl.com/novel/dragon-of-the-root')
+    from lncrawl.app.scraper import Context
+    context = Context('https://lnmtl.com/novel/dragon-of-the-root')
 
     print(context)
-    print(context.get_scraper().login('dipu@gmail.com', 'password'))
-    print(context.get_scraper().fetch_novel_info(context.toc_url))
+    # print(context.scraper.login('dipu@gmail.com', 'password'))
+    print(context.scraper.fetch_novel_info(context.toc_url))
 finally:
     print()

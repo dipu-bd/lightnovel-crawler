@@ -11,10 +11,6 @@ import yaml
 from .utility.colors import Color
 from .utility.dictionary import DictUtils, PathType
 
-__all__ = [
-    'CONFIG'
-]
-
 
 class _Config:
     __opened_file__ = None
@@ -104,7 +100,7 @@ class _Config:
             for filepath in self.__config_files__:
                 if os.path.exists(filepath) and os.path.isfile(filepath):
                     self.__opened_file__ = filepath
-                    with open(self.__opened_file__) as fp:
+                    with open(self.__opened_file__, 'r', encoding='utf-8') as fp:
                         data = yaml.safe_load(fp)
                         DictUtils.merge(self.__dict__, data)
                         logging.info(f'Load config from {self.__opened_file__}')
@@ -119,7 +115,7 @@ class _Config:
             self.__opened_file__ = self.__config_files__[1]
         try:
             os.makedirs(os.path.dirname(self.__opened_file__), exist_ok=True)
-            with open(self.__opened_file__, 'w') as fp:
+            with open(self.__opened_file__, 'w', encoding='utf-8') as fp:
                 yaml.safe_dump(self.__dict__, fp)
                 logging.info(f'Saved config to {self.__opened_file__}')
         except Exception:

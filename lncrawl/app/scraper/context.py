@@ -3,13 +3,13 @@
 from pathlib import Path
 from typing import List
 
-from ...sources import get_scraper_by_url
 from ..binders import OutputFormat
 from ..models import *
 from .scraper import Scraper
+from .sources import get_scraper_by_url
 
 
-class AppContext:
+class Context:
     def __init__(self, toc_url: str, text_direction: TextDirection = TextDirection.LTR):
         self.query: str = None
         self.sources_to_query: List[str] = []
@@ -28,8 +28,11 @@ class AppContext:
         self.filename_suffix: str = None
         self.output_formats: List[OutputFormat] = [OutputFormat.EPUB]
 
-    def get_scraper(self) -> Scraper:
-        return get_scraper_by_url(self.toc_url)
+    @property
+    def scraper(self) -> Scraper:
+        if not hasattr(self, '_scraper'):
+            self._scraper = get_scraper_by_url(self.toc_url)
+        return self._scraper
 
     def get_chapter_by_url(self, url: str) -> Chapter:
         '''Find the chapter object given url'''
