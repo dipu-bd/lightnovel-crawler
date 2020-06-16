@@ -47,7 +47,9 @@ class _Config:
         'sources': {
             # override source specific config here
             'en.lnmtl': {
-                'max_workers': 10
+                'concurrency': {
+                    'max_workers': 2
+                }
             }
         },
         'logging': {
@@ -128,11 +130,12 @@ class _Config:
 
     def scraper(self, scraper_name: str, path: PathType, fallback: Any = None) -> Any:
         '''Returns config specific to a source'''
+        default = self.get(path)
         scraper = self.get(['sources', scraper_name, path])
-        if isinstance(scraper, dict):
-            default = self.get(path, {})
-            if isinstance(default, dict):
-                return DictUtils.merge({}, default, scraper)
+        if scraper is None:
+            return default
+        if isinstance(scraper, dict) and isinstance(default, dict):
+            return DictUtils.merge({}, default, scraper)
         return scraper
 
 

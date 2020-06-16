@@ -2,6 +2,7 @@
 
 import pytest
 
+from lncrawl.app.config import CONFIG
 from lncrawl.app.models import *
 from lncrawl.app.scraper.context import Context
 from lncrawl.app.scraper.scraper import Scraper
@@ -16,6 +17,10 @@ class TestScrapers:
         assert context.chapters == []
         assert context.volumes == []
         assert context.text_direction == TextDirection.LTR
+
+    def test_scraper_config(self):
+        assert CONFIG.scraper('any', 'concurrency/max_workers') == 10
+        assert CONFIG.scraper('en.lnmtl', 'concurrency/max_workers') == 2
 
     def test_scrapper_source_urls(self):
         class Dummy(Scraper):
