@@ -78,7 +78,7 @@ class NovelFullCrawler(Crawler):
         maxi = self.chapters[-1]['volume']
         for i in range(mini, maxi + 1):
             self.volumes.append(
-                {'id': i, 'title': 'Volume %d' % i, 'volume': str(i),}
+                {'id': i, 'title': 'Volume %d' % i, 'volume': str(i), }
             )
         # end for
 
@@ -96,7 +96,8 @@ class NovelFullCrawler(Crawler):
             volume_id = (chapter_id - 1) // 100 + 1
             pc = self.chapters[-1] if self.chapters else None
 
-            if pc and (match := re.search(RE_VOLUME, title, re.IGNORECASE)):
+            match = re.search(RE_VOLUME, title, re.IGNORECASE)
+            if pc and match:
                 _vol_id = int(match.group(1))
                 pv = pc['volume']
                 if not pv or (_vol_id == pv or _vol_id == pv + 1):
