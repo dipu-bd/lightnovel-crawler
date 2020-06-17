@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import re
 from typing import Any, List, Set, Tuple, Union
 
 PathType = Union[str, List[str], Tuple[str], Set[str]]
@@ -44,7 +43,7 @@ class DictUtils:
         return False
 
     @staticmethod
-    def get_value(target: dict, path: PathType, default: Any = None) -> dict:
+    def get_value(target: dict, path: PathType, default: dict = None) -> Union[dict, None]:
         keys = DictUtils.get_keys(path)
         if len(keys) > 0:
             for key in keys:
@@ -56,12 +55,12 @@ class DictUtils:
 
     @staticmethod
     def put_value(target: dict, path: PathType, value: Any) -> None:
-        if len(path) > 0:
-            for key in path[:-1]:
-                target = target.setdefault(key, {})
-            merge(target, {path[-1]: value})
-        elif isinstance(value, dict):
-            merge(target, value)
+        keys = DictUtils.get_keys(path)
+        if not keys:
+            return
+        for key in keys[:-1]:
+            target = target.setdefault(key, {})
+        if isinstance(value, dict):
+            DictUtils.merge(target, {keys[-1]: value})
         else:
-            raise ValueError("Expected non-empty path or a 'dictionary' value;" +
-                             f"Got empty path and a '{type(value)}' value")
+            target[keys[-1]] = value

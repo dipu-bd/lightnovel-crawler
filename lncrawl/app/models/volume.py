@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from typing import Any
+from typing import Any, Dict
 
 from .novel import Novel
 
@@ -13,7 +13,7 @@ class Volume:
         self.serial: int = int(serial)
         self.name: str = ''
         self.details: str = ''
-        self.extra = dict()
+        self.extra: Dict[Any, Any] = dict()
 
     def __hash__(self):
         return hash((self.serial, self.novel))

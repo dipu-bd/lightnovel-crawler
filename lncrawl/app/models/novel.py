@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from typing import Any
+from typing import Any, Dict
 
 from ..utility import UrlUtils
 
@@ -13,6 +13,7 @@ class Novel:
         self.name: str = ''
         self.details: str = ''
         self.cover_url: str = ''
+        self.extra: Dict[Any, Any] = dict()
 
     def __hash__(self):
         return hash(self.url)

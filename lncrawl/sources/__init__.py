@@ -9,7 +9,7 @@ Files are auto-imported by the app, if it meets these conditions:
 For example, see any of the files inside this directory.
 """
 
-from typing import List, Mapping, Union
+from typing import Mapping
 
 # Add rejected urls with reason of rejection here
 rejected_sources: Mapping[str, str] = {}

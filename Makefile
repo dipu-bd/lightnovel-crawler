@@ -89,4 +89,4 @@ publish_test ::
 	@make clean
 
 run ::
-	@pipenv run python .
+	@pipenv run mypy .

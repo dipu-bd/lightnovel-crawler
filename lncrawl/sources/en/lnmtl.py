@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import re
-from typing import List
-
 import js2py
 
-from lncrawl.app.models import *
+from lncrawl.app.models import Author, AuthorType, Chapter, Language, Volume
 from lncrawl.app.scraper import Context, Scraper
 from lncrawl.app.utility import TextUtils, UrlUtils
 
@@ -38,8 +35,9 @@ class LNMTLScraper(Scraper):
     def fetch_info(self, ctx: Context) -> None:
         soup = self.get_sync(ctx.toc_url).soup
 
+        ctx.language = Language.ENGLISH
+
         # Parse novel
-        ctx.novel.language = Language.ENGLISH
         ctx.novel.name = soup.select_value('.novel .media .novel-name', value_of='text')
         ctx.novel.cover_url = soup.select_value('.novel .media img', value_of='src')
         ctx.novel.details = str(soup.select_one('.novel .media .description')).strip()
@@ -57,7 +55,7 @@ class LNMTLScraper(Scraper):
         script = soup.find(name='main').find_next_sibling(name='script').string
         data = js2py.eval_js("window = {}; lnmtl = {};" + script + "; lnmtl;").to_dict()
 
-        ctx._futures = []
+        ctx.extra['futures'] = []
         for i, item in enumerate(data['volumes']):
             serial = int(item.get('number', i + 1))
             vol = ctx.add_volume(serial)
@@ -65,11 +63,11 @@ class LNMTLScraper(Scraper):
             vol.name = TextUtils.latin_only(item.get('title', ''))
 
             f = self.submit_task(self.fetch_chapter_list, ctx, data['route'], vol)
-            ctx._futures.append(f)
+            ctx.extra['futures'].append(f)
 
         # Wait for all chapters
-        while ctx._futures:
-            ctx._futures.pop(0).result()
+        while ctx.extra['futures']:
+            ctx.extra['futures'].pop(0).result()
         delattr(ctx, '_futures')
 
     def fetch_chapter_list(self, ctx: Context, url: str, volume: Volume, page=1):
@@ -89,7 +87,7 @@ class LNMTLScraper(Scraper):
 
         if page < result.get('last_page', page):
             f = self.submit_task(self.fetch_chapter_list, ctx, url, volume, page + 1)
-            ctx._futures.append(f)
+            ctx.extra['futures'].append(f)
 
     def fetch_chapter(self, ctx: Context, chapter: Chapter) -> None:
         raise NotImplementedError()

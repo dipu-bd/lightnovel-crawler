@@ -2,10 +2,8 @@
 
 import json
 import logging
-from typing import Any, List, Mapping, Union
 
 from requests import Response
-from urllib3 import HTTPResponse
 
 from ..config import CONFIG
 from .soup_ex import ExtendedSoup

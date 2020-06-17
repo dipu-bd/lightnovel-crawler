@@ -17,9 +17,10 @@ def long_description():
 def read_requirements(filename):
     # Ref: https://stackoverflow.com/a/42033122/
     with open(filename, 'r', encoding='utf8') as f:
-        requirements = [r.strip() for r in f.readlines()]
-        requirements = [r for r in requirements
-                        if r and re.match('^[\w\d].*$', r)]
+        requirements = [
+            r.strip() for r in f.readlines()
+            if re.match(r'^[^#-].+$', r)
+        ]
         return requirements
 
 
@@ -57,9 +58,9 @@ def run_setup():
 
         url='https://github.com/dipu-bd/lightnovel-crawler',
         project_urls={
-            'Code':  'https://github.com/dipu-bd/lightnovel-crawler',
-            'Issue tracker':  'https://github.com/dipu-bd/lightnovel-crawler/issues',
-            'Documentation':  'https://github.com/dipu-bd/lightnovel-crawler/blob/master/README.md',
+            'Code': 'https://github.com/dipu-bd/lightnovel-crawler',
+            'Issue tracker': 'https://github.com/dipu-bd/lightnovel-crawler/issues',
+            'Documentation': 'https://github.com/dipu-bd/lightnovel-crawler/blob/master/README.md',
         },
 
         platforms=[

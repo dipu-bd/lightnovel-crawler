@@ -6,7 +6,6 @@ Auto imports all crawlers from the lncrawl.sources
 import importlib
 import os
 import re
-import sys
 from glob import glob
 from typing import List, Union
 from urllib.parse import urlparse

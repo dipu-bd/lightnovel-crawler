@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from typing import Any, List, Mapping
 
 from bs4 import BeautifulSoup, Tag
-
-from ..config import CONFIG
 
 logger = logging.getLogger(__name__)
 

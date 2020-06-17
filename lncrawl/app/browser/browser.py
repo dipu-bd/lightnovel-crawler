@@ -58,7 +58,7 @@ class Browser:
         with ConnectionControl(url):
             kwargs['stream'] = True
             res = self.get(url, **kwargs)
-            raw = res.raw()
+            raw = getattr(res, 'raw')()
 
             if filepath is None:
                 _, filepath = tempfile.mkstemp()

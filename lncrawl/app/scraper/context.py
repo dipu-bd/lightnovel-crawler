@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from pathlib import Path
-from typing import Dict, List, Set, Union
+from typing import List, Set, Union, Dict, Any
 
 from ..binders import OutputFormat
-from ..models import *
+from ..models import Author, Chapter, Language, Novel, TextDirection, Volume
 
 
 class Context:
@@ -12,7 +12,7 @@ class Context:
         self.language: Language = Language.UNKNOWN
         self.text_direction: TextDirection = text_dir
 
-        self.query: str = None
+        self.query: str = ''
         self.search_result: List[Novel] = []
 
         self.login_id: str = ''
@@ -27,12 +27,14 @@ class Context:
         self.volumes: Set[Volume] = set()
         self.chapters: Set[Chapter] = set()
 
-        self.output_path: Path = None
+        self.output_path: Path = Path('')  # TODO: replace with default
         self.keep_old_path: bool = True
         self.split_book_by_volumes: bool = True
         self.output_formats: Set[OutputFormat] = set([OutputFormat.EPUB])
         self.filename_format: str = '%{title} c%{fchap}-%{lchap}.%{ext}'
-        # specs: title, fchap, lchap, fvol, lvol, ext, time, url
+        # TODO specs: title, fchap, lchap, fvol, lvol, ext, time, url
+
+        self.extra: Dict[Any, Any] = dict()
 
     #######################################################
     #                Methods for Scrapping                #
@@ -69,11 +71,11 @@ class Context:
 
     @property
     def max_volume_serial(self) -> int:
-        return max(self.volumes, key=lambda x: x.serial)
+        return max(self.volumes, key=lambda x: x.serial).serial
 
     @property
     def min_volume_serial(self) -> int:
-        return min(self.volumes, key=lambda x: x.serial)
+        return min(self.volumes, key=lambda x: x.serial).serial
 
     def get_volume(self, serial: int) -> Union[Volume, None]:
         probe = Volume(self.novel, serial)
@@ -94,11 +96,11 @@ class Context:
     #######################################################
     @property
     def max_chapter_serial(self) -> int:
-        return max(self.chapters, key=lambda x: x.serial)
+        return max(self.chapters, key=lambda x: x.serial).serial
 
     @property
     def min_chapter_serial(self) -> int:
-        return min(self.chapters, key=lambda x: x.serial)
+        return min(self.chapters, key=lambda x: x.serial).serial
 
     def get_chapter(self, serial: int, volume: Volume = None) -> Union[Chapter, None]:
         if volume is not None:
@@ -116,7 +118,8 @@ class Context:
         chapter = self.get_chapter(serial, volume)
         if chapter is None:
             if volume is None:
-                volume = self.add_volume(1 + (serial - 1) / 100)
+                vol_serial = 1 + (serial - 1) // 100
+                volume = self.add_volume(vol_serial)
             chapter = Chapter(volume, serial)
             self.chapters.add(chapter)
         return chapter

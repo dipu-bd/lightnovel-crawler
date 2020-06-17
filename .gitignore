@@ -1,6 +1,6 @@
 # My app specific
 /Lightnovels/
-/.vscode
+# /.vscode
 /*_bot_output
 /venv*
 mycreds.txt

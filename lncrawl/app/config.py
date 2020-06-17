@@ -3,7 +3,7 @@
 import atexit
 import logging
 import os
-from typing import Any, Mapping
+from typing import Any, Dict
 
 import yaml
 from atomicwrites import atomic_write
@@ -20,10 +20,10 @@ class _Config:
     ]
 
     # Define configurations here
-    __dict__: Mapping[str, Any] = {
+    __dict__: Dict[str, Any] = {
         'browser': {
             'parser': 'html5lib',
-            'stream_chunk_size':  50 * 1024,  # in bytes
+            'stream_chunk_size': 50 * 1024,  # in bytes
             'cloudscraper': {
                 # Docs: https://github.com/VeNoMouS/cloudscraper
                 'debug': False,
@@ -131,7 +131,8 @@ class _Config:
     def scraper(self, scraper_name: str, path: PathType, fallback: Any = None) -> Any:
         '''Returns config specific to a source'''
         default = self.get(path)
-        scraper = self.get(['sources', scraper_name, path])
+        scraper = self.get(['sources', scraper_name])
+        scraper = DictUtils.get_value(scraper, path)
         if scraper is None:
             return default
         if isinstance(scraper, dict) and isinstance(default, dict):

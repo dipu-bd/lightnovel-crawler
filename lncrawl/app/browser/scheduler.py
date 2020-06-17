@@ -2,7 +2,7 @@
 
 import logging
 import time
-from threading import BoundedSemaphore, Lock
+from threading import BoundedSemaphore, Lock, Semaphore
 from urllib.parse import urlparse
 
 from ..config import CONFIG
@@ -10,7 +10,6 @@ from ..config import CONFIG
 logger = logging.getLogger(__name__)
 
 mutex = Lock()
-host_configs = dict()
 host_semaphores = dict()
 semaphore = BoundedSemaphore(CONFIG.get('concurrency/max_connections'))
 

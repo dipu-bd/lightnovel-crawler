@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from typing import Any
+from typing import Any, Dict
 
 from ..utility import UrlUtils
 from .novel import Novel
@@ -16,7 +16,7 @@ class Chapter:
         self.name: str = ''
         self.body_url: str = body_url
         self.body: str = ''
-        self.extra = dict()
+        self.extra: Dict[Any, Any] = dict()
 
     def __hash__(self):
         return hash((self.serial, self.volume))

@@ -2,10 +2,9 @@
 
 import atexit
 import logging
-from concurrent.futures import Executor, Future, ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor
 from typing import Any, Callable, MutableMapping
 
-from ..config import CONFIG
 from .browser import Browser
 from .response import BrowserResponse
 

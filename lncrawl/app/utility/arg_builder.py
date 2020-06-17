@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from argparse import ArgumentParser
+from argparse import _ActionsContainer
 
 
-def build_args(parser: ArgumentParser, arguments: list):
+def build_args(parser: _ActionsContainer, arguments: list):
     for kwarg in arguments:
         if isinstance(kwarg, dict):
             args = kwarg.pop('args', tuple())
@@ -17,6 +17,6 @@ def build_args(parser: ArgumentParser, arguments: list):
             build_args(group, kwarg)
         elif isinstance(kwarg, tuple):
             mutex = parser.add_mutually_exclusive_group()
-            build_args(mutex, kwarg)
+            build_args(mutex, list(kwarg))
         else:
             raise ValueError(f"{type(kwarg)}[{kwarg}]")

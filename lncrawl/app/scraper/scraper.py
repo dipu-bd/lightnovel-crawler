@@ -3,11 +3,10 @@
 import logging
 from abc import ABC, abstractmethod
 from typing import List
-from urllib.parse import urlparse
 
 from ..browser import AsyncBrowser
 from ..config import CONFIG
-from ..models import Chapter, Novel
+from ..models import Chapter
 from .context import Context
 
 
@@ -22,11 +21,11 @@ class Scraper(AsyncBrowser, ABC):
     def initialize(self) -> None:
         pass
 
-    def login(self, ctx: Context) -> None:
+    def login(self, ctx: Context) -> bool:
         pass
 
     def search_novels(self, ctx: Context) -> None:
-        return []
+        pass
 
     @abstractmethod
     def fetch_info(self, ctx: Context) -> None:
