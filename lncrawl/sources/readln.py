@@ -29,16 +29,11 @@ class ReadLightNovelCrawler(Crawler):
         # end if
         logger.info('Novel author: %s', self.novel_author)
 
+        volume_ids = set()
         for a in soup.select('.chapters .chapter-chs li a'):
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            vol_id = (chap_id - 1) // 100 + 1
+            volume_ids.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -46,6 +41,8 @@ class ReadLightNovelCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': i} for i in volume_ids]
     # end def
 
     def download_chapter_body(self, chapter):
@@ -54,17 +51,28 @@ class ReadLightNovelCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         div = soup.select_one('.chapter-content3 .desc')
-        hidden = div.select_one('#growfoodsmart')
-        if hidden:
+
+        bad_selectors = [
+            '.trinity-player-iframe-wrapper'
+            '.hidden',
+            '.ads-title',
+            'script',
+            'center',
+            'interaction',
+            'a[href*=remove-ads]',
+            'a[target=_blank]',
+            'hr',
+            'br'
+        ]
+        for hidden in div.select(', '.join(bad_selectors)):
             hidden.decompose()
         # end if
 
         body = self.extract_contents(div)
         if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):
-            chapter['title'] = body[0].replace(
-                '<strong>', '').replace('</strong>', '').strip()
-            chapter['title'] = ('C' if chapter['title'].startswith(
-                'hapter') else '') + chapter['title']
+            title = body[0].replace('<strong>', '').replace('</strong>', '').strip()
+            title = ('C' if title.startswith('hapter') else '') + title
+            chapter['title'] = title.strip()
             body = body[1:]
         # end if
 

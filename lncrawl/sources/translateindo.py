@@ -44,29 +44,37 @@ class TranslateIndoCrawler(Crawler):
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one('div.entry-content p span').text
-        self.novel_author = re.sub(r'[\(\s\)]+', ' ', self.novel_author).strip()
-        self.novel_author = re.sub('Author: ', '', self.novel_author)
+        for span in soup.select('div.entry-content p span'):
+            possible_author = re.sub(r'[\(\s\n\)]+', ' ', span.text, re.M).strip()
+            if possible_author.startswith('Author:'):
+                possible_author = re.sub('Author:', '', possible_author)
+                self.novel_author = possible_author.strip()
+                break
+            # end if
+        # end for
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.select_one('div#comments').find_previous_sibling('div').select('a')
+        for div in soup.select('.cl-lists .cl-block'):
+            possible_vol = div.select_one('.cl-header')
+            if not possible_vol:
+                continue
 
-        for a in chapters:
-            chap_id = len(self.chapters) + 1
-            vol_id = chap_id//100 + 1
-            if len(self.chapters) % 100 == 0:
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
+            vol_title = possible_vol.text.strip()
+            vol_id = len(self.volumes) + 1
+            self.volumes.append({
+                'id': vol_id,
+                'title': vol_title,
             })
+
+            for a in div.select('ol.cl-body li a'):
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'url':  self.absolute_url(a['href']),
+                    'title': a.text.strip() or ('Chapter %d' % chap_id),
+                })
+            # end for
         # end for
     # end def
 

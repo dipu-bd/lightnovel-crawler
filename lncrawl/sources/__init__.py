@@ -4,8 +4,8 @@ Auto imports all crawlers from the current package directory.
 To be recognized, your crawler file should meet following conditions:
     - file does not starts with an underscore
     - file ends with .py extension
-    - file contains a class that extends `src.utils.crawler.Crawler`
-    - the class extending `src.utils.crawler.Crawler` has a global variable `base_url`
+    - file contains a class that extends `lncrawl.utils.crawler.Crawler`
+    - the class extending `lncrawl.utils.crawler.Crawler` has a global variable `base_url`
     - `base_url` contains a valid url or a list of urls supported by the crawler
 
 For example, see any of the files inside this directory.
@@ -20,6 +20,8 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 rejected_sources = {
+    'https://novelplanet.com/': 'Site is closed',
+    'http://gravitytales.com/': 'Redirects to webnovel.com',
     'http://fullnovel.live/': "403 - Forbidden: Access is denied",
     'http://moonbunnycafe.com/': "Does not follow uniform format",
     'https://anythingnovel.com/': 'Site broken',
