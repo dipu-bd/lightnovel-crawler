@@ -1,9 +1,12 @@
-[[source]]
-url = "https://pypi.python.org/simple"
-verify_ssl = true
-name = "pypi"
+[tool.poetry]
+name = "lncrawl"
+version = "3.0.0-alpha"
+description = "Downloads lightnovels from various online sources and generates ebooks in many formats."
+authors = ["Sudipto Chandra <dipu.sudipta@gmail.com>"]
+license = "Apache-2.0"
 
-[packages]
+[tool.poetry.dependencies]
+python = "^3.6"
 cloudscraper = "*"
 beautifulsoup4 = "*"
 html5lib = "*"
@@ -15,7 +18,7 @@ lxml = "*"
 js2py = "*"
 atomicwrites = "*"
 
-[dev-packages]
+[tool.poetry.dev-dependencies]
 "discord.py" = "*"
 python-telegram-bot = "*"
 pyinstaller = "*"
@@ -34,3 +37,7 @@ pytest-cov = "*"
 coverage = "*"
 coveralls = "*"
 mypy = "*"
+
+[build-system]
+requires = ["poetry-core>=1.0.0a5"]
+build-backend = "poetry.core.masonry.api"
