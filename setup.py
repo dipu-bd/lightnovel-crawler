@@ -35,7 +35,6 @@ else:
     config.read_configuration('setup.cfg')
 
     setup(
-        name="lncrawl",
         version=parse_version(Path('lncrawl') / 'VERSION'),
         install_requires=parse_requirements('requirements.txt'),
     )
