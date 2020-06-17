@@ -52,7 +52,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.21.0 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.22.0 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -157,7 +157,7 @@ Simply fill out the environment variables and you get a running instance.
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.20.0
+                           📒 Lightnovel Crawler 🍀2.22.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -194,10 +194,13 @@ optional arguments:
                         A list of specific chapter urls.
   --bot {console,telegram,discord,test}
                         Select a bot. Default: console.
+  --shard-id [SHARD_ID]
+                        Discord bot shard id (default: 0)
+  --shard-count [SHARD_COUNT]
+                        Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
-  ENV                   [chatbots only] Pass query string at the end of all
-                        options. It will be use instead of .env file. Sample:
-                        "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
+  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env
+                        file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
