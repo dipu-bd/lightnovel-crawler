@@ -36,6 +36,7 @@ class MessageHandler:
         self.state = None
         self.executor = ThreadPoolExecutor(max_workers)
         self.last_activity = datetime.now()
+        self.closed = False
     # end def
 
     def process(self, message):
@@ -54,6 +55,7 @@ class MessageHandler:
             logger.exception('While destroying MessageHandler')
         finally:
             self.send_sync('Session closed. Send *start* to start over')
+            self.closed = True
         # end try
     # end def
 
@@ -82,6 +84,8 @@ class MessageHandler:
     # end def3
 
     async def send(self, *contents):
+        if self.closed:
+            return
         self.last_activity = datetime.now()
         async with self.user.typing():
             for text in contents:
@@ -187,6 +191,8 @@ class MessageHandler:
 
     def display_novel_selection(self):
         self.app.search_novel()
+        if self.closed:
+            return;
 
         if len(self.app.search_results) == 0:
             self.send_sync('No novels found for "%s"' % self.app.user_input)
@@ -310,6 +316,8 @@ class MessageHandler:
         self.state = self.busy_state
         try:
             self.app.get_novel_info()
+            if self.closed:
+                return;
         except Exception as ex:
             logger.exception('Failed to get novel info')
             self.send_sync('Failed to get novel info.\n`%s`' % str(ex))
@@ -354,7 +362,7 @@ class MessageHandler:
 
     def handle_range_selection(self):
         self.state = self.busy_state
-        text = self.message.content.strip()
+        text = self.message.content.strip().lower()
         if text == '!cancel':
             self.executor.submit(self.destroy)
             return
@@ -483,14 +491,20 @@ class MessageHandler:
             )
             self.app.start_download()
             self.send_sync('Download complete.')
+            if self.closed:
+                return;
 
             self.send_sync('Binding books...')
             self.app.bind_books()
             self.send_sync('Book binding completed.')
+            if self.closed:
+                return;
 
             self.send_sync('Compressing output folder...')
             self.app.compress_books()
             self.send_sync('Compressed output folder.')
+            if self.closed:
+                return;
 
             if public_ip and public_path and os.path.exists(public_path):
                 self.send_sync('Publishing files...')
