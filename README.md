@@ -13,7 +13,7 @@
 
 An app to download novels from online sources and generate e-books.
 
-> **Discord: [https://discord.gg/7A5Hktx](https://discord.gg/7A5Hktx)**
+> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)**
 
 > **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
 
@@ -52,7 +52,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.20.0 ~ 22MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.22.0 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -157,7 +157,7 @@ Simply fill out the environment variables and you get a running instance.
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.20.0
+                           📒 Lightnovel Crawler 🍀2.22.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -194,10 +194,13 @@ optional arguments:
                         A list of specific chapter urls.
   --bot {console,telegram,discord,test}
                         Select a bot. Default: console.
+  --shard-id [SHARD_ID]
+                        Discord bot shard id (default: 0)
+  --shard-count [SHARD_COUNT]
+                        Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
-  ENV                   [chatbots only] Pass query string at the end of all
-                        options. It will be use instead of .env file. Sample:
-                        "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
+  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env
+                        file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
@@ -267,7 +270,7 @@ You are very welcome to contribute in this project. You can:
 
 - Create new crawler using the [`sources/_template_.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/sources/_template_.py) as template.
 - Update [Supported sources](#c3-supported-sources) section in `README.md`
-- Add some test inputs to `test_user_inputs` variable in `src/bots/test/test_inputs.py`
+- Add some test inputs to `test_user_inputs` variable in `lncrawl/bots/test/test_inputs.py`
 
 ### C2. Adding new Bot
 
@@ -281,7 +284,6 @@ You are very welcome to contribute in this project. You can:
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
 | http://boxnovel.org                    |     ✔      |           |
-| http://gravitytales.com                |            |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://tiknovel.com                    |            |           |
@@ -289,6 +291,7 @@ You are very welcome to contribute in this project. You can:
 | http://www.tiknovel.com                |            |           |
 | http://zenithnovels.com                |            |           |
 | https://4scanlation.xyz                |            |           |
+| https://9kqw.com                       |     ✔      |           |
 | https://anythingnovel.com              |            |           |
 | https://babelnovel.com                 |     ✔      |           |
 | https://bestlightnovel.com             |     ✔      |           |
@@ -296,6 +299,8 @@ You are very welcome to contribute in this project. You can:
 | https://boxnovel.com                   |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
+| https://es.mtlnovel.com                |     ✔      |           |
+| https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
@@ -308,10 +313,9 @@ You are very welcome to contribute in this project. You can:
 | https://m.romanticlovebooks.com        |            |           |
 | https://m.wuxiaworld.co                |     ✔      |           |
 | https://meionovel.com                  |            |           |
-| https://mtled-novels.com               |     ✔      |     ✔     |
 | https://myoniyonitranslations.com      |            |           |
+| https://novelfull.com                  |     ✔      |           |
 | https://novelonlinefull.com            |     ✔      |           |
-| https://novelplanet.com                |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
 | https://novelsrock.com                 |            |           |
 | https://ranobelib.me                   |            |           |
@@ -334,7 +338,6 @@ You are very welcome to contribute in this project. You can:
 | https://www.qidian.com                 |            |           |
 | https://www.readlightnovel.org         |            |           |
 | https://www.readnovelfull.com          |     ✔      |           |
-| https://www.rebirth.online             |            |           |
 | https://www.romanticlovebooks.com      |            |           |
 | https://www.royalroad.com              |     ✔      |           |
 | https://www.scribblehub.com            |     ✔      |           |
@@ -355,8 +358,10 @@ You are very welcome to contribute in this project. You can:
 | ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
+| https://anythingnovel.com     | `Site broken`                       |
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
+| https://mtled-novels.com      | `Domain is expired`                 |
 | https://novelgo.id/           | `Removed`                           |
 | https://www.flying-lines.com  | `Obfuscated content`                |
 | https://www.jieruihao.cn      | `Unavailable`                       |
@@ -364,7 +369,9 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
 | https://yukinovel.id          | `Removed`                           |
-| https://anythingnovel.com/    | `Site broken`                       |
+| https://www.rebirth.online    | `Site moved`                        |
+| http://gravitytales.com       | `Redirects to webnovel.com`         |
+| https://novelplanet.com       | `Site is closed`                    |
 
 ### C5. Supported output formats
 

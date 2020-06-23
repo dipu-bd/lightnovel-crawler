@@ -21,3 +21,4 @@ mycreds.txt
 save_pid.txt
 /.tox
 /logs
+client_secrets.json

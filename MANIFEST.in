@@ -1,2 +1,2 @@
-include src/VERSION
-recursive-include src *.*
+include lncrawl/VERSION
+recursive-include lncrawl *.*

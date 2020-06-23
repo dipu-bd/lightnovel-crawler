@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-import os.path
 
 if sys.version_info[:2] < (3, 5):
     raise RuntimeError(
@@ -24,18 +23,19 @@ else:
     # end def
 
     def parse_requirements(filename):
-        """Return requirements from requirements file."""
-        # Ref: https://stackoverflow.com/a/42033122/
-        requirements = open(filename, 'r').read().strip().split('\n')
-        requirements = [r.strip() for r in requirements]
-        requirements = [r for r in sorted(
-            requirements) if r and not r.startswith('#')]
-        return requirements
+        with open(filename, 'r', encoding='utf-8') as f:
+            requirements = f.read().strip().split('\n')
+            requirements = [
+                r.strip() for r in requirements
+                if r.strip() and not r.startswith('#')
+            ]
+            return requirements
     # end def
 
     config.read_configuration('setup.cfg')
+
     setup(
-        version=parse_version(os.path.join('src', 'VERSION')),
+        version=parse_version(Path('lncrawl') / 'VERSION'),
         install_requires=parse_requirements('requirements.txt'),
     )
 

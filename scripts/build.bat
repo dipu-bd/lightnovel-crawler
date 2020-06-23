@@ -1,6 +1,6 @@
 @ECHO OFF 
 
-SET /P VERSION=<src\VERSION
+SET /P VERSION=<lncrawl\VERSION
 
 SET PY=python
 SET PIP=%PY% -m pip --disable-pip-version-check
@@ -11,10 +11,8 @@ RD /S /Q "dist" "venv" "build" "lightnovel_crawler.egg-info" &
 CALL venv\Scripts\activate.bat
 
 %PIP% install -U pip==20.0.2
-%PIP% install -U wheel setuptools
-
-%PIP% install PyInstaller cairosvg
 %PIP% install -r requirements.txt
+%PIP% install -r dev-requirements.txt
 
 %PY% setup.py clean bdist_wheel sdist package
 
