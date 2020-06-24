@@ -282,7 +282,7 @@ You are very welcome to contribute in this project. You can:
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
 | Available Sources                      | Can Search | Can Login |
-| -------------------------------------- | :--------: | :-------: |
+|----------------------------------------|:----------:|:---------:|
 | http://boxnovel.org                    |     ✔      |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
@@ -302,6 +302,7 @@ You are very welcome to contribute in this project. You can:
 | https://es.mtlnovel.com                |     ✔      |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
+| https://jpmtl.com                      |            |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
 | https://light-novel.online             |     ✔      |           |
@@ -312,6 +313,7 @@ You are very welcome to contribute in this project. You can:
 | https://m.novelspread.com              |            |           |
 | https://m.romanticlovebooks.com        |            |           |
 | https://m.wuxiaworld.co                |     ✔      |           |
+| https://mangatoon.mobi                 |            |           |
 | https://meionovel.com                  |            |           |
 | https://myoniyonitranslations.com      |            |           |
 | https://novelfull.com                  |     ✔      |           |
@@ -352,10 +354,11 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
 
+
 ### C4. Rejected sources
 
 | Rejected Sources              | Reason                              |
-| ----------------------------- | ----------------------------------- |
+|-------------------------------|-------------------------------------|
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
 | https://anythingnovel.com     | `Site broken`                       |
