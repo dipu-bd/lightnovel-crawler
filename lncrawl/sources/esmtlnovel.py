@@ -23,7 +23,7 @@ class EsMtlnovelCrawler(Crawler):
             url = item['permalink']
             results.append({
                 'url': url,
-                'title': item['title'],
+                'title': re.sub(r'</?strong>', '', item['title']),
                 'info': self.search_novel_info(url),
             })
         # end for
