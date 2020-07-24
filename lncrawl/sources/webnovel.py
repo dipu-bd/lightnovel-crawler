@@ -51,7 +51,8 @@ class WebnovelCrawler(Crawler):
     def read_novel_info(self):
         self.get_csrf()
         url = self.novel_url
-        self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
+        #self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
+        self.novel_id =  url.split("_")[1]
         logger.info('Novel Id: %s', self.novel_id)
 
         url = chapter_list_url % (self.csrf, self.novel_id)
