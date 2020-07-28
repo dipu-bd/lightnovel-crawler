@@ -11,10 +11,10 @@ logger = logging.getLogger('INDOWEBNOVEL')
 
 
 class IndowebnovelCrawler(Crawler):
-    base_url = 'http://indowebnovel.id/'
+    base_url = 'https://indowebnovel.id/'
 
     def initialize(self):
-        self.home_url = 'http://indowebnovel.id/'
+        self.home_url = 'https://indowebnovel.id/'
     # end def
 
     def read_novel_info(self):
@@ -26,7 +26,7 @@ class IndowebnovelCrawler(Crawler):
         self.novel_title = soup.select_one('h1.entry-title').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = "Translated by Yukinovel"
+        self.novel_author = "Translated by Indowebnovel"
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
@@ -62,25 +62,9 @@ class IndowebnovelCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        contents = soup.select_one('div.entry-content.cl')
-
-        for d in contents.findAll('div'):
-            d.decompose()
-        # end for
-
-        for comment in contents.find_all(string=lambda text: isinstance(text, Comment)):
-            comment.extract()
-        # end for
-
-        if contents.findAll('p')[0].text.strip().startswith('Bab'):
-            chapter['title'] = contents.findAll('p')[0].text.strip()
-            contents.findAll('p')[0].extract()
-        else:
-            chapter['title'] = chapter['title']
-        # end if
-
-        logger.debug(chapter['title'])
-
-        return str(contents)
+        
+        contents = soup.select('div.entry-content.c2 p')
+        body = [str(p) for p in contents if p.text.strip()]
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

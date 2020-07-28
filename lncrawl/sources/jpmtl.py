@@ -42,26 +42,24 @@ class JpmtlCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         toc_url = chapters_url % self.novel_id
-        chapters = self.get_json(toc_url)
-        toc = (chapters[0]['chapters'])
-        #for a in soup.select('ol.book-volume__chapters li a'):
-        for chapter in toc:
-            chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url':  self.absolute_url(self.novel_url+'/'+str(chapter['id'])),
-                'title': chapter['title'] or ('Chapter %d' % chap_id),
+
+        toc = self.get_json(toc_url)
+        print(toc)
+        for volume in toc:
+            self.volumes.append({
+                    'id': volume['volume'],
+                    'title': volume['volume_title'],
             })
-        # end for
+            for chapter in volume['chapters']:
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': volume['volume'],
+                    'url':  self.absolute_url(self.novel_url+'/'+str(chapter['id'])),
+                    'title': chapter['title'] or ('Chapter %d' % chap_id),
+                })
+            # end for
+        #end for
     # end def
 
     def download_chapter_body(self, chapter):
