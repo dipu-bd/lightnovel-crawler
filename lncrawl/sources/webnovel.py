@@ -16,7 +16,10 @@ search_url = 'https://www.webnovel.com/apiajax/search/AutoCompleteAjax'
 
 
 class WebnovelCrawler(Crawler):
-    base_url = 'https://www.webnovel.com'
+    base_url = [
+        'https://m.webnovel.com',
+        'https://www.webnovel.com',
+    ]
 
     def get_csrf(self):
         logger.info('Getting CSRF Token')
