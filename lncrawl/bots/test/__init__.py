@@ -9,7 +9,7 @@ from random import random
 
 from requests import RequestException
 from urllib3.exceptions import HTTPError
-from cloudscraper.exceptions import CloudflareException, reCaptchaException
+from cloudscraper.exceptions import CloudflareException, CaptchaException
 
 from ...assets.icons import isWindows
 from ...sources import crawler_list
@@ -47,7 +47,7 @@ class TestBot:
                         print()
                     except CloudflareException:
                         traceback.print_exc()
-                    except reCaptchaException:
+                    except CaptchaException:
                         traceback.print_exc()
                     except RequestException:
                         traceback.print_exc()
