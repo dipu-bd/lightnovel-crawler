@@ -9,6 +9,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('JPMTL')
 
 book_url = 'https://jpmtl.com/books/%s'
+chapters_url = 'https://jpmtl.com/v2/chapter/%s/list?state=published&structured=true&direction=false'
 
 class JpmtlCrawler(Crawler):
     base_url = 'https://jpmtl.com/'
@@ -40,23 +41,25 @@ class JpmtlCrawler(Crawler):
         self.novel_author = soup.select_one('.book-sidebar__author .book-sidebar__info').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        for a in soup.select('ol.book-volume__list li a'):
-            chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.select_one('.book-ccontent__title').text.strip() or ('Chapter %d' % chap_id),
+        toc_url = chapters_url % self.novel_id
+
+        toc = self.get_json(toc_url)
+        print(toc)
+        for volume in toc:
+            self.volumes.append({
+                    'id': volume['volume'],
+                    'title': volume['volume_title'],
             })
-        # end for
+            for chapter in volume['chapters']:
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': volume['volume'],
+                    'url':  self.absolute_url(self.novel_url+'/'+str(chapter['id'])),
+                    'title': chapter['title'] or ('Chapter %d' % chap_id),
+                })
+            # end for
+        #end for
     # end def
 
     def download_chapter_body(self, chapter):

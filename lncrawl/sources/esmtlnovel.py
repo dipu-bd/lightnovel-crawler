@@ -78,7 +78,7 @@ class EsMtlnovelCrawler(Crawler):
                     'id': chap_id,
                     'volume': vol_id,
                     'url':  chapter['permalink'],
-                    'title': chapter['title'].strip(': ') or ('Chapter %d' % chap_id),
+                    'title': chapter['no'] + " " + chapter['title'] or ('Chapter %d' % chap_id),
                 })
             # end for
         # end for
