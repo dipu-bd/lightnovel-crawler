@@ -15,6 +15,12 @@ test_user_inputs = {
         b64decode(
             "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS9ub3ZlbC90c3VydWdpLW5vLWpvb3UtdG8tcmFrdWluLW5vLWtvLw==".encode()).decode()
     ],
+    'https://jpmtl.com/': [
+        'https://jpmtl.com/books/178'
+    ],
+    'https://mangatoon.mobi/': [
+        'https://mangatoon.mobi/en/detail/40627'
+    ],
     'https://es.mtlnovel.com/': [
         'https://es.mtlnovel.com/being-a-hamster-in-the-apocalypse-is-a-breeze/',
     ],
