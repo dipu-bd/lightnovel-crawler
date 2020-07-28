@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 from PyInquirer import prompt
 
+from ...assets.icons import Icons
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
@@ -70,10 +71,15 @@ def start(self):
     display.app_complete()
 
     if self.open_folder():
-        import pathlib
-        import webbrowser
-        url = pathlib.Path(self.app.output_path).as_uri()
-        webbrowser.open_new(url)
+        if Icons.isWindows:
+            import subprocess
+            subprocess.Popen('explorer /select,"' + self.app.output_path + '"')
+        else:
+            import pathlib
+            import webbrowser
+            url = pathlib.Path(self.app.output_path).as_uri()
+            webbrowser.open_new(url)
+        # end if
     # end def
 # end def
 

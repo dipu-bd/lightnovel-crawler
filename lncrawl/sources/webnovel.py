@@ -16,7 +16,10 @@ search_url = 'https://www.webnovel.com/apiajax/search/AutoCompleteAjax'
 
 
 class WebnovelCrawler(Crawler):
-    base_url = 'https://www.webnovel.com'
+    base_url = [
+        'https://m.webnovel.com',
+        'https://www.webnovel.com',
+    ]
 
     def get_csrf(self):
         logger.info('Getting CSRF Token')
@@ -52,7 +55,10 @@ class WebnovelCrawler(Crawler):
         self.get_csrf()
         url = self.novel_url
         #self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
-        self.novel_id =  url.split("_")[1]
+        if not "_" in url :
+            self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
+        else : 
+            self.novel_id =  url.split("_")[1]
         logger.info('Novel Id: %s', self.novel_id)
 
         url = chapter_list_url % (self.csrf, self.novel_id)
