@@ -24,10 +24,7 @@ class Crawler:
 
         # Initialize cloudscrapper
         self.scraper = cloudscraper.create_scraper(
-            browser={
-                'browser': 'firefox',
-                'mobile': False
-            }
+            browser={'mobile': False}
         )
 
         # Must resolve these fields inside `read_novel_info`
