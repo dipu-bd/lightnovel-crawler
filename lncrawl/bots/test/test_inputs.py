@@ -7,6 +7,7 @@ allowed_failures = [
     'http://tiknovel.com/',
     'http://www.tiknovel.com/',
     'https://www.tiknovel.com/',
+    'https://m.webnovel.com/ ',
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 ]
 
@@ -15,8 +16,20 @@ test_user_inputs = {
         b64decode(
             "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS9ub3ZlbC90c3VydWdpLW5vLWpvb3UtdG8tcmFrdWluLW5vLWtvLw==".encode()).decode()
     ],
+    'https://indowebnovel.id/': [
+        'https://indowebnovel.id/novel/rebirth-of-the-urban-immortal-cultivator/'
+    ],
     'https://jpmtl.com/': [
         'https://jpmtl.com/books/178'
+    ],
+    'https://wbnovel.com/': [
+        'https://wbnovel.com/novel/genius-detective/'
+    ],
+    'https://woopread.com/': [
+        'https://woopread.com/series/the-villainess-lives-twice/'
+    ],
+    'https://www.novelhall.com/': [
+        'https://www.novelhall.com/best-to-have-met-you-14935/'
     ],
     'https://mangatoon.mobi/': [
         'https://mangatoon.mobi/en/detail/40627'

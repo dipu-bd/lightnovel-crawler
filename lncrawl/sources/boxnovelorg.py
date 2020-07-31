@@ -31,7 +31,6 @@ class BoxNovelOrgCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -78,18 +77,15 @@ class BoxNovelOrgCrawler(Crawler):
 
         # Didn't test without this, but with pagination the chapters could be in different orders
         logger.info('Sorting chapters...')
-        self.chapters.sort(key=lambda x: x['id'])
+        self.chapters.sort(key=lambda x: x['volume'] * 1000 + x['id'])
 
-        # Copied straight from Novelfull 
+        # Copied straight from Novelfull
         logger.info('Adding volumes...')
         mini = self.chapters[0]['volume']
         maxi = self.chapters[-1]['volume']
         for i in range(mini, maxi + 1):
-            self.volumes.append({
-                'id': i,
-                'title': 'Volume %d' % i,
-                'volume': str(i),
-            })
+            self.volumes.append({'id': i})
+        # end for
     # end def
 
     def download_chapter_list(self, page):
@@ -102,10 +98,10 @@ class BoxNovelOrgCrawler(Crawler):
             title = a['title'].strip()
 
             chapter_id = len(self.chapters) + 1
-            match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
-            if len(match) == 1:
-                chapter_id = int(match[0][1])
-            # end if
+            # match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
+            # if len(match) == 1:
+            #     chapter_id = int(match[0][1])
+            # # end if
 
             volume_id = 1 + (chapter_id - 1) // 100
             match = re.findall(r'(book|vol|volume) (\d+)',
@@ -133,7 +129,10 @@ class BoxNovelOrgCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        contents = soup.select_one('div.chr-c')
+        contents = soup.select_one('div.chr-c, #chr-content')
+        for br in contents.select('br'):
+            br.decompose()
+        # end for
 
         return str(contents)
     # end def
