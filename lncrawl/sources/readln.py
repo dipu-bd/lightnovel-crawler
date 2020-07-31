@@ -62,7 +62,8 @@ class ReadLightNovelCrawler(Crawler):
             'a[href*=remove-ads]',
             'a[target=_blank]',
             'hr',
-            'br'
+            'br',
+            '#growfoodsmart'
         ]
         for hidden in div.select(', '.join(bad_selectors)):
             hidden.decompose()
@@ -70,7 +71,8 @@ class ReadLightNovelCrawler(Crawler):
 
         body = self.extract_contents(div)
         if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):
-            title = body[0].replace('<strong>', '').replace('</strong>', '').strip()
+            title = body[0].replace('<strong>', '').replace(
+                '</strong>', '').strip()
             title = ('C' if title.startswith('hapter') else '') + title
             chapter['title'] = title.strip()
             body = body[1:]
