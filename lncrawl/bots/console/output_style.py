@@ -27,7 +27,7 @@ def get_output_path(self):
             {
                 'type': 'input',
                 'name': 'output',
-                'message': 'Enter output direcotry:',
+                'message': 'Enter output directory:',
                 'default': os.path.abspath(self.app.output_path),
             },
         ])
