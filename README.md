@@ -302,6 +302,7 @@ You are very welcome to contribute in this project. You can:
 | https://es.mtlnovel.com                |     ✔      |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
+| https://indowebnovel.id/               |            |           |
 | https://jpmtl.com                      |            |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
@@ -324,6 +325,7 @@ You are very welcome to contribute in this project. You can:
 | https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
 | https://volarenovels.com               |            |           |
+| https://wbnovel.com                    |            |           |
 | https://webnovel.online                |            |           |
 | https://webnovelindonesia.com          |            |           |
 | https://webnovelonline.com             |            |           |
@@ -336,6 +338,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
 | https://www.novelall.com               |     ✔      |           |
+| https://www.novelhall.com              |            |           |
 | https://www.novelringan.com            |            |           |
 | https://www.novelspread.com            |            |           |
 | https://www.qidian.com                 |            |           |
