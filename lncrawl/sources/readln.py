@@ -67,7 +67,7 @@ class ReadLightNovelCrawler(Crawler):
         ]
         for hidden in div.select(', '.join(bad_selectors)):
             hidden.decompose()
-        # end if
+        # end for
 
         body = self.extract_contents(div)
         if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):

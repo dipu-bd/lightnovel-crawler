@@ -129,7 +129,10 @@ class BoxNovelOrgCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        contents = soup.select_one('div.chr-c')
+        contents = soup.select_one('div.chr-c, #chr-content')
+        for br in contents.select('br'):
+            br.decompose()
+        # end for
 
         return str(contents)
     # end def
