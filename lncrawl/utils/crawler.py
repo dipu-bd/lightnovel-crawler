@@ -20,12 +20,20 @@ class Crawler:
 
     def __init__(self):
         self._destroyed = False
-        self.executor = futures.ThreadPoolExecutor(max_workers=2)
+        self.executor = futures.ThreadPoolExecutor(max_workers=3)
 
-        # Initialize cloudscrapper
-        self.scraper = cloudscraper.create_scraper(
-            browser={'mobile': False}
-        )
+        # Initialize cloudscrapper 
+        try:
+            self.scraper = cloudscraper.create_scraper(
+                browser={
+                    'platform': 'linux',
+                    'mobile': False
+                }
+            )
+        except Exception as err:
+            logger.exception('Failed to initialize cloudscraper')
+            self.scraper = Session()
+        # end try
 
         # Must resolve these fields inside `read_novel_info`
         self.novel_title = 'N/A'
