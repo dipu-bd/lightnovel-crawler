@@ -287,15 +287,15 @@ test_user_inputs = {
         'http://liberspark.com/novel/black-irons-glory'
     ],
     'https://webnovelindonesia.com/': [
-        'https://webnovelindonesia.com/nv/almighty-student'
-    ],
-    'https://webnovelindonesia.com/': [
-        'https://webnovelindonesia.com/nv/almighty-student'
+        'https://webnovelindonesia.com/nv/the-beginning-after-the-end/'
     ],
     'https://tiknovel.com/': [
         'https://tiknovel.com/book/index?id=717'
     ],
     'http://boxnovel.org/': [
-        'http://boxnovel.org/novel/martial-god-asura'
+        'http://boxnovel.org/novel/the-fierce-illegitimate-miss'
+    ],
+    'https://instadoses.com/': [
+        'https://instadoses.com/manga/martial-arts-reigns/'
     ]
 }
