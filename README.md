@@ -303,6 +303,7 @@ You are very welcome to contribute in this project. You can:
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://indowebnovel.id/               |            |           |
+| https://instadoses.com                 |            |           |
 | https://jpmtl.com                      |            |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
