@@ -28,11 +28,13 @@ rejected_sources = {
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
+    'https://novelgo.id/': "Removed by owner",
     'https://www.flying-lines.com/': 'Obfuscated content',
     'https://www.jieruihao.cn/': "Unavailable",
     'https://www.noveluniverse.com/': "Site is down",
     'https://www.novelupdates.com/': "Does not host any novels",
     'https://www.novelv.com/': "Site is down",
+    'https://yukinovel.id/': "Removed by owner",
     'https://www.rebirth.online/': 'Site moved',
     'https://mtled-novels.com/': 'Domain is expired',
 }
