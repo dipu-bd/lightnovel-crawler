@@ -27,7 +27,7 @@ def get_output_path(self):
             {
                 'type': 'input',
                 'name': 'output',
-                'message': 'Enter output direcotry:',
+                'message': 'Enter output directory:',
                 'default': os.path.abspath(self.app.output_path),
             },
         ])
@@ -95,7 +95,7 @@ def get_output_formats(self):
                 'type': 'checkbox',
                 'name': 'formats',
                 'message': 'Which output formats to create?',
-                'choices': [{'name': x, 'checked': x == 'epub'} for x in available_formats],
+                'choices': [{'name': x, 'checked': x in ['epub', 'json']} for x in available_formats],
             },
         ])
         formats = answer['formats']

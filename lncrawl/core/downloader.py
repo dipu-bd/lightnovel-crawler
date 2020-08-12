@@ -101,7 +101,6 @@ def download_chapter_body(app, chapter):
         vol_name = 'Volume ' + str(chapter['volume']).rjust(2, '0')
         dir_name = os.path.join(dir_name, vol_name)
     # end if
-    os.makedirs(dir_name, exist_ok=True)
 
     chapter_name = str(chapter['id']).rjust(5, '0')
     file_name = os.path.join(dir_name, chapter_name + '.json')
@@ -136,9 +135,13 @@ def download_chapter_body(app, chapter):
                     chapter['url'], chapter['url'])
             # end if
         # end if
-        with open(file_name, 'w', encoding="utf-8") as file:
-            file.write(json.dumps(chapter))
-        # end with
+
+        if app.output_formats.get('json', False):
+            os.makedirs(dir_name, exist_ok=True)
+            with open(file_name, 'w', encoding="utf-8") as file:
+                file.write(json.dumps(chapter))
+            # end with
+        # end if
     # end if
 
     return result
@@ -160,6 +163,10 @@ def download_chapters(app):
 
     if os.getenv('debug_mode') == 'yes':
         bar.next = lambda: None  # Hide in debug mode
+    # end if
+
+    if not app.output_formats:
+        app.output_formats = {}
     # end if
 
     futures_to_check = {

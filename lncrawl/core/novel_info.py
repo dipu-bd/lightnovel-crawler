@@ -40,7 +40,8 @@ def format_chapters(crawler: Crawler):
 
         volume = [x for x in crawler.volumes if x['id'] == item['volume']]
         if len(volume) == 0:
-            raise Exception('Unknown volume %s for chapter %s' % (item['volume'], item['id']))
+            raise Exception('Unknown volume %s for chapter %s' %
+                            (item['volume'], item['id']))
         else:
             volume = volume[0]
         # end if
@@ -64,8 +65,8 @@ def save_metadata(crawler, output_path):
         'chapters': crawler.chapters,
         'rtl': crawler.is_rtl,
     }
-    file_name = os.path.join(output_path, 'json', 'meta.json')
-    os.makedirs(os.path.dirname(file_name), exist_ok=True)
+    os.makedirs(output_path, exist_ok=True)
+    file_name = os.path.join(output_path, 'meta.json')
     with open(file_name, 'w', encoding="utf-8") as file:
         json.dump(data, file, indent=2)
     # end with
