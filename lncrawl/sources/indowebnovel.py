@@ -63,7 +63,7 @@ class IndowebnovelCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         
-        contents = soup.select('div.entry-content p')
+        contents = soup.select('#main p').replace('A+', '')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
