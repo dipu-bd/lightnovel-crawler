@@ -300,6 +300,7 @@ You are very welcome to contribute in this project. You can:
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
 | https://es.mtlnovel.com                |     ✔      |           |
+| https://fastnovel.net                  |            |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://indowebnovel.id/               |            |           |
@@ -358,6 +359,8 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.co              |     ✔      |           |
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
+| https://www.readlightnovel.cc |  | |
+| https://m.readlightnovel.cc/  |  | |
 
 ### C4. Rejected sources
 
