@@ -5,18 +5,18 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIA_WORLD')
-search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
+logger = logging.getLogger('READLIGHTNOVEL.CC')
+search_url = 'https://www.readlightnovel.cc/search/%s/1'
 
 
-class WuxiaCoCrawler(Crawler):
+class ReadlightnovelCcCrawler(Crawler):
     base_url = [
-        'https://www.wuxiaworld.co/',
-        'https://m.wuxiaworld.co/',
+        'https://www.readlightnovel.cc/',
+        'https://m.readlightnovel.cc/',
     ]
 
     def initialize(self):
-        self.home_url = 'https://www.wuxiaworld.co/'
+        self.home_url = 'https://www.readlightnovel.cc'
     # end def
 
     def search_novel(self, query):
