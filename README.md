@@ -52,13 +52,13 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.22.0 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.22.4 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
-⏬ **Linux**: [lightnovel-crawler v2.19.4 ~ 24MB](https://rebrand.ly/lncrawl-linux)
+⏬ **Linux**: [lightnovel-crawler v2.22.1 ~ 24MB](https://rebrand.ly/lncrawl-linux)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 
@@ -282,7 +282,7 @@ You are very welcome to contribute in this project. You can:
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
 | Available Sources                      | Can Search | Can Login |
-|----------------------------------------|:----------:|:---------:|
+| -------------------------------------- | :--------: | :-------: |
 | http://boxnovel.org                    |     ✔      |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
@@ -302,6 +302,8 @@ You are very welcome to contribute in this project. You can:
 | https://es.mtlnovel.com                |     ✔      |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
+| https://indowebnovel.id/               |            |           |
+| https://instadoses.com                 |            |           |
 | https://jpmtl.com                      |            |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
@@ -324,6 +326,7 @@ You are very welcome to contribute in this project. You can:
 | https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
 | https://volarenovels.com               |            |           |
+| https://wbnovel.com                    |            |           |
 | https://webnovel.online                |            |           |
 | https://webnovelindonesia.com          |            |           |
 | https://webnovelonline.com             |            |           |
@@ -336,6 +339,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
 | https://www.novelall.com               |     ✔      |           |
+| https://www.novelhall.com              |            |           |
 | https://www.novelringan.com            |            |           |
 | https://www.novelspread.com            |            |           |
 | https://www.qidian.com                 |            |           |
@@ -355,11 +359,10 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
 
-
 ### C4. Rejected sources
 
 | Rejected Sources              | Reason                              |
-|-------------------------------|-------------------------------------|
+| ----------------------------- | ----------------------------------- |
 | http://fullnovel.live         | `403 - Forbidden: Access is denied` |
 | http://moonbunnycafe.com      | `Does not follow uniform format`    |
 | https://anythingnovel.com     | `Site broken`                       |
@@ -380,9 +383,9 @@ You are very welcome to contribute in this project. You can:
 ### C5. Supported output formats
 
 - JSON (default)
+- EPUB (default)
 - TEXT
 - WEB
-- EPUB
 - DOCX
 - MOBI
 - PDF

@@ -96,8 +96,9 @@ class App:
         if not novel_url:
             return
         # end if
+        hostname = urlparse(novel_url).hostname
         for home_url, crawler in crawler_list.items():
-            if novel_url.startswith(home_url):
+            if hostname == urlparse(home_url).hostname:
                 logger.info('Initializing crawler for: %s', home_url)
                 self.crawler = crawler()
                 self.crawler.novel_url = novel_url

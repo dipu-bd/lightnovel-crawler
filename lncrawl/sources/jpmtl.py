@@ -44,7 +44,7 @@ class JpmtlCrawler(Crawler):
         toc_url = chapters_url % self.novel_id
 
         toc = self.get_json(toc_url)
-        print(toc)
+        # print(toc)
         for volume in toc:
             self.volumes.append({
                     'id': volume['volume'],

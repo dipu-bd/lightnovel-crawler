@@ -54,17 +54,12 @@ class BoxNovelCrawler(Crawler):
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
+        volumes = set()
         chapters = soup.select('ul.main li.wp-manga-chapter a')
         for a in reversed(chapters):
             chap_id = len(self.chapters) + 1
-            vol_id = chap_id//100 + 1
-            if len(self.chapters) % 100 == 0:
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            vol_id = (chap_id - 1) // 100 + 1
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -72,6 +67,8 @@ class BoxNovelCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):

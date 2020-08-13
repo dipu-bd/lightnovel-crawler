@@ -12,6 +12,7 @@ from .calibre import make_calibres
 logger = logging.Logger('BINDERS')
 
 depends_on_none = [
+    'json',
     'epub',
     'text',
     'web',
@@ -47,7 +48,8 @@ def generate_books(app, data):
     # Resolve formats to output maintaining dependencies
     after_epub = [x for x in depends_on_epub if out_formats[x]]
     need_epub = 'epub' if len(after_epub) else None
-    after_any = [x for x in depends_on_none if out_formats[x] or x == need_epub]
+    after_any = [x for x in depends_on_none
+                 if out_formats[x] or x == need_epub]
 
     # Generate output files
     outputs = dict()
@@ -59,7 +61,7 @@ def generate_books(app, data):
                 outputs[fmt] = make_webs(app, data)
             elif fmt == 'epub':
                 outputs[fmt] = make_epubs(app, data)
-            else:
+            elif fmt in depends_on_epub:
                 outputs[fmt] = make_calibres(app, outputs['epub'], fmt)
             # end if
         except Exception as err:
