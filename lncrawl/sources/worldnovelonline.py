@@ -11,7 +11,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger('WORLDNOVEL_ONLINE')
 
 search_url = 'https://www.worldnovel.online/wp-json/writerist/v1/novel/search?keyword=%s'
-chapter_list_url = "https://www.worldnovel.online/wp-json/writerist/v1/chapters?category=%s&perpage=100&order=ASC&paged=%s"
+chapter_list_url = "https://www.worldnovel.online/wp-json/novel-id/v1/dapatkan_chapter_dengan_novel?category=%s&perpage=100&order=ASC&paged=%s"
 
 
 class WorldnovelonlineCrawler(Crawler):
@@ -45,19 +45,23 @@ class WorldnovelonlineCrawler(Crawler):
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one(
-            'a[href*="/authorr/"]').text.strip()
+        try:
+            self.novel_author = soup.select_one(
+                'a[href*="/authorr/"]').text.strip()
+        except:
+            pass
+        # end try
         logger.info('Novel author: %s', self.novel_author)
 
-        path = urllib.parse.urlsplit(self.novel_url)[2]
-        book_id = path.split('/')[2]
-        #book_id = soup.select_one('span.js-add-bookmark')['data-novel']
+        # path = urllib.parse.urlsplit(self.novel_url)[2]
+        # book_id = path.split('/')[2]
+        # book_id = soup.select_one('span.js-add-bookmark')['data-novel']
+        book_id = soup.select_one('body')['attr']
         logger.info('Bookid = %s' % book_id)
 
         page = len(soup.select('div.d-flex div.jump-to.mr-2'))
 
         data = []
-
         for x in range(page):
             list_url = chapter_list_url % (book_id, x+1)
             logger.debug('Visiting %s', list_url)
