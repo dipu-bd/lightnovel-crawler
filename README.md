@@ -300,6 +300,7 @@ You are very welcome to contribute in this project. You can:
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
 | https://es.mtlnovel.com                |     ✔      |           |
+| https://fastnovel.net                  |            |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://indowebnovel.id/               |            |           |
