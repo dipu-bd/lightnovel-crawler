@@ -50,6 +50,6 @@ class ChineseFantasyNovels(Crawler):
         content = soup.select_one('#BookText')
         content.select_one('.link').decompose()
         body = self.extract_contents(content)
-        return '<p>' + '</p><p>'.join(body) + '</p'
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
