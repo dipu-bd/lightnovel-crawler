@@ -7,7 +7,7 @@ allowed_failures = [
     'http://tiknovel.com/',
     'http://www.tiknovel.com/',
     'https://www.tiknovel.com/',
-    'https://m.webnovel.com/ ',
+    'https://m.webnovel.com/',
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 ]
 

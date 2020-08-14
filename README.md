@@ -52,7 +52,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.22.3 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.22.4 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -300,6 +300,7 @@ You are very welcome to contribute in this project. You can:
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
 | https://es.mtlnovel.com                |     ✔      |           |
+| https://fastnovel.net                  |            |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://indowebnovel.id/               |            |           |
@@ -358,6 +359,8 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.co              |     ✔      |           |
 | https://www.wuxiaworld.com             |     ✔      |           |
 | https://www.wuxiaworld.site            |     ✔      |           |
+| https://www.readlightnovel.cc |  | |
+| https://m.readlightnovel.cc/  |  | |
 
 ### C4. Rejected sources
 
@@ -383,9 +386,9 @@ You are very welcome to contribute in this project. You can:
 ### C5. Supported output formats
 
 - JSON (default)
+- EPUB (default)
 - TEXT
 - WEB
-- EPUB
 - DOCX
 - MOBI
 - PDF

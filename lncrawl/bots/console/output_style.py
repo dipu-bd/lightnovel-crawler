@@ -95,7 +95,7 @@ def get_output_formats(self):
                 'type': 'checkbox',
                 'name': 'formats',
                 'message': 'Which output formats to create?',
-                'choices': [{'name': x, 'checked': x == 'epub'} for x in available_formats],
+                'choices': [{'name': x, 'checked': x in ['epub', 'json']} for x in available_formats],
             },
         ])
         formats = answer['formats']
