@@ -93,6 +93,8 @@ class WuxiaCoCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
         body_parts = soup.select_one('div.chapter-entity')
+        for br in body_parts.select('br'):
+            br.decompose()
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
