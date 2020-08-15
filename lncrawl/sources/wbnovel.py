@@ -18,7 +18,7 @@ class WBNovelCrawler(Crawler):
 
         self.novel_title = ' '.join([
             str(x)
-            for x in soup.select_one('.post-title h3').contents
+            for x in soup.select_one('.post-title h1, .post-title h3').contents
             if not x.name
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
