@@ -52,7 +52,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.22.4 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.22.5 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
 
@@ -284,9 +284,11 @@ You are very welcome to contribute in this project. You can:
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
 | http://boxnovel.org                    |     ✔      |           |
+| http://dmtranslationscn.com/wp         |            |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://tiknovel.com                    |            |           |
+| http://www.fujitranslation.com         |            |           |
 | http://www.machinenoveltranslation.com |            |           |
 | http://www.tiknovel.com                |            |           |
 | http://zenithnovels.com                |            |           |
@@ -299,8 +301,11 @@ You are very welcome to contribute in this project. You can:
 | https://boxnovel.com                   |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
+| https://dmtranslationscn.com           |            |           |
 | https://es.mtlnovel.com                |     ✔      |           |
+| https://fastnovel.net                  |            |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
+| https://fujitranslation.com            |            |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://indowebnovel.id/               |            |           |
 | https://instadoses.com                 |            |           |
@@ -312,7 +317,9 @@ You are very welcome to contribute in this project. You can:
 | https://litnet.com                     |     ✔      |           |
 | https://lnmtl.com                      |            |     ✔     |
 | https://m.chinesefantasynovels.com     |            |           |
+| https://m.mywuxiaworld.com             |     ✔      |           |
 | https://m.novelspread.com              |            |           |
+| https://m.readlightnovel.cc            |            |           |
 | https://m.romanticlovebooks.com        |            |           |
 | https://m.wuxiaworld.co                |     ✔      |           |
 | https://mangatoon.mobi                 |            |           |
@@ -338,11 +345,13 @@ You are very welcome to contribute in this project. You can:
 | https://www.idqidian.us                |            |           |
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
+| https://www.mywuxiaworld.com           |     ✔      |           |
 | https://www.novelall.com               |     ✔      |           |
 | https://www.novelhall.com              |            |           |
 | https://www.novelringan.com            |            |           |
 | https://www.novelspread.com            |            |           |
 | https://www.qidian.com                 |            |           |
+| https://www.readlightnovel.cc          |            |           |
 | https://www.readlightnovel.org         |            |           |
 | https://www.readnovelfull.com          |     ✔      |           |
 | https://www.romanticlovebooks.com      |            |           |

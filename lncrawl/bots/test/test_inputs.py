@@ -7,7 +7,11 @@ allowed_failures = [
     'http://tiknovel.com/',
     'http://www.tiknovel.com/',
     'https://www.tiknovel.com/',
-    'https://m.webnovel.com/ ',
+    'https://m.webnovel.com/',
+    'https://m.readlightnovel.cc',
+    'https://dmtranslationscn.com/',
+    'https://wp.me/',
+    'http://dmtranslationscn.com/wp/',
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 ]
 
@@ -15,6 +19,15 @@ test_user_inputs = {
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode(): [
         b64decode(
             "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS9ub3ZlbC90c3VydWdpLW5vLWpvb3UtdG8tcmFrdWluLW5vLWtvLw==".encode()).decode()
+    ],
+    'https://www.readlightnovel.cc/': [
+        'https://www.readlightnovel.cc/Heidi-and-the-Lord/'
+    ],
+    'https://www.mywuxiaworld.com/': [
+        'https://www.mywuxiaworld.com/book/Rebirth_of_the_Thief_Who_Roamed_the_World/'
+    ],
+    'https://fujitranslation.com/': [
+        'https://fujitranslation.com/mkw/'
     ],
     'https://indowebnovel.id/': [
         'https://indowebnovel.id/novel/rebirth-of-the-urban-immortal-cultivator/'

@@ -1,39 +1,35 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIA_WORLD')
-search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
+logger = logging.getLogger(__name__)
+search_url = 'https://www.mywuxiaworld.com/search/result.html?searchkey=%s'
 
 
-class WuxiaCoCrawler(Crawler):
+class MyWuxiaWorldCrawler(Crawler):
     base_url = [
-        'https://www.wuxiaworld.co/',
-        'https://m.wuxiaworld.co/',
+        'https://www.mywuxiaworld.com/',
+        'https://m.mywuxiaworld.com/',
     ]
 
     def initialize(self):
-        self.home_url = 'https://www.wuxiaworld.co/'
+        self.home_url = 'https://www.mywuxiaworld.com/'
     # end def
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
-        response = self.submit_form(search_url, data=dict(keyword=query, t=1))
-        soup = self.make_soup(response)
+        soup = self.get_soup(search_url % query)
 
         results = []
-        for li in soup.select('ul.result-list li'):
-            a = li.select_one('a.book-name')['href']
-            author = li.select_one('a.book-name font').text
-            title = li.select_one('a.book-name').text.replace(author,"")
-
+        for div in soup.select('.pt-rank-detail'):
+            a = div.select_one('.title a')
+            info = div.select_one('.fl.lh100 a')['title']
             results.append({
-                'title': title,
+                'title': a['title'],
                 'url': self.absolute_url(a['href']),
-                'info': author,
+                'info': info,
             })
         # end for
 
@@ -42,24 +38,25 @@ class WuxiaCoCrawler(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        url = self.novel_url.replace('https://m', 'https://www')
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
+        self.novel_url = self.novel_url.replace(
+            'm.mywuxiaworld.com', 'www.mywuxiaworld.com')
+        logger.debug('Visiting %s', self.novel_url)
+        soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('div.book-name').text.strip()
+        self.novel_title = soup.select_one(
+            'div.pt-bookdetail .novelname a.bold')['title']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one('div.author span.name').text.strip()
+        self.novel_author = soup.select_one(
+            '.pt-bookdetail a[href*="/author/"]')['title']
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('div.book-img img')['src'])
+            soup.select_one('img.pt-bookdetail-img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
-        chapters = soup.select('ul.chapter-list a')
-
-        for a in chapters:
+        for a in soup.select('div.pt-chapter-cont-detail.full a'):
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
                 vol_id = chap_id//100 + 1
@@ -72,8 +69,8 @@ class WuxiaCoCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'title': a['title'],
                 'url':  self.absolute_url(a['href']),
-                'title': a.select_one('p.chapter-name').text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
 
@@ -85,17 +82,9 @@ class WuxiaCoCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        chapter['title'] = soup.select_one('h1.chapter-title').text.strip()
-
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-        body_parts = soup.select_one('div.chapter-entity')
-        for br in body_parts.select('br'):
-            br.decompose()
-        body = self.extract_contents(body_parts)
+        contents = soup.select('div.pt-read-text p')
+        body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
+
 # end class
