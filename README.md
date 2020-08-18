@@ -366,6 +366,8 @@ You are very welcome to contribute in this project. You can:
 | http://dmtranslationscn.com/wp | | |
 | https://fujitranslation.com | | |
 | http://www.fujitranslation.com | | | 
+| https://www.mywuxiaworld.com | ✔ | |
+| https://m.mywuxiaworld.com | ✔ | |
 
 ### C4. Rejected sources
 
