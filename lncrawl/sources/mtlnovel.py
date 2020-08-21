@@ -36,7 +36,8 @@ class MtlnovelCrawler(Crawler):
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        chapters = soup.select('div.info-wrap div')[1].text.replace('Chapters', '')
+        chapters = soup.select(
+            'div.info-wrap div')[1].text.replace('Chapters', '')
         info = '%s chapters' % chapters
         # if len(chapters) > 0:
         #    info += ' | Latest: %s' % chapters[-1].text.strip()
@@ -57,7 +58,11 @@ class MtlnovelCrawler(Crawler):
             soup.select('div.nov-head amp-img')[1]['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select('table.info tr')[3].find('a').text
+        try:
+            self.novel_author = soup.select('table.info tr')[3].find('a').text
+        except:
+            pass
+        # end try
         logger.info('Novel author: %s', self.novel_author)
 
         chapter_list = soup.select('div.ch-list amp-list')
