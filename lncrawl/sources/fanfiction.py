@@ -92,9 +92,6 @@ class FanFictionCrawler(Crawler):
 
         contents = soup.select_one('#storytext, #storycontent')
 
-        for p in contents.select('p[style="text-align:center;"]'):
-            p.decompose()
-
         return str(contents)
     # end def
 # end class
