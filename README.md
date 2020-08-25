@@ -288,7 +288,6 @@ You are very welcome to contribute in this project. You can:
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
 | http://boxnovel.org                    |     ✔      |           |
-| http://dmtranslationscn.com/wp         |            |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://tiknovel.com                    |            |           |
@@ -310,6 +309,7 @@ You are very welcome to contribute in this project. You can:
 | https://fastnovel.net                  |            |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://fujitranslation.com            |            |           |
+| https://www.fuyuneko.org/              |            |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://indowebnovel.id/               |            |           |
 | https://instadoses.com                 |            |           |
