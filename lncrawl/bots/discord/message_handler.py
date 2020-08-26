@@ -24,6 +24,7 @@ available_formats = [
     'web',
     'mobi',
     'pdf',
+    'fb2',
 ]
 
 disable_search = os.getenv('DISCORD_DISABLE_SEARCH') == 'true'
@@ -192,7 +193,7 @@ class MessageHandler:
     def display_novel_selection(self):
         self.app.search_novel()
         if self.closed:
-            return;
+            return
 
         if len(self.app.search_results) == 0:
             self.send_sync('No novels found for "%s"' % self.app.user_input)
@@ -317,7 +318,7 @@ class MessageHandler:
         try:
             self.app.get_novel_info()
             if self.closed:
-                return;
+                return
         except Exception as ex:
             logger.exception('Failed to get novel info')
             self.send_sync('Failed to get novel info.\n`%s`' % str(ex))
@@ -460,15 +461,18 @@ class MessageHandler:
             return
         # end if
 
-        output_format = set(re.findall('|'.join(available_formats), text.lower()))
+        output_format = set(re.findall(
+            '|'.join(available_formats), text.lower()))
         if not len(output_format):
             output_format = set(available_formats)
             self.send_sync('Sorry! I did not recognize your input. ' +
                            'By default, I shall generate in (%s) formats.' % (', ' .join(output_format)))
         # end if
 
-        self.app.output_formats = {x: (x in output_format) for x in available_formats}
-        self.send_sync('I will generate e-book in (%s) format' % (', ' .join(output_format)))
+        self.app.output_formats = {x: (x in output_format)
+                                   for x in available_formats}
+        self.send_sync('I will generate e-book in (%s) format' %
+                       (', ' .join(output_format)))
 
         self.send_sync('\n'.join([
             'Starting download...',
@@ -492,19 +496,19 @@ class MessageHandler:
             self.app.start_download()
             self.send_sync('Download complete.')
             if self.closed:
-                return;
+                return
 
             self.send_sync('Binding books...')
             self.app.bind_books()
             self.send_sync('Book binding completed.')
             if self.closed:
-                return;
+                return
 
             self.send_sync('Compressing output folder...')
             self.app.compress_books()
             self.send_sync('Compressed output folder.')
             if self.closed:
-                return;
+                return
 
             if public_ip and public_path and os.path.exists(public_path):
                 self.send_sync('Publishing files...')
