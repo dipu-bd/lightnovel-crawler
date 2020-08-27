@@ -314,6 +314,7 @@ You are very welcome to contribute in this project. You can:
 | https://indowebnovel.id/               |            |           |
 | https://instadoses.com                 |            |           |
 | https://jpmtl.com                      |            |           |
+| https://jstranslations1.com            |            |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
 | https://light-novel.online             |     ✔      |           |
