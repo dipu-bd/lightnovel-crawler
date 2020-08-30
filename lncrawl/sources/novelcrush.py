@@ -77,11 +77,6 @@ class NovelCrush(Crawler):
         for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
             bad.decompose()
 
-        for content in contents.select("p"):
-            for bad in ["Translator:", "Editor:", "CKtalon"]:
-                if bad in content.text:
-                    content.decompose()
-
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
