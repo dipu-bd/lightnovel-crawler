@@ -60,6 +60,6 @@ class FullnovelLiveCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.page .divContent')
         body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p'
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

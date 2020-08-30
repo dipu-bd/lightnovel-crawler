@@ -29,7 +29,6 @@ class Fuyuneko(Crawler):
 
         # Extract volume-wise chapter entries
         # FIXME: soup.select grabs more than chapters links, it keep getting fuyuneko.org/privacy-policy and trying to extract body text.
-        # TODO: Find a way to ignore/exclude certain url's from getting selected. 
         chapters = soup.select('div.sqs-block-content p [href*=".fuyuneko.org/"]') # Stops external links being selected as chapters
             
         for a in chapters:
