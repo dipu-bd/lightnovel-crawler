@@ -300,6 +300,7 @@ You are very welcome to contribute in this project. You can:
 | https://anythingnovel.com              |            |           |
 | https://babelnovel.com                 |     ✔      |           |
 | https://bestlightnovel.com             |     ✔      |           |
+| https://bestoflightnovels.com/         |     ✔      |           |
 | https://book.qidian.com                |            |           |
 | https://boxnovel.com                   |     ✔      |           |
 | https://creativenovels.com             |            |           |
