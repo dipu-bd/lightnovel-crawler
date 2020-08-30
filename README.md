@@ -334,6 +334,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelcool.com              |            |           |
 | https://novelfull.com                  |     ✔      |           |
 | https://novelonlinefull.com            |     ✔      |           |
+| https://novelonlinefree.com/homepage/  |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
 | https://novelsrock.com                 |            |           |
 | https://ranobelib.me                   |            |           |
