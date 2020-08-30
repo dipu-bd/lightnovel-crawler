@@ -291,10 +291,11 @@ You are very welcome to contribute in this project. You can:
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://tiknovel.com                    |            |           |
+| http://zenithnovels.com                |            |           |
 | http://www.fujitranslation.com         |            |           |
+| http://www.hanyunovels.site            |     ✔      |           |
 | http://www.machinenoveltranslation.com |            |           |
 | http://www.tiknovel.com                |            |           |
-| http://zenithnovels.com                |            |           |
 | https://4scanlation.xyz                |            |           |
 | https://9kqw.com                       |     ✔      |           |
 | https://anythingnovel.com              |            |           |
@@ -310,7 +311,6 @@ You are very welcome to contribute in this project. You can:
 | https://fastnovel.net                  |            |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://fujitranslation.com            |            |           |
-| https://www.fuyuneko.org/              |            |           |
 | https://id.mtlnovel.com                |     ✔      |           |
 | https://indowebnovel.id/               |            |           |
 | https://instadoses.com                 |            |           |
@@ -332,7 +332,7 @@ You are very welcome to contribute in this project. You can:
 | https://mangatoon.mobi                 |            |           |
 | https://meionovel.com                  |            |           |
 | https://myoniyonitranslations.com      |            |           |
-| https://www.novelcool.com              |            |           |
+| https://novelcrush.com                 |     ✔      |           |
 | https://novelfull.com                  |     ✔      |           |
 | https://novelonlinefull.com            |     ✔      |           |
 | https://novelonlinefree.com/homepage/  |     ✔      |           |
@@ -352,12 +352,13 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.online              |     ✔      |           |
 | https://www.aixdzs.com                 |            |           |
 | https://www.asianhobbyist.com          |            |           |
-| http://www.hanyunovels.site            |     ✔      |           |
+| https://www.fuyuneko.org/              |            |           |
 | https://www.idqidian.us                |            |           |
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
 | https://www.mywuxiaworld.com           |     ✔      |           |
 | https://www.novelall.com               |     ✔      |           |
+| https://www.novelcool.com              |            |           |
 | https://www.novelhall.com              |            |           |
 | https://www.novelringan.com            |            |           |
 | https://www.novelspread.com            |            |           |
