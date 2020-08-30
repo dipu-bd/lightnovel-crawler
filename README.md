@@ -338,6 +338,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefree.com/homepage/  |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
 | https://novelsrock.com                 |            |           |
+| https://pery.info/                     |     ✔      |           |
 | https://ranobelib.me                   |            |           |
 | https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
