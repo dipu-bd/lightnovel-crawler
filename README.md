@@ -319,6 +319,7 @@ You are very welcome to contribute in this project. You can:
 | https://kisslightnovels.info           |     ✔      |           |
 | https://light-novel.online             |     ✔      |           |
 | https://listnovel.com                  |            |           |
+| https://lightnovelsonl.com             |     ✔      |           |
 | https://litnet.com                     |     ✔      |           |
 | https://lnmtl.com                      |            |     ✔     |
 | https://m.chinesefantasynovels.com     |            |           |
