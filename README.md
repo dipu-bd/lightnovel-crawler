@@ -342,6 +342,7 @@ You are very welcome to contribute in this project. You can:
 | https://ranobelib.me                   |            |           |
 | https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
+| https://vipnovel.com                   |     ✔      |           |
 | https://volarenovels.com               |            |           |
 | https://wbnovel.com                    |            |           |
 | https://webnovel.online                |            |           |
