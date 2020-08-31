@@ -16,7 +16,7 @@ class Fuyuneko(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        # TO-DO: find a way to remove  "— Fuyu Neko's Translations" from title.
+        # TODO: find a way to remove  "— Fuyu Neko's Translations" from title.
         self.novel_title = soup.select_one('title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -28,6 +28,7 @@ class Fuyuneko(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         # Extract volume-wise chapter entries
+        # FIXME: soup.select grabs more than chapters links, it keep getting fuyuneko.org/privacy-policy and trying to extract body text.
         chapters = soup.select('div.sqs-block-content p [href*=".fuyuneko.org/"]') # Stops external links being selected as chapters
             
         for a in chapters:
