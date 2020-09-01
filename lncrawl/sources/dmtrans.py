@@ -11,8 +11,6 @@ logger = logging.getLogger(__name__)
 class DMTranslations(Crawler):
     base_url = [
         'https://dmtranslationscn.com/',
-        'https://wp.me/',
-        'http://dmtranslationscn.com/wp/',
     ]
 
     def read_novel_info(self):
