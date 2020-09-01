@@ -6,7 +6,7 @@ from urllib.parse import quote_plus
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVELSROCK')
+logger = logging.getLogger(__name__)
 search_url = 'https://novelsrock.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult='
 post_chapter_url = 'https://novelsrock.com/wp-admin/admin-ajax.php'
 

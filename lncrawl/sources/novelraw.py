@@ -6,7 +6,7 @@ from urllib.parse import quote, urlparse
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVELRAW_BLOGSPOT')
+logger = logging.getLogger(__name__)
 
 chapter_list_limit = 150  # currently supports maximum of 150
 chapter_list_url = 'https://novelraw.blogspot.com/feeds/posts/default/-/%s?alt=json&start-index=%d&max-results=' + \

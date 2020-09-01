@@ -3,7 +3,7 @@ import logging
 from ..utils.crawler import Crawler
 import re
 
-logger = logging.getLogger("RANOBE_LIB_ME")
+logger = logging.getLogger(__name__)
 
 
 class RanobeLibCrawler(Crawler):
@@ -39,7 +39,8 @@ class RanobeLibCrawler(Crawler):
             link = a.select_one('a')
             chapter_title = re.sub(r'\s+', ' ', link.text).strip()
             if not chapter_title:
-                chapter_title = 'Том %d. Глава %d' % (int(vol_id), int(a['data-number']))
+                chapter_title = 'Том %d. Глава %d' % (
+                    int(vol_id), int(a['data-number']))
             # end if
 
             self.chapters.append({

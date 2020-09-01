@@ -5,7 +5,7 @@ from concurrent import futures
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('REWAYAT_CLUB')
+logger = logging.getLogger(__name__)
 
 
 class RewayatClubCrawler(Crawler):

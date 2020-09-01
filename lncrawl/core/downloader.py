@@ -5,6 +5,7 @@ To download chapter bodies
 import json
 import logging
 import os
+import time
 from concurrent import futures
 from io import BytesIO
 from urllib.parse import urlparse
@@ -14,7 +15,7 @@ from progress.bar import IncrementalBar
 
 from ..core.arguments import get_args
 
-logger = logging.getLogger('DOWNLOADER')
+logger = logging.getLogger(__name__)
 
 try:
     from ..utils.racovimge import random_cover
@@ -116,12 +117,20 @@ def download_chapter_body(app, chapter):
 
     if len(chapter['body']) == 0:
         body = ''
-        try:
-            logger.debug('Downloading to %s', file_name)
-            body = app.crawler.download_chapter_body(chapter)
-        except Exception:
-            logger.exception('Failed to download chapter body')
-        # end try
+        retry_count = 2
+        for i in range(retry_count + 1):
+            try:
+                logger.debug('Downloading to %s', file_name)
+                body = app.crawler.download_chapter_body(chapter)
+                break
+            except Exception:
+                if i == retry_count:
+                    logger.exception('Failed to download chapter body')
+                else:
+                    time.sleep(1 + 5 * i)  # wait before next retry
+                # end if
+            # end try
+        # end for
         if not body:
             result = 'Body is empty: ' + chapter['url']
         else:

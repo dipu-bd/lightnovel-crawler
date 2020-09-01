@@ -7,7 +7,7 @@ from bs4 import Comment
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('INDOWEBNOVEL')
+logger = logging.getLogger(__name__)
 
 
 class IndowebnovelCrawler(Crawler):

@@ -6,7 +6,7 @@ import re
 import requests
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger("WOOPREAD")
+logger = logging.getLogger(__name__)
 
 
 class WoopReadCrawler(Crawler):
@@ -20,12 +20,15 @@ class WoopReadCrawler(Crawler):
     def read_novel_info(self):
         """Get novel title, autor, cover etc"""
         novel_webpage = self.get_soup(self.novel_url)
-        novel_id_string = novel_webpage.find(text=re.compile(self.regex_novel_id))
+        novel_id_string = novel_webpage.find(
+            text=re.compile(self.regex_novel_id))
         novel_id = re.search(self.regex_novel_id, novel_id_string).group("id")
 
-        self.novel_title = novel_webpage.select_one(".post-title h1").text.strip()
+        self.novel_title = novel_webpage.select_one(
+            ".post-title h1").text.strip()
         logger.info("Novel title: %s", self.novel_title)
-        self.novel_author = novel_webpage.select_one(".author-content").text.strip()
+        self.novel_author = novel_webpage.select_one(
+            ".author-content").text.strip()
         logger.info("Novel author: %s", self.novel_author)
         self.novel_cover = novel_webpage.select_one('meta[property="og:image"]')[
             "content"
@@ -38,7 +41,7 @@ class WoopReadCrawler(Crawler):
         )
         fetch_more_chapters_html = requests.post(
             "https://woopread.com/wp-admin/admin-ajax.php",
-            data={"action": "manga_get_chapters", "manga": novel_id,},
+            data={"action": "manga_get_chapters", "manga": novel_id, },
         )
         more_chapters = self.make_soup(fetch_more_chapters_html).select(
             ".wp-manga-chapter a"

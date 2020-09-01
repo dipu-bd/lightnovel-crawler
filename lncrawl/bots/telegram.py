@@ -13,7 +13,7 @@ from ..core.app import App
 from ..sources import crawler_list
 from ..utils.uploader import upload
 
-logger = logging.getLogger('TELEGRAM_BOT')
+logger = logging.getLogger(__name__)
 
 
 available_formats = [

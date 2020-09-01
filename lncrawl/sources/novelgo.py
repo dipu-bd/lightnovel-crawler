@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVEL_GO')
+logger = logging.getLogger(__name__)
 
 
 class NovelGoCrawler(Crawler):
@@ -35,9 +35,9 @@ class NovelGoCrawler(Crawler):
         #style = cssutils.parseStyle(thumbnail)
         #url = style['background-image']
 
-        #self.novel_cover = self.absolute_url(
+        # self.novel_cover = self.absolute_url(
         #    url.replace('url(', '').replace(')', ''))
-        
+
         thumbnail = soup.find("div", {"class": "novel-thumbnail"})['data-bg']
         self.novel_cover = self.absolute_url(
             thumbnail.replace('url(', '').replace(')', ''))
@@ -45,16 +45,17 @@ class NovelGoCrawler(Crawler):
 
         path = urllib.parse.urlsplit(self.novel_url)[2]
         book_id = path.split('/')[2]
-        logger.info('Novel chapter list : https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s', book_id)
-        #chapter_list = js = self.scraper.post(
+        logger.info(
+            'Novel chapter list : https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s', book_id)
+        # chapter_list = js = self.scraper.post(
         #    'https://novelgo.id/wp-admin/admin-ajax.php?action=LoadChapter&post=%s' % book_id).content
-        #chapter_list = js = self.scraper.post(
+        # chapter_list = js = self.scraper.post(
         #    'https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s' % book_id).content
         #soup_chapter = BeautifulSoup(chapter_list, 'lxml')
 
         #chapters = soup_chapter.select('ul li a')
 
-        #for x in chapters:
+        # for x in chapters:
         #    chap_id = len(self.chapters) + 1
         #    if len(self.chapters) % 100 == 0:
         #        vol_id = chap_id//100 + 1
@@ -72,7 +73,8 @@ class NovelGoCrawler(Crawler):
         #    })
         # end for
 
-        data = self.get_json('https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s' % book_id)
+        data = self.get_json(
+            'https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s' % book_id)
 
         for chapter in data:
             chap_id = len(self.chapters) + 1

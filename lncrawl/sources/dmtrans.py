@@ -5,14 +5,12 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('DM_TRANSLATIONS')
+logger = logging.getLogger(__name__)
 
 
 class DMTranslations(Crawler):
     base_url = [
         'https://dmtranslationscn.com/',
-        'https://wp.me/',
-        'http://dmtranslationscn.com/wp/',
     ]
 
     def read_novel_info(self):
@@ -32,7 +30,7 @@ class DMTranslations(Crawler):
 
         # Extract volume-wise chapter entries
         chapters = soup.find('div', {'class': 'entry-content'}).findAll('a')
-            
+
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
@@ -56,7 +54,7 @@ class DMTranslations(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        
+
         body_parts = soup.select_one('div.entry-content')
 
         for content in body_parts.select("p"):
@@ -66,7 +64,7 @@ class DMTranslations(Crawler):
 
         for br in body_parts.select('br'):
             br.decompose()
-            
+
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIA_ONLINE')
+logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
 
 

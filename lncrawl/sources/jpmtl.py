@@ -6,10 +6,11 @@ import ast
 import requests
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('JPMTL')
+logger = logging.getLogger(__name__)
 
 book_url = 'https://jpmtl.com/books/%s'
 chapters_url = 'https://jpmtl.com/v2/chapter/%s/list?state=published&structured=true&direction=false'
+
 
 class JpmtlCrawler(Crawler):
     base_url = 'https://jpmtl.com/'
@@ -27,7 +28,8 @@ class JpmtlCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title =soup.select_one('h1.book-sidebar__title').text.strip()
+        self.novel_title = soup.select_one(
+            'h1.book-sidebar__title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         try:
@@ -38,7 +40,8 @@ class JpmtlCrawler(Crawler):
             logger.debug('Failed to get cover: %s', self.novel_url)
         # end try
 
-        self.novel_author = soup.select_one('.book-sidebar__author .book-sidebar__info').text.strip()
+        self.novel_author = soup.select_one(
+            '.book-sidebar__author .book-sidebar__info').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         toc_url = chapters_url % self.novel_id
@@ -47,8 +50,8 @@ class JpmtlCrawler(Crawler):
         # print(toc)
         for volume in toc:
             self.volumes.append({
-                    'id': volume['volume'],
-                    'title': volume['volume_title'],
+                'id': volume['volume'],
+                'title': volume['volume_title'],
             })
             for chapter in volume['chapters']:
                 chap_id = len(self.chapters) + 1
@@ -59,14 +62,14 @@ class JpmtlCrawler(Crawler):
                     'title': chapter['title'] or ('Chapter %d' % chap_id),
                 })
             # end for
-        #end for
+        # end for
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        
+
         contents = soup.select('.chapter-content__content p')
 
         body = [str(p) for p in contents if p.text.strip()]

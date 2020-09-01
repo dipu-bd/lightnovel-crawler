@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('TRANSLATEINDO')
+logger = logging.getLogger(__name__)
 
 #search_url = 'https://www.worldnovel.online/wp-json/writerist/v1/novel/search?keyword=%s'
 #chapter_list_url = "https://www.worldnovel.online/wp-json/writerist/v1/chapters?category=%s&perpage=4000&order=ASC&paged=1"
@@ -45,7 +45,8 @@ class TranslateIndoCrawler(Crawler):
         logger.info('Novel cover: %s', self.novel_cover)
 
         for span in soup.select('div.entry-content p span'):
-            possible_author = re.sub(r'[\(\s\n\)]+', ' ', span.text, re.M).strip()
+            possible_author = re.sub(
+                r'[\(\s\n\)]+', ' ', span.text, re.M).strip()
             if possible_author.startswith('Author:'):
                 possible_author = re.sub('Author:', '', possible_author)
                 self.novel_author = possible_author.strip()

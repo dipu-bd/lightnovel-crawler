@@ -7,7 +7,7 @@ from bs4 import Comment
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('YUKI_NOVEL')
+logger = logging.getLogger(__name__)
 
 
 class YukiNovelCrawler(Crawler):
@@ -19,7 +19,8 @@ class YukiNovelCrawler(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        url = self.novel_url.replace('https://yukinovel.me', 'https://yukinovel.id')
+        url = self.novel_url.replace(
+            'https://yukinovel.me', 'https://yukinovel.id')
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 

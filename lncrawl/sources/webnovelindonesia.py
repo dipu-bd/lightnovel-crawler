@@ -4,7 +4,7 @@ import re
 from concurrent import futures
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WEBNOVEL_INDONESIA')
+logger = logging.getLogger(__name__)
 
 chapter_list_url = 'https://webnovelindonesia.com/wp-json/writerist/v1/chapters?category=%s&perpage=100&order=ASC&paged=%s'
 
@@ -16,14 +16,16 @@ class WebnovelIndonesia(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.breadcrumb .breadcrumb-item.active').text.strip()
+        self.novel_title = soup.select_one(
+            '.breadcrumb .breadcrumb-item.active').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
             soup.select_one('.section-novel img[class*="lazy"]')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one('.section-novel li a[href*="/aut/"]').text.strip()
+        self.novel_author = soup.select_one(
+            '.section-novel li a[href*="/aut/"]').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         possible_chapter_pages = soup.select('#js-chpater-jump > div.jump-to')

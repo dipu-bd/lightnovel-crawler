@@ -4,7 +4,7 @@ import json
 import logging
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WEBNOVELONLINE_DOT_COM')
+logger = logging.getLogger(__name__)
 
 
 class WebnovelOnlineDotComCrawler(Crawler):
@@ -19,7 +19,8 @@ class WebnovelOnlineDotComCrawler(Crawler):
         self.novel_title = soup.select_one('.novel-info .novel-desc h1').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
+        self.novel_cover = soup.select_one(
+            'meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_title)
 
         volumes = set([])

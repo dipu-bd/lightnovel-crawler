@@ -1,12 +1,12 @@
 # Lightnovel Crawler [![pip package](https://img.shields.io/badge/%F0%9F%93%A6-pip-blue)](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)
 
 [![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
-[![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler)](https://github.com/dipu-bd/lightnovel-crawler)
 
+<!-- [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler) -->
 <!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
@@ -24,8 +24,8 @@ An app to download novels from online sources and generate e-books.
   - [📦 PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
   - [📱 Termux (Android)](#a3-termux-android)
   - [Chatbots](#a4-chatbots)
-    - [Telegram](#a41-telegram)
-    - [Discord](#a42-discord)
+    - [Discord](#a41-discord)
+    - [Telegram](#a42-telegram)
   - [Run from source](#a5-run-from-source)
   - [Heroku Deployment](#a6-heroku-deployment)
 - [General Usage](#b-general-usage)
@@ -52,15 +52,16 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.22.5 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.23.0 ~ 23MB](https://rebrand.ly/lncrawl)
 
-> In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program. Actually, I am too lazy to add proper configuration files to solve this issue. Excuse me please 😇.
+> In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program.
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
 ⏬ **Linux**: [lightnovel-crawler v2.22.1 ~ 24MB](https://rebrand.ly/lncrawl-linux)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
+> However, it is recommended to use **pip** version directly if you are on Linux
 
 ### A2. PIP (Windows, Mac, and Linux)
 
@@ -74,7 +75,7 @@ To install this app or to update installed one via `pip`, just run:
 $ pip install --user -U lightnovel-crawler
 ```
 
-Remember, in some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
+In some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
 
 Next, open your terminal and enter:
 
@@ -105,19 +106,22 @@ $ lncrawl
 - You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 - Run `pip install -U lightnovel-crawler` again to install the latest updates.
 
+> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
+> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
+
 ### A4. Chatbots
 
-#### A4.1 Telegram
-
-Visit this link to get started with the telegram bot:
-https://t.me/epub_smelter_bot
-
-#### A4.2 Discord
+#### A4.1 Discord
 
 Join our server: https://discord.gg/7A5Hktx
 
 Or, visit this link to install discord bot to your own server:
 https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
+
+#### A4.2 Telegram
+
+Visit this link to get started with the telegram bot:
+https://t.me/epub_smelter_bot
 
 Send `!help` to open the bot help message.
 
@@ -157,7 +161,7 @@ Simply fill out the environment variables and you get a running instance.
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.22.0
+                           📒 Lightnovel Crawler 🍀2.23.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -284,11 +288,11 @@ You are very welcome to contribute in this project. You can:
 | Available Sources                      | Can Search | Can Login |
 | -------------------------------------- | :--------: | :-------: |
 | http://boxnovel.org                    |     ✔      |           |
-| http://dmtranslationscn.com/wp         |            |           |
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://tiknovel.com                    |            |           |
 | http://www.fujitranslation.com         |            |           |
+| http://www.hanyunovels.site            |     ✔      |           |
 | http://www.machinenoveltranslation.com |            |           |
 | http://www.tiknovel.com                |            |           |
 | http://zenithnovels.com                |            |           |
@@ -297,6 +301,7 @@ You are very welcome to contribute in this project. You can:
 | https://anythingnovel.com              |            |           |
 | https://babelnovel.com                 |     ✔      |           |
 | https://bestlightnovel.com             |     ✔      |           |
+| https://bestoflightnovels.com/         |     ✔      |           |
 | https://book.qidian.com                |            |           |
 | https://boxnovel.com                   |     ✔      |           |
 | https://creativenovels.com             |            |           |
@@ -310,9 +315,11 @@ You are very welcome to contribute in this project. You can:
 | https://indowebnovel.id/               |            |           |
 | https://instadoses.com                 |            |           |
 | https://jpmtl.com                      |            |           |
+| https://jstranslations1.com            |            |           |
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
 | https://light-novel.online             |     ✔      |           |
+| https://lightnovelsonl.com             |     ✔      |           |
 | https://listnovel.com                  |            |           |
 | https://litnet.com                     |     ✔      |           |
 | https://lnmtl.com                      |            |     ✔     |
@@ -325,13 +332,20 @@ You are very welcome to contribute in this project. You can:
 | https://mangatoon.mobi                 |            |           |
 | https://meionovel.com                  |            |           |
 | https://myoniyonitranslations.com      |            |           |
+| https://novel27.com                    |     ✔      |           |
+| https://novelcrush.com                 |     ✔      |           |
 | https://novelfull.com                  |     ✔      |           |
+| https://novelonlinefree.com/homepage/  |     ✔      |           |
 | https://novelonlinefull.com            |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
 | https://novelsrock.com                 |            |           |
+| https://pery.info/                     |     ✔      |           |
 | https://ranobelib.me                   |            |           |
+| https://readwebnovels.net              |     ✔      |           |
 | https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
+| https://viewnovel.net                  |     ✔      |           |
+| https://vipnovel.com                   |     ✔      |           |
 | https://volarenovels.com               |            |           |
 | https://wbnovel.com                    |            |           |
 | https://webnovel.online                |            |           |
@@ -342,11 +356,14 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.online              |     ✔      |           |
 | https://www.aixdzs.com                 |            |           |
 | https://www.asianhobbyist.com          |            |           |
+| https://www.fuyuneko.org/              |            |           |
 | https://www.idqidian.us                |            |           |
+| https://www.lightnovelworld.com        |     ✔      |           |
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
 | https://www.mywuxiaworld.com           |     ✔      |           |
 | https://www.novelall.com               |     ✔      |           |
+| https://www.novelcool.com              |            |           |
 | https://www.novelhall.com              |            |           |
 | https://www.novelringan.com            |            |           |
 | https://www.novelspread.com            |            |           |

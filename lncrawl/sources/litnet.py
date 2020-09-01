@@ -2,7 +2,7 @@
 import logging
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LITNET')
+logger = logging.getLogger(__name__)
 search_url = 'https://litnet.com/en/search?q=%s'
 
 

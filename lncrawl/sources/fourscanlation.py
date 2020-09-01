@@ -4,7 +4,7 @@ import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('4SCANLATION')
+logger = logging.getLogger(__name__)
 novel_page = 'https://4scanlation.com/%s'
 
 

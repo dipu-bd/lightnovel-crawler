@@ -10,8 +10,10 @@ allowed_failures = [
     'https://m.webnovel.com/',
     'https://m.readlightnovel.cc',
     'https://dmtranslationscn.com/',
-    'https://wp.me/',
-    'http://dmtranslationscn.com/wp/',
+    'https://m.wuxiaworld.co/',
+    'http://www.fujitranslation.com/',
+    'https://m.mywuxiaworld.com/',
+    'https://m.readlightnovel.cc/',
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 ]
 
@@ -20,11 +22,17 @@ test_user_inputs = {
         b64decode(
             "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS9ub3ZlbC90c3VydWdpLW5vLWpvb3UtdG8tcmFrdWluLW5vLWtvLw==".encode()).decode()
     ],
+    'https://fastnovel.net/': [
+        'https://fastnovel.net/nanomancer-reborn-ive-become-a-snow-girl-156/'
+    ],
     'https://www.readlightnovel.cc/': [
         'https://www.readlightnovel.cc/Heidi-and-the-Lord/'
     ],
     'https://www.mywuxiaworld.com/': [
         'https://www.mywuxiaworld.com/book/Rebirth_of_the_Thief_Who_Roamed_the_World/'
+    ],
+    'http://www.indonovels.net/': [
+        'http://www.indonovels.net/p/blog-page_1.html'
     ],
     'https://fujitranslation.com/': [
         'https://fujitranslation.com/mkw/'
@@ -102,10 +110,7 @@ test_user_inputs = {
         'https://9kqw.com/book/index?id=717',
     ],
     'https://www.wuxiaworld.co/': [
-        'sword',
-    ],
-    'https://m.wuxiaworld.co/': [
-        'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
+        'https://www.wuxiaworld.co/Versatile-Mage/',
     ],
     'https://meionovel.id/': [
         'https://meionovel.id/novel/the-legendary-mechanic/',

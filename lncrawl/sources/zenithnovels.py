@@ -7,7 +7,7 @@ import requests
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('ZENITH_NOVELS')
+logger = logging.getLogger(__name__)
 
 novel_url = 'http://zenithnovels.com/%s/'
 

@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIA_WORLD')
+logger = logging.getLogger(__name__)
 
 book_url = 'https://www.wuxiaworld.com/novel/%s'
 search_url = 'https://www.wuxiaworld.com/api/novels/search?query=%s&count=5'

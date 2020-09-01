@@ -3,7 +3,7 @@ import logging
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('TAPREAD')
+logger = logging.getLogger(__name__)
 
 chapter_list_url = 'https://www.tapread.com/book/contents?bookId=%s'
 chapter_url = 'https://www.tapread.com/book/chapter?bookId=%s&chapterId=%s'

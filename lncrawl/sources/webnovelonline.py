@@ -3,7 +3,7 @@ import re
 import logging
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WEBNOVEL_ONLINE')
+logger = logging.getLogger(__name__)
 
 
 class WebnovelOnlineCrawler(Crawler):

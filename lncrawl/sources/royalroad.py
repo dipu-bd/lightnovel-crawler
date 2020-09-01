@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('ROYALROAD')
+logger = logging.getLogger(__name__)
 search_url = 'https://www.royalroad.com/fictions/search?keyword=%s'
 
 

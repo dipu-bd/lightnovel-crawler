@@ -4,7 +4,7 @@ import logging
 from concurrent import futures
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVELV')
+logger = logging.getLogger(__name__)
 
 
 class NovelvCrawler(Crawler):

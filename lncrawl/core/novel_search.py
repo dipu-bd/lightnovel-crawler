@@ -11,7 +11,7 @@ from progress.bar import IncrementalBar
 
 from ..sources import crawler_list
 
-logger = logging.getLogger('SEARCH_NOVEL')
+logger = logging.getLogger(__name__)
 
 
 def get_search_result(user_input, link):

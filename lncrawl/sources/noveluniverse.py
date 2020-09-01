@@ -4,7 +4,7 @@ import logging
 from concurrent import futures
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVEL_UNIVERSE')
+logger = logging.getLogger(__name__)
 
 novel_info_url = 'https://www.noveluniverse.com/index/novel/info/id/%s.html'
 chapter_page_url = '%s?id=%s&page_c=%d'

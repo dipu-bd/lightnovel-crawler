@@ -4,7 +4,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('ASIAN_HOBBYIST')
+logger = logging.getLogger(__name__)
 
 
 class AsianHobbyistCrawler(Crawler):
