@@ -60,28 +60,46 @@ class NovelFullCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         pagination_link = soup.select_one('#list-chapter .pagination .last a')
-        page_count = int(pagination_link['data-page']) if pagination_link else 0
+        page_count = int(
+            pagination_link['data-page']) if pagination_link else 0
         logger.info('Chapter list pages: %d' % page_count)
 
         logger.info('Getting chapters...')
-        futures_to_check = {
-            self.executor.submit(self.download_chapter_list, i + 1,): str(i)
+        futures = [
+            self.executor.submit(self.download_chapter_list, i + 1)
             for i in range(page_count + 1)
-        }
-        [x.result() for x in futures.as_completed(futures_to_check)]
+        ]
 
-        logger.info('Sorting chapters...')
-        self.chapters.sort(key=lambda x: x['id'])
+        self.chapters = []
+        possible_volumes = set([])
+        for f in futures:
+            for chapter in f.result():
+                chapter_id = len(self.chapters) + 1
+                volume_id = (chapter_id - 1) // 100 + 1
 
-        logger.info('Adding volumes...')
-        mini = self.chapters[0]['volume']
-        maxi = self.chapters[-1]['volume']
-        for i in range(mini, maxi + 1):
-            self.volumes.append(
-                {'id': i, 'title': 'Volume %d' % i, 'volume': str(i), }
-            )
+                # pc = self.chapters[-1] if self.chapters else None
+                # match = re.search(r'(?:book|vol|volume) (\d+)', title, re.I)
+                # if pc and match:
+                #     _vol_id = int(match.group(1))
+                #     pv = pc['volume']
+                #     if not pv or (_vol_id == pv or _vol_id == pv + 1):
+                #         volume_id = _vol_id
+                #     # end if
+                # # end if
+
+                possible_volumes.add(volume_id)
+                self.chapters.append({
+                    'id': chapter_id,
+                    'volume': volume_id,
+                    'title': chapter['title'],
+                    'url': chapter['url'],
+                })
+            # end for
         # end for
 
+        self.volumes = [{'id': x} for x in possible_volumes]
+        logger.info('%d chapters and %d volumes found',
+                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_list(self, page):
@@ -89,29 +107,15 @@ class NovelFullCrawler(Crawler):
         url = self.novel_url.split('?')[0].strip('/')
         url += '?page=%d&per-page=50' % page
         soup = self.get_soup(url)
-
+        chapters = []
         for a in soup.select('ul.list-chapter li a'):
             title = a['title'].strip()
-            chapter_id = len(self.chapters) + 1
-            volume_id = (chapter_id - 1) // 100 + 1
-            pc = self.chapters[-1] if self.chapters else None
-
-            match = re.search(RE_VOLUME, title, re.IGNORECASE)
-            if pc and match:
-                _vol_id = int(match.group(1))
-                pv = pc['volume']
-                if not pv or (_vol_id == pv or _vol_id == pv + 1):
-                    volume_id = _vol_id
-
-            data = {
-                'title': title,
-                'id': chapter_id,
-                'volume': volume_id,
+            chapters.append({
+                'title': a['title'].strip(),
                 'url': self.absolute_url(a['href']),
-            }
-            self.chapters.append(data)
+            })
         # end for
-
+        return chapters
     # end def
 
     def download_chapter_body(self, chapter):
@@ -123,10 +127,9 @@ class NovelFullCrawler(Crawler):
             ads.decompose()
         for ads in content.findAll('div', {"align": 'center'}):
             ads.decompose()
-        self.clean_contents(content)
+        for ads in content.select('.adsbygoogle, script, ins, .ads, .ads-holder'):
+            ads.decompose
+        # self.clean_contents(content)
         return str(content)
-
     # end def
-
-
 # end class
