@@ -1,12 +1,12 @@
 # Lightnovel Crawler [![pip package](https://img.shields.io/badge/%F0%9F%93%A6-pip-blue)](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)
 
 [![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
-[![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler)](https://github.com/dipu-bd/lightnovel-crawler)
 
+<!-- [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler) -->
 <!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 <!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
 <!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
@@ -52,7 +52,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.22.5 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.23.0 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program.
 
@@ -161,7 +161,7 @@ Simply fill out the environment variables and you get a running instance.
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.22.0
+                           📒 Lightnovel Crawler 🍀2.23.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
