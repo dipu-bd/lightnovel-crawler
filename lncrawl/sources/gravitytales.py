@@ -3,7 +3,7 @@ import re
 import logging
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('GRAVITY_TALES')
+logger = logging.getLogger(__name__)
 
 cover_image_url = 'https://cdn.gravitytales.com/images/covers/%s.jpg'
 novel_toc_url = 'http://gravitytales.com/novel/%s'

@@ -7,7 +7,7 @@ from slugify import slugify
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVEL_PLANET')
+logger = logging.getLogger(__name__)
 search_url = 'https://novelplanet.com/NovelList?order=mostpopular&name=%s'
 
 

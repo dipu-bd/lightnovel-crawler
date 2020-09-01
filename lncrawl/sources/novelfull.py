@@ -4,7 +4,7 @@ import logging
 from concurrent import futures
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVEL_FULL')
+logger = logging.getLogger(__name__)
 search_url = 'https://novelfull.com/search?keyword=%s'
 
 RE_VOLUME = r'(?:book|vol|volume) (\d+)'

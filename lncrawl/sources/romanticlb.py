@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('ROMANTIC_LOVE_BOOKS')
+logger = logging.getLogger(__name__)
 
 ajaxchapter_url = 'https://www.romanticlovebooks.com/home/index/ajaxchapter'
 
@@ -21,11 +21,13 @@ class RomanticLBCrawler(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        url = self.novel_url.replace('https://m.romanticlovebooks', 'https://www.romanticlovebooks')
+        url = self.novel_url.replace(
+            'https://m.romanticlovebooks', 'https://www.romanticlovebooks')
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        self.novel_title = soup.select_one('body > div > div.rt > h1').text.strip()
+        self.novel_title = soup.select_one(
+            'body > div > div.rt > h1').text.strip()
         self.novel_cover = self.absolute_url(
             soup.select_one('body > div > div.lf > img')['src'])
 

@@ -14,7 +14,7 @@ from progress.bar import IncrementalBar
 
 from ..core.arguments import get_args
 
-logger = logging.getLogger('DOWNLOADER')
+logger = logging.getLogger(__name__)
 
 try:
     from ..utils.racovimge import random_cover

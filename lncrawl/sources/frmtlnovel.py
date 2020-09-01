@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('IDMTLNOVEL')
+logger = logging.getLogger(__name__)
 search_url = 'https://fr.mtlnovel.com/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
 
 
@@ -36,7 +36,8 @@ class FrMtlnovelCrawler(Crawler):
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        chapters = soup.select('div.info-wrap div')[1].text.replace('Chapters', '')
+        chapters = soup.select(
+            'div.info-wrap div')[1].text.replace('Chapters', '')
         info = '%s chapters' % chapters
         # if len(chapters) > 0:
         #    info += ' | Latest: %s' % chapters[-1].text.strip()

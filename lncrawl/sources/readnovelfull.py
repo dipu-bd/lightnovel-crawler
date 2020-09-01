@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('READNOVELFULL')
+logger = logging.getLogger(__name__)
 search_url = 'https://readnovelfull.com/search?keyword=%s'
 full_chapter_url = 'https://readnovelfull.com/ajax/chapter-archive?novelId=%s'
 

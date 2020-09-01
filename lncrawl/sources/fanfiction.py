@@ -5,7 +5,7 @@ import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('FAN_FICTION')
+logger = logging.getLogger(__name__)
 chapter_url = 'https://www.fanfiction.net/s/%s/%s'
 search_url = 'https://www.fanfiction.net/search/?keywords=%s&type=story&match=title&ready=1&categoryid=202'
 
@@ -40,7 +40,8 @@ class FanFictionCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('#profile_top b.xcontrast_txt, #content b').text.strip()
+        self.novel_title = soup.select_one(
+            '#profile_top b.xcontrast_txt, #content b').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         possible_image = soup.select_one('#profile_top img.cimage')

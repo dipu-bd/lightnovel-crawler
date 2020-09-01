@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WORLDNOVEL_ONLINE')
+logger = logging.getLogger(__name__)
 
 search_url = 'https://www.worldnovel.online/wp-json/writerist/v1/novel/search?keyword=%s'
 chapter_list_url = "https://www.worldnovel.online/wp-json/novel-id/v1/dapatkan_chapter_dengan_novel?category=%s&perpage=100&order=ASC&paged=%s"

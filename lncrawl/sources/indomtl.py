@@ -5,7 +5,7 @@ import re
 from urllib.parse import quote
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('INDOMTL')
+logger = logging.getLogger(__name__)
 
 short_page_url = 'https://indomtl.com/?p=%s'
 search_url = 'https://indomtl.com/wp-admin/admin-ajax.php?action=mtl_auto_suggest&q=%s'
@@ -38,7 +38,8 @@ class IndoMTLCrawler(Crawler):
         self.novel_title = soup.select('nav.breadcrumb li a span')[-1].text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one('.kn-img amp-img')['src'])
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.kn-img amp-img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         for a in soup.select('.globalnovelinfopartvalue a'):
@@ -74,10 +75,12 @@ class IndoMTLCrawler(Crawler):
         # end for
         logger.debug(self.chapters)
 
-        self.volumes = [{'id': x + 1} for x in range(len(self.chapters) // 100 + 1)]
+        self.volumes = [{'id': x + 1}
+                        for x in range(len(self.chapters) // 100 + 1)]
         logger.debug(self.volumes)
 
-        logger.debug('%d volumes & %d chapters found', len(self.volumes), len(self.chapters))
+        logger.debug('%d volumes & %d chapters found',
+                     len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

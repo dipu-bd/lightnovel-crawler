@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('JSTRANSLATIONS')
+logger = logging.getLogger(__name__)
 
 
 class JSTranslations(Crawler):
@@ -28,8 +28,9 @@ class JSTranslations(Crawler):
 
         # Extract volume-wise chapter entries
         # TODO: There are some novels on site that use different layout, need to find a way to check for both.
-        chapters = soup.select('div.wp-block-coblocks-accordion-item__content ul li a')
-            
+        chapters = soup.select(
+            'div.wp-block-coblocks-accordion-item__content ul li a')
+
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
@@ -53,10 +54,10 @@ class JSTranslations(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        
+
         body_parts = soup.select_one('.entry-content')
 
-        # TODO: Refactor below code to make it simpler but still remove all junk text. 
+        # TODO: Refactor below code to make it simpler but still remove all junk text.
         # Removes junk text in chapter body
         for content in body_parts.select("p"):
             for bad in ["[TL Note:", "! I’ll post bonus chapters!]", "There’s a", "for terms left in pinyin in the menu above, for those who need it!"]:

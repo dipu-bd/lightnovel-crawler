@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LIGHT_NOVEL_ONLINE')
+logger = logging.getLogger(__name__)
 search_url = 'https://light-novel.online/search.ajax?query=%s'
 novel_page_url = 'https://light-novel.online/%s?page=%d'
 

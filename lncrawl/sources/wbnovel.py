@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WBNOVEL')
+logger = logging.getLogger(__name__)
 
 
 class WBNovelCrawler(Crawler):
@@ -34,7 +34,6 @@ class WBNovelCrawler(Crawler):
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
-        
         content_area = soup.select_one(' .page-content-listing')
 
         for span in content_area.findAll('span'):

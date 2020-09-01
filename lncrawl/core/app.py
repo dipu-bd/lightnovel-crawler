@@ -13,7 +13,7 @@ from .novel_search import search_novels
 from .downloader import download_chapters
 from .novel_info import format_novel, save_metadata
 
-logger = logging.getLogger('APP')
+logger = logging.getLogger(__name__)
 
 
 class App:
@@ -174,7 +174,8 @@ class App:
         if self.pack_by_volume:
             for vol in self.crawler.volumes:
                 # filename_suffix = 'Volume %d' % vol['id']
-                filename_suffix = 'Chapter %d-%d' % (vol['start_chapter'], vol['final_chapter'])
+                filename_suffix = 'Chapter %d-%d' % (
+                    vol['start_chapter'], vol['final_chapter'])
                 data[filename_suffix] = [
                     x for x in self.chapters
                     if x['volume'] == vol['id']

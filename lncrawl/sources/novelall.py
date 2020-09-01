@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVEL_All')
+logger = logging.getLogger(__name__)
 search_url = 'https://www.novelall.com/search/?name=%s'
 
 

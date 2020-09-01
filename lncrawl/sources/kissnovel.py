@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('KISS-NOVEL')
+logger = logging.getLogger(__name__)
 
 
 class KissNovelCrawler(Crawler):

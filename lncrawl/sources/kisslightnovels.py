@@ -2,7 +2,7 @@
 import logging
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('KISSLIGHTNOVEL')
+logger = logging.getLogger(__name__)
 search_url = 'https://kisslightnovels.info/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 

@@ -5,7 +5,8 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('INDONOVELS')
+logger = logging.getLogger(__name__)
+
 
 class IndoNovels(Crawler):
     base_url = [
@@ -22,7 +23,8 @@ class IndoNovels(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h2", {"style": "text-align: center;"}).text.strip()
+        self.novel_title = soup.find(
+            "h2", {"style": "text-align: center;"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
@@ -36,7 +38,7 @@ class IndoNovels(Crawler):
         chapters = soup.find('div', {
             'style': '-goog-ms-box-shadow: 0 0 10px #000000; -moz-box-shadow: 0 0 10px #000000; -webkit-box-shadow: 0 0 10px #000000; border: 6px double #FF00FF; color: #b4040; height: 500px; overflow: auto; padding: 10px; width: 580px;'}).findAll(
             'a')
-            
+
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
@@ -60,7 +62,7 @@ class IndoNovels(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        
+
         body_parts = soup.select_one('div.post-body-inner')
         for br in body_parts.select('br'):
             br.decompose()

@@ -5,7 +5,8 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVELCOOL')
+logger = logging.getLogger(__name__)
+
 
 class NovelCool(Crawler):
     base_url = 'https://www.novelcool.com/'
@@ -17,8 +18,9 @@ class NovelCool(Crawler):
 
         self.novel_title = soup.select_one('h1.bookinfo-title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
-        
-        self.novel_author = soup.select_one('span', {'itemprop': 'creator'}).text.strip()
+
+        self.novel_author = soup.select_one(
+            'span', {'itemprop': 'creator'}).text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
@@ -54,7 +56,7 @@ class NovelCool(Crawler):
         # FIXME: Chapters title keep getting duplicated, I've tried multiple fixes but nothings worked so far.
         body_parts = soup.select_one('.chapter-reading-section')
 
-         # Removes report button
+        # Removes report button
         for report in body_parts.find('div', {'model_target_name': 'report'}):
             report.extract()
         # end for

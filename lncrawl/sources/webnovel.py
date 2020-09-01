@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WEBNOVEL')
+logger = logging.getLogger(__name__)
 
 book_info_url = 'https://www.webnovel.com/book/%s'
 chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
@@ -55,10 +55,11 @@ class WebnovelCrawler(Crawler):
         self.get_csrf()
         url = self.novel_url
         #self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
-        if not "_" in url :
-            self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
-        else : 
-            self.novel_id =  url.split("_")[1]
+        if not "_" in url:
+            self.novel_id = re.search(
+                r'(?<=webnovel.com/book/)\d+', url).group(0)
+        else:
+            self.novel_id = url.split("_")[1]
         logger.info('Novel Id: %s', self.novel_id)
 
         url = chapter_list_url % (self.csrf, self.novel_id)

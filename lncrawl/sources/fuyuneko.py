@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('FUYUNEKO')
+logger = logging.getLogger(__name__)
 
 
 class Fuyuneko(Crawler):
@@ -29,8 +29,10 @@ class Fuyuneko(Crawler):
 
         # Extract volume-wise chapter entries
         # FIXME: soup.select grabs more than chapters links, it keep getting fuyuneko.org/privacy-policy and trying to extract body text.
-        chapters = soup.select('div.sqs-block-content p [href*=".fuyuneko.org/"]') # Stops external links being selected as chapters
-            
+        # Stops external links being selected as chapters
+        chapters = soup.select(
+            'div.sqs-block-content p [href*=".fuyuneko.org/"]')
+
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
@@ -54,7 +56,7 @@ class Fuyuneko(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        
+
         body_parts = soup.select_one('.entry-content')
 
         # Removes "Previous | Table of Contents | Next" from bottom of chapters.
@@ -68,7 +70,7 @@ class Fuyuneko(Crawler):
 
         for br in body_parts.select('br'):
             br.decompose()
-            
+
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

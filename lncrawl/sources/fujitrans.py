@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('FUJITRANSLATION')
+logger = logging.getLogger(__name__)
 
 
 class FujiTranslation(Crawler):
@@ -27,8 +27,10 @@ class FujiTranslation(Crawler):
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
-        chapters = soup.select('div.entry-content p [href*="fujitranslation.com/"]') # Stops external links being selected as chapters
-            
+        # Stops external links being selected as chapters
+        chapters = soup.select(
+            'div.entry-content p [href*="fujitranslation.com/"]')
+
         for a in chapters:
             chap_id = len(self.chapters) + 1
             if len(self.chapters) % 100 == 0:
@@ -52,7 +54,7 @@ class FujiTranslation(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        
+
         body_parts = soup.select_one('.entry-content')
 
         for content in body_parts.select("p"):
@@ -66,7 +68,7 @@ class FujiTranslation(Crawler):
         # Remove Share Button from bottom of chapter
         for share in body_parts.select('div#jp-post-flair'):
             share.decompose()
-            
+
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

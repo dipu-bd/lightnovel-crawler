@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVEL_ONLINE_FREE')
+logger = logging.getLogger(__name__)
 search_url = 'https://bestlightnovel.com/getsearchstory'
 novel_page_url = 'https://bestlightnovel.com/novel_%s'
 

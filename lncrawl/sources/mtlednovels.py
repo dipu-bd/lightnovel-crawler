@@ -5,7 +5,7 @@ import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MTLED-NOVELS')
+logger = logging.getLogger(__name__)
 search_url = 'https://mtled-novels.com/search_novel.php?q=%s'
 login_url = 'https://mtled-novels.com/login/ajax/checklogin.php'
 logout_url = 'https://mtled-novels.com/login/logout.php'

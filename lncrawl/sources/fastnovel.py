@@ -4,7 +4,8 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('FASTNOVEL')
+logger = logging.getLogger(__name__)
+
 
 class FastNovel(Crawler):
     base_url = 'http://fastnovel.net/'

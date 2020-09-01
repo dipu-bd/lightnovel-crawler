@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVELHALL')
+logger = logging.getLogger(__name__)
 
 
 class NovelhallCrawler(Crawler):

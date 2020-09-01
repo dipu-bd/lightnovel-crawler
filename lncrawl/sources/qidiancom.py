@@ -2,7 +2,7 @@
 import logging
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('QIDIAN_COM')
+logger = logging.getLogger(__name__)
 
 chapter_list_url = 'https://book.qidian.com/ajax/book/category?_csrfToken=%s&bookId=%s'
 chapter_details_url = 'https://read.qidian.com/chapter/%s'

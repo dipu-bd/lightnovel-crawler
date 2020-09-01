@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('VOLARE_NOVELS')
+logger = logging.getLogger(__name__)
 
 book_url = 'https://www.volarenovels.com/novel/%s'
 search_url = 'https://www.volarenovels.com/api/novels/search?query=%s&count=5'

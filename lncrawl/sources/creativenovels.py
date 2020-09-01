@@ -6,7 +6,7 @@ from urllib.parse import parse_qs, urlparse
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('CREATIVE_NOVELS')
+logger = logging.getLogger(__name__)
 
 chapter_list_url = 'https://creativenovels.com/wp-admin/admin-ajax.php'
 chapter_s_regex = r'var chapter_list_summon = {"ajaxurl":"https:\/\/creativenovels.com\/wp-admin\/admin-ajax.php","security":"([^"]+)"}'

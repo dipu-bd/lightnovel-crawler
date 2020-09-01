@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('READLIGHTNOVEL.CC')
+logger = logging.getLogger(__name__)
 search_url = 'https://www.readlightnovel.cc/search/%s/1'
 
 
@@ -28,7 +28,7 @@ class ReadlightnovelCcCrawler(Crawler):
         for li in soup.select('ul.result-list li'):
             a = li.select_one('a.book-name')['href']
             author = li.select_one('a.book-name font').text
-            title = li.select_one('a.book-name').text.replace(author,"")
+            title = li.select_one('a.book-name').text.replace(author, "")
 
             results.append({
                 'title': title,
@@ -49,7 +49,8 @@ class ReadlightnovelCcCrawler(Crawler):
         self.novel_title = soup.select_one('div.book-name').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one('div.author span.name').text.strip()
+        self.novel_author = soup.select_one(
+            'div.author span.name').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(

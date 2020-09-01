@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MACHINE_NOVEL_TRANSLATION')
+logger = logging.getLogger(__name__)
 
 search_url = 'http://www.machinenoveltranslation.com/search/autocomplete'
 

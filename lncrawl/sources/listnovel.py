@@ -5,7 +5,7 @@ import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LIST_NOVEL')
+logger = logging.getLogger(__name__)
 
 
 chapter_list_url = 'https://listnovel.com/wp-admin/admin-ajax.php'

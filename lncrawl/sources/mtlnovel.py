@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MTLNOVEL')
+logger = logging.getLogger(__name__)
 search_url = 'https://www.mtlnovel.com/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
 
 

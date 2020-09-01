@@ -3,7 +3,7 @@
 import os
 import logging
 
-logger = logging.getLogger('UPLOADER')
+logger = logging.getLogger(__name__)
 
 
 try:

@@ -10,7 +10,7 @@ from bs4.element import Tag
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('BABELNOVEL')
+logger = logging.getLogger(__name__)
 
 search_url = 'https://babelnovel.com/api/books?page=0&pageSize=8&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
 novel_page_url = 'https://babelnovel.com/api/books/%s'
@@ -106,7 +106,8 @@ class BabelNovelCrawler(Crawler):
         data = self.get_json(list_url)
         chapters = list()
         for item in data['data']:
-            if not (item['isFree']):  # or item['isLimitFree'] or item['isBought']):
+            # or item['isLimitFree'] or item['isBought']):
+            if not (item['isFree']):
                 continue
             # end if
             chapters.append({
@@ -121,7 +122,8 @@ class BabelNovelCrawler(Crawler):
     def parse_content_css(self, url):
         try:
             soup = self.get_soup(url)
-            content = re.findall('window.__STATE__ = "([^"]+)"', str(soup), re.MULTILINE)
+            content = re.findall(
+                'window.__STATE__ = "([^"]+)"', str(soup), re.MULTILINE)
             data = json.loads(unquote(content[0]))
             cssUrl = self.absolute_url(data['chapterDetailStore']['cssUrl'])
             logger.info('Getting %s', cssUrl)

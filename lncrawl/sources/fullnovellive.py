@@ -2,7 +2,7 @@
 import logging
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('FULLNOVEL_LIVE')
+logger = logging.getLogger(__name__)
 
 NOVEL_SEARCH = 'http://fullnovel.live/search/%s'
 

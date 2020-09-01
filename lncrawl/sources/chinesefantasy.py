@@ -5,7 +5,7 @@ import re
 import logging
 import json
 
-logger = logging.getLogger('CHINESE_FANTASY_NOVELS')
+logger = logging.getLogger(__name__)
 
 
 class ChineseFantasyNovels(Crawler):

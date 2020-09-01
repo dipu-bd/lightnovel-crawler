@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WORDEXCERPT')
+logger = logging.getLogger(__name__)
 search_url = 'https://wordexcerpt.com/?s=%s&post_type=wp-manga'
 
 
@@ -16,7 +16,8 @@ class WordExcerptCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.post-title h1, .c-manga-title h1').text.strip()
+        self.novel_title = soup.select_one(
+            '.post-title h1, .c-manga-title h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         possible_img = soup.select_one('.summary_image img')
@@ -27,7 +28,8 @@ class WordExcerptCrawler(Crawler):
                 self.novel_cover = self.absolute_url(possible_img['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        possible_author = soup.select_one('.author-content a, .profile-manga a[href*="/author/"]')
+        possible_author = soup.select_one(
+            '.author-content a, .profile-manga a[href*="/author/"]')
         if possible_author:
             self.novel_author = possible_author.text
         logger.info('Novel author: %s', self.novel_author)

@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('IDQIDIAN')
+logger = logging.getLogger(__name__)
 
 
 class IdqidianCrawler(Crawler):
