@@ -291,11 +291,11 @@ You are very welcome to contribute in this project. You can:
 | http://liberspark.com                  |            |           |
 | http://novelfull.com                   |     ✔      |           |
 | http://tiknovel.com                    |            |           |
-| http://zenithnovels.com                |            |           |
 | http://www.fujitranslation.com         |            |           |
 | http://www.hanyunovels.site            |     ✔      |           |
 | http://www.machinenoveltranslation.com |            |           |
 | http://www.tiknovel.com                |            |           |
+| http://zenithnovels.com                |            |           |
 | https://4scanlation.xyz                |            |           |
 | https://9kqw.com                       |     ✔      |           |
 | https://anythingnovel.com              |            |           |
@@ -319,8 +319,8 @@ You are very welcome to contribute in this project. You can:
 | https://kiss-novel.com                 |            |           |
 | https://kisslightnovels.info           |     ✔      |           |
 | https://light-novel.online             |     ✔      |           |
-| https://listnovel.com                  |            |           |
 | https://lightnovelsonl.com             |     ✔      |           |
+| https://listnovel.com                  |            |           |
 | https://litnet.com                     |     ✔      |           |
 | https://lnmtl.com                      |            |     ✔     |
 | https://m.chinesefantasynovels.com     |            |           |
@@ -335,8 +335,8 @@ You are very welcome to contribute in this project. You can:
 | https://novel27.com                    |     ✔      |           |
 | https://novelcrush.com                 |     ✔      |           |
 | https://novelfull.com                  |     ✔      |           |
-| https://novelonlinefull.com            |     ✔      |           |
 | https://novelonlinefree.com/homepage/  |     ✔      |           |
+| https://novelonlinefull.com            |     ✔      |           |
 | https://novelraw.blogspot.com          |            |           |
 | https://novelsrock.com                 |            |           |
 | https://pery.info/                     |     ✔      |           |
@@ -344,8 +344,8 @@ You are very welcome to contribute in this project. You can:
 | https://readwebnovels.net              |     ✔      |           |
 | https://rewayat.club                   |            |           |
 | https://tomotranslations.com           |            |           |
-| https://vipnovel.com                   |     ✔      |           |
 | https://viewnovel.net                  |     ✔      |           |
+| https://vipnovel.com                   |     ✔      |           |
 | https://volarenovels.com               |            |           |
 | https://wbnovel.com                    |            |           |
 | https://webnovel.online                |            |           |
@@ -358,6 +358,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.asianhobbyist.com          |            |           |
 | https://www.fuyuneko.org/              |            |           |
 | https://www.idqidian.us                |            |           |
+| https://www.lightnovelworld.com        |     ✔      |           |
 | https://www.machine-translation.org    |     ✔      |           |
 | https://www.mtlnovel.com               |     ✔      |           |
 | https://www.mywuxiaworld.com           |     ✔      |           |
