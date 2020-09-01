@@ -39,7 +39,7 @@ class LightNovelOnline(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_id = urlparse(self.novel_url).path.split('/')[1]
+        self.novel_id = urlparse(self.novel_url).path.split('/')[-1]
         logger.info("Novel Id: %s", self.novel_id)
 
         self.novel_title = soup.select_one(
