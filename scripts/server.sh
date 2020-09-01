@@ -2,7 +2,7 @@ export LC_ALL="en_US.UTF-8"
 
 git stash save -u
 git fetch origin master
-git rebase
+git rebase FETCH_HEAD
 git stash pop
 
 if [ ! -d venv ]; then
