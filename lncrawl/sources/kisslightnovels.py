@@ -40,8 +40,12 @@ class KissLightNovels(Crawler):
         self.novel_title = title_tag.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['data-src'])
+        possible_image = soup.select_one('.summary_image a img')
+        if 'data-src' in possible_image:
+            self.novel_cover = self.absolute_url(possible_image['data-src'])
+        elif 'src' in possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('.tab-summary .author-content a')
