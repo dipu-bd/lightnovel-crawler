@@ -301,6 +301,7 @@ You are very welcome to contribute in this project. You can:
 | https://4scanlation.xyz                      |            |           |
 | https://9kqw.com                             |     ✔      |           |
 | https://anythingnovel.com                    |            |           |
+| https://automtl.wordpress.com                |            |           |
 | https://babelnovel.com                       |     ✔      |           |
 | https://bestlightnovel.com                   |     ✔      |           |
 | https://bestoflightnovels.com/               |     ✔      |           |
