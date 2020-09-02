@@ -381,6 +381,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.shinsori.com               |            |           |
 | https://www.tapread.com                |            |           |
 | https://www.translateindo.com          |            |           |
+| https://www.virlyce.com                |            |           |
 | https://www.wattpad.com                |            |           |
 | https://www.webnovel.com               |     ✔      |           |
 | https://www.worldnovel.online          |     ✔      |           |
