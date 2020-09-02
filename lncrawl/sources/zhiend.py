@@ -5,30 +5,36 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('DARK_TRANSLATION')
+logger = logging.getLogger('ZHI_END')
 
-class DarkTranslation(Crawler):
-    base_url = 'https://darktranslation.com/'
+
+class ZhiEnd(Crawler):
+    base_url = [
+        'http://zhi-end.blogspot.com/',
+        'http://zhi-end.blogspot.co.id/'
+    ]
+
+    def initialize(self):
+        self.home_url = 'http://zhi-end.blogspot.com/'
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
+        self.novel_title = soup.select_one('h1.entry-title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # FIXME: Problem getting cover image, tried multiple ways and keep getting error.
-        # self.novel_cover = self.absolute_url(
-        #     soup.select_one('div.entry-content p img')['src'])
-        # logger.info('Novel cover: %s', self.novel_cover)
+        self.novel_cover = self.absolute_url(
+            soup.select_one('div.entry-content div a img')['src'])
+        logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = "by Dark Translation"
+        self.novel_author = "Translated by Zhi End"
         logger.info('Novel author: %s', self.novel_author)
 
         # Extract volume-wise chapter entries
-        # Stops external links being selected as chapters
-        chapters = soup.select('div.entry-content p a')
+        chapters = soup.select('div.entry-content div [href*="zhi-end.blogspot"]')
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -54,17 +60,10 @@ class DarkTranslation(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
-        body = []
-        contents = soup.select('div.entry-content p')
-        for p in contents:
-            para = ' '.join(self.extract_contents(p))
-            if len(para):
-                body.append(para)
-            # end if
-        # end for
-
-        return '<p>%s</p>' % '</p><p>'.join(body)
+        body_parts = soup.select_one('div.post-body')
+        for br in body_parts.select('br'):
+            br.decompose()
+        body = self.extract_contents(body_parts)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

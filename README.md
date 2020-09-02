@@ -358,6 +358,8 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.io                  |     ✔      |           |
 | https://wuxiaworld.live                |     ✔      |           |
 | https://wuxiaworld.online              |     ✔      |           |
+| http://zhi-end.blogspot.co.id          |            |           |
+| http://zhi-end.blogspot.com            |            |           |
 | https://www.aixdzs.com                 |            |           |
 | https://www.asianhobbyist.com          |            |           |
 | https://www.fuyuneko.org/              |            |           |
