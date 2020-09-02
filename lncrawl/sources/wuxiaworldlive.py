@@ -4,10 +4,10 @@ import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('WUXIAWORLD_LIVE')
 search_url = 'https://wuxiaworld.live/search.ajax?type=&query=%s'
 
-class LightNovelsOnl(Crawler):
+class WuxiaWorldLive(Crawler):
     base_url = 'https://wuxiaworld.live/'
 
     def search_novel(self, query):
