@@ -367,6 +367,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelhall.com              |            |           |
 | https://www.novelringan.com            |            |           |
 | https://www.novelspread.com            |            |           |
+| https://www.oppatranslations.com       |            |           |
 | https://www.qidian.com                 |            |           |
 | https://www.readlightnovel.cc          |            |           |
 | https://www.readlightnovel.org         |            |           |
