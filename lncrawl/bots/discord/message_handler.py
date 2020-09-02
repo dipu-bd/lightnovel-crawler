@@ -203,7 +203,7 @@ class MessageHandler:
             self.display_sources_selection()
         else:
             self.send_sync('\n'.join([
-                'Found %d novels:\n' % len(self.app.search_results)
+                'Found %d novels:' % len(self.app.search_results)
             ] + [
                 '%d. **%s** `%d sources`' % (
                     i + 1,
@@ -211,6 +211,7 @@ class MessageHandler:
                     len(item['novels'])
                 ) for i, item in enumerate(self.app.search_results)
             ] + [
+                '',
                 'Enter name or index of your novel.',
                 'Send `!cancel` to stop this session.'
             ]))
@@ -250,16 +251,22 @@ class MessageHandler:
     # end def
 
     def display_sources_selection(self):
+        novel_list = self.selected_novel['novels']
+        self.send_sync('**%s** is found in %d sources:\n' %
+                       (self.selected_novel['title'], len(novel_list)))
+
+        for j in range(0, len(novel_list), 10):
+            self.send_sync('\n'.join([
+                '%d. <%s> %s' % (
+                    i + 1,
+                    item['url'],
+                    item['info'] if 'info' in item else ''
+                ) for i, item in enumerate(novel_list[j:j+10])
+            ]))
+        # end for
+
         self.send_sync('\n'.join([
-            '**%s** is found in %d sources:\n' % (
-                self.selected_novel['title'], len(self.selected_novel['novels']))
-        ] + [
-            '%d. <%s> %s' % (
-                i + 1,
-                item['url'],
-                item['info'] if 'info' in item else ''
-            ) for i, item in enumerate(self.selected_novel['novels'])
-        ] + [
+            '',
             'Enter index or name of your source.',
             'Send `!cancel` to stop this session.',
         ]))
