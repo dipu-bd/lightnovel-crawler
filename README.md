@@ -308,6 +308,7 @@ You are very welcome to contribute in this project. You can:
 | https://crescentmoon.blog              |            |           |
 | https://dmtranslationscn.com           |            |           |
 | https://es.mtlnovel.com                |     ✔      |           |
+| https://exiledrebelsscanlations.com    |     ✔      |           |
 | https://fastnovel.net                  |            |           |
 | https://fr.mtlnovel.com                |     ✔      |           |
 | https://fujitranslation.com            |            |           |
