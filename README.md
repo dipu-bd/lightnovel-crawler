@@ -310,6 +310,7 @@ You are very welcome to contribute in this project. You can:
 | https://creativenovels.com                   |            |           |
 | https://crescentmoon.blog                    |            |           |
 | https://darktranslation.com                  |            |           |
+| https://demontranslations.com                |            |           |
 | https://dmtranslationscn.com                 |            |           |
 | https://es.mtlnovel.com                      |     ✔      |           |
 | https://exiledrebelsscanlations.com          |     ✔      |           |
