@@ -285,114 +285,115 @@ You are very welcome to contribute in this project. You can:
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
-| Available Sources                       | Can Search | Can Login |
-| --------------------------------------- | :--------: | :-------: |
-| http://boxnovel.org                     |     ✔      |           |
-| http://liberspark.com                   |            |           |
-| http://novelfull.com                    |     ✔      |           |
-| http://tiknovel.com                     |            |           |
-| http://www.fujitranslation.com          |            |           |
-| http://www.hanyunovels.site             |     ✔      |           |
-| http://www.machinenoveltranslation.com  |            |           |
-| http://www.tiknovel.com                 |            |           |
-| http://zenithnovels.com                 |            |           |
-| https://4scanlation.xyz                 |            |           |
-| https://9kqw.com                        |     ✔      |           |
-| https://anythingnovel.com               |            |           |
-| https://babelnovel.com                  |     ✔      |           |
-| https://bestlightnovel.com              |     ✔      |           |
-| https://bestoflightnovels.com/          |     ✔      |           |
-| https://book.qidian.com                 |            |           |
-| https://boxnovel.com                    |     ✔      |           |
-| https://creativenovels.com              |            |           |
-| https://crescentmoon.blog               |            |           |
-| https://darktranslation.com             |            |           |
-| https://dmtranslationscn.com            |            |           |
-| https://es.mtlnovel.com                 |     ✔      |           |
-| https://exiledrebelsscanlations.com     |     ✔      |           |
-| https://fastnovel.net                   |            |           |
-| https://fr.mtlnovel.com                 |     ✔      |           |
-| https://fujitranslation.com             |            |           |
-| https://id.mtlnovel.com                 |     ✔      |           |
-| https://indowebnovel.id/                |            |           |
-| https://instadoses.com                  |            |           |
-| https://jpmtl.com                       |            |           |
-| https://jstranslations1.com             |            |           |
-| https://justatranslatortranslations.com |            |            |           |
-| https://kiss-novel.com                  |            |           |
-| https://kisslightnovels.info            |     ✔      |           |
-| https://light-novel.online              |     ✔      |           |
-| https://lightnovelsonl.com              |     ✔      |           |
-| https://listnovel.com                   |            |           |
-| https://litnet.com                      |     ✔      |           |
-| https://lnmtl.com                       |            |     ✔     |
-| https://m.chinesefantasynovels.com      |            |           |
-| https://m.mywuxiaworld.com              |     ✔      |           |
-| https://m.novelspread.com               |            |           |
-| https://m.readlightnovel.cc             |            |           |
-| https://m.romanticlovebooks.com         |            |           |
-| https://m.wuxiaworld.co                 |     ✔      |           |
-| https://mangatoon.mobi                  |            |           |
-| https://meionovel.com                   |            |           |
-| https://myoniyonitranslations.com       |            |           |
-| https://novel27.com                     |     ✔      |           |
-| https://novelcrush.com                  |     ✔      |           |
-| https://novelfull.com                   |     ✔      |           |
-| https://novelonlinefree.com/homepage/   |     ✔      |           |
-| https://novelonlinefull.com             |     ✔      |           |
-| https://novelraw.blogspot.com           |            |           |
-| https://novelsrock.com                  |            |           |
-| https://pery.info/                      |     ✔      |           |
-| https://ranobelib.me                    |            |           |
-| https://readwebnovels.net               |     ✔      |           |
-| https://rewayat.club                    |            |           |
-| https://tomotranslations.com            |            |           |
-| https://viewnovel.net                   |     ✔      |           |
-| https://vipnovel.com                    |     ✔      |           |
-| https://volarenovels.com                |            |           |
-| https://wbnovel.com                     |            |           |
-| https://webnovel.online                 |            |           |
-| https://webnovelindonesia.com           |            |           |
-| https://webnovelonline.com              |            |           |
-| https://woopread.com                    |            |           |
-| https://wordexcerpt.com                 |            |           |
-| https://wuxiaworld.io                   |     ✔      |           |
-| https://wuxiaworld.live                 |     ✔      |           |
-| https://wuxiaworld.online               |     ✔      |           |
-| http://zhi-end.blogspot.co.id           |            |           |
-| http://zhi-end.blogspot.com             |            |           |
-| https://www.aixdzs.com                  |            |           |
-| https://www.asianhobbyist.com           |            |           |
-| https://www.fuyuneko.org/               |            |           |
-| https://www.idqidian.us                 |            |           |
-| https://www.lightnovelworld.com         |     ✔      |           |
-| https://www.machine-translation.org     |     ✔      |           |
-| https://www.mtlnovel.com                |     ✔      |           |
-| https://www.mywuxiaworld.com            |     ✔      |           |
-| https://www.novelall.com                |     ✔      |           |
-| https://www.novelcool.com               |            |           |
-| https://www.novelhall.com               |            |           |
-| https://www.novelringan.com             |            |           |
-| https://www.novelspread.com             |            |           |
-| https://www.oppatranslations.com        |            |           |
-| https://www.qidian.com                  |            |           |
-| https://www.readlightnovel.cc           |            |           |
-| https://www.readlightnovel.org          |            |           |
-| https://www.readnovelfull.com           |     ✔      |           |
-| https://www.romanticlovebooks.com       |            |           |
-| https://www.royalroad.com               |     ✔      |           |
-| https://www.scribblehub.com             |     ✔      |           |
-| https://www.shinsori.com                |            |           |
-| https://www.tapread.com                 |            |           |
-| https://www.translateindo.com           |            |           |
-| https://www.virlyce.com                 |            |           |
-| https://www.wattpad.com                 |            |           |
-| https://www.webnovel.com                |     ✔      |           |
-| https://www.worldnovel.online           |     ✔      |           |
-| https://www.wuxialeague.com             |            |           |
-| https://www.wuxiaworld.co               |     ✔      |           |
-| https://www.wuxiaworld.com              |     ✔      |           |
-| https://www.wuxiaworld.site             |     ✔      |           |
+| Available Sources                            | Can Search | Can Login |
+| -------------------------------------------- | :--------: | :-------: |
+| http://boxnovel.org                          |     ✔      |           |
+| http://liberspark.com                        |            |           |
+| http://novelfull.com                         |     ✔      |           |
+| http://tiknovel.com                          |            |           |
+| http://www.fujitranslation.com               |            |           |
+| http://www.hanyunovels.site                  |     ✔      |           |
+| http://www.machinenoveltranslation.com       |            |           |
+| http://www.tiknovel.com                      |            |           |
+| http://zenithnovels.com                      |            |           |
+| http://zhi-end.blogspot.co.id                |            |           |
+| http://zhi-end.blogspot.com                  |            |           |
+| https://4scanlation.xyz                      |            |           |
+| https://9kqw.com                             |     ✔      |           |
+| https://anythingnovel.com                    |            |           |
+| https://babelnovel.com                       |     ✔      |           |
+| https://bestlightnovel.com                   |     ✔      |           |
+| https://bestoflightnovels.com/               |     ✔      |           |
+| https://book.qidian.com                      |            |           |
+| https://boxnovel.com                         |     ✔      |           |
+| https://creativenovels.com                   |            |           |
+| https://crescentmoon.blog                    |            |           |
+| https://darktranslation.com                  |            |           |
+| https://dmtranslationscn.com                 |            |           |
+| https://es.mtlnovel.com                      |     ✔      |           |
+| https://exiledrebelsscanlations.com          |     ✔      |           |
+| https://fastnovel.net                        |            |           |
+| https://fr.mtlnovel.com                      |     ✔      |           |
+| https://fujitranslation.com                  |            |           |
+| https://id.mtlnovel.com                      |     ✔      |           |
+| https://indowebnovel.id/                     |            |           |
+| https://instadoses.com                       |            |           |
+| https://jpmtl.com                            |            |           |
+| https://jstranslations1.com                  |            |           |
+| https://justatranslatortranslations.com      |            |           |
+| https://kiss-novel.com                       |            |           |
+| https://kisslightnovels.info                 |     ✔      |           |
+| https://light-novel.online                   |     ✔      |           |
+| https://lightnovelsonl.com                   |     ✔      |           |
+| https://listnovel.com                        |            |           |
+| https://litnet.com                           |     ✔      |           |
+| https://lnmtl.com                            |            |     ✔     |
+| https://m.chinesefantasynovels.com           |            |           |
+| https://m.mywuxiaworld.com                   |     ✔      |           |
+| https://m.novelspread.com                    |            |           |
+| https://m.readlightnovel.cc                  |            |           |
+| https://m.romanticlovebooks.com              |            |           |
+| https://m.wuxiaworld.co                      |     ✔      |           |
+| https://mangatoon.mobi                       |            |           |
+| https://meionovel.com                        |            |           |
+| https://myoniyonitranslations.com            |            |           |
+| https://novel27.com                          |     ✔      |           |
+| https://novelcrush.com                       |     ✔      |           |
+| https://novelfull.com                        |     ✔      |           |
+| https://novelonlinefree.com/homepage/        |     ✔      |           |
+| https://novelonlinefull.com                  |     ✔      |           |
+| https://novelraw.blogspot.com                |            |           |
+| https://novelsrock.com                       |            |           |
+| https://pery.info/                           |     ✔      |           |
+| https://ranobelib.me                         |            |           |
+| https://readwebnovels.net                    |     ✔      |           |
+| https://rewayat.club                         |            |           |
+| https://shalvationtranslations.wordpress.com |            |           |
+| https://tomotranslations.com                 |            |           |
+| https://viewnovel.net                        |     ✔      |           |
+| https://vipnovel.com                         |     ✔      |           |
+| https://volarenovels.com                     |            |           |
+| https://wbnovel.com                          |            |           |
+| https://webnovel.online                      |            |           |
+| https://webnovelindonesia.com                |            |           |
+| https://webnovelonline.com                   |            |           |
+| https://woopread.com                         |            |           |
+| https://wordexcerpt.com                      |            |           |
+| https://wuxiaworld.io                        |     ✔      |           |
+| https://wuxiaworld.live                      |     ✔      |           |
+| https://wuxiaworld.online                    |     ✔      |           |
+| https://www.aixdzs.com                       |            |           |
+| https://www.asianhobbyist.com                |            |           |
+| https://www.fuyuneko.org/                    |            |           |
+| https://www.idqidian.us                      |            |           |
+| https://www.lightnovelworld.com              |     ✔      |           |
+| https://www.machine-translation.org          |     ✔      |           |
+| https://www.mtlnovel.com                     |     ✔      |           |
+| https://www.mywuxiaworld.com                 |     ✔      |           |
+| https://www.novelall.com                     |     ✔      |           |
+| https://www.novelcool.com                    |            |           |
+| https://www.novelhall.com                    |            |           |
+| https://www.novelringan.com                  |            |           |
+| https://www.novelspread.com                  |            |           |
+| https://www.oppatranslations.com             |            |           |
+| https://www.qidian.com                       |            |           |
+| https://www.readlightnovel.cc                |            |           |
+| https://www.readlightnovel.org               |            |           |
+| https://www.readnovelfull.com                |     ✔      |           |
+| https://www.romanticlovebooks.com            |            |           |
+| https://www.royalroad.com                    |     ✔      |           |
+| https://www.scribblehub.com                  |     ✔      |           |
+| https://www.shinsori.com                     |            |           |
+| https://www.tapread.com                      |            |           |
+| https://www.translateindo.com                |            |           |
+| https://www.virlyce.com                      |            |           |
+| https://www.wattpad.com                      |            |           |
+| https://www.webnovel.com                     |     ✔      |           |
+| https://www.worldnovel.online                |     ✔      |           |
+| https://www.wuxialeague.com                  |            |           |
+| https://www.wuxiaworld.co                    |     ✔      |           |
+| https://www.wuxiaworld.com                   |     ✔      |           |
+| https://www.wuxiaworld.site                  |     ✔      |           |
 
 ### C4. Rejected sources
 
