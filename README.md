@@ -354,6 +354,7 @@ You are very welcome to contribute in this project. You can:
 | https://webnovelonline.com             |            |           |
 | https://woopread.com                   |            |           |
 | https://wordexcerpt.com                |            |           |
+| https://wuxiaworld.live                |     ✔      |           |
 | https://wuxiaworld.online              |     ✔      |           |
 | https://www.aixdzs.com                 |            |           |
 | https://www.asianhobbyist.com          |            |           |
