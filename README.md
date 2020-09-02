@@ -306,6 +306,7 @@ You are very welcome to contribute in this project. You can:
 | https://boxnovel.com                   |     ✔      |           |
 | https://creativenovels.com             |            |           |
 | https://crescentmoon.blog              |            |           |
+| https://darktranslation.com            |            |           |
 | https://dmtranslationscn.com           |            |           |
 | https://es.mtlnovel.com                |     ✔      |           |
 | https://exiledrebelsscanlations.com    |     ✔      |           |
