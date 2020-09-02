@@ -258,7 +258,7 @@ class MessageHandler:
         for j in range(0, len(novel_list), 10):
             self.send_sync('\n'.join([
                 '%d. <%s> %s' % (
-                    ((j * 10) + i + 1),
+                    (j + i + 1),
                     item['url'],
                     item['info'] if 'info' in item else ''
                 ) for i, item in enumerate(novel_list[j:j+10])
