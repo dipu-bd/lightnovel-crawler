@@ -366,6 +366,7 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.online                    |     ✔      |           |
 | https://www.aixdzs.com                       |            |           |
 | https://www.asianhobbyist.com                |            |           |
+| https://www.daocaorenshuwu.com               |            |           |
 | https://www.fuyuneko.org/                    |            |           |
 | https://www.idqidian.us                      |            |           |
 | https://www.lightnovelworld.com              |     ✔      |           |
