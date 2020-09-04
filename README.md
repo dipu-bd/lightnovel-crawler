@@ -339,6 +339,7 @@ You are very welcome to contribute in this project. You can:
 | https://mangatoon.mobi                       |            |           |
 | https://meionovel.com                        |            |           |
 | https://myoniyonitranslations.com            |            |           |
+| https://mysticalmerries.com                  |            |           |
 | https://novel27.com                          |     ✔      |           |
 | https://novelcrush.com                       |     ✔      |           |
 | https://novelfull.com                        |     ✔      |           |
