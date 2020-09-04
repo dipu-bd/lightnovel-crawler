@@ -11,7 +11,6 @@ novel_page_url = 'https://novelonlinefree.com/novel/%s'
 
 class NovelOnlineFree(Crawler):
     base_url = [
-        'https://novelonlinefree.com/homepage/',
         'https://novelonlinefree.com/',
     ]
 
