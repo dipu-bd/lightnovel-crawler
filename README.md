@@ -304,9 +304,10 @@ You are very welcome to contribute in this project. You can:
 | https://automtl.wordpress.com                |            |           |
 | https://babelnovel.com                       |     ✔      |           |
 | https://bestlightnovel.com                   |     ✔      |           |
-| https://bestoflightnovels.com/               |     ✔      |           |
+| https://bestoflightnovels.com                |     ✔      |           |
 | https://book.qidian.com                      |            |           |
 | https://boxnovel.com                         |     ✔      |           |
+| https://chrysanthemumgarden.com              |            |           |
 | https://creativenovels.com                   |            |           |
 | https://crescentmoon.blog                    |            |           |
 | https://darktranslation.com                  |            |           |
@@ -319,7 +320,7 @@ You are very welcome to contribute in this project. You can:
 | https://fr.mtlnovel.com                      |     ✔      |           |
 | https://fujitranslation.com                  |            |           |
 | https://id.mtlnovel.com                      |     ✔      |           |
-| https://indowebnovel.id/                     |            |           |
+| https://indowebnovel.id                      |            |           |
 | https://instadoses.com                       |            |           |
 | https://jpmtl.com                            |            |           |
 | https://jstranslations1.com                  |            |           |
@@ -344,7 +345,7 @@ You are very welcome to contribute in this project. You can:
 | https://novel27.com                          |     ✔      |           |
 | https://novelcrush.com                       |     ✔      |           |
 | https://novelfull.com                        |     ✔      |           |
-| https://novelonlinefree.com/homepage/        |     ✔      |           |
+| https://novelonlinefree.com                  |     ✔      |           |
 | https://novelonlinefull.com                  |     ✔      |           |
 | https://novelraw.blogspot.com                |            |           |
 | https://novelsrock.com                       |            |           |
@@ -369,7 +370,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.aixdzs.com                       |            |           |
 | https://www.asianhobbyist.com                |            |           |
 | https://www.daocaorenshuwu.com               |            |           |
-| https://www.fuyuneko.org/                    |            |           |
+| https://www.fuyuneko.org                     |            |           |
 | https://www.idqidian.us                      |            |           |
 | https://www.lightnovelworld.com              |     ✔      |           |
 | https://www.machine-translation.org          |     ✔      |           |
