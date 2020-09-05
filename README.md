@@ -314,6 +314,7 @@ You are very welcome to contribute in this project. You can:
 | https://dmtranslationscn.com                 |            |           |
 | https://es.mtlnovel.com                      |     ✔      |           |
 | https://exiledrebelsscanlations.com          |     ✔      |           |
+| https://fanstranslations.com                 |            |           |
 | https://fastnovel.net                        |            |           |
 | https://fr.mtlnovel.com                      |     ✔      |           |
 | https://fujitranslation.com                  |            |           |
