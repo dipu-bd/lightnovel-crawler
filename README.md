@@ -327,6 +327,7 @@ You are very welcome to contribute in this project. You can:
 | https://justatranslatortranslations.com      |            |           |
 | https://kiss-novel.com                       |            |           |
 | https://kisslightnovels.info                 |     ✔      |           |
+| https://lemontreetranslations.wordpress.com  |            |           |
 | https://light-novel.online                   |     ✔      |           |
 | https://lightnovelsonl.com                   |     ✔      |           |
 | https://listnovel.com                        |            |           |
