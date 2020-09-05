@@ -320,6 +320,7 @@ You are very welcome to contribute in this project. You can:
 | https://fr.mtlnovel.com                      |     ✔      |           |
 | https://fujitranslation.com                  |            |           |
 | https://id.mtlnovel.com                      |     ✔      |           |
+| https://inadequatetranslations.wordpress.com |            |           |
 | https://indowebnovel.id                      |            |           |
 | https://instadoses.com                       |            |           |
 | https://jpmtl.com                            |            |           |
