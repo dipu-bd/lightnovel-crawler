@@ -315,10 +315,12 @@ You are very welcome to contribute in this project. You can:
 | https://dmtranslationscn.com                 |            |           |
 | https://es.mtlnovel.com                      |     ✔      |           |
 | https://exiledrebelsscanlations.com          |     ✔      |           |
+| https://fanstranslations.com                 |            |           |
 | https://fastnovel.net                        |            |           |
 | https://fr.mtlnovel.com                      |     ✔      |           |
 | https://fujitranslation.com                  |            |           |
 | https://id.mtlnovel.com                      |     ✔      |           |
+| https://inadequatetranslations.wordpress.com |            |           |
 | https://indowebnovel.id                      |            |           |
 | https://instadoses.com                       |            |           |
 | https://jpmtl.com                            |            |           |
@@ -326,6 +328,7 @@ You are very welcome to contribute in this project. You can:
 | https://justatranslatortranslations.com      |            |           |
 | https://kiss-novel.com                       |            |           |
 | https://kisslightnovels.info                 |     ✔      |           |
+| https://lemontreetranslations.wordpress.com  |            |           |
 | https://light-novel.online                   |     ✔      |           |
 | https://lightnovelsonl.com                   |     ✔      |           |
 | https://listnovel.com                        |            |           |
@@ -340,6 +343,7 @@ You are very welcome to contribute in this project. You can:
 | https://mangatoon.mobi                       |            |           |
 | https://meionovel.com                        |            |           |
 | https://myoniyonitranslations.com            |            |           |
+| https://mysticalmerries.com                  |            |           |
 | https://novel27.com                          |     ✔      |           |
 | https://novelcrush.com                       |     ✔      |           |
 | https://novelfull.com                        |     ✔      |           |
@@ -379,6 +383,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelhall.com                    |            |           |
 | https://www.novelringan.com                  |            |           |
 | https://www.novelspread.com                  |            |           |
+| https://www.novelupdates.cc                  |            |           |
 | https://www.oppatranslations.com             |            |           |
 | https://www.qidian.com                       |            |           |
 | https://www.readlightnovel.cc                |            |           |
