@@ -369,6 +369,7 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.io                        |     ✔      |           |
 | https://wuxiaworld.live                      |     ✔      |           |
 | https://wuxiaworld.online                    |     ✔      |           |
+| https://wuxiaworld.site                  |     ✔      |           |
 | https://www.aixdzs.com                       |            |           |
 | https://www.asianhobbyist.com                |            |           |
 | https://www.daocaorenshuwu.com               |            |           |
@@ -402,7 +403,6 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxialeague.com                  |            |           |
 | https://www.wuxiaworld.co                    |     ✔      |           |
 | https://www.wuxiaworld.com                   |     ✔      |           |
-| https://www.wuxiaworld.site                  |     ✔      |           |
 | https://www.x81zw.com                        |            |           |
 | https://www.xsbiquge.com                     |            |           |
 
