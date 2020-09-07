@@ -331,7 +331,7 @@ You are very welcome to contribute in this project. You can:
 | https://lemontreetranslations.wordpress.com  |            |           |
 | https://light-novel.online                   |     ✔      |           |
 | https://lightnovelsonl.com                   |     ✔      |           |
-| https://listnovel.com                        |            |           |
+| https://listnovel.com                        |     ✔      |           |
 | https://litnet.com                           |     ✔      |           |
 | https://lnmtl.com                            |            |     ✔     |
 | https://m.chinesefantasynovels.com           |            |           |
