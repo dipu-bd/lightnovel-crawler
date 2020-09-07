@@ -341,7 +341,7 @@ You are very welcome to contribute in this project. You can:
 | https://m.romanticlovebooks.com              |            |           |
 | https://m.wuxiaworld.co                      |     ✔      |           |
 | https://mangatoon.mobi                       |            |           |
-| https://meionovel.com                        |            |           |
+| https://meionovel.id                         |     ✔      |           |
 | https://myoniyonitranslations.com            |            |           |
 | https://mysticalmerries.com                  |            |           |
 | https://novel27.com                          |     ✔      |           |
