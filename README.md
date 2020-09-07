@@ -364,7 +364,7 @@ You are very welcome to contribute in this project. You can:
 | https://webnovel.online                      |            |           |
 | https://webnovelindonesia.com                |            |           |
 | https://webnovelonline.com                   |            |           |
-| https://woopread.com                         |            |           |
+| https://woopread.com                         |     ✔      |           |
 | https://wordexcerpt.com                      |            |           |
 | https://wuxiaworld.io                        |     ✔      |           |
 | https://wuxiaworld.live                      |     ✔      |           |
