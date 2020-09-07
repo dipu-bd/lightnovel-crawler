@@ -11,7 +11,6 @@ search_url = 'https://mysticalmerries.com/?s=%s'
 class MysticalMerries(Crawler):
     base_url = 'https://mysticalmerries.com/'
 
-    # FIXME: Site uses same Wordpress Template as NovelCrush and many others, but I can't seem to get search to work.
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
