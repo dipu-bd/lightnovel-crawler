@@ -360,7 +360,7 @@ You are very welcome to contribute in this project. You can:
 | https://viewnovel.net                        |     ✔      |           |
 | https://vipnovel.com                         |     ✔      |           |
 | https://volarenovels.com                     |            |           |
-| https://wbnovel.com                          |            |           |
+| https://wbnovel.com                          |     ✔      |           |
 | https://webnovel.online                      |            |           |
 | https://webnovelindonesia.com                |            |           |
 | https://webnovelonline.com                   |            |           |
