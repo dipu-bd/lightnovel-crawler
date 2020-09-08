@@ -5,31 +5,30 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://mysticalmerries.com/?s=%s&post_type=wp-manga&author=&artist=&release='
+search_url = 'https://mysticalmerries.com/?s=%s'
 
 
 class MysticalMerries(Crawler):
     base_url = 'https://mysticalmerries.com/'
 
-    # FIXME: Site uses same Wordpress Template as NovelCrush and many others, but I can't seem to get search to work.
-    # def search_novel(self, query):
-    #     query = query.lower().replace(' ', '+')
-    #     soup = self.get_soup(search_url % query)
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
 
-    #     results = []
-    #     for tab in soup.select('.c-blog__content .type-wp-manga'):
-    #         a = tab.select_one('.post-title h4 a')
-    #         latest = "N/A"
-    #         votes = "0"
-    #         results.append({
-    #             'title': a.text.strip(),
-    #             'url': self.absolute_url(a['href']),
-    #             'info': '%s | Rating: %s' % (latest, votes),
-    #         })
-    #     # end for
+        results = []
+        for tab in soup.select('.c-blog_item'):
+            a = tab.select_one('.post-title h4 a')
+            latest = "N/A"
+            votes = "0"
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (latest, votes),
+            })
+        # end for
 
-    #     return results
-    # # end def
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

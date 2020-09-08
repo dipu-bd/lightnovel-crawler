@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('WUXIA_WORLD')
 search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
 
 
@@ -21,18 +21,19 @@ class WuxiaCoCrawler(Crawler):
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
-        response = self.submit_form(search_url, data=dict(keyword=query, t=1))
-        soup = self.make_soup(response)
+        url = search_url % query.lower()
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
 
         results = []
         for li in soup.select('ul.result-list li'):
             a = li.select_one('a.book-name')['href']
             author = li.select_one('a.book-name font').text
-            title = li.select_one('a.book-name').text.replace(author, "")
+            title = li.select_one('a.book-name').text.replace(author,"")
 
             results.append({
                 'title': title,
-                'url': self.absolute_url(a['href']),
+                'url': self.absolute_url(a),
                 'info': author,
             })
         # end for
@@ -49,8 +50,7 @@ class WuxiaCoCrawler(Crawler):
         self.novel_title = soup.select_one('div.book-name').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one(
-            'div.author span.name').text.strip()
+        self.novel_author = soup.select_one('div.author span.name').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(

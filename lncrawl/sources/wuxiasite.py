@@ -11,7 +11,7 @@ search_url = 'https://wuxiaworld.site/?s=%s&post_type=wp-manga'
 class WuxiaSiteCrawler(Crawler):
     base_url = 'https://wuxiaworld.site/'
 
-    # TODO: disabled due to cloudflare issue
+    # TODO: Disabled due to Cloudflare issue.
     # def search_novel(self, query):
     #     query = query.lower().replace(' ', '+')
     #     soup = self.get_soup(search_url % query)
@@ -43,15 +43,8 @@ class WuxiaSiteCrawler(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_img = soup.select_one('.summary_image img')
-        if possible_img:
-            if possible_img.has_attr('data-src'):
-                self.novel_cover = self.absolute_url(possible_img['data-src'])
-            elif possible_img.has_attr('srcset'):
-                self.novel_cover = self.absolute_url(
-                    possible_img['srcset'].split(',')[0])
-            elif possible_img.has_attr('src'):
-                self.novel_cover = self.absolute_url(possible_img['src'])
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.summary_image a img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('.author-content a')
