@@ -11,6 +11,25 @@ search_url = 'https://wordexcerpt.com/?s=%s&post_type=wp-manga'
 class WordExcerptCrawler(Crawler):
     base_url = 'https://wordexcerpt.com/'
 
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for tab in soup.select('.c-tabs-item__content'):
+            a = tab.select_one('.post-title h3 a')
+            latest = tab.select_one('.latest-chap .chapter a').text
+            votes = tab.select_one('.rating .total_votes').text
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (latest, votes),
+            })
+        # end for
+
+        return results
+    # end def
+
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

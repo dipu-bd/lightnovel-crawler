@@ -2,26 +2,24 @@
 import json
 import logging
 import re
-from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://listnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://listnovel.com/wp-admin/admin-ajax.php'
+search_url = 'https://mysticalmerries.com/?s=%s'
 
 
-class ListNovelCrawler(Crawler):
-    base_url = 'https://listnovel.com/'
+class MysticalMerries(Crawler):
+    base_url = 'https://mysticalmerries.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
 
         results = []
-        for tab in soup.select('.c-tabs-item__content'):
-            a = tab.select_one('.post-title h3 a')
-            latest = tab.select_one('.latest-chap .chapter a').text
-            votes = tab.select_one('.rating .total_votes').text
+        for tab in soup.select('.c-blog_item'):
+            a = tab.select_one('.post-title h4 a')
+            latest = "N/A"
+            votes = "0"
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
@@ -45,41 +43,50 @@ class ListNovelCrawler(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['data-src'])
+            soup.select_one('.summary_image a img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
             a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
+            for a in soup.select('.author-content a')
         ])
         logger.info('%s', self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel id: %s', self.novel_id)
-
-        response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
-        soup = self.make_soup(response)
-        for a in reversed(soup.select('.wp-manga-chapter a')):
+        volumes = set()
+        chapters = soup.select('ul.main li.wp-manga-chapter a')
+        for a in reversed(chapters):
             chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append({'id': vol_id})
-            # end if
+            vol_id = (chap_id - 1) // 100 + 1
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
+                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
+        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.reading-content p')
-        return ''.join([str(p) for p in contents])
+
+        contents = soup.select_one('.text-left')
+        for bad in contents.select('.code-block, script, .adsbygoogle'):
+            bad.decompose()
+
+        for images in contents.select('img'):
+            images.decompose()
+
+        for junk in contents.select("p"):
+            for bad in ["Want the next chapter? Click here:", "<a>https://ko-fi.com/milkywaytranslations</a>", "Want the next chapter?", "<a>Click here!</a>"]:
+                if bad in junk.text:
+                    junk.decompose()
+
+        body = self.extract_contents(contents)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

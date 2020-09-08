@@ -164,10 +164,6 @@ test_user_inputs = {
     'https://www.worldnovel.online/': [
         'https://www.worldnovel.online/novel/solo-leveling/',
     ],
-    'https://www.wuxiaworld.co/': [
-        'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
-        'sword'
-    ],
     'https://rewayat.club/': [
         'https://rewayat.club/novel/almighty-sword-domain/'
     ],

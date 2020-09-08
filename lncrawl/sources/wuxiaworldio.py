@@ -4,31 +4,28 @@ import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger(__name__)
-search_url = 'https://novelonlinefree.com/getsearchstory'
-novel_page_url = 'https://novelonlinefree.com/novel/%s'
+logger = logging.getLogger('WUXIAWORLD_IO')
+search_url = 'https://wuxiaworld.io/search.ajax?type=&query=%s'
 
-
-class NovelOnlineFree(Crawler):
-    base_url = [
-        'https://novelonlinefree.com/',
-    ]
+class WuxiaWorldIo(Crawler):
+    base_url = 'https://wuxiaworld.io/'
 
     def search_novel(self, query):
-        response = self.submit_form(search_url, {
-            'searchword': query
-        })
-        data = response.json()
+        '''Gets a list of {title, url} matching the given query'''
+        soup = self.get_soup(search_url % query)
 
         results = []
-        for novel in data:
-            titleSoup = BeautifulSoup(novel['name'], 'lxml')
+        for novel in soup.select('li'):
+            a = novel.select_one('.resultname a')
+            info = novel.select_one('a:nth-of-type(2)')
+            info = info.text.strip() if info else ''
             results.append({
-                'title': titleSoup.body.text.title(),
-                'url': novel_page_url % novel['nameunsigned'],
-                'info': 'Latest: %s' % novel['lastchapter'],
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': 'Latest: %s' % info,
             })
         # end for
+
         return results
     # end def
 
@@ -41,15 +38,12 @@ class NovelOnlineFree(Crawler):
         self.novel_title = soup.select_one('div.entry-header h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        try:
-            novel_data = self.submit_form(search_url, {
-                'searchword': self.novel_title
-            }).json()
-            self.novel_cover = novel_data[0]['image']
-            self.novel_author = novel_data[0]['author']
-        except Exception:
-            logger.debug('Failed getting novel info.\n%s', Exception)
-        # end try
+        self.novel_cover = self.absolute_url(
+            soup.select_one('span.info_image img')['src'])
+        logger.info('Novel cover: %s', self.novel_cover)
+
+        self.novel_author = soup.select('div.truyen_info_right li')[1].text.strip()
+        logger.info('Novel author: %s', self.novel_author)
 
         for a in reversed(soup.select('#list_chapter .chapter-list a')):
             chap_id = len(self.chapters) + 1
@@ -84,7 +78,7 @@ class NovelOnlineFree(Crawler):
             r'(volume|chapter) .?\d+',
         ]
 
-        contents = soup.select_one('#vung_doc')
+        contents = soup.select_one('div.content-area')
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

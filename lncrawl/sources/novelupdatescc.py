@@ -5,54 +5,45 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('READLIGHTNOVEL.CC')
-search_url = 'https://www.readlightnovel.cc/search/%s/1'
+logger = logging.getLogger(__name__)
+search_url = 'https://www.novelupdates.cc/search/%s/1'
 
 
-class ReadlightnovelCcCrawler(Crawler):
+class NovelUpdatesCC(Crawler):
     base_url = [
-        'https://www.readlightnovel.cc/',
-        'https://m.readlightnovel.cc/',
+        'https://www.novelupdates.cc/',
     ]
 
-    def initialize(self):
-        self.home_url = 'https://www.readlightnovel.cc'
-    # end def
+    # FIXME: Can't seem to get search to work.
+    # def search_novel(self, query):
+    #     query = query.lower().replace(' ', '+')
+    #     soup = self.get_soup(search_url % query)
 
-    def search_novel(self, query):
-        '''Gets a list of {title, url} matching the given query'''
-        #response = self.submit_form(search_url, data=dict(keyword=query, t=1))
-        #soup = self.make_soup(response)
-        #soup = self.get_soup(search_url,query)
-        url = search_url % query.lower()
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-        results = []
-        for li in soup.select('ul.result-list li'):
-            a = li.select_one('a.book-name')['href']
-            author = li.select_one('a.book-name font').text
-            title = li.select_one('a.book-name').text.replace(author,"")
+    #     results = []
+    #     for tab in soup.select('li.list-item'):
+    #         a = tab.select_one('a.book-name')
+    #         latest = "N/A"
+    #         votes = tab.select_one('.star-suite span.score').text
+    #         results.append({
+    #             'title': a.text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #             'info': '%s | Rating: %s' % (latest, votes),
+    #         })
+    #     # end for
 
-            results.append({
-                'title': title,
-                'url': self.absolute_url(a),
-                'info': author,
-            })
-        # end for
-
-        return results
-    # end def
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
-        url = self.novel_url.replace('https://m', 'https://www')
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
+        logger.debug('Visiting %s', self.novel_url)
+        soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one('div.book-name').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one('div.author span.name').text.strip()
+        self.novel_author = soup.select_one(
+            'div.author span.name').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(

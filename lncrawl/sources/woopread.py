@@ -7,14 +7,32 @@ import requests
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-
+search_url = 'https://woopread.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 class WoopReadCrawler(Crawler):
-    base_url = ["https://woopread.com/"]
+    base_url = 'https://woopread.com/'
 
     def initialize(self):
         self.regex_novel_id = r'"manga_id"\s*:\s*"(?P<id>\d+)"'
+    # end def
 
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for tab in soup.select('.c-tabs-item__content'):
+            a = tab.select_one('.post-title h3 a')
+            latest = tab.select_one('.latest-chap .chapter a').text
+            votes = tab.select_one('.rating .total_votes').text
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (latest, votes),
+            })
+        # end for
+
+        return results
     # end def
 
     def read_novel_info(self):
