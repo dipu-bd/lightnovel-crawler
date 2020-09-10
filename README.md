@@ -378,6 +378,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.centinni.com                     |     ✔      |           |
 | https://www.daocaorenshuwu.com               |            |           |
 | https://www.fuyuneko.org                     |            |           |
+| https://www.f-w-o.com                        |     ✔      |           |
 | https://www.idqidian.us                      |            |           |
 | https://www.lightnovelworld.com              |     ✔      |           |
 | https://www.machine-translation.org          |     ✔      |           |
