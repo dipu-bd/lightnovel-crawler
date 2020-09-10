@@ -356,6 +356,7 @@ You are very welcome to contribute in this project. You can:
 | https://pery.info/                           |     ✔      |           |
 | https://ranobelib.me                         |            |           |
 | https://readwebnovels.net                    |     ✔      |           |
+| https://reincarnationpalace.com              |            |           |
 | https://rewayat.club                         |            |           |
 | https://shalvationtranslations.wordpress.com |            |           |
 | https://tomotranslations.com                 |            |           |
