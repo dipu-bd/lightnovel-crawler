@@ -301,7 +301,7 @@ You are very welcome to contribute in this project. You can:
 | https://4scanlation.xyz                      |            |           |
 | https://9kqw.com                             |     ✔      |           |
 | https://anythingnovel.com                    |            |           |
-| https://arangscans.com                       |     ✔      |           |
+| https://arangscans.com                       |            |           |
 | https://asadatranslations.com                |     ✔      |           |
 | https://automtl.wordpress.com                |            |           |
 | https://babelnovel.com                       |     ✔      |           |
@@ -374,6 +374,7 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.site                      |            |           |
 | https://www.aixdzs.com                       |            |           |
 | https://www.asianhobbyist.com                |            |           |
+| https://www.centinni.com                     |     ✔      |           |
 | https://www.daocaorenshuwu.com               |            |           |
 | https://www.fuyuneko.org                     |            |           |
 | https://www.idqidian.us                      |            |           |
