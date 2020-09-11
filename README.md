@@ -388,6 +388,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelall.com                     |     ✔      |           |
 | https://www.novelcool.com                    |            |           |
 | https://www.novelhall.com                    |            |           |
+| https://www.novelhunters.com                 |     ✔      |           |
 | https://www.novelringan.com                  |            |           |
 | https://www.novelspread.com                  |            |           |
 | https://www.novelupdates.cc                  |            |           |
