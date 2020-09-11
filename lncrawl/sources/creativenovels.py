@@ -119,6 +119,10 @@ class CreativeNovelsCrawler(Crawler):
         for span in body.find_all('style'):
             span.decompose()
         # end for
+        for div in body.find_all("div", {'class':'novel_showcase'}):
+            # Remove the novel showcase div
+            div.decompose()
+        # end for
 
         self.clean_contents(body)
         return str(body)
