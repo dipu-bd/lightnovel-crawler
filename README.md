@@ -406,6 +406,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.virlyce.com                      |            |           |
 | https://www.wattpad.com                      |            |           |
 | https://www.webnovel.com                     |     ✔      |           |
+| https://www.webnovelover.com                 |     ✔      |           |
 | https://www.worldnovel.online                |     ✔      |           |
 | https://www.wuxialeague.com                  |            |           |
 | https://www.wuxiaworld.co                    |     ✔      |           |
