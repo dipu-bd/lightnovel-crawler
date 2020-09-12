@@ -47,7 +47,7 @@ class Args:
 
     def get_args(self):
         if self.arguments is None:
-            self.arguments = self.build().parse_args()
+            self.arguments, _ = self.build().parse_known_args()
         # end if
         return self.arguments
     # end def
