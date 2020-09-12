@@ -301,6 +301,8 @@ You are very welcome to contribute in this project. You can:
 | https://4scanlation.xyz                      |            |           |
 | https://9kqw.com                             |     ✔      |           |
 | https://anythingnovel.com                    |            |           |
+| https://arangscans.com                       |            |           |
+| https://asadatranslations.com                |     ✔      |           |
 | https://automtl.wordpress.com                |            |           |
 | https://babelnovel.com                       |     ✔      |           |
 | https://bestlightnovel.com                   |     ✔      |           |
@@ -342,6 +344,7 @@ You are very welcome to contribute in this project. You can:
 | https://m.wuxiaworld.co                      |     ✔      |           |
 | https://mangatoon.mobi                       |            |           |
 | https://meionovel.id                         |     ✔      |           |
+| https://moonstonetranslation.com             |            |           |
 | https://myoniyonitranslations.com            |            |           |
 | https://mysticalmerries.com                  |     ✔      |           |
 | https://novel27.com                          |     ✔      |           |
@@ -354,6 +357,7 @@ You are very welcome to contribute in this project. You can:
 | https://pery.info/                           |     ✔      |           |
 | https://ranobelib.me                         |            |           |
 | https://readwebnovels.net                    |     ✔      |           |
+| https://reincarnationpalace.com              |            |           |
 | https://rewayat.club                         |            |           |
 | https://shalvationtranslations.wordpress.com |            |           |
 | https://tomotranslations.com                 |            |           |
@@ -366,14 +370,17 @@ You are very welcome to contribute in this project. You can:
 | https://webnovelonline.com                   |            |           |
 | https://woopread.com                         |     ✔      |           |
 | https://wordexcerpt.com                      |     ✔      |           |
+| https://writerupdates.com                    |            |           |
 | https://wuxiaworld.io                        |     ✔      |           |
 | https://wuxiaworld.live                      |     ✔      |           |
 | https://wuxiaworld.online                    |     ✔      |           |
 | https://wuxiaworld.site                      |            |           |
 | https://www.aixdzs.com                       |            |           |
 | https://www.asianhobbyist.com                |            |           |
+| https://www.centinni.com                     |     ✔      |           |
 | https://www.daocaorenshuwu.com               |            |           |
 | https://www.fuyuneko.org                     |            |           |
+| https://www.f-w-o.com                        |     ✔      |           |
 | https://www.idqidian.us                      |            |           |
 | https://www.lightnovelworld.com              |     ✔      |           |
 | https://www.machine-translation.org          |     ✔      |           |
@@ -382,6 +389,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelall.com                     |     ✔      |           |
 | https://www.novelcool.com                    |            |           |
 | https://www.novelhall.com                    |            |           |
+| https://www.novelhunters.com                 |     ✔      |           |
 | https://www.novelringan.com                  |            |           |
 | https://www.novelspread.com                  |            |           |
 | https://www.novelupdates.cc                  |            |           |
@@ -399,6 +407,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.virlyce.com                      |            |           |
 | https://www.wattpad.com                      |            |           |
 | https://www.webnovel.com                     |     ✔      |           |
+| https://www.webnovelover.com                 |     ✔      |           |
 | https://www.worldnovel.online                |     ✔      |           |
 | https://www.wuxialeague.com                  |            |           |
 | https://www.wuxiaworld.co                    |     ✔      |           |
