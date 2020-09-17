@@ -108,6 +108,18 @@ class CreativeNovelsCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
+        
+        FORMATTING_TAGS = [
+            'b',
+            'i',
+            'strong',
+            'small',
+            'em',
+            'mark',
+            'ins',
+            'sub',
+            'sup'
+        ]
 
         body = soup.select_one('article .entry-content')
         for tag in body.select('.announcements_crn'):
@@ -118,8 +130,14 @@ class CreativeNovelsCrawler(Crawler):
             span.decompose()
         # end for
         for span in body.find_all('span'):
-            # Remaining span tags are changed to p tags
-            span.name = 'p'
+            if span.parent.name in FORMATTING_TAGS:
+                # If its parent is a formatting tag: Just remove the span tag
+                span.replace_with(span.text)
+            else:
+                # Else: change it into a paragraph
+                span.name = 'p'
+                span.attrs = {}
+            # end if
         # end for
         for span in body.find_all('style'):
             span.decompose()
