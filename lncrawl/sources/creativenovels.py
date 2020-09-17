@@ -118,7 +118,8 @@ class CreativeNovelsCrawler(Crawler):
             'mark',
             'ins',
             'sub',
-            'sup'
+            'sup',
+            'br'
         ]
 
         body = soup.select_one('article .entry-content')
@@ -130,14 +131,25 @@ class CreativeNovelsCrawler(Crawler):
             span.decompose()
         # end for
         for span in body.find_all('span'):
-            if span.parent.name in FORMATTING_TAGS:
-                # If its parent is a formatting tag: Just remove the span tag
-                span.replace_with(span.text)
+            if len(span.parent.contents) <= 3:
+                if (span.parent.name in FORMATTING_TAGS) or (span.next_sibling is not None or span.previous_sibling is not None):
+                    if span.next_sibling != None:
+                        if span.next_sibling.name == FORMATTING_TAGS:
+                            span.replace_with(span.text)
+                    elif span.previous_sibling != None:
+                        if span.previous_sibling.name == FORMATTING_TAGS:
+                            span.replace_with(span.text)
+                    # If its parent is a formatting tag: Just remove the span tag
+                    span.replace_with(span.text)
+                else:
+                    # Else: change it into a paragraph
+                    span.name = 'p'
+                    span.attrs = {}
+                # end if
             else:
-                # Else: change it into a paragraph
                 span.name = 'p'
                 span.attrs = {}
-            # end if
+            #end if
         # end for
         for span in body.find_all('style'):
             span.decompose()
