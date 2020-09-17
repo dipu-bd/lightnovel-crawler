@@ -113,13 +113,18 @@ class CreativeNovelsCrawler(Crawler):
         for tag in body.select('.announcements_crn'):
             tag.decompose()
         # end for
-        for span in body.find_all('span'):
+        for span in body.find_all('span', {'style':'color:transparent'}):
+            # Remove span tags that contain invisible text 
             span.decompose()
+        # end for
+        for span in body.find_all('span'):
+            # Remaining span tags are changed to p tags
+            span.name = 'p'
         # end for
         for span in body.find_all('style'):
             span.decompose()
         # end for
-        for div in body.find_all("div", {'class':'novel_showcase'}):
+        for div in body.find_all('div', {'class':'novel_showcase'}):
             # Remove the novel showcase div
             div.decompose()
         # end for
