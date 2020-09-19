@@ -108,18 +108,53 @@ class CreativeNovelsCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
+        
+        FORMATTING_TAGS = [
+            'b',
+            'i',
+            'strong',
+            'small',
+            'em',
+            'mark',
+            'ins',
+            'sub',
+            'sup',
+            'br'
+        ]
 
         body = soup.select_one('article .entry-content')
         for tag in body.select('.announcements_crn'):
             tag.decompose()
         # end for
-        for span in body.find_all('span'):
+        for span in body.find_all('span', {'style':'color:transparent;'}):
+            # Remove span tags that contain invisible text 
             span.decompose()
+        # end for
+        for span in body.find_all('span'):
+            if len(span.parent.contents) <= 3:
+                if (span.parent.name in FORMATTING_TAGS) or (span.next_sibling is not None or span.previous_sibling is not None):
+                    if span.next_sibling != None:
+                        if span.next_sibling.name == FORMATTING_TAGS:
+                            span.replace_with(span.text)
+                    elif span.previous_sibling != None:
+                        if span.previous_sibling.name == FORMATTING_TAGS:
+                            span.replace_with(span.text)
+                    # If its parent is a formatting tag: Just remove the span tag
+                    span.replace_with(span.text)
+                else:
+                    # Else: change it into a paragraph
+                    span.name = 'p'
+                    span.attrs = {}
+                # end if
+            else:
+                span.name = 'p'
+                span.attrs = {}
+            #end if
         # end for
         for span in body.find_all('style'):
             span.decompose()
         # end for
-        for div in body.find_all("div", {'class':'novel_showcase'}):
+        for div in body.find_all('div', {'class':'novel_showcase'}):
             # Remove the novel showcase div
             div.decompose()
         # end for
