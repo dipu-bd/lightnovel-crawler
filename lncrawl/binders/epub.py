@@ -11,7 +11,7 @@ except Exception as err:
     logging.fatal('Failed to import `ebooklib`')
 # end try
 
-logger = logging.getLogger('EPUB_BINDER')
+logger = logging.getLogger(__name__)
 
 
 def make_cover_image(app):

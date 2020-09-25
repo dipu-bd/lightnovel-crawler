@@ -5,7 +5,7 @@ import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('FLYING LINES')
+logger = logging.getLogger(__name__)
 
 chapter_body_url = 'https://www.flying-lines.com/h5/novel/%s/%s?accessToken=&isFirstEnter=1&webdriver=0'
 

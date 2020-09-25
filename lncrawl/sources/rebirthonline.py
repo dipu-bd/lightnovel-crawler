@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('REBIRTH_ONLINE')
+logger = logging.getLogger(__name__)
 
 book_url = 'https://www.rebirth.online/novel/%s'
 

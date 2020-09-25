@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('CRESCENTMOON')
+logger = logging.getLogger(__name__)
 
 
 class CrescentMoonCrawler(Crawler):
@@ -16,7 +16,8 @@ class CrescentMoonCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
+        self.novel_title = soup.find(
+            "h1", {"class": "entry-title"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(

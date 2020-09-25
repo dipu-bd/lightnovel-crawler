@@ -2,7 +2,7 @@ export LC_ALL="en_US.UTF-8"
 
 git stash save -u
 git fetch origin master
-git rebase
+git rebase FETCH_HEAD
 git stash pop
 
 if [ ! -d venv ]; then
@@ -15,6 +15,7 @@ pip install -U -r dev-requirements.txt
 
 echo "Stopping previous instances..."
 pgrep python -a | grep "discord" | awk '{print $1}' | xargs kill -9 || true
+pgrep ebook-convert | xargs kill -9 || true
 
 if [ "$1" = "stop" ]; then
     exit 0

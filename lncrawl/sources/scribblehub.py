@@ -6,7 +6,7 @@ from urllib.parse import quote
 from ..utils.crawler import Crawler
 from math import ceil
 
-logger = logging.getLogger('SCRIBBLEHUB')
+logger = logging.getLogger(__name__)
 search_url = 'https://www.scribblehub.com/?s=%s&post_type=fictionposts'
 
 

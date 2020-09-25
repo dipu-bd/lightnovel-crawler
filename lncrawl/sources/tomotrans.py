@@ -4,7 +4,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('TOMO_TRANSLATIONS')
+logger = logging.getLogger(__name__)
 
 
 class TomoTransCrawler(Crawler):

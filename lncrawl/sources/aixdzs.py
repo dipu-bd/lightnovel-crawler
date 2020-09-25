@@ -8,7 +8,7 @@ import requests
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('AIXDZS_CRAWLER')
+logger = logging.getLogger(__name__)
 
 chapter_list_url = 'https://read.aixdzs.com/%s'
 
@@ -24,13 +24,16 @@ class AixdzsCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
+        self.novel_cover = soup.select_one(
+            'meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_title = soup.select_one('meta[property="og:novel:book_name"]')['content']
+        self.novel_title = soup.select_one(
+            'meta[property="og:novel:book_name"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one('meta[property="og:novel:author"]')['content']
+        self.novel_author = soup.select_one(
+            'meta[property="og:novel:author"]')['content']
         logger.info('%s', self.novel_author)
 
         parsed_url = urlparse(self.novel_url)

@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('NOVEL_SPREAD')
+logger = logging.getLogger(__name__)
 
 book_info_url = 'https://api.novelspread.com/api/novel/path/%s'
 chapter_list_url = 'https://api.novelspread.com/api/novel/%s/chapter/menu'

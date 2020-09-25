@@ -3,7 +3,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIA_LEAGUE')
+logger = logging.getLogger(__name__)
 
 
 class WuxiaLeagueCrawler(Crawler):
@@ -16,10 +16,12 @@ class WuxiaLeagueCrawler(Crawler):
         self.novel_title = soup.select_one('#bookinfo .d_title h1').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one('#bookimg img')['src'])
+        self.novel_cover = self.absolute_url(
+            soup.select_one('#bookimg img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        possible_authors = [a.text for a in soup.select('#bookinfo a[href*="/author/"]')]
+        possible_authors = [a.text for a in soup.select(
+            '#bookinfo a[href*="/author/"]')]
         self.novel_author = ', '.join(possible_authors)
         logger.info('Novel author: %s', self.novel_author)
 
@@ -50,7 +52,8 @@ class WuxiaLeagueCrawler(Crawler):
                 continue
             # end if
             clean_first = ''.join(re.findall(r'([a-z0-9]+)', p.text.lower()))
-            clean_title = ''.join(re.findall(r'([a-z0-9]+)', chapter['title'].lower()))
+            clean_title = ''.join(re.findall(
+                r'([a-z0-9]+)', chapter['title'].lower()))
             if clean_first == clean_title:
                 continue
             # end if

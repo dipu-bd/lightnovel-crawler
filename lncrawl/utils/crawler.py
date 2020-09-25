@@ -22,7 +22,7 @@ class Crawler:
         self._destroyed = False
         self.executor = futures.ThreadPoolExecutor(max_workers=3)
 
-        # Initialize cloudscrapper 
+        # Initialize cloudscrapper
         try:
             self.scraper = cloudscraper.create_scraper(
                 browser={

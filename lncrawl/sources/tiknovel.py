@@ -5,7 +5,7 @@ from urllib.parse import parse_qsl, urlparse
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('TIKNOVEL')
+logger = logging.getLogger(__name__)
 
 chapter_details_url = 'https://tiknovel.com/book/ajaxchap'
 
@@ -20,7 +20,8 @@ class TikNovelCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('#content .detail-wrap h1.detail-tit').text
+        self.novel_title = soup.select_one(
+            '#content .detail-wrap h1.detail-tit').text
         logger.info('Novel title: %s', self.novel_title)
 
         possible_authors = soup.select('#content table.detail-profile td')

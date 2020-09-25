@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('SHINSORI')
+logger = logging.getLogger(__name__)
 
 
 class ShinsoriCrawler(Crawler):
@@ -15,7 +15,8 @@ class ShinsoriCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('span.the-section-title').text.strip()
+        self.novel_title = soup.select_one(
+            'span.the-section-title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = None
@@ -31,7 +32,8 @@ class ShinsoriCrawler(Crawler):
         chapters = []
         # get chapter list by looping pagination range
         for x in range(p_range):
-            p_url = '%s?lcp_page0=%d#lcp_instance_0 x+1' % (self.novel_url, x+1)
+            p_url = '%s?lcp_page0=%d#lcp_instance_0 x+1' % (
+                self.novel_url, x+1)
             p_soup = self.get_soup(p_url)
             chapters.extend(p_soup.select('ul.lcp_catlist')[1].select('li a'))
         # end for

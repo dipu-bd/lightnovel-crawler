@@ -4,7 +4,7 @@ import os
 
 from ..assets.html_style import get_value as get_css_style
 
-logger = logging.getLogger('WEB_BINDER')
+logger = logging.getLogger(__name__)
 
 
 def bind_html_chapter(chapter, prev_chapter, next_chapter, direction='ltr'):

@@ -4,7 +4,7 @@ import re
 from urllib.parse import quote
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MACHINE_NOVEL_TRANSLATION')
+logger = logging.getLogger(__name__)
 
 search_url = 'https://www.machine-translation.org/novel/search/?keywords=%s'
 

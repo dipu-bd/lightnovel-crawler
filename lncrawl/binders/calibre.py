@@ -3,7 +3,7 @@ import logging
 import os
 import subprocess
 
-logger = logging.getLogger('CALIBRE_BINDER')
+logger = logging.getLogger(__name__)
 
 EBOOK_CONVERT = 'ebook-convert'
 CALIBRE_LINK = 'https://calibre-ebook.com/download'

@@ -11,7 +11,7 @@ import requests
 
 from ...assets.user_agents import user_agents
 
-logger = logging.getLogger('MAKE_GITHUB_ISSUE')
+logger = logging.getLogger(__name__)
 
 # Authentication for user filing issue
 USERNAME = os.getenv('GITHUB_USERNAME')
@@ -59,7 +59,8 @@ def find_issues(labels=None):
 def post_issue(title, body=None, labels=None):
     '''Create an issue on github.com using the given parameters.'''
     # Our url to create issues via POST
-    url = 'https://api.github.com/repos/%s/%s/import/issues' % (REPO_OWNER, REPO_NAME)
+    url = 'https://api.github.com/repos/%s/%s/import/issues' % (
+        REPO_OWNER, REPO_NAME)
 
     # Create an authenticated session to create the issue
     session = requests.Session()

@@ -4,7 +4,7 @@ import os
 import re
 from bs4 import BeautifulSoup
 
-logger = logging.getLogger('TEXT_BINDER')
+logger = logging.getLogger(__name__)
 
 
 def make_texts(app, data):

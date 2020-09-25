@@ -3,7 +3,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LIBER_SPARK')
+logger = logging.getLogger(__name__)
 
 
 class LiberSparkCrawler(Crawler):
@@ -20,10 +20,12 @@ class LiberSparkCrawler(Crawler):
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one('#uploaded-cover-image')['src'])
+        self.novel_cover = self.absolute_url(
+            soup.select_one('#uploaded-cover-image')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one('.novel-author-info a h4').text.strip()
+        self.novel_author = soup.select_one(
+            '.novel-author-info a h4').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         for a in reversed(soup.select('#novel-chapters-list td a')):

@@ -15,12 +15,13 @@ import random as rand
 import textwrap
 from pathlib import Path
 
-logger = logging.getLogger('RACOVIMGE')
+logger = logging.getLogger(__name__)
 
 try:
     import jinja2
 except ImportError:
-    logger.info('Jinja2 is required for cover generation:\n    pip install Jinja2')
+    logger.info(
+        'Jinja2 is required for cover generation:\n    pip install Jinja2')
 
 ###############################################################################
 # Templates and Color Schemes
@@ -105,7 +106,8 @@ def random_cover(title, author):
     )
 
     template_dir = os.path.abspath(str(ROOT / 'templates'))
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader(searchpath=template_dir))
+    env = jinja2.Environment(
+        loader=jinja2.FileSystemLoader(searchpath=template_dir))
     env.filters['wrap'] = wrap
     env.filters['rgb'] = to_rgb
     return env.get_template(template + '.svg').render(**kargs)

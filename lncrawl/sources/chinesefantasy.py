@@ -5,7 +5,7 @@ import re
 import logging
 import json
 
-logger = logging.getLogger('CHINESE_FANTASY_NOVELS')
+logger = logging.getLogger(__name__)
 
 
 class ChineseFantasyNovels(Crawler):
@@ -50,6 +50,6 @@ class ChineseFantasyNovels(Crawler):
         content = soup.select_one('#BookText')
         content.select_one('.link').decompose()
         body = self.extract_contents(content)
-        return '<p>' + '</p><p>'.join(body) + '</p'
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class

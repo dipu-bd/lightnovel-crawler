@@ -7,7 +7,7 @@ from bs4 import Comment
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('INDOWEBNOVEL')
+logger = logging.getLogger(__name__)
 
 
 class IndowebnovelCrawler(Crawler):
@@ -61,9 +61,7 @@ class IndowebnovelCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        
-        contents = soup.select('#main p').replace('A+', '')
+        contents = soup.select('#main article p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LNMTL')
+logger = logging.getLogger(__name__)
 
 login_url = 'https://lnmtl.com/auth/login'
 logout_url = 'https://lnmtl.com/auth/logout'
@@ -27,7 +27,8 @@ class LNMTLCrawler(Crawler):
         # Send post request to login
         logger.info('Logging in...')
         response = self.submit_form(
-            login_url, data=dict(_token=token, email=email, password=password,),
+            login_url, data=dict(
+                _token=token, email=email, password=password,),
         )
         # Check if logged in successfully
         soup = BeautifulSoup(response.content, 'lxml')
@@ -37,7 +38,8 @@ class LNMTLCrawler(Crawler):
             body = soup.select_one('body').text
             logger.debug('-' * 80)
             logger.debug(
-                '\n\n'.join([x for x in body.split('\n\n') if len(x.strip()) > 0])
+                '\n\n'.join([x for x in body.split(
+                    '\n\n') if len(x.strip()) > 0])
             )
             logger.debug('-' * 80)
             logger.error('Failed to login')
@@ -96,7 +98,7 @@ class LNMTLCrawler(Crawler):
                 title = re.sub(r'[^\u0000-\u00FF]', '', title)
                 title = re.sub(r'\(\)', '', title).strip()
                 self.volumes.append(
-                    {'id': i + 1, 'title': title, 'download_id': vol['id'],}
+                    {'id': i + 1, 'title': title, 'download_id': vol['id'], }
                 )
             # end for
         except Exception as _:
@@ -146,7 +148,7 @@ class LNMTLCrawler(Crawler):
                 title = '#%s %s' % (chapter.get('number'), title)
             # end if
             chapters.append(
-                {'title': title, 'url': chapter['site_url'],}
+                {'title': title, 'url': chapter['site_url'], }
             )
         # end for
 

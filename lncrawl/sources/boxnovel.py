@@ -4,7 +4,7 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('BOXNOVEL')
+logger = logging.getLogger(__name__)
 search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 

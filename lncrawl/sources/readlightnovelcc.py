@@ -21,9 +21,12 @@ class ReadlightnovelCcCrawler(Crawler):
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
-        response = self.submit_form(search_url, data=dict(keyword=query, t=1))
-        soup = self.make_soup(response)
-
+        #response = self.submit_form(search_url, data=dict(keyword=query, t=1))
+        #soup = self.make_soup(response)
+        #soup = self.get_soup(search_url,query)
+        url = search_url % query.lower()
+        logger.debug('Visiting %s', url)
+        soup = self.get_soup(url)
         results = []
         for li in soup.select('ul.result-list li'):
             a = li.select_one('a.book-name')['href']
@@ -32,7 +35,7 @@ class ReadlightnovelCcCrawler(Crawler):
 
             results.append({
                 'title': title,
-                'url': self.absolute_url(a['href']),
+                'url': self.absolute_url(a),
                 'info': author,
             })
         # end for
@@ -93,6 +96,8 @@ class ReadlightnovelCcCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
         body_parts = soup.select_one('div.chapter-entity')
+        for br in body_parts.select('br'):
+            br.decompose()
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

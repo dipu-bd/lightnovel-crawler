@@ -5,7 +5,7 @@ import re
 import ast
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MANGATOON_MOBI')
+logger = logging.getLogger(__name__)
 
 book_url = 'https://mangatoon.mobi/%s/detail/%s/episodes'
 search_url = 'https://mangatoon.mobi/%s/search?word=%s'
@@ -25,11 +25,11 @@ class MangatoonMobiCrawler(Crawler):
 
         novel_region = self.novel_url.split('/')[3]
 
-        self.novel_url = book_url % (novel_region,self.novel_id)
+        self.novel_url = book_url % (novel_region, self.novel_id)
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title =soup.select_one('h1.comics-title').text
+        self.novel_title = soup.select_one('h1.comics-title').text
         logger.info('Novel title: %s', self.novel_title)
 
         try:
@@ -68,11 +68,11 @@ class MangatoonMobiCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         script = soup.find("script", text=re.compile("initialValue\s+="))
-        initialValue = re.search('var initialValue = (?P<value>.*);', script.string)
+        initialValue = re.search(
+            'var initialValue = (?P<value>.*);', script.string)
         content = initialValue.group('value')
         chapter_content = ast.literal_eval(content)
         chapter_content = [p.replace('\-', '-') for p in chapter_content]
-
 
         text = '<p>' + '</p><p>'.join(chapter_content) + '</p>'
         # end if

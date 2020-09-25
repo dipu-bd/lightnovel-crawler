@@ -5,11 +5,30 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('MEIONOVEL')
-
+logger = logging.getLogger(__name__)
+search_url = 'https://meionovel.id/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 class MeionovelCrawler(Crawler):
     base_url = 'https://meionovel.id/'
+
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for tab in soup.select('.c-tabs-item__content'):
+            a = tab.select_one('.post-title h4 a')
+            latest = tab.select_one('.latest-chap .chapter a').text
+            votes = tab.select_one('.rating .total_votes').text
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (latest, votes),
+            })
+        # end for
+
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -34,7 +53,6 @@ class MeionovelCrawler(Crawler):
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
-        
         content_area = soup.select_one(' .page-content-listing')
 
         for span in content_area.findAll('span'):

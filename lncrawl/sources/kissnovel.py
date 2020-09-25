@@ -4,12 +4,12 @@ import logging
 import re
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('KISS-NOVEL')
-
+logger = logging.getLogger(__name__)
 
 class KissNovelCrawler(Crawler):
     base_url = 'https://kiss-novel.com/'
 
+    # FIXME: Tried getting search to work, but it uses a autocomplete function and I can't figure out how to get results from it.
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)

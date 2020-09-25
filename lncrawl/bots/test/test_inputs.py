@@ -7,7 +7,13 @@ allowed_failures = [
     'http://tiknovel.com/',
     'http://www.tiknovel.com/',
     'https://www.tiknovel.com/',
-    'https://m.webnovel.com/ ',
+    'https://m.webnovel.com/',
+    'https://m.readlightnovel.cc',
+    'https://dmtranslationscn.com/',
+    'https://m.wuxiaworld.co/',
+    'http://www.fujitranslation.com/',
+    'https://m.mywuxiaworld.com/',
+    'https://m.readlightnovel.cc/',
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 ]
 
@@ -15,6 +21,21 @@ test_user_inputs = {
     b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode(): [
         b64decode(
             "aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS9ub3ZlbC90c3VydWdpLW5vLWpvb3UtdG8tcmFrdWluLW5vLWtvLw==".encode()).decode()
+    ],
+    'https://fastnovel.net/': [
+        'https://fastnovel.net/nanomancer-reborn-ive-become-a-snow-girl-156/'
+    ],
+    'https://www.readlightnovel.cc/': [
+        'https://www.readlightnovel.cc/Heidi-and-the-Lord/'
+    ],
+    'https://www.mywuxiaworld.com/': [
+        'https://www.mywuxiaworld.com/book/Rebirth_of_the_Thief_Who_Roamed_the_World/'
+    ],
+    'http://www.indonovels.net/': [
+        'http://www.indonovels.net/p/blog-page_1.html'
+    ],
+    'https://fujitranslation.com/': [
+        'https://fujitranslation.com/mkw/'
     ],
     'https://indowebnovel.id/': [
         'https://indowebnovel.id/novel/rebirth-of-the-urban-immortal-cultivator/'
@@ -89,10 +110,7 @@ test_user_inputs = {
         'https://9kqw.com/book/index?id=717',
     ],
     'https://www.wuxiaworld.co/': [
-        'sword',
-    ],
-    'https://m.wuxiaworld.co/': [
-        'https://m.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
+        'https://www.wuxiaworld.co/Versatile-Mage/',
     ],
     'https://meionovel.id/': [
         'https://meionovel.id/novel/the-legendary-mechanic/',
@@ -145,10 +163,6 @@ test_user_inputs = {
     ],
     'https://www.worldnovel.online/': [
         'https://www.worldnovel.online/novel/solo-leveling/',
-    ],
-    'https://www.wuxiaworld.co/': [
-        'https://www.wuxiaworld.co/Reincarnation-Of-The-Strongest-Sword-God/',
-        'sword'
     ],
     'https://rewayat.club/': [
         'https://rewayat.club/novel/almighty-sword-domain/'
