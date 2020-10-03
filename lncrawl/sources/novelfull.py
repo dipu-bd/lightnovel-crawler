@@ -134,21 +134,23 @@ class NovelFullCrawler(Crawler):
             r'Read more chapter on NovelFull'
             r'^full thich ung',
         ]
+        
+        bad_class = ['h3', 'h2', '.adsbygoogle', 'script', 'ins', '.ads', '.ads-holder']
+        def is_ad(tag):
+            return isinstance(tag, Comment) or (
+                tag.has_attr('class') and \
+                any(x in tag.get("class") for x in bad_class)
+            )
+        for ads in content.find_all(is_ad):
+            ads.decompose()
 
         # Some comments in source code of site gets converted into text/paragraphs. This removes it.
-        for comment in soup.findAll(text=lambda text:isinstance(text, Comment)):
-            def is_ad(tag):
-                return isinstance(tag, Comment) or (
-                    tag.name == "div" and tag.get("class") in [["left"], ["center"]]
-                )
-            for ads in content.find_all(is_ad):
-                ads.decompose()
-            comment.extract()
+        #for comment in soup.find_all(text=lambda text:isinstance(text, Comment)):
+        #    comment.extract()
 
-        self.clean_contents(content)
-
-        for ads in content.select('h3, h2, .adsbygoogle, script, ins, .ads, .ads-holder'):
-            ads.decompose()
+        #self.clean_contents(content)
+        #for ads in content.select('h3, h2, .adsbygoogle, script, ins, .ads, .ads-holder'):
+        #    ads.decompose()
 
         body = self.extract_contents(content)
         return '<p>' + '</p><p>'.join(body) + '</p>'
