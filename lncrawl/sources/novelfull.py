@@ -137,18 +137,19 @@ class NovelFullCrawler(Crawler):
 
         # Some comments in source code of site gets converted into text/paragraphs. This removes it.
         for comment in soup.findAll(text=lambda text:isinstance(text, Comment)):
+            def is_ad(tag):
+                return isinstance(tag, Comment) or (
+                    tag.name == "div" and tag.get("class") in [["left"], ["center"]]
+                )
+            for ads in content.find_all(is_ad):
+                ads.decompose()
             comment.extract()
 
         self.clean_contents(content)
 
-        for ads in content.findAll('div', {"align": 'left'}):
+        for ads in content.select('h3, h2, .adsbygoogle, script, ins, .ads, .ads-holder'):
             ads.decompose()
-        for ads in content.findAll('div', {"align": 'center'}):
-            ads.decompose()
-        for ads in content.select('h3, .adsbygoogle, script, ins, .ads, .ads-holder'):
-            ads.decompose()
-        # return str(content)
-        # Changed so excess div tags are removed and all chapters text is in p tag, so its better formatted. Also added h3 tag to above decompose to remove double chapter headings.
+
         body = self.extract_contents(content)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
