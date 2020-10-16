@@ -253,7 +253,7 @@ class Crawler:
             return div
         # end if
         div.attrs = {}
-        for tag in div.findAll(True):
+        for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
             elif tag.name == 'br':

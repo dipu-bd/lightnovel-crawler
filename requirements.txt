@@ -18,3 +18,4 @@ lxml==4.5.1
 # Bot requirements
 discord.py>=1.3.4
 python-telegram-bot>=12.8
+pydrive==1.3.1

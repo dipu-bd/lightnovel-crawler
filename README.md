@@ -19,8 +19,6 @@ An app to download novels from online sources and generate e-books.
 
 ## Table of contents
 
-- [Lightnovel Crawler ![pip package](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)](#lightnovel-crawler-img-srchttpsimgshieldsiobadgef09f93a6-pip-blue-altpip-package-img-srchttpsimgshieldsiobadgee2a7aa-lncrawlexe-red-altdownload-win-img-srchttpsimgshieldsiobadgee2a7ad-lncrawl20linux-brown-altdownload-linux)
-  - [Table of contents](#table-of-contents)
   - [(A) Installation](#a-installation)
     - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
     - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
@@ -54,7 +52,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.23.2 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.23.3 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program.
 
