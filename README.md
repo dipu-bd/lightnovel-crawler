@@ -19,26 +19,26 @@ An app to download novels from online sources and generate e-books.
 
 ## Table of contents
 
-  - [(A) Installation](#a-installation)
-    - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
-    - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-    - [A3. Termux (Android)](#a3-termux-android)
-    - [A4. Chatbots](#a4-chatbots)
-      - [A4.1 Discord](#a41-discord)
-      - [A4.2 Telegram](#a42-telegram)
-    - [A5. Run from source](#a5-run-from-source)
-    - [A6. Heroku Deployment](#a6-heroku-deployment)
-  - [(B) General Usage](#b-general-usage)
-    - [B1. Available options](#b1-available-options)
-    - [B2. Example Usage](#b2-example-usage)
-    - [B3. Running the bot](#b3-running-the-bot)
-  - [(C) Development](#c-development)
-    - [C1. Adding new source](#c1-adding-new-source)
-    - [C2. Adding new Bot](#c2-adding-new-bot)
-    - [C3. Supported sources](#c3-supported-sources)
-    - [C4. Rejected sources](#c4-rejected-sources)
-    - [C5. Supported output formats](#c5-supported-output-formats)
-    - [C6. Supported bots](#c6-supported-bots)
+- [(A) Installation](#a-installation)
+  - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
+  - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+  - [A3. Termux (Android)](#a3-termux-android)
+  - [A4. Chatbots](#a4-chatbots)
+    - [A4.1 Discord](#a41-discord)
+    - [A4.2 Telegram](#a42-telegram)
+  - [A5. Run from source](#a5-run-from-source)
+  - [A6. Heroku Deployment](#a6-heroku-deployment)
+- [(B) General Usage](#b-general-usage)
+  - [B1. Available options](#b1-available-options)
+  - [B2. Example Usage](#b2-example-usage)
+  - [B3. Running the bot](#b3-running-the-bot)
+- [(C) Development](#c-development)
+  - [C1. Adding new source](#c1-adding-new-source)
+  - [C2. Adding new Bot](#c2-adding-new-bot)
+  - [C3. Supported sources](#c3-supported-sources)
+  - [C4. Rejected sources](#c4-rejected-sources)
+  - [C5. Supported output formats](#c5-supported-output-formats)
+  - [C6. Supported bots](#c6-supported-bots)
 
 <a href="https://github.com/dipu-bd/lightnovel-crawler"><img src="res/lncrawl-icon.png" width="128px" align="right"/></a>
 
@@ -350,6 +350,7 @@ You are very welcome to contribute in this project. You can:
 | https://novel27.com                          |     ✔      |           |
 | https://novelcrush.com                       |     ✔      |           |
 | https://novelfull.com                        |     ✔      |           |
+| https://novelgo.id/                          |            |           |
 | https://novelonlinefree.com                  |     ✔      |           |
 | https://novelonlinefull.com                  |     ✔      |           |
 | https://novelraw.blogspot.com                |            |           |
@@ -379,8 +380,8 @@ You are very welcome to contribute in this project. You can:
 | https://www.asianhobbyist.com                |            |           |
 | https://www.centinni.com                     |     ✔      |           |
 | https://www.daocaorenshuwu.com               |            |           |
-| https://www.fuyuneko.org                     |            |           |
 | https://www.f-w-o.com                        |     ✔      |           |
+| https://www.fuyuneko.org                     |            |           |
 | https://www.idqidian.us                      |            |           |
 | https://www.lightnovelworld.com              |     ✔      |           |
 | https://www.machine-translation.org          |     ✔      |           |
@@ -414,6 +415,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.com                   |     ✔      |           |
 | https://www.x81zw.com                        |            |           |
 | https://www.xsbiquge.com                     |            |           |
+| https://yukinovel.id                         |            |           |
 
 ### C4. Rejected sources
 
@@ -425,13 +427,11 @@ You are very welcome to contribute in this project. You can:
 | https://indomtl.com           | `Does not like to be crawled`       |
 | https://lnindo.org            | `Does not like to be crawled`       |
 | https://mtled-novels.com      | `Domain is expired`                 |
-| https://novelgo.id/           | `Removed`                           |
 | https://www.flying-lines.com  | `Obfuscated content`                |
 | https://www.jieruihao.cn      | `Unavailable`                       |
 | https://www.noveluniverse.com | `Site is down`                      |
 | https://www.novelupdates.com  | `Does not host any novels`          |
 | https://www.novelv.com        | `Site is down`                      |
-| https://yukinovel.id          | `Removed`                           |
 | https://www.rebirth.online    | `Site moved`                        |
 | http://gravitytales.com       | `Redirects to webnovel.com`         |
 | https://novelplanet.com       | `Site is closed`                    |
