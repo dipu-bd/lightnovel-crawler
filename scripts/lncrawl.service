@@ -1,0 +1,16 @@
+[Unit]
+Description=Lightnovel Crawler
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=dipu
+WorkingDirectory=/home/dipu/projects/lightnovel-crawler
+RestartSec=2s
+Restart=always
+ExecStart=/bin/bash ./scripts/start.sh
+ExecStop=/bin/bash ./scripts/stop.sh
+
+[Install]
+WantedBy=multi-user.target
+Alias=lncrawl.service
