@@ -419,22 +419,23 @@ You are very welcome to contribute in this project. You can:
 
 ### C4. Rejected sources
 
-| Rejected Sources              | Reason                              |
-| ----------------------------- | ----------------------------------- |
-| http://fullnovel.live         | `403 - Forbidden: Access is denied` |
-| http://moonbunnycafe.com      | `Does not follow uniform format`    |
-| https://anythingnovel.com     | `Site broken`                       |
-| https://indomtl.com           | `Does not like to be crawled`       |
-| https://lnindo.org            | `Does not like to be crawled`       |
-| https://mtled-novels.com      | `Domain is expired`                 |
-| https://www.flying-lines.com  | `Obfuscated content`                |
-| https://www.jieruihao.cn      | `Unavailable`                       |
-| https://www.noveluniverse.com | `Site is down`                      |
-| https://www.novelupdates.com  | `Does not host any novels`          |
-| https://www.novelv.com        | `Site is down`                      |
-| https://www.rebirth.online    | `Site moved`                        |
-| http://gravitytales.com       | `Redirects to webnovel.com`         |
-| https://novelplanet.com       | `Site is closed`                    |
+| Rejected Sources                | Reason                                         |
+| ------------------------------- | ---------------------------------------------- |
+| http://fullnovel.live           | `403 - Forbidden: Access is denied`            |
+| http://gravitytales.com         | `Redirects to webnovel.com`                    |
+| http://moonbunnycafe.com        | `Does not follow uniform format`               |
+| https://anythingnovel.com       | `Site broken`                                  |
+| https://chrysanthemumgarden.com | `Removed on request of the owner` (Issue #649) |
+| https://indomtl.com             | `Does not like to be crawled`                  |
+| https://lnindo.org              | `Does not like to be crawled`                  |
+| https://mtled-novels.com        | `Domain is expired`                            |
+| https://novelplanet.com         | `Site is closed`                               |
+| https://www.flying-lines.com    | `Obfuscated content`                           |
+| https://www.jieruihao.cn        | `Unavailable`                                  |
+| https://www.noveluniverse.com   | `Site is down`                                 |
+| https://www.novelupdates.com    | `Does not host any novels`                     |
+| https://www.novelv.com          | `Site is down`                                 |
+| https://www.rebirth.online      | `Site moved`                                   |
 
 ### C5. Supported output formats
 
