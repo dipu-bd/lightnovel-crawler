@@ -90,6 +90,9 @@ $ lncrawl
 
 ### A3. Termux (Android)
 
+> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
+> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
+
 📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
@@ -105,9 +108,6 @@ $ lncrawl
 - Type `lncrawl` to start.
 - You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 - Run `pip install -U lightnovel-crawler` again to install the latest updates.
-
-> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
-> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
 
 ### A4. Chatbots
 
