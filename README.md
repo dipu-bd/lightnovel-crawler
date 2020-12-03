@@ -370,6 +370,7 @@ You are very welcome to contribute in this project. You can:
 | https://webnovelonline.com                   |            |           |
 | https://woopread.com                         |     ✔      |           |
 | https://wordexcerpt.com                      |     ✔      |           |
+| https://wordexcerpt.org                      |            |           |
 | https://writerupdates.com                    |            |           |
 | https://wuxiaworld.io                        |     ✔      |           |
 | https://wuxiaworld.live                      |     ✔      |           |
