@@ -309,6 +309,7 @@ You are very welcome to contribute in this project. You can:
 | https://bestoflightnovels.com                |     ✔      |           |
 | https://book.qidian.com                      |            |           |
 | https://boxnovel.com                         |     ✔      |           |
+| https://clicknovel.net                       |            |           |
 | https://creativenovels.com                   |            |           |
 | https://crescentmoon.blog                    |            |           |
 | https://darktranslation.com                  |            |           |
@@ -360,6 +361,7 @@ You are very welcome to contribute in this project. You can:
 | https://reincarnationpalace.com              |            |           |
 | https://rewayat.club                         |            |           |
 | https://shalvationtranslations.wordpress.com |            |           |
+| https://sleepytranslations.com               |            |           |
 | https://tomotranslations.com                 |            |           |
 | https://viewnovel.net                        |     ✔      |           |
 | https://vipnovel.com                         |     ✔      |           |
