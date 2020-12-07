@@ -362,6 +362,7 @@ You are very welcome to contribute in this project. You can:
 | https://reincarnationpalace.com              |            |           |
 | https://rewayat.club                         |            |           |
 | https://shalvationtranslations.wordpress.com |            |           |
+| https://skynovel.org/                        |            |           |
 | https://sleepytranslations.com               |            |           |
 | https://tomotranslations.com                 |            |           |
 | https://viewnovel.net                        |     ✔      |           |
