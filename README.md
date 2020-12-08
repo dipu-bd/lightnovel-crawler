@@ -299,6 +299,7 @@ You are very welcome to contribute in this project. You can:
 | http://zhi-end.blogspot.co.id                |            |           |
 | http://zhi-end.blogspot.com                  |            |           |
 | https://4scanlation.xyz                      |            |           |
+| https://88tangeatdrinkread.wordpress.com     |            |           |
 | https://9kqw.com                             |     ✔      |           |
 | https://anythingnovel.com                    |            |           |
 | https://arangscans.com                       |            |           |
