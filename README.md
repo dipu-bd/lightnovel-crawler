@@ -325,6 +325,7 @@ You are very welcome to contribute in this project. You can:
 | https://id.mtlnovel.com                      |     ✔      |           |
 | https://inadequatetranslations.wordpress.com |            |           |
 | https://indowebnovel.id                      |            |           |
+| https://infinitenoveltranslations.net        |            |           |
 | https://instadoses.com                       |            |           |
 | https://jpmtl.com                            |            |           |
 | https://jstranslations1.com                  |            |           |
