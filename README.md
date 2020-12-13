@@ -318,6 +318,7 @@ You are very welcome to contribute in this project. You can:
 | https://exiledrebelsscanlations.com          |     ✔      |           |
 | https://fanstranslations.com                 |            |           |
 | https://fastnovel.net                        |            |           |
+| https://foxaholic.com                        |     ✔      |           |
 | https://fr.mtlnovel.com                      |     ✔      |           |
 | https://fujitranslation.com                  |            |           |
 | https://id.mtlnovel.com                      |     ✔      |           |
