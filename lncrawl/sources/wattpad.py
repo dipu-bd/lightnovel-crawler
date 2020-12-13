@@ -31,16 +31,11 @@ class WattpadCrawler(Crawler):
         chapters = soup.select('ul.table-of-contents a')
         # chapters.reverse()
 
+        vols = set([])
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            vol_id = chap_id//100 + 1
-            if len(self.chapters) % 100 == 0:
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            vol_id = len(self.chapters) // 100 + 1
+            vols.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -48,6 +43,8 @@ class WattpadCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': i} for i in vols]
     # end def
 
     def download_chapter_body(self, chapter):
