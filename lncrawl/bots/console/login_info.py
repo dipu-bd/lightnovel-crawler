@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from PyInquirer import prompt
+from questionary import prompt
 from ...core.arguments import get_args
 
 
@@ -29,16 +29,14 @@ def get_login_info(self):
             {
                 'type': 'input',
                 'name': 'email',
-                'message': 'Username/Email:',
-                'validate': lambda val: True if len(val)
-                else 'Email address should be not be empty'
+                'message': 'User/Email:',
+                'validate': lambda a: True if a else 'User/Email should be not be empty'
             },
             {
                 'type': 'password',
                 'name': 'password',
                 'message': 'Password:',
-                'validate': lambda val: True if len(val)
-                else 'Password should be not be empty'
+                'validate': lambda a: True if a else 'Password should be not be empty'
             },
         ])
         return answer['email'], answer['password']

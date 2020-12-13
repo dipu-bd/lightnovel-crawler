@@ -67,8 +67,8 @@ def gather_data_files():
         unix_site_packages, os.pathsep)
     command += '--add-data "%s/cairocffi/VERSION%scairocffi" ' % (
         unix_site_packages, os.pathsep)
-    command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (
-        unix_site_packages, os.pathsep)
+    #command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (
+    #    unix_site_packages, os.pathsep)
     command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
         unix_site_packages, os.pathsep)
     command += '--add-data "%s/cloudscraper%scloudscraper" ' % (

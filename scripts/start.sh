@@ -31,3 +31,6 @@ do
     echo "Stopped shard $((i-1)) of $shards shards." &
 done
 wait
+
+echo "Force stop remaining instances..."
+/bin/bash scripts/stop.sh

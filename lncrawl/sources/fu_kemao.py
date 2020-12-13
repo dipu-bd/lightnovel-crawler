@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-from base64 import decodestring as b64decode
+from base64 import b64decode
 from concurrent import futures
 from urllib.parse import quote_plus
 

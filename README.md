@@ -90,6 +90,9 @@ $ lncrawl
 
 ### A3. Termux (Android)
 
+> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
+> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
+
 📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
@@ -105,9 +108,6 @@ $ lncrawl
 - Type `lncrawl` to start.
 - You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 - Run `pip install -U lightnovel-crawler` again to install the latest updates.
-
-> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
-> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
 
 ### A4. Chatbots
 
@@ -309,7 +309,6 @@ You are very welcome to contribute in this project. You can:
 | https://bestoflightnovels.com                |     ✔      |           |
 | https://book.qidian.com                      |            |           |
 | https://boxnovel.com                         |     ✔      |           |
-| https://chrysanthemumgarden.com              |            |           |
 | https://creativenovels.com                   |            |           |
 | https://crescentmoon.blog                    |            |           |
 | https://darktranslation.com                  |            |           |
@@ -420,22 +419,23 @@ You are very welcome to contribute in this project. You can:
 
 ### C4. Rejected sources
 
-| Rejected Sources              | Reason                              |
-| ----------------------------- | ----------------------------------- |
-| http://fullnovel.live         | `403 - Forbidden: Access is denied` |
-| http://moonbunnycafe.com      | `Does not follow uniform format`    |
-| https://anythingnovel.com     | `Site broken`                       |
-| https://indomtl.com           | `Does not like to be crawled`       |
-| https://lnindo.org            | `Does not like to be crawled`       |
-| https://mtled-novels.com      | `Domain is expired`                 |
-| https://www.flying-lines.com  | `Obfuscated content`                |
-| https://www.jieruihao.cn      | `Unavailable`                       |
-| https://www.noveluniverse.com | `Site is down`                      |
-| https://www.novelupdates.com  | `Does not host any novels`          |
-| https://www.novelv.com        | `Site is down`                      |
-| https://www.rebirth.online    | `Site moved`                        |
-| http://gravitytales.com       | `Redirects to webnovel.com`         |
-| https://novelplanet.com       | `Site is closed`                    |
+| Rejected Sources                | Reason                                                                                             |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| http://fullnovel.live           | `403 - Forbidden: Access is denied`                                                                |
+| http://gravitytales.com         | `Redirects to webnovel.com`                                                                        |
+| http://moonbunnycafe.com        | `Does not follow uniform format`                                                                   |
+| https://anythingnovel.com       | `Site broken`                                                                                      |
+| https://chrysanthemumgarden.com | `Removed on request of the owner` [#649](https://github.com/dipu-bd/lightnovel-crawler/issues/649) |
+| https://indomtl.com             | `Does not like to be crawled`                                                                      |
+| https://lnindo.org              | `Does not like to be crawled`                                                                      |
+| https://mtled-novels.com        | `Domain is expired`                                                                                |
+| https://novelplanet.com         | `Site is closed`                                                                                   |
+| https://www.flying-lines.com    | `Obfuscated content`                                                                               |
+| https://www.jieruihao.cn        | `Unavailable`                                                                                      |
+| https://www.noveluniverse.com   | `Site is down`                                                                                     |
+| https://www.novelupdates.com    | `Does not host any novels`                                                                         |
+| https://www.novelv.com          | `Site is down`                                                                                     |
+| https://www.rebirth.online      | `Site moved`                                                                                       |
 
 ### C5. Supported output formats
 

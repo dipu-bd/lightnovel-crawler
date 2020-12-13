@@ -108,7 +108,8 @@ class LightNovelOnline(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        body = soup.select('#chapter-content p')
-        return ''.join([str(p) for p in body if p.text.strip()])
+        body = soup.select_one('#chapter-content')
+        return str(body)
+        # return ''.join([str(p) for p in body if p.text.strip()])
     # end def
 # end class
