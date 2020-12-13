@@ -36,6 +36,7 @@ rejected_sources = {
     'https://www.novelv.com/': "Site is down",
     'https://www.rebirth.online/': 'Site moved',
     'https://mtled-novels.com/': 'Domain is expired',
+    'https://4scanlation.com/': 'Site is down'
 }
 
 # this list will be auto-generated
