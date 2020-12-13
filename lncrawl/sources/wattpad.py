@@ -8,10 +8,17 @@ logger = logging.getLogger(__name__)
 
 
 class WattpadCrawler(Crawler):
-    base_url = 'https://www.wattpad.com/'
+    base_url = [
+        'https://www.wattpad.com/',
+        'https://my.w.tt/',
+    ]
+
+    def initialize(self):
+        self.home_url = self.base_url[0]
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
+
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
