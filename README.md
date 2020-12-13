@@ -58,7 +58,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
-⏬ **Linux**: [lightnovel-crawler v2.22.1 ~ 24MB](https://rebrand.ly/lncrawl-linux)
+⏬ **Linux**: [lightnovel-crawler v2.24.0 ~ 24MB](https://rebrand.ly/lncrawl-linux)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 > However, it is recommended to use **pip** version directly if you are on Linux
