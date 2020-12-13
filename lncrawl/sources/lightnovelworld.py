@@ -9,7 +9,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 novel_search_url = 'https://www.lightnovelworld.com/search?title=%s'
-chapter_list_url = 'https://www.lightnovelworld.com/novelchapters/%s?pageNo=%d&chorder=asc'
+chapter_list_url = 'https://www.lightnovelworld.com/novel/%s?pageNo=%d&tab=chapters&chorder=asc'
 
 
 class LightNovelOnline(Crawler):
@@ -62,8 +62,11 @@ class LightNovelOnline(Crawler):
             'input[name="__RequestVerificationToken"]')['value']
         logger.info('Verification token: %s', self.verificationToken)
 
-        last_page = soup.select_one('.PagedList-skipToLast a')['href']
-        page_count = int(re.findall(r'pageNo=(\d+)', last_page)[0])
+        try:
+            last_page = soup.select_one('.PagedList-skipToLast a')['href']
+            page_count = int(re.findall(r'pageNo=(\d+)', last_page)[0])
+        except:
+            page_count = 0
         logger.info('Total pages: %d', page_count)
 
         logger.info('Getting chapters...')

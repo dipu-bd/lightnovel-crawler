@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
-from PyInquirer import prompt
+from questionary import prompt
 
 from ...core import display
 from ...core.arguments import get_args
@@ -34,8 +34,7 @@ def get_novel_url(self):
                 'type': 'input',
                 'name': 'novel',
                 'message': 'Enter novel page url or query novel:',
-                'validate': lambda val: 'Input should not be empty'
-                if len(val) == 0 else True,
+                'validate': lambda a: True if a else 'Input should not be empty',
             },
         ])
         return answer['novel'].strip()

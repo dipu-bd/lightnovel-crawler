@@ -2,7 +2,7 @@
 import os
 import shutil
 
-from PyInquirer import prompt
+from questionary import prompt
 
 from ...binders import available_formats
 from ...core.arguments import get_args

@@ -141,7 +141,7 @@ class WorldnovelonlineCrawler(Crawler):
             '.post-content'
             '.cha-words',
             '.cha-content',
-            '.chapter-fill',
+            # '.chapter-fill',
             '.entry-content.cl',
             '#content',
         ]))

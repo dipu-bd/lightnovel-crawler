@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
-from PyInquirer import prompt
+from prompt_toolkit.styles.style import Style
+from questionary import prompt
+from questionary.prompts.common import Choice
 
 from ...core.arguments import get_args
 
@@ -73,18 +75,25 @@ def get_range_using_urls(self):
         # end def
         answer = prompt([
             {
-                'type': 'input',
+                'type': 'autocomplete',
                 'name': 'start_url',
                 'message': 'Enter start url:',
+                'choices': [chap['url'] for chap in self.app.crawler.chapters],
                 'validate': validator,
             },
             {
-                'type': 'input',
+                'type': 'autocomplete',
                 'name': 'stop_url',
                 'message': 'Enter final url:',
+                'choices': [chap['url'] for chap in self.app.crawler.chapters],
                 'validate': validator,
             },
-        ])
+        ], style=Style([
+            ("selected", "fg:#000000 bold"),
+            # ("highlighted", "fg:#000000 bold"),
+            ("answer", "fg:#f44336 bold"),
+            ("text", ""),
+        ]))
         start_url = answer['start_url']
         stop_url = answer['stop_url']
     # end if
@@ -163,15 +172,14 @@ def get_range_from_volumes(self, times=0):
                 'name': 'volumes',
                 'message': 'Choose volumes to download:',
                 'choices': [
-                    {
-                        'name': '%d - %s (Chapter %d-%d) [%d chapters]' % (
+                    Choice(
+                        '%d - %s (Chapter %d-%d) [%d chapters]' % (
                             vol['id'], vol['title'], vol['start_chapter'],
-                            vol['final_chapter'], vol['chapter_count'])
-                    }
+                            vol['final_chapter'], vol['chapter_count']),
+                    )
                     for vol in self.app.crawler.volumes
                 ],
-                'validate': lambda ans: True if len(ans) > 0
-                else 'You must choose at least one volume.'
+                'validate': lambda a: True if a else (False, "Select at least one item")
             }
         ])
         selected = [int(val.split(' ')[0]) for val in answer['volumes']]
@@ -205,11 +213,10 @@ def get_range_from_chapters(self, times=0):
                 'name': 'chapters',
                 'message': 'Choose chapters to download:',
                 'choices': [
-                    {'name': '%d - %s' % (chap['id'], chap['title'])}
+                    Choice('%d - %s' % (chap['id'], chap['title']))
                     for chap in self.app.crawler.chapters
                 ],
-                'validate': lambda ans: True if len(ans) > 0
-                else 'You must choose at least one chapter.',
+                'validate': lambda a: True if a else (False, 'Select at least one chapter.'),
             }
         ])
         selected = [
