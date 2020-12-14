@@ -6,7 +6,6 @@ import logging
 import os
 
 import colorama
-import requests
 from colorama import Fore
 
 from ..assets.version import get_value as get_version
@@ -17,13 +16,6 @@ from .display import (cancel_method, debug_mode, description, epilog,
                       error_message, input_suppression)
 
 logger = logging.Logger('CORE')
-
-try:
-    import win_unicode_console
-    win_unicode_console.enable()
-except:
-    pass
-# end try
 
 
 def init():

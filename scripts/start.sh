@@ -7,6 +7,7 @@ cd "$(dirname "$curdir")"
 echo "Workdir: $(pwd)"
 
 echo "Fetch updates..."
+git stash clear
 git stash save -u
 git fetch origin master
 git rebase FETCH_HEAD
@@ -14,8 +15,11 @@ git stash pop
 
 echo "Setup virtual environment..."
 if [ ! -d venv ]; then
+    echo "Creating new venv"
     python3 -m venv venv
 fi
+
+echo "Install requirements..."
 ./venv/bin/python -m pip install -U pip wheel
 ./venv/bin/python -m pip install -r requirements.txt
 ./venv/bin/python -m pip install -r dev-requirements.txt
