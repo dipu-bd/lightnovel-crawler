@@ -14,11 +14,11 @@ git stash pop
 
 echo "Setup virtual environment..."
 if [ ! -d venv ]; then
-    python -m venv venv
+    python3 -m venv venv
 fi
-. venv/bin/activate
-pip install -U -r requirements.txt
-pip install -U -r dev-requirements.txt
+./venv/bin/python -m pip install -U pip wheel
+./venv/bin/python -m pip install -r requirements.txt
+./venv/bin/python -m pip install -r dev-requirements.txt
 
 echo "Stopping previous instances..."
 /bin/bash scripts/stop.sh
@@ -27,7 +27,7 @@ echo "Starting $shards shards..."
 for i in $(seq $shards)
 do
     echo "Starting shard $((i-1)) of $shards shards..." &&
-    python . --bot discord --shard-id $((i-1)) --shard-count $shards &&
+    ./venv/bin/python . --bot discord --shard-id $((i-1)) --shard-count $shards &&
     echo "Stopped shard $((i-1)) of $shards shards." &
 done
 wait
