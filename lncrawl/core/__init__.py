@@ -7,7 +7,6 @@ import os
 
 import colorama
 import requests
-import win_unicode_console
 from colorama import Fore
 
 from ..assets.version import get_value as get_version
@@ -19,11 +18,17 @@ from .display import (cancel_method, debug_mode, description, epilog,
 
 logger = logging.Logger('CORE')
 
+try:
+    import win_unicode_console
+    win_unicode_console.enable()
+except:
+    pass
+# end try
+
 
 def init():
     os.environ['version'] = get_version()
 
-    win_unicode_console.enable()
     colorama.init()
     description()
 
