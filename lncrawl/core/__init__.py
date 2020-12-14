@@ -6,8 +6,6 @@ import logging
 import os
 
 import colorama
-import requests
-import win_unicode_console
 from colorama import Fore
 
 from ..assets.version import get_value as get_version
@@ -23,7 +21,6 @@ logger = logging.Logger('CORE')
 def init():
     os.environ['version'] = get_version()
 
-    win_unicode_console.enable()
     colorama.init()
     description()
 
