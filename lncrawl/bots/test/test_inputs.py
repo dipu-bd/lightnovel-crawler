@@ -311,5 +311,8 @@ test_user_inputs = {
     ],
     'https://instadoses.com/': [
         'https://instadoses.com/manga/martial-arts-reigns/'
-    ]
+    ],
+    'https://foxaholic.com/': [
+        'https://foxaholic.com/novel/the-white-eyed-wolves-i-personally-raised-are-all-coveting-my-legacy/'
+    ],
 }

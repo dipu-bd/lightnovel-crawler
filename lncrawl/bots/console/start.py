@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urlparse
 
-from PyInquirer import prompt
+from questionary import prompt
 
 from ...assets.icons import Icons
 from ...core import display

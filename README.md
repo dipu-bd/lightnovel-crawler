@@ -19,28 +19,26 @@ An app to download novels from online sources and generate e-books.
 
 ## Table of contents
 
-- [Lightnovel Crawler ![pip package](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)](#lightnovel-crawler-img-srchttpsimgshieldsiobadgef09f93a6-pip-blue-altpip-package-img-srchttpsimgshieldsiobadgee2a7aa-lncrawlexe-red-altdownload-win-img-srchttpsimgshieldsiobadgee2a7ad-lncrawl20linux-brown-altdownload-linux)
-  - [Table of contents](#table-of-contents)
-  - [(A) Installation](#a-installation)
-    - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
-    - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-    - [A3. Termux (Android)](#a3-termux-android)
-    - [A4. Chatbots](#a4-chatbots)
-      - [A4.1 Discord](#a41-discord)
-      - [A4.2 Telegram](#a42-telegram)
-    - [A5. Run from source](#a5-run-from-source)
-    - [A6. Heroku Deployment](#a6-heroku-deployment)
-  - [(B) General Usage](#b-general-usage)
-    - [B1. Available options](#b1-available-options)
-    - [B2. Example Usage](#b2-example-usage)
-    - [B3. Running the bot](#b3-running-the-bot)
-  - [(C) Development](#c-development)
-    - [C1. Adding new source](#c1-adding-new-source)
-    - [C2. Adding new Bot](#c2-adding-new-bot)
-    - [C3. Supported sources](#c3-supported-sources)
-    - [C4. Rejected sources](#c4-rejected-sources)
-    - [C5. Supported output formats](#c5-supported-output-formats)
-    - [C6. Supported bots](#c6-supported-bots)
+- [(A) Installation](#a-installation)
+  - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
+  - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+  - [A3. Termux (Android)](#a3-termux-android)
+  - [A4. Chatbots](#a4-chatbots)
+    - [A4.1 Discord](#a41-discord)
+    - [A4.2 Telegram](#a42-telegram)
+  - [A5. Run from source](#a5-run-from-source)
+  - [A6. Heroku Deployment](#a6-heroku-deployment)
+- [(B) General Usage](#b-general-usage)
+  - [B1. Available options](#b1-available-options)
+  - [B2. Example Usage](#b2-example-usage)
+  - [B3. Running the bot](#b3-running-the-bot)
+- [(C) Development](#c-development)
+  - [C1. Adding new source](#c1-adding-new-source)
+  - [C2. Adding new Bot](#c2-adding-new-bot)
+  - [C3. Supported sources](#c3-supported-sources)
+  - [C4. Rejected sources](#c4-rejected-sources)
+  - [C5. Supported output formats](#c5-supported-output-formats)
+  - [C6. Supported bots](#c6-supported-bots)
 
 <a href="https://github.com/dipu-bd/lightnovel-crawler"><img src="res/lncrawl-icon.png" width="128px" align="right"/></a>
 
@@ -54,13 +52,13 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### A1. Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.23.2 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.24.1 ~ 23MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program.
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
-⏬ **Linux**: [lightnovel-crawler v2.22.1 ~ 24MB](https://rebrand.ly/lncrawl-linux)
+⏬ **Linux**: [lightnovel-crawler v2.24.1 ~ 24MB](https://rebrand.ly/lncrawl-linux)
 
 > Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
 > However, it is recommended to use **pip** version directly if you are on Linux
@@ -92,6 +90,9 @@ $ lncrawl
 
 ### A3. Termux (Android)
 
+> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
+> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
+
 📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
@@ -107,9 +108,6 @@ $ lncrawl
 - Type `lncrawl` to start.
 - You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 - Run `pip install -U lightnovel-crawler` again to install the latest updates.
-
-> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
-> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
 
 ### A4. Chatbots
 
@@ -311,7 +309,6 @@ You are very welcome to contribute in this project. You can:
 | https://bestoflightnovels.com                |     ✔      |           |
 | https://book.qidian.com                      |            |           |
 | https://boxnovel.com                         |     ✔      |           |
-| https://chrysanthemumgarden.com              |            |           |
 | https://creativenovels.com                   |            |           |
 | https://crescentmoon.blog                    |            |           |
 | https://darktranslation.com                  |            |           |
@@ -321,6 +318,7 @@ You are very welcome to contribute in this project. You can:
 | https://exiledrebelsscanlations.com          |     ✔      |           |
 | https://fanstranslations.com                 |            |           |
 | https://fastnovel.net                        |            |           |
+| https://foxaholic.com                        |     ✔      |           |
 | https://fr.mtlnovel.com                      |     ✔      |           |
 | https://fujitranslation.com                  |            |           |
 | https://id.mtlnovel.com                      |     ✔      |           |
@@ -352,6 +350,7 @@ You are very welcome to contribute in this project. You can:
 | https://novel27.com                          |     ✔      |           |
 | https://novelcrush.com                       |     ✔      |           |
 | https://novelfull.com                        |     ✔      |           |
+| https://novelgo.id/                          |            |           |
 | https://novelonlinefree.com                  |     ✔      |           |
 | https://novelonlinefull.com                  |     ✔      |           |
 | https://novelraw.blogspot.com                |            |           |
@@ -381,8 +380,8 @@ You are very welcome to contribute in this project. You can:
 | https://www.asianhobbyist.com                |            |           |
 | https://www.centinni.com                     |     ✔      |           |
 | https://www.daocaorenshuwu.com               |            |           |
-| https://www.fuyuneko.org                     |            |           |
 | https://www.f-w-o.com                        |     ✔      |           |
+| https://www.fuyuneko.org                     |            |           |
 | https://www.idqidian.us                      |            |           |
 | https://www.lightnovelworld.com              |     ✔      |           |
 | https://www.machine-translation.org          |     ✔      |           |
@@ -416,27 +415,27 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.com                   |     ✔      |           |
 | https://www.x81zw.com                        |            |           |
 | https://www.xsbiquge.com                     |            |           |
+| https://yukinovel.id                         |            |           |
 
 ### C4. Rejected sources
 
-| Rejected Sources              | Reason                              |
-| ----------------------------- | ----------------------------------- |
-| http://fullnovel.live         | `403 - Forbidden: Access is denied` |
-| http://moonbunnycafe.com      | `Does not follow uniform format`    |
-| https://anythingnovel.com     | `Site broken`                       |
-| https://indomtl.com           | `Does not like to be crawled`       |
-| https://lnindo.org            | `Does not like to be crawled`       |
-| https://mtled-novels.com      | `Domain is expired`                 |
-| https://novelgo.id/           | `Removed`                           |
-| https://www.flying-lines.com  | `Obfuscated content`                |
-| https://www.jieruihao.cn      | `Unavailable`                       |
-| https://www.noveluniverse.com | `Site is down`                      |
-| https://www.novelupdates.com  | `Does not host any novels`          |
-| https://www.novelv.com        | `Site is down`                      |
-| https://yukinovel.id          | `Removed`                           |
-| https://www.rebirth.online    | `Site moved`                        |
-| http://gravitytales.com       | `Redirects to webnovel.com`         |
-| https://novelplanet.com       | `Site is closed`                    |
+| Rejected Sources                | Reason                                                                                             |
+| ------------------------------- | -------------------------------------------------------------------------------------------------- |
+| http://fullnovel.live           | `403 - Forbidden: Access is denied`                                                                |
+| http://gravitytales.com         | `Redirects to webnovel.com`                                                                        |
+| http://moonbunnycafe.com        | `Does not follow uniform format`                                                                   |
+| https://anythingnovel.com       | `Site broken`                                                                                      |
+| https://chrysanthemumgarden.com | `Removed on request of the owner` [#649](https://github.com/dipu-bd/lightnovel-crawler/issues/649) |
+| https://indomtl.com             | `Does not like to be crawled`                                                                      |
+| https://lnindo.org              | `Does not like to be crawled`                                                                      |
+| https://mtled-novels.com        | `Domain is expired`                                                                                |
+| https://novelplanet.com         | `Site is closed`                                                                                   |
+| https://www.flying-lines.com    | `Obfuscated content`                                                                               |
+| https://www.jieruihao.cn        | `Unavailable`                                                                                      |
+| https://www.noveluniverse.com   | `Site is down`                                                                                     |
+| https://www.novelupdates.com    | `Does not host any novels`                                                                         |
+| https://www.novelv.com          | `Site is down`                                                                                     |
+| https://www.rebirth.online      | `Site moved`                                                                                       |
 
 ### C5. Supported output formats
 

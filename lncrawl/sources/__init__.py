@@ -20,6 +20,7 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 rejected_sources = {
+    'https://chrysanthemumgarden.com/': 'Removed on request of the owner (Issue #649)',
     'https://novelplanet.com/': 'Site is closed',
     'http://gravitytales.com/': 'Redirects to webnovel.com',
     'http://fullnovel.live/': "403 - Forbidden: Access is denied",
@@ -28,15 +29,14 @@ rejected_sources = {
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
-    'https://novelgo.id/': "Removed by owner",
     'https://www.flying-lines.com/': 'Obfuscated content',
     'https://www.jieruihao.cn/': "Unavailable",
     'https://www.noveluniverse.com/': "Site is down",
     'https://www.novelupdates.com/': "Does not host any novels",
     'https://www.novelv.com/': "Site is down",
-    'https://yukinovel.id/': "Removed by owner",
     'https://www.rebirth.online/': 'Site moved',
     'https://mtled-novels.com/': 'Domain is expired',
+    'https://4scanlation.com/': 'Site is down'
 }
 
 # this list will be auto-generated
