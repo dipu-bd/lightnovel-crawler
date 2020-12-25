@@ -1,6 +1,5 @@
 # App requirements
 ascii==3.6
-win_unicode_console==0.5
 python-dotenv==0.15.0,<1.0.0
 beautifulsoup4>=4.9.0,<5.0.0
 requests>=2.20.0,<3.0.0
