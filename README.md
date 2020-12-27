@@ -299,6 +299,7 @@ You are very welcome to contribute in this project. You can:
 | http://zhi-end.blogspot.co.id                |            |           |
 | http://zhi-end.blogspot.com                  |            |           |
 | https://4scanlation.xyz                      |            |           |
+| https://88tangeatdrinkread.wordpress.com     |            |           |
 | https://9kqw.com                             |     ✔      |           |
 | https://anythingnovel.com                    |            |           |
 | https://arangscans.com                       |            |           |
@@ -309,6 +310,7 @@ You are very welcome to contribute in this project. You can:
 | https://bestoflightnovels.com                |     ✔      |           |
 | https://book.qidian.com                      |            |           |
 | https://boxnovel.com                         |     ✔      |           |
+| https://clicknovel.net                       |            |           |
 | https://creativenovels.com                   |            |           |
 | https://crescentmoon.blog                    |            |           |
 | https://darktranslation.com                  |            |           |
@@ -324,6 +326,7 @@ You are very welcome to contribute in this project. You can:
 | https://id.mtlnovel.com                      |     ✔      |           |
 | https://inadequatetranslations.wordpress.com |            |           |
 | https://indowebnovel.id                      |            |           |
+| https://infinitenoveltranslations.net        |            |           |
 | https://instadoses.com                       |            |           |
 | https://jpmtl.com                            |            |           |
 | https://jstranslations1.com                  |            |           |
@@ -332,6 +335,7 @@ You are very welcome to contribute in this project. You can:
 | https://kisslightnovels.info                 |     ✔      |           |
 | https://lemontreetranslations.wordpress.com  |            |           |
 | https://light-novel.online                   |     ✔      |           |
+| https://lightnovelheaven.com                 |            |           |
 | https://lightnovelsonl.com                   |     ✔      |           |
 | https://listnovel.com                        |     ✔      |           |
 | https://litnet.com                           |     ✔      |           |
@@ -361,6 +365,8 @@ You are very welcome to contribute in this project. You can:
 | https://reincarnationpalace.com              |            |           |
 | https://rewayat.club                         |            |           |
 | https://shalvationtranslations.wordpress.com |            |           |
+| https://skynovel.org/                        |            |           |
+| https://sleepytranslations.com               |            |           |
 | https://tomotranslations.com                 |            |           |
 | https://viewnovel.net                        |     ✔      |           |
 | https://vipnovel.com                         |     ✔      |           |
@@ -371,6 +377,7 @@ You are very welcome to contribute in this project. You can:
 | https://webnovelonline.com                   |            |           |
 | https://woopread.com                         |     ✔      |           |
 | https://wordexcerpt.com                      |     ✔      |           |
+| https://wordexcerpt.org                      |            |           |
 | https://writerupdates.com                    |            |           |
 | https://wuxiaworld.io                        |     ✔      |           |
 | https://wuxiaworld.live                      |     ✔      |           |
