@@ -11,7 +11,7 @@ fi
 
 . venv/bin/activate
 pip install -U -r requirements.txt
-pip install -U -r dev-requirements.txt
+pip install -U -r requirements-dev.txt
 
 echo "Stopping previous instances..."
 pgrep python -a | grep "discord" | awk '{print $1}' | xargs kill -9 || true

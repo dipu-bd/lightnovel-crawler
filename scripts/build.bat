@@ -12,7 +12,7 @@ CALL venv\Scripts\activate.bat
 
 %PIP% install -U pip==20.0.2
 %PIP% install -r requirements.txt
-%PIP% install -r dev-requirements.txt
+%PIP% install -r requirements-dev.txt
 
 %PY% setup.py clean bdist_wheel sdist package
 
