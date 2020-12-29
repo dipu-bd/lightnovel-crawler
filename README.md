@@ -370,6 +370,7 @@ You are very welcome to contribute in this project. You can:
 | https://tomotranslations.com                 |            |           |
 | https://viewnovel.net                        |     ✔      |           |
 | https://vipnovel.com                         |     ✔      |           |
+| https://vistranslations.wordpress.com        |            |           |
 | https://volarenovels.com                     |            |           |
 | https://wbnovel.com                          |     ✔      |           |
 | https://webnovel.online                      |            |           |
