@@ -161,7 +161,7 @@ Simply fill out the environment variables and you get a running instance.
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.23.0
+                           📒 Lightnovel Crawler 🍀2.24.0
                   https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
