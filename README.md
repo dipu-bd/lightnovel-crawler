@@ -313,6 +313,7 @@ You are very welcome to contribute in this project. You can:
 | https://clicknovel.net                       |            |           |
 | https://creativenovels.com                   |            |           |
 | https://crescentmoon.blog                    |            |           |
+| https://daonovel.com                         |     ✔      |           |
 | https://darktranslation.com                  |            |           |
 | https://demontranslations.com                |            |           |
 | https://dmtranslationscn.com                 |            |           |
