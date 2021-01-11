@@ -357,6 +357,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelsrock.com                       |            |           |
 | https://pery.info/                           |     ✔      |           |
 | https://ranobelib.me                         |            |           |
+| https://readlightnovels.net                  |     ✔      |           |
 | https://readwebnovels.net                    |     ✔      |           |
 | https://reincarnationpalace.com              |            |           |
 | https://rewayat.club                         |            |           |
