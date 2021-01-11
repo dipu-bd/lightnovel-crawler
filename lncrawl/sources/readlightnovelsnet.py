@@ -127,7 +127,7 @@ class ReadLightNovelsNet(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        contents = soup.select_one('#chapter-content')
+        contents = soup.select_one('.chapter-content')
         for br in contents.select('br'):
             br.decompose()
         # end for
