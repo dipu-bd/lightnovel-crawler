@@ -3,6 +3,7 @@ import logging
 import re
 from concurrent import futures
 from ..utils.crawler import Crawler
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 search_url = 'https://readlightnovels.net/?s=%s'
@@ -53,6 +54,9 @@ class ReadLightNovelsNet(Crawler):
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
+        novel_id = soup.select_one('#id_post')['value']
+        logger.info('Novel id: %s', novel_id)
+
         # This is copied from the Novelfull pagination 'hanlder' with minor tweaks
         pagination_links = soup.select('.pagination li a')
         pagination_page_numbers = []
@@ -68,6 +72,7 @@ class ReadLightNovelsNet(Crawler):
             self.executor.submit(
                 self.download_chapter_list,
                 i + 1,
+                novel_id
             ): str(i)
             for i in range(page_count + 1)
         }
@@ -86,20 +91,37 @@ class ReadLightNovelsNet(Crawler):
         # end for
     # end def
 
-    def download_chapter_list(self, page):
+    def download_chapter_list(self, page, novel_id):
+        # RLNs Uses an AJAX based pagination that calls this address:
+        pagination_url = 'https://readlightnovels.net/wp-admin/admin-ajax.php'
+
         '''Download list of chapters and volumes.'''
-        url = self.novel_url.split('?')[0].strip('/')
-        url += '?page=%d&per-page=50' % page
-        soup = self.get_soup(url)
+        url = pagination_url.split('?')[0].strip('/')
+        # url += '?action=tw_ajax&type=pagination&id=%spage=%s' % (novel_id, page)
+        soup = BeautifulSoup(
+            self.submit_form(
+                url,
+                {'action': 'tw_ajax',
+                 'type': 'pagination',
+                 'id': novel_id,
+                 'page': page}
+            ).json()['list_chap'],
+            'lxml'
+        )
+        
+        if not soup.find('body'):
+            raise ConnectionError('HTML document was not loaded properly')
+        # end if
+
 
         for a in soup.select('ul.list-chapter li a'):
-            title = a['title'].strip()
+            title = a.text.strip()
 
             chapter_id = len(self.chapters) + 1
-            # match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
-            # if len(match) == 1:
-            #     chapter_id = int(match[0][1])
-            # # end if
+            match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
+            if len(match) == 1:
+                chapter_id = int(match[0][1])
+            # end if
 
             volume_id = 1 + (chapter_id - 1) // 100
             match = re.findall(r'(book|vol|volume) (\d+)',
