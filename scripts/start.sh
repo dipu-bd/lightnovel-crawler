@@ -1,17 +1,13 @@
 #!/bin/bash
 export LC_ALL="en_US.UTF-8"
 
-shards=4
+shards=2
 curdir="$(dirname "$(readlink -f "$0")")"
 cd "$(dirname "$curdir")"
 echo "Workdir: $(pwd)"
 
 echo "Fetch updates..."
-git stash clear
-git stash save -u
-git fetch origin master
-git rebase FETCH_HEAD
-git stash pop
+git pull --rebase --autostash
 
 echo "Setup virtual environment..."
 if [ ! -d venv ]; then
@@ -22,7 +18,7 @@ fi
 echo "Install requirements..."
 ./venv/bin/python -m pip install -U pip wheel
 ./venv/bin/python -m pip install -r requirements.txt
-./venv/bin/python -m pip install -r dev-requirements.txt
+./venv/bin/python -m pip install -r requirements-dev.txt
 
 echo "Stopping previous instances..."
 /bin/bash scripts/stop.sh

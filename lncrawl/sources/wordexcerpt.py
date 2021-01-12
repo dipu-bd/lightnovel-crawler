@@ -9,7 +9,10 @@ search_url = 'https://wordexcerpt.com/?s=%s&post_type=wp-manga'
 
 
 class WordExcerptCrawler(Crawler):
-    base_url = 'https://wordexcerpt.com/'
+    base_url = [
+        'https://wordexcerpt.com/',
+        'https://wordexcerpt.org/'
+        ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')

@@ -12,7 +12,7 @@ $PY -m venv venv
 
 $PIP install -U pip wheel setuptools
 $PIP install -r requirements.txt
-$PIP install -r dev-requirements.txt
+$PIP install -r requirements-dev.txt
 
 $PY setup.py clean bdist_wheel sdist package
 
