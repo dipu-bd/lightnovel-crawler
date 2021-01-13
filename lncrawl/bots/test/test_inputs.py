@@ -315,4 +315,7 @@ test_user_inputs = {
     'https://foxaholic.com/': [
         'https://foxaholic.com/novel/the-white-eyed-wolves-i-personally-raised-are-all-coveting-my-legacy/'
     ],
+    'https://readlightnovels.net/': [
+        'https://readlightnovels.net/death-march-kara-hajimaru-isekai-kyusoukyoku.html'
+    ]
 }
