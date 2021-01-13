@@ -1,6 +1,4 @@
 Js2Py
 PyInstaller
 cairosvg
-setuptools
-wheel
 win_unicode_console

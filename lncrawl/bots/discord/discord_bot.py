@@ -42,7 +42,7 @@ class DiscordBot(discord.Client):
         self.handlers = {}
 
         print('Discord bot in online!')
-        activity = discord.Activity(name='for 🔥%slncrawl🔥' % signal,
+        activity = discord.Activity(name='for 🔥%s🔥' % signal,
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)
