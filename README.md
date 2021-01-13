@@ -360,6 +360,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefull.com                  |     ✔      |           |
 | https://novelraw.blogspot.com                |            |           |
 | https://novelsrock.com                       |            |           |
+| https://noveltrench.com                      |     ✔      |           |
 | https://pery.info/                           |     ✔      |           |
 | https://ranobelib.me                         |            |           |
 | https://readwebnovels.net                    |     ✔      |           |
