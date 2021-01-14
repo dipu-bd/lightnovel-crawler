@@ -313,6 +313,7 @@ You are very welcome to contribute in this project. You can:
 | https://clicknovel.net                       |            |           |      @SirGryphin      |
 | https://creativenovels.com                   |            |           |                       |
 | https://crescentmoon.blog                    |            |           |                       |
+| https://daonovel.com                         |     ✔      |           |      @SirGryphin      |
 | https://darktranslation.com                  |            |           |                       |
 | https://demontranslations.com                |            |           |                       |
 | https://dmtranslationscn.com                 |            |           |                       |
@@ -359,6 +360,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |
 | https://novelsrock.com                       |            |           |                       |
+| https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
 | https://pery.info/                           |     ✔      |           |                       |
 | https://ranobelib.me                         |            |           |                       |
 | https://readwebnovels.net                    |     ✔      |           |                       |
@@ -371,6 +373,7 @@ You are very welcome to contribute in this project. You can:
 | https://tomotranslations.com                 |            |           |                       |
 | https://viewnovel.net                        |     ✔      |           |                       |
 | https://vipnovel.com                         |     ✔      |           |                       |
+| https://vistranslations.wordpress.com        |            |           |      @SirGryphin      |
 | https://volarenovels.com                     |            |           |                       |
 | https://wbnovel.com                          |     ✔      |           |                       |
 | https://webnovel.online                      |            |           |                       |
@@ -422,6 +425,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.wuxiaworld.co                    |     ✔      |           |       @dipu-bd        |
 | https://www.wuxiaworld.com                   |     ✔      |           |       @dipu-bd        |
 | https://www.x81zw.com                        |            |           |                       |
+| https://www.xiainovel.com                    |            |           |      @SirGryphin      |
 | https://www.xsbiquge.com                     |            |           |                       |
 | https://yukinovel.id                         |            |           |                       |
 

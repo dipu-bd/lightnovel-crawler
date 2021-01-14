@@ -9,7 +9,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 novel_search_url = 'https://www.lightnovelworld.com/search?title=%s'
-chapter_list_url = 'https://www.lightnovelworld.com/novel/%s?pageNo=%d&tab=chapters&chorder=asc'
+chapter_list_url = 'https://www.lightnovelworld.com/novel/%s?tab=chapters&page=%d&chorder=asc'
 
 
 class LightNovelOnline(Crawler):
@@ -64,7 +64,7 @@ class LightNovelOnline(Crawler):
 
         try:
             last_page = soup.select_one('.PagedList-skipToLast a')['href']
-            page_count = int(re.findall(r'pageNo=(\d+)', last_page)[0])
+            page_count = int(re.findall(r'page=(\d+)', last_page)[0])
         except:
             page_count = 0
         logger.info('Total pages: %d', page_count)
