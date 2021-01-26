@@ -6,7 +6,7 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger('WUXIA_WORLD')
-search_url = 'https://m.wuxiaworld.co/SearchBook.aspx'
+search_url = 'https://wuxiaworld.co/search/{}/1'
 
 
 class WuxiaCoCrawler(Crawler):
@@ -21,7 +21,7 @@ class WuxiaCoCrawler(Crawler):
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
-        url = search_url % query.lower()
+        url = search_url.format(query.lower())
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
