@@ -40,7 +40,7 @@ class TikNovelCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('#content .detail-thumb-box img')['data-echo'])
+            soup.select_one('#content .detail-thumb-box img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         volumes = set()
