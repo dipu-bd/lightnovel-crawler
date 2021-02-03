@@ -350,6 +350,7 @@ You are very welcome to contribute in this project. You can:
 | https://mangatoon.mobi                       |            |           |                       |
 | https://meionovel.id                         |     ✔      |           |                       |
 | https://moonstonetranslation.com             |            |           |      @SirGryphin      |
+| https://morenovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://myoniyonitranslations.com            |            |           |                       |
 | https://mysticalmerries.com                  |     ✔      |           |      @SirGryphin      |
 | https://novel27.com                          |     ✔      |           |      @SirGryphin      |
