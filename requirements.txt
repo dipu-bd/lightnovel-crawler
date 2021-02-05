@@ -13,6 +13,7 @@ pillow>=6.0.0
 cloudscraper>=1.2.48
 lxml>=4.0.0,<5.0.0
 questionary>=1.6.0
+prompt-toolkit~=2.0
 
 # Bot requirements
 discord.py>=1.5.0
