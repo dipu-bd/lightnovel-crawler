@@ -126,6 +126,7 @@ class NovelFullCrawler(Crawler):
             r'Read more chapter on NovelFull',  # strip "ads"
             r'full thich ung',  # leftover from previous blacklist
             r'<p><i>\d</i></p>',  # strip random numbers
+            r'<p>[<(strong|b|i|u)>]*Chapter.*?</p>',  # strip "Chapter: ..."
             r'<p>\s*</p>',  # strip any empty paragraphs
         ]
 
