@@ -119,27 +119,31 @@ class NovelFullCrawler(Crawler):
         return chapters
     # end def
 
+    def clean_contents(self, content):
+        self.blacklist_patterns = [
+            r'<p>.*?Translator.*?</p>',  # strip paragraphs with Translator
+            r'<p>.*?Editor.*?</p>',  # strip paragraphs with Editor
+            r'Read more chapter on NovelFull',  # strip "ads"
+            r'full thich ung',  # leftover from previous blacklist
+            r'<p><i>\d</i></p>',  # strip random numbers
+            r'<p>[<(strong|b|i|u)>]*Chapter.*?</p>',  # strip "Chapter: ..."
+            r'<p>\s*</p>',  # strip any empty paragraphs
+        ]
+
+        for pattern in self.blacklist_patterns:
+            content = re.sub(pattern, "", content)
+
+        return content
+
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        content = soup.select_one('div#chapter-content')
+        content = soup.select('div#chapter-content p')
+        content = "".join(str(paragraph) for paragraph in content)
+        content = self.clean_contents(content)
 
-        # Removes junk text from chapters.
-        self.blacklist_patterns = [
-            r'^\s*Translator:',
-            r'^\s*Editor:',
-            r'^\s*Atlas Studios',
-            r'Read more chapter on NovelFull',
-            r'full thich ung',
-            r'If you find any errors \( broken links.*let us know < report chapter >',
-        ]
-
-        self.clean_contents(content)
-        for ads in content.select('h3, h2, .adsbygoogle, script, ins, .ads, .ads-holder'):
-            ads.extract()
-
-        return str(content)
+        return content
     # end def
 # end class
