@@ -50,28 +50,11 @@ class hui3rCrawler(Crawler):
         # end for
     # end def
 
-    # def download_chapter_body(self, chapter):
-    #     '''Download body of a single chapter and return as clean html format.'''
-    #     logger.info('Downloading %s', chapter['url'])
-    #     soup = self.get_soup(chapter['url'])
-
-    #     content = soup.select('.single-entry-content p')
-    #     content = "".join(str(paragraph) for paragraph in content)
-    #     content = self.clean_contents(content)
-
-    #     return content
-
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         logger.debug(soup.title.string)
-
-        # remove urls
-        #self.bad_tags += ['a']
-
-        # remove tags
-        #self.block_tags += ['i', 'em']
 
         body_parts = soup.select_one('.single-entry-content')
 
