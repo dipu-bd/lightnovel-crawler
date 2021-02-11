@@ -58,7 +58,11 @@ class IdMtlnovelCrawler(Crawler):
             soup.select('div.nov-head amp-img')[1]['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select('table.info tr')[3].find('a').text
+        author_elem = soup.select('table.info tr')[3].find('a')
+        if author_elem:
+            self.novel_author = soup.select('table.info tr')[3].find('a').text
+        else:
+            self.novel_author = "Unknown"
         logger.info('Novel author: %s', self.novel_author)
 
         chapter_list = soup.select('div.ch-list amp-list')
