@@ -4,6 +4,7 @@ import logging
 import re
 
 from ..utils.crawler import Crawler
+from bs4 import Comment
 
 logger = logging.getLogger(__name__)
 
@@ -49,30 +50,48 @@ class hui3rCrawler(Crawler):
         # end for
     # end def
 
-    def clean_contents(self, content):
-        self.blacklist_patterns = [
-            r'FANATICAL hui3r.wordpress.com ALL RIGHTS RESERVED. If you are not reading this from hui3r.wordpress.com, then this translation has been posted without the permission of the translator.',  # strip "ads"
-            r'2013-2016',
-            r'©',
-            r'  ',
-            r'013-2016',
-            r'<p>\s*</p>',  # strip any empty paragraphs
-        ]
+    # def download_chapter_body(self, chapter):
+    #     '''Download body of a single chapter and return as clean html format.'''
+    #     logger.info('Downloading %s', chapter['url'])
+    #     soup = self.get_soup(chapter['url'])
 
-        for pattern in self.blacklist_patterns:
-            content = re.sub(pattern, "", content)
+    #     content = soup.select('.single-entry-content p')
+    #     content = "".join(str(paragraph) for paragraph in content)
+    #     content = self.clean_contents(content)
 
-        return content
+    #     return content
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
+        logger.debug(soup.title.string)
 
-        content = soup.select('.single-entry-content p')
-        content = "".join(str(paragraph) for paragraph in content)
-        content = self.clean_contents(content)
+        # remove urls
+        #self.bad_tags += ['a']
 
-        return content
+        # remove tags
+        #self.block_tags += ['i', 'em']
+
+        body_parts = soup.select_one('.single-entry-content')
+
+        # Removes "Share this" text and buttons from bottom of chapters.
+        for share in body_parts.select('div.sharedaddy'):
+            share.decompose()
+
+        # Removes footer info and categories.
+        for footer in body_parts.select('footer.entry-meta'):
+            footer.decompose()
+
+        # Removes watermark/hidden text
+        for hidden in body_parts.findAll('span', {'style': 'color:#ffffff;'}):
+            hidden.decompose()
+
+        # remove comments
+        for comment in soup.findAll(text=lambda text:isinstance(text, Comment)):
+            comment.extract()
+
+        body = self.extract_contents(body_parts)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
