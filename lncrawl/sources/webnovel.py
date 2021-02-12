@@ -11,7 +11,7 @@ book_info_url = 'https://www.webnovel.com/book/%s'
 chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
 book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
 chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
-chapter_body_url = 'https://www.webnovel.com/apiajax/chapter/GetContent?_csrfToken=%s&bookId=%s&chapterId=%s'
+chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 search_url = 'https://www.webnovel.com/apiajax/search/AutoCompleteAjax'
 
 
