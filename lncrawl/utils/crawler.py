@@ -141,12 +141,11 @@ class Crawler:
         elif url.find('//') >= 0:
             return url
         elif url.startswith('/'):
-            return self.home_url + url
+            return self.home_url + url[1:]
         elif page_url:
-            page_url = page_url.strip('/')
-            return (page_url or self.home_url) + '/' + url
+            return page_url.strip('/') + '/' + url
         else:
-            return url
+            return self.home_url + url
         # end if
     # end def
 
