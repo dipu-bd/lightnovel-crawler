@@ -61,7 +61,7 @@ class WattpadCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
         pages = int(re.search(
             '[1-9]', re.search('("pages":)([1-9])', str(soup)).group(0)).group(0))
-        chapter['title'] = soup.select('h2')[0].get_text().strip()
+        #chapter['title'] = soup.select('h2')[0].get_text().strip()
         contents = []
         for i in range(1, pages+1):
             page_url = chapter['url'] + "/page/" + str(i)
