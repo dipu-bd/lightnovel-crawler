@@ -317,6 +317,7 @@ You are very welcome to contribute in this project. You can:
 | https://darktranslation.com                  |            |           |      @SirGryphin      |
 | https://demontranslations.com                |            |           |      @SirGryphin      |
 | https://dmtranslationscn.com                 |            |           |      @SirGryphin      |
+| https://dsrealmtranslations.com              |            |           |      @SirGryphin      |
 | https://es.mtlnovel.com                      |     ✔      |           |                       |
 | https://exiledrebelsscanlations.com          |     ✔      |           |      @SirGryphin      |
 | https://fanstranslations.com                 |            |           |      @SirGryphin      |
@@ -324,6 +325,7 @@ You are very welcome to contribute in this project. You can:
 | https://foxaholic.com                        |     ✔      |           |                       |
 | https://fr.mtlnovel.com                      |     ✔      |           |                       |
 | https://fujitranslation.com                  |            |           |      @SirGryphin      |
+| https://hui3r.wordpress.com                  |            |           |      @SirGryphin      |
 | https://id.mtlnovel.com                      |     ✔      |           |                       |
 | https://inadequatetranslations.wordpress.com |            |           |      @SirGryphin      |
 | https://indowebnovel.id                      |            |           |                       |
@@ -350,6 +352,7 @@ You are very welcome to contribute in this project. You can:
 | https://mangatoon.mobi                       |            |           |                       |
 | https://meionovel.id                         |     ✔      |           |                       |
 | https://moonstonetranslation.com             |            |           |      @SirGryphin      |
+| https://morenovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://myoniyonitranslations.com            |            |           |                       |
 | https://mysticalmerries.com                  |     ✔      |           |      @SirGryphin      |
 | https://novel27.com                          |     ✔      |           |      @SirGryphin      |
