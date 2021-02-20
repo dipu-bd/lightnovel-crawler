@@ -119,6 +119,16 @@ class NovelFullCrawler(Crawler):
         return chapters
     # end def
 
+
+    # See https://stackoverflow.com/questions/2148700/how-do-i-find-the-shortest-overlapping-match-using-regular-expressions
+    def _get_shortest_match(self, regex, content):
+        regex = f"(?=({regex}))"
+        matches = re.findall(regex, content)
+        if matches:
+            shortest = min(matches, key=len)
+            return shortest
+        return ""
+
     def clean_contents(self, content):
         self.blacklist_patterns = [
             r'<p>.*?Translator.*?</p>',  # strip paragraphs with Translator
@@ -131,8 +141,14 @@ class NovelFullCrawler(Crawler):
         ]
 
         for pattern in self.blacklist_patterns:
-            content = re.sub(pattern, "", content)
-
+            # I used .*? when I wanted to get the shortest match, as it turns
+            # out, regex doesn't work that way, for more indepth explanation
+            # what goes wrong, see stackoverflow link in _get_shortest_match
+            if '.*?' in pattern:
+                shortest = self._get_shortest_match(pattern, content)
+                content = re.sub(shortest, "", content)
+            else:
+                content = re.sub(pattern, "", content)
         return content
 
     def download_chapter_body(self, chapter):
