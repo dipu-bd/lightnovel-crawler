@@ -374,6 +374,7 @@ You are very welcome to contribute in this project. You can:
 | https://shalvationtranslations.wordpress.com |            |           |      @SirGryphin      |
 | https://skynovel.org/                        |            |           |      @SirGryphin      |
 | https://sleepytranslations.com               |            |           |      @SirGryphin      |
+| https://steambunlightnovel.com               |            |           |      @SirGryphin      |
 | https://tomotranslations.com                 |            |           |                       |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
