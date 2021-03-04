@@ -14,7 +14,7 @@ class SteambunCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-       self.novel_title = soup.select_one(
+        self.novel_title = soup.select_one(
             'h1.entry-title').text
         logger.info('Novel title: %s', self.novel_title)
 
