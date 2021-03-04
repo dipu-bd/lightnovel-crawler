@@ -14,9 +14,12 @@ class SteambunCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select(
-            'h1.entry-title')[-1].text.strip()
+       self.novel_title = soup.select_one(
+            'h1.entry-title').text
         logger.info('Novel title: %s', self.novel_title)
+
+        self.novel_author = 'by SteamBun Translations'
+        logger.info('Novel author: %s', self.novel_author)
 
         # Site does not list covers.
         # self.novel_cover = soup.select_one('#content a img')['src']
