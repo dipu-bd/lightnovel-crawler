@@ -1,5 +1,17 @@
 import re
+import sys
+import itertools
 import functools
+import unicodedata
+
+
+def _strip_nonprintable_characters(text):
+    all_chars = (i for i in range(sys.maxunicode))
+    hidden_chars = [c for c in all_chars if unicodedata.category(chr(c)) in {'Cf', 'Cc'}]
+    # Use characters of control category
+    nonprintable = itertools.chain(range(0x00, 0x20), range(0x7f, 0xa0), hidden_chars)
+    # Use translate to remove all non-printable characters
+    return text.translate({character: None for character in nonprintable})
 
 
 def _get_shortest_match(regex, content):
@@ -29,6 +41,8 @@ def _clean_contents(content):
         '“s': '\'s',
         '”s': '\'s',
     }
+
+    content = _strip_nonprintable_characters(content)
 
     for pattern in blacklist_patterns:
         # I used .*? when I wanted to get the shortest match, as it turns
