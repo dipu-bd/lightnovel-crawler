@@ -3,6 +3,7 @@ import json
 import logging
 import re
 from ..utils.crawler import Crawler
+from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://readnovelfull.com/search?keyword=%s'
@@ -84,6 +85,7 @@ class ReadNovelFullCrawler(Crawler):
         # end for
     # end def
 
+    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
