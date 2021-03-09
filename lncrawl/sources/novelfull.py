@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 import re
 import logging
-from concurrent import futures
 from ..utils.crawler import Crawler
-from bs4 import Comment
+from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://novelfull.com/search?keyword=%s'
@@ -112,45 +111,14 @@ class NovelFullCrawler(Crawler):
         for a in soup.select('ul.list-chapter li a'):
             title = a['title'].strip()
             chapters.append({
-                'title': a['title'].strip(),
+                'title': title,
                 'url': self.absolute_url(a['href']),
             })
         # end for
         return chapters
     # end def
 
-
-    # See https://stackoverflow.com/questions/2148700/how-do-i-find-the-shortest-overlapping-match-using-regular-expressions
-    def _get_shortest_match(self, regex, content):
-        regex = f"(?=({regex}))"
-        matches = re.findall(regex, content)
-        if matches:
-            shortest = min(matches, key=len)
-            return shortest
-        return ""
-
-    def clean_contents(self, content):
-        self.blacklist_patterns = [
-            r'<p>.*?Translator.*?</p>',  # strip paragraphs with Translator
-            r'<p>.*?Editor.*?</p>',  # strip paragraphs with Editor
-            r'Read more chapter on NovelFull',  # strip "ads"
-            r'full thich ung',  # leftover from previous blacklist
-            r'<p><i>\d</i></p>',  # strip random numbers
-            r'<p>[<(strong|b|i|u)>]*Chapter.*?</p>',  # strip "Chapter: ..."
-            r'<p>\s*</p>',  # strip any empty paragraphs
-        ]
-
-        for pattern in self.blacklist_patterns:
-            # I used .*? when I wanted to get the shortest match, as it turns
-            # out, regex doesn't work that way, for more indepth explanation
-            # what goes wrong, see stackoverflow link in _get_shortest_match
-            if '.*?' in pattern:
-                shortest = self._get_shortest_match(pattern, content)
-                content = re.sub(shortest, "", content)
-            else:
-                content = re.sub(pattern, "", content)
-        return content
-
+    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
@@ -158,7 +126,6 @@ class NovelFullCrawler(Crawler):
 
         content = soup.select('div#chapter-content p')
         content = "".join(str(paragraph) for paragraph in content)
-        content = self.clean_contents(content)
 
         return content
     # end def
