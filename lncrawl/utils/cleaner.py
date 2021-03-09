@@ -4,14 +4,15 @@ import itertools
 import functools
 import unicodedata
 
+ALL_CHARS = (i for i in range(sys.maxunicode))
+INVISIBLE_CHARS = [c for c in ALL_CHARS if unicodedata.category(chr(c)) in {'Cf', 'Cc'}]
+# Use characters of control category
+NONPRINTABLE = itertools.chain(range(0x00, 0x20), range(0x7f, 0xa0), INVISIBLE_CHARS)
+transliterable = {character: None for character in NONPRINTABLE}
 
 def _strip_nonprintable_characters(text):
-    all_chars = (i for i in range(sys.maxunicode))
-    hidden_chars = [c for c in all_chars if unicodedata.category(chr(c)) in {'Cf', 'Cc'}]
-    # Use characters of control category
-    nonprintable = itertools.chain(range(0x00, 0x20), range(0x7f, 0xa0), hidden_chars)
     # Use translate to remove all non-printable characters
-    return text.translate({character: None for character in nonprintable})
+    return text.translate(transliterable)
 
 
 def _get_shortest_match(regex, content):
@@ -19,18 +20,24 @@ def _get_shortest_match(regex, content):
     matches = re.findall(regex, content)
     if matches:
         shortest = min(matches, key=len)
+        # prevents issues if capturing group was used instead of non-capturing
+        # as capturing group will return tuple instead of string, that can't
+        # be passed to re.sub later
+        if type(shortest) == tuple:
+            shortest = shortest[0]
         return shortest
     return ""
 
 
 def _clean_contents(content):
     blacklist_patterns = [
-        r'<p>.*?Translator.*?</p>',  # strip paragraphs with Translator
-        r'<p>.*?Editor.*?</p>',  # strip paragraphs with Editor
+        r'<p>.*?(?:Translator|Translated).*?</p>',  # strip paragraphs with Translator/Translated
+        r'<p>.*?(?:Editor|Edited).*?</p>',  # strip paragraphs with Editor/Edited
+        r'<p>.*Exodus Tales.*</p>',  # blacklist Exodus tales "ad"
         r'Read more chapter on NovelFull',  # strip "ads"
         r'full thich ung',  # leftover from previous blacklist
         r'<p><i>\d</i></p>',  # strip random numbers
-        r'<p>[<(strong|b|i|u)>]*Chapter.*?</p>',  # strip "Chapter: ..."
+        r'<p>[<(strong|b|i|u|h1)>]*Chapter.*?</p>',  # strip "Chapter: ..."
         r'<p>\s*</p>',  # strip any empty paragraphs
     ]
 
@@ -50,6 +57,8 @@ def _clean_contents(content):
         # what goes wrong, see stackoverflow link in _get_shortest_match
         if '.*?' in pattern:
             shortest = _get_shortest_match(pattern, content)
+            print(type(shortest))
+            print("Shortest: ", shortest)
             content = re.sub(shortest, "", content)
         else:
             content = re.sub(pattern, "", content)
