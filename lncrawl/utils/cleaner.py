@@ -57,8 +57,6 @@ def _clean_contents(content):
         # what goes wrong, see stackoverflow link in _get_shortest_match
         if '.*?' in pattern:
             shortest = _get_shortest_match(pattern, content)
-            print(type(shortest))
-            print("Shortest: ", shortest)
             content = re.sub(shortest, "", content)
         else:
             content = re.sub(pattern, "", content)
