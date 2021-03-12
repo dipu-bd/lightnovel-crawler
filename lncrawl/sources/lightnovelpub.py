@@ -8,12 +8,12 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-novel_search_url = 'https://www.lightnovelworld.com/search?title=%s'
-chapter_list_url = 'https://www.lightnovelworld.com/novel/%s?tab=chapters&page=%d&chorder=asc'
+novel_search_url = 'https://www.lightnovelpub.com/search?title=%s'
+chapter_list_url = 'https://www.lightnovelpub.com/novel/%s?tab=chapters&page=%d&chorder=asc'
 
 
 class LightNovelOnline(Crawler):
-    base_url = 'https://www.lightnovelworld.com/'
+    base_url = 'https://www.lightnovelpub.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -93,7 +93,7 @@ class LightNovelOnline(Crawler):
             data='X-Requested-With=XMLHttpRequest',
             headers={
                 'requestverificationtoken': self.verificationToken,
-                'origin': 'https://www.lightnovelworld.com',
+                'origin': 'https://www.lightnovelpub.com',
             },
         )
         soup = self.make_soup(response)

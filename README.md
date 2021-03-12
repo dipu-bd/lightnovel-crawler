@@ -399,7 +399,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
-| https://www.lightnovelworld.com              |     ✔      |           |                       |
+| https://www.lightnovelpub.com                |     ✔      |           |                       |
 | https://www.machine-translation.org          |     ✔      |           |                       |
 | https://www.mtlnovel.com                     |     ✔      |           |                       |
 | https://www.mywuxiaworld.com                 |     ✔      |           |                       |
