@@ -76,7 +76,7 @@ _builder = Args(group=[
          help='User name/email address and password for login.'),
 
     Args('--format', dest='output_formats', nargs='+', metavar='E',
-         choices=available_formats, default=list(),
+         choices=available_formats, default=list(), type=str.lower,
          help='Define which formats to output. Default: all.'),
     Args('--add-source-url', action='store_true',
          help='Add source url at the end of each chapter.'),
