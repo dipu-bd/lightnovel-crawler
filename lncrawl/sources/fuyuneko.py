@@ -16,8 +16,8 @@ class Fuyuneko(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        # TODO: find a way to remove  "— Fuyu Neko's Translations" from title.
-        self.novel_title = soup.select_one('title').text.strip()
+        self.novel_title = soup.select_one('title').text
+        self.novel_title = self.novel_title.split('—')[0].strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
@@ -28,10 +28,9 @@ class Fuyuneko(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         # Extract volume-wise chapter entries
-        # FIXME: soup.select grabs more than chapters links, it keep getting fuyuneko.org/privacy-policy and trying to extract body text.
         # Stops external links being selected as chapters
         chapters = soup.select(
-            'div.sqs-block-content p [href*=".fuyuneko.org/"]')
+            'section#page p [href*="fuyuneko.org/"]')
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -60,11 +59,8 @@ class Fuyuneko(Crawler):
         body_parts = soup.select_one('.entry-content')
 
         # Removes "Previous | Table of Contents | Next" from bottom of chapters.
-        for nav in body_parts.find('p', {'style': 'text-align:center;white-space:pre-wrap;'}):
-            nav.decompose()
-
         for content in body_parts.select("p"):
-            for bad in ["Title: I’m Pregnant with the Villain’s Child", "Translator: Little Bamboo Spirit", "  |  "]:
+            for bad in ["Previous", "Table of Contents", "Next", "  |  "]:
                 if bad in content.text:
                     content.decompose()
 
