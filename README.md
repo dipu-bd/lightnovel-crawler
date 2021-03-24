@@ -340,6 +340,7 @@ You are very welcome to contribute in this project. You can:
 | https://light-novel.online                   |     ✔      |           |                       |
 | https://lightnovelheaven.com                 |            |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
+| https://lightnovel.world                     |            |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
 | https://litnet.com                           |     ✔      |           |                       |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
@@ -401,6 +402,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.idqidian.us                      |            |           |                       |
 | https://www.lightnovelpub.com                |     ✔      |           |                       |
 | https://www.machine-translation.org          |     ✔      |           |                       |
+| https://www.miraslation.net                  |            |           |      @SirGryphin      |
 | https://www.mtlnovel.com                     |     ✔      |           |                       |
 | https://www.mywuxiaworld.com                 |     ✔      |           |                       |
 | https://www.novelall.com                     |     ✔      |           |                       |
