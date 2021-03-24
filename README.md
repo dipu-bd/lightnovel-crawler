@@ -401,6 +401,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.idqidian.us                      |            |           |                       |
 | https://www.lightnovelpub.com                |     ✔      |           |                       |
 | https://www.machine-translation.org          |     ✔      |           |                       |
+| https://www.miraslation.net                  |            |           |      @SirGryphin      |
 | https://www.mtlnovel.com                     |     ✔      |           |                       |
 | https://www.mywuxiaworld.com                 |     ✔      |           |                       |
 | https://www.novelall.com                     |     ✔      |           |                       |
