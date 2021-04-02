@@ -11,7 +11,10 @@ full_chapter_url = 'https://readnovelfull.com/ajax/chapter-archive?novelId=%s'
 
 
 class ReadNovelFullCrawler(Crawler):
-    base_url = 'https://readnovelfull.com/'
+    base_url = [
+        'https://readnovelfull.com/',
+        'http://wspadancewichita.com/',
+    ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
