@@ -14,7 +14,6 @@ class NovelFullCrawler(Crawler):
     base_url = [
         'http://novelfull.com/',
         'https://novelfull.com/',
-        'https://allnovel.org/',
     ]
 
     def search_novel(self, query):
