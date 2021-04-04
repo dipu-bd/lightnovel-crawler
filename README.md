@@ -291,6 +291,7 @@ You are very welcome to contribute in this project. You can:
 | http://liberspark.com                        |            |           |                       |
 | http://novelfull.com                         |     ✔      |           |       @dipu-bd        |
 | http://tiknovel.com                          |            |           |                       |
+| http://wspadancewichita.com                  |     ✔      |           |                       |
 | http://www.fujitranslation.com               |            |           |                       |
 | http://www.hanyunovels.site                  |     ✔      |          |      @SirGryphin      |
 | http://www.machinenoveltranslation.com       |            |           |                       |
