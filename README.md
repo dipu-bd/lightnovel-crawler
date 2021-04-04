@@ -342,6 +342,7 @@ You are very welcome to contribute in this project. You can:
 | https://lightnovelheaven.com                 |            |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
 | https://lightnovel.world                     |            |           |      @SirGryphin      |
+| https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
 | https://litnet.com                           |     ✔      |           |                       |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
