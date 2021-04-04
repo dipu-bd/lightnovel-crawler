@@ -301,6 +301,7 @@ You are very welcome to contribute in this project. You can:
 | https://4scanlation.xyz                      |            |           |                       |
 | https://88tangeatdrinkread.wordpress.com     |            |           |      @SirGryphin      |
 | https://9kqw.com                             |     ✔      |           |                       |
+| https://allnovel.org                         |     ✔      |           |      @SirGryphin      |
 | https://anythingnovel.com                    |            |           |                       |
 | https://arangscans.com                       |            |           |      @SirGryphin      |
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
