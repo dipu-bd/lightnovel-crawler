@@ -412,6 +412,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelcool.com                    |            |           |      @SirGryphin      |
 | https://www.novelhall.com                    |            |           |                       |
 | https://www.novelhunters.com                 |     ✔      |           |      @SirGryphin      |
+| https://www.novelpassion.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.novelringan.com                  |            |           |                       |
 | https://www.novelspread.com                  |            |           |                       |
 | https://www.novelupdates.cc                  |            |           |      @SirGryphin      |
