@@ -298,6 +298,7 @@ You are very welcome to contribute in this project. You can:
 | http://zenithnovels.com                      |            |           |                       |
 | http://zhi-end.blogspot.co.id                |            |           |      @SirGryphin      |
 | http://zhi-end.blogspot.com                  |            |           |      @SirGryphin      |
+| https://1stkissnovel.love                    |     ✔      |           |      @SirGryphin      |
 | https://4scanlation.xyz                      |            |           |                       |
 | https://88tangeatdrinkread.wordpress.com     |            |           |      @SirGryphin      |
 | https://9kqw.com                             |     ✔      |           |                       |
