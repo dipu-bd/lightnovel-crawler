@@ -441,6 +441,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.xiainovel.com                    |            |           |      @SirGryphin      |
 | https://www.xsbiquge.com                     |            |           |      @SirGryphin      |
 | https://yukinovel.id                         |            |           |                       |
+| https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
 
 ### C4. Rejected sources
 
