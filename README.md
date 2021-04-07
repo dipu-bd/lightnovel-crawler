@@ -371,6 +371,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelsrock.com                       |            |           |                       |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
 | https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
+| https://omgnovels.com                        |     ✔      |           |      @SirGryphin      |
 | https://pery.info/                           |     ✔      |           |      @SirGryphin      |
 | https://ranobelib.me                         |            |           |                       |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
