@@ -380,6 +380,7 @@ You are very welcome to contribute in this project. You can:
 | https://skynovel.org/                        |            |           |      @SirGryphin      |
 | https://sleepytranslations.com               |            |           |      @SirGryphin      |
 | https://steambunlightnovel.com               |            |           |      @SirGryphin      |
+| https://supernovel.net                       |     ✔      |           |      @SirGryphin      |
 | https://tomotranslations.com                 |            |           |                       |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
