@@ -367,6 +367,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |
+| https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsrock.com                       |            |           |                       |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
 | https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
