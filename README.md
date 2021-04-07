@@ -399,6 +399,7 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.site                      |            |           |       @dipu-bd        |
 | https://www.aixdzs.com                       |            |           |                       |
 | https://www.asianhobbyist.com                |            |           |                       |
+| https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
 | https://www.centinni.com                     |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
