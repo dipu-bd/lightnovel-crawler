@@ -6,6 +6,7 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://lightnovelheaven.com/?s=%s&post_type=wp-manga&author=&artist=&release='
+chapter_list_url = 'https://lightnovelheaven.com/wp-admin/admin-ajax.php'
 
 
 class LightNovelHeaven(Crawler):
@@ -54,32 +55,32 @@ class LightNovelHeaven(Crawler):
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
-        volumes = set()
-        chapters = soup.select('ul.main li.wp-manga-chapter a')
-        for a in reversed(chapters):
+        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
+        logger.info('Novel id: %s', self.novel_id)
+
+        response = self.submit_form(
+            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        soup = self.make_soup(response)
+        for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
-            vol_id = (chap_id - 1) // 100 + 1
-            volumes.add(vol_id)
+            vol_id = 1 + len(self.chapters) // 100
+            if chap_id % 100 == 1:
+                self.volumes.append({'id': vol_id})
+            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
-        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
+        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.decompose()
-
-        return str(contents)
+        contents = soup.select('.reading-content p')
+        return ''.join([str(p) for p in contents])
     # end def
 # end class
