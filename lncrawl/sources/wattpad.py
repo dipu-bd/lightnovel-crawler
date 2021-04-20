@@ -24,22 +24,21 @@ class WattpadCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select('h1')[0].get_text().strip()
+        self.novel_title = soup.select_one('.story-info__title').get_text().strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select('div.cover.cover-lg img')[0]['src'])
+            soup.select_one('.story-cover img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select(
-            'div.author-info strong a')[0].get_text()
+        self.novel_author = soup.select_one(
+            '.author-info__username').get_text()
         logger.info('Novel author: %s', self.novel_author)
 
-        #description = soup.select('h2.description')[0].get_text()
-
-        chapters = soup.select('ul.table-of-contents a')
-        # chapters.reverse()
-
+        len(soup.select_one('.story-parts').select('ul li a'))
+        
+        chapters = soup.select_one('.story-parts').select('ul li a')
+     
         vols = set([])
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -52,25 +51,10 @@ class WattpadCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
         self.volumes = [{'id': i} for i in vols]
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        # soup = self.get_soup(chapter['url'])
-        # pages = int(re.search(
-        #     '[1-9]', re.search('("pages":)([1-9])', str(soup)).group(0)).group(0))
-        # #chapter['title'] = soup.select('h2')[0].get_text().strip()
-        # contents = []
-        # for i in range(1, pages+1):
-        #     page_url = chapter['url'] + "/page/" + str(i)
-        #     logger.info('Get body text from %s', page_url)
-        #     soup_page = self.get_soup(page_url)
-        #     for p in soup_page.select('pre p'):
-        #         contents.append(p.text)
-        # return '<p>' + '</p><p>'.join(contents) + '</p>'
-
         chapter_id = urlparse(chapter['url']).path.split('-')[0].strip('/')
         info_url = chapter_info_url % (chapter_id, int(time() * 1000))
         
