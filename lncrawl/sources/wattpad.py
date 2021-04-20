@@ -34,8 +34,6 @@ class WattpadCrawler(Crawler):
         self.novel_author = soup.select_one(
             '.author-info__username').get_text()
         logger.info('Novel author: %s', self.novel_author)
-
-        len(soup.select_one('.story-parts').select('ul li a'))
         
         chapters = soup.select_one('.story-parts').select('ul li a')
      
