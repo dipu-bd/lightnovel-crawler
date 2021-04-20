@@ -24,7 +24,6 @@ class WattpadCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        #self.novel_title = soup.select('h1')[0].get_text().strip()
         self.novel_title = soup.select_one('.story-info__title').get_text().strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -40,7 +39,6 @@ class WattpadCrawler(Crawler):
         
         chapters = soup.select_one('.story-parts').select('ul li a')
      
-
         vols = set([])
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -53,7 +51,6 @@ class WattpadCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
         self.volumes = [{'id': i} for i in vols]
     # end def
 
