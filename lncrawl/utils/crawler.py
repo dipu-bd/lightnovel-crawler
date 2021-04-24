@@ -11,6 +11,7 @@ from urllib.parse import urlparse, urljoin
 import cloudscraper
 from requests import Session
 from bs4 import BeautifulSoup, Comment
+from requests.adapters import Response
 
 logger = logging.getLogger(__name__)
 
@@ -180,11 +181,20 @@ class Crawler:
             return None
         # end if
 
-        headers.update({
-            'Content-Type': 'multipart/form-data' if multipart
-            else 'application/x-www-form-urlencoded; charset=UTF-8',
-        })
+        content_type = 'multipart/form-data' 
+        if multipart:
+            content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
+        # end if
+        headers.setdefault('Content-Type', content_type)
+        return self.post_response(url, data, headers)
+    # end def
 
+    def post_response(self, url, data={}, headers={}):
+        if self._destroyed:
+            return None
+        # end if
+
+        headers.setdefault('Content-Type', 'application/json')
         response = self.scraper.post(url, data=data, headers=headers)
         response.encoding = 'utf-8'
         self.cookies.update({
@@ -202,7 +212,15 @@ class Crawler:
     # end def
 
     def make_soup(self, response, parser=None):
-        html = response.content.decode('utf-8', 'ignore')
+        if isinstance(response, Response):
+            html = response.content.decode('utf8', 'ignore')
+        elif isinstance(response, bytes):
+            html = response.decode('utf8', 'ignore')
+        elif isinstance(response, str):
+            html = str(response)
+        else:
+            return None
+        # end if
         soup = BeautifulSoup(html, parser or 'lxml')
         if not soup.find('body'):
             raise ConnectionError('HTML document was not loaded properly')
@@ -212,6 +230,16 @@ class Crawler:
 
     def get_json(self, *args, **kargs):
         response = self.get_response(*args, **kargs)
+        return response.json()
+    # end def
+
+    def post_soup(self, url, data={}, headers={}, parser='lxml'):
+        response = self.post_response(url, data, headers)
+        return self.make_soup(response, parser)
+    # end def
+
+    def post_json(self, url, data={}, headers={}):
+        response = self.post_response(url, data, headers)
         return response.json()
     # end def
 

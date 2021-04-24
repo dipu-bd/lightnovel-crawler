@@ -253,10 +253,6 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 - Install calibre for pdf, mobi etc. formats.
   - https://calibre-ebook.com/download
 
-- Install node.js for cloudflare protected sources.
-  - https://nodejs.org/en/download/
-  - https://github.com/nodesource/distributions
-
 - Install requirements
 ```bash
 $ pip3 install --user -r requirements.txt
@@ -310,7 +306,7 @@ You are very welcome to contribute in this project. You can:
 | http://tiknovel.com                          |            |           |                       |
 | http://wspadancewichita.com                  |     ✔      |           |                       |
 | http://www.fujitranslation.com               |            |           |                       |
-| http://www.hanyunovels.site                  |     ✔      |          |      @SirGryphin      |
+| http://www.hanyunovels.site                  |     ✔      |           |      @SirGryphin      |
 | http://www.machinenoveltranslation.com       |            |           |                       |
 | http://www.tiknovel.com                      |            |           |                       |
 | http://zenithnovels.com                      |            |           |                       |
@@ -359,9 +355,9 @@ You are very welcome to contribute in this project. You can:
 | https://kisslightnovels.info                 |     ✔      |           |                       |
 | https://lemontreetranslations.wordpress.com  |            |           |      @SirGryphin      |
 | https://light-novel.online                   |     ✔      |           |                       |
+| https://lightnovel.world                     |            |           |      @SirGryphin      |
 | https://lightnovelheaven.com                 |            |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
-| https://lightnovel.world                     |            |           |      @SirGryphin      |
 | https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
 | https://litnet.com                           |     ✔      |           |                       |
@@ -392,8 +388,8 @@ You are very welcome to contribute in this project. You can:
 | https://omgnovels.com                        |     ✔      |           |      @SirGryphin      |
 | https://pery.info/                           |     ✔      |           |      @SirGryphin      |
 | https://ranobelib.me                         |            |           |                       |
+| https://readlightnovels.net                  |     ✔      |           |     @PreownedFIN      |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
-| https://readlightnovels.net                  |     ✔      |           |    @PreownedFIN       |
 | https://reincarnationpalace.com              |            |           |      @SirGryphin      |
 | https://rewayat.club                         |            |           |                       |
 | https://shalvationtranslations.wordpress.com |            |           |      @SirGryphin      |
@@ -424,6 +420,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.centinni.com                     |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
+| https://www.foxteller.com/                   |     ✔      |           |       @dipu-bd        |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
 | https://www.lightnovelpub.com                |     ✔      |           |                       |
