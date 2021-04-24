@@ -19,26 +19,28 @@ An app to download novels from online sources and generate e-books.
 
 ## Table of contents
 
-- [(A) Installation](#a-installation)
-  - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
-  - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-  - [A3. Termux (Android)](#a3-termux-android)
-  - [A4. Chatbots](#a4-chatbots)
-    - [A4.1 Discord](#a41-discord)
-    - [A4.2 Telegram](#a42-telegram)
-  - [A5. Run from source](#a5-run-from-source)
-  - [A6. Heroku Deployment](#a6-heroku-deployment)
-- [(B) General Usage](#b-general-usage)
-  - [B1. Available options](#b1-available-options)
-  - [B2. Example Usage](#b2-example-usage)
-  - [B3. Running the bot](#b3-running-the-bot)
-- [(C) Development](#c-development)
-  - [C1. Adding new source](#c1-adding-new-source)
-  - [C2. Adding new Bot](#c2-adding-new-bot)
-  - [C3. Supported sources](#c3-supported-sources)
-  - [C4. Rejected sources](#c4-rejected-sources)
-  - [C5. Supported output formats](#c5-supported-output-formats)
-  - [C6. Supported bots](#c6-supported-bots)
+- [Lightnovel Crawler ![pip package](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)](#lightnovel-crawler---)
+  - [Table of contents](#table-of-contents)
+  - [(A) Installation](#a-installation)
+    - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
+    - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+    - [A3. Termux (Android)](#a3-termux-android)
+    - [A4. Chatbots](#a4-chatbots)
+      - [A4.1 Discord](#a41-discord)
+      - [A4.2 Telegram](#a42-telegram)
+    - [A5. Run from source](#a5-run-from-source)
+    - [A6. Heroku Deployment](#a6-heroku-deployment)
+  - [(B) General Usage](#b-general-usage)
+    - [B1. Available options](#b1-available-options)
+    - [B2. Example Usage](#b2-example-usage)
+    - [B3. Running the bot](#b3-running-the-bot)
+  - [(C) Development](#c-development)
+    - [C1. Adding new source](#c1-adding-new-source)
+    - [C2. Adding new Bot](#c2-adding-new-bot)
+    - [C3. Supported sources](#c3-supported-sources)
+    - [C4. Rejected sources](#c4-rejected-sources)
+    - [C5. Supported output formats](#c5-supported-output-formats)
+    - [C6. Supported bots](#c6-supported-bots)
 
 <a href="https://github.com/dipu-bd/lightnovel-crawler"><img src="res/lncrawl-icon.png" width="128px" align="right"/></a>
 
@@ -246,16 +248,30 @@ There are two chatbots available at this moment: Telegram and Discord. To run yo
 ```bash
 # Clone this repository
 $ git clone https://github.com/dipu-bd/lightnovel-crawler
+
+# Install calibre for pdf, mobi etc. formats
+- Visit https://calibre-ebook.com/download
+
+# Install node.js for cloudflare protected sources
+- Visit https://nodejs.org/en/download/
+- Or, Visit https://github.com/nodesource/distributions
+
 # Install requirements
 $ pip3 install --user -r requirements.txt
-$ pip3 install --user -r bot_requirements.txt
+$ pip3 install --user -r requirements-dev.txt
+
 # Edit the environment variables
 # You should give your API keys and log info here
 # Also specify which bot server you want to run
 $ cp .env.example .env
-$ vim .env
-# Run the server using:
-$ python3 .
+
+# Open .env in your text editor to edit it
+
+# Run the discord bot using
+$ python3 . --bot discord --shard-id 0 --shard-count 1
+
+# Run the telegram bot using
+$ python3 . --bot telegram
 ```
 
 _There is a `server.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
