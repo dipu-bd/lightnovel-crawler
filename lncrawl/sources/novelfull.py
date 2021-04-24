@@ -124,8 +124,8 @@ class NovelFullCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        content = soup.select('div#chapter-content')
-        content = "".join(str(paragraph) for paragraph in content)
+        content = soup.select('div#chapter-content p')
+        content = '\n'.join(str(p) for p in content)
 
         return content
     # end def
