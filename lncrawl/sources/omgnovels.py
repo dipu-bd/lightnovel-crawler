@@ -5,12 +5,11 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://lightnovelheaven.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://lightnovelheaven.com/wp-admin/admin-ajax.php'
+search_url = 'https://omgnovels.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 
-class LightNovelHeaven(Crawler):
-    base_url = 'https://lightnovelheaven.com/'
+class OMGNovelsCrawler(Crawler):
+    base_url = 'https://omgnovels.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -38,12 +37,12 @@ class LightNovelHeaven(Crawler):
 
         self.novel_title = ' '.join([
             str(x)
-            for x in soup.select_one('.post-title h1').contents
+            for x in soup.select_one('.post-title h3').contents
             if not x.name
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        probable_img = soup.select_one('.summary_image img')
+        probable_img = soup.select_one('.summary_image a img')
         if probable_img:
             self.novel_cover = self.absolute_url(probable_img['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
@@ -55,32 +54,32 @@ class LightNovelHeaven(Crawler):
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel id: %s', self.novel_id)
-
-        response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
-        soup = self.make_soup(response)
-        for a in reversed(soup.select('.wp-manga-chapter a')):
+        volumes = set()
+        chapters = soup.select('ul.main li.wp-manga-chapter a')
+        for a in reversed(chapters):
             chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append({'id': vol_id})
-            # end if
+            vol_id = (chap_id - 1) // 100 + 1
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
+                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
+        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.reading-content p')
-        return ''.join([str(p) for p in contents])
+
+        contents = soup.select_one('div.text-left')
+        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
+            bad.decompose()
+
+        return str(contents)
     # end def
 # end class

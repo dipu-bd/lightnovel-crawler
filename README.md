@@ -299,10 +299,12 @@ You are very welcome to contribute in this project. You can:
 | http://zenithnovels.com                      |            |           |                       |
 | http://zhi-end.blogspot.co.id                |            |           |      @SirGryphin      |
 | http://zhi-end.blogspot.com                  |            |           |      @SirGryphin      |
+| https://1stkissnovel.love                    |     ✔      |           |      @SirGryphin      |
 | https://4scanlation.xyz                      |            |           |                       |
 | https://88tangeatdrinkread.wordpress.com     |            |           |      @SirGryphin      |
 | https://9kqw.com                             |     ✔      |           |                       |
 | https://allnovel.org                         |     ✔      |           |      @SirGryphin      |
+| https://anonanemone.wordpress.com            |            |           |      @SirGryphin      |
 | https://anythingnovel.com                    |            |           |                       |
 | https://arangscans.com                       |            |           |      @SirGryphin      |
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
@@ -343,6 +345,7 @@ You are very welcome to contribute in this project. You can:
 | https://lightnovelheaven.com                 |            |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
 | https://lightnovel.world                     |            |           |      @SirGryphin      |
+| https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
 | https://litnet.com                           |     ✔      |           |                       |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
@@ -365,9 +368,11 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |
+| https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsrock.com                       |            |           |                       |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
 | https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
+| https://omgnovels.com                        |     ✔      |           |      @SirGryphin      |
 | https://pery.info/                           |     ✔      |           |      @SirGryphin      |
 | https://ranobelib.me                         |            |           |                       |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
@@ -378,6 +383,7 @@ You are very welcome to contribute in this project. You can:
 | https://skynovel.org/                        |            |           |      @SirGryphin      |
 | https://sleepytranslations.com               |            |           |      @SirGryphin      |
 | https://steambunlightnovel.com               |            |           |      @SirGryphin      |
+| https://supernovel.net                       |     ✔      |           |      @SirGryphin      |
 | https://tomotranslations.com                 |            |           |                       |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
@@ -397,6 +403,7 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.site                      |            |           |       @dipu-bd        |
 | https://www.aixdzs.com                       |            |           |                       |
 | https://www.asianhobbyist.com                |            |           |                       |
+| https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
 | https://www.centinni.com                     |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
@@ -411,6 +418,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelcool.com                    |            |           |      @SirGryphin      |
 | https://www.novelhall.com                    |            |           |                       |
 | https://www.novelhunters.com                 |     ✔      |           |      @SirGryphin      |
+| https://www.novelpassion.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.novelringan.com                  |            |           |                       |
 | https://www.novelspread.com                  |            |           |                       |
 | https://www.novelupdates.cc                  |            |           |      @SirGryphin      |
@@ -437,6 +445,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.xiainovel.com                    |            |           |      @SirGryphin      |
 | https://www.xsbiquge.com                     |            |           |      @SirGryphin      |
 | https://yukinovel.id                         |            |           |                       |
+| https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
 
 ### C4. Rejected sources
 
