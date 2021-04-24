@@ -20,7 +20,7 @@ class Crawler:
 
     def __init__(self):
         self._destroyed = False
-        self.executor = futures.ThreadPoolExecutor(max_workers=3)
+        self.executor = futures.ThreadPoolExecutor(max_workers=4)
 
         # Initialize cloudscrapper
         try:

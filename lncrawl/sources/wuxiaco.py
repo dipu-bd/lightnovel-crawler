@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
+from concurrent.futures import ThreadPoolExecutor
 
 from ..utils.crawler import Crawler
 
@@ -17,6 +16,7 @@ class WuxiaCoCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.co/'
+        self.executor = ThreadPoolExecutor(max_workers=1)
     # end def
 
     def search_novel(self, query):
