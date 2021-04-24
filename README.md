@@ -275,7 +275,7 @@ $ python3 . --bot discord --shard-id 0 --shard-count 1
 $ python3 . --bot telegram
 ```
 
-_There is a `server.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
+_There is a `start.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
 
 ## (C) Development
 
