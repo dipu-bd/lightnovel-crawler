@@ -245,32 +245,33 @@ Here are some example usage of the app:
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
+- Clone this repository
 ```bash
-# Clone this repository
 $ git clone https://github.com/dipu-bd/lightnovel-crawler
+```
 
-# Install calibre for pdf, mobi etc. formats
-- Visit https://calibre-ebook.com/download
+- Install calibre for pdf, mobi etc. formats.
+  - https://calibre-ebook.com/download
 
-# Install node.js for cloudflare protected sources
-- Visit https://nodejs.org/en/download/
-- Or, Visit https://github.com/nodesource/distributions
+- Install node.js for cloudflare protected sources.
+  - https://nodejs.org/en/download/
+  - https://github.com/nodesource/distributions
 
-# Install requirements
+- Install requirements
+```bash
 $ pip3 install --user -r requirements.txt
 $ pip3 install --user -r requirements-dev.txt
+```
 
-# Edit the environment variables
-# You should give your API keys and log info here
-# Also specify which bot server you want to run
-$ cp .env.example .env
+- Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.
 
-# Open .env in your text editor to edit it
-
-# Run the discord bot using
+- To run the discord bot:
+```bash
 $ python3 . --bot discord --shard-id 0 --shard-count 1
+```
 
-# Run the telegram bot using
+- To run the telegram bot
+```bash
 $ python3 . --bot telegram
 ```
 
