@@ -5,15 +5,15 @@ from ..utils.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
-search_url = 'https://novelfull.com/search?keyword=%s'
+search_url = 'https://allnovel.org/search?keyword=%s'
 
 RE_VOLUME = r'(?:book|vol|volume) (\d+)'
 
 
-class NovelFullCrawler(Crawler):
+class AllNovelCrawler(Crawler):
     base_url = [
-        'http://novelfull.com/',
-        'https://novelfull.com/',
+        'https://allnovel.org/',
+        'https://www.allnovel.org/',
     ]
 
     def search_novel(self, query):
@@ -125,7 +125,7 @@ class NovelFullCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         content = soup.select('div#chapter-content p')
-        content = '\n'.join(str(p) for p in content)
+        content = "".join(str(paragraph) for paragraph in content)
 
         return content
     # end def

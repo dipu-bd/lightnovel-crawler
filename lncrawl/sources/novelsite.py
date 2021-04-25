@@ -2,15 +2,16 @@
 import json
 import logging
 import re
+from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://lightnovelheaven.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://lightnovelheaven.com/wp-admin/admin-ajax.php'
+search_url = 'https://novelsite.net/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://novelsite.net/wp-admin/admin-ajax.php'
 
 
-class LightNovelHeaven(Crawler):
-    base_url = 'https://lightnovelheaven.com/'
+class NovelSiteCrawler(Crawler):
+    base_url = 'https://novelsite.net/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -18,11 +19,12 @@ class LightNovelHeaven(Crawler):
 
         results = []
         for tab in soup.select('.c-tabs-item__content'):
-            a = tab.select_one('.post-title h4 a')
+            a = tab.select_one('.post-title h3 a')
             latest = tab.select_one('.latest-chap .chapter a').text
             votes = tab.select_one('.rating .total_votes').text
             results.append({
-                'title': a.text.strip(),
+                # added rsplit to remove word "Novel" so it shows up in search.
+                'title': a.text.rsplit(' ', 1)[0].strip(),
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
@@ -36,24 +38,20 @@ class LightNovelHeaven(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.post-title h1').contents
-            if not x.name
-        ]).strip()
-        logger.info('Novel title: %s', self.novel_title)
+        # Used rsplit to remove this "Novel - NovelSite.Net" from book title.
+        title = soup.select_one('title').text
+        self.novel_title = title.rsplit(' ', 3)[0].strip()
+        logger.debug('Novel title = %s', self.novel_title)
 
-        probable_img = soup.select_one('.summary_image img')
-        if probable_img:
-            self.novel_cover = self.absolute_url(probable_img['data-src'])
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.summary_image a img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select('.author-content a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
-            self.novel_author = author[0].text
-        logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = ' '.join([
+            a.text.strip()
+            for a in soup.select('.author-content a[href*="novel-author"]')
+        ])
+        logger.info('%s', self.novel_author)
 
         self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
         logger.info('Novel id: %s', self.novel_id)

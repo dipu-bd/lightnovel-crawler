@@ -8,29 +8,33 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 
-class Fuyuneko(Crawler):
-    base_url = 'https://www.fuyuneko.org/'
+class Miraslation(Crawler):
+    base_url = [
+        'https://miraslation.net/',
+        'https://www.miraslation.net/',
+    ]
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('title').text
-        self.novel_title = self.novel_title.split('—')[0].strip()
-        logger.info('Novel title: %s', self.novel_title)
+        title = soup.select_one('h1.entry-title').text
+        self.novel_title = title.rsplit(' ', 1)[0]
+        logger.debug('Novel title = %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('figure.sqs-block-image-figure img')['src'])
-        #logger.info('Novel cover: %s', self.novel_cover)
+        # NOTE: Site does not have covers.
+        # self.novel_cover = self.absolute_url(
+        #     soup.select_one('div.entry-content p strong img')['data-orig-file'])
+        # logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = "Translated by Fuyu Neko's"
+        self.novel_author = "Translated by Mira's Cocktail"
         logger.info('Novel author: %s', self.novel_author)
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
         chapters = soup.select(
-            'section#page p [href*="fuyuneko.org/"]')
+            'article.posts-entry p [href*="miraslation.net/novels/"]')
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -58,14 +62,17 @@ class Fuyuneko(Crawler):
 
         body_parts = soup.select_one('.entry-content')
 
-        # Removes "Previous | Table of Contents | Next" from bottom of chapters.
         for content in body_parts.select("p"):
-            for bad in ["Previous", "Table of Contents", "Next", "  |  "]:
+            for bad in ["Table of Contents", "Previous Chapter", "Next Chapter", " | "]:
                 if bad in content.text:
                     content.decompose()
 
         for br in body_parts.select('br'):
             br.decompose()
+
+        # Remove Share Button from bottom of chapter
+        for share in body_parts.select('div.code-block'):
+            share.decompose()
 
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'

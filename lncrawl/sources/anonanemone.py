@@ -8,29 +8,28 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 
-class Fuyuneko(Crawler):
-    base_url = 'https://www.fuyuneko.org/'
+class Anonanemone(Crawler):
+    base_url = [
+        'https://anonanemone.wordpress.com/',
+        'https://www.anonanemone.wordpress.com/',
+    ]
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('title').text
-        self.novel_title = self.novel_title.split('—')[0].strip()
+        self.novel_title = soup.select_one('.entry-title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('figure.sqs-block-image-figure img')['src'])
-        #logger.info('Novel cover: %s', self.novel_cover)
-
-        self.novel_author = "Translated by Fuyu Neko's"
-        logger.info('Novel author: %s', self.novel_author)
+            soup.select_one('.wp-block-image img')['data-orig-file'])
+        logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
         chapters = soup.select(
-            'section#page p [href*="fuyuneko.org/"]')
+            'div.entry-content p [href*="anonanemone.wordpress.com/2"]')
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -58,14 +57,17 @@ class Fuyuneko(Crawler):
 
         body_parts = soup.select_one('.entry-content')
 
-        # Removes "Previous | Table of Contents | Next" from bottom of chapters.
         for content in body_parts.select("p"):
-            for bad in ["Previous", "Table of Contents", "Next", "  |  "]:
+            for bad in ["[Index]", "[Previous]", "[Next]"]:
                 if bad in content.text:
                     content.decompose()
 
         for br in body_parts.select('br'):
             br.decompose()
+
+        # Remove Share Button from bottom of chapter
+        for share in body_parts.select('div#jp-post-flair'):
+            share.decompose()
 
         body = self.extract_contents(body_parts)
         return '<p>' + '</p><p>'.join(body) + '</p>'

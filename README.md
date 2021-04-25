@@ -19,26 +19,28 @@ An app to download novels from online sources and generate e-books.
 
 ## Table of contents
 
-- [(A) Installation](#a-installation)
-  - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
-  - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-  - [A3. Termux (Android)](#a3-termux-android)
-  - [A4. Chatbots](#a4-chatbots)
-    - [A4.1 Discord](#a41-discord)
-    - [A4.2 Telegram](#a42-telegram)
-  - [A5. Run from source](#a5-run-from-source)
-  - [A6. Heroku Deployment](#a6-heroku-deployment)
-- [(B) General Usage](#b-general-usage)
-  - [B1. Available options](#b1-available-options)
-  - [B2. Example Usage](#b2-example-usage)
-  - [B3. Running the bot](#b3-running-the-bot)
-- [(C) Development](#c-development)
-  - [C1. Adding new source](#c1-adding-new-source)
-  - [C2. Adding new Bot](#c2-adding-new-bot)
-  - [C3. Supported sources](#c3-supported-sources)
-  - [C4. Rejected sources](#c4-rejected-sources)
-  - [C5. Supported output formats](#c5-supported-output-formats)
-  - [C6. Supported bots](#c6-supported-bots)
+- [Lightnovel Crawler ![pip package](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)](#lightnovel-crawler---)
+  - [Table of contents](#table-of-contents)
+  - [(A) Installation](#a-installation)
+    - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
+    - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
+    - [A3. Termux (Android)](#a3-termux-android)
+    - [A4. Chatbots](#a4-chatbots)
+      - [A4.1 Discord](#a41-discord)
+      - [A4.2 Telegram](#a42-telegram)
+    - [A5. Run from source](#a5-run-from-source)
+    - [A6. Heroku Deployment](#a6-heroku-deployment)
+  - [(B) General Usage](#b-general-usage)
+    - [B1. Available options](#b1-available-options)
+    - [B2. Example Usage](#b2-example-usage)
+    - [B3. Running the bot](#b3-running-the-bot)
+  - [(C) Development](#c-development)
+    - [C1. Adding new source](#c1-adding-new-source)
+    - [C2. Adding new Bot](#c2-adding-new-bot)
+    - [C3. Supported sources](#c3-supported-sources)
+    - [C4. Rejected sources](#c4-rejected-sources)
+    - [C5. Supported output formats](#c5-supported-output-formats)
+    - [C6. Supported bots](#c6-supported-bots)
 
 <a href="https://github.com/dipu-bd/lightnovel-crawler"><img src="res/lncrawl-icon.png" width="128px" align="right"/></a>
 
@@ -67,7 +69,7 @@ _To get older versions visit the [Releases page](https://github.com/dipu-bd/ligh
 
 📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
-> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
+> Make sure you have installed **Python** v3.6 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
 
 To install this app or to update installed one via `pip`, just run:
 
@@ -139,7 +141,7 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 $ pip install --user -r requirements.txt
 ```
 
-- Run the program (use python v3.5 or higher):
+- Run the program (use python v3.6 or higher):
 
 ```bash
 $ python __main__.py
@@ -161,8 +163,8 @@ Simply fill out the environment variables and you get a running instance.
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.24.0
-                  https://github.com/dipu-bd/lightnovel-crawler
+                           📒 Lightnovel Crawler 🍀2.25.0 
+                  https://github.com/dipu-bd/lightnovel-crawler 
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
        lightnovel-crawler [options...]
@@ -175,7 +177,8 @@ optional arguments:
   --list-sources        Display a list of available sources.
   -s URL, --source URL  Profile page url of the novel.
   -q STR, --query STR   Novel query followed by list of source sites.
-  -x, --sources         Display the source selection menu while searching.
+  -x [REGEX], --sources [REGEX]
+                        Filter out the sources to search for novels.
   --login USER PASSWD   User name/email address and password for login.
   --format E [E ...]    Define which formats to output. Default: all.
   --add-source-url      Add source url at the end of each chapter.
@@ -203,10 +206,9 @@ optional arguments:
   --shard-count [SHARD_COUNT]
                         Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
-  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env
-                        file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
+  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
 ### B2. Example Usage
@@ -243,22 +245,33 @@ Here are some example usage of the app:
 
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
+- Clone this repository
 ```bash
-# Clone this repository
 $ git clone https://github.com/dipu-bd/lightnovel-crawler
-# Install requirements
-$ pip3 install --user -r requirements.txt
-$ pip3 install --user -r bot_requirements.txt
-# Edit the environment variables
-# You should give your API keys and log info here
-# Also specify which bot server you want to run
-$ cp .env.example .env
-$ vim .env
-# Run the server using:
-$ python3 .
 ```
 
-_There is a `server.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
+- Install calibre for pdf, mobi etc. formats.
+  - https://calibre-ebook.com/download
+
+- Install requirements
+```bash
+$ pip3 install --user -r requirements.txt
+$ pip3 install --user -r requirements-dev.txt
+```
+
+- Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.
+
+- To run the discord bot:
+```bash
+$ python3 . --bot discord --shard-id 0 --shard-count 1
+```
+
+- To run the telegram bot
+```bash
+$ python3 . --bot telegram
+```
+
+_There is a `start.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
 
 ## (C) Development
 
@@ -291,16 +304,20 @@ You are very welcome to contribute in this project. You can:
 | http://liberspark.com                        |            |           |                       |
 | http://novelfull.com                         |     ✔      |           |       @dipu-bd        |
 | http://tiknovel.com                          |            |           |                       |
+| http://wspadancewichita.com                  |     ✔      |           |                       |
 | http://www.fujitranslation.com               |            |           |                       |
-| http://www.hanyunovels.site                  |     ✔      |          |      @SirGryphin      |
+| http://www.hanyunovels.site                  |     ✔      |           |      @SirGryphin      |
 | http://www.machinenoveltranslation.com       |            |           |                       |
 | http://www.tiknovel.com                      |            |           |                       |
 | http://zenithnovels.com                      |            |           |                       |
 | http://zhi-end.blogspot.co.id                |            |           |      @SirGryphin      |
 | http://zhi-end.blogspot.com                  |            |           |      @SirGryphin      |
+| https://1stkissnovel.love                    |     ✔      |           |      @SirGryphin      |
 | https://4scanlation.xyz                      |            |           |                       |
 | https://88tangeatdrinkread.wordpress.com     |            |           |      @SirGryphin      |
 | https://9kqw.com                             |     ✔      |           |                       |
+| https://allnovel.org                         |     ✔      |           |      @SirGryphin      |
+| https://anonanemone.wordpress.com            |            |           |      @SirGryphin      |
 | https://anythingnovel.com                    |            |           |                       |
 | https://arangscans.com                       |            |           |      @SirGryphin      |
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
@@ -338,8 +355,10 @@ You are very welcome to contribute in this project. You can:
 | https://kisslightnovels.info                 |     ✔      |           |                       |
 | https://lemontreetranslations.wordpress.com  |            |           |      @SirGryphin      |
 | https://light-novel.online                   |     ✔      |           |                       |
+| https://lightnovel.world                     |            |           |      @SirGryphin      |
 | https://lightnovelheaven.com                 |            |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
+| https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
 | https://litnet.com                           |     ✔      |           |                       |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
@@ -362,18 +381,23 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |
+| https://novels.pl                            |            |           |       @dipu-bd        |
+| https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsrock.com                       |            |           |                       |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
 | https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
+| https://omgnovels.com                        |     ✔      |           |      @SirGryphin      |
 | https://pery.info/                           |     ✔      |           |      @SirGryphin      |
 | https://ranobelib.me                         |            |           |                       |
+| https://readlightnovels.net                  |     ✔      |           |     @PreownedFIN      |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
-| https://readlightnovels.net                  |     ✔      |           |    @PreownedFIN       |
 | https://reincarnationpalace.com              |            |           |      @SirGryphin      |
 | https://rewayat.club                         |            |           |                       |
 | https://shalvationtranslations.wordpress.com |            |           |      @SirGryphin      |
 | https://skynovel.org/                        |            |           |      @SirGryphin      |
 | https://sleepytranslations.com               |            |           |      @SirGryphin      |
+| https://steambunlightnovel.com               |            |           |      @SirGryphin      |
+| https://supernovel.net                       |     ✔      |           |      @SirGryphin      |
 | https://tomotranslations.com                 |            |           |                       |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
@@ -393,20 +417,25 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.site                      |            |           |       @dipu-bd        |
 | https://www.aixdzs.com                       |            |           |                       |
 | https://www.asianhobbyist.com                |            |           |                       |
+| https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
 | https://www.centinni.com                     |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
+| https://www.foxteller.com/                   |     ✔      |           |       @dipu-bd        |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
-| https://www.lightnovelworld.com              |     ✔      |           |                       |
+| https://www.lightnovelpub.com                |     ✔      |           |                       |
 | https://www.machine-translation.org          |     ✔      |           |                       |
+| https://www.miraslation.net                  |            |           |      @SirGryphin      |
 | https://www.mtlnovel.com                     |     ✔      |           |                       |
 | https://www.mywuxiaworld.com                 |     ✔      |           |                       |
 | https://www.novelall.com                     |     ✔      |           |                       |
 | https://www.novelcool.com                    |            |           |      @SirGryphin      |
 | https://www.novelhall.com                    |            |           |                       |
 | https://www.novelhunters.com                 |     ✔      |           |      @SirGryphin      |
+| https://www.novelpassion.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.novelringan.com                  |            |           |                       |
+| https://www.novels.pl                        |            |           |       @dipu-bd        |
 | https://www.novelspread.com                  |            |           |                       |
 | https://www.novelupdates.cc                  |            |           |      @SirGryphin      |
 | https://www.oppatranslations.com             |            |           |      @SirGryphin      |
@@ -432,6 +461,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.xiainovel.com                    |            |           |      @SirGryphin      |
 | https://www.xsbiquge.com                     |            |           |      @SirGryphin      |
 | https://yukinovel.id                         |            |           |                       |
+| https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
 
 ### C4. Rejected sources
 

@@ -1,4 +1,5 @@
-Js2Py
+Jinja2
 PyInstaller
 cairosvg
 win_unicode_console
+setuptools

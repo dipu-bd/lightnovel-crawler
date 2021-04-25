@@ -17,8 +17,8 @@ fi
 
 echo "Install requirements..."
 ./venv/bin/python -m pip install -U pip wheel
-./venv/bin/python -m pip install -r requirements.txt
-./venv/bin/python -m pip install -r requirements-dev.txt
+./venv/bin/python -m pip install -U -r requirements.txt
+./venv/bin/python -m pip install -U -r requirements-dev.txt
 
 echo "Stopping previous instances..."
 /bin/bash scripts/stop.sh

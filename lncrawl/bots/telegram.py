@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (CommandHandler, ConversationHandler, Filters,
-                          Handler, MessageHandler, RegexHandler, Updater)
+                          MessageHandler, Updater)
 
 from ..core.app import App
 from ..sources import crawler_list

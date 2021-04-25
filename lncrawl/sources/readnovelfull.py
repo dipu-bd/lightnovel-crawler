@@ -3,6 +3,7 @@ import json
 import logging
 import re
 from ..utils.crawler import Crawler
+from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://readnovelfull.com/search?keyword=%s'
@@ -10,7 +11,10 @@ full_chapter_url = 'https://readnovelfull.com/ajax/chapter-archive?novelId=%s'
 
 
 class ReadNovelFullCrawler(Crawler):
-    base_url = 'https://readnovelfull.com/'
+    base_url = [
+        'https://readnovelfull.com/',
+        'http://wspadancewichita.com/',
+    ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -84,22 +88,17 @@ class ReadNovelFullCrawler(Crawler):
         # end for
     # end def
 
+    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        root = soup.find('div', id='chr-content')
 
-        if not root:
+        content = soup.select('#chr-content p')
+        if not content:
             return ''
         # end if
 
-        body = [
-            t
-            for t in root.find_all(text=True)
-            if t.parent.name not in self.bad_tags and t.strip()
-        ]
-
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return "".join(map(str, content))
     # end def
 # end class
