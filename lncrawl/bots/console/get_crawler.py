@@ -5,7 +5,6 @@ from questionary import prompt
 
 from ...core import display
 from ...core.arguments import get_args
-from ...sources import rejected_sources
 
 
 def get_novel_url(self):
@@ -52,7 +51,10 @@ def get_crawlers_to_search(self):
     # end if
 
     args = get_args()
-    if args.suppress or not args.sources:
+    if args.sources:
+        links = [l for l in links if re.search(args.sources, l)]
+    # end if
+    if args.suppress or len(links) == 1:
         return links
     # end if
 
@@ -61,7 +63,7 @@ def get_crawlers_to_search(self):
             'type': 'checkbox',
             'name': 'sites',
             'message': 'Where to search?',
-            'choices': [{'name': x} for x in sorted(links)],
+            'choices': [{'name': x, 'checked': True} for x in sorted(links)],
         }
     ])
 
