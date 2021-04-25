@@ -313,12 +313,10 @@ You are very welcome to contribute in this project. You can:
 | http://zhi-end.blogspot.co.id                |            |           |      @SirGryphin      |
 | http://zhi-end.blogspot.com                  |            |           |      @SirGryphin      |
 | https://1stkissnovel.love                    |     ✔      |           |      @SirGryphin      |
-| https://4scanlation.xyz                      |            |           |                       |
 | https://88tangeatdrinkread.wordpress.com     |            |           |      @SirGryphin      |
 | https://9kqw.com                             |     ✔      |           |                       |
 | https://allnovel.org                         |     ✔      |           |      @SirGryphin      |
 | https://anonanemone.wordpress.com            |            |           |      @SirGryphin      |
-| https://anythingnovel.com                    |            |           |                       |
 | https://arangscans.com                       |            |           |      @SirGryphin      |
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
 | https://automtl.wordpress.com                |            |           |      @SirGryphin      |
@@ -387,7 +385,6 @@ You are very welcome to contribute in this project. You can:
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
 | https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
 | https://omgnovels.com                        |     ✔      |           |      @SirGryphin      |
-| https://pery.info/                           |     ✔      |           |      @SirGryphin      |
 | https://ranobelib.me                         |            |           |                       |
 | https://readlightnovels.net                  |     ✔      |           |     @PreownedFIN      |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
@@ -410,7 +407,6 @@ You are very welcome to contribute in this project. You can:
 | https://woopread.com                         |     ✔      |           |                       |
 | https://wordexcerpt.com                      |     ✔      |           | @dipu-bd, @SirGryphin |
 | https://wordexcerpt.org                      |            |           | @dipu-bd, @SirGryphin |
-| https://writerupdates.com                    |            |           |      @SirGryphin      |
 | https://wuxiaworld.io                        |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.live                      |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.online                    |     ✔      |           |       @dipu-bd        |
@@ -418,7 +414,6 @@ You are very welcome to contribute in this project. You can:
 | https://www.aixdzs.com                       |            |           |                       |
 | https://www.asianhobbyist.com                |            |           |                       |
 | https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
-| https://www.centinni.com                     |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
 | https://www.foxteller.com/                   |     ✔      |           |       @dipu-bd        |
@@ -482,6 +477,10 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelupdates.com    | `Does not host any novels`                                                                         |
 | https://www.novelv.com          | `Site is down`                                                                                     |
 | https://www.rebirth.online      | `Site moved`                                                                                       |
+| https://4scanlation.xyz         | `Site moved`                                                                                       |
+| https://pery.info               | `Site is down`                                                                                     |
+| https://writerupdates.com       | `Site is down`                                                                                     |
+| https://www.centinni.com        | `Site is down`                                                                                     |
 
 ### C5. Supported output formats
 
