@@ -163,8 +163,8 @@ Simply fill out the environment variables and you get a running instance.
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.24.0
-                  https://github.com/dipu-bd/lightnovel-crawler
+                           📒 Lightnovel Crawler 🍀2.25.0 
+                  https://github.com/dipu-bd/lightnovel-crawler 
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
        lightnovel-crawler [options...]
@@ -177,7 +177,8 @@ optional arguments:
   --list-sources        Display a list of available sources.
   -s URL, --source URL  Profile page url of the novel.
   -q STR, --query STR   Novel query followed by list of source sites.
-  -x, --sources         Display the source selection menu while searching.
+  -x [REGEX], --sources [REGEX]
+                        Filter out the sources to search for novels.
   --login USER PASSWD   User name/email address and password for login.
   --format E [E ...]    Define which formats to output. Default: all.
   --add-source-url      Add source url at the end of each chapter.
@@ -205,10 +206,9 @@ optional arguments:
   --shard-count [SHARD_COUNT]
                         Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
-  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env
-                        file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
+  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
 ### B2. Example Usage
