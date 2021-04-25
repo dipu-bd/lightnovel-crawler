@@ -381,6 +381,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |
+| https://novels.pl                            |            |           |       @dipu-bd        |
 | https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsrock.com                       |            |           |                       |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
@@ -434,6 +435,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelhunters.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.novelpassion.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.novelringan.com                  |            |           |                       |
+| https://www.novels.pl                        |            |           |       @dipu-bd        |
 | https://www.novelspread.com                  |            |           |                       |
 | https://www.novelupdates.cc                  |            |           |      @SirGryphin      |
 | https://www.oppatranslations.com             |            |           |      @SirGryphin      |

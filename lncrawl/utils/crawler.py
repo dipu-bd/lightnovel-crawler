@@ -181,9 +181,9 @@ class Crawler:
             return None
         # end if
 
-        content_type = 'multipart/form-data' 
+        content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
         if multipart:
-            content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
+            content_type = 'multipart/form-data' 
         # end if
         headers.setdefault('Content-Type', content_type)
         return self.post_response(url, data, headers)
@@ -195,6 +195,8 @@ class Crawler:
         # end if
 
         headers.setdefault('Content-Type', 'application/json')
+        logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
+
         response = self.scraper.post(url, data=data, headers=headers)
         response.encoding = 'utf-8'
         self.cookies.update({
