@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import sys
 
-if sys.version_info[:2] < (3, 5):
+if sys.version_info[:2] < (3, 6):
     raise RuntimeError(
-        'Lightnovel crawler only supports Python 3.5 and later.')
+        'Lightnovel crawler only supports Python 3.6 and later.')
 else:
     run_pyi = 'package' in sys.argv
     if run_pyi:

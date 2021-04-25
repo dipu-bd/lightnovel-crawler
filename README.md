@@ -69,7 +69,7 @@ _To get older versions visit the [Releases page](https://github.com/dipu-bd/ligh
 
 📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
-> Make sure you have installed **Python** v3.5 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
+> Make sure you have installed **Python** v3.6 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
 
 To install this app or to update installed one via `pip`, just run:
 
@@ -141,7 +141,7 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 $ pip install --user -r requirements.txt
 ```
 
-- Run the program (use python v3.5 or higher):
+- Run the program (use python v3.6 or higher):
 
 ```bash
 $ python __main__.py
