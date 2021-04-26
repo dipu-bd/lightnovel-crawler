@@ -1,1 +1,1 @@
-calibre-bin fonts-liberation2 imagemagick libjpeg-turbo-progs libjxr-tools optipng libpng16-16
+calibre-bin libgl1 libglvnd0 libglx0 libxcomposite1 libnss3 libnspr4 libxdamage-dev
