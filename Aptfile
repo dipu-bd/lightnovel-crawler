@@ -1,1 +1,1 @@
-libc6 libglapi-mesa libxdamage1 libxfixes3 libxcb-glx0 libxcb-dri2-0 libxcb-dri3-0 libxcb-present0 libxcb-sync1 libxshmfence1 libxxf86vm1 libxrender1 libxtst6 libxi6 libgl1 libglvnd0 libglx0 libxcomposite1 libnss3 libnspr4
+libnss3 libgl1-mesa-glx libxcomposite1 libxrandr2 libxi6
