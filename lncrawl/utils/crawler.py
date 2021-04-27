@@ -125,6 +125,10 @@ class Crawler:
         return self.scraper.headers.copy()
     # end def
 
+    def set_header(self, key: str, value: str):
+        self.scraper.headers[key.lower()] = value
+    # end def
+
     @property
     def cookies(self):
         return {x.name: x.value for x in self.scraper.cookies}

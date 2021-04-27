@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from concurrent import futures
-from urllib.parse import quote, unquote, urlparse
+from urllib.parse import quote, urlparse
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
@@ -12,16 +12,42 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-search_url = 'https://api.babelnovel.com/v1/books?page=0&pageSize=8&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
-novel_page_url = 'https://api.babelnovel.com/v1/books/%s'
-chapter_list_url = 'https://api.babelnovel.com/v1/books/%s/chapters?bookId=%s&page=%d&pageSize=100&fields=id,name,canonicalName,hasContent,isBought,isFree,isLimitFree'
-chapter_json_url = 'https://api.babelnovel.com/v1/books/%s/chapters/%s/content'
-# https://babelnovel.com/api/books/f337b876-f246-40c9-9bcf-d7f31db00296/chapters/ac1ebce2-e62e-4176-a2e7-6012c606ded4/content
+babelnovel_api = 'https://api.babelnovel.com'
+login_url = babelnovel_api + '/v1/user-account/web-login'
+search_url = babelnovel_api + '/v1/books?page=0&pageSize=8&fields=id,name,canonicalName,lastChapter&ignoreStatus=false&query=%s'
+novel_page_url = babelnovel_api + '/v1/books/%s'
+chapter_list_url = babelnovel_api + '/v1/books/%s/chapters?bookId=%s&page=%d&pageSize=100&fields=id,name,canonicalName,isBought,isFree,isLimitFree'
+chapter_json_url = babelnovel_api + '/v1/books/%s/chapters/%s/content'
 chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 
 class BabelNovelCrawler(Crawler):
     base_url = 'https://babelnovel.com/'
+
+    def initialize(self):
+        self.set_header('Referer', self.home_url)
+        self.set_header('Origin', self.home_url.strip())
+        self.set_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36')
+
+    def login(self, email, password):
+        '''login to LNMTL'''
+        logger.info('Visiting %s', self.home_url)
+        data = self.post_json(login_url, data=json.dumps({
+            'loginType': 'web',
+            'password': password,
+            'userName': email,
+        }), headers={
+            'Content-Type': 'application/json;charset=UTF-8',
+        })
+
+        self.token = data['data']['loginResult']['token']
+        self.set_header('token', self.token)
+        logger.debug('Token = %s', self.token)
+
+        self.user_id = data['data']['loginResult']['user']['id']
+        self.set_header('x-user-id', self.user_id)
+        logger.info('User ID = %s', self.user_id)
+    # end def
 
     def search_novel(self, query):
         # to get cookies
@@ -103,8 +129,7 @@ class BabelNovelCrawler(Crawler):
         data = self.get_json(list_url)
         chapters = list()
         for item in data['data']:
-            # or item['isLimitFree'] or item['isBought']):
-            if not (item['isFree']):
+            if not (item['isFree'] or item['isLimitFree'] or item['isBought']):
                 continue
             # end if
             chapters.append({
@@ -120,7 +145,7 @@ class BabelNovelCrawler(Crawler):
         logger.info('Visiting %s', chapter['json_url'])
         data = self.get_json(chapter['json_url'])
 
-        soup = BeautifulSoup(data['data']['content'], 'lxml')
+        soup = self.make_soup(data['data']['content'])
         body = soup.find('body')
         self.clean_contents(body)
 
@@ -132,7 +157,6 @@ class BabelNovelCrawler(Crawler):
             # end if
         # end for
 
-        # body = data['data']['content']
         result = str(body)
         result = re.sub(r'\n\n', '<br><br>', result)
         return result
