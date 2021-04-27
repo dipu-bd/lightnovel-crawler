@@ -12,7 +12,6 @@ from urllib.parse import quote
 import discord
 
 from ...core.app import App
-from ...sources import crawler_list
 from ...utils.uploader import upload
 from .config import max_workers, public_ip, public_path
 
@@ -115,10 +114,9 @@ class MessageHandler:
             'Please wait...',
             'Processing, give me more time...',
             'I am just a bot. Please be patient...',
-            'Waiting for more RAM...',
             'A little bit longer...',
             'I\'ll be with you in a bit...',
-            'Patience! This is difficult, you know...',
+            #'Patience! This is difficult, you know...',
         ]))
     # end def
 
@@ -165,7 +163,7 @@ class MessageHandler:
         if self.app.crawler:
             self.send_sync('Got your page link')
             self.get_novel_info()
-        elif len(self.app.user_input) < 4:
+        elif self.app.user_input and len(self.app.user_input) < 4:
             self.send_sync('Your query is too short')
             self.state = self.handle_novel_url
             self.get_novel_url()
@@ -299,7 +297,9 @@ class MessageHandler:
         # end for
         if match_count != 1:
             self.send_sync(
-                'Sorry! You should select *one* source from the list (%d selected).' % match_count)
+                'Sorry! You should select *one* source '
+                'from the list (%d selected).' % match_count
+            )
             return self.display_sources_selection()
         # end if
         self.handle_search_result(selected)

@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-import re
 import shutil
+from typing import List
 from urllib.parse import urlparse
 
 from slugify import slugify
 
 from ..binders import available_formats, generate_books
 from ..sources import crawler_list
-from .novel_search import search_novels
+from ..utils.crawler import Crawler
 from .downloader import download_chapters
 from .novel_info import format_novel, save_metadata
+from .novel_search import search_novels
 
 logger = logging.getLogger(__name__)
 
@@ -22,11 +23,11 @@ class App:
     def __init__(self):
         self.progress = 0
         self.user_input = None
-        self.crawler_links = None
+        self.crawler_links: List[str] = []
         self.crawler = None
         self.login_data = ()
         self.search_results = []
-        self.output_path = None
+        self.output_path = os.path.join('Lightnovels')
         self.pack_by_volume = False
         self.chapters = []
         self.book_cover = None
@@ -65,7 +66,7 @@ class App:
         else:
             logger.info('Detected query input')
             self.crawler_links = [
-                link
+                str(link)
                 for link, crawler in crawler_list.items()
                 if 'search_novel' in crawler.__dict__
             ]
@@ -118,11 +119,14 @@ class App:
     def get_novel_info(self):
         '''Requires: crawler, login_data'''
         '''Produces: output_path'''
+        if not isinstance(self.crawler, Crawler):
+            raise Exception('No crawler is selected')
+
         self.crawler.initialize()
 
         if self.can_do('login') and self.login_data:
             logger.debug(self.login_data)
-            self.crawler.login(*self.login_data)
+            self.crawler.login(*list(self.login_data))
         # end if
 
         print('Retrieving novel info...')
@@ -146,14 +150,13 @@ class App:
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
 
-        self.output_path = os.path.join(
-            'Lightnovels', source_name, self.good_file_name)
+        self.output_path = os.path.join('Lightnovels', source_name, self.good_file_name)
     # end def
 
     # ----------------------------------------------------------------------- #
     def start_download(self):
         '''Requires: crawler, chapters, output_path'''
-        if not os.path.exists(self.output_path):
+        if not self.output_path or not os.path.exists(self.output_path):
             raise Exception('Output path is not defined')
         # end if
 

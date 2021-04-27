@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 import os
+import logging
 import logging.config
 from colorama import Fore
 from ...core.arguments import get_args
 
 # The special signal character for crawler commands
 signal = os.getenv('DISCORD_SIGNAL_CHAR') or '!'
-max_workers = os.getenv('DISCORD_MAX_WORKERS', 10)
+max_workers = int(os.getenv('DISCORD_MAX_WORKERS', 10))
 
 # The public ip and path of the server to put files in
 public_ip = os.getenv('PUBLIC_ADDRESS', None)

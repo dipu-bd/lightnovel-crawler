@@ -1,22 +1,13 @@
 # -*- coding: utf-8 -*-
-import asyncio
 import logging
 import logging.config
 import os
-import queue
 import random
-import re
-import shutil
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 import discord
 
 from ...core.arguments import get_args
-from ...binders import available_formats
-from ...core.app import App
-from ...sources import crawler_list
-from ...utils.uploader import upload
 from .config import signal
 from .message_handler import MessageHandler
 
