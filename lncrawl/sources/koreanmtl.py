@@ -18,7 +18,7 @@ class LightNovelsOnl(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         volumes = set([])
-        for a in reversed(soup.select('.post-body.entry-content ul li a')):
+        for a in soup.select('.post-body.entry-content ul li a'):
             chap_id = 1 + len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             volumes.add(vol_id)
