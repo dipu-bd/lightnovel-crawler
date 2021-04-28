@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 import logging
 from ..utils.crawler import Crawler
 
@@ -36,11 +37,28 @@ class LightNovelsOnl(Crawler):
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
+        soup = self.get_soup(chapter['url'], parser='html5lib')
         contents = soup.select_one('.post-body.entry-content')
         for el in contents.select('div[style="text-align:center;"]'):
             el.decompose()
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        body = ''
+        for p in contents.select('p'):
+            line = p.text.strip()
+            line = re.sub(r'<', '&lt;', line)
+            line = re.sub(r'>', '&gt;', line)
+            line = re.sub(r'\u3008', '&lt;', line)
+            line = re.sub(r'\u3009', '&gt;', line)
+            line = re.sub(r'\uff08', '(', line)
+            line = re.sub(r'\uff09', ')', line)
+            line = re.sub(r'\uff0c', ',', line)
+            line = re.sub(r'\u2026', '...', line)
+            line = re.sub(r'\uff1e', '&gt;', line)
+            line = re.sub(r'\u200b', '  ', line)
+            line = re.sub(r'\u3001', '`', line)
+            line = re.sub(r'(\(\))|(\[\])', '', line)
+            #line = re.sub(r'([\u00FF-\uFFFF])', lambda m: '&#x%d;' % ord(m.group(1)), line)
+            if re.search(r'[\w\d]', line):
+                body += '<p>' + line + '</p>'
+        return body
     # end def
 # end class
