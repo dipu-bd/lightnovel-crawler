@@ -419,6 +419,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.foxteller.com/                   |     ✔      |           |       @dipu-bd        |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
+| https://www.koreanmtl.online                 |            |           |       @dipu-bd        |
 | https://www.lightnovelpub.com                |     ✔      |           |                       |
 | https://www.machine-translation.org          |     ✔      |           |                       |
 | https://www.miraslation.net                  |            |           |      @SirGryphin      |
