@@ -19,7 +19,7 @@ class LightNovelsOnl(Crawler):
 
         volumes = set([])
         for a in soup.select('.post-body.entry-content ul li a'):
-            chap_id = 1 + len(self.chapters) + 1
+            chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             volumes.add(vol_id)
             self.chapters.append({
@@ -37,7 +37,10 @@ class LightNovelsOnl(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.post-body.entry-content p')
-        return '\n'.join([str(p) for p in contents if p.text.strip()])
+        contents = soup.select_one('.post-body.entry-content')
+        for el in contents.select('div[style="text-align:center;"]'):
+            el.decompose()
+        body = self.extract_contents(contents)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
