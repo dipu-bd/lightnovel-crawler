@@ -7,6 +7,7 @@ from datetime import datetime
 
 import discord
 
+from ...assets.version import get_value as get_version
 from ...core.arguments import get_args
 from .config import signal
 from .message_handler import MessageHandler
@@ -33,7 +34,7 @@ class DiscordBot(discord.Client):
         self.handlers = {}
 
         print('Discord bot in online!')
-        activity = discord.Activity(name='for 🔥%s🔥' % signal,
+        activity = discord.Activity(name='for 🔥%s🔥 (v%s)' % (signal, get_version()),
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)
