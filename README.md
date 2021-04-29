@@ -417,6 +417,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
+| https://www.flying-lines.com                 |            |           |       @dipu-bd        |
 | https://www.foxteller.com/                   |     ✔      |           |       @dipu-bd        |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
@@ -473,7 +474,6 @@ You are very welcome to contribute in this project. You can:
 | https://lnindo.org              | `Does not like to be crawled`                                                                      |
 | https://mtled-novels.com        | `Domain is expired`                                                                                |
 | https://novelplanet.com         | `Site is closed`                                                                                   |
-| https://www.flying-lines.com    | `Obfuscated content`                                                                               |
 | https://www.jieruihao.cn        | `Unavailable`                                                                                      |
 | https://www.noveluniverse.com   | `Site is down`                                                                                     |
 | https://www.novelupdates.com    | `Does not host any novels`                                                                         |

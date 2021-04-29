@@ -29,7 +29,6 @@ rejected_sources = {
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
-    'https://www.flying-lines.com/': 'Obfuscated content',
     'https://www.jieruihao.cn/': "Unavailable",
     'https://www.noveluniverse.com/': "Site is down",
     'https://www.novelupdates.com/': "Does not host any novels",

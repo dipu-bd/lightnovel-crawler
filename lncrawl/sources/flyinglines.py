@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
+from datetime import datetime
+from hashlib import md5
 from urllib.parse import urlparse
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-
-chapter_body_url = 'https://www.flying-lines.com/h5/novel/%s/%s?accessToken=&isFirstEnter=1&webdriver=0'
 
 
 class FlyingLinesCrawler(Crawler):
     base_url = 'https://www.flying-lines.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -49,12 +47,47 @@ class FlyingLinesCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        url = chapter_body_url % (self.novel_id, chapter['id'])
+        # How to get the key?
+        # - check `app.js` (Sources/cdn.flying-lines.com/front/../js/app.js)
+        # - locate the mapped value of `./what` (e.g.: "./what": 57,)
+        # - locate the mapped valued function. (e.g: search `57:`)
+        # - Copy key from the function. (return "4ec781a70c3f11ea9b46f23c918347ac")
+        key = '4ec781a70c3f11ea9b46f23c918347ac'
+
+        # How to find the sign generation method?
+        # - check `app.js`
+        # - search the mapped value of `./nobody`
+        # - locate the mapped valued function. (e.g: search `48:`)
+        time = str(int(datetime.now().timestamp() * 1000))
+        sign = 'chapterNum=%s&novelPath=%s&time=%s&webdriver=0&key=%s' % (
+            chapter['id'], self.novel_id, time, key)
+        sign = md5(sign.encode('utf8')).hexdigest()
+
+        # How to generate the URL?
+        # - check `app.js`
+        # - search for `e.data.meta`
+        url = '%s/h5/novel/%s/%s?accessToken=&isFirstEnter=1&webdriver=0&time=%s&sign=%s'
+        url = url % (self.base_url.strip('/'), self.novel_id, chapter['id'], time, sign)
+
         logger.info('Downloading %s', url)
-        response = self.submit_form(url)
-        data = response.json()
-        print(data)
-        return data['data']['content']
+        data = self.post_json(url, headers={
+            'Origin': self.base_url.strip('/'),
+            'Referer': self.base_url.strip('/') + '/novel/' + self.novel_id,
+        })
+
+        # How to find the decryption method?
+        # - check `app.js`
+        # - search for `TurnCharIntoString:` function
+        encrypted = data['data']['content']
+        n = data['data']['nowTime']
+        even_shift = int(n[-1])
+        odd_shift = int(n[-2])
+        content = ''
+        for i, ch in enumerate(encrypted):
+            if i % 2 == 0:
+                content += chr(ord(ch) - even_shift)
+            else:
+                content += chr(ord(ch) - odd_shift)
+        return content
     # end def
 # end class
