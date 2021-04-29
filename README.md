@@ -320,7 +320,7 @@ You are very welcome to contribute in this project. You can:
 | https://arangscans.com                       |            |           |      @SirGryphin      |
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
 | https://automtl.wordpress.com                |            |           |      @SirGryphin      |
-| https://babelnovel.com                       |     ✔      |           |                       |
+| https://babelnovel.com                       |     ✔      |     ✔     |       @dipu-bd        |
 | https://bestlightnovel.com                   |     ✔      |           |                       |
 | https://bestoflightnovels.com                |     ✔      |           |      @SirGryphin      |
 | https://book.qidian.com                      |            |           |                       |
@@ -395,6 +395,7 @@ You are very welcome to contribute in this project. You can:
 | https://sleepytranslations.com               |            |           |      @SirGryphin      |
 | https://steambunlightnovel.com               |            |           |      @SirGryphin      |
 | https://supernovel.net                       |     ✔      |           |      @SirGryphin      |
+| https://toc.qidianunderground.org            |     ✔      |           |       @dipu-bd        |
 | https://tomotranslations.com                 |            |           |                       |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
