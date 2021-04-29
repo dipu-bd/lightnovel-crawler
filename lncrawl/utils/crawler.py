@@ -15,6 +15,8 @@ from requests.adapters import Response
 
 logger = logging.getLogger(__name__)
 
+_default_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
@@ -164,12 +166,40 @@ class Crawler:
     def get_response(self, url, **kargs):
         if self._destroyed:
             return None
-        # end if
+
         kargs = kargs or dict()
-        # kargs['verify'] = kargs.get('verify', False)
-        kargs['timeout'] = kargs.get('timeout', 150)  # in seconds
-        self.last_visited_url = url.strip('/')
+        #kargs.setdefault('verify', False)
+        #kargs.setdefault('allow_redirects', True)
+        kargs.setdefault('timeout', 150)  # in seconds
+        headers = kargs.setdefault('headers', {})
+        headers.setdefault('User-Agent', _default_user_agent)
+
         response = self.scraper.get(url, **kargs)
+        response.raise_for_status()
+        response.encoding = 'utf-8'
+        self.cookies.update({
+            x.name: x.value
+            for x in response.cookies
+        })
+        self.last_visited_url = url.strip('/')
+        return response
+    # end def
+
+    def post_response(self, url, data={}, headers={}):
+        if self._destroyed:
+            return None
+
+        headers.setdefault('User-Agent', _default_user_agent)
+        headers.setdefault('Content-Type', 'application/json')
+        logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
+
+        response = self.scraper.post(
+            url,
+            data=data,
+            headers=headers,
+            #verify=False,
+            #allow_redirects=True,
+        )
         response.encoding = 'utf-8'
         self.cookies.update({
             x.name: x.value
@@ -187,28 +217,10 @@ class Crawler:
 
         content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
         if multipart:
-            content_type = 'multipart/form-data' 
+            content_type = 'multipart/form-data'
         # end if
         headers.setdefault('Content-Type', content_type)
         return self.post_response(url, data, headers)
-    # end def
-
-    def post_response(self, url, data={}, headers={}):
-        if self._destroyed:
-            return None
-        # end if
-
-        headers.setdefault('Content-Type', 'application/json')
-        logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
-
-        response = self.scraper.post(url, data=data, headers=headers)
-        response.encoding = 'utf-8'
-        self.cookies.update({
-            x.name: x.value
-            for x in response.cookies
-        })
-        response.raise_for_status()
-        return response
     # end def
 
     def get_soup(self, *args, **kwargs):
@@ -234,8 +246,11 @@ class Crawler:
         return soup
     # end def
 
-    def get_json(self, *args, **kargs):
-        response = self.get_response(*args, **kargs)
+    def get_json(self, *args, **kwargs):
+        kwargs = kwargs or dict()
+        headers = kwargs.setdefault('headers', {})
+        headers.setdefault('Accept', 'application/json, text/javascript, */*')
+        response = self.get_response(*args, **kwargs)
         return response.json()
     # end def
 
@@ -245,6 +260,7 @@ class Crawler:
     # end def
 
     def post_json(self, url, data={}, headers={}):
+        headers.setdefault('Accept', 'application/json, text/javascript, */*')
         response = self.post_response(url, data, headers)
         return response.json()
     # end def

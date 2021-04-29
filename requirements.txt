@@ -1,5 +1,6 @@
 # App requirements
 ascii==3.6
+regex>=2021.4.4
 python-dotenv==0.15.0,<1.0.0
 beautifulsoup4>=4.9.0,<5.0.0
 requests>=2.20.0,<3.0.0
@@ -15,6 +16,7 @@ lxml>=4.0.0,<5.0.0
 questionary>=1.6.0
 prompt-toolkit~=2.0
 html5lib==1.1
+pycryptodome==3.10.1
 
 # Bot requirements
 discord.py>=1.6.0

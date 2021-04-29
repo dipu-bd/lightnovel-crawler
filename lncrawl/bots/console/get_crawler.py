@@ -51,14 +51,13 @@ def get_crawlers_to_search(self):
     # end if
 
     args = get_args()
-    print(args)
-    if args.suppress or args.sources is None:
+    if args.suppress and args.sources is None:
         return links
     # end if
     if args.sources:
         links = [l for l in links if re.search(args.sources, l)]
     # end if
-    if len(links) == 1:
+    if args.suppress or len(links) == 1:
         return links
     # end if
 

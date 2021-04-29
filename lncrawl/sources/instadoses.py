@@ -16,7 +16,6 @@ class InstadosesCrawler(Crawler):
     base_url = 'https://instadoses.com/'
 
     def initialize(self):
-        print('inititiaslkaksjdlkasjdlkajsdlkjdls')
         self.executor = ThreadPoolExecutor(max_workers=7)
     # end def
 
