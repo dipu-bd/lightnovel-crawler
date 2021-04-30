@@ -47,12 +47,11 @@ class NovelTrenchCrawler(Crawler):
             self.novel_cover = self.absolute_url(probable_img['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select('.author-content a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
-            self.novel_author = author[0].text
-        logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = ' '.join([
+            a.text.strip()
+            for a in soup.select('.author-content a[href*="manga-author"]')
+        ])
+        logger.info('%s', self.novel_author)
 
         volumes = set()
         chapters = soup.select('ul.main li.wp-manga-chapter a')
