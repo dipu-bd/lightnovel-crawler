@@ -63,6 +63,9 @@ def process_results(combined_results):
 
 
 def search_novels(app):
+    if not app.crawler_links:
+        return
+
     bar = IncrementalBar('Searching', max=len(app.crawler_links))
     if os.getenv('debug_mode') == 'yes':
         bar.next = lambda n=1: None  # Hide in debug mode

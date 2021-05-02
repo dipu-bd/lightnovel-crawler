@@ -81,7 +81,7 @@ class App:
 
         search_novels(self)
 
-        if len(self.search_results) == 0:
+        if not self.search_results:
             raise Exception('No results for: %s' % self.user_input)
         # end if
 
