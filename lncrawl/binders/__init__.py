@@ -3,6 +3,7 @@
 To bind into ebooks
 """
 import logging
+from typing import final
 
 from .epub import make_epubs
 from .web import make_webs
@@ -39,6 +40,7 @@ available_formats = depends_on_none + depends_on_epub
 
 
 def generate_books(app, data):
+    app.progress = 0
     out_formats = app.output_formats
     if not out_formats:
         out_formats = {}
@@ -50,10 +52,12 @@ def generate_books(app, data):
     need_epub = 'epub' if len(after_epub) else None
     after_any = [x for x in depends_on_none
                  if out_formats[x] or x == need_epub]
+    formats_to_generate = after_any + after_epub
 
     # Generate output files
+    progress = 0
     outputs = dict()
-    for fmt in (after_any + after_epub):
+    for fmt in formats_to_generate:
         try:
             if fmt == 'text':
                 outputs[fmt] = make_texts(app, data)
@@ -66,6 +70,9 @@ def generate_books(app, data):
             # end if
         except Exception as err:
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
+        finally:
+            progress += 1
+            app.progress = 100 * progress / len(formats_to_generate)
         # end try
     # end for
 

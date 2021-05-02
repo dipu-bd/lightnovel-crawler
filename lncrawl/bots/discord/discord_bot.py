@@ -26,11 +26,12 @@ class DiscordBot(discord.Client):
     # end def
 
     def start_bot(self):
+        self.bot_is_ready = False
         self.run(os.getenv('DISCORD_TOKEN'))
     # end def
 
     async def on_ready(self):
-        # Initialize handler cache
+        # Reset handler cache
         self.handlers = {}
 
         print('Discord bot in online!')
@@ -38,15 +39,17 @@ class DiscordBot(discord.Client):
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)
+        
+        self.bot_is_ready = True
     # end def
 
     async def on_message(self, message):
+        if not self.bot_is_ready:
+            return # Not ready yet
         if message.author == self.user:
             return  # I am not crazy to talk with myself
-        # end if
         if message.author.bot:
             return  # Other bots are not edible
-        # end if
         try:
             # Cleanup unused handlers
             self.cleanup_handlers()
@@ -61,7 +64,6 @@ class DiscordBot(discord.Client):
                 # end if
                 await self.send_public_text(message, random.choice([
                     "Sending you a private message",
-                    "Look for direct message",
                 ]))
                 await self.handle_message(message)
             # end if
@@ -102,7 +104,7 @@ class DiscordBot(discord.Client):
     def cleanup_handlers(self):
         try:
             cur_time = datetime.now()
-            for uid, handler in self.handlers.items():
+            for handler in self.handlers.values():
                 last_time = getattr(handler, 'last_activity', cur_time)
                 if (cur_time - last_time).days > 1:
                     handler.destroy()

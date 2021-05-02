@@ -6,9 +6,7 @@ import json
 import logging
 import os
 import time
-from concurrent import futures
 from io import BytesIO
-from urllib.parse import urlparse
 
 from PIL import Image
 from progress.bar import IncrementalBar
@@ -153,11 +151,14 @@ def download_chapter_body(app, chapter):
         # end if
     # end if
 
+    app.progress += 1
     return result
 # end def
 
 
 def download_chapters(app):
+    app.progress = 0
+
     # download or generate cover
     app.book_cover = download_cover(app)
     if not app.book_cover:
@@ -178,23 +179,21 @@ def download_chapters(app):
         app.output_formats = {}
     # end if
 
-    futures_to_check = {
+    futures_to_check = [
         app.crawler.executor.submit(
             download_chapter_body,
             app,
             chapter,
-        ): str(chapter['id'])
+        )
         for chapter in app.chapters
-    }
+    ]
 
-    app.progress = 0
-    for future in futures.as_completed(futures_to_check):
+    for future in futures_to_check:
         result = future.result()
         if result:
             bar.clearln()
             logger.error(result)
         # end if
-        app.progress += 1
         bar.next()
     # end for
 

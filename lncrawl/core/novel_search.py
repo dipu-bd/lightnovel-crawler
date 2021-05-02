@@ -2,19 +2,19 @@
 """
 To search for novels in selected sources
 """
-import os
 import logging
+import os
 from concurrent import futures
 
-from slugify import slugify
 from progress.bar import IncrementalBar
+from slugify import slugify
 
 from ..sources import crawler_list
 
 logger = logging.getLogger(__name__)
 
 
-def get_search_result(user_input, link):
+def get_search_result(user_input, link, app):
     try:
         crawler = crawler_list[link]
         instance = crawler()
@@ -26,6 +26,8 @@ def get_search_result(user_input, link):
     except Exception:
         import traceback
         logger.debug(traceback.format_exc())
+    finally:
+        app.progress += 1
     # end try
     return []
 # end def
@@ -64,7 +66,8 @@ def search_novels(app):
 
     # Add future tasks
     checked = {}
-    futures_to_check = {}
+    futures_to_check = []
+    app.progress = 0
     for link in app.crawler_links:
         crawler = crawler_list[link]
         if crawler in checked:
@@ -72,16 +75,16 @@ def search_novels(app):
             continue
         # end if
         checked[crawler] = True
-        futures_to_check[
-            executor.submit(
-                get_search_result,
-                app.user_input,
-                link
-            )
-        ] = str(crawler)
+        future = executor.submit(
+            get_search_result,
+            app.user_input,
+            link,
+            app
+        )
+        futures_to_check.append(future)
     # end for
 
-    bar = IncrementalBar('Searching', max=len(futures_to_check.keys()))
+    bar = IncrementalBar('Searching', max=len(futures_to_check))
     bar.start()
 
     if os.getenv('debug_mode') == 'yes':
@@ -89,11 +92,9 @@ def search_novels(app):
     # end if
 
     # Resolve future tasks
-    app.progress = 0
     combined_results = []
-    for future in futures.as_completed(futures_to_check):
+    for future in futures_to_check:
         combined_results += future.result()
-        app.progress += 1
         bar.next()
     # end for
 
