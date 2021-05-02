@@ -485,6 +485,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.centinni.com        | `Site is down`                                                                                     |
 | https://fsapk.com               | `Site is not working`                                                                              |
 | https://bestoflightnovels.com   | `Site moved`                                                                                       |
+| https://novelcrush.com          | `Site is down`                                                                                     |
 
 ### C5. Supported output formats
 
