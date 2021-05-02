@@ -322,7 +322,6 @@ You are very welcome to contribute in this project. You can:
 | https://automtl.wordpress.com                |            |           |      @SirGryphin      |
 | https://babelnovel.com                       |     ✔      |     ✔     |       @dipu-bd        |
 | https://bestlightnovel.com                   |     ✔      |           |                       |
-| https://bestoflightnovels.com                |     ✔      |           |      @SirGryphin      |
 | https://book.qidian.com                      |            |           |                       |
 | https://boxnovel.com                         |     ✔      |           |       @dipu-bd        |
 | https://clicknovel.net                       |            |           |      @SirGryphin      |
@@ -461,6 +460,7 @@ You are very welcome to contribute in this project. You can:
 | https://yukinovel.id                         |            |           |                       |
 | https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
 
+
 ### C4. Rejected sources
 
 | Rejected Sources                | Reason                                                                                             |
@@ -483,6 +483,8 @@ You are very welcome to contribute in this project. You can:
 | https://pery.info               | `Site is down`                                                                                     |
 | https://writerupdates.com       | `Site is down`                                                                                     |
 | https://www.centinni.com        | `Site is down`                                                                                     |
+| https://fsapk.com               | `Site is not working`                                                                              |
+| https://bestoflightnovels.com   | `Site moved`                                                                                       |
 
 ### C5. Supported output formats
 
