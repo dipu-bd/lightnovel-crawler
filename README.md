@@ -353,6 +353,7 @@ You are very welcome to contribute in this project. You can:
 | https://lemontreetranslations.wordpress.com  |            |           |      @SirGryphin      |
 | https://light-novel.online                   |     ✔      |           |                       |
 | https://lightnovel.world                     |            |           |      @SirGryphin      |
+| https://lightnovelbastion.com                |            |           |       @dipu-bd        |
 | https://lightnovelheaven.com                 |            |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
 | https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
@@ -411,14 +412,14 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.live                      |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.online                    |     ✔      |           |       @dipu-bd        |
 | https://wuxiaworld.site                      |            |           |       @dipu-bd        |
-| https://wuxiaworldsite.co/                   |            |           |       @dipu-bd        |
+| https://wuxiaworldsite.co                    |            |           |       @dipu-bd        |
 | https://www.aixdzs.com                       |            |           |                       |
 | https://www.asianhobbyist.com                |            |           |                       |
 | https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
 | https://www.flying-lines.com                 |            |           |       @dipu-bd        |
-| https://www.foxteller.com/                   |     ✔      |           |       @dipu-bd        |
+| https://www.foxteller.com                    |     ✔      |           |       @dipu-bd        |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
 | https://www.koreanmtl.online                 |            |           |       @dipu-bd        |
