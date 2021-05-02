@@ -411,6 +411,7 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.live                      |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.online                    |     ✔      |           |       @dipu-bd        |
 | https://wuxiaworld.site                      |            |           |       @dipu-bd        |
+| https://wuxiaworldsite.co/                   |            |           |       @dipu-bd        |
 | https://www.aixdzs.com                       |            |           |                       |
 | https://www.asianhobbyist.com                |            |           |                       |
 | https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
@@ -459,7 +460,6 @@ You are very welcome to contribute in this project. You can:
 | https://www.xsbiquge.com                     |            |           |      @SirGryphin      |
 | https://yukinovel.id                         |            |           |                       |
 | https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
-
 
 ### C4. Rejected sources
 
