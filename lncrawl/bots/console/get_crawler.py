@@ -51,7 +51,7 @@ def get_crawlers_to_search(self):
     # end if
 
     args = get_args()
-    if args.suppress and args.sources is None:
+    if args.suppress or 'sources' not in args:
         return links
     # end if
     if args.sources:
