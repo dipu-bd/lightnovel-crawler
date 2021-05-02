@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('JUSTATRANS')
+logger = logging.getLogger(__name__)
 
 class JustATranslatorTranslations(Crawler):
     base_url = 'https://justatranslatortranslations.com/'

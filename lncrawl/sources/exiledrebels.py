@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('EXILEDREBELS')
+logger = logging.getLogger(__name__)
 search_url = 'https://exiledrebelsscanlations.com/?s=%s'
 
 class ExiledRebelsScanlations(Crawler):

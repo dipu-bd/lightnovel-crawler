@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('ZHI_END')
+logger = logging.getLogger(__name__)
 
 
 class ZhiEnd(Crawler):

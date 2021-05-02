@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('READLIGHTNOVEL.CC')
+logger = logging.getLogger(__name__)
 search_url = 'https://www.readlightnovel.cc/search/%s/1'
 
 

@@ -3,7 +3,7 @@ import logging
 
 
 class ConsoleBot:
-    log = logging.getLogger('CONSOLE_BOT')
+    log = logging.getLogger(__name__)
 
     from .start import start
     from .start import open_folder

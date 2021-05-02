@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('SHALVATION')
+logger = logging.getLogger(__name__)
 
 class ShalvationTranslations(Crawler):
     base_url = 'https://shalvationtranslations.wordpress.com/'

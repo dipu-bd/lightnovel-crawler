@@ -4,7 +4,7 @@ import re
 from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIAWORLD_IO')
+logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.io/search.ajax?type=&query=%s'
 
 class WuxiaWorldIo(Crawler):
