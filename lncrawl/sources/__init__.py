@@ -41,6 +41,7 @@ rejected_sources = {
     'https://www.centinni.com/': 'Site is down',
     'https://fsapk.com/': 'Site is not working',
     'https://bestoflightnovels.com/': 'Site moved',
+    'https://novelcrush.com/': 'Site is down',
 }
 
 # this list will be auto-generated
