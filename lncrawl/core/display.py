@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import logging
 import os
 import textwrap
-from urllib.parse import urlparse
+from ..assets.banner import get_color_banner
 
 from colorama import Back, Fore, Style
 
@@ -24,14 +23,22 @@ except Exception:
 def description():
     print('=' * LINE_SIZE)
 
-    title = Icons.BOOK + ' Lightnovel Crawler ' + \
-        Icons.CLOVER + os.getenv('version')
-    padding = ' ' * ((LINE_SIZE - len(title)) // 2)
-    print(Fore.YELLOW, padding + title, Fore.RESET)
+    # title = Icons.BOOK + ' Lightnovel Crawler ' + Icons.CLOVER + get_version()
+    # padding = ' ' * ((LINE_SIZE - len(title)) // 2)
+    # print(Fore.YELLOW, padding + title, Fore.RESET)
 
-    desc = 'https://github.com/dipu-bd/lightnovel-crawler'
-    padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
-    print(Style.DIM, padding + desc, Style.RESET_ALL)
+    # desc = 'https://github.com/dipu-bd/lightnovel-crawler'
+    # padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
+    # print(Style.DIM, padding + desc, Style.RESET_ALL)
+
+    # print('-' * LINE_SIZE)
+
+    banner = get_color_banner()
+    banner = [l.strip() for l in banner.split('\n')]
+    max_len = max([len(l) for l in banner])
+    padding = ' ' * max(0, LINE_SIZE - max_len)
+    banner = '\n'.join(padding + l for l in banner)
+    print(banner)
 
     print('-' * LINE_SIZE)
 # end def
@@ -100,16 +107,16 @@ def new_version_news(latest):
           'VERSION', Fore.RED + latest + Fore.CYAN,
           'IS NOW AVAILABLE!', Fore.RESET)
 
-    print('', Icons.RIGHT_ARROW, Style.DIM + 'Upgrade:',
+    print(' ', Icons.RIGHT_ARROW, Style.DIM + 'Upgrade using',
           Fore.YELLOW + 'pip install -U lightnovel-crawler', Style.RESET_ALL)
 
-    if Icons.isWindows:
-        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'https://rebrand.ly/lncrawl', Style.RESET_ALL)
-    elif Icons.isLinux:
-        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'https://rebrand.ly/lncrawl-linux', Style.RESET_ALL)
-    # end if
+    # if Icons.isWindows:
+    #     print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
+    #           Fore.YELLOW + 'https://rebrand.ly/lncrawl', Style.RESET_ALL)
+    # elif Icons.isLinux:
+    #     print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
+    #           Fore.YELLOW + 'https://rebrand.ly/lncrawl-linux', Style.RESET_ALL)
+    # # end if
 
     print('-' * LINE_SIZE)
 # end def
@@ -155,7 +162,7 @@ def format_short_info_of_novel(short_info):
         return ''
     # end if
     return '\n'.join(textwrap.wrap(
-        short_info,
+        short_info.strip(),
         width=70,
         initial_indent='\n' + (' ' * 6) + Icons.INFO,
         subsequent_indent=(' ' * 8),
@@ -168,13 +175,11 @@ def format_short_info_of_novel(short_info):
 def format_novel_choices(choices):
     items = []
     for index, item in enumerate(choices):
-        text = '%d. %s [in %d sources]' % (
-            index + 1, item['title'], len(item['novels']))
+        text = '%d. %s [in %d sources]' % (index + 1, item['title'], len(item['novels']))
         if len(item['novels']) == 1:
             novel = item['novels'][0]
-            short_info = novel['info'] if 'info' in novel else ''
-            text += '\n' + (' ' * 6) + '- ' + novel['url']
-            text += format_short_info_of_novel(short_info)
+            text += '\n' + (' ' * 6) + Icons.LINK + ' ' + novel['url']
+            text += format_short_info_of_novel(novel.get('info', ''))
         # end if
         items.append({'name': text})
     # end for

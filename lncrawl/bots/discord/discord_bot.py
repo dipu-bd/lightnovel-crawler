@@ -27,6 +27,7 @@ class DiscordBot(discord.Client):
 
     def start_bot(self):
         self.bot_is_ready = False
+        os.environ['debug_mode'] = 'yes'
         self.run(os.getenv('DISCORD_TOKEN'))
     # end def
 
@@ -39,13 +40,13 @@ class DiscordBot(discord.Client):
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)
-        
+
         self.bot_is_ready = True
     # end def
 
     async def on_message(self, message):
         if not self.bot_is_ready:
-            return # Not ready yet
+            return  # Not ready yet
         if message.author == self.user:
             return  # I am not crazy to talk with myself
         if message.author.bot:

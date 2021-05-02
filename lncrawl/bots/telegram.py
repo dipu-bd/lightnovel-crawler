@@ -27,6 +27,8 @@ available_formats = [
 
 class TelegramBot:
     def start(self):
+        os.environ['debug_mode'] = 'yes'
+        
         # Create the EventHandler and pass it your bot's token.
         self.updater = Updater(
             os.getenv('TELEGRAM_TOKEN', ''),

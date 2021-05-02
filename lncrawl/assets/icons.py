@@ -15,7 +15,7 @@ class Icons:
     # --------------------------------------- #
 
     EMPTY = '  '
-    BOOK = '📒' if hasSupport else ''
+    BOOK = '📒' if hasSupport else '*'
     CLOVER = '🍀' if hasSupport else '#'
     LINK = '🔗' if hasSupport else '-'
     HANDS = '🙏' if hasSupport else '-'
