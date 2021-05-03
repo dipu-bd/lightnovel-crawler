@@ -143,12 +143,10 @@ def download_chapter_body(app, chapter):
             # end if
         # end if
 
-        if app.output_formats.get('json', False):
-            os.makedirs(dir_name, exist_ok=True)
-            with open(file_name, 'w', encoding="utf-8") as file:
-                file.write(json.dumps(chapter))
-            # end with
-        # end if
+        os.makedirs(dir_name, exist_ok=True)
+        with open(file_name, 'w', encoding="utf-8") as file:
+            file.write(json.dumps(chapter))
+        # end with
     # end if
 
     app.progress += 1

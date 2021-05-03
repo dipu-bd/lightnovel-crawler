@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from .. import constants as C
 import argparse
 from urllib.parse import parse_qs
 
@@ -122,11 +123,14 @@ _builder = Args(group=[
          help='Select a bot. Default: console.'),
     Args('--shard-id', type=int, nargs='?', default=0,
          help='Discord bot shard id (default: 0)'),
-    Args('--shard-count', type=int, nargs='?', default=10,
+    Args('--shard-count', type=int, nargs='?', default=1,
          help='Discord bot shard counts (default: 1)'),
 
     Args('--suppress', action='store_true',
          help='Suppress all input prompts and use defaults.'),
+
+    Args('--resume',  dest='resume', nargs='?', default=argparse.SUPPRESS,
+         metavar='NAME/URL', help='Resume download of a novel containing in ' + C.DEFAULT_OUTPUT_PATH),
 
     Args('extra', type=parse_qs, nargs='?', metavar='ENV', default=dict(),
          help='[chatbots only] Pass query string at the end of all options. '

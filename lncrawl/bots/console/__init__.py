@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
+from typing import Optional
+from lncrawl.core.app import App
 import logging
 
 
 class ConsoleBot:
     log = logging.getLogger(__name__)
 
+    def __init__(self) -> None:
+        self.app: Optional[App] = None
+    # end def
+
     from .start import start
-    from .start import open_folder
     from .start import process_chapter_range
 
     from .get_crawler import get_novel_url

@@ -197,3 +197,19 @@ def format_source_choices(novels):
     # end for
     return items
 # end def
+
+def format_resume_choices(metadata_list):
+    items = []
+    for index, data in enumerate(metadata_list):
+        if not data.get('session'):
+            continue
+        text = '%d. %s [downloading %d chapters]' % (
+            index + 1,
+            data['title'],
+            len(data['session']['download_chapters'])
+        )
+        text += '\n' + (' ' * 6) + Icons.LINK + ' ' + data['url']
+        items.append({'name': text})
+    # end for
+    return items
+# end def
