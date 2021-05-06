@@ -2,6 +2,7 @@
 import json
 import logging
 import re
+from urllib.parse import quote_plus
 
 from ..utils.crawler import Crawler
 
@@ -12,7 +13,7 @@ chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
 book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
 chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
 chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s'
-search_url = 'https://www.webnovel.com/apiajax/search/AutoCompleteAjax'
+search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&type=1&keywords=%s'
 
 
 class WebnovelCrawler(Crawler):
@@ -30,22 +31,15 @@ class WebnovelCrawler(Crawler):
 
     def search_novel(self, query):
         self.get_csrf()
-        response = self.submit_form(search_url, {
-            '_csrfToken': self.csrf,
-            'keywords': query,
-        })
-        data = response.json()
-        logger.debug(data)
+        query = quote_plus(str(query).lower())
+        data = self.get_json(search_url % (self.csrf, query))
 
         results = []
-        if 'books' not in data['data']:
-            return results
-        # end if
-
-        for book in data['data']['books']:
+        for book in data['data']['bookInfo']['bookItems']:
             results.append({
-                'title': book['name'],
-                'url': book_info_url % book['id'],
+                'title': book['bookName'],
+                'url': book_info_url % book['bookId'],
+                'info': '%(categoryName)s | Score: %(totalScore)s' % book,
             })
         # end for
         return results

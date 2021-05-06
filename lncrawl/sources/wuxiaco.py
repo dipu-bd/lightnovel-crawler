@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('WUXIA_WORLD')
+logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.co/search/{}/1'
 
 

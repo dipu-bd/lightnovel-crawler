@@ -14,7 +14,7 @@ CALL venv\Scripts\activate.bat
 %PIP% install -r requirements.txt
 %PIP% install -r requirements-dev.txt
 
-%PY% setup.py clean bdist_wheel sdist package
+%PY% setup.py clean bdist_wheel package
 
 CALL venv\Scripts\deactivate.bat
 RD /S /Q "venv" "build" "lightnovel_crawler.egg-info" &

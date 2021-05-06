@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
+from concurrent.futures import ThreadPoolExecutor
+
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -10,6 +10,9 @@ search_url = 'https://www.royalroad.com/fictions/search?keyword=%s'
 
 class RoyalRoadCrawler(Crawler):
     base_url = 'https://www.royalroad.com/'
+
+    def initialize(self):
+        self.executor = ThreadPoolExecutor(1)
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')

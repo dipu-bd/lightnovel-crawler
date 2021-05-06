@@ -15,7 +15,7 @@ class Icons:
     # --------------------------------------- #
 
     EMPTY = '  '
-    BOOK = '📒' if hasSupport else ''
+    BOOK = '📒' if hasSupport else '*'
     CLOVER = '🍀' if hasSupport else '#'
     LINK = '🔗' if hasSupport else '-'
     HANDS = '🙏' if hasSupport else '-'
@@ -23,6 +23,6 @@ class Icons:
     PARTY = '📦' if hasSupport else '$'
     SOUND = '🔊' if hasSupport else '<<'
     SPARKLE = '✨' if hasSupport else '*'
-    INFO = '💁  ' if hasSupport else ': '
+    INFO = '💁 ' if hasSupport else ': '
     RIGHT_ARROW = '➡' if hasSupport else '->'
 # end def

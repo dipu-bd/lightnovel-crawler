@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('LEMON_TREE')
+logger = logging.getLogger(__name__)
 
 class LemonTreeTranslations(Crawler):
     base_url = 'https://lemontreetranslations.wordpress.com/'

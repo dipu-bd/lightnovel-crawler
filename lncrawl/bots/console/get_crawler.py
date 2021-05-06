@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
+from typing import List
 
 from questionary import prompt
 
@@ -43,18 +44,21 @@ def get_novel_url(self):
 # end def
 
 
-def get_crawlers_to_search(self):
+def get_crawlers_to_search(self) -> List[str]:
     '''Returns user choice to search the choosen sites for a novel'''
     links = self.app.crawler_links
     if not links:
-        return None
+        return []
     # end if
 
     args = get_args()
+    if args.suppress or 'sources' not in args:
+        return links
+    # end if
     if args.sources:
         links = [l for l in links if re.search(args.sources, l)]
     # end if
-    if args.suppress or len(links) == 1:
+    if args.suppress or len(links) <= 1:
         return links
     # end if
 

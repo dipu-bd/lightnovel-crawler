@@ -1,22 +1,14 @@
 # -*- coding: utf-8 -*-
-import asyncio
 import logging
 import logging.config
 import os
-import queue
 import random
-import re
-import shutil
-from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
 import discord
 
+from ...assets.version import get_value as get_version
 from ...core.arguments import get_args
-from ...binders import available_formats
-from ...core.app import App
-from ...sources import crawler_list
-from ...utils.uploader import upload
 from .config import signal
 from .message_handler import MessageHandler
 
@@ -24,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class DiscordBot(discord.Client):
+    bot_version = get_version() + '_8'
+
     def __init__(self, *args, loop=None, **options):
         options['shard_id'] = get_args().shard_id
         options['shard_count'] = get_args().shard_count
@@ -34,27 +28,31 @@ class DiscordBot(discord.Client):
     # end def
 
     def start_bot(self):
+        self.bot_is_ready = False
+        os.environ['debug_mode'] = 'yes'
         self.run(os.getenv('DISCORD_TOKEN'))
     # end def
 
     async def on_ready(self):
-        # Initialize handler cache
+        # Reset handler cache
         self.handlers = {}
 
         print('Discord bot in online!')
-        activity = discord.Activity(name='for 🔥%s🔥' % signal,
+        activity = discord.Activity(name='for 🔥%s🔥 (v%s)' % (signal, self.bot_version),
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)
+
+        self.bot_is_ready = True
     # end def
 
     async def on_message(self, message):
+        if not self.bot_is_ready:
+            return  # Not ready yet
         if message.author == self.user:
             return  # I am not crazy to talk with myself
-        # end if
         if message.author.bot:
             return  # Other bots are not edible
-        # end if
         try:
             # Cleanup unused handlers
             self.cleanup_handlers()
@@ -69,7 +67,6 @@ class DiscordBot(discord.Client):
                 # end if
                 await self.send_public_text(message, random.choice([
                     "Sending you a private message",
-                    "Look for direct message",
                 ]))
                 await self.handle_message(message)
             # end if
@@ -110,7 +107,7 @@ class DiscordBot(discord.Client):
     def cleanup_handlers(self):
         try:
             cur_time = datetime.now()
-            for uid, handler in self.handlers.items():
+            for handler in self.handlers.values():
                 last_time = getattr(handler, 'last_activity', cur_time)
                 if (cur_time - last_time).days > 1:
                     handler.destroy()

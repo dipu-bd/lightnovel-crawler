@@ -15,7 +15,6 @@ class MoonStoneTranslation(Crawler):
     base_url = 'https://moonstonetranslation.com/'
 
     def initialize(self):
-        print('inititiaslkaksjdlkasjdlkajsdlkjdls')
         self.executor = ThreadPoolExecutor(max_workers=7)
     # end def
 

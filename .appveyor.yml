@@ -1,25 +1,29 @@
 environment:
   matrix:
+    # - PYTHON: C:\Python39-x64
     - PYTHON: C:\Python38-x64
-    - PYTHON: C:\Python37-x64
-    - PYTHON: C:\Python36-x64
-    - PYTHON: C:\Python35-x64
+    # - PYTHON: C:\Python37-x64
+    # - PYTHON: C:\Python36-x64
 
 init:
   - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
   - SET PYTHONIOENCODING=utf-8
 
-install:
-  - python -m pip install --no-cache-dir  -r requirements.txt
-
-build: false
-
-test_script:
-  - python __main__.py --bot test -lll
-
 branches:
   only:
     - master
+
+install:
+  - python -m pip install --no-cache-dir -U pip wheel setuptools
+  - python -m pip install --no-cache-dir -r requirements.txt
+  - python -m pip install --no-cache-dir -r requirements-dev.txt
+
+build:
+  - python setup.py clean bdist_wheel package
+
+artifacts:
+  - path: dist/lncrawl.exe
+    name: lncrawl
 
 cache:
   - '%LOCALAPPDATA%\pip\Cache'

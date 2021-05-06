@@ -30,16 +30,11 @@ class LightNovelWorldCrawler(Crawler):
         # self.novel_author = soup.select('h1 span').text.strip()
         # logger.info('Novel author: %s', self.novel_author)
 
+        volumes = set([])
         for a in soup.select('div#chapter_content ul li a'):
-            chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            chap_id = 1 + len(self.chapters)
+            vol_id = 1 + len(self.chapters) // 100
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -47,6 +42,8 @@ class LightNovelWorldCrawler(Crawler):
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):

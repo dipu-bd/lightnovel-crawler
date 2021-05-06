@@ -5,7 +5,7 @@ import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('ARANG_SCANS')
+logger = logging.getLogger(__name__)
 search_url = 'https://arangscans.com/?s=%s&post_type=wp-manga'
 
 

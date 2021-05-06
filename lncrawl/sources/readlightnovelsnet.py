@@ -17,7 +17,7 @@ class ReadLightNovelsNet(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for tab in soup.select('.home-truyendecu'):
+        for tab in soup.select('.home-truyendecu')[:20]:
             search_title = tab.select_one('a')
             latest = tab.select_one('.caption .label-primary').text.strip()
             results.append({

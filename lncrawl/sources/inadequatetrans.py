@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('INADEQUATE_TRANSLATIONS')
+logger = logging.getLogger(__name__)
 
 class InadequateTranslations(Crawler):
     base_url = 'https://inadequatetranslations.wordpress.com/'

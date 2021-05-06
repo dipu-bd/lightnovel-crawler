@@ -3,17 +3,26 @@ from urllib.parse import urlparse
 
 from questionary import prompt
 
-from ...assets.icons import Icons
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
 from ...sources import rejected_sources
+from .open_folder_prompt import display_open_folder
+from .resume_download import resume_session
 
 
 def start(self):
+    from . import ConsoleBot
+    if not isinstance(self, ConsoleBot):
+        raise Exception('Unknown self: ' + type(self))
+
     args = get_args()
     if args.list_sources:
         display.url_supported_list()
+        return
+    # end if
+    if 'resume' in args:
+        resume_session()
         return
     # end if
 
@@ -70,17 +79,7 @@ def start(self):
     self.app.destroy()
     display.app_complete()
 
-    if self.open_folder():
-        if Icons.isWindows:
-            import subprocess
-            subprocess.Popen('explorer /select,"' + self.app.output_path + '"')
-        else:
-            import pathlib
-            import webbrowser
-            url = pathlib.Path(self.app.output_path).as_uri()
-            webbrowser.open_new(url)
-        # end if
-    # end def
+    display_open_folder(self.app.output_path)
 # end def
 
 
@@ -142,24 +141,4 @@ def process_chapter_range(self):
 
     self.log.info('%d chapters to be downloaded', len(chapters))
     return chapters
-# end def
-
-
-def open_folder(self):
-    args = get_args()
-
-    if args.suppress:
-        return False
-    # end if
-
-    answer = prompt([
-        {
-            'type': 'confirm',
-            'name': 'exit',
-            'message': 'Open the output folder?',
-            'default': True,
-        },
-    ])
-
-    return answer['exit']
 # end def

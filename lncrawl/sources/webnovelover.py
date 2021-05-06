@@ -16,7 +16,6 @@ class WebNoveLover(Crawler):
     base_url = 'https://www.webnovelover.com/'
 
     def initialize(self):
-        print('inititiaslkaksjdlkasjdlkajsdlkjdls')
         self.executor = ThreadPoolExecutor(max_workers=7)
     # end def
 

@@ -38,7 +38,7 @@ class WuxiaSiteCrawler(Crawler):
 
         self.novel_title = ' '.join([
             str(x)
-            for x in soup.select_one('.post-title h3').contents
+            for x in soup.select_one('.post-title').select_one('h1, h2, h3').contents
             if not x.name
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)

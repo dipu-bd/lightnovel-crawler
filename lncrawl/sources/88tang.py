@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('88_TANG')
+logger = logging.getLogger(__name__)
 
 class TangEatDrinkRead(Crawler):
     base_url = 'https://88tangeatdrinkread.wordpress.com/'

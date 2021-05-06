@@ -12,7 +12,6 @@ from urllib.parse import quote
 import discord
 
 from ...core.app import App
-from ...sources import crawler_list
 from ...utils.uploader import upload
 from .config import max_workers, public_ip, public_path
 
@@ -38,6 +37,7 @@ class MessageHandler:
         self.executor = ThreadPoolExecutor(max_workers)
         self.last_activity = datetime.now()
         self.closed = False
+        self.get_current_status = None
     # end def
 
     def process(self, message):
@@ -47,6 +47,7 @@ class MessageHandler:
 
     def destroy(self):
         try:
+            self.get_current_status = None
             self.client.handlers.pop(str(self.user.id))
             self.send_sync('Closing current session...')
             self.executor.shutdown(wait=False)
@@ -110,16 +111,20 @@ class MessageHandler:
             return
         # end if
 
-        self.send_sync(random.choice([
-            'Send !cancel to stop this session.',
-            'Please wait...',
-            'Processing, give me more time...',
-            'I am just a bot. Please be patient...',
-            'Waiting for more RAM...',
-            'A little bit longer...',
-            'I\'ll be with you in a bit...',
-            'Patience! This is difficult, you know...',
-        ]))
+        status = None
+        if callable(self.get_current_status):
+            status = self.get_current_status()
+        # end if
+        if not status:
+            status = random.choice([
+                'Send !cancel to stop this session.',
+                'Please wait...',
+                'Processing, give me more time...',
+                'A little bit longer...',
+            ])
+        # end if
+
+        self.send_sync(status)
     # end def
 
     # ---------------------------------------------------------------------- #
@@ -154,6 +159,7 @@ class MessageHandler:
             self.app.user_input = self.message.content.strip()
             self.app.init_search()
         except Exception:
+            logger.exception("Fail to init crawler")
             self.send_sync('\n'.join([
                 'Sorry! I do not recognize this sources yet.',
                 'See list of supported sources here:',
@@ -165,7 +171,7 @@ class MessageHandler:
         if self.app.crawler:
             self.send_sync('Got your page link')
             self.get_novel_info()
-        elif len(self.app.user_input) < 4:
+        elif self.app.user_input and len(self.app.user_input) < 4:
             self.send_sync('Your query is too short')
             self.state = self.handle_novel_url
             self.get_novel_url()
@@ -190,8 +196,14 @@ class MessageHandler:
     # SEARCHING -- skips if DISCORD_DISABLE_SEARCH is 'true'
     # ------------------------------------------------------------ #
 
+    def get_novel_selection_progres(self):
+        return 'Searched %d of %d sources' % (self.app.progress, len(self.app.crawler_links))
+    # end def
+
     def display_novel_selection(self):
+        self.get_current_status = self.get_novel_selection_progres
         self.app.search_novel()
+        self.get_current_status = None
         if self.closed:
             return
 
@@ -299,7 +311,9 @@ class MessageHandler:
         # end for
         if match_count != 1:
             self.send_sync(
-                'Sorry! You should select *one* source from the list (%d selected).' % match_count)
+                'Sorry! You should select *one* source '
+                'from the list (%d selected).' % match_count
+            )
             return self.display_sources_selection()
         # end if
         self.handle_search_result(selected)
@@ -323,6 +337,7 @@ class MessageHandler:
     def download_novel_info(self):
         self.state = self.busy_state
         try:
+            self.get_current_status = lambda: 'Getting novel information...'
             self.app.get_novel_info()
             if self.closed:
                 return
@@ -330,6 +345,8 @@ class MessageHandler:
             logger.exception('Failed to get novel info')
             self.send_sync('Failed to get novel info.\n`%s`' % str(ex))
             self.executor.submit(self.destroy)
+        finally:
+            self.get_current_status = None
         # end try
 
         # Setup output path
@@ -449,7 +466,7 @@ class MessageHandler:
         self.send_sync('\n'.join([
             'Now you can choose book formats to download:',
             '- Send `!cancel` to stop.',
-            # '- Send `!all` to download all formats _(it may take a very very long time!)_',
+            '- Send `!all` to download all formats _(it may take a very long time!)_',
             'To select specific output formats:',
             '- Send `pdf` to download only pdf format',
             '- Send `epub pdf` to download both epub and pdf formats.',
@@ -468,18 +485,21 @@ class MessageHandler:
             return
         # end if
 
-        output_format = set(re.findall(
-            '|'.join(available_formats), text.lower()))
-        if not len(output_format):
+        if text == '!all':
             output_format = set(available_formats)
-            self.send_sync('Sorry! I did not recognize your input. ' +
-                           'By default, I shall generate in (%s) formats.' % (', ' .join(output_format)))
+        else:
+            output_format = set(re.findall('|'.join(available_formats), text.lower()))
         # end if
 
-        self.app.output_formats = {x: (x in output_format)
-                                   for x in available_formats}
-        self.send_sync('I will generate e-book in (%s) format' %
-                       (', ' .join(output_format)))
+        if not len(output_format):
+            self.send_sync('Sorry! I did not recognize your input. '
+                           'Try one of these: `' + '` `'.join(available_formats) + '`')
+            self.state = self.handle_output_selection
+            return
+        # end if
+
+        self.app.output_formats = {x: (x in output_format) for x in available_formats}
+        self.send_sync('I will generate e-book in (%s) format' % (', ' .join(output_format)))
 
         self.send_sync('\n'.join([
             'Starting download...',
@@ -492,6 +512,10 @@ class MessageHandler:
 
     # ---------------------------------------------------------------------- #
 
+    def get_download_progress_status(self):
+        return 'Downloaded %d of %d chapters' % (self.app.progress, len(self.app.chapters))
+    # end def
+
     def start_download(self):
         self.app.pack_by_volume = False
 
@@ -500,20 +524,21 @@ class MessageHandler:
                 '**%s**' % self.app.crawler.novel_title,
                 'Downloading %d chapters...' % len(self.app.chapters),
             )
+            self.get_current_status = self.get_download_progress_status
             self.app.start_download()
-            self.send_sync('Download complete.')
+            self.get_current_status = None
             if self.closed:
                 return
 
+            self.get_current_status = lambda: 'Binding books... %.0f%%' % (self.app.progress)
             self.send_sync('Binding books...')
             self.app.bind_books()
-            self.send_sync('Book binding completed.')
+            self.get_current_status = None
             if self.closed:
                 return
 
             self.send_sync('Compressing output folder...')
             self.app.compress_books()
-            self.send_sync('Compressed output folder.')
             if self.closed:
                 return
 
@@ -521,7 +546,6 @@ class MessageHandler:
                 self.send_sync('Publishing files...')
                 self.publish_files()
             else:
-                self.send_sync('Uploading files...')
                 for archive in self.app.archived_outputs:
                     self.upload_file(archive)
                 # end for
@@ -529,7 +553,6 @@ class MessageHandler:
         except Exception as ex:
             logger.exception('Failed to download')
             self.send_sync('Download failed!\n`%s`' % str(ex))
-            self.executor.submit(self.destroy)
         finally:
             self.executor.submit(self.destroy)
         # end try

@@ -29,7 +29,6 @@ rejected_sources = {
     'https://indomtl.com/': "Does not like to be crawled",
     'https://lnindo.org/': "Does not like to be crawled",
     'https://myoniyonitranslations.com/': "522 - Connection timed out",
-    'https://www.flying-lines.com/': 'Obfuscated content',
     'https://www.jieruihao.cn/': "Unavailable",
     'https://www.noveluniverse.com/': "Site is down",
     'https://www.novelupdates.com/': "Does not host any novels",
@@ -39,7 +38,10 @@ rejected_sources = {
     'http://4scanlation.xyz/': 'Site moved',
     'https://pery.info/': 'Site is down',
     'http://writerupdates.com/': 'Site is down',
-    'https://www.centinni.com/': 'Site is down'
+    'https://www.centinni.com/': 'Site is down',
+    'https://fsapk.com/': 'Site is not working',
+    'https://bestoflightnovels.com/': 'Site moved',
+    'https://novelcrush.com/': 'Site is down',
 }
 
 # this list will be auto-generated

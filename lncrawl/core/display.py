@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import logging
 import os
 import textwrap
-from urllib.parse import urlparse
 
 from colorama import Back, Fore, Style
 
@@ -10,6 +8,7 @@ from ..assets.icons import Icons
 from ..sources import crawler_list
 
 LINE_SIZE = 80
+ENABLE_BANNER = True
 
 try:
     row, _ = os.get_terminal_size()
@@ -24,14 +23,19 @@ except Exception:
 def description():
     print('=' * LINE_SIZE)
 
-    title = Icons.BOOK + ' Lightnovel Crawler ' + \
-        Icons.CLOVER + os.getenv('version')
-    padding = ' ' * ((LINE_SIZE - len(title)) // 2)
-    print(Fore.YELLOW, padding + title, Fore.RESET)
-
-    desc = 'https://github.com/dipu-bd/lightnovel-crawler'
-    padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
-    print(Style.DIM, padding + desc, Style.RESET_ALL)
+    if ENABLE_BANNER:
+        from ..assets.banner import get_color_banner
+        print(get_color_banner())
+    else:
+        from ..assets.version import get_value
+        title = Icons.BOOK + ' Lightnovel Crawler ' + Icons.CLOVER + get_value()
+        padding = ' ' * ((LINE_SIZE - len(title)) // 2)
+        print(Fore.YELLOW, padding + title, Fore.RESET)
+        print('-' * LINE_SIZE)
+        desc = 'https://github.com/dipu-bd/lightnovel-crawler'
+        padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
+        print(Style.DIM, padding + desc, Style.RESET_ALL)
+    # end if
 
     print('-' * LINE_SIZE)
 # end def
@@ -100,16 +104,16 @@ def new_version_news(latest):
           'VERSION', Fore.RED + latest + Fore.CYAN,
           'IS NOW AVAILABLE!', Fore.RESET)
 
-    print('', Icons.RIGHT_ARROW, Style.DIM + 'Upgrade:',
+    print(' ', Icons.RIGHT_ARROW, Style.DIM + 'Upgrade using',
           Fore.YELLOW + 'pip install -U lightnovel-crawler', Style.RESET_ALL)
 
-    if Icons.isWindows:
-        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'https://rebrand.ly/lncrawl', Style.RESET_ALL)
-    elif Icons.isLinux:
-        print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
-              Fore.YELLOW + 'https://rebrand.ly/lncrawl-linux', Style.RESET_ALL)
-    # end if
+    # if Icons.isWindows:
+    #     print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
+    #           Fore.YELLOW + 'https://rebrand.ly/lncrawl', Style.RESET_ALL)
+    # elif Icons.isLinux:
+    #     print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
+    #           Fore.YELLOW + 'https://rebrand.ly/lncrawl-linux', Style.RESET_ALL)
+    # # end if
 
     print('-' * LINE_SIZE)
 # end def
@@ -155,7 +159,7 @@ def format_short_info_of_novel(short_info):
         return ''
     # end if
     return '\n'.join(textwrap.wrap(
-        short_info,
+        short_info.strip(),
         width=70,
         initial_indent='\n' + (' ' * 6) + Icons.INFO,
         subsequent_indent=(' ' * 8),
@@ -168,13 +172,11 @@ def format_short_info_of_novel(short_info):
 def format_novel_choices(choices):
     items = []
     for index, item in enumerate(choices):
-        text = '%d. %s [in %d sources]' % (
-            index + 1, item['title'], len(item['novels']))
+        text = '%d. %s [in %d sources]' % (index + 1, item['title'], len(item['novels']))
         if len(item['novels']) == 1:
             novel = item['novels'][0]
-            short_info = novel['info'] if 'info' in novel else ''
-            text += '\n' + (' ' * 6) + '- ' + novel['url']
-            text += format_short_info_of_novel(short_info)
+            text += '\n' + (' ' * 6) + Icons.LINK + ' ' + novel['url']
+            text += format_short_info_of_novel(novel.get('info', ''))
         # end if
         items.append({'name': text})
     # end for
@@ -188,6 +190,23 @@ def format_source_choices(novels):
         text = '%d. %s' % (index + 1, item['url'])
         short_info = item['info'] if 'info' in item else ''
         text += format_short_info_of_novel(short_info)
+        items.append({'name': text})
+    # end for
+    return items
+# end def
+
+
+def format_resume_choices(metadata_list):
+    items = []
+    for index, data in enumerate(metadata_list):
+        if not data.get('session'):
+            continue
+        text = '%d. %s [downloading %d chapters]' % (
+            index + 1,
+            data['title'],
+            len(data['session']['download_chapters'])
+        )
+        text += '\n' + (' ' * 6) + Icons.LINK + ' ' + data['url']
         items.append({'name': text})
     # end for
     return items

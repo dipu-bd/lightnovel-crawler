@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-import re
 import shutil
+from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from slugify import slugify
 
+from .. import constants as C
 from ..binders import available_formats, generate_books
 from ..sources import crawler_list
-from .novel_search import search_novels
-from .downloader import download_chapters
+from ..utils.crawler import Crawler
+from .downloader import download_chapters, download_chapter_images
 from .novel_info import format_novel, save_metadata
+from .novel_search import search_novels
 
 logger = logging.getLogger(__name__)
 
@@ -22,17 +24,17 @@ class App:
     def __init__(self):
         self.progress = 0
         self.user_input = None
-        self.crawler_links = None
-        self.crawler = None
-        self.login_data = ()
+        self.crawler_links: List[str] = []
+        self.crawler: Optional[Crawler] = None
+        self.login_data: Optional[Tuple[str, str]] = None
         self.search_results = []
-        self.output_path = None
+        self.output_path = C.DEFAULT_OUTPUT_PATH
         self.pack_by_volume = False
-        self.chapters = []
+        self.chapters: List[Dict[str, Any]] = []
         self.book_cover = None
-        self.output_formats = {}
+        self.output_formats: Dict[str, bool] = {}
         self.archived_outputs = None
-        self.good_file_name = None
+        self.good_file_name: Optional[str] = None
         self.no_append_after_filename = False
     # end def
 
@@ -65,7 +67,7 @@ class App:
         else:
             logger.info('Detected query input')
             self.crawler_links = [
-                link
+                str(link)
                 for link, crawler in crawler_list.items()
                 if 'search_novel' in crawler.__dict__
             ]
@@ -80,7 +82,7 @@ class App:
 
         search_novels(self)
 
-        if len(self.search_results) == 0:
+        if not self.search_results:
             raise Exception('No results for: %s' % self.user_input)
         # end if
 
@@ -118,11 +120,14 @@ class App:
     def get_novel_info(self):
         '''Requires: crawler, login_data'''
         '''Produces: output_path'''
+        if not isinstance(self.crawler, Crawler):
+            raise Exception('No crawler is selected')
+
         self.crawler.initialize()
 
         if self.can_do('login') and self.login_data:
-            logger.debug(self.login_data)
-            self.crawler.login(*self.login_data)
+            logger.debug('Login with %s', self.login_data)
+            self.crawler.login(*list(self.login_data))
         # end if
 
         print('Retrieving novel info...')
@@ -145,20 +150,26 @@ class App:
         # end if
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
-
-        self.output_path = os.path.join(
-            'Lightnovels', source_name, self.good_file_name)
+        self.output_path = os.path.join(C.DEFAULT_OUTPUT_PATH, source_name, self.good_file_name)
+        save_metadata(self)
     # end def
 
     # ----------------------------------------------------------------------- #
     def start_download(self):
         '''Requires: crawler, chapters, output_path'''
-        if not os.path.exists(self.output_path):
+        if not self.output_path or not os.path.isdir(self.output_path):
             raise Exception('Output path is not defined')
         # end if
 
-        save_metadata(self.crawler, self.output_path)
+        save_metadata(self)
         download_chapters(self)
+        save_metadata(self)
+        download_chapter_images(self)
+        save_metadata(self, True)
+
+        if not self.output_formats.get('json', False):
+            shutil.rmtree(os.path.join(self.output_path, 'json'), ignore_errors=True)
+        # end if
 
         if self.can_do('logout'):
             self.crawler.logout()
@@ -239,5 +250,4 @@ class App:
             # end if
         # end for
     # end def
-
 # end class

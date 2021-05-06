@@ -16,7 +16,7 @@ class VipNovel(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for tab in soup.select('.c-tabs-item__content'):
+        for tab in soup.select('.c-tabs-item__content')[:20]:
             a = tab.select_one('.post-title h4 a')
             latest = tab.select_one('.latest-chap .chapter a').text
             votes = tab.select_one('.rating .total_votes').text
