@@ -1,20 +1,47 @@
-# Lightnovel Crawler [![pip package](https://img.shields.io/badge/%F0%9F%93%A6-pip-blue)](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)
+# Lightnovel Crawler
 
-[![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
+[![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
+[![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)
+
+[![ci.appveyor](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
+[![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler)](https://github.com/dipu-bd/lightnovel-crawler)
 
-<!-- [![Build status](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler) -->
+<!-- [![travis-ci](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler) -->
 <!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
-<!-- [![Heroku](https://heroku-badge.herokuapp.com/?app=lncrawl)] -->
-<!-- [![Snap Status](https://build.snapcraft.io/badge/dipu-bd/lightnovel-crawler.svg)](https://build.snapcraft.io/user/dipu-bd/lightnovel-crawler) -->
 
 An app to download novels from online sources and generate e-books.
 
 > **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)**
 
 > **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
+
+## Table of contents
+
+- [Lightnovel Crawler](#lightnovel-crawler)
+  - [Table of contents](#table-of-contents)
+  - [Installation](#installation)
+    - [Standalone Bundle (Windows, Linux)](#standalone-bundle-windows-linux)
+    - [PIP (Windows, Mac, and Linux)](#pip-windows-mac-and-linux)
+    - [Termux (Android)](#termux-android)
+    - [Chatbots](#chatbots)
+      - [Discord](#discord)
+      - [Telegram](#telegram)
+    - [Heroku Deployment](#heroku-deployment)
+  - [Running from source](#running-from-source)
+  - [Running the Bots](#running-the-bots)
+  - [General Usage](#general-usage)
+    - [Available options](#available-options)
+    - [Example Usage](#example-usage)
+  - [Development](#development)
+    - [Adding new source](#adding-new-source)
+    - [Adding new Bot](#adding-new-bot)
+    - [Supported sources](#supported-sources)
+    - [Rejected sources](#rejected-sources)
+    - [Supported output formats](#supported-output-formats)
+    - [Supported bots](#supported-bots)
 
 <a href="https://github.com/dipu-bd/lightnovel-crawler"><img src="res/lncrawl-icon.png" width="128px" align="right"/></a>
 
