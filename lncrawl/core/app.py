@@ -11,7 +11,7 @@ from .. import constants as C
 from ..binders import available_formats, generate_books
 from ..sources import crawler_list
 from ..utils.crawler import Crawler
-from .downloader import download_chapters
+from .downloader import download_chapters, download_chapter_images
 from .novel_info import format_novel, save_metadata
 from .novel_search import search_novels
 
@@ -163,6 +163,8 @@ class App:
 
         save_metadata(self)
         download_chapters(self)
+        save_metadata(self)
+        download_chapter_images(self)
         save_metadata(self, True)
 
         if not self.output_formats.get('json', False):
