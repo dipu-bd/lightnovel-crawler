@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import os
-import platform
 import re
 import shlex
 import shutil
+import site
 import sys
 from pathlib import Path
 
 from PyInstaller import __main__ as pyi
-from setuptools.config import read_configuration
 
 ROOT = Path(__file__).parent
 unix_root = '/'.join(str(ROOT).split(os.sep))
-site_packages = list(ROOT.glob('venv/**/site-packages'))[0]
-unix_site_packages = '/'.join(str(site_packages).split(os.sep))
+unix_site_packages = '/'.join(site.USER_SITE.split(os.sep))
 
 
 def package():
@@ -63,18 +61,12 @@ def gather_data_files():
     command += '--add-data "%s/lncrawl/VERSION%slncrawl" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
-    command += '--add-data "%s/cairosvg/VERSION%s." ' % (
-        unix_site_packages, os.pathsep)
-    command += '--add-data "%s/cairocffi/VERSION%scairocffi" ' % (
-        unix_site_packages, os.pathsep)
-    #command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (
-    #    unix_site_packages, os.pathsep)
-    command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
-        unix_site_packages, os.pathsep)
-    command += '--add-data "%s/cloudscraper%scloudscraper" ' % (
-        unix_site_packages, os.pathsep)
-    command += '--add-data "%s/wcwidth/version.json%swcwidth" ' % (
-        unix_site_packages, os.pathsep)
+    command += '--add-data "%s/cairosvg/VERSION%s." ' % (unix_site_packages, os.pathsep)
+    command += '--add-data "%s/cairocffi/VERSION%scairocffi" ' % (unix_site_packages, os.pathsep)
+    # command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (unix_site_packages, os.pathsep)
+    command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (unix_site_packages, os.pathsep)
+    command += '--add-data "%s/cloudscraper%scloudscraper" ' % (unix_site_packages, os.pathsep)
+    command += '--add-data "%s/wcwidth/version.json%swcwidth" ' % (unix_site_packages, os.pathsep)
 
     return command
 # end def
