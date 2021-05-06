@@ -1,6 +1,5 @@
 # Lightnovel Crawler [![pip package](https://img.shields.io/badge/%F0%9F%93%A6-pip-blue)](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)
 
-[![Build Status](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
@@ -17,34 +16,9 @@ An app to download novels from online sources and generate e-books.
 
 > **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
 
-## Table of contents
-
-- [Lightnovel Crawler ![pip package](https://pypi.org/project/lightnovel-crawler) [![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl) [![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)](#lightnovel-crawler---)
-  - [Table of contents](#table-of-contents)
-  - [(A) Installation](#a-installation)
-    - [A1. Standalone Bundle (Windows, Linux)](#a1-standalone-bundle-windows-linux)
-    - [A2. PIP (Windows, Mac, and Linux)](#a2-pip-windows-mac-and-linux)
-    - [A3. Termux (Android)](#a3-termux-android)
-    - [A4. Chatbots](#a4-chatbots)
-      - [A4.1 Discord](#a41-discord)
-      - [A4.2 Telegram](#a42-telegram)
-    - [A5. Run from source](#a5-run-from-source)
-    - [A6. Heroku Deployment](#a6-heroku-deployment)
-  - [(B) General Usage](#b-general-usage)
-    - [B1. Available options](#b1-available-options)
-    - [B2. Example Usage](#b2-example-usage)
-    - [B3. Running the bot](#b3-running-the-bot)
-  - [(C) Development](#c-development)
-    - [C1. Adding new source](#c1-adding-new-source)
-    - [C2. Adding new Bot](#c2-adding-new-bot)
-    - [C3. Supported sources](#c3-supported-sources)
-    - [C4. Rejected sources](#c4-rejected-sources)
-    - [C5. Supported output formats](#c5-supported-output-formats)
-    - [C6. Supported bots](#c6-supported-bots)
-
 <a href="https://github.com/dipu-bd/lightnovel-crawler"><img src="res/lncrawl-icon.png" width="128px" align="right"/></a>
 
-## (A) Installation
+## Installation
 
 **This application uses _Calibre_ to convert ebooks.** <br>
 **Install it from https://calibre-ebook.com/download** <br>
@@ -52,7 +26,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 <!-- Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/ -->
 
-### A1. Standalone Bundle (Windows, Linux)
+### Standalone Bundle (Windows, Linux)
 
 ⏬ **Windows**: [lightnovel-crawler v2.24.5 ~ 23MB](https://rebrand.ly/lncrawl)
 
@@ -60,12 +34,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
-⏬ **Linux**: [lightnovel-crawler v2.24.5 ~ 24MB](https://rebrand.ly/lncrawl-linux)
-
-> Copy it to `/usr/bin` or `~/.local/bin` to make it accessible in terminal. Or, you can [create a launcher](https://askubuntu.com/a/66918/457551) to easily access the app.
-> However, it is recommended to use **pip** version directly if you are on Linux
-
-### A2. PIP (Windows, Mac, and Linux)
+### PIP (Windows, Mac, and Linux)
 
 📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
@@ -90,11 +59,14 @@ $ lncrawl
 
 > To view extra logs, use: `lncrawl -lll`
 
-### A3. Termux (Android)
+### Termux (Android)
 
 > Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
 > It is recommended to use the bots on either Discord or Telegram if you are on mobile.
 
+<details>
+  <summary>Click to expand!</summary>
+ 
 📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
@@ -111,23 +83,34 @@ $ lncrawl
 - You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 - Run `pip install -U lightnovel-crawler` again to install the latest updates.
 
-### A4. Chatbots
+</details>
+  
+### Chatbots
 
-#### A4.1 Discord
+#### Discord
 
 Join our server: https://discord.gg/7A5Hktx
 
 Or, visit this link to install discord bot to your own server:
 https://discordapp.com/oauth2/authorize?client_id=537526751170002946&permissions=51264&scope=bot
 
-#### A4.2 Telegram
+#### Telegram
 
 Visit this link to get started with the telegram bot:
 https://t.me/epub_smelter_bot
 
 Send `!help` to open the bot help message.
 
-### A5. Run from source
+### Heroku Deployment
+
+Simply fill out the environment variables and you get a running instance.
+
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+
+## Running from source
+
+<details>
+  <summary>Click to expand!</summary>
 
 - First clone the repository:
 
@@ -150,15 +133,51 @@ $ python __main__.py
 $ python .
 ```
 
-### A6. Heroku Deployment
+</details>
 
-Simply fill out the environment variables and you get a running instance.
+## Running the Bots
 
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+<details>
+  <summary>Click to expand!</summary>
+  
+There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
-## (B) General Usage
+- Clone this repository
+```bash
+$ git clone https://github.com/dipu-bd/lightnovel-crawler
+```
 
-### B1. Available options
+- Install calibre for pdf, mobi etc. formats.
+  - https://calibre-ebook.com/download
+
+- Install requirements
+```bash
+$ pip3 install --user -r requirements.txt
+$ pip3 install --user -r requirements-dev.txt
+```
+
+- Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.
+
+- To run the discord bot:
+```bash
+$ python3 . --bot discord --shard-id 0 --shard-count 1
+```
+
+- To run the telegram bot
+```bash
+$ python3 . --bot telegram
+```
+
+_There is a `start.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
+
+</details>
+
+## General Usage
+
+<details>
+  <summary>Click to expand!</summary>
+  
+### Available options
 
 ```bash
 $ lncrawl -h
@@ -211,7 +230,7 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
 
-### B2. Example Usage
+### Example Usage
 
 Open your console and type `lncrawl --version` first to check if you have installed it properly.
 Here are some example usage of the app:
@@ -241,39 +260,9 @@ Here are some example usage of the app:
 
 - You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
 
-### B3. Running the bot
+</details>
 
-There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
-
-- Clone this repository
-```bash
-$ git clone https://github.com/dipu-bd/lightnovel-crawler
-```
-
-- Install calibre for pdf, mobi etc. formats.
-  - https://calibre-ebook.com/download
-
-- Install requirements
-```bash
-$ pip3 install --user -r requirements.txt
-$ pip3 install --user -r requirements-dev.txt
-```
-
-- Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.
-
-- To run the discord bot:
-```bash
-$ python3 . --bot discord --shard-id 0 --shard-count 1
-```
-
-- To run the telegram bot
-```bash
-$ python3 . --bot telegram
-```
-
-_There is a `start.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
-
-## (C) Development
+## Development
 
 You are very welcome to contribute in this project. You can:
 
@@ -283,21 +272,24 @@ You are very welcome to contribute in this project. You can:
 - add new output formats.
 - create new bots.
 
-### C1. Adding new source
+### Adding new source
 
 - Create new crawler using the [`sources/_template_.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/sources/_template_.py) as template.
 - Update [Supported sources](#c3-supported-sources) section in `README.md`
 - Add some test inputs to `test_user_inputs` variable in `lncrawl/bots/test/test_inputs.py`
 
-### C2. Adding new Bot
+### Adding new Bot
 
 - Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as template.
 - Import bot to [`bots/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/__init__.py) file.
 
-### C3. Supported sources
+### Supported sources
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
+<details>
+  <summary>Click to expand!</summary>
+  
 | Available Sources                            | Can Search | Can Login |      Maintainer       |
 | -------------------------------------------- | :--------: | :-------: | :-------------------: |
 | http://boxnovel.org                          |     ✔      |           |       @dipu-bd        |
@@ -462,8 +454,13 @@ You are very welcome to contribute in this project. You can:
 | https://yukinovel.id                         |            |           |                       |
 | https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
 
-### C4. Rejected sources
+</details>
 
+### Rejected sources
+
+<details>
+  <summary>Click to expand!</summary>
+  
 | Rejected Sources                | Reason                                                                                             |
 | ------------------------------- | -------------------------------------------------------------------------------------------------- |
 | http://fullnovel.live           | `403 - Forbidden: Access is denied`                                                                |
@@ -488,10 +485,15 @@ You are very welcome to contribute in this project. You can:
 | https://bestoflightnovels.com   | `Site moved`                                                                                       |
 | https://novelcrush.com          | `Site is down`                                                                                     |
 
-### C5. Supported output formats
+</details>
 
-- JSON (default)
-- EPUB (default)
+### Supported output formats
+
+<details>
+  <summary>Click to expand!</summary>
+  
+- JSON
+- EPUB
 - TEXT
 - WEB
 - DOCX
@@ -511,7 +513,9 @@ You are very welcome to contribute in this project. You can:
 - TCR
 - HTML
 
-### C6. Supported bots
+</details>
+
+### Supported bots
 
 - Console Bot
 - Telegram Bot
