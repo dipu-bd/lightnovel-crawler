@@ -4,9 +4,6 @@ on:
   pull_request:
     branches:
     - master
-  push:
-    branches:
-    - master
 
 jobs:
   build:
@@ -32,17 +29,3 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Build the wheel package
-      run: |
-        python setup.py clean bdist_wheel
-    - name: Install and test the wheel package
-      run: |
-        pip install dist/lightnovel_crawler*.whl
-        lncrawl --list-sources
-        lncrawl -s https://www.mtlnovel.com/rebirth-of-the-god-of-comics/ --first 2 -f --format epub --suppress
-    - uses: actions/upload-artifact@v2
-      with:
-        name: lighnovel-crawler_py${{ matrix.python-version }}
-        path: dist/*.whl
-        retention-days: 5
-        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
