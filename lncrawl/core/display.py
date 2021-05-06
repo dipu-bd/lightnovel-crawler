@@ -33,12 +33,7 @@ def description():
 
     # print('-' * LINE_SIZE)
 
-    banner = get_color_banner()
-    banner = [l.strip() for l in banner.split('\n')]
-    max_len = max([len(l) for l in banner])
-    padding = ' ' * max(0, LINE_SIZE - max_len)
-    banner = '\n'.join(padding + l for l in banner)
-    print(banner)
+    print(get_color_banner())
 
     print('-' * LINE_SIZE)
 # end def

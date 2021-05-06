@@ -16,6 +16,7 @@ def format_novel(crawler: Crawler):
     # crawler.novel_author = crawler.cleanup_text(crawler.novel_author)
     format_volumes(crawler)
     format_chapters(crawler)
+    crawler.volumes = [x for x in crawler.volumes if x['chapter_count'] > 0]
 # end def
 
 
