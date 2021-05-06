@@ -3,7 +3,6 @@
 To bind into ebooks
 """
 import logging
-from typing import final
 
 from .epub import make_epubs
 from .web import make_webs

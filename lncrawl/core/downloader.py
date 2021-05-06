@@ -252,8 +252,11 @@ def download_chapter_images(app):
             futures_to_check[chapter['id']].append(future)
             image_count += 1
         # end for
-
     # end for
+
+    if not futures_to_check:
+        return
+    # end if
 
     bar = IncrementalBar('Downloading images  ', max=image_count)
     if os.getenv('debug_mode') == 'yes':

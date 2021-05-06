@@ -3,7 +3,6 @@
 Decryptor: https://github.com/Pioverpie/privatebin-api/blob/master/privatebinapi/download.py
 '''
 from concurrent.futures.thread import ThreadPoolExecutor
-from typing import final
 from urllib.parse import urlsplit
 import re
 import logging
