@@ -13,15 +13,10 @@ branches:
   only:
     - master
 
-install:
-  - python -m pip install --no-cache-dir -U pip wheel setuptools
-  - python -m pip install --no-cache-dir -r requirements.txt
-  - python -m pip install --no-cache-dir -r requirements-dev.txt
-
 build: false
 
 test_script:
-  - python setup.py clean bdist_wheel package
+  - .\scripts\build.bat
 
 artifacts:
   - path: dist/lncrawl.exe
