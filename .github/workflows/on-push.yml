@@ -36,7 +36,7 @@ jobs:
       run: |
         pip install dist/lightnovel_crawler*.whl
         lncrawl --list-sources
-        lncrawl -s https://www.mtlnovel.com/rebirth-of-the-god-of-comics/ --first 2 -f --format epub --suppress
+        lncrawl -s https://www.mtlnovel.com/rebirth-of-the-god-of-comics/ --first 2 -f --format epub --suppress -lll
     - uses: actions/upload-artifact@v2
       with:
         name: lighnovel-crawler_py${{ matrix.python-version }}
