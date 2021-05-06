@@ -17,6 +17,7 @@ build: false
 
 test_script:
   - .\scripts\build.bat
+  - dir dist
 
 artifacts:
   - path: dist/lncrawl.exe
