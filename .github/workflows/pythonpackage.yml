@@ -35,6 +35,10 @@ jobs:
     - name: Build the wheel package
       run: |
         python setup.py clean bdist_wheel
+    - name: Install and test the wheel package
+      run: |
+        pip install dist/lightnovel_crawler*.whl
+        lncrawl --list-sources
     - uses: actions/upload-artifact@v2
       with:
         name: lighnovel-crawler_py${{ matrix.python-version }}
