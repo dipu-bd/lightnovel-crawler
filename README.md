@@ -61,12 +61,10 @@ $ lncrawl
 
 ### Termux (Android)
 
-> Mobile platforms are unpredictable. It is not guaranteed that the app will run on all devices.
+> There is no official support to run python in mobile devices.
+> It is not guaranteed that the app will run smoothly in all devices.
 > It is recommended to use the bots on either Discord or Telegram if you are on mobile.
 
-<details>
-  <summary>Click to expand!</summary>
- 
 📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
@@ -75,16 +73,14 @@ $ lncrawl
   - `termux-setup-storage`
   - `pkg install ndk-sysroot make python zlib clang`
   - `pkg install libxml2 libxslt libiconv libcrypt libffi zlib libjpeg-turbo`
-  - `pkg install nodejs-lts`
   - `pip install -U lightnovel-crawler` to install the latest version of this app.
 - Now exit the console and relaunch it.
 - Type `cd ~/storage/downloads` to store novels there.
 - Type `lncrawl` to start.
-- You navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
-- Run `pip install -U lightnovel-crawler` again to install the latest updates.
+- You can navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
 
-</details>
-  
+When there is a new update available, you can install it just by running `pip install -U lightnovel-crawler`. You will not have to run all the above commands again.
+
 ### Chatbots
 
 #### Discord
@@ -109,9 +105,6 @@ Simply fill out the environment variables and you get a running instance.
 
 ## Running from source
 
-<details>
-  <summary>Click to expand!</summary>
-
 - First clone the repository:
 
 ```bash
@@ -133,13 +126,8 @@ $ python __main__.py
 $ python .
 ```
 
-</details>
-
 ## Running the Bots
 
-<details>
-  <summary>Click to expand!</summary>
-  
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
 - Clone this repository
@@ -170,13 +158,8 @@ $ python3 . --bot telegram
 
 _There is a `start.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
 
-</details>
-
 ## General Usage
 
-<details>
-  <summary>Click to expand!</summary>
-  
 ### Available options
 
 ```bash
@@ -260,8 +243,6 @@ Here are some example usage of the app:
 
 - You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
 
-</details>
-
 ## Development
 
 You are very welcome to contribute in this project. You can:
@@ -288,7 +269,7 @@ You are very welcome to contribute in this project. You can:
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
 
 <details>
-  <summary>Click to expand!</summary>
+  <summary style="color: #39f">Click to expand!</summary>
   
 | Available Sources                            | Can Search | Can Login |      Maintainer       |
 | -------------------------------------------- | :--------: | :-------: | :-------------------: |
@@ -323,6 +304,7 @@ You are very welcome to contribute in this project. You can:
 | https://darktranslation.com                  |            |           |      @SirGryphin      |
 | https://demontranslations.com                |            |           |      @SirGryphin      |
 | https://dmtranslationscn.com                 |            |           |      @SirGryphin      |
+| https://docln.net                            |     ✔      |           |       @dipu-bd        |
 | https://dsrealmtranslations.com              |            |           |      @SirGryphin      |
 | https://es.mtlnovel.com                      |     ✔      |           |                       |
 | https://exiledrebelsscanlations.com          |     ✔      |           |      @SirGryphin      |
@@ -351,6 +333,7 @@ You are very welcome to contribute in this project. You can:
 | https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
 | https://litnet.com                           |     ✔      |           |                       |
+| https://ln.hako.re                           |     ✔      |           |       @dipu-bd        |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
 | https://m.chinesefantasynovels.com           |            |           |                       |
 | https://m.mywuxiaworld.com                   |     ✔      |           |                       |
@@ -459,7 +442,7 @@ You are very welcome to contribute in this project. You can:
 ### Rejected sources
 
 <details>
-  <summary>Click to expand!</summary>
+  <summary style="color: #39f">Click to expand!</summary>
   
 | Rejected Sources                | Reason                                                                                             |
 | ------------------------------- | -------------------------------------------------------------------------------------------------- |
@@ -489,9 +472,6 @@ You are very welcome to contribute in this project. You can:
 
 ### Supported output formats
 
-<details>
-  <summary>Click to expand!</summary>
-  
 - JSON
 - EPUB
 - TEXT
@@ -512,8 +492,6 @@ You are very welcome to contribute in this project. You can:
 - SNB
 - TCR
 - HTML
-
-</details>
 
 ### Supported bots
 
