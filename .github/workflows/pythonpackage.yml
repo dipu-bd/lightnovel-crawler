@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -38,6 +37,7 @@ jobs:
         python setup.py clean bdist_wheel
     - uses: actions/upload-artifact@v2
       with:
-        name: lighnovel-crawler
+        name: lighnovel-crawler_py${{ matrix.python-version }}
         path: dist/*.whl
-        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn` 
+        retention-days: 5
+        if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
