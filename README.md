@@ -55,11 +55,15 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.24.5 ~ 23MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lightnovel-crawler v2.26.0 ~ 25MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program.
 
-_To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
+⏬ **Linux**: [lightnovel-crawler v2.26.0 ~ 30MB](https://rebrand.ly/lncrawl-linux)
+
+> It is recommended to install via **pip** if you are on Linux
+
+⏬ _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
 ### PIP (Windows, Mac, and Linux)
 
@@ -192,7 +196,7 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.25.0 
+                           📒 Lightnovel Crawler 🍀2.26.0 
                   https://github.com/dipu-bd/lightnovel-crawler 
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -235,7 +239,9 @@ optional arguments:
   --shard-count [SHARD_COUNT]
                         Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
-  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
+  --resume [NAME/URL]   Resume download of a novel containing in *****************
+  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env
+                        file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
