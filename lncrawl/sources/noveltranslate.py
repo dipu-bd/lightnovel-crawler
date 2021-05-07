@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 search_url = (
     "https://noveltranslate.com/?s=%s&post_type=wp-manga&author=&artist=&release="
 )
-chapter_list_url = "https://noveltranslate.com/wp-admin/admin-ajax.php"
+wp_admin_ajax_url = "https://noveltranslate.com/wp-admin/admin-ajax.php"
 
 
 class NovelTranslateCrawler(Crawler):
@@ -34,7 +34,6 @@ class NovelTranslateCrawler(Crawler):
         # end for
 
         return results
-
     # end def
 
     def read_novel_info(self):
@@ -65,9 +64,16 @@ class NovelTranslateCrawler(Crawler):
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
         logger.info("Novel id: %s", self.novel_id)
 
-        response = self.submit_form(
-            chapter_list_url, data="action=manga_get_chapters&manga=" + self.novel_id
-        )
+        # For getting cookies
+        self.submit_form(wp_admin_ajax_url, data={
+            'action': 'manga_views',
+            'manga': self.novel_id,
+        })
+        print(self.cookies)
+        response = self.submit_form(wp_admin_ajax_url, data={
+            'action': 'manga_get_chapters',
+            'manga': self.novel_id,
+        })
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1

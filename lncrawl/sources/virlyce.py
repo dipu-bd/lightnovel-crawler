@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('VIRLYCE')
+logger = logging.getLogger(__name__)
 
 class Virlyce(Crawler):
     base_url = 'https://www.virlyce.com/'

@@ -2,9 +2,10 @@
 """
 To get the novel info
 """
-import re
-import os
 import json
+import os
+
+from .. import constants as C
 from ..utils.crawler import Crawler
 
 
@@ -15,6 +16,7 @@ def format_novel(crawler: Crawler):
     # crawler.novel_author = crawler.cleanup_text(crawler.novel_author)
     format_volumes(crawler)
     format_chapters(crawler)
+    crawler.volumes = [x for x in crawler.volumes if x['chapter_count'] > 0]
 # end def
 
 
@@ -55,18 +57,34 @@ def format_chapters(crawler: Crawler):
 # end def
 
 
-def save_metadata(crawler, output_path):
+def save_metadata(app, completed=False):
+    from ..core.app import App
+    from ..utils.crawler import Crawler
+    if not isinstance(app, App) and not isinstance(app.crawler, Crawler):
+        return
+
     data = {
-        'url': crawler.novel_url,
-        'title': crawler.novel_title,
-        'author': crawler.novel_author,
-        'cover': crawler.novel_cover,
-        'volumes': crawler.volumes,
-        'chapters': crawler.chapters,
-        'rtl': crawler.is_rtl,
+        'url': app.crawler.novel_url,
+        'title': app.crawler.novel_title,
+        'author': app.crawler.novel_author,
+        'cover': app.crawler.novel_cover,
+        'volumes': app.crawler.volumes,
+        'chapters': app.crawler.chapters,
+        'rtl': app.crawler.is_rtl,
+        'session': {
+            'completed': completed,
+            'user_input': app.user_input,
+            'login_data': app.login_data,
+            'output_path': app.output_path,
+            'output_formats': app.output_formats,
+            'pack_by_volume': app.pack_by_volume,
+            'good_file_name':  app.good_file_name,
+            'no_append_after_filename': app.no_append_after_filename,
+            'download_chapters': [chap['id'] for chap in app.chapters]
+        }
     }
-    os.makedirs(output_path, exist_ok=True)
-    file_name = os.path.join(output_path, 'meta.json')
+    os.makedirs(app.output_path, exist_ok=True)
+    file_name = os.path.join(app.output_path, C.META_FILE_NAME)
     with open(file_name, 'w', encoding="utf-8") as file:
         json.dump(data, file, indent=2)
     # end with

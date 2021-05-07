@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('OPPATRANS')
+logger = logging.getLogger(__name__)
 
 class OppaTranslations(Crawler):
     base_url = 'https://www.oppatranslations.com/'

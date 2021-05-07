@@ -19,8 +19,8 @@ class ClickNovel(Crawler):
 
         results = []
         for tab in soup.select('.c-tabs-item__content'):
-            a = tab.select_one('.post-title h4 a')
-            latest = tab.select_one('.latest-chap .chapter a').text
+            a = tab.select_one('.post-title a')
+            latest = tab.select_one('.latest-chap a').text
             votes = tab.select_one('.rating .total_votes').text
             results.append({
                 'title': a.text.strip(),

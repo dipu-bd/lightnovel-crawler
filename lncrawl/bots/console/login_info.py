@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
+from typing import Optional, Tuple
 from questionary import prompt
 from ...core.arguments import get_args
 
 
-def get_login_info(self):
+def get_login_info(self) -> Optional[Tuple[str, str]]:
     '''Returns the (email, password) pair for login'''
     args = get_args()
 
@@ -12,7 +13,7 @@ def get_login_info(self):
     # end if
 
     if args.suppress:
-        return False
+        return None
     # end if
 
     answer = prompt([

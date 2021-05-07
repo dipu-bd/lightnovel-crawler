@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('DEMONTRANS')
+logger = logging.getLogger(__name__)
 
 class DemonTranslations(Crawler):
     base_url = 'https://demontranslations.com/'

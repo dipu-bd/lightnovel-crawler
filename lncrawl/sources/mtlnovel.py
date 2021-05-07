@@ -19,7 +19,7 @@ class MtlnovelCrawler(Crawler):
         data = self.get_json(list_url)['items'][0]['results']
 
         results = []
-        for item in data:
+        for item in data[:20]:
             url = item['permalink']
             results.append({
                 'url': url,

@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('INFINITE_NOVEL')
+logger = logging.getLogger(__name__)
 
 class InfiniteNovelTranslations(Crawler):
     base_url = 'https://infinitenoveltranslations.net/'

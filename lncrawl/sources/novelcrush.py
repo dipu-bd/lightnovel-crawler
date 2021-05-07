@@ -17,7 +17,7 @@ class NovelCrush(Crawler):
 
         results = []
         for tab in soup.select('.c-tabs-item__content'):
-            a = tab.select_one('.post-title h3 a')
+            a = tab.select_one('.post-title a')
             latest = tab.select_one('.latest-chap .chapter a').text
             votes = tab.select_one('.rating .total_votes').text
             results.append({

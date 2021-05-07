@@ -2,6 +2,7 @@
 """
 To download chapter bodies
 """
+import hashlib
 import json
 import logging
 import os
@@ -50,7 +51,6 @@ def download_cover(app):
     try:
         logger.info('Downloading cover image...')
         response = app.crawler.get_response(app.crawler.novel_cover)
-        assert response.status_code == 200
         img = Image.open(BytesIO(response.content))
         img.save(filename)
         logger.debug('Saved cover: %s', filename)
@@ -143,12 +143,10 @@ def download_chapter_body(app, chapter):
             # end if
         # end if
 
-        if app.output_formats.get('json', False):
-            os.makedirs(dir_name, exist_ok=True)
-            with open(file_name, 'w', encoding="utf-8") as file:
-                file.write(json.dumps(chapter))
-            # end with
-        # end if
+        os.makedirs(dir_name, exist_ok=True)
+        with open(file_name, 'w', encoding="utf-8") as file:
+            file.write(json.dumps(chapter))
+        # end with
     # end if
 
     app.progress += 1
@@ -156,23 +154,42 @@ def download_chapter_body(app, chapter):
 # end def
 
 
+def download_image(app, url, image_output_path):
+    url_hash = hashlib.md5(url.encode()).hexdigest()
+    filename = url_hash + '.jpg'
+    image_file = os.path.join(image_output_path, filename)
+    if os.path.isfile(image_file):
+        app.progress += 1
+        return (url, filename)
+    # end if
+
+    try:
+        logger.info('Downloading image: ' + url)
+        response = app.crawler.get_response(url)
+        img = Image.open(BytesIO(response.content))
+        os.makedirs(image_output_path, exist_ok=True)
+        with open(image_file, 'wb') as f:
+            img.save(f, "JPEG")
+            logger.debug('Saved image: %s', image_file)
+        # end with
+        return (url, filename)
+    except Exception as ex:
+        logger.debug('Failed to download image: %s -> %s (%s)', url, filename, str(ex))
+        return (url, None)
+    finally:
+        app.progress += 1
+    # end try
+# end def
+
+
 def download_chapters(app):
     app.progress = 0
-
-    # download or generate cover
-    app.book_cover = download_cover(app)
-    if not app.book_cover:
-        app.book_cover = generate_cover(app)
-    # end if
-    if not app.book_cover:
-        logger.warn('No cover image')
-    # end if
-
     bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
-    bar.start()
-
     if os.getenv('debug_mode') == 'yes':
         bar.next = lambda: None  # Hide in debug mode
+        bar.finish()
+    else:
+        bar.start()
     # end if
 
     if not app.output_formats:
@@ -199,4 +216,81 @@ def download_chapters(app):
 
     bar.finish()
     print('Processed %d chapters' % len(app.chapters))
+# end def
+
+
+def download_chapter_images(app):
+    app.progress = 0
+
+    # download or generate cover
+    app.book_cover = download_cover(app)
+    if not app.book_cover:
+        app.book_cover = generate_cover(app)
+    # end if
+    if not app.book_cover:
+        logger.warn('No cover image')
+    # end if
+
+    image_count = 0
+    futures_to_check = {}
+    for chapter in app.chapters:
+        if not chapter.get('body'):
+            continue
+        # end if
+
+        soup = app.crawler.make_soup(chapter['body'])
+        image_output_path = os.path.join(app.output_path, 'images')
+        for img in soup.select('img'):
+            full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
+            future = app.crawler.executor.submit(
+                download_image,
+                app,
+                full_url,
+                image_output_path
+            )
+            futures_to_check.setdefault(chapter['id'], [])
+            futures_to_check[chapter['id']].append(future)
+            image_count += 1
+        # end for
+    # end for
+
+    if not futures_to_check:
+        return
+    # end if
+
+    bar = IncrementalBar('Downloading images  ', max=image_count)
+    if os.getenv('debug_mode') == 'yes':
+        bar.next = lambda: None  # Hide in debug mode
+        bar.finish()
+    else:
+        bar.start()
+    # end if
+
+    for chapter in app.chapters:
+        if chapter['id'] not in futures_to_check:
+            bar.next()
+            continue
+        # end if
+
+        images = {}
+        for future in futures_to_check[chapter['id']]:
+            url, filename = future.result()
+            bar.next()
+            if filename:
+                images[url] = filename
+            # end if
+        # end for
+
+        soup = app.crawler.make_soup('<main>' + chapter['body'] + '</main>')
+        for img in soup.select('img'):
+            if img['src'] in images:
+                filename = images[img['src']]
+                img['src'] = 'images/%s' % filename
+                img['style'] = 'float: left; margin: 15px; width: 100%;'
+        # end for
+        chapter['body'] = str(soup.select_one('main'))
+    # end for
+
+    bar.finish()
+    print('Processed %d images' % image_count)
 # end def

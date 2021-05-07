@@ -18,7 +18,6 @@ def make_cover_image(app):
     logger.info('Creating cover: %s', app.book_cover)
     ext = app.book_cover.split('.')[-1]
     cover_image = epub.EpubImage()
-    cover_image.uid = 'cover'
     cover_image.file_name = 'cover.%s' % ext
     cover_image.media_type = 'image/%s' % ext
     with open(app.book_cover, 'rb') as image_file:
@@ -109,6 +108,28 @@ def make_chapters(book, chapters):
 # end def
 
 
+def make_chapter_images(book, image_output_path):
+    if not os.path.isdir(image_output_path):
+        return
+    # end if
+
+    for filename in os.listdir(image_output_path):
+        if not filename.endswith('.jpg'):
+            continue
+        # end if
+
+        image_item = epub.EpubImage()
+        image_item.media_type = 'image/jpeg'
+        image_item.file_name = 'images/' + filename
+        with open(os.path.join(image_output_path, filename), 'rb') as fp:
+            image_item.content = fp.read()
+        # end with
+
+        book.add_item(image_item)
+    # end for
+# end def
+
+
 def bind_epub_book(app, chapters, volume=''):
     book_title = (app.crawler.novel_title + ' ' + volume).strip()
     logger.debug('Binding epub: %s', book_title)
@@ -142,6 +163,10 @@ def bind_epub_book(app, chapters, volume=''):
     make_chapters(book, chapters)
     book.add_item(epub.EpubNcx())
     book.add_item(epub.EpubNav())
+
+    # Add chapter images
+    image_path = os.path.join(app.output_path, 'images')
+    make_chapter_images(book, image_path)
 
     # Save epub file
     epub_path = os.path.join(app.output_path, 'epub')

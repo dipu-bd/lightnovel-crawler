@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 class DiscordBot(discord.Client):
+    bot_version = get_version() + '_8'
+
     def __init__(self, *args, loop=None, **options):
         options['shard_id'] = get_args().shard_id
         options['shard_count'] = get_args().shard_count
@@ -36,7 +38,7 @@ class DiscordBot(discord.Client):
         self.handlers = {}
 
         print('Discord bot in online!')
-        activity = discord.Activity(name='for 🔥%s🔥 (v%s)' % (signal, get_version()),
+        activity = discord.Activity(name='for 🔥%s🔥 (v%s)' % (signal, self.bot_version),
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)

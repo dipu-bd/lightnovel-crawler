@@ -330,6 +330,9 @@ class Crawler:
         # end if
 
         for elem in tag.contents:
+            if isinstance(elem, Comment):
+                continue
+            # end if
             if self.block_tags.count(elem.name):
                 body += self.extract_contents(elem, level + 1)
                 continue

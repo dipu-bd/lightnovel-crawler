@@ -1,25 +1,27 @@
 environment:
   matrix:
+    # - PYTHON: C:\Python39-x64
     - PYTHON: C:\Python38-x64
-    - PYTHON: C:\Python37-x64
-    - PYTHON: C:\Python36-x64
-    - PYTHON: C:\Python35-x64
+    # - PYTHON: C:\Python37-x64
+    # - PYTHON: C:\Python36-x64
 
 init:
   - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
   - SET PYTHONIOENCODING=utf-8
 
-install:
-  - python -m pip install --no-cache-dir  -r requirements.txt
+branches:
+  only:
+    - master
 
 build: false
 
 test_script:
-  - python __main__.py --bot test -lll
+  - .\scripts\build.bat
+  - dir dist
 
-branches:
-  only:
-    - master
+artifacts:
+  - path: dist/lncrawl.exe
+    name: lncrawl
 
 cache:
   - '%LOCALAPPDATA%\pip\Cache'

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 import textwrap
-from ..assets.banner import get_color_banner
 
 from colorama import Back, Fore, Style
 
@@ -9,6 +8,7 @@ from ..assets.icons import Icons
 from ..sources import crawler_list
 
 LINE_SIZE = 80
+ENABLE_BANNER = True
 
 try:
     row, _ = os.get_terminal_size()
@@ -23,22 +23,19 @@ except Exception:
 def description():
     print('=' * LINE_SIZE)
 
-    # title = Icons.BOOK + ' Lightnovel Crawler ' + Icons.CLOVER + get_version()
-    # padding = ' ' * ((LINE_SIZE - len(title)) // 2)
-    # print(Fore.YELLOW, padding + title, Fore.RESET)
-
-    # desc = 'https://github.com/dipu-bd/lightnovel-crawler'
-    # padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
-    # print(Style.DIM, padding + desc, Style.RESET_ALL)
-
-    # print('-' * LINE_SIZE)
-
-    banner = get_color_banner()
-    banner = [l.strip() for l in banner.split('\n')]
-    max_len = max([len(l) for l in banner])
-    padding = ' ' * max(0, LINE_SIZE - max_len)
-    banner = '\n'.join(padding + l for l in banner)
-    print(banner)
+    if ENABLE_BANNER:
+        from ..assets.banner import get_color_banner
+        print(get_color_banner())
+    else:
+        from ..assets.version import get_value
+        title = Icons.BOOK + ' Lightnovel Crawler ' + Icons.CLOVER + get_value()
+        padding = ' ' * ((LINE_SIZE - len(title)) // 2)
+        print(Fore.YELLOW, padding + title, Fore.RESET)
+        print('-' * LINE_SIZE)
+        desc = 'https://github.com/dipu-bd/lightnovel-crawler'
+        padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
+        print(Style.DIM, padding + desc, Style.RESET_ALL)
+    # end if
 
     print('-' * LINE_SIZE)
 # end def
@@ -193,6 +190,23 @@ def format_source_choices(novels):
         text = '%d. %s' % (index + 1, item['url'])
         short_info = item['info'] if 'info' in item else ''
         text += format_short_info_of_novel(short_info)
+        items.append({'name': text})
+    # end for
+    return items
+# end def
+
+
+def format_resume_choices(metadata_list):
+    items = []
+    for index, data in enumerate(metadata_list):
+        if not data.get('session'):
+            continue
+        text = '%d. %s [downloading %d chapters]' % (
+            index + 1,
+            data['title'],
+            len(data['session']['download_chapters'])
+        )
+        text += '\n' + (' ' * 6) + Icons.LINK + ' ' + data['url']
         items.append({'name': text})
     # end for
     return items

@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('VIS_TRANS')
+logger = logging.getLogger(__name__)
 
 class VisTranslations(Crawler):
     base_url = 'https://vistranslations.wordpress.com/'

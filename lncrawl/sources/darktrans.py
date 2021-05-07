@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('DARK_TRANSLATION')
+logger = logging.getLogger(__name__)
 
 class DarkTranslation(Crawler):
     base_url = 'https://darktranslation.com/'

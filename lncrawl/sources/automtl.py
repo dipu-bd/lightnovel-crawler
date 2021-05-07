@@ -5,7 +5,7 @@ import re
 
 from ..utils.crawler import Crawler
 
-logger = logging.getLogger('AUTOMTL')
+logger = logging.getLogger(__name__)
 
 class AutoMTL(Crawler):
     base_url = 'https://automtl.wordpress.com/'
