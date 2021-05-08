@@ -6,7 +6,7 @@
 [![Discord](https://img.shields.io/discord/578550900231110656?logo=discord&label=discord)](https://discord.gg/wMECG2Q)
 <br>
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dipu-bd/lightnovel-crawler/Build%20and%20test%20package?label=linux&logo=linux)](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/package.yml)
-[!![AppVeyor](https://img.shields.io/appveyor/build/dipu-bd/lightnovel-crawler?label=windows&logo=appveyor)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
+[![AppVeyor](https://img.shields.io/appveyor/build/dipu-bd/lightnovel-crawler?label=windows&logo=appveyor)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler?logo=github)](https://github.com/dipu-bd/lightnovel-crawler)
