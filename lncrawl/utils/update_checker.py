@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import atexit
 import json
 import logging
@@ -53,7 +52,7 @@ def check_update_in_background():
 
 def check_updates():
     # Check the last update file
-    if os.path.isfile(update_file):
+    try:
         with open(update_file, encoding='utf8') as fp:
             data = json.load(fp)
             latest_version = version.parse(data['info']['version'])
@@ -61,7 +60,9 @@ def check_updates():
                 new_version_news(str(latest_version))
             # end if
         # end witrh
-    # end if
+    except Exception as e:
+        logger.debug("Failed to check for update. %s", str(e))
+    # end try
 
     # Run upload file resolver in background
     threading.Thread(target=check_update_in_background, daemon=True).start()
