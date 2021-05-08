@@ -5,7 +5,7 @@
 [![download linux](https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux)](https://rebrand.ly/lncrawl-linux)
 [![Discord](https://img.shields.io/discord/578550900231110656?logo=discord&label=discord)](https://discord.gg/wMECG2Q)
 <br>
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dipu-bd/lightnovel-crawler/Build%20and%20test%20package?label=linux&logo=linux)](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/package.yml)
+[![GitHub branch checks state](https://img.shields.io/github/checks-status/dipu-bd/lightnovel-crawler/master)](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/package.yml)
 [![AppVeyor](https://img.shields.io/appveyor/build/dipu-bd/lightnovel-crawler?label=windows&logo=appveyor)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
