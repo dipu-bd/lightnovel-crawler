@@ -1,20 +1,22 @@
 # Lightnovel Crawler
 
-[![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
-[![download win](https://img.shields.io/badge/%E2%A7%AA-lncrawl.exe-red)](https://rebrand.ly/lncrawl)
-[![download linux](<https://img.shields.io/badge/%E2%A7%AD-lncrawl%20(linux)-brown>)](https://rebrand.ly/lncrawl-linux)
-
-[![ci.appveyor](https://ci.appveyor.com/api/projects/status/l7ci88f7ae7rxek5?svg=true)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
+[![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg?logo=python)](https://pypi.org/project/lightnovel-crawler)
+[![download win](https://img.shields.io/badge/download-lncrawl.exe-red?logo=windows)](https://rebrand.ly/lncrawl)
+[![download linux](https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux)](https://rebrand.ly/lncrawl-linux)
+[![Discord](https://img.shields.io/discord/578550900231110656?logo=discord&label=discord)](https://discord.gg/wMECG2Q)
+<br>
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/dipu-bd/lightnovel-crawler/Build%20and%20test%20package?label=linux&logo=linux)](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/package.yml)
+[!![AppVeyor](https://img.shields.io/appveyor/build/dipu-bd/lightnovel-crawler?label=windows&logo=appveyor)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/dipu-bd/lightnovel-crawler/blob/master/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler)](https://github.com/dipu-bd/lightnovel-crawler)
+[![GitHub stars](https://img.shields.io/github/stars/dipu-bd/lightnovel-crawler?logo=github)](https://github.com/dipu-bd/lightnovel-crawler)
 
 <!-- [![travis-ci](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler) -->
 <!-- [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler) -->
 
 An app to download novels from online sources and generate e-books.
 
-> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)**
+> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)** 
 
 > **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
 
@@ -55,11 +57,11 @@ Without it, you will only get output in epub, text, and web formats.
 
 ### Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lightnovel-crawler v2.26.0 ~ 25MB](https://rebrand.ly/lncrawl)
+⏬ **Windows**: [lncrawl.exe ~ 25MB](https://rebrand.ly/lncrawl)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program.
 
-⏬ **Linux**: [lightnovel-crawler v2.26.0 ~ 30MB](https://rebrand.ly/lncrawl-linux)
+⏬ **Linux**: [lncrawl ~ 30MB](https://rebrand.ly/lncrawl-linux)
 
 > It is recommended to install via **pip** if you are on Linux
 
