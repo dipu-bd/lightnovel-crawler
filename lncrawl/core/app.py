@@ -151,7 +151,6 @@ class App:
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
         self.output_path = os.path.join(C.DEFAULT_OUTPUT_PATH, source_name, self.good_file_name)
-        save_metadata(self)
     # end def
 
     # ----------------------------------------------------------------------- #
