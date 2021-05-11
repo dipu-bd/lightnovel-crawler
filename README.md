@@ -367,6 +367,7 @@ You are very welcome to contribute in this project. You can:
 | https://lightnovelkiss.com                   |     ✔      |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
 | https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
+| https://lightnovel.tv                        |     ✔      |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
 | https://litnet.com                           |     ✔      |           |                       |
 | https://ln.hako.re                           |     ✔      |           |       @dipu-bd        |
