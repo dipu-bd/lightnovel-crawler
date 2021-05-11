@@ -314,7 +314,7 @@ You are very welcome to contribute in this project. You can:
 | http://novels.cloud                          |     ✔      |           |      @SirGryphin      |
 | http://novelfull.com                         |     ✔      |           |       @dipu-bd        |
 | http://tiknovel.com                          |            |           |                       |
-| http://wspadancewichita.com                  |     ✔      |           |                       |
+| http://wspadancewichita.com                  |     ✔      |           |      @SirGryphin      |
 | http://www.fujitranslation.com               |            |           |                       |
 | http://www.hanyunovels.site                  |     ✔      |           |      @SirGryphin      |
 | http://www.machinenoveltranslation.com       |            |           |                       |
