@@ -332,6 +332,7 @@ You are very welcome to contribute in this project. You can:
 | https://bestlightnovel.com                   |     ✔      |           |                       |
 | https://book.qidian.com                      |            |           |                       |
 | https://boxnovel.com                         |     ✔      |           |       @dipu-bd        |
+| https://boxnovel.online                      |     ✔      |           |      @SirGryphin      |
 | https://clicknovel.net                       |            |           |      @SirGryphin      |
 | https://creativenovels.com                   |            |           |                       |
 | https://crescentmoon.blog                    |            |           |                       |
