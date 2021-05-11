@@ -308,6 +308,7 @@ You are very welcome to contribute in this project. You can:
   
 | Available Sources                            | Can Search | Can Login |      Maintainer       |
 | -------------------------------------------- | :--------: | :-------: | :-------------------: |
+| http://boxnovel.cloud                        |     ✔      |           |      @SirGryphin      |
 | http://boxnovel.org                          |     ✔      |           |       @dipu-bd        |
 | http://liberspark.com                        |            |           |                       |
 | http://novelfull.com                         |     ✔      |           |       @dipu-bd        |
