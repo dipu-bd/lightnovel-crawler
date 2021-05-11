@@ -310,6 +310,7 @@ You are very welcome to contribute in this project. You can:
 | -------------------------------------------- | :--------: | :-------: | :-------------------: |
 | http://boxnovel.cloud                        |     ✔      |           |      @SirGryphin      |
 | http://boxnovel.org                          |     ✔      |           |       @dipu-bd        |
+| http://hs2ppe.co.uk                          |     ✔      |           |      @SirGryphin      |
 | http://liberspark.com                        |            |           |                       |
 | http://novels.cloud                          |     ✔      |           |      @SirGryphin      |
 | http://novelfull.com                         |     ✔      |           |       @dipu-bd        |
