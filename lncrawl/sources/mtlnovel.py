@@ -51,11 +51,11 @@ class MtlnovelCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.entry-title').text.strip()
+        self.novel_title = soup.select_one('h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select('div.nov-head amp-img')[1]['src'])
+            soup.select_one('.post-content amp-img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:
