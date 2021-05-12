@@ -5,11 +5,11 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://noveltrench.com/?s=%s&post_type=wp-manga&author=&artist=&release='
+search_url = 'https://boxnovel.online/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 
-class NovelTrenchCrawler(Crawler):
-    base_url = 'https://noveltrench.com/'
+class BoxNovelOnline(Crawler):
+    base_url = 'https://boxnovel.online/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -19,11 +19,10 @@ class NovelTrenchCrawler(Crawler):
         for tab in soup.select('.c-tabs-item__content'):
             a = tab.select_one('.post-title h3 a')
             latest = tab.select_one('.latest-chap .chapter a').text
-            votes = tab.select_one('.rating .total_votes').text
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': '%s | Rating: %s' % (latest, votes),
+                'info': '%s' % (latest),
             })
         # end for
 
@@ -47,11 +46,12 @@ class NovelTrenchCrawler(Crawler):
             self.novel_cover = self.absolute_url(probable_img['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = ' '.join([
-            a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
-        ])
-        logger.info('%s', self.novel_author)
+        author = soup.select('.author-content a')
+        if len(author) == 2:
+            self.novel_author = author[0].text + ' (' + author[1].text + ')'
+        else:
+            self.novel_author = author[0].text
+        logger.info('Novel author: %s', self.novel_author)
 
         volumes = set()
         chapters = soup.select('ul.main li.wp-manga-chapter a')

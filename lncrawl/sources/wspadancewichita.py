@@ -6,12 +6,12 @@ from ..utils.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
-search_url = 'https://readnovelfull.com/search?keyword=%s'
-full_chapter_url = 'https://readnovelfull.com/ajax/chapter-archive?novelId=%s'
+search_url = 'http://wspadancewichita.com/search?keyword=%s'
+full_chapter_url = 'http://wspadancewichita.com/ajax/chapter-archive?novelId=%s'
 
 
-class ReadNovelFullCrawler(Crawler):
-    base_url = 'https://readnovelfull.com/'
+class wspadancewichita(Crawler):
+    base_url = 'http://wspadancewichita.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
