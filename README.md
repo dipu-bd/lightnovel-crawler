@@ -391,6 +391,7 @@ You are very welcome to contribute in this project. You can:
 | https://mysticalmerries.com                  |     ✔      |           |      @SirGryphin      |
 | https://novel27.com                          |     ✔      |           |      @SirGryphin      |
 | https://novelcrush.com                       |     ✔      |           |      @SirGryphin      |
+| https://novelextra.com                       |     ✔      |           |      @SirGryphin      |
 | https://novelfull.com                        |     ✔      |           |       @dipu-bd        |
 | https://novelgo.id/                          |            |           |                       |
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
