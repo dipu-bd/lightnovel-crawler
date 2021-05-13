@@ -6,40 +6,20 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://exiledrebelsscanlations.com/?s=%s'
 
 class ExiledRebelsScanlations(Crawler):
     base_url = 'https://exiledrebelsscanlations.com/'
-
-    def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
-
-        results = []
-        for tab in soup.select('article.type-page'):
-            a = tab.select_one('h2.entry-title a')
-            latest = "N/A"
-            votes = "0"
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': '%s | Rating: %s' % (latest, votes),
-            })
-        # end for
-
-        return results
-    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h1", {"class": "page-title"}).text.strip()
+        self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('div.entry-content img')['data-orig-file'])
+            soup.select_one('.post-thumbnail img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = "Translated by ExR"
