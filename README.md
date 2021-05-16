@@ -429,6 +429,7 @@ You are very welcome to contribute in this project. You can:
 | https://wordexcerpt.org                      |            |           | @dipu-bd, @SirGryphin |
 | https://wuxiaworld.io                        |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.live                      |     ✔      |           |      @SirGryphin      |
+| https://wuxiaworld.name                      |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.online                    |     ✔      |           |       @dipu-bd        |
 | https://wuxiaworld.site                      |            |           |       @dipu-bd        |
 | https://wuxiaworldsite.co                    |            |           |       @dipu-bd        |
