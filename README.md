@@ -350,7 +350,7 @@ You are very welcome to contribute in this project. You can:
 | https://es.mtlnovel.com                      |     ✔      |           |                       |
 | https://exiledrebelsscanlations.com          |            |           |      @SirGryphin      |
 | https://fanstranslations.com                 |            |           |      @SirGryphin      |
-| https://fastnovel.net                        |            |           |      @SirGryphin      |
+| https://fastnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://foxaholic.com                        |     ✔      |           |                       |
 | https://fr.mtlnovel.com                      |     ✔      |           |                       |
 | https://fujitranslation.com                  |            |           |      @SirGryphin      |

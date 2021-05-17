@@ -5,10 +5,28 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-
+search_url = 'http://fastnovel.net/search/%s'
 
 class FastNovel(Crawler):
     base_url = 'http://fastnovel.net/'
+
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '%20')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for tab in soup.select('.film-item'):
+            a = tab.select_one('a')
+            latest = tab.select_one('label.current-status span.process').text
+            results.append({
+                'title': a['title'],
+                'url': self.absolute_url(a['href']),
+                'info': '%s' % (latest),
+            })
+        # end for
+
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
