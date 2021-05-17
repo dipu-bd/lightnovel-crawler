@@ -391,6 +391,7 @@ You are very welcome to contribute in this project. You can:
 | https://myoniyonitranslations.com            |            |           |                       |
 | https://mysticalmerries.com                  |     ✔      |           |      @SirGryphin      |
 | https://novel27.com                          |     ✔      |           |      @SirGryphin      |
+| https://novelcake.com                        |     ✔      |           |      @SirGryphin      |
 | https://novelcrush.com                       |     ✔      |           |      @SirGryphin      |
 | https://novelextra.com                       |     ✔      |           |      @SirGryphin      |
 | https://novelfull.com                        |     ✔      |           |       @dipu-bd        |
