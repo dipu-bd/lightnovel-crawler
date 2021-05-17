@@ -424,6 +424,7 @@ You are very welcome to contribute in this project. You can:
 | https://webnovel.online                      |            |           |                       |
 | https://webnovelindonesia.com                |            |           |                       |
 | https://webnovelonline.com                   |            |           |                       |
+| https://wondernovels.com                     |     ✔      |           |      @SirGryphin      |
 | https://woopread.com                         |     ✔      |           |                       |
 | https://wordexcerpt.com                      |     ✔      |           | @dipu-bd, @SirGryphin |
 | https://wordexcerpt.org                      |            |           | @dipu-bd, @SirGryphin |
