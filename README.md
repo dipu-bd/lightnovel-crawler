@@ -419,6 +419,7 @@ You are very welcome to contribute in this project. You can:
 | https://supernovel.net                       |     ✔      |           |      @SirGryphin      |
 | https://toc.qidianunderground.org            |     ✔      |           |       @dipu-bd        |
 | https://tomotranslations.com                 |            |           |                       |
+| https://tunovelaligera.com                   |     ✔      |           |      @SirGryphin      |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
 | https://vistranslations.wordpress.com        |            |           |      @SirGryphin      |
