@@ -6,31 +6,32 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://sleepytranslations.com/?s=%s&post_type=wp-manga'
+#search_url = 'https://sleepytranslations.com/?s=%s&post_type=wp-manga'
 chapter_list_url = 'https://sleepytranslations.com/wp-admin/admin-ajax.php'
 
 
 class SleepyTranslations(Crawler):
     base_url = 'https://sleepytranslations.com/'
 
-    def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
+    # NOTE: Search no longer working, keep getting ! Error: No results for: Novel Title.
+    # def search_novel(self, query):
+    #     query = query.lower().replace(' ', '+')
+    #     soup = self.get_soup(search_url % query)
 
-        results = []
-        for tab in soup.select('.c-tabs-item__content'):
-            a = tab.select_one('.post-title h4 a')
-            latest = tab.select_one('.latest-chap .chapter a').text
-            votes = tab.select_one('.rating .total_votes').text
-            results.append({
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': '%s | Rating: %s' % (latest, votes),
-            })
-        # end for
+    #     results = []
+    #     for tab in soup.select('.c-tabs-item__content'):
+    #         a = tab.select_one('.post-title h3 a')
+    #         latest = tab.select_one('.latest-chap .chapter a').text
+    #         votes = tab.select_one('.rating .total_votes').text
+    #         results.append({
+    #             'title': a.text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #             'info': '%s | Rating: %s' % (latest, votes),
+    #         })
+    #     # end for
 
-        return results
-    # end def
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -57,21 +58,25 @@ class SleepyTranslations(Crawler):
         self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
         logger.info('Novel id: %s', self.novel_id)
 
-        response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        response = self.submit_form(chapter_list_url, data={
+            'action': 'manga_get_chapters',
+            'manga': self.novel_id,
+        })
         soup = self.make_soup(response)
-        for a in reversed(soup.select('.wp-manga-chapter a')):
+        for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
-                self.volumes.append({'id': vol_id})
+                self.volumes.append({"id": vol_id})
             # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
-            })
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                }
+            )
         # end for
     # end def
 
