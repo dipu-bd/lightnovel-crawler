@@ -396,6 +396,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelcrush.com                       |     ✔      |           |      @SirGryphin      |
 | https://novelextra.com                       |     ✔      |           |      @SirGryphin      |
 | https://novelfull.com                        |     ✔      |           |       @dipu-bd        |
+| https://novelgate.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelgo.id/                          |            |           |                       |
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefull.com                  |     ✔      |           |                       |
