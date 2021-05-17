@@ -445,6 +445,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
 | https://www.flying-lines.com                 |            |           |       @dipu-bd        |
 | https://www.foxteller.com                    |     ✔      |           |       @dipu-bd        |
+| https://www.freelightnovel.com               |            |           |      @SirGryphin      |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
 | https://www.koreanmtl.online                 |            |           |       @dipu-bd        |
