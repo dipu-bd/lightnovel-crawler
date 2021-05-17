@@ -402,6 +402,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |
 | https://novels.pl                            |            |           |       @dipu-bd        |
+| https://novelsonline.net                     |            |           |      @SirGryphin      |
 | https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsrock.com                       |            |           |                       |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
