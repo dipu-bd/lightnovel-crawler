@@ -335,6 +335,7 @@ You are very welcome to contribute in this project. You can:
 | https://automtl.wordpress.com                |            |           |      @SirGryphin      |
 | https://babelnovel.com                       |     ✔      |     ✔     |       @dipu-bd        |
 | https://bestlightnovel.com                   |     ✔      |           |                       |
+| https://booknet.com                          |            |           |      @SirGryphin      |
 | https://book.qidian.com                      |            |           |                       |
 | https://boxnovel.com                         |     ✔      |           |       @dipu-bd        |
 | https://boxnovel.online                      |     ✔      |           |      @SirGryphin      |
@@ -375,7 +376,7 @@ You are very welcome to contribute in this project. You can:
 | https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
 | https://lightnovel.tv                        |     ✔      |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
-| https://litnet.com                           |     ✔      |           |                       |
+| https://litnet.com                           |            |           |                       |
 | https://ln.hako.re                           |     ✔      |           |       @dipu-bd        |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
 | https://m.chinesefantasynovels.com           |            |           |                       |
