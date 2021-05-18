@@ -328,12 +328,14 @@ You are very welcome to contribute in this project. You can:
 | https://88tangeatdrinkread.wordpress.com     |            |           |      @SirGryphin      |
 | https://9kqw.com                             |     ✔      |           |                       |
 | https://allnovel.org                         |     ✔      |           |      @SirGryphin      |
+| https://amnesiactl.com                       |            |           |      @SirGryphin      |
 | https://anonanemone.wordpress.com            |            |           |      @SirGryphin      |
 | https://arangscans.com                       |            |           |      @SirGryphin      |
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
 | https://automtl.wordpress.com                |            |           |      @SirGryphin      |
 | https://babelnovel.com                       |     ✔      |     ✔     |       @dipu-bd        |
 | https://bestlightnovel.com                   |     ✔      |           |                       |
+| https://booknet.com                          |            |           |      @SirGryphin      |
 | https://book.qidian.com                      |            |           |                       |
 | https://boxnovel.com                         |     ✔      |           |       @dipu-bd        |
 | https://boxnovel.online                      |     ✔      |           |      @SirGryphin      |
@@ -349,7 +351,7 @@ You are very welcome to contribute in this project. You can:
 | https://es.mtlnovel.com                      |     ✔      |           |                       |
 | https://exiledrebelsscanlations.com          |            |           |      @SirGryphin      |
 | https://fanstranslations.com                 |            |           |      @SirGryphin      |
-| https://fastnovel.net                        |            |           |      @SirGryphin      |
+| https://fastnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://foxaholic.com                        |     ✔      |           |                       |
 | https://fr.mtlnovel.com                      |     ✔      |           |                       |
 | https://fujitranslation.com                  |            |           |      @SirGryphin      |
@@ -374,7 +376,7 @@ You are very welcome to contribute in this project. You can:
 | https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
 | https://lightnovel.tv                        |     ✔      |           |      @SirGryphin      |
 | https://listnovel.com                        |     ✔      |           |                       |
-| https://litnet.com                           |     ✔      |           |                       |
+| https://litnet.com                           |            |           |                       |
 | https://ln.hako.re                           |     ✔      |           |       @dipu-bd        |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
 | https://m.chinesefantasynovels.com           |            |           |                       |
@@ -389,15 +391,19 @@ You are very welcome to contribute in this project. You can:
 | https://morenovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://myoniyonitranslations.com            |            |           |                       |
 | https://mysticalmerries.com                  |     ✔      |           |      @SirGryphin      |
+| https://newsite.kolnovel.com                 |     ✔      |           |      @SirGryphin      |
 | https://novel27.com                          |     ✔      |           |      @SirGryphin      |
+| https://novelcake.com                        |     ✔      |           |      @SirGryphin      |
 | https://novelcrush.com                       |     ✔      |           |      @SirGryphin      |
 | https://novelextra.com                       |     ✔      |           |      @SirGryphin      |
 | https://novelfull.com                        |     ✔      |           |       @dipu-bd        |
+| https://novelgate.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelgo.id/                          |            |           |                       |
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |
 | https://novels.pl                            |            |           |       @dipu-bd        |
+| https://novelsonline.net                     |            |           |      @SirGryphin      |
 | https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsrock.com                       |            |           |                       |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
@@ -416,6 +422,7 @@ You are very welcome to contribute in this project. You can:
 | https://supernovel.net                       |     ✔      |           |      @SirGryphin      |
 | https://toc.qidianunderground.org            |     ✔      |           |       @dipu-bd        |
 | https://tomotranslations.com                 |            |           |                       |
+| https://tunovelaligera.com                   |     ✔      |           |      @SirGryphin      |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
 | https://vistranslations.wordpress.com        |            |           |      @SirGryphin      |
@@ -424,6 +431,7 @@ You are very welcome to contribute in this project. You can:
 | https://webnovel.online                      |            |           |                       |
 | https://webnovelindonesia.com                |            |           |                       |
 | https://webnovelonline.com                   |            |           |                       |
+| https://wondernovels.com                     |     ✔      |           |      @SirGryphin      |
 | https://woopread.com                         |     ✔      |           |                       |
 | https://wordexcerpt.com                      |     ✔      |           | @dipu-bd, @SirGryphin |
 | https://wordexcerpt.org                      |            |           | @dipu-bd, @SirGryphin |
@@ -440,6 +448,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
 | https://www.flying-lines.com                 |            |           |       @dipu-bd        |
 | https://www.foxteller.com                    |     ✔      |           |       @dipu-bd        |
+| https://www.freelightnovel.com               |            |           |      @SirGryphin      |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
 | https://www.idqidian.us                      |            |           |                       |
 | https://www.koreanmtl.online                 |            |           |       @dipu-bd        |

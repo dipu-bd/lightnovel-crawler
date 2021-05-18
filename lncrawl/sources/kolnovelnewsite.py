@@ -6,32 +6,31 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-#search_url = 'https://sleepytranslations.com/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://sleepytranslations.com/wp-admin/admin-ajax.php'
+search_url = 'https://newsite.kolnovel.com/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://newsite.kolnovel.com/wp-admin/admin-ajax.php'
 
 
-class SleepyTranslations(Crawler):
-    base_url = 'https://sleepytranslations.com/'
+class kolnovelnewsite(Crawler):
+    base_url = 'https://newsite.kolnovel.com/'
 
-    # NOTE: Search no longer working, keep getting ! Error: No results for: Novel Title.
-    # def search_novel(self, query):
-    #     query = query.lower().replace(' ', '+')
-    #     soup = self.get_soup(search_url % query)
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
 
-    #     results = []
-    #     for tab in soup.select('.c-tabs-item__content'):
-    #         a = tab.select_one('.post-title h3 a')
-    #         latest = tab.select_one('.latest-chap .chapter a').text
-    #         votes = tab.select_one('.rating .total_votes').text
-    #         results.append({
-    #             'title': a.text.strip(),
-    #             'url': self.absolute_url(a['href']),
-    #             'info': '%s | Rating: %s' % (latest, votes),
-    #         })
-    #     # end for
+        results = []
+        for tab in soup.select('.c-tabs-item__content'):
+            a = tab.select_one('.post-title h3 a')
+            latest = tab.select_one('.latest-chap .chapter a').text
+            votes = tab.select_one('.rating .total_votes').text
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (latest, votes),
+            })
+        # end for
 
-    #     return results
-    # # end def
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -51,7 +50,7 @@ class SleepyTranslations(Crawler):
 
         self.novel_author = ' '.join([
             a.text.strip()
-            for a in soup.select('.author-content a[href*="author"]')
+            for a in soup.select('.author-content a[href*="manga-author"]')
         ])
         logger.info('%s', self.novel_author)
 
@@ -78,6 +77,7 @@ class SleepyTranslations(Crawler):
                 }
             )
         # end for
+
     # end def
 
     def download_chapter_body(self, chapter):

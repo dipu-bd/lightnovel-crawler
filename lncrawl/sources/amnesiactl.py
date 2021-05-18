@@ -6,14 +6,14 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-#search_url = 'https://sleepytranslations.com/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://sleepytranslations.com/wp-admin/admin-ajax.php'
+#search_url = 'https://amnesiactl.com/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://amnesiactl.com/wp-admin/admin-ajax.php'
 
 
-class SleepyTranslations(Crawler):
-    base_url = 'https://sleepytranslations.com/'
+class Amnesiactl(Crawler):
+    base_url = 'https://amnesiactl.com/'
 
-    # NOTE: Search no longer working, keep getting ! Error: No results for: Novel Title.
+    # NOTE: Site doesn't have proper search layout.
     # def search_novel(self, query):
     #     query = query.lower().replace(' ', '+')
     #     soup = self.get_soup(search_url % query)
@@ -51,7 +51,7 @@ class SleepyTranslations(Crawler):
 
         self.novel_author = ' '.join([
             a.text.strip()
-            for a in soup.select('.author-content a[href*="author"]')
+            for a in soup.select('.author-content a[href*="novel-author"]')
         ])
         logger.info('%s', self.novel_author)
 
@@ -78,6 +78,7 @@ class SleepyTranslations(Crawler):
                 }
             )
         # end for
+
     # end def
 
     def download_chapter_body(self, chapter):
