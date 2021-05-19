@@ -490,6 +490,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.xsbiquge.com                     |            |           |      @SirGryphin      |
 | https://yukinovel.id                         |            |           |                       |
 | https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
+| https://www.lunarletters.com                 |            |           |      @SirGryphin      |
 
 </details>
 
@@ -521,6 +522,7 @@ You are very welcome to contribute in this project. You can:
 | https://fsapk.com               | `Site is not working`                                                                              |
 | https://bestoflightnovels.com   | `Site moved`                                                                                       |
 | https://novelcrush.com          | `Site is down`                                                                                     |
+| https://www.hotmtlnovel.xyz     | `Cloudflare version 2 challenge`                                                                   |
 
 </details>
 
