@@ -98,7 +98,7 @@ class OneKissNovelCrawler(Crawler):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
 
-        contents = soup.select_one('div.text-left div:first-child')
+        contents = soup.select_one('div.text-left')
         for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
             bad.decompose()
 
