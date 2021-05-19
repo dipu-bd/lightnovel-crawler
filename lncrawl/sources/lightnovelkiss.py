@@ -6,14 +6,14 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://www.box-novel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://www.box-novel.com/wp-admin/admin-ajax.php'
+search_url = 'https://lightnovelkiss.com/?s=%s&post_type=wp-manga&author=&artist=&release='
+chapter_list_url = 'https://lightnovelkiss.com/wp-admin/admin-ajax.php'
 
 
-class BoxNovelComCrawler(Crawler):
-    base_url = 'https://www.box-novel.com/'
+class LightNovelKiss(Crawler):
+    base_url = 'https://lightnovelkiss.com/'
 
-    # NOTE: Disabled because it is taking too long
+    # NOTE: Disabled because it takes unusually long time
     # def search_novel(self, query):
     #     query = query.lower().replace(' ', '+')
     #     soup = self.get_soup(search_url % query)
@@ -38,6 +38,7 @@ class BoxNovelComCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
+        # NOTE: Title has "Novel" at the end of book title, can't seem to remove it.
         possible_title = soup.select_one('.post-title h1')
         for span in possible_title.select('span'):
             span.extract()
@@ -51,7 +52,7 @@ class BoxNovelComCrawler(Crawler):
 
         self.novel_author = ' '.join([
             a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
+            for a in soup.select('.author-content a[href*="author"]')
         ])
         logger.info('%s', self.novel_author)
 

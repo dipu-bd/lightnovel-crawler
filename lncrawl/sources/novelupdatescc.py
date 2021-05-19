@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
+from urllib.parse import quote
 
 from ..utils.crawler import Crawler
 
@@ -14,25 +13,27 @@ class NovelUpdatesCC(Crawler):
         'https://www.novelupdates.cc/',
     ]
 
-    # FIXME: Can't seem to get search to work.
-    # def search_novel(self, query):
-    #     query = query.lower().replace(' ', '+')
-    #     soup = self.get_soup(search_url % query)
+    def search_novel(self, query):
+        query = quote(query.lower())
+        soup = self.get_soup(search_url % query)
 
-    #     results = []
-    #     for tab in soup.select('li.list-item'):
-    #         a = tab.select_one('a.book-name')
-    #         latest = "N/A"
-    #         votes = tab.select_one('.star-suite span.score').text
-    #         results.append({
-    #             'title': a.text.strip(),
-    #             'url': self.absolute_url(a['href']),
-    #             'info': '%s | Rating: %s' % (latest, votes),
-    #         })
-    #     # end for
+        results = []
+        for li in soup.select('.result-list .list-item'):
+            a = li.select_one('a.book-name')
+            for bad in a.select('font'):
+                bad.decompose()
+            # end for
+            catalog = li.select_one('.book-catalog').text.strip()
+            votes = li.select_one('.star-suite .score').text.strip()
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': '%s | Rating: %s' % (catalog, votes),
+            })
+        # end for
 
-    #     return results
-    # # end def
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

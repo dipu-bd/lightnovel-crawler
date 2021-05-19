@@ -6,14 +6,14 @@ from urllib.parse import urlparse
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://www.box-novel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://www.box-novel.com/wp-admin/admin-ajax.php'
+#search_url = 'https://amnesiactl.com/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://amnesiactl.com/wp-admin/admin-ajax.php'
 
 
-class BoxNovelComCrawler(Crawler):
-    base_url = 'https://www.box-novel.com/'
+class Amnesiactl(Crawler):
+    base_url = 'https://amnesiactl.com/'
 
-    # NOTE: Disabled because it is taking too long
+    # NOTE: Site doesn't have proper search layout.
     # def search_novel(self, query):
     #     query = query.lower().replace(' ', '+')
     #     soup = self.get_soup(search_url % query)
@@ -51,29 +51,34 @@ class BoxNovelComCrawler(Crawler):
 
         self.novel_author = ' '.join([
             a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
+            for a in soup.select('.author-content a[href*="novel-author"]')
         ])
         logger.info('%s', self.novel_author)
 
         self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
         logger.info('Novel id: %s', self.novel_id)
 
-        response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        response = self.submit_form(chapter_list_url, data={
+            'action': 'manga_get_chapters',
+            'manga': self.novel_id,
+        })
         soup = self.make_soup(response)
-        for a in reversed(soup.select('.wp-manga-chapter a')):
+        for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
-                self.volumes.append({'id': vol_id})
+                self.volumes.append({"id": vol_id})
             # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
-            })
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                }
+            )
         # end for
+
     # end def
 
     def download_chapter_body(self, chapter):

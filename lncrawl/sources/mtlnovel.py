@@ -24,26 +24,10 @@ class MtlnovelCrawler(Crawler):
             results.append({
                 'url': url,
                 'title': re.sub(r'</?strong>', '', item['title']),
-                'info': self.search_novel_info(url),
             })
         # end for
 
         return results
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        chapters = soup.select(
-            'div.info-wrap div')[1].text.replace('Chapters', '')
-        info = '%s chapters' % chapters
-        # if len(chapters) > 0:
-        #    info += ' | Latest: %s' % chapters[-1].text.strip()
-        # end if
-
-        return info
     # end def
 
     def read_novel_info(self):
@@ -51,11 +35,11 @@ class MtlnovelCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.entry-title').text.strip()
+        self.novel_title = soup.select_one('h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select('div.nov-head amp-img')[1]['src'])
+            soup.select_one('.post-content amp-img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:

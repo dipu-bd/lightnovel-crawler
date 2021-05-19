@@ -3,24 +3,30 @@ import json
 import logging
 import re
 from ..utils.crawler import Crawler
+from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
-search_url = 'https://www.novelall.com/search/?name=%s'
+search_url = 'https://novelextra.com/search?keyword=%s'
+full_chapter_url = 'https://novelextra.com/ajax/chapter-archive?novelId=%s'
 
 
-class NovelAllCrawler(Crawler):
-    base_url = 'https://www.novelall.com/'
+class NovelExtra(Crawler):
+    base_url = 'https://novelextra.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select('.cover-info p.title a')[:20]:
-            url = self.absolute_url(a['href'])
+        for result in soup.select('div.col-novel-main div.list.list-novel div.row')[:20]:
+            url = self.absolute_url(
+                result.select_one('h3.novel-title a')['href'])
+            title = result.select_one('h3.novel-title a')['title']
+            last_chapter = result.select_one('span.chr-text').text.strip()
             results.append({
                 'url': url,
-                'title': a.text.strip(),
+                'title': title,
+                'info': 'last chapter : %s' % last_chapter,
             })
         # end for
         return results
@@ -31,26 +37,29 @@ class NovelAllCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url + '?waring=1')
 
-        self.novel_title = soup.find(
-            'div', {"class": "manga-detail"}).find('h1').text
+        self.novel_title = soup.select_one('h3.title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.find('div', {"class": "manga-detail"}).find('img')['src'])
+            soup.select_one('div.book img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find(
-            'div', {"class": "detail-info"}).find('a').text.split(',')
-        if len(author) == 2:
-            self.novel_author = author[0] + ' (' + author[1] + ')'
-        else:
-            self.novel_author = ' '.join(author)
-        # end if
+        author = []
+        for a in soup.select('ul.info.info-meta li')[1].select('a'):
+            author.append(a.text.strip())
+        # end for
+
+        self.novel_author = ", ".join(author)
+
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find(
-            'div', {"class": "manga-detailchapter"}).findAll('a', title=True)
-        chapters.reverse()
+        novel_id = soup.select_one('div#rating')['data-novel-id']
+
+        chapter_url = full_chapter_url % novel_id
+        logger.debug('Visiting %s', chapter_url)
+
+        chapter_soup = self.get_soup(chapter_url)
+        chapters = chapter_soup.select('li a')
         for a in chapters:
             for span in a.findAll('span'):
                 span.decompose()
@@ -76,12 +85,17 @@ class NovelAllCrawler(Crawler):
         # end for
     # end def
 
+    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.find('div', {'class': 'reading-box'})
-        self.clean_contents(contents)
-        return str(contents)
+
+        content = soup.select('#chr-content p')
+        if not content:
+            return ''
+        # end if
+
+        return "".join(map(str, content))
     # end def
 # end class

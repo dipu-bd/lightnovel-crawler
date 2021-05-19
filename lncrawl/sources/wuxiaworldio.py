@@ -8,7 +8,10 @@ logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.io/search.ajax?type=&query=%s'
 
 class WuxiaWorldIo(Crawler):
-    base_url = 'https://wuxiaworld.io/'
+    base_url = [
+        'https://wuxiaworld.io/',
+        'https://wuxiaworld.name/',
+    ]
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''

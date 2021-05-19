@@ -54,7 +54,7 @@ class NovelsRockCrawler(Crawler):
         author = soup.select('.author-content a')
         if len(author) == 2:
             self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
+        elif len(author) == 1:
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 

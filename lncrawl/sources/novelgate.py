@@ -5,10 +5,10 @@ import re
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'http://fastnovel.net/search/%s'
+search_url = 'https://novelgate.net/search/%s'
 
-class FastNovel(Crawler):
-    base_url = 'http://fastnovel.net/'
+class NovelGate(Crawler):
+    base_url = 'https://novelgate.net/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
