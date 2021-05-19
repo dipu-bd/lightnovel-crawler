@@ -37,7 +37,6 @@ class OneKissNovelCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        """Get novel title, autor, cover etc"""
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -55,8 +54,8 @@ class OneKissNovelCrawler(Crawler):
 
         self.novel_author = " ".join(
             [
-            a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
+                a.text.strip()
+                for a in soup.select('.author-content a[href*="manga-author"]')
             ]
         )
         logger.info("%s", self.novel_author)
@@ -64,12 +63,12 @@ class OneKissNovelCrawler(Crawler):
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
         logger.info("Novel id: %s", self.novel_id)
 
-        ## For getting cookies
-        #self.submit_form(wp_admin_ajax_url, data={
+        # For getting cookies
+        # self.submit_form(wp_admin_ajax_url, data={
         #    'action': 'manga_views',
         #    'manga': self.novel_id,
-        #})
-        #print(self.cookies)
+        # })
+        # print(self.cookies)
         response = self.submit_form(wp_admin_ajax_url, data={
             'action': 'manga_get_chapters',
             'manga': self.novel_id,
@@ -90,17 +89,16 @@ class OneKissNovelCrawler(Crawler):
                 }
             )
         # end for
-
     # end def
 
     def download_chapter_body(self, chapter):
-        """Download body of a single chapter and return as clean html format."""
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
 
         contents = soup.select_one('div.text-left')
         for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
             bad.decompose()
+        # end for
 
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
