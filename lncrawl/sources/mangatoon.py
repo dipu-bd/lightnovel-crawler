@@ -19,63 +19,57 @@ class MangatoonMobiCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
-        self.novel_id = self.novel_url.split('/')[5]
-        logger.info('Novel Id: %s', self.novel_id)
+        novel_id = self.novel_url.split('/')[5]
+        logger.info('Novel Id: %s', novel_id)
 
         novel_region = self.novel_url.split('/')[3]
+        logger.info('Novel Region: %s', novel_region)
 
-        self.novel_url = book_url % (novel_region, self.novel_id)
+        self.novel_url = book_url % (novel_region, novel_id)
         logger.debug('Visiting %s', self.novel_url)
+
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.comics-title').text
+        self.novel_title = soup.select_one('h1.comics-title, .detail-title').text
         logger.info('Novel title: %s', self.novel_title)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('.detail-top-right img')['src'])
-            logger.info('Novel cover: %s', self.novel_cover)
-        except Exception:
-            logger.debug('Failed to get cover: %s', self.novel_url)
-        # end try
+        possible_image = soup.select_one('.detail-top-right img, .detail-img .big-img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
+        # end if
+        logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one('.created-by').text
-        logger.info('Novel author: %s', self.novel_author)
-
-        for a in soup.select('a.episode-item'):
+        volumes = set([])
+        for a in soup.select('a.episode-item, a.episode-item-new'):
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            vol_id = len(self.chapters) // 100 + 1
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
-                'title': a.select_one('.episode-title').text.strip() or ('Chapter %d' % chap_id),
+                'title': a.select_one('.episode-title, .episode-title-new').text,
             })
         # end for
+
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        script = soup.find("script", text=re.compile("initialValue\s+="))
-        initialValue = re.search(
-            'var initialValue = (?P<value>.*);', script.string)
-        content = initialValue.group('value')
-        chapter_content = ast.literal_eval(content)
-        chapter_content = [p.replace('\-', '-') for p in chapter_content]
-
-        text = '<p>' + '</p><p>'.join(chapter_content) + '</p>'
+        pictures = soup.select_one('.pictures')
+        if pictures:
+            return str(pictures)
         # end if
-        return text.strip()
+
+        script = soup.find("script", text=re.compile(r"initialValue\s+="))
+        initialValue = re.search('var initialValue = (?P<value>.*);', script.string)
+        content = initialValue.group('value')
+
+        chapter_content = ast.literal_eval(content)
+        chapter_content = [p.replace(r'\-', '-') for p in chapter_content]
+        return '<p>' + '</p><p>'.join(chapter_content) + '</p>'
     # end def
 # end class
