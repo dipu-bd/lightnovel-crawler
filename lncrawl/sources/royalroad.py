@@ -24,25 +24,10 @@ class RoyalRoadCrawler(Crawler):
             results.append({
                 'url': url,
                 'title': a.text.strip(),
-                'info': self.search_novel_info(url),
             })
         # end for
 
         return results
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        score = soup.select_one('span.star')['data-content']
-        chapters = len(soup.find('tbody').findAll('a', href=True))
-        latest = soup.find('tbody').findAll('a', href=True)[-1].text.strip()
-        info = 'Score: %s, Chapter count %s, Latest: %s' % (
-            score, chapters, latest)
-
-        return info
     # end def
 
     def read_novel_info(self):

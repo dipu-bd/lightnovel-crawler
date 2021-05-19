@@ -2,6 +2,7 @@
 import json
 import logging
 import re
+from urllib.parse import quote
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -12,9 +13,7 @@ class IdMtlnovelCrawler(Crawler):
     base_url = 'https://id.mtlnovel.com/'
 
     def search_novel(self, query):
-        query = query.lower().replace(' ', '%20')
-        #soup = self.get_soup(search_url % query)
-
+        query = quote(query.lower())
         list_url = search_url % query
         data = self.get_json(list_url)['items'][0]['results']
 
@@ -24,26 +23,10 @@ class IdMtlnovelCrawler(Crawler):
             results.append({
                 'url': url,
                 'title': re.sub(r'</?strong>', '', item['title']),
-                'info': self.search_novel_info(url),
             })
         # end for
 
         return results
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        chapters = soup.select(
-            'div.info-wrap div')[1].text.replace('Chapters', '')
-        info = '%s chapters' % chapters
-        # if len(chapters) > 0:
-        #    info += ' | Latest: %s' % chapters[-1].text.strip()
-        # end if
-
-        return info
     # end def
 
     def read_novel_info(self):

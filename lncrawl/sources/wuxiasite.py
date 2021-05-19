@@ -11,7 +11,7 @@ search_url = 'https://wuxiaworld.site/?s=%s&post_type=wp-manga'
 class WuxiaSiteCrawler(Crawler):
     base_url = 'https://wuxiaworld.site/'
 
-    # TODO: Disabled due to Cloudflare issue.
+    # NOTE: Disabled due to Cloudflare issue.
     # def search_novel(self, query):
     #     query = query.lower().replace(' ', '+')
     #     soup = self.get_soup(search_url % query)

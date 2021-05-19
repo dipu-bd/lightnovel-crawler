@@ -18,7 +18,7 @@ class NovelExtra(Crawler):
         soup = self.get_soup(search_url % query)
 
         results = []
-        for result in soup.select('div.col-novel-main div.list.list-novel div.row')[:5]:
+        for result in soup.select('div.col-novel-main div.list.list-novel div.row')[:20]:
             url = self.absolute_url(
                 result.select_one('h3.novel-title a')['href'])
             title = result.select_one('h3.novel-title a')['title']

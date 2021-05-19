@@ -46,34 +46,15 @@ class VolareNovelsCrawler(Crawler):
         url = search_url % query
         logger.info('Visiting %s ...', url)
         data = self.get_json(url)['items'][:5]
-        logger.debug(data)
-
-        return [
-            {
-                'title': x['name'],
-                'url': book_url % x['slug'],
-                'info': self.search_novel_info(book_url % x['slug']),
-            }
-            for x in data
-        ]
-
-    # end def
-
-    def search_novel_info(self, url):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', url)
-        soup = self.get_soup(url)
-
-        volumes, chapters = self.__parse_toc(soup)
-
-        info = 'Volume : %s, Chapter : %s, Latest: %s' % (
-            len(volumes),
-            len(chapters),
-            chapters[-1]['title'],
-        )
-
-        return info
-
+        # logger.debug(data)
+        results = []
+        for item in data:
+            results.append({
+                'title': item['name'],
+                'url': book_url % item['slug'],
+            })
+        # end for
+        return results
     # end def
 
     def read_novel_info(self):
