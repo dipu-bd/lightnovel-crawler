@@ -85,6 +85,8 @@ class BestLightNovel(Crawler):
         ]
 
         contents = soup.select_one('#vung_doc')
+        for bad in contents.select('br'):
+            bad.decompose()
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
