@@ -124,9 +124,15 @@ class NovelFullCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        content = soup.select('div#chapter-content p')
-        content = '\n'.join(str(p) for p in content)
+        contents = soup.select_one('div#chapter-content')
 
-        return content
+        for bad in contents.select('div, ins, iframe, .ads-middle, .code-block, script, .adsbygoogle'):
+            bad.decompose()
+
+        for end in contents.findAll('div', {"align": 'left'}):
+            end.decompose()
+
+        body = self.extract_contents(contents)
+        return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
 # end class
