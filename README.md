@@ -467,6 +467,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelspread.com                  |            |           |                       |
 | https://www.novelupdates.cc                  |            |           |      @SirGryphin      |
 | https://www.oppatranslations.com             |            |           |      @SirGryphin      |
+| https://www.ornovel.com                      |            |           |      @SirGryphin      |
 | https://www.qidian.com                       |            |           |                       |
 | https://www.readlightnovel.cc                |            |           |                       |
 | https://www.readlightnovel.org               |            |           |                       |
