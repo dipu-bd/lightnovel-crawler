@@ -132,7 +132,6 @@ class NovelFullCrawler(Crawler):
         for end in contents.findAll('div', {"align": 'left'}):
             end.decompose()
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return str(contents)
     # end def
 # end class
