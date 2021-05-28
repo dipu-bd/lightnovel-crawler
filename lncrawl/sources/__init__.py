@@ -42,6 +42,7 @@ rejected_sources = {
     'https://fsapk.com/': 'Site is not working',
     'https://bestoflightnovels.com/': 'Site moved',
     'https://novelcrush.com/': 'Site is down',
+    'https://888novel.com/': 'Gets IP banned for using crawler'
 }
 
 # this list will be auto-generated
