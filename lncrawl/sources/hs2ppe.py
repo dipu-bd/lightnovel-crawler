@@ -26,7 +26,7 @@ class wspadancewichita(Crawler):
             results.append({
                 'url': url,
                 'title': title,
-                'info': 'last chapter : %s' % last_chapter,
+                'info': 'Latest: %s' % last_chapter,
             })
         # end for
         return results

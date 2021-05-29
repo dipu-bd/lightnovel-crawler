@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from bs4 import BeautifulSoup
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -20,7 +18,7 @@ class BestLightNovel(Crawler):
 
         results = []
         for novel in data:
-            titleSoup = BeautifulSoup(novel['name'], 'lxml')
+            titleSoup = self.make_soup(novel['name'])
             results.append({
                 'title': titleSoup.body.text.title(),
                 'url': novel_page_url % novel['id_encode'],

@@ -15,23 +15,24 @@ chapter_aux_url = 'https://www.foxteller.com/aux_dem'
 class FoxtellerCrawler(Crawler):
     base_url = 'https://www.foxteller.com/'
 
-    def search_novel(self, query):
-        self.get_response(self.home_url)    # for cookies
+    # NOTE: Disabled because it takes too long
+    # def search_novel(self, query):
+    #     self.get_response(self.home_url)    # for cookies
 
-        query = query.lower().replace(' ', '+')
-        soup = self.post_soup(search_url, data=dict(query=query))
+    #     query = query.lower().replace(' ', '+')
+    #     soup = self.post_soup(search_url, data=dict(query=query))
 
-        results = []
-        for a in soup.select('a[href*="/novel/"]'):
-            results.append({
-                'title': a.select_one('span .ellipsis-1').text.strip(),
-                'url': self.absolute_url(a['href']),
-                'info': a.select_one('span .text-brand').text.strip(),
-            })
-        # end for
+    #     results = []
+    #     for a in soup.select('a[href*="/novel/"]'):
+    #         results.append({
+    #             'title': a.select_one('span .ellipsis-1').text.strip(),
+    #             'url': self.absolute_url(a['href']),
+    #             'info': a.select_one('span .text-brand').text.strip(),
+    #         })
+    #     # end for
 
-        return results
-    # end def
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

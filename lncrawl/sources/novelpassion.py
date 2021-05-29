@@ -7,10 +7,9 @@ logger = logging.getLogger(__name__)
 
 search_url = 'https://www.novelpassion.com/search?keyword=%s'
 
+
 class NovelPassion(Crawler):
     base_url = 'https://www.novelpassion.com/'
-
-    # lncrawl -q "Forced to Date a Big Shot" --sources
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
@@ -19,9 +18,6 @@ class NovelPassion(Crawler):
         results = []
         for tab in soup.select('div.lh1d5'):
             a = tab.select_one('a')
-            # NOTE: Could not get latest chapter to show.
-            # latest = tab.select_one('.dab a')
-            latest = " "
             votes = tab.select_one('span[class="g_star"]')['title']
             results.append({
                 'title': a.text.strip(),
@@ -33,28 +29,6 @@ class NovelPassion(Crawler):
         return results
     # end def
 
-    # def search_novel(self, query):
-    #     '''Gets a list of (title, url) matching the given query'''
-    #     query = query.strip().lower().replace(' ', '%20')
-    #     soup = self.get_soup(search_url % query)
-
-    #     results = []
-    #     for div in soup.select('.d-80 .j_bookList ul li > lh1d5'):
-    #         a = div.select_one('a.c_000')
-    #         info = div.select_one('.dab')
-    #         results.append(
-    #             {
-    #                 'title': a.text.strip(),
-    #                 'url': self.absolute_url(a['href']),
-    #                 'info': info.text.strip() if info else '',
-    #             }
-    #         )
-    #     # end for
-
-    #     return results
-
-    # # end def
-    
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         url = self.novel_url

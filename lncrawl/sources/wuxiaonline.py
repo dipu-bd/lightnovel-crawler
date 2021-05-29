@@ -11,7 +11,7 @@ search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
 class WuxiaOnlineCrawler(Crawler):
     base_url = 'https://wuxiaworld.online/'
 
-    # DISABLING DUE TO CLOUDEFLARE CAPTCHA CHALLENGE
+    # NOTE: DISABLING DUE TO CLOUDEFLARE CAPTCHA CHALLENGE
     # def search_novel(self, query):
     #     '''Gets a list of {title, url} matching the given query'''
     #     soup = self.get_soup(search_url % query)

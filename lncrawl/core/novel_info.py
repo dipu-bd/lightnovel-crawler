@@ -4,14 +4,19 @@ To get the novel info
 """
 import json
 import os
+import re
 
 from .. import constants as C
 from ..utils.crawler import Crawler
 
 
+def __format_title(text):
+    return re.sub(r'\s+', ' ', text).strip()
+# end def
+
 def format_novel(crawler: Crawler):
-    crawler.novel_title = crawler.novel_title.strip()
-    crawler.novel_author = crawler.novel_author.strip()
+    crawler.novel_title = __format_title(crawler.novel_title)
+    crawler.novel_author = __format_title(crawler.novel_author)
     # crawler.novel_title = crawler.cleanup_text(crawler.novel_title)
     # crawler.novel_author = crawler.cleanup_text(crawler.novel_author)
     format_volumes(crawler)
@@ -29,6 +34,7 @@ def format_volumes(crawler: Crawler):
         if not ('title' in vol and vol['title']):
             vol['title'] = title
         # end if
+        vol['title'] = __format_title(vol['title'])
     # end for
 # end def
 
@@ -39,6 +45,7 @@ def format_chapters(crawler: Crawler):
         if not ('title' in item and item['title']):
             item['title'] = title
         # end if
+        item['title'] = __format_title(item['title'])
 
         volume = [x for x in crawler.volumes if x['id'] == item['volume']]
         if len(volume) == 0:

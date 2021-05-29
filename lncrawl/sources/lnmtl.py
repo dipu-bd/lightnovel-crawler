@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import re
 from concurrent import futures
@@ -44,7 +43,6 @@ class LNMTLCrawler(Crawler):
             logger.debug('-' * 80)
             logger.error('Failed to login')
         # end if
-
     # end def
 
     def logout(self):
@@ -56,7 +54,6 @@ class LNMTLCrawler(Crawler):
         else:
             print('Logged out')
         # end if
-
     # end def
 
     def read_novel_info(self):
@@ -82,7 +79,6 @@ class LNMTLCrawler(Crawler):
 
         logger.info('Getting chapters...')
         self.download_chapter_list()
-
     # end def
 
     def parse_volume_list(self, soup):
@@ -108,7 +104,6 @@ class LNMTLCrawler(Crawler):
         if len(self.volumes) == 0:
             raise Exception('Failed parsing volume list')
         # end if
-
     # end def
 
     def download_chapter_list(self):
@@ -131,7 +126,6 @@ class LNMTLCrawler(Crawler):
                 self.chapters.append(chap)
             # end for
         # end for
-
     # end def
 
     def download_chapters_per_volume(self, volume, page=1):
@@ -160,7 +154,6 @@ class LNMTLCrawler(Crawler):
             chapters += self.download_chapters_per_volume(volume, page)
         # end for
         return volume['id'], chapters
-
     # end def
 
     def download_chapter_body(self, chapter):
@@ -170,7 +163,6 @@ class LNMTLCrawler(Crawler):
         body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         return body.strip()
-
     # end def
 
     def format_text(self, text):
@@ -180,8 +172,6 @@ class LNMTLCrawler(Crawler):
         text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
         text = re.sub(r'[ ]*,[ ]+', ', ', text)
         return text.strip()
-
     # end def
-
 
 # end class

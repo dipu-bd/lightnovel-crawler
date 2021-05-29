@@ -33,7 +33,6 @@ class ListNovelCrawler(Crawler):
         # end for
 
         return results
-
     # end def
 
     def read_novel_info(self):
