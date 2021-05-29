@@ -44,7 +44,8 @@ rejected_sources = {
     'https://novelcrush.com/': 'Site is down',
     'https://888novel.com/': 'Gets IP banned for using crawler',
     'https://novelraw.blogspot.com/': 'Site closed down',
-    'https://www.novelspread.com/': 'Site is down'
+    'https://www.novelspread.com/': 'Site is down',
+    'https://www.translateindo.com/': 'Site is down'
 }
 
 # this list will be auto-generated
