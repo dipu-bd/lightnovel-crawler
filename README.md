@@ -349,7 +349,6 @@ You are very welcome to contribute in this project. You can:
 | https://exiledrebelsscanlations.com          |            |           |      @SirGryphin      |
 | https://fanstranslations.com                 |            |           |      @SirGryphin      |
 | https://fastnovel.net                        |     ✔      |           |      @SirGryphin      |
-| https://foxaholic.com                        |     ✔      |           |                       |
 | https://fr.mtlnovel.com                      |     ✔      |           |                       |
 | https://fujitranslation.com                  |            |           |      @SirGryphin      |
 | https://hui3r.wordpress.com                  |            |           |      @SirGryphin      |
@@ -446,6 +445,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
 | https://www.flying-lines.com                 |            |           |       @dipu-bd        |
+| https://www.foxaholic.com                    |     ✔      |           |      @SirGryphin      |
 | https://www.foxteller.com                    |     ✔      |           |       @dipu-bd        |
 | https://www.freelightnovel.com               |            |           |      @SirGryphin      |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
