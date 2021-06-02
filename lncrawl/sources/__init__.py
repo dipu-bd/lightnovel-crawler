@@ -22,7 +22,7 @@ from ..utils.crawler import Crawler
 rejected_sources = {
     'https://chrysanthemumgarden.com/': 'Removed on request of the owner (Issue #649)',
     'https://novelplanet.com/': 'Site is closed',
-    'http://gravitytales.com/': 'Redirects to webnovel.com',
+    'http://gravitytales.com/': 'Domain is expired',
     'http://fullnovel.live/': "403 - Forbidden: Access is denied",
     'http://moonbunnycafe.com/': "Does not follow uniform format",
     'https://anythingnovel.com/': 'Site broken',
@@ -42,6 +42,10 @@ rejected_sources = {
     'https://fsapk.com/': 'Site is not working',
     'https://bestoflightnovels.com/': 'Site moved',
     'https://novelcrush.com/': 'Site is down',
+    'https://888novel.com/': 'Gets IP banned for using crawler',
+    'https://novelraw.blogspot.com/': 'Site closed down',
+    'https://www.novelspread.com/': 'Site is down',
+    'https://www.translateindo.com/': 'Site is down'
 }
 
 # this list will be auto-generated
