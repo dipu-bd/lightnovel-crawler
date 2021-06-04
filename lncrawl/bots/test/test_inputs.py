@@ -317,5 +317,8 @@ test_user_inputs = {
     ],
     'https://readlightnovels.net/': [
         'https://readlightnovels.net/death-march-kara-hajimaru-isekai-kyusoukyoku.html'
+    ],
+    'https://isotls.com/': [
+        'https://isotls.com/poisonous-peasant-concubine/'
     ]
 }

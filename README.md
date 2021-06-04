@@ -357,6 +357,7 @@ You are very welcome to contribute in this project. You can:
 | https://indowebnovel.id                      |            |           |                       |
 | https://infinitenoveltranslations.net        |            |           |      @SirGryphin      |
 | https://instadoses.com                       |            |           |                       |
+| https://isotls.com                           |            |           |      @SirGryphin      |
 | https://jpmtl.com                            |            |           |       @dipu-bd        |
 | https://jstranslations1.com                  |            |           |      @SirGryphin      |
 | https://justatranslatortranslations.com      |            |           |      @SirGryphin      |
