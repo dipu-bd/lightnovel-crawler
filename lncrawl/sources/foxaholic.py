@@ -4,7 +4,6 @@ import logging
 import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
-from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
@@ -76,7 +75,6 @@ class FoxaholicCrawler(Crawler):
         # end for
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
