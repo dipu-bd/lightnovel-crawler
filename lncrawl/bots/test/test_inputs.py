@@ -320,5 +320,8 @@ test_user_inputs = {
     ],
     'https://isotls.com/': [
         'https://isotls.com/poisonous-peasant-concubine/'
+    ],
+    'https://lazybirdtranslations.wordpress.com/': [
+        'https://lazybirdtranslations.wordpress.com/the-prestigious-familys-young-lady-and-the-farmer/'
     ]
 }

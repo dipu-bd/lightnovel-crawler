@@ -363,6 +363,7 @@ You are very welcome to contribute in this project. You can:
 | https://justatranslatortranslations.com      |            |           |      @SirGryphin      |
 | https://kiss-novel.com                       |            |           |                       |
 | https://kisslightnovels.info                 |     ✔      |           |                       |
+| https://lazybirdtranslations.wordpress.com   |            |           |      @SirGryphin      |
 | https://lemontreetranslations.wordpress.com  |            |           |      @SirGryphin      |
 | https://light-novel.online                   |     ✔      |           |                       |
 | https://lightnovel.tv                        |     ✔      |           |      @SirGryphin      |
