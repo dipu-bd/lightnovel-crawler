@@ -323,5 +323,8 @@ test_user_inputs = {
     ],
     'https://lazybirdtranslations.wordpress.com/': [
         'https://lazybirdtranslations.wordpress.com/the-prestigious-familys-young-lady-and-the-farmer/'
+    ],
+    'https://www.novelmultiverse.com/': [
+        'https://www.novelmultiverse.com/novel/the-fierce-illegitimate-miss/'
     ]
 }
