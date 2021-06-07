@@ -326,5 +326,8 @@ test_user_inputs = {
     ],
     'https://www.novelmultiverse.com/': [
         'https://www.novelmultiverse.com/novel/the-fierce-illegitimate-miss/'
+    ],
+    'https://readnovelz.net/': [
+        'https://readnovelz.net/read/rebirth-how-a-loser-became-a-prince-charming/'
     ]
 }
