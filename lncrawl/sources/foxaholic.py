@@ -4,6 +4,7 @@ import logging
 import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
+from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
@@ -37,15 +38,12 @@ class FoxaholicCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one('.post-title h1')
-        for span in possible_title.select('span'):
-            span.extract()
-        # end for
-        self.novel_title = possible_title.text.strip()
+        self.novel_title = soup.select_one(
+            'meta[property="og:title"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['data-src'])
+        self.novel_cover = soup.select_one(
+            'meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -75,11 +73,20 @@ class FoxaholicCrawler(Crawler):
         # end for
     # end def
 
+    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.reading-content p') 
+        all_imgs = soup.find_all('img')
+        for img in all_imgs:
+            if img.has_attr('loading'):
+                src_url = img['src']
+                parent = img.parent
+                img.decompose()
+                new_tag = soup.new_tag("img", src=src_url)
+                parent.append(new_tag)
         return ''.join([str(p) for p in contents])
     # end def
 # end class
