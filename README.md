@@ -411,6 +411,7 @@ You are very welcome to contribute in this project. You can:
 | https://overabook.com                        |     ✔      |           |      @SirGryphin      |
 | https://ranobelib.me                         |            |           |                       |
 | https://readlightnovels.net                  |     ✔      |           |     @PreownedFIN      |
+| https://readnovelz.net                       |     ✔      |           |      @SirGryphin      |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
 | https://reincarnationpalace.com              |            |           |      @SirGryphin      |
 | https://rewayat.club                         |            |           |                       |
