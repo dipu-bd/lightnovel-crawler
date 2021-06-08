@@ -320,5 +320,14 @@ test_user_inputs = {
     ],
     'https://isotls.com/': [
         'https://isotls.com/poisonous-peasant-concubine/'
+    ],
+    'https://lazybirdtranslations.wordpress.com/': [
+        'https://lazybirdtranslations.wordpress.com/the-prestigious-familys-young-lady-and-the-farmer/'
+    ],
+    'https://www.novelmultiverse.com/': [
+        'https://www.novelmultiverse.com/novel/the-fierce-illegitimate-miss/'
+    ],
+    'https://readnovelz.net/': [
+        'https://readnovelz.net/read/rebirth-how-a-loser-became-a-prince-charming/'
     ]
 }

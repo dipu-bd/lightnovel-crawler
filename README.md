@@ -363,6 +363,7 @@ You are very welcome to contribute in this project. You can:
 | https://justatranslatortranslations.com      |            |           |      @SirGryphin      |
 | https://kiss-novel.com                       |            |           |                       |
 | https://kisslightnovels.info                 |     ✔      |           |                       |
+| https://lazybirdtranslations.wordpress.com   |            |           |      @SirGryphin      |
 | https://lemontreetranslations.wordpress.com  |            |           |      @SirGryphin      |
 | https://light-novel.online                   |     ✔      |           |                       |
 | https://lightnovel.tv                        |     ✔      |           |      @SirGryphin      |
@@ -410,6 +411,7 @@ You are very welcome to contribute in this project. You can:
 | https://overabook.com                        |     ✔      |           |      @SirGryphin      |
 | https://ranobelib.me                         |            |           |                       |
 | https://readlightnovels.net                  |     ✔      |           |     @PreownedFIN      |
+| https://readnovelz.net                       |     ✔      |           |      @SirGryphin      |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
 | https://reincarnationpalace.com              |            |           |      @SirGryphin      |
 | https://rewayat.club                         |            |           |                       |
@@ -462,6 +464,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.novelcool.com                    |            |           |      @SirGryphin      |
 | https://www.novelhall.com                    |            |           |                       |
 | https://www.novelhunters.com                 |     ✔      |           |      @SirGryphin      |
+| https://www.novelmultiverse.com              |     ✔      |           |      @SirGryphin      |
 | https://www.novelpassion.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.novelringan.com                  |            |           |                       |
 | https://www.novels.pl                        |            |           |       @dipu-bd        |
