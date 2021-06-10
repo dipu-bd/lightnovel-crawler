@@ -415,6 +415,8 @@ You are very welcome to contribute in this project. You can:
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
 | https://reincarnationpalace.com              |            |           |      @SirGryphin      |
 | https://rewayat.club                         |            |           |                       |
+| https://rpgnovels.com                        |            |           |      @SirGryphin      |
+| https://rpgnoob.wordpress.com                |            |           |      @SirGryphin      |
 | https://shalvationtranslations.wordpress.com |            |           |      @SirGryphin      |
 | https://skynovel.org/                        |            |           |      @SirGryphin      |
 | https://sleepytranslations.com               |            |           |      @SirGryphin      |

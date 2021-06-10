@@ -329,5 +329,8 @@ test_user_inputs = {
     ],
     'https://readnovelz.net/': [
         'https://readnovelz.net/read/rebirth-how-a-loser-became-a-prince-charming/'
+    ],
+    'https://rpgnovels.com/': [
+        'https://rpgnovels.com/the-demon-lords-urban-development-the-strongest-dungeon-is-a-modern-day-town/'
     ]
 }
