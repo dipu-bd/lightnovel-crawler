@@ -15,6 +15,9 @@ class LightNovelWorldCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
+        self.novel_author = soup.select_one('span.textC999').text.strip()
+        logger.info('Novel author: %s', self.novel_author)
+
         possible_title = soup.select_one('li.text1')
         for span in possible_title.select('span'):
             span.extract()
@@ -25,10 +28,6 @@ class LightNovelWorldCrawler(Crawler):
         self.novel_cover = self.absolute_url(
             soup.select_one('.book_info_l img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
-
-        # NOTE: Could not get author name from page, kept getting ResultSet object has no attribute 'text'.
-        # self.novel_author = soup.select('h1 span').text.strip()
-        # logger.info('Novel author: %s', self.novel_author)
 
         volumes = set([])
         for a in soup.select('div#chapter_content ul li a'):
