@@ -26,8 +26,12 @@ class InadequateTranslations(Crawler):
         self.novel_author = "by Inadequate Translations"
         logger.info('Novel author: %s', self.novel_author)
 
+        # Removes none TOC links from bottom of page.
+        toc_parts = soup.select_one('.entry-content')
+        for notoc in toc_parts.select('.sharedaddy'):
+            notoc.decompose()
+
         # Extract volume-wise chapter entries
-        # FIXME: Sometimes grabs social media link at bottom of page, No idea how to exclude links.
         chapters = soup.select('.entry-content a[href*="inadequatetranslations.wordpress.com"]')
 
         for a in chapters:
