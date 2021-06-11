@@ -37,7 +37,7 @@ class RPGNovels(Crawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('div.post-entry')
         for notoc in toc_parts.select('.sharedaddy'):
-            share.decompose()
+            notoc.decompose()
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
