@@ -26,8 +26,12 @@ class LemonTreeTranslations(Crawler):
         self.novel_author = "by Lemon Tree Translations"
         logger.info('Novel author: %s', self.novel_author)
 
+        # Removes none TOC links from bottom of page.
+        toc_parts = soup.select_one('.entry-content')
+        for notoc in toc_parts.select('.sharedaddy'):
+            notoc.decompose()
+
         # Extract volume-wise chapter entries
-        # FIXME: Sometimes grabs social media link at bottom of page, No idea how to exclude links.
         chapters = soup.select('div.entry-content ul li [href*="lemontreetranslations"]')
 
         for a in chapters:
