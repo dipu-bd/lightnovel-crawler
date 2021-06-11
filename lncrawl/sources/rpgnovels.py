@@ -26,12 +26,19 @@ class RPGNovels(Crawler):
             'meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select('div.post-entry h2.MsoNormal a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
-            self.novel_author = author[0].text
-        logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = " ".join(
+            [
+                a.text.strip()
+                for a in soup.select('.post-entry a[href*="mypage.syosetu.com"]')
+            ]
+        )
+        logger.info("%s", self.novel_author)
+
+        # Removes none TOC links from bottom of page.
+        toc_parts = soup.select_one('div.post-entry')
+
+        for notoc in toc_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, .adsbygoogle'):
+            notoc.decompose()
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
