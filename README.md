@@ -343,6 +343,7 @@ You are very welcome to contribute in this project. You can:
 | https://darktranslation.com                  |            |           |      @SirGryphin      |
 | https://demontranslations.com                |            |           |      @SirGryphin      |
 | https://dmtranslationscn.com                 |            |           |      @SirGryphin      |
+| https://dobelyuwai.wordpress.com             |            |           |      @SirGryphin      |
 | https://docln.net                            |     ✔      |           |       @dipu-bd        |
 | https://dsrealmtranslations.com              |            |           |      @SirGryphin      |
 | https://es.mtlnovel.com                      |     ✔      |           |                       |
