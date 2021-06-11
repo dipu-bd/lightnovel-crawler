@@ -42,10 +42,9 @@ class AsadaTranslations(Crawler):
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # NOTE: Site doesn't have book covers.
-        # self.novel_cover = self.absolute_url(
-        #     soup.select_one('.summary_image a img')['src'])
-        # logger.info('Novel cover: %s', self.novel_cover)
+        self.novel_cover = soup.select_one(
+            'meta[property="og:image"]')['content']
+        logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
             a.text.strip()
