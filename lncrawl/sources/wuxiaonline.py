@@ -39,9 +39,8 @@ class WuxiaOnlineCrawler(Crawler):
         self.novel_title = soup.select_one('h1.entry-title').text
         logger.info('Novel title: %s', self.novel_title)
 
-        # self.novel_author = soup.select_one('#maininfo p').text.strip()
-        # self.novel_author = re.sub(r'^Author[^\w]+', '', self.novel_author).strip()
-        # logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = soup.select_one('div.entry-header > div.truyen_if_wrap > ul > li:nth-child(2)').text
+        logger.info('%s', self.novel_author)
 
         self.novel_cover = self.absolute_url(
             soup.select_one('.info_image img')['src'])
