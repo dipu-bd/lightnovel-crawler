@@ -28,7 +28,7 @@ class TangEatDrinkRead(Crawler):
             notoc.decompose()
 
         # Extract volume-wise chapter entries
-        # FIXME: Chapter title are url links, it's the way translator formatted website.
+        # TODO: Chapter title are url links, it's the way translator formatted website.
         chapters = soup.select('.entry-content a[href*="88tangeatdrinkread.wordpress.com"]')
 
         for a in chapters:

@@ -19,7 +19,7 @@ class hui3rCrawler(Crawler):
         self.novel_title = soup.select_one('.single-entry-content h3 a').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # NOTE: Having trouble grabbing cover without error message (cannot identify image file <_io.BytesIO object at 0x000002CC03335F40>).
+        # TODO: Having trouble grabbing cover without error message (cannot identify image file <_io.BytesIO object at 0x000002CC03335F40>).
         # self.novel_cover = self.absolute_url(
         #     soup.select_one('.single-entry-content p img')['src'])
         # logger.info('Novel cover: %s', self.novel_cover)

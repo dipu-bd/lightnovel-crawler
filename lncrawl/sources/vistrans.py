@@ -18,7 +18,7 @@ class VisTranslations(Crawler):
         self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # NOTE: Could not get cover kept coming back with error "(cannot identify image file <_io.BytesIO object at 0x00000179D0D8FEA0>)"
+        # TODO: Could not get cover kept coming back with error "(cannot identify image file <_io.BytesIO object at 0x00000179D0D8FEA0>)"
         # self.novel_cover = soup.select_one(
         #     'meta[property="og:image"]')['content']
         # logger.info('Novel cover: %s', self.novel_cover)
@@ -32,7 +32,7 @@ class VisTranslations(Crawler):
             notoc.decompose()
 
         # Extract volume-wise chapter entries
-        # NOTE: Some chapters have two href links for each chapters so you get duplicate chapters.
+        # TODO: Some chapters have two href links for each chapters so you get duplicate chapters.
         chapters = soup.select('table td a[href*="vistranslations.wordpress.com"]')
 
         for a in chapters:

@@ -18,7 +18,7 @@ class InadequateTranslations(Crawler):
         self.novel_title = soup.find("a", {"aria-current": "page"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # NOTE: Site list no cover images.
+        # TODO: Site list no cover images.
         # self.novel_cover = self.absolute_url(
         #     soup.select_one('div.entry-content p img')['src'])
         # logger.info('Novel cover: %s', self.novel_cover)
