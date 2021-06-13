@@ -335,5 +335,8 @@ test_user_inputs = {
     ],
     'https://dobelyuwai.wordpress.com/': [
         'https://dobelyuwai.wordpress.com/to-be-a-power-in-the-shadows-ln-volume-4/'
+    ],
+    'https://cclawtranslations.home.blog/': [
+        'https://cclawtranslations.home.blog/asahina-wakaba-to-marumaru-na-kareshi-toc/'
     ]
 }
