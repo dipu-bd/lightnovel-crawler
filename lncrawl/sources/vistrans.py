@@ -18,18 +18,22 @@ class VisTranslations(Crawler):
         self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # NOTE: Could not get cover kept coming back with error.
-        # self.novel_cover = self.absolute_url(
-        #     soup.select_one('div.entry-content div.wp-block-media-text img')['data-orig-file'])
+        # TODO: Could not get cover kept coming back with error "(cannot identify image file <_io.BytesIO object at 0x00000179D0D8FEA0>)"
+        # self.novel_cover = soup.select_one(
+        #     'meta[property="og:image"]')['content']
         # logger.info('Novel cover: %s', self.novel_cover)
 
-        # Could not get author name from site, just replaced with translators name.
-        self.novel_author = "by VisTranslations"
-        logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = soup.select_one('div.wp-block-media-text__content > p:nth-child(4)').text
+        logger.info('%s', self.novel_author)
+
+        # Removes none TOC links from bottom of page.
+        toc_parts = soup.select_one('.site-content')
+        for notoc in toc_parts.select('.sharedaddy, iframe'):
+            notoc.decompose()
 
         # Extract volume-wise chapter entries
-        # FIXME: Sometimes grabs social media link at bottom of page, No idea how to exclude links.
-        chapters = soup.select('table td [href*="vistranslations.wordpress.com"]')
+        # TODO: Some chapters have two href links for each chapters so you get duplicate chapters.
+        chapters = soup.select('table td a[href*="vistranslations.wordpress.com"]')
 
         for a in chapters:
             chap_id = len(self.chapters) + 1

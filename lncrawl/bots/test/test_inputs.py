@@ -329,5 +329,14 @@ test_user_inputs = {
     ],
     'https://readnovelz.net/': [
         'https://readnovelz.net/read/rebirth-how-a-loser-became-a-prince-charming/'
+    ],
+    'https://rpgnovels.com/': [
+        'https://rpgnovels.com/the-demon-lords-urban-development-the-strongest-dungeon-is-a-modern-day-town/'
+    ],
+    'https://dobelyuwai.wordpress.com/': [
+        'https://dobelyuwai.wordpress.com/to-be-a-power-in-the-shadows-ln-volume-4/'
+    ],
+    'https://cclawtranslations.home.blog/': [
+        'https://cclawtranslations.home.blog/asahina-wakaba-to-marumaru-na-kareshi-toc/'
     ]
 }
