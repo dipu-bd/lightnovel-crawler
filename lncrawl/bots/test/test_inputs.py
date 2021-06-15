@@ -338,5 +338,8 @@ test_user_inputs = {
     ],
     'https://cclawtranslations.home.blog/': [
         'https://cclawtranslations.home.blog/asahina-wakaba-to-marumaru-na-kareshi-toc/'
+    ],
+    'https://wujizun.com/': [
+        'https://wujizun.com/mysd/'
     ]
 }

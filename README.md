@@ -440,6 +440,7 @@ You are very welcome to contribute in this project. You can:
 | https://woopread.com                         |     ✔      |           |                       |
 | https://wordexcerpt.com                      |     ✔      |           | @dipu-bd, @SirGryphin |
 | https://wordexcerpt.org                      |            |           | @dipu-bd, @SirGryphin |
+| https://wujizun.com                          |            |           |      @SirGryphin      |
 | https://wuxiaworld.io                        |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.live                      |     ✔      |           |      @SirGryphin      |
 | https://wuxiaworld.name                      |     ✔      |           |      @SirGryphin      |
