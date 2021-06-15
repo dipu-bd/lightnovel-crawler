@@ -66,12 +66,12 @@ class Wujizun(Crawler):
         body_parts = soup.select_one('div.entry-content')
 
         # Removes "Share this" text and buttons from bottom of chapters. Also other junk on page.
-        for share in body_parts.select('iframe, .sharedaddy, .jp-relatedposts, .inline-ad-slot, .code-block, script, hr, .adsbygoogle, .ezoic-adpicker-ad, .ezoic-ad-adaptive, .ezoic-ad, .cb_p6_patreon_button'):
+        for share in body_parts.select('iframe, .sharedaddy, .jp-relatedposts, .inline-ad-slot, .code-block, script, hr, .adsbygoogle, .ezoic-adpicker-ad, .ezoic-ad-adaptive, .ezoic-ad, .cb_p6_patreon_button, a[href*="patreon.com"]'):
             share.decompose()
 
         # Remoeves bad text from chapters.
         for content in body_parts.select("p"):
-            for bad in ["Previous Chapter", "Table of Contents", "Next Chapter"]:
+            for bad in ["Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"]:
                 if bad in content.text:
                     content.decompose()
 
