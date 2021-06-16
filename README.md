@@ -400,6 +400,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelfullplus.com                    |     ✔      |           | @dipu-bd, @SirGryphin |
 | https://novelgate.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelgo.id/                          |            |           |                       |
+| https://novelmic.com                         |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefull.com                  |     ✔      |           |                       |
 | https://novelraw.blogspot.com                |            |           |                       |

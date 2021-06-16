@@ -341,5 +341,8 @@ test_user_inputs = {
     ],
     'https://wujizun.com/': [
         'https://wujizun.com/mysd/'
+    ],
+    'https://novelmic.com/': [
+        'https://novelmic.com/manga/tales-of-demons-and-gods-comics/'
     ]
 }
