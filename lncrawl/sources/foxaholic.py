@@ -42,8 +42,8 @@ class FoxaholicCrawler(Crawler):
             'meta[property="og:title"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one(
-            'meta[property="og:image"]')['content']
+        self.novel_cover = self.absolute_url(
+            soup.select_one('.summary_image a img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
