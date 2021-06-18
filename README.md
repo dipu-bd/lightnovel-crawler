@@ -415,6 +415,7 @@ You are very welcome to contribute in this project. You can:
 | https://ranobelib.me                         |            |           |                       |
 | https://readlightnovels.net                  |     ✔      |           |     @PreownedFIN      |
 | https://readnovelz.net                       |     ✔      |           |      @SirGryphin      |
+| http://readonlinenovels.com                  |            |           |                       |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
 | https://reincarnationpalace.com              |            |           |      @SirGryphin      |
 | https://rewayat.club                         |            |           |                       |

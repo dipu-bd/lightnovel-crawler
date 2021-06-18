@@ -347,5 +347,8 @@ test_user_inputs = {
     ],
     'https://www.1ksy.com/': [
         'https://www.1ksy.com/120_120546/'
+    ],
+    'http://readonlinenovels.com/': [
+        'http://readonlinenovels.com/nv/244c8160d7f91754/hail-the-king-h'
     ]
 }
