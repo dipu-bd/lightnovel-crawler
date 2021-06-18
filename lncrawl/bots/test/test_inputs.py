@@ -344,5 +344,8 @@ test_user_inputs = {
     ],
     'https://novelmic.com/': [
         'https://novelmic.com/manga/tales-of-demons-and-gods-comics/'
+    ],
+    'https://www.1ksy.com/': [
+        'https://www.1ksy.com/120_120546/'
     ]
 }
