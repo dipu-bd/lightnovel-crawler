@@ -359,5 +359,8 @@ test_user_inputs = {
     ],
     'https://smnovels.com/': [
         'https://smnovels.com/category/novel/a-dish-best-served-cold/'
+    ],
+    'https://www.wnmtl.org/': [
+        'https://www.wnmtl.org/novel/the-amber-sword/'
     ]
 }

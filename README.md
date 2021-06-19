@@ -498,6 +498,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.webnovel.com                     |     ✔      |           |       @dipu-bd        |
 | https://www.webnovelover.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.worldnovel.online                |     ✔      |           |                       |
+| https://www.wnmtl.org                        |            |           |      @SirGryphin      |
 | https://www.wuxialeague.com                  |            |           |                       |
 | https://www.wuxiaworld.co                    |     ✔      |           |       @dipu-bd        |
 | https://www.wuxiaworld.com                   |     ✔      |           |       @dipu-bd        |
