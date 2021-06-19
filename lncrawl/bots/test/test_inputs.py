@@ -356,5 +356,8 @@ test_user_inputs = {
     ],
     'https://lightnovelshub.com/': [
         'https://lightnovelshub.com/novel/strongest-abandoned-son/'
+    ],
+    'https://smnovels.com/': [
+        'https://smnovels.com/category/novel/a-dish-best-served-cold/'
     ]
 }
