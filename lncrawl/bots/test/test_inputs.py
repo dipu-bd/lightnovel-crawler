@@ -353,5 +353,8 @@ test_user_inputs = {
     ],
     'https://arnovel.me/': [
         'https://arnovel.me/novel/%d8%b2%d9%88%d8%ac%d8%aa%d9%87-%d8%a7%d9%84%d8%b9%d8%a8%d9%82%d8%b1%d9%8a%d8%a9-%d9%86%d8%ac%d9%85%d8%a9/'
+    ],
+    'https://lightnovelshub.com/': [
+        'https://lightnovelshub.com/novel/strongest-abandoned-son/'
     ]
 }
