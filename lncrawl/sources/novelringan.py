@@ -22,8 +22,13 @@ class NovelRinganCrawler(Crawler):
             soup.select_one('div.imgprop img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = 'Translated by novelringan.com'
-        logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = " ".join(
+            [
+                a.text.strip()
+                for a in soup.select('.entry-author a[href*="/author/"]')
+            ]
+        )
+        logger.info("%s", self.novel_author)
 
         for a in reversed(soup.select('.bxcl ul li a')):
             chap_id = len(self.chapters) + 1
@@ -48,8 +53,7 @@ class NovelRinganCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        soup.select_one('#bacotan').extract()
+        chapter['body_lock'] = True
         contents = soup.select('.entry-content p')
 
         body = [str(p) for p in contents if p.text.strip()]
