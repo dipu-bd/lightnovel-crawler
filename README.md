@@ -328,6 +328,7 @@ You are very welcome to contribute in this project. You can:
 | https://amnesiactl.com                       |            |           |      @SirGryphin      |
 | https://anonanemone.wordpress.com            |            |           |      @SirGryphin      |
 | https://arangscans.com                       |            |           |      @SirGryphin      |
+| https://arnovel.me                           |     ✔      |           |      @SirGryphin      |
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
 | https://automtl.wordpress.com                |            |           |      @SirGryphin      |
 | https://babelnovel.com                       |     ✔      |     ✔     |       @dipu-bd        |
