@@ -1,32 +1,30 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from urllib.parse import urlparse
 from ..utils.crawler import Crawler
-from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
-search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://www.foxaholic.com/wp-admin/admin-ajax.php'
+search_url = 'https://arnovel.me/?s=%s&post_type=wp-manga&author=&artist=&release='
+chapter_list_url = 'https://arnovel.me/wp-admin/admin-ajax.php'
 
-
-class FoxaholicCrawler(Crawler):
-    base_url = 'https://www.foxaholic.com/'
+class ArNovelCrawler(Crawler):
+    base_url = 'https://arnovel.me/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
 
+        # Add "title" to use alterntive name so you can search english name as search for arabic title doesn't work.
         results = []
         for tab in soup.select('.c-tabs-item__content'):
             a = tab.select_one('.post-title h3 a')
+            title = tab.select_one('.mg_alternative .summary-content')
             latest = tab.select_one('.latest-chap .chapter a').text
-            status = tab.select_one('.mg_release .summary-content a')
+            votes = tab.select_one('.rating .total_votes').text
             results.append({
-                'title': a.text.strip(),
+                'title': title.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': '%s | Status: %s' % (latest, status.text.strip()),
+                'info': '%s | Rating: %s' % (latest, votes),
             })
         # end for
 
@@ -38,13 +36,17 @@ class FoxaholicCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'meta[property="og:title"]')['content']
+        possible_title = soup.select_one('.post-title h1')
+        for span in possible_title.select('span'):
+            span.extract()
+        # end for
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['data-src'])
-        logger.info('Novel cover: %s', self.novel_cover)
+        # No novel covers on site.
+        # self.novel_cover = self.absolute_url(
+        #     soup.select_one('.summary_image a img')['data-src'])
+        # logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
             a.text.strip()
@@ -73,20 +75,12 @@ class FoxaholicCrawler(Crawler):
         # end for
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.reading-content p') 
-        all_imgs = soup.find_all('img')
-        for img in all_imgs:
-            if img.has_attr('loading'):
-                src_url = img['src']
-                parent = img.parent
-                img.decompose()
-                new_tag = soup.new_tag("img", src=src_url)
-                parent.append(new_tag)
+        chapter['body_lock'] = True
+        contents = soup.select('.reading-content p')
         return ''.join([str(p) for p in contents])
     # end def
 # end class
