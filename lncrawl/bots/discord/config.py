@@ -44,7 +44,7 @@ logging.config.dictConfig({
             'filename': 'logs/discord-bot_%s.log' % (get_args().shard_id),
             'maxBytes': 10 * 1024 * 1024,  # 10 MB
             'backupCount': 5,
-            'encoding': 'utf-8',
+            'encoding': 'utf8',
         },
     },
     'loggers': {

@@ -70,7 +70,7 @@ def make_webs(app, data):
                 chapter, prev_chapter, next_chapter, direction)
 
             file_name = os.path.join(dir_name, file_name)
-            with open(file_name, 'w', encoding='utf-8') as file:
+            with open(file_name, 'w', encoding='utf8') as file:
                 file.write(html)
             # end with
             web_files.append(file_name)

@@ -176,7 +176,7 @@ class Crawler:
 
         response = self.scraper.get(url, **kargs)
         response.raise_for_status()
-        response.encoding = 'utf-8'
+        response.encoding = 'utf8'
         self.cookies.update({
             x.name: x.value
             for x in response.cookies
@@ -200,7 +200,7 @@ class Crawler:
             #verify=False,
             #allow_redirects=True,
         )
-        response.encoding = 'utf-8'
+        response.encoding = 'utf8'
         self.cookies.update({
             x.name: x.value
             for x in response.cookies

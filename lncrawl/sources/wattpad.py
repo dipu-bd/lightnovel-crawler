@@ -66,7 +66,7 @@ class WattpadCrawler(Crawler):
         
         text_url = data['text_url']['text']
         logger.info('Getting text %s', text_url)
-        text = self.get_response(text_url).content.decode('utf-8')
+        text = self.get_response(text_url).content.decode('utf8')
         text = re.sub(r'<p data-p-id="[a-f0-9]+>"', '<p>', text)
         return text
     # end def

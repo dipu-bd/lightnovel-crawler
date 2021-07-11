@@ -81,7 +81,7 @@ def random_cover(title, author):
     font = Path(font)
     with font.open('rb') as file:
         font_data = file.read()
-        font_data = base64.b64encode(font_data).decode('utf-8')
+        font_data = base64.b64encode(font_data).decode('utf8')
     # end with
     font_name = font.stem
     font_type = font_mimetypes[font.suffix.lstrip('.')]

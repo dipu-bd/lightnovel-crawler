@@ -16,7 +16,7 @@ def run_ebook_convert(*args):
     '''
     try:
         isdebug = os.getenv('debug_mode') == 'yes'
-        with open(os.devnull, 'w') as dumper:
+        with open(os.devnull, 'w', encoding='utf8') as dumper:
             subprocess.call(
                 [EBOOK_CONVERT] + list(args),
                 stdout=None if isdebug else dumper,

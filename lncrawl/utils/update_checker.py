@@ -53,7 +53,7 @@ def check_update_in_background():
 def check_updates():
     # Check the last update file
     try:
-        with open(update_file, encoding='utf8') as fp:
+        with open(update_file, 'r', encoding='utf8') as fp:
             data = json.load(fp)
             latest_version = version.parse(data['info']['version'])
             if latest_version > current_version:

@@ -72,7 +72,7 @@ class CreativeNovelsCrawler(Crawler):
                 s=list_security_key
             )
         )
-        self.parse_chapter_list(response.content.decode('utf-8'))
+        self.parse_chapter_list(response.content.decode('utf8'))
     # end def
 
     def parse_chapter_list(self, content):

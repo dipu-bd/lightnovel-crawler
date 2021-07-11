@@ -19,7 +19,7 @@ def get_bot_version():
     if not os.path.isfile(head_path):
         from ...assets.version import get_value
         return get_value
-    with open(head_path, 'r') as f:
+    with open(head_path, 'r', encoding='utf8') as f:
         return f.readline()[:7]
 
 

@@ -75,13 +75,13 @@ def generate_cover(app):
             author=app.crawler.novel_author,
         )
 
-        with open(svg_file, 'w', encoding='utf-8') as f:
+        with open(svg_file, 'w', encoding='utf8') as f:
             f.write(svg)
             logger.debug('Saved a random cover.svg')
         # end with
 
         png_file = os.path.join(app.output_path, 'cover.png')
-        svg2png(bytestring=svg.encode('utf-8'), write_to=png_file)
+        svg2png(bytestring=svg.encode('utf8'), write_to=png_file)
         logger.debug('Converted cover.svg to cover.png')
 
         return png_file
@@ -145,7 +145,7 @@ def download_chapter_body(app, chapter):
 
         os.makedirs(dir_name, exist_ok=True)
         with open(file_name, 'w', encoding="utf-8") as file:
-            file.write(json.dumps(chapter))
+            file.write(json.dumps(chapter, ensure_ascii=False))
         # end with
     # end if
 
