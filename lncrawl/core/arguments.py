@@ -63,6 +63,9 @@ _builder = Args(group=[
     Args('--list-sources', action='store_true',
          help='Display a list of available sources.'),
 
+    Args('--crawler', nargs='*', metavar='FILES', default=[],
+         help='Load additional crawler files.'),
+
     Args(mutex=[
         Args('-s', '--source', dest='novel_page', type=str, metavar='URL',
              help='Profile page url of the novel.'),
