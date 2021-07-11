@@ -60,8 +60,6 @@ class ShinsoriCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         content = soup.select_one('div.entry-content')
 
         # remove div with no class

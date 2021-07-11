@@ -7,7 +7,6 @@ from datetime import datetime
 
 import discord
 
-from ...assets.version import get_value as get_version
 from ...core.arguments import get_args
 from .config import signal
 from .message_handler import MessageHandler
@@ -15,8 +14,17 @@ from .message_handler import MessageHandler
 logger = logging.getLogger(__name__)
 
 
+def get_bot_version():
+    head_path = os.path.join('.git', 'ORIG_HEAD')
+    if not os.path.isfile(head_path):
+        from ...assets.version import get_value
+        return get_value
+    with open(head_path, 'r', encoding='utf8') as f:
+        return f.readline()[:7]
+
+
 class DiscordBot(discord.Client):
-    bot_version = get_version() + '_8'
+    bot_version = get_bot_version()
 
     def __init__(self, *args, loop=None, **options):
         options['shard_id'] = get_args().shard_id
@@ -38,7 +46,7 @@ class DiscordBot(discord.Client):
         self.handlers = {}
 
         print('Discord bot in online!')
-        activity = discord.Activity(name='for 🔥%s🔥 (v%s)' % (signal, self.bot_version),
+        activity = discord.Activity(name='for 🔥%s🔥 (%s)' % (signal, self.bot_version),
                                     type=discord.ActivityType.watching)
         await self.change_presence(activity=activity,
                                    status=discord.Status.online)

@@ -73,14 +73,9 @@ class IndoMTLCrawler(Crawler):
                 'url': item['permalink'],
             })
         # end for
-        logger.debug(self.chapters)
 
         self.volumes = [{'id': x + 1}
                         for x in range(len(self.chapters) // 100 + 1)]
-        logger.debug(self.volumes)
-
-        logger.debug('%d volumes & %d chapters found',
-                     len(self.volumes), len(self.chapters))
     # end def
 
     def download_chapter_body(self, chapter):

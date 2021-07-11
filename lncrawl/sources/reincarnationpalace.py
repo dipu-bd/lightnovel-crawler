@@ -16,11 +16,12 @@ class ReincarnationPalace(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.entry-title').text.strip()
+        self.novel_title = soup.select_one(
+            'meta[property="og:title"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('div.elementor-image img')['data-src'])
+            soup.select_one('div.elementor-image img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select('div.elementor-widget-container p')[6].text.strip()

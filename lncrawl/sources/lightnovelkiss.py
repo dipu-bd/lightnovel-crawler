@@ -38,7 +38,11 @@ class LightNovelKiss(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        # NOTE: Title has "Novel" at the end of book title, can't seem to remove it.
+        # NOTE: Title has "Novel" at the end of book title, this code should work but can't test at moment because site is having problems.
+        # title = soup.select_one('.post-title h1').text
+        # self.novel_title = title.rsplit(' ', 1)[0].strip()
+        # logger.debug('Novel title = %s', self.novel_title)
+
         possible_title = soup.select_one('.post-title h1')
         for span in possible_title.select('span'):
             span.extract()

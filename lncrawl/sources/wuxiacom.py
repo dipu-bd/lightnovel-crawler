@@ -22,7 +22,7 @@ class WuxiaComCrawler(Crawler):
         url = search_url % query
         logger.info('Visiting %s ...', url)
         data = self.get_json(url)
-        logger.debug(data)
+        # logger.debug(data)
 
         results = []
         for item in data['items'][:5]:

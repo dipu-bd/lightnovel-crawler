@@ -317,5 +317,50 @@ test_user_inputs = {
     ],
     'https://readlightnovels.net/': [
         'https://readlightnovels.net/death-march-kara-hajimaru-isekai-kyusoukyoku.html'
+    ],
+    'https://isotls.com/': [
+        'https://isotls.com/poisonous-peasant-concubine/'
+    ],
+    'https://lazybirdtranslations.wordpress.com/': [
+        'https://lazybirdtranslations.wordpress.com/the-prestigious-familys-young-lady-and-the-farmer/'
+    ],
+    'https://www.novelmultiverse.com/': [
+        'https://www.novelmultiverse.com/novel/the-fierce-illegitimate-miss/'
+    ],
+    'https://readnovelz.net/': [
+        'https://readnovelz.net/read/rebirth-how-a-loser-became-a-prince-charming/'
+    ],
+    'https://rpgnovels.com/': [
+        'https://rpgnovels.com/the-demon-lords-urban-development-the-strongest-dungeon-is-a-modern-day-town/'
+    ],
+    'https://dobelyuwai.wordpress.com/': [
+        'https://dobelyuwai.wordpress.com/to-be-a-power-in-the-shadows-ln-volume-4/'
+    ],
+    'https://cclawtranslations.home.blog/': [
+        'https://cclawtranslations.home.blog/asahina-wakaba-to-marumaru-na-kareshi-toc/'
+    ],
+    'https://wujizun.com/': [
+        'https://wujizun.com/mysd/'
+    ],
+    'https://novelmic.com/': [
+        'https://novelmic.com/manga/tales-of-demons-and-gods-comics/'
+    ],
+    'https://www.1ksy.com/': [
+        'https://www.1ksy.com/120_120546/'
+    ],
+    'http://readonlinenovels.com/': [
+        'http://readonlinenovels.com/nv/244c8160d7f91754/hail-the-king-h'
+    ],
+    'https://arnovel.me/': [
+        'https://arnovel.me/novel/%d8%b2%d9%88%d8%ac%d8%aa%d9%87-%d8%a7%d9%84%d8%b9%d8%a8%d9%82%d8%b1%d9%8a%d8%a9-%d9%86%d8%ac%d9%85%d8%a9/'
+    ],
+    'https://lightnovelshub.com/': [
+        'https://lightnovelshub.com/novel/strongest-abandoned-son/'
+    ],
+    'https://smnovels.com/': [
+        'https://smnovels.com/category/novel/a-dish-best-served-cold/'
+    ],
+    'https://www.wnmtl.org/': [
+        'https://www.wnmtl.org/novel/the-amber-sword/'
     ]
 }

@@ -35,12 +35,12 @@ class Fu_kCom_ademao(Crawler):
         # logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            '#novel-info h5, #recentnovels h5').text.strip()
-        logger.info('Novel title: %s', self.novel_title)
+        title = soup.select_one('title').text
+        self.novel_title = title.rsplit('–', 1)[0].strip()
+        logger.debug('Novel title = %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('#novel-info amp-img, #recentnovels amp-img')['src'])
+            soup.select_one('#thumbnail img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # self.novel_author = soup.select_one('#Publisher a')['href']
@@ -56,7 +56,7 @@ class Fu_kCom_ademao(Crawler):
 
         def parse_chapter_list(soup):
             temp_list = []
-            for a in soup.select('#chapterList td a'):
+            for a in soup.select('.chapter-list td a'):
                 temp_list.append({
                     'title': a.text.strip(),
                     'url': self.absolute_url(a['href']),
@@ -111,13 +111,12 @@ class Fu_kCom_ademao(Crawler):
         soup = self.get_soup(chapter['url'])
         # logger.debug(soup.title.string)
 
-        body = soup.select_one("#content, article")
+        body = soup.select_one(".entry-content")
 
-        paragraphs = []
-        for p in body.select('p'):
-            if 'class' not in p.attrs and p.text.strip():
-                paragraphs.append(str(p))
+        # Removes "junk" from chapters.
+        for share in body.select('script, hr, br, #div-gpt-ad-comrademaocom35917, #div-gpt-ad-comrademaocom35918'):
+            share.decompose()
 
-        return ''.join(paragraphs)
+        return str(body)
     # end def
 # end class

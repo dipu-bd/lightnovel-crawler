@@ -8,6 +8,7 @@ from ..utils.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 chapter_info_url = 'https://www.wattpad.com/v4/parts/%s?fields=id,title,pages,text_url&_=%d'
+story_info_url = 'https://www.wattpad.com/api/v3/stories/%s'
 
 class WattpadCrawler(Crawler):
     base_url = [
@@ -21,21 +22,24 @@ class WattpadCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
 
-        logger.debug('Visiting %s', self.novel_url)
-        soup = self.get_soup(self.novel_url)
+        search_id = re.compile(r'\d{9,}')
+        id_no = search_id.search(self.novel_url)
+        story_url = story_info_url % (id_no.group())
 
-        self.novel_title = soup.select_one('.story-info__title').get_text().strip()
+        logger.debug('Visiting %s', story_url)
+        story_info = self.get_json(story_url)
+
+        self.novel_title = story_info['title']
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.story-cover img')['src'])
+            story_info['cover'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one(
-            '.author-info__username').get_text()
+        self.novel_author = story_info['user']['name']
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.select_one('.story-parts').select('ul li a')
+        chapters = story_info['parts']
 
         vols = set([])
         for a in chapters:
@@ -45,8 +49,8 @@ class WattpadCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
+                'url':  self.absolute_url(a['url']),
+                'title': a['title'] or ('Chapter %d' % chap_id),
             })
         # end for
         self.volumes = [{'id': i} for i in vols]
@@ -62,7 +66,7 @@ class WattpadCrawler(Crawler):
         
         text_url = data['text_url']['text']
         logger.info('Getting text %s', text_url)
-        text = self.get_response(text_url).content.decode('utf-8')
+        text = self.get_response(text_url).content.decode('utf8')
         text = re.sub(r'<p data-p-id="[a-f0-9]+>"', '<p>', text)
         return text
     # end def

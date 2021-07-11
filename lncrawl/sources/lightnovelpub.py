@@ -32,6 +32,8 @@ class LightNovelOnline(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
+        self.novel_url = '%s%s' % (self.base_url, urlparse(self.novel_url).path)
+
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 

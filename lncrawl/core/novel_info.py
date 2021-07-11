@@ -93,6 +93,6 @@ def save_metadata(app, completed=False):
     os.makedirs(app.output_path, exist_ok=True)
     file_name = os.path.join(app.output_path, C.META_FILE_NAME)
     with open(file_name, 'w', encoding="utf-8") as file:
-        json.dump(data, file, indent=2)
+        json.dump(data, file, indent=2, ensure_ascii=False)
     # end with
 # end def

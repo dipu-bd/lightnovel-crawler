@@ -69,8 +69,6 @@ class BestLightNovel(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         if 'Chapter' in soup.select_one('h1').text:
             chapter['title'] = soup.select_one('h1').text
         else:
@@ -83,6 +81,8 @@ class BestLightNovel(Crawler):
         ]
 
         contents = soup.select_one('#vung_doc')
+        for bad in contents.select('br'):
+            bad.decompose()
         body = self.extract_contents(contents)
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

@@ -18,7 +18,7 @@ class LemonTreeTranslations(Crawler):
         self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # NOTE: Site list no cover images.
+        # TODO: Site list no cover images.
         # self.novel_cover = self.absolute_url(
         #     soup.select_one('div.entry-content p img')['src'])
         # logger.info('Novel cover: %s', self.novel_cover)
@@ -26,8 +26,12 @@ class LemonTreeTranslations(Crawler):
         self.novel_author = "by Lemon Tree Translations"
         logger.info('Novel author: %s', self.novel_author)
 
+        # Removes none TOC links from bottom of page.
+        toc_parts = soup.select_one('.entry-content')
+        for notoc in toc_parts.select('.sharedaddy'):
+            notoc.decompose()
+
         # Extract volume-wise chapter entries
-        # FIXME: Sometimes grabs social media link at bottom of page, No idea how to exclude links.
         chapters = soup.select('div.entry-content ul li [href*="lemontreetranslations"]')
 
         for a in chapters:
@@ -53,8 +57,6 @@ class LemonTreeTranslations(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        logger.debug(soup.title.string)
 
         body = []
         contents = soup.select('div.entry-content p')

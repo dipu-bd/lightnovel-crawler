@@ -66,8 +66,6 @@ class NovelPlanetCrawler(Crawler):
 
         contents = soup.select_one('#divReadContent')
         # self.clean_contents(content)
-
-        logger.debug(soup.title.string)
         if soup.select_one('h4').text:
             chapter['title'] = soup.select_one('h4').text
         else:

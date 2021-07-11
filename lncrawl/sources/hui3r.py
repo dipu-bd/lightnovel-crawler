@@ -19,16 +19,20 @@ class hui3rCrawler(Crawler):
         self.novel_title = soup.select_one('.single-entry-content h3 a').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        # NOTE: Having trouble grabbing cover without error message.
+        # TODO: Having trouble grabbing cover without error message (cannot identify image file <_io.BytesIO object at 0x000002CC03335F40>).
         # self.novel_cover = self.absolute_url(
         #     soup.select_one('.single-entry-content p img')['src'])
         # logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = "by hui3r"
+        self.novel_author = "Translated by hui3r"
         logger.info('Novel author: %s', self.novel_author)
 
+        # Removes none TOC links from bottom of page.
+        toc_parts = soup.select_one('.single-entry-content')
+        for notoc in toc_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, .adsbygoogle'):
+            notoc.decompose()
+
         # Extract volume-wise chapter entries
-        # NOTE: Addd /2 to end of url, so it only grabs chapters instead of social media links as well.
         chapters = soup.select('.single-entry-content ul li a[href*="hui3r.wordpress.com/2"]')
 
         for a in chapters:
@@ -54,7 +58,6 @@ class hui3rCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        logger.debug(soup.title.string)
 
         body_parts = soup.select_one('.single-entry-content')
 

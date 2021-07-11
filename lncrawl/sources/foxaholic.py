@@ -2,14 +2,17 @@
 import json
 import logging
 import re
-
+from urllib.parse import urlparse
 from ..utils.crawler import Crawler
+from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
-search_url = 'https://foxaholic.com/?s=%s&post_type=wp-manga'
+search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://www.foxaholic.com/wp-admin/admin-ajax.php'
+
 
 class FoxaholicCrawler(Crawler):
-    base_url = 'https://foxaholic.com/'
+    base_url = 'https://www.foxaholic.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -19,10 +22,11 @@ class FoxaholicCrawler(Crawler):
         for tab in soup.select('.c-tabs-item__content'):
             a = tab.select_one('.post-title h3 a')
             latest = tab.select_one('.latest-chap .chapter a').text
+            status = tab.select_one('.mg_release .summary-content a')
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': 'Latest: %s' % latest,
+                'info': '%s | Status: %s' % (latest, status.text.strip()),
             })
         # end for
 
@@ -34,76 +38,55 @@ class FoxaholicCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.post-title h1, .post-title h3').contents
-            if not x.name
-        ]).strip()
+        self.novel_title = soup.select_one(
+            'meta[property="og:title"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['data-src'])
+            soup.select_one('.summary_image a img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div', {'class': 'author-content'}).findAll('a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
-            self.novel_author = author[0].text
-        logger.info('Novel author: %s', self.novel_author)
+        self.novel_author = ' '.join([
+            a.text.strip()
+            for a in soup.select('.author-content a[href*="novel-author"]')
+        ])
+        logger.info('%s', self.novel_author)
 
-        data_id = soup.select_one('#manga-chapters-holder')['data-id']
-        chapters_response = self.submit_form("https://foxaholic.com/wp-admin/admin-ajax.php",{"action":"manga_get_chapters","manga":data_id})
-        chapter_soup = self.make_soup(chapters_response,None)
-        content_area = chapter_soup.select_one(' .page-content-listing')
+        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
+        logger.info('Novel id: %s', self.novel_id)
 
-        for span in content_area.findAll('span'):
-            span.decompose()
-
-        chapters = content_area.select('ul.main li.wp-manga-chapter a')
-
-        chapters.reverse()
-
-        for a in chapters:
+        response = self.submit_form(
+            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        soup = self.make_soup(response)
+        for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
-            vol_id = chap_id//100 + 1
-            if len(self.chapters) % 100 == 0:
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if chap_id % 100 == 1:
+                self.volumes.append({'id': vol_id})
             # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
     # end def
 
+    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
+        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        contents = soup.select_one('div.text-left')
-
-        for img in contents.findAll('img'):
-            if img.has_attr('data-lazy-src'):
-                src_url = img['data-lazy-src']
+        contents = soup.select('.reading-content p') 
+        all_imgs = soup.find_all('img')
+        for img in all_imgs:
+            if img.has_attr('loading'):
+                src_url = img['src']
                 parent = img.parent
                 img.decompose()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
-
-        if contents.h3:
-            contents.h3.decompose()
-
-        for codeblock in contents.findAll('div', {'class': 'code-block'}):
-            codeblock.decompose()
-
-        return str(contents)
+        return ''.join([str(p) for p in contents])
     # end def
 # end class

@@ -15,20 +15,20 @@ class TangEatDrinkRead(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
-        logger.info('Novel title: %s', self.novel_title)
-
-        # NOTE: Site list no cover images.
-        # self.novel_cover = self.absolute_url(
-        #     soup.select_one('div.entry-content p img')['src'])
-        # logger.info('Novel cover: %s', self.novel_cover)
+        title = soup.select_one('h1.entry-title').text
+        self.novel_title = title.rsplit('~', 1)[0].strip()
+        logger.debug('Novel title = %s', self.novel_title)
 
         self.novel_author = "by 88 Tang"
         logger.info('Novel author: %s', self.novel_author)
 
+        # Removes none TOC links.
+        toc_parts = soup.select_one('.entry-content')
+        for notoc in toc_parts.select('.sharedaddy, .code-block, script, .adsbygoogle'):
+            notoc.decompose()
+
         # Extract volume-wise chapter entries
-        # FIXME: Sometimes grabs social media link at bottom of page, No idea how to exclude links.
-        # FIXME: Chapter title are url links, it's the way translator formatted website.
+        # TODO: Chapter title are url links, it's the way translator formatted website.
         chapters = soup.select('.entry-content a[href*="88tangeatdrinkread.wordpress.com"]')
 
         for a in chapters:
@@ -54,8 +54,6 @@ class TangEatDrinkRead(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        logger.debug(soup.title.string)
 
         body = []
         contents = soup.select('div.entry-content p')
