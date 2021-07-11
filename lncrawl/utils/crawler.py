@@ -163,6 +163,16 @@ class Crawler:
                 and url.path.startswith(page.path))
     # end def
 
+    def __process_response(self, response):
+        response.raise_for_status()
+        response.encoding = 'utf8'
+        self.cookies.update({
+            x.name: x.value
+            for x in response.cookies
+        })
+        return response
+
+
     def get_response(self, url, **kargs):
         if self._destroyed:
             return None
@@ -177,14 +187,8 @@ class Crawler:
         headers.setdefault('user-agent', _default_user_agent)
 
         response = self.scraper.get(url, **kargs)
-        response.raise_for_status()
-        response.encoding = 'utf8'
-        self.cookies.update({
-            x.name: x.value
-            for x in response.cookies
-        })
         self.last_visited_url = url.strip('/')
-        return response
+        return self.__process_response(response)
     # end def
 
     def post_response(self, url, data={}, headers={}):
@@ -203,13 +207,7 @@ class Crawler:
             # verify=False,
             # allow_redirects=True,
         )
-        response.encoding = 'utf8'
-        self.cookies.update({
-            x.name: x.value
-            for x in response.cookies
-        })
-        response.raise_for_status()
-        return response
+        return self.__process_response(response)
     # end def
 
     def submit_form(self, url, data={}, multipart=False, headers={}):
@@ -224,7 +222,9 @@ class Crawler:
         # end if
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('content-type', content_type)
-        return self.post_response(url, data, headers)
+
+        response = self.post_response(url, data, headers)
+        return self.__process_response(response)
     # end def
 
     def get_soup(self, *args, **kwargs):
