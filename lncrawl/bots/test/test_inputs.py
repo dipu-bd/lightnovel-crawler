@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from base64 import decodestring as b64decode
 
 allowed_failures = [

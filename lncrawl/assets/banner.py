@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import re
 from colorama.ansi import Fore, Style
 

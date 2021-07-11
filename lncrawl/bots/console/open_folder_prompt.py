@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from questionary import prompt
 
 from ...assets.icons import Icons
