@@ -11,25 +11,24 @@ search_url = 'http://boxnovel.org/search?keyword=%s'
 class BoxNovelOrgCrawler(Crawler):
     base_url = 'http://boxnovel.org/'
 
-    # TODO: Disabled for issue 882
-    # def search_novel(self, query):
-    #     query = query.lower().replace(' ', '+')
-    #     soup = self.get_soup(search_url % query)
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
 
-    #     results = []
-    #     for tab in soup.select('.col-novel-main .list-novel .row'):
-    #         search_title = tab.select_one('.novel-title a')
-    #         latest = tab.select_one('.text-info a').text.strip()
-    #         results.append({
-    #             'title': search_title.text.strip(),
-    #             'url': self.absolute_url(
-    #                 tab.select_one('.novel-title a')['href']),
-    #             'info': 'Latest chapter: %s' % (latest)
-    #         })
-    #     # end for
+        results = []
+        for tab in soup.select('.col-novel-main .list-novel .row'):
+            search_title = tab.select_one('.novel-title a')
+            latest = tab.select_one('.text-info a').text.strip()
+            results.append({
+                'title': search_title.text.strip(),
+                'url': self.absolute_url(
+                    tab.select_one('.novel-title a')['href']),
+                'info': 'Latest chapter: %s' % (latest)
+            })
+        # end for
 
-    #     return results
-    # # end def
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
