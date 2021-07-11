@@ -1,5 +1,5 @@
-Jinja2
-PyInstaller
+jinja2
+pyinstaller
 cairosvg
 win_unicode_console
 setuptools
