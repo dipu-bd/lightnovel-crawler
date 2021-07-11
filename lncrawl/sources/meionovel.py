@@ -7,6 +7,8 @@ from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://meionovel.id/?s=%s&post_type=wp-manga&author=&artist=&release='
+chapter_list_url = 'https://meionovel.id/wp-admin/admin-ajax.php'
+
 
 class MeionovelCrawler(Crawler):
     base_url = 'https://meionovel.id/'
@@ -36,50 +38,42 @@ class MeionovelCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.post-title h3').contents
-            if not x.name
-        ]).strip()
+        self.novel_title = soup.select_one('meta[property="og:title"]')['content'].split('-')[0]
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['data-src'])
+        self.novel_cover = self.absolute_url(soup.select_one('.summary_image img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.find('div', {'class': 'author-content'}).findAll('a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
-            self.novel_author = author[0].text
+        possible_authors = [a.text.strip() for a in soup.select('.author-content a')]
+        self.novel_author = ', '.join(filter(None, possible_authors))
         logger.info('Novel author: %s', self.novel_author)
 
-        content_area = soup.select_one(' .page-content-listing')
+        manga_id = soup.select_one('#manga-chapters-holder')['data-id']
+        logger.info('Manga id: %s', manga_id)
 
-        for span in content_area.findAll('span'):
-            span.decompose()
+        soup = self.post_soup(chapter_list_url, {
+            'action': 'manga_get_chapters',
+            'manga': manga_id,
+        }, headers={
+            'Origin': self.base_url,
+            'Referer': self.novel_url,
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        })
 
-        chapters = content_area.select('ul.main li.wp-manga-chapter a')
-
-        chapters.reverse()
-
-        for a in chapters:
+        vols = set([])
+        for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
-            vol_id = chap_id//100 + 1
-            if len(self.chapters) % 100 == 0:
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            vol_id = chap_id // 100 + 1
+            vols.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': x} for x in vols]
     # end def
 
     def download_chapter_body(self, chapter):

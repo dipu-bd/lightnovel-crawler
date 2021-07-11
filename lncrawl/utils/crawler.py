@@ -172,7 +172,9 @@ class Crawler:
         #kargs.setdefault('allow_redirects', True)
         kargs.setdefault('timeout', 150)  # in seconds
         headers = kargs.setdefault('headers', {})
-        headers.setdefault('User-Agent', _default_user_agent)
+        
+        headers = {k.lower(): v for k, v in headers.items()}
+        headers.setdefault('user-agent', _default_user_agent)
 
         response = self.scraper.get(url, **kargs)
         response.raise_for_status()
@@ -189,16 +191,17 @@ class Crawler:
         if self._destroyed:
             return None
 
-        headers.setdefault('User-Agent', _default_user_agent)
-        headers.setdefault('Content-Type', 'application/json')
+        headers = {k.lower(): v for k, v in headers.items()}
+        headers.setdefault('user-agent', _default_user_agent)
+        headers.setdefault('content-type', 'application/json')
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
 
         response = self.scraper.post(
             url,
             data=data,
             headers=headers,
-            #verify=False,
-            #allow_redirects=True,
+            # verify=False,
+            # allow_redirects=True,
         )
         response.encoding = 'utf8'
         self.cookies.update({
@@ -219,7 +222,8 @@ class Crawler:
         if multipart:
             content_type = 'multipart/form-data'
         # end if
-        headers.setdefault('Content-Type', content_type)
+        headers = {k.lower(): v for k, v in headers.items()}
+        headers.setdefault('content-type', content_type)
         return self.post_response(url, data, headers)
     # end def
 
@@ -249,7 +253,8 @@ class Crawler:
     def get_json(self, *args, **kwargs):
         kwargs = kwargs or dict()
         headers = kwargs.setdefault('headers', {})
-        headers.setdefault('Accept', 'application/json, text/javascript, */*')
+        headers = {k.lower(): v for k, v in headers.items()}
+        headers.setdefault('accept', 'application/json, text/javascript, */*')
         response = self.get_response(*args, **kwargs)
         return response.json()
     # end def
@@ -260,7 +265,8 @@ class Crawler:
     # end def
 
     def post_json(self, url, data={}, headers={}):
-        headers.setdefault('Accept', 'application/json, text/javascript, */*')
+        headers = {k.lower(): v for k, v in headers.items()}
+        headers.setdefault('accept', 'application/json, text/javascript, */*')
         response = self.post_response(url, data, headers)
         return response.json()
     # end def
