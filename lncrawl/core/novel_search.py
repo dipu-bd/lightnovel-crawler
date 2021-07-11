@@ -39,7 +39,7 @@ def get_search_result(app, link, bar):
 def process_results(combined_results):
     combined = dict()
     for result in combined_results:
-        key = slugify(result['title'])
+        key = slugify(result.get('title') or '')
         if len(key) <= 2:
             continue
         combined.setdefault(key, [])
