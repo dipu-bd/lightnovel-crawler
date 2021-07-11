@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from . import win_term_fix
+
 try:
     from dotenv import load_dotenv
     load_dotenv()
