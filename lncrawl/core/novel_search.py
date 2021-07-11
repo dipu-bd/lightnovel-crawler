@@ -27,7 +27,8 @@ def get_search_result(app, link, bar):
         return results
     except Exception:
         import traceback
-        logger.debug(traceback.format_exc())
+        traceback.print_exc()
+        #logger.debug(traceback.format_exc())
     finally:
         app.progress += 1
         bar.next()

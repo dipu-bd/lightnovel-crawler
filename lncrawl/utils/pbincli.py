@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Source: https://github.com/r4sas/PBinCLI/blob/master/pbincli/format.py
 '''
