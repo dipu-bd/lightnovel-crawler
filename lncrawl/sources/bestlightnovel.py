@@ -69,8 +69,6 @@ class BestLightNovel(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         if 'Chapter' in soup.select_one('h1').text:
             chapter['title'] = soup.select_one('h1').text
         else:

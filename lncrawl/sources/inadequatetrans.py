@@ -58,8 +58,6 @@ class InadequateTranslations(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         body = []
         contents = soup.select('div.entry-content p')
         for p in contents:

@@ -36,8 +36,6 @@ class SMNovelsCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         contents = soup.select_one('.entry-content')
         for bad in contents.select('br'):
             bad.decompose()

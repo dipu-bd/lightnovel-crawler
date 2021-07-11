@@ -53,8 +53,6 @@ class InfiniteNovelTranslations(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         body_parts = soup.select_one('div.entry-content')
 
         # Remoeves Nav Button from top and bottom of chapters.

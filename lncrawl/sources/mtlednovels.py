@@ -51,22 +51,21 @@ class MtledNovelsCrawler(Crawler):
         print('Logged out')
     # end def
 
-    # NOTE: Disabled search for cloudflare issue
-    # def search_novel(self, query):
-    #     query = query.lower().replace(' ', '+')
-    #     soup = self.get_soup(search_url % query)
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
 
-    #     results = []
-    #     for a in soup.select('.card .row .col-lg-2 a')[:5]:
-    #         url = self.absolute_url(a['href'])
-    #         results.append({
-    #             'url': url,
-    #             'title': a.img['alt'],
-    #         })
-    #     # end for
+        results = []
+        for a in soup.select('.card .row .col-lg-2 a')[:5]:
+            url = self.absolute_url(a['href'])
+            results.append({
+                'url': url,
+                'title': a.img['alt'],
+            })
+        # end for
 
-    #     return results
-    # # end def
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -108,8 +107,6 @@ class MtledNovelsCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        logger.debug(soup.title.string)
 
         if soup.h1.text.strip():
             chapter['title'] = soup.h1.text.strip()

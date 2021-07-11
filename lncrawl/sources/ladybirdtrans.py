@@ -58,8 +58,6 @@ class lazybirdtranslations(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         # Adds proper chapter ttile, only problem is some are in 2 parts so there named the same.
         if 'Chapter' in soup.select_one('h2').text:
             chapter['title'] = soup.select_one('h2').text

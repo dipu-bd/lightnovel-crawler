@@ -94,8 +94,6 @@ class NovelGoCrawler(Crawler):
             })
             # end for
         # end for
-
-        logger.debug(self.chapters)
     # end def
 
     def download_chapter_body(self, chapter):

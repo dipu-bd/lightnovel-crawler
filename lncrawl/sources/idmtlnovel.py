@@ -77,8 +77,6 @@ class IdMtlnovelCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         contents = soup.select('div.par p')
         # print(contents)
         # for p in contents:

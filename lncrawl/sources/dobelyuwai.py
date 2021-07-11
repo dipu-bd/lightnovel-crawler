@@ -62,8 +62,6 @@ class Dobelyuwai(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         body_parts = soup.select_one('div.entry-content')
 
         # Removes "Share this" text and buttons from bottom of chapters. Also other junk on page.

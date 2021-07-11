@@ -58,7 +58,6 @@ class hui3rCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        logger.debug(soup.title.string)
 
         body_parts = soup.select_one('.single-entry-content')
 

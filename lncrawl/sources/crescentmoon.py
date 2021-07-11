@@ -58,8 +58,6 @@ class CrescentMoonCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        logger.debug(soup.title.string)
-
         # if soup.find("h1", {"class": "entry-title"}).text.strip():
         #    chapter['title'] = soup.find("h1", {"class": "entry-title"}).text.strip()
         # else:
