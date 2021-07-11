@@ -278,7 +278,7 @@ class Crawler:
         r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
     ]
     bad_tags = [
-        'noscript', 'script', 'iframe', 'form', 'hr', 'img', 'ins',
+        'noscript', 'script', 'iframe', 'form', 'hr', 'ins',
         'button', 'input', 'amp-auto-ads', 'pirate'
     ]
     block_tags = [
@@ -316,8 +316,9 @@ class Crawler:
                 tag.extract()   # Remove empty tags
             elif self.is_blacklisted(tag.text):
                 tag.extract()   # Remove blacklisted contents
-            elif hasattr(tag, 'attrs'):
-                tag.attrs = {}    # Remove attributes
+            elif hasattr(tag, 'attrs') and tag != 'img':
+                for attr, _ in tag.attrs:
+                    del tag[attr]  # Remove attributes
             # end if
         # end for
         return div

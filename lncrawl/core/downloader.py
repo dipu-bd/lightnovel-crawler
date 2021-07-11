@@ -286,7 +286,12 @@ def download_chapter_images(app):
             if img['src'] in images:
                 filename = images[img['src']]
                 img['src'] = 'images/%s' % filename
-                img['style'] = 'float: left; margin: 15px; width: 100%;'
+                #img['style'] = 'float: left; margin: 15px; width: 100%;'
+
+            # Issue 920: styles are causing issues in some readers
+            for attr, _ in img.attrs:
+                if attr != 'src':
+                    del img[attr]
         # end for
         chapter['body'] = str(soup.select_one('main'))
     # end for
