@@ -14,6 +14,7 @@ def __format_title(text):
     return re.sub(r'\s+', ' ', text).strip()
 # end def
 
+
 def format_novel(crawler: Crawler):
     crawler.novel_title = __format_title(crawler.novel_title)
     crawler.novel_author = __format_title(crawler.novel_author)
@@ -76,7 +77,10 @@ def save_metadata(app, completed=False):
         'author': app.crawler.novel_author,
         'cover': app.crawler.novel_cover,
         'volumes': app.crawler.volumes,
-        'chapters': app.crawler.chapters,
+        'chapters': [
+            {k: v for k, v in chap.items() if k != 'body'}
+            for chap in app.crawler.chapters
+        ],
         'rtl': app.crawler.is_rtl,
         'session': {
             'completed': completed,
