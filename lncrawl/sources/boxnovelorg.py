@@ -13,7 +13,7 @@ class BoxNovelOrgCrawler(Crawler):
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query, verify=False)
+        soup = self.get_soup(search_url % query)
 
         results = []
         for tab in soup.select('.col-novel-main .list-novel .row'):
