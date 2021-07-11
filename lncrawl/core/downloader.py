@@ -289,9 +289,8 @@ def download_chapter_images(app):
                 #img['style'] = 'float: left; margin: 15px; width: 100%;'
 
             # Issue 920: styles are causing issues in some readers
-            for attr, _ in img.attrs:
-                if attr != 'src':
-                    del img[attr]
+            if hasattr(img, 'attr'):
+                img.attr = {k: v for k, v in img.attrs.items() if k == 'src'}
         # end for
         chapter['body'] = str(soup.select_one('main'))
     # end for

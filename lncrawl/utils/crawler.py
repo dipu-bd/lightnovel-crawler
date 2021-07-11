@@ -323,8 +323,7 @@ class Crawler:
             elif self.is_blacklisted(tag.text):
                 tag.extract()   # Remove blacklisted contents
             elif hasattr(tag, 'attrs') and tag != 'img':
-                for attr, _ in tag.attrs:
-                    del tag[attr]  # Remove attributes
+                tag.attrs = {}  # Remove attributes
             # end if
         # end for
         return div

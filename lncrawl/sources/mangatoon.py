@@ -12,7 +12,9 @@ search_url = 'https://mangatoon.mobi/%s/search?word=%s'
 
 
 class MangatoonMobiCrawler(Crawler):
-    base_url = 'https://mangatoon.mobi/'
+    base_url = [
+        'https://mangatoon.mobi/',
+    ]
 
     def initialize(self):
         self.home_url = 'https://mangatoon.mobi'
@@ -70,6 +72,7 @@ class MangatoonMobiCrawler(Crawler):
 
         chapter_content = ast.literal_eval(content)
         chapter_content = [p.replace(r'\-', '-') for p in chapter_content]
+        chapter_content = [p.replace('\\', '') for p in chapter_content]
         return '<p>' + '</p><p>'.join(chapter_content) + '</p>'
     # end def
 # end class
