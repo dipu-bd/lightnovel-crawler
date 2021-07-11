@@ -1,11 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-import json
-from urllib.parse import quote, urlparse
-import urllib.parse
-from bs4 import BeautifulSoup
-
 from ..utils.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -139,8 +133,8 @@ class WorldnovelonlineCrawler(Crawler):
 
         contents = soup.select_one(', '.join([
             '.post-content'
-            '.cha-words',
-            '.cha-content',
+            # '.cha-words',
+            # '.cha-content',
             # '.chapter-fill',
             '.entry-content.cl',
             '#content',
@@ -155,6 +149,6 @@ class WorldnovelonlineCrawler(Crawler):
             codeblock.decompose()
         # end for
 
-        return str(contents)
+        return str(contents).replace('www.worldnovel.online', '')
     # end def
 # end class
