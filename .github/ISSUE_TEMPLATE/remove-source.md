@@ -1,7 +1,7 @@
 ---
 name: Remove source
 about: If you are owner of a source added here and want to remove it
-title: 'Request to remove a site: <your site url>'
+title: 'Remove <your site url here>'
 labels: removal
 assignees: dipu-bd
 ---
