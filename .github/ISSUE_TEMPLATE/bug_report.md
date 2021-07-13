@@ -20,7 +20,7 @@ Where did you find this bug?
 <!-- your answer should be one of these: PIP | EXE | Discord Bot | Telegram Bot -->
 
 What is your novel URL?
-<!- paste url here -->
+<!-- paste url here -->
 
 If you are using PIP / EXE, what is your APP version ?
 <!-- if you don't know just skip it -->
