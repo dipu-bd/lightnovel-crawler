@@ -8,10 +8,22 @@ assignees: ''
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+
+<!-- Replace this line with a short description of what the bug is about. -->
+<!-- If you can add the error log / some screenshots that will help a lot -->
 
 **Let us know**
-- Novel URL: [e.g. https://lnmtl.com/novel/against-the-gods]
-- App Version: [e.g. 2.7.8]
-- Package: [can be exe, pip or`github]
-- OS: [e.g. Windows 10]
+
+<!-- Please answer the question below -->
+
+Where did you find this bug?
+- PIP | EXE | Discord Bot | Telegram Bot
+
+What is your novel URL?
+- 
+
+If you are using PIP / EXE, what is your APP version ?
+- (e.g.: 2.26.0)
+
+If you are using PIP / EXE, what is your operating system ?
+- Windows 10 / Linux / Mac OS ?
