@@ -17,13 +17,13 @@ assignees: ''
 <!-- Please answer the question below -->
 
 Where did you find this bug?
-- PIP | EXE | Discord Bot | Telegram Bot
+<!-- your answer should be one of these: PIP | EXE | Discord Bot | Telegram Bot -->
 
 What is your novel URL?
-- 
+<!- paste url here -->
 
 If you are using PIP / EXE, what is your APP version ?
-- (e.g.: 2.26.0)
+<!-- if you don't know just skip it -->
 
 If you are using PIP / EXE, what is your operating system ?
-- Windows 10 / Linux / Mac OS ?
+<!-- e.g. Windows 7, Windows 10, Ubuntu 20, Mac OS Big Sur etc. -->
