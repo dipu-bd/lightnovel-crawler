@@ -1,0 +1,117 @@
+name: Build and test package
+
+on:
+  push:
+    # branches:
+    # - master
+    tags:
+    - '*'
+
+jobs:
+  validate:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:      
+        python-version: [3.6, 3.7, 3.8, 3.9]
+    steps:
+    - uses: actions/checkout@v2  
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip wheel setuptools
+        pip install -r requirements.txt
+    
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Build wheel
+      run: |
+        python setup.py clean bdist_wheel
+    
+    - name: Install and test the wheel package
+      run: |
+        pip install dist/lightnovel_crawler*.whl
+        lncrawl --list-sources
+      # lncrawl -s https://booknet.com/en/book/she-b350343/ --first 2 -f --format epub --suppress -lll
+
+  build-windows:
+    name: Windows Build
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip wheel setuptools
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    
+    - name: Build wheel and package
+      run: |
+        python setup.py clean bdist_wheel package
+    
+    - name: Test the executable package
+      run: .\dist\lncrawl.exe --list-sources
+    
+    - name: Release
+      uses: ncipollo/release-action@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with: # See available options at https://github.com/ncipollo/release-action
+        allowUpdates: true
+        artifactErrorsFailBuild: true
+        artifacts: "dist/lncrwal.exe"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-linux:
+    name: Linux Build & Publish
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.6
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.6
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip wheel setuptools
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+
+    - name: Build wheel and package
+      run: |
+        python setup.py clean bdist_wheel package
+
+    - name: Test the executable package
+      run: ./dist/lncrawl --list-sources
+
+    - name: Release
+      uses: ncipollo/release-action@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with: # See available options at https://github.com/ncipollo/release-action
+        allowUpdates: true
+        artifactErrorsFailBuild: true
+        artifacts: "dist/lncrawl,dist/*.whl"
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish
+      uses: pypa/gh-action-pypi-publish@release/v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
