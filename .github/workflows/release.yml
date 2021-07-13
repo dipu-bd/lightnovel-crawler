@@ -5,7 +5,7 @@ on:
     # branches:
     # - master
     tags:
-    - '*'
+    - 'v*'
 
 jobs:
   validate:
@@ -17,6 +17,11 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
     - uses: actions/checkout@v2  
+    
+    - name: Check VERSION file
+      run: |
+        [ "${GITHUB_REF##*/}" == "v$(head -n 1 lncrawl/VERSION)" ] || exit 100
+    
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
@@ -24,7 +29,7 @@ jobs:
     
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip wheel setuptools
+        python -m pip install -U pip wheel setuptools
         pip install -r requirements.txt
     
     - name: Lint with flake8
@@ -36,14 +41,13 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
     - name: Build wheel
-      run: |
-        python setup.py clean bdist_wheel
+      run: python setup.py clean bdist_wheel
     
     - name: Install and test the wheel package
       run: |
         pip install dist/lightnovel_crawler*.whl
         lncrawl --list-sources
-      # lncrawl -s https://booknet.com/en/book/she-b350343/ --first 2 -f --format epub --suppress -lll
+        lncrawl -s 'https://novelfull.com/the-kings-avatar-for-the-glory.html' --first 2 -f --format epub --suppress -lll
 
   build-windows:
     name: Windows Build
@@ -57,13 +61,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip wheel setuptools
+        python -m pip install -U pip wheel setuptools
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
     
     - name: Build wheel and package
-      run: |
-        python setup.py clean bdist_wheel package
+      run: python setup.py clean bdist_wheel package
     
     - name: Test the executable package
       run: .\dist\lncrawl.exe --list-sources
@@ -89,13 +92,12 @@ jobs:
     
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip wheel setuptools
+        python -m pip install -U pip wheel setuptools
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
 
     - name: Build wheel and package
-      run: |
-        python setup.py clean bdist_wheel package
+      run: python setup.py clean bdist_wheel package
 
     - name: Test the executable package
       run: ./dist/lncrawl --list-sources
