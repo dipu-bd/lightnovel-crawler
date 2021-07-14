@@ -66,6 +66,8 @@ jobs:
         pip install -r requirements-dev.txt
     
     - name: Build wheel and package
+      env:
+        PYTHONIOENCODING: utf-8
       run: python setup.py clean bdist_wheel package
     
     - name: Test the executable package
