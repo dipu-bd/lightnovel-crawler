@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)

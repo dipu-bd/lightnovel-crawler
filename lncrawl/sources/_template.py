@@ -8,7 +8,7 @@ TODO: You can safely delete all [OPTIONAL] methods if you do not need them
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 # TODO: Set a name for meaningful logging
 logger = logging.getLogger(__name__)

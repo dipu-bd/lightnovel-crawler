@@ -15,7 +15,7 @@ import importlib
 import os
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 rejected_sources = {
     'https://chrysanthemumgarden.com/': 'Removed on request of the owner (Issue #649)',

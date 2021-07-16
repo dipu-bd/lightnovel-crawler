@@ -4,7 +4,7 @@ import logging
 import re
 from urllib.parse import urlparse
 from ..utils.cleaner import cleanup_text
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://novelmic.com/?s=%s&post_type=wp-manga'

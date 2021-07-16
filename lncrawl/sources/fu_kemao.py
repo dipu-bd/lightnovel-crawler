@@ -5,7 +5,7 @@ from base64 import b64decode
 from concurrent import futures
 from urllib.parse import quote_plus
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

@@ -4,7 +4,7 @@ import logging
 import re
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote_plus
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://moonstonetranslation.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult='

@@ -10,7 +10,7 @@ from slugify import slugify
 from .. import constants as C
 from ..binders import available_formats, generate_books
 from ..sources import crawler_list
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from .downloader import download_chapters, download_chapter_images
 from .novel_info import format_novel, save_metadata
 from .novel_search import search_novels

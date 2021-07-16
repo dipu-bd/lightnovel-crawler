@@ -6,7 +6,7 @@ import logging
 import re
 from abc import abstractmethod
 from concurrent import futures
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse
 
 import cloudscraper
 from requests import Session

@@ -2,7 +2,7 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.royalroad.com/fictions/search?keyword=%s'

@@ -7,7 +7,7 @@ import urllib.parse
 
 from bs4 import BeautifulSoup
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

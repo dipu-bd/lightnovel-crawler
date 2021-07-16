@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://lightnovelshub.com/?s=%s&post_type=wp-manga&author=&artist=&release='

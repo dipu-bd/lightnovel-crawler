@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from urllib.parse import quote_plus
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 full_chapter_list_url = 'https://wuxiaworldsite.co/get-full-list.ajax?id=%s'

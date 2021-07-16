@@ -4,7 +4,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = '%s/tim-kiem-nang-cao?title=%s'

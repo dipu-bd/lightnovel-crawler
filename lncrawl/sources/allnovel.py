@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)

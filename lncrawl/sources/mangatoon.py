@@ -3,7 +3,7 @@ import json
 import logging
 import re
 import ast
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

@@ -9,7 +9,7 @@ from ... import constants as C
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
-from ...utils.crawler import Crawler
+from ...core.crawler import Crawler
 from .open_folder_prompt import display_open_folder
 
 logger = logging.getLogger(__name__)

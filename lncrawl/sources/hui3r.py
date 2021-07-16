@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from bs4 import Comment
 
 logger = logging.getLogger(__name__)

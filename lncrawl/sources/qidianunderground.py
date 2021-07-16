@@ -10,7 +10,7 @@ from datetime import datetime
 
 import regex
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.pbincli import PasteV2
 
 logger = logging.getLogger(__name__)

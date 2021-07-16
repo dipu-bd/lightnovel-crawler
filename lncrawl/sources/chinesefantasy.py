@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 import requests
 import re
 import logging

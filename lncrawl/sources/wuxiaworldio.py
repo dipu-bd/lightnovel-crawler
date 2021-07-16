@@ -2,7 +2,7 @@
 import logging
 import re
 from bs4 import BeautifulSoup
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.io/search.ajax?type=&query=%s'

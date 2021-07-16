@@ -2,7 +2,7 @@
 import logging
 from urllib.parse import quote
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.novelupdates.cc/search/%s/1'

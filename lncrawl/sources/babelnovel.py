@@ -8,7 +8,7 @@ from urllib.parse import quote, urlparse
 from bs4 import BeautifulSoup
 from bs4.element import Tag
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

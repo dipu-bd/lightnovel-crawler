@@ -4,7 +4,7 @@ import re
 from concurrent import futures
 from urllib.parse import parse_qs, urlparse
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

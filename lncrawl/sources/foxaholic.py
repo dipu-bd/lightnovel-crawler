@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from urllib.parse import urlparse
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)

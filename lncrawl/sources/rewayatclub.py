@@ -3,7 +3,7 @@ import logging
 import re
 from concurrent import futures
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

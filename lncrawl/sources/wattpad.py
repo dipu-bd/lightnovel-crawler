@@ -3,7 +3,7 @@ from time import time
 import logging
 import re
 from urllib.parse import urlparse
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
