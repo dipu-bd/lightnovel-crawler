@@ -73,6 +73,7 @@ class Centinni(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
+        contents = soup.select_one('div.text-left')
 
         # remove bad tags
         self.bad_css += [
