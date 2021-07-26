@@ -50,6 +50,7 @@ jobs:
         lncrawl -s 'https://novelfull.com/the-kings-avatar-for-the-glory.html' --first 2 -f --format epub --suppress -lll
 
   build-windows:
+    needs: validate
     name: Windows Build
     runs-on: windows-latest
     steps:
@@ -83,6 +84,7 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
+    needs: validate
     name: Linux Build & Publish
     runs-on: ubuntu-latest
     steps:
