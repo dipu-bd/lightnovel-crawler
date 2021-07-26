@@ -305,6 +305,7 @@ You are very welcome to contribute in this project. You can:
 
 | Available Sources                            | Can Search | Can Login |      Maintainer       |
 | -------------------------------------------- | :--------: | :-------: | :-------------------: |
+| https://noveltoon.mobi/                      |            |           |       @dipu-bd        |
 | https://grensia.blogspot.com                 |            |           |       @dipu-bd        |
 | http://boxnovel.cloud                        |     ✔      |           |      @SirGryphin      |
 | http://boxnovel.org                          |     ✔      |           |       @dipu-bd        |

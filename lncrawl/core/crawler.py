@@ -322,8 +322,6 @@ class Crawler:
                 # end if
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
-            elif self.__is_in_blacklist(tag.text.strip()):
-                tag.extract()   # Remove blacklisted text
             elif hasattr(tag, 'attrs') and tag != 'img':
                 tag.attrs = {}  # Remove attributes
             # end if
@@ -334,11 +332,11 @@ class Crawler:
 
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
-        content = ' '.join(self.__extract_contents(tag))
+        body = ' '.join(self.__extract_contents(tag))
         return '\n'.join([
             '<p>' + x + '</p>'
-            for x in content.split(LINE_SEP)
-            if x and x.strip()
+            for x in body.split(LINE_SEP)
+            if not self.__is_in_blacklist(x.strip())
         ])
     # end def
 
@@ -385,6 +383,9 @@ class Crawler:
     # end def
 
     def __is_in_blacklist(self, text) -> bool:
+        if not text:
+            return True
+        # end if
         if not self.blacklist_patterns:
             return False
         # end if
