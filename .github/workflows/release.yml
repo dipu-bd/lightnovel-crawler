@@ -65,9 +65,6 @@ jobs:
         PYTHONIOENCODING: utf-8
       run: .\scripts\build.bat
     
-    - name: Test the executable package
-      run: .\dist\lncrawl.exe --list-sources
-    
     - name: Release
       uses: ncipollo/release-action@v1
       if: startsWith(github.ref, 'refs/tags/')
@@ -76,6 +73,11 @@ jobs:
         artifactErrorsFailBuild: true
         artifacts: "dist/lncrwal.exe"
         token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test the executable package
+      env:
+        PYTHONIOENCODING: utf-8
+      run: .\dist\lncrawl.exe --list-sources
 
   build-linux:
     needs: validate
@@ -91,9 +93,6 @@ jobs:
     - name: Build package
       run: ./scripts/build.sh
 
-    - name: Test the executable package
-      run: ./dist/lncrawl --list-sources
-
     - name: Release
       uses: ncipollo/release-action@v1
       if: startsWith(github.ref, 'refs/tags/')
@@ -103,9 +102,13 @@ jobs:
         artifacts: "dist/lncrawl,dist/*.whl"
         token: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Test the executable package
+      run: ./dist/lncrawl --list-sources
+
     - name: Publish
-      uses: pypa/gh-action-pypi-publish@release/v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      env:
+        TWINE_REPOSITORY: lightnovel-crawler
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        TWINE_NON_INTERACTIVE: true
+      run: ./scripts/publish.sh
