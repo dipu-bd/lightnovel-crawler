@@ -71,7 +71,7 @@ jobs:
       with: # See available options at https://github.com/ncipollo/release-action
         allowUpdates: true
         artifactErrorsFailBuild: true
-        artifacts: .\dist\lncrwal.exe
+        artifacts: "dist/lncrawl*"
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test the executable package
