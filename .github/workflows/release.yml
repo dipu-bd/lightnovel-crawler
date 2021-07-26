@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
-      matrix:      
+      matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
-    - uses: actions/checkout@v2  
+    - uses: actions/checkout@v2
     
     - name: Check VERSION file
       run: |
@@ -60,6 +60,9 @@ jobs:
       with:
         python-version: 3.6
 
+    - name: Install OpenSSL
+      run: choco install openssl
+
     - name: Build package
       env:
         PYTHONIOENCODING: utf-8
@@ -80,7 +83,7 @@ jobs:
       run: .\dist\lncrawl.exe --list-sources
 
   build-linux:
-    needs: validate
+    needs: [validate, build-windows]
     name: Linux Build & Publish
     runs-on: ubuntu-latest
     steps:
@@ -104,6 +107,11 @@ jobs:
 
     - name: Test the executable package
       run: ./dist/lncrawl --list-sources
+
+    - name: Update download links
+      env:
+        REBRANDLY_API_KEY: ${{ secrets.REBRANDLY_API_KEY }}
+      run: ./scripts/rebrandly.sh
 
     - name: Publish
       env:
