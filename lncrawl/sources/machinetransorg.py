@@ -75,8 +75,6 @@ class MachineTransOrg(Crawler):
         self.blacklist_patterns = [
             r'^Refresh time: \d+-\d+-\d+$'
         ]
-        self.clean_contents(body)
-
-        return str(body)
+        return self.extract_contents(body)
     # end def
 # end class

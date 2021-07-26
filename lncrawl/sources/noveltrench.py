@@ -77,7 +77,7 @@ class NovelTrenchCrawler(Crawler):
 
         contents = soup.select_one('div.text-left')
         for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.decompose()
+            bad.extract()
 
         return str(contents)
     # end def

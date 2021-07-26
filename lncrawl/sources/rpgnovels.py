@@ -37,7 +37,7 @@ class RPGNovels(Crawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('div.post-entry')
         for notoc in toc_parts.select('.sharedaddy'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
@@ -73,13 +73,13 @@ class RPGNovels(Crawler):
 
         # Removes "Share this" text and buttons from bottom of chapters. Also other junk on page.
         for share in body_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, hr, .adsbygoogle, a[href*="https://www.patreon.com/rpgnovels"]'):
-            share.decompose()
+            share.extract()
 
         # Remoeves bad text from chapters.
         for content in body_parts.select("p"):
             for bad in ["Previous Chapter", "Table of Contents", "Next Chapter", "Please consider supporting me. You can do this either by turning off adblock for this blog or via my . Thank you."]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
         # Fixes images, so they can be downloaded.
         all_imgs = soup.find_all('img')
@@ -87,7 +87,7 @@ class RPGNovels(Crawler):
             if img.has_attr('data-orig-file'):
                 src_url = img['src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 

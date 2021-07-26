@@ -62,7 +62,6 @@ class AixdzsCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        chapter['body_lock'] = True
         contents = soup.select('.content > p')
         contents = [str(p) for p in contents if p.text.strip()]
         return ''.join(contents)

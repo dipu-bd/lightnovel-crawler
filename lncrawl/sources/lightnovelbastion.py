@@ -110,9 +110,8 @@ class LightNovelBastion(Crawler):
             '.sharedaddy',
         ])
         for bad in contents.select(bad_css):
-            bad.decompose()
+            bad.extract()
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

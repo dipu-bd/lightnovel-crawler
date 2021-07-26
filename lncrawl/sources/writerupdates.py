@@ -77,14 +77,13 @@ class WriterUpdates(Crawler):
 
         contents = soup.select_one('div.text-left')
         for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.decompose()
+            bad.extract()
 
         for content in contents.select("p"):
             for bad in ["this chapter is only for novel updates group approval if you want me to translate it hit me on discord server but let me warren you this novel content rascim", "https://discord.gg/AyJes52"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

@@ -146,7 +146,7 @@ class WorldnovelonlineCrawler(Crawler):
         # self.clean_contents(contents)
 
         for codeblock in contents.select('div.code-block'):
-            codeblock.decompose()
+            codeblock.extract()
         # end for
 
         return str(contents).replace('www.worldnovel.online', '')

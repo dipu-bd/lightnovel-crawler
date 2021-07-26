@@ -84,7 +84,7 @@ class FoxaholicCrawler(Crawler):
             if img.has_attr('loading'):
                 src_url = img['src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
         return ''.join([str(p) for p in contents])

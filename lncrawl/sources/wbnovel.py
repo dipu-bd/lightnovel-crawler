@@ -56,7 +56,7 @@ class WBNovelCrawler(Crawler):
         content_area = soup.select_one(' .page-content-listing')
 
         for span in content_area.findAll('span'):
-            span.decompose()
+            span.extract()
 
         chapters = content_area.select('ul.main li.wp-manga-chapter a')
 
@@ -92,15 +92,15 @@ class WBNovelCrawler(Crawler):
             if img.has_attr('data-lazy-src'):
                 src_url = img['data-lazy-src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 
         if contents.h3:
-            contents.h3.decompose()
+            contents.h3.extract()
 
         for codeblock in contents.findAll('div', {'class': 'code-block'}):
-            codeblock.decompose()
+            codeblock.extract()
 
         return str(contents)
     # end def

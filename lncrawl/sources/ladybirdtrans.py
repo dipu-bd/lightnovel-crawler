@@ -70,12 +70,11 @@ class lazybirdtranslations(Crawler):
         for content in body_parts.select("p"):
             for bad in ["[Index]", "[Previous]", "[Next]"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
         for bad in body_parts.select('br, .entry-meta, .inline-ad-slot, .has-text-align-center, #jp-post-flair, .entry-footer'):
-            bad.decompose()
+            bad.extract()
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

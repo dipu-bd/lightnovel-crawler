@@ -61,7 +61,7 @@ class ChrysanthemumGarden(Crawler):
         contents = []
         for p in soup.select('#novel-content p'):
             for span in p.select('span[style*="width:0"]'):
-                span.decompose()
+                span.extract()
             # end for
 
             if any(x in p.text for x in bads):

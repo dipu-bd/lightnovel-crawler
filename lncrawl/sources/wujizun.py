@@ -29,7 +29,7 @@ class Wujizun(Crawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('div.entry-content')
         for notoc in toc_parts.select('.sharedaddy, .ezoic-adpicker-ad, .ezoic-ad-adaptive, .ezoic-ad'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
@@ -65,13 +65,13 @@ class Wujizun(Crawler):
 
         # Removes "Share this" text and buttons from bottom of chapters. Also other junk on page.
         for share in body_parts.select('iframe, .sharedaddy, .jp-relatedposts, .inline-ad-slot, .code-block, script, hr, .adsbygoogle, .ezoic-adpicker-ad, .ezoic-ad-adaptive, .ezoic-ad, .cb_p6_patreon_button, a[href*="patreon.com"]'):
-            share.decompose()
+            share.extract()
 
         # Remoeves bad text from chapters.
         for content in body_parts.select("p"):
             for bad in ["Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
         # Fixes images, so they can be downloaded.
         all_imgs = soup.find_all('img')
@@ -79,7 +79,7 @@ class Wujizun(Crawler):
             if img.has_attr('data-orig-file'):
                 src_url = img['src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 

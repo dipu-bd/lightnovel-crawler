@@ -62,9 +62,7 @@ class OneKsyCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        chapter['body_lock'] = True
         contents = soup.select_one('#content')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

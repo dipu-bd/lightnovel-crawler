@@ -55,11 +55,9 @@ class TikNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        chapter['body_lock'] = True
         query_str = urlparse(chapter['url']).query
         data_params = {x[0]: int(x[1]) for x in parse_qsl(query_str)}
-        logging.debug("Requesting body with: %s", data_params)
+        logger.debug("Requesting body with: %s", data_params)
         response = self.submit_form(chapter_details_url, data=data_params)
         data = response.json()
         chap_desc = data['data']['chap']['desc']

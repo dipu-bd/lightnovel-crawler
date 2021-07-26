@@ -65,11 +65,6 @@ class RebirthOnlineCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
         if len(soup.findAll('br')) > 10:
             contents = soup.find('br').parent
         else:
@@ -80,7 +75,7 @@ class RebirthOnlineCrawler(Crawler):
             for content in contents:
                 for item in remove:
                     if item in content.text:
-                        content.decompose()
+                        content.extract()
                     # end if
                 # end for
             # end for

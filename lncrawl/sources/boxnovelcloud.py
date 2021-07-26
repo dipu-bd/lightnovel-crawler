@@ -120,20 +120,11 @@ class BoxNovelCloud(Crawler):
         # end for
     # end def
 
-    def download_chapter_body(self, chapter):        #
-        # NOTE: Set `chapter['body_lock'] = True` to disable post-formatting.
-        #       It can be useful in non-english sources, e.g. aixdzs, qidiancom, tiknovel
-        #
-        #       Return an empty body if anything goes wrong. But you should not return `None`.
-        '''Download body of a single chapter and return as clean html format.'''
+    def download_chapter_body(self, chapter):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.chr-c, #chr-content')
-        for br in contents.select('br'):
-            br.decompose()
-        # end for
-
-        return str(contents)
+        return self.extract_contents(contents)
     # end def
 # end class

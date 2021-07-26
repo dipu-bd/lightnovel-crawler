@@ -88,7 +88,7 @@ class NovelMic(Crawler):
             if img.has_attr('data-src'):
                 src_url = img['data-src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 

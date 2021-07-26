@@ -73,7 +73,6 @@ class WuxiaOnlineCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         parts = soup.select_one('#list_chapter .content-area')
-        body = self.extract_contents(parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(parts)
     # end def
 # end class

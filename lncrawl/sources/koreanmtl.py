@@ -40,7 +40,7 @@ class LightNovelsOnl(Crawler):
         soup = self.get_soup(chapter['url'], parser='html5lib')
         contents = soup.select_one('.post-body.entry-content')
         for el in contents.select('div[style="text-align:center;"]'):
-            el.decompose()
+            el.extract()
         body = ''
         for p in contents.select('p'):
             line = p.text.strip()

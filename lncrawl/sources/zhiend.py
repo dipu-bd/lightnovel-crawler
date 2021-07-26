@@ -61,9 +61,7 @@ class ZhiEnd(Crawler):
         soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.post-body')
-        for br in body_parts.select('br'):
-            br.decompose()
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        
+        return self.extract_contents(body_parts)
     # end def
 # end class

@@ -103,7 +103,7 @@ class NovelTranslateCrawler(Crawler):
         body = []
         for p in contents:
             for ad in p.select('.ezoic-adpicker-ad, .ezoic-ad, .ezoic-adl'):
-                ad.decompose()
+                ad.extract()
             body.append(str(p))
 
         return ''.join(body)

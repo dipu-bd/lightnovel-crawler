@@ -58,15 +58,14 @@ class Virlyce(Crawler):
 
         # Removes "Share this" text and buttons from bottom of chapters.
         for share in body_parts.select('div.sharedaddy'):
-            share.decompose()
+            share.extract()
 
         # Remoeves Nav Button from top and bottom of chapters.
         for content in body_parts.select("p"):
             for bad in ["|", "<a>Previous</a>", "<a>Next</a>", "<a>Table of Contents</a>"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

@@ -66,7 +66,7 @@ class YukiNovelCrawler(Crawler):
         contents = soup.select_one('div.entry-content.cl')
 
         for d in contents.findAll('div'):
-            d.decompose()
+            d.extract()
         # end for
 
         for comment in contents.find_all(string=lambda text: isinstance(text, Comment)):

@@ -115,7 +115,7 @@ class Fu_kCom_ademao(Crawler):
 
         # Removes "junk" from chapters.
         for share in body.select('script, hr, br, #div-gpt-ad-comrademaocom35917, #div-gpt-ad-comrademaocom35918'):
-            share.decompose()
+            share.extract()
 
         return str(body)
     # end def

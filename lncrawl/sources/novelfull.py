@@ -127,10 +127,10 @@ class NovelFullCrawler(Crawler):
         contents = soup.select_one('div#chapter-content')
 
         for bad in contents.select('iframe, .ads-middle, .code-block, script, .adsbygoogle, img[src*="proxy?container=focus"]'):
-            bad.decompose()
+            bad.extract()
 
         for end in contents.findAll('div', {"align": 'left'}):
-            end.decompose()
+            end.extract()
 
         return str(contents)
     # end def

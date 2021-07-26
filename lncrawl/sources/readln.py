@@ -66,7 +66,7 @@ class ReadLightNovelCrawler(Crawler):
             '#growfoodsmart'
         ]
         for hidden in div.select(', '.join(bad_selectors)):
-            hidden.decompose()
+            hidden.extract()
         # end for
 
         body = self.extract_contents(div)

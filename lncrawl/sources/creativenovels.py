@@ -32,8 +32,8 @@ class CreativeNovelsCrawler(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         try:
-            self.novel_cover = self.absolute_url(soup.select_one(
-                '.x-bar-content-area img.book_cover')['src'])
+            self.novel_cover = self.absolute_url(
+                soup.select_one('.x-bar-content-area img.book_cover')['src'])
             logger.info('Novel Cover: %s', self.novel_cover)
         except Exception:
             pass
@@ -123,13 +123,13 @@ class CreativeNovelsCrawler(Crawler):
         ]
 
         body = soup.select_one('article .entry-content')
-        for tag in body.select('.announcements_crn'):
-            tag.decompose()
-        # end for
-        for span in body.find_all('span', {'style':'color:transparent;'}):
-            # Remove span tags that contain invisible text 
-            span.decompose()
-        # end for
+
+        self.bad_css += [
+            '.announcements_crn',
+            'span[style*="color:transparent"]',
+            'div.novel_showcase',
+        ]
+
         for span in body.find_all('span'):
             if len(span.parent.contents) <= 3:
                 if (span.parent.name in FORMATTING_TAGS) or (span.next_sibling is not None or span.previous_sibling is not None):
@@ -151,15 +151,7 @@ class CreativeNovelsCrawler(Crawler):
                 span.attrs = {}
             #end if
         # end for
-        for span in body.find_all('style'):
-            span.decompose()
-        # end for
-        for div in body.find_all('div', {'class':'novel_showcase'}):
-            # Remove the novel showcase div
-            div.decompose()
-        # end for
 
-        self.clean_contents(body)
-        return str(body)
+        return self.extract_contents(body)
     # end def
 # end class

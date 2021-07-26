@@ -53,16 +53,7 @@ class DarkTranslation(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        body = []
-        contents = soup.select('div.entry-content p')
-        for p in contents:
-            para = ' '.join(self.extract_contents(p))
-            if len(para):
-                body.append(para)
-            # end if
-        # end for
-
-        return '<p>%s</p>' % '</p><p>'.join(body)
+        contents = soup.select('div.entry-content')
+        return self.extract_contents(contents)
     # end def
 # end class

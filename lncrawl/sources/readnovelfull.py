@@ -62,7 +62,7 @@ class ReadNovelFullCrawler(Crawler):
         chapters = chapter_soup.select('li a')
         for a in chapters:
             for span in a.findAll('span'):
-                span.decompose()
+                span.extract()
             # end for
         # end for
 

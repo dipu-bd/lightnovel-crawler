@@ -52,7 +52,7 @@ class LightNovelWorldCrawler(Crawler):
 
         contents = soup.select_one('div#content_detail')
         for ads in contents.select("div"):
-            ads.decompose()
+            ads.extract()
 
         return str(contents)
 

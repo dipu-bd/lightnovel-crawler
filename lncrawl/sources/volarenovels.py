@@ -97,7 +97,7 @@ class VolareNovelsCrawler(Crawler):
         for bad in content.select(
             '.chapter-nav, .hidden-text, .__cf_email__, p[data-f-id=\'pbf\'], span[style*="font-size: 0"]'
         ):
-            bad.decompose()
+            bad.extract()
         # end for
 
         return str(content)

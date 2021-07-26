@@ -48,8 +48,7 @@ class ChineseFantasyNovels(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('#BookText')
-        content.select_one('.link').decompose()
-        body = self.extract_contents(content)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        self.bad_css += ['.link']
+        return self.extract_contents(content)
     # end def
 # end class

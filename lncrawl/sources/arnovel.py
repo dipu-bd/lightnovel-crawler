@@ -79,7 +79,6 @@ class ArNovelCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        chapter['body_lock'] = True
         contents = soup.select('.reading-content p')
         return ''.join([str(p) for p in contents])
     # end def

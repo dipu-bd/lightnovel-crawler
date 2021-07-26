@@ -114,15 +114,10 @@ class MtledNovelsCrawler(Crawler):
             chapter['title'] = chapter['title']
         # end if
 
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
         contents = soup.select('div.translated p')
         # print(contents)
         for p in contents:
-            for span in p.findAll('span'):
+            for span in p.find_all('span'):
                 span.unwrap()
             # end for
         # end for

@@ -60,8 +60,6 @@ class RanobeLibCrawler(Crawler):
 
         div = soup.select_one('.reader-container')
 
-        body = self.extract_contents(div)
-
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(div)
     # end def
 # end class

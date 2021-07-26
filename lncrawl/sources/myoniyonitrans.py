@@ -100,7 +100,7 @@ class MyOniyOniTranslation(Crawler):
             if tag.name == 'hr':
                 break
             # end if
-            tag.decompose()
+            tag.extract()
         # end for
         self.bad_tags.append('div')
         self.clean_contents(contents)

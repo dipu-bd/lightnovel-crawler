@@ -66,7 +66,6 @@ class QidianComCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        chapter['body_lock'] = True
         chapter['title'] = soup.select_one('h3.j_chapterName').text.strip()
         return soup.select_one('div.j_readContent').extract()
     # end def

@@ -117,7 +117,7 @@ class LightNovelOnline(Crawler):
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('.chapter-content')
         for ads in body.select('div[class*="ad"], script, ins, p[class]'):
-            ads.decompose()
+            ads.extract()
         # end for
         return str(body)
     # end def

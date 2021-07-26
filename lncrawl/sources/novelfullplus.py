@@ -74,7 +74,7 @@ class NovelFullPlus(Crawler):
 
         contents = soup.select_one('.reading-detail .container')
         for br in contents.select('br, h3, h1, h2, h4'):
-            br.decompose()
+            br.extract()
         # end for
 
         return str(contents)

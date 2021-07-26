@@ -87,15 +87,15 @@ class MeionovelCrawler(Crawler):
             if img.has_attr('data-lazy-src'):
                 src_url = img['data-lazy-src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 
         if contents.h3:
-            contents.h3.decompose()
+            contents.h3.extract()
 
         for codeblock in contents.findAll('div', {'class': 'code-block'}):
-            codeblock.decompose()
+            codeblock.extract()
 
         return str(contents)
     # end def

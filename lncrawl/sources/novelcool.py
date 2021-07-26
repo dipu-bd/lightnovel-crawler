@@ -66,7 +66,6 @@ class NovelCool(Crawler):
             junk.extract()
         # end for
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

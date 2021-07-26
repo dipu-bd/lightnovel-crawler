@@ -30,7 +30,7 @@ class Dobelyuwai(Crawler):
         toc_parts = soup.select_one('div.entry-content')
 
         for notoc in toc_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, .adsbygoogle'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
@@ -66,13 +66,13 @@ class Dobelyuwai(Crawler):
 
         # Removes "Share this" text and buttons from bottom of chapters. Also other junk on page.
         for share in body_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, hr, .adsbygoogle'):
-            share.decompose()
+            share.extract()
 
         # Remoeves bad text from chapters.
         for content in body_parts.select("p"):
             for bad in ["Prev", "ToC", "Next"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
         # Fixes images, so they can be downloaded.
         all_imgs = soup.find_all('img')
@@ -80,7 +80,7 @@ class Dobelyuwai(Crawler):
             if img.has_attr('data-orig-file'):
                 src_url = img['src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 

@@ -5,25 +5,27 @@ Crawler application
 import logging
 import re
 from abc import abstractmethod
-from concurrent import futures
+from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
 import cloudscraper
-from requests import Session
-from bs4 import BeautifulSoup, Comment
-from requests.adapters import Response
+from bs4 import BeautifulSoup
+from bs4.element import Comment
+from requests import Response, Session
 
 logger = logging.getLogger(__name__)
 
 _default_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 
+LINE_SEP = '<br>'
+
 
 class Crawler:
     '''Blueprint for creating new crawlers'''
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._destroyed = False
-        self.executor = futures.ThreadPoolExecutor(max_workers=4)
+        self.executor = ThreadPoolExecutor(max_workers=4)
 
         # Initialize cloudscrapper
         try:
@@ -63,30 +65,22 @@ class Crawler:
         self.last_visited_url = None
     # end def
 
-    def destroy(self):
-        self._destroyed = True
-        self.volumes.clear()
-        self.chapters.clear()
-        self.scraper.close()
-        self.executor.shutdown(False)
-    # end def
-
     # ------------------------------------------------------------------------- #
     # Implement these methods
     # ------------------------------------------------------------------------- #
 
     @abstractmethod
-    def initialize(self):
+    def initialize(self) -> None:
         pass
     # end def
 
     @abstractmethod
-    def login(self, email, password):
+    def login(self, email: str, password: str) -> None:
         pass
     # end def
 
     @abstractmethod
-    def logout(self):
+    def logout(self) -> None:
         pass
     # end def
 
@@ -97,18 +91,18 @@ class Crawler:
     # end def
 
     @abstractmethod
-    def read_novel_info(self):
+    def read_novel_info(self) -> None:
         '''Get novel title, autor, cover etc'''
         pass
     # end def
 
     @abstractmethod
-    def download_chapter_body(self, chapter):
+    def download_chapter_body(self, chapter) -> str:
         '''Download body of a single chapter and return as clean html format.'''
         pass
     # end def
 
-    def get_chapter_index_of(self, url):
+    def get_chapter_index_of(self, url) -> int:
         '''Return the index of chapter by given url or 0'''
         url = (url or '').strip().strip('/')
         for chapter in self.chapters:
@@ -122,27 +116,36 @@ class Crawler:
     # ------------------------------------------------------------------------- #
     # Helper methods to be used
     # ------------------------------------------------------------------------- #
-    @property
-    def headers(self):
-        return self.scraper.headers.copy()
+
+    def destroy(self) -> None:
+        self._destroyed = True
+        self.volumes.clear()
+        self.chapters.clear()
+        self.scraper.close()
+        self.executor.shutdown(False)
     # end def
 
-    def set_header(self, key: str, value: str):
+    @property
+    def headers(self) -> dict:
+        return dict(self.scraper.headers)
+    # end def
+
+    def set_header(self, key: str, value: str) -> None:
         self.scraper.headers[key.lower()] = value
     # end def
 
     @property
-    def cookies(self):
+    def cookies(self) -> dict:
         return {x.name: x.value for x in self.scraper.cookies}
     # end def
 
-    def absolute_url(self, url, page_url=None):
+    def absolute_url(self, url, page_url=None) -> str:
         url = (url or '').strip()
         if not page_url:
             page_url = self.last_visited_url
         # end if
         if not url or len(url) == 0:
-            return None
+            return url
         elif url.startswith('//'):
             return self.home_url.split(':')[0] + ':' + url
         elif url.find('//') >= 0:
@@ -156,14 +159,14 @@ class Crawler:
         # end if
     # end def
 
-    def is_relative_url(self, url):
+    def is_relative_url(self, url) -> bool:
         page = urlparse(self.novel_url)
         url = urlparse(url)
         return (page.hostname == url.hostname
                 and url.path.startswith(page.path))
     # end def
 
-    def __process_response(self, response):
+    def __process_response(self, response) -> Response:
         response.raise_for_status()
         response.encoding = 'utf8'
         self.cookies.update({
@@ -172,28 +175,29 @@ class Crawler:
         })
         return response
 
-
-    def get_response(self, url, **kargs):
+    def get_response(self, url, **kargs) -> Response:
         if self._destroyed:
-            return None
+            raise Exception('Instance is detroyed')
+        # end if
 
         kargs = kargs or dict()
         #kargs.setdefault('verify', False)
         #kargs.setdefault('allow_redirects', True)
         kargs.setdefault('timeout', 150)  # in seconds
         headers = kargs.setdefault('headers', {})
-        
+
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('user-agent', _default_user_agent)
 
-        response = self.scraper.get(url, **kargs)
+        response: Response = self.scraper.get(url, **kargs)
         self.last_visited_url = url.strip('/')
         return self.__process_response(response)
     # end def
 
-    def post_response(self, url, data={}, headers={}):
+    def post_response(self, url, data={}, headers={}) -> Response:
         if self._destroyed:
-            return None
+            raise Exception('Instance is detroyed')
+        # end if
 
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('user-agent', _default_user_agent)
@@ -210,10 +214,10 @@ class Crawler:
         return self.__process_response(response)
     # end def
 
-    def submit_form(self, url, data={}, multipart=False, headers={}):
+    def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
         '''Submit a form using post request'''
         if self._destroyed:
-            return None
+            raise Exception('Instance is detroyed')
         # end if
 
         content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -227,13 +231,13 @@ class Crawler:
         return self.__process_response(response)
     # end def
 
-    def get_soup(self, *args, **kwargs):
+    def get_soup(self, *args, **kwargs) -> BeautifulSoup:
         parser = kwargs.pop('parser', None)
         response = self.get_response(*args, **kwargs)
         return self.make_soup(response, parser)
     # end def
 
-    def make_soup(self, response, parser=None):
+    def make_soup(self, response, parser=None) -> BeautifulSoup:
         if isinstance(response, Response):
             html = response.content.decode('utf8', 'ignore')
         elif isinstance(response, bytes):
@@ -241,7 +245,7 @@ class Crawler:
         elif isinstance(response, str):
             html = str(response)
         else:
-            return None
+            raise Exception('Could not parse response')
         # end if
         soup = BeautifulSoup(html, parser or 'lxml')
         if not soup.find('body'):
@@ -250,7 +254,7 @@ class Crawler:
         return soup
     # end def
 
-    def get_json(self, *args, **kwargs):
+    def get_json(self, *args, **kwargs) -> dict:
         kwargs = kwargs or dict()
         headers = kwargs.setdefault('headers', {})
         headers = {k.lower(): v for k, v in headers.items()}
@@ -259,19 +263,19 @@ class Crawler:
         return response.json()
     # end def
 
-    def post_soup(self, url, data={}, headers={}, parser='lxml'):
+    def post_soup(self, url, data={}, headers={}, parser='lxml') -> BeautifulSoup:
         response = self.post_response(url, data, headers)
         return self.make_soup(response, parser)
     # end def
 
-    def post_json(self, url, data={}, headers={}):
+    def post_json(self, url, data={}, headers={}) -> dict:
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('accept', 'application/json, text/javascript, */*')
         response = self.post_response(url, data, headers)
         return response.json()
     # end def
 
-    def download_cover(self, output_file):
+    def download_cover(self, output_file) -> None:
         response = self.get_response(self.novel_cover)
         with open(output_file, 'wb') as f:
             f.write(response.content)
@@ -280,34 +284,34 @@ class Crawler:
 
     # ------------------------------------------------------------------------- #
 
-    blacklist_patterns = [
-        r'^[\W\D]*(volume|chapter)[\W\D]+\d+[\W\D]*$',
-    ]
+    blacklist_patterns = []
     bad_tags = [
-        'noscript', 'script', 'iframe', 'form', 'hr', 'ins',
-        'button', 'input', 'amp-auto-ads', 'pirate'
+        'noscript', 'script', 'style', 'iframe', 'ins', 'header', 'footer',
+        'button', 'input', 'amp-auto-ads', 'pirate', 'figcaption', 'address',
+        'tfoot', 'object', 'video', 'audio', 'source', 'nav', 'output', 'select',
+        'textarea', 'form', 'map',
     ]
-    block_tags = [
-        'h3', 'div', 'p'
+    bad_css = [
+        '.code-block', '.adsbygoogle', '.sharedaddy'
     ]
-
-    def is_blacklisted(self, text):
-        if len(text.strip()) == 0:
-            return True
-        # end if
-        for pattern in self.blacklist_patterns:
-            if re.search(pattern, text, re.IGNORECASE):
-                return True
-            # end if
-        # end for
-        return False
-    # end def
+    p_block_tags = [
+        'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+        'main', 'aside', 'article', 'div', 'section',
+    ]
+    unchanged_tags = [
+        None, '', 'pre', 'canvas',
+    ]
+    plain_text_tags = [
+        'span', 'a', 'abbr', 'acronym', 'label', 'time',
+    ]
 
     def clean_contents(self, div):
         if not div:
             return div
         # end if
-        div.attrs = {}
+        for bad in div.select(','.join(self.bad_css)):
+            bad.extract()
+        # end if
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
@@ -318,52 +322,80 @@ class Crawler:
                 # end if
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
-            elif not tag.text.strip():
-                tag.extract()   # Remove empty tags
-            elif self.is_blacklisted(tag.text):
-                tag.extract()   # Remove blacklisted contents
+            elif self.__is_in_blacklist(tag.text.strip()):
+                tag.extract()   # Remove blacklisted text
             elif hasattr(tag, 'attrs') and tag != 'img':
                 tag.attrs = {}  # Remove attributes
             # end if
         # end for
+        div.attrs = {}
         return div
     # end def
 
-    def extract_contents(self, tag, level=0):
-        body = []
-        if level == 0:
-            self.clean_contents(tag)
-        # end if
+    def extract_contents(self, tag) -> str:
+        self.clean_contents(tag)
+        content = ' '.join(self.__extract_contents(tag))
+        return '\n'.join([
+            '<p>' + x + '</p>'
+            for x in content.split(LINE_SEP)
+            if x and x.strip()
+        ])
+    # end def
 
+    def __extract_contents(self, tag) -> list:
+        body = []
         for elem in tag.contents:
             if isinstance(elem, Comment):
                 continue
-            # end if
-            if self.block_tags.count(elem.name):
-                body += self.extract_contents(elem, level + 1)
+            elif elem.name in self.unchanged_tags:
+                body.append(str(elem).strip())
                 continue
             # end if
-            text = ''
-            if not elem.name:
-                text = str(elem).strip()
-            else:
-                text = '<%s>%s</%s>'
-                text = text % (elem.name, elem.text.strip(), elem.name)
-            # end if
-            if text:
-                body.append(text)
+            text = elem.text.strip()
+            if elem.name == 'hr':
+                body.append(LINE_SEP)
+                body.append('-' * 8)
+                body.append(LINE_SEP)
+            elif elem.name == 'br':
+                body.append(LINE_SEP)
+            elif text:
+                is_block = elem.name in self.p_block_tags
+                is_plain = elem.name in self.plain_text_tags
+                content = ' '.join(self.__extract_contents(elem))
+                if is_block:
+                    body.append(LINE_SEP)
+                # end if
+                for line in content.split(LINE_SEP):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    # end if
+                    if not (is_plain or is_block):
+                        line = '<%s>%s</%s>' % (elem.name, line, elem.name)
+                    # end if
+                    body.append(line)
+                    body.append(LINE_SEP)
+                # end if
+                if not is_block:
+                    body.pop()
+                # end if
             # end if
         # end for
+        return [x.strip() for x in body if x.strip()]
+    # end def
 
-        if level > 0:
-            return body
-        else:
-            return [x for x in body if len(x.strip())]
+    def __is_in_blacklist(self, text) -> bool:
+        if not self.blacklist_patterns:
+            return False
         # end if
+        pattern = getattr(self, '__blacklist__', None)
+        if not pattern:
+            pattern = re.compile('|'.join(['(%s)' % p for p in self.blacklist_patterns]))
+            setattr(self, '__blacklist__', pattern)
+        # end if
+        if pattern and pattern.search(text):
+            return True
+        return False
     # end def
 
-    def cleanup_text(self, text):
-        return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]',
-                      '', str(text), flags=re.UNICODE)
-    # end def
 # end class

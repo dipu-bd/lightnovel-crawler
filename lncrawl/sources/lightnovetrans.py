@@ -44,7 +44,7 @@ class LNTCrawler(Crawler):
 
         content = soup.select_one('.entry-content')
         for bad in content.select('.alignleft, .alignright, hr, p[style*="text-align: center"]'):
-            bad.decompose()
+            bad.extract()
         # end for
 
         return '\n'.join([str(p) for p in content.find_all('p')])

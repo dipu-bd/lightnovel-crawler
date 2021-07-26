@@ -29,7 +29,7 @@ class VisTranslations(Crawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('.site-content')
         for notoc in toc_parts.select('.sharedaddy, iframe'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         # TODO: Some chapters have two href links for each chapters so you get duplicate chapters.

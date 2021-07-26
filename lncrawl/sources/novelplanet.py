@@ -77,7 +77,7 @@ class NovelPlanetCrawler(Crawler):
         # end if
 
         for ads in contents.findAll('div', {"style": 'text-align: center; margin-bottom: 10px'}):
-            ads.decompose()
+            ads.extract()
 
         return str(contents)
 

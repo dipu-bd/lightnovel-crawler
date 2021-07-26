@@ -110,8 +110,6 @@ class WuxiaComCrawler(Crawler):
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
-        self.clean_contents(body)
-
-        return '\n'.join([str(x) for x in body.contents])
+        return self.extract_contents(body)
     # end def
 # end class

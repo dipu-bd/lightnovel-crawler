@@ -29,7 +29,7 @@ class InadequateTranslations(Crawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('.entry-content')
         for notoc in toc_parts.select('.sharedaddy'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         chapters = soup.select('.entry-content a[href*="inadequatetranslations.wordpress.com"]')

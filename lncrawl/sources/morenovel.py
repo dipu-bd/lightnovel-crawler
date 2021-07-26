@@ -94,14 +94,13 @@ class ListNovelCrawler(Crawler):
         for bad in contents.select(
             ".code-block, script, .adsbygoogle, .adsense-code, .sharedaddy, a, br"
         ):
-            bad.decompose()
+            bad.extract()
 
         # Remove html comments from bottom of chapters.
         for comment in soup.findAll(text=lambda text: isinstance(text, Comment)):
             comment.extract()
 
-        body = self.extract_contents(contents)
-        return "<p>" + "</p><p>".join(body) + "</p>"
+        return self.extract_contents(contents)
 
     # end def
 # end class

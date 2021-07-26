@@ -59,7 +59,7 @@ class ReincarnationPalace(Crawler):
 
         # remove social media buttons
         for share in body_parts.select('div.sharedaddy'):
-            share.decompose()
+            share.extract()
 
         # remove urls
         self.bad_tags += ['a']
@@ -71,10 +71,8 @@ class ReincarnationPalace(Crawler):
         self.clean_contents(body_parts)
 
         # remove double spacing
-        for br in body_parts.select('br'):
-            br.decompose()
+        
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

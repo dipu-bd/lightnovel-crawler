@@ -67,7 +67,7 @@ class NovelsOnline(Crawler):
             '.col-md-6'
         ]
         for hidden in div.select(', '.join(bad_selectors)):
-            hidden.decompose()
+            hidden.extract()
         # end for
 
         body = self.extract_contents(div)

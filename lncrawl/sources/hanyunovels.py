@@ -76,9 +76,8 @@ class HanyuNovels(Crawler):
 
         contents = soup.select_one('div.text-left')
         for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.decompose()
+            bad.extract()
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents) 
     # end def
 # end class

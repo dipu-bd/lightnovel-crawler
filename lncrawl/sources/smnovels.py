@@ -38,8 +38,7 @@ class SMNovelsCrawler(Crawler):
 
         contents = soup.select_one('.entry-content')
         for bad in contents.select('br'):
-            bad.decompose()
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+            bad.extract()
+        return self.extract_contents(contents)
     # end def
 # end class

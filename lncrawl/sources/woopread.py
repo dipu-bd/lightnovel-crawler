@@ -104,10 +104,9 @@ class WoopReadCrawler(Crawler):
         for content in contents.select("p"):
             for bad in ["Translator:", "Editor:"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
-        body = self.extract_contents(contents)
-        return "<p>" + "</p><p>".join(body) + "</p>"
+        return self.extract_contents(contents)
 
     # end def
 

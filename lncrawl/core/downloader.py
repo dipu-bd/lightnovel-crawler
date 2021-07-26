@@ -132,9 +132,6 @@ def download_chapter_body(app, chapter):
         if not body:
             result = 'Body is empty: ' + chapter['url']
         else:
-            if not('body_lock' in chapter and chapter['body_lock']):
-                body = app.crawler.cleanup_text(body)
-            # end if
             title = chapter['title'].replace('>', '&gt;').replace('<', '&lt;')
             chapter['body'] = '<h1>%s</h1>\n%s' % (title, body)
             if get_args().add_source_url:

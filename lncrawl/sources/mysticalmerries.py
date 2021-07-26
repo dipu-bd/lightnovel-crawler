@@ -76,17 +76,16 @@ class MysticalMerries(Crawler):
 
         contents = soup.select_one('.text-left')
         for bad in contents.select('.code-block, script, .adsbygoogle'):
-            bad.decompose()
+            bad.extract()
 
         for images in contents.select('img'):
-            images.decompose()
+            images.extract()
 
         for junk in contents.select("p"):
             for bad in ["Want the next chapter? Click here:", "<a>https://ko-fi.com/milkywaytranslations</a>", "Want the next chapter?", "<a>Click here!</a>"]:
                 if bad in junk.text:
-                    junk.decompose()
+                    junk.extract()
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

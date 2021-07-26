@@ -80,7 +80,6 @@ class WuxiaWorldIo(Crawler):
         ]
 
         contents = soup.select_one('div.content-area')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

@@ -36,16 +36,10 @@ class FullnovelLiveCrawler(Crawler):
         chapters = soup.select('.scroll-eps a')
         chapters.reverse()
 
+        vols = set([])
         for x in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
-            # end if
+            vol_id = len(self.chapters) // 100 + 1
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -53,13 +47,14 @@ class FullnovelLiveCrawler(Crawler):
                 'title': x.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': x} for x in vols]
     # end def
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.page .divContent')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

@@ -81,7 +81,6 @@ class NovelOnlineFullCrawler(Crawler):
         ]
 
         contents = soup.select_one('#vung_doc')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

@@ -68,7 +68,7 @@ class WebNoveLover(Crawler):
         logger.info('Novel id: %s', self.novel_id)
 
         for span in soup.select('.page-content-listing span'):
-            span.decompose()
+            span.extract()
 
         logger.info('Sending post request to %s', post_chapter_url)
         response = self.submit_form(post_chapter_url, data={
@@ -98,14 +98,13 @@ class WebNoveLover(Crawler):
         contents = soup.select_one('div.text-left')
 
         for bad in contents.select('h3, .code-block, script, .adsbygoogle, .adsense-code, .sharedaddy, a, br, .dw-reactions'):
-            bad.decompose()
+            bad.extract()
 
         for content in contents.select("p"):
             for bad in ["*** Can’t wait until tomorrow to see more? Want to show your support? to read premium additional chapters ahead of time!", "[T/N Note: To Get more Free chapters Quickly Support us on", ". For more and better novels updates. If you have any suggestions, please give it on the comment box or contact us on"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

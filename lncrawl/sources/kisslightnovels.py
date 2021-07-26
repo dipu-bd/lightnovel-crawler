@@ -35,7 +35,7 @@ class KissLightNovels(Crawler):
 
         title_tag = soup.select_one('.post-title h1')
         for badge in title_tag.select('.manga-title-badges'):
-            badge.decompose()
+            badge.extract()
         # end for
         self.novel_title = title_tag.text.strip()
         logger.info('Novel title: %s', self.novel_title)
@@ -88,15 +88,15 @@ class KissLightNovels(Crawler):
         # end if
 
         if contents.select_one('#snippet-box'):
-            contents.select_one('#snippet-box').decompose()
+            contents.select_one('#snippet-box').extract()
         # end if
 
         if contents.h3:
-            contents.h3.decompose()
+            contents.h3.extract()
         # end if
 
         for codeblock in contents.findAll('div', {'class': 'code-block'}):
-            codeblock.decompose()
+            codeblock.extract()
         # end for
 
         self.clean_contents(contents)
