@@ -305,8 +305,6 @@ You are very welcome to contribute in this project. You can:
 
 | Available Sources                            | Can Search | Can Login |      Maintainer       |
 | -------------------------------------------- | :--------: | :-------: | :-------------------: |
-| https://noveltoon.mobi/                      |            |           |       @dipu-bd        |
-| https://grensia.blogspot.com                 |            |           |       @dipu-bd        |
 | http://boxnovel.cloud                        |     ✔      |           |      @SirGryphin      |
 | http://boxnovel.org                          |     ✔      |           |       @dipu-bd        |
 | http://hs2ppe.co.uk                          |     ✔      |           |      @SirGryphin      |
@@ -357,6 +355,7 @@ You are very welcome to contribute in this project. You can:
 | https://fastnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://fr.mtlnovel.com                      |     ✔      |           |                       |
 | https://fujitranslation.com                  |            |           |      @SirGryphin      |
+| https://grensia.blogspot.com                 |            |           |       @dipu-bd        |
 | https://hui3r.wordpress.com                  |            |           |      @SirGryphin      |
 | https://id.mtlnovel.com                      |     ✔      |           |                       |
 | https://inadequatetranslations.wordpress.com |            |           |      @SirGryphin      |
@@ -413,6 +412,7 @@ You are very welcome to contribute in this project. You can:
 | https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsonline.net                     |            |           |      @SirGryphin      |
 | https://novelsrock.com                       |            |           |                       |
+| https://noveltoon.mobi/                      |     ✔      |           |       @dipu-bd        |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
 | https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
 | https://omgnovels.com                        |     ✔      |           |      @SirGryphin      |
@@ -490,6 +490,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.readlightnovel.cc                |            |           |                       |
 | https://www.readlightnovel.org               |            |           |                       |
 | https://www.readnovelfull.com                |     ✔      |           |                       |
+| https://www.readwn.com/                      |     ✔      |           |       @dipu-bd        |
 | https://www.romanticlovebooks.com            |            |           |                       |
 | https://www.royalroad.com                    |     ✔      |           |                       |
 | https://www.scribblehub.com                  |     ✔      |           |                       |

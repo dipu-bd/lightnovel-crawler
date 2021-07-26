@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+from concurrent.futures import ThreadPoolExecutor
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -7,6 +8,10 @@ logger = logging.getLogger(__name__)
 
 class RanobeLibCrawler(Crawler):
     base_url = 'https://ranobes.net/'
+
+    def initialize(self) -> None:
+        self.executor = ThreadPoolExecutor(max_workers=1)
+    # end def
 
     def read_novel_info(self):
         logger.info('Visiting %s', self.novel_url)
