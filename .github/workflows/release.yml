@@ -1,4 +1,4 @@
-name: Build and test package
+name: Build and Publish
 
 on:
   push:
@@ -60,19 +60,10 @@ jobs:
       with:
         python-version: 3.6
 
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip wheel setuptools
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-    
-    - name: Build wheel and package
+    - name: Build package
       env:
         PYTHONIOENCODING: utf-8
-      run: python setup.py clean bdist_wheel package
-    
-    - name: Test the executable package
-      run: .\dist\lncrawl.exe --list-sources
+      run: .\scripts\build.bat
     
     - name: Release
       uses: ncipollo/release-action@v1
@@ -80,8 +71,13 @@ jobs:
       with: # See available options at https://github.com/ncipollo/release-action
         allowUpdates: true
         artifactErrorsFailBuild: true
-        artifacts: "dist/lncrwal.exe"
+        artifacts: "dist/lncrawl*"
         token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Test the executable package
+      env:
+        PYTHONIOENCODING: utf-8
+      run: .\dist\lncrawl.exe --list-sources
 
   build-linux:
     needs: validate
@@ -94,17 +90,8 @@ jobs:
       with:
         python-version: 3.6
     
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip wheel setuptools
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-
-    - name: Build wheel and package
-      run: python setup.py clean bdist_wheel package
-
-    - name: Test the executable package
-      run: ./dist/lncrawl --list-sources
+    - name: Build package
+      run: ./scripts/build.sh
 
     - name: Release
       uses: ncipollo/release-action@v1
@@ -115,9 +102,12 @@ jobs:
         artifacts: "dist/lncrawl,dist/*.whl"
         token: ${{ secrets.GITHUB_TOKEN }}
 
+    - name: Test the executable package
+      run: ./dist/lncrawl --list-sources
+
     - name: Publish
-      uses: pypa/gh-action-pypi-publish@release/v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with:
-        user: __token__
-        password: ${{ secrets.PYPI_API_TOKEN }}
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        TWINE_NON_INTERACTIVE: true
+      run: ./scripts/publish.sh

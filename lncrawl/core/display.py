@@ -120,7 +120,7 @@ def new_version_news(latest):
 
 
 def url_supported_list():
-    print('Supported sources:')
+    print('List of %d supported sources:' % len(crawler_list))
     for url in sorted(crawler_list.keys()):
         print(Fore.LIGHTGREEN_EX, Icons.RIGHT_ARROW, url, Fore.RESET)
     # end for

@@ -5,16 +5,13 @@ import re
 import shlex
 import shutil
 import sys
-import site
 from pathlib import Path
 
 from PyInstaller import __main__ as pyi
-from setuptools.config import read_configuration
 
 ROOT = Path(__file__).parent
 unix_root = '/'.join(str(ROOT).split(os.sep))
-
-site_packages = site.USER_SITE
+site_packages = list(ROOT.glob('venv/**/site-packages'))[0]
 unix_site_packages = '/'.join(str(site_packages).split(os.sep))
 
 
