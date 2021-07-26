@@ -71,7 +71,7 @@ jobs:
       with: # See available options at https://github.com/ncipollo/release-action
         allowUpdates: true
         artifactErrorsFailBuild: true
-        artifacts: "dist/lncrwal.exe"
+        artifacts: .\dist\lncrwal.exe
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Test the executable package
@@ -107,7 +107,6 @@ jobs:
 
     - name: Publish
       env:
-        TWINE_REPOSITORY: lightnovel-crawler
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         TWINE_NON_INTERACTIVE: true
