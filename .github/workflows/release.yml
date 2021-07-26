@@ -1,4 +1,4 @@
-name: Build and test package
+name: Build and Publish
 
 on:
   push:
@@ -60,16 +60,10 @@ jobs:
       with:
         python-version: 3.6
 
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip wheel setuptools
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-    
-    - name: Build wheel and package
+    - name: Build package
       env:
         PYTHONIOENCODING: utf-8
-      run: python setup.py clean bdist_wheel package
+      run: .\scripts\build.bat
     
     - name: Test the executable package
       run: .\dist\lncrawl.exe --list-sources
@@ -94,14 +88,8 @@ jobs:
       with:
         python-version: 3.6
     
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip wheel setuptools
-        pip install -r requirements.txt
-        pip install -r requirements-dev.txt
-
-    - name: Build wheel and package
-      run: python setup.py clean bdist_wheel package
+    - name: Build package
+      run: ./scripts/build.sh
 
     - name: Test the executable package
       run: ./dist/lncrawl --list-sources
