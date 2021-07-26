@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -78,10 +78,10 @@ class KissNovelCrawler(Crawler):
         return '<p>' + '</p><p>'.join(body) + '</p>'
 
         # if contents.h3:
-        #    contents.h3.decompose()
+        #    contents.h3.extract()
 
         # for codeblock in contents.findAll('div', {'class': 'code-block'}):
-        #    codeblock.decompose()
+        #    codeblock.extract()
 
         # return str(contents)
     # end def

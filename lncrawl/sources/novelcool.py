@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +66,6 @@ class NovelCool(Crawler):
             junk.extract()
         # end for
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

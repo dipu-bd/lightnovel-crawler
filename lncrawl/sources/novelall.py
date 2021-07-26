@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.novelall.com/search/?name=%s'
@@ -53,7 +53,7 @@ class NovelAllCrawler(Crawler):
         chapters.reverse()
         for a in chapters:
             for span in a.findAll('span'):
-                span.decompose()
+                span.extract()
             # end for
         # end for
 

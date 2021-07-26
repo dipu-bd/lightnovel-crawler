@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.readlightnovel.cc/search/%s/1'
@@ -96,9 +96,7 @@ class ReadlightnovelCcCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
         body_parts = soup.select_one('div.chapter-entity')
-        for br in body_parts.select('br'):
-            br.decompose()
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        
+        return self.extract_contents(body_parts)
     # end def
 # end class

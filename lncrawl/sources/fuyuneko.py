@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -62,12 +62,8 @@ class Fuyuneko(Crawler):
         for content in body_parts.select("p"):
             for bad in ["Previous", "Table of Contents", "Next", "  |  "]:
                 if bad in content.text:
-                    content.decompose()
-
-        for br in body_parts.select('br'):
-            br.decompose()
-
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+                    content.extract()
+ 
+        return self.extract_contents(body_parts) 
     # end def
 # end class

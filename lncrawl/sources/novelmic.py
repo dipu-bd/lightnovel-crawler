@@ -4,7 +4,7 @@ import logging
 import re
 from urllib.parse import urlparse
 from ..utils.cleaner import cleanup_text
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://novelmic.com/?s=%s&post_type=wp-manga'
@@ -88,7 +88,7 @@ class NovelMic(Crawler):
             if img.has_attr('data-src'):
                 src_url = img['data-src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 

@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://meionovel.id/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -87,15 +87,15 @@ class MeionovelCrawler(Crawler):
             if img.has_attr('data-lazy-src'):
                 src_url = img['data-lazy-src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 
         if contents.h3:
-            contents.h3.decompose()
+            contents.h3.extract()
 
         for codeblock in contents.findAll('div', {'class': 'code-block'}):
-            codeblock.decompose()
+            codeblock.extract()
 
         return str(contents)
     # end def

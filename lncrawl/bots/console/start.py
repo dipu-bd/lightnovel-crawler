@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 from urllib.parse import urlparse
 
 from questionary import prompt
@@ -6,7 +7,7 @@ from questionary import prompt
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
-from ...sources import rejected_sources
+from ...sources import rejected_sources, load_crawler_file
 from .open_folder_prompt import display_open_folder
 from .resume_download import resume_session
 
@@ -17,6 +18,12 @@ def start(self):
         raise Exception('Unknown self: ' + type(self))
 
     args = get_args()
+    for crawler_file in args.crawler:
+        if os.path.isfile(crawler_file):
+            load_crawler_file(crawler_file)
+        # end if
+    # end if
+
     if args.list_sources:
         display.url_supported_list()
         return

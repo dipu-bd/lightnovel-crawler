@@ -5,7 +5,7 @@ from concurrent import futures
 from urllib.parse import quote_plus
 
 from ..utils.cleaner import cleanup_text
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = ' https://novelfullplus.com/ajax/search?q=%s'
@@ -74,7 +74,7 @@ class NovelFullPlus(Crawler):
 
         contents = soup.select_one('.reading-detail .container')
         for br in contents.select('br, h3, h1, h2, h4'):
-            br.decompose()
+            br.extract()
         # end for
 
         return str(contents)

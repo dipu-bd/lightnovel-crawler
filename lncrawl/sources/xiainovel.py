@@ -5,7 +5,7 @@ import re
 
 from bs4 import Comment
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +61,7 @@ class YukiNovelCrawler(Crawler):
         contents = soup.select_one('section#StoryContent')
 
         for d in contents.findAll('div'):
-            d.decompose()
+            d.extract()
         # end for
 
         for comment in contents.find_all(string=lambda text: isinstance(text, Comment)):

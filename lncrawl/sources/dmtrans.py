@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -60,12 +60,8 @@ class DMTranslations(Crawler):
         for content in body_parts.select("p"):
             for bad in ["Translator- DM", "Previous Chapter", "Next Chapter"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
-        for br in body_parts.select('br'):
-            br.decompose()
-
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

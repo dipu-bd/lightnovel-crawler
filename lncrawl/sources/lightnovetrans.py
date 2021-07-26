@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class LNTCrawler(Crawler):
 
         content = soup.select_one('.entry-content')
         for bad in content.select('.alignleft, .alignright, hr, p[style*="text-align: center"]'):
-            bad.decompose()
+            bad.extract()
         # end for
 
         return '\n'.join([str(p) for p in content.find_all('p')])

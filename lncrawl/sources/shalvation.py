@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -60,21 +60,20 @@ class ShalvationTranslations(Crawler):
 
         # Removes "Share this" text and buttons from bottom of chapters.
         for share in body_parts.select('div.sharedaddy'):
-            share.decompose()
+            share.extract()
 
         # Remoeves Nav Button from top and bottom of chapters.
         for content in body_parts.select("p"):
             for bad in ["PREVIOUS CHAPTER", "NEXT CHAPTER"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
         # Remoeves span spacer.
         for content in body_parts.select("span"):
             for bad in ["Ο"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

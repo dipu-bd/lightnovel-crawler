@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -64,11 +64,11 @@ class ShinsoriCrawler(Crawler):
 
         # remove div with no class
         for item in content.findAll('div', attrs={'class': None}):
-            item.decompose()
+            item.extract()
 
         # remove style
         for item in content.findAll('style'):
-            item.decompose()
+            item.extract()
 
         subs = 'tab'
         # remove all div that has class but not relevant
@@ -80,7 +80,7 @@ class ShinsoriCrawler(Crawler):
         # remove p with attribute style
         for item in content.findAll('p'):
             if item.has_attr('style'):
-                item.decompose()
+                item.extract()
 
         return str(content)
     # end def

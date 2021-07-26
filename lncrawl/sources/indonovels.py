@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -64,9 +64,7 @@ class IndoNovels(Crawler):
         soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.post-body-inner')
-        for br in body_parts.select('br'):
-            br.decompose()
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        
+        return self.extract_contents(body_parts)
     # end def
 # end class

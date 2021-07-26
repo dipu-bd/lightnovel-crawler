@@ -5,7 +5,7 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://instadoses.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult='
@@ -49,7 +49,7 @@ class InstadosesCrawler(Crawler):
         logger.info('Novel id: %s', self.novel_id)
 
         for span in soup.select('.page-content-listing span'):
-            span.decompose()
+            span.extract()
 
         logger.info('Sending post request to %s', post_chapter_url)
         response = self.submit_form(post_chapter_url, data={
@@ -81,7 +81,7 @@ class InstadosesCrawler(Crawler):
         body = []
         for p in contents:
             for ad in p.select('h3, .code-block, .adsense-code'):
-                ad.decompose()
+                ad.extract()
             body.append(str(p))
 
         return ''.join(body)

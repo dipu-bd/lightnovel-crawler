@@ -3,7 +3,7 @@ import logging
 import re
 from urllib.parse import parse_qsl, urlparse
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +61,6 @@ class TikNovelCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        chapter['body_lock'] = True
         query_str = urlparse(chapter['url']).query
         data_params = {x[0]: int(x[1]) for x in parse_qsl(query_str)}
         logging.debug("Requesting body with: %s", data_params)

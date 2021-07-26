@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from urllib.parse import urlparse
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
@@ -84,7 +84,7 @@ class FoxaholicCrawler(Crawler):
             if img.has_attr('loading'):
                 src_url = img['src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
         return ''.join([str(p) for p in contents])

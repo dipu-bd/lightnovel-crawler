@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://asadatranslations.com/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -75,10 +75,13 @@ class AsadaTranslations(Crawler):
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle, .sharedaddy'):
-            bad.decompose()
 
-        # remove bad text
+        for discord in contents.select('p'):
+            for bad in ["Join our", "<a>discord</a>", "to get latest updates and progress about the translations"]:
+                if bad in discord.text:
+                    discord.extract()
+
+        self.bad_css += ['h3', '.code-block', '.adsbygoogle', '.sharedaddy']
         self.blacklist_patterns = [
             r'^Translator:',
             r'^Qii',
@@ -90,12 +93,6 @@ class AsadaTranslations(Crawler):
             r'^by submitting reviews and ratings or by adding it to your reading list.',
         ]
 
-        for discord in contents.select('p'):
-            for bad in ["Join our", "<a>discord</a>", "to get latest updates and progress about the translations"]:
-                if bad in discord.text:
-                    discord.decompose()
-
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

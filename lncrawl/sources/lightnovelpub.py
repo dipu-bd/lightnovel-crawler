@@ -4,7 +4,7 @@ import re
 from concurrent import futures
 from urllib.parse import urlparse
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -117,7 +117,7 @@ class LightNovelOnline(Crawler):
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('.chapter-content')
         for ads in body.select('div[class*="ad"], script, ins, p[class]'):
-            ads.decompose()
+            ads.extract()
         # end for
         return str(body)
     # end def

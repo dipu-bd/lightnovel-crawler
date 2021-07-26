@@ -10,7 +10,7 @@ from datetime import datetime
 
 import regex
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.pbincli import PasteV2
 
 logger = logging.getLogger(__name__)
@@ -99,7 +99,7 @@ class QidianComCrawler(Crawler):
         contents = soup.find('div', attrs={'id': a['href'][1:]})
         contents = contents.find('div', attrs={'class': 'well'})
         for bad in contents.select('h2, br'):
-            bad.decompose()
+            bad.extract()
 
         body = contents.text.split('\n\n')
         return '<p>' + '</p><p>'.join(body) + '</p>'

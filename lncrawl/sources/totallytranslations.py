@@ -5,7 +5,7 @@ import re
 
 from requests.sessions import Session
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 

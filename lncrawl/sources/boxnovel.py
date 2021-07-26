@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -35,23 +35,20 @@ class BoxNovelCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.post-title h3').contents
-            if not x.name
-        ]).strip()
+        self.novel_title = soup.select_one('meta[property="og:title"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        probable_img = soup.select_one('.summary_image img')
-        if probable_img:
-            self.novel_cover = self.absolute_url(probable_img['src'])
+        self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select('.author-content a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
-            self.novel_author = author[0].text
+        try:
+            author = soup.select('.author-content a')
+            if len(author) == 2:
+                self.novel_author = author[0].text + ' (' + author[1].text + ')'
+            else:
+                self.novel_author = author[0].text
+        except Exception as e:
+            logger.debug('Failed to parse novel author. Error: %s', e)
         logger.info('Novel author: %s', self.novel_author)
 
         volumes = set()
@@ -75,11 +72,7 @@ class BoxNovelCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.decompose()
-
-        return str(contents)
+        return self.extract_contents(contents)
     # end def
 # end class

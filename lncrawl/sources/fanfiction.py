@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from urllib.parse import urlparse
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 chapter_url = 'https://www.fanfiction.net/s/%s/%s'
@@ -20,7 +20,7 @@ class FanFictionCrawler(Crawler):
         results = []
         for div in soup.select('#content_wrapper .z-list')[:25]:
             a = div.select_one('a.stitle')
-            a.select_one('img').decompose()
+            a.select_one('img').extract()
             info = div.select_one('.xgray').text.strip()
             chapters = re.findall(r'Chapters: \d+', info)[0]
             origin_book = re.findall(r'^.+Rated:', info)[0][:-9]

@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from ..utils.cleaner import cleanup_text
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ class CclawTranslations(Crawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('div.entry-content')
         for notoc in toc_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, hr, .adsbygoogle'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
@@ -67,7 +67,7 @@ class CclawTranslations(Crawler):
 
         # Removes "Share this" text and buttons from bottom of chapters. Also other junk on page.
         for share in body_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, hr, .adsbygoogle'):
-            share.decompose()
+            share.extract()
 
         # Fixes images, so they can be downloaded.
         all_imgs = soup.find_all('img')
@@ -75,7 +75,7 @@ class CclawTranslations(Crawler):
             if img.has_attr('data-orig-file'):
                 src_url = img['src']
                 parent = img.parent
-                img.decompose()
+                img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
 

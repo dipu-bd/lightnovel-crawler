@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from requests import Session
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 chapter_list_url = 'https://www.lunarletters.com/wp-admin/admin-ajax.php'

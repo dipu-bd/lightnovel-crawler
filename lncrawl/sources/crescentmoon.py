@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -57,29 +57,7 @@ class CrescentMoonCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        # if soup.find("h1", {"class": "entry-title"}).text.strip():
-        #    chapter['title'] = soup.find("h1", {"class": "entry-title"}).text.strip()
-        # else:
-        #    chapter['title'] = chapter['title']
-        # end if
-
-        #contents = soup.select('div.entry-content p')
-        #contents = contents[:-1]
-        #body = self.extract_contents(contents)
-        # return '<p>' + '</p><p>'.join(body) + '</p>'
-        # return str(contents)
-
-        body = []
-        contents = soup.select('div.entry-content p')
-        contents = contents[:-1]
-        for p in contents:
-            para = ' '.join(self.extract_contents(p))
-            if len(para):
-                body.append(para)
-            # end if
-        # end for
-
-        return '<p>%s</p>' % '</p><p>'.join(body)
+        contents = soup.select('div.entry-content')
+        return self.extract_contents(contents)
     # end def
 # end class

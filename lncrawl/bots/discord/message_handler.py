@@ -52,7 +52,7 @@ class MessageHandler:
             self.send_sync('Closing current session...')
             self.executor.shutdown(wait=False)
             self.app.destroy()
-            # shutil.rmtree(self.app.output_path, ignore_errors=True)
+            shutil.rmtree(self.app.output_path, ignore_errors=True)
         except Exception:
             logger.exception('While destroying MessageHandler')
         finally:
@@ -356,10 +356,8 @@ class MessageHandler:
         # end if
         good_name = os.path.basename(self.app.output_path)
         output_path = os.path.join(root, str(self.user.id), good_name)
-        if os.path.exists(output_path):
-            shutil.rmtree(output_path, ignore_errors=True)
-        # end if
-
+        shutil.rmtree(output_path, ignore_errors=True)
+        
         os.makedirs(output_path, exist_ok=True)
         self.app.output_path = output_path
 

@@ -2,7 +2,7 @@
 import logging
 import re
 from urllib.parse import quote
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -75,8 +75,6 @@ class MachineTransOrg(Crawler):
         self.blacklist_patterns = [
             r'^Refresh time: \d+-\d+-\d+$'
         ]
-        self.clean_contents(body)
-
-        return str(body)
+        return self.extract_contents(body)
     # end def
 # end class

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
@@ -127,10 +127,10 @@ class NovelFullCrawler(Crawler):
         contents = soup.select_one('div#chapter-content')
 
         for bad in contents.select('iframe, .ads-middle, .code-block, script, .adsbygoogle, img[src*="proxy?container=focus"]'):
-            bad.decompose()
+            bad.extract()
 
         for end in contents.findAll('div', {"align": 'left'}):
-            end.decompose()
+            end.extract()
 
         return str(contents)
     # end def

@@ -2,7 +2,7 @@
 import logging
 import re
 from bs4 import BeautifulSoup
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.live/search.ajax?type=&query=%s'
@@ -87,7 +87,6 @@ class WuxiaWorldLive(Crawler):
         ]
 
         contents = soup.select_one('div.content-area')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

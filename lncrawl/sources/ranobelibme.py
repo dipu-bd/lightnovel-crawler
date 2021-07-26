@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 import re
 
 logger = logging.getLogger(__name__)
@@ -60,8 +60,6 @@ class RanobeLibCrawler(Crawler):
 
         div = soup.select_one('.reader-container')
 
-        body = self.extract_contents(div)
-
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(div)
     # end def
 # end class

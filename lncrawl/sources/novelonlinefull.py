@@ -2,7 +2,7 @@
 import logging
 import re
 from bs4 import BeautifulSoup
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://novelonlinefull.com/getsearchstory'
@@ -81,7 +81,6 @@ class NovelOnlineFullCrawler(Crawler):
         ]
 
         contents = soup.select_one('#vung_doc')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

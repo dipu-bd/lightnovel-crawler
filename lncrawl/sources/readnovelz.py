@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://readnovelz.net/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -74,7 +74,7 @@ class ReadNovelzCrawler(Crawler):
 
         contents = soup.select_one('div.text-left')
         for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.decompose()
+            bad.extract()
 
         return str(contents)
     # end def

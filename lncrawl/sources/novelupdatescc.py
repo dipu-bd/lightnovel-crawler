@@ -2,7 +2,7 @@
 import logging
 from urllib.parse import quote
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.novelupdates.cc/search/%s/1'
@@ -21,7 +21,7 @@ class NovelUpdatesCC(Crawler):
         for li in soup.select('.result-list .list-item'):
             a = li.select_one('a.book-name')
             for bad in a.select('font'):
-                bad.decompose()
+                bad.extract()
             # end for
             catalog = li.select_one('.book-catalog').text.strip()
             votes = li.select_one('.star-suite .score').text.strip()
@@ -88,9 +88,7 @@ class NovelUpdatesCC(Crawler):
             r'(volume|chapter) .?\d+',
         ]
         body_parts = soup.select_one('div.chapter-entity')
-        for br in body_parts.select('br'):
-            br.decompose()
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        
+        return self.extract_contents(body_parts)
     # end def
 # end class

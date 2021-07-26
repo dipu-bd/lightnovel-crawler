@@ -5,7 +5,7 @@ import re
 
 import requests
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -77,7 +77,7 @@ class ZenithNovelsCrawler(Crawler):
         try:
             self.clean_contents(entry)
             for note in entry.select('.footnote'):
-                note.decompose()
+                note.extract()
             # end for
         except Exception:
             pass

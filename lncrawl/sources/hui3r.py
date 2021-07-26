@@ -3,10 +3,11 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from bs4 import Comment
 
 logger = logging.getLogger(__name__)
+
 
 class hui3rCrawler(Crawler):
     base_url = 'https://hui3r.wordpress.com/'
@@ -30,7 +31,7 @@ class hui3rCrawler(Crawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('.single-entry-content')
         for notoc in toc_parts.select('.sharedaddy, .inline-ad-slot, .code-block, script, .adsbygoogle'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         chapters = soup.select('.single-entry-content ul li a[href*="hui3r.wordpress.com/2"]')
@@ -63,21 +64,20 @@ class hui3rCrawler(Crawler):
 
         # Removes "Share this" text and buttons from bottom of chapters.
         for share in body_parts.select('div.sharedaddy'):
-            share.decompose()
+            share.extract()
 
         # Removes footer info and categories.
         for footer in body_parts.select('footer.entry-meta'):
-            footer.decompose()
+            footer.extract()
 
         # Removes watermark/hidden text
         for hidden in body_parts.findAll('span', {'style': 'color:#ffffff;'}):
-            hidden.decompose()
+            hidden.extract()
 
         # remove comments
-        for comment in soup.findAll(text=lambda text:isinstance(text, Comment)):
+        for comment in soup.findAll(text=lambda text: isinstance(text, Comment)):
             comment.extract()
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

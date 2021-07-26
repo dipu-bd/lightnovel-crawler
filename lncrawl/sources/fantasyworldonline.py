@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.f-w-o.com/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -73,12 +73,7 @@ class FantasyWorldOnline(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle, .sharedaddy'):
-            bad.decompose()
-
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

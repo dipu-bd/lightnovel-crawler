@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class IdqidianCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         for a in soup.find_all('a'):
-            a.decompose()
+            a.extract()
 
         body_parts = soup.select('p')
         body_parts = ''.join([str(p.extract()) for p in body_parts if

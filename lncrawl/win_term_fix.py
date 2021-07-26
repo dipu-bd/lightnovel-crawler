@@ -23,8 +23,5 @@ if sys.stdout.isatty() is False:
             sys.stdout = open(sys.stdout.fileno(), 'w', encoding='utf-8', closefd=False)
             print("PYTHONIOENCODING was differing from stdout encoding. ('" + str(PYTHONIOENCODING) + "' != '" + STDOUT_ENCODING +
                   "'). This should normally not happen unless PyInstaller is still broken. Setting hard utf-8 workaround. New encoding: '" + str(PYTHONIOENCODING) + "'.", "D")
-        else:
-            print("PYTHONIOENCODING is equal to stdout encoding. ('" +
-                  str(PYTHONIOENCODING) + "' == '" + str(sys.stdout.encoding) + "'). - All good.")
     else:
         print("PYTHONIOENCODING is set False. ('" + str(PYTHONIOENCODING) + "'). - Nothing to do.")

@@ -5,7 +5,7 @@ from base64 import b64decode
 from concurrent import futures
 from urllib.parse import quote_plus
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +115,7 @@ class Fu_kCom_ademao(Crawler):
 
         # Removes "junk" from chapters.
         for share in body.select('script, hr, br, #div-gpt-ad-comrademaocom35917, #div-gpt-ad-comrademaocom35918'):
-            share.decompose()
+            share.extract()
 
         return str(body)
     # end def

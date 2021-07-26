@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -110,8 +110,6 @@ class WuxiaComCrawler(Crawler):
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ]
-        self.clean_contents(body)
-
-        return '\n'.join([str(x) for x in body.contents])
+        return self.extract_contents(body)
     # end def
 # end class

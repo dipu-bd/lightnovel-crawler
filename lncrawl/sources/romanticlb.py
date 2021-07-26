@@ -2,7 +2,7 @@
 import logging
 import re
 from bs4 import BeautifulSoup
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -65,8 +65,7 @@ class RomanticLBCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#content')
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 
     # def download_chapter_body(self, chapter):

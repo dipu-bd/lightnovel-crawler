@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +146,7 @@ class WorldnovelonlineCrawler(Crawler):
         # self.clean_contents(contents)
 
         for codeblock in contents.select('div.code-block'):
-            codeblock.decompose()
+            codeblock.extract()
         # end for
 
         return str(contents).replace('www.worldnovel.online', '')

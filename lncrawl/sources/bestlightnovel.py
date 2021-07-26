@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://bestlightnovel.com/getsearchstory'
@@ -71,19 +71,9 @@ class BestLightNovel(Crawler):
 
         if 'Chapter' in soup.select_one('h1').text:
             chapter['title'] = soup.select_one('h1').text
-        else:
-            chapter['title'] = chapter['title']
         # end if
 
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
         contents = soup.select_one('#vung_doc')
-        for bad in contents.select('br'):
-            bad.decompose()
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

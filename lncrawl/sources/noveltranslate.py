@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from urllib.parse import urlparse
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = (
@@ -103,7 +103,7 @@ class NovelTranslateCrawler(Crawler):
         body = []
         for p in contents:
             for ad in p.select('.ezoic-adpicker-ad, .ezoic-ad, .ezoic-adl'):
-                ad.decompose()
+                ad.extract()
             body.append(str(p))
 
         return ''.join(body)

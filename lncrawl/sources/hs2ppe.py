@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ class wspadancewichita(Crawler):
         chapters = chapter_soup.select('li a')
         for a in chapters:
             for span in a.findAll('span'):
-                span.decompose()
+                span.extract()
             # end for
         # end for
 

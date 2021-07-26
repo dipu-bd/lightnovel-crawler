@@ -4,7 +4,7 @@ import logging
 import re
 
 import requests
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://woopread.com/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -104,10 +104,9 @@ class WoopReadCrawler(Crawler):
         for content in contents.select("p"):
             for bad in ["Translator:", "Editor:"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
 
-        body = self.extract_contents(contents)
-        return "<p>" + "</p><p>".join(body) + "</p>"
+        return self.extract_contents(contents)
 
     # end def
 

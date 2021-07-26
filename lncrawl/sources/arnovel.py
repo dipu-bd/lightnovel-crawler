@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from urllib.parse import urlparse
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://arnovel.me/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -79,7 +79,6 @@ class ArNovelCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        chapter['body_lock'] = True
         contents = soup.select('.reading-content p')
         return ''.join([str(p) for p in contents])
     # end def

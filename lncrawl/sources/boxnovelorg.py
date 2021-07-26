@@ -2,7 +2,7 @@
 import logging
 import re
 from concurrent import futures
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'http://boxnovel.org/search?keyword=%s'
@@ -11,25 +11,24 @@ search_url = 'http://boxnovel.org/search?keyword=%s'
 class BoxNovelOrgCrawler(Crawler):
     base_url = 'http://boxnovel.org/'
 
-    # TODO: Disabled for issue 882
-    # def search_novel(self, query):
-    #     query = query.lower().replace(' ', '+')
-    #     soup = self.get_soup(search_url % query)
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
 
-    #     results = []
-    #     for tab in soup.select('.col-novel-main .list-novel .row'):
-    #         search_title = tab.select_one('.novel-title a')
-    #         latest = tab.select_one('.text-info a').text.strip()
-    #         results.append({
-    #             'title': search_title.text.strip(),
-    #             'url': self.absolute_url(
-    #                 tab.select_one('.novel-title a')['href']),
-    #             'info': 'Latest chapter: %s' % (latest)
-    #         })
-    #     # end for
+        results = []
+        for tab in soup.select('.col-novel-main .list-novel .row'):
+            search_title = tab.select_one('.novel-title a')
+            latest = tab.select_one('.text-info a').text.strip()
+            results.append({
+                'title': search_title.text.strip(),
+                'url': self.absolute_url(
+                    tab.select_one('.novel-title a')['href']),
+                'info': 'Latest chapter: %s' % (latest)
+            })
+        # end for
 
-    #     return results
-    # # end def
+        return results
+    # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
@@ -121,20 +120,11 @@ class BoxNovelOrgCrawler(Crawler):
         # end for
     # end def
 
-    def download_chapter_body(self, chapter):        #
-        # NOTE: Set `chapter['body_lock'] = True` to disable post-formatting.
-        #       It can be useful in non-english sources, e.g. aixdzs, qidiancom, tiknovel
-        #
-        #       Return an empty body if anything goes wrong. But you should not return `None`.
-        '''Download body of a single chapter and return as clean html format.'''
+    def download_chapter_body(self, chapter):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.chr-c, #chr-content')
-        for br in contents.select('br'):
-            br.decompose()
-        # end for
-
-        return str(contents)
+        return self.extract_contents(contents)
     # end def
 # end class

@@ -2,7 +2,7 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.co/search/{}/1'
@@ -94,9 +94,7 @@ class WuxiaCoCrawler(Crawler):
             r'(volume|chapter) .?\d+',
         ]
         body_parts = soup.select_one('div.chapter-entity')
-        for br in body_parts.select('br'):
-            br.decompose()
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        
+        return self.extract_contents(body_parts)
     # end def
 # end class

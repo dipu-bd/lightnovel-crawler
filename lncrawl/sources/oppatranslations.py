@@ -2,7 +2,7 @@
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -69,12 +69,13 @@ class OppaTranslationsCrawler(Crawler):
 
         for p in reversed(contents.select('p')):
             if p.find('a') and 'TOC' in p.text:
-                p.decompose()
+                p.extract()
         # end for
 
-        contents.select_one('div center').decompose()
+        contents.select_one('div center').extract()
 
-        return self.cleanup_text(str(contents))
+        return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]',
+                      '', str(contents), flags=re.UNICODE)
     # end def
 
 # end class

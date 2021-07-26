@@ -5,7 +5,7 @@ import re
 
 from slugify import slugify
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://novelplanet.com/NovelList?order=mostpopular&name=%s'
@@ -77,7 +77,7 @@ class NovelPlanetCrawler(Crawler):
         # end if
 
         for ads in contents.findAll('div', {"style": 'text-align: center; margin-bottom: 10px'}):
-            ads.decompose()
+            ads.extract()
 
         return str(contents)
 

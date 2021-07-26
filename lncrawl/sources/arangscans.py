@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from urllib.parse import urlparse
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://arangscans.com/?s=%s&post_type=wp-manga'
@@ -75,12 +75,8 @@ class ArangScans(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.decompose()
-
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        self.bad_css += ['h3', '.code-block', '.adsbygoogle']
+        return self.extract_contents(contents)
     # end def
 # end class

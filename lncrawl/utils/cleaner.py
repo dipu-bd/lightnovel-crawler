@@ -6,6 +6,8 @@ import itertools
 import functools
 import unicodedata
 
+# TODO: add this to Crawler class in core/crawler.py
+
 ALL_CHARS = (i for i in range(sys.maxunicode))
 INVISIBLE_CHARS = [c for c in ALL_CHARS if unicodedata.category(chr(c)) in {'Cf', 'Cc'}]
 # Use characters of control category

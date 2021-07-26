@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +52,7 @@ class LightNovelWorldCrawler(Crawler):
 
         contents = soup.select_one('div#content_detail')
         for ads in contents.select("div"):
-            ads.decompose()
+            ads.extract()
 
         return str(contents)
 

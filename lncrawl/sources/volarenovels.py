@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -97,7 +97,7 @@ class VolareNovelsCrawler(Crawler):
         for bad in content.select(
             '.chapter-nav, .hidden-text, .__cf_email__, p[data-f-id=\'pbf\'], span[style*="font-size: 0"]'
         ):
-            bad.decompose()
+            bad.extract()
         # end for
 
         return str(content)

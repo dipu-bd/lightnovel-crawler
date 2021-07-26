@@ -7,7 +7,7 @@ import os
 import re
 
 from .. import constants as C
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 
 def __format_title(text):
@@ -67,7 +67,7 @@ def format_chapters(crawler: Crawler):
 
 def save_metadata(app, completed=False):
     from ..core.app import App
-    from ..utils.crawler import Crawler
+    from lncrawl.core.crawler import Crawler
     if not isinstance(app, App) and not isinstance(app.crawler, Crawler):
         return
 

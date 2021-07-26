@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class OrNovel(Crawler):
 
         contents = soup.select_one('div.chapter-detail')
         for bad in contents.select('h2, ins, .chapter-header .code-block, script, .adsbygoogle'):
-            bad.decompose()
+            bad.extract()
 
         return str(contents)
     # end def

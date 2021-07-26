@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from urllib.parse import quote_plus
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 full_chapter_list_url = 'https://wuxiaworldsite.co/get-full-list.ajax?id=%s'
@@ -51,7 +51,7 @@ class WuxiaSiteCo(Crawler):
         
         contents = soup.select_one('div.content-story')
         for bad in contents.select('p[style="display: none"], script, ins'):
-            bad.decompose()
+            bad.extract()
         # end for
 
         return '\n'.join([str(p) for p in contents.select('p') if p.text.strip()])

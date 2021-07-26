@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ class NovelhallCrawler(Crawler):
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('div.book-info div.total.booktag span.blue')[0]
-        author.select_one("p").decompose()
+        author.select_one("p").extract()
         self.novel_author = author.text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
@@ -53,7 +53,7 @@ class NovelhallCrawler(Crawler):
 
         contents = soup.select_one('div#htmlContent.entry-content')
         for ads in contents.select("div"):
-            ads.decompose()
+            ads.extract()
 
         return str(contents)
 

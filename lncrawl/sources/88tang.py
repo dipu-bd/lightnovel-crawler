@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class TangEatDrinkRead(Crawler):
         # Removes none TOC links.
         toc_parts = soup.select_one('.entry-content')
         for notoc in toc_parts.select('.sharedaddy, .code-block, script, .adsbygoogle'):
-            notoc.decompose()
+            notoc.extract()
 
         # Extract volume-wise chapter entries
         # TODO: Chapter title are url links, it's the way translator formatted website.
@@ -54,16 +54,7 @@ class TangEatDrinkRead(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        body = []
-        contents = soup.select('div.entry-content p')
-        for p in contents:
-            para = ' '.join(self.extract_contents(p))
-            if len(para):
-                body.append(para)
-            # end if
-        # end for
-
-        return '<p>%s</p>' % '</p><p>'.join(body)
+        contents = soup.select_one('div.entry-content')
+        return self.extract_contents(contents)
     # end def
 # end class

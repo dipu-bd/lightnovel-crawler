@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.centinni.com/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -73,10 +73,15 @@ class Centinni(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle, .sharedaddy'):
-            bad.decompose()
+
+        # remove bad tags
+        self.bad_css += [
+            'h3',
+            '.code-block',
+            '.adsbygoogle',
+            '.sharedaddy',
+        ]
 
         # remove bad text
         self.blacklist_patterns = [
@@ -97,7 +102,6 @@ class Centinni(Crawler):
         # remove urls
         self.bad_tags += ['a']
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 import requests
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,6 @@ class AixdzsCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        chapter['body_lock'] = True
         contents = soup.select('.content > p')
         contents = [str(p) for p in contents if p.text.strip()]
         return ''.join(contents)

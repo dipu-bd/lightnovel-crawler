@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.readlightnovel.org/search/autocomplete'
@@ -66,7 +66,7 @@ class ReadLightNovelCrawler(Crawler):
             '#growfoodsmart'
         ]
         for hidden in div.select(', '.join(bad_selectors)):
-            hidden.decompose()
+            hidden.extract()
         # end for
 
         body = self.extract_contents(div)

@@ -2,7 +2,7 @@
 import json
 import logging
 import re
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://wuxiaworld.online/search.ajax?type=&query=%s'
@@ -73,7 +73,6 @@ class WuxiaOnlineCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         parts = soup.select_one('#list_chapter .content-area')
-        body = self.extract_contents(parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(parts)
     # end def
 # end class

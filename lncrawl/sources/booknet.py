@@ -3,7 +3,7 @@ import logging
 from concurrent.futures.thread import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://booknet.com/en/search?q=%s'

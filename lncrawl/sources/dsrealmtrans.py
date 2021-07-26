@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -55,16 +55,7 @@ class DSRealmTranslationsCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        body = []
-        contents = soup.select('div.wpb_wrapper p')
-        for p in contents:
-            para = ' '.join(self.extract_contents(p))
-            if len(para):
-                body.append(para)
-            # end if
-        # end for
-
-        return '<p>%s</p>' % '</p><p>'.join(body)
+        contents = soup.select('div.wpb_wrapper')
+        self.extract_contents(contents)
     # end def
 # end class

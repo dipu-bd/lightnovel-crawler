@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -62,7 +62,7 @@ class JSTranslations(Crawler):
         for content in body_parts.select("p"):
             for bad in ["[TL Note:", "! I’ll post bonus chapters!]", "There’s a", "for terms left in pinyin in the menu above, for those who need it!"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
                 # end if
         # end for
 
@@ -70,7 +70,7 @@ class JSTranslations(Crawler):
         for content in body_parts.select("p strong"):
             for bad in ["NEXT", "BACK", "This site runs on ads, so please turn off your Ad-Blocker to support your translator!", "***[There’s a glossary now for terms left in pinyin in the above menu, for those who need it!]", "supporting me. Buy me a coffee!", "***[", "GLOSSARY", "ALL AVAILABLE CHAPTERS ARE LISTED ON THE TABLE OF CONTENTS PAGE UNDER CURRENT [BG] ROMANCE PROJECTS!]", "A kind reader bought me a", "! Thank you very much for your support! Here is the promised bonus chapter! ❤", "|| TABLE OF CONTENTS ||"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
                 # end if
         # end for
 
@@ -78,7 +78,7 @@ class JSTranslations(Crawler):
         for content in body_parts.select("p span"):
             for bad in ["happy holidays to you and your loved ones!"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
                 # end if
         # end for
 
@@ -86,7 +86,7 @@ class JSTranslations(Crawler):
         for content in body_parts.select("p a"):
             for bad in ["supporting me. Buy me a coffee", "coffee"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
                 # end if
         # end for
 
@@ -94,31 +94,29 @@ class JSTranslations(Crawler):
         for content in body_parts.select("ul"):
             for bad in ["THIS SITE RUNS ON ADS, SO PLEASE TURN OFF YOUR AD-BLOCKER TO SUPPORT YOUR TRANSLATOR!A GLOSSARY IS HERE for terms left in pinyin, for those who need it!ALL AVAILABLE CHAPTERS ARE LISTED ON THE TABLE OF CONTENTS PAGE UNDER CURRENT [BG] ROMANCE PROJECTS!]", "Want to read more? BUY ME A COFFEE for bonus chapters/ parts!Want to read even MORE? Consider BECOMING A PATRON for monthly access to rough drafts of advanced chapters!Or you can support my work by DONATING DIRECTLY THROUGH PAYPAL!Thank you for your support! ❤", "Want to read more? BUY ME A COFFEE for bonus chapters / parts!Want to read even MORE? Consider BECOMING A PATRON for monthly access to rough drafts of advanced chapters!Or you can support my work by DONATING DIRECTLY THROUGH PAYPAL!Thank you for your support! ❤"]:
                 if bad in content.text:
-                    content.decompose()
+                    content.extract()
                 # end if
         # end for
 
         # Removes share button
         for share in body_parts.select('h3.sd-title'):
-            share.decompose()
+            share.extract()
         # end for
 
         # Removes like button
         for like in body_parts.select('span.button'):
-            like.decompose()
+            like.extract()
         # end for
 
         # Removes loading text left behind by comments
         for comments in body_parts.select('span.loading'):
-            comments.decompose()
+            comments.extract()
         # end for
 
         # Removes double spacing.
-        for br in body_parts.select('br'):
-            br.decompose()
+        
         # end for
 
-        body = self.extract_contents(body_parts)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(body_parts)
     # end def
 # end class

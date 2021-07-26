@@ -4,7 +4,7 @@ import logging
 from concurrent.futures.thread import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://lightnovelbastion.com/?s=%s&post_type=wp-manga&author=&artist=&release='
@@ -110,9 +110,8 @@ class LightNovelBastion(Crawler):
             '.sharedaddy',
         ])
         for bad in contents.select(bad_css):
-            bad.decompose()
+            bad.extract()
 
-        body = self.extract_contents(contents)
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(contents)
     # end def
 # end class

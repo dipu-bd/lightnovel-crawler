@@ -8,7 +8,7 @@ TODO: You can safely delete all [OPTIONAL] methods if you do not need them
 import logging
 import re
 
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 # TODO: Set a name for meaningful logging
 logger = logging.getLogger(__name__)
@@ -89,9 +89,6 @@ class SampleCrawler(Crawler):
     def download_chapter_body(self, chapter):
         # TODO: [MUST IMPLEMENT] Download body of a single chapter and return a
         #       clean html format. You may use `chapter['url']` here.
-        #
-        # NOTE: Set `chapter['body_lock'] = True` to disable post-formatting.
-        #       It can be useful in non-english sources, e.g. aixdzs, qidiancom, tiknovel
         #
         #       Return an empty body if anything goes wrong. But you should not return `None`.
         pass

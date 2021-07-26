@@ -3,7 +3,7 @@ import json
 import logging
 import re
 from bs4 import BeautifulSoup
-from ..utils.crawler import Crawler
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://mtled-novels.com/search_novel.php?q=%s'
@@ -114,15 +114,10 @@ class MtledNovelsCrawler(Crawler):
             chapter['title'] = chapter['title']
         # end if
 
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
         contents = soup.select('div.translated p')
         # print(contents)
         for p in contents:
-            for span in p.findAll('span'):
+            for span in p.find_all('span'):
                 span.unwrap()
             # end for
         # end for
