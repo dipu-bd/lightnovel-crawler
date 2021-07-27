@@ -2,10 +2,7 @@
 import json
 import logging
 import re
-import cssutils
 import urllib.parse
-
-from bs4 import BeautifulSoup
 
 from lncrawl.core.crawler import Crawler
 

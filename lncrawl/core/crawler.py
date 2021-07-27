@@ -3,6 +3,7 @@
 Crawler application
 """
 import logging
+import random
 import re
 from abc import abstractmethod
 from concurrent.futures import ThreadPoolExecutor
@@ -13,9 +14,10 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 from requests import Response, Session
 
+from ..assets.user_agents import user_agents
+
 logger = logging.getLogger(__name__)
 
-_default_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 
 LINE_SEP = '<br>'
 
@@ -30,9 +32,12 @@ class Crawler:
         # Initialize cloudscrapper
         try:
             self.scraper = cloudscraper.create_scraper(
+                #debug=True,
                 browser={
-                    'platform': 'linux',
-                    'mobile': False
+                    'custom': random.choice(user_agents),
+                    # 'browser': 'chrome',
+                    # 'platform': 'windows',
+                    # 'mobile': False
                 }
             )
         except Exception as err:
@@ -185,9 +190,8 @@ class Crawler:
         #kargs.setdefault('allow_redirects', True)
         kargs.setdefault('timeout', 150)  # in seconds
         headers = kargs.setdefault('headers', {})
-
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('user-agent', _default_user_agent)
+        #headers.setdefault('user-agent', random.choice(user_agents))
 
         response: Response = self.scraper.get(url, **kargs)
         self.last_visited_url = url.strip('/')
@@ -200,7 +204,7 @@ class Crawler:
         # end if
 
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('user-agent', _default_user_agent)
+        #headers.setdefault('user-agent', random.choice(user_agents))
         headers.setdefault('content-type', 'application/json')
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
 
