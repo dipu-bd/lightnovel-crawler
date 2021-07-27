@@ -37,7 +37,7 @@ else:
 
     setup(
         version=parse_version(Path('lncrawl') / 'VERSION'),
-        install_requires=parse_requirements('requirements.txt'),
+        install_requires=parse_requirements('requirements-app.txt'),
     )
 
     if run_pyi:

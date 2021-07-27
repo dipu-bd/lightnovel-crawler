@@ -174,7 +174,6 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 - Install requirements
 ```bash
 $ pip3 install --user -r requirements.txt
-$ pip3 install --user -r requirements-dev.txt
 ```
 
 - Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.

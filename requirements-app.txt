@@ -6,7 +6,6 @@ python-dotenv>=0.15.0,<1.0.0
 beautifulsoup4>=4.8.0,<5.0.0
 requests>=2.20.0,<3.0.0
 python-slugify>=4.0.0,<5.0.0
-cssutils>=1.0.0,<1.1.0
 colorama>=0.4.0<0.5.0
 progress>=1.5,<2.0
 js2py==0.70
@@ -18,18 +17,3 @@ questionary>=1.6.0
 prompt-toolkit~=2.0
 html5lib~=1.0
 base58~=2.1.0
-
-# dev requirements
-jinja2
-pyinstaller
-cairosvg
-win_unicode_console
-setuptools
-cryptography<=3.3.2
-pycryptodome>=3.0.0,<4.0.0
-# cssutils>=1.0.0,<1.1.0
-
-# bot requirements
-discord.py>=1.0.0,<2.0.0
-python-telegram-bot<12
-pydrive>=1.3.1,<2.0.0

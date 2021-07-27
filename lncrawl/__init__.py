@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from . import win_term_fix
-
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -15,3 +13,6 @@ def main():
     from .core import start_app
     start_app()
 # end def
+
+if __name__ == "__main__":
+     main()
