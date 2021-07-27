@@ -60,8 +60,7 @@ class NovelFullCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         pagination_link = soup.select_one('#list-chapter .pagination .last a')
-        page_count = int(
-            pagination_link['data-page']) if pagination_link else 0
+        page_count = int(str(pagination_link['data-page'])) if pagination_link else 0
         logger.info('Chapter list pages: %d' % page_count)
 
         logger.info('Getting chapters...')
@@ -76,17 +75,6 @@ class NovelFullCrawler(Crawler):
             for chapter in f.result():
                 chapter_id = len(self.chapters) + 1
                 volume_id = (chapter_id - 1) // 100 + 1
-
-                # pc = self.chapters[-1] if self.chapters else None
-                # match = re.search(r'(?:book|vol|volume) (\d+)', title, re.I)
-                # if pc and match:
-                #     _vol_id = int(match.group(1))
-                #     pv = pc['volume']
-                #     if not pv or (_vol_id == pv or _vol_id == pv + 1):
-                #         volume_id = _vol_id
-                #     # end if
-                # # end if
-
                 possible_volumes.add(volume_id)
                 self.chapters.append({
                     'id': chapter_id,
@@ -98,8 +86,6 @@ class NovelFullCrawler(Crawler):
         # end for
 
         self.volumes = [{'id': x} for x in possible_volumes]
-        logger.info('%d chapters and %d volumes found',
-                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_list(self, page):

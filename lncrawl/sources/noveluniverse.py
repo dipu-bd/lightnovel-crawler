@@ -65,8 +65,6 @@ class NovelUniverseCrawler(Crawler):
             for x in set(self.volumes)
         ]
 
-        logger.info('%d chapters and %d volumes found',
-                    len(self.chapters), len(self.volumes))
     # end def
 
     def get_chapter_list(self, url):

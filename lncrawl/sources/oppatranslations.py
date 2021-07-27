@@ -24,7 +24,7 @@ class OppaTranslationsCrawler(Crawler):
 
         possible_authors = soup.select('div.entry-content p strong')
         for author in possible_authors:
-            if author.text.strip().startswith('Author :'):
+            if author and author.text.strip().startswith('Author :'):
                 self.novel_author = author.text.strip().replace('Author :', '')
                 break
         logger.info('Novel author: %s', self.novel_author)
@@ -57,8 +57,6 @@ class OppaTranslationsCrawler(Crawler):
                 })
         # end for
 
-        logger.info('%d chapters and %d volumes found',
-                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_body(self, chapter):

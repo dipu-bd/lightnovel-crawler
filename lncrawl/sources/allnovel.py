@@ -98,8 +98,6 @@ class AllNovelCrawler(Crawler):
         # end for
 
         self.volumes = [{'id': x} for x in possible_volumes]
-        logger.info('%d chapters and %d volumes found',
-                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_list(self, page):
