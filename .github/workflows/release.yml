@@ -61,7 +61,7 @@ jobs:
         python-version: 3.6
 
     - name: Install OpenSSL
-      run: choco install openssl
+      run: choco install -y -r openssl
 
     - name: Build package
       env:
