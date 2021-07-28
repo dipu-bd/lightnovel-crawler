@@ -8,7 +8,7 @@ from ..assets.icons import Icons
 from ..sources import crawler_list
 
 LINE_SIZE = 80
-ENABLE_BANNER = True
+ENABLE_BANNER = not Icons.isWindows
 
 try:
     row, _ = os.get_terminal_size()
@@ -28,7 +28,7 @@ def description():
         print(get_color_banner())
     else:
         from ..assets.version import get_value
-        title = Icons.BOOK + ' Lightnovel Crawler ' + Icons.CLOVER + get_value()
+        title = Icons.BOOK + ' Lightnovel Crawler v' + get_value()
         padding = ' ' * ((LINE_SIZE - len(title)) // 2)
         print(Fore.YELLOW, padding + title, Fore.RESET)
         print('-' * LINE_SIZE)
