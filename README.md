@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg?logo=python)](https://pypi.org/project/lightnovel-crawler)
 [![download win](https://img.shields.io/badge/download-lncrawl.exe-red?logo=windows)](https://rebrand.ly/lncrawl)
-[![download linux](https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux)](https://rebrand.ly/lncrawl-linux)
+[![download linux](<https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux>)](https://rebrand.ly/lncrawl-linux)
 [![Discord](https://img.shields.io/discord/578550900231110656?logo=discord&label=discord)](https://discord.gg/wMECG2Q)
 <br>
 [![Build and Publish](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/release.yml/badge.svg)](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/release.yml)
@@ -16,7 +16,7 @@
 
 An app to download novels from online sources and generate e-books.
 
-> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)** 
+> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)**
 
 > **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
 
@@ -164,14 +164,17 @@ $ python .
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
 - Clone this repository
+
 ```bash
 $ git clone https://github.com/dipu-bd/lightnovel-crawler
 ```
 
 - Install calibre for pdf, mobi etc. formats.
+
   - https://calibre-ebook.com/download
 
 - Install requirements
+
 ```bash
 $ pip3 install --user -r requirements.txt
 ```
@@ -179,11 +182,13 @@ $ pip3 install --user -r requirements.txt
 - Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.
 
 - To run the discord bot:
+
 ```bash
 $ python3 . --bot discord --shard-id 0 --shard-count 1
 ```
 
 - To run the telegram bot
+
 ```bash
 $ python3 . --bot telegram
 ```
@@ -354,6 +359,7 @@ You are very welcome to contribute in this project. You can:
 | https://dmtranslationscn.com                 |            |           |      @SirGryphin      |
 | https://dobelyuwai.wordpress.com             |            |           |      @SirGryphin      |
 | https://docln.net                            |     ✔      |           |       @dipu-bd        |
+| https://domentranslations.wordpress.com      |            |           |       @dipu-bd        |
 | https://dsrealmtranslations.com              |            |           |      @SirGryphin      |
 | https://es.mtlnovel.com                      |     ✔      |           |       @dipu-bd        |
 | https://exiledrebelsscanlations.com          |            |           |      @SirGryphin      |
@@ -522,7 +528,7 @@ You are very welcome to contribute in this project. You can:
 
 | Rejected Sources                | Reason                                                                                             |
 | ------------------------------- | -------------------------------------------------------------------------------------------------- |
-| http://fullnovel.live           | `This site can’t be reached`                                                                |
+| http://fullnovel.live           | `This site can’t be reached`                                                                       |
 | http://gravitytales.com         | `Redirects to webnovel.com`                                                                        |
 | http://moonbunnycafe.com        | `Does not follow uniform format`                                                                   |
 | https://4scanlation.xyz         | `Site moved`                                                                                       |

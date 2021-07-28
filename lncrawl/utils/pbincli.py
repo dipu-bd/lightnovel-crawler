@@ -3,6 +3,7 @@
 Source: https://github.com/r4sas/PBinCLI/blob/master/pbincli/format.py
 '''
 import json
+import logging
 import ntpath
 import os
 import sys
@@ -16,14 +17,15 @@ from base58 import b58decode, b58encode
 
 #-----------------------------------------------------------------------------#
 
+logger = logging.getLogger(__name__)
+
 
 class PBinCLIException(Exception):
     pass
 
 
 def PBinCLIError(message):
-    print("PBinCLI Error: {}".format(message), file=sys.stderr)
-    exit(1)
+    logger.warn("PBinCLI Error: {}".format(message))
 
 
 def path_leaf(path):
@@ -58,20 +60,7 @@ def validate_url(s):
 # try import AES cipher and check if it has GCM mode (prevent usage of pycrypto)
 try:
     from Crypto.Cipher import AES
-    if not hasattr(AES, 'MODE_GCM'):
-        try:
-            from Cryptodome.Cipher import AES
-            from Cryptodome.Random import get_random_bytes
-        except ImportError:
-            PBinCLIError("AES GCM mode is not found in imported crypto module.\n" +
-                         "That can happen if you have installed pycrypto.\n\n" +
-                         "We tried to import pycryptodomex but it is not available.\n" +
-                         "Please install it via pip, if you still need pycrypto, by running:\n" +
-                         "\tpip install pycryptodomex\n" +
-                         "... otherwise use separate python environment or uninstall pycrypto:\n" +
-                         "\tpip uninstall pycrypto")
-    else:
-        from Crypto.Random import get_random_bytes
+    from Crypto.Random import get_random_bytes
 except ImportError:
     PBinCLIError("Unable import pycryptodome")
 
@@ -115,7 +104,7 @@ class PasteV2:
             mime = 'application/octet-stream'
 
         if self._debug:
-            print("Filename:\t{}\nMIME-type:\t{}".format(path_leaf(path), mime))
+            logger.debug("Filename:\t{}\nMIME-type:\t{}".format(path_leaf(path), mime))
 
         self._attachment = 'data:' + mime + ';base64,' + b64encode(contents).decode()
         self._attachment_name = path_leaf(path)

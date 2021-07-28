@@ -2,16 +2,14 @@
 '''
 Decryptor: https://github.com/Pioverpie/privatebin-api/blob/master/privatebinapi/download.py
 '''
-from concurrent.futures.thread import ThreadPoolExecutor
-from urllib.parse import urlsplit
-import re
 import logging
+import re
+from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
+from urllib.parse import urlsplit
 
 import regex
-
 from lncrawl.core.crawler import Crawler
-from ..utils.pbincli import PasteV2
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +74,8 @@ class QidianComCrawler(Crawler):
                 })
 
     def download_chapter_body(self, chapter):
+        from lncrawl.utils.pbincli import PasteV2
+
         url_data = urlsplit(chapter['url'])
         pasteId = url_data.query
         passphrase = url_data.fragment

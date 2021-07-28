@@ -4,7 +4,6 @@ import logging
 import re
 from urllib.parse import urlparse
 from lncrawl.core.crawler import Crawler
-from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
@@ -73,20 +72,19 @@ class FoxaholicCrawler(Crawler):
         # end for
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.reading-content p') 
-        all_imgs = soup.find_all('img')
-        for img in all_imgs:
-            if img.has_attr('loading'):
-                src_url = img['src']
-                parent = img.parent
-                img.extract()
-                new_tag = soup.new_tag("img", src=src_url)
-                parent.append(new_tag)
-        return ''.join([str(p) for p in contents])
+        contents = soup.select('.reading-content')
+        # all_imgs = soup.find_all('img')
+        # for img in all_imgs:
+        #     if img.has_attr('loading'):
+        #         src_url = img['src']
+        #         parent = img.parent
+        #         img.extract()
+        #         new_tag = soup.new_tag("img", src=src_url)
+        #         parent.append(new_tag)
+        return self.extract_contents(contents)
     # end def
 # end class

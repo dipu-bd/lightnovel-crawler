@@ -2,7 +2,6 @@
 import re
 import logging
 from lncrawl.core.crawler import Crawler
-from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://novelfull.com/search?keyword=%s'
@@ -104,20 +103,18 @@ class NovelFullCrawler(Crawler):
         return chapters
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div#chapter-content')
-
-        for bad in contents.select('iframe, .ads-middle, .code-block, script, .adsbygoogle, img[src*="proxy?container=focus"]'):
-            bad.extract()
-
-        for end in contents.findAll('div', {"align": 'left'}):
-            end.extract()
-
-        return str(contents)
+        self.blacklist_patterns += [
+            'Read more chapter on NovelFull'
+        ]
+        self.bad_css += [
+            'div[align="left"]',
+            'img[src*="proxy?container=focus"]'
+        ]
+        return self.extract_contents(contents)
     # end def
 # end class

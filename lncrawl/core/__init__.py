@@ -5,7 +5,7 @@ Interactive application to take user inputs
 import logging
 import os
 
-#import colorama
+import colorama
 from colorama import Fore
 
 from ..assets.version import get_value as get_version
@@ -21,7 +21,7 @@ logger = logging.Logger('CORE')
 def init():
     os.environ['version'] = get_version()
 
-    #colorama.init(wrap=False)
+    colorama.init(wrap=True)
     description()
 
     args = get_args()

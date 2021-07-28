@@ -4,7 +4,6 @@ import base64
 import logging
 import re
 
-from ..utils.cleaner import cleanup_text
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -45,43 +44,22 @@ class FoxtellerCrawler(Crawler):
         self.novel_cover = self.absolute_url(soup.select_one('.novel-featureimg img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        used_vol_id = set([])
-        used_chap_id = set([])
         for card in soup.select('#myTabContent #accordion .card'):
-            vol_title = card.select_one(".card-header .title").text
-            vol_id = card.select_one(".card-header .volume").text
-            if not vol_id.isdigit() or (vol_id in used_vol_id):
-                vol_id = str(self.volumes[-1]['id'] + 1) if len(self.volumes) else '1'
-            # end if
-            used_vol_id.add(vol_id)
-            vol_id = int(vol_id)
-            if vol_id == 0:
-                continue   # Skip Glossary
-            # end if
-            self.volumes.append({
-                'id': vol_id,
-                'title': vol_title,
-            })
+            vol_id = len(self.chapters) // 100 + 1
+            self.volumes.append({'id': vol_id})
 
             for a in card.select('.card-body a'):
-                chap_title = a.text.strip()
-                chap_id = re.findall(r'(\d+)', chap_title)
-                chap_id = int(chap_id[0]) if len(chap_id) else len(self.chapters) + 1
-                if chap_id in used_chap_id:
-                    chap_id = self.chapters[-1]['id'] + 1
-                # end if
-                used_chap_id.add(chap_id)
+                chap_id = len(self.chapters) + 1
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
+                    'title': a.text.strip(),
                     'url':  self.absolute_url(a['href']),
-                    'title': chap_title,
                 })
             # end for
         # end for
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
@@ -111,7 +89,6 @@ class FoxtellerCrawler(Crawler):
             'Referer': chapter['url'].strip('/'),
             'X-XSRF-TOKEN': self.cookies['XSRF-TOKEN'],
             'X-CSRF-TOKEN': soup.select_one('meta[name="csrf-token"]')['content'],
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.85 Safari/537.36',
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json;charset=UTF-8',
         }
@@ -133,6 +110,6 @@ class FoxtellerCrawler(Crawler):
 
         content = self.make_soup(aux)
         content = '\n'.join(str(p) for p in content.select('p'))
-        return content
+        return self.clean_text(content)
     # end def
 # end class

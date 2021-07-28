@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-from concurrent import futures
 from urllib.parse import quote_plus
 
-from ..utils.cleaner import cleanup_text
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -66,17 +64,12 @@ class NovelFullPlus(Crawler):
         self.volumes = [{'id': x} for x in volumes]
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('.reading-detail .container')
-        for br in contents.select('br, h3, h1, h2, h4'):
-            br.extract()
-        # end for
-
-        return str(contents)
+        self.bad_css += ['h1', 'h2', 'h3', 'h4']
+        return self.extract_contents(contents)
     # end def
 # end class
