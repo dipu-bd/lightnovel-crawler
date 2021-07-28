@@ -55,7 +55,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Install OpenSSL
-      run: choco install -y -r openssl
+      run: choco install -y --no-progress openssl
 
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
