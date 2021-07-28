@@ -2,7 +2,6 @@
 import re
 import logging
 from lncrawl.core.crawler import Crawler
-from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://allnovel.org/search?keyword=%s'
@@ -98,8 +97,6 @@ class AllNovelCrawler(Crawler):
         # end for
 
         self.volumes = [{'id': x} for x in possible_volumes]
-        logger.info('%d chapters and %d volumes found',
-                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_list(self, page):
@@ -118,15 +115,11 @@ class AllNovelCrawler(Crawler):
         return chapters
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        content = soup.select('div#chapter-content p')
-        content = "".join(str(paragraph) for paragraph in content)
-
-        return content
+        content = soup.select('div#chapter-content')
+        return self.extract_contents(content)
     # end def
 # end class

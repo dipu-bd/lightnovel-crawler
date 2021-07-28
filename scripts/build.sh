@@ -11,7 +11,7 @@ $PY -m venv venv
 . venv/bin/activate
 
 $PIP install -U pip wheel setuptools
-$PIP install -r requirements.txt
+$PIP install -r requirements-app.txt
 $PIP install -r requirements-dev.txt
 
 $PY setup.py clean bdist_wheel package

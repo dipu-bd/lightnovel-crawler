@@ -31,6 +31,14 @@ except Exception:
 # end try
 
 
+def download_image(app, url):
+    response = app.crawler.get_response(url, headers={
+        'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+    })
+    return Image.open(BytesIO(response.content))
+# end def
+
+
 def download_cover(app):
     if not app.crawler.novel_cover:
         return None
@@ -48,18 +56,17 @@ def download_cover(app):
         return None
     # end try
 
-    try:
-        logger.info('Downloading cover image...')
-        response = app.crawler.get_response(app.crawler.novel_cover)
-        img = Image.open(BytesIO(response.content))
-        img.save(filename)
-        logger.debug('Saved cover: %s', filename)
-        return filename
-    except Exception as ex:
-        logger.warn('Failed to download cover image: %s -> %s (%s)',
-                    app.crawler.novel_cover, filename, str(ex))
-        return None
-    # end try
+    # try:
+    logger.info('Downloading cover image...')
+    img = download_image(app, app.crawler.novel_cover)
+    img.save(filename, 'PNG')
+    logger.debug('Saved cover: %s', filename)
+    return filename
+    # except Exception as ex:
+    #     logger.warn('Failed to download cover image: %s -> %s (%s)',
+    #                 app.crawler.novel_cover, filename, str(ex))
+    #     return None
+    # # end try
 # end def
 
 
@@ -151,7 +158,7 @@ def download_chapter_body(app, chapter):
 # end def
 
 
-def download_image(app, url, image_output_path):
+def download_content_image(app, url, image_output_path):
     url_hash = hashlib.md5(url.encode()).hexdigest()
     filename = url_hash + '.jpg'
     image_file = os.path.join(image_output_path, filename)
@@ -162,8 +169,7 @@ def download_image(app, url, image_output_path):
 
     try:
         logger.info('Downloading image: ' + url)
-        response = app.crawler.get_response(url)
-        img = Image.open(BytesIO(response.content))
+        img = download_image(app, url)
         os.makedirs(image_output_path, exist_ok=True)
         with open(image_file, 'wb') as f:
             img.save(f, "JPEG")
@@ -240,7 +246,7 @@ def download_chapter_images(app):
         for img in soup.select('img'):
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
             future = app.crawler.executor.submit(
-                download_image,
+                download_content_image,
                 app,
                 full_url,
                 image_output_path

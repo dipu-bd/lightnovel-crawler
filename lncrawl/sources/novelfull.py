@@ -2,7 +2,6 @@
 import re
 import logging
 from lncrawl.core.crawler import Crawler
-from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'https://novelfull.com/search?keyword=%s'
@@ -60,8 +59,7 @@ class NovelFullCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         pagination_link = soup.select_one('#list-chapter .pagination .last a')
-        page_count = int(
-            pagination_link['data-page']) if pagination_link else 0
+        page_count = int(str(pagination_link['data-page'])) if pagination_link else 0
         logger.info('Chapter list pages: %d' % page_count)
 
         logger.info('Getting chapters...')
@@ -76,17 +74,6 @@ class NovelFullCrawler(Crawler):
             for chapter in f.result():
                 chapter_id = len(self.chapters) + 1
                 volume_id = (chapter_id - 1) // 100 + 1
-
-                # pc = self.chapters[-1] if self.chapters else None
-                # match = re.search(r'(?:book|vol|volume) (\d+)', title, re.I)
-                # if pc and match:
-                #     _vol_id = int(match.group(1))
-                #     pv = pc['volume']
-                #     if not pv or (_vol_id == pv or _vol_id == pv + 1):
-                #         volume_id = _vol_id
-                #     # end if
-                # # end if
-
                 possible_volumes.add(volume_id)
                 self.chapters.append({
                     'id': chapter_id,
@@ -98,8 +85,6 @@ class NovelFullCrawler(Crawler):
         # end for
 
         self.volumes = [{'id': x} for x in possible_volumes]
-        logger.info('%d chapters and %d volumes found',
-                    len(self.chapters), len(self.volumes))
     # end def
 
     def download_chapter_list(self, page):
@@ -118,20 +103,18 @@ class NovelFullCrawler(Crawler):
         return chapters
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div#chapter-content')
-
-        for bad in contents.select('iframe, .ads-middle, .code-block, script, .adsbygoogle, img[src*="proxy?container=focus"]'):
-            bad.extract()
-
-        for end in contents.findAll('div', {"align": 'left'}):
-            end.extract()
-
-        return str(contents)
+        self.blacklist_patterns += [
+            'Read more chapter on NovelFull'
+        ]
+        self.bad_css += [
+            'div[align="left"]',
+            'img[src*="proxy?container=focus"]'
+        ]
+        return self.extract_contents(contents)
     # end def
 # end class

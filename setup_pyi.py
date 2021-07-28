@@ -61,18 +61,18 @@ def gather_data_files():
     command += '--add-data "%s/lncrawl/VERSION%slncrawl" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
-    command += '--add-data "%s/cairosvg/VERSION%s." ' % (
-        unix_site_packages, os.pathsep)
-    command += '--add-data "%s/cairocffi/VERSION%scairocffi" ' % (
-        unix_site_packages, os.pathsep)
-    # command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (
-    #    unix_site_packages, os.pathsep)
-    command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
-        unix_site_packages, os.pathsep)
     command += '--add-data "%s/cloudscraper%scloudscraper" ' % (
         unix_site_packages, os.pathsep)
-    command += '--add-data "%s/wcwidth/version.json%swcwidth" ' % (
-        unix_site_packages, os.pathsep)
+    # command += '--add-data "%s/cairosvg/VERSION%s." ' % (
+    #     unix_site_packages, os.pathsep)
+    # command += '--add-data "%s/cairocffi/VERSION%scairocffi" ' % (
+    #     unix_site_packages, os.pathsep)
+    # command += '--add-data "%s/tinycss2/VERSION%stinycss2" ' % (
+    #    unix_site_packages, os.pathsep)
+    # command += '--add-data "%s/text_unidecode/data.bin%stext_unidecode" ' % (
+    #     unix_site_packages, os.pathsep)
+    # command += '--add-data "%s/wcwidth/version.json%swcwidth" ' % (
+    #     unix_site_packages, os.pathsep)
 
     return command
 # end def

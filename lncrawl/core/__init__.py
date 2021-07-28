@@ -21,7 +21,7 @@ logger = logging.Logger('CORE')
 def init():
     os.environ['version'] = get_version()
 
-    colorama.init()
+    colorama.init(wrap=True)
     description()
 
     args = get_args()

@@ -2,8 +2,6 @@
 import json
 import logging
 import re
-from urllib.parse import urlparse
-from ..utils.cleaner import cleanup_text
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -74,7 +72,6 @@ class NovelMic(Crawler):
         # end for
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
@@ -83,15 +80,15 @@ class NovelMic(Crawler):
         contents = soup.select('.reading-content')
 
         # Fixes images, so they can be downloaded.
-        all_imgs = soup.find_all('img')
-        for img in all_imgs:
-            if img.has_attr('data-src'):
-                src_url = img['data-src']
-                parent = img.parent
-                img.extract()
-                new_tag = soup.new_tag("img", src=src_url)
-                parent.append(new_tag)
+        # all_imgs = soup.find_all('img')
+        # for img in all_imgs:
+        #     if img.has_attr('data-src'):
+        #         src_url = img['data-src']
+        #         parent = img.parent
+        #         img.extract()
+        #         new_tag = soup.new_tag("img", src=src_url)
+        #         parent.append(new_tag)
 
-        return str(contents)
+        return self.extract_contents(contents)
     # end def
 # end class

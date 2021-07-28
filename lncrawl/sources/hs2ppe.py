@@ -3,7 +3,6 @@ import json
 import logging
 import re
 from lncrawl.core.crawler import Crawler
-from ..utils.cleaner import cleanup_text
 
 logger = logging.getLogger(__name__)
 search_url = 'http://hs2ppe.co.uk/search?keyword=%s'
@@ -19,8 +18,7 @@ class wspadancewichita(Crawler):
 
         results = []
         for result in soup.select('div.col-novel-main div.list.list-novel div.row')[:5]:
-            url = self.absolute_url(
-                result.select_one('h3.novel-title a')['href'])
+            url = self.absolute_url(result.select_one('h3.novel-title a')['href'])
             title = result.select_one('h3.novel-title a')['title']
             last_chapter = result.select_one('span.chr-text').text.strip()
             results.append({
@@ -40,17 +38,17 @@ class wspadancewichita(Crawler):
         self.novel_title = soup.select_one('h3.title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.book img')['src'])
+        self.novel_cover = self.absolute_url(soup.select_one('div.book img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = []
-        for a in soup.select('ul.info.info-meta li')[1].select('a'):
-            author.append(a.text.strip())
-        # end for
-
-        self.novel_author = ", ".join(author)
-
+        try:
+            author = []
+            for a in soup.select('ul.info.info-meta li')[1].select('a'):
+                author.append(a.text.strip())
+            # end for
+            self.novel_author = ", ".join(author)
+        except Exception as e:
+            logger.warn('Failed to parse novel author. Error: %s', e)
         logger.info('Novel author: %s', self.novel_author)
 
         novel_id = soup.select_one('div#rating')['data-novel-id']
@@ -66,36 +64,26 @@ class wspadancewichita(Crawler):
             # end for
         # end for
 
-        for x in chapters:
+        for chap in chapters:
             chap_id = len(self.chapters) + 1
+            vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+                self.volumes.append({'id': vol_id})
             # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url': self.absolute_url(x['href']),
-                'title': x['title'] or ('Chapter %d' % chap_id),
+                'url': self.absolute_url(chap['href']),
+                'title': chap['title'] or ('Chapter %d' % chap_id),
             })
         # end for
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        content = soup.select('#chr-content p')
-        if not content:
-            return ''
-        # end if
-
-        return "".join(map(str, content))
+        content = soup.select('#chr-content')
+        return self.extract_contents(content)
     # end def
 # end class

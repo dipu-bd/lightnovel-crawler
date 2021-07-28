@@ -2,7 +2,7 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg?logo=python)](https://pypi.org/project/lightnovel-crawler)
 [![download win](https://img.shields.io/badge/download-lncrawl.exe-red?logo=windows)](https://rebrand.ly/lncrawl)
-[![download linux](https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux)](https://rebrand.ly/lncrawl-linux)
+[![download linux](<https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux>)](https://rebrand.ly/lncrawl-linux)
 [![Discord](https://img.shields.io/discord/578550900231110656?logo=discord&label=discord)](https://discord.gg/wMECG2Q)
 <br>
 [![Build and Publish](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/release.yml/badge.svg)](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/release.yml)
@@ -16,7 +16,7 @@
 
 An app to download novels from online sources and generate e-books.
 
-> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)** 
+> **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)**
 
 > **Telegram: [https://t.me/epub_smelter_bot](https://t.me/epub_smelter_bot)**
 
@@ -164,27 +164,31 @@ $ python .
 There are two chatbots available at this moment: Telegram and Discord. To run your own bot server, follow these instructions:
 
 - Clone this repository
+
 ```bash
 $ git clone https://github.com/dipu-bd/lightnovel-crawler
 ```
 
 - Install calibre for pdf, mobi etc. formats.
+
   - https://calibre-ebook.com/download
 
 - Install requirements
+
 ```bash
 $ pip3 install --user -r requirements.txt
-$ pip3 install --user -r requirements-dev.txt
 ```
 
 - Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.
 
 - To run the discord bot:
+
 ```bash
 $ python3 . --bot discord --shard-id 0 --shard-count 1
 ```
 
 - To run the telegram bot
+
 ```bash
 $ python3 . --bot telegram
 ```
@@ -198,8 +202,14 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ```bash
 $ lncrawl -h
 ================================================================================
-                           📒 Lightnovel Crawler 🍀2.26.0 
-                  https://github.com/dipu-bd/lightnovel-crawler 
+╭╮╱╱╱╱╱╱╭╮╱╭╮╱╱╱╱╱╱╱╱╱╱╱╱╭╮╱╭━━━╮╱╱╱╱╱╱╱╱╱╭╮
+┃┃╱╱╱╱╱╱┃┃╭╯╰╮╱╱╱╱╱╱╱╱╱╱╱┃┃╱┃╭━╮┃╱╱╱╱╱╱╱╱╱┃┃
+┃┃╱╱╭┳━━┫╰┻╮╭╋━╮╭━━┳╮╭┳━━┫┃╱┃┃╱╰╋━┳━━┳╮╭╮╭┫┃╭━━┳━╮
+┃┃╱╭╋┫╭╮┃╭╮┃┃┃╭╮┫╭╮┃╰╯┃┃━┫┃╱┃┃╱╭┫╭┫╭╮┃╰╯╰╯┃┃┃┃━┫╭╯
+┃╰━╯┃┃╰╯┃┃┃┃╰┫┃┃┃╰╯┣╮╭┫┃━┫╰╮┃╰━╯┃┃┃╭╮┣╮╭╮╭┫╰┫┃━┫┃
+╰━━━┻┻━╮┣╯╰┻━┻╯╰┻━━╯╰╯╰━━┻━╯╰━━━┻╯╰╯╰╯╰╯╰╯╰━┻━━┻╯
+╱╱╱╱╱╭━╯┃ v2.27.2
+╱╱╱╱╱╰━━╯ 🔗 https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
        lightnovel-crawler [options...]
@@ -210,6 +220,8 @@ optional arguments:
   -v, --version         show program's version number and exit
   -l                    Set log levels. (-l = warn, -ll = info, -lll = debug).
   --list-sources        Display a list of available sources.
+  --crawler [FILES [FILES ...]]
+                        Load additional crawler files.
   -s URL, --source URL  Profile page url of the novel.
   -q STR, --query STR   Novel query followed by list of source sites.
   -x [REGEX], --sources [REGEX]
@@ -241,9 +253,8 @@ optional arguments:
   --shard-count [SHARD_COUNT]
                         Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
-  --resume [NAME/URL]   Resume download of a novel containing in *****************
-  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env
-                        file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
+  --resume [NAME/URL]   Resume download of a novel containing in /home/dipu/projects/lightnovel-crawler/Lightnovels
+  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
@@ -262,7 +273,7 @@ Here are some example usage of the app:
 - To download all chapters: `lncrawl --all`
 - To download first 25 chapters: `lncrawl --first 25`
 - To download all between two chapters: `lncrawl --range 10 30`
-- To download all between two chapter links: `lncrawl https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/chapter-2205 https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/chapter-2211`
+- To download all between two chapter links: `lncrawl -s https://novelfull.com/release-that-witch.html --chapters https://novelfull.com/release-that-witch/chapter-6-training-part-i.html https://novelfull.com/release-that-witch/chapter-8-months-of-the-demons-part-1.html`
 - To download a specific volumes: `lncrawl --volumes 2 3`
 
 - To define output path: `lncrawl -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god"`
@@ -271,7 +282,7 @@ Here are some example usage of the app:
 - To resume download where is has been left previously: `lncrawl -i`
 - To specify output formats: `lncrawl --format epub pdf mobi`
 
-- To display list of supported sources: `lncrawl ---list-sources`
+- To display list of supported sources: `lncrawl --list-sources`
 
 - If you provide an option in the argument, it will skip it in the interactive session.
   If you want to disable all interactive prompts, pass `--suppress` at the end.
@@ -308,23 +319,23 @@ You are very welcome to contribute in this project. You can:
 | http://boxnovel.cloud                        |     ✔      |           |      @SirGryphin      |
 | http://boxnovel.org                          |     ✔      |           |       @dipu-bd        |
 | http://hs2ppe.co.uk                          |     ✔      |           |      @SirGryphin      |
-| http://liberspark.com                        |            |           |                       |
+| http://liberspark.com                        |            |           |       @dipu-bd        |
 | http://novelfull.com                         |     ✔      |           |       @dipu-bd        |
 | http://novels.cloud                          |     ✔      |           |      @SirGryphin      |
-| http://readonlinenovels.com                  |            |           |                       |
-| http://tiknovel.com                          |            |           |                       |
+| http://readonlinenovels.com                  |            |           |       @dipu-bd        |
+| http://tiknovel.com                          |            |           |       @dipu-bd        |
 | http://wspadancewichita.com                  |     ✔      |           |      @SirGryphin      |
 | http://wuxiaworld.cloud                      |     ✔      |           |      @SirGryphin      |
-| http://www.fujitranslation.com               |            |           |                       |
+| http://www.fujitranslation.com               |            |           |       @dipu-bd        |
 | http://www.hanyunovels.site                  |     ✔      |           |      @SirGryphin      |
-| http://www.machinenoveltranslation.com       |            |           |                       |
-| http://www.tiknovel.com                      |            |           |                       |
-| http://zenithnovels.com                      |            |           |                       |
+| http://www.machinenoveltranslation.com       |            |           |       @dipu-bd        |
+| http://www.tiknovel.com                      |            |           |       @dipu-bd        |
+| http://zenithnovels.com                      |            |           |       @dipu-bd        |
 | http://zhi-end.blogspot.co.id                |            |           |      @SirGryphin      |
 | http://zhi-end.blogspot.com                  |            |           |      @SirGryphin      |
 | https://1stkissnovel.love                    |     ✔      |           |      @SirGryphin      |
 | https://88tangeatdrinkread.wordpress.com     |            |           |      @SirGryphin      |
-| https://9kqw.com                             |     ✔      |           |                       |
+| https://9kqw.com                             |     ✔      |           |       @dipu-bd        |
 | https://allnovel.org                         |     ✔      |           |      @SirGryphin      |
 | https://amnesiactl.com                       |            |           |      @SirGryphin      |
 | https://anonanemone.wordpress.com            |            |           |      @SirGryphin      |
@@ -333,44 +344,45 @@ You are very welcome to contribute in this project. You can:
 | https://asadatranslations.com                |     ✔      |           |      @SirGryphin      |
 | https://automtl.wordpress.com                |            |           |      @SirGryphin      |
 | https://babelnovel.com                       |     ✔      |     ✔     |       @dipu-bd        |
-| https://bestlightnovel.com                   |     ✔      |           |                       |
-| https://book.qidian.com                      |            |           |                       |
+| https://bestlightnovel.com                   |     ✔      |           |       @dipu-bd        |
+| https://book.qidian.com                      |            |           |       @dipu-bd        |
 | https://booknet.com                          |            |           | @dipu-bd, @SirGryphin |
 | https://boxnovel.com                         |     ✔      |           |       @dipu-bd        |
 | https://boxnovel.online                      |     ✔      |           |      @SirGryphin      |
 | https://cclawtranslations.home.blog          |            |           |      @SirGryphin      |
 | https://clicknovel.net                       |            |           |      @SirGryphin      |
-| https://creativenovels.com                   |            |           |                       |
-| https://crescentmoon.blog                    |            |           |                       |
+| https://creativenovels.com                   |            |           |       @dipu-bd        |
+| https://crescentmoon.blog                    |            |           |       @dipu-bd        |
 | https://daonovel.com                         |     ✔      |           |      @SirGryphin      |
 | https://darktranslation.com                  |            |           |      @SirGryphin      |
 | https://demontranslations.com                |            |           |      @SirGryphin      |
 | https://dmtranslationscn.com                 |            |           |      @SirGryphin      |
 | https://dobelyuwai.wordpress.com             |            |           |      @SirGryphin      |
 | https://docln.net                            |     ✔      |           |       @dipu-bd        |
+| https://domentranslations.wordpress.com      |            |           |       @dipu-bd        |
 | https://dsrealmtranslations.com              |            |           |      @SirGryphin      |
-| https://es.mtlnovel.com                      |     ✔      |           |                       |
+| https://es.mtlnovel.com                      |     ✔      |           |       @dipu-bd        |
 | https://exiledrebelsscanlations.com          |            |           |      @SirGryphin      |
 | https://fanstranslations.com                 |            |           |      @SirGryphin      |
 | https://fastnovel.net                        |     ✔      |           |      @SirGryphin      |
-| https://fr.mtlnovel.com                      |     ✔      |           |                       |
+| https://fr.mtlnovel.com                      |     ✔      |           |       @dipu-bd        |
 | https://fujitranslation.com                  |            |           |      @SirGryphin      |
 | https://grensia.blogspot.com                 |            |           |       @dipu-bd        |
 | https://hui3r.wordpress.com                  |            |           |      @SirGryphin      |
-| https://id.mtlnovel.com                      |     ✔      |           |                       |
+| https://id.mtlnovel.com                      |     ✔      |           |       @dipu-bd        |
 | https://inadequatetranslations.wordpress.com |            |           |      @SirGryphin      |
-| https://indowebnovel.id                      |            |           |                       |
+| https://indowebnovel.id                      |            |           |       @dipu-bd        |
 | https://infinitenoveltranslations.net        |            |           |      @SirGryphin      |
-| https://instadoses.com                       |            |           |                       |
+| https://instadoses.com                       |            |           |       @dipu-bd        |
 | https://isotls.com                           |            |           |      @SirGryphin      |
 | https://jpmtl.com                            |            |           |       @dipu-bd        |
 | https://jstranslations1.com                  |            |           |      @SirGryphin      |
 | https://justatranslatortranslations.com      |            |           |      @SirGryphin      |
-| https://kiss-novel.com                       |            |           |                       |
-| https://kisslightnovels.info                 |     ✔      |           |                       |
+| https://kiss-novel.com                       |            |           |       @dipu-bd        |
+| https://kisslightnovels.info                 |     ✔      |           |       @dipu-bd        |
 | https://lazybirdtranslations.wordpress.com   |            |           |      @SirGryphin      |
 | https://lemontreetranslations.wordpress.com  |            |           |      @SirGryphin      |
-| https://light-novel.online                   |     ✔      |           |                       |
+| https://light-novel.online                   |     ✔      |           |       @dipu-bd        |
 | https://lightnovel.tv                        |     ✔      |           |      @SirGryphin      |
 | https://lightnovel.world                     |            |           |      @SirGryphin      |
 | https://lightnovelbastion.com                |            |           |       @dipu-bd        |
@@ -379,21 +391,21 @@ You are very welcome to contribute in this project. You can:
 | https://lightnovelshub.com                   |     ✔      |           |      @SirGryphin      |
 | https://lightnovelsonl.com                   |     ✔      |           |      @SirGryphin      |
 | https://lightnovelstranslations.com          |            |           |      @SirGryphin      |
-| https://listnovel.com                        |     ✔      |           |                       |
-| https://litnet.com                           |            |           |                       |
+| https://listnovel.com                        |     ✔      |           |       @dipu-bd        |
+| https://litnet.com                           |            |           |       @dipu-bd        |
 | https://ln.hako.re                           |     ✔      |           |       @dipu-bd        |
 | https://lnmtl.com                            |            |     ✔     |       @dipu-bd        |
-| https://m.chinesefantasynovels.com           |            |           |                       |
-| https://m.mywuxiaworld.com                   |     ✔      |           |                       |
-| https://m.novelspread.com                    |            |           |                       |
-| https://m.readlightnovel.cc                  |            |           |                       |
-| https://m.romanticlovebooks.com              |            |           |                       |
+| https://m.chinesefantasynovels.com           |            |           |       @dipu-bd        |
+| https://m.mywuxiaworld.com                   |     ✔      |           |       @dipu-bd        |
+| https://m.novelspread.com                    |            |           |       @dipu-bd        |
+| https://m.readlightnovel.cc                  |            |           |       @dipu-bd        |
+| https://m.romanticlovebooks.com              |            |           |       @dipu-bd        |
 | https://m.wuxiaworld.co                      |     ✔      |           |       @dipu-bd        |
-| https://mangatoon.mobi                       |            |           |                       |
-| https://meionovel.id                         |     ✔      |           |                       |
+| https://mangatoon.mobi                       |            |           |       @dipu-bd        |
+| https://meionovel.id                         |     ✔      |           |       @dipu-bd        |
 | https://moonstonetranslation.com             |            |           |      @SirGryphin      |
 | https://morenovel.net                        |     ✔      |           |      @SirGryphin      |
-| https://myoniyonitranslations.com            |            |           |                       |
+| https://myoniyonitranslations.com            |            |           |       @dipu-bd        |
 | https://mysticalmerries.com                  |     ✔      |           |      @SirGryphin      |
 | https://newsite.kolnovel.com                 |     ✔      |           |      @SirGryphin      |
 | https://novel27.com                          |     ✔      |           |      @SirGryphin      |
@@ -403,27 +415,27 @@ You are very welcome to contribute in this project. You can:
 | https://novelfull.com                        |     ✔      |           |       @dipu-bd        |
 | https://novelfullplus.com                    |     ✔      |           | @dipu-bd, @SirGryphin |
 | https://novelgate.net                        |     ✔      |           |      @SirGryphin      |
-| https://novelgo.id/                          |            |           |                       |
+| https://novelgo.id/                          |            |           |       @dipu-bd        |
 | https://novelmic.com                         |     ✔      |           |      @SirGryphin      |
 | https://novelonlinefree.com                  |     ✔      |           |      @SirGryphin      |
-| https://novelonlinefull.com                  |     ✔      |           |                       |
-| https://novelraw.blogspot.com                |            |           |                       |
+| https://novelonlinefull.com                  |     ✔      |           |       @dipu-bd        |
+| https://novelraw.blogspot.com                |            |           |       @dipu-bd        |
 | https://novels.pl                            |            |           |       @dipu-bd        |
 | https://novelsite.net                        |     ✔      |           |      @SirGryphin      |
 | https://novelsonline.net                     |            |           |      @SirGryphin      |
-| https://novelsrock.com                       |            |           |                       |
+| https://novelsrock.com                       |            |           |       @dipu-bd        |
 | https://noveltoon.mobi/                      |     ✔      |           |       @dipu-bd        |
 | https://noveltranslate.com                   |     ✔      |           |      @SirGryphin      |
 | https://noveltrench.com                      |     ✔      |           |      @SirGryphin      |
 | https://omgnovels.com                        |     ✔      |           |      @SirGryphin      |
 | https://overabook.com                        |     ✔      |           |      @SirGryphin      |
-| https://ranobelib.me                         |            |           |                       |
+| https://ranobelib.me                         |            |           |       @dipu-bd        |
 | https://ranobes.net                          |            |           |       @dipu-bd        |
 | https://readlightnovels.net                  |     ✔      |           |     @PreownedFIN      |
 | https://readnovelz.net                       |     ✔      |           |      @SirGryphin      |
 | https://readwebnovels.net                    |     ✔      |           |      @SirGryphin      |
 | https://reincarnationpalace.com              |            |           |      @SirGryphin      |
-| https://rewayat.club                         |            |           |                       |
+| https://rewayat.club                         |            |           |       @dipu-bd        |
 | https://rpgnoob.wordpress.com                |            |           |      @SirGryphin      |
 | https://rpgnovels.com                        |            |           |      @SirGryphin      |
 | https://shalvationtranslations.wordpress.com |            |           |      @SirGryphin      |
@@ -433,19 +445,19 @@ You are very welcome to contribute in this project. You can:
 | https://steambunlightnovel.com               |            |           |      @SirGryphin      |
 | https://supernovel.net                       |     ✔      |           |      @SirGryphin      |
 | https://toc.qidianunderground.org            |     ✔      |           |       @dipu-bd        |
-| https://tomotranslations.com                 |            |           |                       |
+| https://tomotranslations.com                 |            |           |       @dipu-bd        |
 | https://totallytranslations.com              |            |           | @SirGryphin, @dipu-bd |
 | https://tunovelaligera.com                   |     ✔      |           |      @SirGryphin      |
 | https://viewnovel.net                        |     ✔      |           |      @SirGryphin      |
 | https://vipnovel.com                         |     ✔      |           |      @SirGryphin      |
 | https://vistranslations.wordpress.com        |            |           |      @SirGryphin      |
-| https://volarenovels.com                     |            |           |                       |
-| https://wbnovel.com                          |     ✔      |           |                       |
-| https://webnovel.online                      |            |           |                       |
-| https://webnovelindonesia.com                |            |           |                       |
-| https://webnovelonline.com                   |            |           |                       |
+| https://volarenovels.com                     |            |           |       @dipu-bd        |
+| https://wbnovel.com                          |     ✔      |           |       @dipu-bd        |
+| https://webnovel.online                      |            |           |       @dipu-bd        |
+| https://webnovelindonesia.com                |            |           |       @dipu-bd        |
+| https://webnovelonline.com                   |            |           |       @dipu-bd        |
 | https://wondernovels.com                     |     ✔      |           |      @SirGryphin      |
-| https://woopread.com                         |     ✔      |           |                       |
+| https://woopread.com                         |     ✔      |           |       @dipu-bd        |
 | https://wordexcerpt.com                      |     ✔      |           | @dipu-bd, @SirGryphin |
 | https://wordexcerpt.org                      |            |           | @dipu-bd, @SirGryphin |
 | https://wujizun.com                          |            |           |      @SirGryphin      |
@@ -456,8 +468,8 @@ You are very welcome to contribute in this project. You can:
 | https://wuxiaworld.site                      |            |           |       @dipu-bd        |
 | https://wuxiaworldsite.co                    |            |           |       @dipu-bd        |
 | https://www.1ksy.com                         |            |           |      @SirGryphin      |
-| https://www.aixdzs.com                       |            |           |                       |
-| https://www.asianhobbyist.com                |            |           |                       |
+| https://www.aixdzs.com                       |            |           |       @dipu-bd        |
+| https://www.asianhobbyist.com                |            |           |       @dipu-bd        |
 | https://www.box-novel.com                    |     ✔      |           |      @SirGryphin      |
 | https://www.daocaorenshuwu.com               |            |           |      @SirGryphin      |
 | https://www.f-w-o.com                        |     ✔      |           |      @SirGryphin      |
@@ -466,57 +478,57 @@ You are very welcome to contribute in this project. You can:
 | https://www.foxteller.com                    |     ✔      |           |       @dipu-bd        |
 | https://www.freelightnovel.com               |            |           |      @SirGryphin      |
 | https://www.fuyuneko.org                     |            |           |      @SirGryphin      |
-| https://www.idqidian.us                      |            |           |                       |
+| https://www.idqidian.us                      |            |           |       @dipu-bd        |
 | https://www.koreanmtl.online                 |            |           |       @dipu-bd        |
-| https://www.lightnovelpub.com                |     ✔      |           |                       |
+| https://www.lightnovelpub.com                |     ✔      |           |       @dipu-bd        |
 | https://www.lunarletters.com                 |            |           |      @SirGryphin      |
-| https://www.machine-translation.org          |     ✔      |           |                       |
+| https://www.machine-translation.org          |     ✔      |           |       @dipu-bd        |
 | https://www.miraslation.net                  |            |           |      @SirGryphin      |
-| https://www.mtlnovel.com                     |     ✔      |           |                       |
-| https://www.mywuxiaworld.com                 |     ✔      |           |                       |
-| https://www.novelall.com                     |     ✔      |           |                       |
+| https://www.mtlnovel.com                     |     ✔      |           |       @dipu-bd        |
+| https://www.mywuxiaworld.com                 |     ✔      |           |       @dipu-bd        |
+| https://www.novelall.com                     |     ✔      |           |       @dipu-bd        |
 | https://www.novelcool.com                    |            |           |      @SirGryphin      |
-| https://www.novelhall.com                    |            |           |                       |
+| https://www.novelhall.com                    |            |           |       @dipu-bd        |
 | https://www.novelhunters.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.novelmultiverse.com              |     ✔      |           |      @SirGryphin      |
 | https://www.novelpassion.com                 |     ✔      |           |      @SirGryphin      |
-| https://www.novelringan.com                  |            |           |                       |
+| https://www.novelringan.com                  |            |           |       @dipu-bd        |
 | https://www.novels.pl                        |            |           |       @dipu-bd        |
-| https://www.novelspread.com                  |            |           |                       |
+| https://www.novelspread.com                  |            |           |       @dipu-bd        |
 | https://www.novelupdates.cc                  |            |           |      @SirGryphin      |
 | https://www.oppatranslations.com             |            |           |      @SirGryphin      |
 | https://www.ornovel.com                      |            |           |      @SirGryphin      |
-| https://www.qidian.com                       |            |           |                       |
-| https://www.readlightnovel.cc                |            |           |                       |
-| https://www.readlightnovel.org               |            |           |                       |
-| https://www.readnovelfull.com                |     ✔      |           |                       |
+| https://www.qidian.com                       |            |           |       @dipu-bd        |
+| https://www.readlightnovel.cc                |            |           |       @dipu-bd        |
+| https://www.readlightnovel.org               |            |           |       @dipu-bd        |
+| https://www.readnovelfull.com                |     ✔      |           |       @dipu-bd        |
 | https://www.readwn.com/                      |     ✔      |           |       @dipu-bd        |
-| https://www.romanticlovebooks.com            |            |           |                       |
-| https://www.royalroad.com                    |     ✔      |           |                       |
-| https://www.scribblehub.com                  |     ✔      |           |                       |
-| https://www.shinsori.com                     |            |           |                       |
-| https://www.tapread.com                      |            |           |                       |
-| https://www.translateindo.com                |            |           |                       |
+| https://www.romanticlovebooks.com            |            |           |       @dipu-bd        |
+| https://www.royalroad.com                    |     ✔      |           |       @dipu-bd        |
+| https://www.scribblehub.com                  |     ✔      |           |       @dipu-bd        |
+| https://www.shinsori.com                     |            |           |       @dipu-bd        |
+| https://www.tapread.com                      |            |           |       @dipu-bd        |
+| https://www.translateindo.com                |            |           |       @dipu-bd        |
 | https://www.virlyce.com                      |            |           |      @SirGryphin      |
 | https://www.wattpad.com                      |            |           |       @dipu-bd        |
 | https://www.webnovel.com                     |     ✔      |           |       @dipu-bd        |
 | https://www.webnovelover.com                 |     ✔      |           |      @SirGryphin      |
 | https://www.wnmtl.org                        |            |           |      @SirGryphin      |
-| https://www.worldnovel.online                |     ✔      |           |                       |
-| https://www.wuxialeague.com                  |            |           |                       |
+| https://www.worldnovel.online                |     ✔      |           |       @dipu-bd        |
+| https://www.wuxialeague.com                  |            |           |       @dipu-bd        |
 | https://www.wuxiaworld.co                    |     ✔      |           |       @dipu-bd        |
 | https://www.wuxiaworld.com                   |     ✔      |           |       @dipu-bd        |
 | https://www.x81zw.com                        |            |           |      @SirGryphin      |
 | https://www.xiainovel.com                    |            |           |      @SirGryphin      |
 | https://www.xsbiquge.com                     |            |           |      @SirGryphin      |
-| https://yukinovel.id                         |            |           |                       |
+| https://yukinovel.id                         |            |           |       @dipu-bd        |
 | https://zinnovel.com                         |     ✔      |           |      @SirGryphin      |
 
 ### Rejected sources
 
 | Rejected Sources                | Reason                                                                                             |
 | ------------------------------- | -------------------------------------------------------------------------------------------------- |
-| http://fullnovel.live           | `403 - Forbidden: Access is denied`                                                                |
+| http://fullnovel.live           | `This site can’t be reached`                                                                       |
 | http://gravitytales.com         | `Redirects to webnovel.com`                                                                        |
 | http://moonbunnycafe.com        | `Does not follow uniform format`                                                                   |
 | https://4scanlation.xyz         | `Site moved`                                                                                       |

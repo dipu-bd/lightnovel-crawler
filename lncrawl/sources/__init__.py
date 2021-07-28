@@ -21,7 +21,7 @@ rejected_sources = {
     'https://chrysanthemumgarden.com/': 'Removed on request of the owner (Issue #649)',
     'https://novelplanet.com/': 'Site is closed',
     'http://gravitytales.com/': 'Domain is expired',
-    'http://fullnovel.live/': "403 - Forbidden: Access is denied",
+    'http://fullnovel.live/': "This site can’t be reached",
     'http://moonbunnycafe.com/': "Does not follow uniform format",
     'https://anythingnovel.com/': 'Site broken',
     'https://indomtl.com/': "Does not like to be crawled",

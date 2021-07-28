@@ -1,30 +1,36 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import re
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://www.mtlnovel.com/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
+search_url = '%s/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
 
 
 class MtlnovelCrawler(Crawler):
-    base_url = 'https://www.mtlnovel.com/'
+    base_url = [
+        'http://www.mtlnovel.com/',
+        'http://id.mtlnovel.com/',
+        'http://fr.mtlnovel.com/',
+        'http://es.mtlnovel.com/',
+    ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
         #soup = self.get_soup(search_url % query)
 
-        list_url = search_url % query
-        data = self.get_json(list_url)['items'][0]['results']
-
         results = []
-        for item in data[:20]:
-            url = item['permalink']
-            results.append({
-                'url': url,
-                'title': re.sub(r'</?strong>', '', item['title']),
-            })
+        for url in self.base_url:
+            list_url = search_url % (url, query)
+            data = self.get_json(list_url)['items'][0]['results']
+
+            for item in data[:10]:
+                url = item['permalink']
+                results.append({
+                    'url': url,
+                    'title': re.sub(r'</?strong>', '', item['title']),
+                })
+            # end for
         # end for
 
         return results
@@ -32,42 +38,39 @@ class MtlnovelCrawler(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
+        self.novel_url = self.novel_url.replace('https://', 'http://')
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1').text.strip()
+        self.novel_title = soup.select_one('article .entry-title, h1').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.post-content amp-img')['src'])
+        try:
+            self.novel_cover = self.absolute_url(
+                soup.select_one('.post-content amp-img[fallback]')['src'])
+        except Exception as e:
+            logger.debug('Could not find novel cover. Error %s', e)
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:
-            self.novel_author = soup.select('table.info tr')[3].find('a').text
-        except:
-            pass
-        # end try
+            self.novel_author = soup.select('table.info a[href*="/novel-author/"]').text.strip()
+        except Exception as e:
+            logger.debug('Could not find novel author. Error %s', e)
         logger.info('Novel author: %s', self.novel_author)
 
-        chapter_list = soup.select('div.ch-list amp-list')
-
-        for item in chapter_list:
+        for item in soup.select('div.ch-list amp-list'):
             data = self.get_json(item['src'])
             for chapter in data['items']:
-                chap_id = len(self.chapters) + 1
+                chap_id = 1 + len(self.chapters)
+                vol_id = 1 + len(self.chapters) // 100
                 if len(self.chapters) % 100 == 0:
-                    vol_id = chap_id//100 + 1
-                    vol_title = 'Volume ' + str(vol_id)
-                    self.volumes.append({
-                        'id': vol_id,
-                        'title': vol_title,
-                    })
+                    self.volumes.append({'id': vol_id})
                 # end if
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
                     'url':  chapter['permalink'],
-                    'title': chapter['no'] + " " + chapter['title'] or ('Chapter %d' % chap_id),
+                    'title': chapter['no'] + " " + chapter['title'],
                 })
             # end for
         # end for
@@ -75,20 +78,10 @@ class MtlnovelCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
-
-        contents = soup.select('div.par p')
-        # print(contents)
-        # for p in contents:
-        #    for span in p.findAll('span'):
-        #        span.unwrap()
-        # end for
-        # end for
-        # print(contents)
-        # self.clean_contents(contents)
-        #body = contents.select('p')
-        body = [str(p) for p in contents if p.text.strip()]
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        url = chapter['url'].replace('https://', 'http://')
+        logger.info('Downloading %s', url)
+        soup = self.get_soup(url)
+        contents = soup.select_one('.post-content .par')
+        return self.extract_contents(contents)
     # end def
 # end class

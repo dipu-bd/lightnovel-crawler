@@ -2,8 +2,12 @@
 """
 Crawler application
 """
+import itertools
 import logging
+import random
 import re
+import sys
+import unicodedata
 from abc import abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
@@ -13,11 +17,16 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 from requests import Response, Session
 
+from ..assets.user_agents import user_agents
+
 logger = logging.getLogger(__name__)
 
-_default_user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
 
 LINE_SEP = '<br>'
+
+INVISIBLE_CHARS = [c for c in range(sys.maxunicode) if unicodedata.category(chr(c)) in {'Cf', 'Cc'}]
+NONPRINTABLE = itertools.chain(range(0x00, 0x20), range(0x7f, 0xa0), INVISIBLE_CHARS)
+NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
 
 
 class Crawler:
@@ -30,9 +39,12 @@ class Crawler:
         # Initialize cloudscrapper
         try:
             self.scraper = cloudscraper.create_scraper(
+                # debug=True,
                 browser={
-                    'platform': 'linux',
-                    'mobile': False
+                    'custom': random.choice(user_agents),
+                    # 'browser': 'chrome',
+                    # 'platform': 'windows',
+                    # 'mobile': False
                 }
             )
         except Exception as err:
@@ -185,9 +197,8 @@ class Crawler:
         #kargs.setdefault('allow_redirects', True)
         kargs.setdefault('timeout', 150)  # in seconds
         headers = kargs.setdefault('headers', {})
-
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('user-agent', _default_user_agent)
+        #headers.setdefault('user-agent', random.choice(user_agents))
 
         response: Response = self.scraper.get(url, **kargs)
         self.last_visited_url = url.strip('/')
@@ -200,7 +211,7 @@ class Crawler:
         # end if
 
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('user-agent', _default_user_agent)
+        #headers.setdefault('user-agent', random.choice(user_agents))
         headers.setdefault('content-type', 'application/json')
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
 
@@ -292,18 +303,35 @@ class Crawler:
         'textarea', 'form', 'map',
     ]
     bad_css = [
-        '.code-block', '.adsbygoogle', '.sharedaddy'
+        '.code-block', '.adsbygoogle', '.sharedaddy', '.inline-ad-slot', '.ads-middle',
+        '.jp-relatedposts', '.ezoic-adpicker-ad', '.ezoic-ad-adaptive', '.ezoic-ad',
+        '.cb_p6_patreon_button', 'a[href*="patreon.com"]',
     ]
     p_block_tags = [
         'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
         'main', 'aside', 'article', 'div', 'section',
     ]
     unchanged_tags = [
-        None, '', 'pre', 'canvas',
+        'pre', 'canvas', 'img'
     ]
     plain_text_tags = [
         'span', 'a', 'abbr', 'acronym', 'label', 'time',
     ]
+    substitutions = {
+        'u003c': '<',
+        'u003e': '>',
+        '"s': "'s",
+        '“s': "'s",
+        '”s': "'s",
+    }
+
+    def clean_text(self, text) -> str:
+        text = str(text).strip()
+        text = text.translate(NONPRINTABLE_MAPPING)
+        for k, v in self.substitutions.items():
+            text = text.replace(k, v)
+        return text
+    # end def
 
     def clean_contents(self, div):
         if not div:
@@ -322,8 +350,8 @@ class Crawler:
                 # end if
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
-            elif hasattr(tag, 'attrs') and tag != 'img':
-                tag.attrs = {}  # Remove attributes
+            elif hasattr(tag, 'attrs'):
+                tag.attrs = {k: v for k, v in tag.attrs.items() if k == 'src'}
             # end if
         # end for
         div.attrs = {}
@@ -345,38 +373,45 @@ class Crawler:
         for elem in tag.contents:
             if isinstance(elem, Comment):
                 continue
-            elif elem.name in self.unchanged_tags:
-                body.append(str(elem).strip())
+            if not elem.name:
+                body.append(self.clean_text(elem))
                 continue
-            # end if
-            text = elem.text.strip()
+            if elem.name in self.unchanged_tags:
+                body.append(str(elem))
+                continue
             if elem.name == 'hr':
                 body.append(LINE_SEP)
                 body.append('-' * 8)
                 body.append(LINE_SEP)
-            elif elem.name == 'br':
+                continue
+            if elem.name == 'br':
                 body.append(LINE_SEP)
-            elif text:
-                is_block = elem.name in self.p_block_tags
-                is_plain = elem.name in self.plain_text_tags
-                content = ' '.join(self.__extract_contents(elem))
-                if is_block:
-                    body.append(LINE_SEP)
+                continue
+            # if not elem.text.strip():
+            #     continue
+
+            is_block = elem.name in self.p_block_tags
+            is_plain = elem.name in self.plain_text_tags
+            content = ' '.join(self.__extract_contents(elem))
+
+            if is_block:
+                body.append(LINE_SEP)
+            # end if
+
+            for line in content.split(LINE_SEP):
+                line = line.strip()
+                if not line:
+                    continue
                 # end if
-                for line in content.split(LINE_SEP):
-                    line = line.strip()
-                    if not line:
-                        continue
-                    # end if
-                    if not (is_plain or is_block):
-                        line = '<%s>%s</%s>' % (elem.name, line, elem.name)
-                    # end if
-                    body.append(line)
-                    body.append(LINE_SEP)
+                if not (is_plain or is_block):
+                    line = '<%s>%s</%s>' % (elem.name, line, elem.name)
                 # end if
-                if not is_block:
-                    body.pop()
-                # end if
+                body.append(line)
+                body.append(LINE_SEP)
+            # end if
+
+            if body and not is_block:
+                body.pop()
             # end if
         # end for
         return [x.strip() for x in body if x.strip()]
@@ -398,5 +433,6 @@ class Crawler:
             return True
         return False
     # end def
+
 
 # end class

@@ -2,7 +2,6 @@
 import json
 import logging
 import re
-from ..utils.cleaner import cleanup_text
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -55,7 +54,6 @@ class Wujizun(Crawler):
         # end for
     # end def
 
-    @cleanup_text
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
@@ -63,25 +61,18 @@ class Wujizun(Crawler):
 
         body_parts = soup.select_one('div.entry-content')
 
-        # Removes "Share this" text and buttons from bottom of chapters. Also other junk on page.
-        for share in body_parts.select('iframe, .sharedaddy, .jp-relatedposts, .inline-ad-slot, .code-block, script, hr, .adsbygoogle, .ezoic-adpicker-ad, .ezoic-ad-adaptive, .ezoic-ad, .cb_p6_patreon_button, a[href*="patreon.com"]'):
-            share.extract()
-
         # Remoeves bad text from chapters.
-        for content in body_parts.select("p"):
-            for bad in ["Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"]:
-                if bad in content.text:
-                    content.extract()
+        self.blacklist_patterns += ["Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"]
 
         # Fixes images, so they can be downloaded.
-        all_imgs = soup.find_all('img')
-        for img in all_imgs:
-            if img.has_attr('data-orig-file'):
-                src_url = img['src']
-                parent = img.parent
-                img.extract()
-                new_tag = soup.new_tag("img", src=src_url)
-                parent.append(new_tag)
+        # all_imgs = soup.find_all('img')
+        # for img in all_imgs:
+        #     if img.has_attr('data-orig-file'):
+        #         src_url = img['src']
+        #         parent = img.parent
+        #         img.extract()
+        #         new_tag = soup.new_tag("img", src=src_url)
+        #         parent.append(new_tag)
 
         return str(body_parts)
     # end def
