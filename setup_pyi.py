@@ -51,13 +51,14 @@ def gather_data_files():
     command = ''
 
     # add data files of this project
-    for f in ROOT.glob('**/*.*'):
+    for f in (ROOT / 'lncrawl').glob('**/*.*'):
         src = str(f)
         src = '/'.join(src.split(os.sep))
         dst = str(f.parent.relative_to(ROOT))
         dst = '/'.join(dst.split(os.sep))
         command += '--add-data "%s%s%s" ' % (src, os.pathsep, dst)
     # end for
+    command += '--add-data "%s/lncrawl/VERSION%slncrawl" ' % (unix_root, os.pathsep)
 
     # add data files of other dependencies
     command += '--add-data "%s/cloudscraper%scloudscraper" ' % (
