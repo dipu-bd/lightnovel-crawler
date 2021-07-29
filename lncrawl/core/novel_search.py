@@ -25,9 +25,10 @@ def get_search_result(app, link, bar):
         logger.debug(results)
         logger.info('%d results from %s', len(results), link)
         return results
-    except Exception:
-        import traceback
-        logger.debug(traceback.format_exc())
+    except Exception as e:
+        if logger.isEnabledFor(logging.DEBUG):
+            logging.debug('Searching failure for %s', link)
+        # end if
     finally:
         app.progress += 1
         bar.next()

@@ -9,8 +9,9 @@ assignees: ''
 
 **Describe the bug**
 
-<!-- Replace this line with a short description of what the bug is about. -->
-<!-- If you can add the error log / some screenshots that will help a lot -->
+<!-- Please add some error logs or screenshots -->
+
+<!-- If you are facing this issue often, can you tell us the steps to reproduce it? -->
 
 **Let us know**
 

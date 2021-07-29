@@ -25,8 +25,9 @@ def run_ebook_convert(*args):
         # end with
         return True
     except Exception:
-        import traceback
-        logger.debug(traceback.format_exc())
+        if logger.isEnabledFor(logging.DEBUG):
+            logger.exception('Failed to convert ebook with args: %s', list(args))
+        # end if
         return False
     # end try
 # end def
