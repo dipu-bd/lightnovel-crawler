@@ -10,7 +10,7 @@ import time
 from io import BytesIO
 
 from PIL import Image
-from progress.bar import IncrementalBar
+from tqdm import tqdm
 
 from ..core.arguments import get_args
 
@@ -33,7 +33,7 @@ except Exception:
 
 def download_image(app, url):
     response = app.crawler.get_response(url, headers={
-        'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8'
+        'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
     })
     return Image.open(BytesIO(response.content))
 # end def
@@ -56,17 +56,17 @@ def download_cover(app):
         return None
     # end try
 
-    # try:
-    logger.info('Downloading cover image...')
-    img = download_image(app, app.crawler.novel_cover)
-    img.save(filename, 'PNG')
-    logger.debug('Saved cover: %s', filename)
-    return filename
-    # except Exception as ex:
-    #     logger.warn('Failed to download cover image: %s -> %s (%s)',
-    #                 app.crawler.novel_cover, filename, str(ex))
-    #     return None
-    # # end try
+    try:
+        logger.info('Downloading cover image...')
+        img = download_image(app, app.crawler.novel_cover)
+        img.save(filename, 'PNG')
+        logger.debug('Saved cover: %s', filename)
+        return filename
+    except Exception as ex:
+        logger.warn('Failed to download cover image: %s -> %s (%s)',
+                    app.crawler.novel_cover, filename, str(ex))
+        return None
+    # end try
 # end def
 
 
@@ -187,12 +187,11 @@ def download_content_image(app, url, image_output_path):
 
 def download_chapters(app):
     app.progress = 0
-    bar = IncrementalBar('Downloading chapters', max=len(app.chapters))
+    bar = tqdm(desc='Downloading chapters', total=len(app.chapters), unit='chapters')
     if os.getenv('debug_mode') == 'yes':
-        bar.next = lambda: None  # Hide in debug mode
-        bar.finish()
+        bar.update = lambda n=1: None  # Hide in debug mode
     else:
-        bar.start()
+        bar.clear()
     # end if
 
     if not app.output_formats:
@@ -211,13 +210,13 @@ def download_chapters(app):
     for future in futures_to_check:
         result = future.result()
         if result:
-            bar.clearln()
+            bar.clear()
             logger.error(result)
         # end if
-        bar.next()
+        bar.update()
     # end for
 
-    bar.finish()
+    bar.close()
     print('Processed %d chapters' % len(app.chapters))
 # end def
 
@@ -261,24 +260,23 @@ def download_chapter_images(app):
         return
     # end if
 
-    bar = IncrementalBar('Downloading images  ', max=image_count)
+    bar = tqdm(desc='Downloading images', total=image_count, unit='images')
     if os.getenv('debug_mode') == 'yes':
-        bar.next = lambda: None  # Hide in debug mode
-        bar.finish()
+        bar.update = lambda n=1: None  # Hide in debug mode
     else:
-        bar.start()
+        bar.clear()
     # end if
 
     for chapter in app.chapters:
         if chapter['id'] not in futures_to_check:
-            bar.next()
+            bar.update()
             continue
         # end if
 
         images = {}
         for future in futures_to_check[chapter['id']]:
             url, filename = future.result()
-            bar.next()
+            bar.update()
             if filename:
                 images[url] = filename
             # end if
@@ -298,6 +296,6 @@ def download_chapter_images(app):
         chapter['body'] = str(soup.select_one('main'))
     # end for
 
-    bar.finish()
+    bar.close()
     print('Processed %d images' % image_count)
 # end def

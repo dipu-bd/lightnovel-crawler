@@ -69,6 +69,7 @@ class RanobeLibCrawler(Crawler):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         article = soup.select_one('.text[itemprop="description"]')
+        self.clean_contents(article)
         return str(article)
     # end def
 # end class

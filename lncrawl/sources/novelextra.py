@@ -12,24 +12,25 @@ full_chapter_url = 'https://novelextra.com/ajax/chapter-archive?novelId=%s'
 class NovelExtra(Crawler):
     base_url = 'https://novelextra.com/'
 
-    def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
+    # NOTE: Takes too long
+    # def search_novel(self, query):
+    #     query = query.lower().replace(' ', '+')
+    #     soup = self.get_soup(search_url % query)
 
-        results = []
-        for result in soup.select('div.col-novel-main div.list.list-novel div.row')[:20]:
-            url = self.absolute_url(
-                result.select_one('h3.novel-title a')['href'])
-            title = result.select_one('h3.novel-title a')['title']
-            last_chapter = result.select_one('span.chr-text').text.strip()
-            results.append({
-                'url': url,
-                'title': title,
-                'info': 'last chapter : %s' % last_chapter,
-            })
-        # end for
-        return results
-    # end def
+    #     results = []
+    #     for result in soup.select('div.col-novel-main div.list.list-novel div.row')[:20]:
+    #         url = self.absolute_url(
+    #             result.select_one('h3.novel-title a')['href'])
+    #         title = result.select_one('h3.novel-title a')['title']
+    #         last_chapter = result.select_one('span.chr-text').text.strip()
+    #         results.append({
+    #             'url': url,
+    #             'title': title,
+    #             'info': 'last chapter : %s' % last_chapter,
+    #         })
+    #     # end for
+    #     return results
+    # # end def
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''

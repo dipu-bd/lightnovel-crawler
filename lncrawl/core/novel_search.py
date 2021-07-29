@@ -6,7 +6,7 @@ import logging
 import os
 from concurrent import futures
 
-from progress.bar import IncrementalBar
+from tqdm import tqdm
 from slugify import slugify
 
 from ..sources import crawler_list
@@ -31,7 +31,7 @@ def get_search_result(app, link, bar):
         # end if
     finally:
         app.progress += 1
-        bar.next()
+        bar.update()
     # end try
     return []
 # end def
@@ -67,11 +67,11 @@ def search_novels(app):
     if not app.crawler_links:
         return
 
-    bar = IncrementalBar('Searching', max=len(app.crawler_links))
+    bar = tqdm(desc='Searching', total=len(app.crawler_links), unit='')
     if os.getenv('debug_mode') == 'yes':
-        bar.next = lambda n=1: None  # Hide in debug mode
+        bar.update = lambda n=1: None  # Hide in debug mode
     else:
-        bar.start()
+        bar.clear()
     # end if
 
     # Add future tasks
@@ -82,7 +82,7 @@ def search_novels(app):
         crawler = crawler_list[link]
         if crawler in checked:
             logger.info('A crawler for "%s" already exists', link)
-            bar.next()
+            bar.update()
             continue
         # end if
         checked[crawler] = True
@@ -99,7 +99,6 @@ def search_novels(app):
 
     # Process combined search results
     app.search_results = process_results(combined_results)
-    bar.clearln()
-    bar.finish()
+    bar.close()
     print('Found %d results' % len(app.search_results))
 # end def
