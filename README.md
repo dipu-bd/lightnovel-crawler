@@ -153,10 +153,7 @@ $ pip install --user -r requirements.txt
 - Run the program (use python v3.6 or higher):
 
 ```bash
-$ python __main__.py
-
-# Or, in short,
-$ python .
+$ python lncrawl
 ```
 
 ## Running the Bots
@@ -184,16 +181,16 @@ $ pip3 install --user -r requirements.txt
 - To run the discord bot:
 
 ```bash
-$ python3 . --bot discord --shard-id 0 --shard-count 1
+$ python3 lncrawl --bot discord --shard-id 0 --shard-count 1
 ```
 
 - To run the telegram bot
 
 ```bash
-$ python3 . --bot telegram
+$ python3 lncrawl --bot telegram
 ```
 
-_There is a `start.sh` script to run a bot in ubuntu servers. It will basically execute the `python __main__.py` and send the task to run in background. I use it to run my discord bot in the server._
+_There is a `start.sh` script to run a bot in ubuntu servers. It will basically execute the `python3 lncrawl` and send the task to run in background. I use it to run my discord bot in the server._
 
 ## General Usage
 

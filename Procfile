@@ -1,1 +1,1 @@
-bot: python . --shard-id 0 --shard-count 1
+bot: python lncrawl --shard-id 0 --shard-count 1
