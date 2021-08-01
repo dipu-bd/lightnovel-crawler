@@ -22,7 +22,7 @@ class WattpadCrawler(Crawler):
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
 
-        search_id = re.compile(r'\d{9,}')
+        search_id = re.compile(r'\d+')
         id_no = search_id.search(self.novel_url)
         story_url = story_info_url % (id_no.group())
 
