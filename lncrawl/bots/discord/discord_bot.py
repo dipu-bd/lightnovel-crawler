@@ -3,6 +3,7 @@ import logging
 import logging.config
 import os
 import random
+import subprocess
 from datetime import datetime
 
 import discord
@@ -15,12 +16,12 @@ logger = logging.getLogger(__name__)
 
 
 def get_bot_version():
-    head_path = os.path.join('.git', 'ORIG_HEAD')
-    if not os.path.isfile(head_path):
-        from ...assets.version import get_value
-        return get_value
-    with open(head_path, 'r', encoding='utf8') as f:
-        return f.readline()[:7]
+    try:
+        result = subprocess.check_output(['git', 'rev-list', '--count', 'HEAD'])
+        return result.decode('utf-8')
+    except:
+        from lncrawl.assets import version
+        return version.get_value()
 
 
 class DiscordBot(discord.Client):
