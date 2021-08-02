@@ -70,9 +70,8 @@ def search_novels(app):
     bar = tqdm(desc='Searching', total=len(app.crawler_links), unit='')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
-    else:
-        bar.clear()
     # end if
+    bar.clear()
 
     # Add future tasks
     checked = {}

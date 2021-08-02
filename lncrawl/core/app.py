@@ -99,10 +99,10 @@ class App:
             return
         # end if
         hostname = urlparse(novel_url).hostname
-        for home_url, crawler in crawler_list.items():
+        for home_url, create_crawler in crawler_list.items():
             if hostname == urlparse(home_url).hostname:
                 logger.info('Initializing crawler for: %s', home_url)
-                self.crawler = crawler()
+                self.crawler: Crawler = create_crawler()
                 self.crawler.novel_url = novel_url
                 self.crawler.home_url = home_url.strip('/')
                 break
@@ -124,6 +124,8 @@ class App:
             raise Exception('No crawler is selected')
 
         self.crawler.initialize()
+        self.crawler.scraper.headers['origin'] = self.crawler.home_url
+        self.crawler.scraper.headers['referer'] = self.crawler.home_url + '/'
 
         if self.can_do('login') and self.login_data:
             logger.debug('Login with %s', self.login_data)

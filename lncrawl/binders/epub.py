@@ -18,8 +18,8 @@ def make_cover_image(app):
     logger.info('Creating cover: %s', app.book_cover)
     ext = app.book_cover.split('.')[-1]
     cover_image = epub.EpubImage()
-    cover_image.file_name = 'cover.%s' % ext
-    cover_image.media_type = 'image/%s' % ext
+    cover_image.file_name = 'cover.png'
+    cover_image.media_type = 'image/png'
     with open(app.book_cover, 'rb') as image_file:
         cover_image.content = image_file.read()
     # end with

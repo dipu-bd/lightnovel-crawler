@@ -14,6 +14,7 @@ For example, see any of the files inside this directory.
 import importlib
 import os
 import re
+from typing import Callable, Dict
 
 from lncrawl.core.crawler import Crawler
 
@@ -48,7 +49,7 @@ rejected_sources = {
 }
 
 # this list will be auto-generated
-crawler_list = {}
+crawler_list: Dict[str, Callable[[], Crawler]] = {}
 
 # auto-import all submodules in the current directory
 __sources_dir = os.path.dirname(__file__)

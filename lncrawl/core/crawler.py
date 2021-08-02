@@ -153,6 +153,9 @@ class Crawler:
 
     def absolute_url(self, url, page_url=None) -> str:
         url = (url or '').strip()
+        if len(url) > 1000 or url.startswith('data:'):
+            return url
+        # end if
         if not page_url:
             page_url = self.last_visited_url
         # end if

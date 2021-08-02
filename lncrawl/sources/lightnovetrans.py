@@ -28,6 +28,8 @@ class LNTCrawler(Crawler):
                 'title': vol,
             })
             for a in div.select('.su-spoiler-content p a'):
+                if not a.has_attr('href'):
+                    continue
                 self.chapters.append({
                     'id': len(self.chapters) + 1,
                     'volume': vol_id,
