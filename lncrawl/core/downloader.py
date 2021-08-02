@@ -210,7 +210,7 @@ def download_content_image(app, url, filename):
 
 def download_chapters(app):
     app.progress = 0
-    bar = tqdm(desc='Downloading chapters', total=len(app.chapters), unit='chapters')
+    bar = tqdm(desc='Downloading chapters', total=len(app.chapters), unit='ch')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
     # end if
@@ -277,7 +277,7 @@ def download_chapter_images(app):
         return
     # end if
 
-    bar = tqdm(desc='Downloading images', total=image_count, unit='images')
+    bar = tqdm(desc='Downloading images', total=image_count, unit='img')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
     # end if

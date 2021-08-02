@@ -38,7 +38,7 @@ def setup_command():
 
     command += gather_data_files()
     command += gather_hidden_imports()
-    command += '"%s/__main__.py" ' % unix_root
+    command += '"%s/lncrawl/__main__.py" ' % unix_root
 
     print(command)
     print()

@@ -49,9 +49,6 @@ jobs:
         lncrawl --list-sources
         lncrawl -s 'https://novelfull.com/the-kings-avatar-for-the-glory.html' --first 2 -f --format epub --suppress -lll
 
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v3
-
   build-windows:
     needs: validate
     name: Windows Build
@@ -122,3 +119,6 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         TWINE_NON_INTERACTIVE: true
       run: ./scripts/publish.sh
+
+    # - name: Create Pull Request
+    #   uses: peter-evans/create-pull-request@v3
