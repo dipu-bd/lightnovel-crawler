@@ -482,6 +482,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.machine-translation.org          |     ✔      |           |       @dipu-bd        |
 | https://www.miraslation.net                  |            |           |      @SirGryphin      |
 | https://www.mtlnovel.com                     |     ✔      |           |       @dipu-bd        |
+| https://www.mtlreader.com                    |     ✔      |           |       @dipu-bd        |
 | https://www.mywuxiaworld.com                 |     ✔      |           |       @dipu-bd        |
 | https://www.novelall.com                     |     ✔      |           |       @dipu-bd        |
 | https://www.novelcool.com                    |            |           |      @SirGryphin      |
