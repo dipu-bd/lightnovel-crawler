@@ -2,6 +2,7 @@
 """
 To download chapter bodies
 """
+import base64
 import hashlib
 import json
 import logging
@@ -32,10 +33,16 @@ except Exception:
 
 
 def download_image(app, url):
-    response = app.crawler.get_response(url, headers={
-        'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
-    })
-    return Image.open(BytesIO(response.content))
+    if len(url) > 1000 or url.startswith('data:'):
+        content = base64.b64decode(url.split('base64,')[-1])
+    else:
+        logger.info('Downloading image: ' + url)
+        response = app.crawler.get_response(url, headers={
+            'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
+        })
+        content = response.content
+    # end if
+    return Image.open(BytesIO(content))
 # end def
 
 
@@ -101,7 +108,38 @@ def generate_cover(app):
 
 def download_chapter_body(app, chapter):
     result = None
+    chapter['body'] = read_chapter_body(app, chapter)
 
+    if not chapter['body']:
+        retry_count = 3
+        chapter['body'] = ''
+        for i in range(retry_count):
+            try:
+                logger.debug('Downloading chapter %d: %s', chapter['id'], chapter['url'])
+                chapter['body'] = app.crawler.download_chapter_body(chapter)
+                break
+            except Exception:
+                if i == retry_count:
+                    logger.exception('Failed to download chapter body')
+                else:
+                    time.sleep(3 + 5 * i)  # wait before next retry
+                # end if
+            # end try
+        # end for
+    # end if
+
+    if not chapter['body']:
+        result = 'Body is empty: ' + chapter['url']
+    else:
+        save_chapter_body(app, chapter)
+    # end if
+
+    app.progress += 1
+    return result
+# end def
+
+
+def get_chapter_filename(app, chapter):
     dir_name = os.path.join(app.output_path, 'json')
     if app.pack_by_volume:
         vol_name = 'Volume ' + str(chapter['volume']).rjust(2, '0')
@@ -109,7 +147,12 @@ def download_chapter_body(app, chapter):
     # end if
 
     chapter_name = str(chapter['id']).rjust(5, '0')
-    file_name = os.path.join(dir_name, chapter_name + '.json')
+    return os.path.join(dir_name, chapter_name + '.json')
+# end def
+
+
+def read_chapter_body(app, chapter):
+    file_name = get_chapter_filename(app, chapter)
 
     chapter['body'] = ''
     if os.path.exists(file_name):
@@ -120,65 +163,45 @@ def download_chapter_body(app, chapter):
         # end with
     # end if
 
-    if len(chapter['body']) == 0:
-        body = ''
-        retry_count = 2
-        for i in range(retry_count + 1):
-            try:
-                logger.debug('Downloading to %s', file_name)
-                body = app.crawler.download_chapter_body(chapter)
-                break
-            except Exception:
-                if i == retry_count:
-                    logger.exception('Failed to download chapter body')
-                else:
-                    time.sleep(1 + 5 * i)  # wait before next retry
-                # end if
-            # end try
-        # end for
-        if not body:
-            result = 'Body is empty: ' + chapter['url']
-        else:
-            title = chapter['title'].replace('>', '&gt;').replace('<', '&lt;')
-            chapter['body'] = '<h1>%s</h1>\n%s' % (title, body)
-            if get_args().add_source_url:
-                chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
-                    chapter['url'], chapter['url'])
-            # end if
-        # end if
-
-        os.makedirs(dir_name, exist_ok=True)
-        with open(file_name, 'w', encoding="utf-8") as file:
-            file.write(json.dumps(chapter, ensure_ascii=False))
-        # end with
-    # end if
-
-    app.progress += 1
-    return result
+    return chapter['body']
 # end def
 
 
-def download_content_image(app, url, image_output_path):
-    url_hash = hashlib.md5(url.encode()).hexdigest()
-    filename = url_hash + '.jpg'
-    image_file = os.path.join(image_output_path, filename)
-    if os.path.isfile(image_file):
-        app.progress += 1
-        return (url, filename)
+def save_chapter_body(app, chapter):
+    file_name = get_chapter_filename(app, chapter)
+
+    title = chapter['title'].replace('>', '&gt;').replace('<', '&lt;')
+    chapter['body'] = '<h1>%s</h1>\n%s' % (title, chapter['body'])
+    if get_args().add_source_url:
+        chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
+            chapter['url'], chapter['url'])
     # end if
 
+    os.makedirs(os.path.dirname(file_name), exist_ok=True)
+    with open(file_name, 'w', encoding="utf-8") as file:
+        file.write(json.dumps(chapter, ensure_ascii=False))
+    # end with
+# end def
+
+
+def download_content_image(app, url, filename):
+    image_folder = os.path.join(app.output_path, 'images')
+    image_file = os.path.join(image_folder, filename)
     try:
-        logger.info('Downloading image: ' + url)
+        if os.path.isfile(image_file):
+            return filename
+        # end if
+
         img = download_image(app, url)
-        os.makedirs(image_output_path, exist_ok=True)
+        os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
             img.save(f, "JPEG")
             logger.debug('Saved image: %s', image_file)
         # end with
-        return (url, filename)
+        return filename
     except Exception as ex:
-        logger.debug('Failed to download image: %s -> %s (%s)', url, filename, str(ex))
-        return (url, None)
+        logger.debug('Failed to download image: %s (%s)', image_file, str(ex))
+        return None
     finally:
         app.progress += 1
     # end try
@@ -190,9 +213,8 @@ def download_chapters(app):
     bar = tqdm(desc='Downloading chapters', total=len(app.chapters), unit='chapters')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
-    else:
-        bar.clear()
     # end if
+    bar.clear()
 
     if not app.output_formats:
         app.output_formats = {}
@@ -241,59 +263,51 @@ def download_chapter_images(app):
         # end if
 
         soup = app.crawler.make_soup(chapter['body'])
-        image_output_path = os.path.join(app.output_path, 'images')
         for img in soup.select('img'):
+            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
-            future = app.crawler.executor.submit(
-                download_content_image,
-                app,
-                full_url,
-                image_output_path
-            )
+            future = app.crawler.executor.submit(download_content_image, app, full_url, filename)
             futures_to_check.setdefault(chapter['id'], [])
             futures_to_check[chapter['id']].append(future)
             image_count += 1
         # end for
     # end for
 
-    if not futures_to_check:
+    if image_count == 0:
         return
     # end if
 
     bar = tqdm(desc='Downloading images', total=image_count, unit='images')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
-    else:
-        bar.clear()
     # end if
+    bar.clear()
 
     for chapter in app.chapters:
         if chapter['id'] not in futures_to_check:
-            bar.update()
             continue
         # end if
 
-        images = {}
+        images = []
         for future in futures_to_check[chapter['id']]:
-            url, filename = future.result()
+            images.append(future.result())
             bar.update()
-            if filename:
-                images[url] = filename
+        # end for
+        print(images)
+
+        soup = app.crawler.make_soup(chapter['body'])
+        for img in soup.select('img'):
+            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
+            if filename in images:
+                img.attrs = {'src': 'images/%s' % filename, 'alt': filename}
+                #img['style'] = 'float: left; margin: 15px; width: 100%;'
+            else:
+                img.extract()
             # end if
         # end for
 
-        soup = app.crawler.make_soup('<main>' + chapter['body'] + '</main>')
-        for img in soup.select('img'):
-            if img['src'] in images:
-                filename = images[img['src']]
-                img['src'] = 'images/%s' % filename
-                #img['style'] = 'float: left; margin: 15px; width: 100%;'
-
-            # Issue 920: styles are causing issues in some readers
-            if hasattr(img, 'attr'):
-                img.attr = {k: v for k, v in img.attrs.items() if k == 'src'}
-        # end for
-        chapter['body'] = str(soup.select_one('main'))
+        chapter['body'] = ''.join([str(x) for x in soup.select_one('body').contents])
+        save_chapter_body(app, chapter)
     # end for
 
     bar.close()
