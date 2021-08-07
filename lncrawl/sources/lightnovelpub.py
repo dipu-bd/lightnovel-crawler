@@ -98,7 +98,7 @@ class LightNovelOnline(Crawler):
             data='X-Requested-With=XMLHttpRequest',
             headers={
                 'requestverificationtoken': self.verificationToken,
-                'origin': 'https://www.lightnovelpub.com',
+                'origin': self.home_url,
             },
         )
         soup = self.make_soup(response)
