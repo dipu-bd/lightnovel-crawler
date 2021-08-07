@@ -478,6 +478,7 @@ You are very welcome to contribute in this project. You can:
 | https://www.idqidian.us                      |            |           |       @dipu-bd        |
 | https://www.koreanmtl.online                 |            |           |       @dipu-bd        |
 | https://www.lightnovelpub.com                |     ✔      |           |       @dipu-bd        |
+| https://www.lightnovelworld.com              |     ✔      |           |       @dipu-bd        |
 | https://www.lunarletters.com                 |            |           |      @SirGryphin      |
 | https://www.machine-translation.org          |     ✔      |           |       @dipu-bd        |
 | https://www.miraslation.net                  |            |           |      @SirGryphin      |
