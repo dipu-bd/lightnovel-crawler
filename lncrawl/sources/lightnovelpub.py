@@ -8,16 +8,19 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-novel_search_url = 'https://www.lightnovelpub.com/search?title=%s'
-chapter_list_url = 'https://www.lightnovelpub.com/novel/%s?tab=chapters&page=%d&chorder=asc'
+novel_search_url = '%s/search?title=%s'
+chapter_list_url = '%s/novel/%s?tab=chapters&page=%d&chorder=asc'
 
 
 class LightNovelOnline(Crawler):
-    base_url = 'https://www.lightnovelpub.com/'
+    base_url = [
+        'https://www.lightnovelpub.com/',
+        'https://www.lightnovelworld.com/',
+    ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        soup = self.get_soup(novel_search_url % query)
+        soup = self.get_soup(novel_search_url % (self.home_url, query))
 
         results = []
         for a in soup.select('.novel-list .novel-item a'):
@@ -91,7 +94,7 @@ class LightNovelOnline(Crawler):
 
     def extract_chapter_list(self, page):
         response = self.submit_form(
-            chapter_list_url % (self.novel_id, page),
+            chapter_list_url % (self.home_url, self.novel_id, page),
             data='X-Requested-With=XMLHttpRequest',
             headers={
                 'requestverificationtoken': self.verificationToken,
