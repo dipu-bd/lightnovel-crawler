@@ -18,6 +18,7 @@ from typing import Callable, Dict
 
 from lncrawl.core.crawler import Crawler
 
+# A list of rejected sources and reason for the rejection.
 rejected_sources = {
     'https://chrysanthemumgarden.com/': 'Removed on request of the owner (Issue #649)',
     'https://novelplanet.com/': 'Site is closed',
