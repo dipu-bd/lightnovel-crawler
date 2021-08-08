@@ -4,7 +4,7 @@ Interactive application to take user inputs
 """
 import logging
 import os
-
+import sys
 import colorama
 from colorama import Fore
 
@@ -15,7 +15,7 @@ from .arguments import get_args
 from .display import (cancel_method, debug_mode, description, epilog,
                       error_message, input_suppression)
 
-logger = logging.Logger('CORE')
+logger = logging.getLogger(__name__)
 
 
 def init():
@@ -81,7 +81,7 @@ def start_app():
 
     epilog()
 
-    # if Icons.isWindows and get_args().suppress is False:
-    #     input('Press ENTER to exit...')
-    # # end if
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        input('Press ENTER to exit...')
+    # end if
 # end def

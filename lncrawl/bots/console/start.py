@@ -7,7 +7,7 @@ from questionary import prompt
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
-from ...sources import rejected_sources, load_crawler_file
+from ...sources import add_all_crawlers, rejected_sources
 from .open_folder_prompt import display_open_folder
 from .resume_download import resume_session
 
@@ -20,7 +20,7 @@ def start(self):
     args = get_args()
     for crawler_file in args.crawler:
         if os.path.isfile(crawler_file):
-            load_crawler_file(crawler_file)
+            add_all_crawlers(crawler_file)
         # end if
     # end if
 

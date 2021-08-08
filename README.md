@@ -344,6 +344,9 @@ You are very welcome to contribute in this project. You can:
 <tr><td><a href="http://gravitytales.com/" target="_blank">http://gravitytales.com/</a></td>
 <td>Domain is expired</td>
 </tr>
+<tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
+<td>Domain expired</td>
+</tr>
 <tr><td><a href="https://anythingnovel.com/" target="_blank">https://anythingnovel.com/</a></td>
 <td>Site broken</td>
 </tr>
@@ -585,13 +588,6 @@ You are very welcome to contribute in this project. You can:
 <td></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/commits/master/sources/1stkissnovel.py">26 January 2018 05:38:42 PM</a></td>
 <td>SirGryphin, Sudipto Chandra, Sudipto Chandra Dipu, Yudi Santoso, dipu-bd, kuwoyuki, mchubby</td>
-</tr>
-<tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
-<td><a href="https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/sources/fourscanlation.py">📃 1626444718</a></td>
-<td></td>
-<td></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/commits/master/sources/fourscanlation.py">28 March 2019 08:09:23 AM</a></td>
-<td>Sudipto Chandra, Sudipto Chandra Dipu, Yudi Santoso</td>
 </tr>
 <tr><td><a href="https://88tangeatdrinkread.wordpress.com/" target="_blank">https://88tangeatdrinkread.wordpress.com/</a></td>
 <td><a href="https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/sources/88tang.py">📃 1627268414</a></td>

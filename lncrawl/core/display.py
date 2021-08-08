@@ -31,10 +31,9 @@ def description():
         title = Icons.BOOK + ' Lightnovel Crawler v' + get_value()
         padding = ' ' * ((LINE_SIZE - len(title)) // 2)
         print(Fore.YELLOW, padding + title, Fore.RESET)
-        print('-' * LINE_SIZE)
         desc = 'https://github.com/dipu-bd/lightnovel-crawler'
         padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
-        print(Style.DIM, padding + desc, Style.RESET_ALL)
+        print(Fore.CYAN, padding + desc, Fore.RESET)
     # end if
 
     print('-' * LINE_SIZE)
