@@ -19,9 +19,6 @@ class AsianHobbyistCrawler(Crawler):
             '#content article .post-title.entry-title a').text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = 'N/A'
-        logger.info('Novel author: %s', self.novel_author)
-
         self.novel_cover = self.absolute_url(
             soup.select_one('#content article p img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)

@@ -89,7 +89,8 @@ def update_sources(updates: dict):
         try:
             f.result()
         except Exception as e:
-            logger.error('Failed to download source')
+            bar.clear()
+            logger.error('Failed to download source. Cause: %s', e)
         finally:
             bar.update()
         # end try

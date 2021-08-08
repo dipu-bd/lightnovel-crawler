@@ -21,9 +21,7 @@ base58~=2.1.0
 
 # dev requirements
 autopep8
-jinja2
 pyinstaller
-cairosvg
 setuptools
 cryptography<=3.3.2
 pycryptodome>=3.0.0,<4.0.0
