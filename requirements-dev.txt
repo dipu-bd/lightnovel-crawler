@@ -1,4 +1,5 @@
 # dev requirements
+flake8
 autopep8
 jinja2
 pyinstaller
