@@ -1,9 +1,9 @@
 name: Generate source index
 
 on:
-  pull_request:
+  push:
     branches:
-      - master
+      - dev
     paths:
       - "sources/**"
       - "!sources/_index.json"
