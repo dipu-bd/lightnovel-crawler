@@ -152,6 +152,7 @@ before, supported, after = readme_text.split(SUPPORTED_SOURCE_LIST_QUE)
 supported = '\n\n<table>\n<tbody>\n'
 supported += '<tr>'
 supported += '<th></th>\n'
+supported += '<th></th>\n'
 supported += '<th>Source URL</th>\n'
 supported += '<th>Version</th>\n'
 # supported += '<th>Created At</th>\n'
@@ -161,15 +162,19 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     info = INDEX_DATA['crawlers'][crawler_id]
     created_at = datetime.fromtimestamp(info['first_commit']['time']).strftime(DATE_FORMAT)
     history_url = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s' % info['file_path']
+
+    badges = [
+        '<span title="Supports Searching">%s</span>' % ('🔍' if info['can_search'] else ''),
+        '<span title="Supports Login">%s</span>\n' % ('🔑' if info['can_login'] else '')
+    ]
+    colspan = 1 if info['can_search'] and info['can_login'] else 2
+
     supported += '<tr>'
-    supported += '<td class="cursor: default"><span title="Supports Searching">%s</span><span title="Supports Login">%s</span></td>\n' % (
-        ('🔍' if info['can_search'] else ''),
-        ('🔑' if info['can_login'] else '')
-    )
+    supported += '\n'.join('<td colspan="%d">%s</td>' % x for x in badges)
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
     supported += '<td><a href="%s">%s</a></td>\n' % (info['url'], info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
-    supported += '<td><span class="font-size: 0.8em">%s</span></td>\n' % ', '.join(sorted(info['contributors']))
+    supported += '<td><sub><sup>%s</sup></sub></td>\n' % ', '.join(sorted(info['contributors']))
     supported += '</tr>\n'
 supported += '</tbody>\n</table>\n\n'
 readme_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
