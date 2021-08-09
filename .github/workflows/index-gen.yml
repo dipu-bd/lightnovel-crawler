@@ -7,12 +7,17 @@ on:
       - dev
     paths:
       - "sources/**/*.py"
+      - "scripts/index_gen.py"
+      - "lncrawl/VERSION"
+      - ".github/workflows"
 
 jobs:
   index_gen:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set up git
+        run: apt-get install -y git
       - name: Set up Python 3.8
         uses: actions/setup-python@v1
         with:
