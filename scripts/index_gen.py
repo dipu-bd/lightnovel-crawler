@@ -163,14 +163,9 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     created_at = datetime.fromtimestamp(info['first_commit']['time']).strftime(DATE_FORMAT)
     history_url = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s' % info['file_path']
 
-    badges = [
-        '<span title="Supports Searching">%s</span>' % ('🔍' if info['can_search'] else ''),
-        '<span title="Supports Login">%s</span>\n' % ('🔑' if info['can_login'] else '')
-    ]
-    colspan = '' if info['can_search'] and info['can_login'] else ' colspan="2"'
-
     supported += '<tr>'
-    supported += '\n'.join('<td%s>%s</td>' % (colspan, x) for x in badges)
+    supported += '<td title="Supports searching">%s</td>\n' % ('🔍' if info['can_search'] else '')
+    supported += '<td title="Supports login">%s</td>\n' % ('🔑' if info['can_login'] else '')
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
     supported += '<td><a href="%s">%s</a></td>\n' % (info['url'], info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
