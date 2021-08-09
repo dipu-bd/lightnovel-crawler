@@ -76,10 +76,11 @@ def download_chapter_body(app, chapter):
                 logger.debug('Downloading chapter %d: %s', chapter['id'], chapter['url'])
                 chapter['body'] = app.crawler.download_chapter_body(chapter)
                 break
-            except Exception:
+            except Exception as e:
                 if i == retry_count:
                     logger.exception('Failed to download chapter body')
                 else:
+                    logger.debug('Error: %s. Retrying...', str(e))
                     time.sleep(3 + 5 * i)  # wait before next retry
                 # end if
             # end try
