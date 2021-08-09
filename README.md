@@ -331,8 +331,8 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://es.mtlnovel.com/" target="_blank">http://es.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://fastnovel.net/" target="_blank">http://fastnovel.net/</a></td>
@@ -341,18 +341,18 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://fr.mtlnovel.com/" target="_blank">http://fr.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://hs2ppe.co.uk/" target="_blank">http://hs2ppe.co.uk/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/hs2ppe.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki, Galunid</td>
+<td>kuwoyuki, Yudi Santoso, Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://id.mtlnovel.com/" target="_blank">http://id.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://liberspark.com/" target="_blank">http://liberspark.com/</a></td>
@@ -362,7 +362,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://novelfull.com/" target="_blank">http://novelfull.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/novelfull.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki, Galunid</td>
+<td>kuwoyuki, Yudi Santoso, Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://novels.cloud/" target="_blank">http://novels.cloud/</a></td>
@@ -372,7 +372,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://readonlinenovels.com/" target="_blank">http://readonlinenovels.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/readonlinenovels.py">1627423436</a></td>
-<td>Yudi Santoso, SirGryphin, dipu-bd, amritoo</td>
+<td>amritoo, dipu-bd, SirGryphin, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://tiknovel.com/" target="_blank">http://tiknovel.com/</a></td>
@@ -392,17 +392,17 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://www.fujitranslation.com/" target="_blank">http://www.fujitranslation.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/fujitrans.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://www.hanyunovels.site/" target="_blank">http://www.hanyunovels.site/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/hanyunovels.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://www.indonovels.net/" target="_blank">http://www.indonovels.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/indonovels.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://www.machinenoveltranslation.com/" target="_blank">http://www.machinenoveltranslation.com/</a></td>
@@ -411,13 +411,13 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://www.mtlnovel.com/" target="_blank">http://www.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://www.tiknovel.com/" target="_blank">http://www.tiknovel.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/9kqw.py">1627268414</a></td>
-<td>dipu-bd, Galunid</td>
+<td>Galunid, dipu-bd</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://zenithnovels.com/" target="_blank">http://zenithnovels.com/</a></td>
@@ -427,32 +427,32 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://zhi-end.blogspot.co.id/" target="_blank">http://zhi-end.blogspot.co.id/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/zhiend.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://zhi-end.blogspot.com/" target="_blank">http://zhi-end.blogspot.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/zhiend.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://1stkissnovel.love/" target="_blank">https://1stkissnovel.love/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/1stkissnovel.py">1627268414</a></td>
-<td>mchubby, SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki</td>
+<td>kuwoyuki, Yudi Santoso, dipu-bd, SirGryphin, mchubby</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://88tangeatdrinkread.wordpress.com/" target="_blank">https://88tangeatdrinkread.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/88tang.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://9kqw.com/" target="_blank">https://9kqw.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/9kqw.py">1627268414</a></td>
-<td>dipu-bd, Galunid</td>
+<td>Galunid, dipu-bd</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://allnovel.org/" target="_blank">https://allnovel.org/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/allnovel.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki, Galunid</td>
+<td>kuwoyuki, Yudi Santoso, Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://amnesiactl.com/" target="_blank">https://amnesiactl.com/</a></td>
@@ -462,12 +462,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://anonanemone.wordpress.com/" target="_blank">https://anonanemone.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/anonanemone.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://arangscans.com/" target="_blank">https://arangscans.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/arangscans.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://arnovel.me/" target="_blank">https://arnovel.me/</a></td>
@@ -477,22 +477,22 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://asadatranslations.com/" target="_blank">https://asadatranslations.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/asadatrans.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://automtl.wordpress.com/" target="_blank">https://automtl.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/automtl.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login">🔑</span></td>
 <td><a href="https://babelnovel.com/" target="_blank">https://babelnovel.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/babelnovel.py">1626444718</a></td>
-<td>kuwoyuki, dipu-bd, Yudi Santoso, Galunid</td>
+<td>Galunid, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://bestlightnovel.com/" target="_blank">https://bestlightnovel.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/bestlightnovel.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://book.qidian.com/" target="_blank">https://book.qidian.com/</a></td>
@@ -517,7 +517,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://cclawtranslations.home.blog/" target="_blank">https://cclawtranslations.home.blog/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/domentranslations.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://clicknovel.net/" target="_blank">https://clicknovel.net/</a></td>
@@ -532,7 +532,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://creativenovels.com/" target="_blank">https://creativenovels.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/creativenovels.py">1627423436</a></td>
-<td>tidux, dipu-bd, Yudi Santoso, tomcb1, kuwoyuki</td>
+<td>tidux, tomcb1, kuwoyuki, Yudi Santoso, dipu-bd</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://crescentmoon.blog/" target="_blank">https://crescentmoon.blog/</a></td>
@@ -547,22 +547,22 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://darktranslation.com/" target="_blank">https://darktranslation.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/darktrans.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://demontranslations.com/" target="_blank">https://demontranslations.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/demontrans.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://dmtranslationscn.com/" target="_blank">https://dmtranslationscn.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/dmtrans.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://dobelyuwai.wordpress.com/" target="_blank">https://dobelyuwai.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/dobelyuwai.py">1628465042</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://docln.net/" target="_blank">https://docln.net/</a></td>
@@ -572,17 +572,17 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://domentranslations.wordpress.com/" target="_blank">https://domentranslations.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/domentranslations.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://es.mtlnovel.com/" target="_blank">https://es.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://exiledrebelsscanlations.com/" target="_blank">https://exiledrebelsscanlations.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/exiledrebels.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://fanstranslations.com/" target="_blank">https://fanstranslations.com/</a></td>
@@ -591,13 +591,13 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://fr.mtlnovel.com/" target="_blank">https://fr.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://fujitranslation.com/" target="_blank">https://fujitranslation.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/fujitrans.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://grensia.blogspot.com/" target="_blank">https://grensia.blogspot.com/</a></td>
@@ -611,28 +611,28 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://id.mtlnovel.com/" target="_blank">https://id.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://inadequatetranslations.wordpress.com/" target="_blank">https://inadequatetranslations.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/inadequatetrans.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://indonovels.blogspot.co.id/" target="_blank">https://indonovels.blogspot.co.id/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/indonovels.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://indowebnovel.id/" target="_blank">https://indowebnovel.id/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/indowebnovel.py">1626444718</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://infinitenoveltranslations.net/" target="_blank">https://infinitenoveltranslations.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/infinitetrans.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://instadoses.com/" target="_blank">https://instadoses.com/</a></td>
@@ -657,7 +657,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://justatranslatortranslations.com/" target="_blank">https://justatranslatortranslations.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/justatrans.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://kiss-novel.com/" target="_blank">https://kiss-novel.com/</a></td>
@@ -672,12 +672,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://lazybirdtranslations.wordpress.com/" target="_blank">https://lazybirdtranslations.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/ladybirdtrans.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://lemontreetranslations.wordpress.com/" target="_blank">https://lemontreetranslations.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/lemontree.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://light-novel.online/" target="_blank">https://light-novel.online/</a></td>
@@ -702,7 +702,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://lightnovelheaven.com/" target="_blank">https://lightnovelheaven.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/lightnovelheaven.py">1626444718</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://lightnovelkiss.com/" target="_blank">https://lightnovelkiss.com/</a></td>
@@ -752,12 +752,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://m.chinesefantasynovels.com/" target="_blank">https://m.chinesefantasynovels.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/chinesefantasy.py">1627268414</a></td>
-<td>dipu-bd, amritoo</td>
+<td>amritoo, dipu-bd</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://m.mywuxiaworld.com/" target="_blank">https://m.mywuxiaworld.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mywuxiaworld.py">1627423436</a></td>
-<td>Yudi Santoso, SirGryphin, dipu-bd, amritoo</td>
+<td>amritoo, dipu-bd, SirGryphin, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://m.readlightnovel.cc/" target="_blank">https://m.readlightnovel.cc/</a></td>
@@ -777,7 +777,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://m.wuxiaworld.co/" target="_blank">https://m.wuxiaworld.co/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/wuxiaco.py">1627423436</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, Galunid</td>
+<td>Galunid, dipu-bd, SirGryphin, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://mangatoon.mobi/" target="_blank">https://mangatoon.mobi/</a></td>
@@ -792,7 +792,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://miraslation.net/" target="_blank">https://miraslation.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/miraslation.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://moonstonetranslation.com/" target="_blank">https://moonstonetranslation.com/</a></td>
@@ -812,7 +812,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://mysticalmerries.com/" target="_blank">https://mysticalmerries.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mysticalmerries.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://newsite.kolnovel.com/" target="_blank">https://newsite.kolnovel.com/</a></td>
@@ -822,7 +822,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://novel27.com/" target="_blank">https://novel27.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/novel27.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://novelcake.com/" target="_blank">https://novelcake.com/</a></td>
@@ -832,12 +832,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://novelextra.com/" target="_blank">https://novelextra.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/novelextra.py">1627556402</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki, Galunid</td>
+<td>kuwoyuki, Yudi Santoso, Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://novelfull.com/" target="_blank">https://novelfull.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/novelfull.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki, Galunid</td>
+<td>kuwoyuki, Yudi Santoso, Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://novelfullplus.com/" target="_blank">https://novelfullplus.com/</a></td>
@@ -852,7 +852,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://novelgo.id/" target="_blank">https://novelgo.id/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/novelgo.py">1627422652</a></td>
-<td>dipu-bd, AncientCatz, fadhilm293, Yudi Santoso</td>
+<td>fadhilm293, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://novelmic.com/" target="_blank">https://novelmic.com/</a></td>
@@ -907,7 +907,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://noveltrench.com/" target="_blank">https://noveltrench.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/noveltrench.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://omgnovels.com/" target="_blank">https://omgnovels.com/</a></td>
@@ -932,12 +932,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://readlightnovels.net/" target="_blank">https://readlightnovels.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/readlightnovelsnet.py">1627268414</a></td>
-<td>dipu-bd, Sakari Saastamoinen, Yudi Santoso</td>
+<td>Sakari Saastamoinen, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://readnovelfull.com/" target="_blank">https://readnovelfull.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/readnovelfull.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki, Galunid</td>
+<td>kuwoyuki, Yudi Santoso, Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://readnovelz.net/" target="_blank">https://readnovelz.net/</a></td>
@@ -947,12 +947,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://readwebnovels.net/" target="_blank">https://readwebnovels.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/readwebnovels.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://reincarnationpalace.com/" target="_blank">https://reincarnationpalace.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/reincarnationpalace.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://rewayat.club/" target="_blank">https://rewayat.club/</a></td>
@@ -962,17 +962,17 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://rpgnoob.wordpress.com/" target="_blank">https://rpgnoob.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/rpgnovels.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://rpgnovels.com/" target="_blank">https://rpgnovels.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/rpgnovels.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://shalvationtranslations.wordpress.com/" target="_blank">https://shalvationtranslations.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/shalvation.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://skynovel.org/" target="_blank">https://skynovel.org/</a></td>
@@ -1022,17 +1022,17 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://viewnovel.net/" target="_blank">https://viewnovel.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/viewnovel.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://vipnovel.com/" target="_blank">https://vipnovel.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/vipnovel.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://vistranslations.wordpress.com/" target="_blank">https://vistranslations.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/vistrans.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://wbnovel.com/" target="_blank">https://wbnovel.com/</a></td>
@@ -1082,27 +1082,27 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://writerupdates.com/" target="_blank">https://writerupdates.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/writerupdates.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://wujizun.com/" target="_blank">https://wujizun.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/wujizun.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://wuxiaworld.io/" target="_blank">https://wuxiaworld.io/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/wuxiaworldio.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://wuxiaworld.live/" target="_blank">https://wuxiaworld.live/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/wuxiaworldlive.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://wuxiaworld.name/" target="_blank">https://wuxiaworld.name/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/wuxiaworldio.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://wuxiaworld.online/" target="_blank">https://wuxiaworld.online/</a></td>
@@ -1132,12 +1132,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.allnovel.org/" target="_blank">https://www.allnovel.org/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/allnovel.py">1627433129</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, kuwoyuki, Galunid</td>
+<td>kuwoyuki, Yudi Santoso, Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.anonanemone.wordpress.com/" target="_blank">https://www.anonanemone.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/anonanemone.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.asianhobbyist.com/" target="_blank">https://www.asianhobbyist.com/</a></td>
@@ -1157,12 +1157,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.f-w-o.com/" target="_blank">https://www.f-w-o.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/fantasyworldonline.py">1627268414</a></td>
-<td>kuwoyuki, SirGryphin, dipu-bd, Yudi Santoso</td>
+<td>SirGryphin, kuwoyuki, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.fanfiction.net/" target="_blank">https://www.fanfiction.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/fanfiction.py">1627268414</a></td>
-<td>fof300f, dipu-bd</td>
+<td>dipu-bd, fof300f</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.flying-lines.com/" target="_blank">https://www.flying-lines.com/</a></td>
@@ -1187,7 +1187,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.fuyuneko.org/" target="_blank">https://www.fuyuneko.org/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/fuyuneko.py">1627268414</a></td>
-<td>SirGryphin, dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>SirGryphin, AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.idqidian.us/" target="_blank">https://www.idqidian.us/</a></td>
@@ -1202,12 +1202,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.lightnovelpub.com/" target="_blank">https://www.lightnovelpub.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/lightnovelpub.py">1628406176</a></td>
-<td>SirGryphin, dipu-bd, Galunid</td>
+<td>Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.lightnovelworld.com/" target="_blank">https://www.lightnovelworld.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/lightnovelpub.py">1628406176</a></td>
-<td>SirGryphin, dipu-bd, Galunid</td>
+<td>Galunid, dipu-bd, SirGryphin</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.lunarletters.com/" target="_blank">https://www.lunarletters.com/</a></td>
@@ -1222,12 +1222,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.miraslation.net/" target="_blank">https://www.miraslation.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/miraslation.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.mtlnovel.com/" target="_blank">https://www.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1627918840</a></td>
-<td>Yudi Santoso, dipu-bd, kuwoyuki, Galunid</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mtlnovel.py">1628549643</a></td>
+<td>Galunid, Yudi Santoso, dipu-bd, kuwoyuki</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.mtlreader.com/" target="_blank">https://www.mtlreader.com/</a></td>
@@ -1237,7 +1237,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.mywuxiaworld.com/" target="_blank">https://www.mywuxiaworld.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/mywuxiaworld.py">1627423436</a></td>
-<td>Yudi Santoso, SirGryphin, dipu-bd, amritoo</td>
+<td>amritoo, dipu-bd, SirGryphin, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.novelall.com/" target="_blank">https://www.novelall.com/</a></td>
@@ -1281,8 +1281,8 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.oppatranslations.com/" target="_blank">https://www.oppatranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/oppatranslations.py">1627423436</a></td>
-<td>dipu-bd, amritoo</td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/oppatrans.py">1626444718</a></td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.ornovel.com/" target="_blank">https://www.ornovel.com/</a></td>
@@ -1312,12 +1312,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.royalroad.com/" target="_blank">https://www.royalroad.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/royalroad.py">1626444718</a></td>
-<td>dipu-bd, Pk11, Yudi Santoso</td>
+<td>Pk11, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.scribblehub.com/" target="_blank">https://www.scribblehub.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/scribblehub.py">1626444718</a></td>
-<td>dipu-bd, Pk11, Yudi Santoso</td>
+<td>Pk11, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.shinsori.com/" target="_blank">https://www.shinsori.com/</a></td>
@@ -1332,12 +1332,12 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.tiknovel.com/" target="_blank">https://www.tiknovel.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/9kqw.py">1627268414</a></td>
-<td>dipu-bd, Galunid</td>
+<td>Galunid, dipu-bd</td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.virlyce.com/" target="_blank">https://www.virlyce.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/virlyce.py">1627268414</a></td>
-<td>dipu-bd, AncientCatz, Yudi Santoso</td>
+<td>AncientCatz, dipu-bd, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.volarenovels.com/" target="_blank">https://www.volarenovels.com/</a></td>
@@ -1377,7 +1377,7 @@ You are very welcome to contribute in this project. You can:
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.wuxiaworld.co/" target="_blank">https://www.wuxiaworld.co/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/master/sources/wuxiaco.py">1627423436</a></td>
-<td>SirGryphin, dipu-bd, Yudi Santoso, Galunid</td>
+<td>Galunid, dipu-bd, SirGryphin, Yudi Santoso</td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.wuxiaworld.com/" target="_blank">https://www.wuxiaworld.com/</a></td>
