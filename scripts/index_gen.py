@@ -77,7 +77,7 @@ with open(REJECTED_FILE, encoding='utf8') as fp:
 def git_history(file_path):
     try:
         cmd = 'git log --follow --diff-filter=AMT --pretty="format:%%at||%%an||%%s" "%s"' % file_path
-        logs = subprocess.check_output(cmd).decode('utf-8').strip()
+        logs = subprocess.check_output(cmd, shell=True).decode('utf-8').strip()
         logs = [line.strip().split('||', maxsplit=3) for line in logs.splitlines(False)]
         logs = [{'time': int(x[0]), 'author': x[1], 'subject': x[2]} for x in logs]
         return logs
