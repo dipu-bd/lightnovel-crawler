@@ -6,26 +6,25 @@ on:
       - main
       - dev
     paths:
-      - "sources/**/*.py"
-      - "sources/_rejected.json"
+      - "sources/**"
+      - "!sources/_index.json"
       - "scripts/index_gen.py"
       - "lncrawl/VERSION"
-      - ".github/workflows"
 
 jobs:
   index_gen:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install dependencies
-      run: pip install -r requirements.txt
-    - name: Generate index
-      run: python ./scripts/index_gen.py
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v4
-      with:
-        commit_message: Generate source index
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Generate index
+        run: python ./scripts/index_gen.py
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Generate source index

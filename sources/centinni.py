@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
+
 search_url = 'https://www.centinni.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 
