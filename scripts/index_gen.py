@@ -167,10 +167,10 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
         '<span title="Supports Searching">%s</span>' % ('🔍' if info['can_search'] else ''),
         '<span title="Supports Login">%s</span>\n' % ('🔑' if info['can_login'] else '')
     ]
-    colspan = 1 if info['can_search'] and info['can_login'] else 2
+    colspan = '' if info['can_search'] and info['can_login'] else ' colspan="2"'
 
     supported += '<tr>'
-    supported += '\n'.join('<td colspan="%d">%s</td>' % x for x in badges)
+    supported += '\n'.join('<td%s>%s</td>' % (colspan, x) for x in badges)
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
     supported += '<td><a href="%s">%s</a></td>\n' % (info['url'], info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
