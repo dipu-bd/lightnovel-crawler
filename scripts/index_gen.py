@@ -57,7 +57,6 @@ INDEX_DATA['app']['release'] = pypi_data['releases'][latest_version]
 print('Latest version', latest_version)
 print('-' * 50)
 
-
 # =========================================================================================== #
 # Generate sources index
 # =========================================================================================== #
@@ -77,7 +76,7 @@ with open(REJECTED_FILE, encoding='utf8') as fp:
 
 def git_history(file_path):
     try:
-        cmd = 'git log --follow --diff-filter=AMT --pretty="format:%%at||%%an||%%s" "./%s"' % file_path
+        cmd = 'git log --follow --diff-filter=AMT --pretty="format:%%at||%%an||%%s" "%s"' % file_path
         logs = subprocess.check_output(cmd).decode('utf-8').strip()
         logs = [line.strip().split('||', maxsplit=3) for line in logs.splitlines(False)]
         logs = [{'time': int(x[0]), 'author': x[1], 'subject': x[2]} for x in logs]

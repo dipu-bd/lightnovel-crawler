@@ -15,16 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.9
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.9
       - name: Install dependencies
         run: pip install -r requirements-app.txt
-      - name: checking
-        run: |
-          git rev-parse --abbrev-ref HEAD
-          ls -lshua
       - name: Generate index
         run: python ./scripts/index_gen.py
       - name: Commit changes
