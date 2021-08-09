@@ -7,6 +7,7 @@ on:
       - dev
     paths:
       - "sources/**/*.py"
+      - "sources/_rejected.json"
       - "scripts/index_gen.py"
       - "lncrawl/VERSION"
       - ".github/workflows"
