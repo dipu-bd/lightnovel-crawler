@@ -57,6 +57,7 @@ INDEX_DATA['app']['release'] = pypi_data['releases'][latest_version]
 print('Latest version', latest_version)
 print('-' * 50)
 
+
 # =========================================================================================== #
 # Generate sources index
 # =========================================================================================== #
