@@ -306,106 +306,6 @@ You are very welcome to contribute in this project. You can:
 - Create a new bot file using [`bots/_sample.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/_sample.py) as template.
 - Import bot to [`bots/__init__.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/bots/__init__.py) file.
 
-### Supported output formats
-
-- JSON
-- EPUB
-- TEXT
-- WEB
-- DOCX
-- MOBI
-- PDF
-- RTF
-- TXT
-- AZW3
-- FB2
-- LIT
-- LRF
-- OEB
-- PDB
-- PML
-- RB
-- SNB
-- TCR
-- HTML
-
-## Rejected sources
-
-<!-- auto generated rejected sources list -->
-
-<table>
-<tbody>
-<tr><th>Source URL</th>
-<th>Rejection Cause</th>
-</tr>
-<tr><td><a href="http://fullnovel.live/" target="_blank">http://fullnovel.live/</a></td>
-<td>This site can’t be reached</td>
-</tr>
-<tr><td><a href="http://gravitytales.com/" target="_blank">http://gravitytales.com/</a></td>
-<td>Domain is expired</td>
-</tr>
-<tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
-<td>Domain expired</td>
-</tr>
-<tr><td><a href="https://anythingnovel.com/" target="_blank">https://anythingnovel.com/</a></td>
-<td>Site broken</td>
-</tr>
-<tr><td><a href="https://bestoflightnovels.com/" target="_blank">https://bestoflightnovels.com/</a></td>
-<td>Site moved</td>
-</tr>
-<tr><td><a href="https://chrysanthemumgarden.com/" target="_blank">https://chrysanthemumgarden.com/</a></td>
-<td>Removed on request of the owner (Issue #649)</td>
-</tr>
-<tr><td><a href="https://dsrealmtranslations.com/" target="_blank">https://dsrealmtranslations.com/</a></td>
-<td>Site is down</td>
-</tr>
-<tr><td><a href="https://fsapk.com/" target="_blank">https://fsapk.com/</a></td>
-<td>Site is not working</td>
-</tr>
-<tr><td><a href="https://indomtl.com/" target="_blank">https://indomtl.com/</a></td>
-<td>Does not like to be crawled</td>
-</tr>
-<tr><td><a href="https://mtled-novels.com/" target="_blank">https://mtled-novels.com/</a></td>
-<td>Domain is expired</td>
-</tr>
-<tr><td><a href="https://myoniyonitranslations.com/" target="_blank">https://myoniyonitranslations.com/</a></td>
-<td>522 - Connection timed out</td>
-</tr>
-<tr><td><a href="https://novelcrush.com/" target="_blank">https://novelcrush.com/</a></td>
-<td>Site is down</td>
-</tr>
-<tr><td><a href="https://novelplanet.com/" target="_blank">https://novelplanet.com/</a></td>
-<td>Site is closed</td>
-</tr>
-<tr><td><a href="https://novelraw.blogspot.com/" target="_blank">https://novelraw.blogspot.com/</a></td>
-<td>Site closed down</td>
-</tr>
-<tr><td><a href="https://pery.info/" target="_blank">https://pery.info/</a></td>
-<td>Site is down</td>
-</tr>
-<tr><td><a href="https://www.centinni.com/" target="_blank">https://www.centinni.com/</a></td>
-<td>Site is down</td>
-</tr>
-<tr><td><a href="https://www.novelspread.com/" target="_blank">https://www.novelspread.com/</a></td>
-<td>Site is down</td>
-</tr>
-<tr><td><a href="https://www.noveluniverse.com/" target="_blank">https://www.noveluniverse.com/</a></td>
-<td>Site is down</td>
-</tr>
-<tr><td><a href="https://www.novelv.com/" target="_blank">https://www.novelv.com/</a></td>
-<td>Site is down</td>
-</tr>
-<tr><td><a href="https://www.rebirth.online/" target="_blank">https://www.rebirth.online/</a></td>
-<td>Site moved</td>
-</tr>
-<tr><td><a href="https://www.translateindo.com/" target="_blank">https://www.translateindo.com/</a></td>
-<td>Site is down</td>
-</tr>
-</tbody>
-</table>
-
-<!-- auto generated rejected sources list -->
-
 ## Supported sources
 
 > Request new one by [creating a new issue](https://github.com/dipu-bd/lightnovel-crawler/issues/new/choose).
@@ -1930,3 +1830,103 @@ You are very welcome to contribute in this project. You can:
 </table>
 
 <!-- auto generated supported sources list -->
+
+## Rejected sources
+
+<!-- auto generated rejected sources list -->
+
+<table>
+<tbody>
+<tr><th>Source URL</th>
+<th>Rejection Cause</th>
+</tr>
+<tr><td><a href="http://fullnovel.live/" target="_blank">http://fullnovel.live/</a></td>
+<td>This site can’t be reached</td>
+</tr>
+<tr><td><a href="http://gravitytales.com/" target="_blank">http://gravitytales.com/</a></td>
+<td>Domain is expired</td>
+</tr>
+<tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
+<td>Domain expired</td>
+</tr>
+<tr><td><a href="https://anythingnovel.com/" target="_blank">https://anythingnovel.com/</a></td>
+<td>Site broken</td>
+</tr>
+<tr><td><a href="https://bestoflightnovels.com/" target="_blank">https://bestoflightnovels.com/</a></td>
+<td>Site moved</td>
+</tr>
+<tr><td><a href="https://chrysanthemumgarden.com/" target="_blank">https://chrysanthemumgarden.com/</a></td>
+<td>Removed on request of the owner (Issue #649)</td>
+</tr>
+<tr><td><a href="https://dsrealmtranslations.com/" target="_blank">https://dsrealmtranslations.com/</a></td>
+<td>Site is down</td>
+</tr>
+<tr><td><a href="https://fsapk.com/" target="_blank">https://fsapk.com/</a></td>
+<td>Site is not working</td>
+</tr>
+<tr><td><a href="https://indomtl.com/" target="_blank">https://indomtl.com/</a></td>
+<td>Does not like to be crawled</td>
+</tr>
+<tr><td><a href="https://mtled-novels.com/" target="_blank">https://mtled-novels.com/</a></td>
+<td>Domain is expired</td>
+</tr>
+<tr><td><a href="https://myoniyonitranslations.com/" target="_blank">https://myoniyonitranslations.com/</a></td>
+<td>522 - Connection timed out</td>
+</tr>
+<tr><td><a href="https://novelcrush.com/" target="_blank">https://novelcrush.com/</a></td>
+<td>Site is down</td>
+</tr>
+<tr><td><a href="https://novelplanet.com/" target="_blank">https://novelplanet.com/</a></td>
+<td>Site is closed</td>
+</tr>
+<tr><td><a href="https://novelraw.blogspot.com/" target="_blank">https://novelraw.blogspot.com/</a></td>
+<td>Site closed down</td>
+</tr>
+<tr><td><a href="https://pery.info/" target="_blank">https://pery.info/</a></td>
+<td>Site is down</td>
+</tr>
+<tr><td><a href="https://www.centinni.com/" target="_blank">https://www.centinni.com/</a></td>
+<td>Site is down</td>
+</tr>
+<tr><td><a href="https://www.novelspread.com/" target="_blank">https://www.novelspread.com/</a></td>
+<td>Site is down</td>
+</tr>
+<tr><td><a href="https://www.noveluniverse.com/" target="_blank">https://www.noveluniverse.com/</a></td>
+<td>Site is down</td>
+</tr>
+<tr><td><a href="https://www.novelv.com/" target="_blank">https://www.novelv.com/</a></td>
+<td>Site is down</td>
+</tr>
+<tr><td><a href="https://www.rebirth.online/" target="_blank">https://www.rebirth.online/</a></td>
+<td>Site moved</td>
+</tr>
+<tr><td><a href="https://www.translateindo.com/" target="_blank">https://www.translateindo.com/</a></td>
+<td>Site is down</td>
+</tr>
+</tbody>
+</table>
+
+<!-- auto generated rejected sources list -->
+
+### Supported output formats
+
+- JSON
+- EPUB
+- TEXT
+- WEB
+- DOCX
+- MOBI
+- PDF
+- RTF
+- TXT
+- AZW3
+- FB2
+- LIT
+- LRF
+- OEB
+- PDB
+- PML
+- RB
+- SNB
+- TCR
+- HTML
