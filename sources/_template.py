@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 class MyCrawlerName(Crawler):
+
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = [
         'http://sample.url/'
@@ -88,4 +89,5 @@ class MyCrawlerName(Crawler):
         #       Delete this method if you want to use the default one.
         pass
     # end def
+
 # end class
