@@ -12,7 +12,7 @@ CALL venv\Scripts\activate.bat
 
 %PIP% install -U pip wheel setuptools
 %PIP% install -r requirements-app.txt
-%PIP% install pyinstaller pycryptodome>=3.0.0,<4.0.0
+%PIP% install -r requirements-dev.txt
 
 %PY% setup.py clean bdist_wheel package
 

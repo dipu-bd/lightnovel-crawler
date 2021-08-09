@@ -2,27 +2,22 @@
 """
 The purpose of this bot is to test the application and crawlers
 """
-import io
-import sys
 import traceback
 from random import random
 
+from cloudscraper.exceptions import CaptchaException, CloudflareException
 from requests import RequestException
 from urllib3.exceptions import HTTPError
-from cloudscraper.exceptions import CloudflareException, CaptchaException
 
-from ...assets.icons import isWindows
-from ...sources import crawler_list
+from ...core.sources import crawler_list
 
 
 class TestBot:
     allerrors = dict()
 
-    from .test_inputs import test_user_inputs
-    from .test_inputs import allowed_failures
-
-    from .test_crawler import test_crawler
     from .post_github import post_on_github
+    from .test_crawler import test_crawler
+    from .test_inputs import allowed_failures, test_user_inputs
 
     def start(self):
         try:

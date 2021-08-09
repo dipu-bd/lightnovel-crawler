@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-VERSION=$(head -n 1 lncrawl/VERSION)
+VERSION=$(head -n 1 ./lncrawl/VERSION)
 
 PY="python3"
 PIP="$PY -m pip --disable-pip-version-check"
@@ -12,7 +12,7 @@ $PY -m venv venv
 
 $PIP install -U pip wheel setuptools
 $PIP install -r requirements-app.txt
-$PIP install pyinstaller pycryptodome>=3.0.0,<4.0.0
+$PIP install -r requirements-dev.txt
 
 $PY setup.py clean bdist_wheel package
 

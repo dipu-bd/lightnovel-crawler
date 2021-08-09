@@ -6,10 +6,10 @@ import logging
 import os
 from concurrent import futures
 
-from tqdm import tqdm
 from slugify import slugify
+from tqdm import tqdm
 
-from ..sources import crawler_list
+from ..core.sources import crawler_list
 
 logger = logging.getLogger(__name__)
 
@@ -18,9 +18,9 @@ executor = futures.ThreadPoolExecutor(20)
 
 def get_search_result(app, link, bar):
     try:
-        crawler = crawler_list[link]
-        instance = crawler()
-        instance.home_url = link.strip('/')
+        CrawlerType = crawler_list[link]
+        instance = CrawlerType()
+        instance.home_url = link
         results = instance.search_novel(app.user_input)
         logger.debug(results)
         logger.info('%d results from %s', len(results), link)

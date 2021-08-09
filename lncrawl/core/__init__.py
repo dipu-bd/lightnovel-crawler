@@ -5,15 +5,16 @@ Interactive application to take user inputs
 import logging
 import os
 import sys
+
 import colorama
 from colorama import Fore
 
 from ..assets.version import get_value as get_version
 from ..bots import run_bot
-from ..utils.update_checker import check_updates
 from .arguments import get_args
 from .display import (cancel_method, debug_mode, description, epilog,
                       error_message, input_suppression)
+from .sources import load_sources
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +66,7 @@ def init():
 def start_app():
     init()
 
-    check_updates()
+    load_sources()
     cancel_method()
 
     try:

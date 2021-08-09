@@ -10,7 +10,6 @@ from telegram.ext import (CommandHandler, ConversationHandler, Filters,
                           MessageHandler, Updater)
 
 from ..core.app import App
-from ..sources import crawler_list
 from ..utils.uploader import upload
 
 logger = logging.getLogger(__name__)
@@ -28,7 +27,7 @@ available_formats = [
 class TelegramBot:
     def start(self):
         os.environ['debug_mode'] = 'yes'
-        
+
         # Create the EventHandler and pass it your bot's token.
         self.updater = Updater(
             os.getenv('TELEGRAM_TOKEN', ''),
