@@ -157,7 +157,7 @@ def check_updates():
             with open(source_file, 'rb') as fp:
                 source_md5 = hashlib.md5(fp.read()).hexdigest()
 
-        if source_md5 != info['md5']:
+        if source_md5 != info['md5'] and user_index_file != dev_index_file:
             logger.debug('%s | %s (current) != %s (latest)', source_file, source_md5, info['md5'])
             source_updates[info['url']] = source_file
         # end if
