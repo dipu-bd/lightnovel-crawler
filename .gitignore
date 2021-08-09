@@ -23,3 +23,4 @@ save_pid.txt
 /logs
 client_secrets.json
 /lightnovel-crawler-*
+__pycache__/

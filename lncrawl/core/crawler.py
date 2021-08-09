@@ -53,8 +53,8 @@ class Crawler:
         # end try
 
         # Must resolve these fields inside `read_novel_info`
-        self.novel_title = 'N/A'
-        self.novel_author = 'N/A'
+        self.novel_title = ''
+        self.novel_author = ''
         self.novel_cover = None
         self.is_rtl = False
 

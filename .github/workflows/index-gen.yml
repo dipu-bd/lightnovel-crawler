@@ -1,0 +1,31 @@
+name: Generate source index
+
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - "sources/**"
+      - "!sources/_index.json"
+      - "scripts/index_gen.py"
+      - "lncrawl/VERSION"
+
+jobs:
+  index_gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: pip install -r requirements-app.txt
+      - name: Generate index
+        run: python ./scripts/index_gen.py
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Generate source index

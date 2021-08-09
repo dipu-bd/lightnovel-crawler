@@ -16,7 +16,7 @@ def make_cover_image(app):
         return None
     # end if
     logger.info('Creating cover: %s', app.book_cover)
-    ext = app.book_cover.split('.')[-1]
+    # ext = app.book_cover.split('.')[-1]
     cover_image = epub.EpubImage()
     cover_image.file_name = 'cover.png'
     cover_image.media_type = 'image/png'
@@ -32,11 +32,13 @@ def make_intro_page(app, cover_image):
     github_url = 'https://github.com/dipu-bd/lightnovel-crawler'
 
     intro_html = '<div style="%s">' % ';'.join([
-        'min-height: 6.5in',
+        'max-height: 95vh',
+        'min-height: 450px',
         'display: flex',
         'text-align: center',
         'flex-direction: column',
         'justify-content: space-between',
+        'align-items: center'
     ])
 
     intro_html += '''
@@ -52,8 +54,8 @@ def make_intro_page(app, cover_image):
     if cover_image:
         intro_html += '<img id="cover" src="%s" style="%s">' % (
             cover_image.file_name, '; '.join([
-                'max-height: 65%',
-                'min-height: 3.0in',
+                'max-height: 50vh',
+                'min-height: 30vh',
                 'object-fit: contain',
                 'object-position: center center'
             ]))
@@ -152,7 +154,7 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Create book spine
     try:
-        book.set_cover('image.jpg', open(app.book_cover, 'rb').read())
+        book.set_cover('book-cover.png', open(app.book_cover, 'rb').read())
         book.spine = ['cover', intro_page, 'nav']
     except Exception:
         book.spine = [intro_page, 'nav']

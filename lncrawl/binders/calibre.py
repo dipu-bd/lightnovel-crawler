@@ -67,7 +67,7 @@ def epub_to_calibre(app, epub_file, out_fmt):
         args += ['--cover', app.book_cover]
     if out_fmt == 'pdf':
         args += [
-            '--paper-size', 'a4',
+            '--paper-size', 'letter',
             '--pdf-page-numbers',
             '--pdf-hyphenate',
             '--pdf-header-template', '<p style="text-align:center; color:#555; font-size:0.9em">⦗ _TITLE_ &mdash; _SECTION_ ⦘</p>',

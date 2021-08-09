@@ -9,7 +9,7 @@ from .web import make_webs
 from .text import make_texts
 from .calibre import make_calibres
 
-logger = logging.Logger('BINDERS')
+logger = logging.getLogger(__name__)
 
 depends_on_none = [
     'json',

@@ -5,6 +5,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+
 class Dobelyuwai(Crawler):
     base_url = 'https://dobelyuwai.wordpress.com/'
 
@@ -17,13 +18,15 @@ class Dobelyuwai(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
+        if 'blank.jpg' in self.novel_cover:
+            self.novel_cover = None
         logger.info('Novel cover: %s', self.novel_cover)
 
-        try:
-            self.novel_author = soup.select_one('div.entry-content > p:nth-child(2)').text.strip()
-        except Exception as e:
-            logger.warn('Failed to get novel auth. Error: %s', e)
-        logger.info('%s', self.novel_author)
+        # try:
+        #     self.novel_author = soup.select_one('div.entry-content > p:nth-child(2)').text.strip()
+        # except Exception as e:
+        #     logger.warn('Failed to get novel auth. Error: %s', e)
+        # logger.info('%s', self.novel_author)
 
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('div.entry-content')

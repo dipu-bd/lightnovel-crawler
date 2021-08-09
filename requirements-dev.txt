@@ -1,8 +1,7 @@
 # dev requirements
+flake8
 autopep8
-jinja2
 pyinstaller
-cairosvg
 setuptools
 pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2

@@ -62,7 +62,8 @@ try:
     from Crypto.Cipher import AES
     from Crypto.Random import get_random_bytes
 except ImportError:
-    PBinCLIError("Unable import pycryptodome")
+    PBinCLIError('pycryptodome not found.\n'
+                 '    pip install pycryptodome>=3.0.0,<4.0.0')
 
 
 CIPHER_ITERATION_COUNT = 100000

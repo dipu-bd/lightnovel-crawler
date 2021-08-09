@@ -17,20 +17,6 @@ from ..core.arguments import get_args
 
 logger = logging.getLogger(__name__)
 
-try:
-    from ..utils.racovimge import random_cover
-except ImportError as err:
-    logger.debug(err)
-
-try:
-    from cairosvg import svg2png
-except Exception:
-    svg2png = None
-    logger.info('CairoSVG was not found.' +
-                'Install it to generate random cover image:\n' +
-                '    pip install cairosvg')
-# end try
-
 
 def download_image(app, url):
     if len(url) > 1000 or url.startswith('data:'):
@@ -47,8 +33,9 @@ def download_image(app, url):
 
 
 def download_cover(app):
-    if not app.crawler.novel_cover:
-        return None
+    image_url = app.crawler.novel_cover
+    if not image_url:
+        image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
     # end if
 
     filename = None
@@ -59,48 +46,19 @@ def download_cover(app):
         # end if
     except Exception as ex:
         logger.warn('Failed to locate cover image: %s -> %s (%s)',
-                    app.crawler.novel_cover, app.output_path, str(ex))
+                    image_url, app.output_path, str(ex))
         return None
     # end try
 
     try:
         logger.info('Downloading cover image...')
-        img = download_image(app, app.crawler.novel_cover)
+        img = download_image(app, image_url)
         img.save(filename, 'PNG')
         logger.debug('Saved cover: %s', filename)
         return filename
     except Exception as ex:
         logger.warn('Failed to download cover image: %s -> %s (%s)',
-                    app.crawler.novel_cover, filename, str(ex))
-        return None
-    # end try
-# end def
-
-
-def generate_cover(app):
-    logger.info('Generating cover image...')
-    if svg2png is None:
-        return
-    # end if
-    try:
-        svg_file = os.path.join(app.output_path, 'cover.svg')
-        svg = random_cover(
-            title=app.crawler.novel_title,
-            author=app.crawler.novel_author,
-        )
-
-        with open(svg_file, 'w', encoding='utf8') as f:
-            f.write(svg)
-            logger.debug('Saved a random cover.svg')
-        # end with
-
-        png_file = os.path.join(app.output_path, 'cover.png')
-        svg2png(bytestring=svg.encode('utf8'), write_to=png_file)
-        logger.debug('Converted cover.svg to cover.png')
-
-        return png_file
-    except Exception:
-        logger.exception('Failed to generate cover image: %s', app.output_path)
+                    image_url, filename, str(ex))
         return None
     # end try
 # end def
@@ -118,10 +76,11 @@ def download_chapter_body(app, chapter):
                 logger.debug('Downloading chapter %d: %s', chapter['id'], chapter['url'])
                 chapter['body'] = app.crawler.download_chapter_body(chapter)
                 break
-            except Exception:
+            except Exception as e:
                 if i == retry_count:
                     logger.exception('Failed to download chapter body')
                 else:
+                    logger.debug('Error: %s. Retrying...', str(e))
                     time.sleep(3 + 5 * i)  # wait before next retry
                 # end if
             # end try
@@ -248,9 +207,6 @@ def download_chapter_images(app):
 
     # download or generate cover
     app.book_cover = download_cover(app)
-    if not app.book_cover:
-        app.book_cover = generate_cover(app)
-    # end if
     if not app.book_cover:
         logger.warn('No cover image')
     # end if
