@@ -5,16 +5,18 @@ Build lightnovel-crawler source index to use for update checking.
 """
 import hashlib
 import json
+import re
 import subprocess
 import sys
 import time
 import traceback
-import urllib.request
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from urllib.request import Request, urlopen
 from pathlib import Path
 
 PYPI_JSON_URL = 'https://pypi.org/pypi/lightnovel-crawler/json'
+SOURCE_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/master/%s'
+HISTORY_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s'
 SOURCE_DOWNLOAD_URL_PREFIX = 'https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/%s'
 WHEEL_RELEASE_URL = 'https://github.com/dipu-bd/lightnovel-crawler/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl'
 
@@ -41,12 +43,14 @@ INDEX_DATA = {
     'crawlers': {},
 }
 
+executor = ThreadPoolExecutor(8)
+
 # =========================================================================================== #
 # The index data
 # =========================================================================================== #
 
 print('-' * 50)
-with urllib.request.urlopen(PYPI_JSON_URL) as fp:
+with urlopen(PYPI_JSON_URL) as fp:
     pypi_data = json.load(fp)
 
 latest_version = pypi_data['info']['version']
@@ -64,6 +68,7 @@ print('-' * 50)
 try:
     sys.path.insert(0, str(WORKDIR))
     from lncrawl.sources import load_crawlers
+    from lncrawl.assets.user_agents import user_agents
 except ImportError:
     traceback.print_exc()
     exit(1)
@@ -76,14 +81,32 @@ with open(REJECTED_FILE, encoding='utf8') as fp:
 
 def git_history(file_path):
     try:
-        cmd = 'git log --follow --diff-filter=AMT --pretty="format:%%at||%%an||%%s" "%s"' % file_path
+        cmd = 'git log --follow --diff-filter=AMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
+        # cmd = 'git log -1 --diff-filter=AMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
         logs = subprocess.check_output(cmd, shell=True).decode('utf-8').strip()
-        logs = [line.strip().split('||', maxsplit=3) for line in logs.splitlines(False)]
-        logs = [{'time': int(x[0]), 'author': x[1], 'subject': x[2]} for x in logs]
+        logs = [line.strip().split('||', maxsplit=4) for line in logs.splitlines(False)]
+        logs = [{'time': int(x[0]), 'author': x[1], 'email': x[2], 'subject': x[3]} for x in logs]
         return logs
     except Exception:
         traceback.print_exc()
         return {}
+
+
+name_alias = {
+    'Sudipto Chandra': 'dipu-bd',
+    'Sudipto Chandra Dipu': 'dipu-bd'
+}
+
+
+def process_contributors(history):
+    global email_to_name
+    for data in history:
+        aN = data['author']
+        aE = data['email']
+        name_alias.setdefault(aN, aN)
+        name_alias.setdefault(aE, aN)
+        if len(aN) < len(name_alias[aE]):
+            name_alias[aE] = aN
 
 
 def process_file(py_file: Path) -> float:
@@ -92,9 +115,10 @@ def process_file(py_file: Path) -> float:
 
     start = time.time()
     relative_path = py_file.relative_to(WORKDIR).as_posix()
+    download_url = SOURCE_DOWNLOAD_URL_PREFIX % relative_path
 
     history = git_history(relative_path)
-    download_url = SOURCE_DOWNLOAD_URL_PREFIX % relative_path
+    process_contributors(history)
 
     with open(py_file, 'rb') as f:
         md5 = hashlib.md5(f.read()).hexdigest()
@@ -106,10 +130,10 @@ def process_file(py_file: Path) -> float:
         info['md5'] = md5
         info['version'] = history[0]['time']
         info['total_commits'] = len(history)
-        info['last_commit'] = history[0]
-        info['first_commit'] = history[-1]
-        info['author'] = history[-1]['author']
-        info['contributors'] = list(set([x['author'] for x in history]))
+        # info['last_commit'] = history[0]
+        # info['first_commit'] = history[-1]
+        # info['author'] = history[-1]['author']
+        info['contributors'] = list(set([name_alias[x['email']] for x in history]))
 
         INDEX_DATA['crawlers'][info['id']] = info
         for url in info['base_urls']:
@@ -121,16 +145,13 @@ def process_file(py_file: Path) -> float:
     return time.time() - start
 
 
-executor = ThreadPoolExecutor(8)
-futures = {
-    executor.submit(process_file, py_file): py_file
-    for py_file in sorted(SOURCES_FOLDER.glob('**/*.py'))
-}
-for future, py_file in futures.items():
-    print('> %-40s ' % py_file.name, end='')
+futures = {}
+for py_file in sorted(SOURCES_FOLDER.glob('**/*.py')):
+    futures[py_file] = executor.submit(process_file, py_file)
+for py_file, future in futures.items():
+    print('> %-40s' % py_file.name, end='')
     runtime = future.result()
     print('%.3fs' % runtime)
-executor.shutdown()
 
 print('-' * 50)
 print('%d crawlers.' % len(INDEX_DATA['crawlers']),
@@ -144,6 +165,8 @@ with open(INDEX_FILE, 'w', encoding='utf8') as fp:
 # =========================================================================================== #
 # Update README.md
 # =========================================================================================== #
+
+print('Rendering supported and rejected source list for README.md...')
 
 with open(README_FILE, encoding='utf8') as fp:
     readme_text = fp.read()
@@ -159,20 +182,25 @@ supported += '<th>Contributors</th>\n'
 supported += '</tr>\n'
 for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0]):
     info = INDEX_DATA['crawlers'][crawler_id]
-    created_at = datetime.fromtimestamp(info['first_commit']['time']).strftime(DATE_FORMAT)
-    history_url = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s' % info['file_path']
+    source_url = SOURCE_URL_PREFIX % info['file_path']
+    # history_url = HISTORY_URL_PREFIX % info['file_path']
+    # created_at = datetime.fromtimestamp(info['first_commit']['time']).strftime(DATE_FORMAT)
+
     supported += '<tr>'
-    supported += '<td><span title="Supports Searching">%s</span> <span title="Supports Login">%s</span></td>\n' % (
-        ('🔍' if info['can_search'] else ''),
-        ('🔑' if info['can_login'] else '')
-    )
+    supported += '<td>'
+    supported += '<span title="Supports searching">%s</span>' % ('🔍' if info['can_search'] else '')
+    supported += '<span title="Supports login">%s</span>' % ('🔑' if info['can_login'] else '')
+    supported += '</td>\n'
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
-    supported += '<td><a href="%s">%s</a></td>\n' % (info['url'], info['version'])
+    supported += '<td><a href="%s">%s</a></td>\n' % (source_url, info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
-    supported += '<td><small>%s</small></td>\n' % ', '.join(sorted(info['contributors']))
+    supported += '<td>%s</td>\n' % ', '.join(list(set([name_alias[x]
+                                             for x in info['contributors']])))
     supported += '</tr>\n'
 supported += '</tbody>\n</table>\n\n'
 readme_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
+
+print('Generated supported sources list.')
 
 before, rejected, after = readme_text.split(REJECTED_SOURCE_LIST_QUE)
 rejected = '\n\n<table>\n<tbody>\n'
@@ -188,5 +216,11 @@ for url, cause in sorted(INDEX_DATA['rejected'].items(),  key=lambda x: x[0]):
 rejected += '</tbody>\n</table>\n\n'
 readme_text = REJECTED_SOURCE_LIST_QUE.join([before, rejected, after])
 
+print('Generated rejected sources list.')
+
 with open(README_FILE, 'w', encoding='utf8') as fp:
     fp.write(readme_text)
+
+print('-' * 50)
+
+executor.shutdown()
