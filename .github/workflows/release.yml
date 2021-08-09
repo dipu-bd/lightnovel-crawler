@@ -5,7 +5,7 @@ on:
     # branches:
     # - master
     tags:
-    - 'v*'
+      - "v*"
 
 jobs:
   validate:
@@ -16,109 +16,112 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
-    - uses: actions/checkout@v2
-    
-    - name: Check VERSION file
-      run: |
-        [ "${GITHUB_REF##*/}" == "v$(head -n 1 lncrawl/VERSION)" ] || exit 100
-    
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
-      with:
-        python-version: ${{ matrix.python-version }}
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install -U pip wheel setuptools
-        pip install -r requirements.txt
-    
-    - name: Lint with flake8
-      run: |
-        pip install flake8
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    
-    - name: Build wheel
-      run: python setup.py clean bdist_wheel
-    
-    - name: Install and test the wheel package
-      run: |
-        pip install dist/lightnovel_crawler*.whl
-        lncrawl --list-sources
-        lncrawl -s 'https://novelfull.com/the-kings-avatar-for-the-glory.html' --first 2 -f --format epub --suppress -lll
+      - uses: actions/checkout@v2
+
+      - name: Check VERSION file
+        run: |
+          [ "${GITHUB_REF##*/}" == "v$(head -n 1 lncrawl/VERSION)" ] || exit 100
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip wheel setuptools
+          pip install -r requirements.txt
+
+      - name: Lint with flake8
+        run: |
+          pip install flake8
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Build wheel
+        run: python setup.py clean bdist_wheel
+
+      - name: Install and test the wheel package
+        run: |
+          pip install dist/lightnovel_crawler*.whl
+          lncrawl --list-sources
+          lncrawl -s 'https://novelfull.com/the-kings-avatar-for-the-glory.html' --first 2 -f --format epub --suppress -lll
 
   build-windows:
     needs: validate
     name: Windows Build
     runs-on: windows-latest
     steps:
-    - name: Install OpenSSL
-      run: choco install -y --no-progress openssl
+      - name: Install OpenSSL
+        run: choco install -y --no-progress openssl
 
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
 
-    - name: Build package
-      env:
-        PYTHONIOENCODING: utf-8
-      run: .\scripts\build.bat
-    
-    - name: Test the executable package
-      env:
-        PYTHONIOENCODING: utf-8
-      run: .\dist\lncrawl.exe --list-sources
+      - name: Build package
+        env:
+          PYTHONIOENCODING: utf-8
+        run: .\scripts\build.bat
 
-    - name: Release
-      uses: ncipollo/release-action@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with: # See available options at https://github.com/ncipollo/release-action
-        allowUpdates: true
-        artifactErrorsFailBuild: true
-        artifacts: "dist/lncrawl*"
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test the executable package
+        env:
+          PYTHONIOENCODING: utf-8
+        run: .\dist\lncrawl.exe --list-sources
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with: # See available options at https://github.com/ncipollo/release-action
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "dist/lncrawl*"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
     needs: [validate, build-windows]
     name: Linux Build & Publish
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.6
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.6
-    
-    - name: Build package
-      run: ./scripts/build.sh
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.6
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.6
 
-    - name: Test the executable package
-      run: ./dist/lncrawl --list-sources
+      - name: Build package
+        run: ./scripts/build.sh
 
-    - name: Release
-      uses: ncipollo/release-action@v1
-      if: startsWith(github.ref, 'refs/tags/')
-      with: # See available options at https://github.com/ncipollo/release-action
-        allowUpdates: true
-        artifactErrorsFailBuild: true
-        artifacts: "dist/lncrawl,dist/*.whl"
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test the executable package
+        run: ./dist/lncrawl --list-sources
 
-    - name: Update download links
-      env:
-        REBRANDLY_API_KEY: ${{ secrets.REBRANDLY_API_KEY }}
-      run: ./scripts/rebrandly.sh
+      - name: Release
+        uses: ncipollo/release-action@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with: # See available options at https://github.com/ncipollo/release-action
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "dist/lncrawl,dist/*.whl"
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Publish
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        TWINE_NON_INTERACTIVE: true
-      run: ./scripts/publish.sh
+      - name: Update download links
+        env:
+          REBRANDLY_API_KEY: ${{ secrets.REBRANDLY_API_KEY }}
+        run: ./scripts/rebrandly.sh
 
-    # - name: Create Pull Request
-    #   uses: peter-evans/create-pull-request@v3
+      - name: Publish
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_NON_INTERACTIVE: true
+        run: ./scripts/publish.sh
+
+      - name: Generate index
+        run: python ./scripts/index_gen.py
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3

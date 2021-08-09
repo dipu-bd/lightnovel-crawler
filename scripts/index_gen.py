@@ -152,7 +152,6 @@ before, supported, after = readme_text.split(SUPPORTED_SOURCE_LIST_QUE)
 supported = '\n\n<table>\n<tbody>\n'
 supported += '<tr>'
 supported += '<th></th>\n'
-supported += '<th></th>\n'
 supported += '<th>Source URL</th>\n'
 supported += '<th>Version</th>\n'
 # supported += '<th>Created At</th>\n'
@@ -164,8 +163,10 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     history_url = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s' % info['file_path']
 
     supported += '<tr>'
-    supported += '<td title="Supports searching">%s</td>\n' % ('🔍' if info['can_search'] else '')
-    supported += '<td title="Supports login">%s</td>\n' % ('🔑' if info['can_login'] else '')
+    supported += '<td>'
+    supported += '<span title="Supports searching">%s</span>' % ('🔍' if info['can_search'] else '')
+    supported += '<span title="Supports login">%s</span>' % ('🔑' if info['can_login'] else '')
+    supported += '</td>\n'
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
     supported += '<td><a href="%s">%s</a></td>\n' % (info['url'], info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
