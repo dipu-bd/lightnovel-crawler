@@ -11,8 +11,8 @@ import sys
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
-from urllib.request import Request, urlopen
 from pathlib import Path
+from urllib.request import Request, urlopen
 
 PYPI_JSON_URL = 'https://pypi.org/pypi/lightnovel-crawler/json'
 SOURCE_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/master/%s'
@@ -67,8 +67,7 @@ print('-' * 50)
 
 try:
     sys.path.insert(0, str(WORKDIR))
-    from lncrawl.sources import load_crawlers
-    from lncrawl.assets.user_agents import user_agents
+    from lncrawl.core.sources import __import_crawlers
 except ImportError:
     traceback.print_exc()
     exit(1)
@@ -110,7 +109,7 @@ def process_contributors(history):
 
 
 def process_file(py_file: Path) -> float:
-    if py_file.name[0] == '_':
+    if not py_file.name[0].isalnum():
         return 0
 
     start = time.time()
@@ -123,24 +122,36 @@ def process_file(py_file: Path) -> float:
     with open(py_file, 'rb') as f:
         md5 = hashlib.md5(f.read()).hexdigest()
 
-    for info in load_crawlers(py_file):
-        info['id'] = hashlib.md5(download_url.encode()).hexdigest()
-        info['file_path'] = str(relative_path)
-        info['url'] = download_url
+    for crawler in __import_crawlers(py_file):
+        can_login = 'login' in crawler.__dict__
+        can_logout = 'logout' in crawler.__dict__
+        can_search = 'search_novel' in crawler.__dict__
+        source_id = hashlib.md5(str(crawler).encode('utf8')).hexdigest()
+
+        info = {}
+        info['id'] = source_id
         info['md5'] = md5
+        info['url'] = download_url
+        # info['name'] = crawler.__name__
+        # info['filename'] = py_file.name
         info['version'] = history[0]['time']
         info['total_commits'] = len(history)
+        info['file_path'] = str(relative_path)
         # info['last_commit'] = history[0]
         # info['first_commit'] = history[-1]
         # info['author'] = history[-1]['author']
+        info['can_search'] = can_search
+        info['can_login'] = can_login
+        info['can_logout'] = can_logout
+        info['base_urls'] = getattr(crawler, 'base_url')
         info['contributors'] = list(set([name_alias[x['email']] for x in history]))
 
-        INDEX_DATA['crawlers'][info['id']] = info
+        INDEX_DATA['crawlers'][source_id] = info
         for url in info['base_urls']:
             if url in rejected_sources:
                 INDEX_DATA['rejected'][url] = rejected_sources[url]
             else:
-                INDEX_DATA['supported'][url] = info['id']
+                INDEX_DATA['supported'][url] = source_id
 
     return time.time() - start
 

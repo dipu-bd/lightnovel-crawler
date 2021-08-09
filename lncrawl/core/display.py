@@ -5,7 +5,6 @@ import textwrap
 from colorama import Back, Fore, Style
 
 from ..assets.icons import Icons
-from ..sources import crawler_list
 
 LINE_SIZE = 80
 ENABLE_BANNER = not Icons.isWindows
@@ -119,6 +118,7 @@ def new_version_news(latest):
 
 
 def url_supported_list():
+    from .sources import crawler_list
     print('List of %d supported sources:' % len(crawler_list))
     for url in sorted(crawler_list.keys()):
         print(Fore.LIGHTGREEN_EX, Icons.RIGHT_ARROW, url, Fore.RESET)
