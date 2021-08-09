@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 search_url = 'https://arnovel.me/?s=%s&post_type=wp-manga&author=&artist=&release='
 chapter_list_url = 'https://arnovel.me/wp-admin/admin-ajax.php'
 
+
 class ArNovelCrawler(Crawler):
     base_url = 'https://arnovel.me/'
 
