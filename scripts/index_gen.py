@@ -170,7 +170,7 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
     supported += '<td><a href="%s">%s</a></td>\n' % (info['url'], info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
-    supported += '<td><sub><sup>%s</sup></sub></td>\n' % ', '.join(sorted(info['contributors']))
+    supported += '<td>%s</td>\n' % ', '.join(sorted(info['contributors']))
     supported += '</tr>\n'
 supported += '</tbody>\n</table>\n\n'
 readme_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
