@@ -1,2 +1,3 @@
 include lncrawl/VERSION
 recursive-include lncrawl *.*
+recursive-include sources *.*

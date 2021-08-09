@@ -75,7 +75,7 @@ def start_app():
     except Exception as err:
         if os.getenv('debug_mode') == 'yes':
             raise err
-        else:
+        elif not isinstance(err, KeyError):
             error_message(err)
         # end if
     # end try

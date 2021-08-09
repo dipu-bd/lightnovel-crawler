@@ -9,6 +9,10 @@ search_url = '%s/wp-admin/admin-ajax.php?action=autosuggest&q=%s'
 
 class MtlnovelCrawler(Crawler):
     base_url = [
+        'https://www.mtlnovel.com/',
+        'https://id.mtlnovel.com/',
+        'https://fr.mtlnovel.com/',
+        'https://es.mtlnovel.com/',
         'http://www.mtlnovel.com/',
         'http://id.mtlnovel.com/',
         'http://fr.mtlnovel.com/',

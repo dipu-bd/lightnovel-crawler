@@ -199,8 +199,8 @@ class TelegramBot:
             except Exception:
                 update.message.reply_text(
                     'Sorry! I only recognize these sources:\n' +
-                    'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources'
-                )  # '\n'.join(['- %s' % x for x in crawler_list.keys()]))
+                    'https://github.com/dipu-bd/lightnovel-crawler#supported-sources'
+                )
                 update.message.reply_text(
                     'Enter something again or send /cancel to stop.')
                 return 'handle_novel_url'
