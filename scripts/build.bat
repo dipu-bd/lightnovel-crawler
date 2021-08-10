@@ -11,8 +11,8 @@ RD /S /Q "dist" "venv" "build" "lightnovel_crawler.egg-info" &
 CALL venv\Scripts\activate.bat
 
 %PIP% install -U pip wheel setuptools
-%PIP% install -r requirements-app.txt
 %PIP% install -r requirements-dev.txt
+%PIP% install -r requirements-app.txt
 
 %PY% setup.py clean bdist_wheel package
 

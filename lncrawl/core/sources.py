@@ -80,7 +80,9 @@ __index_fetch_internval_in_hours = 3
 __master_index_file_url = 'https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/sources/_index.json'
 
 __user_data_path = Path(os.path.expanduser('~')) / '.lncrawl'
-__local_data_path = Path(__file__).parent.parent.parent.absolute()
+__local_data_path = Path(__file__).parent.parent.absolute()
+if not (__local_data_path / 'sources').is_dir():
+    __local_data_path = __local_data_path.parent
 
 __current_index_data = {}
 __latest_index_data = {}
@@ -115,6 +117,7 @@ def __save_current_index_data():
 
 def __load_latest_index_data():
     global __latest_index_data
+    global __current_index_data
 
     if __is_dev_mode:
         __latest_index_data = __current_index_data
@@ -130,6 +133,7 @@ def __load_latest_index_data():
         data = __download_data(__master_index_file_url)
         __latest_index_data = json.loads(data.decode('utf8'))
         __current_index_data['last_download'] = time.time()
+        __save_current_index_data()
     except Exception as e:
         logger.warn('Could not download latest index. Error: %s', e)
         __latest_index_data = __current_index_data
@@ -145,6 +149,7 @@ def __check_updates():
 
     global __current_index_data
     __current_index_data['app'] = __latest_index_data['app']
+    __save_current_index_data()
 
     global rejected_sources
     rejected_sources = __latest_index_data['rejected']
@@ -170,6 +175,7 @@ def __save_source_data(source_id, data):
 
     global __current_index_data
     __current_index_data['crawlers'][source_id] = latest
+    __save_current_index_data()
 
     logger.debug('Source update downloaded: %s', dst_file.name)
 
@@ -281,6 +287,7 @@ def __add_crawlers_from_path(path: Path):
     if path.is_dir():
         for py_file in path.glob('**/*.py'):
             __add_crawlers_from_path(py_file)
+        return
 
     global crawler_list
     try:
