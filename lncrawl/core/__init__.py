@@ -83,6 +83,10 @@ def start_app():
     epilog()
 
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-        input('Press ENTER to exit...')
+        try:
+            input('Press ENTER to exit...')
+        except EOFError:
+            pass
+        # end try
     # end if
 # end def
