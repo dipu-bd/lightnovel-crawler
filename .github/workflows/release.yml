@@ -118,7 +118,9 @@ jobs:
         run: ./scripts/publish.sh
 
       - name: Generate index
-        run: python ./scripts/index_gen.py
+        run: |
+          pip install -r requirements-app.txt
+          python ./scripts/index_gen.py
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v3
