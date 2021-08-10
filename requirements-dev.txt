@@ -1,8 +1,7 @@
 # dev requirements
-flake8
-autopep8
-pyinstaller
+wheel
 setuptools
+pyinstaller
 pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5

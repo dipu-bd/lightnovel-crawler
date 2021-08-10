@@ -182,7 +182,14 @@ class Crawler(object):
                 and url.path.startswith(page.path))
     # end def
 
-    def __process_response(self, response) -> Response:
+    def __process_response(self, response: Response) -> Response:
+        if response.status_code == 403 and response.reason == 'Forbidden':
+            raise Exception('403 Forbidden! Could not bypass the cloudflare protection.\n'
+                            '  If you are running from your own computer, visit the link on your browser and try again later.\n'
+                            '  Sometimes, using `http` instead of `https` link may work.')
+            print('>'*10, response.status_code, response.reason)
+            return response
+
         response.raise_for_status()
         response.encoding = 'utf8'
         self.cookies.update({

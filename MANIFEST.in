@@ -1,2 +1,0 @@
-include lncrawl/VERSION
-recursive-include lncrawl *.*

@@ -75,7 +75,7 @@ def start_app():
     except Exception as err:
         if os.getenv('debug_mode') == 'yes':
             raise err
-        else:
+        elif not isinstance(err, KeyError):
             error_message(err)
         # end if
     # end try
@@ -83,6 +83,10 @@ def start_app():
     epilog()
 
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-        input('Press ENTER to exit...')
+        try:
+            input('Press ENTER to exit...')
+        except EOFError:
+            pass
+        # end try
     # end if
 # end def
