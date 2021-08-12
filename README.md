@@ -1,8 +1,8 @@
 # Lightnovel Crawler
 
-[![download win](https://img.shields.io/badge/download-lncrawl.exe-red?logo=windows)](https://rebrand.ly/lncrawl)
-[![download linux](<https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux>)](https://rebrand.ly/lncrawl-linux)
-[![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg?logo=python)](https://pypi.org/project/lightnovel-crawler)
+[![download win](https://img.shields.io/badge/download-lncrawl.exe-red?logo=windows&style=for-the-badge)](https://rebrand.ly/lncrawl)
+[![download linux](<https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux&style=for-the-badge>)](https://rebrand.ly/lncrawl-linux)
+[![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg?logo=python&style=for-the-badge)](https://pypi.org/project/lightnovel-crawler)
 <br>
 [![Build and Publish](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/release.yml/badge.svg)](https://github.com/dipu-bd/lightnovel-crawler/actions/workflows/release.yml)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
