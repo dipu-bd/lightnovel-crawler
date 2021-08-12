@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 novel_list_url = 'https://toc.qidianunderground.org/api/v1/pages/public'
 chapter_list_url = 'https://toc.qidianunderground.org/api/v1/pages/public/%s/chapters'
-chapter_body_url = 'https://vim.cx/?pasteid=%s'
+chapter_body_url = '/?pasteid=%s'
 
 
 class QidianComCrawler(Crawler):
@@ -26,6 +26,7 @@ class QidianComCrawler(Crawler):
     def __init__(self):
         super().__init__()
         self.chapter_cache = {}
+        self.set_header('Accept', 'application/json')
         self.executor = ThreadPoolExecutor(max_workers=1)
 
     @property
@@ -77,13 +78,14 @@ class QidianComCrawler(Crawler):
         from lncrawl.utils.pbincli import PasteV2
 
         url_data = urlsplit(chapter['url'])
+        pasteHost = url_data.scheme + '://' + url_data.netloc
         pasteId = url_data.query
         passphrase = url_data.fragment
 
         if pasteId in self.chapter_cache:
             soup = self.chapter_cache[pasteId]
         else:
-            data = self.get_json(chapter_body_url % pasteId)
+            data = self.get_json(pasteHost + (chapter_body_url % pasteId))
             paste = PasteV2()
             paste.setHash(passphrase)
             paste.loadJSON(data)
