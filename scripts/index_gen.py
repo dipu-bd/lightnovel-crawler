@@ -5,20 +5,17 @@ Build lightnovel-crawler source index to use for update checking.
 """
 import hashlib
 import json
-import re
 import subprocess
 import sys
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from urllib.request import Request, urlopen
+from threading import Event
+from typing import Dict
+from urllib.parse import quote_plus, unquote_plus
 
-PYPI_JSON_URL = 'https://pypi.org/pypi/lightnovel-crawler/json'
-SOURCE_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/master/%s'
-HISTORY_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s'
-SOURCE_DOWNLOAD_URL_PREFIX = 'https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/%s'
-WHEEL_RELEASE_URL = 'https://github.com/dipu-bd/lightnovel-crawler/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl'
+import cloudscraper
 
 WORKDIR = Path(__file__).parent.parent.absolute()
 
@@ -44,26 +41,34 @@ INDEX_DATA = {
 }
 
 executor = ThreadPoolExecutor(8)
+session = cloudscraper.create_scraper()
 
 # =========================================================================================== #
 # The index data
 # =========================================================================================== #
 
 print('-' * 50)
-with urlopen(PYPI_JSON_URL) as fp:
-    pypi_data = json.load(fp)
+res = session.get('https://pypi.org/pypi/lightnovel-crawler/json')
+res.raise_for_status()
+pypi_data = res.json()
+print('Latest version:', pypi_data['info']['version'])
 
-latest_version = pypi_data['info']['version']
-INDEX_DATA['app']['version'] = latest_version
+INDEX_DATA['app']['version'] = pypi_data['info']['version']
 INDEX_DATA['app']['home'] = pypi_data['info']['home_page']
 INDEX_DATA['app']['pypi'] = pypi_data['info']['release_url']
-INDEX_DATA['app']['release'] = pypi_data['releases'][latest_version]
-print('Latest version', latest_version)
 print('-' * 50)
 
 # =========================================================================================== #
 # Generate sources index
 # =========================================================================================== #
+
+SOURCE_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/master/%s'
+HISTORY_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s'
+SOURCE_DOWNLOAD_URL_PREFIX = 'https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/%s'
+WHEEL_RELEASE_URL = 'https://github.com/dipu-bd/lightnovel-crawler/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl'
+
+queue_cache_result: Dict[str, str] = {}
+queue_cache_event: Dict[str, Event] = {}
 
 try:
     sys.path.insert(0, str(WORKDIR))
@@ -76,6 +81,39 @@ assert SOURCES_FOLDER.is_dir()
 
 with open(REJECTED_FILE, encoding='utf8') as fp:
     rejected_sources = json.load(fp)
+
+print('Getting contributors...')
+res = session.get('https://api.github.com/repos/dipu-bd/lightnovel-crawler/contributors')
+res.raise_for_status()
+repo_contribs = {x['login']: x for x in res.json()}
+print('Contributors:', ', '.join(repo_contribs.keys()))
+print('-' * 50)
+
+
+def search_user_by(query):
+    if query in queue_cache_event:
+        queue_cache_event[query].wait()
+        return queue_cache_result.get(query, '')
+
+    queue_cache_event[query] = Event()
+    for _ in range(2):
+        res = session.get('https://api.github.com/search/users?q=%s' % query)
+        if res.status_code != 200:
+            current_limit = int(res.headers.get('X-RateLimit-Remaining') or '0')
+            if current_limit == 0:
+                reset_time = int(res.headers.get('X-RateLimit-Reset') or '0') - time.time()
+                print(query, ':', 'Waiting %d seconds for reset...' % reset_time)
+                time.sleep(reset_time + 2)
+            continue
+        data = res.json()
+        for item in data['items']:
+            if item['login'] in repo_contribs:
+                print('search result:', unquote_plus(query), '|', item['login'])
+                queue_cache_result[query] = item['login']
+                break
+        break
+    queue_cache_event[query].set()
+    return queue_cache_result.get(query, '')
 
 
 def git_history(file_path):
@@ -90,23 +128,24 @@ def git_history(file_path):
         traceback.print_exc()
         return {}
 
-
-name_alias = {
-    'Sudipto Chandra': 'dipu-bd',
-    'Sudipto Chandra Dipu': 'dipu-bd'
-}
-
-
 def process_contributors(history):
-    global email_to_name
+    contribs = set([])
     for data in history:
-        aN = data['author']
-        aE = data['email']
-        name_alias.setdefault(aN, aN)
-        name_alias.setdefault(aE, aN)
-        if len(aN) < len(name_alias[aE]):
-            name_alias[aE] = aN
-
+        author = data['author']
+        email = data['email']
+        if author in repo_contribs:
+            contribs.add(author)
+            continue
+        name = search_user_by(quote_plus('%s in:email' % email))
+        if name in repo_contribs:
+            contribs.add(name)
+            continue
+        name = search_user_by(quote_plus('%s in:name' % author))
+        if name in repo_contribs:
+            contribs.add(name)
+            continue
+        #contribs.add(author)
+    return list(contribs)
 
 def process_file(py_file: Path) -> float:
     if not py_file.name[0].isalnum():
@@ -117,7 +156,6 @@ def process_file(py_file: Path) -> float:
     download_url = SOURCE_DOWNLOAD_URL_PREFIX % relative_path
 
     history = git_history(relative_path)
-    process_contributors(history)
 
     with open(py_file, 'rb') as f:
         md5 = hashlib.md5(f.read()).hexdigest()
@@ -144,7 +182,7 @@ def process_file(py_file: Path) -> float:
         info['can_login'] = can_login
         info['can_logout'] = can_logout
         info['base_urls'] = getattr(crawler, 'base_url')
-        info['contributors'] = list(set([name_alias[x['email']] for x in history]))
+        info['contributors'] = process_contributors(history)
 
         INDEX_DATA['crawlers'][source_id] = info
         for url in info['base_urls']:
@@ -205,8 +243,10 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
     supported += '<td><a href="%s">%s</a></td>\n' % (source_url, info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
-    supported += '<td>%s</td>\n' % ', '.join(list(set([name_alias[x]
-                                             for x in info['contributors']])))
+    supported += '<td>%s</td>\n' % ' '.join([
+        '<a href="%s"><img src="%s&s=24" alt="%s" height="24"/></a>' % (c['html_url'], c['avatar_url'], c['login'])
+        for c in sorted([repo_contribs[x] for x in info['contributors']], key=lambda x: -x['contributions'])
+    ])
     supported += '</tr>\n'
 supported += '</tbody>\n</table>\n\n'
 readme_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
