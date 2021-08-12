@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Event
 from typing import Dict
+from datetime import datetime
 from urllib.parse import quote_plus, unquote_plus
 
 import cloudscraper
@@ -62,10 +63,9 @@ print('-' * 50)
 # Generate sources index
 # =========================================================================================== #
 
-SOURCE_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/master/%s'
-HISTORY_URL_PREFIX = 'https://github.com/dipu-bd/lightnovel-crawler/commits/master/%s'
+REPO_URL = 'https://github.com/dipu-bd/lightnovel-crawler'
 SOURCE_DOWNLOAD_URL_PREFIX = 'https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/%s'
-WHEEL_RELEASE_URL = 'https://github.com/dipu-bd/lightnovel-crawler/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl'
+WHEEL_RELEASE_URL =  REPO_URL + '/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl'
 
 queue_cache_result: Dict[str, str] = {}
 queue_cache_event: Dict[str, Event] = {}
@@ -231,9 +231,8 @@ supported += '<th>Contributors</th>\n'
 supported += '</tr>\n'
 for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0]):
     info = INDEX_DATA['crawlers'][crawler_id]
-    source_url = SOURCE_URL_PREFIX % info['file_path']
-    # history_url = HISTORY_URL_PREFIX % info['file_path']
-    # created_at = datetime.fromtimestamp(info['first_commit']['time']).strftime(DATE_FORMAT)
+    source_url = REPO_URL + '/master/' + info['file_path']
+    last_update = datetime.fromtimestamp(info['total_commits']).strftime(DATE_FORMAT)
 
     supported += '<tr>'
     supported += '<td>'
@@ -241,8 +240,7 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     supported += '<span title="Supports login">%s</span>' % ('🔑' if info['can_login'] else '')
     supported += '</td>\n'
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
-    supported += '<td><a href="%s">%s</a></td>\n' % (source_url, info['version'])
-    # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
+    supported += '<td><a href="%s" title="%s">%d</a></td>\n' % (source_url, last_update, info['total_commits'])
     supported += '<td>%s</td>\n' % ' '.join([
         '<a href="%s"><img src="%s&s=24" alt="%s" height="24"/></a>' % (c['html_url'], c['avatar_url'], c['login'])
         for c in sorted([repo_contribs[x] for x in info['contributors']], key=lambda x: -x['contributions'])
