@@ -3,12 +3,13 @@ import logging
 import re
 from urllib.parse import urlparse
 
+from bs4.element import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
 novel_search_url = '%s/search?title=%s'
-chapter_list_url = '%s/novel/%s?tab=chapters&page=%d&chorder=asc'
+chapter_list_url = '%s/chapters/page-%d'
 
 
 class LightNovelOnline(Crawler):
@@ -23,8 +24,9 @@ class LightNovelOnline(Crawler):
 
         results = []
         for a in soup.select('.novel-list .novel-item a'):
+            assert isinstance(a, Tag)
             results.append({
-                'title': a['title'].strip(),
+                'title': str(a['title']).strip(),
                 'url': self.absolute_url(a['href']),
                 'info': a.select_one('.novel-stats').text.strip(),
             })
@@ -33,7 +35,7 @@ class LightNovelOnline(Crawler):
     # end def
 
     def read_novel_info(self):
-        self.novel_url = '%s%s' % (self.home_url, urlparse(self.novel_url).path)
+        self.novel_url = self.home_url + re.findall('/(novel/[^/]+)/', self.novel_url)[0]
 
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -41,16 +43,9 @@ class LightNovelOnline(Crawler):
         self.novel_title = soup.select_one('.novel-info .novel-title').text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_id = urlparse(self.novel_url).path.split('/')[-1]
-        logger.info('Novel id: %s', self.novel_id)
-
-        self.verificationToken = soup.select_one(
-            'input[name="__RequestVerificationToken"]')['value']
-        logger.info('Verification token: %s', self.verificationToken)
-
         try:
             self.novel_cover = self.absolute_url(
-                soup.select_one('.novel-header .cover img')['data-src'])
+                soup.select_one('.glass-background img')['src'])
         except Exception as err:
             logger.debug('Failed to parse novel cover. Error: %s', err)
         # end try
@@ -63,63 +58,45 @@ class LightNovelOnline(Crawler):
         # end try
         logger.info('Novel author: %s', self.novel_author)
 
+        logger.info('Getting chapters...')
+        soup = self.get_soup(chapter_list_url % (self.novel_url, 1))
         try:
             last_page = soup.select_one('.PagedList-skipToLast a')
             if not last_page:
-                last_page = soup.select('.pagination li a:not([rel="next"])')[-1]
-            page_count = int(re.findall(r'page=(\d+)', last_page['href'])[0])
+                paginations = soup.select('.pagination li a[href*="/chapters/page"]')
+                last_page = paginations[-2] if len(paginations) > 1 else paginations[0]
+            assert isinstance(last_page, Tag)
+            page_count = int(re.findall(r'/page-(\d+)', str(last_page['href']))[0])
         except Exception as err:
             logger.debug('Failed to parse page count. Error: %s', err)
             page_count = 0
         logger.info('Total pages: %d', page_count)
 
-        logger.info('Getting chapters...')
         futures = [
-            self.executor.submit(self.extract_chapter_list, i + 1)
-            for i in range(page_count + 1)
+            self.executor.submit(self.get_soup, chapter_list_url % (self.novel_url, p))
+            for p in range(2, page_count + 1)
         ]
+        page_soups = [soup] + [f.result() for f in futures]
 
-        volumes = set([])
-        for f in futures:
-            for chap in f.result():
-                chap['id'] = len(self.chapters) + 1
-                chap['volume'] = len(self.chapters) // 100 + 1
-                self.chapters.append(chap)
-                volumes.add(chap['volume'])
+        for soup in page_soups:
+            vol_id = len(self.volumes) + 1
+            self.volumes.append({'id': vol_id})
+            for a in soup.select('ul.chapter-list li a'):
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'title': a['title'],
+                    'url': self.absolute_url(a['href']),
+                })
             # end for
         # end for
-
-        self.volumes = [{'id': x} for x in volumes]
-    # end def
-
-    def extract_chapter_list(self, page):
-        response = self.submit_form(
-            chapter_list_url % (self.home_url, self.novel_id, page),
-            data='X-Requested-With=XMLHttpRequest',
-            headers={
-                'requestverificationtoken': self.verificationToken,
-                'origin': self.home_url,
-            },
-        )
-        soup = self.make_soup(response)
-
-        temp_list = []
-        for li in soup.select('.chapter-list li'):
-            a = li.select_one('a')
-            temp_list.append({
-                'title': a['title'],
-                'url': self.absolute_url(a['href']),
-            })
-        # end for
-        return temp_list
     # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        body = soup.select_one('.chapter-content')
-        for ads in body.select('div[class*="ad"], script, ins, p[class]'):
-            ads.extract()
-        # end for
+        body = soup.select_one('#chapter-container')
+        self.bad_css += ['.adsbox', 'p[class]', '.ad', 'p:nth-child(1) > strong']
         return self.extract_contents(body)
     # end def
 # end class
