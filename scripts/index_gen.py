@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from threading import Event
 from typing import Dict
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, unquote_plus
 
 import cloudscraper
 
@@ -93,7 +93,7 @@ print('-' * 50)
 def search_user_by(query):
     if query in queue_cache_event:
         queue_cache_event[query].wait()
-        return queue_cache_result[query]
+        return queue_cache_result.get(query, '')
 
     queue_cache_event[query] = Event()
     for _ in range(2):
@@ -101,18 +101,19 @@ def search_user_by(query):
         if res.status_code != 200:
             current_limit = int(res.headers.get('X-RateLimit-Remaining') or '0')
             if current_limit == 0:
-                reset_time = int(time.time()) - int(res.headers.get('X-RateLimit-Reset') or '0')
+                reset_time = int(res.headers.get('X-RateLimit-Reset') or '0') - time.time()
                 print(query, ':', 'Waiting %d seconds for reset...' % reset_time)
                 time.sleep(reset_time + 2)
             continue
         data = res.json()
         for item in data['items']:
             if item['login'] in repo_contribs:
+                print('search result:', unquote_plus(query), '|', item['login'])
                 queue_cache_result[query] = item['login']
                 break
         break
     queue_cache_event[query].set()
-    return queue_cache_result.get(query)
+    return queue_cache_result.get(query, '')
 
 
 def git_history(file_path):
