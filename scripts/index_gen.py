@@ -244,7 +244,7 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     supported += '<td><a href="%s">%s</a></td>\n' % (source_url, info['version'])
     # supported += '<td><a href="%s">%s</a></td>\n' % (history_url, created_at)
     supported += '<td>%s</td>\n' % ' '.join([
-        '<a href="%s" target="_blank"><img src="%s&s=24" alt="%s" height="24"/></a>' % (c['html_url'], c['avatar_url'], c['login'])
+        '<a href="%s"><img src="%s&s=24" alt="%s" height="24"/></a>' % (c['html_url'], c['avatar_url'], c['login'])
         for c in sorted([repo_contribs[x] for x in info['contributors']], key=lambda x: -x['contributions'])
     ])
     supported += '</tr>\n'
