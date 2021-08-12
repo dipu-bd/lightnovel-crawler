@@ -231,7 +231,7 @@ supported += '<th>Contributors</th>\n'
 supported += '</tr>\n'
 for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0]):
     info = INDEX_DATA['crawlers'][crawler_id]
-    source_url = REPO_URL + '/master/' + info['file_path']
+    source_url = REPO_URL + '/blob/master/' + info['file_path']
     last_update = datetime.fromtimestamp(info['version']).strftime(DATE_FORMAT)
 
     supported += '<tr>'
