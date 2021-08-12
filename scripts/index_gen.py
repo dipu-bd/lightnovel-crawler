@@ -194,7 +194,7 @@ def process_file(py_file: Path) -> float:
 
 
 futures = {}
-for py_file in sorted(SOURCES_FOLDER.glob('**/*.py'))[:10]:
+for py_file in sorted(SOURCES_FOLDER.glob('**/*.py')):
     futures[py_file] = executor.submit(process_file, py_file)
 for py_file, future in futures.items():
     print('> %-40s' % py_file.name, end='')
