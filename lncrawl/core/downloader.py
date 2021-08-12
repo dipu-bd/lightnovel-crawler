@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 def download_image(app, url):
+    assert isinstance(url, str)
     if len(url) > 1000 or url.startswith('data:'):
         content = base64.b64decode(url.split('base64,')[-1])
     else:
@@ -33,34 +34,35 @@ def download_image(app, url):
 
 
 def download_cover(app):
-    image_url = app.crawler.novel_cover
-    if not image_url:
-        image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
-    # end if
-
     filename = None
-    try:
-        filename = os.path.join(app.output_path, 'cover.png')
-        if os.path.exists(filename):
-            return filename
-        # end if
-    except Exception as ex:
-        logger.warn('Failed to locate cover image: %s -> %s (%s)',
-                    image_url, app.output_path, str(ex))
-        return None
-    # end try
+    filename = os.path.join(app.output_path, 'cover.png')
+    if os.path.exists(filename):
+        return filename
 
+    logger.info('Downloading original cover image...')
+    image_url = app.crawler.novel_cover
     try:
-        logger.info('Downloading cover image...')
         img = download_image(app, image_url)
         img.save(filename, 'PNG')
         logger.debug('Saved cover: %s', filename)
         return filename
     except Exception as ex:
-        logger.warn('Failed to download cover image: %s -> %s (%s)',
+        logger.warn('Failed to download original cover image: %s -> %s (%s)',
                     image_url, filename, str(ex))
-        return None
     # end try
+    
+    logger.info('Downloading fallback cover image...')
+    image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
+    try:
+        img = download_image(app, image_url)
+        img.save(filename, 'PNG')
+        logger.debug('Saved cover: %s', filename)
+        return filename
+    except Exception as ex:
+        logger.warn('Failed to download fallback cover image: %s -> %s (%s)',
+                    image_url, filename, str(ex))
+    # end try
+    return None
 # end def
 
 
