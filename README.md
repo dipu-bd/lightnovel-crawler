@@ -380,6 +380,11 @@ You are very welcome to contribute in this project. You can:
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/tiknovel.py" title="26 July 2021 03:00:14 AM">7</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
+<tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
+<td><a href="http://wnmtl.org/" target="_blank">http://wnmtl.org/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wnmtl.py" title="13 August 2021 01:24:16 AM">10</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
+</tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="http://wspadancewichita.com/" target="_blank">http://wspadancewichita.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wspadancewichita.py" title="28 July 2021 12:45:29 AM">21</a></td>
@@ -419,6 +424,11 @@ You are very welcome to contribute in this project. You can:
 <td><a href="http://www.tiknovel.com/" target="_blank">http://www.tiknovel.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/9kqw.py" title="26 July 2021 03:00:14 AM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
+</tr>
+<tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
+<td><a href="http://www.wnmtl.org/" target="_blank">http://www.wnmtl.org/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wnmtl.py" title="13 August 2021 01:24:16 AM">10</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="http://zenithnovels.com/" target="_blank">http://zenithnovels.com/</a></td>
@@ -1057,7 +1067,7 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://wnmtl.org/" target="_blank">https://wnmtl.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wnmtl.py" title="02 August 2021 01:00:42 PM">9</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wnmtl.py" title="13 August 2021 01:24:16 AM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
@@ -1362,7 +1372,7 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.wnmtl.org/" target="_blank">https://www.wnmtl.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wnmtl.py" title="02 August 2021 01:00:42 PM">9</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wnmtl.py" title="13 August 2021 01:24:16 AM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
