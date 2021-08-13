@@ -15,6 +15,8 @@ class WNMTLCrawler(Crawler):
     base_url = [
         'https://www.wnmtl.org/',
         'https://wnmtl.org/',
+        'http://www.wnmtl.org/',
+        'http://wnmtl.org/',
     ]
 
     # NOTE: Disabled because it takes too long to responsd
