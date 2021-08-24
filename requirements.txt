@@ -19,7 +19,7 @@ cloudscraper>=1.2.58
 lxml>=4.0.0,<5.0.0
 questionary>=1.6.0
 prompt-toolkit~=2.0
-html5lib~=1.0
+html5lib~=1.1
 base58~=2.1.0
 
 # dev requirements
