@@ -1,14 +1,10 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
-from urllib.parse import urlparse
 from lncrawl.core.crawler import Crawler
 from bs4 import Comment
 
 logger = logging.getLogger(__name__)
 search_url = "https://morenovel.net/?s=%s&post_type=wp-manga&author=&artist=&release="
-chapter_list_url = "https://morenovel.net/wp-admin/admin-ajax.php"
 
 
 class ListNovelCrawler(Crawler):
@@ -63,9 +59,7 @@ class ListNovelCrawler(Crawler):
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
         logger.info("Novel id: %s", self.novel_id)
 
-        response = self.submit_form(
-            chapter_list_url, data="action=manga_get_chapters&manga=" + self.novel_id
-        )
+        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
