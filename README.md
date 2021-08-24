@@ -947,7 +947,7 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://readnovelfull.com/" target="_blank">https://readnovelfull.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/readnovelfull.py" title="28 July 2021 12:45:29 AM">62</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/readnovelfull.py" title="24 August 2021 05:10:05 PM">63</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
