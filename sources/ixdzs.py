@@ -64,7 +64,6 @@ class IxdzsCrawler(Crawler):
                     'url': url,
                     'volume': vol_id
                 })
-            logger.info(f"{len(self.chapters)} chapters and {len(self.volumes)} volumes found")
     # end def
 
     def download_chapter_body(self, chapter):
@@ -72,7 +71,6 @@ class IxdzsCrawler(Crawler):
         logger.info(f"Downloading {chapter['url']}")
         soup = self.get_soup(chapter['url'])
 
-        chapter['body_lock'] = True
         content = soup.select("article.page-content section p")
         content = '\n'.join(str(p) for p in content)
         

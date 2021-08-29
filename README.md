@@ -1419,11 +1419,6 @@ You are very welcome to contribute in this project. You can:
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/zinnovel.py" title="16 July 2021 02:11:58 PM">7</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
-<tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
-<td><a href="https://tw.m.ixdzs.com/" target="_blank">https://tw.m.ixdzs.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/ixdzs.py" title="28 August 2021 03:26:00 PM">1</a></td>
-<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/junqili259"><img src="https://avatars.githubusercontent.com/u/39481617?s=60&v=4" alt="junqili259" height="24"/></a></td>
-</tr>
 </tbody>
 </table>
 
