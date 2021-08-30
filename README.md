@@ -14,7 +14,6 @@
 <!-- [![AppVeyor](https://img.shields.io/appveyor/build/dipu-bd/lightnovel-crawler?logo=appveyor)](https://ci.appveyor.com/project/dipu-bd/lightnovel-crawler) -->
 <!-- [![travis-ci](https://travis-ci.com/dipu-bd/lightnovel-crawler.svg?branch=master)](https://travis-ci.com/dipu-bd/lightnovel-crawler) -->
 
-
 An app to download novels from online sources and generate e-books.
 
 > **Discord: [https://discord.gg/wMECG2Q](https://discord.gg/wMECG2Q)**

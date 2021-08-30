@@ -363,5 +363,8 @@ test_user_inputs = {
     ],
     'https://www.wnmtl.org/': [
         'https://www.wnmtl.org/novel/the-amber-sword/'
+    ],
+    'https://tw.m.ixdzs.com/': [
+        'https://tw.m.ixdzs.com/novel/%E6%88%91%E7%95%B6%E9%99%B0%E9%99%BD%E5%85%88%E7%94%9F%E7%9A%84%E9%82%A3%E5%B9%BE%E5%B9%B4'
     ]
 }
