@@ -76,7 +76,7 @@ class FoxaholicCrawler(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.reading-content')
+        contents = soup.select_one('.reading-content')
         # all_imgs = soup.find_all('img')
         # for img in all_imgs:
         #     if img.has_attr('loading'):
