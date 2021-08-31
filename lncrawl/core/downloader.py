@@ -183,10 +183,7 @@ def download_content_image(app, url, filename):
         img = download_image_requests(app, url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
-            if url.endswith('.png'):
-                img.save(f, "PNG")
-            else:
-                img.save(f, "JPEG")
+            img.convert('RGB').save(f, map_image_extension(str(url).split('.')[-1].lower()))
             logger.debug('Saved image: %s', image_file)
         # end with
         return filename
@@ -200,6 +197,18 @@ def download_content_image(app, url, filename):
 
 # end def
 
+def map_image_extension(ext):
+    img_type = ''
+
+    if ext == 'jpg':
+        img_type = 'JPEG'
+    elif ext == 'png':
+        img_type = 'PNG'
+
+    return img_type
+
+
+# end def
 
 def download_chapters(app):
     app.progress = 0
@@ -257,10 +266,8 @@ def download_chapter_images(app):
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
-            if full_url.endswith('.png'):
-                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.png'
-            else:
-                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
+            filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
+                                        str(str(full_url).split('.')[-1]).split('?')[0].lower())
             future = app.crawler.executor.submit(download_content_image, app, full_url, filename)
             futures_to_check.setdefault(chapter['id'], [])
             futures_to_check[chapter['id']].append(future)
@@ -292,7 +299,8 @@ def download_chapter_images(app):
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
-            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
+            filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
+                                        str(str(app.crawler.absolute_url(img['src'], page_url=chapter['url'])).split('.')[-1]).split('?')[0].lower())
             if filename in images:
                 img.attrs = {'src': 'images/%s' % filename, 'alt': filename}
                 # img['style'] = 'float: left; margin: 15px; width: 100%;'

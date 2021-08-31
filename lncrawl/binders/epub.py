@@ -24,6 +24,8 @@ def make_cover_image(app):
         cover_image.content = image_file.read()
     # end with
     return cover_image
+
+
 # end def
 
 
@@ -75,6 +77,8 @@ def make_intro_page(app, cover_image):
         title='Intro',
         content=intro_html,
     )
+
+
 # end def
 
 
@@ -107,6 +111,8 @@ def make_chapters(book, chapters):
         # end if
     # end for
     book.toc = tuple(toc)
+
+
 # end def
 
 
@@ -116,12 +122,12 @@ def make_chapter_images(book, image_output_path):
     # end if
 
     for filename in os.listdir(image_output_path):
-        if not filename.endswith('.jpg'):
+        if not (filename.endswith('.jpg') or filename.endswith('.png')):
             continue
         # end if
 
         image_item = epub.EpubImage()
-        image_item.media_type = 'image/jpeg'
+        image_item.media_type = map_image_extension_to_type(filename)
         image_item.file_name = 'images/' + filename
         with open(os.path.join(image_output_path, filename), 'rb') as fp:
             image_item.content = fp.read()
@@ -129,6 +135,21 @@ def make_chapter_images(book, image_output_path):
 
         book.add_item(image_item)
     # end for
+
+
+# end def
+
+def map_image_extension_to_type(ext):
+    img_type = ''
+
+    if ext.endswith('.jpg') == 'jpg':
+        img_type = 'image/jpeg'
+    elif ext.endswith('.png') == 'png':
+        img_type = 'image/png'
+
+    return img_type
+
+
 # end def
 
 
@@ -182,6 +203,8 @@ def bind_epub_book(app, chapters, volume=''):
     epub.write_epub(file_path, book, {})
     print('Created: %s.epub' % file_name)
     return file_path
+
+
 # end def
 
 
