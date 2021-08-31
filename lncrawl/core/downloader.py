@@ -157,8 +157,9 @@ def save_chapter_body(app, chapter):
     file_name = get_chapter_filename(app, chapter)
 
     title = chapter['title'].replace('>', '&gt;').replace('<', '&lt;')
-    chapter['body'] = '<h1>%s</h1>\n%s' % (title, chapter['body'])
-    if get_args().add_source_url:
+    if title not in chapter['body']:
+        chapter['body'] = '<h1>%s</h1>\n%s' % (title, chapter['body'])
+    if get_args().add_source_url and chapter['url'] not in chapter['body']:
         chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
             chapter['url'], chapter['url'])
     # end if
