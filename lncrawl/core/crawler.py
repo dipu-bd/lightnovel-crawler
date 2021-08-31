@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse
 
 import cloudscraper
+import requests
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 from requests import Response, Session
@@ -212,6 +213,25 @@ class Crawler(object):
         #headers.setdefault('user-agent', random.choice(user_agents))
 
         response: Response = self.scraper.get(url, **kargs)
+        self.last_visited_url = url.strip('/')
+        return self.__process_response(response)
+    # end def
+
+    def get_requests_response(self, url, **kargs) -> Response:
+        if self._destroyed:
+            raise Exception('Instance is detroyed')
+        # end if
+
+        kargs = kargs or dict()
+        #kargs.setdefault('verify', False)
+        #kargs.setdefault('allow_redirects', True)
+        kargs.setdefault('timeout', 150)  # in seconds
+        headers = kargs.setdefault('headers', {})
+        headers = {k.lower(): v for k, v in headers.items()}
+        #headers.setdefault('user-agent', random.choice(user_agents))
+        kargs.setdefault('verify', True)
+
+        response: Response = requests.get(url, **kargs)
         self.last_visited_url = url.strip('/')
         return self.__process_response(response)
     # end def

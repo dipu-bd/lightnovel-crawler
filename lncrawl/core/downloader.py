@@ -30,8 +30,25 @@ def download_image(app, url):
         content = response.content
     # end if
     return Image.open(BytesIO(content))
+
+
 # end def
 
+def download_image_requests(app, url):
+    assert isinstance(url, str)
+    if len(url) > 1000 or url.startswith('data:'):
+        content = base64.b64decode(url.split('base64,')[-1])
+    else:
+        logger.info('Downloading image: ' + url)
+        response = app.crawler.get_requests_response(url, headers={
+            'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
+        })
+        content = response.content
+    # end if
+    return Image.open(BytesIO(content))
+
+
+# end def
 
 def download_cover(app):
     filename = None
@@ -50,7 +67,7 @@ def download_cover(app):
         logger.warn('Failed to download original cover image: %s -> %s (%s)',
                     image_url, filename, str(ex))
     # end try
-    
+
     logger.info('Downloading fallback cover image...')
     image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
     try:
@@ -63,6 +80,8 @@ def download_cover(app):
                     image_url, filename, str(ex))
     # end try
     return None
+
+
 # end def
 
 
@@ -97,6 +116,8 @@ def download_chapter_body(app, chapter):
 
     app.progress += 1
     return result
+
+
 # end def
 
 
@@ -109,6 +130,8 @@ def get_chapter_filename(app, chapter):
 
     chapter_name = str(chapter['id']).rjust(5, '0')
     return os.path.join(dir_name, chapter_name + '.json')
+
+
 # end def
 
 
@@ -125,6 +148,8 @@ def read_chapter_body(app, chapter):
     # end if
 
     return chapter['body']
+
+
 # end def
 
 
@@ -142,6 +167,8 @@ def save_chapter_body(app, chapter):
     with open(file_name, 'w', encoding="utf-8") as file:
         file.write(json.dumps(chapter, ensure_ascii=False))
     # end with
+
+
 # end def
 
 
@@ -153,10 +180,13 @@ def download_content_image(app, url, filename):
             return filename
         # end if
 
-        img = download_image(app, url)
+        img = download_image_requests(app, url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
-            img.save(f, "JPEG")
+            if url.endswith('.png'):
+                img.save(f, "PNG")
+            else:
+                img.save(f, "JPEG")
             logger.debug('Saved image: %s', image_file)
         # end with
         return filename
@@ -166,6 +196,8 @@ def download_content_image(app, url, filename):
     finally:
         app.progress += 1
     # end try
+
+
 # end def
 
 
@@ -201,6 +233,8 @@ def download_chapters(app):
 
     bar.close()
     print('Processed %d chapters' % len(app.chapters))
+
+
 # end def
 
 
@@ -222,8 +256,11 @@ def download_chapter_images(app):
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
-            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
+            if full_url.endswith('.png'):
+                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.png'
+            else:
+                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             future = app.crawler.executor.submit(download_content_image, app, full_url, filename)
             futures_to_check.setdefault(chapter['id'], [])
             futures_to_check[chapter['id']].append(future)
@@ -258,7 +295,7 @@ def download_chapter_images(app):
             filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             if filename in images:
                 img.attrs = {'src': 'images/%s' % filename, 'alt': filename}
-                #img['style'] = 'float: left; margin: 15px; width: 100%;'
+                # img['style'] = 'float: left; margin: 15px; width: 100%;'
             else:
                 img.extract()
             # end if
