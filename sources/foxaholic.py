@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
+import base64
 import logging
-import re
-from urllib.parse import urlparse
+from io import BytesIO
+
+import requests
+from PIL import Image
+from requests import Response
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -30,6 +34,7 @@ class FoxaholicCrawler(Crawler):
         # end for
 
         return results
+
     # end def
 
     def read_novel_info(self):
@@ -67,9 +72,10 @@ class FoxaholicCrawler(Crawler):
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
+                'url': self.absolute_url(a['href']),
             })
         # end for
+
     # end def
 
     def download_chapter_body(self, chapter):
@@ -86,5 +92,22 @@ class FoxaholicCrawler(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
         return self.extract_contents(contents)
+
     # end def
+
+    def download_image(self, url):
+        assert isinstance(url, str)
+        if len(url) > 1000 or url.startswith('data:'):
+            content = base64.b64decode(url.split('base64,')[-1])
+        else:
+            logger.info('Downloading image: ' + url)
+            response = requests.get(url, headers={
+                'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
+            })
+            content = response.content
+        # end if
+        return Image.open(BytesIO(content))
+
+    # end def
+
 # end class

@@ -18,38 +18,6 @@ from ..core.arguments import get_args
 logger = logging.getLogger(__name__)
 
 
-def download_image(app, url):
-    assert isinstance(url, str)
-    if len(url) > 1000 or url.startswith('data:'):
-        content = base64.b64decode(url.split('base64,')[-1])
-    else:
-        logger.info('Downloading image: ' + url)
-        response = app.crawler.get_response(url, headers={
-            'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
-        })
-        content = response.content
-    # end if
-    return Image.open(BytesIO(content))
-
-
-# end def
-
-def download_image_requests(app, url):
-    assert isinstance(url, str)
-    if len(url) > 1000 or url.startswith('data:'):
-        content = base64.b64decode(url.split('base64,')[-1])
-    else:
-        logger.info('Downloading image: ' + url)
-        response = app.crawler.get_requests_response(url, headers={
-            'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
-        })
-        content = response.content
-    # end if
-    return Image.open(BytesIO(content))
-
-
-# end def
-
 def download_cover(app):
     filename = None
     filename = os.path.join(app.output_path, 'cover.png')
@@ -59,7 +27,7 @@ def download_cover(app):
     logger.info('Downloading original cover image...')
     image_url = app.crawler.novel_cover
     try:
-        img = download_image(app, image_url)
+        img = app.crawler.download_image(image_url)
         img.save(filename, 'PNG')
         logger.debug('Saved cover: %s', filename)
         return filename
@@ -71,7 +39,7 @@ def download_cover(app):
     logger.info('Downloading fallback cover image...')
     image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
     try:
-        img = download_image(app, image_url)
+        img = app.crawler.download_image(image_url)
         img.save(filename, 'PNG')
         logger.debug('Saved cover: %s', filename)
         return filename
@@ -181,7 +149,7 @@ def download_content_image(app, url, filename):
             return filename
         # end if
 
-        img = download_image_requests(app, url)
+        img = app.crawler.download_image(url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
             img.convert('RGB').save(f, map_image_extension(str(url).split('.')[-1].lower()))
