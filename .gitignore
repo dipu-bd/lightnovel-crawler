@@ -24,5 +24,4 @@ save_pid.txt
 client_secrets.json
 /lightnovel-crawler-*
 __pycache__/
-venv/
-.idea
+.idea/

@@ -21,6 +21,7 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 from requests import Response, Session
 
+from .arguments import get_args
 from ..assets.user_agents import user_agents
 
 logger = logging.getLogger(__name__)
@@ -79,6 +80,7 @@ class Crawler(object):
         self.home_url = ''
         self.novel_url = ''
         self.last_visited_url = None
+        self.include_png = get_args().include_png
     # end def
 
     # ------------------------------------------------------------------------- #

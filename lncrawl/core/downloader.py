@@ -2,18 +2,15 @@
 """
 To download chapter bodies
 """
-import base64
 import hashlib
 import json
 import logging
 import os
 import time
-from io import BytesIO
 
-from PIL import Image
 from tqdm import tqdm
 
-from ..core.arguments import get_args
+from .arguments import get_args
 
 logger = logging.getLogger(__name__)
 
@@ -48,8 +45,6 @@ def download_cover(app):
                     image_url, filename, str(ex))
     # end try
     return None
-
-
 # end def
 
 
@@ -84,8 +79,6 @@ def download_chapter_body(app, chapter):
 
     app.progress += 1
     return result
-
-
 # end def
 
 
@@ -98,8 +91,6 @@ def get_chapter_filename(app, chapter):
 
     chapter_name = str(chapter['id']).rjust(5, '0')
     return os.path.join(dir_name, chapter_name + '.json')
-
-
 # end def
 
 
@@ -116,8 +107,6 @@ def read_chapter_body(app, chapter):
     # end if
 
     return chapter['body']
-
-
 # end def
 
 
@@ -136,8 +125,6 @@ def save_chapter_body(app, chapter):
     with open(file_name, 'w', encoding="utf-8") as file:
         file.write(json.dumps(chapter, ensure_ascii=False))
     # end with
-
-
 # end def
 
 
@@ -152,7 +139,10 @@ def download_content_image(app, url, filename):
         img = app.crawler.download_image(url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
-            img.convert('RGB').save(f, map_image_extension(str(url).split('.')[-1].lower()))
+            if app.crawler.include_png:
+                img.convert('RGB').save(f, map_image_extension(str(url).split('.')[-1].lower()))
+            else:
+                img.save(f, "JPEG")
             logger.debug('Saved image: %s', image_file)
         # end with
         return filename
@@ -162,12 +152,10 @@ def download_content_image(app, url, filename):
     finally:
         app.progress += 1
     # end try
-
-
 # end def
 
 def map_image_extension(ext):
-    img_type = ''
+    img_type = 'JPEG'
 
     if ext == 'jpg':
         img_type = 'JPEG'
@@ -175,8 +163,6 @@ def map_image_extension(ext):
         img_type = 'PNG'
 
     return img_type
-
-
 # end def
 
 def download_chapters(app):
@@ -211,8 +197,6 @@ def download_chapters(app):
 
     bar.close()
     print('Processed %d chapters' % len(app.chapters))
-
-
 # end def
 
 
@@ -235,8 +219,11 @@ def download_chapter_images(app):
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
-            filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
-                                        str(str(full_url).split('.')[-1]).split('?')[0].lower())
+            if app.crawler.include_png:
+                filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
+                                            str(str(full_url).split('.')[-1]).split('?')[0].lower())
+            else:
+                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             future = app.crawler.executor.submit(download_content_image, app, full_url, filename)
             futures_to_check.setdefault(chapter['id'], [])
             futures_to_check[chapter['id']].append(future)
@@ -268,8 +255,12 @@ def download_chapter_images(app):
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
-            filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
-                                        str(str(app.crawler.absolute_url(img['src'], page_url=chapter['url'])).split('.')[-1]).split('?')[0].lower())
+            if app.crawler.include_png:
+                full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
+                filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
+                                            str(str(full_url).split('.')[-1]).split('?')[0].lower())
+            else:
+                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             if filename in images:
                 img.attrs = {'src': 'images/%s' % filename, 'alt': filename}
                 # img['style'] = 'float: left; margin: 15px; width: 100%;'
