@@ -135,9 +135,6 @@ _builder = Args(group=[
     Args('--resume',  dest='resume', nargs='?', default=argparse.SUPPRESS,
          metavar='NAME/URL', help='Resume download of a novel containing in ' + C.DEFAULT_OUTPUT_PATH),
 
-    Args('--include-png', action='store_true',
-         help='Include PNG format image and also force image to saved in RGB mode'),
-
     Args('extra', type=parse_qs, nargs='?', metavar='ENV', default=dict(),
          help='[chatbots only] Pass query string at the end of all options. '
          'It will be use instead of .env file. '

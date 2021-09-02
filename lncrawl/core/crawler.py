@@ -80,7 +80,6 @@ class Crawler(object):
         self.home_url = ''
         self.novel_url = ''
         self.last_visited_url = None
-        self.include_png = get_args().include_png
     # end def
 
     # ------------------------------------------------------------------------- #

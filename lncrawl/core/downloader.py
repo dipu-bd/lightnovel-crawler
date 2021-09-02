@@ -139,10 +139,7 @@ def download_content_image(app, url, filename):
         img = app.crawler.download_image(url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
-            if app.crawler.include_png:
-                img.convert('RGB').save(f, map_image_extension(str(url).split('.')[-1].lower()))
-            else:
-                img.save(f, "JPEG")
+            img.convert('RGB').save(f, "JPEG")
             logger.debug('Saved image: %s', image_file)
         # end with
         return filename
@@ -152,17 +149,6 @@ def download_content_image(app, url, filename):
     finally:
         app.progress += 1
     # end try
-# end def
-
-def map_image_extension(ext):
-    img_type = 'JPEG'
-
-    if ext == 'jpg':
-        img_type = 'JPEG'
-    elif ext == 'png':
-        img_type = 'PNG'
-
-    return img_type
 # end def
 
 def download_chapters(app):
@@ -219,11 +205,7 @@ def download_chapter_images(app):
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
-            if app.crawler.include_png:
-                filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
-                                            str(str(full_url).split('.')[-1]).split('?')[0].lower())
-            else:
-                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
+            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             future = app.crawler.executor.submit(download_content_image, app, full_url, filename)
             futures_to_check.setdefault(chapter['id'], [])
             futures_to_check[chapter['id']].append(future)
@@ -255,12 +237,7 @@ def download_chapter_images(app):
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
-            if app.crawler.include_png:
-                full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
-                filename = '{0}.{1}'.format(hashlib.md5(img['src'].encode()).hexdigest(),
-                                            str(str(full_url).split('.')[-1]).split('?')[0].lower())
-            else:
-                filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
+            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             if filename in images:
                 img.attrs = {'src': 'images/%s' % filename, 'alt': filename}
                 # img['style'] = 'float: left; margin: 15px; width: 100%;'
