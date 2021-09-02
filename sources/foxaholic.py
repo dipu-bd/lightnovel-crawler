@@ -5,7 +5,6 @@ from io import BytesIO
 
 import requests
 from PIL import Image
-from requests import Response
 
 from lncrawl.core.crawler import Crawler
 

@@ -8,11 +8,11 @@ import logging
 import random
 import re
 import sys
-from io import BytesIO
-from typing import Dict, List
 import unicodedata
 from abc import abstractmethod
 from concurrent.futures import ThreadPoolExecutor
+from io import BytesIO
+from typing import Dict, List
 from urllib.parse import urlparse
 
 import cloudscraper
@@ -21,7 +21,6 @@ from bs4 import BeautifulSoup
 from bs4.element import Comment
 from requests import Response, Session
 
-from .arguments import get_args
 from ..assets.user_agents import user_agents
 
 logger = logging.getLogger(__name__)
