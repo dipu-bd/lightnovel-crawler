@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
+from bs4.element import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -9,22 +8,29 @@ search_url = 'https://www.readlightnovel.org/search/autocomplete'
 
 
 class ReadLightNovelCrawler(Crawler):
-    base_url = 'https://www.readlightnovel.org/'
+    base_url = [
+        'https://readlightnovel.org/',
+        'https://www.readlightnovel.org/',
+    ]
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.block-title h1').text
+        possible_title = soup.select_one('.block-title h1')
+        assert isinstance(possible_title, Tag), 'Novel title is not found'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.find('img', {'alt': self.novel_title})['src'])
+        possible_cover = soup.find('img', {'alt': self.novel_title})
+        if isinstance(possible_cover, Tag):
+            self.novel_cover = self.absolute_url(possible_cover['src'])
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
-
+        
         author_link = soup.select_one("a[href*=author]")
-        if author_link:
+        if isinstance(author_link, Tag):
             self.novel_author = author_link.text.strip().title()
         # end if
         logger.info('Novel author: %s', self.novel_author)
@@ -51,33 +57,29 @@ class ReadLightNovelCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
 
         div = soup.select_one('.chapter-content3 .desc')
+        assert isinstance(div, Tag)
 
-        bad_selectors = [
+        possible_title = div.select_one('h3')
+        if isinstance(possible_title, Tag):
+            chapter['title'] = possible_title.text.strip()
+        # end if
+
+        self.bad_css += [
+            'h3',
             '.trinity-player-iframe-wrapper'
             '.hidden',
             '.ads-title',
-            'script',
             'center',
             'interaction',
+            'p.hid',
             'a[href*=remove-ads]',
             'a[target=_blank]',
-            'hr',
-            'br',
-            '#growfoodsmart'
+            '#growfoodsmart',
+            '#chapterhidden',
+            'div[style*="float:left;margin-top:15px;"]',
+            'div[style*="float: left; margin-top: 20px;"]',
         ]
-        for hidden in div.select(', '.join(bad_selectors)):
-            hidden.extract()
-        # end for
 
-        body = self.extract_contents(div)
-        if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):
-            title = body[0].replace('<strong>', '').replace(
-                '</strong>', '').strip()
-            title = ('C' if title.startswith('hapter') else '') + title
-            chapter['title'] = title.strip()
-            body = body[1:]
-        # end if
-
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        return self.extract_contents(div)
     # end def
 # end class
