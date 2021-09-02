@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 book_info_url = 'https://www.webnovel.com/book/%s'
 chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
 book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
-chapter_list_url = 'https://www.webnovel.com/apiajax/chapter/GetChapterList?_csrfToken=%s&bookId=%s'
+chapter_list_url = 'https://www.webnovel.com/go/pcm/chapter/get-chapter-list?_csrfToken=%s&bookId=%s&pageIndex=0'
 chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&type=1&keywords=%s'
 
@@ -62,18 +62,19 @@ class WebnovelCrawler(Crawler):
         data = response.json()['data']
 
         if 'bookInfo' in data:
+            logger.debug('book info: %s', data['bookInfo'])
             self.novel_title = data['bookInfo']['bookName']
             self.novel_cover = book_cover_url % self.novel_id
         # end if
 
         chapterItems = []
         if 'volumeItems' in data:
+            logger.debug('volume items: %d', len(data['volumeItems']))
             for vol in data['volumeItems']:
-                vol_id = vol['index'] or (len(self.volumes) + 1)
-                vol_title = vol['name'].strip() or ('Volume %d' % vol_id)
+                vol_id = len(self.volumes) + 1
                 self.volumes.append({
                     'id': vol_id,
-                    'title': vol_title,
+                    'title': vol['volumeName'].strip(),
                 })
                 for chap in vol['chapterItems']:
                     chap['volume'] = vol_id
@@ -81,13 +82,9 @@ class WebnovelCrawler(Crawler):
                 # end if
             # end for
         elif 'chapterItems' in data:
+            logger.debug('chapter items: %d', len(data['chapterItems']))
             chapterItems = data['chapterItems']
-            for vol in range(len(chapterItems) // 100 + 1):
-                self.volumes.append({
-                    'id': vol,
-                    'title': 'Volume %d' % (vol + 1),
-                })
-            # end for
+            self.volumes = [{ 'id': x} for x in range(len(chapterItems) // 100 + 1)]
         # end if
 
         for i, chap in enumerate(chapterItems):
@@ -96,9 +93,9 @@ class WebnovelCrawler(Crawler):
             # end if
             self.chapters.append({
                 'id': i + 1,
-                'hash': chap['id'],
-                'title': 'Chapter %s: %s' % (chap['index'], chap['name'].strip()),
-                'url': chapter_body_url % (self.csrf, self.novel_id, chap['id']),
+                'hash': chap['chapterId'],
+                'title': 'Chapter %s: %s' % (chap['chapterIndex'], chap['chapterName'].strip()),
+                'url': chapter_body_url % (self.csrf, self.novel_id, chap['chapterId']),
                 'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
             })
         # end for
@@ -120,8 +117,7 @@ class WebnovelCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         url = chapter['url']
-        logger.info('Getting chapter... %s [%s]',
-                    chapter['title'], chapter['id'])
+        logger.info('Getting chapter... %s [%s]', chapter['title'], chapter['id'])
 
         response = self.get_response(url)
         data = response.json()['data']
