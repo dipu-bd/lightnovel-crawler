@@ -939,6 +939,11 @@ You are very welcome to contribute in this project. You can:
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/ranobes.py" title="29 July 2021 10:59:22 AM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
+<tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
+<td><a href="https://readlightnovel.org/" target="_blank">https://readlightnovel.org/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/readlightnovelorg.py" title="26 July 2021 03:00:14 AM">66</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
+</tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://readlightnovels.net/" target="_blank">https://readlightnovels.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/readlightnovelsnet.py" title="26 July 2021 03:00:14 AM">22</a></td>
@@ -1311,7 +1316,7 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.readlightnovel.org/" target="_blank">https://www.readlightnovel.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/readln.py" title="26 July 2021 03:00:14 AM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/readlightnovelorg.py" title="26 July 2021 03:00:14 AM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
