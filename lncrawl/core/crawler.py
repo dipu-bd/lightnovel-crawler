@@ -2,18 +2,21 @@
 """
 Crawler application
 """
+import base64
 import itertools
 import logging
 import random
 import re
 import sys
-from typing import Dict, List
 import unicodedata
 from abc import abstractmethod
 from concurrent.futures import ThreadPoolExecutor
+from io import BytesIO
+from typing import Dict, List
 from urllib.parse import urlparse
 
 import cloudscraper
+from PIL import Image
 from bs4 import BeautifulSoup
 from bs4.element import Comment
 from requests import Response, Session
@@ -113,6 +116,21 @@ class Crawler(object):
     def download_chapter_body(self, chapter) -> str:
         '''Download body of a single chapter and return as clean html format.'''
         pass
+    # end def
+
+    def download_image(self, url) -> bytes:
+        assert isinstance(url, str)
+        if len(url) > 1000 or url.startswith('data:'):
+            content = base64.b64decode(url.split('base64,')[-1])
+        else:
+            logger.info('Downloading image: ' + url)
+            response = self.get_response(url, headers={
+                'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
+            })
+            content = response.content
+        # end if
+        return Image.open(BytesIO(content))
+
     # end def
 
     def get_chapter_index_of(self, url) -> int:
