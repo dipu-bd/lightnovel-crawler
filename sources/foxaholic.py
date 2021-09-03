@@ -12,7 +12,12 @@ chapter_list_url = 'https://www.foxaholic.com/wp-admin/admin-ajax.php'
 
 
 class FoxaholicCrawler(Crawler):
-    base_url = 'https://www.foxaholic.com/'
+    base_url = [
+        'https://foxaholic.com/',
+        'https://www.foxaholic.com/',
+        'https://18.foxaholic.com/',
+        'https://global.foxaholic.com/',
+    ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
