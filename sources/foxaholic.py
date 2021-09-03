@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
-import base64
-import logging
-from io import BytesIO
+import logging 
+from bs4.element import Tag
 
 import requests
-from PIL import Image
 
 from lncrawl.core.crawler import Crawler
 
@@ -23,43 +21,40 @@ class FoxaholicCrawler(Crawler):
         results = []
         for tab in soup.select('.c-tabs-item__content'):
             a = tab.select_one('.post-title h3 a')
-            latest = tab.select_one('.latest-chap .chapter a').text
+            if not isinstance(a, Tag):
+                continue
+            latest = tab.select_one('.latest-chap .chapter a')
+            if isinstance(latest, Tag):
+                latest = latest.text.strip()
             status = tab.select_one('.mg_release .summary-content a')
+            if isinstance(status, Tag):
+                status = 'Status: ' + status.text.strip()
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': '%s | Status: %s' % (latest, status.text.strip()),
+                'info': ' | '.join(filter(None, [latest, status]))
             })
         # end for
-
         return results
-
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'meta[property="og:title"]')['content']
+        self.novel_title = soup.select_one('meta[property="og:title"]')['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['data-src'])
+        self.novel_cover = self.absolute_url(soup.select_one('.summary_image a img')['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = ' '.join([
-            a.text.strip()
-            for a in soup.select('.author-content a[href*="novel-author"]')
-        ])
+        self.novel_author = ' '.join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
         logger.info('%s', self.novel_author)
 
         self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
         logger.info('Novel id: %s', self.novel_id)
 
-        response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        response = self.submit_form(chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
         soup = self.make_soup(response)
         for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
@@ -74,11 +69,9 @@ class FoxaholicCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
             })
         # end for
-
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.reading-content')
@@ -91,22 +84,17 @@ class FoxaholicCrawler(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
         return self.extract_contents(contents)
-
     # end def
 
     def download_image(self, url):
-        assert isinstance(url, str)
-        if len(url) > 1000 or url.startswith('data:'):
-            content = base64.b64decode(url.split('base64,')[-1])
-        else:
-            logger.info('Downloading image: ' + url)
-            response = requests.get(url, headers={
-                'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
-            })
-            content = response.content
-        # end if
-        return Image.open(BytesIO(content))
-
+        logger.info('Foxaholic image: %s', url)
+        response = requests.get(
+            url,
+            verify=False,
+            allow_redirects=True,
+            headers={'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'},
+        )
+        return response.content
     # end def
 
 # end class

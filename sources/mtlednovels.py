@@ -115,13 +115,11 @@ class MtledNovelsCrawler(Crawler):
         # end if
 
         contents = soup.select('div.translated p')
-        # print(contents)
         for p in contents:
             for span in p.find_all('span'):
                 span.unwrap()
             # end for
         # end for
-        # print(contents)
         # self.clean_contents(contents)
         #body = contents.select('p')
         body = [str(p) for p in contents if p.text.strip()]
