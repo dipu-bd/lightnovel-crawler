@@ -7,9 +7,10 @@ import os
 import sys
 
 import colorama
+import urllib3
 from colorama import Fore
 
-from ..assets.version import get_value as get_version
+from ..assets.version import get_version
 from ..bots import run_bot
 from .arguments import get_args
 from .display import (cancel_method, debug_mode, description, epilog,
@@ -31,6 +32,7 @@ def init():
     level = os.getenv('LOG_LEVEL')
     if not level:
         level = levels[args.log] if args.log else 'NOTSET'
+        urllib3.disable_warnings()
     # end if
     if level != 'NOTSET':
         os.environ['debug_mode'] = 'yes'

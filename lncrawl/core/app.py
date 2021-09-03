@@ -108,7 +108,8 @@ class App:
             raise Exception('No crawler found for ' + base_url)
         # end if
 
-        logger.info('Initializing crawler for: %s', base_url)
+        logger.info('Initializing crawler for: %s [%s]',
+                    base_url, getattr(CrawlerType, 'file_path', '.'))
         self.crawler = CrawlerType()
         self.crawler.home_url = base_url
         self.crawler.novel_url = novel_url

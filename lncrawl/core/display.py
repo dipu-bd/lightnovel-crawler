@@ -26,8 +26,8 @@ def description():
         from ..assets.banner import get_color_banner
         print(get_color_banner())
     else:
-        from ..assets.version import get_value
-        title = Icons.BOOK + ' Lightnovel Crawler v' + get_value()
+        from ..assets.version import get_version
+        title = Icons.BOOK + ' Lightnovel Crawler v' + get_version()
         padding = ' ' * ((LINE_SIZE - len(title)) // 2)
         print(Fore.YELLOW, padding + title, Fore.RESET)
         desc = 'https://github.com/dipu-bd/lightnovel-crawler'
