@@ -7,10 +7,10 @@ import logging
 import random
 import re
 import sys
-from typing import Dict, List
 import unicodedata
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
+from typing import Dict, List
 from urllib.parse import urlparse
 
 import cloudscraper
@@ -30,7 +30,7 @@ NONPRINTABLE = itertools.chain(range(0x00, 0x20), range(0x7f, 0xa0), INVISIBLE_C
 NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
 
 
-class Crawler(object):
+class Crawler(ABC):
     '''Blueprint for creating new crawlers'''
 
     def __init__(self) -> None:
@@ -82,37 +82,42 @@ class Crawler(object):
     # Implement these methods
     # ------------------------------------------------------------------------- #
 
-    @abstractmethod
     def initialize(self) -> None:
         pass
     # end def
 
-    @abstractmethod
     def login(self, email: str, password: str) -> None:
         pass
     # end def
 
-    @abstractmethod
     def logout(self) -> None:
         pass
     # end def
 
-    @abstractmethod
     def search_novel(self, query) -> List[Dict[str, str]]:
         '''Gets a list of results matching the given query'''
-        pass
+        return []
     # end def
 
     @abstractmethod
     def read_novel_info(self) -> None:
         '''Get novel title, autor, cover etc'''
-        pass
+        raise NotImplementedError()
     # end def
 
     @abstractmethod
     def download_chapter_body(self, chapter) -> str:
         '''Download body of a single chapter and return as clean html format.'''
-        pass
+        raise NotImplementedError()
+    # end def
+
+    def download_image(self, url) -> bytes:
+        '''Download image from url'''
+        logger.info('Downloading image: ' + url)
+        response = self.get_response(url, headers={
+            'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
+        })
+        return response.content
     # end def
 
     def get_chapter_index_of(self, url) -> int:
@@ -187,8 +192,6 @@ class Crawler(object):
             raise Exception('403 Forbidden! Could not bypass the cloudflare protection.\n'
                             '  If you are running from your own computer, visit the link on your browser and try again later.\n'
                             '  Sometimes, using `http` instead of `https` link may work.')
-            print('>'*10, response.status_code, response.reason)
-            return response
 
         response.raise_for_status()
         response.encoding = 'utf8'

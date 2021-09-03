@@ -3,7 +3,7 @@ from .. import constants as C
 import argparse
 from urllib.parse import parse_qs
 
-from ..assets.version import get_value as get_version
+from ..assets.version import get_version
 from ..binders import available_formats
 from ..bots import supported_bots
 from .display import LINE_SIZE

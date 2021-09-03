@@ -69,7 +69,6 @@ class NovelTranslateCrawler(Crawler):
             'action': 'manga_views',
             'manga': self.novel_id,
         })
-        print(self.cookies)
         response = self.submit_form(wp_admin_ajax_url, data={
             'action': 'manga_get_chapters',
             'manga': self.novel_id,

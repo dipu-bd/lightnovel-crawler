@@ -13,25 +13,20 @@ from io import BytesIO
 from PIL import Image
 from tqdm import tqdm
 
-from ..core.arguments import get_args
+from .arguments import get_args
 
 logger = logging.getLogger(__name__)
 
-
-def download_image(app, url):
+def download_image(app, url) -> Image.Image:
+    '''Download image'''
     assert isinstance(url, str)
     if len(url) > 1000 or url.startswith('data:'):
         content = base64.b64decode(url.split('base64,')[-1])
     else:
-        logger.info('Downloading image: ' + url)
-        response = app.crawler.get_response(url, headers={
-            'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
-        })
-        content = response.content
+        content = app.crawler.download_image(url)
     # end if
     return Image.open(BytesIO(content))
 # end def
-
 
 def download_cover(app):
     filename = None
@@ -50,7 +45,7 @@ def download_cover(app):
         logger.warn('Failed to download original cover image: %s -> %s (%s)',
                     image_url, filename, str(ex))
     # end try
-    
+
     logger.info('Downloading fallback cover image...')
     image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
     try:
@@ -132,8 +127,9 @@ def save_chapter_body(app, chapter):
     file_name = get_chapter_filename(app, chapter)
 
     title = chapter['title'].replace('>', '&gt;').replace('<', '&lt;')
-    chapter['body'] = '<h1>%s</h1>\n%s' % (title, chapter['body'])
-    if get_args().add_source_url:
+    if title not in chapter['body']:
+        chapter['body'] = '<h1>%s</h1>\n%s' % (title, chapter['body'])
+    if get_args().add_source_url and chapter['url'] not in chapter['body']:
         chapter['body'] += '<br><p>Source: <a href="%s">%s</a></p>' % (
             chapter['url'], chapter['url'])
     # end if
@@ -156,7 +152,7 @@ def download_content_image(app, url, filename):
         img = download_image(app, url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
-            img.save(f, "JPEG")
+            img.convert('RGB').save(f, "JPEG")
             logger.debug('Saved image: %s', image_file)
         # end with
         return filename
@@ -168,10 +164,9 @@ def download_content_image(app, url, filename):
     # end try
 # end def
 
-
 def download_chapters(app):
     app.progress = 0
-    bar = tqdm(desc='Downloading chapters', total=len(app.chapters), unit='ch')
+    bar = tqdm(desc='Downloading', total=len(app.chapters), unit='ch')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
     # end if
@@ -222,8 +217,8 @@ def download_chapter_images(app):
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
-            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
+            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             future = app.crawler.executor.submit(download_content_image, app, full_url, filename)
             futures_to_check.setdefault(chapter['id'], [])
             futures_to_check[chapter['id']].append(future)
@@ -235,7 +230,7 @@ def download_chapter_images(app):
         return
     # end if
 
-    bar = tqdm(desc='Downloading images', total=image_count, unit='img')
+    bar = tqdm(desc='Images', total=image_count, unit='img')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
     # end if
@@ -251,14 +246,14 @@ def download_chapter_images(app):
             images.append(future.result())
             bar.update()
         # end for
-        print(images)
+        logger.debug(images)
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
             filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
             if filename in images:
                 img.attrs = {'src': 'images/%s' % filename, 'alt': filename}
-                #img['style'] = 'float: left; margin: 15px; width: 100%;'
+                # img['style'] = 'float: left; margin: 15px; width: 100%;'
             else:
                 img.extract()
             # end if
