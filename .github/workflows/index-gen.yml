@@ -30,6 +30,7 @@ jobs:
 
       - name: Generate index
         run: python ./scripts/index_gen.py
+
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
