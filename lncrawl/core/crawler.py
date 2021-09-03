@@ -124,7 +124,7 @@ class Crawler(object):
             content = base64.b64decode(url.split('base64,')[-1])
         else:
             logger.info('Downloading image: ' + url)
-            response = self.crawler.get_response(url, headers={
+            response = self.get_response(url, headers={
                 'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
             })
             content = response.content
