@@ -2,18 +2,31 @@
 """
 To download chapter bodies
 """
+import base64
 import hashlib
 import json
 import logging
 import os
 import time
+from io import BytesIO
 
+from PIL import Image
 from tqdm import tqdm
 
 from .arguments import get_args
 
 logger = logging.getLogger(__name__)
 
+def download_image(app, url) -> Image.Image:
+    '''Download image'''
+    assert isinstance(url, str)
+    if len(url) > 1000 or url.startswith('data:'):
+        content = base64.b64decode(url.split('base64,')[-1])
+    else:
+        content = app.crawler.download_image(url)
+    # end if
+    return Image.open(BytesIO(content))
+# end def
 
 def download_cover(app):
     filename = None
@@ -24,7 +37,7 @@ def download_cover(app):
     logger.info('Downloading original cover image...')
     image_url = app.crawler.novel_cover
     try:
-        img = app.crawler.download_image(image_url)
+        img = download_image(app, image_url)
         img.save(filename, 'PNG')
         logger.debug('Saved cover: %s', filename)
         return filename
@@ -36,7 +49,7 @@ def download_cover(app):
     logger.info('Downloading fallback cover image...')
     image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
     try:
-        img = app.crawler.download_image(image_url)
+        img = download_image(app, image_url)
         img.save(filename, 'PNG')
         logger.debug('Saved cover: %s', filename)
         return filename
@@ -136,7 +149,7 @@ def download_content_image(app, url, filename):
             return filename
         # end if
 
-        img = app.crawler.download_image(url)
+        img = download_image(app, url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
             img.convert('RGB').save(f, "JPEG")
@@ -153,7 +166,7 @@ def download_content_image(app, url, filename):
 
 def download_chapters(app):
     app.progress = 0
-    bar = tqdm(desc='Downloading chapters', total=len(app.chapters), unit='ch')
+    bar = tqdm(desc='Downloading', total=len(app.chapters), unit='ch')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
     # end if
@@ -217,7 +230,7 @@ def download_chapter_images(app):
         return
     # end if
 
-    bar = tqdm(desc='Downloading images', total=image_count, unit='img')
+    bar = tqdm(desc='Images', total=image_count, unit='img')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
     # end if
@@ -233,7 +246,7 @@ def download_chapter_images(app):
             images.append(future.result())
             bar.update()
         # end for
-        print(images)
+        logger.debug(images)
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
