@@ -10,10 +10,10 @@ import sys
 import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from pathlib import Path
 from threading import Event
 from typing import Dict
-from datetime import datetime
 from urllib.parse import quote_plus, unquote_plus
 
 import cloudscraper
@@ -23,6 +23,7 @@ WORKDIR = Path(__file__).parent.parent.absolute()
 SOURCES_FOLDER = WORKDIR / 'sources'
 INDEX_FILE = SOURCES_FOLDER / '_index.json'
 REJECTED_FILE = SOURCES_FOLDER / '_rejected.json'
+CONTRIB_CACHE_FILE = WORKDIR / '.github' / 'contribs.json'
 
 README_FILE = WORKDIR / 'README.md'
 SUPPORTED_SOURCE_LIST_QUE = '<!-- auto generated supported sources list -->'
@@ -82,6 +83,14 @@ assert SOURCES_FOLDER.is_dir()
 with open(REJECTED_FILE, encoding='utf8') as fp:
     rejected_sources = json.load(fp)
 
+username_cache = {}
+try:
+    with open(CONTRIB_CACHE_FILE, encoding='utf8') as fp:
+        username_cache = json.load(fp)
+except Exception as e:
+    print('Could not load contributor cache file')
+# end try
+
 print('Getting contributors...')
 res = session.get('https://api.github.com/repos/dipu-bd/lightnovel-crawler/contributors')
 res.raise_for_status()
@@ -118,8 +127,8 @@ def search_user_by(query):
 
 def git_history(file_path):
     try:
-        cmd = 'git log --follow --diff-filter=AMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
-        # cmd = 'git log -1 --diff-filter=AMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
+        cmd = 'git log --follow --diff-filter=ACMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
+        # cmd = 'git log -1 --diff-filter=ACMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
         logs = subprocess.check_output(cmd, shell=True).decode('utf-8').strip()
         logs = [line.strip().split('||', maxsplit=4) for line in logs.splitlines(False)]
         logs = [{'time': int(x[0]), 'author': x[1], 'email': x[2], 'subject': x[3]} for x in logs]
@@ -133,19 +142,29 @@ def process_contributors(history):
     for data in history:
         author = data['author']
         email = data['email']
+        if author in username_cache:
+            contribs.add(username_cache[author])
+            continue
+        if email in username_cache:
+            contribs.add(username_cache[email])
+            continue
         if author in repo_contribs:
             contribs.add(author)
             continue
         name = search_user_by(quote_plus('%s in:email' % email))
         if name in repo_contribs:
+            username_cache[email] = name
             contribs.add(name)
             continue
         name = search_user_by(quote_plus('%s in:name' % author))
         if name in repo_contribs:
+            username_cache[author] = name
             contribs.add(name)
             continue
+        username_cache[author] = None
+        username_cache[email] = None
         #contribs.add(author)
-    return list(contribs)
+    return list(filter(None, contribs))
 
 def process_file(py_file: Path) -> float:
     if not py_file.name[0].isalnum():
@@ -210,6 +229,9 @@ print('-' * 50)
 
 with open(INDEX_FILE, 'w', encoding='utf8') as fp:
     json.dump(INDEX_DATA, fp)  # , indent='  ')
+
+with open(CONTRIB_CACHE_FILE, 'w', encoding='utf8') as fp:
+    json.dump(username_cache, fp, indent='  ')
 
 # =========================================================================================== #
 # Update README.md

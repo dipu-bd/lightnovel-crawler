@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import logging 
+import logging
 from bs4.element import Tag
 
 import requests
@@ -7,17 +7,12 @@ import requests
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://www.foxaholic.com/wp-admin/admin-ajax.php'
+search_url = 'https://latestnovel.net/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://latestnovel.net/wp-admin/admin-ajax.php'
 
 
-class FoxaholicCrawler(Crawler):
-    base_url = [
-        'https://foxaholic.com/',
-        'https://www.foxaholic.com/',
-        'https://18.foxaholic.com/',
-        'https://global.foxaholic.com/',
-    ]
+class LatestNovelCrawler(Crawler):
+    base_url = 'https://latestnovel.net/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -89,17 +84,6 @@ class FoxaholicCrawler(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
         return self.extract_contents(contents)
-    # end def
-
-    def download_image(self, url):
-        logger.info('Foxaholic image: %s', url)
-        response = requests.get(
-            url,
-            verify=False,
-            allow_redirects=True,
-            headers={'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'},
-        )
-        return response.content
     # end def
 
 # end class
