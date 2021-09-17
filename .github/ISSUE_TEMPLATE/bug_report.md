@@ -13,7 +13,8 @@ assignees: ''
 
 ## Let us know
 
-**Input**: < novel url or query you entered >   <!-- What is your novel URL? -->
-**App type**: PIP | EXE | Discord | Telegram    <!-- Where did you find this bug? -->
-**App version**: x.y.z                          <!-- skip for bots -->
-**Your OS**: Linux | Windows | Mac              <!-- skip for bots -->
+**Input**:         <novel url or query you entered> <!-- What is your novel URL? -->
+**App source**:    PIP | EXE | Discord | Telegram <!-- Where did you find this bug? -->
+**App version**:   x.y.z  <!-- or the name of the bot -->
+**Your OS**:       Linux | Windows | Mac <!-- skip for bots -->
+  
