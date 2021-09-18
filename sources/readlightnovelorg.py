@@ -11,6 +11,8 @@ class ReadLightNovelCrawler(Crawler):
     base_url = [
         'https://readlightnovel.org/',
         'https://www.readlightnovel.org/',
+        'https://readlightnovel.me/',
+        'https://www.readlightnovel.me/',
     ]
 
     def read_novel_info(self):
