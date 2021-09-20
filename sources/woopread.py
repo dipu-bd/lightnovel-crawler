@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-
 import logging
 import re
-
-import requests
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -53,24 +50,14 @@ class WoopReadCrawler(Crawler):
         ]
         logger.info("Novel cover: %s", self.novel_title)
 
-        volumes = set([])
-        available_chapters = novel_webpage.select(
-            "#manga-chapters-holder .wp-manga-chapter a"
-        )
-        fetch_more_chapters_html = requests.post(
-            "https://woopread.com/wp-admin/admin-ajax.php",
-            data={"action": "manga_get_chapters", "manga": novel_id, },
-        )
-        more_chapters = self.make_soup(fetch_more_chapters_html).select(
-            ".wp-manga-chapter a"
-        )
-        all_chapters = available_chapters + more_chapters
-
-        volumes = set([])
-        for a in reversed(all_chapters):
+        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
+        soup = self.make_soup(response)
+        for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
-            volumes.add(vol_id)
+            if chap_id % 100 == 1:
+                self.volumes.append({"id": vol_id})
+            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -80,9 +67,6 @@ class WoopReadCrawler(Crawler):
                 }
             )
         # end for
-
-        self.volumes = [{"id": x, "title": ""} for x in volumes]
-
     # end def
 
     def download_chapter_body(self, chapter):
