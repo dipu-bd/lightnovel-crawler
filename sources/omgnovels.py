@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -35,23 +33,24 @@ class OMGNovelsCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.post-title h3').contents
-            if not x.name
-        ]).strip()
-        logger.info('Novel title: %s', self.novel_title)
+        possible_title = soup.select_one(".post-title h3")
+        for span in possible_title.select("span"):
+            span.extract()
+        # end for
+        self.novel_title = possible_title.text.strip()
+        logger.info("Novel title: %s", self.novel_title)
 
-        probable_img = soup.select_one('.summary_image a img')
-        if probable_img:
-            self.novel_cover = self.absolute_url(probable_img['data-src'])
+        self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select('.author-content a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        else:
-            self.novel_author = author[0].text
+        try:
+            author = soup.select('.author-content a')
+            if len(author) == 2:
+                self.novel_author = author[0].text + ' (' + author[1].text + ')'
+            else:
+                self.novel_author = author[0].text
+        except Exception as e:
+            logger.debug('Failed to parse novel author. Error: %s', e)
         logger.info('Novel author: %s', self.novel_author)
 
         volumes = set()
