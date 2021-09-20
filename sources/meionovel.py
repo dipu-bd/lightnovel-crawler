@@ -7,8 +7,6 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://meionovel.id/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://meionovel.id/wp-admin/admin-ajax.php'
-
 
 class MeionovelCrawler(Crawler):
     base_url = 'https://meionovel.id/'
@@ -48,32 +46,26 @@ class MeionovelCrawler(Crawler):
         self.novel_author = ', '.join(filter(None, possible_authors))
         logger.info('Novel author: %s', self.novel_author)
 
-        manga_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Manga id: %s', manga_id)
+        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
+        logger.info("Novel id: %s", self.novel_id)
 
-        soup = self.post_soup(chapter_list_url, {
-            'action': 'manga_get_chapters',
-            'manga': manga_id,
-        }, headers={
-            'Origin': self.base_url,
-            'Referer': self.novel_url,
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        })
-
-        vols = set([])
-        for a in reversed(soup.select('.wp-manga-chapter a')):
+        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
+        soup = self.make_soup(response)
+        for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
-            vol_id = chap_id // 100 + 1
-            vols.add(vol_id)
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
-            })
+            vol_id = 1 + len(self.chapters) // 100
+            if chap_id % 100 == 1:
+                self.volumes.append({"id": vol_id})
+            # end if
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                }
+            )
         # end for
-
-        self.volumes = [{'id': x} for x in vols]
     # end def
 
     def download_chapter_body(self, chapter):
