@@ -3,9 +3,6 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-#search_url = 'https://sleepytranslations.com/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://sleepytranslations.com/wp-admin/admin-ajax.php'
-
 
 class SleepyTranslations(Crawler):
     base_url = 'https://sleepytranslations.com/'
@@ -32,13 +29,10 @@ class SleepyTranslations(Crawler):
         ])
         logger.info('%s', self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel id: %s', self.novel_id)
+        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
+        logger.info("Novel id: %s", self.novel_id)
 
-        response = self.submit_form(chapter_list_url, data={
-            'action': 'manga_get_chapters',
-            'manga': self.novel_id,
-        })
+        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
