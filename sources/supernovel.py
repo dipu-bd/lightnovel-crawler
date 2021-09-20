@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://supernovel.net/?s=%s&post_type=wp-manga&author=&artist=&release='
-
+chapter_list_url = 'https://supernovel.net/wp-admin/admin-ajax.php'
 
 class SuperNovelCrawler(Crawler):
     base_url = 'https://supernovel.net/'
@@ -42,9 +40,7 @@ class SuperNovelCrawler(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        probable_img = soup.select_one('.summary_image img')
-        if probable_img:
-            self.novel_cover = self.absolute_url(probable_img['src'])
+        self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select('.author-content a')
@@ -54,21 +50,25 @@ class SuperNovelCrawler(Crawler):
             self.novel_author = author[0].text
         logger.info('Novel author: %s', self.novel_author)
 
-        volumes = set()
-        chapters = soup.select('ul.main li.wp-manga-chapter a')
-        for a in reversed(chapters):
+        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
+        logger.info('Novel id: %s', self.novel_id)
+
+        response = self.submit_form(
+            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        soup = self.make_soup(response)
+        for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
-            vol_id = (chap_id - 1) // 100 + 1
-            volumes.add(vol_id)
+            vol_id = 1 + len(self.chapters) // 100
+            if chap_id % 100 == 1:
+                self.volumes.append({'id': vol_id})
+            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
+                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
-        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
