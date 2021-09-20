@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
-from urllib.parse import urlparse
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.novelmultiverse.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://www.novelmultiverse.com/wp-admin/admin-ajax.php'
-
 
 class NovelMultiverseCrawler(Crawler):
     base_url = 'https://www.novelmultiverse.com/'
@@ -51,25 +46,21 @@ class NovelMultiverseCrawler(Crawler):
         ])
         logger.info('%s', self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel id: %s', self.novel_id)
-
-        response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
-        soup = self.make_soup(response)
-        for a in reversed(soup.select('.wp-manga-chapter a')):
+        volumes = set()
+        chapters = soup.select('ul.main li.wp-manga-chapter a')
+        for a in reversed(chapters):
             chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append({'id': vol_id})
-            # end if
+            vol_id = (chap_id - 1) // 100 + 1
+            volumes.add(vol_id)
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
+                'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
+
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
