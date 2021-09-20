@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://boxnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-
 
 class BoxNovelCrawler(Crawler):
     base_url = 'https://boxnovel.com/'
@@ -51,21 +48,26 @@ class BoxNovelCrawler(Crawler):
             logger.debug('Failed to parse novel author. Error: %s', e)
         logger.info('Novel author: %s', self.novel_author)
 
-        volumes = set()
-        chapters = soup.select('ul.main li.wp-manga-chapter a')
-        for a in reversed(chapters):
-            chap_id = len(self.chapters) + 1
-            vol_id = (chap_id - 1) // 100 + 1
-            volumes.add(vol_id)
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
-            })
-        # end for
+        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
+        logger.info("Novel id: %s", self.novel_id)
 
-        self.volumes = [{'id': x} for x in volumes]
+        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
+        soup = self.make_soup(response)
+        for a in reversed(soup.select(".wp-manga-chapter a")):
+            chap_id = len(self.chapters) + 1
+            vol_id = 1 + len(self.chapters) // 100
+            if chap_id % 100 == 1:
+                self.volumes.append({"id": vol_id})
+            # end if
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                }
+            )
+        # end for
     # end def
 
     def download_chapter_body(self, chapter):
