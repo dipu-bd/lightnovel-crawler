@@ -366,5 +366,41 @@ test_user_inputs = {
     ],
     'https://tw.m.ixdzs.com/': [
         'https://tw.m.ixdzs.com/novel/%E6%88%91%E7%95%B6%E9%99%B0%E9%99%BD%E5%85%88%E7%94%9F%E7%9A%84%E9%82%A3%E5%B9%BE%E5%B9%B4'
+    ],
+    'https://noveltrench.com/': [
+        'https://noveltrench.com/manga/refining-the-mountains-and-rivers/'
+    ],
+    'https://tipnovel.com/': [
+        'https://tipnovel.com/novel/profound-dragon-warlord/'
+    ],
+    'https://f-w-o.com/': [
+        'https://f-w-o.com/novel/lord-of-flames/'
+    ],
+    'https://lightnovelheaven.com/': [
+        'https://lightnovelheaven.com/series/martial-god-asura/'
+    ],
+    'https://lunarletters.com/': [
+        'https://lunarletters.com/series/the-royal-deal/'
+    ],
+    'https://noveltranslate.com/': [
+        'https://noveltranslate.com/novel/earth-destruction-plan/'
+    ],
+    'https://omgnovels.com/': [
+        'https://omgnovels.com/novel/master-hunter-k/'
+    ],
+    'https://webnovelonline.net/': [
+        'https://webnovelonline.net/read/peerless-martial-god/'
+    ],
+    'https://sleepytranslations.com/': [
+        'https://sleepytranslations.com/series/semantic-error/'
+    ],
+    'https://supernovel.net/': [
+        'https://supernovel.net/novel/moonlight-ball/'
+    ],
+    'https://vipnovel.com/': [
+        'https://vipnovel.com/vipnovel/supreme-crazy-wife/'
+    ],
+    'https://zinnovel.com/': [
+        'https://zinnovel.com/manga/under-the-oak-tree/'
     ]
 }

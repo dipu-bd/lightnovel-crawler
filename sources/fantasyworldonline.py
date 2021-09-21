@@ -9,7 +9,10 @@ search_url = 'https://www.f-w-o.com/?s=%s&post_type=wp-manga&author=&artist=&rel
 
 
 class FantasyWorldOnline(Crawler):
-    base_url = 'https://www.f-w-o.com/'
+    base_url = [
+        'https://www.f-w-o.com/',
+        'https://f-w-o.com/'
+        ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
