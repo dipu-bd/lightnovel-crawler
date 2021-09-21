@@ -3,10 +3,11 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://zinnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
+search_url = 'https://tipnovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
-class ZinNovelCrawler(Crawler):
-    base_url = 'https://zinnovel.com/'
+
+class TipNovel(Crawler):
+    base_url = 'https://tipnovel.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -16,11 +17,10 @@ class ZinNovelCrawler(Crawler):
         for tab in soup.select('.c-tabs-item__content'):
             a = tab.select_one('.post-title h3 a')
             latest = tab.select_one('.latest-chap .chapter a').text
-            votes = tab.select_one('.rating .total_votes').text
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': '%s | Rating: %s' % (latest, votes),
+                'info': '%s' % (latest),
             })
         # end for
 
@@ -32,22 +32,24 @@ class ZinNovelCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one('.post-title h1')
-        for span in possible_title.select('span'):
-            span.extract()
-        # end for
-        self.novel_title = possible_title.text.strip()
+        self.novel_title = ' '.join([
+            str(x)
+            for x in soup.select_one('.post-title h1').contents
+            if not x.name
+        ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['data-src'])
+        probable_img = soup.select_one('.summary_image img')
+        if probable_img:
+            self.novel_cover = self.absolute_url(probable_img['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = ' '.join([
-            a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
-        ])
-        logger.info('%s', self.novel_author)
+        author = soup.select('.author-content a')
+        if len(author) == 2:
+            self.novel_author = author[0].text + ' (' + author[1].text + ')'
+        else:
+            self.novel_author = author[0].text
+        logger.info('Novel author: %s', self.novel_author)
 
         volumes = set()
         chapters = soup.select('ul.main li.wp-manga-chapter a')
@@ -68,9 +70,13 @@ class ZinNovelCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
+        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.reading-content p')
-        return ''.join([str(p) for p in contents])
+
+        contents = soup.select_one('div.text-left')
+        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
+            bad.extract()
+
+        return str(contents)
     # end def
 # end class
