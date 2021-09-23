@@ -294,9 +294,9 @@ print('Generated supported sources list.')
 before, help_text, after = readme_text.split(HELP_RESULT_QUE)
 
 os.chdir(WORKDIR)
-output = subprocess.check_output(['python', 'lncrawl', '-h'], shell=True)
+output = subprocess.check_output(['python', 'lncrawl', '-h'])
 
-help_text += '\n'
+help_text = '\n'
 help_text += '```bash\n'
 help_text += '$ lncrawl -h\n'
 help_text += output.decode('utf-8').replace('\r\n', '\n')
