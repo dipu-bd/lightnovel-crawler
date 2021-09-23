@@ -196,7 +196,6 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
-
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -206,7 +205,7 @@ $ lncrawl -h
 ┃┃╱╭╋┫╭╮┃╭╮┃┃┃╭╮┫╭╮┃╰╯┃┃━┫┃╱┃┃╱╭┫╭┫╭╮┃╰╯╰╯┃┃┃┃━┫╭╯
 ┃╰━╯┃┃╰╯┃┃┃┃╰┫┃┃┃╰╯┣╮╭┫┃━┫╰╮┃╰━╯┃┃┃╭╮┣╮╭╮╭┫╰┫┃━┫┃
 ╰━━━┻┻━╮┣╯╰┻━┻╯╰┻━━╯╰╯╰━━┻━╯╰━━━┻╯╰╯╰╯╰╯╰╯╰━┻━━┻╯
-╱╱╱╱╱╭━╯┃ v2.28.0
+╱╱╱╱╱╭━╯┃ v2.28.5
 ╱╱╱╱╱╰━━╯ 🔗 https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -218,7 +217,7 @@ optional arguments:
   -v, --version         show program's version number and exit
   -l                    Set log levels. (-l = warn, -ll = info, -lll = debug).
   --list-sources        Display a list of available sources.
-  --crawler [FILES [FILES ...]]
+  --crawler [FILES ...]
                         Load additional crawler files.
   -s URL, --source URL  Profile page url of the novel.
   -q STR, --query STR   Novel query followed by list of source sites.
@@ -240,10 +239,8 @@ optional arguments:
   --last [COUNT]        Download last few chapters (default: 10).
   --page START STOP.    The start and final chapter urls.
   --range FROM TO.      The start and final chapter indexes.
-  --volumes [N [N ...]]
-                        The list of volume numbers to download.
-  --chapters [URL [URL ...]]
-                        A list of specific chapter urls.
+  --volumes [N ...]     The list of volume numbers to download.
+  --chapters [URL ...]  A list of specific chapter urls.
   --bot {console,telegram,discord,test}
                         Select a bot. Default: console.
   --shard-id [SHARD_ID]
@@ -251,15 +248,15 @@ optional arguments:
   --shard-count [SHARD_COUNT]
                         Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
-  --resume [NAME/URL]   Resume download of a novel containing in /home/dipu/projects/lightnovel-crawler/Lightnovels
-  ENV                   [chatbots only] Pass query string at the end of all options. It will be use instead of .env file. Sample: "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
+  --resume [NAME/URL]   Resume download of a novel containing in
+                        /home/runner/work/lightnovel-crawler/lightnovel-
+                        crawler/Lightnovels
+  ENV                   [chatbots only] Pass query string at the end of all
+                        options. It will be use instead of .env file. Sample:
+                        "BOT=discord&DISCORD_TOKEN=***&LOG_LEVEL=DEBUG"
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-```
-
-
-```bash
-$ lncrawl -h
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~
 ```
 <!-- auto generated command line output -->
 
