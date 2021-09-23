@@ -3,6 +3,7 @@
 """
 Build lightnovel-crawler source index to use for update checking.
 """
+import os
 import hashlib
 import json
 import subprocess
@@ -28,6 +29,7 @@ CONTRIB_CACHE_FILE = WORKDIR / '.github' / 'contribs.json'
 README_FILE = WORKDIR / 'README.md'
 SUPPORTED_SOURCE_LIST_QUE = '<!-- auto generated supported sources list -->'
 REJECTED_SOURCE_LIST_QUE = '<!-- auto generated rejected sources list -->'
+HELP_RESULT_QUE = '<!-- auto generated command line output -->'
 
 DATE_FORMAT = '%d %B %Y %I:%M:%S %p'
 
@@ -287,7 +289,22 @@ for url, cause in sorted(INDEX_DATA['rejected'].items(),  key=lambda x: x[0]):
 rejected += '</tbody>\n</table>\n\n'
 readme_text = REJECTED_SOURCE_LIST_QUE.join([before, rejected, after])
 
-print('Generated rejected sources list.')
+print('Generated supported sources list.')
+
+before, help_text, after = readme_text.split(HELP_RESULT_QUE)
+
+os.chdir(WORKDIR)
+output = subprocess.check_output(['python', 'lncrawl', '-h'], shell=True)
+
+help_text += '\n'
+help_text += '```bash\n'
+help_text += '$ lncrawl -h\n'
+help_text += output.decode('utf-8').replace('\r\n', '\n')
+help_text += '```\n'
+
+readme_text = HELP_RESULT_QUE.join([before, help_text, after])
+
+print('Generated help command output.')
 
 with open(README_FILE, 'w', encoding='utf8') as fp:
     fp.write(readme_text)

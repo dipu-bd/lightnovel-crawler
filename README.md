@@ -195,6 +195,8 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 
 ### Available options
 
+<!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -254,6 +256,8 @@ optional arguments:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
+
+<!-- auto generated command line output -->
 
 ### Example Usage
 
