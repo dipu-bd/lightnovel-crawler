@@ -11,7 +11,7 @@ chapter_list_url = 'https://www.readwn.com/e/extend/fy.php'
 
 
 class ReadWNCrawler(Crawler):
-    base_url = 'https://www.readwn.com/'
+    base_url = ['https://www.readwn.com/', 'https://www.ltnovel.com/']
 
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
