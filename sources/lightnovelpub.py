@@ -35,8 +35,8 @@ class LightNovelOnline(Crawler):
     # end def
 
     def read_novel_info(self):
-        self.novel_url = self.home_url + re.findall('/(novel/[^/]+)/', self.novel_url)[0]
-
+        #self.novel_url = self.home_url + re.findall('/(novel/[^/]+)/', self.novel_url)[0]
+        
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
