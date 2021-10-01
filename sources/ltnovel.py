@@ -6,12 +6,12 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-search_url = 'https://www.readwn.com/search.html'
-chapter_list_url = 'https://www.readwn.com/e/extend/fy.php'
+search_url = 'https://www.ltnovel.com/search.html'
+chapter_list_url = 'https://www.ltnovel.com/e/extend/fy.php'
 
 
-class ReadWNCrawler(Crawler):
-    base_url = 'https://www.readwn.com/'
+class LtNovel(Crawler):
+    base_url = 'https://www.ltnovel.com/'
 
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
@@ -34,7 +34,7 @@ class ReadWNCrawler(Crawler):
 
         soup = self.post_soup(url, data=payload, headers={
             'Referer': search_url,
-            'Origin': 'https://www.readwn.com',
+            'Origin': 'https://www.ltnovel.com',
             'Content-Type': 'application/x-www-form-urlencoded',
         })
 
