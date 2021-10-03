@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import re
+import time
 from urllib.parse import quote_plus
 
 from lncrawl.core.crawler import Crawler
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 book_info_url = 'https://www.webnovel.com/book/%s'
 chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
-book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg'
+book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg?coverUpdateTime=%s&imageMogr2/quality/80'
 chapter_list_url = 'https://www.webnovel.com/go/pcm/chapter/get-chapter-list?_csrfToken=%s&bookId=%s&pageIndex=0'
 chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s'
 search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&type=1&keywords=%s'
@@ -50,8 +50,7 @@ class WebnovelCrawler(Crawler):
         url = self.novel_url
         #self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
         if not "_" in url:
-            self.novel_id = re.search(
-                r'(?<=webnovel.com/book/)\d+', url).group(0)
+            self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
         else:
             self.novel_id = url.split("_")[1]
         logger.info('Novel Id: %s', self.novel_id)
@@ -64,7 +63,7 @@ class WebnovelCrawler(Crawler):
         if 'bookInfo' in data:
             logger.debug('book info: %s', data['bookInfo'])
             self.novel_title = data['bookInfo']['bookName']
-            self.novel_cover = book_cover_url % self.novel_id
+            self.novel_cover = book_cover_url % (self.novel_id, int(1000 * time.time()))
         # end if
 
         chapterItems = []

@@ -117,7 +117,7 @@ def __load_latest_index():
     global __latest_index
     global __current_index
 
-    last_download = __current_index.get('last_download', 0)
+    last_download = __current_index.get('v', 0)
     if time.time() - last_download < __index_fetch_internval_in_hours * 3600:
         logger.debug('Current index was already downloaded once in last %d hours.',
                      __index_fetch_internval_in_hours)
@@ -129,7 +129,7 @@ def __load_latest_index():
         __latest_index = json.loads(data.decode('utf8'))
         if 'crawlers' not in __current_index:
             __current_index = __latest_index
-        __current_index['last_download'] = time.time()
+        __current_index['v'] = int(time.time())
         __save_current_index()
     except Exception as e:
         if 'crawlers' not in __current_index:
@@ -187,10 +187,18 @@ def __get_file_md5(file: Path):
 
 
 def __download_sources():
+    tbd_sids = []
+    for sid in __current_index['crawlers'].keys():
+        if sid not in __latest_index['crawlers']:
+            tbd_sids.append(sid)
+    for sid in tbd_sids:
+        del __current_index['crawlers'][sid]
+
     futures: Dict[str, Future] = {}
     for sid, latest in __latest_index['crawlers'].items():
         current = __current_index['crawlers'].get(sid)
         has_new_version = not current or current['version'] < latest['version']
+        __current_index['crawlers'][sid] = latest
         user_file = (__user_data_path / str(latest['file_path'])).is_file()
         local_file = (__local_data_path / str(latest['file_path'])).is_file()
         if has_new_version or not (user_file or local_file):

@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-import json
+# -*- coding: utf-8 -*- 
 import logging
-import re
+from bs4.element import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -14,36 +13,29 @@ class Wujizun(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'meta[property="og:title"]')['content']
+        possible_title = soup.select_one('meta[property="og:title"]')
+        assert isinstance(possible_title, Tag)
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one(
-            'meta[property="og:image"]')['content']
+        possible_cover = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_cover, Tag):
+            self.novel_cover = possible_cover['content']
         logger.info('Novel cover: %s', self.novel_cover)
-
-        self.novel_author = "Translated by Wujizun"
-        logger.info('Novel author: %s', self.novel_author)
 
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one('div.entry-content')
+        assert isinstance(toc_parts, Tag)
         for notoc in toc_parts.select('.sharedaddy, .ezoic-adpicker-ad, .ezoic-ad-adaptive, .ezoic-ad'):
             notoc.extract()
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
-        chapters = soup.select(
-            'div.entry-content p a[href*="wujizun.com/2"]')
-
-        for a in chapters:
+        for a in soup.select('div.entry-content p a[href*="wujizun.com/2"]'):
             chap_id = len(self.chapters) + 1
+            vol_id = chap_id // 100 + 1
             if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -63,16 +55,7 @@ class Wujizun(Crawler):
 
         # Remoeves bad text from chapters.
         self.blacklist_patterns += ["Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"]
-
-        # Fixes images, so they can be downloaded.
-        # all_imgs = soup.find_all('img')
-        # for img in all_imgs:
-        #     if img.has_attr('data-orig-file'):
-        #         src_url = img['src']
-        #         parent = img.parent
-        #         img.extract()
-        #         new_tag = soup.new_tag("img", src=src_url)
-        #         parent.append(new_tag)
+        self.clean_contents(body_parts)
 
         return str(body_parts)
     # end def

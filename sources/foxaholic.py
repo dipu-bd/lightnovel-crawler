@@ -8,7 +8,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://www.foxaholic.com/wp-admin/admin-ajax.php'
+# chapter_list_url = 'https://www.foxaholic.com/wp-admin/admin-ajax.php'
 
 
 class FoxaholicCrawler(Crawler):
@@ -59,7 +59,8 @@ class FoxaholicCrawler(Crawler):
         self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
         logger.info('Novel id: %s', self.novel_id)
 
-        response = self.submit_form(chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        # response = self.submit_form(chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters/', data='')
         soup = self.make_soup(response)
         for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1

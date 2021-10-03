@@ -6,6 +6,7 @@ import itertools
 import logging
 import random
 import re
+import ssl
 import sys
 import unicodedata
 from abc import ABC, abstractmethod
@@ -15,10 +16,11 @@ from urllib.parse import urlparse
 
 import cloudscraper
 from bs4 import BeautifulSoup
-from bs4.element import Comment
+from bs4.element import Comment, Tag
 from requests import Response, Session
 
 from ..assets.user_agents import user_agents
+from ..utils.ssl_no_verify import no_ssl_verification
 
 logger = logging.getLogger(__name__)
 
@@ -39,13 +41,17 @@ class Crawler(ABC):
 
         # Initialize cloudscrapper
         try:
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
             self.scraper = cloudscraper.create_scraper(
                 # debug=True,
+                ssl_context=ctx,
                 browser={
-                    'custom': random.choice(user_agents),
-                    # 'browser': 'chrome',
-                    # 'platform': 'windows',
-                    # 'mobile': False
+                    #'custom': random.choice(user_agents),
+                    'browser': 'chrome',
+                    'platform': 'windows',
+                    'mobile': False
                 }
             )
         except Exception as err:
@@ -214,7 +220,9 @@ class Crawler(ABC):
         headers = {k.lower(): v for k, v in headers.items()}
         #headers.setdefault('user-agent', random.choice(user_agents))
 
-        response: Response = self.scraper.get(url, **kargs)
+        with no_ssl_verification():
+            response = self.scraper.get(url, **kargs)
+
         self.last_visited_url = url.strip('/')
         return self.__process_response(response)
     # end def
@@ -229,13 +237,15 @@ class Crawler(ABC):
         headers.setdefault('content-type', 'application/json')
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
 
-        response = self.scraper.post(
-            url,
-            data=data,
-            headers=headers,
-            # verify=False,
-            # allow_redirects=True,
-        )
+        with no_ssl_verification():
+            response = self.scraper.post(
+                url,
+                data=data,
+                headers=headers,
+                # verify=False,
+                # allow_redirects=True,
+            )
+
         return self.__process_response(response)
     # end def
 
@@ -348,7 +358,7 @@ class Crawler(ABC):
     # end def
 
     def clean_contents(self, div):
-        if not div:
+        if not isinstance(div, Tag):
             return div
         # end if
         for bad in div.select(','.join(self.bad_css)):
@@ -395,8 +405,8 @@ class Crawler(ABC):
                 continue
             if elem.name == 'hr':
                 body.append(LINE_SEP)
-                body.append('-' * 8)
-                body.append(LINE_SEP)
+                # body.append('-' * 8)
+                # body.append(LINE_SEP)
                 continue
             if elem.name == 'br':
                 body.append(LINE_SEP)

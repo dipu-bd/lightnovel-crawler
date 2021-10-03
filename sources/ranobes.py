@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 import logging
 from concurrent.futures import ThreadPoolExecutor
+
+from bs4.element import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
 
 class RanobeLibCrawler(Crawler):
-    base_url = 'https://ranobes.net/'
+    base_url = [
+        'http://ranobes.net/',
+        'https://ranobes.net/',
+    ]
 
     def initialize(self) -> None:
         self.executor = ThreadPoolExecutor(max_workers=1)
@@ -22,11 +28,14 @@ class RanobeLibCrawler(Crawler):
             self.novel_url = self.absolute_url(main_page_link['href'])
             soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('meta[property="og:title"]')['content']
+        possible_title = soup.select_one('meta[property="og:title"]')
+        assert isinstance(possible_title, Tag)
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('meta[property="og:image"]')['content'])
+        possible_cover = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_cover, Tag):
+            self.novel_cover = self.absolute_url(possible_cover['content'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author_link = soup.select_one('.tag_list[itemprop="author"] a')
@@ -36,6 +45,7 @@ class RanobeLibCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         chapter_list_link = soup.select_one('#fs-chapters a[title="Go to table of contents"]')
+        assert isinstance(chapter_list_link, Tag)
         chapter_list_link = self.absolute_url(chapter_list_link['href'])
 
         soup = self.get_soup(chapter_list_link)
@@ -58,7 +68,7 @@ class RanobeLibCrawler(Crawler):
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
-                    'title': a['title'].strip(),
+                    'title': a['title'],
                     'url': self.absolute_url(a['href']),
                 })
 
@@ -68,8 +78,15 @@ class RanobeLibCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
+
         article = soup.select_one('.text[itemprop="description"]')
+
+        self.bad_css += [
+            '.free-support',
+            'div[id^="adfox_"]'
+        ]
         self.clean_contents(article)
+
         return str(article)
     # end def
 # end class
