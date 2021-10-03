@@ -205,7 +205,7 @@ $ lncrawl -h
 ┃┃╱╭╋┫╭╮┃╭╮┃┃┃╭╮┫╭╮┃╰╯┃┃━┫┃╱┃┃╱╭┫╭┫╭╮┃╰╯╰╯┃┃┃┃━┫╭╯
 ┃╰━╯┃┃╰╯┃┃┃┃╰┫┃┃┃╰╯┣╮╭┫┃━┫╰╮┃╰━╯┃┃┃╭╮┣╮╭╮╭┫╰┫┃━┫┃
 ╰━━━┻┻━╮┣╯╰┻━┻╯╰┻━━╯╰╯╰━━┻━╯╰━━━┻╯╰╯╰╯╰╯╰╯╰━┻━━┻╯
-╱╱╱╱╱╭━╯┃ v2.28.5
+╱╱╱╱╱╭━╯┃ v2.28.6
 ╱╱╱╱╱╰━━╯ 🔗 https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -801,7 +801,7 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://m.webnovel.com/" target="_blank">https://m.webnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/webnovel.py" title="02 September 2021 03:42:50 PM">75</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/webnovel.py" title="03 October 2021 10:34:45 AM">76</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
@@ -1116,7 +1116,7 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://wujizun.com/" target="_blank">https://wujizun.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wujizun.py" title="28 July 2021 12:45:29 AM">69</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/wujizun.py" title="03 October 2021 10:39:52 AM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
@@ -1401,7 +1401,7 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://www.webnovel.com/" target="_blank">https://www.webnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/webnovel.py" title="02 September 2021 03:42:50 PM">75</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/webnovel.py" title="03 October 2021 10:34:45 AM">76</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
