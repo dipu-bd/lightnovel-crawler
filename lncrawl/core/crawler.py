@@ -16,7 +16,7 @@ from urllib.parse import urlparse
 
 import cloudscraper
 from bs4 import BeautifulSoup
-from bs4.element import Comment
+from bs4.element import Comment, Tag
 from requests import Response, Session
 
 from ..assets.user_agents import user_agents
@@ -358,7 +358,7 @@ class Crawler(ABC):
     # end def
 
     def clean_contents(self, div):
-        if not div:
+        if not isinstance(div, Tag):
             return div
         # end if
         for bad in div.select(','.join(self.bad_css)):
@@ -405,8 +405,8 @@ class Crawler(ABC):
                 continue
             if elem.name == 'hr':
                 body.append(LINE_SEP)
-                body.append('-' * 8)
-                body.append(LINE_SEP)
+                # body.append('-' * 8)
+                # body.append(LINE_SEP)
                 continue
             if elem.name == 'br':
                 body.append(LINE_SEP)
