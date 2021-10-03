@@ -91,7 +91,7 @@ jobs:
           python-version: 3.6
 
       - name: Build package
-        run: ./scripts/build.sh
+        run: sh ./scripts/build.sh
 
       - name: Test the executable package
         run: ./dist/lncrawl --list-sources
@@ -108,11 +108,11 @@ jobs:
       - name: Update download links
         env:
           REBRANDLY_API_KEY: ${{ secrets.REBRANDLY_API_KEY }}
-        run: ./scripts/rebrandly.sh
+        run: sh ./scripts/rebrandly.sh
 
       - name: Publish
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
           TWINE_NON_INTERACTIVE: true
-        run: ./scripts/publish.sh
+        run: sh ./scripts/publish.sh
