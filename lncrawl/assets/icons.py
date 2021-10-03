@@ -11,6 +11,7 @@ class Icons:
     isLinux = isLinux
     isWindows = isWindows
     hasSupport = isLinux or isMac
+    EOL = '\r\n' if isWindows else '\n'
 
     # --------------------------------------- #
 
