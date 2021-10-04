@@ -434,10 +434,11 @@ class Crawler(ABC):
                 body.append(LINE_SEP)
             # end if
 
-            if body and not is_block:
+            if body and body[-1] == LINE_SEP and not is_block:
                 body.pop()
             # end if
         # end for
+
         return [x.strip() for x in body if x.strip()]
     # end def
 
