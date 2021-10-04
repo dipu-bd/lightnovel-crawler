@@ -536,6 +536,11 @@ You are very welcome to contribute in this project. You can:
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/domentranslations.py" title="26 July 2021 03:00:14 AM">67</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
+<tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
+<td><a href="https://chrysanthemumgarden.com/" target="_blank">https://chrysanthemumgarden.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/chrysanthemumgarden.py" title="04 October 2021 03:39:55 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
 <tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
 <td><a href="https://clicknovel.net/" target="_blank">https://clicknovel.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/clicknovel.py" title="16 July 2021 02:11:58 PM">10</a></td>
@@ -1505,9 +1510,6 @@ You are very welcome to contribute in this project. You can:
 </tr>
 <tr><td><a href="https://boxnovel.online/" target="_blank">https://boxnovel.online/</a></td>
 <td>Redirects to tipnovel.com</td>
-</tr>
-<tr><td><a href="https://chrysanthemumgarden.com/" target="_blank">https://chrysanthemumgarden.com/</a></td>
-<td>Removed on request of the owner (Issue #649)</td>
 </tr>
 <tr><td><a href="https://dsrealmtranslations.com/" target="_blank">https://dsrealmtranslations.com/</a></td>
 <td>Site is down</td>
