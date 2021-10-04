@@ -8,6 +8,7 @@ on:
       - "sources/**"
       - "!sources/_index.json"
       - "scripts/index_gen.py"
+      - "lncrawl/VERSION"
 
 jobs:
   index_gen:
