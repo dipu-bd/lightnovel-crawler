@@ -113,6 +113,8 @@ $ lncrawl
 
 When there is a new update available, you can install it just by running `pip install -U lightnovel-crawler`. You will not have to run all the above commands again.
 
+> Another easy way is creating a custom script. Check https://github.com/dipu-bd/lightnovel-crawler/issues/1121
+
 ### Chatbots
 
 #### Discord
