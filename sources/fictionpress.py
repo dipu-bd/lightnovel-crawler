@@ -2,6 +2,7 @@
 import logging
 import re
 from urllib.parse import urlparse
+from bs4.element import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -48,9 +49,12 @@ class FictionPressCrawler(Crawler):
             self.novel_cover = self.absolute_url(possible_image['src'])
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
-
-        self.novel_author = soup.select_one(
-            '#profile_top, #content').select_one('a[href*="/u/"]').text.strip()
+        
+        possible_author = soup.select_one('#profile_top, #content')
+        if isinstance(possible_author, Tag):
+            possible_author = possible_author.select_one('a[href*="/u/"]')
+        if isinstance(possible_author, Tag):
+            self.novel_author = possible_author.text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_id = urlparse(self.novel_url).path.split('/')[2]
