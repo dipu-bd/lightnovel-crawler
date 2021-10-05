@@ -245,7 +245,10 @@ with open(README_FILE, encoding='utf8') as fp:
     readme_text = fp.read()
 
 before, supported, after = readme_text.split(SUPPORTED_SOURCE_LIST_QUE)
-supported = '\n\n<table>\n<tbody>\n'
+supported = '\n\n'
+supported += f"We are supporting {len(INDEX_DATA['supported'])} sources and {len(INDEX_DATA['crawlers'])} crawlers."
+supported += '\n\n'
+supported += '<table>\n<tbody>\n'
 supported += '<tr>'
 supported += '<th></th>\n'
 supported += '<th>Source URL</th>\n'
@@ -276,7 +279,10 @@ readme_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
 print('Generated supported sources list.')
 
 before, rejected, after = readme_text.split(REJECTED_SOURCE_LIST_QUE)
-rejected = '\n\n<table>\n<tbody>\n'
+rejected = '\n\n'
+rejected += f"We have rejected {len(INDEX_DATA['rejected'])} sources due to the following reasons."
+rejected = '\n\n'
+rejected += '<table>\n<tbody>\n'
 rejected += '<tr>'
 rejected += '<th>Source URL</th>\n'
 rejected += '<th>Rejection Cause</th>\n'
