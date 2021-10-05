@@ -319,6 +319,8 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
+We are supporting 232 sources and 219 crawlers.
+
 <table>
 <tbody>
 <tr><th></th>
