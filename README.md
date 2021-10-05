@@ -319,7 +319,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 232 sources and 219 crawlers.
+We are supporting 233 sources and 220 crawlers.
 
 <table>
 <tbody>
@@ -1222,6 +1222,11 @@ We are supporting 232 sources and 219 crawlers.
 <td><a href="https://www.fanfiction.net/" target="_blank">https://www.fanfiction.net/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/fanfiction.py" title="26 July 2021 03:00:14 AM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
+<tr><td><span title="Supports searching">🔍</span><span title="Supports login"></span></td>
+<td><a href="https://www.fictionpress.com/" target="_blank">https://www.fictionpress.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/fictionpress.py" title="05 October 2021 05:41:45 PM">13</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.flying-lines.com/" target="_blank">https://www.flying-lines.com/</a></td>
