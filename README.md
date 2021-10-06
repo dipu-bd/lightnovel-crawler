@@ -1450,7 +1450,7 @@ We are supporting 233 sources and 220 crawlers.
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://www.worldnovel.online/" target="_blank">https://www.worldnovel.online/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/worldnovelonline.py" title="26 July 2021 03:00:14 AM">78</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/worldnovelonline.py" title="06 October 2021 04:28:19 PM">79</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
