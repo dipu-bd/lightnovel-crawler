@@ -1000,7 +1000,7 @@ We are supporting 233 sources and 220 crawlers.
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
 <td><a href="https://rewayat.club/" target="_blank">https://rewayat.club/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/rewayatclub.py" title="16 July 2021 02:11:58 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/rewayatclub.py" title="06 October 2021 06:10:01 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Supports searching"></span><span title="Supports login"></span></td>
