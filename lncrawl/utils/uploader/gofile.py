@@ -16,8 +16,8 @@ def upload(file_path, description):
             upload_url,
             data={
                 'description': description,
-                'token': os.getenv('GOFILE_TOKEN'),
-                'folderId': os.getenv('GOFILE_FOLDER_ID'),
+                #'token': os.getenv('GOFILE_TOKEN'),
+                #'folderId': os.getenv('GOFILE_FOLDER_ID'),
             },
             files={
                 'upload_file': fp,
