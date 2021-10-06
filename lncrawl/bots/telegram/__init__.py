@@ -9,8 +9,8 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from telegram.ext import (CommandHandler, ConversationHandler, Filters,
                           MessageHandler, Updater)
 
-from ..core.app import App
-from ..utils.uploader import upload
+from lncrawl.core.app import App
+from lncrawl.utils.uploader import upload
 
 logger = logging.getLogger(__name__)
 
