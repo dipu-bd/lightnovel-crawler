@@ -361,8 +361,10 @@ class Crawler(ABC):
         if not isinstance(div, Tag):
             return div
         # end if
-        for bad in div.select(','.join(self.bad_css)):
-            bad.extract()
+        if self.bad_css:
+            for bad in div.select(','.join(self.bad_css)):
+                bad.extract()
+            # end if
         # end if
         for tag in div.find_all(True):
             if isinstance(tag, Comment):

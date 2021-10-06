@@ -1,83 +1,90 @@
 # -*- coding: utf-8 -*-
+import json
+import math
 import logging
 import re
-from concurrent import futures
+
+import js2py
+from bs4.element import Tag
 
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+chapter_list_url = 'https://api.rewayat.club/api/chapters/%s/?ordering=number&page=%d'
+chapter_body_url = 'https://rewayat.club/novel/%s/%d'
 
 class RewayatClubCrawler(Crawler):
     base_url = 'https://rewayat.club/'
 
     def read_novel_info(self):
-        logger.debug('Visiting %s', self.novel_url)
-        soup = self.get_soup(self.novel_url)
-
         self.is_rtl = True
 
-        self.novel_title = soup.select_one('h1.card-header').text.strip()
+        soup = self.get_soup(self.novel_url)
+        script = soup.find(lambda tag: isinstance(tag, Tag) and tag.name == 'script' and tag.text.startswith('window.__NUXT__'))
+        assert isinstance(script, Tag)
+
+        data = js2py.eval_js(script.text).to_dict()
+
+        novel_info = data['fetch'][0]['novel']
+        pagination = data['fetch'][1]['pagination']
+        per_page = len(data['fetch'][1]['chapters'])
+
+        self.novel_title = novel_info['arabic']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.card-body .align-middle img')['src'])
+        self.novel_cover = 'https://api.rewayat.club' + novel_info['poster_url']
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one(
-            '.card-body table td a[href*="/user/"]').text.strip()
+        self.novel_author = ', '.join([x['username'] for x in novel_info['contributors']])
         logger.info('Novel author: %s', self.novel_author)
 
-        page_count = len(soup.select(
-            '.card-footer select.custom-select option'))
-        logger.info('Total pages: %d', page_count)
+        novel_slug = novel_info['slug']
+        logger.info('Novel slug: %s', novel_slug)
 
-        logger.info('Getting chapters...')
-        futures_to_check = {
-            self.executor.submit(self.download_chapter_list, i + 1): str(i)
-            for i in range(page_count)
-        }
-        temp_chapters = dict()
-        for future in futures.as_completed(futures_to_check):
-            page = int(futures_to_check[future])
-            temp_chapters[page] = future.result()
+        total_items = pagination['count']
+        total_pages = math.ceil(total_items / per_page)
+        logger.info('Total pages: %d', total_pages)
+        
+        futures = []
+        for page in range(total_pages):
+            url = chapter_list_url % (novel_slug, page + 1)
+            f = self.executor.submit(self.get_json, url)
+            futures.append(f)
         # end for
 
-        logger.info('Building sorted chapter list...')
-        volumes = set()
-        for page in sorted(temp_chapters.keys()):
-            for chap in temp_chapters[page]:
-                chap['id'] = 1 + len(self.chapters)
-                chap['volume'] = 1 + len(self.chapters) // 100
-                volumes.add(chap['volume'])
-                self.chapters.append(chap)
-            # end for
+        for f in futures:
+            data = f.result()
+            for item in data['results']:
+                chap_id = 1 + len(self.chapters)
+                vol_id = 1 + len(self.chapters) // 100
+                if len(self.chapters) % 100 == 0:
+                    self.volumes.append({ 'id': vol_id })
+                # end if
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'title': item['title'],
+                    'url': chapter_body_url % (novel_slug, item['number']),
+                })
         # end for
-
-        self.volumes = [{'id': x} for x in volumes]
     # end def
-
-    def download_chapter_list(self, page_no):
-        chapter_url = self.novel_url + ('?page=%d' % page_no)
-        logger.info('Visiting %s', chapter_url)
-        soup = self.get_soup(chapter_url)
-
-        chapters = []
-        for a in soup.select('.card a[href*="/novel/"]'):
-            chapters.append({
-                'url': self.absolute_url(a['href']),
-                'title': a.select_one('div p').text.strip(),
-            })
-        # end for
-        return chapters
-    # end def
-
+    
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        paras = soup.select('.card .card-body p')
-        paras = [str(p) for p in paras if p.text.strip()]
-        return ''.join(paras)
+        script = soup.find(lambda tag: isinstance(tag, Tag) and tag.name == 'script' and tag.text.startswith('window.__NUXT__'))
+        assert isinstance(script, Tag)
+
+        data = js2py.eval_js(script.text).to_dict()
+
+        contents = data['fetch'][0]['contentParts']
+        contents = [x['content'] for y in contents for x in y]
+
+        self.bad_tags = []
+        self.bad_css = ['.code-block']
+        html = '\n'.join(contents)
+        html = html.replace('<span>', '').replace('</span>', '')
+        body = self.make_soup(html).find('body')
+        return self.extract_contents(body)
     # end def
 # end class
