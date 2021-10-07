@@ -52,7 +52,7 @@
     "GOOGLE_DRIVE_FOLDER_ID": {
       "description": "Google Drive folder id to upload",
       "required": false
-    },
+    }
   },
   "buildpacks": [
     {
