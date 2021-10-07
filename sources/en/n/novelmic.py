@@ -10,6 +10,7 @@ chapter_list_url = 'https://novelmic.com/wp-admin/admin-ajax.php'
 
 
 class NovelMic(Crawler):
+    has_manga = True
     base_url = 'https://novelmic.com/'
 
     # TODO: Search not working, not sure why/

@@ -185,6 +185,7 @@ def process_file(py_file: Path) -> float:
         can_login = 'login' in crawler.__dict__
         can_logout = 'logout' in crawler.__dict__
         can_search = 'search_novel' in crawler.__dict__
+        has_manga = getattr(crawler, 'has_manga', False)
         has_mtl = getattr(crawler, 'machine_translation', False)
         source_id = hashlib.md5(str(crawler).encode('utf8')).hexdigest()
 
@@ -201,6 +202,7 @@ def process_file(py_file: Path) -> float:
         # info['first_commit'] = history[-1]
         # info['author'] = history[-1]['author']
         info['has_mtl'] = has_mtl
+        info['has_manga'] = has_manga
         info['can_search'] = can_search
         info['can_login'] = can_login
         info['can_logout'] = can_logout
@@ -269,6 +271,7 @@ for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0
     supported += '<span title="Contains machine translations">%s</span>' % ('🤖' if info['has_mtl'] else '')
     supported += '<span title="Supports searching">%s</span>' % ('🔍' if info['can_search'] else '')
     supported += '<span title="Supports login">%s</span>' % ('🔑' if info['can_login'] else '')
+    supported += '<span title="Contains manga/manhua/manhwa">%s</span>' % ('🖼️' if info['has_manga'] else '')
     supported += '</td>\n'
 
     supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
