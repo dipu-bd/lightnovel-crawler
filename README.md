@@ -113,7 +113,9 @@ $ lncrawl
 
 When there is a new update available, you can install it just by running `pip install -U lightnovel-crawler`. You will not have to run all the above commands again.
 
-> Another easy way is creating a custom script. Check https://github.com/dipu-bd/lightnovel-crawler/issues/1121
+**PyDroid**
+
+You can also use PyDroid in Android phones. Check this discussion for a custom script to run the app: https://github.com/dipu-bd/lightnovel-crawler/discussions/1137
 
 ### Chatbots
 
