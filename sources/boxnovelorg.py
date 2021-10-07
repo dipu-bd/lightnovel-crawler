@@ -9,7 +9,10 @@ search_url = 'http://boxnovel.org/search?keyword=%s'
 
 
 class BoxNovelOrgCrawler(Crawler):
-    base_url = 'http://boxnovel.org/'
+    base_url = [
+        'http://boxnovel.org/',
+        'https://boxnovel.org/',
+    ]
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
