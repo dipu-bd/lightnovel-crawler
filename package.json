@@ -1,8 +1,0 @@
-{
-  "name": "lightnovel-crawler",
-  "description": "Downloads lightnovels from various online sources and generates ebooks in many formats.",
-  "version": "2.16.2",
-  "engines": {
-    "node": "12.x"
-  }
-}

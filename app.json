@@ -2,8 +2,8 @@
   "name": "lightnovel crawler",
   "description": "Downloads lightnovels from various online sources and generates ebooks in many formats.",
   "keywords": [
-    "discord",
     "bot",
+    "discord",
     "telegram",
     "novel",
     "lightnovel",
@@ -18,7 +18,7 @@
       "required": true
     },
     "BOT": {
-      "description": "available: console, discord, telegram",
+      "description": "Available: console, discord, telegram",
       "value": "discord",
       "required": true
     },
@@ -32,14 +32,29 @@
     },
     "DISCORD_SIGNAL_CHAR": {
       "description": "Discord command prefix, only required if BOT is set to discord",
+      "required": true
+    },
+    "DISCORD_DISABLE_SEARCH": {
+      "description": "Disable searching in discord bot",
       "required": false,
-      "value": "!"
+      "value": "false"
+    },
+    "CLOUD_DRIVE": {
+      "description": "Available: GOFILE, GOOGLE_DRIVE",
+      "required": false,
+      "value": "GOFILE"
+    },
+    "GOOGLE_DRIVE_CREDENTIAL_FILE": {
+      "description": "Google Drive service credentials to use",
+      "required": false,
+      "value": "mycreds.txt"
+    },
+    "GOOGLE_DRIVE_FOLDER_ID": {
+      "description": "Google Drive folder id to upload",
+      "required": false
     }
   },
   "buildpacks": [
-    {
-      "url": "https://github.com/heroku/heroku-buildpack-nodejs"
-    },
     {
       "url": "https://github.com/heroku/heroku-buildpack-python"
     },

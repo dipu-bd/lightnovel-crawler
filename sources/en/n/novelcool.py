@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 class NovelCool(Crawler):
+    has_manga = True
     base_url = 'https://www.novelcool.com/'
 
     def read_novel_info(self):
