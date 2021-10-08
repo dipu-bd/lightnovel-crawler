@@ -13,11 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 class MyCrawlerName(Crawler):
-
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = [
         'http://sample.url/'
     ]
+    
+    # TODO: [OPTIONAL] Set True if this crawler is for manga/manhua/manhwa.
+    has_manga = False
+
+    # TODO: [OPTIONAL] Set True if this source contains machine translations.
+    machine_translation = False
 
     def initialize(self):
         # TODO: [OPTIONAL] This gets called before executing all other methods.

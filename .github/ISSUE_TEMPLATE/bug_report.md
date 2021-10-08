@@ -9,11 +9,11 @@ assignees: ''
 
 ## Describe the bug
 
-< what is this bug about? you can paste some error logs / screenshots here. >
+<!-- what is this bug about? you can paste some error logs / screenshots here. -->
 
 ## Let us know
 
-**Input**:         <novel url or query you entered> <!-- What is your novel URL? -->
+**Novel URL**:     <your novel url or query> <!-- What is your novel URL? -->
 **App source**:    PIP | EXE | Discord | Telegram <!-- Where did you find this bug? -->
 **App version**:   x.y.z  <!-- or the name of the bot -->
 **Your OS**:       Linux | Windows | Mac <!-- skip for bots -->
