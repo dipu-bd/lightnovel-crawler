@@ -48,10 +48,10 @@ class Crawler(ABC):
                 # debug=True,
                 ssl_context=ctx,
                 browser={
-                    #'custom': random.choice(user_agents),
-                    'browser': 'chrome',
-                    'platform': 'windows',
-                    'mobile': False
+                    'custom': random.choice(user_agents),
+                    #'browser': 'chrome',
+                    #'platform': 'windows',
+                    #'mobile': False
                 }
             )
         except Exception as err:
