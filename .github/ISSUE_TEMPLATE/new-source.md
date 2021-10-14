@@ -7,5 +7,11 @@ assignees: ''
 
 ---
 
-<!-- Replace the title with your URL -->
-<!-- Please put one URL per issue -->
+<!-- Please provide following informations -->
+
+- Language:
+- Supports Searching: Yes/No
+- Contains Machine Translations: Yes/No
+- Contains Manga/Manhua/Manhwa: Yes/No
+- Has CloudFlare Protection: Yes/No
+
