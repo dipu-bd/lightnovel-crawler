@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-from urllib.parse import urlparse
 
 from bs4.element import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -25,10 +25,12 @@ class LightNovelOnline(Crawler):
         results = []
         for a in soup.select('.novel-list .novel-item a'):
             assert isinstance(a, Tag)
+            possible_info = a.select_one('.novel-stats')
+            info = possible_info.text.strip() if isinstance(possible_info, Tag) else None
             results.append({
                 'title': str(a['title']).strip(),
                 'url': self.absolute_url(a['href']),
-                'info': a.select_one('.novel-stats').text.strip(),
+                'info': info,
             })
         # end for
         return results
@@ -40,22 +42,19 @@ class LightNovelOnline(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.novel-info .novel-title').text.strip()
+        possible_title = soup.select_one('.novel-info .novel-title')
+        assert isinstance(possible_title, Tag)
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('.glass-background img')['src'])
-        except Exception as err:
-            logger.debug('Failed to parse novel cover. Error: %s', err)
-        # end try
+        possible_image = soup.select_one('.glass-background img')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        try:
-            self.novel_author = soup.select_one('.author a[href*="/author/"]')['title']
-        except Exception as err:
-            logger.debug('Failed to parse novel author. Error: %s', err)
-        # end try
+        possible_author = soup.select_one('.author a[href*="/author/"]')
+        if isinstance(possible_author, Tag):
+            self.novel_author = possible_author['title']
         logger.info('Novel author: %s', self.novel_author)
 
         logger.info('Getting chapters...')

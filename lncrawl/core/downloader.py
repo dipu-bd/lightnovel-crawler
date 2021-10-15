@@ -30,7 +30,7 @@ def download_image(app, url) -> Image.Image:
 
 def download_cover(app):
     filename = None
-    filename = os.path.join(app.output_path, 'cover.png')
+    filename = os.path.join(app.output_path, 'cover.jpg')
     if os.path.exists(filename):
         return filename
 
@@ -38,7 +38,7 @@ def download_cover(app):
     image_url = app.crawler.novel_cover
     try:
         img = download_image(app, image_url)
-        img.save(filename, 'PNG')
+        img.convert('RGB').save(filename, "JPEG")
         logger.debug('Saved cover: %s', filename)
         return filename
     except Exception as ex:
@@ -47,10 +47,10 @@ def download_cover(app):
     # end try
 
     logger.info('Downloading fallback cover image...')
-    image_url = 'https://source.unsplash.com/featured/1200x1550?abstract'
+    image_url = 'https://source.unsplash.com/featured/800x1032?abstract'
     try:
         img = download_image(app, image_url)
-        img.save(filename, 'PNG')
+        img.convert('RGB').save(filename, "JPEG")
         logger.debug('Saved cover: %s', filename)
         return filename
     except Exception as ex:
