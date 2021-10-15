@@ -18,8 +18,8 @@ def make_cover_image(app):
     logger.info('Creating cover: %s', app.book_cover)
     # ext = app.book_cover.split('.')[-1]
     cover_image = epub.EpubImage()
-    cover_image.file_name = 'cover.png'
-    cover_image.media_type = 'image/png'
+    cover_image.file_name = 'cover.jpg'
+    cover_image.media_type = 'image/jpeg'
     with open(app.book_cover, 'rb') as image_file:
         cover_image.content = image_file.read()
     # end with
@@ -154,7 +154,7 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Create book spine
     try:
-        book.set_cover('book-cover.png', open(app.book_cover, 'rb').read())
+        book.set_cover('book-cover.jpg', open(app.book_cover, 'rb').read())
         book.spine = ['cover', intro_page, 'nav']
     except Exception:
         book.spine = [intro_page, 'nav']
