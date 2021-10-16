@@ -1,5 +1,3 @@
-import os
-
 from requests import Session
 
 
@@ -10,19 +8,13 @@ def upload(file_path, description):
         response.raise_for_status()
         server_name = response.json()['data']['server']
 
-    with open(file_path, "rb") as fp:
-        upload_url = f'https://{server_name}.gofile.io/uploadFile'
-        response = sess.post(
-            upload_url,
-            data={
-                'description': description,
-                #'token': os.getenv('GOFILE_TOKEN'),
-                #'folderId': os.getenv('GOFILE_FOLDER_ID'),
-            },
-            files={
-                'upload_file': fp,
-            },
-            stream=True,
-        )
-        response.raise_for_status()
-        return response.json()['data']['directLink']
+        with open(file_path, "rb") as fp:
+            upload_url = f'https://{server_name}.gofile.io/uploadFile'
+            response = sess.post(
+                upload_url,
+                data={'description': description},
+                files={ 'upload_file': fp },
+                stream=True,
+            )
+            response.raise_for_status()
+            return response.json()['data']['directLink']
