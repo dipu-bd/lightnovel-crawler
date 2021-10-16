@@ -1,43 +1,33 @@
 # -*- coding: utf-8 -*-
 import asyncio
-import logging
 import os
 import random
 import re
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from urllib.parse import quote
+from typing import Optional
 
 import discord
 
-from ...core.app import App
-from ...utils.uploader import upload
-from .config import max_workers, public_ip, public_path
+from lncrawl.core.app import App
+from lncrawl.core.crawler import Crawler
+from lncrawl.utils.uploader import upload
 
-logger = logging.getLogger(__name__)
-
-available_formats = [
-    'epub',
-    'text',
-    'web',
-    'mobi',
-    'pdf',
-    'fb2',
-]
-
-disable_search = os.getenv('DISCORD_DISABLE_SEARCH') == 'true'
+from .config import available_formats, disable_search, logger
 
 
 class MessageHandler:
-    def __init__(self, client):
+    def __init__(self, uid, client):
         self.app = App()
+        self.uid = uid
         self.client = client
         self.state = None
-        self.executor = ThreadPoolExecutor(max_workers)
+        self.executor = ThreadPoolExecutor(2)
         self.last_activity = datetime.now()
         self.closed = False
         self.get_current_status = None
+        self.selected_novel: Optional[dict] = None
     # end def
 
     def process(self, message):
@@ -48,7 +38,7 @@ class MessageHandler:
     def destroy(self):
         try:
             self.get_current_status = None
-            self.client.handlers.pop(str(self.user.id))
+            self.client.handlers.pop(str(self.uid))
             self.send_sync('Closing current session...')
             self.executor.shutdown(wait=False)
             self.app.destroy()
@@ -61,7 +51,7 @@ class MessageHandler:
         # end try
     # end def
 
-    def handle_message(self, message):
+    def handle_message(self, message: discord.Message):
         self.message = message
         self.user = message.author
         if not self.state:
@@ -263,6 +253,7 @@ class MessageHandler:
     # end def
 
     def display_sources_selection(self):
+        assert isinstance(self.selected_novel, dict)
         novel_list = self.selected_novel['novels']
         self.send_sync('**%s** is found in %d sources:\n' %
                        (self.selected_novel['title'], len(novel_list)))
@@ -288,6 +279,7 @@ class MessageHandler:
     def handle_sources_to_search(self):
         self.state = self.busy_state
 
+        assert isinstance(self.selected_novel, dict)
         if len(self.selected_novel['novels']) == 1:
             novel = self.selected_novel['novels'][0]
             return self.handle_search_result(novel)
@@ -350,9 +342,6 @@ class MessageHandler:
 
         # Setup output path
         root = os.path.abspath('.discord_bot_output')
-        if public_path and os.path.exists(public_path):
-            root = os.path.abspath(public_path)
-        # end if
         good_name = os.path.basename(self.app.output_path)
         output_path = os.path.join(root, str(self.user.id), good_name)
         shutil.rmtree(output_path, ignore_errors=True)
@@ -373,6 +362,7 @@ class MessageHandler:
             '- Send `volume 2 5` to download download volume 2 and 5. Pass as many numbers you need.',
             '- Send `chapter 110 120` to download chapter 110 to 120. Only two numbers are accepted.',
         ]))
+        assert isinstance(self.app.crawler, Crawler)
         self.send_sync(
             '**It has `%d` volumes and `%d` chapters.**' % (
                 len(self.app.crawler.volumes),
@@ -390,6 +380,7 @@ class MessageHandler:
             return
         # end if
 
+        assert isinstance(self.app.crawler, Crawler)
         if text == 'all':
             self.app.chapters = self.app.crawler.chapters[:]
         elif re.match(r'^first(\s\d+)?$', text):
@@ -421,7 +412,7 @@ class MessageHandler:
                     cid = 0
                     if name.isdigit():
                         cid = int(name)
-                    else:
+                    elif isinstance(self.app.crawler, Crawler):
                         cid = self.app.crawler.get_chapter_index_of(name)
                     # end if
                     return cid - 1
@@ -517,6 +508,7 @@ class MessageHandler:
         self.app.pack_by_volume = False
 
         try:
+            assert isinstance(self.app.crawler, Crawler)
             self.send_sync(
                 '**%s**' % self.app.crawler.novel_title,
                 'Downloading %d chapters...' % len(self.app.chapters),
@@ -539,14 +531,10 @@ class MessageHandler:
             if self.closed:
                 return
 
-            if public_ip and public_path and os.path.exists(public_path):
-                self.send_sync('Publishing files...')
-                self.publish_files()
-            else:
-                for archive in self.app.archived_outputs:
-                    self.upload_file(archive)
-                # end for
-            # end if
+            assert isinstance(self.app.archived_outputs, list)
+            for archive in self.app.archived_outputs:
+                self.upload_file(archive)
+            # end for
         except Exception as ex:
             logger.exception('Failed to download')
             self.send_sync('Download failed!\n`%s`' % str(ex))
@@ -555,23 +543,12 @@ class MessageHandler:
         # end try
     # end def
 
-    def publish_files(self):
-        try:
-            download_url = '%s/%s/%s' % (public_ip.strip('/'),
-                                         quote(str(self.user.id)),
-                                         quote(os.path.basename(self.app.output_path)))
-            self.send_sync('Download files from:\n' + download_url)
-        except Exception:
-            logger.exception('Fail to publish')
-        # end try
-    # end def
-
     def upload_file(self, archive):
         # Check file size
         filename = os.path.basename(archive)
         file_size = os.stat(archive).st_size
         if file_size > 7.99 * 1024 * 1024:
-            self.send_sync(f'File {filename} exceeds 8MB. Using alternative cloud storage.')
+            self.send_sync(f'File exceeds 8MB. Using alternative cloud storage.')
             try:
                 description = 'Generated By : Lightnovel Crawler Discord Bot'
                 direct_link = upload(archive, description)

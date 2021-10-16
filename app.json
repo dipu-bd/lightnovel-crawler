@@ -40,9 +40,9 @@
       "value": "false"
     },
     "CLOUD_DRIVE": {
-      "description": "Available: GOFILE, GOOGLE_DRIVE",
+      "description": "Available: GOFILE, GOOGLE_DRIVE, ANONFILES",
       "required": false,
-      "value": "GOFILE"
+      "value": "ANONFILES"
     },
     "GOOGLE_DRIVE_CREDENTIAL_FILE": {
       "description": "Google Drive service credentials to use",
