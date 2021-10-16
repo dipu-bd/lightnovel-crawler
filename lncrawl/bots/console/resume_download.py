@@ -52,6 +52,8 @@ def resume_session():
     # end if
 
     app = load_session_from_metadata(metadata)
+    assert isinstance(app.crawler, Crawler)
+
     print('Resuming', app.crawler.novel_title)
     print('Output path:', app.output_path)
 
