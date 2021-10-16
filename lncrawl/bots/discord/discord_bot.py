@@ -68,11 +68,11 @@ class DiscordBot(discord.Client):
                 await self.handle_message(message)
             elif text.startswith(C.signal) and len(text.split(C.signal)) == 2:
                 uid = str(message.author.id)
+                async with message.channel.typing():
+                    await message.channel.send(f"Sending you a private message <@{uid}>")
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
                 # end if
-                with message.channel.typing():
-                    await message.channel.send(f"Sending you a private message <@{uid}>")
                 await self.handle_message(message)
             # end if
         except IndexError as ex:
@@ -93,20 +93,20 @@ class DiscordBot(discord.Client):
             if uid in self.handlers:
                 self.handlers[uid].process(message)
             elif len(self.handlers) > C.max_active_handles or discriminator not in C.vip_users_ids:
-                await message.author.trigger_typing()
-                await message.author.send(
-                    "Sorry! I am too busy processing requests of other users.\n"
-                    "Please knock me here later!"
-                )
+                async with message.author.typing():
+                    await message.author.send(
+                        "Sorry! I am too busy processing requests of other users.\n"
+                        "Please knock me here later!"
+                    )
             else:
-                self.handlers[uid] = MessageHandler(uid, self)
                 logger.info("New handler for %s#%s [%s]", message.author.name, discriminator, uid)
-                await message.author.trigger_typing()
-                await message.author.send(
-                    '-' * 25 + '\n' +
-                    f'Hello <@{uid}>\n' +
-                    '-' * 25 + '\n'
-                )
+                self.handlers[uid] = MessageHandler(uid, self)
+                async with message.author.typing():
+                    await message.author.send(
+                        '-' * 25 + '\n' +
+                        f'Hello <@{uid}>\n' +
+                        '-' * 25 + '\n'
+                    )
                 self.handlers[uid].process(message)
             # end if
         except Exception:

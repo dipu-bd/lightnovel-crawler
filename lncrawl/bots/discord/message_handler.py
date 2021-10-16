@@ -23,11 +23,11 @@ class MessageHandler:
         self.uid = uid
         self.client = client
         self.state = None
-        self.executor = ThreadPoolExecutor(2)
         self.last_activity = datetime.now()
         self.closed = False
         self.get_current_status = None
         self.selected_novel: Optional[dict] = None
+        self.executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix=uid)
     # end def
 
     def process(self, message):
@@ -36,18 +36,21 @@ class MessageHandler:
     # end def
 
     def destroy(self):
+        self.executor.submit(self.destroy_sync)
+    # end def
+
+    def destroy_sync(self):
         try:
             self.get_current_status = None
-            self.client.handlers.pop(str(self.uid))
-            self.send_sync('Closing current session...')
-            self.executor.shutdown(wait=False)
+            self.client.handlers.pop(self.uid)
             self.app.destroy()
             shutil.rmtree(self.app.output_path, ignore_errors=True)
+            self.executor.shutdown(wait=False)
         except Exception:
             logger.exception('While destroying MessageHandler')
         finally:
-            self.send_sync('Session closed. Send *start* to start over')
             self.closed = True
+            logger.info('Session destroyed: %s', self.uid)
         # end try
     # end def
 
@@ -62,7 +65,7 @@ class MessageHandler:
         except Exception as ex:
             logger.exception('Failed to process state')
             self.send_sync('Something went wrong!\n`%s`' % str(ex))
-            self.executor.submit(self.destroy)
+            self.destroy()
         # end try
     # end def
 
@@ -72,7 +75,7 @@ class MessageHandler:
         asyncio.run_coroutine_threadsafe(
             async_coroutine,
             self.client.loop
-        ).result()
+        ).result(timeout=300)
     # end def3
 
     async def send(self, *contents):
@@ -97,7 +100,7 @@ class MessageHandler:
         text = self.message.content.strip()
 
         if text == '!cancel':
-            self.executor.submit(self.destroy)
+            self.destroy()
             return
         # end if
 
@@ -141,7 +144,7 @@ class MessageHandler:
 
         text = self.message.content.strip()
         if text == '!cancel':
-            self.executor.submit(self.destroy)
+            self.destroy()
             return
         # end if
 
@@ -336,7 +339,7 @@ class MessageHandler:
         except Exception as ex:
             logger.exception('Failed to get novel info')
             self.send_sync('Failed to get novel info.\n`%s`' % str(ex))
-            self.executor.submit(self.destroy)
+            self.destroy()
             return
         # end try
 
@@ -376,7 +379,7 @@ class MessageHandler:
         self.state = self.busy_state
         text = self.message.content.strip().lower()
         if text == '!cancel':
-            self.executor.submit(self.destroy)
+            self.destroy()
             return
         # end if
 
@@ -539,7 +542,7 @@ class MessageHandler:
             logger.exception('Failed to download')
             self.send_sync('Download failed!\n`%s`' % str(ex))
         finally:
-            self.executor.submit(self.destroy)
+            self.destroy()
         # end try
     # end def
 
