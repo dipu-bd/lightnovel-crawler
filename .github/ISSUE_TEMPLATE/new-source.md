@@ -7,6 +7,8 @@ assignees: ''
 
 ---
 
+<!-- Did you search the issues to check if this link is already requested? -->
+
 <!-- Please provide following informations -->
 
 - Language:
