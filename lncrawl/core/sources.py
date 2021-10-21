@@ -148,10 +148,12 @@ def __check_updates():
 
     global __current_index
     __current_index['app'] = __latest_index['app']
+    __current_index['supported'] = __latest_index['supported']
+    __current_index['rejected'] = __latest_index['rejected']
     __save_current_index()
 
     global rejected_sources
-    rejected_sources = __latest_index['rejected']
+    rejected_sources = __current_index['rejected']
 
 
 # --------------------------------------------------------------------------- #
