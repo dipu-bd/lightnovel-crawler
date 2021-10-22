@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
-from urllib.parse import quote_plus
+
+from bs4.element import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -14,26 +15,34 @@ class WuxiaSiteCo(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.read-item h1').text.strip()
+        possible_title = soup.select_one('.read-item h1')
+        assert isinstance(possible_title, Tag)
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.read-item .img-read img')['src'])
+        possible_cover = soup.select_one('.read-item .img-read img')
+        if isinstance(possible_cover, Tag):
+            self.novel_cover = self.absolute_url(possible_cover['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select('.read-item .content-reading p')[0].text.strip()
+        possible_author = soup.select_one('.read-item .content-reading p:first-child')
+        if isinstance(possible_author, Tag):
+            self.novel_author = possible_author.text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_id = soup.select_one('.story-introduction__toggler .show-more-list')['data-id']
+        possible_id = soup.select_one('.story-introduction__toggler .show-more-list')
+        assert isinstance(possible_id, Tag)
+        self.novel_id = possible_id['data-id']
         logger.info('Novel Id: %s', self.novel_id)
 
         soup = self.get_soup(full_chapter_list_url % self.novel_id)
 
-        volumes = set([])
         for a in soup.select('a'):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
-            volumes.add(vol_id)
+            if len(self.chapters) % 100 == 0:
+                self.volumes.append({ 'id': vol_id })
+            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -41,8 +50,6 @@ class WuxiaSiteCo(Crawler):
                 'url': self.absolute_url(a['href']),
             })
         # end for
-
-        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
@@ -50,10 +57,15 @@ class WuxiaSiteCo(Crawler):
         soup = self.get_soup(chapter['url'])
         
         contents = soup.select_one('div.content-story')
+        assert isinstance(contents, Tag)
+
         for bad in contents.select('p[style="display: none"], script, ins'):
             bad.extract()
         # end for
 
-        return '\n'.join([str(p) for p in contents.select('p') if p.text.strip()])
+        return '\n'.join([
+            str(p) for p in contents.select('p')
+            if p.text.strip()
+        ])
     # end def
 # end class
