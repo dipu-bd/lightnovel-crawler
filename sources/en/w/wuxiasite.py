@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
+
+from bs4.element import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -35,39 +36,35 @@ class WuxiaSiteCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
+        possible_title = soup.select_one('.post-title')
+        assert isinstance(possible_title, Tag)
+        possible_title = possible_title.select_one('h1, h2, h3')
+        assert isinstance(possible_title, Tag)
         self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.post-title').select_one('h1, h2, h3').contents
-            if not x.name
+            str(x) for x in possible_title.contents
+            if not isinstance(x, Tag)
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['src'])
+        possible_cover = soup.select_one('.summary_image a img')
+        if isinstance(possible_cover, Tag):
+            self.novel_cover = self.absolute_url(possible_cover['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        author = soup.select('.author-content a')
-        if len(author) == 2:
-            self.novel_author = author[0].text + ' (' + author[1].text + ')'
-        elif len(author) == 1:
-            self.novel_author = author[0].text
+        authors = soup.select('.author-content a')
+        if len(authors) == 2:
+            self.novel_author = authors[0].text + ' (' + authors[1].text + ')'
+        elif len(authors) == 1:
+            self.novel_author = authors[0].text
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel Id = %s', self.novel_id)
+        possible_chapter = soup.select_one('.page-content-listing .wp-manga-chapter a')
+        assert isinstance(possible_chapter, Tag)
+        chapter_link = self.absolute_url(possible_chapter['href'])
+        logger.info('chapter: %s', chapter_link)
+        soup = self.get_soup(chapter_link)
 
-        soup = self.make_soup(self.submit_form(
-            'https://wuxiaworld.site/wp-admin/admin-ajax.php',
-            data={
-                'action': 'manga_get_chapters',
-                'manga': self.novel_id
-            }
-        ))
-
-        chapters = soup.select('ul.main li.wp-manga-chapter a')
-        chapters.reverse()
-
-        for a in chapters:
+        for option in reversed(soup.select('select.selectpicker_chapter option')):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
@@ -76,8 +73,8 @@ class WuxiaSiteCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
+                'title': option.text.strip(),
+                'url':  self.absolute_url(option['data-redirect']),
             })
         # end for
     # end def
@@ -85,7 +82,13 @@ class WuxiaSiteCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        content = soup.select_one('.text-left, .cha-words, .reading-content')
+
+        content = soup.select_one('.text-left')
+        if not isinstance(content, Tag):
+            content = soup.select_one('.cha-words')
+        if not isinstance(content, Tag):
+            content = soup.select_one('.reading-content')
+
         return self.extract_contents(content)
     # end def
 # end class

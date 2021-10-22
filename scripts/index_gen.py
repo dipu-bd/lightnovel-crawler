@@ -25,6 +25,7 @@ SOURCES_FOLDER = WORKDIR / 'sources'
 INDEX_FILE = SOURCES_FOLDER / '_index.json'
 REJECTED_FILE = SOURCES_FOLDER / '_rejected.json'
 CONTRIB_CACHE_FILE = WORKDIR / '.github' / 'contribs.json'
+LANGUAGE_CACHE_FILE = WORKDIR / '.github' / 'lang_codes.json'
 
 README_FILE = WORKDIR / 'README.md'
 SUPPORTED_SOURCE_LIST_QUE = '<!-- auto generated supported sources list -->'
@@ -32,6 +33,16 @@ REJECTED_SOURCE_LIST_QUE = '<!-- auto generated rejected sources list -->'
 HELP_RESULT_QUE = '<!-- auto generated command line output -->'
 
 DATE_FORMAT = '%d %B %Y %I:%M:%S %p'
+
+executor = ThreadPoolExecutor(8)
+session = cloudscraper.create_scraper()
+
+with open(LANGUAGE_CACHE_FILE, encoding='utf8') as fp:
+    language_codes = json.load(fp)
+
+# =========================================================================================== #
+# The index data
+# =========================================================================================== #
 
 INDEX_DATA = {
     'v': int(time.time()),
@@ -43,13 +54,6 @@ INDEX_DATA = {
     'supported': {},
     'crawlers': {},
 }
-
-executor = ThreadPoolExecutor(8)
-session = cloudscraper.create_scraper()
-
-# =========================================================================================== #
-# The index data
-# =========================================================================================== #
 
 print('-' * 50)
 res = session.get('https://pypi.org/pypi/lightnovel-crawler/json')
@@ -243,45 +247,68 @@ with open(CONTRIB_CACHE_FILE, 'w', encoding='utf8') as fp:
 # Update README.md
 # =========================================================================================== #
 
+# Make groups by language codes
+grouped_crawlers = dict()
+grouped_supported = dict()
+
+for crawler_id, crawler in INDEX_DATA['crawlers'].items():
+    ln_code = crawler['file_path'].split('/')[1]
+    if ln_code not in language_codes:
+        ln_code = ''
+    grouped_crawlers[crawler_id] = ln_code
+
+for link, crawler_id in INDEX_DATA['supported'].items():
+    ln_code = grouped_crawlers[crawler_id]
+    grouped_supported.setdefault(ln_code, {})
+    grouped_supported[ln_code][link] = crawler_id
+
 print('Rendering supported and rejected source list for README.md...')
 
 with open(README_FILE, encoding='utf8') as fp:
     readme_text = fp.read()
 
 before, supported, after = readme_text.split(SUPPORTED_SOURCE_LIST_QUE)
+
 supported = '\n\n'
 supported += f"We are supporting {len(INDEX_DATA['supported'])} sources and {len(INDEX_DATA['crawlers'])} crawlers."
-supported += '\n\n'
-supported += '<table>\n<tbody>\n'
-supported += '<tr>'
-supported += '<th></th>\n'
-supported += '<th>Source URL</th>\n'
-supported += '<th>Version</th>\n'
-# supported += '<th>Created At</th>\n'
-supported += '<th>Contributors</th>\n'
-supported += '</tr>\n'
-for url, crawler_id in sorted(INDEX_DATA['supported'].items(), key=lambda x: x[0]):
-    info = INDEX_DATA['crawlers'][crawler_id]
-    source_url = REPO_URL + '/blob/master/' + info['file_path']
-    last_update = datetime.fromtimestamp(info['version']).strftime(DATE_FORMAT)
 
+for ln_code, links in sorted(grouped_supported.items(), key=lambda x: x[0]):
+    assert isinstance(links, dict)
+    language = language_codes.get(ln_code, 'Unknown')
+    supported += '\n\n'
+    supported += f'### `{ln_code or "~"}` {language}'
+    supported += '\n\n'
+    supported += '<table>\n<tbody>\n'
     supported += '<tr>'
-
-    supported += '<td>'
-    supported += '<span title="Contains machine translations">%s</span>' % ('🤖' if info['has_mtl'] else '')
-    supported += '<span title="Supports searching">%s</span>' % ('🔍' if info['can_search'] else '')
-    supported += '<span title="Supports login">%s</span>' % ('🔑' if info['can_login'] else '')
-    supported += '<span title="Contains manga/manhua/manhwa">%s</span>' % ('🖼️' if info['has_manga'] else '')
-    supported += '</td>\n'
-
-    supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
-    supported += '<td><a href="%s" title="%s">%d</a></td>\n' % (source_url, last_update, info['total_commits'])
-    supported += '<td>%s</td>\n' % ' '.join([
-        '<a href="%s"><img src="%s&s=24" alt="%s" height="24"/></a>' % (c['html_url'], c['avatar_url'], c['login'])
-        for c in sorted([repo_contribs[x] for x in info['contributors']], key=lambda x: -x['contributions'])
-    ])
+    supported += '<th></th>\n'
+    supported += '<th>Source URL</th>\n'
+    supported += '<th>Version</th>\n'
+    # supported += '<th>Created At</th>\n'
+    supported += '<th>Contributors</th>\n'
     supported += '</tr>\n'
-supported += '</tbody>\n</table>\n\n'
+    for url, crawler_id in sorted(links.items(), key=lambda x: x[0]):
+        info = INDEX_DATA['crawlers'][crawler_id]
+        source_url = REPO_URL + '/blob/master/' + info['file_path']
+        last_update = datetime.fromtimestamp(info['version']).strftime(DATE_FORMAT)
+
+        supported += '<tr>'
+
+        supported += '<td>'
+        supported += '<span title="Contains machine translations">%s</span>' % ('🤖' if info['has_mtl'] else '')
+        supported += '<span title="Supports searching">%s</span>' % ('🔍' if info['can_search'] else '')
+        supported += '<span title="Supports login">%s</span>' % ('🔑' if info['can_login'] else '')
+        supported += '<span title="Contains manga/manhua/manhwa">%s</span>' % ('🖼️' if info['has_manga'] else '')
+        supported += '</td>\n'
+
+        supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)
+        supported += '<td><a href="%s" title="%s">%d</a></td>\n' % (source_url, last_update, info['total_commits'])
+        supported += '<td>%s</td>\n' % ' '.join([
+            '<a href="%s"><img src="%s&s=24" alt="%s" height="24"/></a>' % (c['html_url'], c['avatar_url'], c['login'])
+            for c in sorted([repo_contribs[x] for x in info['contributors']], key=lambda x: -x['contributions'])
+        ])
+        supported += '</tr>\n'
+    supported += '</tbody>\n</table>\n'
+
 readme_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
 
 print('Generated supported sources list.')
