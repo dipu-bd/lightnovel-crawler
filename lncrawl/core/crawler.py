@@ -342,11 +342,14 @@ class Crawler(ABC):
         'span', 'a', 'abbr', 'acronym', 'label', 'time',
     ]
     substitutions = {
-        'u003c': '<',
-        'u003e': '>',
         '"s': "'s",
         '“s': "'s",
         '”s': "'s",
+        '&': '&amp;',
+        'u003c': '<',
+        'u003e': '>',
+        '<': '&lt;',
+        '>': '&gt;',
     }
 
     def clean_text(self, text) -> str:
