@@ -5,7 +5,6 @@ import tarfile
 import tempfile
 from io import BytesIO, FileIO
 from logging import Logger
-from shutil import rmtree
 from zipfile import ZipFile
 import requests
 

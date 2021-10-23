@@ -13,7 +13,7 @@ signal = os.getenv('DISCORD_SIGNAL_CHAR') or '!'
 discord_token = os.getenv('DISCORD_TOKEN')
 disable_search = os.getenv('DISCORD_DISABLE_SEARCH') == 'true'
 session_retain_time_in_seconds = 4 * 3600
-max_active_handles = 5
+max_active_handles = 15
 
 vip_users_ids = set([
     '1822',
