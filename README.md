@@ -321,7 +321,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 203 sources and 221 crawlers.
+We are supporting 204 sources and 222 crawlers.
 
 ### `~` Unknown
 
@@ -952,6 +952,11 @@ We are supporting 203 sources and 221 crawlers.
 <td><a href="https://www.box-novel.com/" target="_blank">https://www.box-novel.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/b/boxnovelcom.py" title="16 July 2021 02:11:58 PM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://www.divinedaolibrary.com/" target="_blank">https://www.divinedaolibrary.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/d/divinedaolibrary.py" title="23 October 2021 12:37:53 PM">1</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.f-w-o.com/" target="_blank">https://www.f-w-o.com/</a></td>
