@@ -36,6 +36,7 @@ class MessageHandler:
     # end def
 
     def destroy(self):
+        self.send_sync('Closing current session')
         self.executor.submit(self.destroy_sync)
     # end def
 
@@ -69,14 +70,18 @@ class MessageHandler:
         # end try
     # end def
 
+    def is_busy(self) -> bool:
+        return self.state == self.busy_state
+    # end def
+
     # ---------------------------------------------------------------------- #
 
     def wait_for(self, async_coroutine):
         asyncio.run_coroutine_threadsafe(
             async_coroutine,
             self.client.loop
-        ).result(timeout=300)
-    # end def3
+        ).result(timeout=3*60)
+    # end def
 
     async def send(self, *contents):
         if self.closed:

@@ -96,7 +96,7 @@ class DiscordBot(discord.Client):
                 async with message.author.typing():
                     await message.author.send(
                         "Sorry! I am too busy processing requests of other users.\n"
-                        "Please knock me here later!"
+                        "Please knock again in a few hours."
                     )
             else:
                 logger.info("New handler for %s#%s [%s]", message.author.name, discriminator, uid)
@@ -118,6 +118,9 @@ class DiscordBot(discord.Client):
         try:
             cur_time = datetime.now()
             for handler in self.handlers.values():
+                if handler.is_busy():
+                    continue
+                # end if
                 last_time = getattr(handler, 'last_activity', cur_time)
                 if (cur_time - last_time).seconds > C.session_retain_time_in_seconds:
                     handler.destroy()
