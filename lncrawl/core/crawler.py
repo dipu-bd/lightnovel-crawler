@@ -11,6 +11,7 @@ import sys
 import unicodedata
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
+from threading import Semaphore
 from typing import Dict, List
 from urllib.parse import urlparse
 
@@ -31,13 +32,22 @@ INVISIBLE_CHARS = [c for c in range(sys.maxunicode) if unicodedata.category(chr(
 NONPRINTABLE = itertools.chain(range(0x00, 0x20), range(0x7f, 0xa0), INVISIBLE_CHARS)
 NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
 
+MAX_CONCURRENT_REQUEST_PER_DOMAIN = 15
+REQUEST_SEMAPHORES: Dict[str, Semaphore] = {}
+
+def get_domain_semaphore(url):
+    host = urlparse(url).hostname or url
+    if host not in REQUEST_SEMAPHORES:
+        REQUEST_SEMAPHORES[host] = Semaphore(MAX_CONCURRENT_REQUEST_PER_DOMAIN)
+    return REQUEST_SEMAPHORES[host]
+
 
 class Crawler(ABC):
     '''Blueprint for creating new crawlers'''
 
     def __init__(self) -> None:
         self._destroyed = False
-        self.executor = ThreadPoolExecutor(max_workers=4)
+        self.executor = ThreadPoolExecutor(max_workers=5)
 
         # Initialize cloudscrapper
         try:
@@ -220,8 +230,9 @@ class Crawler(ABC):
         headers = {k.lower(): v for k, v in headers.items()}
         #headers.setdefault('user-agent', random.choice(user_agents))
 
-        with no_ssl_verification():
-            response = self.scraper.get(url, **kargs)
+        with get_domain_semaphore(url):
+            with no_ssl_verification():
+                response = self.scraper.get(url, **kargs)
 
         self.last_visited_url = url.strip('/')
         return self.__process_response(response)
@@ -237,14 +248,15 @@ class Crawler(ABC):
         headers.setdefault('content-type', 'application/json')
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
 
-        with no_ssl_verification():
-            response = self.scraper.post(
-                url,
-                data=data,
-                headers=headers,
-                # verify=False,
-                # allow_redirects=True,
-            )
+        with get_domain_semaphore(url):
+            with no_ssl_verification():
+                response = self.scraper.post(
+                    url,
+                    data=data,
+                    headers=headers,
+                    # verify=False,
+                    # allow_redirects=True,
+                )
 
         return self.__process_response(response)
     # end def
