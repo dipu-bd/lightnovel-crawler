@@ -2,9 +2,12 @@
 """
 Use this template to create new sources.
 
+Put your source file inside the language folder. The `en` folder has too many
+files, therefore it is grouped using the first letter of the domain name.
+
 TODO: Read the TODOs carefully.
 TODO: You should remove all TODOs tag.
-TODO: You can safely delete all [OPTIONAL] methods if you do not need them
+TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
 """
 import logging
 from lncrawl.core.crawler import Crawler

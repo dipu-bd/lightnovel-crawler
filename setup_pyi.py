@@ -50,9 +50,10 @@ def gather_hidden_imports():
         'pkg_resources.py2_warn',
     ]
 
-    for f in (ROOT / 'sources').glob('*.py'):
-        if f.name[0].isalnum():
-            module_list.append('sources.' + f.name[:-3])
+    for f in (ROOT / 'sources').glob('**/*.py'):
+        rel_path = str(f.relative_to(ROOT / 'sources'))
+        if all(x[0].isalnum() for x in rel_path.split(os.sep)):
+            module_list.append('sources.' + rel_path[:-3].replace(os.sep, '.'))
 
     command = []
     for p in module_list:
