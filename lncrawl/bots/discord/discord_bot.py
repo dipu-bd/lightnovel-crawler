@@ -92,12 +92,12 @@ class DiscordBot(discord.Client):
             logger.info("Processing message from %s#%s", message.author.name, discriminator)
             if uid in self.handlers:
                 self.handlers[uid].process(message)
-            elif len(self.handlers) > C.max_active_handles or discriminator not in C.vip_users_ids:
-                async with message.author.typing():
-                    await message.author.send(
-                        "Sorry! I am too busy processing requests of other users.\n"
-                        "Please knock again in a few hours."
-                    )
+            # elif len(self.handlers) > C.max_active_handles or discriminator not in C.vip_users_ids:
+            #     async with message.author.typing():
+            #         await message.author.send(
+            #             "Sorry! I am too busy processing requests of other users.\n"
+            #             "Please knock again in a few hours."
+            #         )
             else:
                 logger.info("New handler for %s#%s [%s]", message.author.name, discriminator, uid)
                 self.handlers[uid] = MessageHandler(uid, self)
