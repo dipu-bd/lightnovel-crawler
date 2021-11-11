@@ -1,6 +1,6 @@
 ---
-name: New Source
-about: Have a new source that you did not find in the README.md?
+name: Request New Source
+about: Want to request a new source that is not yet listed in the README.md?
 title: Replace this with an url
 labels: source
 assignees: ''
