@@ -9,7 +9,7 @@ assignees: ''
 
 ## Describe the bug
 
-<!-- If this issue is related to specific source / novel url, please create a "Source Not Working" istead  -->
+<!-- If this issue is related to specific source / novel url, please create a "Source Not Working" instead  -->
 
 <!-- What is this issue about? -->
 
