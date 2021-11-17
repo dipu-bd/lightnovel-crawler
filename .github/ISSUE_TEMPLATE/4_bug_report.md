@@ -9,6 +9,8 @@ assignees: ''
 
 ## Describe the bug
 
+<!-- If this issue is related to specific source / novel url, please create a "Source Not Working" instead  -->
+
 <!-- What is this issue about? -->
 
 <!-- Please add some error logs or screenshots here. -->

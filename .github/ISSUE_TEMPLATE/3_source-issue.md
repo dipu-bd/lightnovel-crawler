@@ -2,7 +2,7 @@
 name: Source Not Working
 about: Having trouble with a specific source? (e.g. failing to crawl or missing chapters or content)
 title: Fix this source
-labels: bug
+labels: source-issue
 assignees: ''
 
 ---
