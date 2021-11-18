@@ -46,7 +46,8 @@ class RoyalRoadCrawler(Crawler):
             "span", {"property": "name"}).text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        chapters = soup.find('tbody').findAll('a', href=True)
+        chapter_rows = soup.find('tbody').findAll('tr')
+        chapters = [row.find('a', href=True) for row in chapter_rows]
 
         for x in chapters:
             chap_id = len(self.chapters) + 1
