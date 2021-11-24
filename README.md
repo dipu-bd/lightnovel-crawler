@@ -321,7 +321,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 205 sources and 222 crawlers.
+We are supporting 206 sources and 222 crawlers.
 
 ### `ar` Arabic
 
@@ -848,6 +848,11 @@ We are supporting 205 sources and 222 crawlers.
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://totallytranslations.com/" target="_blank">https://totallytranslations.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/t/totallytranslations.py" title="16 July 2021 02:11:58 PM">2</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://travistranslations.com/" target="_blank">https://travistranslations.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/t/travistranslations.py" title="24 November 2021 02:26:04 PM">1</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -1472,9 +1477,6 @@ We are supporting 205 sources and 222 crawlers.
 </tr>
 <tr><td><a href="http://gravitytales.com/" target="_blank">http://gravitytales.com/</a></td>
 <td>Domain is expired</td>
-</tr>
-<tr><td><a href="http://liberspark.com/" target="_blank">http://liberspark.com/</a></td>
-<td>Site moved to https://travistranslations.com/ </td>
 </tr>
 <tr><td><a href="http://novels.cloud/" target="_blank">http://novels.cloud/</a></td>
 <td>This domain has expired</td>
