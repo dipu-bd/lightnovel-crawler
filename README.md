@@ -306,9 +306,9 @@ You are very welcome to contribute in this project. You can:
 
 ### Adding new source
 
-- Create new crawler using the [`sources/_template_.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/sources/_template_.py) as template.
-- Update [Supported sources](#c3-supported-sources) section in `README.md`
-- Add some test inputs to `test_user_inputs` variable in `lncrawl/bots/test/test_inputs.py`
+- Create new crawler using the [`sources/_template.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/_template.py) as template. Read the comments on the file for instructions.
+- You can find plenty examples in the `sources` folder.
+- Put your source file inside the language folder. The `en` folder has too many files, therefore it is grouped using the first letter of the domain name.
 
 ### Adding new Bot
 
