@@ -306,9 +306,9 @@ You are very welcome to contribute in this project. You can:
 
 ### Adding new source
 
-- Create new crawler using the [`sources/_template_.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/lncrawl/sources/_template_.py) as template.
-- Update [Supported sources](#c3-supported-sources) section in `README.md`
-- Add some test inputs to `test_user_inputs` variable in `lncrawl/bots/test/test_inputs.py`
+- Create new crawler using the [`sources/_template.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/_template.py) as template. Read the comments on the file for instructions.
+- You can find plenty examples in the `sources` folder.
+- Put your source file inside the language folder. The `en` folder has too many files, therefore it is grouped using the first letter of the domain name.
 
 ### Adding new Bot
 
@@ -321,7 +321,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 206 sources and 222 crawlers.
+We are supporting 207 sources and 223 crawlers.
 
 ### `ar` Arabic
 
@@ -504,6 +504,11 @@ We are supporting 206 sources and 222 crawlers.
 <td><a href="https://dobelyuwai.wordpress.com/" target="_blank">https://dobelyuwai.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/d/dobelyuwai.py" title="08 August 2021 11:24:02 PM">68</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://dragontea.ink/" target="_blank">https://dragontea.ink/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/d/dragon_tea.py" title="19 December 2021 01:43:44 AM">13</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://exiledrebelsscanlations.com/" target="_blank">https://exiledrebelsscanlations.com/</a></td>
