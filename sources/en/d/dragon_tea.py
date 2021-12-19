@@ -11,8 +11,8 @@ search_url = 'https://dragontea.ink/?s=%s&post_type=wp-manga'
 chapter_list_url = 'https://dragontea.ink/novel/%s/ajax/chapters/'
 
 
-class DaoNovelCrawler(Crawler):
-    base_url = 'ttps://dragontea.ink/'
+class DragonTeaCrawler(Crawler):
+    base_url = 'https://dragontea.ink/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
