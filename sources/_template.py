@@ -97,5 +97,4 @@ class MyCrawlerName(Crawler):
         #       Delete this method if you want to use the default one.
         pass
     # end def
-
 # end class
