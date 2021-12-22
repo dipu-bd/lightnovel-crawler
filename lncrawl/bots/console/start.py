@@ -68,7 +68,16 @@ def start(self):
         self.app.login_data = self.get_login_info()
     # end if
 
-    self.app.get_novel_info()
+    success = self.app.get_novel_info()
+    while not success:
+        # Get the user to try again
+        #TODO: refactor so login is supported
+        novel_url = self.choose_a_novel()
+        self.log.info('Selected novel: %s' % novel_url)
+        self.app.init_crawler(novel_url)
+
+        success = self.app.get_novel_info()
+    # end while
 
     self.app.output_path = self.get_output_path()
     self.app.chapters = self.process_chapter_range()

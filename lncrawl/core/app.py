@@ -136,7 +136,13 @@ class App:
 
         print('Retrieving novel info...')
         print(self.crawler.novel_url)
-        self.crawler.read_novel_info()
+        try:
+            self.crawler.read_novel_info()
+        except Exception as err:
+            print('Error reading novel info: %s' % err)
+            # Go back to the source list to allow the user to try again
+
+            return False
         print('NOVEL: %s' % self.crawler.novel_title)
         print('%d volumes and %d chapters found' %
               (len(self.crawler.volumes), len(self.crawler.chapters)))
@@ -155,6 +161,9 @@ class App:
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
         self.output_path = os.path.join(C.DEFAULT_OUTPUT_PATH, source_name, self.good_file_name)
+
+        # Success
+        return True
     # end def
 
     # ----------------------------------------------------------------------- #
