@@ -93,14 +93,21 @@ def search_novels(app):
 
     # Resolve all futures
     combined_results = []
-    for f in futures_to_check:
+    for i, f in enumerate(futures_to_check):
         try:
             for item in f.result(SEARCH_TIMEOUT):
                 combined_results.append(item)
+        except KeyboardInterrupt:
+            break
         except Exception as e:
-            # We expect time out exceptions, ignore them.
-            # But let the user know about them, just in case
-            print(e)
+            logger.debug('Failed to complete search', e)
+        # end try
+    # end for
+    
+    # Cancel any remaining futures
+    for f in futures_to_check:
+        f.cancel()
+    # end for
 
     # Process combined search results
     app.search_results = process_results(combined_results)
