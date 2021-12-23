@@ -11,6 +11,8 @@ from tqdm import tqdm
 
 from ..core.sources import crawler_list
 
+SEARCH_TIMEOUT = 10
+
 logger = logging.getLogger(__name__)
 
 executor = futures.ThreadPoolExecutor(20)
@@ -90,11 +92,22 @@ def search_novels(app):
     # end for
 
     # Resolve all futures
-    combined_results = [
-        item
-        for f in futures_to_check
-        for item in f.result()
-    ]
+    combined_results = []
+    for i, f in enumerate(futures_to_check):
+        try:
+            for item in f.result(SEARCH_TIMEOUT):
+                combined_results.append(item)
+        except KeyboardInterrupt:
+            break
+        except Exception as e:
+            logger.debug('Failed to complete search', e)
+        # end try
+    # end for
+    
+    # Cancel any remaining futures
+    for f in futures_to_check:
+        f.cancel()
+    # end for
 
     # Process combined search results
     app.search_results = process_results(combined_results)
