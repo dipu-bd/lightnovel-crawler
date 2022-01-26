@@ -39,7 +39,7 @@ class RoyalRoadCrawler(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.find("img", {"class": "img-offset thumbnail inline-block"})['src'])
+            soup.find("img", {"class": "thumbnail inline-block"})['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.find(
