@@ -56,10 +56,6 @@ class FoxaholicCrawler(Crawler):
         self.novel_author = ' '.join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
         logger.info('%s', self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel id: %s', self.novel_id)
-
-        # response = self.submit_form(chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
         response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters/', data='')
         soup = self.make_soup(response)
         for a in reversed(soup.select('.wp-manga-chapter a')):
