@@ -87,12 +87,14 @@ class ScribbleHubCrawler(Crawler):
             futures_to_check.append(future)
         # end for
 
+        volumes = set()
         for f in futures_to_check:
             response = f.result()
             soup = self.make_soup(response)
             for chapter in reversed(soup.select('.toc_ol a.toc_a')):
                 chap_id = len(self.chapters) + 1
                 vol_id = len(self.chapters) // 100 + 1
+                volumes.add(vol_id)
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
@@ -102,10 +104,7 @@ class ScribbleHubCrawler(Crawler):
             # end for
         # end for
 
-        self.volumes = [
-            {'id': x + 1}
-            for x in range(len(self.chapters) // 100 + 1)
-        ]
+        self.volumes = [{'id': x} for x in volumes]
     # end def
 
     def download_chapter_body(self, chapter):
