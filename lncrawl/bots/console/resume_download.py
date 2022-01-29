@@ -87,7 +87,7 @@ def load_session_from_metadata(data) -> App:
     app.no_append_after_filename = session_data['no_append_after_filename']
 
     logger.info('Novel Url: %s', data['url'])
-    app.init_crawler(data['url'])
+    app.prepare_crawler(data['url'])
     if not isinstance(app.crawler, Crawler):
         raise Exception('No crawler found for ' + data['url'])
 

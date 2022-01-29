@@ -9,6 +9,7 @@ class ConsoleBot:
 
     def __init__(self) -> None:
         self.app: Optional[App] = None
+        self.search_mode = False
     # end def
 
     from .start import start
@@ -17,6 +18,7 @@ class ConsoleBot:
     from .get_crawler import get_novel_url
     from .get_crawler import get_crawlers_to_search
     from .get_crawler import choose_a_novel
+    from .get_crawler import confirm_retry
 
     from .login_info import get_login_info
 

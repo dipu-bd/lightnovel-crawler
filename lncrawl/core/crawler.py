@@ -225,7 +225,7 @@ class Crawler(ABC):
         kargs = kargs or dict()
         #kargs.setdefault('verify', False)
         #kargs.setdefault('allow_redirects', True)
-        kargs.setdefault('timeout', 150)  # in seconds
+        kargs.setdefault('timeout', (7, 301))  # in seconds
         headers = kargs.setdefault('headers', {})
         headers = {k.lower(): v for k, v in headers.items()}
         #headers.setdefault('user-agent', random.choice(user_agents))

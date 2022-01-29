@@ -27,7 +27,7 @@ class App:
         self.crawler_links: List[str] = []
         self.crawler: Optional[Crawler] = None
         self.login_data: Optional[Tuple[str, str]] = None
-        self.search_results = []
+        self.search_results: List[Dict[str, Any]] = []
         self.output_path = C.DEFAULT_OUTPUT_PATH
         self.pack_by_volume = False
         self.chapters: List[Dict[str, Any]] = []
@@ -54,7 +54,7 @@ class App:
 
     # ----------------------------------------------------------------------- #
 
-    def init_search(self):
+    def prepare_search(self):
         '''Requires: user_input'''
         '''Produces: [crawler, output_path] or [crawler_links]'''
         if not self.user_input:
@@ -63,7 +63,7 @@ class App:
 
         if self.user_input.startswith('http'):
             logger.info('Detected URL input')
-            self.init_crawler(self.user_input)
+            self.prepare_crawler(self.user_input)
         else:
             logger.info('Detected query input')
             self.crawler_links = [
@@ -92,7 +92,7 @@ class App:
 
     # ----------------------------------------------------------------------- #
 
-    def init_crawler(self, novel_url):
+    def prepare_crawler(self, novel_url):
         if not novel_url:
             return
         # end if
@@ -158,6 +158,7 @@ class App:
     # end def
 
     # ----------------------------------------------------------------------- #
+
     def start_download(self):
         '''Requires: crawler, chapters, output_path'''
         if not self.output_path or not os.path.isdir(self.output_path):
