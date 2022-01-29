@@ -89,12 +89,11 @@ def start(self):
         try:
             _download_novel()
             break
-        except KeyboardInterrupt:
-            break
+        except KeyboardInterrupt as e:
+            raise e
         except Exception as e:
-            logger.exception('')
             if not (self.search_mode and self.confirm_retry()):
-                break
+                raise e
             # end if
         # end try
     # end while

@@ -204,10 +204,10 @@ class Crawler(ABC):
     # end def
 
     def __process_response(self, response: Response) -> Response:
-        if response.status_code == 403 and response.reason == 'Forbidden':
-            raise Exception('403 Forbidden! Could not bypass the cloudflare protection.\n'
-                            '  If you are running from your own computer, visit the link on your browser and try again later.\n'
-                            '  Sometimes, using `http` instead of `https` link may work.')
+        # if response.status_code == 403 and response.reason == 'Forbidden':
+        #     raise Exception('403 Forbidden! Could not bypass the cloudflare protection.\n'
+        #                     '  If you are running from your own computer, visit the link on your browser and try again later.\n'
+        #                     '  Sometimes, using `http` instead of `https` link may work.')
 
         response.raise_for_status()
         response.encoding = 'utf8'
