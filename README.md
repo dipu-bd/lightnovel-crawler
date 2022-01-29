@@ -321,7 +321,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 207 sources and 223 crawlers.
+We are supporting 206 sources and 223 crawlers.
 
 ### `ar` Arabic
 
@@ -487,7 +487,7 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://daonovel.com/" target="_blank">https://daonovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/d/daonovel.py" title="16 July 2021 02:11:58 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/d/daonovel.py" title="29 January 2022 06:12:25 AM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -928,11 +928,6 @@ We are supporting 207 sources and 223 crawlers.
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wuxiaworld.online/" target="_blank">https://wuxiaworld.online/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiaonline.py" title="27 July 2021 10:03:56 PM">25</a></td>
-<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
-</tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
-<td><a href="https://wuxiaworld.site/" target="_blank">https://wuxiaworld.site/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiasite.py" title="22 October 2021 02:35:39 AM">63</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -1478,7 +1473,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>Access denied</td>
 </tr>
 <tr><td><a href="http://fullnovel.live/" target="_blank">http://fullnovel.live/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="http://gravitytales.com/" target="_blank">http://gravitytales.com/</a></td>
 <td>Domain is expired</td>
@@ -1487,7 +1482,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>This domain has expired</td>
 </tr>
 <tr><td><a href="http://tiknovel.com/" target="_blank">http://tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="http://wuxiaworld.cloud/" target="_blank">http://wuxiaworld.cloud/</a></td>
 <td>The domain has expired</td>
@@ -1502,7 +1497,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>No longer provides lightnovels</td>
 </tr>
 <tr><td><a href="http://www.tiknovel.com/" target="_blank">http://www.tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
 <td>Domain expired</td>
@@ -1517,7 +1512,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>The domain is for sale</td>
 </tr>
 <tr><td><a href="https://bestoflightnovels.com/" target="_blank">https://bestoflightnovels.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://boxnovel.online/" target="_blank">https://boxnovel.online/</a></td>
 <td>Redirects to tipnovel.com</td>
@@ -1541,7 +1536,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>Redirects to wuxiaworldsite.co</td>
 </tr>
 <tr><td><a href="https://kisslightnovels.info/" target="_blank">https://kisslightnovels.info/</a></td>
-<td>Can't reach the server</td>
+<td>can not reach the server</td>
 </tr>
 <tr><td><a href="https://lightnovelshub.com/" target="_blank">https://lightnovelshub.com/</a></td>
 <td>Site is down</td>
@@ -1559,13 +1554,13 @@ We are supporting 207 sources and 223 crawlers.
 <td>Web server is down</td>
 </tr>
 <tr><td><a href="https://moonstonetranslation.com/" target="_blank">https://moonstonetranslation.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://mtled-novels.com/" target="_blank">https://mtled-novels.com/</a></td>
 <td>Domain is expired</td>
 </tr>
 <tr><td><a href="https://myoniyonitranslations.com/" target="_blank">https://myoniyonitranslations.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://newsite.kolnovel.com/" target="_blank">https://newsite.kolnovel.com/</a></td>
 <td>Site is down</td>
@@ -1595,7 +1590,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>Redirects to webnovelonline.net</td>
 </tr>
 <tr><td><a href="https://tiknovel.com/" target="_blank">https://tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://tunovelaligera.com/" target="_blank">https://tunovelaligera.com/</a></td>
 <td>Broken. Chapters does not load</td>
@@ -1608,6 +1603,9 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><a href="https://writerupdates.com/" target="_blank">https://writerupdates.com/</a></td>
 <td>Site is down</td>
+</tr>
+<tr><td><a href="https://wuxiaworld.site/" target="_blank">https://wuxiaworld.site/</a></td>
+<td>Access denied</td>
 </tr>
 <tr><td><a href="https://www.1ksy.com/" target="_blank">https://www.1ksy.com/</a></td>
 <td>Web server is down</td>
@@ -1637,13 +1635,13 @@ We are supporting 207 sources and 223 crawlers.
 <td>Web server is down</td>
 </tr>
 <tr><td><a href="https://www.tiknovel.com/" target="_blank">https://www.tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://www.translateindo.com/" target="_blank">https://www.translateindo.com/</a></td>
 <td>Site is down</td>
 </tr>
 <tr><td><a href="https://www.x81zw.com/" target="_blank">https://www.x81zw.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://www.xsbiquge.com/" target="_blank">https://www.xsbiquge.com/</a></td>
 <td>Redirects to https://www.biqufan.com/</td>
