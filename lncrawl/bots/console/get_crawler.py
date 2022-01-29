@@ -119,3 +119,23 @@ def choose_a_novel(self):
 
     return selected_novel['url']
 # end def
+
+def confirm_retry(self) -> bool:
+    '''Returns whether to retry on failure'''
+    args = get_args()
+
+    if args.suppress:
+        return False
+    # end if
+
+    answer = prompt([
+        {
+            'type': 'confirm',
+            'name': 'retry',
+            'message': 'Do you want to choose another novel?',
+            'default': True
+        },
+    ])
+
+    return answer['retry']
+# end if

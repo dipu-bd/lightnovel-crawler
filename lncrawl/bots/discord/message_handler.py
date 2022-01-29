@@ -155,7 +155,7 @@ class MessageHandler:
 
         try:
             self.app.user_input = self.message.content.strip()
-            self.app.init_search()
+            self.app.prepare_search()
         except Exception:
             logger.exception("Fail to init crawler")
             self.send_sync('\n'.join([
@@ -321,7 +321,7 @@ class MessageHandler:
 
     def handle_search_result(self, novel):
         self.send_sync('Selected: %s' % novel['url'])
-        self.app.init_crawler(novel['url'])
+        self.app.prepare_crawler(novel['url'])
         self.get_novel_info()
     # end def
 

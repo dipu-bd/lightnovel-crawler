@@ -13,7 +13,7 @@ def test_crawler(self, link, user_input):
     print('App initialize: DONE')
 
     app.user_input = user_input
-    app.init_search()
+    app.prepare_search()
     print('Init search: DONE')
 
     if not app.crawler:
@@ -36,15 +36,8 @@ def test_crawler(self, link, user_input):
         novel_url = source['novels'][0]['url']
         print('Top novel:', novel_url)
 
-        app.init_crawler(novel_url)
+        app.prepare_crawler(novel_url)
         print('Init crawler: DONE')
-
-        app.get_novel_info()
-        print('Novel info: DONE')
-        if not app.crawler.novel_title:
-            raise Exception('No novel title')
-            # end if
-        return
     # end if
 
     if not app.crawler:

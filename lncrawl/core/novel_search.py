@@ -4,6 +4,7 @@ To search for novels in selected sources
 """
 import logging
 import os
+import random
 from concurrent import futures
 
 from slugify import slugify
@@ -27,13 +28,12 @@ def get_search_result(app, link, bar):
         logger.debug(results)
         logger.info('%d results from %s', len(results), link)
         return results
+    except KeyboardInterrupt as e:
+        raise e
     except Exception as e:
         if logger.isEnabledFor(logging.DEBUG):
             logging.debug('Searching failure for %s', link)
         # end if
-    finally:
-        app.progress += 1
-        bar.update()
     # end try
     return []
 # end def
@@ -66,20 +66,27 @@ def process_results(combined_results):
 
 
 def search_novels(app):
+    from .app import App
+    assert isinstance(app, App)
+
     if not app.crawler_links:
         return
 
-    bar = tqdm(desc='Searching', total=len(app.crawler_links), unit='')
+    sources = app.crawler_links.copy()
+    random.shuffle(sources)
+
+    bar = tqdm(desc='Searching', total=len(sources), unit='source')
     if os.getenv('debug_mode') == 'yes':
         bar.update = lambda n=1: None  # Hide in debug mode
     # end if
     bar.clear()
+    
 
     # Add future tasks
     checked = {}
     futures_to_check = []
     app.progress = 0
-    for link in app.crawler_links:
+    for link in sources:
         crawler = crawler_list[link]
         if crawler in checked:
             logger.info('A crawler for "%s" already exists', link)
@@ -94,23 +101,33 @@ def search_novels(app):
     # Resolve all futures
     combined_results = []
     for i, f in enumerate(futures_to_check):
+        assert isinstance(f, futures.Future)
         try:
-            for item in f.result(SEARCH_TIMEOUT):
-                combined_results.append(item)
+            f.result(SEARCH_TIMEOUT)
         except KeyboardInterrupt:
             break
+        except TimeoutError:
+            f.cancel()
         except Exception as e:
             logger.debug('Failed to complete search', e)
+        finally:
+            app.progress += 1
+            bar.update()
         # end try
     # end for
-    
+
     # Cancel any remaining futures
     for f in futures_to_check:
-        f.cancel()
+        assert isinstance(f, futures.Future)
+        if not f.done():
+            f.cancel()
+        elif not f.cancelled():
+            combined_results += f.result()
+        # end if
     # end for
 
     # Process combined search results
     app.search_results = process_results(combined_results)
-    bar.close()
     print('Found %d results' % len(app.search_results))
+    bar.close()
 # end def

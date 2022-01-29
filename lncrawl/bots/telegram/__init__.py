@@ -195,7 +195,7 @@ class TelegramBot:
             app.user_input = update.message.text.strip()
 
             try:
-                app.init_search()
+                app.prepare_search()
             except Exception:
                 update.message.reply_text(
                     'Sorry! I only recognize these sources:\n' +
@@ -346,9 +346,10 @@ class TelegramBot:
     def show_source_selection(self, bot, update, user_data):
         app = user_data.get('app')
         selected = user_data.get('selected')
+        assert isinstance(app, App)
 
         if len(selected['novels']) == 1:
-            app.init_crawler(selected['novels'][0]['url'])
+            app.prepare_crawler(selected['novels'][0]['url'])
             return self.get_novel_info(bot, update, user_data)
         # end if
 
@@ -372,6 +373,7 @@ class TelegramBot:
     def handle_select_source(self, bot, update, user_data):
         app = user_data.get('app')
         selected = user_data.get('selected')
+        assert isinstance(app, App)
 
         source = None
         text = update.message.text
@@ -393,11 +395,11 @@ class TelegramBot:
             # end if
         # end if
 
-        if not selected:
+        if not selected or not (source and source.get('url')):
             return self.show_source_selection(bot, update, user_data)
         # end if
 
-        app.init_crawler(source['url'])
+        app.prepare_crawler(source.get('url'))
         return self.get_novel_info(bot, update, user_data)
     # end def
 
