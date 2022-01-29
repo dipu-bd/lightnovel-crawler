@@ -82,8 +82,6 @@ def start(self):
 
         self.app.output_formats = self.get_output_formats()
         self.app.pack_by_volume = self.should_pack_by_volume()
-
-        self.app.start_download()
     # end def
 
     while True:
