@@ -25,6 +25,7 @@ class RewayatClubCrawler(Crawler):
         assert isinstance(script, Tag)
 
         data = js2py.eval_js(script.text).to_dict()
+        assert isinstance(data, dict)
 
         novel_info = data['fetch'][0]['novel']
         pagination = data['fetch'][1]['pagination']
