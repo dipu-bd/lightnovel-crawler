@@ -13,6 +13,7 @@ from io import BytesIO
 from PIL import Image
 from tqdm import tqdm
 
+from ..core.exeptions import LNException
 from .arguments import get_args
 
 logger = logging.getLogger(__name__)
@@ -41,6 +42,8 @@ def download_cover(app):
         img.convert('RGB').save(filename, "JPEG")
         logger.debug('Saved cover: %s', filename)
         return filename
+    except KeyboardInterrupt as ex:
+        raise LNException('Cancelled by user')
     except Exception as ex:
         logger.warn('Failed to download original cover image: %s -> %s (%s)',
                     image_url, filename, str(ex))
@@ -53,6 +56,8 @@ def download_cover(app):
         img.convert('RGB').save(filename, "JPEG")
         logger.debug('Saved cover: %s', filename)
         return filename
+    except KeyboardInterrupt as ex:
+        raise LNException('Cancelled by user')
     except Exception as ex:
         logger.warn('Failed to download fallback cover image: %s -> %s (%s)',
                     image_url, filename, str(ex))
@@ -73,6 +78,8 @@ def download_chapter_body(app, chapter):
                 logger.debug('Downloading chapter %d: %s', chapter['id'], chapter['url'])
                 chapter['body'] = app.crawler.download_chapter_body(chapter)
                 break
+            except KeyboardInterrupt as ex:
+                raise LNException('Cancelled by user')
             except Exception as e:
                 if i == retry_count:
                     logger.exception('Failed to download chapter body')
@@ -156,6 +163,8 @@ def download_content_image(app, url, filename):
             logger.debug('Saved image: %s', image_file)
         # end with
         return filename
+    except KeyboardInterrupt as ex:
+        raise LNException('Cancelled by user')
     except Exception as ex:
         logger.debug('Failed to download image: %s (%s)', image_file, str(ex))
         return None

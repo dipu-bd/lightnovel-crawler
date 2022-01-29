@@ -173,6 +173,10 @@ class Crawler(ABC):
     def cookies(self) -> dict:
         return {x.name: x.value for x in self.scraper.cookies}
     # end def
+    
+    def set_cookie(self, name: str, value: str) -> None:
+        self.scraper.cookies[name] = value
+    # end def
 
     def absolute_url(self, url, page_url=None) -> str:
         url = (url or '').strip()
@@ -230,6 +234,8 @@ class Crawler(ABC):
         headers = kargs.setdefault('headers', {})
         headers = {k.lower(): v for k, v in headers.items()}
         #headers.setdefault('user-agent', random.choice(user_agents))
+        headers.setdefault('origin', self.home_url.strip('/'))
+        headers.setdefault('referer', self.novel_url.strip('/'))
 
         with get_domain_semaphore(url):
             with no_ssl_verification():
@@ -247,6 +253,8 @@ class Crawler(ABC):
         headers = {k.lower(): v for k, v in headers.items()}
         #headers.setdefault('user-agent', random.choice(user_agents))
         headers.setdefault('content-type', 'application/json')
+        headers.setdefault('origin', self.home_url.strip('/'))
+        headers.setdefault('referer', self.novel_url.strip('/'))
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
 
         with get_domain_semaphore(url):
@@ -275,8 +283,7 @@ class Crawler(ABC):
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('content-type', content_type)
 
-        response = self.post_response(url, data, headers)
-        return self.__process_response(response)
+        return self.post_response(url, data, headers)
     # end def
 
     def get_soup(self, *args, **kwargs) -> BeautifulSoup:
