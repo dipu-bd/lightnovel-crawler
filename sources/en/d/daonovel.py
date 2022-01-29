@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
-from urllib.parse import urlparse
+
+from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = 'https://daonovel.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://daonovel.com/wp-admin/admin-ajax.php'
 
 
 class DaoNovelCrawler(Crawler):
@@ -20,12 +19,25 @@ class DaoNovelCrawler(Crawler):
         results = []
         for tab in soup.select('.c-tabs-item__content')[:20]:
             a = tab.select_one('.post-title h3 a')
-            latest = tab.select_one('.latest-chap .chapter a').text
-            votes = tab.select_one('.rating .total_votes').text
+            if not isinstance(a, Tag):
+                continue
+            # end if
+
+            info = []
+            latest = tab.select_one('.latest-chap .chapter a')
+            if isinstance(latest, Tag):
+                info.append(latest.text.strip())
+            # end if
+
+            votes = tab.select_one('.rating .total_votes')
+            if isinstance(votes, Tag):
+                info.append('Rating: ' + votes.text.strip())
+            # end if
+
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-                'info': '%s | Rating: %s' % (latest, votes),
+                'info': ' | '.join(info),
             })
         # end for
 
@@ -38,14 +50,16 @@ class DaoNovelCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one('.post-title h1')
+        assert isinstance(possible_title, Tag)
         for span in possible_title.select('span'):
             span.extract()
         # end for
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['src'])
+        possible_image = soup.select_one('.summary_image a img')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -54,12 +68,8 @@ class DaoNovelCrawler(Crawler):
         ])
         logger.info('%s', self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel id: %s', self.novel_id)
-
-        response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
-        soup = self.make_soup(response)
+        chapter_list_url = self.absolute_url('ajax/chapters', self.novel_url)
+        soup = self.post_soup(chapter_list_url, headers={'accept': '*/*'})
         for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100

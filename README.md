@@ -209,7 +209,7 @@ $ lncrawl -h
 ┃┃╱╭╋┫╭╮┃╭╮┃┃┃╭╮┫╭╮┃╰╯┃┃━┫┃╱┃┃╱╭┫╭┫╭╮┃╰╯╰╯┃┃┃┃━┫╭╯
 ┃╰━╯┃┃╰╯┃┃┃┃╰┫┃┃┃╰╯┣╮╭┫┃━┫╰╮┃╰━╯┃┃┃╭╮┣╮╭╮╭┫╰┫┃━┫┃
 ╰━━━┻┻━╮┣╯╰┻━┻╯╰┻━━╯╰╯╰━━┻━╯╰━━━┻╯╰╯╰╯╰╯╰╯╰━┻━━┻╯
-╱╱╱╱╱╭━╯┃ v2.29.0
+╱╱╱╱╱╭━╯┃ v2.29.1
 ╱╱╱╱╱╰━━╯ 🔗 https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
@@ -321,7 +321,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 207 sources and 223 crawlers.
+We are supporting 208 sources and 224 crawlers.
 
 ### `ar` Arabic
 
@@ -367,7 +367,7 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://ranobes.net/" target="_blank">http://ranobes.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/ranobes.py" title="03 October 2021 10:26:24 AM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/ranobes.py" title="29 January 2022 06:33:03 AM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -472,7 +472,7 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://comrademao.com/" target="_blank">https://comrademao.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/c/fu_kemao.py" title="26 July 2021 03:00:14 AM">8</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/c/fu_kemao.py" title="29 January 2022 07:43:27 AM">9</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -487,7 +487,7 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://daonovel.com/" target="_blank">https://daonovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/d/daonovel.py" title="16 July 2021 02:11:58 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/d/daonovel.py" title="29 January 2022 06:12:25 AM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -614,6 +614,11 @@ We are supporting 207 sources and 223 crawlers.
 <td><a href="https://lightnovelkiss.com/" target="_blank">https://lightnovelkiss.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/l/lightnovelkiss.py" title="16 July 2021 02:11:58 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://lightnovelreader.org/" target="_blank">https://lightnovelreader.org/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/l/lightnovelreader.py" title="29 January 2022 09:07:20 AM">1</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovels.me/" target="_blank">https://lightnovels.me/</a></td>
@@ -762,7 +767,7 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://ranobes.net/" target="_blank">https://ranobes.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/ranobes.py" title="03 October 2021 10:26:24 AM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/ranobes.py" title="29 January 2022 06:33:03 AM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -792,7 +797,7 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://rewayat.club/" target="_blank">https://rewayat.club/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/rewayatclub.py" title="06 October 2021 06:10:01 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/rewayatclub.py" title="29 January 2022 06:33:03 AM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -931,11 +936,6 @@ We are supporting 207 sources and 223 crawlers.
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
-<td><a href="https://wuxiaworld.site/" target="_blank">https://wuxiaworld.site/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiasite.py" title="22 October 2021 02:35:39 AM">63</a></td>
-<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
-</tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wuxiaworldsite.co/" target="_blank">https://wuxiaworldsite.co/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiaworldsite.py" title="22 October 2021 02:35:39 AM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
@@ -1004,6 +1004,11 @@ We are supporting 207 sources and 223 crawlers.
 <td><a href="https://www.lightnovelpub.com/" target="_blank">https://www.lightnovelpub.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/l/lightnovelpub.py" title="15 October 2021 02:14:01 AM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://www.lightnovelreader.org/" target="_blank">https://www.lightnovelreader.org/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/l/lightnovelreader.py" title="29 January 2022 09:07:20 AM">1</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.lightnovelworld.com/" target="_blank">https://www.lightnovelworld.com/</a></td>
@@ -1087,8 +1092,8 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.oppatranslations.com/" target="_blank">https://www.oppatranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/o/oppatrans.py" title="16 July 2021 02:11:58 PM">61</a></td>
-<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/o/oppatranslations.py" title="27 July 2021 10:03:56 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/amritoo"><img src="https://avatars.githubusercontent.com/u/45586379?v=4&s=24" alt="amritoo" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.ornovel.com/" target="_blank">https://www.ornovel.com/</a></td>
@@ -1117,7 +1122,7 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.scribblehub.com/" target="_blank">https://www.scribblehub.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/s/scribblehub.py" title="16 July 2021 02:11:58 PM">20</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/s/scribblehub.py" title="29 January 2022 07:43:27 AM">22</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/Epicpkmn11"><img src="https://avatars.githubusercontent.com/u/41608708?v=4&s=24" alt="Epicpkmn11" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -1478,7 +1483,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>Access denied</td>
 </tr>
 <tr><td><a href="http://fullnovel.live/" target="_blank">http://fullnovel.live/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="http://gravitytales.com/" target="_blank">http://gravitytales.com/</a></td>
 <td>Domain is expired</td>
@@ -1487,7 +1492,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>This domain has expired</td>
 </tr>
 <tr><td><a href="http://tiknovel.com/" target="_blank">http://tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="http://wuxiaworld.cloud/" target="_blank">http://wuxiaworld.cloud/</a></td>
 <td>The domain has expired</td>
@@ -1502,7 +1507,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>No longer provides lightnovels</td>
 </tr>
 <tr><td><a href="http://www.tiknovel.com/" target="_blank">http://www.tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
 <td>Domain expired</td>
@@ -1517,7 +1522,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>The domain is for sale</td>
 </tr>
 <tr><td><a href="https://bestoflightnovels.com/" target="_blank">https://bestoflightnovels.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://boxnovel.online/" target="_blank">https://boxnovel.online/</a></td>
 <td>Redirects to tipnovel.com</td>
@@ -1541,7 +1546,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>Redirects to wuxiaworldsite.co</td>
 </tr>
 <tr><td><a href="https://kisslightnovels.info/" target="_blank">https://kisslightnovels.info/</a></td>
-<td>Can't reach the server</td>
+<td>can not reach the server</td>
 </tr>
 <tr><td><a href="https://lightnovelshub.com/" target="_blank">https://lightnovelshub.com/</a></td>
 <td>Site is down</td>
@@ -1559,13 +1564,13 @@ We are supporting 207 sources and 223 crawlers.
 <td>Web server is down</td>
 </tr>
 <tr><td><a href="https://moonstonetranslation.com/" target="_blank">https://moonstonetranslation.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://mtled-novels.com/" target="_blank">https://mtled-novels.com/</a></td>
 <td>Domain is expired</td>
 </tr>
 <tr><td><a href="https://myoniyonitranslations.com/" target="_blank">https://myoniyonitranslations.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://newsite.kolnovel.com/" target="_blank">https://newsite.kolnovel.com/</a></td>
 <td>Site is down</td>
@@ -1595,7 +1600,7 @@ We are supporting 207 sources and 223 crawlers.
 <td>Redirects to webnovelonline.net</td>
 </tr>
 <tr><td><a href="https://tiknovel.com/" target="_blank">https://tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://tunovelaligera.com/" target="_blank">https://tunovelaligera.com/</a></td>
 <td>Broken. Chapters does not load</td>
@@ -1608,6 +1613,9 @@ We are supporting 207 sources and 223 crawlers.
 </tr>
 <tr><td><a href="https://writerupdates.com/" target="_blank">https://writerupdates.com/</a></td>
 <td>Site is down</td>
+</tr>
+<tr><td><a href="https://wuxiaworld.site/" target="_blank">https://wuxiaworld.site/</a></td>
+<td>Access denied</td>
 </tr>
 <tr><td><a href="https://www.1ksy.com/" target="_blank">https://www.1ksy.com/</a></td>
 <td>Web server is down</td>
@@ -1637,13 +1645,13 @@ We are supporting 207 sources and 223 crawlers.
 <td>Web server is down</td>
 </tr>
 <tr><td><a href="https://www.tiknovel.com/" target="_blank">https://www.tiknovel.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://www.translateindo.com/" target="_blank">https://www.translateindo.com/</a></td>
 <td>Site is down</td>
 </tr>
 <tr><td><a href="https://www.x81zw.com/" target="_blank">https://www.x81zw.com/</a></td>
-<td>This site can’t be reached</td>
+<td>This site can not be reached</td>
 </tr>
 <tr><td><a href="https://www.xsbiquge.com/" target="_blank">https://www.xsbiquge.com/</a></td>
 <td>Redirects to https://www.biqufan.com/</td>

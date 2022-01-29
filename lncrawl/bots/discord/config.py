@@ -5,7 +5,7 @@ import os
 
 from colorama import Fore
 
-from lncrawl.core.arguments import get_args
+from ...core.arguments import get_args
 
 shard_id = get_args().shard_id
 shard_count = get_args().shard_count

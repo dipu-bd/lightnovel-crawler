@@ -22,6 +22,7 @@ from requests import Response, Session
 
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
+from .exeptions import LNException
 
 logger = logging.getLogger(__name__)
 
@@ -172,6 +173,10 @@ class Crawler(ABC):
     def cookies(self) -> dict:
         return {x.name: x.value for x in self.scraper.cookies}
     # end def
+    
+    def set_cookie(self, name: str, value: str) -> None:
+        self.scraper.cookies[name] = value
+    # end def
 
     def absolute_url(self, url, page_url=None) -> str:
         url = (url or '').strip()
@@ -204,10 +209,10 @@ class Crawler(ABC):
     # end def
 
     def __process_response(self, response: Response) -> Response:
-        if response.status_code == 403 and response.reason == 'Forbidden':
-            raise Exception('403 Forbidden! Could not bypass the cloudflare protection.\n'
-                            '  If you are running from your own computer, visit the link on your browser and try again later.\n'
-                            '  Sometimes, using `http` instead of `https` link may work.')
+        # if response.status_code == 403 and response.reason == 'Forbidden':
+        #     raise LNException('403 Forbidden! Could not bypass the cloudflare protection.\n'
+        #                     '  If you are running from your own computer, visit the link on your browser and try again later.\n'
+        #                     '  Sometimes, using `http` instead of `https` link may work.')
 
         response.raise_for_status()
         response.encoding = 'utf8'
@@ -219,7 +224,7 @@ class Crawler(ABC):
 
     def get_response(self, url, **kargs) -> Response:
         if self._destroyed:
-            raise Exception('Instance is detroyed')
+            raise LNException('Instance is detroyed')
         # end if
 
         kargs = kargs or dict()
@@ -229,6 +234,8 @@ class Crawler(ABC):
         headers = kargs.setdefault('headers', {})
         headers = {k.lower(): v for k, v in headers.items()}
         #headers.setdefault('user-agent', random.choice(user_agents))
+        headers.setdefault('origin', self.home_url.strip('/'))
+        headers.setdefault('referer', self.novel_url.strip('/'))
 
         with get_domain_semaphore(url):
             with no_ssl_verification():
@@ -240,12 +247,14 @@ class Crawler(ABC):
 
     def post_response(self, url, data={}, headers={}) -> Response:
         if self._destroyed:
-            raise Exception('Instance is detroyed')
+            raise LNException('Instance is detroyed')
         # end if
 
         headers = {k.lower(): v for k, v in headers.items()}
         #headers.setdefault('user-agent', random.choice(user_agents))
         headers.setdefault('content-type', 'application/json')
+        headers.setdefault('origin', self.home_url.strip('/'))
+        headers.setdefault('referer', self.novel_url.strip('/'))
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
 
         with get_domain_semaphore(url):
@@ -264,7 +273,7 @@ class Crawler(ABC):
     def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
         '''Submit a form using post request'''
         if self._destroyed:
-            raise Exception('Instance is detroyed')
+            raise LNException('Instance is detroyed')
         # end if
 
         content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -274,8 +283,7 @@ class Crawler(ABC):
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('content-type', content_type)
 
-        response = self.post_response(url, data, headers)
-        return self.__process_response(response)
+        return self.post_response(url, data, headers)
     # end def
 
     def get_soup(self, *args, **kwargs) -> BeautifulSoup:
@@ -292,7 +300,7 @@ class Crawler(ABC):
         elif isinstance(response, str):
             html = str(response)
         else:
-            raise Exception('Could not parse response')
+            raise LNException('Could not parse response')
         # end if
         soup = BeautifulSoup(html, parser or 'lxml')
         if not soup.find('body'):

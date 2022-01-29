@@ -7,7 +7,8 @@ import os
 import re
 
 from .. import constants as C
-from lncrawl.core.crawler import Crawler
+from .crawler import Crawler
+from .exeptions import LNException
 
 
 def __format_title(text):
@@ -50,7 +51,7 @@ def format_chapters(crawler: Crawler):
 
         volume = [x for x in crawler.volumes if x['id'] == item['volume']]
         if len(volume) == 0:
-            raise Exception('Unknown volume %s for chapter %s' %
+            raise LNException('Unknown volume %s for chapter %s' %
                             (item['volume'], item['id']))
         else:
             volume = volume[0]
@@ -67,8 +68,8 @@ def format_chapters(crawler: Crawler):
 
 def save_metadata(app, completed=False):
     from ..core.app import App
-    from lncrawl.core.crawler import Crawler
-    if not isinstance(app, App) and not isinstance(app.crawler, Crawler):
+    from .crawler import Crawler
+    if not (isinstance(app, App) and isinstance(app.crawler, Crawler)):
         return
 
     data = {

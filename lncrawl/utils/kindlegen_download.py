@@ -6,7 +6,10 @@ import tempfile
 from io import BytesIO, FileIO
 from logging import Logger
 from zipfile import ZipFile
+
 import requests
+
+from ..core.exeptions import LNException
 
 logger = Logger('KINDLEGEN')
 
@@ -23,7 +26,7 @@ def get_url_by_platform():
     elif platform.system() == 'Windows':
         return WINDOWS_URL
     else:
-        raise Exception('Unrecognized platform')
+        raise LNException('Unrecognized platform')
     # end if
 # end def
 
@@ -41,7 +44,7 @@ def extract_kindlegen_file(extractor, file_list):
                   os.path.join(home, 'kindlegen'))
         logger.info('Renamed kindlegen.exe to kindlegen')
     else:
-        raise Exception('Kindlegen executable was not found.')
+        raise LNException('Kindlegen executable was not found.')
     # end if
 # end def
 
