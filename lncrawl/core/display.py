@@ -7,6 +7,7 @@ import traceback
 from colorama import Fore, Style
 
 from ..assets.icons import Icons
+from ..core.exeptions import LNException
 
 LINE_SIZE = 80
 ENABLE_BANNER = not Icons.isWindows
@@ -90,7 +91,7 @@ def error_message():
     err_class, message, tb = sys.exc_info()
     tb_summary = ''.join(traceback.format_tb(tb)[-4:]).strip()
     print(Fore.RED, Icons.ERROR, 'Error:', message, Fore.RESET)
-    if tb_summary:
+    if tb_summary and err_class != LNException:
         print(Style.DIM, err_class, Style.RESET_ALL)
         print(Style.DIM, tb_summary, Style.RESET_ALL)
     # end if

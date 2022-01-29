@@ -5,12 +5,13 @@ import shutil
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
-from lncrawl.core.crawler import Crawler
 from slugify import slugify
 
 from .. import constants as C
 from ..binders import available_formats, generate_books
+from ..core.exeptions import LNException
 from ..core.sources import crawler_list, rejected_sources
+from .crawler import Crawler
 from .downloader import download_chapter_images, download_chapters
 from .novel_info import format_novel, save_metadata
 from .novel_search import search_novels
@@ -58,7 +59,7 @@ class App:
         '''Requires: user_input'''
         '''Produces: [crawler, output_path] or [crawler_links]'''
         if not self.user_input:
-            raise Exception('User input is not valid')
+            raise LNException('User input is not valid')
         # end if
 
         if self.user_input.startswith('http'):
@@ -83,7 +84,7 @@ class App:
         search_novels(self)
 
         if not self.search_results:
-            raise Exception('No results for: %s' % self.user_input)
+            raise LNException('No results for: %s' % self.user_input)
         # end if
 
         logger.info('Total %d novels found from %d sites',
@@ -100,12 +101,12 @@ class App:
         parsed_url = urlparse(novel_url)
         base_url = '%s://%s/' % (parsed_url.scheme, parsed_url.hostname)
         if base_url in rejected_sources:
-            raise Exception('Source is rejected. Reason: ' + rejected_sources[base_url])
+            raise LNException('Source is rejected. Reason: ' + rejected_sources[base_url])
         # end if
 
         CrawlerType = crawler_list.get(base_url)
         if not CrawlerType:
-            raise Exception('No crawler found for ' + base_url)
+            raise LNException('No crawler found for ' + base_url)
         # end if
 
         logger.info('Initializing crawler for: %s [%s]',
@@ -123,7 +124,7 @@ class App:
         '''Requires: crawler, login_data'''
         '''Produces: output_path'''
         if not isinstance(self.crawler, Crawler):
-            raise Exception('No crawler is selected')
+            raise LNException('No crawler is selected')
 
         self.crawler.initialize()
         self.crawler.scraper.headers['origin'] = self.crawler.home_url
@@ -162,7 +163,7 @@ class App:
     def start_download(self):
         '''Requires: crawler, chapters, output_path'''
         if not self.output_path or not os.path.isdir(self.output_path):
-            raise Exception('Output path is not defined')
+            raise LNException('Output path is not defined')
         # end if
 
         assert self.crawler

@@ -7,6 +7,7 @@ from questionary import prompt
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
+from ...core.exeptions import LNException
 from ...core.sources import rejected_sources
 from .open_folder_prompt import display_open_folder
 from .resume_download import resume_session
@@ -17,7 +18,7 @@ logger = logging.getLogger(__name__)
 def start(self):
     from . import ConsoleBot
     if not isinstance(self, ConsoleBot):
-        raise Exception('Unknown self: ' + type(self))
+        raise LNException('Unknown self: ' + type(self))
 
     args = get_args()
     if args.list_sources:
@@ -143,7 +144,7 @@ def process_chapter_range(self):
     # end if
 
     if len(chapters) == 0:
-        raise Exception('No chapters to download')
+        raise LNException('No chapters to download')
     # end if
 
     self.log.debug('Selected chapters:')

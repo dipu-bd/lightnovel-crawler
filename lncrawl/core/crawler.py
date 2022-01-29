@@ -22,6 +22,7 @@ from requests import Response, Session
 
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
+from .exeptions import LNException
 
 logger = logging.getLogger(__name__)
 
@@ -205,7 +206,7 @@ class Crawler(ABC):
 
     def __process_response(self, response: Response) -> Response:
         # if response.status_code == 403 and response.reason == 'Forbidden':
-        #     raise Exception('403 Forbidden! Could not bypass the cloudflare protection.\n'
+        #     raise LNException('403 Forbidden! Could not bypass the cloudflare protection.\n'
         #                     '  If you are running from your own computer, visit the link on your browser and try again later.\n'
         #                     '  Sometimes, using `http` instead of `https` link may work.')
 
@@ -219,7 +220,7 @@ class Crawler(ABC):
 
     def get_response(self, url, **kargs) -> Response:
         if self._destroyed:
-            raise Exception('Instance is detroyed')
+            raise LNException('Instance is detroyed')
         # end if
 
         kargs = kargs or dict()
@@ -240,7 +241,7 @@ class Crawler(ABC):
 
     def post_response(self, url, data={}, headers={}) -> Response:
         if self._destroyed:
-            raise Exception('Instance is detroyed')
+            raise LNException('Instance is detroyed')
         # end if
 
         headers = {k.lower(): v for k, v in headers.items()}
@@ -264,7 +265,7 @@ class Crawler(ABC):
     def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
         '''Submit a form using post request'''
         if self._destroyed:
-            raise Exception('Instance is detroyed')
+            raise LNException('Instance is detroyed')
         # end if
 
         content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -292,7 +293,7 @@ class Crawler(ABC):
         elif isinstance(response, str):
             html = str(response)
         else:
-            raise Exception('Could not parse response')
+            raise LNException('Could not parse response')
         # end if
         soup = BeautifulSoup(html, parser or 'lxml')
         if not soup.find('body'):

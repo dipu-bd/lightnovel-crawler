@@ -20,6 +20,7 @@ from ..assets.version import get_version
 from .arguments import get_args
 from .crawler import Crawler
 from .display import new_version_news
+from .exeptions import LNException
 
 logger = logging.getLogger(__name__)
 
@@ -133,7 +134,7 @@ def __load_latest_index():
         __save_current_index()
     except Exception as e:
         if 'crawlers' not in __current_index:
-            raise Exception('Could not fetch sources index')
+            raise LNException('Could not fetch sources index')
         logger.warn('Could not download latest index. Error: %s', e)
         __latest_index = __current_index
 
