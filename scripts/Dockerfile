@@ -13,7 +13,7 @@ RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev
 RUN useradd -ms /bin/bash appuser
 USER appuser
 
-WORKDIR /app
+WORKDIR /home/appuser/app
 
 RUN pip install -U pip wheel
 
@@ -22,5 +22,9 @@ RUN pip install -r requirements.txt
 
 COPY lncrawl lncrawl
 COPY sources sources
+
+USER root
+RUN chown -R appuser:appuser /home/appuser/app
+USER appuser
 
 ENTRYPOINT [ "python", "-m", "lncrawl" ]

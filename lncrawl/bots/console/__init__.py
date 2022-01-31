@@ -13,7 +13,7 @@ class ConsoleBot:
         self.search_mode = False
     # end def
 
-    from .start import process_chapter_range, start
+    from .integration import process_chapter_range, start
     from .get_crawler import (choose_a_novel, confirm_retry,
                               get_crawlers_to_search, get_novel_url)
     from .login_info import get_login_info

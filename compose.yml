@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
-    command: python -m lncrawl --bot discord --shard-id 0 --shard-count 1
+    command: python -m lncrawl --bot discord --shard-id 0 --shard-count 1 --suppress
     environment:
       BOT: discord
       LOG_LEVEL: ERROR

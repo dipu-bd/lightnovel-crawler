@@ -65,7 +65,7 @@ logging.config.dictConfig({
     'loggers': {
         '': {  # root logger
             'handlers': ['console', 'file'],
-            'level': logging.INFO,
+            'level': os.getenv('LOG_LEVEL', 'NOTSET'),
         },
     },
 })
