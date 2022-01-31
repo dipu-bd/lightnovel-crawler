@@ -2,6 +2,7 @@ version: '3'
 
 services:
   discord-bot:
+    image: lncrawl
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
