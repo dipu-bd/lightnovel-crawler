@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  discord-bot:
+    build:
+      context: .
+      dockerfile: ./scripts/Dockerfile
+    command: python -m lncrawl --bot discord --shard-id 0 --shard-count 1
+    environment:
+      BOT: discord
+      LOG_LEVEL: ERROR
+      CLOUD_DRIVE: "${CLOUD_DRIVE}"
+      DISCORD_TOKEN: "${DISCORD_TOKEN}"
+      DISCORD_SIGNAL_CHAR: "${DISCORD_SIGNAL_CHAR}"
+      DISCORD_DISABLE_SEARCH: "${DISCORD_DISABLE_SEARCH}"
+      TELEGRAM_TOKEN: "${TELEGRAM_TOKEN}"
+      GOOGLE_DRIVE_CREDENTIAL_FILE: "${GOOGLE_DRIVE_CREDENTIAL_FILE}"
+      GOOGLE_DRIVE_FOLDER_ID: "${GOOGLE_DRIVE_FOLDER_ID}"
