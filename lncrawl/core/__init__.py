@@ -32,6 +32,7 @@ def init():
     level = os.getenv('LOG_LEVEL')
     if not level:
         level = levels[args.log] if args.log else 'NOTSET'
+        os.environ['LOG_LEVEL'] = level
         urllib3.disable_warnings()
     # end if
     if level != 'NOTSET':
