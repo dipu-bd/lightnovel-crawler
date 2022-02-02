@@ -245,12 +245,16 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
     # logger.debug('+ %s', file_path)
     assert file_path.is_file()
 
-    module_name = hashlib.md5(file_path.name.encode()).hexdigest()
-    spec = importlib.util.spec_from_file_location(module_name, file_path)
-    assert spec and isinstance(spec.loader, FileLoader)
+    try:
+        module_name = hashlib.md5(file_path.name.encode()).hexdigest()
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        assert spec and isinstance(spec.loader, FileLoader)
 
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    except:
+        logger.warn('Failed to load module: %s', file_path)
+        return []
 
     crawlers = []
     for key in dir(module):
