@@ -5,8 +5,6 @@ autopep8
 ascii
 regex
 packaging
-jaraco.text
-jaraco.functools
 python-dotenv>=0.15.0,<1.0.0
 beautifulsoup4>=4.8.0,<5.0.0
 requests>=2.20.0,<3.0.0
@@ -29,7 +27,7 @@ protobuf>=3.19.0,<4.0.0
 # dev requirements
 wheel
 pyinstaller
-setuptools
+setuptools<=60.0.0
 pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5

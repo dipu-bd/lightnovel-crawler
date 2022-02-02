@@ -48,8 +48,6 @@ def gather_data_files():
 def gather_hidden_imports():
     module_list = [
         'pkg_resources.py2_warn',
-        'jaraco.text',
-        'jaraco.functools',
     ]
 
     for f in (ROOT / 'sources').glob('**/*.py'):

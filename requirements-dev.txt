@@ -1,7 +1,7 @@
 # dev requirements
 wheel
-setuptools
 pyinstaller
+setuptools<=60.0.0
 pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5
