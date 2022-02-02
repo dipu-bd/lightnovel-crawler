@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package wuxiaworld.api.v2;
+
+/*
+ * Generator:
+ $ pip install protobuf grpcio grpcio-tools
+ $ python -m grpc_tools.protoc -I . --python_out=. wuxiacom.proto
+ */
+
+message StringValue {
+    string value = 1;
+}
+message BoolValue {
+    bool value = 1;
+}
+message Int32Value {
+    int32 value = 1;
+}
+
+message NovelChapterInfo {
+    ChapterItem firstChapter = 1;
+    ChapterItem latestChapter = 2;
+    Int32Value chapterCount = 3;
+    repeated ChapterGroupItem chapterGroups = 4;
+}
+
+message NovelItem {
+    int32 id  = 1;
+    string name = 2;
+    StringValue coverUrl = 10;
+    StringValue authorName = 13;
+    NovelChapterInfo chapterInfo = 23;
+}
+
+message ChapterItem {
+    int32 entityId = 1;
+    string name = 2;
+    string slug = 3;
+    StringValue content = 5;
+    int32 novelId = 6;
+}
+
+message ChapterGroupItem {
+    int32 id = 1;
+    string title = 2;
+    int32 order = 3;
+    repeated ChapterItem chapterList = 6;
+}
+
+
+message GetChapterByProperty {
+    oneof byProperty {
+        int32 chapterId = 1;
+        ByNovelAndChapterSlug slugs = 2;
+    }
+
+    message ByNovelAndChapterSlug {
+        string novelSlug = 1;
+        string chapterSlug = 2;
+    }
+}
+
+message GetNovelRequest {
+    oneof selector {
+        int32 id = 1;
+        string slug = 2;
+    }
+}
+
+message GetNovelResponse {
+    NovelItem item = 1;
+}
+
+message GetChapterListRequest {
+    int32 novelId = 1;
+    FilterChapters filter = 2;
+
+    message FilterChapters {
+        Int32Value chapterGroupId = 1;
+        BoolValue isAdvanceChapter = 2;
+    }
+}
+
+message GetChapterListResponse {
+    repeated ChapterGroupItem items = 1;
+}
+
+message GetChapterRequest {
+    GetChapterByProperty chapterProperty = 1;
+}
+
+message GetChapterResponse {
+    ChapterItem item = 1;
+}
+
+service Novels {
+    rpc GetNovel(GetNovelRequest) returns (GetNovelResponse);
+}
+
+service Chapters {
+    rpc GetChapterList(GetChapterListRequest) returns (GetChapterListResponse);
+    rpc GetChapter(GetChapterRequest) returns (GetChapterResponse);
+}
