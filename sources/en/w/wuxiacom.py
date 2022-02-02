@@ -1,115 +1,86 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import re
+
+import sonora.client
+from google.protobuf.message import Message
+from google.protobuf.json_format import MessageToDict
+
 from lncrawl.core.crawler import Crawler
+from sources.en.w import wuxiacom_pb2 as proto
 
 logger = logging.getLogger(__name__)
-
-book_url = 'https://www.wuxiaworld.com/novel/%s'
-search_url = 'https://www.wuxiaworld.com/api/novels/search?query=%s&count=5'
-
 
 class WuxiaComCrawler(Crawler):
     base_url = ['https://www.wuxiaworld.com/']
 
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.com'
-    # end def
-
-    def search_novel(self, query):
-        '''Gets a list of {title, url} matching the given query'''
-        url = search_url % query
-        logger.info('Visiting %s ...', url)
-        data = self.get_json(url)
-        # logger.debug(data)
-
-        results = []
-        for item in data['items'][:5]:
-            results.append({
-                'title': item['name'],
-                'url': book_url % item['slug'],
-            })
-        # end for
-        return results
+        self.grpc = sonora.client.insecure_web_channel(f"https://api.wuxiaworld.com")
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
-        self.novel_id = self.novel_url.split(
-            'wuxiaworld.com/novel/')[1].split('/')[0]
-        logger.info('Novel Id: %s', self.novel_id)
+        slug = re.findall(r'/novel/([^/]+)', self.novel_url)[0]
+        logger.debug('Novel slug: %s', slug)
 
-        self.novel_url = book_url % self.novel_id
-        logger.debug('Visiting %s', self.novel_url)
-        soup = self.get_soup(self.novel_url)
+        client = self.grpc.unary_unary(
+            '/wuxiaworld.api.v2.Novels/GetNovel',
+            request_serializer=proto.GetNovelRequest.SerializeToString,
+            response_deserializer=proto.GetNovelResponse.FromString,
+        )
+        response = client(proto.GetNovelRequest(slug=slug))
+        assert isinstance(response, Message)
+        novel = MessageToDict(response)['item']
 
-        self.novel_title = soup.select_one('.section-content h2').text
-        logger.info('Novel title: %s', self.novel_title)
+        self.novel_title = novel['name']
+        logger.info('Novel title = %s', self.novel_title)
+        
+        self.novel_cover = novel['coverUrl']['value']
+        logger.info('Novel cover = %s', self.novel_cover)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('img.media-object')['src'])
-            logger.info('Novel cover: %s', self.novel_cover)
-        except Exception:
-            logger.debug('Failed to get cover: %s', self.novel_url)
-        # end try
+        self.novel_author = novel['authorName']['value']
+        logger.info('Novel author = %s', self.novel_author)
 
-        authors = ''
-        for d in soup.select_one('.media-body dl, .novel-body').select('dt, dd'):
-            authors += d.text.strip()
-            authors += ' ' if d.name == 'dt' else '; '
-        # end for
-        self.novel_author = authors.strip().strip(';')
-        logger.info('Novel author: %s', self.novel_author)
-
-        for panel in soup.select('#accordion .panel-default'):
-            vol_id = int(panel.select_one('h4.panel-title .book').text)
-            vol_title = panel.select_one('h4.panel-title .title a').text
-            if re.search(r'table of contents', vol_title, flags=re.I):
-                vol_title = 'Volume %s' % vol_id
-            # end if
+        client = self.grpc.unary_unary(
+            '/wuxiaworld.api.v2.Chapters/GetChapterList',
+            request_serializer=proto.GetChapterListRequest.SerializeToString,
+            response_deserializer=proto.GetChapterListResponse.FromString,
+        )
+        response = client(proto.GetChapterListRequest(novelId=novel['id']))
+        volumes = MessageToDict(response)['items']
+        
+        for group in sorted(volumes, key=lambda x: x.get('order', 0)):
+            vol_id = len(self.volumes) + 1
             self.volumes.append({
                 'id': vol_id,
-                'title': vol_title.strip(),
+                'title': group['title'],
             })
-            for a in panel.select('ul.list-chapters li.chapter-item a'):
+            for chap in group['chapterList']:
                 chap_id = len(self.chapters) + 1
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
-                    'url': self.absolute_url(a['href']),
-                    'title': a.text.strip(),
+                    'title': chap['name'],
+                    'entityId': chap['entityId'],
+                    'url': 'https://www.wuxiaworld.com/novel/%s/%s' % (slug, chap['slug']),
                 })
             # end for
         # end for
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format'''
-        logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
-
-        body = soup.select_one('#chapterContent')
-        if not body:
-            body = soup.select_one('#chapter-content')
-        # end if
-        if not body:
-            body = soup.select_one('.panel-default .fr-view')
-        # end if
-        if not body:
-            return ''
-        # end if
-
-        for nav in (soup.select('.chapter-nav') or []):
-            nav.extract()
-        # end for
-
-        self.blacklist_patterns = [
-            r'^<span>(...|\u2026)</span>$',
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-        return self.extract_contents(body)
+        client = self.grpc.unary_unary(
+            '/wuxiaworld.api.v2.Chapters/GetChapter',
+            request_serializer=proto.GetChapterRequest.SerializeToString,
+            response_deserializer=proto.GetChapterResponse.FromString,
+        )
+        property = proto.GetChapterByProperty(chapterId=chapter['entityId'])
+        response = client(proto.GetChapterRequest(chapterProperty=property))
+        chapter = MessageToDict(response)['item']
+        
+        soup = self.make_soup('<main>' + chapter['content']['value'] + '</main>')
+        body = soup.find('main')
+        self.clean_contents(body)
+        return str(body)
     # end def
 # end class
