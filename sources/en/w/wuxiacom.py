@@ -2,14 +2,18 @@
 import logging
 import re
 
-from google.protobuf.json_format import MessageToDict
-from google.protobuf.message import Message
-
 from lncrawl.core.crawler import Crawler
-from lncrawl.utils.sonora.client import insecure_web_channel
-from sources.en.w import wuxiacom_pb2 as proto
 
 logger = logging.getLogger(__name__)
+
+try:
+    from google.protobuf.json_format import MessageToDict
+    from google.protobuf.message import Message
+
+    from lncrawl.utils.sonora.client import insecure_web_channel
+    from lncrawl.etc import wuxiacom_pb2 as proto
+except:
+    pass
 
 class WuxiaComCrawler(Crawler):
     base_url = ['https://www.wuxiaworld.com/']
