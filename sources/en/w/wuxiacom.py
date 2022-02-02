@@ -2,11 +2,11 @@
 import logging
 import re
 
-import sonora.client
-from google.protobuf.message import Message
 from google.protobuf.json_format import MessageToDict
+from google.protobuf.message import Message
 
 from lncrawl.core.crawler import Crawler
+from lncrawl.utils.sonora.client import insecure_web_channel
 from sources.en.w import wuxiacom_pb2 as proto
 
 logger = logging.getLogger(__name__)
@@ -16,7 +16,7 @@ class WuxiaComCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.com'
-        self.grpc = sonora.client.insecure_web_channel(f"https://api.wuxiaworld.com")
+        self.grpc = insecure_web_channel(f"https://api.wuxiaworld.com")
     # end def
 
     def read_novel_info(self):
