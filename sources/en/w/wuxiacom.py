@@ -6,52 +6,45 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-try:
-    from google.protobuf.json_format import MessageToDict
-    from google.protobuf.message import Message
+from pyease_grpc import Protobuf, RpcSession
 
-    from lncrawl.utils.sonora.client import insecure_web_channel
-    from lncrawl.etc import wuxiacom_pb2 as proto
-except:
-    pass
 
 class WuxiaComCrawler(Crawler):
     base_url = ['https://www.wuxiaworld.com/']
 
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.com'
-        self.grpc = insecure_web_channel(f"https://api.wuxiaworld.com")
+        self.grpc = RpcSession(Protobuf.string(WUXIWORLD_PROTO))
     # end def
 
     def read_novel_info(self):
         slug = re.findall(r'/novel/([^/]+)', self.novel_url)[0]
         logger.debug('Novel slug: %s', slug)
 
-        client = self.grpc.unary_unary(
-            '/wuxiaworld.api.v2.Novels/GetNovel',
-            request_serializer=proto.GetNovelRequest.SerializeToString,
-            response_deserializer=proto.GetNovelResponse.FromString,
+        response = self.grpc.request(
+            'https://api.wuxiaworld.com/wuxiaworld.api.v2.Novels/GetNovel',
+            {'slug': slug},
         )
-        response = client(proto.GetNovelRequest(slug=slug))
-        assert isinstance(response, Message)
-        novel = MessageToDict(response)['item']
+        response.raise_for_status()
+        assert response.single
+        novel = response.single['item']
 
         self.novel_title = novel['name']
         logger.info('Novel title = %s', self.novel_title)
         
-        self.novel_cover = novel['coverUrl']['value']
+        self.novel_cover = novel['coverUrl']
         logger.info('Novel cover = %s', self.novel_cover)
 
-        self.novel_author = novel['authorName']['value']
+        self.novel_author = novel['authorName']
         logger.info('Novel author = %s', self.novel_author)
 
-        client = self.grpc.unary_unary(
-            '/wuxiaworld.api.v2.Chapters/GetChapterList',
-            request_serializer=proto.GetChapterListRequest.SerializeToString,
-            response_deserializer=proto.GetChapterListResponse.FromString,
+        response = self.grpc.request(
+            'https://api.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapterList',
+            {'novelId': novel['id']},
         )
-        response = client(proto.GetChapterListRequest(novelId=novel['id']))
-        volumes = MessageToDict(response)['items']
+        response.raise_for_status()
+        assert response.single
+        volumes = response.single['items']
         
         for group in sorted(volumes, key=lambda x: x.get('order', 0)):
             vol_id = len(self.volumes) + 1
@@ -73,18 +66,110 @@ class WuxiaComCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        client = self.grpc.unary_unary(
-            '/wuxiaworld.api.v2.Chapters/GetChapter',
-            request_serializer=proto.GetChapterRequest.SerializeToString,
-            response_deserializer=proto.GetChapterResponse.FromString,
+        response = self.grpc.request(
+            'https://api.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapter',
+            {'chapterProperty': {'chapterId': chapter['entityId']}},
         )
-        property = proto.GetChapterByProperty(chapterId=chapter['entityId'])
-        response = client(proto.GetChapterRequest(chapterProperty=property))
-        chapter = MessageToDict(response)['item']
+        response.raise_for_status()
+        assert response.single
+        chapter = response.single['item']
         
-        soup = self.make_soup('<main>' + chapter['content']['value'] + '</main>')
+        soup = self.make_soup('<main>' + chapter['content'] + '</main>')
         body = soup.find('main')
         self.clean_contents(body)
         return str(body)
     # end def
 # end class
+
+
+WUXIWORLD_PROTO='''
+syntax = "proto3";
+package wuxiaworld.api.v2;
+
+import public "google/protobuf/wrappers.proto";
+
+message NovelChapterInfo {
+    ChapterItem firstChapter = 1;
+    ChapterItem latestChapter = 2;
+    google.protobuf.Int32Value chapterCount = 3;
+    repeated ChapterGroupItem chapterGroups = 4;
+}
+
+message NovelItem {
+    int32 id  = 1;
+    string name = 2;
+    google.protobuf.StringValue coverUrl = 10;
+    google.protobuf.StringValue authorName = 13;
+    NovelChapterInfo chapterInfo = 23;
+}
+
+message ChapterItem {
+    int32 entityId = 1;
+    string name = 2;
+    string slug = 3;
+    google.protobuf.StringValue content = 5;
+    int32 novelId = 6;
+}
+
+message ChapterGroupItem {
+    int32 id = 1;
+    string title = 2;
+    int32 order = 3;
+    repeated ChapterItem chapterList = 6;
+}
+
+
+message GetChapterByProperty {
+    oneof byProperty {
+        int32 chapterId = 1;
+        ByNovelAndChapterSlug slugs = 2;
+    }
+
+    message ByNovelAndChapterSlug {
+        string novelSlug = 1;
+        string chapterSlug = 2;
+    }
+}
+
+message GetNovelRequest {
+    oneof selector {
+        int32 id = 1;
+        string slug = 2;
+    }
+}
+
+message GetNovelResponse {
+    NovelItem item = 1;
+}
+
+message GetChapterListRequest {
+    int32 novelId = 1;
+    FilterChapters filter = 2;
+
+    message FilterChapters {
+        google.protobuf.Int32Value chapterGroupId = 1;
+        google.protobuf.BoolValue isAdvanceChapter = 2;
+    }
+}
+
+message GetChapterListResponse {
+    repeated ChapterGroupItem items = 1;
+}
+
+message GetChapterRequest {
+    GetChapterByProperty chapterProperty = 1;
+}
+
+message GetChapterResponse {
+    ChapterItem item = 1;
+}
+
+service Novels {
+    rpc GetNovel(GetNovelRequest) returns (GetNovelResponse);
+}
+
+service Chapters {
+    rpc GetChapterList(GetChapterListRequest) returns (GetChapterListResponse);
+    rpc GetChapter(GetChapterRequest) returns (GetChapterResponse);
+}
+'''
