@@ -1,35 +1,79 @@
 # -*- coding: utf-8 -*-
-import re
+import json
 import logging
+import re
+
+from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
 
+novel_info_url = '/feeds/posts/default/-/%s?&orderby=published&alt=json-in-script&callback=startpost2&max-results=99999'
+
+_underscorer1 = re.compile(r'(.)([A-Z][a-z]+)')
+_underscorer2 = re.compile('([a-z0-9])([A-Z])')
+
+def camel_to_title(s):
+    s = _underscorer1.sub(r'\1_\2', s)
+    s = _underscorer2.sub(r'\1_\2', s).lower()
+    return ' '.join([x.title() for x in s.split('_')])
+
 class GreensiaCrawler(Crawler):
     base_url = 'https://grensia.blogspot.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         soup = self.get_soup(self.novel_url)
-        self.novel_title = soup.select_one('meta[property="og:title"]')['content']
-        self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
+
+        possible_cover = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_cover, Tag):
+            self.novel_cover = possible_cover['content']
+        logger.info('Novel cover: %s', self.novel_cover)
+
+        response = None
+
+        script_tag = soup.select_one('script[src^="/feeds/posts/default/-/"]')
+        if isinstance(script_tag, Tag):
+            response = self.get_response(self.absolute_url(script_tag['src']))
+
+        a_search = soup.select_one('#breadcrumb a[href*="/search/label/"], #main span.search-label')
+        if not response and isinstance(a_search, Tag):
+            response = self.get_response(self.absolute_url(novel_info_url % a_search.text.strip()))
+
+        if not response:
+            raise Exception('Please enter a valid novel page link')
+
+        data = json.loads(re.findall(r'startpost2\((.*)\);', response.text)[0])
+
+        possible_title = re.findall(r'/posts/default/-/([^/?]+)', response.url)[0]
+        self.novel_title = camel_to_title(possible_title)
+        logger.info('Novel title: %s', self.novel_title)
+
+        try:
+            self.novel_author = str(data['feed']['author'][0]['name']['$t']).title()
+            logger.info('Novel author: %s', self.novel_author)
+        except:
+            pass
 
         vols = set([])
-        for a in soup.select('.blog-post .post-body a'):
-            if not a.has_attr('href') or not a.text.strip():
-                continue
-            if not re.match(self.base_url + r'\d{4}/\d{2}/.*\.html', a['href']):
+        for entry in reversed(data['feed']['entry']):
+            a_href = None
+            for link in entry['link']:
+                if link['rel'] == 'alternate':
+                    a_href = link['href']
+            if not a_href:
                 continue
 
             chap_id = len(self.chapters) + 1
             vol_id = chap_id // 100 + 1
             vols.add(vol_id)
+
             self.chapters.append(dict(
                 id=chap_id,
                 volume=vol_id,
-                title=a.text.strip(),
-                url=self.absolute_url(a['href']),
+                title=entry['title']['$t'],
+                url=self.absolute_url(a_href),
             ))
         # end for
 
@@ -37,12 +81,14 @@ class GreensiaCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
+        logger.debug('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        body = soup.select_one('.blog-post .post-body')
-        for div in body.select('.entry-header'):
-            div.extract()
-        return self.extract_contents(body) 
+
+        body = soup.select_one('.post-body')
+        assert isinstance(body, Tag)
+        self.bad_tags += ['h1', 'header']
+        self.bad_css += ['.googlepublisherads']
+        return self.extract_contents(body)
     # end def
 
 # end class
