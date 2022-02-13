@@ -75,8 +75,8 @@ def force_replace_old(self):
             'name': 'replace',
             'message': 'What to do with existing folder?',
             'choices': [
-                'Remove old folder and start fresh',
                 'Download remaining chapters only',
+                'Remove old folder and start fresh'                
             ],
         },
     ])

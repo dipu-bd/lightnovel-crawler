@@ -27,6 +27,7 @@ An app to download novels from online sources and generate e-books.
   - [Installation](#installation)
     - [Standalone Bundle (Windows, Linux)](#standalone-bundle-windows-linux)
     - [PIP (Windows, Mac, and Linux)](#pip-windows-mac-and-linux)
+    - [Docker](#docker)
     - [Termux (Android)](#termux-android)
     - [Chatbots](#chatbots)
       - [Discord](#discord)
@@ -75,47 +76,73 @@ Without it, you will only get output in epub, text, and web formats.
 To install this app or to update installed one via `pip`, just run:
 
 ```bash
-$ pip install --user -U lightnovel-crawler
+$ pip install -U lightnovel-crawler
 ```
 
 In some cases you have to use `python3 -m pip` or `pip3` or `python -m pip`. And you do not need `--user` option, if you are running from root.
 
 Next, open your terminal and enter:
 
-```bash
-$ lightnovel-crawler
-
-# Or, a shortcut:
+```
 $ lncrawl
 ```
 
 > To view extra logs, use: `lncrawl -lll`
 
+### Docker
+
+Docker is a convenient way to run it anywhere.
+
+- First clone the project.
+
+```
+$ git clone https://github.com/dipu-bd/lightnovel-crawler
+```
+
+- Build docker:
+
+```
+$ cd lightnovel-crawler
+$ docker build -t lncrawl -f ./scripts/Dockerfile .
+```
+
+- Run commands using docker:
+
+```
+$ mkdir ~/Lightnovels
+$ docker run -v ~/Lightnovels:/app/Lightnovels -it lncrawl
+```
+
+> You can setup _alias_ to the above command in your terminal's profile to run using single a single-word command.
+
 ### Termux (Android)
 
-> There is no official support to run python in mobile devices.
-> It is not guaranteed that the app will run smoothly in all devices.
-> It is recommended to use the bots on either Discord or Telegram if you are on mobile.
+> Please read before proceeding:
+> - It is not guaranteed that the app will run smoothly in all devices.
+> - It may take a long time to install depending on your mobile processor.
+> - It is recommended to use the bots on either Discord or Telegram if you are on mobile.
 
 📱 Using Termux, you can run this app in your android phones too. Follow this instructions:
 
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
 - Open the app and run these commands one by one:
-  - `apt update && apt upgrade`
+  - `pkg upgrade`
+  - `pkg install python libxml2 libxslt libjpeg-turbo`
+  - `pip install -U pip wheel setuptools`
+  - `pip install lightnovel-crawler`
   - `termux-setup-storage`
-  - `pkg install ndk-sysroot make python zlib clang`
-  - `pkg install libxml2 libxslt libiconv libcrypt libffi zlib libjpeg-turbo`
-  - `pip install -U lightnovel-crawler` to install the latest version of this app.
-- Now exit the console and relaunch it.
-- Type `cd ~/storage/downloads` to store novels there.
-- Type `lncrawl` to start.
-- You can navigate up using <kbd>Volume UP</kbd> + <kbd>W</kbd> and down using <kbd>Volume UP</kbd> + <kbd>S</kbd>.
+  - `cd ~/storage/downloads`
+  - `lncrawl`
+- You can navigate up using <kbd>Vol UP</kbd> + <kbd>W</kbd> and down using <kbd>Vol UP</kbd> + <kbd>S</kbd>.
 
 When there is a new update available, you can install it just by running `pip install -U lightnovel-crawler`. You will not have to run all the above commands again.
 
 **PyDroid**
 
 You can also use PyDroid in Android phones. Check this discussion for a custom script to run the app: https://github.com/dipu-bd/lightnovel-crawler/discussions/1137
+
+<!-- TODO -->
+<!-- ### Google Colab -->
 
 ### Chatbots
 
@@ -150,7 +177,7 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 - Open command prompt inside of the project folder and install requirements:
 
 ```bash
-$ pip install --user -r requirements.txt
+$ pip install -r requirements.txt
 ```
 
 - Run the program (use python v3.6 or higher):
@@ -176,7 +203,7 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 - Install requirements
 
 ```bash
-$ pip3 install --user -r requirements.txt
+$ pip3 install -r requirements.txt
 ```
 
 - Copy `.env.example` file to `.env` file. Edit this file and give your API credentials here.
@@ -209,7 +236,7 @@ $ lncrawl -h
 ┃┃╱╭╋┫╭╮┃╭╮┃┃┃╭╮┫╭╮┃╰╯┃┃━┫┃╱┃┃╱╭┫╭┫╭╮┃╰╯╰╯┃┃┃┃━┫╭╯
 ┃╰━╯┃┃╰╯┃┃┃┃╰┫┃┃┃╰╯┣╮╭┫┃━┫╰╮┃╰━╯┃┃┃╭╮┣╮╭╮╭┫╰┫┃━┫┃
 ╰━━━┻┻━╮┣╯╰┻━┻╯╰┻━━╯╰╯╰━━┻━╯╰━━━┻╯╰╯╰╯╰╯╰╯╰━┻━━┻╯
-╱╱╱╱╱╭━╯┃ v2.29.6
+╱╱╱╱╱╭━╯┃ v2.29.7
 ╱╱╱╱╱╰━━╯ 🔗 https://github.com/dipu-bd/lightnovel-crawler
 --------------------------------------------------------------------------------
 usage: lncrawl [options...]
