@@ -23,8 +23,8 @@ class App:
     '''Bots are based on top of an instance of this app'''
 
     def __init__(self):
-        self.progress = 0
-        self.user_input = None
+        self.progress: float = 0
+        self.user_input: Optional[str] = None
         self.crawler_links: List[str] = []
         self.crawler: Optional[Crawler] = None
         self.login_data: Optional[Tuple[str, str]] = None
@@ -32,7 +32,7 @@ class App:
         self.output_path = C.DEFAULT_OUTPUT_PATH
         self.pack_by_volume = False
         self.chapters: List[Dict[str, Any]] = []
-        self.book_cover = None
+        self.book_cover: Optional[str] = None
         self.output_formats: Dict[str, bool] = {}
         self.archived_outputs = None
         self.good_file_name: str = ''

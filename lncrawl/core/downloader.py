@@ -10,6 +10,7 @@ import os
 import time
 from io import BytesIO
 
+import bs4
 from PIL import Image
 from tqdm import tqdm
 
@@ -19,7 +20,10 @@ from .arguments import get_args
 logger = logging.getLogger(__name__)
 
 def download_image(app, url) -> Image.Image:
-    '''Download image'''
+    from .app import App
+    assert isinstance(app, App)
+    assert app.crawler is not None
+
     assert isinstance(url, str)
     if len(url) > 1000 or url.startswith('data:'):
         content = base64.b64decode(url.split('base64,')[-1])
@@ -30,6 +34,10 @@ def download_image(app, url) -> Image.Image:
 # end def
 
 def download_cover(app):
+    from .app import App
+    assert isinstance(app, App)
+    assert app.crawler is not None
+
     filename = None
     filename = os.path.join(app.output_path, 'cover.jpg')
     if os.path.exists(filename):
@@ -67,6 +75,10 @@ def download_cover(app):
 
 
 def download_chapter_body(app, chapter):
+    from .app import App
+    assert isinstance(app, App)
+    assert app.crawler is not None
+
     result = None
     chapter['body'] = read_chapter_body(app, chapter)
 
@@ -103,6 +115,9 @@ def download_chapter_body(app, chapter):
 
 
 def get_chapter_filename(app, chapter):
+    from .app import App
+    assert isinstance(app, App)
+
     dir_name = os.path.join(app.output_path, 'json')
     if app.pack_by_volume:
         vol_name = 'Volume ' + str(chapter['volume']).rjust(2, '0')
@@ -115,6 +130,9 @@ def get_chapter_filename(app, chapter):
 
 
 def read_chapter_body(app, chapter):
+    from .app import App
+    assert isinstance(app, App)
+
     file_name = get_chapter_filename(app, chapter)
 
     chapter['body'] = ''
@@ -131,6 +149,9 @@ def read_chapter_body(app, chapter):
 
 
 def save_chapter_body(app, chapter):
+    from .app import App
+    assert isinstance(app, App)
+
     file_name = get_chapter_filename(app, chapter)
 
     title = chapter['title'].replace('>', '&gt;').replace('<', '&lt;')
@@ -149,6 +170,9 @@ def save_chapter_body(app, chapter):
 
 
 def download_content_image(app, url, filename):
+    from .app import App
+    assert isinstance(app, App)
+
     image_folder = os.path.join(app.output_path, 'images')
     image_file = os.path.join(image_folder, filename)
     try:
@@ -174,6 +198,10 @@ def download_content_image(app, url, filename):
 # end def
 
 def download_chapters(app):
+    from .app import App
+    assert isinstance(app, App)
+    assert app.crawler is not None
+
     app.progress = 0
     bar = tqdm(desc='Downloading', total=len(app.chapters), unit='ch')
     if os.getenv('debug_mode') == 'yes':
@@ -209,6 +237,10 @@ def download_chapters(app):
 
 
 def download_chapter_images(app):
+    from .app import App
+    assert isinstance(app, App)
+    assert app.crawler is not None
+
     app.progress = 0
 
     # download or generate cover
@@ -226,8 +258,12 @@ def download_chapter_images(app):
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
+            if not isinstance(img, bs4.Tag) or not img.has_attr('src'):
+                continue
+            # end if
+
             full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
-            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
+            filename = hashlib.md5(str(img['src']).encode()).hexdigest() + '.jpg'
             future = app.crawler.executor.submit(download_content_image, app, full_url, filename)
             futures_to_check.setdefault(chapter['id'], [])
             futures_to_check[chapter['id']].append(future)
@@ -252,14 +288,25 @@ def download_chapter_images(app):
 
         images = []
         for future in futures_to_check[chapter['id']]:
-            images.append(future.result())
-            bar.update()
+            try:
+                images.append(future.result())
+            except KeyboardInterrupt as ex:
+                raise LNException('Cancelled by user')
+            except Exception as ex:
+                logger.warn('Failed to download image: %s', str(ex))
+            finally:
+                bar.update()
+            # end try
         # end for
         logger.debug(images)
 
         soup = app.crawler.make_soup(chapter['body'])
         for img in soup.select('img'):
-            filename = hashlib.md5(img['src'].encode()).hexdigest() + '.jpg'
+            if not isinstance(img, bs4.Tag) or not img.has_attr('src'):
+                img.extract()
+                continue
+            # end if
+            filename = hashlib.md5(str(img['src']).encode()).hexdigest() + '.jpg'
             if filename in images:
                 img.attrs = {'src': 'images/%s' % filename, 'alt': filename}
                 # img['style'] = 'float: left; margin: 15px; width: 100%;'
@@ -268,7 +315,9 @@ def download_chapter_images(app):
             # end if
         # end for
 
-        chapter['body'] = ''.join([str(x) for x in soup.select_one('body').contents])
+        soup_body = soup.select_one('body')
+        assert isinstance(soup_body, bs4.Tag)
+        chapter['body'] = ''.join([str(x) for x in soup_body.contents])
         save_chapter_body(app, chapter)
     # end for
 
