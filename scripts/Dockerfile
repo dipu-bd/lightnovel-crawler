@@ -15,6 +15,7 @@ USER appuser
 
 WORKDIR /home/appuser/app
 
+RUN export PATH="/home/appuser/.local/bin:$PATH"
 RUN pip install -U pip wheel
 
 COPY requirements.txt .
