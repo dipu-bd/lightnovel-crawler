@@ -32,10 +32,11 @@ class NovelFullPlus(Crawler):
 
     def read_novel_info(self):
         '''Get novel title, autor, cover etc'''
+        self.novel_url = self.novel_url.split('#')[0]
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        image = soup.select_one('.detail-info .col-image img')
+        image = soup.select_one('.books .book img')
 
         self.novel_title = image['alt']
         logger.info('Novel title: %s', self.novel_title)
@@ -43,21 +44,22 @@ class NovelFullPlus(Crawler):
         self.novel_cover = self.absolute_url(image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        any_chapter_url = soup.select_one('.chapter a[href*="/novel/"]')['href']
-        soup = self.get_soup(any_chapter_url)
+        split_url = self.novel_url.split('/')
+        self.novel_id = split_url[len(split_url)-1]
+        logger.info('Novel id: %s', self.novel_id)
+
+        chapters_soup = self.get_soup('https://novelfullplus.com/ajax/chapter-archive?novelId=' +  self.novel_id)
 
         volumes = set([])
-        for option in soup.select('select.select-chapter option'):
+        for a in chapters_soup.select('.list-chapter li a'):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             volumes.add(vol_id)
-            option['value']
-            option.text.strip()
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'title': option.text.strip(),
-                'url': self.absolute_url(option['value']),
+                'title': a['title'].strip(),
+                'url': self.absolute_url(a['href'].strip()),
             })
         # end for
 
@@ -68,7 +70,7 @@ class NovelFullPlus(Crawler):
         '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('.reading-detail .container')
+        contents = soup.select_one('#chr-content')
         self.bad_css += ['h1', 'h2', 'h3', 'h4']
         return self.extract_contents(contents)
     # end def
