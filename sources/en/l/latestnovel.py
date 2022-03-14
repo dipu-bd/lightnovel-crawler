@@ -88,7 +88,9 @@ class LatestNovelCrawler(Crawler):
         contents = soup.select_one('.reading-content .text-left')
         if not isinstance(contents, Tag):
             contents = soup.select_one('.reading-content')
-
+        self.blacklist_patterns += [
+            'You can read the novel online free at LatestNovel.Net or NovelZone.Net'
+        ]
         return self.extract_contents(contents)
     # end def
 
