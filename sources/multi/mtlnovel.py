@@ -43,7 +43,6 @@ class MtlnovelCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         self.novel_url = self.novel_url.replace('https://', 'http://')
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -83,7 +82,6 @@ class MtlnovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         url = chapter['url'].replace('https://', 'http://')
         logger.info('Downloading %s', url)
         soup = self.get_soup(url)

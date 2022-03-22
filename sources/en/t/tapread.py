@@ -13,7 +13,6 @@ class TapreadCrawler(Crawler):
     base_url = 'https://www.tapread.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 

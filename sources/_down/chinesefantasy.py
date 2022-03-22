@@ -12,7 +12,6 @@ class ChineseFantasyNovels(Crawler):
     base_url = 'https://m.chinesefantasynovels.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         if not self.novel_url.endswith('/'):
             self.novel_url += '/'
         # end if
@@ -44,7 +43,6 @@ class ChineseFantasyNovels(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('#BookText')

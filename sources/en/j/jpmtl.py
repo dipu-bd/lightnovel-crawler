@@ -21,7 +21,6 @@ class JpmtlCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         self.novel_id = self.novel_url.split('/')[-1]
         logger.info('Novel Id: %s', self.novel_id)
 

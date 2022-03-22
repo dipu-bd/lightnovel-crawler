@@ -11,7 +11,6 @@ class WebnovelOnlineDotComCrawler(Crawler):
     base_url = 'https://webnovelonline.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         url = self.novel_url
         logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
@@ -40,7 +39,6 @@ class WebnovelOnlineDotComCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 

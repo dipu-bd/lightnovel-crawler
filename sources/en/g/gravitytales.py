@@ -64,7 +64,6 @@ class GravityTalesCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s' % chapter['url'])
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('#chapterContent')

@@ -16,7 +16,6 @@ class ZenithNovelsCrawler(Crawler):
     base_url = 'http://zenithnovels.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         self.novel_id = re.search(
             r'(?<=zenithnovels.com/)[^/]+', self.novel_url).group(0)
         logger.info('Novel id: %s', self.novel_id)
@@ -68,7 +67,6 @@ class ZenithNovelsCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 

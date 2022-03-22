@@ -20,7 +20,6 @@ class OneKsyCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         url = self.novel_url.replace(
             'https://m.1ksy', 'https://www.1ksy')
         logger.debug('Visiting %s', url)
@@ -59,7 +58,6 @@ class OneKsyCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('#content')

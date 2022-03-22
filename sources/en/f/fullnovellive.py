@@ -27,7 +27,6 @@ class FullnovelLiveCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         soup = self.get_soup(self.novel_url)
         self.novel_title = soup.select_one('.info h1.title a').text.strip()
         self.novel_cover = self.absolute_url(
@@ -52,7 +51,6 @@ class FullnovelLiveCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.page .divContent')
         return self.extract_contents(contents)

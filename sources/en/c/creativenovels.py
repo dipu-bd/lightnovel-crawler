@@ -16,7 +16,6 @@ class CreativeNovelsCrawler(Crawler):
     base_url = 'https://creativenovels.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         #self.novel_id = re.findall(r'\/\d+\/', self.novel_url)[0]
         #self.novel_id = int(self.novel_id.strip('/'))
 
