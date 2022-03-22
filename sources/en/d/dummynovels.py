@@ -18,20 +18,19 @@ class DummyNovelsCrawler(Crawler):
 
     def search_novel(self, query: str):
         keywords = set(query.lower().split())
-
         soup = self.get_soup('%s/novels/' % self.home_url)
 
         novels = {}
         for a in soup.select('.elementor-post .elementor-post__title a'):
-            novels[a.text.strip()] = {
+            novels[a.text.strip().lower()] = {
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             }
         # end for
 
         results = []
-        for novel in novels:
-            if any(x in keywords for x in novel['title'].lower().split()):
+        for haystack, novel in novels.items():
+            if any(x in keywords for x in haystack.split()):
                 results.append(novel)
             # end if
         # end for
@@ -61,15 +60,16 @@ class DummyNovelsCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         possible_toc = None
-        for tab in soup.select('.elementor-tab-title[aria-controls]'):
-            if str(tab.text).find('Table of Contents') > -1:
-                possible_toc = soup.select('#' + str(tab['aria-controls']))
+        for tab in soup.select('.elementor-tab-desktop-title[aria-controls]'):
+            if 'Table of Contents' in str(tab.text):
+                possible_toc = soup.select_one('#' + str(tab['aria-controls']))
                 break
+            # end if
         # end for
-        assert isinstance(possible_toc, Tag)
+        assert isinstance(possible_toc, Tag), 'No table of contents'
 
         for tab in possible_toc.select('.elementor-accordion-item .elementor-tab-title'):
-            possible_contents = possible_toc.select('#' + str(tab['aria-controls']))
+            possible_contents = possible_toc.select_one('#' + str(tab['aria-controls']))
             if not isinstance(possible_contents, Tag):
                 continue
             # end if
