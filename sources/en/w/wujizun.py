@@ -17,9 +17,9 @@ class Wujizun(Crawler):
         self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.select_one('meta[property="og:image"]')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = possible_cover['content']
+        possible_image = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = possible_image['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Removes none TOC links from bottom of page.
@@ -46,7 +46,6 @@ class Wujizun(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.entry-content')

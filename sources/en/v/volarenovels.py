@@ -61,7 +61,9 @@ class VolareNovelsCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('#content-container h3.title').text
+        possible_title = soup.select_one('#content-container h3.title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         try:

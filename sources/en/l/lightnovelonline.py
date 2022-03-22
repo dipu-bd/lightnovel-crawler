@@ -41,8 +41,9 @@ class LightNovelOnline(Crawler):
         self.novel_id = urlparse(self.novel_url).path.split('/')[-1]
         logger.info("Novel Id: %s", self.novel_id)
 
-        self.novel_title = soup.select_one(
-            '.series-details .series-name a').text.strip()
+        possible_title = soup.select_one('.series-details .series-name a')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
@@ -104,7 +105,6 @@ class LightNovelOnline(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('#chapter-content')
         return str(body)

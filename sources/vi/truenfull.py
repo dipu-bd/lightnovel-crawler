@@ -156,12 +156,8 @@ class TruenFull(Crawler):
         # end for
     # end def
 
-    def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('#chapter-c, .chapter-c')
-
-        self.bad_css = [
+    def initialize(self) -> None:
+        self.cleaner.bad_css = set([
             '.ads-content',
             '.ads-inpage-container',
             '.ads-responsive',
@@ -175,7 +171,12 @@ class TruenFull(Crawler):
             '.ads-taboola',
             '.ads-middle',
             '.adsbygoogle',
-        ]
-        return self.extract_contents(contents)
+        ])
+    # end def
+
+    def download_chapter_body(self, chapter):
+        soup = self.get_soup(chapter['url'])
+        contents = soup.select_one('#chapter-c, .chapter-c')
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

@@ -75,7 +75,6 @@ class ListNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.reading-content p')
         return ''.join([str(p) for p in contents])

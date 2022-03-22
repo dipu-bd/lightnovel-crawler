@@ -1,12 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-import re
 from concurrent import futures
 from urllib.parse import quote, urlparse
-
-from bs4 import BeautifulSoup
-from bs4.element import Tag
 
 from lncrawl.core.crawler import Crawler
 
@@ -142,23 +138,9 @@ class BabelNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['json_url'])
         data = self.get_json(chapter['json_url'])
-
         soup = self.make_soup(data['data']['content'])
         body = soup.find('body')
-        self.clean_contents(body)
-
-        for tag in body.contents:
-            if not str(tag).strip():
-                tag.extract()
-            elif isinstance(tag, Tag):
-                tag.name = 'p'
-            # end if
-        # end for
-
-        result = str(body)
-        result = re.sub(r'\n\n', '<br><br>', result)
-        return result
+        return self.cleaner.extract_contents(body)
     # end def
 # end class

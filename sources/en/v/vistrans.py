@@ -36,13 +36,9 @@ class VisTranslations(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -54,13 +50,12 @@ class VisTranslations(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body = []
         contents = soup.select('div.entry-content p')
         for p in contents:
-            para = ' '.join(self.extract_contents(p))
+            para = ' '.join(self.cleaner.extract_contents(p))
             if len(para):
                 body.append(para)
             # end if

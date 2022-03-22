@@ -37,8 +37,9 @@ class WordExcerptCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            '.post-title h1, .c-manga-title h1').text.strip()
+        possible_title = soup.select_one('.post-title h1, .c-manga-title h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         possible_img = soup.select_one('.summary_image img')
@@ -103,7 +104,6 @@ class WordExcerptCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         # logger.debug(soup.title.string)
         contents = soup.select('div.text-left p')

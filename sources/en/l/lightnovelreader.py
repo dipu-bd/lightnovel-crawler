@@ -17,11 +17,20 @@ class LightnovelReader(Crawler):
         'https://www.lightnovelreader.org/',
     ]
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update([
+            'center',
+        ])
+        self.cleaner.bad_css.update([
+            'div[style="display:none"]',
+            'div[class*="hidden"]', 
+        ])
+    # end def
+
     def search_novel(self, query):
         self.get_response(self.home_url)
 
         url = self.absolute_url(novel_search_url % quote(query))
-        logger.debug('Visiting %s', url)
         data = self.get_json(url)
 
         results = []
@@ -114,19 +123,14 @@ class LightnovelReader(Crawler):
         # end for
     # end def
 
+
     def download_chapter_body(self, chapter):
         response = self.get_response(chapter['url'])
         html_text = response.content.decode('utf8', 'ignore')
         html_text = html_text.replace(r'</body>', '').replace(r'</html>', '')
         html_text += '</body></html>'
         soup = self.make_soup(html_text)
-
         body = soup.select_one('#chapterText')
-        self.bad_css += [
-            'div[style="display:none"]',
-            'div[class*="hidden"]', 
-            'center',
-        ]
-        return self.extract_contents(body)
+        return self.cleaner.extract_contents(body)
     # end def
 # end class

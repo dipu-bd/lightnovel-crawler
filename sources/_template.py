@@ -29,6 +29,9 @@ class MyCrawlerName(Crawler):
 
     def initialize(self):
         # TODO: [OPTIONAL] This gets called before executing all other methods.
+        #
+        # You can initialize your custom `TextCleaner` instances and other
+        # necessary global variables here.
         pass
     # end def
 
@@ -84,7 +87,7 @@ class MyCrawlerName(Crawler):
         # TODO: [REQUIRED] Download content of a single chapter and return it in a
         #       clean html format. You can use `chapter['url']` to get the contents.
         #
-        #       To keep it simple, check `self.extract_contents` in the parent `Crawler` class.
+        #       To keep it simple, check `extract_contents` in the `TextCleaner` class.
         #       It extracts chapter contents given a soup Tag, and returns a clean HTML.
         pass
     # end def

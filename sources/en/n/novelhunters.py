@@ -92,7 +92,6 @@ class NovelHunters(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')
@@ -105,6 +104,6 @@ class NovelHunters(Crawler):
                 if bad in content.text:
                     content.extract()
 
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

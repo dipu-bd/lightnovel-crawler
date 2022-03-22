@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = '%s/?s=%s&post_type=wp-manga&author=&artist=&release='
 
-class BoxNovelCrawler(Crawler):
+class MyBoxNovelCrawler(Crawler):
     base_url = [
         'https://myboxnovel.com/',
     ]
-
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -44,9 +45,9 @@ class BoxNovelCrawler(Crawler):
         self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.select_one('meta[property="og:image"]')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = possible_cover['content']
+        possible_image = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = possible_image['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:
@@ -87,10 +88,9 @@ class BoxNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.text-left')
         assert isinstance(contents, Tag), 'No contents'
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

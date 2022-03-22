@@ -37,13 +37,13 @@ class BoxNovelCrawler(Crawler):
         assert isinstance(possible_book_id, Tag), 'No book id'
         self.novel_id = possible_book_id['value']
 
-        possible_cover = soup.select_one('a.book_cover img.cover')
-        assert isinstance(possible_cover, Tag), 'No novel title'
+        possible_image = soup.select_one('a.book_cover img.cover')
+        assert isinstance(possible_image, Tag), 'No novel title'
         
-        self.novel_cover = self.absolute_url(possible_cover['src'])
+        self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_title = possible_cover['alt']
+        self.novel_title = possible_image['alt']
         logger.info('Novel title: %s', self.novel_title)
 
         for item in soup.select('.book_info ul.list span.item'):
@@ -73,11 +73,10 @@ class BoxNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         paras = soup.select('#showReading sent')
         return ''.join(['<p>%s</p>' % p.text for p in paras])
         # assert isinstance(contents, Tag), 'No contents'
-        # return self.extract_contents(contents)
+        # return self.cleaner.extract_contents(contents)
     # end def
 # end class

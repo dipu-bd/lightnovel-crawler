@@ -14,11 +14,14 @@ class FreeLightNovel(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.page-header').text
+        possible_title = soup.select_one('h1.page-header')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.content img.img-responsive')['src'])
+        possible_image = soup.select_one('.content img.img-responsive')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.volumes.append({'id': 1})
@@ -45,7 +48,7 @@ class FreeLightNovel(Crawler):
         soup = self.get_soup(chapter['url'])
 
         content = soup.select_one('.content')
-        self.clean_contents(content)
+        self.cleaner.clean_contents(content)
 
         return ''.join([
             str(p) for p in content.select('p')

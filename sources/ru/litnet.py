@@ -48,7 +48,9 @@ class LitnetCrawler(Crawler):
         self.csrf_param = soup.select_one('meta[name="csrf-param"]')['content']
         logger.info('%s: %s', self.csrf_param, self.csrf_token)
 
-        self.novel_title = soup.select_one('h1.roboto').text.strip()
+        possible_title = soup.select_one('h1.roboto')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         img_src = soup.select_one('.book-view-cover img')

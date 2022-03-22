@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from bs4 import BeautifulSoup
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -22,13 +21,14 @@ class RomanticLBCrawler(Crawler):
     def read_novel_info(self):
         url = self.novel_url.replace(
             'https://m.romanticlovebooks', 'https://www.romanticlovebooks')
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        self.novel_title = soup.select_one(
-            'body > div > div.rt > h1').text.strip()
-        self.novel_cover = self.absolute_url(
-            soup.select_one('body > div > div.lf > img')['src'])
+        possible_title = soup.select_one('body > div > div.rt > h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
+        possible_image = soup.select_one('body > div > div.lf > img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
 
         for info in soup.select('body > div > div.msg > *'):
             text = info.text.strip()
@@ -59,11 +59,10 @@ class RomanticLBCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#content')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 
     # def download_chapter_body(self, chapter):
@@ -89,7 +88,7 @@ class RomanticLBCrawler(Crawler):
     #     # end for
 
     #     contents = soup.select_one('#BookText')
-    #     body = self.extract_contents(contents)
+    #     body = self.cleaner.extract_contents(contents)
     #     if len(body) > 2 or body[0].strip() != 'Loading...':
     #         return '<p>' + '</p><p>'.join(body) + '</p>'
     #     # end if
@@ -99,7 +98,7 @@ class RomanticLBCrawler(Crawler):
 
     #     soup = BeautifulSoup(data['info']['content'], 'lxml')
     #     contents = soup.select_one('body')
-    #     body = self.extract_contents(contents)
+    #     body = self.cleaner.extract_contents(contents)
     #     return '<p>' + '</p><p>'.join(body) + '</p>'
     # # end def
 # end class

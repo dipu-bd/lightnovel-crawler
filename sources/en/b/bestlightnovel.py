@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -33,7 +34,9 @@ class BestLightNovel(Crawler):
         soup = self.get_soup(self.novel_url)
 
         # self.novel_title = soup.select_one('h1.entry-title').text.strip()
-        self.novel_title = soup.select_one('div.entry-header h1').text.strip()
+        possible_title = soup.select_one('div.entry-header h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         try:
@@ -63,8 +66,8 @@ class BestLightNovel(Crawler):
         self.get_response(change_bad_words_off)
     # end def
 
+
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         if 'Chapter' in soup.select_one('h1').text:
@@ -72,6 +75,6 @@ class BestLightNovel(Crawler):
         # end if
 
         contents = soup.select_one('#vung_doc')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import re
 import logging
+import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -9,9 +10,12 @@ logger = logging.getLogger(__name__)
 class WebnovelOnlineCrawler(Crawler):
     base_url = 'https://webnovel.online/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(['h1', 'h3', 'hr'])
+    # end def
+    
     def read_novel_info(self):
         url = self.novel_url
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
         img = soup.select_one('main img.cover')
@@ -44,7 +48,6 @@ class WebnovelOnlineCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         strong = soup.select_one('#story-content strong')
@@ -53,8 +56,7 @@ class WebnovelOnlineCrawler(Crawler):
             logger.info('Updated title: %s', chapter['title'])
         # end if
 
-        self.bad_tags += ['h1', 'h3', 'hr']
         contents = soup.select_one('#story-content')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

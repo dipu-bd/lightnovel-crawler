@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-from urllib.parse import quote_plus
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -57,9 +56,8 @@ class BestofLightNovels(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.text-left')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

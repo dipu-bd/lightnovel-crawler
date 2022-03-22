@@ -14,6 +14,10 @@ RE_VOLUME = r'(?:book|vol|volume) (\d+)'
 class NovelFullPlus(Crawler):
     base_url = 'https://novelfullplus.com/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(['h1', 'h2', 'h3', 'h4'])
+    # end def
+
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
         query = quote_plus(query.lower())
@@ -66,10 +70,8 @@ class NovelFullPlus(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('#chr-content')
-        self.bad_css += ['h1', 'h2', 'h3', 'h4']
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

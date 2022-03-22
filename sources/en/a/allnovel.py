@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import re
+
 import logging
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -99,7 +100,6 @@ class AllNovelCrawler(Crawler):
     # end def
 
     def download_chapter_list(self, page):
-        '''Download list of chapters and volumes.'''
         url = self.novel_url.split('?')[0].strip('/')
         url += '?page=%d&per-page=50' % page
         soup = self.get_soup(url)
@@ -115,9 +115,8 @@ class AllNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select('div#chapter-content')
-        return self.extract_contents(content)
+        return self.cleaner.extract_contents(content)
     # end def
 # end class

@@ -34,9 +34,9 @@ class WorldnovelonlineCrawler(Crawler):
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.select_one('.section-novel img[alt^="Thumbnail"]')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = self.absolute_url(possible_cover['data-src'])
+        possible_image = soup.select_one('.section-novel img[alt^="Thumbnail"]')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['data-src'])
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
 

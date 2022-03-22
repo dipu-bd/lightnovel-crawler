@@ -33,16 +33,18 @@ class WuxiaOnlineCrawler(Crawler):
 
     def read_novel_info(self):
         url = self.novel_url
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
-        self.novel_title = soup.select_one('h1.entry-title').text
+        possible_title = soup.select_one('h1.entry-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = soup.select_one('div.entry-header > div.truyen_if_wrap > ul > li:nth-child(2)').text
         logger.info('%s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.info_image img')['src'])
+        possible_image = soup.select_one('.info_image img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         last_vol = -1
@@ -65,10 +67,9 @@ class WuxiaOnlineCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         parts = soup.select_one('#list_chapter .content-area')
-        return self.extract_contents(parts)
+        return self.cleaner.extract_contents(parts)
     # end def
 # end class

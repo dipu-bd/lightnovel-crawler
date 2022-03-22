@@ -16,11 +16,14 @@ class MachineNovelTrans(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.desc h5').text
+        possible_title = soup.select_one('.desc h5')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.about-author .row img')['src'])
+        possible_image = soup.select_one('.about-author .row img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         for div in soup.select('#chapters #accordion .panel'):
@@ -50,7 +53,6 @@ class MachineNovelTrans(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body = soup.select('.about-author .desc .translated')

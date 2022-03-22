@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import re
 import logging
+import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -11,6 +12,10 @@ search_url = 'https://www.novelpassion.com/search?keyword=%s'
 class NovelPassion(Crawler):
     base_url = 'https://www.novelpassion.com/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(['h1', 'h3', 'hr'])
+    # end def
+    
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
         soup = self.get_soup(search_url % query)
@@ -31,7 +36,6 @@ class NovelPassion(Crawler):
 
     def read_novel_info(self):
         url = self.novel_url
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
         img = soup.select_one('div.nw i.g_thumb img')
@@ -63,8 +67,8 @@ class NovelPassion(Crawler):
         # end for
     # end def
 
+
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         strong = soup.select_one('.cha-words strong')
@@ -73,8 +77,7 @@ class NovelPassion(Crawler):
             logger.info('Updated title: %s', chapter['title'])
         # end if
 
-        self.bad_tags += ['h1', 'h3', 'hr']
         contents = soup.select_one('.cha-words')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

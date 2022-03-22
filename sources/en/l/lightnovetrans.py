@@ -13,7 +13,9 @@ class LNTCrawler(Crawler):
 
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.entry-title').text
+        possible_title = soup.select_one('h1.entry-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         # TODO: No covers on site, could not grab author name.

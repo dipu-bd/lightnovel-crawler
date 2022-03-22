@@ -17,8 +17,9 @@ class OppaTranslationsCrawler(Crawler):
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
-        self.novel_title = soup.select_one(
-            'header.entry-header h1.entry-title').text.strip()
+        possible_title = soup.select_one('header.entry-header h1.entry-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         possible_authors = soup.select('div.entry-content p strong')
@@ -27,12 +28,10 @@ class OppaTranslationsCrawler(Crawler):
                 self.novel_author = author.text.strip().replace('Author :', '')
                 break
         logger.info('Novel author: %s', self.novel_author)
-
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('div.entry-content img')['src'])
-        except Exception:
-            pass
+        
+        possible_image = soup.select_one('div.entry-content img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         # end try
         logger.info('Novel cover: %s', self.novel_cover)
 
@@ -59,7 +58,6 @@ class OppaTranslationsCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.entry-content')
 

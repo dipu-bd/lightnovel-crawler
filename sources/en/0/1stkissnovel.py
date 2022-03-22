@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
-import re
-from urllib.parse import urlparse
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -16,6 +15,11 @@ class OneKissNovelCrawler(Crawler):
     machine_translation = True
     base_url = 'https://1stkissnovel.love/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(['h3', 'script'])
+        self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
+    # end def
+    
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)
@@ -94,12 +98,7 @@ class OneKissNovelCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-
         contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.extract()
-        # end for
-
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class
