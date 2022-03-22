@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
-import re
 import urllib.parse
+
+from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
 
@@ -14,6 +15,7 @@ class NovelGoCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://novelgo.id/'
+    # end def
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -34,9 +36,10 @@ class NovelGoCrawler(Crawler):
         # self.novel_cover = self.absolute_url(
         #    url.replace('url(', '').replace(')', ''))
 
-        thumbnail = soup.find("div", {"class": "novel-thumbnail"})['data-bg']
-        self.novel_cover = self.absolute_url(
-            thumbnail.replace('url(', '').replace(')', ''))
+        thumbnail = soup.find("div", {"class": "novel-thumbnail"})
+        if isinstance(thumbnail, Tag):
+            thumbnail_src = str(thumbnail['data-bg']).replace('url(', '').replace(')', '')
+            self.novel_cover = self.absolute_url(thumbnail_src)
         logger.info('Novel cover: %s', self.novel_cover)
 
         path = urllib.parse.urlsplit(self.novel_url)[2]
@@ -90,14 +93,7 @@ class NovelGoCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
-        contents = soup.find(
-            'div', {'id': 'chapter-post-content'}).findAll('p')
+        contents = soup.select('#chapter-post-content p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def

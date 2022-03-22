@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from bs4 import BeautifulSoup
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -12,6 +11,13 @@ class WuxiaWorldIo(Crawler):
         'https://wuxiaworld.io/',
         'https://wuxiaworld.name/',
     ]
+
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ])
+    # end def
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
@@ -67,18 +73,6 @@ class WuxiaWorldIo(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-
-        if 'Chapter' in soup.select_one('h1').text:
-            chapter['title'] = soup.select_one('h1').text
-        else:
-            chapter['title'] = chapter['title']
-        # end if
-
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
         contents = soup.select_one('div.content-area')
         return self.cleaner.extract_contents(contents)
     # end def

@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*- 
 import logging
+
 from bs4.element import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
 class Wujizun(Crawler):
     base_url = 'https://wujizun.com/'
+
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            "Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"
+        ])
+    # end def
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -47,13 +55,8 @@ class Wujizun(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-
         body_parts = soup.select_one('div.entry-content')
-
-        # Remoeves bad text from chapters.
-        self.blacklist_patterns += ["Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"]
-        self.clean_contents(body_parts)
-
+        self.cleaner.clean_contents(body_parts)
         return str(body_parts)
     # end def
 # end class

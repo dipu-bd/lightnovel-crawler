@@ -17,6 +17,10 @@ class WuxiaCoCrawler(Crawler):
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.co/'
         self.executor = ThreadPoolExecutor(max_workers=1)
+        self.cleaner.blacklist_patterns.update([
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ])
     # end def
 
     def search_novel(self, query):
@@ -73,20 +77,16 @@ class WuxiaCoCrawler(Crawler):
                 'title': a.select_one('p.chapter-name').text.strip() or ('Chapter %d' % chap_id),
             })
         # end for
-
     # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
-        chapter['title'] = soup.select_one('h1.chapter-title').text.strip()
+        possible_title = soup.select_one('h1.chapter-title')
+        if possible_title:
+            chapter['title'] = possible_title.text.strip()
 
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
         body_parts = soup.select_one('div.chapter-entity')
-        
         return self.cleaner.extract_contents(body_parts)
     # end def
 # end class

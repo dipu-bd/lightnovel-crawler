@@ -10,6 +10,13 @@ search_url = 'https://wuxiaworld.live/search.ajax?type=&query=%s'
 class WuxiaWorldLive(Crawler):
     base_url = 'https://wuxiaworld.live/'
 
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ])
+    # end def
+
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
         soup = self.get_soup(search_url % query)
@@ -74,18 +81,6 @@ class WuxiaWorldLive(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-
-        if 'Chapter' in soup.select_one('h1').text:
-            chapter['title'] = soup.select_one('h1').text
-        else:
-            chapter['title'] = chapter['title']
-        # end if
-
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
         contents = soup.select_one('div.content-area')
         return self.cleaner.extract_contents(contents)
     # end def

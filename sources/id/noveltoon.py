@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import re
 import logging
+import re
 from urllib.parse import quote_plus
 
 from lncrawl.core.crawler import Crawler
@@ -11,6 +11,16 @@ search_url = 'https://noveltoon.mobi/en/search?word=%s&source=&lock='
 
 class NovelsRockCrawler(Crawler):
     base_url = 'https://noveltoon.mobi/'
+
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            r"Don't forget to leave a like and subscribe to this new novel.",
+            r"Feel free to comment your thoughts below.",
+            r'——————————————————.*',
+            r"Don't forget to leave like sub to this new novel.",
+            r'Feel free to comment below.',
+        ])
+    # end def
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
@@ -72,13 +82,6 @@ class NovelsRockCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.watch-chapter-detail')
-        self.blacklist_patterns = [
-            r"Don't forget to leave a like and subscribe to this new novel.",
-            r"Feel free to comment your thoughts below.",
-            r'——————————————————.*',
-            r"Don't forget to leave like sub to this new novel.",
-            r'Feel free to comment below.',
-        ]
         return self.cleaner.extract_contents(contents)
     # end def
 # end class
