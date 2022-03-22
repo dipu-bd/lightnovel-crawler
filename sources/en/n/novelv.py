@@ -11,16 +11,17 @@ class NovelvCrawler(Crawler):
     base_url = 'https://www.novelv.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            '.panel-default .info .info2 h1').text.strip()
+        possible_title = soup.select_one('.panel-default .info .info2 h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.panel-default .info .info1 img')['src'])
+        possible_image = soup.select_one('.panel-default .info .info1 img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         authors = []
@@ -58,13 +59,11 @@ class NovelvCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         chapter['title'] = self.clean_text(chapter['title'])
 
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('.panel-body.content-body')
-        body = self.extract_contents(content)
+        body = self.cleaner.extract_contents(content)
         body = '<p>%s</p>' % '</p><p>'.join(body)
         return self.clean_text(body)
     # end def

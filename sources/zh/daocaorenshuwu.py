@@ -16,15 +16,17 @@ class Daocaorenshuwu(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            '.container .book-info h1.book-name').text
+        possible_title = soup.select_one('.container .book-info h1.book-name')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = soup.select('.container .media-body .row div')[0].text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.container .media-left a img')['src'])
+        possible_image = soup.select_one('.container .media-left a img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise ch
@@ -33,13 +35,9 @@ class Daocaorenshuwu(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -51,7 +49,6 @@ class Daocaorenshuwu(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.cont-text > p')
         contents = [str(p) for p in contents if p.text.strip()]

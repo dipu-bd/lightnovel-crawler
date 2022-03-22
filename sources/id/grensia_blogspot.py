@@ -23,12 +23,17 @@ def camel_to_title(s):
 class GreensiaCrawler(Crawler):
     base_url = 'https://grensia.blogspot.com/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(['h1', 'header'])
+        self.cleaner.bad_css.update(['.googlepublisherads'])
+    # end def
+
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
-        possible_cover = soup.select_one('meta[property="og:image"]')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = possible_cover['content']
+        possible_image = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = possible_image['content']
         logger.info('Novel cover: %s', self.novel_cover)
 
         response = None
@@ -83,12 +88,9 @@ class GreensiaCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.debug('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         body = soup.select_one('.post-body')
         assert isinstance(body, Tag)
-        self.bad_tags += ['h1', 'header']
-        self.bad_css += ['.googlepublisherads']
-        return self.extract_contents(body)
+        return self.cleaner.extract_contents(body)
     # end def
 
 # end class

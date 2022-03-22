@@ -128,6 +128,5 @@ def search_novels(app):
 
     # Process combined search results
     app.search_results = process_results(combined_results)
-    print('Found %d results' % len(app.search_results))
     bar.close()
 # end def

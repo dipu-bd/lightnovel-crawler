@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -13,17 +12,27 @@ class RPGNovels(Crawler):
         'https://rpgnoob.wordpress.com/'
     ]
 
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            "Previous Chapter",
+            "Table of Contents",
+            "Next Chapter",
+            "Please consider supporting me. You can do this either by turning off adblock for this blog or via my . Thank you."
+        ])
+    # end def
+
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'meta[property="og:title"]')['content']
+        possible_title = soup.select_one('meta[property="og:title"]')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one(
-            'meta[property="og:image"]')['content']
+        possible_novel_cover = soup.select_one('meta[property="og:image"]')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = " ".join(
@@ -46,13 +55,9 @@ class RPGNovels(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -64,17 +69,9 @@ class RPGNovels(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.post-entry')
-        self.blacklist_patterns += [
-            "Previous Chapter",
-            "Table of Contents",
-            "Next Chapter",
-            "Please consider supporting me. You can do this either by turning off adblock for this blog or via my . Thank you."
-        ]
 
         # Fixes images, so they can be downloaded.
         # all_imgs = soup.find_all('img')
@@ -86,6 +83,6 @@ class RPGNovels(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
 
-        return self.extract_contents(body_parts)
+        return self.cleaner.extract_contents(body_parts)
     # end def
 # end class

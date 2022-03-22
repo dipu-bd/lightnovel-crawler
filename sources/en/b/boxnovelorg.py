@@ -2,6 +2,9 @@
 import logging
 import re
 from concurrent import futures
+
+from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -34,19 +37,20 @@ class BoxNovelOrgCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = ' '.join([
-            str(x)
-            for x in soup.select_one('.title').contents
-            if not x.name
-        ]).strip()
+        possible_title = soup.select_one('.title')
+        assert isinstance(possible_title, Tag), 'No title'
+        for tag in possible_title.contents:
+            if not isinstance(tag, Tag):
+                tag.extract()
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.book img')['src'])
+        possible_image = soup.select_one('.book img')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.find_all(href=re.compile('author'))
@@ -92,13 +96,12 @@ class BoxNovelOrgCrawler(Crawler):
     # end def
 
     def download_chapter_list(self, page):
-        '''Download list of chapters and volumes.'''
         url = self.novel_url.split('?')[0].strip('/')
         url += '?page=%d&per-page=50' % page
         soup = self.get_soup(url)
 
         for a in soup.select('ul.list-chapter li a'):
-            title = a['title'].strip()
+            title = str(a['title']).strip()
 
             chapter_id = len(self.chapters) + 1
             # match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
@@ -124,10 +127,8 @@ class BoxNovelOrgCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div.chr-c, #chr-content')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

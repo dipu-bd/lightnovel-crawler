@@ -11,7 +11,6 @@ class DarkTranslation(Crawler):
     base_url = 'https://darktranslation.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -20,7 +19,7 @@ class DarkTranslation(Crawler):
 
         # FIXME: Problem getting cover image, tried multiple ways and keep getting error.
         # self.novel_cover = self.absolute_url(
-        #     soup.select_one('div.entry-content p img')['src'])
+        #     soup.select_one('div.entry-content p img')
         # logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = "by Dark Translation"
@@ -32,13 +31,9 @@ class DarkTranslation(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -50,10 +45,8 @@ class DarkTranslation(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('div.entry-content')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

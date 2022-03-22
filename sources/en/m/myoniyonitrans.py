@@ -2,6 +2,7 @@
 import logging
 import re
 from urllib.parse import urlparse
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -12,7 +13,6 @@ class MyOniyOniTranslation(Crawler):
     base_url = 'https://myoniyonitranslations.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         path_fragments = urlparse(self.novel_url).path.split('/')
         novel_hash = path_fragments[1]
         if novel_hash == 'category':
@@ -33,8 +33,9 @@ class MyOniyOniTranslation(Crawler):
             return self.read_novel_info()
         # end if
 
-        self.novel_title = soup.select_one(
-            'header.entry-header h1.entry-title').text
+        possible_title = soup.select_one('header.entry-header h1.entry-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         possible_authors = []
@@ -48,8 +49,9 @@ class MyOniyOniTranslation(Crawler):
         # end if
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.x-container img.x-img')['src'])
+        possible_image = soup.select_one('.x-container img.x-img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
@@ -92,18 +94,21 @@ class MyOniyOniTranslation(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
+        
         contents = soup.select_one('article div.entry-content')
+        assert contents, 'No chapter contents'
+
+        # clean all upto first <hr>
         for tag in contents.select('*'):
             if tag.name == 'hr':
                 break
             # end if
             tag.extract()
         # end for
-        self.bad_tags.append('div')
-        self.clean_contents(contents)
+
+        self.cleaner.bad_tags.add('div')
+        self.cleaner.clean_contents(contents)
         return str(contents)
     # end def
 # end class

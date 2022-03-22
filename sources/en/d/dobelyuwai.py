@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -10,15 +10,24 @@ class Dobelyuwai(Crawler):
     machine_translation = True
     base_url = 'https://dobelyuwai.wordpress.com/'
 
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            "Prev", "ToC", "Next"
+        ])
+    # end def
+
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('meta[property="og:title"]')['content']
+        possible_title = soup.select_one('meta[property="og:title"]')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one('meta[property="og:image"]')['content']
+        possible_novel_cover = soup.select_one('meta[property="og:image"]')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
         if 'blank.jpg' in self.novel_cover:
             self.novel_cover = None
         logger.info('Novel cover: %s', self.novel_cover)
@@ -42,13 +51,9 @@ class Dobelyuwai(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -59,15 +64,13 @@ class Dobelyuwai(Crawler):
         # end for
     # end def
 
+    
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.entry-content')
 
         # Remoeves bad text from chapters.
-        self.blacklist_patterns += ["Prev", "ToC", "Next"]
         # Fixes images, so they can be downloaded.
         # all_imgs = soup.find_all('img')
         # for img in all_imgs:
@@ -78,6 +81,6 @@ class Dobelyuwai(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
 
-        return self.extract_contents(body_parts)
+        return self.cleaner.extract_contents(body_parts)
     # end def
 # end class

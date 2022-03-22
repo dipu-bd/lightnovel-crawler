@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 from concurrent.futures.thread import ThreadPoolExecutor
 from urllib.parse import quote_plus
@@ -12,6 +11,21 @@ search_url = 'https://lightnovelbastion.com/?s=%s&post_type=wp-manga&author=&art
 
 class LightNovelBastion(Crawler):
     base_url = 'https://lightnovelbastion.com/'
+
+    def initialize(self) -> None:
+        self.executor = ThreadPoolExecutor(1)
+        self.cleaner.bad_tags.update([
+            'h3',
+            'blockquote',
+            'script',
+        ])
+        self.cleaner.bad_css.update([
+            '.lnbad-tag',
+            '.code-block',
+            '.adsbygoogle',
+            '.sharedaddy',
+        ])
+    # end def
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
@@ -32,11 +46,7 @@ class LightNovelBastion(Crawler):
         return results
     # end def
 
-    def initialize(self):
-        self.executor = ThreadPoolExecutor(1)
-
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -95,23 +105,8 @@ class LightNovelBastion(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.reading-content .text-left')
-
-        bad_css = ','.join([
-            'h3',
-            '.lnbad-tag',
-            'blockquote',
-            '.code-block',
-            'script',
-            '.adsbygoogle',
-            '.sharedaddy',
-        ])
-        for bad in contents.select(bad_css):
-            bad.extract()
-
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

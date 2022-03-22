@@ -8,9 +8,9 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 search_url = '%s/?s=%s&post_type=wp-manga&author=&artist=&release='
 
-class BoxNovelCrawler(Crawler):
+class MyBoxNovelCrawler(Crawler):
     base_url = [
-        'https://boxnovel.com/',
+        'https://myboxnovel.com/',
     ]
 
     def search_novel(self, query):
@@ -65,7 +65,10 @@ class BoxNovelCrawler(Crawler):
         self.novel_id = possible_novel_id["data-id"]
         logger.info("Novel id: %s", self.novel_id)
 
-        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
+        response = self.submit_form(self.home_url + '/wp-admin/admin-ajax.php', {
+            'action': 'manga_get_chapters',
+            'manga': 299105,
+        })
         soup = self.make_soup(response)
         for a in reversed(soup.select("li.wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-import re
 import logging
+import re
 from urllib.parse import quote_plus
 
 from lncrawl.core.crawler import Crawler
@@ -11,6 +11,16 @@ search_url = 'https://noveltoon.mobi/en/search?word=%s&source=&lock='
 
 class NovelsRockCrawler(Crawler):
     base_url = 'https://noveltoon.mobi/'
+
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            r"Don't forget to leave a like and subscribe to this new novel.",
+            r"Feel free to comment your thoughts below.",
+            r'——————————————————.*',
+            r"Don't forget to leave like sub to this new novel.",
+            r'Feel free to comment below.',
+        ])
+    # end def
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
@@ -38,14 +48,14 @@ class NovelsRockCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.detail-top .detail-title').text.strip()
+        possible_title = soup.select_one('.detail-top .detail-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('.detail-top .detail-top-right img')['src'])
-        except Exception as e:
-            logger.debug('Failed to get novel cover', e)
+        possible_image = soup.select_one('.detail-top .detail-top-right img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:
@@ -70,16 +80,8 @@ class NovelsRockCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.watch-chapter-detail')
-        self.blacklist_patterns = [
-            r"Don't forget to leave a like and subscribe to this new novel.",
-            r"Feel free to comment your thoughts below.",
-            r'——————————————————.*',
-            r"Don't forget to leave like sub to this new novel.",
-            r'Feel free to comment below.',
-        ]
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

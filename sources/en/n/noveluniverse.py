@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
-import re
 import logging
+import re
 from concurrent import futures
+
+from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -26,11 +29,13 @@ class NovelUniverseCrawler(Crawler):
             raise Exception('Invalid content')
         # end if
 
-        self.novel_title = book_info.select_one('h1.books_name').text.strip()
+        possible_novel_title = book_info.select_one('h1.books_name')
+        assert isinstance(possible_novel_title, Tag), 'No novel title'
+        self.novel_title = possible_novel_title.text.strip()
         logger.info('Title: %s', self.novel_title)
 
         self.novel_author = []
-        for tag in book_info.select_one('.info_more'):
+        for tag in book_info.select('.info_more'):
             if not tag.name and len(str(tag).strip()):
                 self.novel_author.append(str(tag))
             # end if
@@ -38,8 +43,9 @@ class NovelUniverseCrawler(Crawler):
         self.novel_author = ', '.join(self.novel_author).strip()
         logger.info(self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            book_info.select_one('.img img')['src'])
+        possible_image = book_info.select_one('.img img')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Cover: %s', self.novel_cover)
 
         max_page = soup.select('.allPagesStyle a')
@@ -68,7 +74,6 @@ class NovelUniverseCrawler(Crawler):
     # end def
 
     def get_chapter_list(self, url):
-        logger.info('Visiting %s', url)
         soup = self.get_soup(url)
 
         for a in soup.select('ul#chapters li a'):
@@ -92,12 +97,11 @@ class NovelUniverseCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body = []
         for p in soup.select('div#content .overHide p.data-discuss'):
-            para = ' '.join(self.extract_contents(p))
+            para = ' '.join(self.cleaner.extract_contents(p))
             if len(para):
                 body.append(para)
             # end if

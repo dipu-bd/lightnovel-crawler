@@ -24,7 +24,9 @@ class GravityTalesCrawler(Crawler):
 
         for tag in soup.select('.main-content h3 > *'):
             tag.extract()
-        self.novel_title = soup.select_one('.main-content h3').text.strip()
+        possible_title = soup.select_one('.main-content h3')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s' % self.novel_title)
 
         self.novel_cover = cover_image_url % self.novel_id
@@ -64,7 +66,6 @@ class GravityTalesCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         logger.info('Downloading %s' % chapter['url'])
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('#chapterContent')

@@ -36,12 +36,12 @@ class FictionPressCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            '#profile_top b.xcontrast_txt, #content b').text.strip()
+        possible_title = soup.select_one('#profile_top b.xcontrast_txt, #content b')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         possible_image = soup.select_one('#profile_top img.cimage')
@@ -90,8 +90,6 @@ class FictionPressCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#storytext, #storycontent')

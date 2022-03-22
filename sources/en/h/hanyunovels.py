@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
-import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -10,6 +10,15 @@ search_url = 'http://www.hanyunovels.site/?s=%s&post_type=wp-manga&author=&artis
 
 class HanyuNovels(Crawler):
     base_url = 'http://www.hanyunovels.site/'
+
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            '.code-block', '.adsbygoogle',
+        ])
+        self.cleaner.bad_tags.update([
+            'h3','script',
+        ])
+    # end def
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -31,7 +40,6 @@ class HanyuNovels(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -42,8 +50,9 @@ class HanyuNovels(Crawler):
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['src'])
+        possible_image = soup.select_one('.summary_image a img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -70,14 +79,8 @@ class HanyuNovels(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        contents = soup.select_one('div.text-left')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.extract()
-
-        return self.extract_contents(contents) 
+        contents = soup.select_one('div.text-left') 
+        return self.cleaner.extract_contents(contents) 
     # end def
 # end class

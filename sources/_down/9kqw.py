@@ -25,8 +25,9 @@ class TikNovelCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            '#content .detail-wrap h1.detail-tit').text
+        possible_title = soup.select_one('#content .detail-wrap h1.detail-tit')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         possible_authors = soup.select('#content table.detail-profile td')
@@ -39,8 +40,9 @@ class TikNovelCrawler(Crawler):
         # end for
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('#content .detail-thumb-box img')['src'])
+        possible_image = soup.select_one('#content .detail-thumb-box img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         volumes = set()
@@ -60,7 +62,6 @@ class TikNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         query_str = urlparse(chapter['url']).query
         data_params = {x[0]: int(x[1]) for x in parse_qsl(query_str)}
         logging.debug("Requesting body with: %s", data_params)

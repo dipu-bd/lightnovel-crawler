@@ -11,15 +11,15 @@ class Virlyce(Crawler):
     base_url = 'https://www.virlyce.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.entry-content p img')['src'])
+        possible_image = soup.select_one('div.entry-content p img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = 'Virlyce'
@@ -32,13 +32,9 @@ class Virlyce(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -50,8 +46,6 @@ class Virlyce(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.entry-content')
@@ -66,6 +60,6 @@ class Virlyce(Crawler):
                 if bad in content.text:
                     content.extract()
 
-        return self.extract_contents(body_parts)
+        return self.cleaner.extract_contents(body_parts)
     # end def
 # end class

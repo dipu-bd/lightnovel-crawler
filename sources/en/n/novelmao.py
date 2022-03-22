@@ -41,9 +41,9 @@ class NovelMaoCrawler(Crawler):
             self.novel_title = possible_title['content']
             logger.info('Novel title = %s', self.novel_title)
 
-            possible_cover = soup.select_one('article .kn-img amp-img')
-            if isinstance(possible_cover, Tag):
-                self.novel_cover = possible_cover['src']
+            possible_image = soup.select_one('article .kn-img amp-img')
+            if isinstance(possible_image, Tag):
+                self.novel_cover = possible_image['src']
             # end if
             logger.info('Novel cover = %s', self.novel_cover)
         # end try

@@ -19,7 +19,6 @@ class IndoMTLCrawler(Crawler):
 
     def search_novel(self, query):
         url = search_url % quote(query.lower())
-        logger.debug('Visiting %s', url)
         data = self.get_json(url)
 
         results = []
@@ -33,15 +32,15 @@ class IndoMTLCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select('nav.breadcrumb li a span')[-1].text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.kn-img amp-img')['src'])
+        possible_image = soup.select_one('.kn-img amp-img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         for a in soup.select('.globalnovelinfopartvalue a'):
@@ -81,8 +80,6 @@ class IndoMTLCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('article div.entry-content p.indo')
         contents = [str(p) for p in contents if p.text.strip()]

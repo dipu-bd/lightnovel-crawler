@@ -38,7 +38,6 @@ class NovelFullCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -88,7 +87,6 @@ class NovelFullCrawler(Crawler):
     # end def
 
     def download_chapter_list(self, page):
-        '''Download list of chapters and volumes.'''
         url = self.novel_url.split('?')[0].strip('/')
         url += '?page=%d&per-page=50' % page
         soup = self.get_soup(url)
@@ -103,18 +101,19 @@ class NovelFullCrawler(Crawler):
         return chapters
     # end def
 
-    def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('div#chapter-content')
-        self.blacklist_patterns += [
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
             'Read more chapter on NovelFull'
-        ]
-        self.bad_css += [
+        ])
+        self.cleaner.bad_css.update([
             'div[align="left"]',
             'img[src*="proxy?container=focus"]'
-        ]
-        return self.extract_contents(contents)
+        ])
+    # end def
+
+    def download_chapter_body(self, chapter):
+        soup = self.get_soup(chapter['url'])
+        contents = soup.select_one('div#chapter-content')
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

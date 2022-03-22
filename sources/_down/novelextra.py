@@ -2,6 +2,7 @@
 import json
 import logging
 import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -33,15 +34,17 @@ class NovelExtra(Crawler):
     # # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url + '?waring=1')
 
-        self.novel_title = soup.select_one('h3.title').text.strip()
+        possible_title = soup.select_one('h3.title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.book img')['src'])
+        possible_image = soup.select_one('div.book img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:
@@ -83,10 +86,8 @@ class NovelExtra(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select('#chr-content')
-        return self.extract_contents(content)
+        return self.cleaner.extract_contents(content)
     # end def
 # end class

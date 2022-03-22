@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
-import re
+
+from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
 
@@ -10,8 +11,16 @@ logger = logging.getLogger(__name__)
 class JustATranslatorTranslations(Crawler):
     base_url = 'https://justatranslatortranslations.com/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            '.sharedaddy'
+        ])
+        self.cleaner.bad_tags.update([
+            'sup'
+        ])
+    # end def
+
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -32,13 +41,9 @@ class JustATranslatorTranslations(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -50,19 +55,10 @@ class JustATranslatorTranslations(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body_parts = soup.select_one('div.entry-content')
-
-        # Removes "Share this" text and buttons from bottom of chapters.
-        for share in body_parts.select('div.sharedaddy'):
-            share.extract()
-
-        # Removes footnote numbers.
-        for footnote in body_parts.select('sup'):
-            footnote.extract()
+        assert isinstance(body_parts, Tag)
 
         # Remoeves Nav Button from top and bottom of chapters.
         for content in body_parts.select("p"):
@@ -70,6 +66,7 @@ class JustATranslatorTranslations(Crawler):
                 if bad in content.text:
                     content.extract()
 
-        return self.extract_contents(body_parts)
+        return self.cleaner.extract_contents(body_parts)
     # end def
 # end class
+

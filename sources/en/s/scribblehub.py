@@ -16,7 +16,6 @@ class ScribbleHubCrawler(Crawler):
 
     def search_novel(self, query):
         url = search_url % quote(query.lower())
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
         results = []
@@ -107,14 +106,16 @@ class ScribbleHubCrawler(Crawler):
         self.volumes = [{'id': x} for x in volumes]
     # end def
 
-    def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('div#chp_raw')
-        self.bad_css += [
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
             '.modern-footnotes-footnote',
             '.modern-footnotes-footnote__note',
-        ]
-        return self.extract_contents(contents)
+        ])
+    # end def
+
+    def download_chapter_body(self, chapter):
+        soup = self.get_soup(chapter['url'])
+        contents = soup.select_one('div#chp_raw')
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

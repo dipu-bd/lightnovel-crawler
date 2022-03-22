@@ -15,15 +15,17 @@ class NovelPlanetCrawler(Crawler):
     base_url = 'https://novelplanet.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('section a.title').text
+        possible_title = soup.select_one('section a.title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.post-previewInDetails img')['src'])
+        possible_image = soup.select_one('.post-previewInDetails img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         for span in soup.find_all("span", {"class": "infoLabel"}):
@@ -42,13 +44,9 @@ class NovelPlanetCrawler(Crawler):
 
         for x in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -60,8 +58,6 @@ class NovelPlanetCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#divReadContent')

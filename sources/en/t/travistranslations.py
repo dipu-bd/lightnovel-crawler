@@ -18,9 +18,9 @@ class TravisTranslations(Crawler):
         self.novel_title = possible_title['title']
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.select_one('meta[property="og:image"]')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = self.absolute_url(possible_cover['content'])
+        possible_image = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['content'])
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
@@ -53,7 +53,6 @@ class TravisTranslations(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         para = []

@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
 import re
 from urllib.parse import urlparse
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -36,12 +37,12 @@ class FanFictionCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            '#profile_top b.xcontrast_txt, #content b').text.strip()
+        possible_title = soup.select_one('#profile_top b.xcontrast_txt, #content b')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         possible_image = soup.select_one('#profile_top img.cimage')
@@ -50,8 +51,11 @@ class FanFictionCrawler(Crawler):
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one(
-            '#profile_top, #content').select_one('a[href*="/u/"]').text.strip()
+        possible_author = soup.select_one('#profile_top, #content')
+        if possible_author:
+            possible_author = possible_author.select_one('a[href*="/u/"]')
+        if possible_author:
+            self.novel_author = possible_author.text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
         self.novel_id = urlparse(self.novel_url).path.split('/')[2]
@@ -87,8 +91,6 @@ class FanFictionCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#storytext, #storycontent')

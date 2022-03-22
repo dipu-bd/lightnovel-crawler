@@ -16,7 +16,9 @@ class FlyingLinesCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.novel-info .title h2').text
+        possible_title = soup.select_one('.novel-info .title h2')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(

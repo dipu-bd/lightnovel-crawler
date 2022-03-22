@@ -17,11 +17,20 @@ class LightnovelReader(Crawler):
         'https://www.lightnovelreader.org/',
     ]
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update([
+            'center',
+        ])
+        self.cleaner.bad_css.update([
+            'div[style="display:none"]',
+            'div[class*="hidden"]', 
+        ])
+    # end def
+
     def search_novel(self, query):
         self.get_response(self.home_url)
 
         url = self.absolute_url(novel_search_url % quote(query))
-        logger.debug('Visiting %s', url)
         data = self.get_json(url)
 
         results = []
@@ -44,12 +53,12 @@ class LightnovelReader(Crawler):
         html_text += '</body></html>'
         soup = self.make_soup(html_text)
         
-        possible_title = soup.select_one('.section-header h1')
+        possible_title = soup.select_one('.section-header-title')
         assert isinstance(possible_title, Tag)
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_image = soup.select_one('.container  a[href="#"] img.w-full')
+        possible_image = soup.select_one('.novels-detail-left img')
         if isinstance(possible_image, Tag):
             self.novel_cover = self.absolute_url(possible_image['src'])
         # end if
@@ -67,38 +76,53 @@ class LightnovelReader(Crawler):
         # end for
         logger.info('Novel author: %s', self.novel_author)
 
-        possible_novel_id = soup.select_one('.js-load-chapters')
-        assert isinstance(possible_novel_id, Tag)
-        novel_id = str(possible_novel_id['data-novel-id']).strip()
-        logger.info('# novel id = %s', novel_id)
+        # possible_novel_id = soup.select_one('.js-load-chapters')
+        # assert isinstance(possible_novel_id, Tag)
+        # novel_id = str(possible_novel_id['data-novel-id']).strip()
+        # logger.info('# novel id = %s', novel_id)
 
-        response = self.submit_form(
-            self.absolute_url(chapter_load_url),
-            data='novelId=%s' % novel_id,
-            headers={
-                'accept': '*/*',
-                'x-requested-with': 'XMLHttpRequest',
-                'origin': self.home_url.strip('/'),
-                'referer': self.novel_url.strip('/'),
-            },
-        )
-        soup = self.make_soup(response)
+        # response = self.submit_form(
+        #     self.absolute_url(chapter_load_url),
+        #     data='novelId=%s' % novel_id,
+        #     headers={
+        #         'accept': '*/*',
+        #         'x-requested-with': 'XMLHttpRequest',
+        #         'origin': self.home_url.strip('/'),
+        #         'referer': self.novel_url.strip('/'),
+        #     },
+        # )
+        # soup = self.make_soup(response)
 
-        volumes = set()
-        for a in reversed(soup.select('a')):
-            chap_id = len(self.chapters) + 1
-            vol_id = len(self.chapters) // 100 + 1
-            volumes.add(vol_id)
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-            })
+        # volumes = set()
+        # for a in reversed(soup.select('a')):
+        #     chap_id = len(self.chapters) + 1
+        #     vol_id = len(self.chapters) // 100 + 1
+        #     volumes.add(vol_id)
+        #     self.chapters.append({
+        #         'id': chap_id,
+        #         'volume': vol_id,
+        #         'title': a.text.strip(),
+        #         'url': self.absolute_url(a['href']),
+        #     })
+        # # end for
+
+        # self.volumes = [{'id': x} for x in volumes]
+
+        for tab in reversed(soup.select('.novels-detail-chapters-btn-list a[data-tab]')):
+            vol_id = len(self.volumes) + 1
+            self.volumes.append({ 'id': vol_id })
+            for a in reversed(soup.select('.novels-detail-chapters#%s a' % tab['data-tab'])):
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'title': a.text.strip(),
+                    'url': self.absolute_url(a['href']),
+                })
+            # end for
         # end for
-
-        self.volumes = [{'id': x} for x in volumes]
     # end def
+
 
     def download_chapter_body(self, chapter):
         response = self.get_response(chapter['url'])
@@ -106,9 +130,7 @@ class LightnovelReader(Crawler):
         html_text = html_text.replace(r'</body>', '').replace(r'</html>', '')
         html_text += '</body></html>'
         soup = self.make_soup(html_text)
-
-        body = soup.select_one('article#chapterText')
-        self.bad_css += ['div[style="display:none"]', 'center p']
-        return self.extract_contents(body)
+        body = soup.select_one('#chapterText')
+        return self.cleaner.extract_contents(body)
     # end def
 # end class

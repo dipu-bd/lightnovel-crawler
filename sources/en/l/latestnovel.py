@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from bs4.element import Tag
 
 from lncrawl.core.crawler import Crawler
@@ -11,6 +12,12 @@ chapter_list_url = 'https://latestnovel.net/wp-admin/admin-ajax.php'
 
 class LatestNovelCrawler(Crawler):
     base_url = 'https://latestnovel.net/'
+
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            'You can read the novel online free at LatestNovel.Net or NovelZone.Net'
+        ])
+    # end def
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -45,9 +52,9 @@ class LatestNovelCrawler(Crawler):
         self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.select_one('.summary_image a img')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = self.absolute_url(possible_cover['data-src'])
+        possible_image = soup.select_one('.summary_image a img')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['data-src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -82,16 +89,13 @@ class LatestNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('.reading-content .text-left')
         if not isinstance(contents, Tag):
             contents = soup.select_one('.reading-content')
-        self.blacklist_patterns += [
-            'You can read the novel online free at LatestNovel.Net or NovelZone.Net'
-        ]
-        return self.extract_contents(contents)
+
+        return self.cleaner.extract_contents(contents)
     # end def
 
 # end class

@@ -46,9 +46,9 @@ class WuxiaSiteCrawler(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.select_one('.summary_image a img')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = self.absolute_url(possible_cover['src'])
+        possible_image = soup.select_one('.summary_image a img')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         authors = soup.select('.author-content a')
@@ -80,7 +80,6 @@ class WuxiaSiteCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         content = soup.select_one('.text-left')
@@ -89,6 +88,6 @@ class WuxiaSiteCrawler(Crawler):
         if not isinstance(content, Tag):
             content = soup.select_one('.reading-content')
 
-        return self.extract_contents(content)
+        return self.cleaner.extract_contents(content)
     # end def
 # end class

@@ -59,7 +59,6 @@ class TruenFull(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -157,13 +156,8 @@ class TruenFull(Crawler):
         # end for
     # end def
 
-    def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('#chapter-c, .chapter-c')
-
-        self.bad_css = [
+    def initialize(self) -> None:
+        self.cleaner.bad_css = set([
             '.ads-content',
             '.ads-inpage-container',
             '.ads-responsive',
@@ -177,7 +171,12 @@ class TruenFull(Crawler):
             '.ads-taboola',
             '.ads-middle',
             '.adsbygoogle',
-        ]
-        return self.extract_contents(contents)
+        ])
+    # end def
+
+    def download_chapter_body(self, chapter):
+        soup = self.get_soup(chapter['url'])
+        contents = soup.select_one('#chapter-c, .chapter-c')
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

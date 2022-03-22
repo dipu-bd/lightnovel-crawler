@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
-import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
+
 search_url = 'https://asadatranslations.com/?s=%s&post_type=wp-manga&author=&artist=&release='
 
 
@@ -31,7 +32,6 @@ class AsadaTranslations(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -42,8 +42,9 @@ class AsadaTranslations(Crawler):
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one(
-            'meta[property="og:image"]')['content']
+        possible_novel_cover = soup.select_one('meta[property="og:image"]')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -69,9 +70,23 @@ class AsadaTranslations(Crawler):
         self.volumes = [{'id': x} for x in volumes]
     # end def
 
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            'h3', '.code-block', '.adsbygoogle', '.sharedaddy'
+        ])
+        self.cleaner.blacklist_patterns.update([
+            r'^Translator:',
+            r'^Qii',
+            r'^Editor:',
+            r'^Maralynx',
+            r'^Translator and Editor Notes:',
+            r'^Support this novel on',
+            r'^NU',
+            r'^by submitting reviews and ratings or by adding it to your reading list.',
+        ])
+    # end def
+
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')
@@ -81,18 +96,6 @@ class AsadaTranslations(Crawler):
                 if bad in discord.text:
                     discord.extract()
 
-        self.bad_css += ['h3', '.code-block', '.adsbygoogle', '.sharedaddy']
-        self.blacklist_patterns = [
-            r'^Translator:',
-            r'^Qii',
-            r'^Editor:',
-            r'^Maralynx',
-            r'^Translator and Editor Notes:',
-            r'^Support this novel on',
-            r'^NU',
-            r'^by submitting reviews and ratings or by adding it to your reading list.',
-        ]
-
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

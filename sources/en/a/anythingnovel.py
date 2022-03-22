@@ -18,7 +18,9 @@ class AnythingNovelCrawler(Crawler):
             '#wrap .breadcrumbs span')[-1].text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one('#content a img')['src']
+        possible_novel_cover = soup.select_one('#content a img')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         volumes = set([])
@@ -40,10 +42,9 @@ class AnythingNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('div#content')
-        self.clean_contents(content)
+        self.cleaner.clean_contents(content)
         body = content.select('p')
         body = [str(p) for p in body if self.should_take(p)]
         return '<p>' + '</p><p>'.join(body) + '</p>'

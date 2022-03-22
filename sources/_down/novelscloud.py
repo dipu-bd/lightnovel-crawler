@@ -31,7 +31,6 @@ class NovelsCloud(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -42,8 +41,9 @@ class NovelsCloud(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.book img')['src'])
+        possible_image = soup.select_one('.book img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.find_all(href=re.compile('author'))
@@ -89,7 +89,6 @@ class NovelsCloud(Crawler):
     # end def
 
     def download_chapter_list(self, page):
-        '''Download list of chapters and volumes.'''
         url = self.novel_url.split('?')[0].strip('/')
         url += '?page=%d&per-page=50' % page
         soup = self.get_soup(url)
@@ -121,7 +120,6 @@ class NovelsCloud(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.chr-c, #chr-content')

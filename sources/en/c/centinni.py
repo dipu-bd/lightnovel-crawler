@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -10,6 +11,32 @@ search_url = 'https://www.centinni.com/?s=%s&post_type=wp-manga&author=&artist=&
 class Centinni(Crawler):
     base_url = 'https://www.centinni.com/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update([
+            'a'
+            'h3',
+        ])
+        self.cleaner.bad_css.update([
+            '.code-block',
+            '.adsbygoogle',
+            '.sharedaddy',
+        ])
+        self.cleaner.blacklist_patterns.update([
+            r'^Link for previous chapters:',
+            r'^https://www.novelupdates.com/series/possessing-nothing/',
+            r'^This translation belongs to Centinni.',
+            r'^https://discord.gg/aqDszgB',
+            r'^Hey guys, join us now on our discord server:',
+            r'^https://www.paypal.me/centinni1',
+            r'^You may also donate through paypal to support the people who work on these novels (please specify which novel you are supporting):',
+            r'^. And get a chance to chat with your favorite translators and editors. Meet more like-minded people and have a fun time with real-time novel updates and much more.',
+            r'^You may also donate through paypal to support the people who work on these novels (please specify which novel you are supporting):',
+            r'^You can donate on Ko-fi(from main page) Extra chapter be released when 10$/chapter have been slowly accumulated on Ko-fi. Please mention the novel you are supporting.',
+            r'^Centinni is translating this novel.',
+            r'^Possessing Nothing now has a chat channel! Join our discord server to chat with your team and more friends!',
+        ])
+    # end def
+    
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
@@ -30,7 +57,6 @@ class Centinni(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -41,8 +67,9 @@ class Centinni(Crawler):
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['src'])
+        possible_image = soup.select_one('.summary_image a img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -68,39 +95,10 @@ class Centinni(Crawler):
         self.volumes = [{'id': x} for x in volumes]
     # end def
 
+
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.text-left')
-
-        # remove bad tags
-        self.bad_css += [
-            'h3',
-            '.code-block',
-            '.adsbygoogle',
-            '.sharedaddy',
-        ]
-
-        # remove bad text
-        self.blacklist_patterns = [
-            r'^Link for previous chapters:',
-            r'^https://www.novelupdates.com/series/possessing-nothing/',
-            r'^This translation belongs to Centinni.',
-            r'^https://discord.gg/aqDszgB',
-            r'^Hey guys, join us now on our discord server:',
-            r'^https://www.paypal.me/centinni1',
-            r'^You may also donate through paypal to support the people who work on these novels (please specify which novel you are supporting):',
-            r'^. And get a chance to chat with your favorite translators and editors. Meet more like-minded people and have a fun time with real-time novel updates and much more.',
-            r'^You may also donate through paypal to support the people who work on these novels (please specify which novel you are supporting):',
-            r'^You can donate on Ko-fi(from main page) Extra chapter be released when 10$/chapter have been slowly accumulated on Ko-fi. Please mention the novel you are supporting.',
-            r'^Centinni is translating this novel.',
-            r'^Possessing Nothing now has a chat channel! Join our discord server to chat with your team and more friends!',
-        ]
-
-        # remove urls
-        self.bad_tags += ['a']
-
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

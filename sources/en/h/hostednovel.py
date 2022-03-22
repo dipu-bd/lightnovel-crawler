@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-from bs4 import BeautifulSoup
-from bs4.element import Tag
+
+from bs4 import BeautifulSoup, Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -76,6 +77,6 @@ class HostedNovelCom(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('#chapter')
-        return self.extract_contents(content)
+        return self.cleaner.extract_contents(content)
     # end def
 # end class

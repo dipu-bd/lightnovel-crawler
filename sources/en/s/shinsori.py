@@ -11,12 +11,12 @@ class ShinsoriCrawler(Crawler):
     base_url = 'https://www.shinsori.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'span.the-section-title').text.strip()
+        possible_title = soup.select_one('span.the-section-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = None
@@ -56,8 +56,6 @@ class ShinsoriCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         content = soup.select_one('div.entry-content')

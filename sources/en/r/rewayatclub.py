@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-import math
 import logging
+import math
 import re
 
 import js2py
@@ -16,6 +16,12 @@ chapter_body_url = 'https://rewayat.club/novel/%s/%d'
 
 class RewayatClubCrawler(Crawler):
     base_url = 'https://rewayat.club/'
+
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.clear()
+        self.cleaner.bad_css.clear()
+        self.cleaner.bad_css.update(['.code-block'])
+    # end def
 
     def read_novel_info(self):
         self.is_rtl = True
@@ -70,7 +76,7 @@ class RewayatClubCrawler(Crawler):
                 })
         # end for
     # end def
-    
+
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         script = soup.find(lambda tag: isinstance(tag, Tag) and tag.name == 'script' and tag.text.startswith('window.__NUXT__'))
@@ -81,11 +87,9 @@ class RewayatClubCrawler(Crawler):
         contents = data['fetch'][0]['contentParts']
         contents = [x['content'] for y in contents for x in y]
 
-        self.bad_tags = []
-        self.bad_css = ['.code-block']
         html = '\n'.join(contents)
         html = html.replace('<span>', '').replace('</span>', '')
         body = self.make_soup(html).find('body')
-        return self.extract_contents(body)
+        return self.cleaner.extract_contents(body)
     # end def
 # end class
