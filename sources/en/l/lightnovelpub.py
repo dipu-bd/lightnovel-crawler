@@ -95,8 +95,6 @@ class LightNovelOnline(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('#chapter-container')
-        for el in soup.select("p > strong > strong"):
-            el.extract()
         self.bad_css += [
             '.adsbox',
             '.ad-container',
