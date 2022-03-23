@@ -36,7 +36,7 @@ class MessageHandler:
     # end def
 
     def destroy(self):
-        self.send_sync('Closing current session')
+        #self.send_sync('Closing current session')
         self.executor.submit(self.destroy_sync)
     # end def
 
