@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
-
-from slugify import slugify
 
 from lncrawl.core.crawler import Crawler
 

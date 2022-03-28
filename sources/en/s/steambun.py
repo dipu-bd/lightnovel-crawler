@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import re
+
 import logging
-from concurrent import futures
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
