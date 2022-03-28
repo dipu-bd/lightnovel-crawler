@@ -66,15 +66,13 @@ class RoyalRoadCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
-        if 'Chapter' in soup.select_one('h2').text:
-            chapter['title'] = soup.select_one('h2').text
-        else:
-            chapter['title'] = chapter['title']
+        possible_title = soup.select_one('h2')
+        if possible_title and 'Chapter' in possible_title.text:
+            chapter['title'] = possible_title.text.strip()
         # end if
 
-        contents = soup.find("div", {"class": "chapter-content"})
-
-        self.clean_contents(contents)
+        contents = soup.select_one('.chapter-content')
+        self.cleaner.clean_contents(contents)
         return str(contents)
     # end def
 # end class
