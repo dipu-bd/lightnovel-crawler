@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import re
+
 import logging
-from concurrent import futures
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,8 @@ class SteambunCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('div.entry-content')
-        self.clean_contents(content)
+        assert content, 'No chapter content'
+        self.cleaner.clean_contents(content)
         body = content.select('p')
         body = [str(p) for p in body if self.should_take(p)]
         return '<p>' + '</p><p>'.join(body) + '</p>'

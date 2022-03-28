@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
-
-from slugify import slugify
 
 from lncrawl.core.crawler import Crawler
 
@@ -60,17 +56,15 @@ class NovelPlanetCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
-        contents = soup.select_one('#divReadContent')
-        # self.clean_contents(content)
-        if soup.select_one('h4').text:
-            chapter['title'] = soup.select_one('h4').text
+        possible_title = soup.select_one('h4')
+        if possible_title and possible_title.text:
+            chapter['title'] = possible_title.text.strip()
         else:
-            if chapter['title'].startswith('Read'):
-                chapter['title'].replace('Read Novel ', '')
-            else:
-                chapter['title'] = chapter['title']
-            # end if
+            chapter['title'] = str(chapter['title']).replace('Read Novel ', '')
         # end if
+
+        contents = soup.select_one('#divReadContent')
+        assert contents, 'No chapter contents'
 
         for ads in contents.findAll('div', {"style": 'text-align: center; margin-bottom: 10px'}):
             ads.extract()

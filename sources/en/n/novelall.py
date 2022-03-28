@@ -77,7 +77,7 @@ class NovelAllCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.find('div', {'class': 'reading-box'})
-        self.clean_contents(contents)
+        self.cleaner.clean_contents(contents)
         return str(contents)
     # end def
 # end class

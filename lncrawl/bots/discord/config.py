@@ -12,8 +12,8 @@ shard_count = get_args().shard_count
 signal = os.getenv('DISCORD_SIGNAL_CHAR') or '!'
 discord_token = os.getenv('DISCORD_TOKEN')
 disable_search = os.getenv('DISCORD_DISABLE_SEARCH') == 'true'
-session_retain_time_in_seconds = 30 * 60
-max_active_handles = 25
+session_retain_time_in_seconds = 4 * 60 * 60
+max_active_handles = 150
 
 vip_users_ids = set([
     '1822',
