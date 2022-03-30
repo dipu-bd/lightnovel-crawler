@@ -25,6 +25,9 @@ class LightnovelReader(Crawler):
             'div[style="display:none"]',
             'div[class*="hidden"]', 
         ])
+        self.cleaner.blacklist_patterns.update([
+            r'Please read this chapter at www.lightnovelreader.com for faster releases',
+        ])
     # end def
 
     def search_novel(self, query):
