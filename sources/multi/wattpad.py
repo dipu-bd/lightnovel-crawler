@@ -17,7 +17,8 @@ class WattpadCrawler(Crawler):
     ]
 
     def initialize(self):
-        self.home_url = self.base_url[0]
+        self.home_url = 'https://www.wattpad.com/'
+    # end def
 
     def read_novel_info(self):
 

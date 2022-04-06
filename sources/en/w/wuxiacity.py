@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 search_url = 'https://www.wuxia.city/search?q=%s'
 
 class WuxiaCityCrawler(Crawler):
-    """
-    """
     base_url = [
         'https://wuxia.city',
     ]
@@ -19,7 +17,7 @@ class WuxiaCityCrawler(Crawler):
     # This source offers no manga/manhua/manhwa.
     has_manga = False
 
-    # TODO: [OPTIONAL] Set True if this source contains machine translations.
+    # Set True if this source contains machine translations.
     machine_translation = True
 
     def search_novel(self, query):
@@ -31,7 +29,7 @@ class WuxiaCityCrawler(Crawler):
                    for e in soup.find_all('li', class_='section-item')]
         return [{
                 'title': e[0].a.h4.text,
-                'url': f'{self.base_url[0].strip("/")}{e[0].a.get("href")}',
+                'url': f'{self.home_url.strip("/")}{e[0].a.get("href")}',
                 'info': f'{e[1]} | Score: {e[2]}',
             } for e in entries]
     # end def
@@ -50,7 +48,7 @@ class WuxiaCityCrawler(Crawler):
             self.chapters.append({
                 'id': int(chapter.find('span', class_='chapter-num').text),
                 'volume': vol_id,
-                'url': f'{self.base_url[0].strip("/")}{chapter.a.get("href")}',
+                'url': f'{self.home_url.strip("/")}{chapter.a.get("href")}',
                 'title': chapter.a.p.text,
                 'hash': chapter.a.get('href').split('/')[-1],
             })
