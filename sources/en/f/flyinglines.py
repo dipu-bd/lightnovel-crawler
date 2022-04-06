@@ -69,12 +69,12 @@ class FlyingLinesCrawler(Crawler):
         # - check `app.js`
         # - search for `e.data.meta`
         url = '%s/h5/novel/%s/%s?accessToken=&isFirstEnter=1&webdriver=0&time=%s&sign=%s'
-        url = url % (self.base_url.strip('/'), self.novel_id, chapter['id'], time, sign)
+        url = url % (self.home_url.strip('/'), self.novel_id, chapter['id'], time, sign)
 
         logger.info('Downloading %s', url)
         data = self.post_json(url, headers={
-            'Origin': self.base_url.strip('/'),
-            'Referer': self.base_url.strip('/') + '/novel/' + self.novel_id,
+            'Origin': self.home_url.strip('/'),
+            'Referer': self.home_url.strip('/') + '/novel/' + self.novel_id,
         })
 
         # How to find the decryption method?
