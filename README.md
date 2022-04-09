@@ -804,7 +804,7 @@ We are supporting 213 sources and 227 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://noveltrench.com/" target="_blank">https://noveltrench.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/n/noveltrench.py" title="22 March 2022 02:50:32 PM">64</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/n/noveltrench.py" title="09 April 2022 12:12:43 AM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
