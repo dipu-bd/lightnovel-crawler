@@ -9,16 +9,14 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-class AllNovelCrawler(Crawler):
+class AllNovelFullCrawler(Crawler):
     base_url = [
-        'https://allnovel.org/',
-        'https://www.allnovel.org/',
+        'https://allnovelfull.com/',
     ]
 
     def initialize(self) -> None:
-        self.home_url = self.base_url[0]
         self.cleaner.blacklist_patterns.update([
-            'If you find any errors ( broken links, non-standard content, etc.. ), Please let us know < report chapter > so we can fix it as soon as possible.'
+            'For more, visit AllNovelFull.Com',
         ])
     # end def
 
