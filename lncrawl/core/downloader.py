@@ -203,11 +203,9 @@ def download_chapters(app):
     assert app.crawler is not None
 
     app.progress = 0
-    bar = tqdm(desc='Downloading', total=len(app.chapters), unit='ch')
-    if os.getenv('debug_mode') == 'yes':
-        bar.update = lambda n=1: None  # Hide in debug mode
-    # end if
-    bar.clear()
+    bar = tqdm(desc='Downloading',
+               total=len(app.chapters), unit='ch',
+               disable=os.getenv('debug_mode') == 'yes')
 
     if not app.output_formats:
         app.output_formats = {}
@@ -275,11 +273,9 @@ def download_chapter_images(app):
         return
     # end if
 
-    bar = tqdm(desc='Images', total=image_count, unit='img')
-    if os.getenv('debug_mode') == 'yes':
-        bar.update = lambda n=1: None  # Hide in debug mode
-    # end if
-    bar.clear()
+    bar = tqdm(desc='Images',
+               total=image_count, unit='img',
+               disable=os.getenv('debug_mode') == 'yes')
 
     for chapter in app.chapters:
         if chapter['id'] not in futures_to_check:
