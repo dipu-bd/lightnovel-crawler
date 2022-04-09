@@ -73,7 +73,7 @@ def search_novels(app):
         return
 
     sources = app.crawler_links.copy()
-    random.shuffle(sources)
+    #random.shuffle(sources)
 
     bar = tqdm(desc='Searching', total=len(sources), unit='source')
     if os.getenv('debug_mode') == 'yes':
