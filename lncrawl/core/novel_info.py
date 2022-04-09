@@ -12,7 +12,7 @@ from .exeptions import LNException
 
 
 def __format_title(text):
-    return re.sub(r'\s+', ' ', str(text)).strip()
+    return re.sub(r'\s+', ' ', str(text)).strip().title()
 # end def
 
 
