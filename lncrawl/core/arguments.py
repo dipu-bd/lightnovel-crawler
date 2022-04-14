@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from .. import constants as C
 import argparse
 from urllib.parse import parse_qs
 
+from .. import constants as C
 from ..assets.version import get_version
 from ..binders import available_formats
 from ..bots import supported_bots
@@ -131,6 +131,9 @@ _builder = Args(group=[
 
     Args('--suppress', action='store_true',
          help='Suppress all input prompts and use defaults.'),
+
+    Args('--close-directly', action='store_true',
+         help='Do not prompt to close at the end for windows platforms.'),
 
     Args('--resume',  dest='resume', nargs='?', default=argparse.SUPPRESS,
          metavar='NAME/URL', help='Resume download of a novel containing in ' + C.DEFAULT_OUTPUT_PATH),
