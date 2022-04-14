@@ -4,7 +4,6 @@ To search for novels in selected sources
 """
 import logging
 import os
-import random
 from concurrent import futures
 
 from slugify import slugify
@@ -32,7 +31,7 @@ def get_search_result(app, link, bar):
         raise e
     except Exception as e:
         if logger.isEnabledFor(logging.DEBUG):
-            logging.debug('Searching failure for %s', link)
+            logging.exception('Searching failure for %s', link)
         # end if
     # end try
     return []
@@ -73,14 +72,11 @@ def search_novels(app):
         return
 
     sources = app.crawler_links.copy()
-    random.shuffle(sources)
+    #random.shuffle(sources)
 
-    bar = tqdm(desc='Searching', total=len(sources), unit='source')
-    if os.getenv('debug_mode') == 'yes':
-        bar.update = lambda n=1: None  # Hide in debug mode
-    # end if
-    bar.clear()
-    
+    bar = tqdm(desc='Searching',
+               total=len(sources), unit='source',
+               disable=os.getenv('debug_mode') == 'yes')
 
     # Add future tasks
     checked = {}
