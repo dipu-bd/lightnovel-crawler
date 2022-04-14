@@ -67,7 +67,7 @@ class MyBoxNovelCrawler(Crawler):
 
         response = self.submit_form(self.home_url + '/wp-admin/admin-ajax.php', {
             'action': 'manga_get_chapters',
-            'manga': 299105,
+            'manga': self.novel_id,
         })
         soup = self.make_soup(response)
         for a in reversed(soup.select("li.wp-manga-chapter a")):
