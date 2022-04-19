@@ -279,6 +279,8 @@ optional arguments:
   --shard-count [SHARD_COUNT]
                         Discord bot shard counts (default: 1)
   --suppress            Suppress all input prompts and use defaults.
+  --close-directly      Do not prompt to close at the end for windows
+                        platforms.
   --resume [NAME/URL]   Resume download of a novel containing in
                         /home/runner/work/lightnovel-crawler/lightnovel-
                         crawler/Lightnovels
