@@ -76,13 +76,24 @@ class ReadWNCrawler(Crawler):
         except Exception as e:
             logger.debug('Failed to parse novel author. Error: %s', e)
 
-        last_page = soup.select('#chapters .pagination li a')[-1]['href']
-        logger.debug('Last page: %s', last_page)
+        try:
+            last_page = soup.select('#chapters .pagination li a')[-1]['href']
+            last_page_qs = parse_qs(urlparse(last_page).query)
+            wjm = last_page_qs['wjm'][0]
+            
+            max_page = int(last_page_qs['page'][0])
+            logger.debug('Last page: %s', last_page)
+            max_page = int(last_page_qs['page'][0])
+            logger.debug('Max page: %d, wjm = %s', max_page, wjm)
 
-        last_page_qs = parse_qs(urlparse(last_page).query)
-        max_page = int(last_page_qs['page'][0])
-        wjm = last_page_qs['wjm'][0]
-        logger.debug('Max page: %d, wjm = %s', max_page, wjm)
+
+        except Exception as err:
+            logger.debug('Failed to parse page count. Error: %s', err)
+            page_count = 0
+            max_page = 0
+            wjm_link = soup.select("#chpagedlist .filters a")[0]['href']
+            last_page_qs = parse_qs(urlparse(wjm_link).query)
+            wjm = last_page_qs['wjm'][0]
 
         futures = []
         for i in range(max_page + 1):
