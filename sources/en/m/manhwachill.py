@@ -51,7 +51,7 @@ class Manhwachill(Crawler):
         ])
         logger.info('%s', self.novel_author)
 
-        for a in reversed(soup.select('ul.main li.wp-manga-chapter a')):
+        for a in reversed(soup.select('ul.main li.wp-manga-chapter > a')):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
@@ -74,6 +74,15 @@ class Manhwachill(Crawler):
         # end if
 
         contents = soup.select_one('div.reading-content')
+
+        for img in contents.findAll('img'):
+            if img.has_attr('data-src'):
+                src_url = img['data-src']
+                parent = img.parent
+                img.extract()
+                new_tag = soup.new_tag("img", src=src_url)
+                parent.append(new_tag)
+
         return self.cleaner.extract_contents(contents)
     # end def
 # end class
