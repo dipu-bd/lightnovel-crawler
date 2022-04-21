@@ -74,6 +74,15 @@ class ManhwachillLove(Crawler):
         # end if
 
         contents = soup.select_one('div.reading-content')
+
+        for img in contents.findAll('img'):
+            if img.has_attr('data-src'):
+                src_url = img['data-src']
+                parent = img.parent
+                img.extract()
+                new_tag = soup.new_tag("img", src=src_url)
+                parent.append(new_tag)
+
         return self.cleaner.extract_contents(contents)
     # end def
 # end class
