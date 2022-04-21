@@ -3,8 +3,8 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://novelmic.com/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://novelmic.com/wp-admin/admin-ajax.php'
+search_url = 'https://coffeemanga.com/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://coffeemanga.com/wp-admin/admin-ajax.php'
 
 
 class CoffeeManga(Crawler):
