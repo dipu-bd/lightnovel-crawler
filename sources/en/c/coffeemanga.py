@@ -51,7 +51,7 @@ class CoffeeManga(Crawler):
         ])
         logger.info('%s', self.novel_author)
 
-        for a in reversed(soup.select('ul.main li.wp-manga-chapter a', 'html.parser')):
+        for a in reversed(soup.select('ul.main li.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
