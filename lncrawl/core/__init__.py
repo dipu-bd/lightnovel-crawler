@@ -85,7 +85,8 @@ def start_app():
 
     epilog()
 
-    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    args = get_args()
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS') and not args.close_directly:
         try:
             input('Press ENTER to exit...')
         except EOFError:
