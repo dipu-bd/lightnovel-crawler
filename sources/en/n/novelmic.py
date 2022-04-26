@@ -34,16 +34,17 @@ class NovelMic(Crawler):
     # # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'meta[property="og:title"]')['content']
+        possible_title = soup.select_one('meta[property="og:title"]')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one(
-            'meta[property="og:image"]')['content']
+        possible_novel_cover = soup.select_one('meta[property="og:image"]')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -74,8 +75,6 @@ class NovelMic(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select('.reading-content')
@@ -90,6 +89,6 @@ class NovelMic(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
 
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

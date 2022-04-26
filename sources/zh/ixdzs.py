@@ -31,39 +31,43 @@ class IxdzsCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-            '''Get novel title, author, cover etc'''
-            logger.debug('Visiting %s', self.novel_url)
-            soup = self.get_soup(self.novel_url)
+        '''Get novel title, author, cover etc'''
+        logger.debug('Visiting %s', self.novel_url)
+        soup = self.get_soup(self.novel_url)
 
-            self.novel_title = soup.select_one('header.ix-header.ix-border.ix-page h1').get_text()
-            logger.info(f'Novel title: {self.novel_title}')
+        possible_title = soup.select_one('header.ix-header.ix-border.ix-page h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.get_text()
+        logger.info(f'Novel title: {self.novel_title}')
 
-            self.novel_author = soup.select_one('div.ix-list-info.ui-border-t p').get_text()[3:]
-            logger.info(f'Novel Author: {self.novel_author}')
+        self.novel_author = soup.select_one('div.ix-list-info.ui-border-t p').get_text()[3:]
+        logger.info(f'Novel Author: {self.novel_author}')
 
-            self.novel_cover = soup.select_one('div.ix-list-img-square img')['src']
-            logger.info(f'Novel Cover: {self.novel_cover}')
-            
-            logger.info('Getting chapters...')
-            for chapter in soup.select("ul.chapter li a"):       
-                title = chapter.get_text()
-                url = self.absolute_url(chapter['href'])
+        possible_novel_cover = soup.select_one('div.ix-list-img-square img')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['src'])
+        logger.info(f'Novel Cover: {self.novel_cover}')
+        
+        logger.info('Getting chapters...')
+        for chapter in soup.select("ul.chapter li a"):       
+            title = chapter.get_text()
+            url = self.absolute_url(chapter['href'])
 
-                chap_id = len(self.chapters) + 1
-                if len(self.chapters) % 100 == 0:
-                    vol_id = chap_id//100 + 1
-                    vol_title = 'Volume ' + str(vol_id)
-                    self.volumes.append({
-                        'id': vol_id,
-                        'title': vol_title
-                    })
-
-                self.chapters.append({
-                    'id': chap_id,
-                    'title': title,
-                    'url': url,
-                    'volume': vol_id
+            chap_id = len(self.chapters) + 1
+            if len(self.chapters) % 100 == 0:
+                vol_id = chap_id//100 + 1
+                vol_title = 'Volume ' + str(vol_id)
+                self.volumes.append({
+                    'id': vol_id,
+                    'title': vol_title
                 })
+
+            self.chapters.append({
+                'id': chap_id,
+                'title': title,
+                'url': url,
+                'volume': vol_id
+            })
     # end def
 
     def download_chapter_body(self, chapter):

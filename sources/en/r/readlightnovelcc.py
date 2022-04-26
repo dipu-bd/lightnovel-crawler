@@ -25,7 +25,6 @@ class ReadlightnovelCcCrawler(Crawler):
         #soup = self.make_soup(response)
         #soup = self.get_soup(search_url,query)
         url = search_url % query.lower()
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
         results = []
         for li in soup.select('ul.result-list li'):
@@ -44,19 +43,20 @@ class ReadlightnovelCcCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         url = self.novel_url.replace('https://m', 'https://www')
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        self.novel_title = soup.select_one('div.book-name').text.strip()
+        possible_title = soup.select_one('div.book-name')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = soup.select_one('div.author span.name').text.strip()
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.book-img img')['src'])
+        possible_image = soup.select_one('div.book-img img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
@@ -64,13 +64,9 @@ class ReadlightnovelCcCrawler(Crawler):
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -83,18 +79,16 @@ class ReadlightnovelCcCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         chapter['title'] = soup.select_one('h1.chapter-title').text.strip()
 
-        self.blacklist_patterns = [
+        self.cleaner.blacklist_patterns = set([
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
-        ]
+        ])
         body_parts = soup.select_one('div.chapter-entity')
         
-        return self.extract_contents(body_parts)
+        return self.cleaner.extract_contents(body_parts)
     # end def
 # end class

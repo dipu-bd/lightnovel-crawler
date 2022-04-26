@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 from base64 import b64decode
-from cgitb import text
 from urllib.parse import quote_plus
 
 from bs4 import Tag
@@ -17,6 +16,14 @@ novel_search_url = b64decode(
 class Fu_kCom_ademao(Crawler):
     machine_translation = True
     base_url = b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
+
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            '#ad',
+            '#div-gpt-ad-comrademaocom35917',
+            '#div-gpt-ad-comrademaocom35918',
+        ])
+    # end def
 
     def search_novel(self, query):
         url = novel_search_url + quote_plus(query)
@@ -82,16 +89,10 @@ class Fu_kCom_ademao(Crawler):
 
         self.volumes = [{'id': x} for x in volumes]
     # end def
-
+    
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         body = soup.select_one("#content")
-        self.bad_css += [
-            '#ad',
-            '#div-gpt-ad-comrademaocom35917',
-            '#div-gpt-ad-comrademaocom35918',
-        ]
-        return self.extract_contents(body)
+        return self.cleaner.extract_contents(body)
     # end def
 # end class

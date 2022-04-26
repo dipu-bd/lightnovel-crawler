@@ -15,7 +15,6 @@ class RebirthOnlineCrawler(Crawler):
     base_url = 'https://www.rebirth.online/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         self.novel_id = self.novel_url.split(
             'rebirth.online/novel/')[1].split('/')[0]
         logger.info('Novel Id: %s', self.novel_id)
@@ -24,7 +23,9 @@ class RebirthOnlineCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h2.entry-title a').text
+        possible_title = soup.select_one('h2.entry-title a')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         translator = soup.find(
@@ -61,8 +62,6 @@ class RebirthOnlineCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         if len(soup.findAll('br')) > 10:

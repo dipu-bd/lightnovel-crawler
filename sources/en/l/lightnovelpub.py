@@ -18,6 +18,19 @@ class LightNovelOnline(Crawler):
         'https://www.lightnovelworld.com/',
     ]
 
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            '.adsbox',
+            '.ad-container',
+            'p > strong > strong',
+            '.OUTBRAIN',
+            'p[class]',
+            '.ad', 'p:nth-child(1) > strong',
+            '.noveltopads',
+            '.chadsticky',
+        ])
+    # end def
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(novel_search_url % (self.home_url, query))
@@ -95,18 +108,6 @@ class LightNovelOnline(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('#chapter-container')
-        for el in soup.select("p > strong > strong"):
-            el.extract()
-        self.bad_css += [
-            '.adsbox',
-            '.ad-container',
-            'p > strong > strong',
-            '.OUTBRAIN',
-            'p[class]',
-            '.ad', 'p:nth-child(1) > strong',
-            '.noveltopads',
-            '.chadsticky',
-        ]
-        return self.extract_contents(body)
+        return self.cleaner.extract_contents(body)
     # end def
 # end class

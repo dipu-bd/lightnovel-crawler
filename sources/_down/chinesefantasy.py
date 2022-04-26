@@ -5,6 +5,7 @@ import re
 import logging
 import json
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -12,14 +13,15 @@ class ChineseFantasyNovels(Crawler):
     base_url = 'https://m.chinesefantasynovels.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         if not self.novel_url.endswith('/'):
             self.novel_url += '/'
         # end if
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.btitle h1').text
+        possible_title = soup.select_one('.btitle h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = soup.select_one('.bookinfo .status').text
@@ -43,12 +45,15 @@ class ChineseFantasyNovels(Crawler):
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
     # end def
 
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            '.link'
+        ])
+    # end def
+
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('#BookText')
-        self.bad_css += ['.link']
-        return self.extract_contents(content)
+        return self.cleaner.extract_contents(content)
     # end def
 # end class

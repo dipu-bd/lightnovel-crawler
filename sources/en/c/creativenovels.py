@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-from concurrent import futures
 from urllib.parse import parse_qs, urlparse
+
+from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
 
@@ -15,8 +16,15 @@ chapter_s_regex = r'var chapter_list_summon = {"ajaxurl":"https:\/\/creativenove
 class CreativeNovelsCrawler(Crawler):
     base_url = 'https://creativenovels.com/'
 
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            '.announcements_crn',
+            'span[style*="color:transparent"]',
+            'div.novel_showcase',
+        ])
+    # end def
+
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         #self.novel_id = re.findall(r'\/\d+\/', self.novel_url)[0]
         #self.novel_id = int(self.novel_id.strip('/'))
 
@@ -27,17 +35,17 @@ class CreativeNovelsCrawler(Crawler):
         self.novel_id = parse_qs(urlparse(shortlink).query)['p'][0]
         logger.info('Id: %s', self.novel_id)
 
-        self.novel_title = soup.select_one('head title').text
+        possible_title = soup.select_one('head title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         self.novel_title = self.novel_title.split('–')[0].strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('.x-bar-content-area img.book_cover')['src'])
-            logger.info('Novel Cover: %s', self.novel_cover)
-        except Exception:
-            pass
+        possible_image = soup.select_one('.x-bar-content-area img.book_cover')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         # end try
+        logger.info('Novel Cover: %s', self.novel_cover)
 
         for div in soup.select('.x-bar-content .x-text.bK_C'):
             text = div.text.strip()
@@ -86,25 +94,21 @@ class CreativeNovelsCrawler(Crawler):
             if len(parts) < 2:
                 continue
             # end if
-            url = parts[0]
-            title = parts[1]
             ch_id = len(self.chapters) + 1
-            vol_id = (ch_id - 1) // 100 + 1
-            self.volumes.append(vol_id)
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < 1:
+                self.volumes.append({'id': vol_id})
+            # end if
             self.chapters.append({
                 'id': ch_id,
-                'url': url,
-                'title': title,
                 'volume': vol_id,
+                'url': parts[0],
+                'title': parts[1],
             })
         # end for
-
-        self.volumes = [{'id': x} for x in set(self.volumes)]
-
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         
         FORMATTING_TAGS = [
@@ -121,13 +125,7 @@ class CreativeNovelsCrawler(Crawler):
         ]
 
         body = soup.select_one('article .entry-content')
-
-        self.bad_css += [
-            '.announcements_crn',
-            'span[style*="color:transparent"]',
-            'div.novel_showcase',
-        ]
-
+        assert isinstance(body, Tag)
         for span in body.find_all('span'):
             if len(span.parent.contents) <= 3:
                 if (span.parent.name in FORMATTING_TAGS) or (span.next_sibling is not None or span.previous_sibling is not None):
@@ -150,6 +148,6 @@ class CreativeNovelsCrawler(Crawler):
             #end if
         # end for
 
-        return self.extract_contents(body)
+        return self.cleaner.extract_contents(body)
     # end def
 # end class

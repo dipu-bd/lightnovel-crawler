@@ -43,19 +43,18 @@ class MtlnovelCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         self.novel_url = self.novel_url.replace('https://', 'http://')
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('article .entry-title, h1').text.strip()
+        possible_title = soup.select_one('article .entry-title, h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('.post-content amp-img[fallback]')['src'])
-        except Exception as e:
-            logger.debug('Could not find novel cover. Error %s', e)
+        possible_image = soup.select_one('.post-content amp-img[fallback]')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:
@@ -83,11 +82,10 @@ class MtlnovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         url = chapter['url'].replace('https://', 'http://')
         logger.info('Downloading %s', url)
         soup = self.get_soup(url)
         contents = soup.select_one('.post-content .par')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

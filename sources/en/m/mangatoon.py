@@ -32,7 +32,9 @@ class MangatoonMobiCrawler(Crawler):
 
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.comics-title, .detail-title').text
+        possible_title = soup.select_one('h1.comics-title, .detail-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         possible_image = soup.select_one('.detail-top-right img, .detail-img .big-img')
@@ -58,7 +60,6 @@ class MangatoonMobiCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         pictures = soup.select_one('.pictures')

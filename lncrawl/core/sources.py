@@ -211,10 +211,9 @@ def __download_sources():
     if not futures:
         return
 
-    bar = tqdm(desc='Updating sources', total=len(futures), unit='file')
-    if os.getenv('debug_mode') == 'yes':
-        bar.update = lambda n=1: None  # Hide in debug mode
-    bar.clear()
+    bar = tqdm(desc='Updating sources', 
+               total=len(futures), unit='file',
+               disable=os.getenv('debug_mode') == 'yes')
 
     for sid, future in futures.items():
         try:

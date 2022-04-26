@@ -47,7 +47,9 @@ class FoxaholicCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('meta[property="og:title"]')['content']
+        possible_title = soup.select_one('meta[property="og:title"]')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(soup.select_one('.summary_image a img')['data-src'])
@@ -74,7 +76,6 @@ class FoxaholicCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.reading-content')
         # all_imgs = soup.find_all('img')
@@ -85,7 +86,7 @@ class FoxaholicCrawler(Crawler):
         #         img.extract()
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 
     def download_image(self, url):

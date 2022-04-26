@@ -12,11 +12,12 @@ class NovelsOnline(Crawler):
     base_url = 'https://novelsonline.net/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.block-title h1').text
+        possible_title = soup.select_one('.block-title h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
@@ -46,8 +47,6 @@ class NovelsOnline(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         div = soup.select_one('.chapter-content3')
@@ -70,7 +69,7 @@ class NovelsOnline(Crawler):
             hidden.extract()
         # end for
 
-        body = self.extract_contents(div)
+        body = self.cleaner.extract_contents(div)
         if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):
             title = body[0].replace('<strong>', '').replace(
                 '</strong>', '').strip()

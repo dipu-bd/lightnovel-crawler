@@ -34,14 +34,15 @@ class NovelRawCrawler(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         url = chapter_list_url % (self.novel_title, 1)
-        logger.debug('Visiting %s', url)
         data = self.get_json(url)
         self.novel_author = ', '.join([
             x['name']['$t'] for x in data['feed']['author']
         ])
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = soup.select_one('#tgtPost .separator img')['src']
+        possible_novel_cover = soup.select_one('#tgtPost .separator img')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         total_chapters = int(data['feed']['openSearch$totalResults']['$t'])
@@ -85,15 +86,13 @@ class NovelRawCrawler(Crawler):
 
     def download_chapter_list(self, index):
         url = chapter_list_url % (self.novel_title, index)
-        logger.debug('Visiting %s', url)
         data = self.get_json(url)
         return data['feed']['entry']
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        contents = self.extract_contents(soup.select_one('#tgtPost'))
+        contents = self.cleaner.extract_contents(soup.select_one('#tgtPost'))
         return '<p>' + '</p><p>'.join(contents) + '</p>'
     # end def
 # end class

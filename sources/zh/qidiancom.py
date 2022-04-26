@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -19,23 +20,28 @@ class QidianComCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.book-info h1 em').text
+        possible_title = soup.select_one('.book-info h1 em')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one('.book-info h1 a.writer').text
+        possible_author = soup.select_one('.book-info h1 a.writer')
+        if possible_author:
+            self.novel_author = possible_author.text
         logger.info('Novel author: %s', self.novel_author)
 
-        book_img = soup.select_one('#bookImg')
-        self.novel_cover = self.absolute_url(book_img.find('img')['src'])
-        self.novel_cover = '/'.join(self.novel_cover.split('/')[:-1])
-        logger.info('Novel cover: %s', self.novel_cover)
+        book_img = soup.select_one('#bookImg img')
+        assert book_img, 'No book image found'
 
         self.book_id = book_img['data-bid']
-        logger.debug('Book Id: %s', self.book_id)
+        logger.info('Book Id: %s', self.book_id)
+
+        bool_img_src = '/'.join(str(book_img['src']).split('/')[:-1])
+        self.novel_cover = self.absolute_url(bool_img_src)
+        logger.info('Novel cover: %s', self.novel_cover)
 
         self.csrf = self.cookies['_csrfToken']
         logger.debug('CSRF Token: %s', self.csrf)
@@ -63,10 +69,14 @@ class QidianComCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        chapter['title'] = soup.select_one('h3.j_chapterName').text.strip()
-        return soup.select_one('div.j_readContent').extract()
+
+        possible_title = soup.select_one('h3.j_chapterName')
+        if possible_title:
+            chapter['title'] = possible_title.text.strip()
+        # end if
+
+        contents = soup.select_one('div.j_readContent')
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

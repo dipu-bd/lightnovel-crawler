@@ -17,10 +17,10 @@ class WattpadCrawler(Crawler):
     ]
 
     def initialize(self):
-        self.home_url = self.base_url[0]
+        self.home_url = 'https://www.wattpad.com/'
+    # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
 
         search_id = re.compile(r'\d+')
         id_no = search_id.search(self.novel_url)

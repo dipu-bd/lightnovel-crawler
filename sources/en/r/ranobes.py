@@ -37,9 +37,9 @@ class RanobeLibCrawler(Crawler):
         self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.select_one('meta[property="og:image"]')
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = self.absolute_url(possible_cover['content'])
+        possible_image = soup.select_one('meta[property="og:image"]')
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['content'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author_link = soup.select_one('.tag_list a[href*="/authors/"]')
@@ -94,18 +94,17 @@ class RanobeLibCrawler(Crawler):
         self.volumes = [{'id': x} for x in volumes]
     # end def
 
-    def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
-
-        article = soup.select_one('.text[itemprop="description"]')
-
-        self.bad_css += [
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
             '.free-support',
             'div[id^="adfox_"]'
-        ]
-        self.clean_contents(article)
+        ])
+    # end def
 
+    def download_chapter_body(self, chapter):
+        soup = self.get_soup(chapter['url'])
+        article = soup.select_one('.text[itemprop="description"]')
+        self.cleaner.clean_contents(article)
         return str(article)
     # end def
 # end class

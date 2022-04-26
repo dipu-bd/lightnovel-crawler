@@ -17,23 +17,25 @@ class AixdzsCrawler(Crawler):
     base_url = 'https://www.aixdzs.com'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         if not self.novel_url.endswith('/'):
             self.novel_url += '/'
         # end if
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_cover = soup.select_one(
-            'meta[property="og:image"]')['content']
+        possible_novel_cover = soup.select_one('meta[property="og:image"]')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_title = soup.select_one(
-            'meta[property="og:novel:book_name"]')['content']
+        possible_title = soup.select_one('meta[property="og:novel:book_name"]')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one(
-            'meta[property="og:novel:author"]')['content']
+        possible_novel_author = soup.select_one('meta[property="og:novel:author"]')
+        if possible_novel_author:
+            self.novel_author = possible_novel_author['content']
         logger.info('%s', self.novel_author)
 
         parsed_url = urlparse(self.novel_url)
@@ -59,8 +61,6 @@ class AixdzsCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.content > p')
         contents = [str(p) for p in contents if p.text.strip()]

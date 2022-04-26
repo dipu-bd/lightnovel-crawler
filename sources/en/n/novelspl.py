@@ -35,7 +35,6 @@ class NovelsPlCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -43,7 +42,9 @@ class NovelsPlCrawler(Crawler):
         self.novel_title = title.rsplit('|')[0].strip()
         logger.debug('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one('.imageCover img.img-thumbnail')['src'])
+        possible_image = soup.select_one('.imageCover img.img-thumbnail')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select_one('.panel-body .coll a[href^="/author/"]').text
@@ -108,8 +109,6 @@ class NovelsPlCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.panel-body.article p')
         return ''.join([str(p) for p in contents])

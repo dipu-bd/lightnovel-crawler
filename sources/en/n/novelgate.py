@@ -29,11 +29,12 @@ class NovelGate(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.name').text
+        possible_title = soup.select_one('.name')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         author = soup.find_all(href=re.compile('author'))
@@ -74,8 +75,6 @@ class NovelGate(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#chapter-body')

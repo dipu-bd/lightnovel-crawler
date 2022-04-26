@@ -94,7 +94,7 @@ class ListNovelCrawler(Crawler):
         for comment in soup.findAll(text=lambda text: isinstance(text, Comment)):
             comment.extract()
 
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
 
     # end def
 # end class

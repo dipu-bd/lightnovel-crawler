@@ -11,7 +11,6 @@ class KissNovelCrawler(Crawler):
 
     # FIXME: Tried getting search to work, but it uses a autocomplete function and I can't figure out how to get results from it.
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -22,8 +21,9 @@ class KissNovelCrawler(Crawler):
         ]).strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image img')['src'])
+        possible_image = soup.select_one('.summary_image img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.find('div', {'class': 'author-content'}).findAll('a')
@@ -68,8 +68,6 @@ class KissNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select('div.reading-content p')

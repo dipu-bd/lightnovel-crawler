@@ -31,12 +31,13 @@ class NovelOnlineFullCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         # self.novel_title = soup.select_one('h1.entry-title').text.strip()
-        self.novel_title = soup.select_one('div.entry-header h1').text.strip()
+        possible_title = soup.select_one('div.entry-header h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         try:
@@ -65,8 +66,6 @@ class NovelOnlineFullCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         if 'Chapter' in soup.select_one('h1').text:
@@ -75,12 +74,12 @@ class NovelOnlineFullCrawler(Crawler):
             chapter['title'] = chapter['title']
         # end if
 
-        self.blacklist_patterns = [
+        self.cleaner.blacklist_patterns = set([
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
-        ]
+        ])
 
         contents = soup.select_one('#vung_doc')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

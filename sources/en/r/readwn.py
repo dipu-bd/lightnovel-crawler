@@ -54,11 +54,12 @@ class ReadWNCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.novel-info .novel-title').text.strip()
+        possible_title = soup.select_one('.novel-info .novel-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         try:
@@ -75,13 +76,24 @@ class ReadWNCrawler(Crawler):
         except Exception as e:
             logger.debug('Failed to parse novel author. Error: %s', e)
 
-        last_page = soup.select('#chapters .pagination li a')[-1]['href']
-        logger.debug('Last page: %s', last_page)
+        try:
+            last_page = soup.select('#chapters .pagination li a')[-1]['href']
+            last_page_qs = parse_qs(urlparse(last_page).query)
+            wjm = last_page_qs['wjm'][0]
+            
+            max_page = int(last_page_qs['page'][0])
+            logger.debug('Last page: %s', last_page)
+            max_page = int(last_page_qs['page'][0])
+            logger.debug('Max page: %d, wjm = %s', max_page, wjm)
 
-        last_page_qs = parse_qs(urlparse(last_page).query)
-        max_page = int(last_page_qs['page'][0])
-        wjm = last_page_qs['wjm'][0]
-        logger.debug('Max page: %d, wjm = %s', max_page, wjm)
+
+        except Exception as err:
+            logger.debug('Failed to parse page count. Error: %s', err)
+            page_count = 0
+            max_page = 0
+            wjm_link = soup.select("#chpagedlist .filters a")[0]['href']
+            last_page_qs = parse_qs(urlparse(wjm_link).query)
+            wjm = last_page_qs['wjm'][0]
 
         futures = []
         for i in range(max_page + 1):
@@ -115,10 +127,8 @@ class ReadWNCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.chapter-content')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

@@ -12,7 +12,6 @@ class FourScanlationCrawler(Crawler):
     base_url = 'https://4scanlation.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         path_fragments = urlparse(self.novel_url).path.split('/')
         novel_hash = path_fragments[1]
         if novel_hash == 'category':
@@ -60,8 +59,6 @@ class FourScanlationCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('article div.entry-content')

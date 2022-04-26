@@ -4,6 +4,8 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
+from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -42,24 +44,27 @@ class ListNovelCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.series-name a').text.strip()
+        possible_title = soup.select_one('.series-name a')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_author = ' '.join([a.text.strip() for a in soup.select('.info-value a[href*="/tac-gia/"]')])
         logger.info('%s', self.novel_author)
 
-        possible_image = soup.select_one('.series-cover .img-in-ratio')['style']
-        possible_image = re.findall(r"url\('([^']+)'\)", possible_image)
-        self.novel_cover = self.absolute_url(possible_image[0])
+        possible_image = soup.select_one('.series-cover .img-in-ratio')
+        if isinstance(possible_image, Tag):
+            urls = re.findall(r"url\('([^']+)'\)", str(possible_image['style']))
+            self.novel_cover = self.absolute_url(urls[0]) if urls else None
         logger.info('Novel cover: %s', self.novel_cover)
 
         for section in soup.select('.volume-list'):
             vol_id = 1 + len(self.volumes)
-            vol_title = section.select_one('.sect-title').text.strip()
+            vol_title = section.select_one('.sect-title')
+            vol_title = vol_title.text.strip() if isinstance(vol_title, Tag) else None
             self.volumes.append({
                 'id': vol_id,
                 'title': vol_title,
@@ -77,8 +82,6 @@ class ListNovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('#chapter-content p')
         return ''.join([str(p) for p in contents])

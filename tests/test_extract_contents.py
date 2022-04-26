@@ -22,7 +22,7 @@ class TestCrawler(Crawler):
             html_text = f.read()
         soup = self.make_soup(html_text)
         chapter = soup.select_one('article #chapter')
-        text = self.extract_contents(chapter)
+        text = self.cleaner.extract_contents(chapter)
         print(text)
 
     def test_sample2(self):
@@ -30,7 +30,7 @@ class TestCrawler(Crawler):
             html_text = f.read()
         soup = self.make_soup(html_text)
         chapter = soup.select_one('article')
-        text = self.extract_contents(chapter)
+        text = self.cleaner.extract_contents(chapter)
         print(text)
 
 

@@ -38,7 +38,6 @@ class WNMTLCrawler(Crawler):
     # # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug(self.home_url)
         self.scraper.headers['site-domain'] = urlparse(self.novel_url).hostname or ''
 
@@ -86,7 +85,6 @@ class WNMTLCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
         data = self.get_json(chapter['url'])
         contents = data['data']['content'].split('\n')
         return '\n'.join(['<p>' + x + '</p>' for x in contents])

@@ -3,6 +3,7 @@ import logging
 from lncrawl.core.crawler import Crawler
 import re
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -13,11 +14,14 @@ class RanobeLibCrawler(Crawler):
         logger.info('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.manga-title h1').text
+        possible_title = soup.select_one('.manga-title h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('.manga__image img')['src'])
+        possible_image = soup.select_one('.manga__image img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         novel_link = soup.select_one("a[href*=author]")
@@ -55,11 +59,8 @@ class RanobeLibCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
         div = soup.select_one('.reader-container')
-
-        return self.extract_contents(div)
+        return self.cleaner.extract_contents(div)
     # end def
 # end class

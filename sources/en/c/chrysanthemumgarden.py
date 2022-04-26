@@ -10,24 +10,23 @@ class ChrysanthemumGarden(Crawler):
     base_url = 'https://chrysanthemumgarden.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         if not self.novel_url.endswith('/'):
             self.novel_url += '/'
         # end if
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('h1.novel-title').text
+        possible_title = soup.select_one('h1.novel-title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         # self.novel_author = soup.select_one('.bookinfo .status').text
         # logger.info('%s', self.novel_author)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('.novel-cover img')['src'])
-        except:
-            pass
+        possible_image = soup.select_one('.novel-cover img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         volumes = set([])
@@ -47,8 +46,6 @@ class ChrysanthemumGarden(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         bads = [

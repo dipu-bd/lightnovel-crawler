@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 
 from lncrawl.core.crawler import Crawler
 
@@ -37,34 +36,32 @@ class MyWuxiaWorldCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         self.novel_url = self.novel_url.replace(
             'm.mywuxiaworld.com', 'www.mywuxiaworld.com')
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one(
-            'div.pt-bookdetail .novelname a.bold')['title']
+        possible_title = soup.select_one('div.pt-bookdetail .novelname a.bold')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title['title']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select_one(
-            '.pt-bookdetail a[href*="/author/"]')['title']
+        possible_novel_author = soup.select_one('.pt-bookdetail a[href*="/author/"]')
+        if possible_novel_author:
+            self.novel_author = possible_novel_author['title']
         logger.info('Novel author: %s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('img.pt-bookdetail-img')['src'])
+        possible_image = soup.select_one('img.pt-bookdetail-img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
         for a in soup.select('div.pt-chapter-cont-detail.full a'):
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -77,8 +74,6 @@ class MyWuxiaWorldCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
         contents = soup.select('div.pt-read-text p')
         body = [str(p) for p in contents if p.text.strip()]

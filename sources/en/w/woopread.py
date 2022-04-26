@@ -90,7 +90,7 @@ class WoopReadCrawler(Crawler):
                 if bad in content.text:
                     content.extract()
 
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
 
     # end def
 

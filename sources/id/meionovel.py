@@ -32,11 +32,12 @@ class MeionovelCrawler(Crawler):
     # # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('meta[property="og:title"]')['content'].split('-')[0]
+        possible_title = soup.select_one('meta[property="og:title"]')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title['content'].split('-')[0]
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(soup.select_one('.summary_image img')['data-src'])
@@ -69,8 +70,6 @@ class MeionovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('div.text-left')

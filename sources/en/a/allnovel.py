@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
-import re
+
 import logging
+from urllib.parse import quote
+
+from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://allnovel.org/search?keyword=%s'
-
-RE_VOLUME = r'(?:book|vol|volume) (\d+)'
-
 
 class AllNovelCrawler(Crawler):
     base_url = [
@@ -15,15 +15,23 @@ class AllNovelCrawler(Crawler):
         'https://www.allnovel.org/',
     ]
 
+    def initialize(self) -> None:
+        self.home_url = self.base_url[0]
+        self.cleaner.blacklist_patterns.update([
+            'If you find any errors ( broken links, non-standard content, etc.. ), Please let us know < report chapter > so we can fix it as soon as possible.'
+        ])
+    # end def
+
     def search_novel(self, query):
-        '''Gets a list of (title, url) matching the given query'''
-        query = query.strip().lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
+        soup = self.get_soup(self.home_url + 'search?keyword=' + quote(query))
 
         results = []
-        for div in soup.select('#list-page .archive .list-truyen > .row'):
+        for div in soup.select('.list-truyen > .row'):
             a = div.select_one('.truyen-title a')
-            info = div.select_one('.text-info a .chapter-text')
+            if not isinstance(a, Tag):
+                continue
+            # end if
+            info = div.select_one('.text-info .chapter-text')
             results.append(
                 {
                     'title': a.text.strip(),
@@ -34,92 +42,98 @@ class AllNovelCrawler(Crawler):
         # end for
 
         return results
-
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
-        logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         image = soup.select_one('.info-holder .book img')
+        assert isinstance(image, Tag), 'No title found'
+
         self.novel_title = image['alt']
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        authors = []
-        for a in soup.select('.info-holder .info a'):
-            if a['href'].startswith('/author/'):
-                authors.append(a.text.strip())
-            # end if
-        # end for
-        self.novel_author = ', '.join(authors)
+        authors = soup.select('.info-holder .info a[href*="/author/"]')
+        self.novel_author = ', '.join([a.text.strip() for a in authors])
         logger.info('Novel author: %s', self.novel_author)
 
-        pagination_link = soup.select_one('#list-chapter .pagination .last a')
-        page_count = int(
-            pagination_link['data-page']) if pagination_link else 0
-        logger.info('Chapter list pages: %d' % page_count)
-
         logger.info('Getting chapters...')
-        futures = [
-            self.executor.submit(self.download_chapter_list, i + 1)
-            for i in range(page_count + 1)
-        ]
 
-        self.chapters = []
-        possible_volumes = set([])
-        for f in futures:
-            for chapter in f.result():
-                chapter_id = len(self.chapters) + 1
-                volume_id = (chapter_id - 1) // 100 + 1
+        # NOTE: old way to get chapter list by visiting each pages
+        # page_count = 0
+        # pagination_link = soup.select_one('#list-chapter .pagination .last a')
+        # if isinstance(pagination_link, Tag):
+        #     page_count = int(str(pagination_link['data-page']))
+        # logger.info('Chapter list pages: %d' % page_count)
 
-                # pc = self.chapters[-1] if self.chapters else None
-                # match = re.search(r'(?:book|vol|volume) (\d+)', title, re.I)
-                # if pc and match:
-                #     _vol_id = int(match.group(1))
-                #     pv = pc['volume']
-                #     if not pv or (_vol_id == pv or _vol_id == pv + 1):
-                #         volume_id = _vol_id
-                #     # end if
-                # # end if
+        # futures = []
+        # for page in range(1, page_count + 2):
+        #     if page == 1:
+        #         f = self.executor.submit(lambda: soup)
+        #     else:
+        #         url = self.novel_url.split('?')[0].strip('/')
+        #         url += '?page=%d' % page
+        #         f = self.executor.submit(self.get_soup, url)
+        #     # end if
+        #     futures.append(f)
+        # # end for
 
-                possible_volumes.add(volume_id)
-                self.chapters.append({
-                    'id': chapter_id,
-                    'volume': volume_id,
-                    'title': chapter['title'],
-                    'url': chapter['url'],
-                })
-            # end for
-        # end for
-
-        self.volumes = [{'id': x} for x in possible_volumes]
-    # end def
-
-    def download_chapter_list(self, page):
-        '''Download list of chapters and volumes.'''
-        url = self.novel_url.split('?')[0].strip('/')
-        url += '?page=%d&per-page=50' % page
-        soup = self.get_soup(url)
-        chapters = []
-        for a in soup.select('ul.list-chapter li a'):
-            title = a['title'].strip()
-            chapters.append({
-                'title': title,
-                'url': self.absolute_url(a['href']),
+        # for i, f in enumerate(futures):
+        #     try:
+        #         soup = f.result()
+        #     except KeyboardInterrupt:
+        #         c = len([f.cancel() for f in futures[i:]])
+        #         logger.info('Cancelled remaining %d jobs', c)
+        #     # end try
+        #     for a in soup.select('ul.list-chapter li a'):
+        #         chap_id = len(self.chapters) + 1
+        #         vol_id = 1 + len(self.chapters) // 100
+        #         if len(self.volumes) < vol_id:
+        #             self.volumes.append({ 'id': vol_id })
+        #         # end if
+        #         self.chapters.append({
+        #             'id': chap_id,
+        #             'volume': vol_id,
+        #             'title': a['title'],
+        #             'url': self.absolute_url(a['href']),
+        #         })
+        #     # end for
+        # # end for
+        
+        possible_id = soup.select_one('input#truyen-id')
+        assert possible_id, 'No novel id'
+        self.novel_id = possible_id['value']
+        soup = self.get_soup(self.home_url + 'ajax-chapter-option?novelId=%s' % self.novel_id)
+        for opt in soup.select('select option'):
+            chap_id = len(self.chapters) + 1
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
+            # end if
+            self.chapters.append({
+                'id': chap_id,
+                'volume': vol_id,
+                'title': opt.text,
+                'url': self.absolute_url(opt['value']),
             })
         # end for
-        return chapters
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-        content = soup.select('div#chapter-content')
-        return self.extract_contents(content)
+        content = soup.select_one('div#chapter-content')
+
+        assert isinstance(content, Tag), 'No chapter content'
+        for child in content.contents:
+            child.extract()
+            if isinstance(child, Tag) and child.name == 'h3':
+                break
+            # end if
+        # end for
+
+        return self.cleaner.extract_contents(content)
     # end def
 # end class

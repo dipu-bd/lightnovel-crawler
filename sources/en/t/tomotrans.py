@@ -11,11 +11,12 @@ class TomoTransCrawler(Crawler):
     base_url = 'https://tomotranslations.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('article h1.title').text
+        possible_title = soup.select_one('article h1.title')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
@@ -47,8 +48,6 @@ class TomoTransCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         body = ''

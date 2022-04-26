@@ -11,16 +11,17 @@ class WebnovelOnlineDotComCrawler(Crawler):
     base_url = 'https://webnovelonline.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         url = self.novel_url
-        logger.debug('Visiting %s', url)
         soup = self.get_soup(url)
 
-        self.novel_title = soup.select_one('.novel-info .novel-desc h1').text
+        possible_title = soup.select_one('.novel-info .novel-desc h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = soup.select_one(
-            'meta[property="og:image"]')['content']
+        possible_novel_cover = soup.select_one('meta[property="og:image"]')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
         logger.info('Novel cover: %s', self.novel_title)
 
         volumes = set([])
@@ -40,8 +41,6 @@ class WebnovelOnlineDotComCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Visiting %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         for script in soup.select('script'):

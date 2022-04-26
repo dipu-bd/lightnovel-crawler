@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from bs4.element import Tag
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -14,7 +16,6 @@ class ReadLightNovelCrawler(Crawler):
     ]
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -23,9 +24,9 @@ class ReadLightNovelCrawler(Crawler):
         self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_cover = soup.find('img', {'alt': self.novel_title})
-        if isinstance(possible_cover, Tag):
-            self.novel_cover = self.absolute_url(possible_cover['src'])
+        possible_image = soup.find('img', {'alt': self.novel_title})
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image['src'])
         # end if
         logger.info('Novel cover: %s', self.novel_cover)
         
@@ -51,9 +52,26 @@ class ReadLightNovelCrawler(Crawler):
         self.volumes = [{'id': i} for i in volume_ids]
     # end def
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update([
+            'h3',
+            'center',
+            'interaction',
+        ])
+        self.cleaner.bad_css.update([
+            '.trinity-player-iframe-wrapper'
+            '.hidden',
+            '.ads-title',
+            'p.hid',
+            'a[href*=remove-ads]',
+            'a[target=_blank]',
+            '#growfoodsmart',
+            '#chapterhidden',
+            'div[style*="float:left;margin-top:15px;"]',
+            'div[style*="float: left; margin-top: 20px;"]',
+        ])
+
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
 
         div = soup.select_one('.chapter-content3 .desc')
@@ -64,22 +82,6 @@ class ReadLightNovelCrawler(Crawler):
             chapter['title'] = possible_title.text.strip()
         # end if
 
-        self.bad_css += [
-            'h3',
-            '.trinity-player-iframe-wrapper'
-            '.hidden',
-            '.ads-title',
-            'center',
-            'interaction',
-            'p.hid',
-            'a[href*=remove-ads]',
-            'a[target=_blank]',
-            '#growfoodsmart',
-            '#chapterhidden',
-            'div[style*="float:left;margin-top:15px;"]',
-            'div[style*="float: left; margin-top: 20px;"]',
-        ]
-
-        return self.extract_contents(div)
+        return self.cleaner.extract_contents(div)
     # end def
 # end class

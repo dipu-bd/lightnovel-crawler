@@ -13,18 +13,17 @@ class TapreadCrawler(Crawler):
     base_url = 'https://www.tapread.com/'
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one('.book-name').text.strip()
+        possible_title = soup.select_one('.book-name')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        try:
-            self.novel_cover = self.absolute_url(
-                soup.select_one('img.bg-img, img.cover-img, .book-img img')['src'])
-        except Exception:
-            pass
+        possible_image = soup.select_one('img.bg-img, img.cover-img, .book-img img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         # end try
         logger.info('Novel cover: %s', self.novel_cover)
 
@@ -61,8 +60,6 @@ class TapreadCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format'''
-        logger.info('Downloading %s', chapter['url'])
         data = self.get_json(chapter['url'])
         return data['result']['content']
     # end def

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from bs4 import BeautifulSoup
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -12,6 +11,13 @@ class WuxiaWorldIo(Crawler):
         'https://wuxiaworld.io/',
         'https://wuxiaworld.name/',
     ]
+
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            r'^translat(ed by|or)',
+            r'(volume|chapter) .?\d+',
+        ])
+    # end def
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
@@ -33,16 +39,18 @@ class WuxiaWorldIo(Crawler):
     # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         # self.novel_title = soup.select_one('h1.entry-title').text.strip()
-        self.novel_title = soup.select_one('div.entry-header h1').text.strip()
+        possible_title = soup.select_one('div.entry-header h1')
+        assert possible_title, 'No novel title'
+        self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('span.info_image img')['src'])
+        possible_image = soup.select_one('span.info_image img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select('div.truyen_info_right li')[1].text.strip()
@@ -64,22 +72,8 @@ class WuxiaWorldIo(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        if 'Chapter' in soup.select_one('h1').text:
-            chapter['title'] = soup.select_one('h1').text
-        else:
-            chapter['title'] = chapter['title']
-        # end if
-
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
         contents = soup.select_one('div.content-area')
-        return self.extract_contents(contents)
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class

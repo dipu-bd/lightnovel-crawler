@@ -193,6 +193,10 @@ def process_file(py_file: Path) -> float:
         has_mtl = getattr(crawler, 'machine_translation', False)
         source_id = hashlib.md5(str(crawler).encode('utf8')).hexdigest()
 
+        # Test crawler instance
+        crawler()
+
+        # Gather crawler info
         info = {}
         info['id'] = source_id
         info['md5'] = md5

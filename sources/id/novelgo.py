@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-import json
+
 import logging
-import re
 import urllib.parse
+
+from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
 
@@ -14,9 +15,9 @@ class NovelGoCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://novelgo.id/'
+    # end def
 
     def read_novel_info(self):
-        '''Get novel title, autor, cover etc'''
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -35,9 +36,10 @@ class NovelGoCrawler(Crawler):
         # self.novel_cover = self.absolute_url(
         #    url.replace('url(', '').replace(')', ''))
 
-        thumbnail = soup.find("div", {"class": "novel-thumbnail"})['data-bg']
-        self.novel_cover = self.absolute_url(
-            thumbnail.replace('url(', '').replace(')', ''))
+        thumbnail = soup.find("div", {"class": "novel-thumbnail"})
+        if isinstance(thumbnail, Tag):
+            thumbnail_src = str(thumbnail['data-bg']).replace('url(', '').replace(')', '')
+            self.novel_cover = self.absolute_url(thumbnail_src)
         logger.info('Novel cover: %s', self.novel_cover)
 
         path = urllib.parse.urlsplit(self.novel_url)[2]
@@ -75,13 +77,9 @@ class NovelGoCrawler(Crawler):
 
         for chapter in data:
             chap_id = len(self.chapters) + 1
-            if len(self.chapters) % 100 == 0:
-                vol_id = chap_id//100 + 1
-                vol_title = 'Volume ' + str(vol_id)
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol_title,
-                })
+            vol_id = 1 + len(self.chapters) // 100
+            if len(self.volumes) < vol_id:
+                self.volumes.append({ 'id': vol_id })
             # end if
             self.chapters.append({
                 'id': chap_id,
@@ -94,17 +92,8 @@ class NovelGoCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        '''Download body of a single chapter and return as clean html format.'''
-        logger.info('Downloading %s', chapter['url'])
         soup = self.get_soup(chapter['url'])
-
-        self.blacklist_patterns = [
-            r'^translat(ed by|or)',
-            r'(volume|chapter) .?\d+',
-        ]
-
-        contents = soup.find(
-            'div', {'id': 'chapter-post-content'}).findAll('p')
+        contents = soup.select('#chapter-post-content p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
     # end def
