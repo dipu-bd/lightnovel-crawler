@@ -44,7 +44,6 @@ class ListNovelCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one('.series-name a')
