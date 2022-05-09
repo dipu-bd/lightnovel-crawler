@@ -45,7 +45,7 @@ class VeraTales(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        contens = soup.select_one('div.reader-content')
+        contents = soup.select_one('div.reader-content')
         return self.cleaner.extract_contents(contents)
     # end def
 # end class
