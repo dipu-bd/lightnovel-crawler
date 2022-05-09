@@ -7,6 +7,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+
 class VeraTales(Crawler):
     base_url = 'https://veratales.com/'
 
@@ -21,16 +22,13 @@ class VeraTales(Crawler):
         self.novel_author=''
         logger.info('%s', self.novel_author)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one('div.card-header a img')['src'])
+        possible_image = soup.select_one('div.card-header a img')
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
-        # Extract volume-wise chapter entries
-        
         chapters = soup.select('table td a')
-        chapters.reverse()
-
-        for a in chapters:
+        for a in reversed(chapters):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
@@ -47,11 +45,7 @@ class VeraTales(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-
-        contents = soup.select_one('div.reader-content')
-        for bad in contents.select('h3, .code-block, script, .adsbygoogle'):
-            bad.extract()
-
+        contens = soup.select_one('div.reader-content')
         return self.cleaner.extract_contents(contents)
     # end def
 # end class
