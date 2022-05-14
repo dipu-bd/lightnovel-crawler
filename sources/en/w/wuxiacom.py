@@ -18,6 +18,9 @@ class WuxiaComCrawler(Crawler):
         self.grpc = RpcSession.from_descriptor(WUXIWORLD_PROTO)
     # end def
 
+    def login(self, email: str, password: str) -> None:
+        self.bearer_token = email + ' ' + password
+
     def read_novel_info(self):
         slug = re.findall(r'/novel/([^/]+)', self.novel_url)[0]
         logger.debug('Novel slug: %s', slug)
@@ -25,6 +28,7 @@ class WuxiaComCrawler(Crawler):
         response = self.grpc.request(
             'https://api.wuxiaworld.com/wuxiaworld.api.v2.Novels/GetNovel',
             {'slug': slug},
+            headers={ 'authorization': self.bearer_token, }
         )
         response.raise_for_status()
         assert response.single
@@ -42,6 +46,7 @@ class WuxiaComCrawler(Crawler):
         response = self.grpc.request(
             'https://api.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapterList',
             {'novelId': novel['id']},
+            headers={ 'authorization': self.bearer_token, }
         )
         response.raise_for_status()
         assert response.single
@@ -70,6 +75,7 @@ class WuxiaComCrawler(Crawler):
         response = self.grpc.request(
             'https://api.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapter',
             {'chapterProperty': {'chapterId': chapter['entityId']}},
+            headers={ 'authorization': self.bearer_token, }
         )
         response.raise_for_status()
         assert response.single
