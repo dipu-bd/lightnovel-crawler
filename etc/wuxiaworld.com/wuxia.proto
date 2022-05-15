@@ -24,6 +24,7 @@ message ChapterItem {
     string slug = 3;
     google.protobuf.StringValue content = 5;
     int32 novelId = 6;
+    google.protobuf.StringValue translatorThoughts = 19;
 }
 
 message ChapterGroupItem {
@@ -32,7 +33,6 @@ message ChapterGroupItem {
     int32 order = 3;
     repeated ChapterItem chapterList = 6;
 }
-
 
 message GetChapterByProperty {
     oneof byProperty {
@@ -79,6 +79,29 @@ message GetChapterResponse {
     ChapterItem item = 1;
 }
 
+message UnlockedItem {
+    oneof id {
+        int32 novelId = 2;
+        int32 chapterId = 3;
+    }
+}
+
+enum UnlockItemMethod {
+    UnlockMethodNone = 0;
+    UnlockMethodKarma = 1;
+    UnlockMethodVip = 2;
+    UnlockMethodSponsor = 3;
+}
+
+message UnlockItemRequest {
+    UnlockItemMethod unlockMethod = 1;
+    UnlockedItem item = 2;
+}
+
+message UnlockItemResponse {
+    UnlockedItem unlockedItem = 1;
+}
+
 service Novels {
     rpc GetNovel(GetNovelRequest) returns (GetNovelResponse);
 }
@@ -86,4 +109,8 @@ service Novels {
 service Chapters {
     rpc GetChapterList(GetChapterListRequest) returns (GetChapterListResponse);
     rpc GetChapter(GetChapterRequest) returns (GetChapterResponse);
+}
+
+service Unlocks {
+    rpc UnlockItem(UnlockItemRequest) returns (UnlockItemResponse);
 }
