@@ -73,10 +73,16 @@ class OneKissNovelCrawler(Crawler):
         #    'action': 'manga_views',
         #    'manga': self.novel_id,
         # })
-        response = self.submit_form(wp_admin_ajax_url, data={
-            'action': 'manga_get_chapters',
-            'manga': self.novel_id,
-        })
+
+        # Deprecated way to fetch chapters
+        # response = self.submit_form(wp_admin_ajax_url, data={
+        #     'action': 'manga_get_chapters',
+        #     'manga': self.novel_id,
+        # })
+
+        clean_novel_url = self.novel_url.split('?')[0].strip('/')
+        response = self.submit_form(f'{clean_novel_url}/ajax/chapters/')
+
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
