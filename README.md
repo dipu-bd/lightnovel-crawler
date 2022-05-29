@@ -1176,7 +1176,7 @@ We are supporting 204 sources and 233 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.wuxiaworld.com/" target="_blank">https://www.wuxiaworld.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiacom.py" title="15 May 2022 05:06:20 PM">67</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiacom.py" title="29 May 2022 07:57:10 AM">68</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
