@@ -50,10 +50,16 @@ class NovelCool(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
-        # FIXME: Chapters title keep getting duplicated, I've tried multiple fixes but nothings worked so far.
-        body_parts = soup.select_one('.chapter-reading-section')
+        chapter_title = soup.select_one('.chapter-title')
+        chapter_start = soup.select_one('.chapter-start-mark')
+        body_parts = chapter_start.parent
 
-        # Removes report button
+        # FIXED: Chapters title removed.
+        if chapter_title:
+            chapter_title.extract()
+            
+        chapter_start.extract()
+
         for report in body_parts.find('div', {'model_target_name': 'report'}):
             report.extract()
         # end for
