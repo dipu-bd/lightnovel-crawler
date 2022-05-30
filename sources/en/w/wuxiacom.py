@@ -16,6 +16,7 @@ class WuxiaComCrawler(Crawler):
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.com'
         self.grpc = RpcSession.from_descriptor(WUXIWORLD_PROTO)
+        self.bearer_token = None
     # end def
 
     def login(self, email: str, password: str) -> None:
@@ -79,7 +80,9 @@ class WuxiaComCrawler(Crawler):
         )
         response.raise_for_status()
         assert response.single
-        chapter = response.single['item']['content']
+
+        soup = self.make_soup(response.single['item']['content'])
+        chapter = self.cleaner.extract_contents(soup.select_one('body'))
         
         if 'translatorThoughts' in response.single['item']:
             chapter += '<hr/>'
