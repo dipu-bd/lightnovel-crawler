@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-import logging 
+import logging
+import re 
 from bs4.element import Tag
 
 import requests
 
 from lncrawl.core.crawler import Crawler
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.foxaholic.com/?s=%s&post_type=wp-manga'
@@ -58,7 +60,17 @@ class FoxaholicCrawler(Crawler):
         self.novel_author = ' '.join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
         logger.info('%s', self.novel_author)
 
-        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters/', data='')
+        parsed_url = urlparse(self.novel_url)
+        current_base_url = '%s://%s' % (parsed_url.scheme, parsed_url.hostname)
+        
+        novel_id = soup.select_one('#manga-chapters-holder')['data-id']
+        get_chapter_data = {
+            'action': 'manga_get_chapters',
+            'manga': novel_id
+        }
+
+        response = self.submit_form(current_base_url + '/wp-admin/admin-ajax.php', data=get_chapter_data)
+        
         soup = self.make_soup(response)
         for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
@@ -77,7 +89,20 @@ class FoxaholicCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('.reading-content')
+
+        #REMINDER : Some chapters have additional protection in the form of having the actual
+        # chapter url in the post. This selector might change frequently.
+
+        blocked_chapter = soup.select_one('.text-left').find(
+            lambda tag:tag.name=="a" and "Chapter" in tag.text
+            )
+        if blocked_chapter:
+            logger.info("Blocked chapter detected. Trying to bypass...")
+            soup = self.get_soup(blocked_chapter['href'])
+
+        contents = soup.select_one('.entry-content_wrap')
+
+        
         # all_imgs = soup.find_all('img')
         # for img in all_imgs:
         #     if img.has_attr('loading'):
