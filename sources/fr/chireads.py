@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 logger = logging.getLogger(__name__)
 
 
-class MyCrawlerName(Crawler):
+class Chireads(Crawler):
     base_url = ["https://chireads.com/"]
     has_manga = False
     machine_translation = False
@@ -48,7 +48,6 @@ class MyCrawlerName(Crawler):
                 to_add["info"] = info
 
             result.append(to_add)
-        logger.info("Found %d results", len(result), ": ", result)
         return result
 
     def read_novel_info(self):
