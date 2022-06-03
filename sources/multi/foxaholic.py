@@ -65,18 +65,20 @@ class FoxaholicCrawler(Crawler):
         self.novel_author = ' '.join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
         logger.info('%s', self.novel_author)
 
-        # parsed_url = urlparse(self.novel_url)
-        # current_base_url = '%s://%s' % (parsed_url.scheme, parsed_url.hostname)
-        #
-        # novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        # get_chapter_data = {
-        #     'action': 'manga_get_chapters',
-        #     'manga': novel_id
-        # }
-        #
-        # response = self.submit_form(current_base_url + '/wp-admin/admin-ajax.php', data=get_chapter_data)
-        #
-        # soup = self.make_soup(response)
+        if "18.foxaholic.com" in self.novel_url or "global.foxaholic.com" in self.novel_url:
+            parsed_url = urlparse(self.novel_url)
+            current_base_url = '%s://%s' % (parsed_url.scheme, parsed_url.hostname)
+
+            novel_id = soup.select_one('#manga-chapters-holder')['data-id']
+            get_chapter_data = {
+                'action': 'manga_get_chapters',
+                'manga': novel_id
+            }
+
+            response = self.submit_form(current_base_url + '/wp-admin/admin-ajax.php', data=get_chapter_data)
+
+            soup = self.make_soup(response)
+
         for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
