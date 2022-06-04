@@ -38,15 +38,18 @@ class Chireads(Crawler):
         )
 
         metadata = content[0]
+        
         self.novel_cover = self.absolute_url(metadata.find("img").get("src"))
-        self.novel_title = self.cleaner.clean_text(
-            metadata.find("h3", {"class": "inform-title"}).text.split("|")[0]
-        )
-        self.novel_author = self.cleaner.clean_text(
-            metadata.find("h6", {"class": "font-color-black3"})
-            .text.split("\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0")[0]
-            .replace("Auteur : ", "")
-        )
+        
+        self.novel_title = metadata.find("h3", {
+            "class": "inform-title"
+        }).text.split("|")[0].strip()
+
+        self.novel_author = metadata.find("h6", {
+            "class": "font-color-black3"
+        }).text.split(
+            "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0"
+        )[0].replace("Auteur : ", "")
 
         body = content[1]
         tomes = body.find_all("div", {"class": "chapitre"})
