@@ -31,7 +31,7 @@ class Lnmtlfr(Crawler):
 
             result.append(
                 {
-                    "title": title.text,
+                    "title": self.cleaner.clean_text(title.text),
                     "url": title.get("href"),
                     "info": f"Author{'s' if len(authors)>1 else ''} : "
                     + self.cleaner.clean_text(", ".join([a.text for a in authors])),
@@ -45,10 +45,10 @@ class Lnmtlfr(Crawler):
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = self.cleaner.clean_text(
-            soup.find("div", {"class": "post-title"}).find("h1").text.strip()
+            soup.find("div", {"class": "post-title"}).find("h1").text
         )
         self.novel_cover = self.cleaner.clean_text(
-            soup.find("div", {"class": "summary_image"}).find("img").get("src").strip()
+            soup.find("div", {"class": "summary_image"}).find("img").get("src")
         )
         self.novel_author = self.cleaner.clean_text(
             ", ".join(
@@ -87,10 +87,8 @@ class Lnmtlfr(Crawler):
                         {
                             "id": chap_count,
                             "volume": vol_count,
-                            "url": chap.find("a").get("href"),
-                            "title": self.cleaner.clean_text(
-                                chap.find("a").text.strip()
-                            ),
+                            "url": chap.find("a").get("href").strip(),
+                            "title": self.cleaner.clean_text(chap.find("a").text),
                         }
                     )
                     chap_count += 1
@@ -105,8 +103,8 @@ class Lnmtlfr(Crawler):
                     {
                         "id": chap_count,
                         "volume": 1,
-                        "url": chap.find("a").get("href"),
-                        "title": self.cleaner.clean_text(chap.find("a").text.strip()),
+                        "url": chap.find("a").get("href").strip(),
+                        "title": self.cleaner.clean_text(chap.find("a").text),
                     }
                 )
                 chap_count += 1

@@ -38,13 +38,12 @@ class Chireads(Crawler):
         metadata = content[0]
         self.novel_cover = metadata.find("img").get("src").strip()
         self.novel_title = self.cleaner.clean_text(
-            metadata.find("h3", {"class": "inform-title"}).text.split("|")[0].strip()
+            metadata.find("h3", {"class": "inform-title"}).text.split("|")[0]
         )
         self.novel_author = self.cleaner.clean_text(
             metadata.find("h6", {"class": "font-color-black3"})
             .text.split("\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0")[0]
             .replace("Auteur : ", "")
-            .strip()
         )
 
         body = content[1]
@@ -60,7 +59,7 @@ class Chireads(Crawler):
                 {
                     "id": i,
                     "title": self.cleaner.clean_text(
-                        tome.find("div", {"class": "title"}).text.strip()
+                        tome.find("div", {"class": "title"}).text
                     ),
                 }
             )
@@ -70,9 +69,9 @@ class Chireads(Crawler):
                     {
                         "id": chap_nmbr,
                         "volume": i,
-                        "url": self.cleaner.clean_text(chapter.get("href").strip()),
+                        "url": chapter.get("href").strip(),
                         "title": self.cleaner.clean_text(
-                            chapter.text.replace("\xa0", " ").strip()
+                            chapter.text.replace("\xa0", " ")
                         ),
                     }
                 )
