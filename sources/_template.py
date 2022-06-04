@@ -75,7 +75,7 @@ class MyCrawlerName(Crawler):
         #          `volume` : the volume number [required]
         #          `url`    : the link to download the chapter [required]
         #          `title`  : the title name [optional]
-        #       `self.volumes`: Unique list of volumes used inside the chatpers.
+        #       `self.volumes`: Unique list of volumes used inside the chapters.
         #          `id`     : the index of the volume [required]
         #          `title`  : the volume title [optional]
         #
