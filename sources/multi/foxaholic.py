@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
-import re 
+import re
+from concurrent.futures import ThreadPoolExecutor
+
 from bs4.element import Tag
 
 import requests
@@ -20,6 +22,9 @@ class FoxaholicCrawler(Crawler):
         'https://18.foxaholic.com/',
         'https://global.foxaholic.com/',
     ]
+
+    def initialize(self) -> None:
+        self.executor = ThreadPoolExecutor(max_workers=1)
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -60,18 +65,20 @@ class FoxaholicCrawler(Crawler):
         self.novel_author = ' '.join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
         logger.info('%s', self.novel_author)
 
-        parsed_url = urlparse(self.novel_url)
-        current_base_url = '%s://%s' % (parsed_url.scheme, parsed_url.hostname)
-        
-        novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        get_chapter_data = {
-            'action': 'manga_get_chapters',
-            'manga': novel_id
-        }
+        if "18.foxaholic.com" in self.novel_url or "global.foxaholic.com" in self.novel_url:
+            parsed_url = urlparse(self.novel_url)
+            current_base_url = '%s://%s' % (parsed_url.scheme, parsed_url.hostname)
 
-        response = self.submit_form(current_base_url + '/wp-admin/admin-ajax.php', data=get_chapter_data)
-        
-        soup = self.make_soup(response)
+            novel_id = soup.select_one('#manga-chapters-holder')['data-id']
+            get_chapter_data = {
+                'action': 'manga_get_chapters',
+                'manga': novel_id
+            }
+
+            response = self.submit_form(current_base_url + '/wp-admin/admin-ajax.php', data=get_chapter_data)
+
+            soup = self.make_soup(response)
+
         for a in reversed(soup.select('.wp-manga-chapter a')):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
