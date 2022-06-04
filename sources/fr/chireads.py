@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from lncrawl.core.crawler import Crawler
 import requests
-from bs4 import BeautifulSoup
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
@@ -16,16 +15,19 @@ class Chireads(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
 
-        # Using self.get_soup() here throw an error, I don't know why.
+        # NOTE: Using self.get_soup() here throw an error, I don't know why.
         response = requests.get("https://chireads.com/search?x=0&y=0&name=" + query)
-        soup = BeautifulSoup(response.text, "html.parser")
+        soup = self.make_soup(response)
 
         result = []
         content = soup.find("div", {"id": "content"})
 
         for novel in content.find_all("li"):
             content = novel.find("a")
-            result.append({"title": content.get("title"), "url": content.get("href")})
+            result.append({
+                "title": content.get("title"),
+                "url": self.absolute_url(content.get("href")),
+            })
 
         return result
 
@@ -36,7 +38,7 @@ class Chireads(Crawler):
         )
 
         metadata = content[0]
-        self.novel_cover = metadata.find("img").get("src").strip()
+        self.novel_cover = self.absolute_url(metadata.find("img").get("src"))
         self.novel_title = self.cleaner.clean_text(
             metadata.find("h3", {"class": "inform-title"}).text.split("|")[0]
         )
@@ -47,40 +49,25 @@ class Chireads(Crawler):
         )
 
         body = content[1]
-
-        self.chapters = []
-        self.volumes = []
-
         tomes = body.find_all("div", {"class": "chapitre"})
-
-        chap_nmbr = 1
-        for i, tome in enumerate(tomes, 1):
-            self.volumes.append(
-                {
-                    "id": i,
-                    "title": self.cleaner.clean_text(
-                        tome.find("div", {"class": "title"}).text
-                    ),
-                }
-            )
-
+        for vol_id, tome in enumerate(tomes, 1):
+            self.volumes.append({
+                "id": vol_id,
+                "title": tome.find("div", {"class": "title"}).text,
+            })
             for chapter in tome.find_all("a"):
-                self.chapters.append(
-                    {
-                        "id": chap_nmbr,
-                        "volume": i,
-                        "url": chapter.get("href").strip(),
-                        "title": self.cleaner.clean_text(
-                            chapter.text.replace("\xa0", " ")
-                        ),
-                    }
-                )
-                chap_nmbr += 1
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "url": self.absolute_url(chapter.get("href")),
+                    "title": chapter.text.replace("\xa0", " "),
+                })
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        return self.cleaner.extract_contents(
-            soup.find(
-                "div", {"id": "content", "class": "font-color-black3 article-font"}
-            )
-        )
+        content = soup.find("div", {
+            "id": "content", 
+            "class": "font-color-black3 article-font",
+        })
+        return self.cleaner.extract_contents(content)
