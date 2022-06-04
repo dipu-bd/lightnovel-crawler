@@ -41,7 +41,7 @@ class Lnmtlfr(Crawler):
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("div", {"class": "post-title"}).find("h1").text
+        self.novel_title = soup.find("div", {"class": "post-title"}).find("h1").text.strip()
         self.novel_cover = self.absolute_url(
             soup.find("div", {"class": "summary_image"}).find("img").get("src")
         )
