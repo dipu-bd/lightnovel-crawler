@@ -1,7 +1,6 @@
 import logging
+
 from lncrawl.core.crawler import Crawler
-import requests
-from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 
@@ -28,87 +27,67 @@ class Lnmtlfr(Crawler):
                 .find("div", {"class": "summary-content"})
                 .find_all("a")
             )
+            
+            author_names = ", ".join([a.text for a in authors])
 
-            result.append(
-                {
-                    "title": self.cleaner.clean_text(title.text),
-                    "url": title.get("href"),
-                    "info": f"Author{'s' if len(authors)>1 else ''} : "
-                    + self.cleaner.clean_text(", ".join([a.text for a in authors])),
-                }
-            )
+            result.append({
+                "title": title.text,
+                "url": title.get("href"),
+                "info": f"Author{'s' if len(authors) > 1 else ''}: {author_names}",
+            })
 
         return result
 
     def read_novel_info(self):
-
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = self.cleaner.clean_text(
-            soup.find("div", {"class": "post-title"}).find("h1").text
-        )
-        self.novel_cover = self.cleaner.clean_text(
+        self.novel_title = soup.find("div", {"class": "post-title"}).find("h1").text
+        self.novel_cover = self.absolute_url(
             soup.find("div", {"class": "summary_image"}).find("img").get("src")
         )
-        self.novel_author = self.cleaner.clean_text(
-            ", ".join(
-                [
-                    e.text.strip()
-                    for e in soup.find("div", {"class": "author-content"}).find_all("a")
-                ]
-            )
-        )
+        self.novel_author = ", ".join([
+            e.text.strip()
+            for e in soup.find("div", {"class": "author-content"}).find_all("a")
+        ])
 
         # Chapter are recuperated from a post request.
-        # I didn't know how to make a post request using get_soup() so I just used requests.
         id = soup.find("input", {"class": "rating-post-id"}).get("value")
 
         url = "https://lnmtlfr.com/wp-admin/admin-ajax.php"
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
         data = f"action=manga_get_chapters&manga={id}"
-        resp = requests.post(url, headers=headers, data=data)
-        soup = BeautifulSoup(resp.text, "html.parser")
+        resp = self.submit_form(url, data=data)
+        soup = self.make_soup(resp)
 
         list_vol = soup.find_all("ul", {"class": "sub-chap list-chap"})
-        list_vol.reverse()
-
-        chap_count = 1
-        self.chapters = []
-
         if list_vol:
             self.volumes = []
-            vol_count = 1
-            for vol in list_vol:
-
+            for vol in reversed(list_vol):
+                vol_id = len(self.volumes) + 1
+                self.volumes.append({"id": vol_id})
+                
                 list_chap = vol.find_all("li")
-                list_chap.reverse()
-                for chap in list_chap:
-                    self.chapters.append(
-                        {
-                            "id": chap_count,
-                            "volume": vol_count,
-                            "url": chap.find("a").get("href").strip(),
-                            "title": self.cleaner.clean_text(chap.find("a").text),
-                        }
-                    )
-                    chap_count += 1
-                self.volumes.append({"id": vol_count})
-                vol_count += 1
+                for chap in reversed(list_chap):
+                    chap_id = len(self.chapters) + 1
+                    self.chapters.append({
+                        "id": chap_id,
+                        "volume": vol_id,
+                        "title": chap.find("a").text,
+                        "url": self.absolute_url(chap.find("a").get("href")),
+                    })
+                
         else:
             self.volumes = [{"id": 1}]
             list_chap = soup.find_all("li")
-            list_chap.reverse()
-            for chap in list_chap:
-                self.chapters.append(
-                    {
-                        "id": chap_count,
-                        "volume": 1,
-                        "url": chap.find("a").get("href").strip(),
-                        "title": self.cleaner.clean_text(chap.find("a").text),
-                    }
-                )
-                chap_count += 1
+            for chap in reversed(list_chap):
+                chap_id = len(self.chapters) + 1
+                self.chapters.append({
+                    "id": chap_id,
+                    "volume": 1,
+                    "title": chap.find("a").text,
+                    "url": self.absolute_url(chap.find("a").get("href")),
+                })
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        return self.cleaner.extract_contents(soup.find("div", {"class": "text-left"}))
+        content = soup.find("div", {"class": "text-left"})
+        return self.cleaner.extract_contents(content)
