@@ -15,7 +15,7 @@ class Eight88NovelCrawler(Crawler):
     machine_translation = False
 
     def initialize(self) -> None:
-        class Eight88NoovelTextCleaner(TextCleaner):
+        class Eight88NovelTextCleaner(TextCleaner):
             """A copy of TextCleaner that keep double <br> tags"""
 
             def clean_contents(self, div):
@@ -48,7 +48,7 @@ class Eight88NovelCrawler(Crawler):
 
             # end def
 
-        self.cleaner = Eight88NoovelTextCleaner()
+        self.cleaner = Eight88NovelTextCleaner()
 
     def search_novel(self, query):
         query = query.replace(" ", "+")
