@@ -350,7 +350,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 206 sources and 235 crawlers.
+We are supporting 208 sources and 238 crawlers.
 
 ### `ar` Arabic
 
@@ -1221,6 +1221,29 @@ We are supporting 206 sources and 235 crawlers.
 </table>
 
 
+### `fr` French
+
+<table>
+<tbody>
+<tr><th></th>
+<th>Source URL</th>
+<th>Version</th>
+<th>Contributors</th>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://chireads.com/" target="_blank">https://chireads.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/fr/chireads.py" title="04 June 2022 06:09:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://lnmtlfr.com/" target="_blank">https://lnmtlfr.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/fr/lnmtlfr.py" title="04 June 2022 06:09:06 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
+</tbody>
+</table>
+
+
 ### `id` Indonesian
 
 <table>
@@ -1536,6 +1559,9 @@ We are supporting 206 sources and 235 crawlers.
 </tr>
 <tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
 <td>Domain expired</td>
+</tr>
+<tr><td><a href="https://888novel.com/" target="_blank">https://888novel.com/</a></td>
+<td>Gets IP banned for using crawler</td>
 </tr>
 <tr><td><a href="https://9kqw.com/" target="_blank">https://9kqw.com/</a></td>
 <td>This domain has expired</td>
