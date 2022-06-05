@@ -3,6 +3,8 @@ import json
 import logging
 import re
 
+from bs4 import Comment
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -86,10 +88,15 @@ class WuxiaComCrawler(Crawler):
 
         chapter = response.single['item']['content']
         
-        
         soup = self.make_soup('<main>' + chapter + '</main>')
         body = soup.find('main')
-        self.cleaner.clean_contents(body)
+        for tag in body.find_all(True):
+            if isinstance(tag, Comment):
+                tag.extract()   # Remove comments
+            elif hasattr(tag, 'attrs') and 'style' in tag.attrs:
+                tag.attrs.pop('style')
+            # end if
+        # end for
         chapter = str(body)
 
         if 'translatorThoughts' in response.single['item']:

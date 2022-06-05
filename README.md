@@ -350,7 +350,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 206 sources and 235 crawlers.
+We are supporting 208 sources and 238 crawlers.
 
 ### `ar` Arabic
 
@@ -1116,8 +1116,8 @@ We are supporting 206 sources and 235 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.oppatranslations.com/" target="_blank">https://www.oppatranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/o/oppatrans.py" title="22 March 2022 02:50:32 PM">63</a></td>
-<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/o/oppatranslations.py" title="22 March 2022 02:50:32 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/amritoo"><img src="https://avatars.githubusercontent.com/u/45586379?v=4&s=24" alt="amritoo" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.ornovel.com/" target="_blank">https://www.ornovel.com/</a></td>
@@ -1181,7 +1181,7 @@ We are supporting 206 sources and 235 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.wuxiaworld.com/" target="_blank">https://www.wuxiaworld.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiacom.py" title="04 June 2022 05:36:58 PM">69</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/w/wuxiacom.py" title="05 June 2022 08:10:32 PM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
@@ -1216,6 +1216,29 @@ We are supporting 206 sources and 235 crawlers.
 <td><a href="https://domentranslations.wordpress.com/" target="_blank">https://domentranslations.wordpress.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/es/domentranslations.py" title="22 March 2022 02:50:32 PM">69</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
+</tr>
+</tbody>
+</table>
+
+
+### `fr` French
+
+<table>
+<tbody>
+<tr><th></th>
+<th>Source URL</th>
+<th>Version</th>
+<th>Contributors</th>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://chireads.com/" target="_blank">https://chireads.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/fr/chireads.py" title="04 June 2022 06:09:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://lnmtlfr.com/" target="_blank">https://lnmtlfr.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/fr/lnmtlfr.py" title="04 June 2022 06:09:06 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 </tbody>
 </table>
@@ -1536,6 +1559,9 @@ We are supporting 206 sources and 235 crawlers.
 </tr>
 <tr><td><a href="https://4scanlation.com/" target="_blank">https://4scanlation.com/</a></td>
 <td>Domain expired</td>
+</tr>
+<tr><td><a href="https://888novel.com/" target="_blank">https://888novel.com/</a></td>
+<td>Gets IP banned for using crawler</td>
 </tr>
 <tr><td><a href="https://9kqw.com/" target="_blank">https://9kqw.com/</a></td>
 <td>This domain has expired</td>
