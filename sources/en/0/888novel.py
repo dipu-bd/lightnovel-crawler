@@ -14,42 +14,6 @@ class Eight88NovelCrawler(Crawler):
     has_manga = False
     machine_translation = False
 
-    def initialize(self) -> None:
-        class Eight88NovelTextCleaner(TextCleaner):
-            """A copy of TextCleaner that keep double <br> tags"""
-
-            def clean_contents(self, div):
-                if not isinstance(div, Tag):
-                    return div
-                # end if
-                if self.bad_css:
-                    for bad in div.select(",".join(self.bad_css)):
-                        bad.extract()
-                    # end if
-                # end if
-                for tag in div.find_all(True):
-                    if isinstance(tag, Comment):
-                        tag.extract()  # Remove comments
-
-                    # I want to keep double <br> tags
-                    # elif tag.name == 'br':
-                    #     next_tag = getattr(tag, 'next_sibling')
-                    #     if next_tag and getattr(next_tag, 'name') == 'br':
-                    #         tag.extract()
-                    #     # end if
-                    elif tag.name in self.bad_tags:
-                        tag.extract()  # Remove bad tags
-                    elif hasattr(tag, "attrs"):
-                        tag.attrs = {k: v for k, v in tag.attrs.items() if k == "src"}
-                    # end if
-                # end for
-                div.attrs = {}
-                return div
-
-            # end def
-
-        self.cleaner = Eight88NovelTextCleaner()
-
     def search_novel(self, query):
         query = query.replace(" ", "+")
         soup = self.get_soup(
@@ -66,7 +30,6 @@ class Eight88NovelCrawler(Crawler):
                     urls.append(a.get("href"))
 
         result = []
-
         for url in urls:
             # The first page is already loaded as soup
             if url != "First":
@@ -80,35 +43,34 @@ class Eight88NovelCrawler(Crawler):
                     e.text
                     for e in novel.find("span", {"itemprop": "name"}).find_all("a")
                 ]
-                result.append(
-                    {
-                        "title": self.cleaner.clean_text(a.get("title")),
-                        "url": a.get("href").strip(),
-                        "info": self.cleaner.clean_text(
-                            f"Author{'s' if len(author)>1 else ''} : {', '.join(author)}"
-                        ),
-                    }
-                )
+                result.append({
+                    "title": a.get("title"),
+                    "url": a.get("href").strip(),
+                    "info": self.cleaner.clean_text(
+                        f"Author{'s' if len(author)>1 else ''} : {', '.join(author)}"
+                    ),
+                })
         return result
 
     def read_novel_info(self):
-
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = self.cleaner.clean_text(
-            soup.find("h1", {"class": "crop-text-1"}).text
-        )
-
-        rows = soup.find("table").find_all("tr")
-        self.novel_author = self.cleaner.clean_text(
-            ", ".join(
-                [e.text for e in rows[(1 if len(rows) == 3 else 0)].find_all("a")]
-            )
-        )
-
-        self.novel_cover = self.cleaner.clean_text(
-            soup.find("div", {"class": "book3d"}).find("img").get("data-src")
-        )
+        self.novel_title = soup.find("h1", {"class": "crop-text-1"}).text.strip()
+        
+        try:
+            rows = soup.find("table").find_all("tr")
+            self.novel_author = ", ".join([
+                e.text.strip()
+                for e in rows[(1 if len(rows) == 3 else 0)].find_all("a")
+            ])
+        except:
+            pass
+        
+        try:
+            self.novel_cover = self.absolute_url(
+                soup.find("div", {"class": "book3d"}).find("img").get("data-src"))
+        except:
+            pass
 
         self.volumes = [{"id": 1}]
         self.chapters = []
@@ -144,7 +106,6 @@ class Eight88NovelCrawler(Crawler):
                 chapter_count += 1
 
     def download_chapter_body(self, chapter):
-
-        return self.cleaner.clean_contents(
-            self.get_soup(chapter["url"]).find("div", {"class": "reading"})
-        )
+        soup = self.get_soup(chapter["url"])
+        content = soup.find("div", {"class": "reading"})
+        return self.cleaner.extract_contents(content)
