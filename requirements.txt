@@ -26,7 +26,7 @@ base58~=2.1.1
 # dev requirements
 wheel
 pyinstaller
-setuptools<=60.0.0
+setuptools<63.0.0
 pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5
