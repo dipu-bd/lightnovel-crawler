@@ -87,17 +87,6 @@ class WuxiaComCrawler(Crawler):
         assert response.single
 
         chapter = response.single['item']['content']
-        
-        soup = self.make_soup('<main>' + chapter + '</main>')
-        body = soup.find('main')
-        for tag in body.find_all(True):
-            if isinstance(tag, Comment):
-                tag.extract()   # Remove comments
-            elif hasattr(tag, 'attrs') and 'style' in tag.attrs:
-                tag.attrs.pop('style')
-            # end if
-        # end for
-        chapter = str(body)
 
         if 'translatorThoughts' in response.single['item']:
             chapter += '<hr/>'
@@ -105,6 +94,7 @@ class WuxiaComCrawler(Crawler):
             chapter += response.single['item']['translatorThoughts']
             chapter += "</blockquote>"
 
+        chapter = re.sub(r'(background-)?color: [^\\";]+', '', chapter)
         return chapter
     # end def
 # end class
