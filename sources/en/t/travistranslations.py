@@ -54,15 +54,8 @@ class TravisTranslations(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-
-        para = []
-        for span in soup.select('p > span[style="font-weight: 400;"]'):
-            text = span.text.strip()
-            if text:
-                para.append(f'<p>{text}</p>')
-            # end if
-        # end for
-
-        return '\n'.join(para)
+        # ! NOTE: Images use loading="lazy" which means they can't be scraped without selenium
+        contents = soup.select_one('div.reader-content')
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class
