@@ -53,10 +53,10 @@ class Novel:
 def get_novel_info(novel_folder: Path):
 
     novel = Novel()
-    novel.title = novel_folder.name
     novel.path = novel_folder.absolute()
-    novel.slug = quote_plus(novel.title)
+    novel.slug = quote_plus(novel_folder.name)
 
+    novel.title = None
     novel.cover = None
     novel.author = None
     novel.chapter_count = None
@@ -84,9 +84,14 @@ def get_novel_info(novel_folder: Path):
 
         if not novel.volumes:
             novel.volumes = len(meta["volumes"])
+        
+        if not novel.title:
+            novel.title = meta["title"]
 
         novel.sources.append(source_folder.name)
 
+    if not novel.title:
+        novel.title = novel_folder.name
     novel.source_count = len(novel.sources)
     return novel
 
@@ -94,15 +99,14 @@ def get_novel_info(novel_folder: Path):
 @lru_cache
 def get_novel_info_source(source_folder: Path):
     novel = Novel()
-    novel.title = source_folder.parent.name
     novel.path = source_folder.parent.absolute()
-    novel.slug = quote_plus(novel.title)
+    novel.slug = quote_plus(source_folder.parent.name)
     novel.source_slug = quote_plus(source_folder.name)
     novel.sources = [e.name for e in source_folder.parent.iterdir()]
     novel.source_count = len(novel.sources)
 
     novel.cover = (
-        f"{novel.title}/{source_folder.name}/cover.jpg"
+        f"{source_folder.parent.name}/{source_folder.name}/cover.jpg"
         if (source_folder / "cover.jpg").exists()
         else None
     )
@@ -127,6 +131,11 @@ def get_novel_info_source(source_folder: Path):
             and "title" in meta["chapters"][0]
             else None
         )
+        novel.title = meta["title"] if "title" in meta else None
+    
+    if not novel.title:
+        novel.title = source_folder.parent.name
+
 
     return novel
 
