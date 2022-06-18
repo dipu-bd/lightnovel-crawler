@@ -9,8 +9,6 @@ from math import ceil
 @app.route("/lncrawl/")
 @app.route("/lncrawl/page-<int:page>")
 def menu(page=None):
-    print(lib.all_downloaded_novels)
-    print("OK")
 
     last_page = ceil(len(lib.all_downloaded_novels) / 50)
     start = ((page if page else 1) - 1) * 50
@@ -48,7 +46,6 @@ def chapterlist(novel_and_source_path, page=None):
 
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/gotochap", methods=["POST"])
 def gotochap(novel_and_source_path):
-    print(request.form)
     return redirect(
         f"/lncrawl/novel/{novel_and_source_path}/chapter-{request.form.get('chapno')}"
     )
