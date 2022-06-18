@@ -3,6 +3,8 @@ import json
 import logging
 import re
 
+from bs4 import Comment
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -16,11 +18,14 @@ class WuxiaComCrawler(Crawler):
     def initialize(self):
         self.home_url = 'https://www.wuxiaworld.com'
         self.grpc = RpcSession.from_descriptor(WUXIWORLD_PROTO)
+        self.cleaner.bad_css.clear()
+        self.cleaner.bad_tags.add('hr')
         self.bearer_token = None
     # end def
 
     def login(self, email: str, password: str) -> None:
         self.bearer_token = email + ' ' + password
+    # end def
 
     def read_novel_info(self):
         slug = re.findall(r'/novel/([^/]+)', self.novel_url)[0]
@@ -81,20 +86,15 @@ class WuxiaComCrawler(Crawler):
         response.raise_for_status()
         assert response.single
 
-        soup = self.make_soup(response.single['item']['content'])
-        chapter = self.cleaner.extract_contents(soup.select_one('body'))
-        
+        chapter = response.single['item']['content']
+
         if 'translatorThoughts' in response.single['item']:
             chapter += '<hr/>'
             chapter += "<blockquote><b>Translator's Thoughts</b>"
             chapter += response.single['item']['translatorThoughts']
             chapter += "</blockquote>"
-        
-        # soup = self.make_soup('<main>' + chapter + '</main>')
-        # body = soup.find('main')
-        # self.clean_contents(body)
-        # chapter = str(body)
 
+        chapter = re.sub(r'(background-)?color: [^\\";]+', '', chapter)
         return chapter
     # end def
 # end class

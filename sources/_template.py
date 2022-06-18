@@ -68,14 +68,14 @@ class MyCrawlerName(Crawler):
         #       Check the base lncrawl.core.crawler.Crawler class for useful methods.
         #
         #       `self.novel_title`: a string [required]
-        #       `self.novel_autor`: a comma separated string. [optional]
+        #       `self.novel_author`: a comma separated string. [optional]
         #       `self.novel_cover`: the cover image url [optional]
         #       `self.chapters`: A list of chapters. Each chapter should contain these keys:
         #          `id`     : the chapter number [required]
         #          `volume` : the volume number [required]
         #          `url`    : the link to download the chapter [required]
         #          `title`  : the title name [optional]
-        #       `self.volumes`: Unique list of volumes used inside the chatpers.
+        #       `self.volumes`: Unique list of volumes used inside the chapters.
         #          `id`     : the index of the volume [required]
         #          `title`  : the volume title [optional]
         #
