@@ -115,8 +115,11 @@
                         <div class="source-select">
 
                             <select class="sel" onchange="location = this.value">
+                                <option value="../{{ current_source }}">{{ current_source }}</option>
                                 {% for source in novel.sources %}
-                                <option value="./{{ source }}">{{ source }}</option>
+                                {% if source != current_source %}
+                                <option value="../{{ source }}">{{ source }}</option>
+                                {% endif %}
                                 {% endfor %}
                             </select>
 

@@ -55,8 +55,12 @@ def gotochap(novel_and_source_path):
 def novel_info(novel_and_source_path):
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
     novel = lib.get_novel_info_source(novel_and_source_path)
+    current_source = novel_and_source_path.name
     return render_template(
-        "reader/novel_info.html", novel=novel, len_sources=len(novel.sources)
+        "reader/novel_info.html",
+        novel=novel,
+        len_sources=len(novel.sources),
+        current_source=current_source,
     )
 
 
