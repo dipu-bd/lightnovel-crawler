@@ -3,7 +3,6 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from lncrawl.core.app import App
 from lncrawl.core.crawler import Crawler
-import pathlib
 import logging
 from urllib.parse import urlparse
 from slugify import slugify
@@ -91,8 +90,6 @@ class JobHandler:
         try:
             self.set_last_action("Preparing crawler")
             self.app.prepare_search()
-            # TODO : remove that
-            self.app.crawler_links = self.app.crawler_links[:5]
         except Exception as e:
             return self.crash(f"Fail to init crawler : {e}")
 
