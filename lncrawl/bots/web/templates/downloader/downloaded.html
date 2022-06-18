@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+</head>
+
+<body>
+    <div class="container">
+        <p>{{ "success" if job.success else "Failed" }}</p>
+        {{ f"<p> Error at {job.end_date} : {job.message} </p>" if job.success == False else "" }}}}
+    </div>
+</body>
+
+</html>

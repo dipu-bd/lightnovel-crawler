@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple">
+
+<head>
+    <title>Explore The Recently Added Light Novels</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+        href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+        href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+        href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/pagedlist.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/browsepg.min.css') }}">
+</head>
+
+<body class="fade-out">
+    <header class="main-header skiptranslate">
+        <div class="wrapper">
+            <div class="nav-logo">
+                <a href="/lncrawl" title="Read Most Popular Light Novels Online for Fre">
+                    <img src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="Light Novel" />
+                </a>
+            </div>
+            <div class="navigation-bar">
+                <nav>
+                    <span class="lnw-slog">Your fictional stories hub.</span>
+                    <ul class="navbar-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" title="Search Light Novels" href="/lncrawl/search"><i
+                                    class="icon-search"></i> Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Explore the Most Popular Light Novels" href="/genre/all/new"><i
+                                    class="icon-th-large"></i> Browse</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Development Announcements" href="/notices"><i
+                                    class="icon-megaphone"></i> DEV</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nightmode_switch" data-tool="night" title="Dark Mode" data-night="0"
+                                data-content="Dark Theme">
+                                <i class="icon-moon"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="nav-back">
+                <i class="icon-left-open"></i>
+            </div>
+            <button id="mobile-menu-btn">
+                <div id="burger-btn"></div>
+            </button>
+        </div>
+    </header>
+    <div class="sidebar-wrapper"></div>
+    <main role="main">
+        <article id="explore" class="container">
+            <header id="Result">
+                <h1>Browse Light Novels</h1>
+                <p class="description"> Discover the best and most popular light novels. </p>
+                <nav class="paging">
+                    <div class="pagination-container">
+                        <ul class="pagination">
+
+                            {% if not page %}
+                            <li class="active"><span>1</span></li>
+                            {{ (("<li><a href='page-2'>2</a></li>") if last_page >= 2 else "") |safe }}
+                            {{ (("<li><a href='page-3'>3</a></li>") if last_page >= 3 else "") |safe }}
+                            {{ (("<li><a href='page-4'>4</a></li>") if last_page >= 4 else "") |safe }}
+
+                            {{
+                            (("<li class='PagedList-skipToNext'><a href='page-2' rel='next'>&gt;</a></li>")
+                            if last_page >= 2 else "")
+                            |safe }}
+
+                            {{
+                            (("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a>
+                            </li>")
+                            if last_page >= 3 else "")
+                            |safe }}
+
+
+                            {% else %}
+
+                            {{
+                            (("<li class='PagedList-skipToFirst'><a href='page-1'>&lt;&lt;</a></li>")
+                            if page > 2 else "")
+                            |safe }}
+
+                            {{
+                            (("<li class='PagedList-skipToPrevious'><a href='page-" ~ (page-1) ~ "' rel='prev'>&lt;</a>
+                            </li>") if page > 1 else "")
+                            |safe }}
+
+                            {{
+                            (("<li><a href='page-" ~ (page-1) ~ "'>" ~ (page-1) ~ "</a></li>")
+                            if page-1 > 0 else "")
+                            |safe }}
+
+                            <li class="active"><span>{{ page }}</span></li>
+
+                            {{
+                            (("<li><a href='page-" ~ (page+1) ~ "'>" ~ (page+1) ~ "</a></li>")
+                            if (last_page > page) else "")
+                            |safe }}
+
+                            {{
+                            (("<li><a href='page-" ~ (page+2) ~ "'>" ~ (page+2) ~ "</a></li>")
+                            if (last_page > page+1) else "")
+                            |safe }}
+
+                            {{
+                            (("<li class='PagedList-skipToNext'><a href='page-" ~ (page+1) ~ "' rel='next'>&gt;</a>
+                            </li>
+                            ")
+                            if (last_page >= page+1) else "")
+                            |safe }}
+
+                            {{
+                            (("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a></li>")
+                            if (last_page >= page+2) else "")
+                            |safe }}
+
+
+                            {% endif %}
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+            <ul class="novel-list horizontal col2"> {% for novel in novels %} <li class="novel-item">
+                    <div class="cover-wrap">
+                        <a title="{{ novel.title }}" href="/lncrawl/novel/{{ novel.slug }}/{{ novel.source_slug }}">
+                            <figure class="novel-cover">
+                                <img class="lazyload" src="/image/{{ novel.cover }}" alt="{{ novel.title }}" />
+                            </figure>
+                        </a>
+                    </div>
+                    <div class="item-body">
+                        <h4 class="novel-title text1row">
+                            <a title="{{ novel.title }}" href="/lncrawl/novel/{{ novel.slug }}/novel.source_slug"> {{
+                                novel.title }} </a>
+                        </h4>
+                        <div class="novel-stats">
+                            <span><i class="icon-book-open"></i> {{ novel.chapter_count }} Chapters</span>
+                        </div>
+                        <div class="novel-stats">
+                            <span><i class="icon-crown"></i> {{ novel.author }}</span>
+                        </div>
+                        <div class="novel-stats">
+                            <span><i class="icon-pencil-2"></i> {{ novel.latest }}</span>
+                        </div>
+                        <div class="novel-stats">
+                            <spag><i class="icon-tags"></i> {{ novel.source_count }} Sources</span>
+                        </div>
+                    </div>
+                </li> {% endfor %} </ul>
+        </article>
+    </main>
+    <footer translate="no">
+        <div class="wrapper">
+            <div class="col logo">
+                <a href="/lncrawl" style="display:inline-block">
+                    <img class="footer-logo" src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="logo-footer">
+                </a>
+            </div>
+            <nav class="col links">
+                <ul>
+                    <li>
+                        <a href="/">Terms of Service</a>
+                    </li>
+                    <li>
+                        <a href="/">DMCA Notices</a>
+                    </li>
+                    <li>
+                        <a href="/">Contact Us</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+    <script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+</body>
+
+</html>

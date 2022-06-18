@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Choose Range</title>
+</head>
+
+<body>
+    <h1>Choose Range</h1>
+    <form action="/lncrawl/addnovel/choose_range/form/" method="post">
+        <label for="start">Start:</label>
+        <input type="number" name="start" id="start" value=1>
+        <label for="end">End:</label>
+        <input type="number" name="end" id="end" value="{{ len_chapters }}">
+        <input type="text" class="form-control" id="redirect" name="redirect" style="display: none;" value="true">
+        <input type="number" class="form-control" id="job_id" name="job_id" style="display: none;" value="{{ job_id }}">
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+    <ul>
+        {% for chapter in chapters %}
+        <li>{{ chapter["id"] }}. {{ chapter["volume"] }} - {{ chapter["title"] if "title" in chapter else "" }}</li>
+        {% endfor %}
+    </ul>
+    <p>Show advanced settings : <button onclick="ToggleAdvanced()">o</button></p>
+</body>
+<script>
+    function ToggleAdvanced() {
+        var x = document.getElementById("job_id");
+        if (x.style.display === "none") {
+            x.style.display = "";
+        } else {
+            x.style.display = "none";
+        }
+    }
+</script>
+
+</html>

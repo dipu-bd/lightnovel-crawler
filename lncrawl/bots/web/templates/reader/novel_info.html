@@ -1,0 +1,199 @@
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple" lang="en">
+
+<head>
+    <title>Explore The Recently Added Light Novels</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+        href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+        href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+        href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/novel.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+        href="{{ url_for('static',filename='styles/novel.768.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+        href="{{ url_for('static',filename='styles/novel.1024.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+        href="{{ url_for('static',filename='styles/novel.1270.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/custom.css') }}">
+    <!-- {{ url_for('static',filename='assets/logo.bmp') }} -->
+    </script>
+</head>
+
+<body class="fade-out vsc-initialized">
+    <header class="main-header skiptranslate">
+        <div class="wrapper">
+            <div class="nav-logo">
+                <a href="/lncrawl" title="Read Most Popular Light Novels Online for Fre">
+                    <img src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="Light Novel" />
+                </a>
+            </div>
+            <div class="navigation-bar">
+                <nav>
+                    <span class="lnw-slog">Your fictional stories hub.</span>
+                    <ul class="navbar-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" title="Search Light Novels" href="/lncrawl/search"><i
+                                    class="icon-search"></i>
+                                Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Explore the Most Popular Light Novels" href="/genre/all/new"><i
+                                    class="icon-th-large"></i> Browse</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Development Announcements" href="/notices"><i
+                                    class="icon-megaphone"></i> DEV</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nightmode_switch" data-tool="night" title="Dark Mode" data-night="0"
+                                data-content="Dark Theme">
+                                <i class="icon-moon"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="nav-back">
+                <i class="icon-left-open"></i>
+            </div>
+            <button id="mobile-menu-btn">
+                <div id="burger-btn"></div>
+            </button>
+        </div>
+    </header>
+    <div class="sidebar-wrapper"></div>
+    <main role="main">
+
+
+        <article id="novel" data-novelid="1370" data-volbased="False" itemprop="itemReviewed" itemscope=""
+            itemtype="http://schema.org/Book">
+
+
+
+
+            <header class="novel-header">
+                <div class="glass-background">
+                    <img src="/image/{{ novel.cover }}" alt="{{ novel.title }}" itemprop="image">
+                    <div class="glass-shade"></div>
+                </div>
+                <div class="header-body container">
+                    <div class="fixed-img">
+                        <figure class="cover">
+                            <img class=" ls-is-cached lazyloaded" src="/image/{{ novel.cover }}"
+                                alt="{{ novel.title }}">
+                        </figure>
+                    </div>
+                    <div class="novel-info">
+                        <div class="main-head">
+                            <h1 itemprop="name" class="novel-title text2row">
+                                {{ novel.title }}
+                            </h1>
+                            <div class="author">
+                                <span>Author:</span>
+                                <span itemprop="author">{{ novel.author }}</span>
+                            </div>
+
+                        </div>
+
+                        <div class="header-stats">
+                            <span>
+                                <strong><i class="icon-book-open"></i> {{ novel.chapter_count }}</strong>
+                                <small>Chapters</small>
+                            </span>
+                            <span>
+                                <strong><i class="icon-tags"></i>{{ len_sources }}</strong>
+                                <small>Sources</small>
+                            </span>
+
+
+                        </div>
+
+                        <div class="source-select">
+
+                            <select class="sel" onchange="location = this.value">
+                                {% for source in novel.sources %}
+                                <option value="./{{ source }}">{{ source }}</option>
+                                {% endfor %}
+                            </select>
+
+                        </div>
+
+                    </div>
+                </div>
+            </header>
+            <div class="novel-body container">
+                <nav class="content-nav">
+                    <a class="grdbtn reviews-latest-container" title="{{ novel.title }} First Chapter"
+                        href="../{{ novel.source_slug }}/chapter-1">
+                        <div class="body">
+                            <h4>FIRST CHAPTER</h4>
+                            <p class="latest text1row"> {{ novel.first }}</p>
+                        </div>
+                        <i class="icon-right-open"></i>
+                    </a>
+                    <a class="grdbtn chapter-latest-container" title="{{ novel.title }} Chapters"
+                        href="../{{ novel.source_slug }}/chapterlist">
+                        <div class="body">
+                            <h4>Novel Chapters</h4>
+                            <p class="latest text1row">
+                                latest : {{ novel.latest }}
+                            </p>
+
+                        </div>
+                        <i class="icon-right-open"></i>
+                    </a>
+
+                </nav>
+                <section id="info">
+                    <div class="summary">
+                        <h4 class="lined">Summary</h4>
+                        <div class="content expand-wrapper show">
+                            <p>{{ novel.summary }}
+                            </p>
+                            <div class="expand">
+                                <a class="expand-btn"><i class="icon-right-open"></i> <span>Show More</span></a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </section>
+            </div>
+
+        </article>
+    </main>
+    <footer translate="no">
+        <div class="wrapper">
+            <div class="col logo">
+                <a href="/lncrawl" style="display:inline-block">
+                    <img class="footer-logo" src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="logo-footer">
+                </a>
+            </div>
+            <nav class="col links">
+                <ul>
+                    <li>
+                        <a href="/">Terms of Service</a>
+                    </li>
+                    <li>
+                        <a href="/">DMCA Notices</a>
+                    </li>
+                    <li>
+                        <a href="/">Contact
+                            Us</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+</body>
+
+</html>

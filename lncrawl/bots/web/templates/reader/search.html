@@ -1,0 +1,157 @@
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple"
+    class=" wnsmtd idc0_340" lang="en">
+
+<head>
+
+    <title>Search for Light Novels</title>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+        href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+        href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+        href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/searchpg.min.css') }}">
+
+
+</head>
+
+<body class="fade-out vsc-initialized">
+    <header class="main-header skiptranslate">
+        <div class="wrapper">
+            <div class="nav-logo">
+                <a href="/lncrawl" title="Read Most Popular Light Novels Online for Fre">
+                    <img src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="Light Novel" />
+                </a>
+            </div>
+            <div class="navigation-bar">
+                <nav>
+                    <span class="lnw-slog">Your fictional stories hub.</span>
+                    <ul class="navbar-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" title="Search Light Novels" href="/lncrawl/search"><i
+                                    class="icon-search"></i>
+                                Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Explore the Most Popular Light Novels" href="/genre/all/new"><i
+                                    class="icon-th-large"></i> Browse</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Development Announcements" href="/notices"><i
+                                    class="icon-megaphone"></i> DEV</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nightmode_switch" data-tool="night" title="Dark Mode" data-night="0"
+                                data-content="Dark Theme">
+                                <i class="icon-moon"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="nav-back">
+                <i class="icon-left-open"></i>
+            </div>
+            <button id="mobile-menu-btn">
+                <div id="burger-btn"></div>
+            </button>
+        </div>
+    </header>
+    <main role="main">
+        <article class="container" id="search-section">
+            <div class="search-container">
+                <form method="post" id="novelSearchForm" action="/lncrawl/lnsearchlive">
+                    <div class="form-group single">
+                        <label class="search_label" for="search"><svg width="16" height="16" viewBox="0 0 16 16"
+                                class="styles_icon__3eEqS dib vam pa_auto _no_color">
+                                <path
+                                    d="M7.153 12.307A5.153 5.153 0 107.153 2a5.153 5.153 0 000 10.307zm5.716-.852l2.838 2.838a1 1 0 01-1.414 1.414l-2.838-2.838a7.153 7.153 0 111.414-1.414z"
+                                    fill="#C0C2CC" fill-rule="nonzero"></path>
+                            </svg></label>
+                        <input id="inputContent" name="inputContent" type="search" class="form-control"
+                            placeholder="Search Light Novel By Title" aria-label="Novel Search"
+                            aria-describedby="basic-addon1" data-com.bitwarden.browser.user-edited="yes">
+                    </div>
+                </form>
+                <section id="novelListBase">
+                </section>
+
+            </div>
+        </article>
+    </main>
+    <footer translate="no">
+        <div class="wrapper">
+            <div class="col logo">
+                <a href="/lncrawl" style="display:inline-block">
+                    <img class="footer-logo" src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="logo-footer">
+                </a>
+            </div>
+            <nav class="col links">
+                <ul>
+                    <li>
+                        <a href="/">Terms of Service</a>
+                    </li>
+                    <li>
+                        <a href="/">DMCA Notices</a>
+                    </li>
+                    <li>
+                        <a href="/">Contact
+                            Us</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+
+
+    <script defer="">
+        var typingTimer;
+        var doneTypingInterval = 1000;
+        var $input = $('#inputContent');
+        var $loadindicator = $("<div class='loading-dual-ring'></div>");
+
+        $input.on('keyup', function (e) {
+            clearTimeout(typingTimer);
+            if ((e.keyCode || e.which) != 13) {
+                typingTimer = setTimeout(searchInput, doneTypingInterval);
+            }
+        });
+
+        $input.on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
+        $("#novelSearchForm").submit(function (e) {
+            e.preventDefault();
+            clearTimeout(typingTimer);
+            searchInput();
+        });
+
+        function searchInput() {
+            var value = $input.val();
+            if (value.length < 3)
+                return null;
+
+            $("#novelListBase").html($loadindicator);
+
+            $.post('/lncrawl/lnsearchlive', { inputContent: value }, function (res) {
+                if (res.success) {
+                    $("#novelListBase").html(res.resultview);
+                }
+            });
+        }
+    </script>
+
+
+</body>
+
+</html>
