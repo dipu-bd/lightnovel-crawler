@@ -10,6 +10,7 @@ from ... import constants
 class FinishedJob:
     is_finished = True
     is_busy = False
+    last_action = "Finished"
 
     def __init__(self, success, message, end_date):
         print(f"FinishedJob: {success}, {message}, {end_date}")

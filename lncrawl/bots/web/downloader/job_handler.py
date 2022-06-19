@@ -34,17 +34,23 @@ class JobHandler:
         return reason
 
     def destroy(self):
-        # self.send_sync('Closing current session')
+        print("DESTROYING")
         self.executor.submit(self.destroy_sync)
 
     def destroy_sync(self):
+        print("DESTROYING SYNC")
         try:
+            print("REPLACEING APP")
+            print(lib.jobs[self.job_id])
             lib.jobs[self.job_id] = lib.FinishedJob(
                 (not self.crashed), self.last_action, self.last_activity
             )
+            print(lib.jobs[self.job_id])
+
             self.app.destroy()
             self.executor.shutdown(wait=False)
         except Exception as e:
+            print(f"Error while destroying: {e}")
             logger.exception(f"While destroying JobHandler : {e}")
         finally:
             logger.info("Session destroyed: %s", self.job_id)
@@ -194,7 +200,6 @@ class JobHandler:
         try:
             assert isinstance(self.app.crawler, Crawler)
             self.app.start_download()
-
             self.set_last_action("Compressing")
             self.app.compress_books()
             self.set_last_action("Finished downloading, destroying session")
@@ -204,12 +209,16 @@ class JobHandler:
 
         novel_info = lib.get_novel_info(lib.LIGHTNOVEL_FOLDER / self.app.good_file_name)
         is_in_all_novels = False
-        for downloaded in lib.all_downloaded_novels():
-            if novel_info["title"] == downloaded["title"]:
+
+        for downloaded in lib.all_downloaded_novels:
+            if novel_info.title == downloaded.title:
                 is_in_all_novels = True
                 break
+
         if not is_in_all_novels:
             lib.all_downloaded_novels.append(novel_info)
 
+
         self.is_busy = False
+        print("DESTROYING SESSION")
         self.destroy()

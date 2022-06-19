@@ -5,6 +5,9 @@ from .job_handler import JobHandler
 
 # ----------------------------------------------- Search Novel ----------------------------------------------- #
 
+@app.route("/lncrawl/addnovel")
+def addnovel():
+    return render_template("reader/addnovel.html")
 
 @app.route("/lncrawl/addnovel/search/")
 @app.route("/lncrawl/addnovel/search/<string:job_id>/")
@@ -132,37 +135,6 @@ def source_selected(novel_id, job_id=None):
     return redirect(f"/lncrawl/addnovel/download/{job_id}")
 
 
-# ----------------------------------------------- Download ----------------------------------------------- #
-
-# INFO :  As this process is meant to be used by a web server, and downloaded novels can be accessed by everyone,
-# it is not necessary ask the user for a range of chapters to download, downloading everything is better.
-# I kept it commented here to show how to do it in a future api.
-
-# @app.route("/lncrawl/addnovel/choose_range/form/", methods=["POST"])
-# def range_select_page_form():
-#     job_id = (
-#         request.form["job_id"]
-#         if "job_id" in request.form
-#         else str(hash(request.remote_addr))
-#     )
-
-#     if not job_id in lib.jobs:
-#         return redirect("/lncrawl/addnovel/search")
-
-#     job = lib.jobs[job_id]
-
-#     if job.is_busy:
-#         return {"error": {"code": 503, "message": job.get_status()}}
-
-#     start = int(request.form["start"])
-#     end = int(request.form["end"])
-#     job.select_range(start, end)
-
-#     if "redirect" in request.form and request.form["redirect"] == "true":
-#         return redirect(f"/lncrawl/addnovel/downloaded/{job_id}")
-#     else:
-#         return 200
-
 
 @app.route("/lncrawl/addnovel/download/")
 @app.route("/lncrawl/addnovel/download/<string:job_id>")
@@ -174,6 +146,9 @@ def downloaded_page(job_id=None):
         return redirect("/lncrawl/addnovel/search")
 
     job = lib.jobs[job_id]
+    if job.is_finished:
+        return render_template("downloader/downloaded.html", job_id=job_id, job=job)
+
     if job.is_busy:
         return render_template(
             "downloader/queue.html",
@@ -182,13 +157,7 @@ def downloaded_page(job_id=None):
         )
 
     job.select_range()
-
     job.start_download()
-
-    if job.is_finished:
-
-        print("rendering downloaded page")
-        return render_template("downloader/download.html", job_id=job_id, job=job)
 
     return render_template(
         "downloader/queue.html",

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple">
+
+<head>
+    <title>Explore The Recently Added Light Novels</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+        href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+        href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+        href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+</head>
+
+<body class="fade-out">
+    <header class="main-header skiptranslate">
+        <div class="wrapper">
+            <div class="nav-logo">
+                <a href="/lncrawl" title="Read Most Popular Light Novels Online for Fre">
+                    <img src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="Light Novel" />
+                </a>
+            </div>
+            <div class="navigation-bar">
+                <nav>
+                    <span class="lnw-slog">Your fictional stories hub.</span>
+                    <ul class="navbar-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" title="Search Light Novels" href="/lncrawl/search"><i
+                                    class="icon-search"></i> Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Explore the Most Popular Light Novels" href="/genre/all/new"><i
+                                    class="icon-th-large"></i> Browse</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" title="Development Announcements" href="/notices"><i
+                                    class="icon-megaphone"></i> DEV</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nightmode_switch" data-tool="night" title="Dark Mode" data-night="0"
+                                data-content="Dark Theme">
+                                <i class="icon-moon"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="nav-back">
+                <i class="icon-left-open"></i>
+            </div>
+            <button id="mobile-menu-btn">
+                <div id="burger-btn"></div>
+            </button>
+        </div>
+    </header>
+    <div class="sidebar-wrapper"></div>
+    <main role="main">
+        <article id="addnovel" class="container">
+            <iframe src="/lncrawl/addnovel/search" title="addnovel" scrolling="no"
+                onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+50+"px";}(this));'
+                style="height:200px;width:100%;border:none;overflow:hidden;"></iframe>
+        </article>
+    </main>
+    <footer translate="no">
+        <div class="wrapper">
+            <div class="col logo">
+                <a href="/lncrawl" style="display:inline-block">
+                    <img class="footer-logo" src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="logo-footer">
+                </a>
+            </div>
+            <nav class="col links">
+                <ul>
+                    <li>
+                        <a href="/">Terms of Service</a>
+                    </li>
+                    <li>
+                        <a href="/">DMCA Notices</a>
+                    </li>
+                    <li>
+                        <a href="/">Contact Us</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </footer>
+    <script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+</body>
+
+</html>
