@@ -34,18 +34,13 @@ class JobHandler:
         return reason
 
     def destroy(self):
-        print("DESTROYING")
         self.executor.submit(self.destroy_sync)
 
     def destroy_sync(self):
-        print("DESTROYING SYNC")
         try:
-            print("REPLACEING APP")
-            print(lib.jobs[self.job_id])
             lib.jobs[self.job_id] = lib.FinishedJob(
                 (not self.crashed), self.last_action, self.last_activity
             )
-            print(lib.jobs[self.job_id])
 
             self.app.destroy()
             self.executor.shutdown(wait=False)
@@ -87,7 +82,6 @@ class JobHandler:
         self.executor.submit(self._get_list_of_novel, query)
 
     def _get_list_of_novel(self, query):
-        print(f"Getting list of novels for {query}")
         if len(query) < 4:
             self.is_busy = False
             return
@@ -123,11 +117,9 @@ class JobHandler:
     # -----------------------------------------------------------------------------
 
     def select_novel(self, novel_id):
-        print(f"Novel selected: {novel_id}")
         self.selected_novel = self.app.search_results[novel_id]
 
     def get_list_of_sources(self):
-        print(f"Getting list of sources for {self.selected_novel['title']}")
         self.set_last_action("Source selection")
         novel_list = self.selected_novel["novels"]
 
@@ -145,7 +137,6 @@ class JobHandler:
         }
 
     def select_source(self, source_id):
-        print(f"Source selected: {source_id}")
         self.is_busy = True
 
         self.set_last_action(f"Selected {self.selected_novel['novels'][source_id]}")
@@ -155,7 +146,6 @@ class JobHandler:
         self.executor.submit(self.download_novel_info)
 
     def download_novel_info(self):
-        print(f"Downloading info for {self.selected_novel['title']}")
         self.is_busy = True
         self.set_last_action("Getting novel information...")
 
@@ -164,14 +154,12 @@ class JobHandler:
         except Exception as ex:
             return self.crash(f"Failed to get novel info : {ex}")
 
-        print(f"Novel info downloaded: {self.selected_novel['title']}")
 
         source_name = slugify(urlparse(self.app.crawler.home_url).netloc)
         output_path = lib.LIGHTNOVEL_FOLDER / self.app.good_file_name / source_name
         self.app.output_path = str(output_path)
         if not output_path.exists():
             output_path.mkdir(parents=True)
-        print(f"Output path : {output_path}")
 
         self.is_busy = False
 
@@ -191,7 +179,6 @@ class JobHandler:
         self.executor.submit(self._start_download)
 
     def _start_download(self):
-        print(f"Starting download for {self.selected_novel['title']}")
         self.is_busy = True
         self.set_last_action("Downloading")
 
@@ -220,5 +207,4 @@ class JobHandler:
 
 
         self.is_busy = False
-        print("DESTROYING SESSION")
         self.destroy()

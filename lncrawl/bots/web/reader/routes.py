@@ -8,7 +8,6 @@ from math import ceil
 @app.route("/lncrawl/")
 @app.route("/lncrawl/page-<int:page>")
 def menu(page=None):
-    print("\n\n".join([str(e) for e in lib.all_downloaded_novels]))
     last_page = ceil(len(lib.all_downloaded_novels) / 50)
     start = ((page if page else 1) - 1) * 50
     stop = min((page if page else 1) * 50, len(lib.all_downloaded_novels))
