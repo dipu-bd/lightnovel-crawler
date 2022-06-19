@@ -8,6 +8,10 @@ from ... import constants
 
 
 class FinishedJob:
+    """
+    Represent a successfully downloaded novel, or a failed download.
+    Replace JobHandler in lib.jobs when JobHandler is destroyed
+    """
     is_finished = True
     is_busy = False
     last_action = "Finished"
@@ -36,6 +40,13 @@ LIGHTNOVEL_FOLDER = Path(constants.DEFAULT_OUTPUT_PATH)
 
 @dataclass(init=False)
 class Novel:
+    """
+    Holds information about a novel.
+
+    When source is not specified :
+        - source is random source that has sufficient metadata for the novel.
+        - every metadata are randomly selected from the sources.
+    """
     title: str
     path: Path
     cover: Path
@@ -49,9 +60,14 @@ class Novel:
     source_slug: Optional[str] = None
     first: Optional[str] = None
     summary: Optional[str] = None
+    search_words: Optional[List[str]] = None
 
 
 def get_novel_info(novel_folder: Path):
+    """
+    Collects information about a novel locally.
+    source isn't specified, so we need to find a source that has sufficient metadata for the novel.
+    """
 
     novel = Novel()
     novel.path = novel_folder.absolute()
@@ -94,11 +110,16 @@ def get_novel_info(novel_folder: Path):
     if not novel.title:
         novel.title = novel_folder.name
     novel.source_count = len(novel.sources)
+    novel.search_words = sanitize(novel.title).split(" ") + sanitize(novel.author).split(" ")
     return novel
 
 
 @lru_cache
 def get_novel_info_source(source_folder: Path):
+    """
+    Collects information about a novel for a source.
+    Source is specified, so we can just read the meta.json file...
+    """
     novel = Novel()
     novel.path = source_folder.parent.absolute()
     novel.slug = quote_plus(source_folder.parent.name)
@@ -137,9 +158,18 @@ def get_novel_info_source(source_folder: Path):
     if not novel.title:
         novel.title = source_folder.parent.name
 
-
+    novel.search_words = sanitize(novel.title).split(" ")
     return novel
 
+import unicodedata
+def sanitize(text:str):
+    """
+    Remove all special characters from a string, replace accentuated characters with their 
+    non-accentuated counterparts, and remove all non-alphanumeric characters.
+    """
+    text = text.replace("\n", " ").replace("\r", " ").replace("\t", " ").upper().strip()
+    text = unicodedata.normalize("NFKD", text)
+    return u"".join([c for c in text if not unicodedata.combining(c)])
 
 all_downloaded_novels: List[Novel] = []
 for novel_folder in LIGHTNOVEL_FOLDER.iterdir():

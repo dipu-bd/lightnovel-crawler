@@ -4,10 +4,17 @@ from .. import lib
 from urllib.parse import unquote_plus
 import json
 from math import ceil
+import difflib
 
 @app.route("/lncrawl/")
 @app.route("/lncrawl/page-<int:page>")
 def menu(page=None):
+    """
+    Main page of the web interface.
+    Displays all downloaded novels in a random order.
+
+    #TODO : order by the most clicked novels
+    """
     last_page = ceil(len(lib.all_downloaded_novels) / 50)
     start = ((page if page else 1) - 1) * 50
     stop = min((page if page else 1) * 50, len(lib.all_downloaded_novels))
@@ -23,6 +30,9 @@ def menu(page=None):
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/chapterlist/")
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/chapterlist/page-<int:page>")
 def chapterlist(novel_and_source_path, page=None):
+    """
+    Displays the list of chapters for the novel with selected source.
+    """
 
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
     novel = lib.get_novel_info_source(novel_and_source_path)
@@ -44,6 +54,12 @@ def chapterlist(novel_and_source_path, page=None):
 
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/gotochap", methods=["POST"])
 def gotochap(novel_and_source_path):
+    """
+    POST method to redirect to a chapter
+    Need form input "chapno"
+    
+    => Redirect to the chapter id in the form input "chapno"
+    """
     return redirect(
         f"/lncrawl/novel/{novel_and_source_path}/chapter-{request.form.get('chapno')}"
     )
@@ -51,6 +67,9 @@ def gotochap(novel_and_source_path):
 
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/")
 def novel_info(novel_and_source_path):
+    """
+    Show the info page for a novel.
+    """
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
     novel = lib.get_novel_info_source(novel_and_source_path)
     current_source = novel_and_source_path.name
@@ -64,6 +83,9 @@ def novel_info(novel_and_source_path):
 
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/chapter-<int:chapter_id>")
 def chapter(novel_and_source_path, chapter_id: int):
+    """
+    Display a chapter.
+    """
     chapter_folder = (
         lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path) / "json"
     )
@@ -89,6 +111,9 @@ def chapter(novel_and_source_path, chapter_id: int):
 
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/images/<string:image_name>/")
 def novel_image(novel_and_source_path, image_name:str):
+    """
+    Allow to load an image from the novel as linked in json content.
+    """
     file = f"{unquote_plus(novel_and_source_path)}/images/{image_name}"
     path = lib.LIGHTNOVEL_FOLDER / file
     if path.exists():
@@ -97,25 +122,29 @@ def novel_image(novel_and_source_path, image_name:str):
         print(path)
         print(path.name)
 
-from difflib import SequenceMatcher
-
 
 @app.route("/lncrawl/lnsearchlive", methods=["POST"])
 def lnsearchlive():
-    search_query = request.form.get("inputContent").replace("+", " ")
+    """
+    POST method for live search
+    Need form input "inputContent"
 
-    # [(Novel, similarity), ]
-    ratio = [
-        (novel, SequenceMatcher(None, search_query, novel.title).quick_ratio())
-        for novel in lib.all_downloaded_novels
-    ]
+    => return a list of max 20 best matches from downloaded novels
+    """
 
-    search_results = [
-        e[0]
-        for e in sorted(ratio, key=lambda x: x[1], reverse=True)[
-            : min(20, len(lib.all_downloaded_novels))
-        ]
-    ]
+    search_query = lib.sanitize(request.form.get("inputContent").replace("+", " ")).split(" ")
+    ratio = []
+    for downloaded in lib.all_downloaded_novels:
+        count = 0
+        for search_word in search_query:
+            count += len(difflib.get_close_matches(search_word, downloaded.search_words))
+        ratio.append((downloaded, count))
+
+    ratio.sort(key=lambda x: x[1], reverse=True)
+
+    number_of_results = min(20, len(lib.all_downloaded_novels))
+
+    search_results = [novel for novel, ratio in ratio[: number_of_results] if ratio != 0]
 
     return {
         "$id": "1",
@@ -128,4 +157,7 @@ def lnsearchlive():
 
 @app.route("/lncrawl/search")
 def search():
+    """
+    Return the search page.
+    """
     return render_template("reader/search.html")
