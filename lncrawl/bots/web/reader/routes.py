@@ -1,10 +1,9 @@
 from ..flaskapp import app
-from flask import redirect, render_template, request
+from flask import redirect, render_template, request, send_from_directory
 from .. import lib
 from urllib.parse import unquote_plus
 import json
 from math import ceil
-
 
 @app.route("/lncrawl/")
 @app.route("/lncrawl/page-<int:page>")
@@ -89,6 +88,15 @@ def chapter(novel_and_source_path, chapter_id: int):
         novel=novel,
     )
 
+@app.route("/lncrawl/novel/<path:novel_and_source_path>/images/<string:image_name>/")
+def novel_image(novel_and_source_path, image_name:str):
+    file = f"{unquote_plus(novel_and_source_path)}/images/{image_name}"
+    path = lib.LIGHTNOVEL_FOLDER / file
+    if path.exists():
+        return send_from_directory(lib.LIGHTNOVEL_FOLDER, file)
+    else:
+        print(path)
+        print(path.name)
 
 from difflib import SequenceMatcher
 
