@@ -298,3 +298,19 @@
 .icon-user-circle-o:before {
 	content: '\f2be'
 }
+
+.plus {
+	--b: 3px;
+	aspect-ratio: 1;
+	border: 2px solid #000;
+}
+
+.alt {
+	border-color: #fff;
+	background:
+		conic-gradient(from 90deg at var(--b) var(--b), #fff 90deg, #000 0) calc(100% + var(--b)/2) calc(100% + var(--b)/2)/ calc(50% + var(--b)) calc(50% + var(--b));
+}
+
+.radius {
+	border-radius: 50%;
+}
