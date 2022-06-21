@@ -2,7 +2,7 @@
 	{% for novel in novels %}
 	<li class="novel-item">
 		<a title="{{ novel.title }}"
-			href="lncrawl/novel/{{ novel.slug }}/{{ novel.source_slug if novel.source_slug else '' }}">
+			href="/lncrawl/novel/{{ novel.slug }}/{{ novel.source_slug if novel.source_slug else '' }}">
 			<div class="cover-wrap">
 				<figure class="novel-cover">
 					<img src='/image/{{ novel.cover }}' alt="{{ novel.title }}" />
