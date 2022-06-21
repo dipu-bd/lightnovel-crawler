@@ -36,6 +36,8 @@ jobs = {}
 
 
 LIGHTNOVEL_FOLDER = Path(constants.DEFAULT_OUTPUT_PATH)
+if not LIGHTNOVEL_FOLDER.exists():
+    LIGHTNOVEL_FOLDER.mkdir()
 
 
 @dataclass(init=False)
