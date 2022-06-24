@@ -74,5 +74,3 @@ class KiteNovel(Crawler):
 
 
 # end class
-
-# https://www.kitenovel.com/novel/Only-I-level-up
