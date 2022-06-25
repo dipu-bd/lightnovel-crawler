@@ -124,13 +124,14 @@ class AllNovelFullCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('div#chapter-content')
 
-        assert isinstance(content, Tag), 'No chapter content'
+        # NOTE: Commented out this code because it causing empty body on some chapters.
+        """ assert isinstance(content, Tag), 'No chapter content'
         for child in content.contents:
             child.extract()
             if isinstance(child, Tag) and child.name == 'h3':
                 break
             # end if
-        # end for
+        # end for """
 
         return self.cleaner.extract_contents(content)
     # end def
