@@ -84,8 +84,9 @@
 	font-family: Lora, serif, serif;
 }
 
+
 #chapter-article .chapter-content.font_dyslexic {
-	font-family: OpenDyslexic3, OpenDyslexic;
+	font-family: opendyslexic3;
 	text-rendering: optimizeLegibility;
 }
 
