@@ -1,9 +1,10 @@
 from flask import Flask, send_file, send_from_directory
 from .lib import LIGHTNOVEL_FOLDER
 import pathlib
+from flask_minify import Minify
 
 app = Flask(__name__)
-
+Minify(app=app, html=True, js=True, cssless=True)
 
 @app.route("/")
 def hello_world():
