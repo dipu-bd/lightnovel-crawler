@@ -63,6 +63,8 @@ class Crawler(ABC):
         # Must resolve these fields inside `read_novel_info`
         self.novel_title = ''
         self.novel_author = ''
+        self.summary = ''
+        self.language = 'en'
         self.novel_cover = None
         self.is_rtl = False
 

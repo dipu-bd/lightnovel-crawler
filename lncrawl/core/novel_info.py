@@ -76,6 +76,8 @@ def save_metadata(app, completed=False):
         'url': app.crawler.novel_url,
         'title': app.crawler.novel_title,
         'author': app.crawler.novel_author,
+        'summary': app.crawler.summary,
+        'language':app.crawler.language,
         'cover': app.crawler.novel_cover,
         'volumes': app.crawler.volumes,
         'chapters': [
