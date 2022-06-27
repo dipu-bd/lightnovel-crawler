@@ -35,7 +35,7 @@ def chapterlist(novel_and_source_path, page=None):
     """
 
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
-    novel = lib.get_novel_info_source(novel_and_source_path)
+    novel = lib.get_source_info(novel_and_source_path)
 
     with open(novel_and_source_path / "meta.json", "r", encoding="utf-8") as f:
         chapters = json.load(f)["chapters"]
@@ -71,13 +71,14 @@ def novel_info(novel_and_source_path):
     Show the info page for a novel.
     """
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
-    novel = lib.get_novel_info_source(novel_and_source_path)
-    current_source = novel_and_source_path.name
+
+    source = lib.findSourceWithPath(novel_and_source_path)
+
     return render_template(
         "reader/novel_info.html",
-        novel=novel,
-        len_sources=len(novel.sources),
-        current_source=current_source,
+        source=source,
+        len_sources=len(source.novel.sources)
+
     )
 
 
@@ -86,27 +87,24 @@ def chapter(novel_and_source_path, chapter_id: int):
     """
     Display a chapter.
     """
-    chapter_folder = (
-        lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path) / "json"
-    )
-    chapter_file = chapter_folder / f"{str(chapter_id).zfill(5)}.json"
+    novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
+    chapter_folder = novel_and_source_path / "json"
 
+    chapter_file = chapter_folder / f"{str(chapter_id).zfill(5)}.json"
     prev_chapter = chapter_folder / f"{str(chapter_id - 1).zfill(5)}.json"
     next_chapter = chapter_folder / f"{str(chapter_id + 1).zfill(5)}.json"
 
     with open(chapter_file, encoding="utf8") as f:
         chapter = json.load(f)
 
-    novel = lib.get_novel_info_source(
-        lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
-    )
+    source = lib.findSourceWithPath(novel_and_source_path)
 
     return render_template(
         "reader/chapter.html",
         chapter=chapter,
         is_prev=prev_chapter.exists(),
         is_next=next_chapter.exists(),
-        novel=novel,
+        source=source,
     )
 
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/images/<string:image_name>/")

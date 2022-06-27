@@ -13,7 +13,7 @@
 		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
 		crossorigin="" onload="this.rel='stylesheet'">
 
-	<title>{{ novel.title }}</title>
+	<title>{{ source.title }}</title>
 
 
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
@@ -111,8 +111,8 @@
 		</div>
 		<section class="page-in content-wrap">
 			<div class="titles">
-				<h1 itemprop="headline"><a class="booktitle" href="./" title="{{ novel.title }}" rel="up"
-						itemprop="sameAs">{{ novel.title }}</a><span hidden=""> - </span><br><span
+				<h1 itemprop="headline"><a class="booktitle" href="./" title="{{ source.title }}" rel="up"
+						itemprop="sameAs">{{ source.title }}</a><span hidden=""> - </span><br><span
 						class="chapter-title">{{ chapter["title"] }}</span></h1>
 				<div class="control-action-btn">
 					<a href="#chsetting"><svg>
@@ -147,7 +147,7 @@
 							<path d="M6.975 13.3L12 20H9l-6-8 6-8h3l-5.025 6.7H21v2.6H6.975z"></path>
 						</svg></i>
 					<div class="bar-titles">
-						<a class="booktitle text1row" href="/lncrawl/novel/{{ novel.slug }}/{{ novel.source_slug }}"
+						<a class="booktitle text1row" href="/lncrawl/novel/{{ source.novel.slug }}/{{ source.slug }}"
 							title="Magic System in a Parallel World">Magic System in a Parallel World</a>
 						<span class="chapter-title">Chapter 1: Parallel World</span>
 					</div>

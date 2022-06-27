@@ -152,7 +152,7 @@
 			</header>
 			<ul class="novel-list horizontal col2"> {% for novel in novels %} <li class="novel-item">
 					<div class="cover-wrap">
-						<a title="{{ novel.title }}" href="/lncrawl/novel/{{ novel.slug }}/{{ novel.source_slug }}">
+						<a title="{{ novel.title }}" href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">
 							<figure class="novel-cover">
 								<img class="lazyload" src="/image/{{ novel.cover }}" alt="{{ novel.title }}" />
 							</figure>
@@ -161,7 +161,7 @@
 					<div class="item-body">
 						<h4 class="novel-title text1row">
 							<a title="{{ novel.title }}"
-								href="/lncrawl/novel/{{ novel.slug }}/{{ novel.source_slug }}">{{ novel.title }} </a>
+								href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">{{ novel.title }} </a>
 						</h4>
 						<div class="novel-stats">
 							<span><i class="icon-book-open"></i> {{ novel.chapter_count }} Chapters</span>

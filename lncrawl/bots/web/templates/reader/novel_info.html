@@ -93,31 +93,31 @@
 
 			<header class="novel-header">
 				<div class="glass-background">
-					<img src="/image/{{ novel.cover }}" alt="{{ novel.title }}" itemprop="image">
+					<img src="/image/{{ source.cover }}" alt="{{ source.title }}" itemprop="image">
 					<div class="glass-shade"></div>
 				</div>
 				<div class="header-body container">
 					<div class="fixed-img">
 						<figure class="cover">
-							<img class=" ls-is-cached lazyloaded" src="/image/{{ novel.cover }}"
-								alt="{{ novel.title }}">
+							<img class=" ls-is-cached lazyloaded" src="/image/{{ source.cover }}"
+								alt="{{ source.title }}">
 						</figure>
 					</div>
 					<div class="novel-info">
 						<div class="main-head">
 							<h1 itemprop="name" class="novel-title text2row">
-								{{ novel.title }}
+								{{ source.title }}
 							</h1>
 							<div class="author">
 								<span>Author:</span>
-								<span itemprop="author">{{ novel.author }}</span>
+								<span itemprop="author">{{ source.author }}</span>
 							</div>
 
 						</div>
 
 						<div class="header-stats">
 							<span>
-								<strong><i class="icon-book-open"></i> {{ novel.chapter_count }}</strong>
+								<strong><i class="icon-book-open"></i> {{ source.chapter_count }}</strong>
 								<small>Chapters</small>
 							</span>
 							<span>
@@ -131,10 +131,10 @@
 						<div class="source-select">
 
 							<select class="sel" onchange="location = this.value">
-								<option value="../{{ current_source }}">{{ current_source }}</option>
-								{% for source in novel.sources %}
-								{% if source != current_source %}
-								<option value="../{{ source }}">{{ source }}</option>
+								<option value="../{{ source.slug }}">{{ source.slug }}</option>
+								{% for s in source.novel.sources %}
+								{% if s != source %}
+								<option value="../{{ s.slug }}">{{ s.slug }}</option>
 								{% endif %}
 								{% endfor %}
 							</select>
@@ -146,20 +146,20 @@
 			</header>
 			<div class="novel-body container">
 				<nav class="content-nav">
-					<a class="grdbtn reviews-latest-container" title="{{ novel.title }} First Chapter"
-						href="../{{ novel.source_slug }}/chapter-1">
+					<a class="grdbtn reviews-latest-container" title="{{ source.title }} First Chapter"
+						href="./chapter-1">
 						<div class="body">
 							<h4>FIRST CHAPTER</h4>
-							<p class="latest text1row"> {{ novel.first }}</p>
+							<p class="latest text1row"> {{ source.first }}</p>
 						</div>
 						<i class="icon-right-open"></i>
 					</a>
-					<a class="grdbtn chapter-latest-container" title="{{ novel.title }} Chapters"
-						href="../{{ novel.source_slug }}/chapterlist">
+					<a class="grdbtn chapter-latest-container" title="{{ source.title }} Chapters"
+						href="./chapterlist">
 						<div class="body">
 							<h4>Novel Chapters</h4>
 							<p class="latest text1row">
-								latest : {{ novel.latest }}
+								latest : {{ source.latest }}
 							</p>
 
 						</div>
@@ -171,7 +171,7 @@
 					<div class="summary">
 						<h4 class="lined">Summary</h4>
 						<div class="content expand-wrapper show">
-							<p>{{ novel.summary }}
+							<p>{{ source.summary }}
 							</p>
 							<div class="expand">
 								<a class="expand-btn"><i class="icon-right-open"></i> <span>Show More</span></a>
