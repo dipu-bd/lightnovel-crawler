@@ -35,7 +35,7 @@ def chapterlist(novel_and_source_path, page=None):
     """
 
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(novel_and_source_path)
-    novel = lib.get_source_info(novel_and_source_path)
+    novel = lib.findSourceWithPath(novel_and_source_path)
 
     with open(novel_and_source_path / "meta.json", "r", encoding="utf-8") as f:
         chapters = json.load(f)["chapters"]
