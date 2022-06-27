@@ -78,7 +78,7 @@ class NovelFromSource(_Novel):
     novel: Novel()
 
 
-def get_novel_info(novel_folder: Path):
+def get_novel_info(novel_folder: Path)->Novel:
     """
     Collects information about a novel locally.
     source isn't specified, so we need to find a source that has sufficient metadata for the novel.
@@ -135,7 +135,7 @@ def get_novel_info(novel_folder: Path):
     return novel
 
 
-def get_source_info(source_folder: Path):
+def get_source_info(source_folder: Path) -> NovelFromSource:
     """
     Collects information about a novel for a source.
     Source is specified, so we can just read the meta.json file...
@@ -174,7 +174,7 @@ def get_source_info(source_folder: Path):
 import unicodedata
 
 
-def sanitize(text: str):
+def sanitize(text: str) -> str:
     """
     Remove all special characters from a string, replace accentuated characters with their
     non-accentuated counterparts, and remove all non-alphanumeric characters.
@@ -183,7 +183,11 @@ def sanitize(text: str):
     text = unicodedata.normalize("NFKD", text)
     return "".join([c for c in text if not unicodedata.combining(c)])
 
-def findSourceWithPath(novel_and_source_path):
+@lru_cache
+def findSourceWithPath(novel_and_source_path: Path) -> NovelFromSource|None:
+    """
+    Find the NovelFromSource object corresponding to the path
+    """
     novel = None
     for n in all_downloaded_novels:
         if novel_and_source_path.parent == n.path:
