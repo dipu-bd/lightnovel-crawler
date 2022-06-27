@@ -43,59 +43,56 @@ if not LIGHTNOVEL_FOLDER.exists():
 
 @dataclass(init=False)
 class _Novel:
-    title: str
-    path: Path
-    cover: Path
-    author: str
-    chapter_count: int
-    volume_count: int
-    slug: str
-    first: str
-    latest: str
-    summary: str
-    language : str
+    title: str = None
+    path: Path = None
+    cover: Path = None
+    author: str = None
+    chapter_count: int = 0
+    volume_count: int = 0
+    slug: str = None
+    first: str = None
+    latest: str = None
+    summary: str = None
+    language : str = 'en'
 
+    def __init__(self, path: Path):
+        self.path = path
+        self.slug = quote_plus(path.name)
 
 @dataclass(init=False)
 class Novel(_Novel):
     """
     Holds information about a novel.
-    Informations are randomly picked from it's sources
     """
-
     sources: list['NovelFromSource']
-    prefered_source : 'NovelFromSource'
-    source_count: int
-    search_words: List[str]
+    prefered_source : 'NovelFromSource' = None
+    source_count: int = 0
+    search_words: List[str] 
+
+    def __init__(self, path: Path):
+        self.search_words = []
+        self.sources = []
+        super().__init__(path)
 
 
 @dataclass(init=False)
 class NovelFromSource(_Novel):
     """
-    Hold information about a novel from a source
+    Hold information about a novel from a source.
     """
-    language: str
-    novel: Novel()
+    novel: Novel
 
 
 def get_novel_info(novel_folder: Path)->Novel:
     """
     Collects information about a novel locally.
-    source isn't specified, so we need to find a source that has sufficient metadata for the novel.
+    source isn't specified, so we need to find a source that has sufficient 
+        metadata for the novel and set it to prefered_source.
+    Metadata are randomly picked from the sources.
     """
 
-    novel = Novel()
-    novel.path = novel_folder.absolute()
-    novel.slug = quote_plus(novel_folder.name)
+    novel = Novel(novel_folder.absolute())
 
-    novel.title = None
-    novel.cover = None
-    novel.author = None
-    novel.chapter_count = None
-    novel.latest = None
-    novel.volume_count = None
-    novel.sources = []
-    
     language = set()
 
     for source_folder in novel_folder.iterdir():
@@ -114,12 +111,18 @@ def get_novel_info(novel_folder: Path)->Novel:
 
         if not novel.latest and source.latest:
             novel.latest = source.latest
+        
+        if not novel.first and source.first:
+            novel.first = source.first
 
         if not novel.volume_count and source.volume_count:
             novel.volume_count = source.volume_count
 
         if not novel.title and source.title:
             novel.title = source.title
+
+        if not novel.summary and source.summary:
+            novel.summary = source.summary
         
         if source.language:
             language.add(source.language)
@@ -140,9 +143,7 @@ def get_source_info(source_folder: Path) -> NovelFromSource:
     Collects information about a novel for a source.
     Source is specified, so we can just read the meta.json file...
     """
-    source = NovelFromSource()
-    source.path = source_folder.absolute()
-    source.slug = quote_plus(source_folder.name)
+    source = NovelFromSource(source_folder.absolute())
     source.cover = (
         f"{source_folder.parent.name}/{source_folder.name}/cover.jpg"
         if (source_folder / "cover.jpg").exists()
