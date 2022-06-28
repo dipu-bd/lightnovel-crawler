@@ -30,51 +30,7 @@
 </head>
 
 <body class="fade-out">
-	<header class="main-header skiptranslate">
-		<div class="wrapper">
-			<div class="nav-logo">
-				<a href="/lncrawl" title="Read Most Popular Light Novels Online for Fre">
-					<img src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="Light Novel" />
-				</a>
-			</div>
-			<div class="navigation-bar">
-				<nav>
-					<span class="lnw-slog">Your fictional stories hub.</span>
-					<ul class="navbar-menu">
-						<li class="nav-item">
-							<a class="nav-link" title="Search Light Novels" href="/lncrawl/search"><i
-									class="icon-search"></i> Search</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" title="Explore the Most Popular Light Novels" href="/lncrawl/"><i
-									class="icon-th-large"></i> Browse</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" title="Development Announcements"
-								href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev"><i
-									class="icon-megaphone"></i> DEV</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" title="Add Novel" href="/lncrawl/addnovel"><i class="plus"
-									></i>Add Novel</a>
-						</li>
-						<li class="nav-item">
-							<a class="nightmode_switch" data-tool="nightmode_switch" title="Dark Mode" data-night="0"
-								data-content="Dark Theme">
-								<i class="icon-moon"></i>
-							</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
-			<div class="nav-back">
-				<i class="icon-left-open"></i>
-			</div>
-			<button id="mobile-menu-btn">
-				<div id="burger-btn"></div>
-			</button>
-		</div>
-	</header>
+	{% include 'reader/component/header.html' %}
 	<div class="sidebar-wrapper"></div>
 	<main role="main">
 		<article id="explore" class="container">
@@ -179,28 +135,7 @@
 				</li> {% endfor %} </ul>
 		</article>
 	</main>
-	<footer translate="no">
-		<div class="wrapper">
-			<div class="col logo">
-				<a href="/lncrawl" style="display:inline-block">
-					<img class="footer-logo" src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="logo-footer">
-				</a>
-			</div>
-			<nav class="col links">
-				<ul>
-					<li>
-						<a href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev">Terms of Service</a>
-					</li>
-					<li>
-						<a href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev">DMCA Notices</a>
-					</li>
-					<li>
-						<a href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev">Contact Us</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</footer>
+	{% include 'reader/component/footer.html' %}
 	<script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
 	<script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
 	<script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>

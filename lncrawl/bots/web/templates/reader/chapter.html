@@ -41,52 +41,7 @@
 </head>
 
 <body class="fade-out vsc-initialized" style="position: relative; min-height: 100%; top: 40px;">
-	<header class="main-header skiptranslate">
-		<div class="wrapper">
-			<div class="nav-logo">
-				<a href="/lncrawl" title="Read Most Popular Light Novels Online for Fre">
-					<img src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="Light Novel" />
-				</a>
-			</div>
-			<div class="navigation-bar">
-				<nav>
-					<span class="lnw-slog">Your fictional stories hub.</span>
-					<ul class="navbar-menu">
-						<li class="nav-item">
-							<a class="nav-link" title="Search Light Novels" href="/lncrawl/search"><i
-									class="icon-search"></i>
-								Search</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" title="Explore the Most Popular Light Novels" href="/lncrawl/"><i
-									class="icon-th-large"></i> Browse</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" title="Development Announcements"
-								href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev"><i
-									class="icon-megaphone"></i> DEV</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" title="Add Novel" href="/lncrawl/addnovel"><i class="plus"
-									></i>Add Novel</a>
-						</li>
-						<li class="nav-item">
-							<a class="nightmode_switch" data-tool="nightmode_switch" title="Dark Mode" data-night="0"
-								data-content="Dark Theme">
-								<i class="icon-moon"></i>
-							</a>
-						</li>
-					</ul>
-				</nav>
-			</div>
-			<div class="nav-back">
-				<i class="icon-left-open"></i>
-			</div>
-			<button id="mobile-menu-btn">
-				<div id="burger-btn"></div>
-			</button>
-		</div>
-	</header>
+	{% include 'reader/component/header.html' %}
 
 	<!-- settings icon -->
 	<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
@@ -126,7 +81,7 @@
 				{{ chapter["body"]|safe }}
 			</div>
 			<div class="chapternav skiptranslate">
-				<a rel="prev" class="button prevchap {{ 'isDisabled' if not is_prev else '' }}"
+				<a rel="prev" class="button prevchap {{ 'isDisabled' if not is_prev}}"
 					href="chapter-{{ chapter['id'] - 1 }}">
 					<i class="icon-left-open"></i>
 					<span>Prev</span>
@@ -135,7 +90,7 @@
 					<i class="icon-home"></i>
 					<span>Index</span>
 				</a>
-				<a rel="next" class="button nextchap {{ 'isDisabled' if not is_next else '' }}"
+				<a rel="next" class="button nextchap {{ 'isDisabled' if not is_next}}"
 					href="chapter-{{ chapter['id'] + 1 }}">
 					<span>Next</span>
 					<i class="icon-right-open"></i>
@@ -156,7 +111,7 @@
 			<dialog class="control-action" translate="no" style="display: none;">
 				<nav class="action-items">
 					<div class="action-select">
-						<a rel="prev" class="{{ 'isDisabled' if not is_prev else '' }} chnav prev"
+						<a rel="prev" class="{{ 'isDisabled' if not is_prev}} chnav prev"
 							href="chapter-{{ chapter['id'] - 1 }}"><i class="icon-left-open"></i><span>Prev</span></a>
 						<a class="chap-index" title="Chapter Index" href="chapterlist">
 							<i class="icon-home"></i>
@@ -164,7 +119,7 @@
 						<a class="nightmode_switch" title="Night mode" data-night="0" data-content="Dark Theme">
 							<i class="icon-moon"></i>
 						</a>
-						<a rel="next" class="{{ 'isDisabled' if not is_next else '' }} chnav next"
+						<a rel="next" class="{{ 'isDisabled' if not is_next}} chnav next"
 							href="chapter-{{ chapter['id'] + 1 }}"><span>Next</span><i class="icon-right-open"></i></a>
 					</div>
 					<div class="font-select">
@@ -222,31 +177,7 @@
 		</section>
 	</article>
 
-
-
-	<footer translate="no">
-		<div class="wrapper">
-			<div class="col logo">
-				<a href="/lncrawl" style="display:inline-block">
-					<img class="footer-logo" src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="logo-footer">
-				</a>
-			</div>
-			<nav class="col links">
-				<ul>
-					<li>
-						<a href="/https://github.com/dipu-bd/lightnovel-crawler/tree/dev">Terms of Service</a>
-					</li>
-					<li>
-						<a href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev">DMCA Notices</a>
-					</li>
-					<li>
-						<a href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev">Contact
-							Us</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-	</footer>
+	{% include 'reader/component/footer.html' %}
 
 	<script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
 	<script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>

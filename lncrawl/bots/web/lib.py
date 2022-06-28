@@ -75,7 +75,7 @@ class Novel(_Novel):
         super().__init__(path)
 
 
-@dataclass(init=False)
+@dataclass(init=False, slots=True)
 class NovelFromSource(_Novel):
     """
     Hold information about a novel from a source.
