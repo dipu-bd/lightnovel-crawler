@@ -69,7 +69,7 @@ class MyCrawlerName(Crawler):
         #
         #       `self.novel_title`: a string [required]
         #       `self.novel_author`: a comma separated string. [optional]
-        #       `self.summary`: a clean html string. You can use `extract_contents()`. [optional]
+        #       `self.summary`: a clean html string. You can use `self.cleaner.extract_contents()`. [optional]
         #       `self.language`: string of ISO 639-1 Code (ex : 'en', 'ru'). [optional]
         #       `self.novel_cover`: the cover image url [optional]
         #       `self.chapters`: A list of chapters. Each chapter should contain these keys:
