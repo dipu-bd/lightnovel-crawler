@@ -86,51 +86,62 @@
         }
 
         async function sendSearchRequest() {
-            let form = new FormData(document.getElementById("novelSearchForm"));
+            var inputContent = document.getElementById("inputContent").value;
             let job_id = document.getElementById("job_id").value;
 
-            let res = await fetch("/lncrawl/addnovel/search/form", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(Object.fromEntries(form)),
-            })
-
-            if (res.status == 200) {
-
-                let queueTarget = "/lncrawl/addnovel/choose_novel/" + job_id;
+            if (inputContent.startsWith("http")) {
                 let displayArea = document.getElementById("novelListBase");
-                displayArea.innerHTML = "";
-
+                let queueTarget = "/lncrawl/addnovel/direct_download/" + job_id + "/" + "?url=" + inputContent;
                 let response = await queue(queueTarget, displayArea);
+                displayArea.innerHTML = response.html;
 
-                let listNovel = document.createElement("ul");
-                listNovel.className = "novel-list";
-
-                response.novels.content.forEach((novel, novelId) => {
-
-                    let novelItem = document.createElement("li")
-                    novelItem.className = "novel-item";
-
-                    let iconPlus = document.createElement("i");
-                    iconPlus.className = "icon-right-open"
-                    iconPlus.onclick = function () { switchShowSource(iconPlus, novelId, job_id) };
-                    novelItem.appendChild(iconPlus);
-
-                    let novelText = document.createElement("span");
-                    novelText.innerText = novel.title;
-                    novelItem.appendChild(novelText);
-
-                    listNovel.appendChild(novelItem);
-
-                });
-
-
-
-                displayArea.appendChild(listNovel);
             }
             else {
-                let res = JSON.parse(xhr.response);
-                alert("Error: " + res.message);
+                let form = new FormData(document.getElementById("novelSearchForm"));
+                
+                let res = await fetch("/lncrawl/addnovel/search/form", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(Object.fromEntries(form)),
+                })
+
+                if (res.status == 200) {
+
+                    let queueTarget = "/lncrawl/addnovel/choose_novel/" + job_id;
+                    let displayArea = document.getElementById("novelListBase");
+                    displayArea.innerHTML = "";
+
+                    let response = await queue(queueTarget, displayArea);
+
+                    let listNovel = document.createElement("ul");
+                    listNovel.className = "novel-list";
+
+                    response.novels.content.forEach((novel, novelId) => {
+
+                        let novelItem = document.createElement("li")
+                        novelItem.className = "novel-item";
+
+                        let iconPlus = document.createElement("i");
+                        iconPlus.className = "icon-right-open"
+                        iconPlus.onclick = function () { switchShowSource(iconPlus, novelId, job_id) };
+                        novelItem.appendChild(iconPlus);
+
+                        let novelText = document.createElement("span");
+                        novelText.innerText = novel.title;
+                        novelItem.appendChild(novelText);
+
+                        listNovel.appendChild(novelItem);
+
+                    });
+
+
+
+                    displayArea.appendChild(listNovel);
+                }
+                else {
+                    let res = JSON.parse(xhr.response);
+                    alert("Error: " + res.message);
+                }
             }
 
 
@@ -164,7 +175,7 @@
 
                         let iconDownload = document.createElement("i");
                         iconDownload.className = "download-icon icon-check-empty";
-                        iconDownload.onclick = function () {startDownload(novelId, sourceId, job_id) };
+                        iconDownload.onclick = function () { startDownload(novelId, sourceId, job_id) };
                         sourceItem.appendChild(iconDownload);
 
                         let div = document.createElement("div");
@@ -270,7 +281,7 @@
         }
 
         ul.source-list li.source-item div {
-            width:calc(100% - 3em);
+            width: calc(100% - 3em);
         }
 
         ul.novel-list li.novel-item span.loading {
@@ -280,7 +291,7 @@
         }
 
         ul.source-list li.source-item i.download-icon {
-            margin-right:1em;
+            margin-right: 1em;
         }
     </style>
 

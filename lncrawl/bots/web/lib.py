@@ -18,8 +18,9 @@ class FinishedJob:
     is_busy = False
     last_action = "Finished"
 
-    def __init__(self, success, message, end_date):
+    def __init__(self, success, message, end_date, original_query):
         print(f"FinishedJob: {success}, {message}, {end_date}")
+        self.original_query = original_query
         self.success = success
         self.message = message
         self.end_date = end_date 
@@ -93,7 +94,7 @@ class Novel(_Novel):
         return hash(self.title)
 
 
-@dataclass(init=False, slots=True)
+@dataclass(init=False)
 class NovelFromSource(_Novel):
     """
     Hold information about a novel from a source.

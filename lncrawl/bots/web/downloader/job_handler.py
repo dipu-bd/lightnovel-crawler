@@ -13,6 +13,7 @@ from .. import lib
 
 
 class JobHandler:
+    original_query = ""
     selected_novel = None
     is_busy = False
     search_results = None
@@ -84,7 +85,7 @@ class JobHandler:
 
     # -----------------------------------------------------------------------------
     def get_list_of_novel(self, query):
-
+        self.original_query = query
         self.is_busy = True
         self.executor.submit(self._get_list_of_novel, query)
 
@@ -121,10 +122,11 @@ class JobHandler:
             "query": query,
         }
 
-    # -----------------------------------------------------------------------------
-
     def select_novel(self, novel_id):
         self.selected_novel = self.app.search_results[novel_id]
+        
+    # -----------------------------------------------------------------------------
+
 
     def get_list_of_sources(self):
         self.set_last_action("Source selection")
@@ -149,6 +151,15 @@ class JobHandler:
         self.set_last_action("Getting information about your novel...")
         self.executor.submit(self.download_novel_info)
 
+    # -----------------------------------------------------------------------------
+
+    def prepare_direct_download(self, url:str):
+        self.original_query = url
+        self.is_busy = True
+        self.app.prepare_crawler(url)
+        self.executor.submit(self.download_novel_info)
+
+    # -----------------------------------------------------------------------------
     def download_novel_info(self):
         self.is_busy = True
         self.set_last_action("Getting novel information...")
@@ -174,12 +185,13 @@ class JobHandler:
     #     self.set_last_action("Set download range")
     #     self.app.chapters = self.app.crawler.chapters[start - 1 : finish - 1]
 
-    def select_range(self):
+    def _select_range(self):
         self.set_last_action("Set download range")
         self.app.chapters = self.app.crawler.chapters[:]
 
     def start_download(self):
         self.is_busy = True
+        self._select_range()
         self.executor.submit(self._start_download)
 
     def _start_download(self):
@@ -195,7 +207,7 @@ class JobHandler:
             self.app.compress_books()
             self.set_last_action("Finished downloading")
             self.set_last_action("Updating website")
-            self.update_website()
+            self._update_website()
             self.set_last_action("Success, destroying session")
 
         except Exception as ex:
@@ -204,7 +216,7 @@ class JobHandler:
         self.destroy()
 
 
-    def update_website(self):
+    def _update_website(self):
         
         novel_info = lib.get_novel_info(Path(self.app.output_path).parent)
 
