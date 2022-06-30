@@ -6,27 +6,32 @@ from lncrawl.core.crawler import Crawler
 import logging
 from urllib.parse import urlparse
 from slugify import slugify
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 from .. import lib
 
 
 class JobHandler:
+    selected_novel = None
+    is_busy = False
+    search_results = None
+    is_finished = False
+    crashed = False
+    last_action = None
+    metadata_downloaded = False
+
     def __init__(self, job_id):
         self.app = App()
         self.app.output_formats = {"json": True}
         self.job_id = job_id
-        self.last_action = None
         self.last_activity = datetime.now()
         self.executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix=job_id)
-        self.selected_novel = None
-        self.is_busy = False
-        self.search_results = None
-        self.is_finished = False
-        self.crashed = False
+        
 
     # -----------------------------------------------------------------------------
     def crash(self, reason):
+        print(reason)
         self.crashed = True
         self.set_last_action(reason)
         logger.exception(reason)
@@ -56,6 +61,7 @@ class JobHandler:
         return {"Error": f"Busy, {self.last_action} started at {self.last_activity}"}
 
     def set_last_action(self, action):
+        print("starting action : ", action)
         self.last_action = action
         self.last_activity = datetime.now()
 
@@ -78,6 +84,7 @@ class JobHandler:
 
     # -----------------------------------------------------------------------------
     def get_list_of_novel(self, query):
+
         self.is_busy = True
         self.executor.submit(self._get_list_of_novel, query)
 
@@ -121,18 +128,15 @@ class JobHandler:
 
     def get_list_of_sources(self):
         self.set_last_action("Source selection")
-        novel_list = self.selected_novel["novels"]
 
         return {
             "novel": self.selected_novel["title"],
-            "found": len(novel_list),
             "content": [
                 {
-                    "id": i,
                     "url": item["url"],
                     "info": item["info"] if "info" in item else "",
                 }
-                for i, item in enumerate(novel_list)
+                for item in self.selected_novel["novels"]
             ],
         }
 
@@ -162,8 +166,8 @@ class JobHandler:
             output_path.mkdir(parents=True)
 
         self.is_busy = False
+        self.metadata_downloaded = True
 
-        # self.app.output_path
 
     # def select_range(self, start: int, finish: int):
     #     print(f"Selected range: {start -1} - {finish-1}")
@@ -189,22 +193,29 @@ class JobHandler:
             self.app.start_download()
             self.set_last_action("Compressing")
             self.app.compress_books()
-            self.set_last_action("Finished downloading, destroying session")
+            self.set_last_action("Finished downloading")
+            self.set_last_action("Updating website")
+            self.update_website()
+            self.set_last_action("Success, destroying session")
 
         except Exception as ex:
             self.crash(f"Download failed : {ex}")
 
-        novel_info = lib.get_novel_info(lib.LIGHTNOVEL_FOLDER / self.app.good_file_name)
-        is_in_all_novels = False
+        self.destroy()
 
-        for downloaded in lib.all_downloaded_novels:
-            if novel_info.title == downloaded.title:
+
+    def update_website(self):
+        
+        novel_info = lib.get_novel_info(Path(self.app.output_path).parent)
+
+        is_in_all_novels = False
+        for i, downloaded_info in enumerate(lib.all_downloaded_novels):
+            if downloaded_info == novel_info:
+                lib.all_downloaded_novels[i] = novel_info
                 is_in_all_novels = True
                 break
-
+        
         if not is_in_all_novels:
             lib.all_downloaded_novels.append(novel_info)
 
-
-        self.is_busy = False
-        self.destroy()
+    

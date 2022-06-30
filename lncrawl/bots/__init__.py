@@ -29,7 +29,7 @@ def run_bot(bot):
         from . import web
 
     elif bot == "test":
-        from ..bots.test import TestBot
+        from ..bots.test import TestBot # type: ignore
 
         TestBot().start()
     else:

@@ -13,7 +13,6 @@
 		crossorigin="" onload="this.rel='stylesheet'">
 
 	<title>Explore The Recently Added Light Novels</title>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/icons.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
 	<link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
@@ -133,6 +132,76 @@
 						</div>
 					</div>
 				</li> {% endfor %} </ul>
+			<footer class="pagination" style="height:auto">
+				<nav class="paging">
+					<div class="pagination-container">
+						<ul class="pagination">
+
+							{% if not page %}
+							<li class="active"><span>1</span></li>
+							{{ (("<li><a href='page-2'>2</a></li>") if last_page >= 2 else "") |safe }}
+							{{ (("<li><a href='page-3'>3</a></li>") if last_page >= 3 else "") |safe }}
+							{{ (("<li><a href='page-4'>4</a></li>") if last_page >= 4 else "") |safe }}
+
+							{{
+							(("<li class='PagedList-skipToNext'><a href='page-2' rel='next'>&gt;</a></li>")
+							if last_page >= 2 else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a>
+							</li>")
+							if last_page >= 3 else "")
+							|safe }}
+
+
+							{% else %}
+
+							{{
+							(("<li class='PagedList-skipToFirst'><a href='page-1'>&lt;&lt;</a></li>")
+							if page > 2 else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToPrevious'><a href='page-" ~ (page-1) ~ "' rel='prev'>&lt;</a>
+							</li>") if page > 1 else "")
+							|safe }}
+
+							{{
+							(("<li><a href='page-" ~ (page-1) ~ "'>" ~ (page-1) ~ "</a></li>")
+							if page-1 > 0 else "")
+							|safe }}
+
+							<li class="active"><span>{{ page }}</span></li>
+
+							{{
+							(("<li><a href='page-" ~ (page+1) ~ "'>" ~ (page+1) ~ "</a></li>")
+							if (last_page > page) else "")
+							|safe }}
+
+							{{
+							(("<li><a href='page-" ~ (page+2) ~ "'>" ~ (page+2) ~ "</a></li>")
+							if (last_page > page+1) else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToNext'><a href='page-" ~ (page+1) ~ "' rel='next'>&gt;</a>
+							</li>
+							")
+							if (last_page >= page+1) else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a></li>")
+							if (last_page >= page+2) else "")
+							|safe }}
+
+
+							{% endif %}
+						</ul>
+					</div>
+				</nav>
+			</footer>
 		</article>
 	</main>
 	{% include 'reader/component/footer.html' %}

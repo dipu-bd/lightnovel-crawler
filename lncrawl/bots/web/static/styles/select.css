@@ -20,3 +20,9 @@ select.sel {
 	}
 
 }
+
+select.sel option {
+	background-color: var(--bg-color);
+	color: var(--text-color);
+  }
+  

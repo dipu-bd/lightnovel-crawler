@@ -5,9 +5,6 @@ from .job_handler import JobHandler
 
 # ----------------------------------------------- Search Novel ----------------------------------------------- #
 
-@app.route("/lncrawl/addnovel")
-def addnovel():
-    return render_template("reader/addnovel.html")
 
 @app.route("/lncrawl/addnovel/search/")
 @app.route("/lncrawl/addnovel/search/<string:job_id>/")
@@ -18,15 +15,13 @@ def search_input_page(job_id=None):
     return render_template("downloader/search_novel.html", job_id=job_id)
 
 
-@app.route("/lncrawl/addnovel/search/form/", methods=["POST"])
+@app.route("/lncrawl/addnovel/search/form", methods=["POST"])
 def search_form():
-    query = request.form["query"]
+    request.form = request.json
+
+    query = request.form["inputContent"]
     if len(query) < 4:
-        return render_template(
-            "downloader/queue.html",
-            message="Query too short",
-            url="/lncrawl/addnovel/search/",
-        )
+        return {"message" : "Query too short"}, 400
     job_id = (
         request.form["job_id"]
         if "job_id" in request.form
@@ -36,13 +31,9 @@ def search_form():
         lib.jobs[job_id].destroy()
     lib.jobs[job_id] = JobHandler(job_id)
     job = lib.jobs[job_id]
-
     job.get_list_of_novel(query)
 
-    if "redirect" in request.form and request.form["redirect"] == "true":
-        return redirect(f"/lncrawl/addnovel/choose_novel/{job_id}")
-    else:
-        return 200
+    return {"status": "success"}, 200
 
 
 # ----------------------------------------------- Choose Novel ----------------------------------------------- #
@@ -51,116 +42,61 @@ def search_form():
 @app.route("/lncrawl/addnovel/choose_novel/")
 @app.route("/lncrawl/addnovel/choose_novel/<string:job_id>")
 def novel_select_page(job_id=None):
+    """Return search results"""
     if not job_id:
         job_id = str(hash(request.remote_addr))
     if not job_id in lib.jobs:
         return redirect("/lncrawl/addnovel/search")
     job = lib.jobs[job_id]
     if job.is_busy:
-        return render_template(
-            "downloader/queue.html",
-            message=job.get_status(),
-            url=f"/lncrawl/addnovel/choose_novel/{job_id}",
-        )
+        return {"status": "pending", "html": job.get_status()}, 200
+    return {"status": "success", "novels": job.search_results}, 200
 
-    return render_template(
-        "downloader/choose_novel.html",
-        job_id=job_id,
-        search_results=job.search_results,
-    )
-
-
-@app.route("/lncrawl/addnovel/novel_selected/<int:novel_id>")
-@app.route("/lncrawl/addnovel/novel_selected/<int:novel_id>/<string:job_id>")
-def novel_selected(novel_id, job_id=None):
-    if not job_id:
-        job_id = str(hash(request.remote_addr))
-    if not job_id in lib.jobs:
-        return redirect("/lncrawl/addnovel/search")
-    job = lib.jobs[job_id]
-    if job.is_busy:
-        return render_template(
-            "downloader/queue.html",
-            message=job.get_status(),
-            url=f"/lncrawl/addnovel/novel_selected/{novel_id}/{job_id}",
-        )
-
-    job.select_novel(novel_id)
-
-    return redirect(f"/lncrawl/addnovel/choose_source/{job_id}")
 
 
 # ----------------------------------------------- Choose Source ----------------------------------------------- #
 
 
-@app.route("/lncrawl/addnovel/choose_source/")
-@app.route("/lncrawl/addnovel/choose_source/<string:job_id>")
-def source_select_page(job_id=None):
+@app.route("/lncrawl/addnovel/choose_source/<int:novel_id>")
+@app.route("/lncrawl/addnovel/choose_source/<int:novel_id>/<string:job_id>")
+def novel_selected(novel_id, job_id=None):
+    """Return list of sources for selected novel"""
     if not job_id:
         job_id = str(hash(request.remote_addr))
     if not job_id in lib.jobs:
         return redirect("/lncrawl/addnovel/search")
     job = lib.jobs[job_id]
     if job.is_busy:
-        return render_template(
-            "downloader/queue.html",
-            message=job.get_status(),
-            url=f"/lncrawl/addnovel/choose_source/{job_id}",
-        )
+        return {"status": "pending", "html": job.get_status()}, 200
 
-    return render_template(
-        "downloader/choose_source.html",
-        job_id=job_id,
-        sources=job.get_list_of_sources(),
-    )
+    job.select_novel(novel_id)
 
+    return {"status":"success", "sources":job.get_list_of_sources()}, 200
 
-@app.route("/lncrawl/addnovel/source_selected/<int:novel_id>")
-@app.route("/lncrawl/addnovel/source_selected/<int:novel_id>/<string:job_id>")
-def source_selected(novel_id, job_id=None):
+# ----------------------------------------------- Start Download ----------------------------------------------- #
+
+@app.route("/lncrawl/addnovel/download/<int:novel_id>/<int:source_id>")
+@app.route("/lncrawl/addnovel/download/<int:novel_id>/<int:source_id>/<string:job_id>")
+def download(novel_id, source_id, job_id=None):
+    """Select Source and start download"""
     if not job_id:
         job_id = str(hash(request.remote_addr))
     if not job_id in lib.jobs:
         return redirect("/lncrawl/addnovel/search")
     job = lib.jobs[job_id]
+
     if job.is_busy:
-        return render_template(
-            "downloader/queue.html",
-            message=job.get_status(),
-            url=f"/lncrawl/addnovel/source_selected/{novel_id}/{job_id}",
-        )
+        return {"status": "pending", "html": job.get_status()}, 200
 
-    job.select_source(novel_id)
-
-    return redirect(f"/lncrawl/addnovel/download/{job_id}")
-
-
-
-@app.route("/lncrawl/addnovel/download/")
-@app.route("/lncrawl/addnovel/download/<string:job_id>")
-def downloaded_page(job_id=None):
-    if not job_id:
-        job_id = str(hash(request.remote_addr))
-
-    if not job_id in lib.jobs:
-        return redirect("/lncrawl/addnovel/search")
-
-    job = lib.jobs[job_id]
     if job.is_finished:
-        return render_template("downloader/downloaded.html", job_id=job_id, job=job)
+        return {"status": "success", "html": job.get_status()}, 200
 
-    if job.is_busy:
-        return render_template(
-            "downloader/queue.html",
-            message=job.get_status(),
-            url=f"/lncrawl/addnovel/download/{job_id}",
-        )
-
+    if not job.metadata_downloaded:
+        job.select_novel(novel_id)
+        job.select_source(source_id)
+        return {"status": "pending", "html": job.get_status()}, 200
+    
     job.select_range()
     job.start_download()
 
-    return render_template(
-        "downloader/queue.html",
-        message=job.get_status(),
-        url=f"/lncrawl/addnovel/download/{job_id}",
-    )
+    return {"status": "pending", "html": job.get_status()}, 200

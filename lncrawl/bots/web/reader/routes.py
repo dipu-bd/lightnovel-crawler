@@ -159,3 +159,8 @@ def search():
     Return the search page.
     """
     return render_template("reader/search.html")
+
+
+@app.route("/lncrawl/addnovel")
+def addnovel():
+    return render_template("reader/addnovel.html")

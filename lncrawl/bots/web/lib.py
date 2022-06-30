@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass
 from functools import lru_cache
 from typing import List, Optional
@@ -21,10 +22,7 @@ class FinishedJob:
         print(f"FinishedJob: {success}, {message}, {end_date}")
         self.success = success
         self.message = message
-        self.end_date = end_date
-
-    def is_busy(self):
-        return False
+        self.end_date = end_date 
 
     def get_status(self):
         return self.message
@@ -33,7 +31,13 @@ class FinishedJob:
         pass
 
 
-jobs = {}
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .downloader.job_handler import JobHandler
+
+
+jobs:dict[str, FinishedJob|JobHandler] = {}
 
 
 LIGHTNOVEL_FOLDER = Path(constants.DEFAULT_OUTPUT_PATH)
@@ -43,16 +47,16 @@ if not LIGHTNOVEL_FOLDER.exists():
 
 @dataclass(init=False)
 class _Novel:
-    title: str = None
+    title: str = ""
     path: Path = None
     cover: Path = None
-    author: str = None
+    author: str = ""
     chapter_count: int = 0
     volume_count: int = 0
-    slug: str = None
-    first: str = None
-    latest: str = None
-    summary: str = None
+    slug: str = ""
+    first: str = ""
+    latest: str = ""
+    summary: str = ""
     language : str = 'en'
 
     def __init__(self, path: Path):
@@ -73,6 +77,20 @@ class Novel(_Novel):
         self.search_words = []
         self.sources = []
         super().__init__(path)
+
+    def __eq__(self, other):
+        """
+        Overrides the default implementation
+        _Novel are equal if they have the same title
+        """
+        if issubclass(type(other), _Novel):
+            return self.title == other.title
+        return False
+
+
+    def __hash__(self):
+        """Overrides the default implementation"""
+        return hash(self.title)
 
 
 @dataclass(init=False, slots=True)
@@ -96,7 +114,7 @@ def get_novel_info(novel_folder: Path)->Novel:
     language = set()
 
     for source_folder in novel_folder.iterdir():
-        source = get_source_info(source_folder)
+        source = _get_source_info(source_folder)
         source.novel = novel
          
         if not novel.cover and source.cover:
@@ -138,7 +156,7 @@ def get_novel_info(novel_folder: Path)->Novel:
     return novel
 
 
-def get_source_info(source_folder: Path) -> NovelFromSource:
+def _get_source_info(source_folder: Path) -> NovelFromSource:
     """
     Collects information about a novel for a source.
     Source is specified, so we can just read the meta.json file...
