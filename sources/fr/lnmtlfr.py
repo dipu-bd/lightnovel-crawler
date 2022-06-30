@@ -41,10 +41,13 @@ class Lnmtlfr(Crawler):
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
+
         self.novel_title = soup.find("div", {"class": "post-title"}).find("h1").text.strip()
         self.novel_cover = self.absolute_url(
             soup.find("div", {"class": "summary_image"}).find("img").get("src")
         )
+        self.summary = self.cleaner.extract_contents(soup.find("div", {"class": "summary__content"}).find("p"))
+        self.language = "fr"
         self.novel_author = ", ".join([
             e.text.strip()
             for e in soup.find("div", {"class": "author-content"}).find_all("a")
