@@ -2,14 +2,19 @@ from ..flaskapp import app
 from flask import redirect, request, render_template
 from .. import lib
 from .job_handler import JobHandler
-import urllib.parse
+import random
 
 # ----------------------------------------------- Search Novel ----------------------------------------------- #
 
 
 @app.route("/lncrawl/addnovel/search/")
 def search_input_page():
-    return render_template("downloader/search_novel.html", job_id=str(hash(request.remote_addr)))
+
+    job_id = random.randint(0, 1000000)
+    while job_id in lib.jobs:
+        job_id = random.randint(0, 1000000)
+
+    return render_template("downloader/search_novel.html", job_id=job_id)
 
 
 @app.route("/lncrawl/addnovel/search/form", methods=["POST"])
