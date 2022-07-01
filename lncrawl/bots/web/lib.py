@@ -2,11 +2,11 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import List
 from pathlib import Path
+import json
 from ... import constants
 from .Novel import Novel, NovelFromSource
 
 from . import read_novel_info
-
 
 from typing import TYPE_CHECKING
 
@@ -19,7 +19,6 @@ jobs: dict[str, FinishedJob | JobHandler] = {}
 LIGHTNOVEL_FOLDER = Path(constants.DEFAULT_OUTPUT_PATH)
 if not LIGHTNOVEL_FOLDER.exists():
     LIGHTNOVEL_FOLDER.mkdir()
-
 
 
 @lru_cache
@@ -51,3 +50,25 @@ for novel_folder in LIGHTNOVEL_FOLDER.iterdir():
     if novel_folder.is_dir():
         all_downloaded_novels.append(read_novel_info.get_novel_info(novel_folder))
 
+
+# Periodic function to update each novels stats
+import threading, time
+def update_novels_stats():
+    while True:
+        time.sleep(600) # 10 minutes
+        for novel in all_downloaded_novels:
+            if not novel.path:
+                continue
+            with open(novel.path / "stats.json", "w", encoding="utf-8") as f:
+                novel_stats = {
+                    "clicks": novel.clicks,
+                    "favorites": novel.favorites,
+                    "ratings": novel.ratings,
+                }
+
+                json.dump(novel_stats, f, indent=4)
+
+        print("Updated novels stats")
+
+
+threading.Thread(target=update_novels_stats, daemon=True).start()

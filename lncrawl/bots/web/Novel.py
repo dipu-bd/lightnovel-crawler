@@ -32,15 +32,20 @@ class Novel(_Novel):
     """
     Holds information about a novel.
     """
-
-    sources: list[NovelFromSource]
     prefered_source: NovelFromSource | None = None
     source_count: int = 0
-    search_words: List[str]
+    clicks : int = 0
+    overall_rating: float = 0.0
+    favorites_count: int = 0
 
     def __init__(self, path: Path):
         self.search_words = []
         self.sources = []
+        self.ratings: dict[str, int] = {}
+        self.search_words: List[str] = []
+        self.favorites: set[str] = set()
+        self.sources: list[NovelFromSource] = []
+
         super().__init__(path)
 
     def __eq__(self, other: Any) -> bool:

@@ -42,8 +42,8 @@ def chapterlist(novel_and_source_path: Path, page: int | None = None):
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(
         str(novel_and_source_path)
     )
-    novel = lib.findSourceWithPath(novel_and_source_path)
-    if not novel:
+    source = lib.findSourceWithPath(novel_and_source_path)
+    if not source:
         return {"error": "Novel not found"}, 404
 
     with open(novel_and_source_path / "meta.json", "r", encoding="utf-8") as f:
@@ -52,12 +52,14 @@ def chapterlist(novel_and_source_path: Path, page: int | None = None):
         stop = min((page if page else 1) * 100, len(chapters))
         chapters = chapters[start:stop]
 
+    source.novel.clicks += 1
+
     return render_template(
         "reader/chapterlist.html",
-        novel=novel,
+        novel=source,
         chapters=chapters,
         page=page,
-        last_page=ceil(novel.chapter_count / 100),
+        last_page=ceil(source.chapter_count / 100),
     )
 
 
@@ -86,6 +88,8 @@ def novel_info(novel_and_source_path: Path):
     source = lib.findSourceWithPath(novel_and_source_path)
     if not source:
         return {"error": "Source not found"}, 404
+
+    source.novel.clicks += 1
 
     return render_template(
         "reader/novel_info.html", source=source, len_sources=len(source.novel.sources)
@@ -119,6 +123,11 @@ def chapter(novel_and_source_path: Path, chapter_id: int):
             "body": "<p>Chapter not found</p>",
         }
     source = lib.findSourceWithPath(novel_and_source_path)
+
+    if not source:
+        return {"error": "Source not found"}, 404
+        
+    source.novel.clicks += 1
 
     return render_template(
         "reader/chapter.html",

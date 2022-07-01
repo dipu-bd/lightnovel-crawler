@@ -1,7 +1,7 @@
 import json
 from .Novel import Novel, NovelFromSource
 from pathlib import Path
-
+import shutil
 
 def get_novel_info(novel_folder: Path) -> Novel:
     """
@@ -13,6 +13,7 @@ def get_novel_info(novel_folder: Path) -> Novel:
 
     novel = Novel(novel_folder.absolute())
 
+    # --------------------------------------------------------------------------
     language: set[str] = set()
 
     for source_folder in novel_folder.iterdir():
@@ -55,6 +56,25 @@ def get_novel_info(novel_folder: Path) -> Novel:
         novel.title = novel_folder.name
     novel.source_count = len(novel.sources)
     novel.search_words = sanitize(novel.title + " " + novel.author).split(" ")
+    
+    
+    # --------------------------------------------------------------------------
+    
+
+    novel_stats_file = Path(novel_folder / "stats.json")
+
+    if not novel_stats_file.exists():
+        shutil.copy(str(Path(__file__).parent / "_stats.json"), str(novel_stats_file))
+
+    with open(novel_stats_file, "r", encoding="utf-8") as f:
+        novel_stats = json.load(f)
+        novel.clicks = novel_stats["clicks"]
+        novel.ratings = novel_stats["ratings"]
+        novel.favorites = novel_stats["favorites"]
+
+    novel.overall_rating = sum(novel.ratings.values()) / len(novel.ratings)
+    novel.favorites_count = len(novel.favorites)
+    
     return novel
 
 
