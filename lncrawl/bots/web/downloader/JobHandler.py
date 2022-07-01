@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+from typing import List
 from lncrawl.core.app import App
 from lncrawl.core.crawler import Crawler
 import logging
@@ -13,25 +14,23 @@ from .. import lib
 
 
 class JobHandler:
-    original_query = ""
+    original_query: str = ""
     selected_novel = None
     is_busy = False
-    search_results = None
-    is_finished = False
-    crashed = False
-    last_action = None
+    search_results: dict[str, int | str | List[dict[str, str | int]]] | None = None
+    crashed: bool = False
+    last_action: str = "Created job"
     metadata_downloaded = False
 
-    def __init__(self, job_id):
+    def __init__(self, job_id: str):
         self.app = App()
         self.app.output_formats = {"json": True}
         self.job_id = job_id
         self.last_activity = datetime.now()
         self.executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix=job_id)
-        
 
     # -----------------------------------------------------------------------------
-    def crash(self, reason):
+    def crash(self, reason: str):
         print(reason)
         self.crashed = True
         self.set_last_action(reason)
@@ -45,7 +44,10 @@ class JobHandler:
     def destroy_sync(self):
         try:
             lib.jobs[self.job_id] = lib.FinishedJob(
-                (not self.crashed), self.last_action, self.last_activity
+                (not self.crashed),
+                self.last_action,
+                self.last_activity,
+                self.original_query,
             )
 
             self.app.destroy()
@@ -61,7 +63,7 @@ class JobHandler:
     def busy(self):
         return {"Error": f"Busy, {self.last_action} started at {self.last_activity}"}
 
-    def set_last_action(self, action):
+    def set_last_action(self, action: str):
         print("starting action : ", action)
         self.last_action = action
         self.last_activity = datetime.now()
@@ -84,12 +86,12 @@ class JobHandler:
             return self.last_action
 
     # -----------------------------------------------------------------------------
-    def get_list_of_novel(self, query):
+    def get_list_of_novel(self, query: str) -> None:
         self.original_query = query
         self.is_busy = True
         self.executor.submit(self._get_list_of_novel, query)
 
-    def _get_list_of_novel(self, query):
+    def _get_list_of_novel(self, query: str):
         if len(query) < 4:
             self.is_busy = False
             return
@@ -122,14 +124,15 @@ class JobHandler:
             "query": query,
         }
 
-    def select_novel(self, novel_id):
+    def select_novel(self, novel_id: int) -> None:
         self.selected_novel = self.app.search_results[novel_id]
-        
-    # -----------------------------------------------------------------------------
 
+    # -----------------------------------------------------------------------------
 
     def get_list_of_sources(self):
         self.set_last_action("Source selection")
+
+        assert self.selected_novel, "No novel selected"
 
         return {
             "novel": self.selected_novel["title"],
@@ -142,21 +145,23 @@ class JobHandler:
             ],
         }
 
-    def select_source(self, source_id):
+    def select_source(self, source_id: int):
         self.is_busy = True
 
+        assert self.selected_novel, "No novel selected"
+
         self.set_last_action(f"Selected {self.selected_novel['novels'][source_id]}")
-        self.app.prepare_crawler(self.selected_novel["novels"][source_id]["url"])
+        self.app.prepare_crawler(self.selected_novel["novels"][source_id]["url"])  # type: ignore
 
         self.set_last_action("Getting information about your novel...")
         self.executor.submit(self.download_novel_info)
 
     # -----------------------------------------------------------------------------
 
-    def prepare_direct_download(self, url:str):
+    def prepare_direct_download(self, url: str):
         self.original_query = url
         self.is_busy = True
-        self.app.prepare_crawler(url)
+        self.app.prepare_crawler(url)  # type: ignore
         self.executor.submit(self.download_novel_info)
 
     # -----------------------------------------------------------------------------
@@ -169,8 +174,7 @@ class JobHandler:
         except Exception as ex:
             return self.crash(f"Failed to get novel info : {ex}")
 
-
-        source_name = slugify(urlparse(self.app.crawler.home_url).netloc)
+        source_name = slugify(urlparse(self.app.crawler.home_url).netloc)  # type: ignore
         output_path = lib.LIGHTNOVEL_FOLDER / self.app.good_file_name / source_name
         self.app.output_path = str(output_path)
         if not output_path.exists():
@@ -179,7 +183,6 @@ class JobHandler:
         self.is_busy = False
         self.metadata_downloaded = True
 
-
     # def select_range(self, start: int, finish: int):
     #     print(f"Selected range: {start -1} - {finish-1}")
     #     self.set_last_action("Set download range")
@@ -187,7 +190,7 @@ class JobHandler:
 
     def _select_range(self):
         self.set_last_action("Set download range")
-        self.app.chapters = self.app.crawler.chapters[:]
+        self.app.chapters = self.app.crawler.chapters[:]  # type: ignore
 
     def start_download(self):
         self.is_busy = True
@@ -215,9 +218,8 @@ class JobHandler:
 
         self.destroy()
 
-
     def _update_website(self):
-        
+
         novel_info = lib.get_novel_info(Path(self.app.output_path).parent)
 
         is_in_all_novels = False
@@ -226,8 +228,6 @@ class JobHandler:
                 lib.all_downloaded_novels[i] = novel_info
                 is_in_all_novels = True
                 break
-        
+
         if not is_in_all_novels:
             lib.all_downloaded_novels.append(novel_info)
-
-    

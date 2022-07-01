@@ -1,1 +1,1 @@
-from . import routes
+from . import routes  # type:ignore

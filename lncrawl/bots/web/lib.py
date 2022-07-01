@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 from ... import constants
 from .Novel import Novel, NovelFromSource
+from datetime import datetime
+
 
 class FinishedJob:
     """
@@ -12,16 +14,17 @@ class FinishedJob:
     Replace JobHandler in lib.jobs when JobHandler is destroyed
     """
 
-    is_finished = True
     is_busy = False
     last_action = "Finished"
 
-    def __init__(self, success, message, end_date, original_query):
+    def __init__(
+        self, success: bool, message: str, end_date: datetime, original_query: str
+    ):
         print(f"FinishedJob: {success}, {message}, {end_date}")
         self.original_query = original_query
         self.success = success
         self.message = message
-        self.end_date = end_date 
+        self.end_date = end_date
 
     def get_status(self):
         return self.message
@@ -33,10 +36,10 @@ class FinishedJob:
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from .downloader.job_handler import JobHandler
+    from .downloader.JobHandler import JobHandler
 
 
-jobs:dict[str, FinishedJob|JobHandler] = {}
+jobs: dict[str, FinishedJob | JobHandler] = {}
 
 
 LIGHTNOVEL_FOLDER = Path(constants.DEFAULT_OUTPUT_PATH)
@@ -44,25 +47,22 @@ if not LIGHTNOVEL_FOLDER.exists():
     LIGHTNOVEL_FOLDER.mkdir()
 
 
-
-
-
-def get_novel_info(novel_folder: Path)->Novel:
+def get_novel_info(novel_folder: Path) -> Novel:
     """
     Collects information about a novel locally.
-    source isn't specified, so we need to find a source that has sufficient 
+    source isn't specified, so we need to find a source that has sufficient
         metadata for the novel and set it to prefered_source.
     Metadata are randomly picked from the sources.
     """
 
     novel = Novel(novel_folder.absolute())
 
-    language = set()
+    language: set[str] = set()
 
     for source_folder in novel_folder.iterdir():
         source = _get_source_info(source_folder)
         source.novel = novel
-         
+
         if not novel.cover and source.cover:
             novel.cover = source.cover
             novel.prefered_source = source
@@ -75,7 +75,7 @@ def get_novel_info(novel_folder: Path)->Novel:
 
         if not novel.latest and source.latest:
             novel.latest = source.latest
-        
+
         if not novel.first and source.first:
             novel.first = source.first
 
@@ -87,10 +87,10 @@ def get_novel_info(novel_folder: Path)->Novel:
 
         if not novel.summary and source.summary:
             novel.summary = source.summary
-        
+
         if source.language:
             language.add(source.language)
-        
+
         novel.sources.append(source)
 
     novel.language = ", ".join(language)
@@ -98,7 +98,7 @@ def get_novel_info(novel_folder: Path)->Novel:
     if not novel.title:
         novel.title = novel_folder.name
     novel.source_count = len(novel.sources)
-    novel.search_words = sanitize(novel.title + " " + novel.author).split(" ") 
+    novel.search_words = sanitize(novel.title + " " + novel.author).split(" ")
     return novel
 
 
@@ -117,21 +117,21 @@ def _get_source_info(source_folder: Path) -> NovelFromSource:
         with open(source_folder / "meta.json", "r", encoding="utf-8") as f:
             meta = json.load(f)
 
-        try :
+        try:
             source.latest = meta["chapters"][-1]["title"]
         except KeyError:
-            source.latest = None
-        try :
+            source.latest = ""
+        try:
             source.first = meta["chapters"][0]["title"]
         except KeyError:
-            source.first = None
-        source.author = meta["author"] if "author" in meta else None
-        source.chapter_count = len(meta["chapters"]) if "chapters" in meta else None
-        source.volume_count = len(meta["volumes"]) if "volumes" in meta else None
+            source.first = ""
+        source.author = meta["author"] if "author" in meta else ""
+        source.chapter_count = len(meta["chapters"]) if "chapters" in meta else 0
+        source.volume_count = len(meta["volumes"]) if "volumes" in meta else 0
         source.title = meta["title"] if "title" in meta else source_folder.parent.name
-        source.language = meta["language"] if "language" in meta else 'en'
-        source.summary = meta["summary"] if "summary" in meta else None
-        source.language = meta["language"] if "language" in meta else None
+        source.language = meta["language"] if "language" in meta else "en"
+
+        source.summary = meta["summary"] if "summary" in meta else ""
 
     return source
 
@@ -148,8 +148,9 @@ def sanitize(text: str) -> str:
     text = unicodedata.normalize("NFKD", text)
     return "".join([c for c in text if not unicodedata.combining(c)])
 
+
 @lru_cache
-def findSourceWithPath(novel_and_source_path: Path) -> NovelFromSource|None:
+def findSourceWithPath(novel_and_source_path: Path) -> NovelFromSource | None:
     """
     Find the NovelFromSource object corresponding to the path
     """
@@ -158,7 +159,7 @@ def findSourceWithPath(novel_and_source_path: Path) -> NovelFromSource|None:
         if novel_and_source_path.parent == n.path:
             novel = n
             break
-    if not novel :
+    if not novel:
         return None
 
     source = None
@@ -168,8 +169,9 @@ def findSourceWithPath(novel_and_source_path: Path) -> NovelFromSource|None:
             break
     if not source:
         return None
-    
+
     return source
+
 
 all_downloaded_novels: List[Novel] = []
 for novel_folder in LIGHTNOVEL_FOLDER.iterdir():

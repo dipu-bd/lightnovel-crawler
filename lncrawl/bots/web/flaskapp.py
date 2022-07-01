@@ -1,10 +1,11 @@
-from flask import Flask, send_file, send_from_directory
+from flask import Flask, send_file, send_from_directory  # type: ignore
 from .lib import LIGHTNOVEL_FOLDER
 import pathlib
-from flask_minify import Minify
+from flask_minify import Minify  # type: ignore
 
 app = Flask(__name__)
 Minify(app=app, html=True, js=True, cssless=True)
+
 
 @app.route("/")
 def hello_world():
@@ -17,7 +18,7 @@ def favicon():
 
 
 @app.route("/image/<path:file>")
-def image(file):
+def image(file: pathlib.Path):
     path: pathlib.Path = LIGHTNOVEL_FOLDER / file
     if path.exists() and path.name == "cover.jpg":
         return send_from_directory(LIGHTNOVEL_FOLDER, file)
