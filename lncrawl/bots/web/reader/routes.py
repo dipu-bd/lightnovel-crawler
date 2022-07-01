@@ -1,6 +1,7 @@
 from ..flaskapp import app
 from flask import redirect, render_template, request, send_from_directory  # type: ignore
 from .. import lib
+from .. import read_novel_info
 from urllib.parse import unquote_plus
 import json
 from math import ceil
@@ -105,9 +106,18 @@ def chapter(novel_and_source_path: Path, chapter_id: int):
     prev_chapter = chapter_folder / f"{str(chapter_id - 1).zfill(5)}.json"
     next_chapter = chapter_folder / f"{str(chapter_id + 1).zfill(5)}.json"
 
-    with open(chapter_file, encoding="utf8") as f:
-        chapter = json.load(f)
-
+    try:
+        with open(chapter_file, encoding="utf8") as f:
+            chapter = json.load(f)
+    except FileNotFoundError:
+        chapter = {
+            "id": chapter_id,
+            "volume": 0,
+            "title": "N/A",
+            "url": "N/A",
+            "volume_title": "N/A",
+            "body": "<p>Chapter not found</p>",
+        }
     source = lib.findSourceWithPath(novel_and_source_path)
 
     return render_template(
@@ -145,7 +155,7 @@ def lnsearchlive():
     if not input_content:
         return {"error": "No input content"}, 400
 
-    search_query = lib.sanitize(input_content.replace("+", " ")).split(" ")
+    search_query = read_novel_info.sanitize(input_content.replace("+", " ")).split(" ")
     ratio: List[tuple[Novel, int]] = []
     for downloaded in lib.all_downloaded_novels:
         count = 0

@@ -8,10 +8,9 @@ import logging
 from urllib.parse import urlparse
 from slugify import slugify
 from pathlib import Path
-
 logger = logging.getLogger(__name__)
 from .. import lib
-
+from .. import read_novel_info
 
 class JobHandler:
     original_query: str = ""
@@ -43,7 +42,7 @@ class JobHandler:
 
     def destroy_sync(self):
         try:
-            lib.jobs[self.job_id] = lib.FinishedJob(
+            lib.jobs[self.job_id] = FinishedJob(
                 (not self.crashed),
                 self.last_action,
                 self.last_activity,
@@ -220,7 +219,7 @@ class JobHandler:
 
     def _update_website(self):
 
-        novel_info = lib.get_novel_info(Path(self.app.output_path).parent)
+        novel_info = read_novel_info.get_novel_info(Path(self.app.output_path).parent)
 
         is_in_all_novels = False
         for i, downloaded_info in enumerate(lib.all_downloaded_novels):
@@ -231,3 +230,30 @@ class JobHandler:
 
         if not is_in_all_novels:
             lib.all_downloaded_novels.append(novel_info)
+
+
+
+
+class FinishedJob:
+    """
+    Represent a successfully downloaded novel, or a failed download.
+    Replace JobHandler in lib.jobs when JobHandler is destroyed
+    """
+
+    is_busy = False
+    last_action = "Finished"
+
+    def __init__(
+        self, success: bool, message: str, end_date: datetime, original_query: str
+    ):
+        print(f"FinishedJob: {success}, {message}, {end_date}")
+        self.original_query = original_query
+        self.success = success
+        self.message = message
+        self.end_date = end_date
+
+    def get_status(self):
+        return self.message
+
+    def destroy(self):
+        pass

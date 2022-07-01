@@ -1,7 +1,7 @@
 from ..flaskapp import app
 from flask import redirect, request, render_template
 from .. import lib
-from .JobHandler import JobHandler
+from .Job import JobHandler, FinishedJob
 import random
 
 # ----------------------------------------------- Search Novel ----------------------------------------------- #
@@ -50,7 +50,7 @@ def novel_select_page(job_id: int):
     if job.is_busy:
         return {"status": "pending", "html": job.get_status()}, 200
 
-    if isinstance(job, lib.FinishedJob):
+    if isinstance(job, FinishedJob):
         return redirect("/lncrawl/addnovel/search")
 
     if not job.search_results:
@@ -71,7 +71,7 @@ def novel_selected(novel_id: int, job_id: int):
     if job.is_busy:
         return {"status": "pending", "html": job.get_status()}, 200
 
-    if isinstance(job, lib.FinishedJob):
+    if isinstance(job, FinishedJob):
         return redirect("/lncrawl/addnovel/search")
 
     job.select_novel(novel_id)
@@ -92,7 +92,7 @@ def download(novel_id: int, source_id: int, job_id: int):
     if job.is_busy:
         return {"status": "pending", "html": job.get_status()}, 200
 
-    if isinstance(job, lib.FinishedJob):
+    if isinstance(job, FinishedJob):
         return {"status": "success", "html": job.get_status()}, 200
 
     if not job.metadata_downloaded:
@@ -120,7 +120,7 @@ def direct_download(job_id: str):
         {"status": "error", "html": "Invalid URL"}
 
     if not job_id in lib.jobs or (
-        isinstance(lib.jobs[job_id], lib.FinishedJob)
+        isinstance(lib.jobs[job_id], FinishedJob)
         and lib.jobs[job_id].original_query == novel_url
     ):
         lib.jobs[job_id] = job = JobHandler(job_id)
@@ -130,7 +130,7 @@ def direct_download(job_id: str):
     if job.is_busy:
         return {"status": "pending", "html": job.get_status()}, 200
 
-    if isinstance(job, lib.FinishedJob):
+    if isinstance(job, FinishedJob):
         return {"status": "success", "html": job.get_status()}, 200
 
     if not job.metadata_downloaded:
