@@ -70,10 +70,8 @@ def get_novel_info(novel_folder: Path) -> Novel:
         novel_stats = json.load(f)
         novel.clicks = novel_stats["clicks"]
         novel.ratings = novel_stats["ratings"]
-        novel.favorites = novel_stats["favorites"]
 
     novel.overall_rating = sum(novel.ratings.values()) / len(novel.ratings)
-    novel.favorites_count = len(novel.favorites)
     
     return novel
 

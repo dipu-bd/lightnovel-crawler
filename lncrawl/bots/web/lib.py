@@ -51,9 +51,9 @@ for novel_folder in LIGHTNOVEL_FOLDER.iterdir():
         all_downloaded_novels.append(read_novel_info.get_novel_info(novel_folder))
 
 
-# Periodic function to update each novels stats
 import threading, time
 def update_novels_stats():
+    """Periodic function to update each novels stats"""
     while True:
         time.sleep(600) # 10 minutes
         for novel in all_downloaded_novels:
@@ -62,7 +62,6 @@ def update_novels_stats():
             with open(novel.path / "stats.json", "w", encoding="utf-8") as f:
                 novel_stats = {
                     "clicks": novel.clicks,
-                    "favorites": novel.favorites,
                     "ratings": novel.ratings,
                 }
 
