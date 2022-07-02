@@ -114,7 +114,13 @@
 							<figure class="novel-cover">
 								<img class="lazyload" src="/image/{{ novel.cover }}" alt="{{ novel.title }}" />
 							</figure>
+							<div class="novel-languages">
+								{% for language in novel.language.split(', ') %}
+								<span class="flag-wrap"><img src="/flag/{{ language }}" alt="{{ language }} flag"/></span>
+								{% endfor %}
+							</div>
 						</a>
+
 					</div>
 					<div class="item-body">
 						<h4 class="novel-title text1row">

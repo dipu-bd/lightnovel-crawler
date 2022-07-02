@@ -27,6 +27,9 @@ def image(file: pathlib.Path):
         print(path.name)
     return "", 404
 
+@app.route("/flag/<string:code>")
+def flag(code: str):
+    return send_file(f"static/assets/flags/{code}.svg", mimetype="image/svg+xml")
 
 # --------------------------------------------------------------
 

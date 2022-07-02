@@ -1581,6 +1581,15 @@ article header p {
 	margin: 0;
 }
 
+.cover-wrap .novel-languages {
+	position: absolute;
+	bottom: -2%;
+	right: 0px;
+	z-index: 1;
+	display: inline-flex;
+	line-height: 0.9;
+}
+
 .novel-list.horizontal .novel-item .item-body {
 	width: auto;
 	flex-grow: 1;
@@ -1616,6 +1625,7 @@ article header p {
 .novel-item p,
 .novel-item span {
 	display: block;
+	position: relative;
 }
 
 .novel-item p {
