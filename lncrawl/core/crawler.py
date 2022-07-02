@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from threading import Semaphore
 from typing import Dict, List
 from urllib.parse import urlparse
+from pathlib import Path
 
 import cloudscraper
 from bs4 import BeautifulSoup
@@ -64,9 +65,13 @@ class Crawler(ABC):
         self.novel_title = ''
         self.novel_author = ''
         self.summary = ''
-        self.language = 'en'
         self.novel_cover = None
         self.is_rtl = False
+
+        # The folder in which the crawler is located
+        # If the source contains multiple languages it need to be overridden 
+            # by crawlers to avoid having language='multi'
+        self.language = Path(self.file_path).parent.name
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume
