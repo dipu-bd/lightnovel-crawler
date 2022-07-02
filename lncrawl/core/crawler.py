@@ -71,7 +71,12 @@ class Crawler(ABC):
         # The folder in which the crawler is located
         # If the source contains multiple languages it need to be overridden 
             # by crawlers to avoid having language='multi'
-        self.language = Path(self.file_path).parent.name
+        crawler_path = Path(self.file_path)
+        # English source are store inside a second folder
+        if crawler_path.parent.parent.name == 'en': 
+            self.language = crawler_path.parent.parent.name
+        else :
+            self.language = crawler_path.parent.name
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume
