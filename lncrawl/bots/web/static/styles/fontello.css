@@ -409,7 +409,7 @@
 	--b: 3px;
 	aspect-ratio: 1;
 	border: 2px solid #000;
-	text-align:center;
+	text-align: center;
 	width: 15px !important;
 	margin-top: 12px;
 	margin-right: 6px !important;
@@ -427,4 +427,17 @@
 	-o-transform: rotate(90deg);
 	transform: rotate(90deg);
 	display: inline-block;
-  }
+}
+
+.rating-star p span.star-wrap .icon-star,
+.rating-star p span.star-wrap .icon-star-empty,
+.rating-star p span.star-wrap .icon-star-half {
+	color: var(--star-color-on);
+	font-size: 1.1em;
+
+}
+
+.rating-star p span.star-wrap {
+	margin-right: 1px;
+	margin-bottom: 0px;
+}

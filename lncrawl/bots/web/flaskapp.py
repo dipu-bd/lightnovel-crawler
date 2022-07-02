@@ -25,6 +25,7 @@ def image(file: pathlib.Path):
     else:
         print(path)
         print(path.name)
+    return "", 404
 
 
 # --------------------------------------------------------------

@@ -17,6 +17,9 @@ def get_novel_info(novel_folder: Path) -> Novel:
     language: set[str] = set()
 
     for source_folder in novel_folder.iterdir():
+        if not source_folder.is_dir():
+            continue
+        
         source = _get_source_info(source_folder)
         source.novel = novel
 

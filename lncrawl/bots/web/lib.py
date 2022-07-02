@@ -50,6 +50,9 @@ for novel_folder in LIGHTNOVEL_FOLDER.iterdir():
     if novel_folder.is_dir():
         all_downloaded_novels.append(read_novel_info.get_novel_info(novel_folder))
 
+all_downloaded_novels.sort(key=lambda n: n.clicks, reverse=True)
+for i, n in enumerate(all_downloaded_novels, start=1):
+    n.rank = i
 
 import threading, time
 def update_novels_stats():

@@ -105,9 +105,12 @@
 					</div>
 				</nav>
 			</header>
-			<ul class="novel-list horizontal col2"> {% for novel in novels %} <li class="novel-item">
+			<ul class="novel-list horizontal col2">
+				{% for novel in novels %}
+				<li class="novel-item">
 					<div class="cover-wrap">
-						<a title="{{ novel.title }}" href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">
+						<a title="{{ novel.title }}"
+							href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">
 							<figure class="novel-cover">
 								<img class="lazyload" src="/image/{{ novel.cover }}" alt="{{ novel.title }}" />
 							</figure>
@@ -116,22 +119,57 @@
 					<div class="item-body">
 						<h4 class="novel-title text1row">
 							<a title="{{ novel.title }}"
-								href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">{{ novel.title }} </a>
+								href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">
+								{{ novel.title }}
+							</a>
 						</h4>
 						<div class="novel-stats">
-							<span><i class="icon-book-open"></i> {{ novel.chapter_count }} Chapters</span>
+							<div class="rating-star">
+								<p>
+									{% for i in range(novel.overall_rating.__int__()) %}
+									<span class="star-wrap">
+										<i class="icon-star"></i>
+									</span>
+									{% endfor %}
+									{% for i in range(5 - novel.overall_rating.__int__()) %}
+									<span class="star-wrap">
+										<i class="icon-star-empty"></i>
+									</span>
+									{% endfor %}
+									<strong>{{novel.overall_rating}} ({{ novel.ratings_count }})</strong>
+								</p>
+							</div>
+						</div>
+						{% if novel.chapter_count or novel.source_count %}
+						<div class="novel-stats">
+							{% if novel.rank %}
+							<span><i class="icon-trophy"></i> Rank {{ novel.rank }}</span>
+							{% endif %}
+							{% if novel.author %}
+							<span><i class="icon-user-circle-o"></i> {{ novel.author }}</span>
+							{% endif %}
 						</div>
 						<div class="novel-stats">
-							<span><i class="icon-crown"></i> {{ novel.author }}</span>
+							{% if novel.chapter_count %}
+							<span><i class="icon-book-open"></i> {{ novel.chapter_count }} Chapters</span>
+							{% endif %}
+							{% if novel.source_count %}
+							<span><i class="icon-tags"></i> {{ novel.source_count }} Sources</span>
+							{% endif %}
 						</div>
+						{% endif %}
+						{% if novel.author or novel.rank %}
+						{% endif %}
+						{% if novel.latest %}
 						<div class="novel-stats">
 							<span><i class="icon-pencil-2"></i> {{ novel.latest }}</span>
 						</div>
-						<div class="novel-stats">
-							<spag><i class="icon-tags"></i> {{ novel.source_count }} Sources</span>
-						</div>
+						{% endif %}
+
 					</div>
-				</li> {% endfor %} </ul>
+				</li>
+				{% endfor %}
+			</ul>
 			<footer class="pagination" style="height:auto">
 				<nav class="paging">
 					<div class="pagination-container">

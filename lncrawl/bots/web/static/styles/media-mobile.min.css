@@ -1601,7 +1601,7 @@ article header p {
 
 .novel-list.horizontal .novel-item .novel-stats>span {
 	display: inline-block;
-	min-width: 82px;
+	min-width: 106px;
 }
 
 .novel-list.horizontal.col1 .novel-item,

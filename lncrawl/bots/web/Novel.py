@@ -36,6 +36,8 @@ class Novel(_Novel):
     source_count: int = 0
     clicks : int = 0
     overall_rating: float = 0.0
+    ratings_count = property(lambda self: len(self.ratings))
+    rank:int
 
     def __init__(self, path: Path):
         self.search_words = []
