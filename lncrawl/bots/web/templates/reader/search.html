@@ -3,11 +3,29 @@
 	class=" wnsmtd idc0_340" lang="en">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0">
-	<meta name="keywords"
-		content="novel, light novel, web novel, chinese novel, korean novel, novel chapter, novel updates,">
-	<meta name="mobile-web-app-capable" content="yes">
+	{% include 'reader/component/basic_meta.html' %}
+
+
+	{% set description = ('Search a novel in LnCrawler database. Not finding what you want ? You can add it instantly from more than 140 different websites !') %}
+	{% set title = ('Search a novel in LnCrawler database') %}
+	{% set image = (WEBSITE_URL + '/static/assets/logo.bmp') %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ image }}">
+	<meta property="og:image:type" content="image/bmp">
+	<meta property="og:image:alt" content="LnCrawler">
+	<meta property="og:image:url" content="{{ image }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ image }}">
+	<meta name="twitter:image:type" content="image/bmp">
+	<meta name="twitter:image:alt" content="LnCrawler">
+	<meta name="twitter:image:url" content="{{ image }}">
+
 
 	<link rel="stylesheet" as="style"
 		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"

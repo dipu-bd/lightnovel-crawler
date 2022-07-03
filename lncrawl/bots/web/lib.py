@@ -20,6 +20,10 @@ LIGHTNOVEL_FOLDER = Path(constants.DEFAULT_OUTPUT_PATH)
 if not LIGHTNOVEL_FOLDER.exists():
     LIGHTNOVEL_FOLDER.mkdir()
 
+WEBSITE_URL = "http://88.163.246.171:54444/"
+WEBSITE_URL = WEBSITE_URL.strip("/")
+
+
 
 @lru_cache
 def findSourceWithPath(novel_and_source_path: Path) -> NovelFromSource | None:

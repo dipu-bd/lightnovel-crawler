@@ -1,11 +1,34 @@
 from flask import Flask, send_file, send_from_directory  # type: ignore
-from .lib import LIGHTNOVEL_FOLDER
+from .lib import LIGHTNOVEL_FOLDER, WEBSITE_URL
 import pathlib
 from flask_minify import Minify  # type: ignore
+language_dict = {
+    "en": "English",
+    "ja": "Japanese",
+    "zh": "Chinese",
+    "ko": "Korean",
+    "fr": "French",
+    "de": "German",
+    "es": "Spanish",
+    "it": "Italian",
+    "pt": "Portuguese",
+    "ru": "Russian",
+    "tr": "Turkish",
+    "ar": "Arabic",
+    "el": "Greek",
+    "he": "Hebrew",
+    "id": "Indonesian",
+    "pl": "Polish",
+    "th": "Thai",
+    "vi": "Vietnamese",
+}
 
 app = Flask(__name__)
 Minify(app=app, html=True, js=True, cssless=True)
 
+@app.context_processor
+def inject_stage_and_region():
+    return dict(LIGHTNOVEL_FOLDER=LIGHTNOVEL_FOLDER, WEBSITE_URL=WEBSITE_URL, language_dict=language_dict)
 
 @app.route("/")
 def hello_world():
