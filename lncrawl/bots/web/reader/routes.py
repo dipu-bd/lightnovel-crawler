@@ -20,15 +20,16 @@ def menu(page: int | None = None):
 
     #TODO : order by the most clicked novels
     """
-    last_page = ceil(len(lib.all_downloaded_novels) / 50)
-    start = ((page if page else 1) - 1) * 50
-    stop = min((page if page else 1) * 50, len(lib.all_downloaded_novels))
+    last_page = ceil(len(lib.all_downloaded_novels) / 20)
+    start = ((page if page else 1) - 1) * 20
+    stop = min((page if page else 1) * 20, len(lib.all_downloaded_novels))
 
     return render_template(
         "reader/menu.html",
         novels=lib.all_downloaded_novels[start:stop],
         page=page,
         last_page=last_page,
+        min=min
     )
 
 

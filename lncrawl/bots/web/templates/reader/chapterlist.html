@@ -5,11 +5,33 @@
 <head>
 	{% include 'reader/component/basic_meta.html' %}
 
+	{% set description = ( 'All ' + source.chapter_count.__str__() + ' chapters of ' + source.title + ((' in ' + language_dict[source.language]) if source.language in language_dict else ' ') + ((' by ' +  source.author) if source.author else '') + ' from source.slug' ) %}
+	{% set title = ("Chapters " + ((page-1) * 20).__str__() + " - " + min(page*20, source.chapter_count).__str__() + " of " + source.title %}
+	{% set cover = (WEBSITE_URL + '/image/' + source.cover) %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ cover }}">
+	<meta property="og:image:type" content="image/jpeg">
+	<meta property="og:image:alt" content="{{ source.title }}">
+	<meta property="og:image:url" content="{{ cover }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ cover }}">
+	<meta name="twitter:image:type" content="image/jpeg">
+	<meta name="twitter:image:alt" content="{{ source.title }}">
+	<meta name="twitter:image:url" content="{{ cover }}">
+
+
+
 	<link rel="stylesheet" as="style"
 		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
 		crossorigin="" onload="this.rel='stylesheet'">
 
-	<title>{{ novel.title }} Chapters - (Page {{ page }})</title>
+	<title>{{ title }}</title>
 
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
