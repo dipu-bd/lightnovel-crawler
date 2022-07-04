@@ -9,7 +9,8 @@ import difflib
 from pathlib import Path
 from typing import List
 from ..Novel import Novel
-
+from .. import utils
+from .. import database
 
 @app.route("/lncrawl/")
 @app.route("/lncrawl/page-<int:page>")
@@ -20,16 +21,16 @@ def menu(page: int | None = None):
 
     #TODO : order by the most clicked novels
     """
-    last_page = ceil(len(lib.all_downloaded_novels) / 20)
+    last_page = ceil(len(database.all_downloaded_novels) / 20)
     start = ((page if page else 1) - 1) * 20
-    stop = min((page if page else 1) * 20, len(lib.all_downloaded_novels))
+    stop = min((page if page else 1) * 20, len(database.all_downloaded_novels))
 
     return render_template(
         "reader/menu.html",
-        novels=lib.all_downloaded_novels[start:stop],
+        novels=database.all_downloaded_novels[start:stop],
         page=page,
         last_page=last_page,
-        min=min
+        min=min,
     )
 
 
@@ -43,7 +44,7 @@ def chapterlist(novel_and_source_path: Path, page: int | None = None):
     novel_and_source_path = lib.LIGHTNOVEL_FOLDER / unquote_plus(
         str(novel_and_source_path)
     )
-    source = lib.findSourceWithPath(novel_and_source_path)
+    source = utils.findSourceWithPath(novel_and_source_path)
     if not source:
         return {"error": "Novel not found"}, 404
 
@@ -57,10 +58,11 @@ def chapterlist(novel_and_source_path: Path, page: int | None = None):
 
     return render_template(
         "reader/chapterlist.html",
-        novel=source,
+        source=source,
         chapters=chapters,
         page=page,
         last_page=ceil(source.chapter_count / 100),
+        min=min,
     )
 
 
@@ -77,6 +79,7 @@ def gotochap(novel_and_source_path: Path):
     )
 
 
+
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/")
 def novel_info(novel_and_source_path: Path):
     """
@@ -86,14 +89,18 @@ def novel_info(novel_and_source_path: Path):
         str(novel_and_source_path)
     )
 
-    source = lib.findSourceWithPath(novel_and_source_path)
+    source = utils.findSourceWithPath(novel_and_source_path)
     if not source:
         return {"error": "Source not found"}, 404
 
     source.novel.clicks += 1
 
     return render_template(
-        "reader/novel_info.html", source=source, len_sources=len(source.novel.sources)
+        "reader/novel_info.html",
+        source=source,
+        len_sources=len(source.novel.sources),
+        human_format=utils.human_format,
+        emoji_flag=utils.emoji_flag,
     )
 
 
@@ -123,11 +130,11 @@ def chapter(novel_and_source_path: Path, chapter_id: int):
             "volume_title": "N/A",
             "body": "<p>Chapter not found</p>",
         }
-    source = lib.findSourceWithPath(novel_and_source_path)
+    source = utils.findSourceWithPath(novel_and_source_path)
 
     if not source:
         return {"error": "Source not found"}, 404
-        
+
     source.novel.clicks += 1
 
     return render_template(
@@ -167,7 +174,7 @@ def lnsearchlive():
 
     search_query = read_novel_info.sanitize(input_content.replace("+", " ")).split(" ")
     ratio: List[tuple[Novel, int]] = []
-    for downloaded in lib.all_downloaded_novels:
+    for downloaded in database.all_downloaded_novels:
         count = 0
         for search_word in search_query:
             count += len(
@@ -177,7 +184,7 @@ def lnsearchlive():
 
     ratio.sort(key=lambda x: x[1], reverse=True)
 
-    number_of_results = min(20, len(lib.all_downloaded_novels))
+    number_of_results = min(20, len(database.all_downloaded_novels))
 
     search_results = [novel for novel, ratio in ratio[:number_of_results] if ratio != 0]
 

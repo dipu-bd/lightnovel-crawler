@@ -5,8 +5,8 @@
 <head>
 	{% include 'reader/component/basic_meta.html' %}
 
-	{% set description = ( 'All ' + source.chapter_count.__str__() + ' chapters of ' + source.title + ((' in ' + language_dict[source.language]) if source.language in language_dict else ' ') + ((' by ' +  source.author) if source.author else '') + ' from source.slug' ) %}
-	{% set title = ("Chapters " + ((page-1) * 20).__str__() + " - " + min(page*20, source.chapter_count).__str__() + " of " + source.title %}
+	{% set description = ( 'All ' + source.chapter_count.__str__() + ' chapters of ' + source.title + ((' in ' + language_dict[source.language]) if source.language in language_dict else ' ') + ((' by ' +  source.author) if source.author else '') + ' from ' + source.slug ) %}
+	{% set title = ("Chapters " + (((page if page else 1) -1) * 100 + 1).__str__() + " - " + min((page if page else 1)*100, source.chapter_count).__str__() + " of " + source.title) %}
 	{% set cover = (WEBSITE_URL + '/image/' + source.cover) %}
 
 	<meta name="description" content="{{ description }}">
@@ -57,26 +57,26 @@
 			<header class="container">
 				<div class="novel-item">
 					<div class="cover-wrap">
-						<a title="{{ novel.title }}" href="../">
+						<a title="{{ source.title }}" href="../">
 							<figure class="novel-cover">
-								<img src="/image/{{ novel.cover }}" alt="{{ novel.title }}" />
+								<img src="/image/{{ source.cover }}" alt="{{ source.title }}" />
 							</figure>
 						</a>
 					</div>
 					<div class="item-body">
 						<h1>
-							<a class="text2row" title="God of Tricksters" href="../">{{ novel.title }}</a>
+							<a class="text2row" title="God of Tricksters" href="../">{{ source.title }}</a>
 						</h1>
 					</div>
 				</div>
 				<span class="divider"></span>
-				<h2>{{ novel.title}} Chapters - (Page {{ page }})</h2>
+				<h2>{{ source.title}} Chapters - (Page {{ page }})</h2>
 				<p>
-					{{ novel.summary }}
+					{{ source.summary }}
 				</p>
 				<p>
 					Latest Release:<br>
-					<a href="../chapter-{{ novel.chapter_count }}" title="{{ novel.latest }}">{{ novel.latest }}</a>
+					<a href="../chapter-{{ source.chapter_count }}" title="{{ source.latest }}">{{ source.latest }}</a>
 				</p>
 			</header>
 			<section class="container" id="chpagedlist" data-load="0">

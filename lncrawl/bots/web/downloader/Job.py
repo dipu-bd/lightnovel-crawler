@@ -10,6 +10,7 @@ from slugify import slugify
 from pathlib import Path
 logger = logging.getLogger(__name__)
 from .. import lib
+from .. import database
 from .. import read_novel_info
 
 class JobHandler:
@@ -42,7 +43,7 @@ class JobHandler:
 
     def destroy_sync(self):
         try:
-            lib.jobs[self.job_id] = FinishedJob(
+            database.jobs[self.job_id] = FinishedJob(
                 (not self.crashed),
                 self.last_action,
                 self.last_activity,
@@ -222,14 +223,16 @@ class JobHandler:
         novel_info = read_novel_info.get_novel_info(Path(self.app.output_path).parent)
 
         is_in_all_novels = False
-        for i, downloaded_info in enumerate(lib.all_downloaded_novels):
+        for i, downloaded_info in enumerate(database.all_downloaded_novels):
             if downloaded_info == novel_info:
-                lib.all_downloaded_novels[i] = novel_info
+                novel_info.rank = downloaded_info.rank
+                database.all_downloaded_novels[i] = novel_info
                 is_in_all_novels = True
                 break
 
         if not is_in_all_novels:
-            lib.all_downloaded_novels.append(novel_info)
+            novel_info.rank = len(database.all_downloaded_novels) + 1
+            database.all_downloaded_novels.append(novel_info)
 
 
 

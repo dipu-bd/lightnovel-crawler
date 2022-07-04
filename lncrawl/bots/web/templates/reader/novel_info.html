@@ -86,6 +86,26 @@
 								<span>Author:</span>
 								<span itemprop="author">{{ source.author }}</span>
 							</div>
+							<div class="rating">
+								<div class="rank">
+									<span><i class="icon-trophy"></i> Rank {{ source.novel.rank }}</span>
+								</div>
+								<div class="rating-star" itemprop="aggregateRating" itemscope="" itemtype="https://schema.org/AggregateRating">
+									<p>
+										{% for i in range(source.novel.overall_rating.__int__()) %}
+										<span class="star-wrap">
+											<i class="icon-star"></i>
+										</span>
+										{% endfor %}
+										{% for i in range(5 - source.novel.overall_rating.__int__()) %}
+										<span class="star-wrap">
+											<i class="icon-star-empty"></i>
+										</span>
+										{% endfor %}
+										<strong>{{source.novel.overall_rating}} ({{ source.novel.ratings_count }})</strong>
+									</p>
+								</div>
+							</div>
 
 						</div>
 
@@ -95,10 +115,19 @@
 								<small>Chapters</small>
 							</span>
 							<span>
-								<strong><i class="icon-tags"></i>{{ len_sources }}</strong>
+								<strong><i class="icon-tags"></i> {{ len_sources }}</strong>
 								<small>Sources</small>
 							</span>
-
+							<span>
+								<strong><i class="icon-eye"></i> {{ human_format(source.novel.clicks) }}</strong>
+								<small>Views</small>
+							</span>
+							<span> 
+								<strong style="align-self: center;">
+									<img src="{{ url_for('static',filename='assets/flags/'+ source.language + '.svg') }}" alt="{{ source.language }} flag" style="width: 25px;margin-top: 4px;">
+								</strong>  
+								<small>Language</small>
+							</span>
 
 						</div>
 
@@ -108,7 +137,7 @@
 								<option value="../{{ source.slug }}">{{ source.slug }}</option>
 								{% for s in source.novel.sources %}
 								{% if s != source %}
-								<option value="../{{ s.slug }}">{{ s.slug }}</option>
+								<option value="../{{ s.slug }}">{{ emoji_flag(source.language) }} - {{ s.slug }}</option>
 								{% endif %}
 								{% endfor %}
 							</select>

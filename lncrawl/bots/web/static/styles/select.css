@@ -1,7 +1,7 @@
 select.sel {
 	font-size: 1.5rem;
 	display: block;
-	margin: 3em 0em;
+	margin-bottom: 20px;
 	width: 350px;
 	background-color: transparent;
 	border: none;
@@ -24,5 +24,4 @@ select.sel {
 select.sel option {
 	background-color: var(--bg-color);
 	color: var(--text-color);
-  }
-  
+}
