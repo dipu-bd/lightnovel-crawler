@@ -20,8 +20,19 @@ LIGHTNOVEL_FOLDER = Path(constants.DEFAULT_OUTPUT_PATH)
 if not LIGHTNOVEL_FOLDER.exists():
     LIGHTNOVEL_FOLDER.mkdir()
 
-WEBSITE_URL = "http://88.163.246.171:54444/"
+config_file = Path("lncrawl/bots/web/config.json")
+if not config_file.exists():
+    with open(config_file, "w", encoding="utf-8") as f:
+        json.dump({"host": "localhost", "port":"5000", "website_url":"localhost:5000"}, f, indent=4)
+with open(config_file, "r", encoding="utf-8") as f:
+    config = json.load(f)
+
+WEBSITE_URL = config["website_url"]
+HOST = config["host"]
+PORT = config["port"]
 WEBSITE_URL = WEBSITE_URL.strip("/")
+
+
 
 
 
