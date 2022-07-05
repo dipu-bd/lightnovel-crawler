@@ -118,6 +118,7 @@ $ docker run -v ~/Lightnovels:/app/Lightnovels -it lncrawl
 ### Termux (Android)
 
 > Please read before proceeding:
+>
 > - It is not guaranteed that the app will run smoothly in all devices.
 > - It may take a long time to install depending on your mobile processor.
 > - It is recommended to use the bots on either Discord or Telegram if you are on mobile.
@@ -227,6 +228,7 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -291,6 +293,7 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~
 ```
+
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -373,7 +376,6 @@ We are supporting 211 sources and 241 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -1212,7 +1214,6 @@ We are supporting 211 sources and 241 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish, Castilian
 
 <table>
@@ -1235,7 +1236,6 @@ We are supporting 211 sources and 241 crawlers.
 </tbody>
 </table>
 
-
 ### `fr` French
 
 <table>
@@ -1257,7 +1257,6 @@ We are supporting 211 sources and 241 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -1351,7 +1350,6 @@ We are supporting 211 sources and 241 crawlers.
 </tbody>
 </table>
 
-
 ### `multi` Multilingual
 
 <table>
@@ -1434,7 +1432,6 @@ We are supporting 211 sources and 241 crawlers.
 </tbody>
 </table>
 
-
 ### `ru` Russian
 
 <table>
@@ -1451,7 +1448,6 @@ We are supporting 211 sources and 241 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -1484,7 +1480,6 @@ We are supporting 211 sources and 241 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 
@@ -1782,3 +1777,13 @@ We are supporting 211 sources and 241 crawlers.
 - SNB
 - TCR
 - HTML
+
+## Sponsors
+
+<table>
+  <tbody>
+    <tr align="center">
+      <td align="center"><a href="https://wuxiaworld.eu"><img src="https://www.wuxiaworld.eu/apple-touch-icon.png" width="200px;" alt=""/><br /><sub><h3>Wuxiaworld</b></sub></a></td>
+    </tr>
+  </tbody>
+</table>
