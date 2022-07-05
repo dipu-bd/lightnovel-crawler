@@ -1750,6 +1750,9 @@ We are supporting 211 sources and 241 crawlers.
 <tr><td><a href="https://www.xsbiquge.com/" target="_blank">https://www.xsbiquge.com/</a></td>
 <td>Site is down</td>
 </tr>
+<tr><td><a href="https://www.wuxiaworld.eu/" target="_blank">https://www.wuxiaworld.eu/</a></td>
+<td>Not crawler friendly</td>
+</tr>
 </tbody>
 </table>
 
