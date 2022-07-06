@@ -2,14 +2,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import quote_plus
-from typing import Any, List
-
+from typing import Any, List, Optional
 
 @dataclass(init=False)
 class _Novel:
     title: str = ""
-    path: Path | None = None
-    cover: str | None = None
+    path: Optional[Path] = None
+    cover: Optional[str] = None
     author: str = ""
     chapter_count: int = 0
     volume_count: int = 0
@@ -32,7 +31,7 @@ class Novel(_Novel):
     """
     Holds information about a novel.
     """
-    prefered_source: NovelFromSource | None = None
+    prefered_source: Optional[NovelFromSource] = None
     source_count: int = 0
     clicks : int = 0
     overall_rating: float = 0.0

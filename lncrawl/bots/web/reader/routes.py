@@ -7,14 +7,14 @@ import json
 from math import ceil
 import difflib
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 from ..Novel import Novel
 from .. import utils
 from .. import database
 
 @app.route("/lncrawl/")
 @app.route("/lncrawl/page-<int:page>")
-def menu(page: int | None = None):
+def menu(page: Optional[int] = None):
     """
     Main page of the web interface.
     Displays all downloaded novels in a random order.
@@ -36,7 +36,7 @@ def menu(page: int | None = None):
 
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/chapterlist/")
 @app.route("/lncrawl/novel/<path:novel_and_source_path>/chapterlist/page-<int:page>")
-def chapterlist(novel_and_source_path: Path, page: int | None = None):
+def chapterlist(novel_and_source_path: Path, page: Optional[int] = None):
     """
     Displays the list of chapters for the novel with selected source.
     """
@@ -155,9 +155,7 @@ def novel_image(novel_and_source_path: Path, image_name: str):
     path = lib.LIGHTNOVEL_FOLDER / file
     if path.exists():
         return send_from_directory(lib.LIGHTNOVEL_FOLDER, file)
-    else:
-        print(path)
-        print(path.name)
+
 
 
 @app.route("/lncrawl/lnsearchlive", methods=["POST"])

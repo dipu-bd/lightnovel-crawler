@@ -1,4 +1,4 @@
-from functools import lru_cache
+from typing import Optional
 from .Novel import NovelFromSource
 from pathlib import Path
 from . import database
@@ -51,7 +51,7 @@ def emoji_flag(country_code: str):
 
 
 
-def findSourceWithPath(novel_and_source_path: Path) -> NovelFromSource | None:
+def findSourceWithPath(novel_and_source_path: Path) -> Optional[NovelFromSource]:
     """
     Find the NovelFromSource object corresponding to the path
     """

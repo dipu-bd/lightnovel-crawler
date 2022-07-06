@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import List
+from typing import List, Optional, Union
 from lncrawl.core.app import App
 from lncrawl.core.crawler import Crawler
 import logging
@@ -17,7 +17,7 @@ class JobHandler:
     original_query: str = ""
     selected_novel = None
     is_busy = False
-    search_results: dict[str, int | str | List[dict[str, str | int]]] | None = None
+    search_results: Optional[dict[str, Union[int, str, List]]] = None
     crashed: bool = False
     last_action: str = "Created job"
     metadata_downloaded = False
