@@ -105,7 +105,7 @@ class Reaperscans(Crawler):
                 if bad in content.text:
                     content.extract()
 
-        return self.cleaner.extract_contents(contents)
+        return contents
 
     # end def
 
