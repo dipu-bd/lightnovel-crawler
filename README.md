@@ -228,7 +228,6 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
-
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -293,7 +292,6 @@ optional arguments:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~
 ```
-
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -353,7 +351,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 212 sources and 242 crawlers.
+We are supporting 213 sources and 243 crawlers.
 
 ### `ar` Arabic
 
@@ -376,6 +374,7 @@ We are supporting 212 sources and 242 crawlers.
 </tr>
 </tbody>
 </table>
+
 
 ### `en` English
 
@@ -831,6 +830,11 @@ We are supporting 212 sources and 242 crawlers.
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/readwebnovels.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://reaperscans.com/" target="_blank">https://reaperscans.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/reaperscans.py" title="08 July 2022 11:08:19 AM">2</a></td>
+<td><a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
+</tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://reincarnationpalace.com/" target="_blank">https://reincarnationpalace.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/en/r/reincarnationpalace.py" title="22 March 2022 02:50:32 PM">62</a></td>
@@ -1219,6 +1223,7 @@ We are supporting 212 sources and 242 crawlers.
 </tbody>
 </table>
 
+
 ### `es` Spanish, Castilian
 
 <table>
@@ -1241,6 +1246,7 @@ We are supporting 212 sources and 242 crawlers.
 </tbody>
 </table>
 
+
 ### `fr` French
 
 <table>
@@ -1262,6 +1268,7 @@ We are supporting 212 sources and 242 crawlers.
 </tr>
 </tbody>
 </table>
+
 
 ### `id` Indonesian
 
@@ -1355,6 +1362,7 @@ We are supporting 212 sources and 242 crawlers.
 </tbody>
 </table>
 
+
 ### `multi` Multilingual
 
 <table>
@@ -1437,6 +1445,7 @@ We are supporting 212 sources and 242 crawlers.
 </tbody>
 </table>
 
+
 ### `ru` Russian
 
 <table>
@@ -1453,6 +1462,7 @@ We are supporting 212 sources and 242 crawlers.
 </tr>
 </tbody>
 </table>
+
 
 ### `vi` Vietnamese
 
@@ -1485,6 +1495,7 @@ We are supporting 212 sources and 242 crawlers.
 </tr>
 </tbody>
 </table>
+
 
 ### `zh` Chinese
 
@@ -1754,9 +1765,6 @@ We are supporting 212 sources and 242 crawlers.
 </tr>
 <tr><td><a href="https://www.xsbiquge.com/" target="_blank">https://www.xsbiquge.com/</a></td>
 <td>Site is down</td>
-</tr>
-<tr><td><a href="https://www.wuxiaworld.eu/" target="_blank">https://www.wuxiaworld.eu/</a></td>
-<td>Not crawler friendly</td>
 </tr>
 </tbody>
 </table>
