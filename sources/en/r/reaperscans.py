@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-
 from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
@@ -82,30 +81,24 @@ class Reaperscans(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-
         contents = soup.select_one('div.text-left')
 
-        for bad in contents.select(
-            'h3, .code-block, script, .adsbygoogle, .adsense-code, .sharedaddy, a, br'
-        ):
-            bad.extract()
-
-        for content in contents.select("p"):
-            for bad in [
+        self.cleaner.blacklist_patterns = set(
+            [
+                "Translator",
+                "Proofreader",
                 "Reaper Scans",
                 "REAPER SCANS",
-                "Join our discord for updates on releases!",
-                "Join our discord",
                 "https://dsc.gg/reapercomics",
                 "https://discord.gg/MaRegMFhRb",
+                "https://discord.gg/reapercomics",
+                "h ttps://discord.gg/reapercomic",
                 "____",
-                "Translator – ",
-                "Proofreader – ",
-            ]:
-                if bad in content.text:
-                    content.extract()
+                "Join our Discord for updates on releases!",
+            ]
+        )
 
-        return contents
+        return self.cleaner.extract_contents(contents)
 
     # end def
 
