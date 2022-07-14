@@ -10,6 +10,21 @@ search_url = 'https://reaperscans.com/?s=%s&post_type=wp-manga'
 
 class Reaperscans(Crawler):
     base_url = 'https://reaperscans.com/'
+    
+    def initialize(self):
+        self.cleaner.blacklist_patterns = set([
+            "Translator",
+            "Proofreader",
+            "Reaper Scans",
+            "REAPER SCANS",
+            "https://dsc.gg/reapercomics",
+            "https://discord.gg/MaRegMFhRb",
+            "https://discord.gg/reapercomics",
+            "h ttps://discord.gg/reapercomic",
+            "____",
+            "Join our Discord for updates on releases!",
+        ])
+    # end def
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -30,7 +45,6 @@ class Reaperscans(Crawler):
         # end for
 
         return results
-
     # end def
 
     def read_novel_info(self):
@@ -82,25 +96,7 @@ class Reaperscans(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.text-left')
-
-        self.cleaner.blacklist_patterns = set(
-            [
-                "Translator",
-                "Proofreader",
-                "Reaper Scans",
-                "REAPER SCANS",
-                "https://dsc.gg/reapercomics",
-                "https://discord.gg/MaRegMFhRb",
-                "https://discord.gg/reapercomics",
-                "h ttps://discord.gg/reapercomic",
-                "____",
-                "Join our Discord for updates on releases!",
-            ]
-        )
-
         return self.cleaner.extract_contents(contents)
-
     # end def
-
 
 # end class
