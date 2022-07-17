@@ -77,4 +77,3 @@ class BlackboxTL(Crawler):
 
 
 # end class
-# https://www.blackbox-tl.com/novels/hog/
