@@ -1551,7 +1551,7 @@ We are supporting 217 sources and 247 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.aixdzs.com/" target="_blank">https://www.aixdzs.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/zh/aixdzs.py" title="22 March 2022 02:50:32 PM">15</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/zh/aixdzs.py" title="17 July 2022 02:00:46 PM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
