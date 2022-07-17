@@ -25,7 +25,7 @@ class TextCleaner:
         self.bad_css = set([
             '.code-block', '.adsbygoogle', '.sharedaddy', '.inline-ad-slot', '.ads-middle',
             '.jp-relatedposts', '.ezoic-adpicker-ad', '.ezoic-ad-adaptive', '.ezoic-ad',
-            '.cb_p6_patreon_button', 'a[href*="patreon.com"]',
+            '.cb_p6_patreon_button', 'a[href*="patreon.com"]', '.adbox'
         ])
         self.p_block_tags = set([
             'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
