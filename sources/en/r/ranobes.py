@@ -20,8 +20,7 @@ class RanobeLibCrawler(Crawler):
         self.executor = ThreadPoolExecutor(max_workers=1)
     # end def
 
-    def read_novel_info(self):
-        logger.info('Visiting %s', self.novel_url)
+    def read_novel_info(self):       
         soup = self.get_soup(self.novel_url)
 
         main_page_link = soup.select_one('#mainside, .breadcrumbs-panel')
