@@ -25,12 +25,8 @@ class MTLNation(Crawler):
             'password': password,
         }))
         jwt = self.cookies.get('jwt')
-        self.headers['authorization'] = f'JWT {jwt}'
+        self.set_header('authorization', f'JWT {jwt}')
         logger.info('Logged in with jwt %s', jwt)
-    # end def
-
-    def logout(self) -> None:
-        self.headers.pop('authorization', '')
     # end def
 
     def search_novel(self, query):
