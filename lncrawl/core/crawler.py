@@ -315,7 +315,7 @@ class Crawler(ABC):
 
     def post_json(self, url, data={}, headers={}) -> dict:
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('accept', 'application/json, text/javascript, */*')
+        headers.setdefault('accept', 'application/json, text/plain, */*')
         response = self.post_response(url, data, headers)
         return response.json()
     # end def
