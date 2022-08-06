@@ -13,7 +13,7 @@ chapter_info_url = 'https://www.webnovel.com/book/%s/%s?encryptType=3&_fsae=0'
 book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg?coverUpdateTime=%s&imageMogr2/quality/80'
 chapter_list_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=0&encryptType=3&_fsae=0'
 chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s&encryptType=3&_fsae=0'
-search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&type=1&encryptType=3&_fsae=0&keywords=%s'
+search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&encryptType=3&_fsae=0&keywords=%s'
 
 
 class WebnovelCrawler(Crawler):
