@@ -73,7 +73,7 @@ class WebnovelCrawler(Crawler):
         # end if
 
         chap_id = data['chapterInfo']['chapterId']
-        logger.info('Chap count: %s', totalChapterNum)
+
         for i in range(totalChapterNum):
             url = chapter_body_url % (self.csrf, self.novel_id, chap_id)
             response = self.get_response(url)
@@ -87,6 +87,7 @@ class WebnovelCrawler(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
+            # end if
             
             self.chapters.append({
                 'id': i + 1,
@@ -96,7 +97,12 @@ class WebnovelCrawler(Crawler):
                 'volume': vol_id,
                 'json_content': json_content,
             })
+            
             chap_id = chap['nextChapterId']
+            
+            if chap_id == '-1':
+                break
+            # end if
         # end for
     # end def
 
