@@ -33,9 +33,9 @@ class WattpadCrawler(Crawler):
         
         data = self.get_json('https://www.wattpad.com/api/v3/internal/current_user?fields=email,username,name')
         logger.debug('current user', data)
-        if email != data['username']:
+        if email.lower() != data['username'].lower():
             raise Exception('Failed to login')
-        print('Logged in as %s[%s]<%s>' % data['name'], data['username'], data['email'])
+        print('Logged in as %s[%s]<%s>' % (data['name'], data['username'], data['email']))
 
     def read_novel_info(self):
 
