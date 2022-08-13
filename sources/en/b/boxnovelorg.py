@@ -40,17 +40,12 @@ class BoxNovelOrgCrawler(Crawler):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one('.title')
-        assert isinstance(possible_title, Tag), 'No title'
-        for tag in possible_title.contents:
-            if not isinstance(tag, Tag):
-                tag.extract()
-        self.novel_title = possible_title.text.strip()
+        image = soup.select_one('.book img')
+
+        self.novel_title = image['alt']
         logger.info('Novel title: %s', self.novel_title)
 
-        possible_image = soup.select_one('.book img')
-        if isinstance(possible_image, Tag):
-            self.novel_cover = self.absolute_url(possible_image['src'])
+        self.novel_cover = self.absolute_url(image['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.find_all(href=re.compile('author'))
