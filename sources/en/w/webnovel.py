@@ -8,12 +8,12 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-book_info_url = 'https://www.webnovel.com/book/%s'
-chapter_info_url = 'https://www.webnovel.com/book/%s/%s'
+book_info_url = 'https://www.webnovel.com/book/%s?encryptType=3&_fsae=0'
+chapter_info_url = 'https://www.webnovel.com/book/%s/%s?encryptType=3&_fsae=0'
 book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg?coverUpdateTime=%s&imageMogr2/quality/80'
-chapter_list_url = 'https://www.webnovel.com/go/pcm/chapter/get-chapter-list?_csrfToken=%s&bookId=%s&pageIndex=0'
-chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s'
-search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&type=1&keywords=%s'
+chapter_list_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=0&encryptType=3&_fsae=0'
+chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s&encryptType=3&_fsae=0'
+search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&encryptType=3&_fsae=0&keywords=%s'
 
 
 class WebnovelCrawler(Crawler):
@@ -66,37 +66,43 @@ class WebnovelCrawler(Crawler):
             self.novel_cover = book_cover_url % (self.novel_id, int(1000 * time.time()))
         # end if
 
-        chapterItems = []
-        if 'volumeItems' in data:
-            logger.debug('volume items: %d', len(data['volumeItems']))
-            for vol in data['volumeItems']:
-                vol_id = len(self.volumes) + 1
-                self.volumes.append({
-                    'id': vol_id,
-                    'title': vol['volumeName'].strip(),
-                })
-                for chap in vol['chapterItems']:
-                    chap['volume'] = vol_id
-                    chapterItems.append(chap)
-                # end if
-            # end for
-        elif 'chapterItems' in data:
-            logger.debug('chapter items: %d', len(data['chapterItems']))
-            chapterItems = data['chapterItems']
-            self.volumes = [{ 'id': x} for x in range(len(chapterItems) // 100 + 1)]
+        totalChapterNum = 0
+        if 'totalChapterNum' in data['bookInfo']:
+            logger.debug('chapter items: %d', data['bookInfo']['totalChapterNum'])
+            totalChapterNum = data['bookInfo']['totalChapterNum']
         # end if
 
-        for i, chap in enumerate(chapterItems):
-            if chap['isVip'] > 0:
+        chap_id = data['chapterInfo']['chapterId']
+
+        for i in range(totalChapterNum):
+            url = chapter_body_url % (self.csrf, self.novel_id, chap_id)
+            response = self.get_response(url)
+            json_content = response.json()
+            chap = json_content['data']['chapterInfo']
+            
+            if chap['vipStatus'] > 0:
                 continue
             # end if
+            
+            vol_id = len(self.chapters) // 100 + 1
+            if len(self.chapters) % 100 == 0:
+                self.volumes.append({'id': vol_id})
+            # end if
+            
             self.chapters.append({
                 'id': i + 1,
                 'hash': chap['chapterId'],
                 'title': 'Chapter %s: %s' % (chap['chapterIndex'], chap['chapterName'].strip()),
                 'url': chapter_body_url % (self.csrf, self.novel_id, chap['chapterId']),
-                'volume': chap['volume'] if 'volume' in chap else (1 + i // 100),
+                'volume': vol_id,
+                'json_content': json_content,
             })
+            
+            chap_id = chap['nextChapterId']
+            
+            if chap_id == '-1':
+                break
+            # end if
         # end for
     # end def
 
@@ -115,11 +121,7 @@ class WebnovelCrawler(Crawler):
     # end def
 
     def download_chapter_body(self, chapter):
-        url = chapter['url']
-        logger.info('Getting chapter... %s [%s]', chapter['title'], chapter['id'])
-
-        response = self.get_response(url)
-        data = response.json()['data']
+        data = chapter['json_content']['data']
 
         if 'authorName' in data['bookInfo']:
             self.novel_author = data['bookInfo']['authorName'] or self.novel_author
