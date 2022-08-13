@@ -96,7 +96,7 @@ class CreativeNovelsCrawler(Crawler):
             # end if
             ch_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
-            if len(self.volumes) < 1:
+            if vol_id > len(self.volumes):
                 self.volumes.append({'id': vol_id})
             # end if
             self.chapters.append({

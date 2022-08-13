@@ -20,6 +20,23 @@ class WattpadCrawler(Crawler):
         self.home_url = 'https://www.wattpad.com/'
     # end def
 
+    def login(self, email: str, password: str) -> None:
+        resp = self.submit_form('https://www.wattpad.com/login?nextUrl=/home', data={
+            'username': email,
+            'password': password,  
+        })
+        apiAuthKey = re.findall(r"wattpad\.apiAuthKey = '([^']+)';", resp.text)
+        if not apiAuthKey:
+            raise Exception('Failed to login')
+        logger.info('authorization', apiAuthKey[0])
+        self.set_header('authorization', apiAuthKey[0])
+        
+        data = self.get_json('https://www.wattpad.com/api/v3/internal/current_user?fields=email,username,name')
+        logger.debug('current user', data)
+        if email != data['username']:
+            raise Exception('Failed to login')
+        print('Logged in as %s[%s]<%s>' % data['name'], data['username'], data['email'])
+
     def read_novel_info(self):
 
         search_id = re.compile(r'\d+')

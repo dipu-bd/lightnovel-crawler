@@ -141,6 +141,11 @@ class App:
         print('NOVEL: %s' % self.crawler.novel_title)
         print('%d volumes and %d chapters found' %
               (len(self.crawler.volumes), len(self.crawler.chapters)))
+        
+        if not len(self.crawler.chapters):
+            raise Exception('No chapters found')
+        if not len(self.crawler.volumes):
+            raise Exception('No volumes found')
 
         format_novel(self.crawler)
 

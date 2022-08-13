@@ -14,12 +14,6 @@ class AllNovelFullCrawler(Crawler):
         'https://allnovelfull.com/',
     ]
 
-    def initialize(self) -> None:
-        self.cleaner.blacklist_patterns.update([
-            'For more, visit AllNovelFull.Com',
-        ])
-    # end def
-
     def search_novel(self, query):
         soup = self.get_soup(self.home_url + 'search?keyword=' + quote(query))
 
@@ -30,13 +24,11 @@ class AllNovelFullCrawler(Crawler):
                 continue
             # end if
             info = div.select_one('.text-info .chapter-text')
-            results.append(
-                {
-                    'title': a.text.strip(),
-                    'url': self.absolute_url(a['href']),
-                    'info': info.text.strip() if info else '',
-                }
-            )
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+                'info': info.text.strip() if info else '',
+            })
         # end for
 
         return results
@@ -59,48 +51,6 @@ class AllNovelFullCrawler(Crawler):
         logger.info('Novel author: %s', self.novel_author)
 
         logger.info('Getting chapters...')
-
-        # NOTE: old way to get chapter list by visiting each pages
-        # page_count = 0
-        # pagination_link = soup.select_one('#list-chapter .pagination .last a')
-        # if isinstance(pagination_link, Tag):
-        #     page_count = int(str(pagination_link['data-page']))
-        # logger.info('Chapter list pages: %d' % page_count)
-
-        # futures = []
-        # for page in range(1, page_count + 2):
-        #     if page == 1:
-        #         f = self.executor.submit(lambda: soup)
-        #     else:
-        #         url = self.novel_url.split('?')[0].strip('/')
-        #         url += '?page=%d' % page
-        #         f = self.executor.submit(self.get_soup, url)
-        #     # end if
-        #     futures.append(f)
-        # # end for
-
-        # for i, f in enumerate(futures):
-        #     try:
-        #         soup = f.result()
-        #     except KeyboardInterrupt:
-        #         c = len([f.cancel() for f in futures[i:]])
-        #         logger.info('Cancelled remaining %d jobs', c)
-        #     # end try
-        #     for a in soup.select('ul.list-chapter li a'):
-        #         chap_id = len(self.chapters) + 1
-        #         vol_id = 1 + len(self.chapters) // 100
-        #         if len(self.volumes) < vol_id:
-        #             self.volumes.append({ 'id': vol_id })
-        #         # end if
-        #         self.chapters.append({
-        #             'id': chap_id,
-        #             'volume': vol_id,
-        #             'title': a['title'],
-        #             'url': self.absolute_url(a['href']),
-        #         })
-        #     # end for
-        # # end for
-        
         possible_id = soup.select_one('input#truyen-id')
         assert possible_id, 'No novel id'
         self.novel_id = possible_id['value']
@@ -123,16 +73,6 @@ class AllNovelFullCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('div#chapter-content')
-
-        # NOTE: Commented out this code because it causing empty body on some chapters.
-        """ assert isinstance(content, Tag), 'No chapter content'
-        for child in content.contents:
-            child.extract()
-            if isinstance(child, Tag) and child.name == 'h3':
-                break
-            # end if
-        # end for """
-
         return self.cleaner.extract_contents(content)
     # end def
 # end class

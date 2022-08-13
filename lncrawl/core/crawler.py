@@ -199,10 +199,10 @@ class Crawler(ABC):
     # end def
 
     def __process_response(self, response: Response) -> Response:
-        # if response.status_code == 403 and response.reason == 'Forbidden':
-        #     raise LNException('403 Forbidden! Could not bypass the cloudflare protection.\n'
-        #                     '  If you are running from your own computer, visit the link on your browser and try again later.\n'
-        #                     '  Sometimes, using `http` instead of `https` link may work.')
+        if response.status_code == 403 and response.reason == 'Forbidden':
+            logger.debug('%s\n%s\n%s', '-' * 60, response.text, '-' * 60)
+            raise LNException('403 Forbidden! Could not bypass the cloudflare protection.')
+        # end if
 
         response.raise_for_status()
         response.encoding = 'utf8'
@@ -211,6 +211,7 @@ class Crawler(ABC):
             for x in response.cookies
         })
         return response
+    # end def
 
     def get_response(self, url, **kargs) -> Response:
         if self._destroyed:
@@ -223,9 +224,10 @@ class Crawler(ABC):
         kargs.setdefault('timeout', (7, 301))  # in seconds
         headers = kargs.setdefault('headers', {})
         headers = {k.lower(): v for k, v in headers.items()}
-        #headers.setdefault('user-agent', random.choice(user_agents))
+        headers.setdefault('host', urlparse(self.home_url).hostname)
         headers.setdefault('origin', self.home_url.strip('/'))
         headers.setdefault('referer', self.novel_url.strip('/'))
+        logger.debug('GET url=%s, headers=%s', url, headers)
 
         with get_domain_semaphore(url):
             with no_ssl_verification():
@@ -241,8 +243,8 @@ class Crawler(ABC):
         # end if
 
         headers = {k.lower(): v for k, v in headers.items()}
-        #headers.setdefault('user-agent', random.choice(user_agents))
         headers.setdefault('content-type', 'application/json')
+        headers.setdefault('host', urlparse(self.home_url).hostname)
         headers.setdefault('origin', self.home_url.strip('/'))
         headers.setdefault('referer', self.novel_url.strip('/'))
         logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
@@ -265,13 +267,14 @@ class Crawler(ABC):
         if self._destroyed:
             raise LNException('Instance is detroyed')
         # end if
-
-        content_type = 'application/x-www-form-urlencoded; charset=UTF-8'
-        if multipart:
-            content_type = 'multipart/form-data'
-        # end if
+ 
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('content-type', content_type)
+        headers.setdefault('content-type', 'multipart/form-data' if multipart \
+            else 'application/x-www-form-urlencoded; charset=UTF-8')
+        headers.setdefault('host', urlparse(self.home_url).hostname)
+        headers.setdefault('origin', self.home_url.strip('/'))
+        headers.setdefault('referer', self.novel_url.strip('/'))
+        logger.debug('SUBMIT url=%s, data=%s, headers=%s', url, data, headers)
 
         return self.post_response(url, data, headers)
     # end def
@@ -315,7 +318,7 @@ class Crawler(ABC):
 
     def post_json(self, url, data={}, headers={}) -> dict:
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('accept', 'application/json, text/javascript, */*')
+        headers.setdefault('accept', 'application/json, text/plain, */*')
         response = self.post_response(url, data, headers)
         return response.json()
     # end def
