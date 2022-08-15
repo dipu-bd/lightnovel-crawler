@@ -13,7 +13,6 @@ wp_admin_ajax_url = 'https://pianmanga.com/wp-admin/admin-ajax.php'
 
 class PianMangaCrawler(Crawler):
     has_manga = True
-    machine_translation = True
     base_url = 'https://pianmanga.com/'
 
     def initialize(self) -> None:
