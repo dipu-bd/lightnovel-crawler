@@ -21,7 +21,7 @@ class MangaRosieCrawler(Crawler):
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % (self.home_url, query))
+        soup = self.get_soup(self.search_url % (self.home_url, query))
         
         results = []
         for tab in soup.select(".c-tabs-item__content"):
