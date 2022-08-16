@@ -1,29 +1,28 @@
 # -*- coding: utf-8 -*-
 
 import logging
-
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = (
-    "https://pianmanga.com/?s=%s&post_type=wp-manga&author=&artist=&release="
-)
-wp_admin_ajax_url = 'https://pianmanga.com/wp-admin/admin-ajax.php'
-
 
 class PianMangaCrawler(Crawler):
-    has_manga = True
-    base_url = 'https://pianmanga.com/'
-
+    base_url = [
+        'https://pianmanga.com/'
+    ]
+    
+    search_url = (
+        "%s?s=%s&post_type=wp-manga&author=&artist=&release="
+    )
+        
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(['h3', 'script'])
         self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
     # end def
-    
+
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
-
+        soup = self.get_soup(self.search_url % (self.home_url, query))
+        
         results = []
         for tab in soup.select(".c-tabs-item__content"):
             a = tab.select_one(".post-title h3 a")
