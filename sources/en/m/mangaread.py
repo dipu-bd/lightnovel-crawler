@@ -6,6 +6,7 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 class MangaReadCrawler(Crawler):
+    has_manga = True
     base_url = [
         'https://www.mangaread.org/'
     ]
