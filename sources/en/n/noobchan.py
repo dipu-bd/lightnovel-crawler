@@ -91,16 +91,8 @@ class NoobChanCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-        contents = soup.select_one('div.reading-content')
         
-        for img in contents.findAll('img'):
-            if img.has_attr('data-src'):
-                src_url = img['data-src']
-                parent = img.parent
-                img.extract()
-                new_tag = soup.new_tag("img", src=src_url)
-                parent.append(new_tag)
-        # end for
+        contents = soup.select_one('div.text-left')
         
         return self.cleaner.extract_contents(contents)
     # end def
