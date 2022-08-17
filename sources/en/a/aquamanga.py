@@ -6,6 +6,7 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 class AquaMangaCrawler(Crawler):
+    has_manga = True
     base_url = [
         'https://aquamanga.com/'
     ]
