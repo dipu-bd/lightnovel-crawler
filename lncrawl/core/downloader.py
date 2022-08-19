@@ -13,7 +13,8 @@ from io import BytesIO
 import bs4
 from PIL import Image
 from tqdm import tqdm
-
+from requests.exceptions import RequestException
+    
 from ..core.exeptions import LNException
 from .arguments import get_args
 
@@ -83,7 +84,7 @@ def download_chapter_body(app, chapter):
     chapter['body'] = read_chapter_body(app, chapter)
 
     if not chapter['body']:
-        retry_count = 3
+        retry_count = 2
         chapter['body'] = ''
         for i in range(retry_count):
             try:
@@ -92,13 +93,15 @@ def download_chapter_body(app, chapter):
                 break
             except KeyboardInterrupt as ex:
                 raise LNException('Cancelled by user')
-            except Exception as e:
+            except RequestException as e:
                 if i == retry_count:
                     logger.exception('Failed to download chapter body')
                 else:
                     logger.debug('Error: %s. Retrying...', str(e))
                     time.sleep(3 + 5 * i)  # wait before next retry
                 # end if
+            except Exception as e:
+                logger.exception('Failed to download chapter body')
             # end try
         # end for
     # end if
