@@ -1,29 +1,29 @@
 # -*- coding: utf-8 -*-
 
 import logging
-
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = (
-    "https://1stkissnovel.love/?s=%s&post_type=wp-manga&author=&artist=&release="
-)
-wp_admin_ajax_url = 'https://1stkissnovel.love/wp-admin/admin-ajax.php'
 
-
-class OneKissNovelCrawler(Crawler):
-    machine_translation = True
-    base_url = 'https://1stkissnovel.love/'
-
+class NoobChanCrawler(Crawler):
+    has_manga = True
+    base_url = [
+        'https://noobchan.xyz/'
+    ]
+    
+    search_url = (
+        "%s?s=%s&post_type=wp-manga&author=&artist=&release="
+    )
+        
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(['h3', 'script'])
         self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
     # end def
-    
+
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
-
+        soup = self.get_soup(self.search_url % (self.home_url, query))
+        
         results = []
         for tab in soup.select(".c-tabs-item__content"):
             a = tab.select_one(".post-title h3 a")
@@ -68,21 +68,6 @@ class OneKissNovelCrawler(Crawler):
         )
         logger.info("%s", self.novel_author)
 
-        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
-        logger.info("Novel id: %s", self.novel_id)
-
-        # For getting cookies
-        # self.submit_form(wp_admin_ajax_url, data={
-        #    'action': 'manga_views',
-        #    'manga': self.novel_id,
-        # })
-
-        # Deprecated way to fetch chapters
-        # response = self.submit_form(wp_admin_ajax_url, data={
-        #     'action': 'manga_get_chapters',
-        #     'manga': self.novel_id,
-        # })
-
         clean_novel_url = self.novel_url.split('?')[0].strip('/')
         response = self.submit_form(f'{clean_novel_url}/ajax/chapters/')
 
@@ -107,7 +92,9 @@ class OneKissNovelCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
+        
         contents = soup.select_one('div.text-left')
+        
         return self.cleaner.extract_contents(contents)
     # end def
 # end class

@@ -1,33 +1,45 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from urllib.parse import parse_qsl, urlparse
 
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-class x81zw(Crawler):
-    base_url = 'https://www.x81zw.com/'
+
+class WanderingInnCrawler(Crawler):
+    base_url = [
+        'https://wanderinginn.com/'
+    ]
+
+    def initialize(self) -> None:
+        self.cleaner.blacklist_patterns.update([
+            "Previous Chapter",
+            "Table of Contents",
+            "Next Chapter"
+        ])
+    # end def
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one('#info h1')
+        possible_title = soup.select_one('meta[property="og:site_name"]')
         assert possible_title, 'No novel title'
-        self.novel_title = possible_title.text.strip()
+        self.novel_title = possible_title['content']
         logger.info('Novel title: %s', self.novel_title)
 
-        self.novel_author = soup.select('#info p')[1].text.strip()
+        possible_novel_cover = soup.select_one('meta[property="og:image"]')
+        if possible_novel_cover:
+            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
+        logger.info('Novel cover: %s', self.novel_cover)
+
+        self.novel_author = "Written by Pirateaba"
         logger.info('Novel author: %s', self.novel_author)
 
-        possible_image = soup.select_one('#sidebar #fmimg img')
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image['src'])
-        logger.info('Novel cover: %s', self.novel_cover)
-        
-        chapters = soup.select('dl a')
+        # Extract volume-wise chapter entries
+        # Stops external links being selected as chapters
+        chapters = soup.select(
+            'div.entry-content a[href*="wanderinginn"]')
 
         for a in chapters:
             chap_id = len(self.chapters) + 1
@@ -46,8 +58,9 @@ class x81zw(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('#content')
-        contents = [str(p) for p in contents if p.text.strip()]
-        return ''.join(contents)
+
+        body_parts = soup.select_one('div.entry-content')
+
+        return self.cleaner.extract_contents(body_parts)
     # end def
 # end class
