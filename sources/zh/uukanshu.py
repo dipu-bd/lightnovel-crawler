@@ -16,6 +16,27 @@ class UukanshuOnline(Crawler):
     base_url = [
         'https://sj.uukanshu.com/'
     ]
+    
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(novel_search_url % (self.home_url, query))
+        results = []
+
+        for data in soup.select('#bookList li'):
+            title = data.select_one('.book-title a.name')['title']
+            author = data.select_one('.book-title .aut').get_text()
+            url = self.home_url + data.select_one('.book-title a.name')['href']
+            
+            results.append(
+                {
+                    'title': title,
+                    'url': url,
+                    'info': f"Author: {author}",
+                }
+            )
+        # end for
+        return results
+    # end def
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
