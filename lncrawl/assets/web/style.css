@@ -24,6 +24,10 @@ body {
   font-family: "Merriweather", Georgia, "Times New Roman", Times, serif;
 }
 
+#content img {
+  width: 100%;
+}
+
 @media (max-width: 925px) {
   #content {
     margin: 5px;

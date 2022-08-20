@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
+import shutil
 
-from ..assets.html_script import get_value as get_js_script
-from ..assets.html_style import get_value as get_css_style
+from ..assets.web.script import get_value as get_js_script
+from ..assets.web.style import get_value as get_css_style
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +51,7 @@ def bind_html_chapter(chapters, index, direction='ltr'):
             <style>
                 {get_css_style()}
             </style>
-            <script>
+            <script type="text/javascript">
                 {get_js_script()}
             </script>
         </head>
@@ -70,20 +71,38 @@ def bind_html_chapter(chapters, index, direction='ltr'):
 
 
 def make_webs(app, data):
+    assert isinstance(data, dict)
+    from ..core.app import App
+    assert isinstance(app, App)
+
     web_files = []
-    for vol in data:
+    for vol, chapters in data.items():
+        assert isinstance(vol, str) and vol in data, 'Invalid volume name'
         dir_name = os.path.join(app.output_path, 'web', vol)
+        img_dir = os.path.join(dir_name, 'images')
         os.makedirs(dir_name, exist_ok=True)
-        for i in range(len(data[vol])):
+        os.makedirs(img_dir, exist_ok=True)
+        for index, chapter in enumerate(chapters):
+            assert isinstance(chapter, dict)
+
+            # Generate HTML file
             direction = 'rtl' if app.crawler.is_rtl else 'ltr'
-            html, file_name = bind_html_chapter(data[vol], i, direction)
+            html, file_name = bind_html_chapter(chapters, index, direction)
             file_name = os.path.join(dir_name, file_name)
             with open(file_name, 'w', encoding='utf8') as file:
                 file.write(html)
             # end with
+
+            # Copy images
+            for filename in chapter.get('images', {}):
+                src_file = os.path.join(app.output_path, 'images', filename)
+                dst_file = os.path.join(img_dir, filename)
+                shutil.copyfile(src_file, dst_file)
+            # end for
+
             web_files.append(file_name)
         # end for
     # end for
-    print('Created: %d web files' % len(web_files))
+    logger.info('Created: %d web files' % len(web_files))
     return web_files
 # end def

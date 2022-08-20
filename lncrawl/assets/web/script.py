@@ -3,7 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 
-with open(str(ROOT / 'html_script.js'), 'r', encoding='utf8') as f:
+with open(str(ROOT / 'script.js'), 'r', encoding='utf8') as f:
     script = f.read()
 # end with
 
