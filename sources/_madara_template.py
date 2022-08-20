@@ -79,7 +79,6 @@ class MadaraTemplateCrawler(Crawler):
         self.get_chapters_list(soup)
         if len(self.chapters) == 0:
             # try old method
-            self.volumes = []
             response = self.submit_form(wp_admin_ajax_url % self.home_url, data={
                 'action': 'manga_get_chapters',
                 'manga': self.novel_id,
