@@ -6,6 +6,9 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 class MadaraTemplateCrawler(Crawler):
+    has_manga = False
+    machine_translation = False
+    
     base_url = [
         'http://sample.url/'
     ]
@@ -66,11 +69,26 @@ class MadaraTemplateCrawler(Crawler):
             ]
         )
         logger.info("%s", self.novel_author)
+        
+        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
 
         clean_novel_url = self.novel_url.split('?')[0].strip('/')
         response = self.submit_form(f'{clean_novel_url}/ajax/chapters/')
 
         soup = self.make_soup(response)
+        self.get_chapters_list(soup)
+        if len(self.chapters) == 0:
+            # try old method
+            response = self.submit_form(wp_admin_ajax_url % self.home_url, data={
+                'action': 'manga_get_chapters',
+                'manga': self.novel_id,
+            })
+            soup = self.make_soup(response)
+            self.get_chapters_list(soup)
+        #end if
+    # end def
+    
+    def get_chapters_list(self, soup):
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
@@ -86,7 +104,7 @@ class MadaraTemplateCrawler(Crawler):
                 }
             )
         # end for
-    # end def
+    #end def
 
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
