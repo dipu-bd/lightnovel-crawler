@@ -8,7 +8,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-novel_search_url = '%s/search?title=%s'
+novel_search_url = '%ssearch.aspx?k=%s'
 chapter_list_url = '%s&page=%d'
 
 
@@ -48,10 +48,12 @@ class UukanshuOnline(Crawler):
         page_soups = [soup] + [f.result() for f in futures]
 
         for soup in page_soups:
-            vol_id = len(self.volumes) + 1
-            self.volumes.append({'id': vol_id})
             for a in soup.select('ul#chapterList li a'):
                 chap_id = len(self.chapters) + 1
+                vol_id = 1 + len(self.chapters) // 100
+                if chap_id % 100 == 1:
+                    self.volumes.append({"id": vol_id})
+                # end if
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
