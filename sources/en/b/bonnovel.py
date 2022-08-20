@@ -9,7 +9,7 @@ wp_admin_ajax_url = '%s/wp-admin/admin-ajax.php'
 
 class BonNovelCrawler(Crawler):
     base_url = [
-        'https://bonnovel.com//'
+        'https://bonnovel.com/'
     ]
     
     search_url = (
