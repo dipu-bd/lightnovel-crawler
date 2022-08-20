@@ -49,7 +49,8 @@ files = Path("lncrawl").iterdir()
 with open(".gitignore") as gitignore_file:
     gitignore = [line for line in gitignore_file.read().splitlines() if line]
 lncrawl_files = [
-    fname for fname in glob('lncrawl/**/*', recursive=True) 
+    '/'.join(fname.split(os.sep)[1:])
+    for fname in glob('lncrawl/**/*', recursive=True) 
     if os.path.isfile(fname) and not any(fnmatch(fname, ignore) for ignore in gitignore)
 ]
 
