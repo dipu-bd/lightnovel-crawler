@@ -104,7 +104,7 @@ class MadaraTemplateCrawler(Crawler):
                 }
             )
         # end for
-    #end def
+    # end def
 
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
