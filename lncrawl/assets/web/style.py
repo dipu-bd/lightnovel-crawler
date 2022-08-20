@@ -4,7 +4,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 
-with open(str(ROOT / 'html_style.css'), 'r', encoding='utf8') as f:
+with open(str(ROOT / 'style.css'), 'r', encoding='utf8') as f:
     style = f.read()
 # end with
 

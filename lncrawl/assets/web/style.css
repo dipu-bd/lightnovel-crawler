@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Merriweather:400,400i,700,700i');
+@import url("https://fonts.googleapis.com/css?family=Merriweather:400,400i,700,700i");
 
 html,
 body {
@@ -16,12 +16,16 @@ body {
   max-width: 850px;
   margin: 10px auto;
   font-size: 16px;
-  font-family: 'Merriweather', Georgia, serif;
   text-align: justify;
   line-height: 1.8;
   border-radius: 5px;
-  box-shadow: 0 0 10px #000, 0 0 0 1px #000;
   background-color: #fffff0;
+  box-shadow: 0 0 10px #000, 0 0 0 1px #000;
+  font-family: "Merriweather", Georgia, "Times New Roman", Times, serif;
+}
+
+#content img {
+  width: 100%;
 }
 
 @media (max-width: 925px) {
@@ -34,6 +38,11 @@ body {
 main {
   min-height: 500px;
   padding: 0 10px;
+}
+
+p + br,
+br + br {
+  display: none;
 }
 
 h1,
@@ -56,7 +65,7 @@ h1 {
 }
 
 h1:after {
-  content: '-';
+  content: "-";
   margin: 10px 30px;
   height: 2px;
   border-radius: 50%;
@@ -68,16 +77,12 @@ h1:after {
 .link-group {
   padding: 10px;
   margin: 15px 0;
+  gap: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #dde;
+  background: #dee2ef;
   border: 1px solid #dde;
-}
-
-.link-group a {
-  color: #39f;
-  text-decoration: none;
 }
 
 .link-group .btn {
@@ -94,12 +99,38 @@ h1:after {
   border-radius: 5px;
 }
 
-.link-group .btn:hover {
+.link-group .toc {
+  cursor: pointer;
+  color: #323235;
+  width: 100%;
+  max-width: 350px;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  border-radius: 4px;
+  box-shadow: 1px 1px 2px #aac, 0 0 0 1px #ccc;
+}
+
+.link-group .btn:hover,
+.link-group .toc:hover {
   background: #ececef;
 }
 
 .link-group .btn:active {
-  box-shadow: 1px 1px 2px #cce inset, 0 0 0 1px #ccc;
+  box-shadow: 0 0 2px #dee2ef inset, 0 0 0 1px #ccc;
+}
+
+.link-group a {
+  color: #39f;
+  text-decoration: none;
+}
+
+.link-group a[href="#"],
+.link-group a[href="#"]:hover,
+.link-group a[href="#"]:active {
+  color: #888;
+  background: #eee;
+  box-shadow: 0 0 0 1px #ddd;
 }
 
 div#readpos {

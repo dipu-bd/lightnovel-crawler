@@ -54,6 +54,7 @@ class LightNovelOnline(Crawler):
         
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
+        self.novel_url = soup.find("meta", property="og:url")["content"]
 
         possible_title = soup.select_one('.novel-info .novel-title')
         assert isinstance(possible_title, Tag)
