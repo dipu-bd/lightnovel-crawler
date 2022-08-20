@@ -351,7 +351,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 237 sources and 264 crawlers.
+We are supporting 238 sources and 265 crawlers.
 
 ### `ar` Arabic
 
@@ -1643,6 +1643,11 @@ We are supporting 237 sources and 264 crawlers.
 <td><a href="https://book.qidian.com/" target="_blank">https://book.qidian.com/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/zh/qidiancom.py" title="22 March 2022 02:50:32 PM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://sj.uukanshu.com/" target="_blank">https://sj.uukanshu.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/zh/uukanshu.py" title="20 August 2022 07:48:07 AM">3</a></td>
+<td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://tw.m.ixdzs.com/" target="_blank">https://tw.m.ixdzs.com/</a></td>
