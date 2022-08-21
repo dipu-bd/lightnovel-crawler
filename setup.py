@@ -1,18 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import os
 import sys
+from glob import glob
+from pathlib import Path
+from fnmatch import fnmatch
 
 if sys.version_info[:2] < (3, 6):
     raise RuntimeError(
         'Lightnovel crawler only supports Python 3.6 and later.')
 
 try:
-    from pathlib import Path
-
     import setuptools
     from setuptools import config, setup
 finally:
     pass
+ 
 
 run_pyi = 'package' in sys.argv
 if run_pyi:
@@ -42,13 +45,22 @@ sources_packages = [
     for p in Path('sources').glob('**')
 ]
 
+files = Path("lncrawl").iterdir()
+with open(".gitignore") as gitignore_file:
+    gitignore = [line for line in gitignore_file.read().splitlines() if line]
+lncrawl_files = [
+    '/'.join(fname.split(os.sep)[1:])
+    for fname in glob('lncrawl/**/*', recursive=True) 
+    if os.path.isfile(fname) and not any(fnmatch(fname, ignore) for ignore in gitignore)
+]
+
 setup(
     packages=packages + sources_packages,
     package_dir = {
         'lncrawl.sources': 'sources'
     },
     package_data = {
-        'lncrawl': ['**/*.*', 'VERSION'],
+        'lncrawl': lncrawl_files,
         'lncrawl.sources': ['*.*'],
     },
     install_requires=parse_requirements('requirements-app.txt'),
