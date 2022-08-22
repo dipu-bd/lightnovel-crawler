@@ -8,7 +8,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-book_info_url = 'https://www.webnovel.com/book/%s?encryptType=3&_fsae=0'
+book_info_url = 'https://www.webnovel.com/book/%s'
 chapter_info_url = 'https://www.webnovel.com/book/%s/%s?encryptType=3&_fsae=0'
 book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg?coverUpdateTime=%s&imageMogr2/quality/80'
 chapter_list_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=0&encryptType=3&_fsae=0'
