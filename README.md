@@ -38,6 +38,8 @@ An app to download novels from online sources and generate e-books.
   - [General Usage](#general-usage)
     - [Available options](#available-options)
     - [Example Usage](#example-usage)
+    - [Additional Help](#additional-help)
+    - [Login to **www.wuxiaworld.com**](#login-to-wwwwuxiaworldcom)
   - [Development](#development)
     - [Adding new source](#adding-new-source)
     - [Adding new Bot](#adding-new-bot)
@@ -323,6 +325,14 @@ Here are some example usage of the app:
   If you want to disable all interactive prompts, pass `--suppress` at the end.
 
 - You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
+
+### Additional Help
+
+Visit the [discussions](https://github.com/dipu-bd/lightnovel-crawler/discussions) page for more information. You can also post your query there too.
+
+### Login to [www.wuxiaworld.com](https://www.wuxiaworld.com/)
+
+Follow this guide to know how to login: https://github.com/dipu-bd/lightnovel-crawler/discussions/1360
 
 ## Development
 
