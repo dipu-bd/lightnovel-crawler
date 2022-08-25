@@ -324,6 +324,12 @@ Here are some example usage of the app:
 
 - You can stack up options like this: `lncrawl -s https://boxnovel.com/novel/reincarnation-of-the-strongest-sword-god/ -o "D:\Lightnovels\reincarnation-of-the-strongest-sword-god" --last 50 -i --format pdf --suppress`
 
+
+### Additional Information
+- Visit our [discussions](https://github.com/dipu-bd/lightnovel-crawler/discussions)
+
+- To log in to wuxiaworld.com you need to follow the instruction https://github.com/dipu-bd/lightnovel-crawler/discussions/1360
+
 ## Development
 
 You are very welcome to contribute in this project. You can:
