@@ -39,7 +39,7 @@ An app to download novels from online sources and generate e-books.
     - [Available options](#available-options)
     - [Example Usage](#example-usage)
     - [Additional Help](#additional-help)
-    - [Login to **www.wuxiaworld.com**](#login-to-www-wuxiaworld-com)
+    - [Login to **www.wuxiaworld.com**](#login-to-wwwwuxiaworldcom)
   - [Development](#development)
     - [Adding new source](#adding-new-source)
     - [Adding new Bot](#adding-new-bot)
