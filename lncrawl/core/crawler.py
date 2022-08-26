@@ -5,6 +5,7 @@ Crawler application
 import logging
 import random
 import ssl
+import time
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from threading import Semaphore
@@ -35,6 +36,9 @@ def get_domain_semaphore(url):
 class Crawler(ABC):
     '''Blueprint for creating new crawlers'''
 
+    # ------------------------------------------------------------------------- #
+    # Internal methods
+    # ------------------------------------------------------------------------- #
     def __init__(self) -> None:
         self._destroyed = False
         self.executor = ThreadPoolExecutor(max_workers=5)
@@ -83,6 +87,57 @@ class Crawler(ABC):
         self.home_url = ''
         self.novel_url = ''
         self.last_visited_url = None
+
+        # Setup an automatic proxy switcher
+        self.auto_proxy_switch = True
+        self.__proxy_worker = ThreadPoolExecutor(max_workers=2)
+        self.__generate_next_proxy()
+    # end def
+
+    def __generate_next_proxy(self):
+        if not self.auto_proxy_switch or not self.home_url:
+            return
+        # end if
+
+        try:
+            from fp.fp import FreeProxy
+        except ImportError as e:
+            logger.debug('free-proxy package is not found.')
+            return
+        # end try
+
+        scheme = urlparse(self.home_url).scheme
+        https = scheme == 'https'
+
+        def generator():
+            gen_time_key = '__last_http_proxy_gen_time'
+            last_gen = getattr(self, gen_time_key, 0)
+            if time.time() - last_gen > 30:
+                setattr(self, gen_time_key, time.time())
+                proxy = FreeProxy(https=https).get()
+                self.set_proxy(scheme, proxy)
+            # end if
+        # end def
+
+        self.__proxy_worker.submit(generator)
+    # end def
+
+    def __process_response(self, response: Response) -> Response:
+        # generate a proxy after each response received
+        self.__generate_next_proxy()
+
+        if response.status_code in [403, 429, 503]:
+            logger.debug('%s\n%s\n%s', '-' * 60, response.text, '-' * 60)
+            raise LNException(f'{response.status_code} {response.reason} -- could not bypass cloudflare.')
+        # end if
+
+        response.raise_for_status()
+        response.encoding = 'utf8'
+        self.cookies.update({
+            x.name: x.value
+            for x in response.cookies
+        })
+        return response
     # end def
 
     # ------------------------------------------------------------------------- #
@@ -148,6 +203,7 @@ class Crawler(ABC):
         self.chapters.clear()
         self.scraper.close()
         self.executor.shutdown(False)
+        self.__proxy_worker.shutdown(False)
     # end def
 
     @property
@@ -166,6 +222,10 @@ class Crawler(ABC):
     
     def set_cookie(self, name: str, value: str) -> None:
         self.scraper.cookies[name] = value
+    # end def
+
+    def set_proxy(self, scheme: str, proxy_url: str) -> None:
+        self.scraper.proxies[scheme] = proxy_url
     # end def
 
     def absolute_url(self, url, page_url=None) -> str:
@@ -196,21 +256,6 @@ class Crawler(ABC):
         url = urlparse(url)
         return (page.hostname == url.hostname
                 and url.path.startswith(page.path))
-    # end def
-
-    def __process_response(self, response: Response) -> Response:
-        if response.status_code == 403 and response.reason == 'Forbidden':
-            logger.debug('%s\n%s\n%s', '-' * 60, response.text, '-' * 60)
-            raise LNException('403 Forbidden! Could not bypass the cloudflare protection.')
-        # end if
-
-        response.raise_for_status()
-        response.encoding = 'utf8'
-        self.cookies.update({
-            x.name: x.value
-            for x in response.cookies
-        })
-        return response
     # end def
 
     def get_response(self, url, **kargs) -> Response:
@@ -329,4 +374,5 @@ class Crawler(ABC):
             f.write(response.content)
         # end with
     # end def
+    
 # end class

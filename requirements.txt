@@ -10,7 +10,7 @@ python-dotenv>=0.15.0,<1.0.0
 beautifulsoup4>=4.8.0,<5.0.0
 requests>=2.20.0,<3.0.0
 python-slugify>=4.0.0,<7.0.0
-cssutils>=1.0.0,<2.6.0
+cssutils>=1.0.0,<2.7.0
 colorama>=0.4.0,<0.5.0
 tqdm>=4.60,<5.0
 js2py==0.71
@@ -22,6 +22,7 @@ questionary>=1.6.0
 prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
+free-proxy>=1.0.0,<2.0.0
 
 # dev requirements
 wheel
@@ -30,7 +31,7 @@ setuptools<=60.0.0
 pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5
-# cssutils>=1.0.0,<2.6.0
+# cssutils>=1.0.0,<2.7.0
 
 # bot requirements
 discord.py>=1.0.0,<2.0.0
