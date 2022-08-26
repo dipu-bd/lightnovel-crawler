@@ -6,7 +6,7 @@ from questionary.prompts.common import Choice
 from ...core.arguments import get_args
 
 
-def get_range_selection(self):
+def get_range_selection(self, disable_args=False):
     '''
     Returns a choice of how to select the range of chapters to downloads
     '''
@@ -16,18 +16,18 @@ def get_range_selection(self):
                   'page', 'range', 'volumes', 'chapters']
 
     args = get_args()
-    for key in selections:
-        if args.__getattribute__(key):
-            return key
-        # end if
-    # end if
-
     if args.suppress:
         return selections[0]
     # end if
 
-    big_list_warn = '(warn: very big list)' if chapter_count > 50 else ''
-
+    if not disable_args:
+        for key in selections:
+            if args.__getattribute__(key):
+                return key
+            # end if
+        # end if
+    # end if
+ 
     choices = [
         'Everything! (%d chapters)' % chapter_count,
         'Last 10 chapters',
@@ -35,7 +35,7 @@ def get_range_selection(self):
         'Custom range using URL',
         'Custom range using index',
         'Select specific volumes (%d volumes)' % volume_count,
-        'Select specific chapters ' + big_list_warn,
+        'Select specific chapters ' + ('(warn: very big list)' if chapter_count > 50 else ''),
     ]
     if chapter_count <= 20:
         choices.pop(1)
@@ -55,38 +55,54 @@ def get_range_selection(self):
 # end def
 
 
-def get_range_using_urls(self):
+def get_range_using_urls(self, disable_args=False):
     '''Returns a range of chapters using start and end urls as input'''
     args = get_args()
-    start_url, stop_url = args.page or (None, None)
 
-    if args.suppress and not (start_url and stop_url):
+    if args.page:
+        start = self.app.crawler.get_chapter_index_of(args.page[0]) - 1
+    else:
+        start = -1
+    # end if
+
+    if args.page and len(args.page) > 1:
+        stop = self.app.crawler.get_chapter_index_of(args.page[1]) - 1
+    else:
+        stop = -1
+    # end if
+
+    if args.suppress and start < 0:
         return (0, len(self.app.crawler.chapters) - 1)
     # end if
 
-    if not (start_url and stop_url):
-        def validator(val):
-            try:
-                if self.app.crawler.get_chapter_index_of(val) > 0:
-                    return True
-            except Exception:
-                pass
-            return 'No such chapter found given the url'
+    if disable_args or start < 0:
+        def _validator(is_optional):
+            def _internal_validator(val):
+                try:
+                    if is_optional and not val:
+                        return True
+                    if self.app.crawler.get_chapter_index_of(val) > 0:
+                        return True
+                except Exception:
+                    pass
+                return 'No such chapter found given the url'
+            return _internal_validator
         # end def
+        
         answer = prompt([
             {
                 'type': 'autocomplete',
                 'name': 'start_url',
                 'message': 'Enter start url:',
                 'choices': [chap['url'] for chap in self.app.crawler.chapters],
-                'validate': validator,
+                'validate': _validator(False),
             },
             {
                 'type': 'autocomplete',
                 'name': 'stop_url',
-                'message': 'Enter final url:',
+                'message': 'Enter final url (optional):',
                 'choices': [chap['url'] for chap in self.app.crawler.chapters],
-                'validate': validator,
+                'validate': _validator(True),
             },
         ], style=Style([
             ("selected", "fg:#000000 bold"),
@@ -94,18 +110,21 @@ def get_range_using_urls(self):
             ("answer", "fg:#f44336 bold"),
             ("text", ""),
         ]))
-        start_url = answer['start_url']
-        stop_url = answer['stop_url']
+        start = self.app.crawler.get_chapter_index_of(answer['start_url']) - 1
+        stop = self.app.crawler.get_chapter_index_of(answer['stop_url']) - 1
     # end if
 
-    start = self.app.crawler.get_chapter_index_of(start_url) - 1
-    stop = self.app.crawler.get_chapter_index_of(stop_url) - 1
+    if stop < 0:
+        stop = len(self.app.crawler.chapters) - 1
+    elif stop < start:
+        stop = start
+    # end if
 
-    return (start, stop) if start < stop else (stop, start)
+    return (start, stop)
 # end def
 
 
-def get_range_using_index(self):
+def get_range_using_index(self, disable_args=False):
     '''Returns a range selected using chapter indices'''
     chapter_count = len(self.app.crawler.chapters)
 
@@ -116,7 +135,7 @@ def get_range_using_index(self):
         return (0, chapter_count - 1)
     # end if
 
-    if not (start and stop):
+    if disable_args or not start:
         def validator(val):
             try:
                 if 1 <= int(val) <= chapter_count:
@@ -152,7 +171,7 @@ def get_range_using_index(self):
 # end def
 
 
-def get_range_from_volumes(self, times=0):
+def get_range_from_volumes(self, times=0, disable_args=False):
     '''Returns a range created using volume list'''
     selected = None
     args = get_args()
@@ -165,7 +184,7 @@ def get_range_from_volumes(self, times=0):
         selected = [x['id'] for x in self.app.crawler.volumes]
     # end if
 
-    if not selected:
+    if disable_args or not selected:
         answer = prompt([
             {
                 'type': 'checkbox',
@@ -193,7 +212,7 @@ def get_range_from_volumes(self, times=0):
 # end def
 
 
-def get_range_from_chapters(self, times=0):
+def get_range_from_chapters(self, times=0, disable_args=False):
     '''Returns a range created using individual chapters'''
     selected = None
     args = get_args()
@@ -206,7 +225,7 @@ def get_range_from_chapters(self, times=0):
         selected = self.app.crawler.chapters
     # end if
 
-    if not selected:
+    if disable_args or not selected:
         answer = prompt([
             {
                 'type': 'checkbox',

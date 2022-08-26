@@ -108,9 +108,9 @@ def start(self):
 # end def
 
 
-def process_chapter_range(self):
+def process_chapter_range(self, disable_args=False):
     chapters = []
-    res = self.get_range_selection()
+    res = self.get_range_selection(disable_args)
 
     args = get_args()
     if res == 'all':
@@ -122,19 +122,19 @@ def process_chapter_range(self):
         n = args.last or 10
         chapters = self.app.crawler.chapters[-n:]
     elif res == 'page':
-        start, stop = self.get_range_using_urls()
+        start, stop = self.get_range_using_urls(disable_args)
         chapters = self.app.crawler.chapters[start:(stop + 1)]
     elif res == 'range':
-        start, stop = self.get_range_using_index()
+        start, stop = self.get_range_using_index(disable_args)
         chapters = self.app.crawler.chapters[start:(stop + 1)]
     elif res == 'volumes':
-        selected = self.get_range_from_volumes()
+        selected = self.get_range_from_volumes(disable_args)
         chapters = [
             chap for chap in self.app.crawler.chapters
             if selected.count(chap['volume']) > 0
         ]
     elif res == 'chapters':
-        selected = self.get_range_from_chapters()
+        selected = self.get_range_from_chapters(disable_args)
         chapters = [
             chap for chap in self.app.crawler.chapters
             if selected.count(chap['id']) > 0
@@ -160,7 +160,7 @@ def process_chapter_range(self):
             }
         ])
         if answer['continue'] == 'Change selection':
-            return self.process_chapter_range()
+            return self.process_chapter_range(True)
         # end if
     # end if
 
