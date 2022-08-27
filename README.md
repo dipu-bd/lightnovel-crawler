@@ -271,8 +271,10 @@ optional arguments:
   --all                 Download all chapters.
   --first [COUNT]       Download first few chapters (default: 10).
   --last [COUNT]        Download last few chapters (default: 10).
-  --page START STOP.    The start and final chapter urls.
-  --range FROM TO.      The start and final chapter indexes.
+  --page START [STOP. ...]
+                        The start and final chapter urls.
+  --range FROM TO., --index FROM TO., --chapter FROM TO.
+                        The start and final chapter indexes.
   --volumes [N ...]     The list of volume numbers to download.
   --chapters [URL ...]  A list of specific chapter urls.
   --bot {console,telegram,discord,test}
