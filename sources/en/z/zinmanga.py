@@ -6,7 +6,7 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 class ZinMangaCrawler(Crawler):
-    has_manga = False
+    has_manga = True
     machine_translation = False
     
     base_url = [
