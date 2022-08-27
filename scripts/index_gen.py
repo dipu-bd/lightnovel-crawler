@@ -19,6 +19,10 @@ from urllib.parse import quote_plus, unquote_plus
 
 import cloudscraper
 
+# =========================================================================================== #
+# Configurations
+# =========================================================================================== #
+
 WORKDIR = Path(__file__).parent.parent.absolute()
 
 SOURCES_FOLDER = WORKDIR / 'sources'
@@ -34,15 +38,27 @@ HELP_RESULT_QUE = '<!-- auto generated command line output -->'
 
 DATE_FORMAT = '%d %B %Y %I:%M:%S %p'
 
-executor = ThreadPoolExecutor(8)
-session = cloudscraper.create_scraper()
+REPO_BRANCH = 'master'
+REPO_URL = 'https://github.com/dipu-bd/lightnovel-crawler'
+FILE_DOWNLOAD_URL = f'https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler'
+WHEEL_RELEASE_URL =  REPO_URL + '/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl'
 
-with open(LANGUAGE_CACHE_FILE, encoding='utf8') as fp:
-    language_codes = json.load(fp)
+# Current git branch
+try:
+    commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD'])
+    REPO_BRANCH = commit_hash.decode('utf-8').strip()
+except Exception:
+    traceback.print_exc()
+    pass
 
 # =========================================================================================== #
 # The index data
 # =========================================================================================== #
+
+with open(LANGUAGE_CACHE_FILE, encoding='utf8') as fp:
+    language_codes = json.load(fp)
+
+session = cloudscraper.create_scraper()
 
 INDEX_DATA = {
     'v': int(time.time()),
@@ -66,21 +82,12 @@ INDEX_DATA['app']['home'] = pypi_data['info']['home_page']
 INDEX_DATA['app']['pypi'] = pypi_data['info']['release_url']
 print('-' * 50)
 
+
 # =========================================================================================== #
 # Generate sources index
 # =========================================================================================== #
 
-REPO_BRANCH = 'master'
-REPO_URL = 'https://github.com/dipu-bd/lightnovel-crawler'
-FILE_DOWNLOAD_URL = f'https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler'
-WHEEL_RELEASE_URL =  REPO_URL + '/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl'
-
-try:
-    with open(os.path.join('.git', 'ORIG_HEAD')) as f:
-        REPO_BRANCH = f.read().strip()
-except:
-    pass
-
+executor = ThreadPoolExecutor(8)
 queue_cache_result: Dict[str, str] = {}
 queue_cache_event: Dict[str, Event] = {}
 
@@ -136,8 +143,8 @@ def search_user_by(query):
         break
     queue_cache_event[query].set()
     return queue_cache_result.get(query, '')
-
-
+ 
+    
 def git_history(file_path):
     try:
         cmd = 'git log --follow --diff-filter=ACMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
@@ -149,6 +156,7 @@ def git_history(file_path):
     except Exception:
         traceback.print_exc()
         return {}
+
 
 def process_contributors(history):
     contribs = set([])
