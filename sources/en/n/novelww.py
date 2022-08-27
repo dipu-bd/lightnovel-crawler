@@ -12,7 +12,7 @@ class Eight88NovelCrawler(Crawler):
     base_url = ["https://novelww.com/"]
 
     has_manga = False
-    machine_translation = False
+    machine_translation = True
 
     def search_novel(self, query):
         query = query.replace(" ", "+")
