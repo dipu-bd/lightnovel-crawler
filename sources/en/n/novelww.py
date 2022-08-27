@@ -14,44 +14,6 @@ class Eight88NovelCrawler(Crawler):
     has_manga = False
     machine_translation = True
 
-    def search_novel(self, query):
-        query = query.replace(" ", "+")
-        soup = self.get_soup(
-            f"{self.home_url}tim-kiem/?title={query}&he_liet=yes&status=all"
-        )
-
-        # The search result is paginated.
-        urls = ["First"]
-
-        list_page = soup.find("ul", {"class": "pagination"})
-        if list_page:
-            for a in list_page.find_all("a"):
-                if a.get("href") != "#":
-                    urls.append(a.get("href"))
-
-        result = []
-        for url in urls:
-            # The first page is already loaded as soup
-            if url != "First":
-                soup = self.get_soup(url)
-
-            for novel in soup.find("div", {"class": "col-lg-9"}).find_all(
-                "li", {"class": "col-md-6 col-xs-12"}
-            ):
-                a = novel.find("h2", {"class": "crop-text-2"}).find("a")
-                author = [
-                    e.text
-                    for e in novel.find("span", {"itemprop": "name"}).find_all("a")
-                ]
-                result.append({
-                    "title": a.get("title"),
-                    "url": a.get("href").strip(),
-                    "info": self.cleaner.clean_text(
-                        f"Author{'s' if len(author)>1 else ''} : {', '.join(author)}"
-                    ),
-                })
-        return result
-
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
