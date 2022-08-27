@@ -220,6 +220,7 @@ def __download_sources():
             data = future.result()
             __save_source_data(sid, data)
         except Exception as e:
+            bar.clear()
             logger.warn('Failed to download source file. Error: %s', e)
         finally:
             bar.update()
