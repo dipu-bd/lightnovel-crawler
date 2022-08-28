@@ -1,0 +1,256 @@
+#search-section {
+	padding: 20px 13px 30px;
+	background-color: #fff;
+	background-color: var(--bg-color-main);
+}
+
+#search-section h1 {
+	margin: 0;
+	font-weight: 400;
+	font-size: 26px;
+}
+
+#search-section form {
+	display: block;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+#search-section form label {
+	font-size: 1rem;
+	display: block;
+	margin-bottom: 4px;
+}
+
+#search-section form .form-group {
+	position: relative;
+}
+
+#search-section form input[type=search] {
+	width: 100%;
+	border-radius: 60px;
+	height: 2.5rem;
+	font-weight: 500;
+	line-height: 1.5rem;
+	padding: .25rem 1rem .25rem 3rem;
+	font-size: .925rem;
+	display: block;
+	-webkit-appearance: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	background-image: none;
+	background-color: var(--bg-color-7);
+	border: 1px solid var(--border-color-4);
+	color: var(--text-color);
+}
+
+#search-section form input[type=text]::-webkit-input-placeholder {
+	font-size: 24px;
+}
+
+#search-section form input[type=text]:hover {
+	border-bottom-color: #4c5fe2;
+}
+
+#search-section form .search-i {
+	font-size: 28px;
+	top: 50%;
+	margin-top: -22px;
+	padding-left: 0;
+	color: #c0c2cc;
+	position: absolute;
+	left: 0;
+}
+
+#search-section form .selectize-dropdown {
+	font-size: 14px;
+}
+
+#search-section form .selectize-input {
+	font-size: 16px;
+}
+
+#search-section form .selectize-input input {
+	font-size: 16px;
+}
+
+#search-section form .single {
+	margin-bottom: 1rem;
+}
+
+#search-section form button[type=submit] {
+	padding: .25rem .3rem;
+	background-color: #2d73e7;
+	color: #fff;
+	width: 8rem;
+	text-align: center;
+	text-decoration: none;
+	width: initial;
+	padding: 8px 16px;
+	border-radius: 5px;
+	font-size: 16px;
+	border: 1px solid transparent;
+	vertical-align: middle;
+	white-space: nowrap;
+	text-transform: uppercase;
+}
+
+#search-section form .submit {
+	text-align: center;
+}
+
+#search-section form button.hide {
+	position: absolute;
+	clip: rect(0 0 0 0);
+}
+
+#search-section form .advanced {
+	margin: 1rem 0;
+	display: -ms-grid;
+	display: grid;
+	-ms-grid-columns: 1fr;
+	grid-template-columns: repeat(1, 1fr);
+	grid-gap: 6px;
+}
+
+#search-section .search_label {
+	width: 3rem;
+	height: 2.5rem;
+	border-radius: 2rem 0 0 2rem;
+	color: rgba(18, 18, 23, .24);
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	left: 0;
+}
+
+#search-section .search_label svg {
+	position: absolute;
+	margin: auto;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	vertical-align: middle;
+	display: inline-block;
+	color: rgba(18, 18, 23, .24);
+}
+
+#search-section .loading-dual-ring {
+	width: 50px;
+	height: 50px;
+}
+
+#search-section .loading-dual-ring:after {
+	width: 50px;
+	height: 50px;
+}
+
+#search-section #novelListBase {
+	min-height: 150px;
+}
+
+#search-section .popular-novels {
+	margin-top: 30px;
+}
+
+#search-section .popular-novels h2 {
+	font-size: 1.2rem;
+	margin-top: 0;
+	margin-bottom: 14px;
+	padding-bottom: 6px;
+	border-bottom: 2px solid var(--border-color-2);
+}
+
+@media screen and (min-width:768px) {
+	#search-section {
+		margin-top: 30px;
+		background-color: transparent;
+	}
+
+	#search-section form input[type=search] {
+		height: 4rem;
+		padding: .5rem 1rem .5rem 4rem;
+		font-size: 1.3rem;
+		background-color: var(--bg-color-7);
+	}
+
+	#search-section .search-container {
+		padding: 30px 10%;
+	}
+
+	#search-section .form-group {
+		margin: 0 auto;
+	}
+
+	#search-section .search_label {
+		width: 4rem;
+		height: 4rem;
+	}
+
+	#search-section .search_label svg {
+		width: 1.3rem;
+		height: 1.3rem;
+	}
+
+	#search-section .loading-dual-ring {
+		width: 50px;
+		height: 50px;
+	}
+
+	#search-section .loading-dual-ring:after {
+		width: 50px;
+		height: 50px;
+	}
+
+	#search-section #novelListBase {
+		min-height: 150px;
+		padding: 0 20px;
+	}
+
+	#search-section #novelListBase .novel-list.horizontal .novel-item .cover-wrap {
+		width: 17%;
+	}
+
+	#search-section .popular-novels {
+		padding: 0 20px;
+		margin-top: 30px;
+	}
+
+	#search-section .popular-novels h2 {
+		font-size: 20px;
+	}
+
+	#search-section .popular-novels .novel-list {
+		margin-left: -20px;
+	}
+
+	#search-section .popular-novels .novel-list.col5 .novel-item {
+		margin-left: 20px;
+		margin-bottom: 20px;
+	}
+
+	#search-section .popular-novels .novel-list.horizontal .novel-item {
+		margin-left: 20px;
+		margin-bottom: 20px;
+	}
+
+	#search-section .popular-novels .novel-list.horizontal .novel-item .cover-wrap {
+		width: 13%;
+	}
+
+	#search-section form label {
+		font-size: 1rem;
+	}
+
+	#search-section .advanced {
+		grid-template-columns: repeat(2, 1fr);
+		grid-gap: 20px;
+		margin: 2rem 0;
+	}
+}
+
+@media screen and (min-width:1024px) {
+	#search-section #novelListBase .novel-list.horizontal .novel-item .cover-wrap {
+		width: 13%;
+	}
+}

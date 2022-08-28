@@ -61,6 +61,14 @@ def make_intro_page(app, cover_image):
             ]))
     # end if
 
+    if app.crawler.summary :
+        intro_html += f'''
+        <div>
+            <p>{app.crawler.summary}</p>
+        </div>
+        '''
+    # end if
+
     intro_html += '''
     <div>
         <b>Source:</b> <a href="%s">%s</a><br>
@@ -149,7 +157,7 @@ def bind_epub_book(app, chapters, volume=''):
 
     # Create book
     book = epub.EpubBook()
-    book.set_language('en')
+    book.set_language(app.crawler.language)
     book.set_title(book_title)
     book.add_author(app.crawler.novel_author)
     book.set_identifier(app.output_path + volume)

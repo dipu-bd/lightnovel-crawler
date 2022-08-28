@@ -1,0 +1,202 @@
+#ttspanel {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	padding-top: 16px;
+	position: relative
+}
+
+#ttspanel>*:not(:last-child) {
+	margin-right: 10px
+}
+
+#ttspanel:before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	border-top: 2px solid #272727
+}
+
+#ttspanel:after {
+	content: "Text to Speech";
+	position: absolute;
+	top: -5px;
+	left: calc(50% - 39px);
+	width: 78px;
+	font-size: 10px;
+	text-align: center;
+	color: #a7a7a7;
+	background-color: #121212
+}
+
+#ttspanel button {
+	flex: 0 0 10%;
+	display: inline-block;
+	padding: 3px 10px;
+	margin-bottom: 0;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.5;
+	text-align: center;
+	white-space: nowrap;
+	vertical-align: middle;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	user-select: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	background-color: #515355;
+	color: #f1f3f5
+}
+
+#ttspanel select {
+	background-color: #272727;
+	color: #a7a7a7;
+	border-color: #373737;
+	font-size: .85rem;
+	padding: 5px 8px
+}
+
+#ttspanel #tts-rate {
+	flex: 0 0 10%
+}
+
+#ttspanel .select-wrap {
+	flex: 1 1 auto
+}
+
+#ttspanel .select-wrap #tts-voices {
+	width: 100%
+}
+
+#ttspanel option.selected {
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis
+}
+
+#lntts-natural {
+	background-color: var(--bg-color-2);
+	border: 2px solid var(--border-color-3);
+	padding: 1rem .725rem .5rem;
+	margin: -2px -.725rem 0;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 4px 8px rgba(120, 120, 120, .6)
+}
+
+#lntts-natural .player {
+	--plyr-audio-controls-background: var(--bg-color-3);
+	--plyr-control-spacing: 8px;
+	background-color: var(--bg-color-3);
+	border: 1px solid var(--border-color-3);
+	border-radius: .5rem;
+	padding: 0 .2rem;
+	margin: .5rem 0 0;
+	flex: 1 1 100%
+}
+
+#lntts-natural .player .plyr--audio .plyr__controls {
+	padding: 0
+}
+
+#lntts-natural .button {
+	font-size: .775rem;
+	padding: .3rem .5rem
+}
+
+#lntts-natural #chapter-audio {
+	display: none
+}
+
+#lntts-natural .ttsinfo {
+	margin-top: .5rem;
+	font-size: .75rem
+}
+
+#lntts-natural .tts-func {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: .85rem
+}
+
+#lntts-natural .tts-func .func {
+	margin-right: 13px;
+	display: flex
+}
+
+#lntts-natural .tts-func .func label {
+	padding: .2em .3em;
+	font-size: 1em;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+	background-color: var(--bg-color-3);
+	border: 1px solid var(--border-color-4)
+}
+
+#lntts-natural .tts-func .func select {
+	max-width: 5rem;
+	border: 1px solid var(--border-color-4);
+	border-radius: .25em;
+	padding: .2em .3em;
+	cursor: pointer;
+	line-height: 1;
+	background-color: var(--bg-color-2);
+	color: var(--text-color)
+}
+
+#lntts-natural .tts-func .func select.small {
+	max-width: 3rem
+}
+
+@media screen and (min-width:768px) {
+	#lntts-natural {
+		padding: 23px 40px 10px;
+		margin: 0;
+		border: 2px solid var(--border-color-3);
+		border-top-width: 0;
+		flex-direction: row;
+		flex-wrap: wrap;
+		box-shadow: 0 8px 10px -8px rgba(120, 120, 120, .6)
+	}
+
+	#lntts-natural .player {
+		flex: 1 1 auto;
+		padding: 0 13px;
+		margin: 0 0 0 1rem
+	}
+
+	#lntts-natural .ttsinfo {
+		flex: 1 0 100%;
+		font-size: 14px
+	}
+
+	#lntts-natural .button {
+		font-size: 14px;
+		padding: 6px 10px
+	}
+
+	#lntts-natural .tts-func {
+		font-size: 16px;
+		flex-wrap: nowrap
+	}
+
+	#lntts-natural .tts-func .func label {
+		padding: 7px 12px
+	}
+
+	#lntts-natural .tts-func .func select {
+		max-width: 180px
+	}
+
+	#lntts-natural .tts-func .func select.small {
+		max-width: 180px
+	}
+}

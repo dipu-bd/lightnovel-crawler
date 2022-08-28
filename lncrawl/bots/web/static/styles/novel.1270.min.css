@@ -1,0 +1,48 @@
+.novel-body {
+	padding: 30px;
+}
+
+.novel-body.container {
+	width: 1030px;
+}
+
+@media screen and (min-width:1654px) {
+	.novel-body .ad-container {
+		display: block;
+		position: absolute;
+		top: 0;
+		right: -302px;
+		width: 302px;
+		height: 100%;
+	}
+
+	.novel-body .ad-container.left {
+		left: -302px;
+		height: 100%;
+		width: 302px;
+	}
+
+	.novel-body .ad-container .ad-sticky {
+		display: block;
+		width: 100%;
+		height: auto;
+	}
+
+	.novel-body .ad-container #vi-ad {
+		display: block;
+		width: 300px;
+		height: 300px;
+	}
+
+	.novel-body .ad-container .vbanner-ad {
+		margin-top: 16px;
+		display: block;
+		width: 300px;
+		height: auto;
+	}
+
+}
+
+.novel-header .header-body .adrside {
+	display: block;
+}

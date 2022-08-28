@@ -1,0 +1,462 @@
+#novel {
+	padding-bottom: 50px;
+}
+
+.novel-header {
+	height: 426px;
+	color: #e9e9e9;
+	padding-bottom: 0;
+	position: relative;
+	padding: 30px 0;
+}
+
+.novel-header .glass-background {
+	display: block;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.novel-header .glass-background img {
+	background: -webkit-gradient(linear, left top, right top, from(#fc0), to(#f9a700));
+	background: linear-gradient(90deg, #fc0, #f9a700);
+	margin: -35%;
+	height: 200%;
+	width: 200%;
+	object-fit: cover;
+	-webkit-filter: blur(40px);
+	filter: blur(40px);
+}
+
+.novel-header .glass-background .glass-shade {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: var(--bg-color-glass);
+	opacity: var(--glass-opa);
+}
+
+.novel-header .header-body {
+	display: flex;
+	flex-direction: row;
+	margin: 0 auto;
+}
+
+.novel-header .header-body .adrside {
+	flex: 0 0 auto;
+	max-width: 300px;
+	min-width: 250px;
+	height: 100%;
+	max-height: 300px;
+	display: none;
+	background: transparent;
+}
+
+.novel-header .fixed-img {
+	position: initial;
+	z-index: 1;
+	-webkit-box-flex: 0;
+	-ms-flex: 0 0 258px;
+	flex: 0 0 258px;
+	height: 100%;
+	max-height: 100%;
+	margin-right: 20px;
+	box-shadow: 0 4px 15px -5px rgba(0, 0, 0, .6);
+	background: transparent;
+}
+
+.novel-header .fixed-img img {
+	mask-image: none;
+	-webkit-mask-image: none;
+	border-radius: 6px;
+}
+
+.novel-header .novel-info {
+	-webkit-box-flex: 1;
+	-ms-flex: 1 1 auto;
+	flex: 1 1 auto;
+	padding: 0;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	margin-bottom: 0;
+	margin-top: 0;
+}
+
+.novel-header .novel-info h1 {
+	font-weight: 700;
+	font-size: 24px;
+	line-height: 1.2;
+	margin-bottom: 4px;
+}
+
+.novel-header .novel-info h2 {
+	font-weight: 400;
+	font-size: 18px;
+	line-height: 1.2;
+}
+
+.novel-header .novel-info .main-head {
+	padding: 0;
+	margin-bottom: 10px;
+	-webkit-box-ordinal-group: 1;
+	-ms-flex-order: 0;
+	order: 0;
+	height: 10rem;
+}
+
+.novel-header .novel-info .author {
+	font-size: 16px;
+	line-height: 18px;
+}
+
+.novel-header .novel-info .rating .rank {
+	color: #efd72f;
+	display: inline-block;
+	font-size: 20px;
+	line-height: 1;
+	display: flex;
+	align-items: center;
+}
+
+.novel-header .novel-info .rating .rank i {
+	margin-right: 6px;
+	font-size: 22px;
+}
+
+.novel-header .novel-info .rating .rating-star p {
+	line-height: 1;
+}
+
+.novel-header .novel-info .rating .rating-star p strong {
+	font-size: 20px;
+}
+
+.novel-header .novel-info .rating .rating-star p .star-wrap {
+	font-size: 16px;
+	margin-bottom: 4px;
+}
+
+.novel-header .novel-info .header-stats {
+	-webkit-box-ordinal-group: 2;
+	-ms-flex-order: 1;
+	order: 1;
+	color: #f1f1f1;
+	grid-template-columns: repeat(4, 1fr);
+	grid-gap: 14px;
+	margin: 0 auto 10px 0;
+}
+
+.novel-header .novel-info .header-stats span {
+	box-shadow: none;
+	background-color: transparent;
+	align-items: flex-start;
+	padding: 0 5px 0 5px;
+	border-radius: 0;
+}
+
+.novel-header .novel-info .header-stats span i {
+	margin-right: 4px;
+	font-size: 1.6rem;
+}
+
+.novel-header .novel-info .header-stats span small {
+	-webkit-box-ordinal-group: 1;
+	-ms-flex-order: 0;
+	order: 0;
+	margin-bottom: 4px;
+	font-size: 14px;
+}
+
+.novel-header .novel-info .header-stats span strong {
+	-webkit-box-ordinal-group: 2;
+	-ms-flex-order: 1;
+	order: 1;
+	display: flex;
+	align-items: center;
+}
+
+.novel-header .novel-info .header-stats span strong.ongoing {
+	color: #ff8989;
+}
+
+.novel-header .novel-info .header-stats span:not(:last-child) {
+	border-right: 1px solid #fff;
+}
+
+.novel-header .novel-info .categories {
+	order: 2;
+	align-items: flex-start;
+	margin: 0 0 10px 0;
+	padding: 0;
+	background-color: transparent;
+	border-radius: 0;
+}
+
+.novel-header .novel-info .categories h4 {
+	font-size: 14px;
+	color: #fff;
+	margin-bottom: 4px;
+	font-weight: 400;
+	text-transform: capitalize;
+	letter-spacing: 0;
+}
+
+.novel-header .novel-info .categories h4:before,
+.novel-header .novel-info .categories h4:after {
+	display: none;
+}
+
+.novel-header .novel-info .categories ul {
+	justify-content: flex-start;
+	--gap: 6px;
+}
+
+.novel-header .novel-info .categories ul li {
+	background-color: var(--bg-color-secondary-2);
+	box-shadow: 0 2px 4px -2px rgba(0, 0, 0, .6);
+}
+
+.novel-header .novel-info .categories ul li a {
+	font-size: 14px;
+}
+
+.novel-header .novel-info .updinfo {
+	-webkit-box-ordinal-group: 4;
+	-ms-flex-order: 3;
+	order: 3;
+	background-color: transparent;
+	color: #fff;
+	flex-direction: row;
+	justify-content: flex-start;
+	padding: 0;
+	margin: 0 0 10px 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.novel-header .novel-info .updinfo span,
+.novel-header .novel-info .updinfo strong {
+	font-size: 16px;
+	line-height: 1.2;
+	font-weight: 400;
+}
+
+.novel-header .novel-info .updinfo span {
+	margin-right: 6px;
+}
+
+.novel-header .novel-info .updinfo span::after {
+	content: ":";
+	margin-left: 2px;
+}
+
+.novel-header .novel-info .links {
+	align-items: flex-end;
+	margin-bottom: 0;
+	margin-top: 10px;
+	-webkit-box-ordinal-group: 5;
+	-ms-flex-order: 4;
+	order: 4;
+}
+
+.novel-header .novel-info .links a {
+	width: 134px;
+	height: 42px;
+	padding: 0 10px;
+	border-radius: 6px;
+	font-size: 18px;
+	border: 1px solid transparent;
+	vertical-align: middle;
+	white-space: nowrap;
+	text-transform: uppercase;
+	line-height: 1.9;
+}
+
+.novel-header .novel-info .links a.empty {
+	background-color: transparent;
+	color: #2d73e7;
+	border: 1px solid #2d73e7;
+}
+
+.novel-header .novel-info .links a span {
+	display: block;
+	line-height: 16px;
+	font-size: 14px;
+}
+
+.novel-header .novel-info .links a small {
+	display: block;
+	font-size: 12px;
+	line-height: 12px;
+}
+
+.novel-header .novel-info .links a i {
+	display: inline-block;
+	font-size: 18px;
+	margin-right: 5px;
+	margin-bottom: 2px;
+}
+
+.novel-header .novel-info .links a#report-issue {
+	display: flex;
+	flex-grow: 0;
+	flex-shrink: 1;
+	width: 64px;
+}
+
+.novel-header .novel-info .links a#report-issue span {
+	white-space: pre-wrap;
+}
+
+.novel-body {
+	margin: 0 auto;
+	background-color: var(--bg-color-2);
+	padding: 13px;
+}
+
+.novel-body h4 {
+	font-size: 26px;
+}
+
+.novel-body .content-nav {
+	flex-direction: row;
+	margin-right: -26px;
+	margin-bottom: 26px;
+}
+
+.novel-body .content-nav .grdbtn {
+	width: calc(50% - 26px);
+	margin-right: 26px;
+	margin-bottom: 0;
+}
+
+.novel-body .content-nav .grdbtn h4 {
+	font-size: 22px;
+}
+
+.novel-body .content-nav .grdbtn .latest {
+	font-size: 16px;
+}
+
+.novel-body .content-nav .grdbtn .update {
+	font-size: 16px;
+}
+
+.novel-body .content-nav .grdbtn i {
+	font-size: 36px;
+}
+
+#info .description,
+#info .custom-content,
+#info .comrule {
+	font-size: 16px;
+}
+
+#info .description h5,
+#info .custom-content h5,
+#info .comrule h5 {
+	font-size: 20px;
+}
+
+#info .summary .content {
+	font-size: 16px;
+	line-height: 24px;
+}
+
+#info .summary .content p+p {
+	margin-top: 1em;
+}
+
+#info .tags ul li {
+	padding: 0 10px;
+	line-height: 26px;
+}
+
+#info .tags ul li a {
+	font-size: 16px;
+}
+
+#info .wrap {
+	display: flex;
+	height: 100%;
+}
+
+#info .wrap .left {
+	width: 70%;
+	display: block;
+	padding-right: 20px;
+}
+
+#info .wrap .right {
+	width: 30%;
+	display: block;
+	position: relative;
+}
+
+#info .report-container {
+	font-size: 14px;
+}
+
+.expand-wrapper {
+	max-height: 220px;
+}
+
+.expand-wrapper:after {
+	top: 184px;
+	height: 36px;
+}
+
+.expand-wrapper.show {
+	max-height: 1000px;
+}
+
+.expand-wrapper .expand {
+	position: absolute;
+	top: 201px;
+}
+
+.expand-wrapper .expand a {
+	font-size: 12px;
+	line-height: 1.6;
+}
+
+.expand-wrapper.content {
+	max-height: 238px;
+}
+
+.expand-wrapper.content:after {
+	top: 210px;
+	height: 30px;
+}
+
+.expand-wrapper.content .expand {
+	top: 218px;
+}
+
+.novel-header {
+	background-color: var(--bg-color);
+	border-color: var(--border-color);
+}
+
+.novel-header .novel-info .updinfo {
+	background-color: var(--bg-color);
+}
+
+.related h4 {
+	font-size: 26px;
+	margin-bottom: 1rem;
+	font-weight: 700;
+}
+
+.related .section-body {
+	margin-left: 0;
+	margin-right: 0;
+}

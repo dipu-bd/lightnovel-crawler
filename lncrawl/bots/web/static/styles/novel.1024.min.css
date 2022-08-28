@@ -1,0 +1,95 @@
+.novel-header {
+	height: 510px;
+}
+
+.novel-header::before {
+	bottom: 80px;
+}
+
+.novel-header .fixed-img {
+	flex: 0 0 314px;
+	height: 100%;
+	max-height: 100%;
+}
+
+.novel-header .novel-info h1 {
+	font-size: 28px;
+}
+
+.novel-header .novel-info .main-head {
+	margin-bottom: 14px;
+}
+
+.novel-header .novel-info .header-stats {
+	font-size: 18px;
+	margin: 0 auto 14px 0;
+}
+
+.novel-header .novel-info .header-stats span:not(:last-child) {
+	border-right: 1px solid #c1c3c5;
+}
+
+.novel-header .novel-info .header-stats i {
+	margin-right: 4px;
+	font-size: 1.6rem;
+}
+
+.novel-header .novel-info .links {
+	margin-top: 14px;
+}
+
+.novel-header .novel-info .links a {
+	padding: 0 12px;
+	flex: 0 0 216px;
+	height: 46px;
+}
+
+.novel-header .novel-info .links a i {
+	display: inline-block;
+	margin: 0;
+}
+
+.novel-header .novel-info .links a#library-push span {
+	font-size: 18px;
+	line-height: 1.8;
+}
+
+.novel-header .novel-info .links a#report-issue {
+	flex: 0 0 auto;
+	width: auto;
+	padding: 5px 12px;
+}
+
+.novel-header .novel-info .links a#report-issue i {
+	display: block;
+}
+
+.novel-header .novel-info .links a#report-issue span {
+	font-size: 14px;
+	text-align: center;
+}
+
+.novel-header .novel-info .categories {
+	margin: 0 0 14px 0;
+}
+
+.novel-header .novel-info .categories strong {
+	font-size: 14px;
+}
+
+.novel-header .novel-info .categories ul {
+	--gap: 8px;
+}
+
+.novel-header .novel-info .updinfo {
+	margin: 0 0 14px 0;
+}
+
+.novel-body.fullw {
+	padding-right: 13px;
+}
+
+#info {
+	position: relative;
+	min-height: 746px;
+}

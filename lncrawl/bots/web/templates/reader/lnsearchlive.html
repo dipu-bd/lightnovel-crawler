@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<ul class="novel-list horizontal col2">
+	{% for novel in novels %}
+	<li class="novel-item">
+		<a title="{{ novel.title }}"
+			href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">
+			<div class="cover-wrap">
+				<figure class="novel-cover">
+					<img src='/image/{{ novel.cover }}' alt="{{ novel.title }}" />
+				</figure>
+			</div>
+			<div class="item-body">
+				<h4 class="novel-title text1row">{{ novel.title }}</h4>
+				<div class="novel-stats">
+					<span><i class="icon-book-open"></i> {{ novel.chapter_count }} Chapters</span>
+				</div>
+				<div class="novel-stats">
+					<span><i class="icon-crown"></i> {{ novel.author }}</span>
+				</div>
+				<div class="novel-stats">
+					<span><i class="icon-pencil-2"></i> {{ novel.latest }}</span>
+				</div>
+				<div class="novel-stats">
+					<span><i class="icon-tags"></i> {{ novel.source_count }} Sources</span>
+				</div>
+			</div>
+		</a>
+	</li>
+	{% endfor %}
+</ul>

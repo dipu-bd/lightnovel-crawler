@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple"
+	class=" wnsmtd idc0_340" lang="en">
+
+<head>
+	{% include 'reader/component/basic_meta.html' %}
+
+
+	{% set description = ('Search a novel in LnCrawler database. Not finding what you want ? You can add it instantly from more than 140 different websites !') %}
+	{% set title = ('Search a novel in LnCrawler database') %}
+	{% set image = (WEBSITE_URL + '/static/assets/logo.bmp') %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ image }}">
+	<meta property="og:image:type" content="image/bmp">
+	<meta property="og:image:alt" content="LnCrawler">
+	<meta property="og:image:url" content="{{ image }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ image }}">
+	<meta name="twitter:image:type" content="image/bmp">
+	<meta name="twitter:image:alt" content="LnCrawler">
+	<meta name="twitter:image:url" content="{{ image }}">
+
+
+	<link rel="stylesheet" as="style"
+		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
+		crossorigin="" onload="this.rel='stylesheet'">
+
+
+	<title>{{ title }}</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+		href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+		href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+		href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/searchpg.min.css') }}">
+
+
+</head>
+
+<body class="fade-out vsc-initialized">
+	{% include 'reader/component/header.html' %}
+	<main role="main">
+		<article class="container" id="search-section">
+			<div class="search-container">
+				<form method="post" id="novelSearchForm" action="/lncrawl/lnsearchlive">
+					<div class="form-group single">
+						<label class="search_label" for="search"><svg width="16" height="16" viewBox="0 0 16 16"
+								class="styles_icon__3eEqS dib vam pa_auto _no_color">
+								<path
+									d="M7.153 12.307A5.153 5.153 0 107.153 2a5.153 5.153 0 000 10.307zm5.716-.852l2.838 2.838a1 1 0 01-1.414 1.414l-2.838-2.838a7.153 7.153 0 111.414-1.414z"
+									fill="#C0C2CC" fill-rule="nonzero"></path>
+							</svg></label>
+						<input id="inputContent" name="inputContent" type="search" class="form-control"
+							placeholder="Search Light Novel By Title" aria-label="Novel Search"
+							aria-describedby="basic-addon1" data-com.bitwarden.browser.user-edited="yes">
+					</div>
+				</form>
+				<section id="novelListBase">
+				</section>
+
+			</div>
+		</article>
+	</main>
+	{% include 'reader/component/footer.html' %}
+
+	<script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+
+
+	<script defer="">
+		var typingTimer;
+		var doneTypingInterval = 1000;
+		var $input = $('#inputContent');
+		var $loadindicator = $("<div class='loading-dual-ring'></div>");
+
+		$input.on('keyup', function (e) {
+			clearTimeout(typingTimer);
+			if ((e.keyCode || e.which) != 13) {
+				typingTimer = setTimeout(searchInput, doneTypingInterval);
+			}
+		});
+
+		$input.on('keydown', function () {
+			clearTimeout(typingTimer);
+		});
+
+		$("#novelSearchForm").submit(function (e) {
+			e.preventDefault();
+			clearTimeout(typingTimer);
+			searchInput();
+		});
+
+		function searchInput() {
+			var value = $input.val();
+			if (value.length < 3)
+				return null;
+
+			$("#novelListBase").html($loadindicator);
+
+			$.post('/lncrawl/lnsearchlive', { inputContent: value }, function (res) {
+				if (res.success) {
+					$("#novelListBase").html(res.resultview);
+				}
+			});
+		}
+	</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple"
+	class=" zujmvmoppc idc0_340" lang="en">
+
+<head>
+	{% include 'reader/component/basic_meta.html' %}
+
+	{% set description = ( 'All ' + source.chapter_count.__str__() + ' chapters of ' + source.title + ((' in ' + language_dict[source.language]) if source.language in language_dict else ' ') + ((' by ' +  source.author) if source.author else '') + ' from ' + source.slug ) %}
+	{% set title = ("Chapters " + (((page if page else 1) -1) * 100 + 1).__str__() + " - " + min((page if page else 1)*100, source.chapter_count).__str__() + " of " + source.title) %}
+	{% set cover = (WEBSITE_URL + '/image/' + source.cover) %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ cover }}">
+	<meta property="og:image:type" content="image/jpeg">
+	<meta property="og:image:alt" content="{{ source.title }}">
+	<meta property="og:image:url" content="{{ cover }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ cover }}">
+	<meta name="twitter:image:type" content="image/jpeg">
+	<meta name="twitter:image:alt" content="{{ source.title }}">
+	<meta name="twitter:image:url" content="{{ cover }}">
+
+
+
+	<link rel="stylesheet" as="style"
+		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
+		crossorigin="" onload="this.rel='stylesheet'">
+
+	<title>{{ title }}</title>
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+		href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+		href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+		href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+
+	<link rel="stylesheet" type="text/css"
+		href="{{ url_for('static',filename='styles/novel.chapter-review.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/pagedlist.css') }}">
+</head>
+
+<body class="fade-out vsc-initialized">
+	{% include 'reader/component/header.html' %}
+	<div class="sidebar-wrapper"></div>
+	<main role="main">
+
+		<article id="chapter-list-page">
+			<header class="container">
+				<div class="novel-item">
+					<div class="cover-wrap">
+						<a title="{{ source.title }}" href="../">
+							<figure class="novel-cover">
+								<img src="/image/{{ source.cover }}" alt="{{ source.title }}" />
+							</figure>
+						</a>
+					</div>
+					<div class="item-body">
+						<h1>
+							<a class="text2row" title="God of Tricksters" href="../">{{ source.title }}</a>
+						</h1>
+					</div>
+				</div>
+				<span class="divider"></span>
+				<h2>{{ source.title}} Chapters - (Page {{ page }})</h2>
+				<p>
+					{{ source.summary }}
+				</p>
+				<p>
+					Latest Release:<br>
+					<a href="../chapter-{{ source.chapter_count }}" title="{{ source.latest }}">{{ source.latest }}</a>
+				</p>
+			</header>
+			<section class="container" id="chpagedlist" data-load="0">
+				<svg aria-hidden="true" style="position: absolute; width: 0px; height: 0px; overflow: hidden;">
+					<symbol id="i-rank-up" viewBox="0 0 1308 1024">
+						<path
+							d="M512 149.33333366666665h796.444444v113.777777H512V149.33333366666665z m0 341.333333h568.888889v113.777778H512V490.6666666666667z m0 341.333333h341.333333v113.777778H512v-113.777778zM227.555556 303.6159996666667L100.124444 452.9493336666667 13.653333 379.0506666666667 341.333333-4.949333333333332V1002.6666666666666H227.555556V303.6159996666667z">
+						</path>
+					</symbol>
+				</svg>
+				<div class="filters">
+					<form method="post" id="gotochap" data-ajax="true" data-ajax-method="post"
+						data-ajax-success="onGotoChapSuccess" action="../gotochap">
+						<input id="gotochapno" name="chapno" type="number" placeholder="Enter Chapter No">
+						<input class="button" type="submit" value="Go">
+					</form>
+					<div class="pagenav">
+						<div class="pagination-container">
+							<ul class="pagination">
+
+								{% if not page %}
+								<li class="active"><span>1</span></li>
+								{{ (("<li><a href='page-2'>2</a></li>") if last_page >= 2 else "") |safe }}
+								{{ (("<li><a href='page-3'>3</a></li>") if last_page >= 3 else "") |safe }}
+								{{ (("<li><a href='page-4'>4</a></li>") if last_page >= 4 else "") |safe }}
+
+								{{
+								(("<li class='PagedList-skipToNext'><a href='page-2' rel='next'>&gt;</a></li>")
+								if last_page >= 2 else "")
+								|safe }}
+
+								{{
+								(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a>
+								</li>")
+								if last_page >= 3 else "")
+								|safe }}
+
+
+								{% else %}
+
+								{{
+								(("<li class='PagedList-skipToFirst'><a href='page-1'>&lt;&lt;</a></li>")
+								if page > 2 else "")
+								|safe }}
+
+								{{
+								(("<li class='PagedList-skipToPrevious'><a href='page-" ~ (page-1) ~ "'
+										rel='prev'>&lt;</a>
+								</li>") if page > 1 else "")
+								|safe }}
+
+								{{
+								(("<li><a href='page-" ~ (page-1) ~ "'>" ~ (page-1) ~ "</a></li>")
+								if page-1 > 0 else "")
+								|safe }}
+
+								<li class="active"><span>{{ page }}</span></li>
+
+								{{
+								(("<li><a href='page-" ~ (page+1) ~ "'>" ~ (page+1) ~ "</a></li>")
+								if (last_page > page) else "")
+								|safe }}
+
+								{{
+								(("<li><a href='page-" ~ (page+2) ~ "'>" ~ (page+2) ~ "</a></li>")
+								if (last_page > page+1) else "")
+								|safe }}
+
+								{{
+								(("<li class='PagedList-skipToNext'><a href='page-" ~ (page+1) ~ "' rel='next'>&gt;</a>
+								</li>
+								")
+								if (last_page >= page+1) else "")
+								|safe }}
+
+								{{
+								(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a></li>")
+								if (last_page >= page+2) else "")
+								|safe }}
+
+
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</div>
+				<ul class="chapter-list">
+					{% for chapter in chapters %}
+					<li data-chapterno="{{ chapter['id'] }}" data-volumeno="{{ chapter['volume'] }}"
+						data-orderno="{{ chapter['id'] }}">
+						<a href="../chapter-{{ chapter['id'] }}" title="{{ chapter['title'] }}">
+							<span class="chapter-no ">{{ chapter['id'] }}</span>
+							<strong class="chapter-title">
+								{{ chapter['title'] }} </strong>
+						</a>
+					</li>
+					{% endfor %}
+				</ul>
+			</section>
+		</article>
+	</main>
+
+	{% include 'reader/component/footer.html' %}
+
+
+	<script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+
+</body>
+
+</html>

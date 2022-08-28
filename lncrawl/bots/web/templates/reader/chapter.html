@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple"
+	style="height: 100%;" class=" zasroaz idc0_340" lang="en">
+
+<head>
+	{% include 'reader/component/basic_meta.html' %}
+
+	{% set description = ( 'Read Chapter ' + chapter['id'].__str__()  + ' of ' + source.title + ' - ' + chapter['title'] + ((' in ' + language_dict[source.language]) if source.language in language_dict else ' ') + ((' by ' +  source.author) if source.author else '') ) %}
+	{% set title = ('Read Chapter ' + chapter['id'].__str__() + ' of ' + source.title + ' - ' + chapter['title']) %}
+	{% set cover = (WEBSITE_URL + '/image/' + source.cover) %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ cover }}">
+	<meta property="og:image:type" content="image/jpeg">
+	<meta property="og:image:alt" content="{{ source.title }}">
+	<meta property="og:image:url" content="{{ cover }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ cover }}">
+	<meta name="twitter:image:type" content="image/jpeg">
+	<meta name="twitter:image:alt" content="{{ source.title }}">
+	<meta name="twitter:image:url" content="{{ cover }}">
+	
+	<link rel="stylesheet" as="style"
+		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
+		crossorigin="" onload="this.rel='stylesheet'">
+
+	<title>{{ title }}</title>
+
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+		href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+		href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+		href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/chaptertts.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/chapterpg.min.css') }}">
+
+	<style>
+		@font-face {
+			font-family: 'opendyslexic3';
+			src: url("{{ url_for('static', filename='assets/OpenDyslexic3-Regular.ttf')}}") format('truetype');
+			font-weight: normal;
+			font-style: normal;
+		}
+	</style>
+</head>
+
+<body class="fade-out vsc-initialized" style="position: relative; min-height: 100%; top: 40px;">
+	{% include 'reader/component/header.html' %}
+
+	<!-- settings icon -->
+	<svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+		<symbol id="i-set" viewBox="0 0 1027 1024">
+			<path
+				d="M1005.37728 614.4l-115.2-64c0-12.8 0-25.6 0-38.4s0-25.6 0-38.4l115.2-64C1024.57728 403.2 1030.97728 384 1018.17728 364.8l-128-224c-6.4-12.8-25.6-19.2-44.8-12.8l-115.2 64c-19.2-12.8-38.4-25.6-64-38.4l0-128C672.57728 12.8 659.77728 0 640.57728 0L384.57728 0C365.37728 0 352.57728 12.8 352.57728 32l0 128c-19.2 12.8-44.8 19.2-64 38.4l-115.2-64C160.57728 121.6 141.37728 128 134.97728 147.2l-128 224C-5.82272 384 0.57728 403.2 13.37728 409.6l115.2 64C128.57728 486.4 128.57728 499.2 128.57728 512s0 25.6 0 38.4l-115.2 64C0.57728 620.8-5.82272 640 6.97728 659.2l128 224c6.4 12.8 25.6 19.2 44.8 12.8l115.2-64c19.2 12.8 38.4 25.6 64 38.4l0 128C352.57728 1011.2 365.37728 1024 384.57728 1024l256 0c19.2 0 32-12.8 32-32l0-128c19.2-12.8 44.8-19.2 64-38.4l115.2 64c12.8 6.4 32 6.4 44.8-12.8l128-224C1030.97728 640 1024.57728 620.8 1005.37728 614.4zM838.97728 774.4l-115.2-70.4c-38.4 44.8-89.6 70.4-147.2 83.2l0 134.4L448.57728 921.6l0-134.4c-57.6-12.8-108.8-44.8-147.2-83.2l-115.2 70.4-64-108.8 115.2-70.4C230.97728 569.6 224.57728 544 224.57728 512s6.4-57.6 12.8-83.2L122.17728 358.4l64-108.8 115.2 70.4C339.77728 275.2 390.97728 243.2 448.57728 230.4L448.57728 96l128 0 0 134.4c57.6 12.8 108.8 44.8 147.2 83.2l115.2-70.4 64 108.8-115.2 70.4c6.4 25.6 12.8 57.6 12.8 83.2s-6.4 57.6-12.8 83.2l115.2 70.4L838.97728 774.4z">
+			</path>
+			<path
+				d="M512.57728 320C403.77728 320 320.57728 403.2 320.57728 512s83.2 192 192 192 192-83.2 192-192S621.37728 320 512.57728 320zM512.57728 640c-70.4 0-128-57.6-128-128s57.6-128 128-128 128 57.6 128 128S582.97728 640 512.57728 640z">
+			</path>
+		</symbol>
+		<symbol id="i-times" viewBox="0 0 1024 1024">
+			<path
+				d="M618.775 512l320.329-320.329c30.51-30.51 30.51-76.269 0-106.775s-76.269-30.51-106.775 0l-320.329 320.329-320.329-320.329c-30.51-30.51-76.269-30.51-106.775 0s-30.51 76.269 0 106.775l320.329 320.329-320.329 320.329c-30.51 30.51-30.51 76.269 0 106.775s76.269 30.51 106.775 0l320.329-320.329 320.329 320.329c30.51 30.51 76.269 30.51 106.775 0s30.51-76.269 0-106.775l-320.329-320.329z">
+			</path>
+		</symbol>
+	</svg>
+	<!-- settings icon -->
+	<article id="chapter-article" itemscope="" itemtype="https://schema.org/CreativeWorkSeries">
+		<div class="head-stick-offset"></div>
+		<div class="container">
+		</div>
+		<section class="page-in content-wrap">
+			<div class="titles">
+				<h1 itemprop="headline"><a class="booktitle" href="./" title="{{ source.title }}" rel="up"
+						itemprop="sameAs">{{ source.title }}</a><span hidden=""> - </span><br><span
+						class="chapter-title">{{ chapter["title"] }}</span></h1>
+				<div class="control-action-btn">
+					<a href="#chsetting"><svg>
+							<use xlink:href="#i-set"></use>
+						</svg></a>
+				</div>
+
+			</div>
+			<div id="chapter-container" class="chapter-content font_default" itemprop="description"
+				style="font-size: 16px;">
+				{{ chapter["body"]|safe }}
+			</div>
+			<div class="chapternav skiptranslate">
+				<a rel="prev" class="button prevchap {{ 'isDisabled' if not is_prev}}"
+					href="chapter-{{ chapter['id'] - 1 }}">
+					<i class="icon-left-open"></i>
+					<span>Prev</span>
+				</a>
+				<a title="Magic System in a Parallel World Chapter List" class="button chapindex" href="chapterlist">
+					<i class="icon-home"></i>
+					<span>Index</span>
+				</a>
+				<a rel="next" class="button nextchap {{ 'isDisabled' if not is_next}}"
+					href="chapter-{{ chapter['id'] + 1 }}">
+					<span>Next</span>
+					<i class="icon-right-open"></i>
+				</a>
+			</div>
+			<dialog class="mobile-title-bar">
+				<div class="bar-body">
+					<i class="bar-nav-back"><svg viewBox="0 0 24 24" fill="none" width="30" height="30">
+							<path d="M6.975 13.3L12 20H9l-6-8 6-8h3l-5.025 6.7H21v2.6H6.975z"></path>
+						</svg></i>
+					<div class="bar-titles">
+						<a class="booktitle text1row" href="/lncrawl/novel/{{ source.novel.slug }}/{{ source.slug }}"
+							title="Magic System in a Parallel World">Magic System in a Parallel World</a>
+						<span class="chapter-title">Chapter 1: Parallel World</span>
+					</div>
+				</div>
+			</dialog>
+			<dialog class="control-action" translate="no" style="display: none;">
+				<nav class="action-items">
+					<div class="action-select">
+						<a rel="prev" class="{{ 'isDisabled' if not is_prev}} chnav prev"
+							href="chapter-{{ chapter['id'] - 1 }}"><i class="icon-left-open"></i><span>Prev</span></a>
+						<a class="chap-index" title="Chapter Index" href="chapterlist">
+							<i class="icon-home"></i>
+						</a>
+						<a class="nightmode_switch" title="Night mode" data-night="0" data-content="Dark Theme">
+							<i class="icon-moon"></i>
+						</a>
+						<a rel="next" class="{{ 'isDisabled' if not is_next}} chnav next"
+							href="chapter-{{ chapter['id'] + 1 }}"><span>Next</span><i class="icon-right-open"></i></a>
+					</div>
+					<div class="font-select">
+						<div class="font-wrap">
+							<input type="radio" id="radioDefault" name="radioFont" value="default" checked="">
+							<label for="radioDefault">Default</label>
+							<input type="radio" id="radioDyslexic" name="radioFont" value="dyslexic">
+							<label for="radioDyslexic">Dyslexic</label>
+							<input type="radio" id="radioRoboto" name="radioFont" value="roboto">
+							<label for="radioRoboto">Roboto</label>
+							<input type="radio" id="radioLora" name="radioFont" value="lora">
+							<label for="radioLora">Lora</label>
+						</div>
+					</div>
+					<div class="action-select range-slider">
+						<span class="svgbtn" id="svgFontMinus">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+								<path fill-rule="evenodd" clip-rule="evenodd"
+									d="M14.333 21l-1.703-4.6H5.37L3.667 21H1L7.667 3h2.666L17 21h-2.667zM9 6.6l2.74 7.4H6.26L9 6.6zM23 5h-8v2h8V5z"
+									fill="#000"></path>
+							</svg>
+						</span>
+						<div class="range-fontsize">
+							<div class="range">
+								<input type="range" min="1" max="8" step="1" value="1">
+							</div>
+							<ul class="range-labels">
+								<li class="selected">14</li>
+								<li class="active selected">16</li>
+								<li>18</li>
+								<li>20</li>
+								<li>22</li>
+								<li>24</li>
+								<li>26</li>
+								<li>28</li>
+							</ul>
+						</div>
+						<span class="svgbtn" id="svgFontPlus">
+							<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+								<path fill-rule="evenodd" clip-rule="evenodd"
+									d="M20 2v3h3v2h-3v3h-2V7h-3V5h3V2h2zm-5.667 19l-1.703-4.6H5.37L3.667 21H1L7.667 3h2.666L17 21h-2.667zM9 6.6l2.74 7.4H6.26L9 6.6z"
+									fill="#000"></path>
+							</svg>
+						</span>
+					</div>
+
+
+				</nav>
+			</dialog>
+			<div class="guide-message">
+				<span class="mobile">Tap the screen to use reading tools</span>
+				<span class="desktop">Tip: You can use left and right keyboard keys to browse between
+					chapters.</span>
+			</div>
+		</section>
+	</article>
+
+	{% include 'reader/component/footer.html' %}
+
+	<script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+</body>
+
+</html>

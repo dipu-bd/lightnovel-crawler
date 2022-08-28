@@ -58,6 +58,8 @@ def epub_to_calibre(app, epub_file, out_fmt):
         '--no-chapters-in-toc',
         '--title', file_name_without_ext,
         '--authors', app.crawler.novel_author,
+        '--summary', app.crawler.summary,
+        '--language', app.crawler.language,
         '--series', app.crawler.novel_title,
         '--publisher', app.crawler.home_url,
         '--book-producer', 'Lightnovel Crawler',

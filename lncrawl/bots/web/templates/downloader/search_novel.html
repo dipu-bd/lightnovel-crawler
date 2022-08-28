@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple">
+
+<head>
+
+    {% include 'reader/component/basic_meta.html' %}
+
+	{% set description = ('Add instantly any novel from more than 140 sources to read for free on LnCrawler! Participate in growing the LnCrawler database for all users!') %}
+	{% set title = ('Add instantly a new novel to LnCrawler database from more than 140 sources!') %}
+	{% set image = (WEBSITE_URL + '/static/assets/logo.bmp') %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ image }}">
+	<meta property="og:image:type" content="image/bmp">
+	<meta property="og:image:alt" content="LnCrawler">
+	<meta property="og:image:url" content="{{ image }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ image }}">
+	<meta name="twitter:image:type" content="image/bmp">
+	<meta name="twitter:image:alt" content="LnCrawler">
+	<meta name="twitter:image:url" content="{{ image }}">
+
+
+    
+
+    <link rel="stylesheet" as="style"
+        href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
+        crossorigin="" onload="this.rel='stylesheet'">
+
+    <title>LN Crawler Search</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+        href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+        href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+    <link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+        href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/pagedlist.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/browsepg.min.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/searchpg.min.css') }}">
+
+
+</head>
+
+<body class="fade-out">
+    {% include 'reader/component/header.html' %}
+    <div class="sidebar-wrapper"></div>
+    <main role="main">
+        <article id="search-section" class="container">
+            <div class="search container">
+                <form id="novelSearchForm">
+                    <div class="form-group single">
+                        <button type="button" onclick="sendSearchRequest()" class="search_label"
+                            style="border:0px;background:none;">
+                            <svg width="16" height="16" viewBox="0 0 16 16"
+                                class="styles_icon__3eEqS dib vam pa_auto _no_color">
+                                <path
+                                    d="M7.153 12.307A5.153 5.153 0 107.153 2a5.153 5.153 0 000 10.307zm5.716-.852l2.838 2.838a1 1 0 01-1.414 1.414l-2.838-2.838a7.153 7.153 0 111.414-1.414z"
+                                    fill="#C0C2CC" fill-rule="nonzero"></path>
+                            </svg>
+                        </button>
+                        <input id="inputContent" name="inputContent" type="search" class="form-control"
+                            placeholder="Search Light Novel By Title" aria-label="Novel Search"
+                            aria-describedby="basic-addon1" onKeyDown="if(event.keyCode==13) sendSearchRequest();">
+                    </div>
+
+                    <input type="number" class="form-control" id="job_id" name="job_id" style="display: none;"
+                        value="{{ job_id }}">
+            </div>
+
+            </form>
+            <br>
+            <br>
+            <p>Show advanced settings :
+                <button onclick="ToggleAdvanced()">o</button>
+            </p>
+
+            <section id="novelListBase"></section>
+        </article>
+    </main>
+    {% include 'reader/component/footer.html' %}
+    <script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+    <script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+    <script>
+        function ToggleAdvanced() {
+            var x = document.getElementById("job_id");
+            if (x.style.display === "none") {
+                x.style.display = "";
+            } else {
+                x.style.display = "none";
+            }
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function sendSearchRequest() {
+            var inputContent = document.getElementById("inputContent").value;
+            let job_id = document.getElementById("job_id").value;
+
+            if (inputContent.startsWith("http")) {
+                let displayArea = document.getElementById("novelListBase");
+                let queueTarget = "/lncrawl/addnovel/direct_download/" + job_id + "/" + "?url=" + inputContent;
+                let response = await queue(queueTarget, displayArea);
+                displayArea.innerHTML = response.html;
+
+            }
+            else {
+                let form = new FormData(document.getElementById("novelSearchForm"));
+                
+                let res = await fetch("/lncrawl/addnovel/search/form", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(Object.fromEntries(form)),
+                })
+
+                if (res.status == 200) {
+
+                    let queueTarget = "/lncrawl/addnovel/choose_novel/" + job_id;
+                    let displayArea = document.getElementById("novelListBase");
+                    displayArea.innerHTML = "";
+
+                    let response = await queue(queueTarget, displayArea);
+
+                    let listNovel = document.createElement("ul");
+                    listNovel.className = "novel-list";
+
+                    response.novels.content.forEach((novel, novelId) => {
+
+                        let novelItem = document.createElement("li")
+                        novelItem.className = "novel-item";
+
+                        let iconPlus = document.createElement("i");
+                        iconPlus.className = "icon-right-open"
+                        iconPlus.onclick = function () { switchShowSource(iconPlus, novelId, job_id) };
+                        novelItem.appendChild(iconPlus);
+
+                        let novelText = document.createElement("span");
+                        novelText.innerText = novel.title;
+                        novelItem.appendChild(novelText);
+
+                        listNovel.appendChild(novelItem);
+
+                    });
+
+
+
+                    displayArea.appendChild(listNovel);
+                }
+                else {
+                    let res = JSON.parse(xhr.response);
+                    alert("Error: " + res.message);
+                }
+            }
+
+
+
+        }
+
+        async function switchShowSource(iconPlus, novelId, job_id) {
+            let sourceList = iconPlus.parentNode.getElementsByClassName("source-list")
+            // Rotate icon 90 when open with class "rotate-90"
+            if (iconPlus.className == "icon-right-open") {
+                iconPlus.className = "icon-right-open rotate-90";
+                if (sourceList[0]) {
+                    sourceList[0].style.display = "";
+                }
+                else {
+                    let loadingSpan = document.createElement("span");
+                    loadingSpan.className = "loading";
+                    loadingSpan.innerText = "Loading...";
+                    iconPlus.parentNode.appendChild(loadingSpan);
+                    let target = "/lncrawl/addnovel/choose_source/" + novelId + "/" + job_id;
+                    let response = await queue(target, loadingSpan);
+                    loadingSpan.remove();
+
+
+                    sourceList = document.createElement("ul");
+                    sourceList.className = "source-list";
+
+                    response.sources.content.forEach((source, sourceId) => {
+                        let sourceItem = document.createElement("li");
+                        sourceItem.className = "source-item";
+
+                        let iconDownload = document.createElement("i");
+                        iconDownload.className = "download-icon icon-check-empty";
+                        iconDownload.onclick = function () { startDownload(novelId, sourceId, job_id) };
+                        sourceItem.appendChild(iconDownload);
+
+                        let div = document.createElement("div");
+
+                        let sourceUrl = document.createElement("a");
+                        sourceUrl.className = "source-url";
+                        sourceUrl.href = source.url;
+                        sourceUrl.innerText = source.url;
+                        div.appendChild(sourceUrl);
+
+                        if (source.info) {
+                            let sourceInfo = document.createElement("label");
+                            sourceInfo.innerText = source.info;
+                            div.appendChild(sourceInfo);
+                        }
+                        sourceItem.appendChild(div);
+
+                        sourceList.appendChild(sourceItem);
+                    });
+
+                    iconPlus.parentNode.appendChild(sourceList);
+                }
+
+            }
+            else {
+                iconPlus.className = "icon-right-open";
+                if (sourceList[0]) {
+                    sourceList[0].style.display = "none";
+                }
+                else {
+                    Array.from(iconPlus.parentNode.getElementsByClassName("loading")).forEach(loadingSpan => {
+                        loadingSpan.remove();
+                    });
+                }
+
+
+            }
+        }
+
+        async function startDownload(novelId, sourceId, job_id) {
+            let displayArea = document.getElementById("novelListBase");
+            let response = await queue("/lncrawl/addnovel/download/" + novelId + "/" + sourceId + "/" + job_id, displayArea);
+            displayArea.innerHTML = response.html;
+        }
+
+        async function queue(queueTarget, displayArea) {
+
+            let response = await fetch(queueTarget).then(res => res.json());
+
+            while (response.status == "pending") {
+                displayArea.innerHTML = response.html;
+                response = await fetch(queueTarget).then(res => res.json());
+                await sleep(2000);
+            }
+            displayArea.innerHTML = "";
+
+            return response
+        }
+    </script>
+    <style>
+        ul.source-list,
+        ul.novel-list {
+            display: initial
+        }
+
+        ul.source-list li.source-item,
+        ul.novel-list li.novel-item {
+            line-height: 1.5em;
+            width: auto;
+        }
+
+        ul.novel-list li.novel-item i {
+            cursor: pointer;
+            font-style: normal;
+            font-weight: bold;
+            margin-right: 3px;
+        }
+
+        ul.novel-list li.novel-item span {
+            display: contents
+        }
+
+        ul.source-list li.source-item {
+            margin-left: 40px;
+            display: flex;
+        }
+
+        ul.source-list li.source-item a,
+        ul.source-list li.source-item a {
+            line-height: 1.5em;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        ul.source-list li.source-item label {
+            margin-left: 5%;
+            cursor: auto;
+            line-height: 1.5em;
+            display: block;
+            margin-bottom: 1em;
+        }
+
+        ul.source-list li.source-item div {
+            width: calc(100% - 3em);
+        }
+
+        ul.novel-list li.novel-item span.loading {
+            display: inline-block;
+            width: 100%;
+            text-align: center
+        }
+
+        ul.source-list li.source-item i.download-icon {
+            margin-right: 1em;
+        }
+    </style>
+
+</body>
+
+</html>

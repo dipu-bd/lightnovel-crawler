@@ -1,0 +1,21 @@
+.container,
+footer .wrapper {
+	width: 970px;
+}
+
+@supports not (display:grid) {
+	.novel-item {
+		width: calc(14.38% + 29px);
+		padding-right: 29px;
+	}
+
+	.novel-item:nth-child(5n+5) {
+		width: calc(14.38% + 29px);
+		padding-right: 29px;
+	}
+
+	.novel-item:nth-child(6n+6) {
+		width: 14.38%;
+		padding-right: 0;
+	}
+}

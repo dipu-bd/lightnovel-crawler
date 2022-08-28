@@ -1,0 +1,18 @@
+<svg width="16" height="12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <mask id="a" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="12">
+    <path fill="#fff" d="M0 0h16v12H0z"/>
+  </mask>
+  <g mask="url(#a)">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0v12h16V0H0z" fill="#F7FCFF"/>
+    <mask id="b" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="12">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0v12h16V0H0z" fill="#fff"/>
+    </mask>
+    <g mask="url(#b)">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0v4h16V0H0zm0 8v4h16V8H0z" fill="#3D58DB"/>
+      <path d="M9.713 5.93a1.82 1.82 0 11-3.642 0 1.82 1.82 0 013.642 0z" stroke="#E8AA00" stroke-width=".5"/>
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M6.905 4.831s-.476.784-.476 1.322S7 7.368 7.896 7.368c.875 0 1.504-.523 1.523-1.215.019-.692-.47-1.184-.47-1.184s.276.996.138 1.4c-.139.403-.587.891-1.19.83-.604-.063-1.177-.806-1.177-1.046s.185-1.322.185-1.322z" fill="#1E601B"/>
+      <path d="M7.08 6.164h1.604" stroke="#188396" stroke-width=".5"/>
+      <path d="M7.23 5.903h1.38m-.085.303H7.297l.62-1.029.608 1.029z" stroke="#E8AA00" stroke-width=".5"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,45 @@
+<header class="main-header skiptranslate">
+    <div class="wrapper">
+        <div class="nav-logo">
+            <a href="/lncrawl" title="Read Most Popular Light Novels Online for Fre">
+                <img src="{{ url_for('static',filename='assets/logo.bmp') }}" alt="Light Novel" />
+            </a>
+        </div>
+        <div class="navigation-bar">
+            <nav>
+                <span class="lnw-slog">Your fictional stories hub.</span>
+                <ul class="navbar-menu">
+                    <li class="nav-item">
+                        <a class="nav-link" title="Search Light Novels" href="/lncrawl/search"><i
+                                class="icon-search"></i> Search</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Explore the Most Popular Light Novels" href="/lncrawl/"><i
+                                class="icon-th-large"></i> Browse</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Development Announcements"
+                            href="https://github.com/dipu-bd/lightnovel-crawler/tree/dev"><i
+                                class="icon-megaphone"></i> DEV</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" title="Add Novel" href="/lncrawl/addnovel/search/"><i class="plus"></i>Add
+                            Novel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nightmode_switch" data-tool="nightmode_switch" title="Dark Mode" data-night="0"
+                            data-content="Dark Theme">
+                            <i class="icon-moon"></i>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="nav-back">
+            <i class="icon-left-open"></i>
+        </div>
+        <button id="mobile-menu-btn">
+            <div id="burger-btn"></div>
+        </button>
+    </div>
+</header>

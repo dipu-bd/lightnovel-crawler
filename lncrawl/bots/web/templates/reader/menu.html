@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple">
+
+<head>
+	{% include 'reader/component/basic_meta.html' %}
+
+	{% set description = ('Read world famous Japanese Light Novels, Chinese Light Novels and Korean Light Novels in any language from more that 140 different websites.') %}
+	{% set title = ('Read Light Novels Online For Free | LnCrawler') %}
+	{% set image = (WEBSITE_URL + '/static/assets/logo.bmp') %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ image }}">
+	<meta property="og:image:type" content="image/bmp">
+	<meta property="og:image:alt" content="LnCrawler">
+	<meta property="og:image:url" content="{{ image }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ image }}">
+	<meta name="twitter:image:type" content="image/bmp">
+	<meta name="twitter:image:alt" content="LnCrawler">
+	<meta name="twitter:image:url" content="{{ image }}">
+
+
+
+	
+	<link rel="stylesheet" as="style"
+		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
+		crossorigin="" onload="this.rel='stylesheet'">
+
+	<title>{{ title }}</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+		href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+		href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+		href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/pagedlist.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/browsepg.min.css') }}">
+
+
+</head>
+
+<body class="fade-out">
+	{% include 'reader/component/header.html' %}
+	<div class="sidebar-wrapper"></div>
+	<main role="main">
+		<article id="explore" class="container">
+			<header id="Result">
+				<h1>Browse Light Novels</h1>
+				<p class="description"> Discover the best and most popular light novels. </p>
+				<nav class="paging">
+					<div class="pagination-container">
+						<ul class="pagination">
+
+							{% if not page %}
+							<li class="active"><span>1</span></li>
+							{{ (("<li><a href='page-2'>2</a></li>") if last_page >= 2 else "") |safe }}
+							{{ (("<li><a href='page-3'>3</a></li>") if last_page >= 3 else "") |safe }}
+							{{ (("<li><a href='page-4'>4</a></li>") if last_page >= 4 else "") |safe }}
+
+							{{
+							(("<li class='PagedList-skipToNext'><a href='page-2' rel='next'>&gt;</a></li>")
+							if last_page >= 2 else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a>
+							</li>")
+							if last_page >= 3 else "")
+							|safe }}
+
+
+							{% else %}
+
+							{{
+							(("<li class='PagedList-skipToFirst'><a href='page-1'>&lt;&lt;</a></li>")
+							if page > 2 else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToPrevious'><a href='page-" ~ (page-1) ~ "' rel='prev'>&lt;</a>
+							</li>") if page > 1 else "")
+							|safe }}
+
+							{{
+							(("<li><a href='page-" ~ (page-1) ~ "'>" ~ (page-1) ~ "</a></li>")
+							if page-1 > 0 else "")
+							|safe }}
+
+							<li class="active"><span>{{ page }}</span></li>
+
+							{{
+							(("<li><a href='page-" ~ (page+1) ~ "'>" ~ (page+1) ~ "</a></li>")
+							if (last_page > page) else "")
+							|safe }}
+
+							{{
+							(("<li><a href='page-" ~ (page+2) ~ "'>" ~ (page+2) ~ "</a></li>")
+							if (last_page > page+1) else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToNext'><a href='page-" ~ (page+1) ~ "' rel='next'>&gt;</a>
+							</li>
+							")
+							if (last_page >= page+1) else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a></li>")
+							if (last_page >= page+2) else "")
+							|safe }}
+
+
+							{% endif %}
+						</ul>
+					</div>
+				</nav>
+			</header>
+			<ul class="novel-list horizontal col2">
+				{% for novel in novels %}
+				<li class="novel-item">
+					<div class="cover-wrap">
+						<a title="{{ novel.title }}"
+							href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">
+							<figure class="novel-cover">
+								<img class="lazyload" src="/image/{{ novel.cover }}" alt="{{ novel.title }}" />
+							</figure>
+							<div class="novel-languages">
+								{% for language in novel.language.split(', ') %}
+								<span class="flag-wrap"><img src="{{ url_for('static',filename='assets/flags/'+ language + '.svg') }}" alt="{{ language }} flag"/></span>
+								{% endfor %}
+							</div>
+						</a>
+
+					</div>
+					<div class="item-body">
+						<h4 class="novel-title text1row">
+							<a title="{{ novel.title }}"
+								href="/lncrawl/novel/{{ novel.slug }}/{{ novel.prefered_source.slug }}">
+								{{ novel.title }}
+							</a>
+						</h4>
+						<div class="novel-stats">
+							<div class="rating-star">
+								<p>
+									{% for i in range(novel.overall_rating.__int__()) %}
+									<span class="star-wrap">
+										<i class="icon-star"></i>
+									</span>
+									{% endfor %}
+									{% for i in range(5 - novel.overall_rating.__int__()) %}
+									<span class="star-wrap">
+										<i class="icon-star-empty"></i>
+									</span>
+									{% endfor %}
+									<strong>{{novel.overall_rating}} ({{ novel.ratings_count }})</strong>
+								</p>
+							</div>
+						</div>
+						{% if novel.chapter_count or novel.source_count %}
+						<div class="novel-stats">
+							{% if novel.rank %}
+							<span><i class="icon-trophy"></i> Rank {{ novel.rank }}</span>
+							{% endif %}
+							{% if novel.author %}
+							<span><i class="icon-user-circle-o"></i> {{ novel.author }}</span>
+							{% endif %}
+						</div>
+						<div class="novel-stats">
+							{% if novel.chapter_count %}
+							<span><i class="icon-book-open"></i> {{ novel.chapter_count }} Chapters</span>
+							{% endif %}
+							{% if novel.source_count %}
+							<span><i class="icon-tags"></i> {{ novel.source_count }} Sources</span>
+							{% endif %}
+						</div>
+						{% endif %}
+						{% if novel.author or novel.rank %}
+						{% endif %}
+						{% if novel.latest %}
+						<div class="novel-stats">
+							<span><i class="icon-pencil-2"></i> {{ novel.latest }}</span>
+						</div>
+						{% endif %}
+
+					</div>
+				</li>
+				{% endfor %}
+			</ul>
+			<footer class="pagination" style="height:auto">
+				<nav class="paging">
+					<div class="pagination-container">
+						<ul class="pagination">
+
+							{% if not page %}
+							<li class="active"><span>1</span></li>
+							{{ (("<li><a href='page-2'>2</a></li>") if last_page >= 2 else "") |safe }}
+							{{ (("<li><a href='page-3'>3</a></li>") if last_page >= 3 else "") |safe }}
+							{{ (("<li><a href='page-4'>4</a></li>") if last_page >= 4 else "") |safe }}
+
+							{{
+							(("<li class='PagedList-skipToNext'><a href='page-2' rel='next'>&gt;</a></li>")
+							if last_page >= 2 else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a>
+							</li>")
+							if last_page >= 3 else "")
+							|safe }}
+
+
+							{% else %}
+
+							{{
+							(("<li class='PagedList-skipToFirst'><a href='page-1'>&lt;&lt;</a></li>")
+							if page > 2 else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToPrevious'><a href='page-" ~ (page-1) ~ "' rel='prev'>&lt;</a>
+							</li>") if page > 1 else "")
+							|safe }}
+
+							{{
+							(("<li><a href='page-" ~ (page-1) ~ "'>" ~ (page-1) ~ "</a></li>")
+							if page-1 > 0 else "")
+							|safe }}
+
+							<li class="active"><span>{{ page }}</span></li>
+
+							{{
+							(("<li><a href='page-" ~ (page+1) ~ "'>" ~ (page+1) ~ "</a></li>")
+							if (last_page > page) else "")
+							|safe }}
+
+							{{
+							(("<li><a href='page-" ~ (page+2) ~ "'>" ~ (page+2) ~ "</a></li>")
+							if (last_page > page+1) else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToNext'><a href='page-" ~ (page+1) ~ "' rel='next'>&gt;</a>
+							</li>
+							")
+							if (last_page >= page+1) else "")
+							|safe }}
+
+							{{
+							(("<li class='PagedList-skipToLast'><a href='page-" ~ last_page ~ "'>&gt;&gt;</a></li>")
+							if (last_page >= page+2) else "")
+							|safe }}
+
+
+							{% endif %}
+						</ul>
+					</div>
+				</nav>
+			</footer>
+		</article>
+	</main>
+	{% include 'reader/component/footer.html' %}
+	<script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+
+
+
+</body>
+
+</html>

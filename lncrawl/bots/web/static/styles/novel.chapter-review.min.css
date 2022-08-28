@@ -1,0 +1,872 @@
+#chapter-list-page,
+#review-list-page {
+	background-color: var(--bg-color);
+	padding-bottom: 13px;
+}
+
+#chapter-list-page .container,
+#review-list-page .container {
+	padding: 1rem;
+}
+
+#chapter-list-page header,
+#review-list-page header {
+	margin-bottom: 1rem;
+}
+
+#chapter-list-page header h2,
+#review-list-page header h2 {
+	font-weight: 500;
+	font-size: .95rem;
+	margin-bottom: .5rem;
+}
+
+#chapter-list-page header p,
+#review-list-page header p {
+	font-size: .85rem;
+	margin-bottom: .5rem;
+}
+
+#chapter-list-page header .divider,
+#review-list-page header .divider {
+	display: block;
+	width: 100%;
+	border-bottom: 1px solid var(--bg-color-5);
+	margin: 1rem 0;
+}
+
+#chapter-list-page .novel-item,
+#review-list-page .novel-item {
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 1rem;
+}
+
+#chapter-list-page .novel-item>a,
+#review-list-page .novel-item>a {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+#chapter-list-page .novel-item h1,
+#review-list-page .novel-item h1 {
+	font-size: 1rem;
+}
+
+#chapter-list-page .novel-item .cover-wrap,
+#review-list-page .novel-item .cover-wrap {
+	width: 3.6rem;
+	flex-shrink: 0;
+}
+
+#chapter-list-page .novel-item .cover-wrap .novel-cover,
+#review-list-page .novel-item .cover-wrap .novel-cover {
+	margin: 0;
+}
+
+#chapter-list-page .novel-item .item-body,
+#review-list-page .novel-item .item-body {
+	width: auto;
+	flex-grow: 1;
+	margin-left: .6rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: start;
+}
+
+#chapter-list-page .novel-item .item-body .novel-title,
+#chapter-list-page .novel-item .item-body .chapter-title,
+#review-list-page .novel-item .item-body .novel-title,
+#review-list-page .novel-item .item-body .chapter-title {
+	margin-bottom: .2rem;
+}
+
+#chapter-list-page .novel-item .novel-stats,
+#review-list-page .novel-item .novel-stats {
+	line-height: 1.5;
+	font-size: .825rem;
+}
+
+#chapter-list-page .novel-item .novel-stats>span,
+#review-list-page .novel-item .novel-stats>span {
+	display: inline-block;
+	min-width: 82px;
+}
+
+#chapter-list-page #reviews,
+#review-list-page #reviews {
+	background-color: var(--bg-color-2);
+}
+
+#chapter-list-page #chpagedlist {
+	position: relative;
+	background-color: var(--bg-color-2);
+	padding-top: 13px;
+}
+
+#chapter-list-page #chpagedlist.loading {
+	color: currentColor;
+	cursor: not-allowed;
+	opacity: .5;
+	text-decoration: none;
+	pointer-events: none;
+}
+
+#chapter-list-page #chpagedlist.loading::after {
+	text-align: center;
+	position: absolute;
+	top: 5%;
+	left: calc(50% - 88px);
+	content: " ";
+	width: 80px;
+	height: 80px;
+	margin: 1px;
+	border-radius: 50%;
+	border: 8px solid #646464;
+	border-color: #646464 transparent #646464 transparent;
+	-webkit-animation: lds-dual-ring 1s linear infinite;
+	animation: lds-dual-ring 1s linear infinite;
+}
+
+#chapter-list-page .chorder {
+	font-size: 28px;
+	line-height: 28px;
+	padding: 5px 10px;
+	cursor: pointer;
+	transition: transform .2s;
+	display: inline-block;
+}
+
+#chapter-list-page .chorder.asc {
+	transform: scaleY(-1) translateY(-3px);
+}
+
+#chapter-list-page .chorder.desc {
+	transform: scaleY(1) translateY(0);
+}
+
+#chapter-list-page h4 {
+	-webkit-box-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+}
+
+#chapter-list-page h3 {
+	font-size: 26px;
+	font-weight: 700;
+	margin: 0;
+}
+
+#chapter-list-page .filters {
+	width: 100%;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	flex-direction: column;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+	border-bottom: 1px solid var(--border-color-4);
+	padding-bottom: 20px;
+}
+
+#chapter-list-page .filters #gotochap {
+	display: flex;
+	margin-bottom: .6rem;
+}
+
+#chapter-list-page .filters #gotochap #gotochapno {
+	background-color: var(--bg-color-5);
+	border: 1px solid var(--border-color-2);
+	border-radius: 3px;
+	padding: .4rem;
+	width: 140px;
+	font-size: .825rem;
+	margin-right: .5rem;
+	caret-color: var(--text-color);
+	color: var(--text-color-2);
+}
+
+#chapter-list-page .filters #gotochap #gotochapno::placeholder {
+	color: var(--text-color-4);
+	opacity: 1;
+}
+
+#chapter-list-page .filters #gotochap #gotochapno:-ms-input-placeholder {
+	color: var(--text-color-4);
+}
+
+#chapter-list-page .filters #gotochap #gotochapno::-ms-input-placeholder {
+	color: var(--text-color-4);
+}
+
+#chapter-list-page .filters .pagenav {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	align-items: center;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
+}
+
+#chapter-list-page .load-more-chapter {
+	display: block;
+	text-align: center;
+	margin: 2rem auto 0;
+}
+
+#chapter-list-page .load-more-chapter button {
+	border: none;
+	padding: 1rem 2rem;
+	margin: 0;
+	text-decoration: none;
+	background: #0069ed;
+	color: #fff;
+	font-size: 1.2rem;
+	line-height: 1.2;
+	cursor: pointer;
+	text-align: center;
+	border-radius: 4px;
+	-webkit-transition: background 250ms;
+	-o-transition: background 250ms;
+	transition: background 250ms;
+}
+
+#chapter-list-page .load-more-chapter button:hover {
+	background: #1a529a;
+}
+
+#chapter-list-page .load-more-chapter button:disabled {
+	background: #90a4bd;
+}
+
+#chapter-list-page .chapter-list li {
+	padding: .3rem .4rem 1.2rem;
+	border-bottom: 1px solid var(--border-color-4);
+}
+
+#chapter-list-page .chapter-list li.selected a {
+	color: #2943f1 !important;
+}
+
+#chapter-list-page .chapter-list li.selected h6.chapter-title {
+	color: #2943f1 !important;
+}
+
+#chapter-list-page .chapter-list li:hover {
+	background-color: var(--bg-color);
+	cursor: pointer;
+}
+
+#chapter-list-page .chapter-list li.ad-container:hover {
+	background-color: initial;
+	cursor: default;
+}
+
+#chapter-list-page .chapter-list .vol-section {
+	background: #e1e3e5;
+	border-bottom: 2px solid #818385;
+	grid-column: 1/span 2;
+}
+
+#chapter-list-page .chapter-list .vol-section strong {
+	font-weight: 400;
+	font-size: 18px;
+}
+
+#chapter-list-page .chapter-list .list-body {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	-ms-flex-preferred-size: auto;
+	flex-basis: auto;
+	max-width: 250px;
+}
+
+#chapter-list-page .chapter-list a {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: start;
+	-ms-flex-align: start;
+	align-items: flex-start;
+	text-decoration: none;
+	font-size: .825rem;
+	position: relative;
+	color: var(--text-color-2);
+}
+
+#chapter-list-page .chapter-list a .chapter-no {
+	-ms-flex-preferred-size: 18%;
+	flex-basis: 18%;
+	-ms-flex-negative: 0;
+	flex-shrink: 0;
+}
+
+#chapter-list-page .chapter-list a .chapter-title {
+	font-weight: 400;
+	text-decoration: none !important;
+	-o-text-overflow: ellipsis;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+	font-size: .85rem;
+	color: var(--text-color);
+}
+
+#chapter-list-page .chapter-list a .chapter-update {
+	font-size: .675rem;
+	line-height: 1;
+	position: absolute;
+	top: 100%;
+	left: 18%;
+}
+
+#chapter-list-page .chapter-list::-webkit-scrollbar {
+	-webkit-appearance: none;
+}
+
+#chapter-list-page .chapter-list::-webkit-scrollbar:vertical {
+	width: 12px;
+}
+
+#chapter-list-page .chapter-list::-webkit-scrollbar:horizontal {
+	height: 12px;
+}
+
+#chapter-list-page .chapter-list::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, .5);
+	border-radius: 10px;
+	border: 2px solid #fff;
+}
+
+#chapter-list-page .chapter-list::-webkit-scrollbar-track {
+	border-radius: 10px;
+	background-color: #fff;
+}
+
+.review-panel {
+	margin-bottom: 20px;
+}
+
+.review-panel.attractive {
+	padding: 13px;
+	background-color: #fff;
+	border-radius: 6px;
+	border: 1px solid #dadada;
+	-webkit-box-shadow: 0 5px 15px -6px rgba(0, 0, 0, .5);
+	box-shadow: 0 5px 15px -6px rgba(0, 0, 0, .5);
+}
+
+.review-panel .section-header {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	position: relative;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	border-bottom: none;
+}
+
+.review-panel .section-header h3 {
+	margin-right: 20px;
+	margin-bottom: .5rem;
+	flex-grow: 0;
+	line-height: normal;
+}
+
+.review-panel .section-header a {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	width: 90px;
+	font-size: .875rem;
+	line-height: 1.4;
+	padding: 10px;
+}
+
+.review-panel .section-header .star-wrap .star {
+	width: 1.2rem;
+	height: 1.2rem;
+}
+
+.review-panel .section-header .rating-star p {
+	font-size: 1.2rem;
+}
+
+.review-list {
+	border-top: 1px solid var(--border-color-4);
+	padding: 20px 0;
+}
+
+.review-list .review-item:not(:last-child) {
+	margin-bottom: 1rem;
+	padding-bottom: 1rem;
+	border-bottom: 1px solid var(--border-color-4);
+}
+
+.review-list .review-item .review-info {
+	margin-bottom: 1rem;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	flex-direction: row;
+}
+
+.review-list .review-item .review-info img.avatar {
+	width: 2.4rem;
+	height: 2.4rem;
+	border-radius: 50%;
+	margin-right: .5rem;
+}
+
+.review-list .review-item .review-info .user {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	flex-direction: column;
+	-webkit-box-align: start;
+	-ms-flex-align: start;
+	align-items: flex-start;
+}
+
+.review-list .review-item .review-info .user .username {
+	line-height: 1.3;
+}
+
+.review-list .review-item .review-info .user strong {
+	font-size: .925rem;
+	font-weight: 500;
+	color: var(--text-color);
+}
+
+.review-list .review-item .review-info .user .rating-info {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	font-size: .85rem;
+}
+
+.review-list .review-item .review-info .user .rating-info .review-date {
+	color: var(--text-color-2);
+	font-weight: 300;
+	line-height: 1.2;
+}
+
+.review-list .review-item .review-info .user .rating-info .star-wrap {
+	margin-right: .5rem;
+	margin-bottom: 2px;
+	line-height: 1.2;
+}
+
+.review-list .review-item .review-info .user .rating-info .star-wrap svg {
+	color: var(--text-color-lighter);
+}
+
+.review-list .review-item .review-info .user .rating-info .star-wrap .star-on {
+	color: var(--star-color-on);
+}
+
+.review-list .review-item .review-text {
+	display: -webkit-box;
+	overflow: hidden;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 5;
+	max-height: 9.5rem;
+	line-height: 1.4;
+	font-size: .875rem;
+	margin-bottom: 10px;
+	color: var(--text-color);
+}
+
+.review-list .review-item .toolbar {
+	padding: .3rem 0;
+	display: flex;
+	justify-content: space-between;
+}
+
+.review-list .review-item .toolbar .rightfit {
+	color: var(--text-color-2);
+}
+
+.review-list .review-item .toolbar .rightfit span>* {
+	vertical-align: middle;
+}
+
+.review-list .review-item .toolbar .rightfit span i {
+	margin-right: .3rem;
+	font-size: 1rem;
+}
+
+.review-list .review-item .toolbar .rightfit span strong {
+	font-size: .825rem;
+}
+
+.review-list .review-item .toolbar .rightfit span+span {
+	margin-left: 1rem;
+}
+
+.review-list .review-item .toolbar .view-detail {
+	color: var(--button-secondary);
+	border: 1px dashed var(--button-secondary-border);
+	border-radius: 4px;
+	font-weight: 600;
+	font-size: .825rem;
+	padding: 2px 6px;
+}
+
+.review-modal {
+	font-size: 0;
+	position: fixed;
+	z-index: 200;
+	top: 0;
+	left: 0;
+	display: block;
+	visibility: hidden;
+	overflow: auto;
+	width: 100%;
+	height: 100%;
+	-webkit-transition: opacity .15s;
+	-o-transition: opacity .15s;
+	transition: opacity .15s;
+	text-align: center;
+	opacity: 0;
+	background-color: rgba(0, 0, 0, .7);
+}
+
+.review-modal:after {
+	display: inline-block;
+	width: 0;
+	height: 100%;
+	content: "";
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	vertical-align: middle;
+	pointer-events: none;
+	background-color: #f00;
+}
+
+.review-modal .review-section {
+	opacity: 0;
+	-webkit-transform: scale(.8);
+	-ms-transform: scale(.8);
+	transform: scale(.8);
+	visibility: hidden;
+}
+
+.review-modal._show {
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+.review-modal._show .review-section {
+	visibility: visible;
+	-webkit-transition: .15s;
+	-o-transition: .15s;
+	transition: .15s;
+	-webkit-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+	opacity: 1;
+}
+
+@media screen and (min-width:768px) {
+
+	#chapter-list-page,
+	#review-list-page {
+		padding-top: 1rem;
+	}
+
+	#chapter-list-page .container,
+	#review-list-page .container {
+		background-color: var(--bg-color-2);
+	}
+
+	#chapter-list-page header,
+	#review-list-page header {
+		margin-bottom: 1rem;
+		border-radius: 12px;
+	}
+
+	#chapter-list-page header h2,
+	#review-list-page header h2 {
+		font-weight: 600;
+		font-size: 20px;
+	}
+
+	#chapter-list-page header p,
+	#review-list-page header p {
+		font-size: 16px;
+	}
+
+	#chapter-list-page .novel-item,
+	#review-list-page .novel-item {
+		margin-bottom: 1rem;
+	}
+
+	#chapter-list-page .novel-item h1,
+	#review-list-page .novel-item h1 {
+		font-size: 24px;
+	}
+
+	#chapter-list-page .novel-item .cover-wrap,
+	#review-list-page .novel-item .cover-wrap {
+		width: 62px;
+	}
+
+	#chapter-list-page .novel-item .item-body,
+	#review-list-page .novel-item .item-body {
+		margin-left: 12px;
+	}
+
+	#chapter-list-page .novel-item .novel-stats,
+	#review-list-page .novel-item .novel-stats {
+		line-height: 1.5;
+		font-size: 16px;
+	}
+
+	#chapter-list-page .intro {
+		display: block;
+		font-size: 18px;
+		border: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	#chapter-list-page .intro a,
+	#chapter-list-page .intro span {
+		white-space: nowrap;
+	}
+
+	#chapter-list-page h4 {
+		flex: 1;
+	}
+
+	#chapter-list-page h3 {
+		font-size: 26px;
+		font-weight: 700;
+		margin: 0;
+	}
+
+	#chapter-list-page .filters {
+		flex-direction: row;
+	}
+
+	#chapter-list-page .filters .chapfilter {
+		display: flex;
+		align-content: center;
+	}
+
+	#chapter-list-page .filters .chapfilter input {
+		width: 60px;
+		margin-left: 10px;
+		font-size: 20px;
+	}
+
+	#chapter-list-page .filters .chapfilter label {
+		font-size: 20px;
+	}
+
+	#chapter-list-page .filters #chorder {
+		font-size: 30px;
+		margin-left: 20px;
+		cursor: pointer;
+	}
+
+	#chapter-list-page .filters #gotochap {
+		margin-bottom: 0;
+	}
+
+	#chapter-list-page .filters #gotochap #gotochapno {
+		width: 155px;
+		font-size: 16px;
+	}
+
+	#chapter-list-page .wrapper {
+		display: flex;
+		width: 100%;
+	}
+
+
+	#chapter-list-page .chapter-list {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		grid-column-gap: 30px;
+		flex-shrink: 1;
+		flex-grow: 1;
+		flex-basis: auto;
+	}
+
+	#chapter-list-page .chapter-list .loading-dual-ring {
+		grid-area: span 1/span 2;
+		margin: 20px auto;
+	}
+
+	#chapter-list-page .chapter-list li {
+		padding: 10px 10px 28px;
+		background-color: var(--bg-color-2);
+	}
+
+	#chapter-list-page .chapter-list li.vol-section {
+		background-color: #f6f7f8;
+		padding: 1.2rem .6rem;
+	}
+
+	#chapter-list-page .chapter-list li:nth-child(4n),
+	#chapter-list-page .chapter-list li:nth-child(4n-1) {
+		background-color: var(--bg-color-3);
+	}
+
+	#chapter-list-page .chapter-list li:nth-child(4n):hover,
+	#chapter-list-page .chapter-list li:nth-child(4n-1):hover {
+		background-color: var(--bg-color);
+	}
+
+	#chapter-list-page .chapter-list li.ad-container {
+		grid-area: span 1/span 2;
+		border: none;
+	}
+
+	#chapter-list-page .chapter-list a {
+		font-size: 16px;
+		position: relative;
+	}
+
+	#chapter-list-page .chapter-list a .chapter-no {
+		flex-basis: 15%;
+		flex-shrink: 0;
+	}
+
+	#chapter-list-page .chapter-list a .chapter-title {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+		font-size: 16px;
+	}
+
+	#chapter-list-page .chapter-list a .chapter-update {
+		position: absolute;
+		font-size: 12px;
+		top: 100%;
+		left: 15%;
+	}
+
+	#chapter-list-page .chapter-list a:hover .chapter-title {
+		text-decoration: underline;
+	}
+
+	#chapter-list-page .chorder {
+		font-size: 32px;
+		line-height: 32px;
+		padding: 2px 10px;
+		margin-left: 16px;
+	}
+
+	.review-panel .section-header {
+		padding-bottom: 0;
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.review-panel .section-header a {
+		position: absolute;
+		right: 0;
+		left: auto;
+		width: auto;
+		font-size: 16px;
+	}
+
+	.review-panel .section-header .rating-star p {
+		font-size: 20px;
+	}
+
+	.review-panel .section-header .star-wrap .star {
+		width: 22px;
+		height: 22px;
+	}
+
+	.review-list {
+		margin: 0;
+	}
+
+	.review-list.fullw {
+		margin: 0;
+	}
+
+	.review-list .review-item .review-info img.avatar {
+		width: 44px;
+		height: 44px;
+	}
+
+	.review-list .review-item .review-info .user strong {
+		font-size: 16px;
+		font-weight: 700;
+	}
+
+	.review-list .review-item .review-info .user .rating-info .star-wrap {
+		margin-bottom: 4px;
+	}
+
+	.review-list .review-item .review-info .user .rating-info svg {
+		font-size: 16px;
+	}
+
+	.review-list .review-item .review-text {
+		font-size: 16px;
+		line-height: 24px;
+		max-height: 250px;
+	}
+
+	.review-list .review-item .toolbar .rightfit span i {
+		margin-right: .3rem;
+		font-size: 16px;
+	}
+
+	.review-list .review-item .toolbar .rightfit span strong {
+		font-size: 14px;
+	}
+
+	.review-list .review-item .toolbar .view-detail {
+		font-size: 1rem;
+	}
+
+	.review-list.multiple {
+		width: 50%;
+	}
+}
+
+@media screen and (min-width:1270px) {
+
+	#chapter-list-page,
+	#review-list-page {
+		margin-bottom: 0;
+		padding-bottom: 1rem;
+	}
+
+	#chapter-list-page .container,
+	#review-list-page .container {
+		width: 1030px;
+		padding: 30px;
+	}
+
+	#chapter-list-page #chpagedlist,
+	#review-list-page #chpagedlist {
+		padding: 30px;
+	}
+}

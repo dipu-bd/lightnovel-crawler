@@ -1,0 +1,20 @@
+<svg width="16" height="12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <mask id="a" maskUnits="userSpaceOnUse" x="0" y="0" width="16" height="12">
+    <path fill="#fff" d="M0 0h16v12H0z"/>
+  </mask>
+  <g mask="url(#a)">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0h16v11a1 1 0 01-1 1H1a1 1 0 01-1-1V0z" fill="#C51918"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M3 3h10v6H3V3z" fill="#FECA00"/>
+    <mask id="b" maskUnits="userSpaceOnUse" x="3" y="3" width="10" height="6">
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M3 3h10v6H3V3z" fill="#fff"/>
+    </mask>
+    <g mask="url(#b)" fill-rule="evenodd" clip-rule="evenodd">
+      <path d="M3 3l5 3-5 3V3zm10 0L8 6l5 3V3z" fill="#23875F"/>
+      <path d="M8 8a2 2 0 100-4 2 2 0 000 4z" fill="#C51918"/>
+      <path d="M7.965 6.657l-1.036.718.331-1.23-.76-.786 1.03-.043.435-1.216.435 1.216h1.028l-.759.829.38 1.157-1.084-.645z" fill="#FECA00"/>
+    </g>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.388 2.221l.566-.35.593.315-.208-.566.415-.405h-.562L4.954.621l-.238.594-.562.021.415.384-.18.601zm3 0l.566-.35.593.315-.208-.566.415-.405h-.562L7.954.621l-.238.594-.562.021.415.384-.18.601zm3.566-.35l-.566.35.181-.601-.415-.384.562-.02.238-.595.238.594h.562l-.415.405.208.566-.593-.316zm-6.566 9.213l.566-.351.592.315-.207-.565.414-.405h-.561l-.238-.594-.238.594-.563.02.416.385-.181.6zm3.566-.351l-.566.35.18-.6-.415-.384.563-.021.238-.594.238.594h.561l-.414.405.207.565-.592-.315zm2.434.35l.566-.35.592.315-.207-.565.414-.405h-.561l-.238-.594-.238.594-.563.02.416.385-.181.6z" fill="#FECA00"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.317 6.386s.27.24.416.321c.05-.191-.062-.626-.062-.626-.032-.103-.379-.29-.379-.29s-.097.328.025.595z" fill="#C51918"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.598 6.965s-.692-.323-.762-.78C3.766 5.728 3.915 5 3.915 5s1.123.255 1.2.803c.076.548-.178.892-.178.892s-.26-.668-.505-.742c0 0 0 .662.166 1.012z" fill="#FECA00"/>
+  </g>
+</svg>

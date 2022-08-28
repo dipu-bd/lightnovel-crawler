@@ -39,6 +39,12 @@ class Chireads(Crawler):
 
         metadata = content[0]
         
+        self.language = 'fr'
+
+        self.summary = self.cleaner.extract_contents(
+            metadata.find("div", {"class":"inform-txt-show font-color-black6"})
+        )
+
         self.novel_cover = self.absolute_url(metadata.find("img").get("src"))
         
         self.novel_title = metadata.find("h3", {

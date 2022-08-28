@@ -94,6 +94,9 @@ def load_session_from_metadata(data) -> App:
 
     app.crawler.novel_title = data['title']
     app.crawler.novel_author = data['author']
+    # ternary operator necessary for novels downloaded before language and summary where implemented
+    app.crawler.language = data['language'] if 'language' in data else 'en'
+    app.crawler.summary = data['summary'] if 'summary' in data else ''
     app.crawler.novel_cover = data['cover']
     app.crawler.volumes = data['volumes']
     app.crawler.chapters = data['chapters']

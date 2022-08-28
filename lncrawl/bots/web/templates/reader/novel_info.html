@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml" theme="dark" bgcolor="black" hgcolor="purple" lang="en">
+
+<head>
+
+	{% include 'reader/component/basic_meta.html' %}
+
+
+	{% set description = ('Read ' + source.title + ((' in ' + language_dict[source.language]) if source.language in language_dict else ' ') + ' and thousands of famous Light Novels and Web Novels in any language from more that 140 different websites') %}
+	{% set title = ('Read ' + source.title + ((' in ' + language_dict[source.language]) if source.language in language_dict else ' ') + ' for free | LnCrawler') %}
+	{% set image = (WEBSITE_URL + '/image/' + source.cover) %}
+
+	<meta name="description" content="{{ description }}">
+
+	<meta property="og:title" content="{{ title }}">
+	<meta property="og:description" content="{{ description }}">
+	<meta property="og:image" content="{{ image }}">
+	<meta property="og:image:type" content="image/jpeg">
+	<meta property="og:image:alt" content="{{ source.title }}">
+	<meta property="og:image:url" content="{{ image }}">
+	
+	<meta name="twitter:title" content="{{ title }}">
+	<meta name="twitter:description" content="{{ description }}">
+	<meta name="twitter:image" content="{{ image }}">
+	<meta name="twitter:image:type" content="image/jpeg">
+	<meta name="twitter:image:alt" content="{{ source.title }}">
+	<meta name="twitter:image:url" content="{{ image }}">
+
+
+
+	<link rel="stylesheet" as="style"
+		href="https://fonts.googleapis.com/css?family=Roboto:400,500,600,700|Nunito+Sans:400,500,600,700&amp;display=swap"
+		crossorigin="" onload="this.rel='stylesheet'">
+
+	<title>{{ title }}</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/navbar.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/media-mobile.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+		href="{{ url_for('static',filename='styles/media-768.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+		href="{{ url_for('static',filename='styles/media-1024.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+		href="{{ url_for('static',filename='styles/media-1270.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/fontello.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/novel.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 768px)"
+		href="{{ url_for('static',filename='styles/novel.768.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1024px)"
+		href="{{ url_for('static',filename='styles/novel.1024.min.css') }}">
+	<link rel="stylesheet" type="text/css" media="screen and (min-width: 1270px)"
+		href="{{ url_for('static',filename='styles/novel.1270.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/select.css') }}">
+	</script>
+</head>
+
+<body class="fade-out vsc-initialized">
+	{% include 'reader/component/header.html' %}
+	<div class="sidebar-wrapper"></div>
+	<main role="main">
+
+
+		<article id="novel" data-novelid="1370" data-volbased="False" itemprop="itemReviewed" itemscope=""
+			itemtype="http://schema.org/Book">
+
+
+
+
+			<header class="novel-header">
+				<div class="glass-background">
+					<img src="/image/{{ source.cover }}" alt="{{ source.title }}" itemprop="image">
+					<div class="glass-shade"></div>
+				</div>
+				<div class="header-body container">
+					<div class="fixed-img">
+						<figure class="cover">
+							<img class=" ls-is-cached lazyloaded" src="/image/{{ source.cover }}"
+								alt="{{ source.title }}">
+						</figure>
+					</div>
+					<div class="novel-info">
+						<div class="main-head">
+							<h1 itemprop="name" class="novel-title text2row">
+								{{ source.title }}
+							</h1>
+							<div class="author">
+								<span>Author:</span>
+								<span itemprop="author">{{ source.author }}</span>
+							</div>
+							<div class="rating">
+								<div class="rank">
+									<span><i class="icon-trophy"></i> Rank {{ source.novel.rank }}</span>
+								</div>
+								<div class="rating-star" itemprop="aggregateRating" itemscope="" itemtype="https://schema.org/AggregateRating">
+									<p>
+										{% for i in range(source.novel.overall_rating.__int__()) %}
+										<span class="star-wrap">
+											<i class="icon-star"></i>
+										</span>
+										{% endfor %}
+										{% for i in range(5 - source.novel.overall_rating.__int__()) %}
+										<span class="star-wrap">
+											<i class="icon-star-empty"></i>
+										</span>
+										{% endfor %}
+										<strong>{{source.novel.overall_rating}} ({{ source.novel.ratings_count }})</strong>
+									</p>
+								</div>
+							</div>
+
+						</div>
+
+						<div class="header-stats">
+							<span>
+								<strong><i class="icon-book-open"></i> {{ source.chapter_count }}</strong>
+								<small>Chapters</small>
+							</span>
+							<span>
+								<strong><i class="icon-tags"></i> {{ len_sources }}</strong>
+								<small>Sources</small>
+							</span>
+							<span>
+								<strong><i class="icon-eye"></i> {{ human_format(source.novel.clicks) }}</strong>
+								<small>Views</small>
+							</span>
+							<span> 
+								<strong style="align-self: center;">
+									<img src="{{ url_for('static',filename='assets/flags/'+ source.language + '.svg') }}" alt="{{ source.language }} flag" style="width: 25px;margin-top: 4px;">
+								</strong>  
+								<small>Language</small>
+							</span>
+
+						</div>
+
+						<div class="source-select">
+
+							<select class="sel" onchange="location = this.value">
+								<option value="../{{ source.slug }}">{{ source.slug }}</option>
+								{% for s in source.novel.sources %}
+								{% if s != source %}
+								<option value="../{{ s.slug }}">{{ emoji_flag(source.language) }} - {{ s.slug }}</option>
+								{% endif %}
+								{% endfor %}
+							</select>
+
+						</div>
+
+					</div>
+				</div>
+			</header>
+			<div class="novel-body container">
+				<nav class="content-nav">
+					<a class="grdbtn reviews-latest-container" title="{{ source.title }} First Chapter"
+						href="./chapter-1">
+						<div class="body">
+							<h4>FIRST CHAPTER</h4>
+							<p class="latest text1row"> {{ source.first }}</p>
+						</div>
+						<i class="icon-right-open"></i>
+					</a>
+					<a class="grdbtn chapter-latest-container" title="{{ source.title }} Chapters"
+						href="./chapterlist">
+						<div class="body">
+							<h4>Novel Chapters</h4>
+							<p class="latest text1row">
+								latest : {{ source.latest }}
+							</p>
+
+						</div>
+						<i class="icon-right-open"></i>
+					</a>
+
+				</nav>
+				<section id="info">
+					<div class="summary">
+						<h4 class="lined">Summary</h4>
+						<div class="content expand-wrapper show">
+							<p>{{ source.summary|safe }}
+							</p>
+							<div class="expand">
+								<a class="expand-btn"><i class="icon-right-open"></i> <span>Show More</span></a>
+							</div>
+						</div>
+					</div>
+
+
+				</section>
+			</div>
+
+		</article>
+	</main>
+	{% include 'reader/component/footer.html' %}
+
+	<script src="{{ url_for('static',filename='scripts/js.cookie.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/jquery.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/appsettings.min.js') }}"></script>
+	<script src="{{ url_for('static',filename='scripts/app.min.js') }}"></script>
+</body>
+
+</html>
