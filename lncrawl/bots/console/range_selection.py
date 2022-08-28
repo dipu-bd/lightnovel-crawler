@@ -16,9 +16,6 @@ def get_range_selection(self, disable_args=False):
                   'page', 'range', 'volumes', 'chapters']
 
     args = get_args()
-    if args.suppress:
-        return selections[0]
-    # end if
 
     if not disable_args:
         for key in selections:
@@ -26,6 +23,10 @@ def get_range_selection(self, disable_args=False):
                 return key
             # end if
         # end if
+    # end if
+    
+    if args.suppress:
+        return selections[0]
     # end if
  
     choices = [
