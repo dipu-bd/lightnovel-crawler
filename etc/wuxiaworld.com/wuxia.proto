@@ -2,20 +2,32 @@ syntax = "proto3";
 package wuxiaworld.api.v2;
 
 import public "google/protobuf/wrappers.proto";
+import public "google/protobuf/timestamp.proto";
 
-message NovelChapterInfo {
-    ChapterItem firstChapter = 1;
-    ChapterItem latestChapter = 2;
-    google.protobuf.Int32Value chapterCount = 3;
-    repeated ChapterGroupItem chapterGroups = 4;
+
+message RelatedChapterUserInfo {
+    google.protobuf.BoolValue isChapterUnlocked = 1;
+    google.protobuf.BoolValue isNovelUnlocked = 2;
+    google.protobuf.BoolValue isChapterFavorite = 3;
+    google.protobuf.BoolValue isNovelOwned = 4;
+    google.protobuf.BoolValue isChapterOwned = 5;
+    // UserUnlockInfo unlockInfo = 6;
 }
 
-message NovelItem {
-    int32 id  = 1;
-    string name = 2;
-    google.protobuf.StringValue coverUrl = 10;
-    google.protobuf.StringValue authorName = 13;
-    NovelChapterInfo chapterInfo = 23;
+message ChapterSponsor {
+    bool advanceChapter = 1;
+    google.protobuf.Int32Value advanceChapterNumber = 2;
+    repeated AdvanceChapterPlan plans = 3;
+
+    message AdvanceChapterPlan {
+        string name = 1;
+        int32 advanceChapterCount = 2;
+    }
+}
+
+message ChapterPricing {
+    bool isFree = 1;
+    bool isLastHoldback = 2;
 }
 
 message ChapterItem {
@@ -24,7 +36,14 @@ message ChapterItem {
     string slug = 3;
     google.protobuf.StringValue content = 5;
     int32 novelId = 6;
+    bool visible = 7;
+    bool isTeaser = 8;
+    bool spoilerTitle = 10;
+    ChapterSponsor sponsorInfo = 15;
+    RelatedChapterUserInfo relatedUserInfo = 16;
+    google.protobuf.Timestamp publishedAt = 18;
     google.protobuf.StringValue translatorThoughts = 19;
+    ChapterPricing pricingInfo = 20;
 }
 
 message ChapterGroupItem {
@@ -32,6 +51,75 @@ message ChapterGroupItem {
     string title = 2;
     int32 order = 3;
     repeated ChapterItem chapterList = 6;
+}
+
+// message NovelChapterInfo {
+//     ChapterItem firstChapter = 1;
+//     ChapterItem latestChapter = 2;
+//     google.protobuf.Int32Value chapterCount = 3;
+//     repeated ChapterGroupItem chapterGroups = 4;
+// }
+
+message SponsorPlanItem {
+    int32 id = 1;
+    string name = 2;
+    bool enabled = 4;
+    bool visible = 5;
+    int32 advanceChapterCount = 6;
+    bool paused = 10;
+}
+
+// message NovelSponsorInfo {
+//     int32 advanceChapterCount = 1;
+//     google.protobuf.BoolValue hasAnyPlans = 3;
+//     repeated SponsorPlanItem plans = 4;
+// }
+
+message NovelItem {
+    int32 id  = 1;
+    string name = 2;
+    // google.protobuf.StringValue description = 8;
+    // google.protobuf.StringValue synopsis = 9;
+    google.protobuf.StringValue coverUrl = 10;
+    google.protobuf.StringValue translatorName = 11;
+    google.protobuf.StringValue authorName = 13;
+    bool isSneakPeek = 18;
+    // NovelSponsorInfo sponsorInfo = 19;
+    // NovelChapterInfo chapterInfo = 23;
+}
+
+enum UnlockItemMethod {
+    UnlockMethodNone = 0;
+    UnlockMethodKarma = 1;
+    UnlockMethodVip = 2;
+    UnlockMethodSponsor = 3;
+}
+
+message UnlockedItem {
+    oneof id {
+        int32 novelId = 2;
+        int32 chapterId = 3;
+    }
+}
+
+message VipItem {
+    int32 id = 1;
+    string name = 2;
+    bool enabled = 7;
+    bool visible = 8;
+}
+
+message SubscriptionItem {
+    int32 id = 1;
+    bool active = 2;
+    Plan plan = 3;
+
+    message Plan {   
+        oneof plan {
+            VipItem vip = 1;
+            SponsorPlanItem sponsor = 2;
+        }
+    }
 }
 
 message GetChapterByProperty {
@@ -69,6 +157,7 @@ message GetChapterListRequest {
 
 message GetChapterListResponse {
     repeated ChapterGroupItem items = 1;
+    NovelItem novelInfo = 2;
 }
 
 message GetChapterRequest {
@@ -79,20 +168,6 @@ message GetChapterResponse {
     ChapterItem item = 1;
 }
 
-message UnlockedItem {
-    oneof id {
-        int32 novelId = 2;
-        int32 chapterId = 3;
-    }
-}
-
-enum UnlockItemMethod {
-    UnlockMethodNone = 0;
-    UnlockMethodKarma = 1;
-    UnlockMethodVip = 2;
-    UnlockMethodSponsor = 3;
-}
-
 message UnlockItemRequest {
     UnlockItemMethod unlockMethod = 1;
     UnlockedItem item = 2;
@@ -100,6 +175,14 @@ message UnlockItemRequest {
 
 message UnlockItemResponse {
     UnlockedItem unlockedItem = 1;
+}
+
+message GetSubscriptionsRequest {
+    int32 novelId = 2;
+}
+
+message GetSubscriptionsResponse {
+    repeated SubscriptionItem items = 1;
 }
 
 service Novels {
@@ -113,4 +196,8 @@ service Chapters {
 
 service Unlocks {
     rpc UnlockItem(UnlockItemRequest) returns (UnlockItemResponse);
+}
+
+service Subscriptions {
+    rpc GetSubscriptions(GetSubscriptionsRequest) returns (GetSubscriptionsResponse);
 }
