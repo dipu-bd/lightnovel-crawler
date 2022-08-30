@@ -23,6 +23,7 @@ class TamagoTlCrawler(Crawler):
             a = article.select_one('a.tip')
             if not isinstance(a, Tag):
                 continue
+            # end if
             results.append({
                 'title': a.select_one('span.ntitle').text.strip(),
                 'url': self.absolute_url(a['href']),
@@ -39,13 +40,13 @@ class TamagoTlCrawler(Crawler):
         possible_title = soup.select_one('h1.entry-title')
         if possible_title:
             self.novel_title = possible_title.get_text()
-        
+        # end if
         logger.info('Novel title: %s', self.novel_title)
 
         possible_image = soup.select_one('.thumbook img.wp-post-image')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        
+        # end if
         logger.info('Novel cover: %s', self.novel_cover)
 
         for span in soup.select('.spe span'):
