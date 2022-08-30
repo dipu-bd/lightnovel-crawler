@@ -86,13 +86,12 @@ def cancel_method():
 # end def
 
 
-def error_message():
+def error_message(ex_type, message, tb):
     print()
-    err_class, message, tb = sys.exc_info()
     tb_summary = ''.join(traceback.format_tb(tb)[-4:]).strip()
     print(Fore.RED, Icons.ERROR, 'Error:', message, Fore.RESET)
-    if tb_summary and err_class != LNException:
-        print(Style.DIM, err_class, Style.RESET_ALL)
+    if tb_summary and ex_type != LNException:
+        print(Style.DIM, ex_type, Style.RESET_ALL)
         print(Style.DIM, tb_summary, Style.RESET_ALL)
     # end if
     print()

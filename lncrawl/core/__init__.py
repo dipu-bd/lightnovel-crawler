@@ -78,8 +78,8 @@ def start_app():
     except Exception as err:
         if os.getenv('debug_mode') == 'yes':
             raise err
-        elif not any(isinstance(err, t) for t in [KeyError, KeyboardInterrupt]):
-            error_message()
+        elif not isinstance(err, KeyboardInterrupt):
+            error_message(*sys.exc_info())
         # end if
     # end try
 
