@@ -4,7 +4,6 @@ supported_bots = [
     'console',
     'telegram',
     'discord',
-    'test',
 ]
 
 
@@ -21,9 +20,6 @@ def run_bot(bot):
     elif bot == 'discord':
         from ..bots.discord import DiscordBot
         DiscordBot().start_bot()
-    elif bot == 'test':
-        from ..bots.test import TestBot
-        TestBot().start()
     else:
         print('Unknown bot: %s' % bot)
     # end def
