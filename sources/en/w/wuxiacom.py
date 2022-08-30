@@ -46,7 +46,10 @@ class WuxiaComCrawler(Crawler):
         self.novel_cover = novel['coverUrl']
         logger.info('Novel cover = %s', self.novel_cover)
 
-        self.novel_author = f"Author: {novel['authorName']}, Translator: {novel['translatorName']}"
+        self.novel_author = ', '.join([
+            f"Author: {novel.get('authorName', 'N/A')}",
+            f"Translator: {novel.get('translatorName', 'N/A')}"
+        ])
         logger.info('Novel author = %s', self.novel_author)
 
         is_vip = False
