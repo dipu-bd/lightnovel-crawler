@@ -155,8 +155,6 @@ def download_chapter_body(app, chapter):
             except Exception as e:
                 logger.debug('Failed', e)
                 return f"[{chapter['id']}] Failed to get chapter body ({e.__class__.__name__}: {e})"
-            finally:
-                app.progress += 1
             # end try
         # end for
     finally:

@@ -126,9 +126,9 @@ class Crawler(ABC):
         # generate a proxy after each response received
         self.__generate_next_proxy()
 
-        if response.status_code == 403 and response.reason == 'Forbidden':
+        if response.status_code in [403, 429, 503]:
             logger.debug('%s\n%s\n%s', '-' * 60, response.text, '-' * 60)
-            raise LNException('403 Forbidden! Could not bypass the cloudflare protection.')
+            raise LNException(f'{response.status_code} {response.reason} -- could not bypass cloudflare.')
         # end if
 
         response.raise_for_status()
