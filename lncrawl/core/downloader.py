@@ -155,8 +155,6 @@ def download_chapter_body(app, chapter):
             except Exception as e:
                 logger.debug('Failed', e)
                 return f"[{chapter['id']}] Failed to get chapter body ({e.__class__.__name__}: {e})"
-            finally:
-                app.progress += 1
             # end try
         # end for
     finally:
@@ -215,30 +213,34 @@ def download_cover_image(app):
     assert app.crawler is not None
 
     filename = os.path.join(app.output_path, 'cover.jpg')
-    if os.path.isfile(filename):
-        app.book_cover = filename
-        return
-    # end if
 
-    cover_urls = [
-        app.crawler.novel_cover,
-        'https://source.unsplash.com/featured/800x1032?abstract',
-    ]
-    for url in cover_urls:
-        logger.info('Downloading cover image: %s', url)
-        try:
-            img = download_image(app, url)
-            img.convert('RGB').save(filename, "JPEG")
-            logger.debug('Saved cover: %s', filename)
-            app.crawler.novel_cover = filename
-            app.progress += 1
-            break
-        except KeyboardInterrupt as e:
-            raise LNException('Cancelled by user')
-        except Exception as e:
-            return f"[{filename}] Failed to get cover image: {url} | {e.__class__.__name__}: {e}"
-        # end try
-    # end for
+    if not os.path.isfile(filename):
+        cover_urls = [
+            app.crawler.novel_cover,
+            'https://source.unsplash.com/featured/800x1032?abstract',
+        ]
+        for url in cover_urls:
+            try:
+                logger.info('Downloading cover image: %s', url)
+                img = download_image(app, url)
+                img.convert('RGB').save(filename, "JPEG")
+                logger.debug('Saved cover: %s', filename)
+                app.progress += 1
+                break
+            except KeyboardInterrupt as e:
+                raise LNException('Cancelled by user')
+            except Exception as e:
+                logger.debug('Failed to get cover: %s', url, e)
+            # end try
+        # end for
+    # end if
+             
+    if not os.path.isfile(filename):
+        return f"[{filename}] Failed to download cover image"
+    # end if
+    
+    app.crawler.novel_cover = filename
+    app.book_cover = filename
 # end def
 
 
