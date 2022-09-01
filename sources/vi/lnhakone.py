@@ -16,7 +16,7 @@ chapter_list_url = 'https://listnovel.com/wp-admin/admin-ajax.php'
 class ListNovelCrawler(Crawler):
     machine_translation = True
     base_url = [
-        'https://ln.hako.re/',
+        'https://ln.hako.vn/',
         'https://docln.net/',
     ]
 
