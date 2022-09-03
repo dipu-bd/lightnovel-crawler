@@ -3,6 +3,7 @@ import atexit
 import logging
 import os
 import shutil
+from threading import Thread
 from typing import Any, Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
@@ -18,7 +19,6 @@ from .novel_info import format_novel, save_metadata
 from .novel_search import search_novels
 
 logger = logging.getLogger(__name__)
-
 
 class App:
     '''Bots are based on top of an instance of this app'''
@@ -40,6 +40,13 @@ class App:
         self.no_append_after_filename = False
         atexit.register(self.destroy)
     # end def
+
+    def __background(self, target_method, *args, **kwargs):
+        t = Thread(target=target_method, args=args, kwargs=kwargs)
+        t.start()
+        while t.is_alive():
+            t.join(1)
+
 
     # ----------------------------------------------------------------------- #
 
@@ -139,7 +146,7 @@ class App:
 
         print('Retrieving novel info...')
         print(self.crawler.novel_url)
-        self.crawler.read_novel_info()
+        self.__background(self.crawler.read_novel_info)
         print('NOVEL: %s' % self.crawler.novel_title)
         print('%d volumes and %d chapters found' %
               (len(self.crawler.volumes), len(self.crawler.chapters)))
