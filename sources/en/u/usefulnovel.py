@@ -44,7 +44,6 @@ class UsefulNovelCrawler(Crawler):
     # end def
 
     def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one(".post-title h1")
@@ -68,7 +67,7 @@ class UsefulNovelCrawler(Crawler):
                 for a in soup.select('.author-content a[href*="manga-author"]')
             ]
         )
-        logger.info("%s", self.novel_author)
+        logger.info("Novel author: %s", self.novel_author)
 
         clean_novel_url = self.novel_url.split('?')[0].strip('/')
         response = self.submit_form(f'{clean_novel_url}/ajax/chapters/')

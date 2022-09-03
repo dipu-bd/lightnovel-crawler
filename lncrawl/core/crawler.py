@@ -286,7 +286,7 @@ class Crawler(ABC):
         kwargs['headers'] = headers
         kwargs['data'] = data
 
-        return self.__process_request('get', url, **kwargs)
+        return self.__process_request('post', url, **kwargs)
     # end def
 
     def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
