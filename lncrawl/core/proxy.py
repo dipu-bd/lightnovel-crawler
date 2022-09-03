@@ -1,6 +1,6 @@
 import atexit
 import logging
-import random
+from typing import Dict, List
 import signal
 import time
 from threading import Thread
@@ -18,10 +18,10 @@ __proxy_ttl = 3600
 __max_use_per_proxy = 50
 
 __sess = Session()
-__proxy_list: dict[str, list[str]] = {}
-__proxy_visited_at: dict[str, int] = {}
-__proxy_use_count: dict[str, int] = {}
-__circular_index: dict[str, int] = {}
+__proxy_list: Dict[str, List[str]] = {}
+__proxy_visited_at: Dict[str, int] = {}
+__proxy_use_count: Dict[str, int] = {}
+__circular_index: Dict[str, int] = {}
 
 
 def get_a_proxy(scheme: str = 'http', timeout: int = 0):
