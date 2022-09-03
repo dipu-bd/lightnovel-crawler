@@ -19,7 +19,6 @@ questionary>=1.6.0
 prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
-urllib3==1.23
 
 # dev requirements
 wheel
