@@ -90,9 +90,9 @@ def error_message(ex_type, message, tb):
     print()
     tb_summary = ''.join(traceback.format_tb(tb)[-4:]).strip()
     print(Fore.RED, Icons.ERROR, 'Error:', message, Fore.RESET)
-    if tb_summary and ex_type != LNException:
-        print(Style.DIM, ex_type, Style.RESET_ALL)
-        print(Style.DIM, tb_summary, Style.RESET_ALL)
+    if tb_summary and ex_type not in [LNException, KeyboardInterrupt]:
+        print(Style.DIM + str(ex_type) + Style.RESET_ALL)
+        print(Style.DIM + str(tb_summary) + Style.RESET_ALL)
     # end if
     print()
 # end def

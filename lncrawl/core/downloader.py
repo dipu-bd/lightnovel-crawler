@@ -7,14 +7,13 @@ import hashlib
 import json
 import logging
 import os
-import time
 from io import BytesIO
+import signal
 
 import bs4
 from PIL import Image
 from tqdm import tqdm
-from requests.exceptions import RequestException
-    
+
 from ..core.exeptions import LNException
 from .arguments import get_args
 
@@ -28,6 +27,21 @@ def resolve_all_futures(futures_to_check, desc='', unit=''):
     bar = tqdm(desc=desc, unit=unit,
                total=len(futures_to_check), 
                disable=is_debug_mode)
+    
+    def cancel_all(*args):
+        bar.close()
+        for future in futures_to_check:
+            if not future.done():
+                future.cancel()
+            # end if
+        # end for
+        if len(args):
+            raise LNException('Cancelled by user')
+        # end if
+    # end def
+
+    signal.signal(signal.SIGINT, cancel_all)
+
     try:
         for future in futures_to_check:
             try:
@@ -36,17 +50,12 @@ def resolve_all_futures(futures_to_check, desc='', unit=''):
                     bar.clear()
                     logger.warning(message)
                 # end if
-            except KeyboardInterrupt as ex:
-                raise LNException('Cancelled by user')
             finally:
                 bar.update()
             # end try
         # end for
     finally:
-        bar.close()
-        for future in futures_to_check:
-            future.cancel()
-        # end for
+        cancel_all()
     # end try
 # end def
 
@@ -121,42 +130,30 @@ def download_chapter_body(app, chapter):
     assert app.crawler is not None
 
     try:
-        # Read old chapter
+        # Check previously downloaded chapter
         file_name = get_chapter_filename(app, chapter)
         if os.path.exists(file_name):
             logger.debug('Restoring from %s', file_name)
             with open(file_name, 'r', encoding="utf-8") as file:
                 old_chapter = json.load(file)
             # end with
-            if old_chapter.get('body') and old_chapter.get('success'):
-                chapter.update(**old_chapter)
-                return
-            # end if
+            chapter.update(**old_chapter)
         # end def
+        
+        if chapter.get('body') and chapter.get('success'):
+            return
+        # end if
 
-        # Fetch new chapter body
-        retry_count = 2
-        for i in range(retry_count):
-            try:
-                logger.debug('Downloading chapter %d: %s', chapter['id'], chapter['url'])
-                chapter['body'] = app.crawler.download_chapter_body(chapter)
-                extract_chapter_images(app, chapter)
-                chapter['success'] = True
-            except KeyboardInterrupt as ex:
-                raise LNException('Cancelled by user')
-            except RequestException as e:
-                if i < retry_count:
-                    logger.debug('Error: %s | Retrying...', str(e))
-                    time.sleep(3 + 5 * i)  # wait before next retry
-                else:
-                    logger.debug('Failed after %d retries', i, e)
-                    return f"[{chapter['id']}] Failed to get chapter body ({e.__class__.__name__}: {e})"
-                # end if
-            except Exception as e:
-                logger.debug('Failed', e)
-                return f"[{chapter['id']}] Failed to get chapter body ({e.__class__.__name__}: {e})"
-            # end try
-        # end for
+        # Fetch chapter body if it does not exists
+        logger.debug('Downloading chapter %d: %s', chapter['id'], chapter['url'])
+        chapter['body'] = app.crawler.download_chapter_body(chapter)
+        extract_chapter_images(app, chapter)
+        chapter['success'] = True
+    except KeyboardInterrupt:
+        raise LNException('Chapter download cancelled by user')
+    except Exception as e:
+        logger.debug('Failed', e)
+        return f"[{chapter['id']}] Failed to get chapter body ({e.__class__.__name__}: {e})"
     finally:
         chapter.setdefault('body', '')
         save_chapter_body(app, chapter)
@@ -228,7 +225,7 @@ def download_cover_image(app):
                 app.progress += 1
                 break
             except KeyboardInterrupt as e:
-                raise LNException('Cancelled by user')
+                raise LNException('Cover download cancelled by user')
             except Exception as e:
                 logger.debug('Failed to get cover: %s', url, e)
             # end try
@@ -260,7 +257,7 @@ def download_content_image(app, url, filename):
             logger.debug('Saved image: %s', image_file)
         # end with
     except KeyboardInterrupt as e:
-        raise LNException('Cancelled by user')
+        raise LNException('Image download cancelled by user')
     except Exception as e:
         return f"[{filename}] Failed to get content image: {url} | {e.__class__.__name__}: {e}"
     finally:
