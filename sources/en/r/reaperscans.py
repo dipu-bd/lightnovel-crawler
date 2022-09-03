@@ -72,7 +72,7 @@ class Reaperscans(Crawler):
         chapter_list_url = self.absolute_url('ajax/chapters', self.novel_url)
         soup = self.post_soup(chapter_list_url, headers={'accept': '*/*'})
         for a in reversed(
-            soup.select('.wp-manga-chapter a[href*="/chapter"]')
+            soup.select('.wp-manga-chapter:not(.premium-block) a[href*="/chapter"]')
         ):  # This stops it from trying to download locked premium chapters.
             for span in a.findAll('span'):  # Removes time and date from chapter title.
                 span.extract()
