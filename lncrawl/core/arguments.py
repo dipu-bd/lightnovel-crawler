@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+
 import argparse
+import atexit
 from urllib.parse import parse_qs
 
 from .. import constants as C
 from ..assets.version import get_version
 from ..binders import available_formats
 from ..bots import supported_bots
-from .display import LINE_SIZE
+from .display import LINE_SIZE, epilog
 
 
 class Args:
@@ -122,6 +124,9 @@ _builder = Args(group=[
         Args('--chapters', nargs='*', metavar='URL',
              help='A list of specific chapter urls.'),
     ]),
+    
+    Args('--auto-proxy', action='store_true', default=False,
+         help='Use some free proxies from https://free-proxy-list.net/'),
 
     Args('--bot', type=str, choices=supported_bots,
          help='Select a bot. Default: console.'),
@@ -138,7 +143,7 @@ _builder = Args(group=[
 
     Args('--resume',  dest='resume', nargs='?', default=argparse.SUPPRESS,
          metavar='NAME/URL', help='Resume download of a novel containing in ' + C.DEFAULT_OUTPUT_PATH),
-
+         
     Args('extra', type=parse_qs, nargs='?', metavar='ENV', default=dict(),
          help='[chatbots only] Pass query string at the end of all options. '
          'It will be use instead of .env file. '
@@ -149,3 +154,5 @@ _builder = Args(group=[
 def get_args():
     return _builder.get_args()
 # end def
+
+atexit.register(epilog)

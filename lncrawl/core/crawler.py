@@ -5,7 +5,6 @@ Crawler application
 import logging
 import random
 import ssl
-import time
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from threading import Semaphore
@@ -15,16 +14,20 @@ from urllib.parse import urlparse
 import cloudscraper
 from bs4 import BeautifulSoup
 from requests import Response, Session
+from requests.exceptions import ProxyError, RequestException
 
 from ..assets.user_agents import user_agents
 from ..utils.cleaner import TextCleaner
 from ..utils.ssl_no_verify import no_ssl_verification
 from .exeptions import LNException
+from .proxy import get_a_proxy, remove_faulty_proxies
 
 logger = logging.getLogger(__name__)
 
-MAX_CONCURRENT_REQUEST_PER_DOMAIN = 15
+MAX_WORKER_COUNT = 10
+MAX_CONCURRENT_REQUEST_PER_DOMAIN = 25
 REQUEST_SEMAPHORES: Dict[str, Semaphore] = {}
+
 
 def get_domain_semaphore(url):
     host = urlparse(url).hostname or url
@@ -41,8 +44,8 @@ class Crawler(ABC):
     # ------------------------------------------------------------------------- #
     def __init__(self) -> None:
         self._destroyed = False
-        self.executor = ThreadPoolExecutor(max_workers=5)
         self.cleaner = TextCleaner()
+        self.executor = ThreadPoolExecutor(MAX_WORKER_COUNT)
 
         # Initialize cloudscrapper
         try:
@@ -89,55 +92,67 @@ class Crawler(ABC):
         self.last_visited_url = None
 
         # Setup an automatic proxy switcher
-        self.auto_proxy_switch = True
-        self.__proxy_worker = ThreadPoolExecutor(max_workers=2)
-        self.__generate_next_proxy()
+        self.enable_auto_proxy = False
     # end def
 
-    def __generate_next_proxy(self):
-        if not self.auto_proxy_switch or not self.home_url:
-            return
+    def __generate_proxy(self, url, **kwargs):
+        if not self.enable_auto_proxy or not url:
+            return None
         # end if
-
-        try:
-            from fp.fp import FreeProxy
-        except ImportError as e:
-            logger.debug('free-proxy package is not found.')
-            return
-        # end try
-
         scheme = urlparse(self.home_url).scheme
-        https = scheme == 'https'
-
-        def generator():
-            gen_time_key = '__last_http_proxy_gen_time'
-            last_gen = getattr(self, gen_time_key, 0)
-            if time.time() - last_gen > 30:
-                setattr(self, gen_time_key, time.time())
-                proxy = FreeProxy(https=https).get()
-                self.set_proxy(scheme, proxy)
-            # end if
-        # end def
-
-        self.__proxy_worker.submit(generator)
+        return { scheme: get_a_proxy(scheme,  **kwargs) }
     # end def
 
-    def __process_response(self, response: Response) -> Response:
-        # generate a proxy after each response received
-        self.__generate_next_proxy()
+    def __process_request(self, method: str, url, **kwargs):
+        method_call = getattr(self.scraper, method)
+        assert callable(method_call), f'No request method: {method}'
+        
+        kwargs = kwargs or dict()
+        retry = kwargs.pop('retry', 2)
+        #kwargs.setdefault('verify', False)
+        #kwargs.setdefault('allow_redirects', True)
+        headers = kwargs.setdefault('headers', {})
+        headers = {k.lower(): v for k, v in headers.items()}
+        headers.setdefault('host', urlparse(self.home_url).hostname)
+        headers.setdefault('origin', self.home_url.strip('/'))
+        headers.setdefault('referer', self.novel_url.strip('/'))
+        kwargs['proxies'] = self.__generate_proxy(url)
 
-        if response.status_code in [403, 429, 503]:
-            logger.debug('%s\n%s\n%s', '-' * 60, response.text, '-' * 60)
-            raise LNException(f'{response.status_code} {response.reason} -- could not bypass cloudflare.')
-        # end if
+        while retry >= 0:
+            if self._destroyed:
+                raise LNException('Instance is detroyed')
+            # end if
+            try:
+                logger.debug('[%s] %s\n%s', method.upper(), url, 
+                    ', '.join([f'{k}={v}' for k, v in kwargs.items()]))
 
-        response.raise_for_status()
-        response.encoding = 'utf8'
-        self.cookies.update({
-            x.name: x.value
-            for x in response.cookies
-        })
-        return response
+                with get_domain_semaphore(url):
+                    with no_ssl_verification():
+                        response: Response = method_call(url, **kwargs)
+                
+                response.raise_for_status()
+                response.encoding = 'utf8'
+                self.cookies.update({
+                    x.name: x.value
+                    for x in response.cookies
+                })
+                return response
+            except RequestException as e:
+                if retry == 0: # retry attempt depleted
+                    raise e
+                # end if
+                logger.debug('%s | Retrying...', e)
+                retry -= 1
+                if isinstance(e, ProxyError):
+                    for proxy_url in kwargs.get('proxies', {}).values():
+                        remove_faulty_proxies(proxy_url)
+                    # end for
+                # end if
+                if retry != 0: # do not use proxy on last attemp
+                    kwargs['proxies'] = self.__generate_proxy(url, timeout=2)
+                # end if
+            # end try
+        # end while
     # end def
 
     # ------------------------------------------------------------------------- #
@@ -203,7 +218,6 @@ class Crawler(ABC):
         self.chapters.clear()
         self.scraper.close()
         self.executor.shutdown(False)
-        self.__proxy_worker.shutdown(False)
     # end def
 
     @property
@@ -222,10 +236,6 @@ class Crawler(ABC):
     
     def set_cookie(self, name: str, value: str) -> None:
         self.scraper.cookies[name] = value
-    # end def
-
-    def set_proxy(self, scheme: str, proxy_url: str) -> None:
-        self.scraper.proxies[scheme] = proxy_url
     # end def
 
     def absolute_url(self, url, page_url=None) -> str:
@@ -258,53 +268,25 @@ class Crawler(ABC):
                 and url.path.startswith(page.path))
     # end def
 
-    def get_response(self, url, **kargs) -> Response:
-        if self._destroyed:
-            raise LNException('Instance is detroyed')
-        # end if
+    def get_response(self, url, **kwargs) -> Response:
+        kwargs = kwargs or dict()
+        kwargs.setdefault('retry', 5)
+        kwargs.setdefault('timeout', (7, 301))  # in seconds
 
-        kargs = kargs or dict()
-        #kargs.setdefault('verify', False)
-        #kargs.setdefault('allow_redirects', True)
-        kargs.setdefault('timeout', (7, 301))  # in seconds
-        headers = kargs.setdefault('headers', {})
-        headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault('host', urlparse(self.home_url).hostname)
-        headers.setdefault('origin', self.home_url.strip('/'))
-        headers.setdefault('referer', self.novel_url.strip('/'))
-        logger.debug('GET url=%s, headers=%s', url, headers)
-
-        with get_domain_semaphore(url):
-            with no_ssl_verification():
-                response = self.scraper.get(url, **kargs)
-
+        result = self.__process_request('get', url, **kwargs)
         self.last_visited_url = url.strip('/')
-        return self.__process_response(response)
+        return result
     # end def
 
-    def post_response(self, url, data={}, headers={}) -> Response:
-        if self._destroyed:
-            raise LNException('Instance is detroyed')
-        # end if
-
+    def post_response(self, url, data={}, headers={}, **kwargs) -> Response:
+        kwargs = kwargs or dict()
+        kwargs.setdefault('retry', 2)
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('content-type', 'application/json')
-        headers.setdefault('host', urlparse(self.home_url).hostname)
-        headers.setdefault('origin', self.home_url.strip('/'))
-        headers.setdefault('referer', self.novel_url.strip('/'))
-        logger.debug('POST url=%s, data=%s, headers=%s', url, data, headers)
+        kwargs['headers'] = headers
+        kwargs['data'] = data
 
-        with get_domain_semaphore(url):
-            with no_ssl_verification():
-                response = self.scraper.post(
-                    url,
-                    data=data,
-                    headers=headers,
-                    # verify=False,
-                    # allow_redirects=True,
-                )
-
-        return self.__process_response(response)
+        return self.__process_request('get', url, **kwargs)
     # end def
 
     def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
@@ -319,14 +301,14 @@ class Crawler(ABC):
         headers.setdefault('host', urlparse(self.home_url).hostname)
         headers.setdefault('origin', self.home_url.strip('/'))
         headers.setdefault('referer', self.novel_url.strip('/'))
-        logger.debug('SUBMIT url=%s, data=%s, headers=%s', url, data, headers)
 
         return self.post_response(url, data, headers)
     # end def
 
-    def get_soup(self, *args, **kwargs) -> BeautifulSoup:
+    def get_soup(self, url, **kwargs) -> BeautifulSoup:
+        '''Downloads an URL and make a BeautifulSoup object from response'''
         parser = kwargs.pop('parser', None)
-        response = self.get_response(*args, **kwargs)
+        response = self.get_response(url, **kwargs)
         return self.make_soup(response, parser)
     # end def
 

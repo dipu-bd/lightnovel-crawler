@@ -5,7 +5,7 @@ Interactive application to take user inputs
 import logging
 import os
 import sys
-
+import signal
 import colorama
 import urllib3
 from colorama import Fore
@@ -13,15 +13,23 @@ from colorama import Fore
 from ..assets.version import get_version
 from ..bots import run_bot
 from .arguments import get_args
-from .display import (cancel_method, debug_mode, description, epilog,
-                      error_message, input_suppression)
+from .display import (cancel_method, debug_mode, description, error_message,
+                      input_suppression)
+from .proxy import start_proxy_fetcher, stop_proxy_fetcher
 from .sources import load_sources
 
 logger = logging.getLogger(__name__)
 
+def destroy(*args, **kwargs):
+    error_message('', 'Cancelled by user', None)
+    stop_proxy_fetcher()
+    sys.exit(1)
+# end def
+    
 
 def init():
     os.environ['version'] = get_version()
+    signal.signal(signal.SIGINT, destroy)
 
     colorama.init(wrap=True)
     description()
@@ -37,6 +45,7 @@ def init():
     # end if
     if level != 'NOTSET':
         os.environ['debug_mode'] = 'yes'
+        urllib3.add_stderr_logger(logging.INFO)
         logging.basicConfig(
             level=logging.getLevelName(level),
             format=Fore.CYAN + '%(asctime)s '
@@ -72,24 +81,28 @@ def start_app():
     load_sources()
     cancel_method()
 
+    args = get_args()
+    if args.auto_proxy:
+        start_proxy_fetcher()
+    # end if
+
     try:
         bot = os.getenv('BOT', '').lower()
         run_bot(bot)
-    except Exception as err:
-        if os.getenv('debug_mode') == 'yes':
-            raise err
-        elif not isinstance(err, KeyboardInterrupt):
+    except Exception as e:
+        if not isinstance(e, KeyboardInterrupt):
             error_message(*sys.exc_info())
         # end if
     # end try
 
-    epilog()
+    if args.auto_proxy:
+        stop_proxy_fetcher()
+    # end if
 
-    args = get_args()
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS') and not args.close_directly:
         try:
             input('Press ENTER to exit...')
-        except EOFError:
+        except KeyboardInterrupt | EOFError:
             pass
         # end try
     # end if

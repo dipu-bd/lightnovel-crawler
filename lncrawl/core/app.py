@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import atexit
 import logging
 import os
 import shutil
@@ -37,6 +38,7 @@ class App:
         self.archived_outputs = None
         self.good_file_name: str = ''
         self.no_append_after_filename = False
+        atexit.register(self.destroy)
     # end def
 
     # ----------------------------------------------------------------------- #
@@ -50,7 +52,7 @@ class App:
             self.crawler.destroy()
         # end if
         self.chapters.clear()
-        logger.info('Destroyed App')
+        logger.info('App destroyed')
     # end def
 
     # ----------------------------------------------------------------------- #
