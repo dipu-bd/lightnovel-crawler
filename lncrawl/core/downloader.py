@@ -9,6 +9,7 @@ import logging
 import os
 from io import BytesIO
 import signal
+import threading
 
 import bs4
 from PIL import Image
