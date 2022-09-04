@@ -9,6 +9,7 @@ import logging
 import os
 from io import BytesIO
 import signal
+import threading
 
 import bs4
 from PIL import Image
@@ -39,8 +40,9 @@ def resolve_all_futures(futures_to_check, desc='', unit=''):
             raise LNException('Cancelled by user')
         # end if
     # end def
-
-    signal.signal(signal.SIGINT, cancel_all)
+    
+    if threading.current_thread() is threading.main_thread():
+        signal.signal(signal.SIGINT, cancel_all)
 
     try:
         for future in futures_to_check:
