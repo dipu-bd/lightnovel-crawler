@@ -46,7 +46,7 @@ class LazyGirlTranslationsCrawler(Crawler):
         for p in contents:
             index = index + 1
             a = p.select_one(f'a[href="{self.novel_url}"]')
-            if a:
+            if a and a.text == 'Table of Contents':
                 contents = contents[index:-1]
                 break
                 
