@@ -23,6 +23,8 @@ class LazyGirlTranslationsCrawler(Crawler):
             if text.startswith('Author'):
                 self.novel_author = text.replace("Author: ", "")
                 break
+            # end if
+        # end for
 
         for a in soup.select('.wp-block-column a'):
             chap_id = len(self.chapters) + 1
@@ -49,7 +51,8 @@ class LazyGirlTranslationsCrawler(Crawler):
             if a and a.text == 'Table of Contents':
                 contents = contents[index:-1]
                 break
-                
+            # end if
+        # end for
         return ''.join([str(p) for p in contents])
     # end def
 # end class
