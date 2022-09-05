@@ -17,14 +17,9 @@ class LazyGirlTranslationsCrawler(Crawler):
             self.novel_cover = self.absolute_url(cover_img['data-ezsrc'])
         # end if
 
-        first_p = soup.select_one("div.entry-content p")
-
-        for text in first_p.get_text(separator='\n', strip=True).split('\n'):
-            if text.startswith('Author'):
-                self.novel_author = text.replace("Author: ", "")
-                break
-            # end if
-        # end for
+        first_p = soup.select_one("div.entry-content p").get_text(separator='\n', strip=True)
+        author = next(filter(lambda x: 'Author:' in x, first_p.split('\n')), '')
+        self.novel_author = author.replace('Author: ', '')
 
         for a in soup.select('.wp-block-column a'):
             chap_id = len(self.chapters) + 1
