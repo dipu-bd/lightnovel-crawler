@@ -41,7 +41,15 @@ class LazyGirlTranslationsCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('.entry-content p')[2:-1]
+        contents = soup.select('.entry-content p')
+        index = 0
+        for p in contents:
+            index = index + 1
+            a = p.select_one(f'a[href="{self.novel_url}"]')
+            if a:
+                contents = contents[index:-1]
+                break
+                
         return ''.join([str(p) for p in contents])
     # end def
 # end class
