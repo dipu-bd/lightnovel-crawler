@@ -4,6 +4,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+
 class LazyGirlTranslationsCrawler(Crawler):
     base_url = 'https://lazygirltranslations.com/'
 
@@ -11,8 +12,8 @@ class LazyGirlTranslationsCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one('h1.entry-title').text.strip()
-        
-        cover_img = soup.select_one('.entry-content .wp-block-image img')      
+
+        cover_img = soup.select_one('.entry-content .wp-block-image img')
         if cover_img:
             self.novel_cover = self.absolute_url(cover_img['data-ezsrc'])
 
@@ -31,7 +32,7 @@ class LazyGirlTranslationsCrawler(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
+                'url': self.absolute_url(a['href']),
                 'title': a.text.strip(),
             })
 
