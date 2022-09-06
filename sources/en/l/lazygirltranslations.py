@@ -15,26 +15,25 @@ class LazyGirlTranslationsCrawler(Crawler):
         cover_img = soup.select_one('.entry-content .wp-block-image img')      
         if cover_img:
             self.novel_cover = self.absolute_url(cover_img['data-ezsrc'])
-        # end if
 
-        first_p = soup.select_one("div.entry-content p").get_text(separator='\n', strip=True)
-        author = next(filter(lambda x: 'Author:' in x, first_p.split('\n')), '')
-        self.novel_author = author.replace('Author: ', '')
+        first_p = soup.select_one("div.entry-content p")
+        if first_p:
+            t = first_p.get_text(separator='\n', strip=True)
+            author = next(filter(lambda x: 'Author:' in x, t.split('\n')), '')
+            self.novel_author = author.replace('Author: ', '')
 
         for a in soup.select('.wp-block-column a'):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip(),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -44,8 +43,4 @@ class LazyGirlTranslationsCrawler(Crawler):
             if a and a.text == 'Table of Contents':
                 contents = contents[index + 1:-1]
                 break
-            # end if
-        # end for
         return ''.join([str(p) for p in contents])
-    # end def
-# end class
