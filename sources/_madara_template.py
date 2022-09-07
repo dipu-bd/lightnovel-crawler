@@ -5,6 +5,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 ajax_url = '%s/wp-admin/admin-ajax.php'
+search_url = "%s/?s=%s&post_type=wp-manga&author=&artist=&release="
 
 
 class MadaraTemplateCrawler(Crawler):
@@ -15,17 +16,13 @@ class MadaraTemplateCrawler(Crawler):
         'http://sample.url/'
     ]
 
-    search_url = (
-        "%s?s=%s&post_type=wp-manga&author=&artist=&release="
-    )
-
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(['h3', 'script'])
         self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
-        soup = self.get_soup(self.search_url % (self.home_url, query))
+        soup = self.get_soup(search_url % (self.home_url.rstrip('/'), query))
 
         results = []
         for tab in soup.select(".c-tabs-item__content"):
@@ -43,7 +40,6 @@ class MadaraTemplateCrawler(Crawler):
         return results
 
     def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one(".post-title h1")
@@ -51,7 +47,6 @@ class MadaraTemplateCrawler(Crawler):
             span.extract()
 
         self.novel_title = possible_title.text.strip()
-        logger.info("Novel title: %s", self.novel_title)
 
         img_src = soup.select_one(".summary_image a img")
 
@@ -66,7 +61,7 @@ class MadaraTemplateCrawler(Crawler):
                 for a in soup.select('.author-content a[href*="manga-author"]')
             ]
         )
-        logger.info("%s", self.novel_author)
+        logger.info("Author: %s", self.novel_author)
 
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
 
