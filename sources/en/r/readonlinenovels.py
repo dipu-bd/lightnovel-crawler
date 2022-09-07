@@ -11,24 +11,20 @@ class ReadOnlineNovelsCrawler(Crawler):
     base_url = ['http://readonlinenovels.com/',
                 'https://readonlinenovels.com/', ]
 
-    # NOTE: Disabled because it takes too long
-    # def search_novel(self, query):
-    #     soup = self.get_soup(search_url % query)
+    def search_novel(self, query):
+        soup = self.get_soup(search_url % query)
 
-    #     results = []
-    #     for div in soup.select('div.book-context'):
-    #         a = div.select_one('a')
-    #         title = a.select_one('h4 b').text.strip()
-    #         info = div.select_one('div.update-info').text.strip()
-    #         results.append({
-    #             'title': title,
-    #             'url': self.absolute_url(a['href']),
-    #             'info': info,
-    #         })
-    #     # end for
-
-    #     return results
-    # # end def
+        results = []
+        for div in soup.select('div.book-context'):
+            a = div.select_one('a')
+            title = a.select_one('h4 b').text.strip()
+            info = div.select_one('div.update-info').text.strip()
+            results.append({
+                'title': title,
+                'url': self.absolute_url(a['href']),
+                'info': info,
+            })
+        return results
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
