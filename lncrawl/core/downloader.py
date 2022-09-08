@@ -92,14 +92,17 @@ def extract_chapter_images(app, chapter):
         if not img or not img.has_attr('src'):
             continue
         # end if
-        full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])   
+        full_url = app.crawler.absolute_url(img['src'], page_url=chapter['url'])
+        if not full_url.startswith('http'):
+            continue
+        # end if
         filename = hashlib.md5(full_url.encode()).hexdigest() + '.jpg'
         img.attrs = {'src': 'images/' + filename, 'alt': filename}
         chapter['images'][filename] = full_url
     # end for
     
     soup_body = soup.select_one('body')
-    assert isinstance(soup_body, bs4.Tag), 'Invalid soup body'
+    assert soup_body
     chapter['body'] = ''.join([str(x) for x in soup_body.contents])
 # end def
 
@@ -243,16 +246,15 @@ def download_cover_image(app):
 # end def
 
 
-def download_content_image(app, url, filename):
+def download_content_image(app, url, filename, image_folder):
     from .app import App
     assert isinstance(app, App)
-    image_folder = os.path.join(app.output_path, 'images')
     image_file = os.path.join(image_folder, filename)
     try:
         if os.path.isfile(image_file):
             return
         # end if
-        img = download_image(app, url)        
+        img = download_image(app, url)
         os.makedirs(image_folder, exist_ok=True)
         with open(image_file, 'wb') as f:
             img.convert('RGB').save(f, "JPEG")
@@ -265,6 +267,38 @@ def download_content_image(app, url, filename):
     finally:
         app.progress += 1
     # end try
+# end def
+
+
+def discard_failed_images(app, chapter, failed):
+    from .app import App
+    assert isinstance(app, App)
+    assert app.crawler is not None
+    assert isinstance(chapter, dict), 'Invalid chapter'
+
+    if not chapter['body'] or not 'images' in chapter:
+        return
+    # end if 
+    
+    assert isinstance(chapter['images'], dict)
+    current_failed = [
+        filename for filename in failed
+        if filename in chapter['images']
+    ]
+    if not current_failed:
+        return
+    # end if
+    
+    soup = app.crawler.make_soup(chapter['body'])
+    for filename in current_failed:
+        chapter['images'].pop(filename)
+        for img in soup.select(f'img[alt="{filename}"]'):
+            img.extract()
+        # end for
+    # end for
+    soup_body = soup.select_one('body')
+    assert soup_body
+    chapter['body'] = ''.join([str(x) for x in soup_body.contents])
 # end def
 
 
@@ -281,20 +315,37 @@ def download_chapter_images(app):
             app,
         )
     ]
+
+    # download content images
+    image_folder = os.path.join(app.output_path, 'images')
+    images_to_download = set([
+        (filename, url)
+        for chapter in app.chapters
+        for filename, url in chapter.get('images', {}).items()
+    ])
     futures_to_check += [
         app.crawler.executor.submit(
             download_content_image,
             app,
             url,
             filename,
+            image_folder
         )
-        for chapter in app.chapters
-        for filename, url in chapter.get('images', {}).items()
+        for filename, url in images_to_download
     ]
 
+    failed = []
     try:
         resolve_all_futures(futures_to_check, desc='  Images', unit='item')
+        failed = [
+            filename for filename, url in images_to_download
+            if not os.path.isfile(os.path.join(image_folder, filename))
+        ]
     finally:
-        logger.info('Processed %d images' % app.progress)
+        logger.info('Processed %d images [%d failed]' % (app.progress, len(failed)))
     # end try
+    
+    for chapter in app.chapters:
+        discard_failed_images(app, chapter, failed)
+    # end for
 # end def

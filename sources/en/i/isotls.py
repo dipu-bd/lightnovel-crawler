@@ -6,8 +6,10 @@ logger = logging.getLogger(__name__)
 
 
 class IsotlsCrawler(Crawler):
-    base_url = ['https://isotls.com/',
-                'https://www.isotls.com/', ]
+    base_url = [
+        'https://isotls.com/',
+        'https://www.isotls.com/',
+    ]
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
