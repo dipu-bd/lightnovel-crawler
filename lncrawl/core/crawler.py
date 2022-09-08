@@ -95,12 +95,12 @@ class Crawler(ABC):
         self.enable_auto_proxy = False
     # end def
 
-    def __generate_proxy(self, url, **kwargs):
+    def __generate_proxy(self, url, timeout:int = 0):
         if not self.enable_auto_proxy or not url:
             return None
         # end if
         scheme = urlparse(self.home_url).scheme
-        return { scheme: get_a_proxy(scheme,  **kwargs) }
+        return { scheme: get_a_proxy(scheme, timeout) }
     # end def
 
     def __process_request(self, method: str, url, **kwargs):
@@ -149,7 +149,7 @@ class Crawler(ABC):
                     # end for
                 # end if
                 if retry != 0: # do not use proxy on last attemp
-                    kwargs['proxies'] = self.__generate_proxy(url, timeout=2)
+                    kwargs['proxies'] = self.__generate_proxy(url, 5)
                 # end if
             # end try
         # end while
@@ -270,7 +270,7 @@ class Crawler(ABC):
 
     def get_response(self, url, **kwargs) -> Response:
         kwargs = kwargs or dict()
-        kwargs.setdefault('retry', 5)
+        kwargs.setdefault('retry', 3)
         kwargs.setdefault('timeout', (7, 301))  # in seconds
 
         result = self.__process_request('get', url, **kwargs)
@@ -280,13 +280,13 @@ class Crawler(ABC):
 
     def post_response(self, url, data={}, headers={}, **kwargs) -> Response:
         kwargs = kwargs or dict()
-        kwargs.setdefault('retry', 2)
+        kwargs.setdefault('retry', 1)
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('content-type', 'application/json')
         kwargs['headers'] = headers
         kwargs['data'] = data
 
-        return self.__process_request('get', url, **kwargs)
+        return self.__process_request('post', url, **kwargs)
     # end def
 
     def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:

@@ -1,5 +1,6 @@
 import atexit
 import logging
+import random
 from typing import Dict, List
 import signal
 import time
@@ -89,7 +90,7 @@ def __validate_and_add(scheme: str, ip: str, url: str):
             )
             resp.raise_for_status()
         if resp.text.strip() == ip:
-            # print('found', url)
+            # print('>>>>>> found', url)
             __proxy_list[scheme].append(url)
             return True
         # end if
@@ -100,36 +101,49 @@ def __validate_and_add(scheme: str, ip: str, url: str):
 # end def
 
 
-def __proxy_finder():
+def __get_free_proxy_list(url):
+    with no_ssl_verification():
+        resp = __sess.get(
+            url,
+            headers={'user-agent': user_agents[0]},
+            timeout=5
+        )
+    if resp.status_code >= 400:
+        return []
+    # end if
+    html = resp.content.decode('utf8', 'ignore')
+    soup = BeautifulSoup(html, 'lxml')
+    return [
+        [td.text for td in tr.select('td')]
+        for tr in soup.select('.fpl-list table tbody tr')
+    ]
+# end def
+
+
+def __find_proxies():
     err_count = 0
     while err_count < 3 and not __has_exit:
         logger.debug('Fetching proxies | Current checklist: %d', len(__proxy_visited_at))
         try:
-            resp = __sess.get(
-                'https://free-proxy-list.net/',
-                headers={'user-agent': user_agents[0]},
-                timeout=5
-            )
-            resp.raise_for_status()
-            html = resp.content.decode('utf8', 'ignore')
-            soup = BeautifulSoup(html, 'lxml')
+            rows = __get_free_proxy_list('https://free-proxy-list.net/')
+            rows += __get_free_proxy_list('https://www.sslproxies.org/')
+            random.shuffle(rows)
             err_count = 0
- 
-            for tr in soup.select('.fpl-list table tbody tr'):
+
+            for cols in rows:
                 if __has_exit:
                     break
-
-                cols = [td.text for td in tr.select('td')]
-                ip = cols[0]
-                port = cols[1]
-                type = cols[4]
-                scheme = 'https' if cols[6] == 'yes' else 'http'
-                url = f'{scheme}://{ip}:{port}'
-
-                if type not in ['anonymous', 'transparent']:
+                if 'hour' in cols[7]:
+                    continue
+                if cols[4] not in ['anonymous', 'transparent']:
                     continue
                 # end if
  
+                ip = cols[0]
+                port = cols[1]      
+                scheme = 'https' if cols[6] == 'yes' else 'http'
+                url = f'{scheme}://{ip}:{port}'
+
                 __proxy_list.setdefault(scheme, [])
                 if __proxy_visited_at.get(url, 0) + __proxy_ttl < time.time():
                     __validate_and_add(scheme, ip, url)
@@ -152,7 +166,7 @@ def __proxy_finder():
 def start_proxy_fetcher():
     atexit.register(stop_proxy_fetcher)
     signal.signal(signal.SIGINT, stop_proxy_fetcher)
-    Thread(target=__proxy_finder, daemon=False).start()
+    Thread(target=__find_proxies, daemon=False).start()
 # end def
 
 
