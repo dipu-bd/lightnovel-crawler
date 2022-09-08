@@ -102,7 +102,9 @@ def start_app():
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS') and not args.close_directly:
         try:
             input('Press ENTER to exit...')
-        except KeyboardInterrupt | EOFError:
+        except KeyboardInterrupt:
+            pass
+        except EOFError:
             pass
         # end try
     # end if
