@@ -8,8 +8,10 @@ search_url = 'https://readonlinenovels.com/novel/search/?keywords=%s'
 
 
 class ReadOnlineNovelsCrawler(Crawler):
-    base_url = ['http://readonlinenovels.com/',
-                'https://readonlinenovels.com/', ]
+    base_url = [
+        'http://readonlinenovels.com/',
+        'https://readonlinenovels.com/',
+    ]
 
     def search_novel(self, query):
         soup = self.get_soup(search_url % query)
@@ -59,6 +61,6 @@ class ReadOnlineNovelsCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('div.read-context p')
-        body = [str(p) for p in contents if p.text.strip()]
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        contents = soup.select_one('.read-context .reading_area')
+        assert contents, 'No chapter contents found'
+        return self.cleaner.extract_contents(contents)
