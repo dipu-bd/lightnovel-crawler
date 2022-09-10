@@ -8,9 +8,6 @@ ajax_url = '%s/wp-admin/admin-ajax.php'
 
 
 class ZetroTranslationCrawler(Crawler):
-    has_manga = False
-    machine_translation = False
-
     base_url = [
         'https://zetrotranslation.com/'
     ]
@@ -39,10 +36,8 @@ class ZetroTranslationCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-        # end for
 
         return results
-    # end def
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
