@@ -5,7 +5,7 @@ from lncrawl.core.crawler import Crawler
 import json
 
 logger = logging.getLogger(__name__)
-next_url = '%s_next/data/%s/en%s'
+next_url = 'https://novelsala.com/_next/data/%s/en%s'
 
 
 class NovelSalaCrawler(Crawler):
@@ -41,13 +41,15 @@ class NovelSalaCrawler(Crawler):
                     "id": chap_id,
                     "volume": vol_id,
                     "url": self.novel_url.rstrip('/') + f'/chapter-{chap_id}/',
-                    "chapter_json_url": next_url % (self.home_url, buildId, book_data['url']) + f"chapter-{chap_id}.json",
+                    "chapter_json_url": (next_url % (buildId, book_data['url'])
+                                         + f"chapter-{chap_id}.json"),
                 }
             )
 
     def download_chapter_body(self, chapter):
         chapter_json = self.get_json(chapter["chapter_json_url"])
-        chapter_data = chapter_json['pageProps']['relayData'][0][1]['data']['chapter2']
+        chapter_data = (chapter_json['pageProps']['relayData'][0][1]
+                        ['data']['chapter2'])
 
         chapter['title'] = chapter_data['title']
         content = chapter_data['contentHtml']
