@@ -55,7 +55,7 @@ class NovelSalaCrawler(Crawler):
                     {
                         "id": chap['chapNum'],
                         "volume": vol_id + 1,
-                        "title": f"Chapter {chap['chapNum']}: " + chap['title'],
+                        "title": f"Chapter {chap['chapNum']}" + chap['title'],
                         "url": self.home_url.rstrip('/') + chap['url'],
                         "chapter_json_url": (next_url % (buildId, book_data['url'])
                                              + f"chapter-{chap['chapNum']}.json"),
