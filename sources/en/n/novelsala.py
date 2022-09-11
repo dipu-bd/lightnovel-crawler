@@ -7,6 +7,31 @@ import json
 logger = logging.getLogger(__name__)
 next_url = 'https://novelsala.com/_next/data/%s/en%s'
 
+graphql_url = 'https://novelsala.com/graphql'
+graphql_body = '''
+{"id":"chapters_NovelRefetchQuery","query":"query chapters_NovelRefetchQuery(\n
+  $slug: String!\n
+  $startChapNum: Int\n
+  ) {\n
+    ...chapters_list_items\n
+  }\n\n
+  fragment chapters_list_items on Query {\n
+    chapterListChunks(bookSlug: $slug, chunkSize: 100,
+                      startChapNum: $startChapNum) {\n
+        items {\n
+          title\n
+          chapNum\n
+          url\n
+          refId\n
+          id\n
+        }\n
+        title\n
+        startChapNum\n
+    }\n
+  }\n
+  ","variables":{"slug":"%s","startChapNum":%s}}
+'''
+
 
 class NovelSalaCrawler(Crawler):
     base_url = [
@@ -30,6 +55,9 @@ class NovelSalaCrawler(Crawler):
         logger.info("Novel author: %s", self.novel_author)
 
         chapters_count = book_data['numChapters']
+
+        # TODO
+        # volume_chapters = graphql_body % (slug, volume_chapter)
         for cid in range(chapters_count):
             chap_id = cid + 1
             vol_id = 1 + len(self.chapters) // 100
