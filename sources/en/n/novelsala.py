@@ -8,29 +8,7 @@ logger = logging.getLogger(__name__)
 next_url = 'https://novelsala.com/_next/data/%s/en%s'
 
 graphql_url = 'https://novelsala.com/graphql'
-graphql_body = '''
-{"id":"chapters_NovelRefetchQuery","query":"query chapters_NovelRefetchQuery(\n
-  $slug: String!\n
-  $startChapNum: Int\n
-  ) {\n
-    ...chapters_list_items\n
-  }\n\n
-  fragment chapters_list_items on Query {\n
-    chapterListChunks(bookSlug: $slug, chunkSize: 100,
-                      startChapNum: $startChapNum) {\n
-        items {\n
-          title\n
-          chapNum\n
-          url\n
-          refId\n
-          id\n
-        }\n
-        title\n
-        startChapNum\n
-    }\n
-  }\n
-  ","variables":{"slug":"%s","startChapNum":%s}}
-'''
+graphql_body = '{"id":"chapters_NovelRefetchQuery","query":"query chapters_NovelRefetchQuery(\\n  $slug: String!\\n  $startChapNum: Int\\n) {\\n  ...chapters_list_items\\n}\\n\\nfragment chapters_list_items on Query {\\n  chapterListChunks(bookSlug: $slug, chunkSize: 100, startChapNum: $startChapNum) {\\n    items {\\n      title\\n      chapNum\\n      url\\n      refId\\n      id\\n    }\\n    title\\n    startChapNum\\n  }\\n}\\n","variables":{"slug":"%s","startChapNum":%d}}'
 
 
 class NovelSalaCrawler(Crawler):
@@ -58,6 +36,10 @@ class NovelSalaCrawler(Crawler):
 
         # TODO
         # volume_chapters = graphql_body % (slug, volume_chapter)
+        slug = book_data['slug']
+        volume_chapters = self.post_json(graphql_url, data=graphql_body % (slug, 1))['data']['chapterListChunks'][0]
+        print(volume_chapters)
+
         for cid in range(chapters_count):
             chap_id = cid + 1
             vol_id = 1 + len(self.chapters) // 100
