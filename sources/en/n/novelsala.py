@@ -32,36 +32,39 @@ class NovelSalaCrawler(Crawler):
 
         logger.info("Novel author: %s", self.novel_author)
 
-        chapters_count = book_data['numChapters']
-
-        # TODO
-        # volume_chapters = graphql_body % (slug, volume_chapter)
         slug = book_data['slug']
-        volume_chapters = self.post_json(graphql_url, data=graphql_body % (slug, 1))['data']['chapterListChunks'][0]
-        print(volume_chapters)
+        startChapNum = 1
+        volume_chapters = (self.post_json(
+                           graphql_url,
+                           data=graphql_body % (slug, startChapNum))
+                           ['data']['chapterListChunks'])
 
-        for cid in range(chapters_count):
-            chap_id = cid + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append({"id": vol_id})
+        for vol_id, volume in enumerate(volume_chapters):
+            startChapNum = volume['startChapNum']
 
-            self.chapters.append(
-                {
-                    "id": chap_id,
-                    "volume": vol_id,
-                    "url": self.novel_url.rstrip('/') + f'/chapter-{chap_id}/',
-                    "chapter_json_url": (next_url % (buildId, book_data['url'])
-                                         + f"chapter-{chap_id}.json"),
-                }
-            )
+            if vol_id != 0:
+                volume = (self.post_json(
+                          graphql_url,
+                          data=graphql_body % (slug, startChapNum))
+                          ['data']['chapterListChunks'])[vol_id]
+
+            self.volumes.append({"id": vol_id + 1})
+            chaps = volume['items']
+            for chap in chaps:
+                self.chapters.append(
+                    {
+                        "id": chap['chapNum'],
+                        "volume": vol_id + 1,
+                        "title": f"Chapter {chap['chapNum']}: " + chap['title'],
+                        "url": self.home_url.rstrip('/') + chap['url'],
+                        "chapter_json_url": (next_url % (buildId, book_data['url'])
+                                             + f"chapter-{chap['chapNum']}.json"),
+                    }
+                )
 
     def download_chapter_body(self, chapter):
         chapter_json = self.get_json(chapter["chapter_json_url"])
         chapter_data = (chapter_json['pageProps']['relayData'][0][1]
                         ['data']['chapter2'])
 
-        chapter['title'] = chapter_data['title']
-        content = chapter_data['contentHtml']
-
-        return content
+        return chapter_data['contentHtml']
