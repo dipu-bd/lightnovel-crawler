@@ -6,6 +6,7 @@ import json
 
 logger = logging.getLogger(__name__)
 next_url = 'https://novelsala.com/_next/data/%s/en%s'
+search_url = 'https://novelsala.com/search/?q=%s'
 
 graphql_url = 'https://novelsala.com/graphql'
 graphql_body = '{"id":"chapters_NovelRefetchQuery","query":"query chapters_NovelRefetchQuery(\\n  $slug: String!\\n  $startChapNum: Int\\n) {\\n  ...chapters_list_items\\n}\\n\\nfragment chapters_list_items on Query {\\n  chapterListChunks(bookSlug: $slug, chunkSize: 100, startChapNum: $startChapNum) {\\n    items {\\n      title\\n      chapNum\\n      url\\n      refId\\n      id\\n    }\\n    title\\n    startChapNum\\n  }\\n}\\n","variables":{"slug":"%s","startChapNum":%d}}'
@@ -15,6 +16,24 @@ class NovelSalaCrawler(Crawler):
     base_url = [
         'https://novelsala.com/'
     ]
+
+    def search_novel(self, query):
+        query = query.lower().replace(" ", "+")
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for a in soup.select("a.cell-active"):
+            title = a.select_one(".body h3").text
+            info = a.select_one(".body span").text
+            results.append(
+                {
+                    "title": title,
+                    "url": self.absolute_url(self.home_url.rstrip('/') + a["href"]),
+                    "info": info,
+                }
+            )
+
+        return results
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
