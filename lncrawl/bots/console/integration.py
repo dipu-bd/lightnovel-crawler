@@ -42,18 +42,19 @@ def start(self):
     try:
         self.app.prepare_search()
         self.search_mode = not self.app.crawler
+    except LNException as e:
+        raise e
     except Exception as e:
-        logger.debug("Fail to init crawler. Error: %s", e)
         if self.app.user_input.startswith('http'):
             url = urlparse(self.app.user_input)
             url = '%s://%s/' % (url.scheme, url.hostname)
             if url in rejected_sources:
                 display.url_rejected(rejected_sources[url])
-                return
+            else:
+                display.url_not_recognized()
             # end if
         # end if
-        display.url_not_recognized()
-        return
+        raise LNException(f'Fail to init crawler. Error: {e}')
     # end if
 
     # Search for novels
@@ -71,6 +72,8 @@ def start(self):
             self.app.prepare_crawler(novel_url)
         # end if
 
+        self.app.crawler.enable_auto_proxy = args.auto_proxy
+        
         if self.app.can_do('login'):
             self.app.login_data = self.get_login_info()
         # end if
@@ -88,8 +91,10 @@ def start(self):
         try:
             _download_novel()
             break
+        except LNException as e:
+            raise e
         except KeyboardInterrupt as e:
-            raise LNException('Cancelled by user')
+            raise LNException('Novel download cancelled by user')
         except Exception as e:
             if not (self.search_mode and self.confirm_retry()):
                 raise e
@@ -159,7 +164,7 @@ def process_chapter_range(self, disable_args=False):
                 ],
             }
         ])
-        if answer['continue'] == 'Change selection':
+        if answer.get('continue', '') == 'Change selection':
             return self.process_chapter_range(True)
         # end if
     # end if

@@ -102,7 +102,7 @@ def get_output_formats(self):
     # end if
 
     if not formats or len(formats) == 0:
-        formats = ['epub']  # default to epub if none selected
+        formats = ['epub', 'json']  # default to epub if none selected
     # end if
 
     return {x: (x in formats) for x in available_formats}
