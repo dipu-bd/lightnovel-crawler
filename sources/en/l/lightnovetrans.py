@@ -21,7 +21,7 @@ class LNTCrawler(Crawler):
         # TODO: No covers on site, could not grab author name.
 
         # Extract volume-wise chapter entries
-        for div in soup.select('.su-accordion .su-spoiler'):
+        for div in soup.select('.entry-content .su-spoiler'):
             vol = div.select_one('.su-spoiler-title').text.strip()
             vol_id = int(vol) if vol.isdigit() else len(self.volumes) + 1
             self.volumes.append({
