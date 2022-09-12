@@ -71,7 +71,9 @@ class NovelHunters(Crawler):
         soup = self.make_soup(response)
         vol_li = soup.select('.listing-chapters_wrap > ul > li')
 
-        for vol_id, volume in enumerate(vol_li):
+        for vol_id, volume in enumerate(sorted(
+                                        vol_li,
+                                        key=lambda x: x.select_one('a').text)):
             self.volumes.append({'id': vol_id + 1})
 
             for a in reversed(volume.select(
