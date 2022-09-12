@@ -3,6 +3,7 @@ import logging
 from concurrent.futures import ThreadPoolExecutor
 
 from lncrawl.core.crawler import Crawler
+import re
 
 logger = logging.getLogger(__name__)
 search_url = 'https://www.novelhunters.com/?s=%s&post_type=wp-manga'
@@ -73,7 +74,9 @@ class NovelHunters(Crawler):
 
         for vol_id, volume in enumerate(sorted(
                                         vol_li,
-                                        key=lambda x: x.select_one('a').text)):
+                                        key=lambda x: int(re.search(
+                                            r'\d+',
+                                            x.select_one('a').text).group()))):
             self.volumes.append({'id': vol_id + 1})
 
             for a in reversed(volume.select(
