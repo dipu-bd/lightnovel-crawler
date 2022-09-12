@@ -71,17 +71,16 @@ class NovelHunters(Crawler):
         soup = self.make_soup(response)
         vol_li = soup.select('.listing-chapters_wrap > ul > li')
 
-        for volume in vol_li:
+        for vol_id, volume in enumerate(vol_li):
+            self.volumes.append({'id': vol_id + 1})
+
             for a in reversed(volume.select(
                               '.wp-manga-chapter:not(.premium-block) a')):
                 chap_id = 1 + len(self.chapters)
-                vol_id = 1 + len(self.chapters) // 100
-                if len(self.chapters) % 100 == 0:
-                    self.volumes.append({'id': vol_id})
 
                 self.chapters.append({
                     'id': chap_id,
-                    'volume': vol_id,
+                    'volume': vol_id + 1,
                     'title': a.text.strip(),
                     'url': self.absolute_url(a['href']),
                 })
