@@ -93,6 +93,7 @@ class Crawler(ABC):
 
         # Setup an automatic proxy switcher
         self.enable_auto_proxy = False
+        self.new_proxies = ["185.199.229.156:7492:syctplhv:tnbzdr3s127f"]
     # end def
 
     def __generate_proxy(self, url, timeout:int = 0):
@@ -116,7 +117,11 @@ class Crawler(ABC):
         headers.setdefault('host', urlparse(self.home_url).hostname)
         headers.setdefault('origin', self.home_url.strip('/'))
         headers.setdefault('referer', self.novel_url.strip('/'))
-        kwargs['proxies'] = self.__generate_proxy(url)
+        splitprox = self.new_proxies[0].split(":")
+        
+        proxyy = f'http://{splitprox[2]}:{splitprox[3]}@{splitprox[0]}:{splitprox[1]}'
+        proxies  = {'http':proxyy, 'https':proxyy}
+        kwargs['proxies'] = proxies
 
         while retry >= 0:
             if self._destroyed:
