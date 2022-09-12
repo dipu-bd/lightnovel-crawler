@@ -18,7 +18,9 @@ class LNTCrawler(Crawler):
         self.novel_title = possible_title.text
         logger.info('Novel title: %s', self.novel_title)
 
-        # TODO: No covers on site, could not grab author name.
+        possible_cover = soup.select_one('meta[property="og:image"]')
+        if possible_cover:
+            self.novel_cover = self.absolute_url(possible_cover['content'])
 
         # Extract volume-wise chapter entries
         for div in soup.select('.entry-content .su-spoiler'):
