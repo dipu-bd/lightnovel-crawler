@@ -13,10 +13,6 @@ class MangaRockTeamCrawler(Crawler):
         'https://mangarockteam.com/'
     ]
 
-    search_url = (
-        "%s?s=%s&post_type=wp-manga&author=&artist=&release="
-    )
-
     def initialize(self) -> None:
         madara.initialize(self)
 
