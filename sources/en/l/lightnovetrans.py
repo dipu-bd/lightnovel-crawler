@@ -22,6 +22,11 @@ class LNTCrawler(Crawler):
         if possible_cover:
             self.novel_cover = self.absolute_url(possible_cover['content'])
 
+        for p in soup.select("div.entry-content p"):
+            if 'Author' in p.text:
+                self.novel_author = p.text.replace('Author:', '').strip()
+                break
+
         # Extract volume-wise chapter entries
         for div in soup.select('.entry-content .su-spoiler'):
             vol = div.select_one('.su-spoiler-title').text.strip()
