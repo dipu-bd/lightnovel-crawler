@@ -8,7 +8,7 @@ services:
       dockerfile: ./scripts/Dockerfile
     command: python -m lncrawl --bot discord --shard-id 0 --shard-count 1 --suppress
     environment:
-      CLOUD_DRIVE: "ANONFILES"
+      CLOUD_DRIVE: "GOFILE"
       DISCORD_TOKEN: "${DISCORD_TOKEN}"
       DISCORD_SIGNAL_CHAR: "${DISCORD_SIGNAL_CHAR}"
       DISCORD_DISABLE_SEARCH: "${DISCORD_DISABLE_SEARCH}"
@@ -20,6 +20,6 @@ services:
       dockerfile: ./scripts/Dockerfile
     command: python -m lncrawl --bot telegram
     environment:
-      CLOUD_DRIVE: "ANONFILES"
+      CLOUD_DRIVE: "GOFILE"
       TELEGRAM_TOKEN: "${TELEGRAM_TOKEN}"
  

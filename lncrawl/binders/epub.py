@@ -86,11 +86,22 @@ def make_chapters(book, chapters):
             continue
         # end if
         xhtml_file = 'chap_%s.xhtml' % str(i + 1).rjust(5, '0')
+        additional_styles = '''<style>
+        img {
+            width: 100vw;
+            object-fit: scale-down;
+            object-position: center center;
+        }
+        p + br, br + br {
+            display: none;
+        }
+        </style>
+        '''
         content = epub.EpubHtml(
             # uid=str(i + 1),
             file_name=xhtml_file,
             title=chapter['title'],
-            content=str(chapter['body']),
+            content=str(chapter['body']) + additional_styles,
             direction=book.direction,
         )
         book.add_item(content)

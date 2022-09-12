@@ -42,18 +42,19 @@ def start(self):
     try:
         self.app.prepare_search()
         self.search_mode = not self.app.crawler
+    except LNException as e:
+        raise e
     except Exception as e:
-        logger.debug("Fail to init crawler. Error: %s", e)
         if self.app.user_input.startswith('http'):
             url = urlparse(self.app.user_input)
             url = '%s://%s/' % (url.scheme, url.hostname)
             if url in rejected_sources:
                 display.url_rejected(rejected_sources[url])
-                return
+            else:
+                display.url_not_recognized()
             # end if
         # end if
-        display.url_not_recognized()
-        return
+        raise LNException(f'Fail to init crawler. Error: {e}')
     # end if
 
     # Search for novels
@@ -71,6 +72,8 @@ def start(self):
             self.app.prepare_crawler(novel_url)
         # end if
 
+        self.app.crawler.enable_auto_proxy = args.auto_proxy
+        
         if self.app.can_do('login'):
             self.app.login_data = self.get_login_info()
         # end if
@@ -88,8 +91,10 @@ def start(self):
         try:
             _download_novel()
             break
+        except LNException as e:
+            raise e
         except KeyboardInterrupt as e:
-            raise LNException('Cancelled by user')
+            raise LNException('Novel download cancelled by user')
         except Exception as e:
             if not (self.search_mode and self.confirm_retry()):
                 raise e
@@ -108,9 +113,9 @@ def start(self):
 # end def
 
 
-def process_chapter_range(self):
+def process_chapter_range(self, disable_args=False):
     chapters = []
-    res = self.get_range_selection()
+    res = self.get_range_selection(disable_args)
 
     args = get_args()
     if res == 'all':
@@ -122,19 +127,19 @@ def process_chapter_range(self):
         n = args.last or 10
         chapters = self.app.crawler.chapters[-n:]
     elif res == 'page':
-        start, stop = self.get_range_using_urls()
+        start, stop = self.get_range_using_urls(disable_args)
         chapters = self.app.crawler.chapters[start:(stop + 1)]
     elif res == 'range':
-        start, stop = self.get_range_using_index()
+        start, stop = self.get_range_using_index(disable_args)
         chapters = self.app.crawler.chapters[start:(stop + 1)]
     elif res == 'volumes':
-        selected = self.get_range_from_volumes()
+        selected = self.get_range_from_volumes(disable_args)
         chapters = [
             chap for chap in self.app.crawler.chapters
             if selected.count(chap['volume']) > 0
         ]
     elif res == 'chapters':
-        selected = self.get_range_from_chapters()
+        selected = self.get_range_from_chapters(disable_args)
         chapters = [
             chap for chap in self.app.crawler.chapters
             if selected.count(chap['id']) > 0
@@ -159,8 +164,8 @@ def process_chapter_range(self):
                 ],
             }
         ])
-        if answer['continue'] == 'Change selection':
-            return self.process_chapter_range()
+        if answer.get('continue', '') == 'Change selection':
+            return self.process_chapter_range(True)
         # end if
     # end if
 

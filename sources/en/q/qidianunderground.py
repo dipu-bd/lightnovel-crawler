@@ -21,6 +21,7 @@ chapter_body_url = '/?pasteid=%s'
 class QidianComCrawler(Crawler):
     base_url = [
         'https://toc.qidianunderground.org/',
+        'https://tocqidianunderground.blogspot.com/'
     ]
 
     def __init__(self):
@@ -34,6 +35,7 @@ class QidianComCrawler(Crawler):
         if not hasattr(self, '_novel_list'):
             data = self.get_json(novel_list_url)
             self._novel_list = {x['ID']: x for x in data}
+        # end if
         return self._novel_list
 
     def search_novel(self, query):
@@ -56,6 +58,16 @@ class QidianComCrawler(Crawler):
         return list(sorted(results, key=lambda x: -x['score']))[:10]
 
     def read_novel_info(self):
+        if self.novel_url.startswith('https://tocqidianunderground'):
+            soup = self.get_soup(self.novel_url)
+            meta = soup.select_one('meta[property="og:title"]')
+            assert meta, 'No title found'
+            data = self.search_novel(meta['content'])
+            assert len(data) > 0, 'No such novel found'
+            self.novel_url = data[0]['url']
+        # end if
+
+
         novel_id = self.novel_url.split('/')[-2]
         self.novel_title = self.novel_list[novel_id]['Name']
 

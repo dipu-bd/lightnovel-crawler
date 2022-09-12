@@ -49,9 +49,9 @@ class MTLNation(Crawler):
     # end def
 
     def read_novel_info(self):
-        slug = urlparse(self.novel_url).path.split('/')[-1]
+        slug = urlparse(self.novel_url).path.rstrip('/').split('/')[-1]
         data = self.get_json(f'https://api.mtlnation.com/api/v2/novels/{slug}')
-
+        
         self.novel_title = data['data']['title']
         self.novel_author = data['data']['author']
         self.novel_cover = 'https://api.mtlnation.com/media/' + data['data']['cover']
