@@ -5,7 +5,7 @@ from lncrawl.core.crawler import Crawler
 import json
 
 logger = logging.getLogger(__name__)
-next_url = 'https://novelsala.com/_next/data/%s/en%s'
+data_url = 'https://novelsala.com/_next/data/%s/en%s'
 search_url = 'https://novelsala.com/search/?q=%s'
 
 graphql_url = 'https://novelsala.com/graphql'
@@ -18,18 +18,18 @@ class NovelSalaCrawler(Crawler):
     ]
 
     def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
+        query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
 
         results = []
-        for a in soup.select("a.cell-active"):
-            title = a.select_one(".body h3").text
-            info = a.select_one(".body span").text
+        for a in soup.select('a.cell-active'):
+            title = a.select_one('.body h3').text
+            info = a.select_one('.body span').text
             results.append(
                 {
-                    "title": title,
-                    "url": self.absolute_url(self.home_url.rstrip('/') + a["href"]),
-                    "info": info,
+                    'title': title,
+                    'url': self.home_url.rstrip('/') + a['href'],
+                    'info': info,
                 }
             )
 
@@ -49,40 +49,39 @@ class NovelSalaCrawler(Crawler):
         self.novel_cover = book_data['coverLg']
         self.novel_author = book_data['author']['name']
 
-        logger.info("Novel author: %s", self.novel_author)
+        logger.info('Novel author: %s', self.novel_author)
 
         slug = book_data['slug']
-        startChapNum = 1
+
         volume_chapters = (self.post_json(
                            graphql_url,
-                           data=graphql_body % (slug, startChapNum))
+                           data=graphql_body % (slug, 1))
                            ['data']['chapterListChunks'])
 
-        for vol_id, volume in enumerate(volume_chapters):
-            startChapNum = volume['startChapNum']
-
-            if vol_id != 0:
+        for vol_id, volume in enumerate(volume_chapters, 1):
+            if vol_id != 1:
                 volume = (self.post_json(
                           graphql_url,
-                          data=graphql_body % (slug, startChapNum))
-                          ['data']['chapterListChunks'])[vol_id]
+                          data=graphql_body % (slug, volume['startChapNum']))
+                          ['data']['chapterListChunks'])[vol_id - 1]
 
-            self.volumes.append({"id": vol_id + 1})
-            chaps = volume['items']
-            for chap in chaps:
+            self.volumes.append({'id': vol_id})
+
+            for chapter in volume['items']:
                 self.chapters.append(
                     {
-                        "id": chap['chapNum'],
-                        "volume": vol_id + 1,
-                        "title": f"Chapter {chap['chapNum']}: " + chap['title'],
-                        "url": self.home_url.rstrip('/') + chap['url'],
-                        "chapter_json_url": (next_url % (buildId, book_data['url'])
-                                             + f"chapter-{chap['chapNum']}.json"),
+                        'id': chapter['chapNum'],
+                        'volume': vol_id,
+                        'title': f'Chapter {chapter["chapNum"]}: '
+                                 + chapter['title'],
+                        'url': self.home_url.rstrip('/') + chapter['url'],
+                        'json_url': (data_url % (buildId, book_data['url'])
+                                     + f'chapter-{chapter["chapNum"]}.json'),
                     }
                 )
 
     def download_chapter_body(self, chapter):
-        chapter_json = self.get_json(chapter["chapter_json_url"])
+        chapter_json = self.get_json(chapter['json_url'])
         chapter_data = (chapter_json['pageProps']['relayData'][0][1]
                         ['data']['chapter2'])
 
