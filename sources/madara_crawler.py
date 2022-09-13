@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import logging
-
-logger = logging.getLogger(__name__)
 ajax_url = '%s/wp-admin/admin-ajax.php'
 search_url = '%s/?s=%s&post_type=wp-manga&author=&artist=&release='
 
@@ -46,15 +43,12 @@ def read_novel_info(self):
     if img_src:
         self.novel_cover = self.absolute_url(img_src['src'])
 
-    logger.info('Novel cover: %s', self.novel_cover)
-
     self.novel_author = ' '.join(
         [
             a.text.strip()
             for a in soup.select('.author-content a[href*="manga-author"]')
         ]
     )
-    logger.info('Author: %s', self.novel_author)
 
     clean_novel_url = self.novel_url.split('?')[0].strip('/')
     response = self.submit_form(f'{clean_novel_url}/ajax/chapters/')
@@ -93,9 +87,9 @@ def get_chapters_list(self, soup):
 
 
 def download_chapter_body(self, chapter):
-    logger.info('Visiting %s', chapter['url'])
     soup = self.get_soup(chapter['url'])
     contents = soup.select_one('div.reading-content')
+
     for img in contents.findAll('img'):
         if img.has_attr('data-src'):
             src_url = img['data-src']
