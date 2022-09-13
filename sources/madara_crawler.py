@@ -50,8 +50,8 @@ def read_novel_info(self):
         ]
     )
 
-    clean_novel_url = self.novel_url.split('?')[0].strip('/')
-    response = self.submit_form(f'{clean_novel_url}/ajax/chapters/')
+    clean_novel_url = self.novel_url.split('?')[0].rstrip('/')
+    response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
 
     soup = self.make_soup(response)
     get_chapters_list(self, soup)
