@@ -76,8 +76,9 @@ class NovelHunters(Crawler):
                                         vol_li,
                                         key=lambda x: int(re.search(
                                             r'\d+',
-                                            x.select_one('a').text).group()))):
-            self.volumes.append({'id': vol_id + 1})
+                                            x.select_one('a').text).group())),
+                                        1):
+            self.volumes.append({'id': vol_id})
 
             for a in reversed(volume.select(
                               '.wp-manga-chapter:not(.premium-block) a')):
@@ -85,7 +86,7 @@ class NovelHunters(Crawler):
 
                 self.chapters.append({
                     'id': chap_id,
-                    'volume': vol_id + 1,
+                    'volume': vol_id,
                     'title': a.text.strip(),
                     'url': self.absolute_url(a['href']),
                 })
