@@ -15,7 +15,7 @@ def decrypt_string(crypted_string):
                        list(crypted_string)))
 
 
-class SuperNovelCrawler(Crawler):
+class SecondLifeTransCrawler(Crawler):
     base_url = 'https://secondlifetranslations.com/'
 
     def read_novel_info(self):
