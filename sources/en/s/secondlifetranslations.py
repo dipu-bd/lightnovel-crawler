@@ -30,13 +30,12 @@ class SuperNovelCrawler(Crawler):
 
         logger.info('Novel cover: %s', self.novel_cover)
 
-        novelcontent = soup.select_one("novelcontent")
+        novelcontent = soup.select_one(".novelcontent")
         if novelcontent:
-            t = novelcontent.get_text(separator='\n', strip=True)
-            author = next(filter(lambda x: 'Author:' in x, t.split('\n')), '')
-            self.novel_author = author.replace('Author: ', '')
+            author_strong = novelcontent.find('strong', string='Author: ')
+            if author_strong and author_strong.next_sibling:
+                self.novel_author = author_strong.next_sibling
 
-        print(self.novel_author)
         logger.info('Novel author: %s', self.novel_author)
 
         for a in soup.select('.panel > form > div > div > a'):
