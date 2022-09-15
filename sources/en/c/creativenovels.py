@@ -145,7 +145,7 @@ class CreativeNovelsCrawler(Crawler):
             else:
                 span.name = 'p'
                 span.attrs = {}
-            #end if
+
         
 
         return self.cleaner.extract_contents(body)
