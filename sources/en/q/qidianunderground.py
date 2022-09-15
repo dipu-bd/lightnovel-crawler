@@ -65,15 +65,12 @@ class QidianComCrawler(Crawler):
             data = self.search_novel(meta['content'])
             assert len(data) > 0, 'No such novel found'
             self.novel_url = data[0]['url']
-        # end if
-
 
         novel_id = self.novel_url.split('/')[-2]
         self.novel_title = self.novel_list[novel_id]['Name']
 
         data = self.get_json(self.novel_url)
-        for i, item in enumerate(data):
-            vol_id = i + 1
+        for vol_id, item in enumerate(data, 1):
             start_ch, final_ch = re.findall(r'(\d+) - (\d+)', item['Text'])[0]
             self.volumes.append({
                 'id': vol_id,
