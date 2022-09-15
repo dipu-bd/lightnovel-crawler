@@ -117,8 +117,7 @@ class Crawler(ABC):
         headers.setdefault('host', urlparse(self.home_url).hostname)
         headers.setdefault('origin', self.home_url.strip('/'))
         headers.setdefault('referer', self.novel_url.strip('/'))
-
-        
+        kwargs['proxies'] = self.__generate_proxy(url)
 
         while retry >= 0:
             if len(self.new_proxies) > 0:
