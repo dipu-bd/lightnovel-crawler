@@ -53,6 +53,3 @@ class NovelhallCrawler(Crawler):
             ads.extract()
 
         return str(contents)
-
-
-

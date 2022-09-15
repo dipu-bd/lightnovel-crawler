@@ -86,9 +86,6 @@ class WordRain(Crawler):
                 }
             )
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
@@ -117,8 +114,5 @@ class WordRain(Crawler):
                     content.extract()
 
         return self.cleaner.extract_contents(contents)
-
-
-
 
 

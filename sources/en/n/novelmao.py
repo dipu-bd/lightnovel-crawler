@@ -101,6 +101,3 @@ class NovelMaoCrawler(Crawler):
             if txt in para:
                 return False
         return True
-
-
-

@@ -84,15 +84,9 @@ class MostNovel(Crawler):
                 }
             )
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.text-left')
         return self.cleaner.extract_contents(contents)
-
-
-
 
 

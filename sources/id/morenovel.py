@@ -95,6 +95,3 @@ class ListNovelCrawler(Crawler):
             comment.extract()
 
         return self.cleaner.extract_contents(contents)
-
-
-

@@ -100,9 +100,6 @@ class WordExcerptCrawler(Crawler):
                     'title': chapter.text.strip(),
                 })
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         # logger.debug(soup.title.string)

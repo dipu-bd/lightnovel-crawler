@@ -61,6 +61,3 @@ class AmericanFaux(Crawler):
         return self.cleaner.extract_contents(contents)
 
     
-
-
-

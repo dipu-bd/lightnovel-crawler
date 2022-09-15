@@ -63,9 +63,6 @@ class WuxiaOnlineCrawler(Crawler):
                 'url':  self.absolute_url(a['href']),
             })
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 

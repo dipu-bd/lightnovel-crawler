@@ -69,9 +69,6 @@ class NovelUpdatesCC(Crawler):
                 'title': a.select_one('p.chapter-name').text.strip() or ('Chapter %d' % chap_id),
             })
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 

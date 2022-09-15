@@ -87,6 +87,3 @@ class NeoSekaiCrawler(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
         return self.cleaner.extract_contents(contents)
-
-
-

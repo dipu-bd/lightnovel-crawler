@@ -83,6 +83,3 @@ class AncientHeartloss(Crawler):
         return self.cleaner.extract_contents(body_parts)
 
     
-
-
-

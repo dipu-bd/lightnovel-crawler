@@ -126,9 +126,6 @@ class LNMTLCrawler(Crawler):
                 chap['volume'] = volume['id']
                 self.chapters.append(chap)
 
-
-
-
     def download_chapters_per_volume(self, volume, page=1):
         url = self.absolute_url(
             '/chapter?page=%s&volumeId=%s' % (page, volume['download_id'])
@@ -172,6 +169,3 @@ class LNMTLCrawler(Crawler):
         text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
         text = re.sub(r'[ ]*,[ ]+', ', ', text)
         return text.strip()
-
-
-

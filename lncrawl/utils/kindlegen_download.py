@@ -28,9 +28,6 @@ def get_url_by_platform():
     else:
         raise LNException('Unrecognized platform')
 
-
-
-
 def extract_kindlegen_file(extractor, file_list):
     logger.debug(file_list)
     home = os.path.expanduser('~')
@@ -45,9 +42,6 @@ def extract_kindlegen_file(extractor, file_list):
         logger.info('Renamed kindlegen.exe to kindlegen')
     else:
         raise LNException('Kindlegen executable was not found.')
-
-
-
 
 def download_kindlegen():
     # Download the file
@@ -77,9 +71,6 @@ def download_kindlegen():
         finally:
             os.remove(temp_file)
             logger.info('%s removed.', temp_file)
-
-
-
 
 
 def retrieve_kindlegen():

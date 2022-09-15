@@ -103,9 +103,6 @@ class WebnovelCrawler(Crawler):
             if chap_id == '-1':
                 break
 
-
-
-
     def get_chapter_index_of(self, url):
         if not url:
             return 0

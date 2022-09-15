@@ -54,9 +54,6 @@ class OppaTranslationsCrawler(Crawler):
                     'url':  self.absolute_url(a['href']),
                 })
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.entry-content')
@@ -70,6 +67,3 @@ class OppaTranslationsCrawler(Crawler):
 
         return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]',
                       '', str(contents), flags=re.UNICODE)
-
-
-

@@ -78,9 +78,6 @@ class MtlnovelCrawler(Crawler):
                     'title': chapter['no'] + " " + chapter['title'],
                 })
 
-
-
-
     def download_chapter_body(self, chapter):
         url = chapter['url'].replace('https://', 'http://')
         logger.info('Downloading %s', url)

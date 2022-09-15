@@ -62,9 +62,6 @@ class TomoTransCrawler(Crawler):
                 else:
                     body += str(tag)
 
-
-
-
         return body
 
 

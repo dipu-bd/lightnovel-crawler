@@ -91,6 +91,3 @@ class GreensiaCrawler(Crawler):
         body = soup.select_one('.post-body')
         assert isinstance(body, Tag)
         return self.cleaner.extract_contents(body)
-
-
-

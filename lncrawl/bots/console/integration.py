@@ -97,9 +97,6 @@ def start(self):
             if not (self.search_mode and self.confirm_retry()):
                 raise e
 
-
-
-
     self.app.start_download()
     self.app.bind_books()
     self.app.compress_books()

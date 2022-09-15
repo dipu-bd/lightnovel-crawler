@@ -123,9 +123,6 @@ class ReadWNCrawler(Crawler):
                     'title': a.select_one('.chapter-title').text.strip(),
                 })
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.chapter-content')

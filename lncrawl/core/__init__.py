@@ -72,9 +72,6 @@ def init():
     # requests.urllib3.disable_warnings(
     #     requests.urllib3.exceptions.InsecureRequestWarning)
 
-
-
-
 def start_app():
     init()
 
@@ -111,6 +108,3 @@ def start_app():
             pass
         except EOFError:
             pass
-
-
-

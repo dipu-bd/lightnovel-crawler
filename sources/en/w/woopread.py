@@ -93,6 +93,3 @@ class WoopReadCrawler(Crawler):
         return self.cleaner.extract_contents(contents)
 
 
-
-
-

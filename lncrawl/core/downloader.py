@@ -125,9 +125,6 @@ def save_chapter_body(app, chapter):
     with open(file_name, 'w', encoding="utf-8") as file:
         file.write(json.dumps(chapter, ensure_ascii=False))
 
-
-
-
 def download_chapter_body(app, chapter):
     assert isinstance(chapter, dict)
     from .app import App
@@ -164,9 +161,6 @@ def download_chapter_body(app, chapter):
         save_chapter_body(app, chapter)
         app.progress += 1
 
-
-
-
 def download_chapters(app):
     from .app import App
     assert isinstance(app, App)
@@ -190,9 +184,6 @@ def download_chapters(app):
         resolve_all_futures(futures_to_check, desc='Chapters', unit='item')
     finally:
         logger.info('Processed %d chapters' % app.progress)
-
-
-
 
 def download_image(app, url) -> Image.Image:
     from .app import App
@@ -266,9 +257,6 @@ def download_content_image(app, url, filename, image_folder):
         return f"[{filename}] Failed to get content image: {url} | {e.__class__.__name__}: {e}"
     finally:
         app.progress += 1
-
-
-
 
 def discard_failed_images(app, chapter, failed):
     from .app import App

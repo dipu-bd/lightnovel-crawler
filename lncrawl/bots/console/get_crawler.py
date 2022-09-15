@@ -42,9 +42,6 @@ def get_novel_url(self):
     except Exception:
         raise LNException('Novel page url or query was not given')
 
-
-
-
 def get_crawlers_to_search(self) -> List[str]:
     '''Returns user choice to search the choosen sites for a novel'''
     links = self.app.crawler_links

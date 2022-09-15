@@ -87,6 +87,3 @@ class BroNovel(Crawler):
         return self.cleaner.extract_contents(contents)
 
     
-
-
-

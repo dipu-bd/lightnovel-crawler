@@ -104,6 +104,3 @@ class VolareNovelsCrawler(Crawler):
         return str(content)
 
 
-
-
-

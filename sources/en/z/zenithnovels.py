@@ -87,9 +87,6 @@ class ZenithNovelsCrawler(Crawler):
                 if len(p.strip()):
                     body += '<p>%s</p>' % p
 
-
-
-
         return body
 
 

@@ -30,9 +30,6 @@ def run_ebook_convert(*args):
 
         return False
 
-
-
-
 def epub_to_calibre(app, epub_file, out_fmt):
     if not os.path.exists(epub_file):
         return None
@@ -82,9 +79,6 @@ def epub_to_calibre(app, epub_file, out_fmt):
     else:
         logger.error('[%s] conversion failed: %s', out_fmt, epub_file_name)
         return None
-
-
-
 
 def make_calibres(app, epubs, out_fmt):
     if out_fmt == 'epub' or not epubs:

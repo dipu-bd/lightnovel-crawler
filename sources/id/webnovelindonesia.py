@@ -60,9 +60,6 @@ class WebnovelIndonesia(Crawler):
                 chap['id'] = 1 + len(self.chapters)
                 self.chapters.append(chap)
 
-
-
-
     def extract_chapter_list(self, url):
         temp_list = []
         logger.debug('Visiting: %s', url)

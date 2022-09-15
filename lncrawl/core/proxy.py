@@ -86,9 +86,6 @@ def remove_faulty_proxies(faulty_url: str):
     if faulty_url and not __is_private_proxy[faulty_url]:
         __proxy_use_count[faulty_url] = __max_use_per_proxy + 1
 
-
-
-
 def wait_for_first_proxy(scheme: str, timeout: int = 0):
     if timeout <= 0:
         timeout = 10 * 60
@@ -100,9 +97,6 @@ def wait_for_first_proxy(scheme: str, timeout: int = 0):
                 return True
         time.sleep(0.1)
         elapsed += 0.1
-
-
-
 
 def __validate_and_add(scheme: str, ip: str, url: str):
     try:
@@ -125,9 +119,6 @@ def __validate_and_add(scheme: str, ip: str, url: str):
     except RequestException as e:
         # print(url, e)
         pass
-
-
-
 
 def __get_free_proxy_list(url):
     with no_ssl_verification():
@@ -186,9 +177,6 @@ def __find_proxies():
         except Exception as e:
             logger.debug('Failed to update proxy list', e)
             stop_proxy_fetcher()
-
-
-
 
 
 def start_proxy_fetcher():

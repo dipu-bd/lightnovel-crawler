@@ -31,9 +31,6 @@ class TruenFull(Crawler):
         else:
             return (getattr(possible_item, 'text') or '').strip()
 
-
-
-
     def search_novel(self, query):
         soup = self.get_soup(search_url % quote(query))
 

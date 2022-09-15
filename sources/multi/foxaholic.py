@@ -130,6 +130,3 @@ class FoxaholicCrawler(Crawler):
             headers={'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'},
         )
         return response.content
-
-
-

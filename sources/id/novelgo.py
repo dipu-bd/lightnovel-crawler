@@ -88,9 +88,6 @@ class NovelGoCrawler(Crawler):
                 'title': chapter['post_title'] or ('Chapter %d' % chap_id),
             })
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('#chapter-post-content p')

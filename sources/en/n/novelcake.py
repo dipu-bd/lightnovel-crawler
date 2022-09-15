@@ -76,9 +76,6 @@ class NovelCake(Crawler):
                 }
             )
 
-
-
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.reading-content p')

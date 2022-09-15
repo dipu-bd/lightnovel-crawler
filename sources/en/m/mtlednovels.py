@@ -111,9 +111,6 @@ class MtledNovelsCrawler(Crawler):
                 if isinstance(span, Tag):
                     span.unwrap()
 
-
-
-
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
 

@@ -71,6 +71,3 @@ class KiteNovel(Crawler):
         return self.cleaner.extract_contents(contents)
 
     
-
-
-
