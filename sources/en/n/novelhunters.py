@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import quote_plus
 
 from lncrawl.core.crawler import Crawler
+import re
 
 logger = logging.getLogger(__name__)
-search_url = 'https://www.novelhunters.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult='
+search_url = 'https://www.novelhunters.com/?s=%s&post_type=wp-manga'
 post_chapter_url = 'https://www.novelhunters.com/wp-admin/admin-ajax.php'
 
 
@@ -17,9 +15,7 @@ class NovelHunters(Crawler):
 
     def initialize(self):
         self.executor = ThreadPoolExecutor(max_workers=7)
-    # end def
 
-    # NOTE: Site search doesn't work. So this won't work.
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
@@ -34,10 +30,8 @@ class NovelHunters(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
-        # end for
 
         return results
-    # end def
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -76,20 +70,26 @@ class NovelHunters(Crawler):
             'manga': int(self.novel_id)
         })
         soup = self.make_soup(response)
-        for a in reversed(soup.select('.wp-manga-chapter > a')):
-            chap_id = len(self.chapters) + 1
-            vol_id = chap_id // 100 + 1
-            if len(self.chapters) % 100 == 0:
-                self.volumes.append({'id': vol_id})
-            # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
-            })
-        # end for
-    # end def
+        vol_li = soup.select('.listing-chapters_wrap > ul > li')
+
+        for vol_id, volume in enumerate(sorted(
+                                        vol_li,
+                                        key=lambda x: int(re.search(
+                                            r'\d+',
+                                            x.select_one('a').text).group())),
+                                        1):
+            self.volumes.append({'id': vol_id})
+
+            for a in reversed(volume.select(
+                              '.wp-manga-chapter:not(.premium-block) a')):
+                chap_id = 1 + len(self.chapters)
+
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'title': a.text.strip(),
+                    'url': self.absolute_url(a['href']),
+                })
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -105,5 +105,3 @@ class NovelHunters(Crawler):
                     content.extract()
 
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
