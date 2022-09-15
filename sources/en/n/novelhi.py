@@ -9,7 +9,7 @@ search_url = '%s/book/searchByPageInShelf?curr=1&limit=10&keyword=%s'
 fetch_chapter_list_url = '%s/book/queryIndexList?bookId=%s&curr=1&limit=50000'
 fetch_chapter_body_url = '%s/book/queryBookIndexContent?bookId=%s&bookIndexId=%s&autoUnlock=false'
 
-class BoxNovelCrawler(Crawler):
+class NovelHiCrawler(Crawler):
     base_url = [
         'https://novelhi.com/',
     ]
