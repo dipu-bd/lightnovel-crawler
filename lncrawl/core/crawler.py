@@ -93,15 +93,19 @@ class Crawler(ABC):
 
         # Setup an automatic proxy switcher
         self.enable_auto_proxy = False
-        self.new_proxies = []
+        self.user_proxies = []
     # end def
 
-    def __generate_proxy(self, url, timeout:int = 0):
+    def __generate_proxy(self, url, timeout: int = 0):
         if not self.enable_auto_proxy or not url:
             return None
         # end if
-        scheme = urlparse(self.home_url).scheme
-        return { scheme: get_a_proxy(scheme, timeout) }
+        if not self.user_proxies: # Get a free proxy
+            scheme = urlparse(self.home_url).scheme
+            return { scheme: get_a_proxy(scheme, timeout) }
+        # end if
+        host, port, user, pass = random.choice(self.user_proxies).split(":")
+        return { scheme: f'{scheme}://{host}:{port}@{user}:{pass}' }
     # end def
 
     def __process_request(self, method: str, url, **kwargs):
@@ -120,11 +124,6 @@ class Crawler(ABC):
         kwargs['proxies'] = self.__generate_proxy(url)
 
         while retry >= 0:
-            if len(self.new_proxies) > 0:
-                random_split_proxy = random.choice(self.new_proxies).split(":")
-                proxy_to_use = f'http://{random_split_proxy[2]}:{random_split_proxy[3]}@{random_split_proxy[0]}:{random_split_proxy[1]}'
-                proxies  = {'http':proxy_to_use, 'https':proxy_to_use}
-                kwargs['proxies'] = proxies
             if self._destroyed:
                 raise LNException('Instance is detroyed')
             # end if
@@ -155,8 +154,7 @@ class Crawler(ABC):
                     # end for
                 # end if
                 if retry != 0: # do not use proxy on last attemp
-                    if len(self.new_proxies) == 0: #Use free proxies if no proxy provided
-                        kwargs['proxies'] = self.__generate_proxy(url, 5)
+                    kwargs['proxies'] = self.__generate_proxy(url, 5)
                 # end if
             # end try
         # end while
