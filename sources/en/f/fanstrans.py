@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import logging
-
+from bs4 import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
+search_url = (
+    "https://fanstranslations.com/?post_type=wp-manga&s=%s"
+)
+wp_admin_ajax_url = 'https://fanstranslations.com/wp-admin/admin-ajax.php'
 
 
-class FansTranslations(Crawler):
-    base_url = 'https://fanstranslations.com/'
-
-    def initialize(self) -> None:
+def initialize(self) -> None:
         self.cleaner.blacklist_patterns.update([
             r'^Translator Thoughts:',
             r'^Please leave some comments to show your support~',
@@ -30,54 +31,90 @@ class FansTranslations(Crawler):
         self.cleaner.bad_tags.update(['a'])
     # end def
 
-    def read_novel_info(self):
-        logger.debug('Visiting %s', self.novel_url)
-        soup = self.get_soup(self.novel_url)
+class FansTranslations(Crawler):
+    base_url = 'https://fanstranslations.com/'
 
-        possible_title = soup.select_one('h1.page-header-title')
-        assert possible_title, 'No novel title'
-        self.novel_title = possible_title.text.strip()
-        logger.info('Novel title: %s', self.novel_title)
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(['h3', 'script'])
+        self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
+    # end def
+    
+    def search_novel(self, query):
+        query = query.lower().replace(" ", "+")
+        soup = self.get_soup(search_url % query)
 
-        possible_image = soup.select_one('#editdescription p span img')
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image['src'])
-        logger.info('Novel cover: %s', self.novel_cover)
-
-        self.novel_author = "by Fans Translations"
-        logger.info('Novel author: %s', self.novel_author)
-
-        # Extract volume-wise chapter entries
-        chapters = soup.select('div.entry div a[href*="fanstranslations.com"]')
-
-        vols = set([])
-        for a in chapters:
-            chap_id = len(self.chapters) + 1
-            vol_id = len(self.chapters)//100 + 1
-            vols.add(vol_id)
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip(),
-            })
+        results = []
+        for tab in soup.select(".c-tabs-item__content"):
+            a = tab.select_one(".post-title h3 a")
+            latest = tab.select_one(".latest-chap .chapter a").text
+            votes = tab.select_one(".rating .total_votes").text
+            results.append(
+                {
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                    "info": "%s | Rating: %s" % (latest, votes),
+                }
+            )
         # end for
 
-        self.volumes = [{'id': x} for x in vols]
+        return results
     # end def
 
+    def read_novel_info(self):
+        logger.debug("Visiting %s", self.novel_url)
+        soup = self.get_soup(self.novel_url)
+
+        possible_title = soup.select_one(".post-title h1")
+        for span in possible_title.select("span"):
+            span.extract()
+        # end for
+        self.novel_title = possible_title.text.strip()
+        logger.info("Novel title: %s", self.novel_title)
+        
+        img_src = soup.select_one(".summary_image a img")
+        
+        if img_src:
+            self.novel_cover = self.absolute_url(img_src["src"])
+        # end if
+        
+        logger.info("Novel cover: %s", self.novel_cover)
+
+        self.novel_author = " ".join(
+            [
+                a.text.strip()
+                for a in soup.select('.author-content a[href*="novel-author"]')
+            ]
+        )
+        logger.info("%s", self.novel_author)
+
+        possible_novel_id = soup.select_one("#manga-chapters-holder")
+        assert isinstance(possible_novel_id, Tag), 'No novel id'
+        self.novel_id = possible_novel_id["data-id"]
+        logger.info("Novel id: %s", self.novel_id)
+
+        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
+        soup = self.make_soup(response)
+        for a in reversed(soup.select("li.wp-manga-chapter a")):
+            chap_id = len(self.chapters) + 1
+            vol_id = 1 + len(self.chapters) // 100
+            if chap_id % 100 == 1:
+                self.volumes.append({"id": vol_id})
+            # end if
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                }
+            )
+        # end for
+    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        body_parts = soup.select_one('.site-content .entry-content')
-
-        # TODO: Can't remove some junk text because it contains &#160; and I can't find a way to remove it.
-
-        for content in body_parts.select("p"):
-            for bad in ["&#160;And", "Support on", "and Join", "<span>And</span>"]:
-                if bad in content.text:
-                    content.extract()
-
-        return self.cleaner.extract_contents(body_parts)
+        contents = soup.select_one('div.text-left')
+        assert isinstance(contents, Tag), 'No contents'
+        return self.cleaner.extract_contents(contents)
     # end def
 # end class
