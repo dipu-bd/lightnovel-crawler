@@ -30,7 +30,7 @@ class WuxiaComCrawler(Crawler):
         logger.debug('Novel slug: %s', slug)
 
         response = self.grpc.request(
-            'https://api.wuxiaworld.com/wuxiaworld.api.v2.Novels/GetNovel',
+            'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Novels/GetNovel',
             {'slug': slug},
             headers={ 'authorization': self.bearer_token, }
         )
@@ -56,7 +56,7 @@ class WuxiaComCrawler(Crawler):
         advance_chapter_allowed = 0;
         try:
             response = self.grpc.request(
-                'https://api.wuxiaworld.com/wuxiaworld.api.v2.Subscriptions/GetSubscriptions',
+                'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Subscriptions/GetSubscriptions',
                 {'novelId': novel['id']},
                 headers={ 'authorization': self.bearer_token, }
             )
@@ -76,7 +76,7 @@ class WuxiaComCrawler(Crawler):
         # end try
 
         response = self.grpc.request(
-            'https://api.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapterList',
+            'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapterList',
             {'novelId': novel['id']},
             headers={ 'authorization': self.bearer_token, }
         )
@@ -116,7 +116,7 @@ class WuxiaComCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         response = self.grpc.request(
-            'https://api.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapter',
+            'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapter',
             {'chapterProperty': {'chapterId': chapter['entityId']}},
             headers={ 'authorization': self.bearer_token, }
         )
