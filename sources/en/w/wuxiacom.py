@@ -8,6 +8,8 @@ from pyease_grpc import RpcSession
 
 logger = logging.getLogger(__name__)
 
+api_home = 'https://api2.wuxiaworld.com'
+
 
 class WuxiaComCrawler(Crawler):
     base_url = ['https://www.wuxiaworld.com/']
@@ -27,7 +29,7 @@ class WuxiaComCrawler(Crawler):
         logger.debug('Novel slug: %s', slug)
 
         response = self.grpc.request(
-            'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Novels/GetNovel',
+            f'{api_home}/wuxiaworld.api.v2.Novels/GetNovel',
             {'slug': slug},
             headers={'authorization': self.bearer_token, }
         )
@@ -49,11 +51,11 @@ class WuxiaComCrawler(Crawler):
         ])
         logger.info('Novel author = %s', self.novel_author)
 
-        is_vip = False
+        # is_vip = False
         advance_chapter_allowed = 0
         try:
             response = self.grpc.request(
-                'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Subscriptions/GetSubscriptions',
+                f'{api_home}/wuxiaworld.api.v2.Subscriptions/GetSubscriptions',
                 {'novelId': novel['id']},
                 headers={'authorization': self.bearer_token, }
             )
@@ -63,15 +65,16 @@ class WuxiaComCrawler(Crawler):
             logger.debug('User subscriptions: %s', subscriptions)
             for subscription in subscriptions:
                 if 'sponsor' in subscription['plan']:
-                    advance_chapter_allowed = subscription['plan']['sponsor']['advanceChapterCount']
-                elif 'vip' in subscription['plan']:
-                    is_vip = subscription['plan']['vip']['enabled']
+                    advance_chapter_allowed = (subscription['plan']['sponsor']
+                                               ['advanceChapterCount'])
+            #    elif 'vip' in subscription['plan']:
+            #        is_vip = subscription['plan']['vip']['enabled']
 
         except Exception as e:
             logger.debug('Failed to acquire subscription details', e)
 
         response = self.grpc.request(
-            'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapterList',
+            f'{api_home}/wuxiaworld.api.v2.Chapters/GetChapterList',
             {'novelId': novel['id']},
             headers={'authorization': self.bearer_token, }
         )
@@ -91,8 +94,11 @@ class WuxiaComCrawler(Crawler):
                 if not chap['visible']:
                     continue
 
-                if not chap['pricingInfo']['isFree'] and chap['sponsorInfo']['advanceChapter']:
-                    if chap['sponsorInfo']['advanceChapterNumber'] > advance_chapter_allowed:
+                isFree = chap['pricingInfo']['isFree']
+
+                if not isFree and chap['sponsorInfo']['advanceChapter']:
+                    advChapNum = chap['sponsorInfo']['advanceChapterNumber']
+                    if advChapNum > advance_chapter_allowed:
                         continue
 
                 if chap['spoilerTitle']:
@@ -109,7 +115,7 @@ class WuxiaComCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         response = self.grpc.request(
-            'https://api2.wuxiaworld.com/wuxiaworld.api.v2.Chapters/GetChapter',
+            f'{api_home}/wuxiaworld.api.v2.Chapters/GetChapter',
             {'chapterProperty': {'chapterId': chapter['entityId']}},
             headers={'authorization': self.bearer_token, }
         )
