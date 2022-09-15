@@ -3,6 +3,7 @@
 Crawler application
 """
 import logging
+import os
 import random
 import ssl
 from abc import ABC, abstractmethod
@@ -92,20 +93,16 @@ class Crawler(ABC):
         self.last_visited_url = None
 
         # Setup an automatic proxy switcher
-        self.enable_auto_proxy = False
-        self.user_proxies = []
+        self.enable_auto_proxy = os.getenv('use_proxy') == '1'
     # end def
 
     def __generate_proxy(self, url, timeout: int = 0):
         if not self.enable_auto_proxy or not url:
             return None
         # end if
-        if not self.user_proxies: # Get a free proxy
-            scheme = urlparse(self.home_url).scheme
-            return { scheme: get_a_proxy(scheme, timeout) }
-        # end if
-        host, port, user, pass = random.choice(self.user_proxies).split(":")
-        return { scheme: f'{scheme}://{host}:{port}@{user}:{pass}' }
+        scheme = urlparse(self.home_url).scheme
+        proxy = { scheme: get_a_proxy(scheme, timeout) }
+        return proxy
     # end def
 
     def __process_request(self, method: str, url, **kwargs):

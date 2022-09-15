@@ -15,7 +15,7 @@ from ..bots import run_bot
 from .arguments import get_args
 from .display import (cancel_method, debug_mode, description, error_message,
                       input_suppression)
-from .proxy import start_proxy_fetcher, stop_proxy_fetcher
+from .proxy import start_proxy_fetcher, stop_proxy_fetcher, load_proxies
 from .sources import load_sources
 
 logger = logging.getLogger(__name__)
@@ -82,7 +82,12 @@ def start_app():
     cancel_method()
 
     args = get_args()
+    if args.proxy_file:
+        os.environ['use_proxy'] = '1'
+        load_proxies(args.proxy_file)
+    # end if
     if args.auto_proxy:
+        os.environ['use_proxy'] = '1'
         start_proxy_fetcher()
     # end if
 
