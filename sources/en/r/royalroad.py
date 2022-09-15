@@ -25,10 +25,10 @@ class RoyalRoadCrawler(Crawler):
                 'url': url,
                 'title': a.text.strip(),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -53,15 +53,15 @@ class RoyalRoadCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': self.absolute_url(x['href']),
                 'title': x.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -69,10 +69,10 @@ class RoyalRoadCrawler(Crawler):
         possible_title = soup.select_one('h2')
         if possible_title and 'Chapter' in possible_title.text:
             chapter['title'] = possible_title.text.strip()
-        # end if
+
 
         contents = soup.select_one('.chapter-content')
         self.cleaner.clean_contents(contents)
         return str(contents)
-    # end def
-# end class
+
+

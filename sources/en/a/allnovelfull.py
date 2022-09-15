@@ -22,17 +22,17 @@ class AllNovelFullCrawler(Crawler):
             a = div.select_one('.truyen-title a')
             if not isinstance(a, Tag):
                 continue
-            # end if
+
             info = div.select_one('.text-info .chapter-text')
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
                 'info': info.text.strip() if info else '',
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -60,19 +60,19 @@ class AllNovelFullCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': opt.text,
                 'url': self.absolute_url(opt['value']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('div#chapter-content')
         return self.cleaner.extract_contents(content)
-    # end def
-# end class
+    
+

@@ -14,7 +14,7 @@ class TotallyTranslations(Crawler):
 
     def initialize(self):
         self.scraper = Session()
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -47,13 +47,13 @@ class TotallyTranslations(Crawler):
                     'title': a.text.strip(),
                     'url':  self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
-    # end def
+
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         paras = soup.select('.post-content p')
         return '\n'.join([str(p) for p in paras if p.text.strip()])
-    # end def
-# end class
+
+

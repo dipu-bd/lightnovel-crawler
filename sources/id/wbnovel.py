@@ -25,10 +25,10 @@ class WBNovelCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -71,15 +71,15 @@ class WBNovelCrawler(Crawler):
                     'id': vol_id,
                     'title': vol_title,
                 })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -101,5 +101,5 @@ class WBNovelCrawler(Crawler):
             codeblock.extract()
 
         return str(contents)
-    # end def
-# end class
+
+

@@ -43,15 +43,15 @@ class NovelPlanetCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': self.absolute_url(x.find('a')['href']),
                 'title': x.find('a')['title'] or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -61,7 +61,7 @@ class NovelPlanetCrawler(Crawler):
             chapter['title'] = possible_title.text.strip()
         else:
             chapter['title'] = str(chapter['title']).replace('Read Novel ', '')
-        # end if
+
 
         contents = soup.select_one('#divReadContent')
         assert contents, 'No chapter contents'
@@ -76,5 +76,5 @@ class NovelPlanetCrawler(Crawler):
         #    for p in content.select('p')
         #    if p.text.strip()
         # ])
-    # end def
-# end class
+
+

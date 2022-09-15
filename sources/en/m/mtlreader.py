@@ -25,7 +25,7 @@ class MtlReaderCrawler(Crawler):
         form_data = {}
         for input in soup.select('form[action$="/search"] input'):
             form_data[input['name']] = input.get('value', '')
-        # end for
+
         form_data['input'] = quote(query)
         logger.debug('Form data: %s', form_data)
 
@@ -43,10 +43,10 @@ class MtlReaderCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': info.text.strip() if info else '',
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -59,14 +59,14 @@ class MtlReaderCrawler(Crawler):
         novel_image_elem = soup.select_one('meta[property="og:image"]')
         if isinstance(novel_image_elem, Tag):
             self.novel_cover = self.absolute_url(novel_image_elem['content'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         possible_author = soup.select_one('.agent-p-contact .fa.fa-user')
         if isinstance(possible_author, Tag) and isinstance(possible_author.parent, Tag):
             self.novel_author = possible_author.parent.text.strip()
             self.novel_author = re.sub(r'Author[: ]+', '', self.novel_author)
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         for a in soup.select('table td a[href*="/chapters/"]'):
@@ -74,7 +74,7 @@ class MtlReaderCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             chap_title = re.sub(r'^(\d+[\s:\-]+)', '', a.text.strip())
             self.chapters.append({
                 'id': chap_id,
@@ -82,8 +82,8 @@ class MtlReaderCrawler(Crawler):
                 'title': chap_title,
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         self.get_response(chapter['url'])
@@ -102,5 +102,5 @@ class MtlReaderCrawler(Crawler):
         })
         text = re.sub('([\r\n]?<br>[\r\n]?)+', '\n\n', response.json())
         return '\n'.join(['<p>' + x.strip() + '</p>' for x in text.split('\n\n')])
-    # end def
-# end class
+
+

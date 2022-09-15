@@ -44,9 +44,9 @@ class NovelMaoCrawler(Crawler):
             possible_image = soup.select_one('article .kn-img amp-img')
             if isinstance(possible_image, Tag):
                 self.novel_cover = possible_image['src']
-            # end if
+
             logger.info('Novel cover = %s', self.novel_cover)
-        # end try
+
 
         current_page = 0
         temp_chapters = []
@@ -67,7 +67,7 @@ class NovelMaoCrawler(Crawler):
             has_more_pages = data['hasMorePages'] == 1
             temp_chapters += data['items']
             current_page += 1
-        # end for
+
 
         for item in reversed(temp_chapters):
             chap_id = 1 + len(self.chapters)
@@ -81,8 +81,8 @@ class NovelMaoCrawler(Crawler):
                 'title': item['title'],
                 'url': item['permalink']
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -91,7 +91,7 @@ class NovelMaoCrawler(Crawler):
             str(p) for p in paras
             if self.filter_para(p.text.strip())
         ])
-    # end def
+
 
     def filter_para(self, para):
         bad_texts = [
@@ -101,6 +101,6 @@ class NovelMaoCrawler(Crawler):
             if txt in para:
                 return False
         return True
-    # end def
 
-# end class
+
+

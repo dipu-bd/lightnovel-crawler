@@ -32,7 +32,7 @@ class FreeLightNovel(Crawler):
             match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
             if len(match) == 1:
                 chap_id = int(match[0][1])
-            # end if
+
 
             self.chapters.append({
                 'volume': 1,
@@ -40,8 +40,8 @@ class FreeLightNovel(Crawler):
                 'title': title,
                 'url':  self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         logger.debug('Visiting %s', chapter['url'])
@@ -54,5 +54,4 @@ class FreeLightNovel(Crawler):
             str(p) for p in content.select('p')
             if len(p.text.strip()) > 1
         ])
-    # end def
-# end class
+    

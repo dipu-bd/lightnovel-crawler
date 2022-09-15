@@ -18,7 +18,7 @@ class JpmtlCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://jpmtl.com'
-    # end def
+    
 
     def read_novel_info(self):
         self.novel_id = self.novel_url.split('/')[-1]
@@ -36,7 +36,7 @@ class JpmtlCrawler(Crawler):
         possible_image = soup.select_one('.book-sidebar__img img')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end try
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = soup.select_one(
@@ -59,9 +59,9 @@ class JpmtlCrawler(Crawler):
                     'url':  self.absolute_url(self.novel_url+'/'+str(chapter['id'])),
                     'title': chapter['title'] or ('Chapter %d' % chap_id),
                 })
-            # end for
-        # end for
-    # end def
+            
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -71,5 +71,5 @@ class JpmtlCrawler(Crawler):
         body = [str(p) for p in contents if p.text.strip()]
 
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-# end class
+    
+

@@ -27,7 +27,7 @@ class RanobeLibCrawler(Crawler):
         novel_link = soup.select_one("a[href*=author]")
         if novel_link:
             self.novel_author = novel_link.text.strip().title()
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.select('.chapter-item')
@@ -45,7 +45,7 @@ class RanobeLibCrawler(Crawler):
             if not chapter_title:
                 chapter_title = 'Том %d. Глава %d' % (
                     int(vol_id), int(a['data-number']))
-            # end if
+
 
             self.chapters.append({
                 'id': chap_id,
@@ -53,14 +53,14 @@ class RanobeLibCrawler(Crawler):
                 'url':  self.absolute_url(link['href']),
                 'title': chapter_title,
             })
-        # end for
+        
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         div = soup.select_one('.reader-container')
         return self.cleaner.extract_contents(div)
-    # end def
-# end class
+    
+

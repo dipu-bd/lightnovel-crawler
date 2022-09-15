@@ -42,15 +42,15 @@ class WuxiaSiteCo(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': 'Chapter %d' % chap_id,
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -60,11 +60,11 @@ class WuxiaSiteCo(Crawler):
 
         for bad in contents.select('p[style="display: none"], script, ins'):
             bad.extract()
-        # end for
+
 
         return '\n'.join([
             str(p) for p in contents.select('p')
             if p.text.strip()
         ])
-    # end def
-# end class
+
+

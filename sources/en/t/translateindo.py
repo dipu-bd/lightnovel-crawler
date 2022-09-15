@@ -25,10 +25,10 @@ class TranslateIndoCrawler(Crawler):
     #            'url': item['permalink'],
     #            'title': item['post_title'],
     #        })
-    #    # end for
+
 
     #    return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -42,7 +42,7 @@ class TranslateIndoCrawler(Crawler):
         possible_image = soup.select_one('div.entry-content img')['src']
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image)
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         for span in soup.select('div.entry-content p span'):
@@ -52,8 +52,8 @@ class TranslateIndoCrawler(Crawler):
                 possible_author = re.sub('Author:', '', possible_author)
                 self.novel_author = possible_author.strip()
                 break
-            # end if
-        # end for
+
+
         logger.info('Novel author: %s', self.novel_author)
 
         for div in soup.select('.cl-lists .cl-block'):
@@ -76,9 +76,9 @@ class TranslateIndoCrawler(Crawler):
                     'url':  self.absolute_url(a['href']),
                     'title': a.text.strip() or ('Chapter %d' % chap_id),
                 })
-            # end for
-        # end for
-    # end def
+
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -87,5 +87,5 @@ class TranslateIndoCrawler(Crawler):
 
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-# end class
+
+

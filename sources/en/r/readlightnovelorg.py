@@ -27,13 +27,13 @@ class ReadLightNovelCrawler(Crawler):
         possible_image = soup.find('img', {'alt': self.novel_title})
         if isinstance(possible_image, Tag):
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
         
         author_link = soup.select_one("a[href*=author]")
         if isinstance(author_link, Tag):
             self.novel_author = author_link.text.strip().title()
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         volume_ids = set()
@@ -47,10 +47,10 @@ class ReadLightNovelCrawler(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+
 
         self.volumes = [{'id': i} for i in volume_ids]
-    # end def
+
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update([
@@ -80,8 +80,8 @@ class ReadLightNovelCrawler(Crawler):
         possible_title = div.select_one('h3')
         if isinstance(possible_title, Tag):
             chapter['title'] = possible_title.text.strip()
-        # end if
+
 
         return self.cleaner.extract_contents(div)
-    # end def
-# end class
+
+

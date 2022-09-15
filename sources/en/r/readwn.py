@@ -16,7 +16,7 @@ class ReadWNCrawler(Crawler):
 
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
-    # end def
+
 
     def search_novel(self, query):
         '''Search for a novel and return the search results.'''
@@ -24,13 +24,13 @@ class ReadWNCrawler(Crawler):
         form = soup.select_one('.search-container form[method="post"]')
         if not form:
             return []
-        # end if
+
 
         payload = {}
         url = self.absolute_url(form['action'])
         for input in form.select('input'):
             payload[input['name']] = input['value']
-        # end for
+
         payload['keyboard'] = query
 
         soup = self.post_soup(url, data=payload, headers={
@@ -43,15 +43,15 @@ class ReadWNCrawler(Crawler):
         for a in soup.select('ul.novel-list .novel-item a')[:10]:
             for i in a.select('.material-icons'):
                 i.extract()
-            # end for
+
             result.append({
                 'url': self.absolute_url(a['href']),
                 'title': a.select_one('.novel-title').text.strip(),
                 'info': ' | '.join([x.text.strip() for x in a.select('.novel-stats')]),
             })
-        # end for
+
         return result
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -108,7 +108,7 @@ class ReadWNCrawler(Crawler):
             ])
             logger.debug('Fetching chapters from %s', url)
             futures.append(self.executor.submit(self.get_soup, url))
-        # end for
+
 
         for page, f in enumerate(futures):
             soup = f.result()
@@ -122,13 +122,13 @@ class ReadWNCrawler(Crawler):
                     'url': self.absolute_url(a['href']),
                     'title': a.select_one('.chapter-title').text.strip(),
                 })
-            # end for
-        # end for
-    # end def
+
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.chapter-content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

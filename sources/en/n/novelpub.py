@@ -28,7 +28,7 @@ class NovelPubOnline(Crawler):
             '.noveltopads',
             '.chadsticky',
         ])
-    # end def
+
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -44,9 +44,9 @@ class NovelPubOnline(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': info,
             })
-        # end for
+
         return results
-    # end def
+
 
     def read_novel_info(self):
         #self.novel_url = self.home_url + re.findall('/(novel/[^/]+)/', self.novel_url)[0]
@@ -101,13 +101,13 @@ class NovelPubOnline(Crawler):
                     'title': a['title'],
                     'url': self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
-    # end def
+
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         body = soup.select_one('#chapter-container')
         return self.cleaner.extract_contents(body)
-    # end def
-# end class
+
+

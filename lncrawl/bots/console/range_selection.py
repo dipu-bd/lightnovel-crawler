@@ -21,13 +21,13 @@ def get_range_selection(self, disable_args=False):
         for key in selections:
             if args.__getattribute__(key):
                 return key
-            # end if
-        # end if
-    # end if
+
+
+
     
     if args.suppress:
         return selections[0]
-    # end if
+
  
     choices = [
         'Everything! (%d chapters)' % chapter_count,
@@ -41,7 +41,7 @@ def get_range_selection(self, disable_args=False):
     if chapter_count <= 20:
         choices.pop(1)
         choices.pop(1)
-    # end if
+
 
     answer = prompt([
         {
@@ -53,7 +53,7 @@ def get_range_selection(self, disable_args=False):
     ])
 
     return selections[choices.index(answer['choice'])]
-# end def
+
 
 
 def get_range_using_urls(self, disable_args=False):
@@ -64,17 +64,17 @@ def get_range_using_urls(self, disable_args=False):
         start = self.app.crawler.get_chapter_index_of(args.page[0]) - 1
     else:
         start = -1
-    # end if
+
 
     if args.page and len(args.page) > 1:
         stop = self.app.crawler.get_chapter_index_of(args.page[1]) - 1
     else:
         stop = -1
-    # end if
+
 
     if args.suppress and start < 0:
         return (0, len(self.app.crawler.chapters) - 1)
-    # end if
+
 
     if disable_args or start < 0:
         def _validator(is_optional):
@@ -88,7 +88,7 @@ def get_range_using_urls(self, disable_args=False):
                     pass
                 return 'No such chapter found given the url'
             return _internal_validator
-        # end def
+        
         
         answer = prompt([
             {
@@ -113,16 +113,16 @@ def get_range_using_urls(self, disable_args=False):
         ]))
         start = self.app.crawler.get_chapter_index_of(answer['start_url']) - 1
         stop = self.app.crawler.get_chapter_index_of(answer['stop_url']) - 1
-    # end if
+
 
     if stop < 0:
         stop = len(self.app.crawler.chapters) - 1
     elif stop < start:
         stop = start
-    # end if
+
 
     return (start, stop)
-# end def
+
 
 
 def get_range_using_index(self, disable_args=False):
@@ -134,7 +134,7 @@ def get_range_using_index(self, disable_args=False):
 
     if args.suppress and not (start and stop):
         return (0, chapter_count - 1)
-    # end if
+
 
     if disable_args or not start:
         def validator(val):
@@ -144,7 +144,7 @@ def get_range_using_index(self, disable_args=False):
             except Exception:
                 pass
             return 'Enter an integer between 1 and %d' % chapter_count
-        # end def
+        
         answer = prompt([
             {
                 'type': 'input',
@@ -166,10 +166,10 @@ def get_range_using_index(self, disable_args=False):
     else:
         start = start - 1
         stop = stop - 1
-    # end if
+
 
     return (start, stop) if start < stop else (stop, start)
-# end def
+
 
 
 def get_range_from_volumes(self, times=0, disable_args=False):
@@ -179,11 +179,11 @@ def get_range_from_volumes(self, times=0, disable_args=False):
 
     if times == 0 and args.volumes:
         selected = [int(x) for x in args.volumes]
-    # end if
+
 
     if not selected and args.suppress:
         selected = [x['id'] for x in self.app.crawler.volumes]
-    # end if
+
 
     if disable_args or not selected:
         answer = prompt([
@@ -203,14 +203,14 @@ def get_range_from_volumes(self, times=0, disable_args=False):
             }
         ])
         selected = [int(val.split(' ')[0]) for val in answer['volumes']]
-    # end if
+
 
     if times < 3 and len(selected) == 0:
         return self.get_range_from_volumes(times + 1)
-    # end if
+
 
     return selected
-# end def
+
 
 
 def get_range_from_chapters(self, times=0, disable_args=False):
@@ -220,11 +220,11 @@ def get_range_from_chapters(self, times=0, disable_args=False):
 
     if times == 0 and not selected:
         selected = get_args().chapters
-    # end if
+
 
     if not selected and args.suppress:
         selected = self.app.crawler.chapters
-    # end if
+
 
     if disable_args or not selected:
         answer = prompt([
@@ -248,11 +248,11 @@ def get_range_from_chapters(self, times=0, disable_args=False):
             self.app.crawler.get_chapter_index_of(x)
             for x in selected if x
         ]
-    # end if
+
 
     if times < 3 and len(selected) == 0:
         return self.get_range_from_chapters(times + 1)
-    # end if
+
 
     selected = [
         x for x in selected
@@ -260,4 +260,4 @@ def get_range_from_chapters(self, times=0, disable_args=False):
     ]
 
     return selected
-# end def
+

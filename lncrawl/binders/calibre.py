@@ -22,21 +22,21 @@ def run_ebook_convert(*args):
                 stdout=None if isdebug else dumper,
                 stderr=None if isdebug else dumper,
             )
-        # end with
+
         return True
     except Exception:
         if logger.isEnabledFor(logging.DEBUG):
             logger.exception('Failed to convert ebook with args: %s', list(args))
-        # end if
+
         return False
-    # end try
-# end def
+
+
 
 
 def epub_to_calibre(app, epub_file, out_fmt):
     if not os.path.exists(epub_file):
         return None
-    # end if
+
 
     epub_path = os.path.dirname(epub_file)
     epub_file_name = os.path.basename(epub_file)
@@ -72,7 +72,7 @@ def epub_to_calibre(app, epub_file, out_fmt):
             '--pdf-hyphenate',
             '--pdf-header-template', '<p style="text-align:center; color:#555; font-size:0.9em">⦗ _TITLE_ &mdash; _SECTION_ ⦘</p>',
         ]
-    # end if
+
 
     run_ebook_convert(*args)
 
@@ -82,26 +82,26 @@ def epub_to_calibre(app, epub_file, out_fmt):
     else:
         logger.error('[%s] conversion failed: %s', out_fmt, epub_file_name)
         return None
-    # end if
-# end def
+
+
 
 
 def make_calibres(app, epubs, out_fmt):
     if out_fmt == 'epub' or not epubs:
         return epubs
-    # end if
+
 
     if not run_ebook_convert('--version'):
         logger.error('Install Calibre to generate %s: %s',
                      out_fmt, CALIBRE_LINK),
         return
-    # end if
+
 
     out_files = []
     for epub in epubs:
         out = epub_to_calibre(app, epub, out_fmt)
         out_files += [out]
-    # end for
+    
 
     return out_files
-# end def
+

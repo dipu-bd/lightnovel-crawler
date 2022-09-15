@@ -35,7 +35,7 @@ class QidianComCrawler(Crawler):
         if not hasattr(self, '_novel_list'):
             data = self.get_json(novel_list_url)
             self._novel_list = {x['ID']: x for x in data}
-        # end if
+
         return self._novel_list
 
     def search_novel(self, query):

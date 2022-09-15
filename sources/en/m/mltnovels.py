@@ -27,10 +27,10 @@ class MltNovelsCrawler(Crawler):
                 'title': a.select_one('span.ntitle').text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -54,8 +54,8 @@ class MltNovelsCrawler(Crawler):
                 elif len(authors) == 1:
                     self.novel_author = authors[0].text    
                 break
-            # end if
-        # end for
+
+
         
         logger.info('Novel author: %s', self.novel_author)
 
@@ -64,7 +64,7 @@ class MltNovelsCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -73,12 +73,12 @@ class MltNovelsCrawler(Crawler):
                     "url": self.absolute_url(a['href']),
                 }
             )
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.entry-content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

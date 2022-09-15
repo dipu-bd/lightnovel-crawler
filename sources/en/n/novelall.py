@@ -23,9 +23,9 @@ class NovelAllCrawler(Crawler):
                 'url': url,
                 'title': a.text.strip(),
             })
-        # end for
+
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -47,7 +47,7 @@ class NovelAllCrawler(Crawler):
             self.novel_author = author[0] + ' (' + author[1] + ')'
         else:
             self.novel_author = ' '.join(author)
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.find(
@@ -56,28 +56,28 @@ class NovelAllCrawler(Crawler):
         for a in chapters:
             for span in a.findAll('span'):
                 span.extract()
-            # end for
-        # end for
+
+
 
         for x in chapters:
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': self.absolute_url(x['href']),
                 'title': x['title'] or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.find('div', {'class': 'reading-box'})
         self.cleaner.clean_contents(contents)
         return str(contents)
-    # end def
-# end class
+
+

@@ -22,7 +22,7 @@ class CreativeNovelsCrawler(Crawler):
             'span[style*="color:transparent"]',
             'div.novel_showcase',
         ])
-    # end def
+    
 
     def read_novel_info(self):
         #self.novel_id = re.findall(r'\/\d+\/', self.novel_url)[0]
@@ -44,7 +44,7 @@ class CreativeNovelsCrawler(Crawler):
         possible_image = soup.select_one('.x-bar-content-area img.book_cover')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end try
+
         logger.info('Novel Cover: %s', self.novel_cover)
 
         for div in soup.select('.x-bar-content .x-text.bK_C'):
@@ -52,8 +52,8 @@ class CreativeNovelsCrawler(Crawler):
             if re.search('author|translator', text, re.I):
                 self.novel_author = text
                 break
-            # end if
-        # end for
+
+        
         logger.info(self.novel_author)
 
         list_security_key = ''
@@ -61,15 +61,15 @@ class CreativeNovelsCrawler(Crawler):
             text = script.string
             if not text or 'var chapter_list_summon' not in text:
                 continue
-            # end if
+
 
             p = re.findall(r'"([^"]+)"', text)
             if p[0] == 'ajaxurl' and p[1] == 'https:\\/\\/creativenovels.com\\/wp-admin\\/admin-ajax.php':
                 if p[2] == 'security':
                     list_security_key = p[3]
-                # end if
-            # end if
-        # end for
+
+
+        
         logger.debug('Chapter list security = %s', list_security_key)
 
         response = self.submit_form(
@@ -81,32 +81,32 @@ class CreativeNovelsCrawler(Crawler):
             )
         )
         self.parse_chapter_list(response.content.decode('utf8'))
-    # end def
+    
 
     def parse_chapter_list(self, content):
         if not content.startswith('success'):
             return
-        # end if
+
 
         content = content[len('success.define.'):]
         for data in content.split('.end_data.'):
             parts = data.split('.data.')
             if len(parts) < 2:
                 continue
-            # end if
+
             ch_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if vol_id > len(self.volumes):
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': ch_id,
                 'volume': vol_id,
                 'url': parts[0],
                 'title': parts[1],
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -141,13 +141,13 @@ class CreativeNovelsCrawler(Crawler):
                     # Else: change it into a paragraph
                     span.name = 'p'
                     span.attrs = {}
-                # end if
+
             else:
                 span.name = 'p'
                 span.attrs = {}
             #end if
-        # end for
+        
 
         return self.cleaner.extract_contents(body)
-    # end def
-# end class
+    
+

@@ -37,15 +37,15 @@ class DivineDaoLibrary(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -57,5 +57,5 @@ class DivineDaoLibrary(Crawler):
             body += '<p>' + span.text.strip() + '</p>\n'
 
         return body
-    # end def
-# end class
+    
+

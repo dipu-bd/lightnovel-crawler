@@ -15,7 +15,7 @@ class IndowebnovelCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://indowebnovel.id/'
-    # end def
+
 
     def read_novel_info(self):
         #url = self.novel_url.replace('https://yukinovel.me', 'https://yukinovel.id')
@@ -45,20 +45,20 @@ class IndowebnovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('#main article p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-# end class
+
+

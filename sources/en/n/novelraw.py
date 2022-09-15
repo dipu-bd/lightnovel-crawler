@@ -29,8 +29,8 @@ class NovelRawCrawler(Crawler):
             if len(text) == 1:
                 self.novel_title = text[0].strip()
                 break
-            # end if
-        # end for
+
+
         logger.info('Novel title: %s', self.novel_title)
 
         url = chapter_list_url % (self.novel_title, 1)
@@ -60,7 +60,7 @@ class NovelRawCrawler(Crawler):
         for future in futures.as_completed(futures_to_check):
             page = int(futures_to_check[future])
             all_entry[page] = future.result()
-        # end for
+
 
         for page in reversed(sorted(all_entry.keys())):
             for entry in reversed(all_entry[page]):
@@ -69,30 +69,30 @@ class NovelRawCrawler(Crawler):
                 ]
                 if not len(possible_urls):
                     continue
-                # end if
+
                 self.chapters.append({
                     'id': len(self.chapters) + 1,
                     'volume': len(self.chapters) // 100 + 1,
                     'title': entry['title']['$t'],
                     'url': possible_urls[0]
                 })
-            # end for
-        # end for
+
+
 
         self.volumes = [
             {'id': x + 1} for x in range(len(self.chapters) // 100 + 1)
         ]
-    # end def
+
 
     def download_chapter_list(self, index):
         url = chapter_list_url % (self.novel_title, index)
         data = self.get_json(url)
         return data['feed']['entry']
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = self.cleaner.extract_contents(soup.select_one('#tgtPost'))
         return '<p>' + '</p><p>'.join(contents) + '</p>'
-    # end def
-# end class
+
+

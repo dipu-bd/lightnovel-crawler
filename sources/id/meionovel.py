@@ -26,10 +26,10 @@ class MeionovelCrawler(Crawler):
     #             'url': self.absolute_url(a['href']),
     #             'info': '%s | Rating: %s' % (latest, votes),
     #         })
-    #     # end for
+
 
     #     return results
-    # # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -57,7 +57,7 @@ class MeionovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -66,8 +66,8 @@ class MeionovelCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -89,5 +89,5 @@ class MeionovelCrawler(Crawler):
             codeblock.extract()
 
         return str(contents)
-    # end def
-# end class
+
+

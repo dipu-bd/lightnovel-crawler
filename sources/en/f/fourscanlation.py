@@ -16,7 +16,7 @@ class FourScanlationCrawler(Crawler):
         novel_hash = path_fragments[1]
         if novel_hash == 'category':
             novel_hash = path_fragments[2]
-        # end if
+
         self.novel_url = novel_page % novel_hash
 
         logger.debug('Visiting %s', self.novel_url)
@@ -34,7 +34,7 @@ class FourScanlationCrawler(Crawler):
         possible_image = soup.select_one('#primary article img.wp-post-image')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
@@ -43,7 +43,7 @@ class FourScanlationCrawler(Crawler):
             possible_url = self.absolute_url(a['href'])
             if not self.is_relative_url(possible_url):
                 continue
-            # end if
+
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             volumes.add(vol_id)
@@ -53,10 +53,10 @@ class FourScanlationCrawler(Crawler):
                 'url':  possible_url,
                 'title': a.text.strip(),
             })
-        # end for
+        
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -64,19 +64,19 @@ class FourScanlationCrawler(Crawler):
         contents = soup.select_one('article div.entry-content')
         if not contents:
             return ''
-        # end if
+
 
         for d in contents.findAll('div'):
             d.extract()
-        # end for
+        
 
         try:
             chapter['title'] = soup.select_one('header h1').text
             logger.debug(chapter['title'])
         except Exception:
             pass
-        # end try
+
 
         return str(contents or '')
-    # end def
-# end class
+    
+

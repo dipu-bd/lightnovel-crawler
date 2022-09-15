@@ -25,10 +25,10 @@ class Manhwachill(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -37,7 +37,7 @@ class Manhwachill(Crawler):
         possible_title = soup.select_one('.post-title h1')
         for span in possible_title.select('span'):
             span.extract()
-        # end for
+
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -56,22 +56,22 @@ class Manhwachill(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
         if 'Chapter' in soup.select_one('h1').text:
             chapter['title'] = soup.select_one('h1').text
-        # end if
+
 
         contents = soup.select_one('div.reading-content')
 
@@ -84,5 +84,4 @@ class Manhwachill(Crawler):
                 parent.append(new_tag)
 
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+

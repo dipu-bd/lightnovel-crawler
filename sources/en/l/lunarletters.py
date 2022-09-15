@@ -39,14 +39,14 @@ class LunarLetters(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.reading-content p')
         return ''.join([str(p) for p in contents])
-    # end def
-# end class
+
+

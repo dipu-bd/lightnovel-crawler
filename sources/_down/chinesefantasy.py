@@ -15,7 +15,7 @@ class ChineseFantasyNovels(Crawler):
     def read_novel_info(self):
         if not self.novel_url.endswith('/'):
             self.novel_url += '/'
-        # end if
+
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -40,20 +40,20 @@ class ChineseFantasyNovels(Crawler):
                 'title': ch_title,
                 'url': self.absolute_url(a['href']),
             })
-        # end def
+        
 
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
-    # end def
+    
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update([
             '.link'
         ])
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('#BookText')
         return self.cleaner.extract_contents(content)
-    # end def
-# end class
+    
+

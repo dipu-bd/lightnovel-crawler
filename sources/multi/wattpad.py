@@ -18,7 +18,7 @@ class WattpadCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.wattpad.com/'
-    # end def
+
 
     def login(self, email: str, password: str) -> None:
         resp = self.submit_form('https://www.wattpad.com/login?nextUrl=/home', data={
@@ -69,9 +69,9 @@ class WattpadCrawler(Crawler):
                 'url':  self.absolute_url(a['url']),
                 'title': a['title'] or ('Chapter %d' % chap_id),
             })
-        # end for
+
         self.volumes = [{'id': i} for i in vols]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         chapter_id = urlparse(chapter['url']).path.split('-')[0].strip('/')
@@ -86,5 +86,5 @@ class WattpadCrawler(Crawler):
         text = self.get_response(text_url).content.decode('utf8')
         text = re.sub(r'<p data-p-id="[a-f0-9]+>"', '<p>', text)
         return text
-    # end def
-# end class
+
+

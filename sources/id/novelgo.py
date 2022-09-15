@@ -15,7 +15,7 @@ class NovelGoCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://novelgo.id/'
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -63,14 +63,14 @@ class NovelGoCrawler(Crawler):
         #            'id': vol_id,
         #            'title': vol_title,
         #        })
-        #    # end if
+
         #    self.chapters.append({
         #        'id': chap_id,
         #        'volume': vol_id,
         #        'url': self.absolute_url(x['href']),
         #        'title': x.text.strip() or ('Chapter %d' % chap_id),
         #    })
-        # end for
+
 
         data = self.get_json(
             'https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s' % book_id)
@@ -80,21 +80,21 @@ class NovelGoCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  chapter['permalink'],
                 'title': chapter['post_title'] or ('Chapter %d' % chap_id),
             })
-            # end for
-        # end for
-    # end def
+
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('#chapter-post-content p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-# end class
+
+

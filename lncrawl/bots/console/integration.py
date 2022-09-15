@@ -24,11 +24,11 @@ def start(self):
     if args.list_sources:
         display.url_supported_list()
         return
-    # end if
+
     if 'resume' in args:
         resume_session()
         return
-    # end if
+
 
     self.app = App()
     self.app.initialize()
@@ -52,16 +52,16 @@ def start(self):
                 display.url_rejected(rejected_sources[url])
             else:
                 display.url_not_recognized()
-            # end if
-        # end if
+
+
         raise LNException(f'Fail to init crawler. Error: {e}')
-    # end if
+
 
     # Search for novels
     if self.search_mode:
         self.app.crawler_links = self.get_crawlers_to_search()
         self.app.search_novel()
-    # end if
+
 
     def _download_novel():
         assert isinstance(self.app, App)
@@ -70,11 +70,11 @@ def start(self):
             novel_url = self.choose_a_novel()
             self.log.info('Selected novel: %s' % novel_url)
             self.app.prepare_crawler(novel_url)
-        # end if
+
 
         if self.app.can_do('login'):
             self.app.login_data = self.get_login_info()
-        # end if
+
 
         self.app.get_novel_info()
 
@@ -83,7 +83,7 @@ def start(self):
 
         self.app.output_formats = self.get_output_formats()
         self.app.pack_by_volume = self.should_pack_by_volume()
-    # end def
+    
 
     while True:
         try:
@@ -96,9 +96,9 @@ def start(self):
         except Exception as e:
             if not (self.search_mode and self.confirm_retry()):
                 raise e
-            # end if
-        # end try
-    # end while
+
+
+
 
     self.app.start_download()
     self.app.bind_books()
@@ -108,7 +108,7 @@ def start(self):
     display.app_complete()
 
     display_open_folder(self.app.output_path)
-# end def
+
 
 
 def process_chapter_range(self, disable_args=False):
@@ -142,11 +142,11 @@ def process_chapter_range(self, disable_args=False):
             chap for chap in self.app.crawler.chapters
             if selected.count(chap['id']) > 0
         ]
-    # end if
+
 
     if len(chapters) == 0:
         raise LNException('No chapters to download')
-    # end if
+
 
     self.log.debug('Selected chapters:')
     self.log.debug(chapters)
@@ -164,9 +164,9 @@ def process_chapter_range(self, disable_args=False):
         ])
         if answer.get('continue', '') == 'Change selection':
             return self.process_chapter_range(True)
-        # end if
-    # end if
+
+
 
     self.log.info('%d chapters to be downloaded', len(chapters))
     return chapters
-# end def
+

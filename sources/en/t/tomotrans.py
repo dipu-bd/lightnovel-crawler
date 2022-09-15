@@ -33,7 +33,7 @@ class TomoTransCrawler(Crawler):
             possible_vol = re.findall(r'-volume-(\d+)-', chap_url)
             if not len(possible_vol):
                 continue
-            # end if
+
             vol_id = int(possible_vol[0])
             volumes.add(vol_id)
             self.chapters.append({
@@ -42,10 +42,10 @@ class TomoTransCrawler(Crawler):
                 'url':  chap_url,
                 'title': a.text.strip(),
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -61,10 +61,10 @@ class TomoTransCrawler(Crawler):
                     pass
                 else:
                     body += str(tag)
-                # end if
-            # end if
-        # end for
+
+
+
 
         return body
-    # end def
-# end class
+
+

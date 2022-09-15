@@ -47,7 +47,7 @@ class TextCleaner:
             '<': '&lt;',
             '>': '&gt;',
         }
-    # end def
+    
 
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
@@ -57,17 +57,17 @@ class TextCleaner:
             for x in body.split(LINE_SEP)
             if not self.is_in_blacklist(x.strip())
         ])
-    # end def
+    
 
     def clean_contents(self, div):
         if not isinstance(div, Tag):
             return div
-        # end if
+
         if self.bad_css:
             for bad in div.select(','.join(self.bad_css)):
                 bad.extract()
-            # end if
-        # end if
+
+
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
@@ -75,30 +75,30 @@ class TextCleaner:
                 next_tag = getattr(tag, 'next_sibling')
                 if next_tag and getattr(next_tag, 'name') == 'br':
                     tag.extract()
-                # end if
+
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
             elif hasattr(tag, 'attrs'):
                 tag.attrs = {k: v for k, v in tag.attrs.items() if k == 'src'}
-            # end if
-        # end for
+
+        
         div.attrs = {}
         return div
-    # end def
+    
 
     def clean_text(self, text) -> str:
         text = str(text).strip()
         text = text.translate(NONPRINTABLE_MAPPING)
         for k, v in self.substitutions.items():
             text = text.replace(k, v)
-        # end for
+        
         return text
-    # end def
+    
 
     def extract_paragraphs(self, tag) -> list:
         if not isinstance(tag, Tag):
             return []
-        # end if
+
 
         body = []
         for elem in tag.contents:
@@ -127,42 +127,42 @@ class TextCleaner:
 
             if is_block:
                 body.append(LINE_SEP)
-            # end if
+
 
             for line in content.split(LINE_SEP):
                 line = line.strip()
                 if not line:
                     continue
-                # end if
+
                 if not (is_plain or is_block):
                     line = '<%s>%s</%s>' % (elem.name, line, elem.name)
-                # end if
+
                 body.append(line)
                 body.append(LINE_SEP)
-            # end if
+
 
             if body and body[-1] == LINE_SEP and not is_block:
                 body.pop()
-            # end if
-        # end for
+
+        
 
         return [x.strip() for x in body if x.strip()]
-    # end def
+    
 
     def is_in_blacklist(self, text) -> bool:
         if not text:
             return True
-        # end if
+
         if not self.blacklist_patterns:
             return False
-        # end if
+
         pattern = getattr(self, '__blacklist__', None)
         if not pattern:
             pattern = re.compile('|'.join(['(%s)' % p for p in self.blacklist_patterns]))
             setattr(self, '__blacklist__', pattern)
-        # end if
+
         if pattern and pattern.search(text):
             return True
         return False
-    # end def
-# end class
+    
+

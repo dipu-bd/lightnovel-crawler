@@ -33,9 +33,9 @@ class WNMTLCrawler(Crawler):
     #             'info': 'Author: %s | %s | Last update: %s %s' % (
     #                 item['authorPseudonym'], item['genreName'], item['lastUpdateChapterOrder'], item['lastUpdateChapterTitle']),
     #         })
-    #     # end for
+
     #     return results
-    # # end def
+
 
     def read_novel_info(self):
         logger.debug(self.home_url)
@@ -59,34 +59,34 @@ class WNMTLCrawler(Crawler):
         for page in range(2, data['data']['totalPages'] + 1):
             url = CHAPTER_LIST_URL % (self.novel_id, page)
             futures.append(self.executor.submit(self.get_json, url))
-        # end for
+
 
         for f in futures:
             data = f.result()
             chapter_data += data['data']['list']
-        # end for
+
 
         for item in chapter_data:
             if item['paywallStatus'] != "free" or item['status'] != "published":
                 continue
-            # end if
+
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': CHAPTER_CONTENT_URL % item['id'],
                 'title': 'Chapter %d: %s' % (item['chapterOrder'], item['title']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         data = self.get_json(chapter['url'])
         contents = data['data']['content'].split('\n')
         return '\n'.join(['<p>' + x + '</p>' for x in contents])
-    # end def
-# end class
+
+

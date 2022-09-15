@@ -28,17 +28,17 @@ class MessageHandler:
         self.get_current_status = None
         self.selected_novel: Optional[dict] = None
         self.executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix=uid)
-    # end def
+    
 
     def process(self, message):
         self.last_activity = datetime.now()
         self.executor.submit(self.handle_message, message)
-    # end def
+    
 
     def destroy(self):
         #self.send_sync('Closing current session')
         self.executor.submit(self.destroy_sync)
-    # end def
+    
 
     def destroy_sync(self):
         try:
@@ -52,27 +52,27 @@ class MessageHandler:
         finally:
             self.closed = True
             logger.info('Session destroyed: %s', self.uid)
-        # end try
-    # end def
+
+    
 
     def handle_message(self, message: discord.Message):
         self.message = message
         self.user = message.author
         if not self.state:
             self.state = self.get_novel_url
-        # end if
+
         try:
             self.state()
         except Exception as ex:
             logger.exception('Failed to process state')
             self.send_sync('Something went wrong!\n`%s`' % str(ex))
             self.destroy()
-        # end try
-    # end def
+
+    
 
     def is_busy(self) -> bool:
         return self.state == self.busy_state
-    # end def
+    
 
     # ---------------------------------------------------------------------- #
 
@@ -81,7 +81,7 @@ class MessageHandler:
             async_coroutine,
             self.client.loop
         ).result(timeout=3*60)
-    # end def
+    
 
     async def send(self, *contents):
         if self.closed:
@@ -91,15 +91,15 @@ class MessageHandler:
             for text in contents:
                 if not text:
                     continue
-                # end if
+
                 await self.user.send(text)
-            # end for
-        # end with
-    # end def
+            
+
+    
 
     def send_sync(self, *contents):
         self.wait_for(self.send(*contents))
-    # end def
+    
 
     def busy_state(self):
         text = self.message.content.strip()
@@ -107,12 +107,12 @@ class MessageHandler:
         if text == '!cancel':
             self.destroy()
             return
-        # end if
+
 
         status = None
         if callable(self.get_current_status):
             status = self.get_current_status()
-        # end if
+
         if not status:
             status = random.choice([
                 'Send !cancel to stop this session.',
@@ -120,10 +120,10 @@ class MessageHandler:
                 'Processing, give me more time...',
                 'A little bit longer...',
             ])
-        # end if
+
 
         self.send_sync(status)
-    # end def
+    
 
     # ---------------------------------------------------------------------- #
 
@@ -140,9 +140,9 @@ class MessageHandler:
                 '- A query to search your lightnovel.',
                 'What are you looking for?'
             )
-        # end if
+
         self.state = self.handle_novel_url
-    # end def
+    
 
     def handle_novel_url(self):
         self.state = self.busy_state
@@ -151,7 +151,7 @@ class MessageHandler:
         if text == '!cancel':
             self.destroy()
             return
-        # end if
+
 
         try:
             self.app.user_input = self.message.content.strip()
@@ -164,7 +164,7 @@ class MessageHandler:
                 'https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources',
             ]))
             self.get_novel_url()
-        # end try
+
 
         if self.app.crawler:
             self.send_sync('Got your page link')
@@ -186,9 +186,9 @@ class MessageHandler:
                         len(self.app.crawler_links), self.app.user_input),
                 )
                 self.display_novel_selection()
-            # end if
-        # end if
-    # end def
+
+
+    
 
     # ------------------------------------------------------------ #
     # SEARCHING -- skips if DISCORD_DISABLE_SEARCH is 'true'
@@ -196,7 +196,7 @@ class MessageHandler:
 
     def get_novel_selection_progres(self):
         return 'Searched %d of %d sources' % (self.app.progress, len(self.app.crawler_links))
-    # end def
+    
 
     def display_novel_selection(self):
         self.get_current_status = self.get_novel_selection_progres
@@ -226,8 +226,8 @@ class MessageHandler:
                 'Send `!cancel` to stop this session.'
             ]))
             self.state = self.handle_novel_selection
-        # end if
-    # end def
+
+    
 
     def handle_novel_selection(self):
         self.state = self.busy_state
@@ -236,7 +236,7 @@ class MessageHandler:
         if text.startswith('!cancel'):
             self.get_novel_url()
             return
-        # end if
+
         match_count = 0
         selected = None
         for i, res in enumerate(self.app.search_results):
@@ -248,17 +248,17 @@ class MessageHandler:
             elif res['title'].lower().find(text) != -1:
                 selected = res
                 match_count += 1
-            # end if
-        # end for
+
+        
         if match_count != 1:
             self.send_sync(
                 'Sorry! You should select *one* novel from the list (%d selected).' % match_count)
             self.display_novel_selection()
             return
-        # end if
+
         self.selected_novel = selected
         self.display_sources_selection()
-    # end def
+    
 
     def display_sources_selection(self):
         assert isinstance(self.selected_novel, dict)
@@ -274,7 +274,7 @@ class MessageHandler:
                     item['info'] if 'info' in item else ''
                 ) for i, item in enumerate(novel_list[j:j+10])
             ]))
-        # end for
+        
 
         self.send_sync('\n'.join([
             '',
@@ -282,7 +282,7 @@ class MessageHandler:
             'Send `!cancel` to stop this session.',
         ]))
         self.state = self.handle_sources_to_search
-    # end def
+    
 
     def handle_sources_to_search(self):
         self.state = self.busy_state
@@ -291,11 +291,11 @@ class MessageHandler:
         if len(self.selected_novel['novels']) == 1:
             novel = self.selected_novel['novels'][0]
             return self.handle_search_result(novel)
-        # end if
+
         text = self.message.content.strip()
         if text.startswith('!cancel'):
             return self.get_novel_url()
-        # end if
+
         match_count = 0
         selected = None
         for i, res in enumerate(self.selected_novel['novels']):
@@ -307,23 +307,23 @@ class MessageHandler:
             elif res['url'].lower().find(text) != -1:
                 selected = res
                 match_count += 1
-            # end if
-        # end for
+
+        
         if match_count != 1:
             self.send_sync(
                 'Sorry! You should select *one* source '
                 'from the list (%d selected).' % match_count
             )
             return self.display_sources_selection()
-        # end if
+
         self.handle_search_result(selected)
-    # end def
+    
 
     def handle_search_result(self, novel):
         self.send_sync('Selected: %s' % novel['url'])
         self.app.prepare_crawler(novel['url'])
         self.get_novel_info()
-    # end def
+    
 
     # ---------------------------------------------------------------------- #
 
@@ -332,7 +332,7 @@ class MessageHandler:
 
         self.send_sync('Getting information about your novel...')
         self.executor.submit(self.download_novel_info)
-    # end def
+    
 
     def download_novel_info(self):
         self.state = self.busy_state
@@ -346,7 +346,7 @@ class MessageHandler:
             self.send_sync('Failed to get novel info.\n`%s`' % str(ex))
             self.destroy()
             return
-        # end try
+
 
         # Setup output path
         root = os.path.abspath('.discord_bot_output')
@@ -358,7 +358,7 @@ class MessageHandler:
         self.app.output_path = output_path
 
         self.display_range_selection()
-    # end def
+    
 
     def display_range_selection(self):
         self.send_sync('\n'.join([
@@ -378,7 +378,7 @@ class MessageHandler:
             )
         )
         self.state = self.handle_range_selection
-    # end def
+    
 
     def handle_range_selection(self):
         self.state = self.busy_state
@@ -386,7 +386,7 @@ class MessageHandler:
         if text == '!cancel':
             self.destroy()
             return
-        # end if
+
 
         assert isinstance(self.app.crawler, Crawler)
         if text == 'all':
@@ -422,40 +422,40 @@ class MessageHandler:
                         cid = int(name)
                     elif isinstance(self.app.crawler, Crawler):
                         cid = self.app.crawler.get_chapter_index_of(name)
-                    # end if
+
                     return cid - 1
-                # end def
+                
                 first = resolve_chapter(pair[0])
                 second = resolve_chapter(pair[1])
                 if first > second:
                     second, first = first, second
-                # end if
+
                 if first >= 0 or second < len(self.app.crawler.chapters):
                     self.app.chapters = self.app.crawler.chapters[first: second]
-                # end if
-            # end if
+
+
             if len(self.app.chapters) == 0:
                 self.send_sync('Chapter range is not valid. Please try again')
                 self.state = self.handle_range_selection
                 return
-            # end if
+
         else:
             self.send_sync(
                 'Sorry! I did not recognize your input. Please try again')
             self.state = self.handle_range_selection
             return
-        # end if
+
 
         if len(self.app.chapters) == 0:
             self.send_sync(
                 'You have not selected any chapters. Please select at least one')
             self.state = self.handle_range_selection
             return
-        # end if
+
 
         self.send_sync('Got your range selection')
         self.display_output_selection()
-    # end def
+    
 
     def display_output_selection(self):
         self.state = self.busy_state
@@ -470,7 +470,7 @@ class MessageHandler:
             'Available formats: `' + '` `'.join(available_formats) + '`',
         ]))
         self.state = self.handle_output_selection
-    # end def
+    
 
     def handle_output_selection(self):
         self.state = self.busy_state
@@ -479,20 +479,20 @@ class MessageHandler:
         if text.startswith('!cancel'):
             self.get_novel_url()
             return
-        # end if
+
 
         if text == '!all':
             output_format = set(available_formats)
         else:
             output_format = set(re.findall('|'.join(available_formats), text.lower()))
-        # end if
+
 
         if not len(output_format):
             self.send_sync('Sorry! I did not recognize your input. '
                            'Try one of these: `' + '` `'.join(available_formats) + '`')
             self.state = self.handle_output_selection
             return
-        # end if
+
 
         self.app.output_formats = {x: (x in output_format) for x in available_formats}
         self.send_sync('I will generate e-book in (%s) format' % (', ' .join(output_format)))
@@ -504,13 +504,13 @@ class MessageHandler:
         ]))
 
         self.executor.submit(self.start_download)
-    # end def
+    
 
     # ---------------------------------------------------------------------- #
 
     def get_download_progress_status(self):
         return 'Downloaded %d of %d chapters' % (self.app.progress, len(self.app.chapters))
-    # end def
+    
 
     def start_download(self):
         self.app.pack_by_volume = False
@@ -542,14 +542,14 @@ class MessageHandler:
             assert isinstance(self.app.archived_outputs, list)
             for archive in self.app.archived_outputs:
                 self.upload_file(archive)
-            # end for
+            
         except Exception as ex:
             logger.exception('Failed to download')
             self.send_sync('Download failed!\n`%s`' % str(ex))
         finally:
             self.destroy()
-        # end try
-    # end def
+
+    
 
     def upload_file(self, archive):
         # Check file size
@@ -564,7 +564,7 @@ class MessageHandler:
             except Exception as e:
                 logger.error('Failed to upload file: %s', archive, e)
                 self.send_sync(f'Failed to upload file: {filename}.\n`Error: {e}`')
-            # end if
+
             return
 
         # Upload small files to discord directly
@@ -572,7 +572,7 @@ class MessageHandler:
         while(file_size > 1024 and k < 3):
             k += 1
             file_size /= 1024.0
-        # end while
+
         self.send_sync(
             'Uploading %s [%d%s] ...' % (
                 os.path.basename(archive),
@@ -588,5 +588,5 @@ class MessageHandler:
                 )
             )
         )
-    # end def
-# end class
+    
+

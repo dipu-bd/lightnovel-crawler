@@ -31,10 +31,10 @@ class BoxNovelOrgCrawler(Crawler):
                     tab.select_one('.novel-title a')['href']),
                 'info': 'Latest chapter: %s' % (latest)
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -87,8 +87,8 @@ class BoxNovelOrgCrawler(Crawler):
         maxi = self.chapters[-1]['volume']
         for i in range(mini, maxi + 1):
             self.volumes.append({'id': i})
-        # end for
-    # end def
+        
+    
 
     def download_chapter_list(self, page):
         url = self.novel_url.split('?')[0].strip('/')
@@ -102,14 +102,14 @@ class BoxNovelOrgCrawler(Crawler):
             # match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
             # if len(match) == 1:
             #     chapter_id = int(match[0][1])
-            # # end if
+
 
             volume_id = 1 + (chapter_id - 1) // 100
             match = re.findall(r'(book|vol|volume) (\d+)',
                                title, re.IGNORECASE)
             if len(match) == 1:
                 volume_id = int(match[0][1])
-            # end if
+
 
             data = {
                 'title': title,
@@ -118,12 +118,12 @@ class BoxNovelOrgCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
             }
             self.chapters.append(data)
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.chr-c, #chr-content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+    
+

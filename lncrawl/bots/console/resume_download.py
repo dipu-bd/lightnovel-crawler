@@ -26,9 +26,9 @@ def resume_session():
             data = json.load(file)
             if 'session' in data and not data['session']['completed']:
                 resumable_meta_data.append(data)
-            # end if
-        # end with
-    # end for
+
+
+    
 
     metadata = None
     if len(resumable_meta_data) == 1:
@@ -44,13 +44,13 @@ def resume_session():
         ])
         index = int(answer['resume'].split('.')[0])
         metadata = resumable_meta_data[index - 1]
-    # end if
+
 
     if not metadata:
         print('No unfinished download to resume\n')
         display.app_complete()
         return
-    # end if
+
 
     app = load_session_from_metadata(metadata)
     assert isinstance(app.crawler, Crawler)
@@ -64,7 +64,7 @@ def resume_session():
     if app.can_do('login') and app.login_data:
         logger.debug('Login with %s', app.login_data)
         app.crawler.login(*list(app.login_data))
-    # end if
+
 
     app.start_download()
     app.bind_books()
@@ -72,7 +72,7 @@ def resume_session():
     app.destroy()
     display.app_complete()
     display_open_folder(app.output_path)
-# end def
+
 
 
 def load_session_from_metadata(data) -> App:
@@ -107,4 +107,4 @@ def load_session_from_metadata(data) -> App:
     logger.debug(app.chapters)
 
     return app
-# end def
+

@@ -35,15 +35,15 @@ class IdqidianCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -60,8 +60,8 @@ class IdqidianCrawler(Crawler):
             my_texts = set(texts).difference(unwanted_text)
             body_parts = ''.join(
                 [str(p) for p in my_texts if p.strip() and not 'Advertisement' in p and not 'JavaScript!' in p])
-        # end if
+
 
         return body_parts
-    # end def
-# end class
+
+

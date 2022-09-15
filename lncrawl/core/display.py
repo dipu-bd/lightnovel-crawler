@@ -16,10 +16,10 @@ try:
     row, _ = os.get_terminal_size()
     if row < LINE_SIZE:
         LINE_SIZE = row
-    # end if
+
 except Exception:
     pass
-# end try
+
 
 
 def description():
@@ -36,10 +36,10 @@ def description():
         desc = 'https://github.com/dipu-bd/lightnovel-crawler'
         padding = ' ' * ((LINE_SIZE - len(desc)) // 2)
         print(Fore.CYAN, padding + desc, Fore.RESET)
-    # end if
+
 
     print('-' * LINE_SIZE)
-# end def
+
 
 
 def epilog():
@@ -53,7 +53,7 @@ def epilog():
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
 
     print('=' * LINE_SIZE)
-# end def
+
 
 
 def debug_mode(level):
@@ -65,7 +65,7 @@ def debug_mode(level):
     print(padding + text)
 
     print('-' * LINE_SIZE)
-# end def
+
 
 
 def input_suppression():
@@ -75,7 +75,7 @@ def input_suppression():
 
     print(text)
     print('-' * LINE_SIZE)
-# end def
+
 
 
 def cancel_method():
@@ -83,7 +83,7 @@ def cancel_method():
     print(Icons.RIGHT_ARROW, 'Press', Fore.MAGENTA,
           'Ctrl + C', Fore.RESET, 'to exit')
     print()
-# end def
+
 
 
 def error_message(ex_type, message, tb):
@@ -93,16 +93,16 @@ def error_message(ex_type, message, tb):
     if tb_summary and ex_type not in [LNException, KeyboardInterrupt]:
         print(Style.DIM + str(ex_type) + Style.RESET_ALL)
         print(Style.DIM + str(tb_summary) + Style.RESET_ALL)
-    # end if
+
     print()
-# end def
+
 
 
 def app_complete():
     print(Style.BRIGHT + Fore.YELLOW + Icons.SPARKLE,
           'Task completed', Fore.RESET, Style.RESET_ALL)
     print()
-# end def
+
 
 
 def new_version_news(latest):
@@ -119,10 +119,10 @@ def new_version_news(latest):
     # elif Icons.isLinux:
     #     print('', Icons.RIGHT_ARROW, Style.DIM + 'Download:',
     #           Fore.YELLOW + 'https://rebrand.ly/lncrawl-linux', Style.RESET_ALL)
-    # # end if
+
 
     print('-' * LINE_SIZE)
-# end def
+
 
 
 def url_supported_list():
@@ -130,8 +130,8 @@ def url_supported_list():
     print('List of %d supported sources:' % len(crawler_list))
     for url in sorted(crawler_list.keys()):
         print(Fore.LIGHTGREEN_EX, Icons.RIGHT_ARROW, url, Fore.RESET)
-    # end for
-# end def
+    
+
 
 
 def url_not_recognized():
@@ -146,7 +146,7 @@ def url_not_recognized():
     # print('You can request developers to add support for this site here:')
     # print(Fore.CYAN, Icons.LINK,
     #       'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
-# end def
+
 
 
 def url_rejected(reason):
@@ -158,13 +158,13 @@ def url_rejected(reason):
     print('You can try other available sources or create an issue if you find something\nhas went wrong:')
     print(Fore.CYAN, Icons.LINK,
           'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
-# end def
+
 
 
 def format_short_info_of_novel(short_info):
     if not short_info or len(short_info) == 0:
         return ''
-    # end if
+
     return '\n'.join(textwrap.wrap(
         short_info.strip(),
         width=70,
@@ -173,7 +173,7 @@ def format_short_info_of_novel(short_info):
         drop_whitespace=True,
         break_long_words=True,
     ))
-# end def
+
 
 
 def format_novel_choices(choices):
@@ -184,11 +184,11 @@ def format_novel_choices(choices):
             novel = item['novels'][0]
             text += '\n' + (' ' * 6) + Icons.LINK + ' ' + novel['url']
             text += format_short_info_of_novel(novel.get('info', ''))
-        # end if
+
         items.append({'name': text})
-    # end for
+    
     return items
-# end def
+
 
 
 def format_source_choices(novels):
@@ -198,9 +198,9 @@ def format_source_choices(novels):
         short_info = item['info'] if 'info' in item else ''
         text += format_short_info_of_novel(short_info)
         items.append({'name': text})
-    # end for
+    
     return items
-# end def
+
 
 
 def format_resume_choices(metadata_list):
@@ -215,6 +215,6 @@ def format_resume_choices(metadata_list):
         )
         text += '\n' + (' ' * 6) + Icons.LINK + ' ' + data['url']
         items.append({'name': text})
-    # end for
+    
     return items
-# end def
+

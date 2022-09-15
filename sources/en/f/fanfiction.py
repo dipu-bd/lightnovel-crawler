@@ -31,10 +31,10 @@ class FanFictionCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | %s | By, %s' % (origin_book, chapters, writer)
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -48,7 +48,7 @@ class FanFictionCrawler(Crawler):
         possible_image = soup.select_one('#profile_top img.cimage')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         possible_author = soup.select_one('#profile_top, #content')
@@ -69,7 +69,7 @@ class FanFictionCrawler(Crawler):
             })
         else:
             self.volumes.append({'id': 1})
-        # end if
+
 
         chapter_select = soup.select_one('#chap_select, select#jump')
         if chapter_select:
@@ -80,15 +80,15 @@ class FanFictionCrawler(Crawler):
                     'title': option.text.strip(),
                     'url':  chapter_url % (self.novel_id, option['value']),
                 })
-            # end for
+            
         else:
             self.chapters.append({
                 'id': 1,
                 'volume': 1,
                 'url':  self.novel_url,
             })
-        # end if
-    # end def
+
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -96,5 +96,5 @@ class FanFictionCrawler(Crawler):
         contents = soup.select_one('#storytext, #storycontent')
 
         return str(contents)
-    # end def
-# end class
+    
+

@@ -28,7 +28,7 @@ class IxdzsCrawler(Crawler):
                 }
             )
         return results
-    # end def
+
 
     def read_novel_info(self):
         '''Get novel title, author, cover etc'''
@@ -68,7 +68,7 @@ class IxdzsCrawler(Crawler):
                 'url': url,
                 'volume': vol_id
             })
-    # end def
+
 
     def download_chapter_body(self, chapter):
 
@@ -79,5 +79,5 @@ class IxdzsCrawler(Crawler):
         content = '\n'.join(str(p) for p in content)
         
         return content
-    # end def
-# end class
+
+

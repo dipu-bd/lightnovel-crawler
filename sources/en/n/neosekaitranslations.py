@@ -34,9 +34,9 @@ class NeoSekaiCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': ' | '.join(filter(None, [latest, status]))
             })
-        # end for
+
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -65,15 +65,15 @@ class NeoSekaiCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -87,6 +87,6 @@ class NeoSekaiCrawler(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
         return self.cleaner.extract_contents(contents)
-    # end def
 
-# end class
+
+

@@ -24,7 +24,7 @@ def destroy(*args, **kwargs):
     error_message('', 'Cancelled by user', None)
     stop_proxy_fetcher()
     sys.exit(1)
-# end def
+
     
 
 def init():
@@ -42,7 +42,7 @@ def init():
         level = levels[args.log] if args.log else 'NOTSET'
         os.environ['LOG_LEVEL'] = level
         urllib3.disable_warnings()
-    # end if
+
     if level != 'NOTSET':
         os.environ['debug_mode'] = 'yes'
         urllib3.add_stderr_logger(logging.INFO)
@@ -54,25 +54,25 @@ def init():
             + Fore.WHITE + '%(message)s' + Fore.RESET,
         )
         debug_mode(level)
-    # end if
+
 
     if args.suppress:
         input_suppression()
         print(args)
-    # end if
+
 
     if args.bot:
         os.environ['BOT'] = args.bot
-    # end if
+
 
     for key, val in args.extra.items():
         os.environ[key] = val[0]
-    # end for
+    
 
     # requests.urllib3.disable_warnings(
     #     requests.urllib3.exceptions.InsecureRequestWarning)
-    # # end if
-# end def
+
+
 
 
 def start_app():
@@ -85,11 +85,11 @@ def start_app():
     if args.proxy_file:
         os.environ['use_proxy'] = '1'
         load_proxies(args.proxy_file)
-    # end if
+
     if args.auto_proxy:
         os.environ['use_proxy'] = '1'
         start_proxy_fetcher()
-    # end if
+
 
     try:
         bot = os.getenv('BOT', '').lower()
@@ -97,12 +97,12 @@ def start_app():
     except Exception as e:
         if not isinstance(e, KeyboardInterrupt):
             error_message(*sys.exc_info())
-        # end if
-    # end try
+
+
 
     if args.auto_proxy:
         stop_proxy_fetcher()
-    # end if
+
 
     if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS') and not args.close_directly:
         try:
@@ -111,6 +111,6 @@ def start_app():
             pass
         except EOFError:
             pass
-        # end try
-    # end if
-# end def
+
+
+

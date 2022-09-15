@@ -109,7 +109,7 @@ try:
         username_cache = json.load(fp)
 except Exception as e:
     print('Could not load contributor cache file')
-# end try
+
 
 print('Getting contributors...')
 res = session.get('https://api.github.com/repos/dipu-bd/lightnovel-crawler/contributors')

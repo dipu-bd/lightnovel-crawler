@@ -12,7 +12,7 @@ def get_filename(chapter):
     if not chapter or 'id' not in chapter:
         return None
     return str(chapter['id']).rjust(5, '0') + '.html'
-# end def
+
 
 def bind_html_chapter(chapters, index, direction='ltr'):
     chapter = chapters[index]
@@ -39,7 +39,7 @@ def bind_html_chapter(chapters, index, direction='ltr'):
     main_body = chapter['body']
     if not main_body:
         main_body = f"<h1>{chapter['title']}</h1><p>No contents</p>"
-    # end if
+
 
     html = f'''
     <!DOCTYPE html>
@@ -67,7 +67,7 @@ def bind_html_chapter(chapters, index, direction='ltr'):
     '''
 
     return html, this_filename
-# end def
+
 
 
 def make_webs(app, data):
@@ -91,18 +91,18 @@ def make_webs(app, data):
             file_name = os.path.join(dir_name, file_name)
             with open(file_name, 'w', encoding='utf8') as file:
                 file.write(html)
-            # end with
+
 
             # Copy images
             for filename in chapter.get('images', {}):
                 src_file = os.path.join(app.output_path, 'images', filename)
                 dst_file = os.path.join(img_dir, filename)
                 shutil.copyfile(src_file, dst_file)
-            # end for
+            
 
             web_files.append(file_name)
-        # end for
-    # end for
+        
+    
     logger.info('Created: %d web files' % len(web_files))
     return web_files
-# end def
+

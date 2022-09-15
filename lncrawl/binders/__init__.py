@@ -43,7 +43,7 @@ def generate_books(app, data):
     out_formats = app.output_formats
     if not out_formats:
         out_formats = {}
-    # end if
+
     out_formats = {x: out_formats.get(x, False) for x in available_formats}
 
     # Resolve formats to output maintaining dependencies
@@ -66,14 +66,14 @@ def generate_books(app, data):
                 outputs[fmt] = make_epubs(app, data)
             elif fmt in depends_on_epub:
                 outputs[fmt] = make_calibres(app, outputs['epub'], fmt)
-            # end if
+
         except Exception as err:
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
         finally:
             progress += 1
             app.progress = 100 * progress / len(formats_to_generate)
-        # end try
-    # end for
+
+    
 
     return outputs
-# end def
+

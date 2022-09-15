@@ -26,10 +26,10 @@ class ListNovelCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         """Get novel title, autor, cover etc"""
@@ -39,7 +39,7 @@ class ListNovelCrawler(Crawler):
         possible_title = soup.select_one(".post-title h1")
         for span in possible_title.select("span"):
             span.extract()
-        # end for
+
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
@@ -66,7 +66,7 @@ class ListNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -75,8 +75,8 @@ class ListNovelCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         """Download body of a single chapter and return as clean html format."""
@@ -96,5 +96,5 @@ class ListNovelCrawler(Crawler):
 
         return self.cleaner.extract_contents(contents)
 
-    # end def
-# end class
+
+

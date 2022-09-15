@@ -16,7 +16,7 @@ class OneKsyCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.1ksy.com/'
-    # end def
+    
 
     def read_novel_info(self):
         url = self.novel_url.replace(
@@ -46,7 +46,7 @@ class OneKsyCrawler(Crawler):
                     'id': vol_id,
                     'title': 'Volume %d' % vol_id
                 })
-            # end if
+
 
             chap_id += 1
             self.chapters.append({
@@ -55,12 +55,12 @@ class OneKsyCrawler(Crawler):
                 'title': a['title'],
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('#content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+    
+

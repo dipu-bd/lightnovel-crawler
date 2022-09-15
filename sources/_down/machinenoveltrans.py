@@ -45,12 +45,12 @@ class MachineNovelTrans(Crawler):
                     'title': ch_title,
                     'url':  self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
+            
+        
 
         logger.debug('%d chapters and %d volumes found',
                      len(self.chapters), len(self.volumes))
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -59,7 +59,7 @@ class MachineNovelTrans(Crawler):
         body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         return body.strip()
-    # end def
+    
 
     def format_text(self, text):
         '''formats the text and remove bad characters'''
@@ -68,5 +68,5 @@ class MachineNovelTrans(Crawler):
         text = re.sub(r'\u201d[, ]*', '&rdquo;', text, flags=re.UNICODE)
         text = re.sub(r'[ ]*,[ ]+', ', ', text, flags=re.UNICODE)
         return text.strip()
-    # end def
-# end class
+    
+

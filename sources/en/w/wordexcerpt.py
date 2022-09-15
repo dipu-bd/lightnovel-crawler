@@ -28,10 +28,10 @@ class WordExcerptCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -78,8 +78,8 @@ class WordExcerptCrawler(Crawler):
                     if last_vol != volume['id']:
                         last_vol = volume['id']
                         self.volumes.append(volume)
-                # end for
-            # end for
+
+
         else:
             chapter_list = soup.select('li.wp-manga-chapter a')
             chapter_list.reverse()
@@ -92,16 +92,16 @@ class WordExcerptCrawler(Crawler):
                         'id': vol_id,
                         'title': vol_title,
                     })
-                # end if
+
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
                     'url':  chapter['href'],
                     'title': chapter.text.strip(),
                 })
-            # end for
-        # end if
-    # end def
+
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -109,5 +109,5 @@ class WordExcerptCrawler(Crawler):
         contents = soup.select('div.text-left p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-# end class
+
+

@@ -38,15 +38,15 @@ class FlyingLinesCrawler(Crawler):
             vol_id = 1 + (chap_id - 1) // 100
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         # How to get the key?
@@ -91,5 +91,5 @@ class FlyingLinesCrawler(Crawler):
             else:
                 content += chr(ord(ch) - odd_shift)
         return content
-    # end def
-# end class
+    
+

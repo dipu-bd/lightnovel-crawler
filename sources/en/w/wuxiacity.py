@@ -32,7 +32,7 @@ class WuxiaCityCrawler(Crawler):
                 'url': f'{self.home_url.strip("/")}{e[0].a.get("href")}',
                 'info': f'{e[1]} | Score: {e[2]}',
             } for e in entries]
-    # end def
+
 
     def read_novel_info(self):
         soup = self.get_soup(f'{self.novel_url}/table-of-contents')
@@ -53,11 +53,11 @@ class WuxiaCityCrawler(Crawler):
                 'hash': chapter.a.get('href').split('/')[-1],
             })
         self.chapters.sort(key=lambda c: c['id'])
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         return self.cleaner.extract_contents(soup.find('div', class_='chapter-content'))
-    # end def
-# end class
+
+

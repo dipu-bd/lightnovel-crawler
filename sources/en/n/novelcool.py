@@ -37,15 +37,15 @@ class NovelCool(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': self.absolute_url(x['href']),
                 'title': x.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -62,13 +62,13 @@ class NovelCool(Crawler):
 
         for report in body_parts.find('div', {'model_target_name': 'report'}):
             report.extract()
-        # end for
+
 
         # Removes End of Chapter junk text.
         for junk in body_parts.find('p', {'class': 'chapter-end-mark'}):
             junk.extract()
-        # end for
+
 
         return self.cleaner.extract_contents(body_parts)
-    # end def
-# end class
+
+

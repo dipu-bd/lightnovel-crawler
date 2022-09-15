@@ -28,8 +28,8 @@ class NovelvCrawler(Crawler):
         for a in soup.select('.panel-default .info .info2 h3 a'):
             if a['href'].startswith('/author/'):
                 authors.append(a.text.strip())
-            # end if
-        # end for
+
+
         self.novel_author = ', '.join(authors)
         logger.info('Novel author: %s', self.novel_author)
 
@@ -38,7 +38,7 @@ class NovelvCrawler(Crawler):
             possible_url = self.absolute_url(a['href'].lower())
             if not possible_url.startswith(self.novel_url):
                 continue
-            # end if
+
 
             chapter_id = len(self.chapters) + 1
             volume_id = (chapter_id - 1) // 100 + 1
@@ -50,13 +50,13 @@ class NovelvCrawler(Crawler):
                 'url': possible_url,
                 'volume': volume_id,
             })
-        # end for
+
 
         self.volumes = [
             {'id': x, 'title': ''}
             for x in list(volumes)
         ]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         chapter['title'] = self.clean_text(chapter['title'])
@@ -66,7 +66,7 @@ class NovelvCrawler(Crawler):
         body = self.cleaner.extract_contents(content)
         body = '<p>%s</p>' % '</p><p>'.join(body)
         return self.clean_text(body)
-    # end def
+
 
     def clean_text(self, text):
         text = re.sub(r'\ufffd\ufffd\ufffd+', '**', text)
@@ -74,5 +74,5 @@ class NovelvCrawler(Crawler):
         text = re.sub(r'\u00a0\u00a0', '–', text)
         text = re.sub(r'\ufffdC', '', text)
         return text
-    # end def
-# end class
+
+

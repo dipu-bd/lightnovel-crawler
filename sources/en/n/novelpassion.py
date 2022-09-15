@@ -14,7 +14,7 @@ class NovelPassion(Crawler):
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(['h1', 'h3', 'hr'])
-    # end def
+
     
     def search_novel(self, query):
         query = query.lower().replace(' ', '%20')
@@ -29,10 +29,10 @@ class NovelPassion(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': 'Rating: %s' % (votes),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         url = self.novel_url
@@ -45,7 +45,7 @@ class NovelPassion(Crawler):
         span = soup.select_one('div.dns a.stq')
         if span:
             self.novel_author = span.text.strip()
-        # end if
+
 
         chap_id = 0
         for a in soup.select('#stq a.c_000'):
@@ -55,7 +55,7 @@ class NovelPassion(Crawler):
                     'id': vol_id,
                     'title': 'Volume %d' % vol_id
                 })
-            # end if
+
 
             chap_id += 1
             self.chapters.append({
@@ -64,8 +64,8 @@ class NovelPassion(Crawler):
                 'title': ('Chapter %d' % chap_id),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
 
     def download_chapter_body(self, chapter):
@@ -75,9 +75,9 @@ class NovelPassion(Crawler):
         if strong and re.search(r'Chapter \d+', strong.text):
             chapter['title'] = strong.text.strip()
             logger.info('Updated title: %s', chapter['title'])
-        # end if
+
 
         contents = soup.select_one('.cha-words')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

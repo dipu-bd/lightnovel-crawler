@@ -27,7 +27,7 @@ class NovelUniverseCrawler(Crawler):
         book_info = soup.select_one('.book_info')
         if not book_info:
             raise Exception('Invalid content')
-        # end if
+
 
         possible_novel_title = book_info.select_one('h1.books_name')
         assert isinstance(possible_novel_title, Tag), 'No novel title'
@@ -38,8 +38,8 @@ class NovelUniverseCrawler(Crawler):
         for tag in book_info.select('.info_more'):
             if not tag.name and len(str(tag).strip()):
                 self.novel_author.append(str(tag))
-            # end if
-        # end for
+
+
         self.novel_author = ', '.join(self.novel_author).strip()
         logger.info(self.novel_author)
 
@@ -53,7 +53,7 @@ class NovelUniverseCrawler(Crawler):
             max_page = int(max_page[-2].text)
         else:
             max_page = 1
-        # end if
+
         logger.info('Pagination length: %d', max_page)
 
         tasks = {
@@ -71,7 +71,7 @@ class NovelUniverseCrawler(Crawler):
             for x in set(self.volumes)
         ]
 
-    # end def
+
 
     def get_chapter_list(self, url):
         soup = self.get_soup(url)
@@ -93,8 +93,8 @@ class NovelUniverseCrawler(Crawler):
                 'title': chapter_title,
                 'volume': volume_id,
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -104,9 +104,9 @@ class NovelUniverseCrawler(Crawler):
             para = ' '.join(self.cleaner.extract_contents(p))
             if len(para):
                 body.append(para)
-            # end if
-        # end for
+
+
 
         return '<p>%s</p>' % '</p><p>'.join(body)
-    # end def
-# end class
+
+

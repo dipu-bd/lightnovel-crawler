@@ -124,41 +124,41 @@ class TelegramBot:
         # SIGTERM or SIGABRT. This should be used most of the time, since
         # start_polling() is non-blocking and will stop the bot gracefully.
         self.updater.idle()
-    # end def
+    
 
     def error_handler(self, bot, update, error):
         """Log Errors caused by Updates."""
         logger.warn('Error: %s\nCaused by: %s', error, update)
-    # end def
+    
 
     def show_help(self, bot, update):
         update.message.reply_text(
             'Send /start to create new session.\n'
         )
         return ConversationHandler.END
-    # end def
+    
 
     def destroy_app(self, bot, update, user_data):
         if user_data.get('job'):
             user_data.pop('job').schedule_removal()
-        # end if
+
         if user_data.get('app'):
             app = user_data.pop('app')
             app.destroy()
             # remove output path
             #shutil.rmtree(app.output_path, ignore_errors=True)
-        # end if
+
         update.message.reply_text(
             'Session closed',
             reply_markup=ReplyKeyboardRemove()
         )
         return ConversationHandler.END
-    # end def
+    
 
     def init_app(self, bot, update, user_data):
         if user_data.get('app'):
             self.destroy_app(bot, update, user_data)
-        # end def
+        
 
         app = App()
         app.initialize()
@@ -172,7 +172,7 @@ class TelegramBot:
             'Enter whatever you want or send /cancel to stop.'
         )
         return 'handle_novel_url'
-    # end def
+    
 
     def handle_novel_url(self, bot, update, user_data):
         if user_data.get('job'):
@@ -191,7 +191,7 @@ class TelegramBot:
                 app = App()
                 app.initialize()
                 user_data['app'] = app
-            # end if
+
             app.user_input = update.message.text.strip()
 
             try:
@@ -204,23 +204,23 @@ class TelegramBot:
                 update.message.reply_text(
                     'Enter something again or send /cancel to stop.')
                 return 'handle_novel_url'
-            # end try
+
 
             if app.crawler:
                 update.message.reply_text('Got your page link')
                 return self.get_novel_info(bot, update, user_data)
-            # end if
+
 
             if len(app.user_input) < 5:
                 update.message.reply_text(
                     'Please enter a longer query text (at least 5 letters).')
                 return 'handle_novel_url'
-            # end if
+
 
             update.message.reply_text('Got your query text')
             return self.show_crawlers_to_search(bot, update, user_data)
-        # end if
-    # end def
+
+    
 
     def show_crawlers_to_search(self, bot, update, user_data):
         app = user_data.get('app')
@@ -229,14 +229,14 @@ class TelegramBot:
 
         def make_button(i, url):
             return '%d - %s' % (i + 1, urlparse(url).hostname)
-        # end def
+        
         for i in range(1, len(app.crawler_links) + 1, 2):
             buttons += [[
                 make_button(i - 1, app.crawler_links[i - 1]),
                 make_button(i, app.crawler_links[i]) if i < len(
                     app.crawler_links) else '',
             ]]
-        # end for
+        
 
         update.message.reply_text(
             'Choose where to search for your novel, \n'
@@ -244,7 +244,7 @@ class TelegramBot:
             reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True),
         )
         return 'handle_crawler_to_search'
-    # end def
+    
 
     def handle_crawler_to_search(self, bot, update, user_data):
         app = user_data.get('app')
@@ -261,11 +261,11 @@ class TelegramBot:
                     x for i, x in enumerate(app.crawler_links)
                     if '%d - %s' % (i + 1, urlparse(x).hostname) == link
                 ]
-            # end if
+
             if len(selected_crawlers) != 0:
                 app.crawler_links = selected_crawlers
-            # end if
-        # end if
+
+
 
         update.message.reply_text(
             'Searching for "%s" in %d sites. Please wait.' % (
@@ -279,7 +279,7 @@ class TelegramBot:
 
         app.search_novel()
         return self.show_novel_selection(bot, update, user_data)
-    # end def
+    
 
     def show_novel_selection(self, bot, update, user_data):
         app = user_data.get('app')
@@ -290,12 +290,12 @@ class TelegramBot:
                 'Try again or send /cancel to stop.'
             )
             return 'handle_novel_url'
-        # end if
+
 
         if len(app.search_results) == 1:
             user_data['selected'] = app.search_results[0]
             return self.show_source_selection(bot, update, user_data)
-        # end if
+
 
         update.message.reply_text(
             'Choose any one of the following novels,' +
@@ -310,7 +310,7 @@ class TelegramBot:
         )
 
         return 'handle_select_novel'
-    # end def
+    
 
     def handle_select_novel(self, bot, update, user_data):
         app = user_data.get('app')
@@ -329,19 +329,19 @@ class TelegramBot:
                         selected = item
                     else:
                         continue
-                    # end if
+
                     break
-                # end for
-            # end if
-        # end if
+                
+
+
 
         if not selected:
             return self.show_novel_selection(bot, update, user_data)
-        # end if
+
 
         user_data['selected'] = selected
         return self.show_source_selection(bot, update, user_data)
-    # end def
+    
 
     def show_source_selection(self, bot, update, user_data):
         app = user_data.get('app')
@@ -351,7 +351,7 @@ class TelegramBot:
         if len(selected['novels']) == 1:
             app.prepare_crawler(selected['novels'][0]['url'])
             return self.get_novel_info(bot, update, user_data)
-        # end if
+
 
         update.message.reply_text(
             ('Choose a source to download "%s", ' % selected['title']) +
@@ -368,7 +368,7 @@ class TelegramBot:
         )
 
         return 'handle_select_source'
-    # end def
+    
 
     def handle_select_source(self, bot, update, user_data):
         app = user_data.get('app')
@@ -389,19 +389,19 @@ class TelegramBot:
                         source = item
                     else:
                         continue
-                    # end if
+
                     break
-                # end for
-            # end if
-        # end if
+                
+
+
 
         if not selected or not (source and source.get('url')):
             return self.show_source_selection(bot, update, user_data)
-        # end if
+
 
         app.prepare_crawler(source.get('url'))
         return self.get_novel_info(bot, update, user_data)
-    # end def
+    
 
     def get_novel_info(self, bot, update, user_data):
         app = user_data.get('app')
@@ -412,7 +412,7 @@ class TelegramBot:
         # TODO: Implement login feature. Create login_info_dict of (email, password)
         # if app.can_do('login'):
         #     app.login_data = login_info_dict.get(app.crawler.home_url)
-        # # end if
+
 
         update.message.reply_text('Reading novel info...')
         app.get_novel_info()
@@ -436,8 +436,8 @@ class TelegramBot:
                 reply_markup=ReplyKeyboardRemove()
             )
             return self.display_range_selection_help(bot, update)
-        # end if
-    # end def
+
+    
 
     def handle_delete_cache(self, bot, update, user_data):
         app = user_data.get('app')
@@ -447,8 +447,8 @@ class TelegramBot:
             if os.path.exists(app.output_path):
                 shutil.rmtree(app.output_path, ignore_errors=True)
             os.makedirs(app.output_path, exist_ok=True)
-            # end if
-        # end if
+
+
 
         # Get chapter range
         update.message.reply_text(
@@ -459,7 +459,7 @@ class TelegramBot:
             reply_markup=ReplyKeyboardRemove()
         )
         return self.display_range_selection_help(bot, update)
-    # end def
+    
 
     def display_range_selection_help(self, bot, update):
         update.message.reply_text('\n'.join([
@@ -471,7 +471,7 @@ class TelegramBot:
             'To tereminate this session, send /cancel.'
         ]))
         return 'handle_range_selection'
-    # end def
+    
 
     def range_selection_done(self, bot, update, user_data):
         app = user_data.get('app')
@@ -480,7 +480,7 @@ class TelegramBot:
         )
         if len(app.chapters) == 0:
             return self.display_range_selection_help(bot, update)
-        # end if
+
         update.message.reply_text(
             'Do you want to generate a single file or split the books into volumes?',
             reply_markup=ReplyKeyboardMarkup([
@@ -488,25 +488,25 @@ class TelegramBot:
             ], one_time_keyboard=True),
         )
         return 'handle_pack_by_volume'
-    # end def
+    
 
     def handle_range_all(self, bot, update, user_data):
         app = user_data.get('app')
         app.chapters = app.crawler.chapters[:]
         return self.range_selection_done(bot, update, user_data)
-    # end def
+    
 
     def handle_range_first(self, bot, update, user_data):
         app = user_data.get('app')
         app.chapters = app.crawler.chapters[:50]
         return self.range_selection_done(bot, update, user_data)
-    # end def
+    
 
     def handle_range_last(self, bot, update, user_data):
         app = user_data.get('app')
         app.chapters = app.crawler.chapters[-50:]
         return self.range_selection_done(bot, update, user_data)
-    # end def
+    
 
     def handle_range_volume(self, bot, update, user_data):
         app = user_data.get('app')
@@ -516,7 +516,7 @@ class TelegramBot:
             '\nEnter which one these volumes you want to download separated space or commas.'
         )
         return 'handle_volume_selection'
-    # end def
+    
 
     def handle_volume_selection(self, bot, update, user_data):
         app = user_data.get('app')
@@ -533,7 +533,7 @@ class TelegramBot:
             if selected.count(chap['volume']) > 0
         ]
         return self.range_selection_done(bot, update, user_data)
-    # end def
+    
 
     def handle_range_chapter(self, bot, update, user_data):
         app = user_data.get('app')
@@ -543,7 +543,7 @@ class TelegramBot:
             '\nEnter which start and end chapter you want to generate separated space or comma.',
         )
         return 'handle_chapter_selection'
-    # end def
+    
 
     def handle_chapter_selection(self, bot, update, user_data):
         app = user_data.get('app')
@@ -563,7 +563,7 @@ class TelegramBot:
                 '\nTotal chapter chosen is %s' % len(app.chapters),
             )
         return self.range_selection_done(bot, update, user_data)
-    # end def
+    
 
     def handle_pack_by_volume(self, bot, update, user_data):
         app = user_data.get('app')
@@ -577,7 +577,7 @@ class TelegramBot:
         else:
             update.message.reply_text(
                 'I will generate single output files whenever possible')
-        # end if
+
 
         i = 0
         new_list = [['all']]
@@ -594,7 +594,7 @@ class TelegramBot:
         )
 
         return 'handle_output_format'
-    # end def
+    
 
     def handle_output_format(self, bot, update, job_queue, user_data):
         app = user_data.get('app')
@@ -608,12 +608,12 @@ class TelegramBot:
                     app.output_formats[x] = True
                 else:
                     app.output_formats[x] = False
-                # end if
-            # end for
+
+            
         elif text != 'all':
             update.message.reply_text('Sorry, I did not understand.')
             return
-        # end if
+
 
         job = job_queue.run_once(
             self.process_download_request,
@@ -630,7 +630,7 @@ class TelegramBot:
         )
 
         return ConversationHandler.END
-    # end def
+    
 
     def process_download_request(self, bot, job):
         update, user_data = job.context
@@ -640,7 +640,7 @@ class TelegramBot:
             user_data['status'] = 'Downloading "%s"' % app.crawler.novel_title
             app.start_download()
             update.message.reply_text('Download finished.')
-        # end if
+
 
         app = user_data.get('app')
         if app:
@@ -648,14 +648,14 @@ class TelegramBot:
             update.message.reply_text(user_data.get('status'))
             output_files = app.bind_books()
             update.message.reply_text('Output files generated.')
-        # end if
+
 
         app = user_data.get('app')
         if app:
             user_data['status'] = 'Compressing output folder.'
             update.message.reply_text(user_data.get('status'))
             app.compress_books()
-        # end if
+
 
         for archive in app.archived_outputs:
             file_size = os.stat(archive).st_size
@@ -674,12 +674,12 @@ class TelegramBot:
                     update.message.reply_text('Get your file here: %s' % direct_link)
                 except Exception as e:
                     logger.error('Failed to upload file: %s', archive, e)
-                # end try
-            # end if
-        # end for
+
+
+        
 
         self.destroy_app(bot, update, user_data)
-    # end def
+    
 
     def handle_downloader(self, bot, update, user_data):
         app = user_data.get('app')
@@ -694,8 +694,8 @@ class TelegramBot:
             )
         # else:
         #     self.show_help(bot, update)
-        # end if
+
 
         return ConversationHandler.END
-    # end def
-# end class
+    
+

@@ -43,10 +43,10 @@ class OrNovel(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -56,5 +56,4 @@ class OrNovel(Crawler):
             bad.extract()
 
         return str(contents)
-    # end def
-# end class
+

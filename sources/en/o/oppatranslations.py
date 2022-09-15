@@ -12,7 +12,7 @@ class OppaTranslationsCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.oppatranslations.com/'
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -32,7 +32,7 @@ class OppaTranslationsCrawler(Crawler):
         possible_image = soup.select_one('div.entry-content img')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end try
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
@@ -46,16 +46,16 @@ class OppaTranslationsCrawler(Crawler):
                         'id': vol_id,
                         'title': vol_title,
                     })
-                # end if
+
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
                     'title': a.text.strip(),
                     'url':  self.absolute_url(a['href']),
                 })
-        # end for
 
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -64,12 +64,12 @@ class OppaTranslationsCrawler(Crawler):
         for p in reversed(contents.select('p')):
             if p.find('a') and 'TOC' in p.text:
                 p.extract()
-        # end for
+
 
         contents.select_one('div center').extract()
 
         return re.sub(u'[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]',
                       '', str(contents), flags=re.UNICODE)
-    # end def
 
-# end class
+
+

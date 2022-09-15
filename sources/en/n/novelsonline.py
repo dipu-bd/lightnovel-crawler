@@ -27,7 +27,7 @@ class NovelsOnline(Crawler):
         author_link = soup.select_one("a[href*=author]")
         if author_link:
             self.novel_author = author_link.text.strip().title()
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         volume_ids = set()
@@ -41,10 +41,10 @@ class NovelsOnline(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+
 
         self.volumes = [{'id': i} for i in volume_ids]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -67,7 +67,7 @@ class NovelsOnline(Crawler):
         ]
         for hidden in div.select(', '.join(bad_selectors)):
             hidden.extract()
-        # end for
+
 
         body = self.cleaner.extract_contents(div)
         if re.search(r'c?hapter .?\d+', body[0], re.IGNORECASE):
@@ -76,8 +76,7 @@ class NovelsOnline(Crawler):
             title = ('C' if title.startswith('hapter') else '') + title
             chapter['title'] = title.strip()
             body = body[1:]
-        # end if
+
 
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-# end class
+

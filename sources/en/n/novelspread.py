@@ -27,11 +27,11 @@ class NovelSpreadCrawler(Crawler):
             m = hashlib.md5()
             m.update(r.encode())
             r = m.hexdigest()
-        # end for
+
         url = 'https://www.novelspread.com/image/' \
               '%sx%s/%s/%s/%s/%s' % (a, b, d, c, r[:16], image)
         return url
-    # end def
+
 
     def read_novel_info(self):
         self.novel_id = self.novel_url.strip('/').split('/')[-1]
@@ -60,7 +60,7 @@ class NovelSpreadCrawler(Crawler):
                 'title': chap['title'],
                 'url': self.absolute_url(chap['link'])
             })
-        # end for
+
 
         self.volumes = [
             {'id': x, 'title': ''}
@@ -69,12 +69,12 @@ class NovelSpreadCrawler(Crawler):
 
         logger.debug('%d chapters and %d volumes found',
                      len(self.chapters), len(self.volumes))
-    # end def
+
 
     def download_chapter_body(self, chapter):
         url = chapter_body_url % (self.novel_id, chapter['id'])
         logger.info('Getting chapter... %s [%s]', chapter['title'], url)
         data = self.get_json(url)
         return data['data']['chapter_content']
-    # end def
-# end class
+
+

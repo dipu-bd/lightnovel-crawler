@@ -15,7 +15,7 @@ class HostedNovelCom(Crawler):
         self.cleaner.bad_css.update([
             '.adbox'
         ])
-    # end def
+    
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -29,7 +29,7 @@ class HostedNovelCom(Crawler):
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
             logger.info('Novel cover: %s', self.novel_cover)
-        # end if 
+
 
         for div in soup.select('section[aria-labelledby="novel-details-heading"] dl div'):
             dt = div.select_one('.dt')
@@ -37,8 +37,8 @@ class HostedNovelCom(Crawler):
             if dt and dd and dt.text.strip().startswith('Author:'):
                 self.novel_author = dd.text.strip()
                 break
-            # end if
-        # end for
+
+        
         logger.info('Novel author: %s', self.novel_author)
 
         page_re = re.compile(r'page=(\d+)#chapters')
@@ -58,7 +58,7 @@ class HostedNovelCom(Crawler):
             logger.info('Getting chapters from "%s"', page_url)
             f = self.executor.submit(self.get_soup, page_url)
             futures.append(f)
-        # end for
+        
 
         for f in futures:
             soup = f.result()
@@ -67,20 +67,20 @@ class HostedNovelCom(Crawler):
                 vol_id = 1 + len(self.chapters) // 100
                 if len(self.volumes) < vol_id:
                     self.volumes.append({ 'id': vol_id })
-                # end if
+
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
                     'title': a.text.strip(),
                     'url':  self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
-    # end def
+            
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select_one('.chapter')
         return self.cleaner.extract_contents(content)
-    # end def
-# end class
+    
+

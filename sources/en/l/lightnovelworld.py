@@ -20,7 +20,7 @@ class LightNovelWorldCrawler(Crawler):
         possible_title = soup.select_one('li.text1')
         for span in possible_title.select('span'):
             span.extract()
-        # end for
+
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -40,10 +40,10 @@ class LightNovelWorldCrawler(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -54,5 +54,4 @@ class LightNovelWorldCrawler(Crawler):
 
         return str(contents)
 
-    # end def
-# end class
+

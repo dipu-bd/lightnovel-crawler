@@ -39,7 +39,7 @@ class App:
         self.good_file_name: str = ''
         self.no_append_after_filename = False
         atexit.register(self.destroy)
-    # end def
+    
 
     def __background(self, target_method, *args, **kwargs):
         t = Thread(target=target_method, args=args, kwargs=kwargs)
@@ -52,15 +52,15 @@ class App:
 
     def initialize(self):
         logger.info('Initialized App')
-    # end def
+    
 
     def destroy(self):
         if self.crawler:
             self.crawler.destroy()
-        # end if
+
         self.chapters.clear()
         logger.info('App destroyed')
-    # end def
+    
 
     # ----------------------------------------------------------------------- #
 
@@ -69,7 +69,7 @@ class App:
         '''Produces: [crawler, output_path] or [crawler_links]'''
         if not self.user_input:
             raise LNException('User input is not valid')
-        # end if
+
 
         if self.user_input.startswith('http'):
             logger.info('Detected URL input')
@@ -81,8 +81,8 @@ class App:
                 for link, crawler in crawler_list.items()
                 if 'search_novel' in crawler.__dict__
             ]
-        # end if
-    # end def
+
+    
 
     def search_novel(self):
         '''Requires: user_input, crawler_links'''
@@ -94,40 +94,40 @@ class App:
 
         if not self.search_results:
             raise LNException('No results for: %s' % self.user_input)
-        # end if
+
 
         logger.info('Total %d novels found from %d sites',
                     len(self.search_results), len(self.crawler_links))
-    # end def
+    
 
     # ----------------------------------------------------------------------- #
 
     def prepare_crawler(self, novel_url):
         if not novel_url:
             return
-        # end if
+
 
         parsed_url = urlparse(novel_url)
         base_url = '%s://%s/' % (parsed_url.scheme, parsed_url.hostname)
         if base_url in rejected_sources:
             raise LNException('Source is rejected. Reason: ' + rejected_sources[base_url])
-        # end if
+
 
         CrawlerType = crawler_list.get(base_url)
         if not CrawlerType:
             raise LNException('No crawler found for ' + base_url)
-        # end if
+
 
         logger.info('Initializing crawler for: %s [%s]',
                     base_url, getattr(CrawlerType, 'file_path', '.'))
         self.crawler = CrawlerType()
         self.crawler.home_url = base_url
         self.crawler.novel_url = novel_url
-    # end def
+    
 
     def can_do(self, prop_name):
         return prop_name in self.crawler.__class__.__dict__
-    # end def
+    
 
     def get_novel_info(self):
         '''Requires: crawler, login_data'''
@@ -142,7 +142,7 @@ class App:
         if self.can_do('login') and self.login_data:
             logger.debug('Login with %s', self.login_data)
             self.crawler.login(*list(self.login_data))
-        # end if
+
 
         print('Retrieving novel info...')
         print(self.crawler.novel_url)
@@ -166,11 +166,11 @@ class App:
                 lowercase=False,
                 word_boundary=True,
             )
-        # end if
+
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
         self.output_path = os.path.join(C.DEFAULT_OUTPUT_PATH, source_name, self.good_file_name)
-    # end def
+    
 
     # ----------------------------------------------------------------------- #
 
@@ -178,7 +178,7 @@ class App:
         '''Requires: crawler, chapters, output_path'''
         if not self.output_path or not os.path.isdir(self.output_path):
             raise LNException('Output path is not defined')
-        # end if
+
 
         assert self.crawler
 
@@ -190,12 +190,12 @@ class App:
 
         if not self.output_formats.get('json', False):
             shutil.rmtree(os.path.join(self.output_path, 'json'), ignore_errors=True)
-        # end if
+
 
         if self.can_do('logout'):
             self.crawler.logout()
-        # end if
-    # end def
+
+    
 
     # ----------------------------------------------------------------------- #
 
@@ -215,16 +215,16 @@ class App:
                     if x['volume'] == vol['id']
                     and len(x['body']) > 0
                 ]
-            # end for
+            
         else:
             first_id = self.chapters[0]['id']
             last_id = self.chapters[-1]['id']
             vol = 'c%s-%s' % (first_id, last_id)
             data[vol] = self.chapters
-        # end if
+
 
         generate_books(self, data)
-    # end def
+    
 
     # ----------------------------------------------------------------------- #
 
@@ -240,8 +240,8 @@ class App:
                     root_dir,
                     self.good_file_name + ' (' + fmt + ')'
                 ])
-            # end if
-        # end for
+
+        
 
         # Archive files
         self.archived_outputs = []
@@ -250,7 +250,7 @@ class App:
             if len(file_list) == 0:
                 logger.info('It has no files: %s', root_dir)
                 continue
-            # end if
+
 
             archived_file = None
             if len(file_list) == 1 and not archive_singles \
@@ -266,11 +266,11 @@ class App:
                     root_dir=root_dir,
                 )
                 print('Compressed:', os.path.basename(archived_file))
-            # end if
+
 
             if archived_file:
                 self.archived_outputs.append(archived_file)
-            # end if
-        # end for
-    # end def
-# end class
+
+        
+    
+

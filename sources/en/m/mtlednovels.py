@@ -42,15 +42,15 @@ class MtledNovelsCrawler(Crawler):
             soup.find('button').extract()
             error = soup.find('div').text.strip()
             raise PermissionError(error)
-        # end if
-    # end def
+
+
 
     def logout(self):
         '''logout as a good citizen'''
         logger.debug('Logging out...')
         self.get_response(logout_url)
         print('Logged out')
-    # end def
+
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -63,10 +63,10 @@ class MtledNovelsCrawler(Crawler):
                 'url': url,
                 'title': a.img['alt'],
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -92,15 +92,15 @@ class MtledNovelsCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -110,11 +110,11 @@ class MtledNovelsCrawler(Crawler):
             for span in p.find_all('span'):
                 if isinstance(span, Tag):
                     span.unwrap()
-                # end if
-            # end for
-        # end for
+
+
+
 
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
-# end class
+
+

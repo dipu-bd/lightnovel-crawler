@@ -35,15 +35,15 @@ class OppaTranslations(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -55,9 +55,8 @@ class OppaTranslations(Crawler):
             para = ' '.join(self.cleaner.extract_contents(p))
             if len(para):
                 body.append(para)
-            # end if
-        # end for
+
+
 
         return '<p>%s</p>' % '</p><p>'.join(body)
-    # end def
-# end class
+

@@ -23,9 +23,9 @@ class FullnovelLiveCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': info
             })
-        # end for
+        
         return results
-    # end def
+    
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -49,14 +49,14 @@ class FullnovelLiveCrawler(Crawler):
                 'url': self.absolute_url(x['href']),
                 'title': x.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+        
 
         self.volumes = [{'id': x} for x in vols]
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.page .divContent')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+    
+

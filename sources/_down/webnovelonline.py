@@ -12,7 +12,7 @@ class WebnovelOnlineCrawler(Crawler):
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(['h1', 'h3', 'hr'])
-    # end def
+    
     
     def read_novel_info(self):
         url = self.novel_url
@@ -25,7 +25,7 @@ class WebnovelOnlineCrawler(Crawler):
         span = soup.select_one('header span.send-author-event')
         if span:
             self.novel_author = span.text.strip()
-        # end if
+
 
         chap_id = 0
         for a in soup.select('#info a.on-navigate-part'):
@@ -35,7 +35,7 @@ class WebnovelOnlineCrawler(Crawler):
                     'id': vol_id,
                     'title': 'Volume %d' % vol_id
                 })
-            # end if
+
 
             chap_id += 1
             self.chapters.append({
@@ -44,8 +44,8 @@ class WebnovelOnlineCrawler(Crawler):
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -54,9 +54,9 @@ class WebnovelOnlineCrawler(Crawler):
         if strong and re.search(r'Chapter \d+', strong.text):
             chapter['title'] = strong.text.strip()
             logger.info('Updated title: %s', chapter['title'])
-        # end if
+
 
         contents = soup.select_one('#story-content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+    
+

@@ -24,7 +24,7 @@ class TapreadCrawler(Crawler):
         possible_image = soup.select_one('img.bg-img, img.cover-img, .book-img img')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end try
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         try:
@@ -32,11 +32,11 @@ class TapreadCrawler(Crawler):
             for div in soup.select('.author, .translator'):
                 possible_authors.append(
                     ': '.join([x.strip() for x in div.text.split(':')]))
-            # end for
+
             self.novel_author = ', '.join(possible_authors)
         except Exception:
             pass
-        # end try
+
         logger.info(self.novel_author)
 
         path = urlparse(self.novel_url).path
@@ -54,13 +54,13 @@ class TapreadCrawler(Crawler):
                 'title': chap['chapterName'],
                 'url': chapter_url % (chap['bookId'], chap['chapterId']),
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         data = self.get_json(chapter['url'])
         return data['result']['content']
-    # end def
-# end class
+
+

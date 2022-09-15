@@ -23,10 +23,10 @@ class FastNovel(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s' % (latest),
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -67,21 +67,21 @@ class FastNovel(Crawler):
                     'title': ch_title,
                     'url':  self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
+            
+        
 
         logger.debug('%d chapters and %d volumes found',
                      len(self.chapters), len(self.volumes))
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
         contents = soup.select_one('#chapter-body')
-        # end for
+        
 
         return str(contents)
-    # end def
+    
 
     def format_text(self, text):
         '''formats the text and remove bad characters'''
@@ -90,5 +90,5 @@ class FastNovel(Crawler):
         text = re.sub(r'\u201d[, ]*', '&rdquo;', text, flags=re.UNICODE)
         text = re.sub(r'[ ]*,[ ]+', ', ', text, flags=re.UNICODE)
         return text.strip()
-    # end def
-# end class
+    
+

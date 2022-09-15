@@ -35,10 +35,10 @@ class WebnovelOnlineDotComCrawler(Crawler):
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
+
 
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -47,12 +47,12 @@ class WebnovelOnlineDotComCrawler(Crawler):
             text = script.string
             if not text or not text.startswith('window._INITIAL_DATA_'):
                 continue
-            # end if
+
             content = re.findall(r',"chapter":(".+")},', text)[0]
             content = json.loads(content).strip()
             return '<p>' + '</p><p>'.join(content.split('\n\n')) + '</p>'
-        # end for
+
 
         return ''
-    # end def
-# end class
+
+

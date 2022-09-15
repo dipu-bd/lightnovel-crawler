@@ -36,11 +36,11 @@ class MtlnovelCrawler(Crawler):
                     'url': url,
                     'title': re.sub(r'</?strong>', '', item['title']),
                 })
-            # end for
-        # end for
+
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         self.novel_url = self.novel_url.replace('https://', 'http://')
@@ -70,16 +70,16 @@ class MtlnovelCrawler(Crawler):
                 vol_id = 1 + len(self.chapters) // 100
                 if len(self.chapters) % 100 == 0:
                     self.volumes.append({'id': vol_id})
-                # end if
+
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
                     'url':  chapter['permalink'],
                     'title': chapter['no'] + " " + chapter['title'],
                 })
-            # end for
-        # end for
-    # end def
+
+
+
 
     def download_chapter_body(self, chapter):
         url = chapter['url'].replace('https://', 'http://')
@@ -87,5 +87,5 @@ class MtlnovelCrawler(Crawler):
         soup = self.get_soup(url)
         contents = soup.select_one('.post-content .par')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

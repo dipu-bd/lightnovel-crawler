@@ -36,7 +36,7 @@ class ShinsoriCrawler(Crawler):
                 self.novel_url, x+1)
             p_soup = self.get_soup(p_url)
             chapters.extend(p_soup.select('ul.lcp_catlist')[1].select('li a'))
-        # end for
+
 
         for x in chapters:
             chap_id = len(self.chapters) + 1
@@ -47,13 +47,13 @@ class ShinsoriCrawler(Crawler):
                 'url': self.absolute_url(x['href']),
                 'title': x['title'] or ('Chapter %d' % chap_id),
             })
-        # end for
+
 
         self.volumes = [
             {'id': x + 1}
             for x in range(len(self.chapters) // 100 + 1)
         ]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -81,5 +81,5 @@ class ShinsoriCrawler(Crawler):
                 item.extract()
 
         return str(content)
-    # end def
-# end class
+
+

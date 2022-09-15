@@ -21,7 +21,7 @@ class RewayatClubCrawler(Crawler):
         self.cleaner.bad_tags.clear()
         self.cleaner.bad_css.clear()
         self.cleaner.bad_css.update(['.code-block'])
-    # end def
+    
 
     def read_novel_info(self):
         self.is_rtl = True
@@ -58,7 +58,7 @@ class RewayatClubCrawler(Crawler):
             url = chapter_list_url % (novel_slug, page + 1)
             f = self.executor.submit(self.get_json, url)
             futures.append(f)
-        # end for
+        
 
         for f in futures:
             data = f.result()
@@ -67,15 +67,15 @@ class RewayatClubCrawler(Crawler):
                 vol_id = 1 + len(self.chapters) // 100
                 if len(self.chapters) % 100 == 0:
                     self.volumes.append({ 'id': vol_id })
-                # end if
+
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
                     'title': item['title'],
                     'url': chapter_body_url % (novel_slug, item['number']),
                 })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -91,5 +91,5 @@ class RewayatClubCrawler(Crawler):
         html = html.replace('<span>', '').replace('</span>', '')
         body = self.make_soup(html).find('body')
         return self.cleaner.extract_contents(body)
-    # end def
-# end class
+    
+

@@ -17,7 +17,7 @@ class QidianComCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.qidian.com/'
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -64,9 +64,9 @@ class QidianComCrawler(Crawler):
                     'title': chapter['cN'],
                     'url': chapter_details_url % chapter['cU'],
                 })
-            # end for
-        # end for
-    # end def
+            
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -74,9 +74,9 @@ class QidianComCrawler(Crawler):
         possible_title = soup.select_one('h3.j_chapterName')
         if possible_title:
             chapter['title'] = possible_title.text.strip()
-        # end if
+
 
         contents = soup.select_one('div.j_readContent')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+    
+

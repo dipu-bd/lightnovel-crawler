@@ -19,7 +19,7 @@ class AixdzsCrawler(Crawler):
     def read_novel_info(self):
         if not self.novel_url.endswith('/'):
             self.novel_url += '/'
-        # end if
+
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -55,15 +55,15 @@ class AixdzsCrawler(Crawler):
                 'title': a.text,
                 'url': self.absolute_url(a['href']),
             })
-        # end def
+
 
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.content > p')
         contents = [str(p) for p in contents if p.text.strip()]
         return ''.join(contents)
-    # end def
-# end class
+
+

@@ -17,7 +17,7 @@ class WuxiaWorldIo(Crawler):
             r'^translat(ed by|or)',
             r'(volume|chapter) .?\d+',
         ])
-    # end def
+
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
@@ -33,10 +33,10 @@ class WuxiaWorldIo(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': 'Latest: %s' % info,
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -61,19 +61,19 @@ class WuxiaWorldIo(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.content-area')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

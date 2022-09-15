@@ -6,12 +6,12 @@ ROOT = Path(__file__).parent
 
 with open(str(ROOT / 'style.css'), 'r', encoding='utf8') as f:
     style = f.read()
-# end with
+
 
 
 def get_value():
     return _minify(style)
-# end def
+
 
 
 def _minify(css):
@@ -51,4 +51,4 @@ def _minify(css):
                     ['%s:%s;' % (key, properties[key]) for key in porder])[:-1])
 
     return result
-# end def
+

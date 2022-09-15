@@ -14,7 +14,7 @@ class Wujizun(Crawler):
         self.cleaner.blacklist_patterns.update([
             "Previous Chapter", "Table of Contents", "Next Chapter", "MYSD Patreon:"
         ])
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -43,20 +43,20 @@ class Wujizun(Crawler):
             vol_id = chap_id // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         body_parts = soup.select_one('div.entry-content')
         self.cleaner.clean_contents(body_parts)
         return str(body_parts)
-    # end def
-# end class
+
+

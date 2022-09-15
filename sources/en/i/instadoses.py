@@ -17,7 +17,7 @@ class InstadosesCrawler(Crawler):
 
     def initialize(self):
         self.executor = ThreadPoolExecutor(max_workers=7)
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -62,15 +62,15 @@ class InstadosesCrawler(Crawler):
             vol_id = chap_id // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url':  self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -84,5 +84,5 @@ class InstadosesCrawler(Crawler):
             body.append(str(p))
 
         return ''.join(body)
-    # end def
-# end class
+    
+

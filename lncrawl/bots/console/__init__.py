@@ -11,7 +11,7 @@ class ConsoleBot:
     def __init__(self) -> None:
         self.app: Optional[App] = None
         self.search_mode = False
-    # end def
+    
 
     from .integration import process_chapter_range, start
     from .get_crawler import (choose_a_novel, confirm_retry,
@@ -22,4 +22,4 @@ class ConsoleBot:
     from .range_selection import (get_range_from_chapters,
                                   get_range_from_volumes, get_range_selection,
                                   get_range_using_index, get_range_using_urls)
-# end class
+

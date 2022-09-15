@@ -43,7 +43,7 @@ class BabelNovelCrawler(Crawler):
         self.user_id = data['data']['loginResult']['user']['id']
         self.set_header('x-user-id', self.user_id)
         logger.info('User ID = %s', self.user_id)
-    # end def
+    
 
     def search_novel(self, query):
         # to get cookies
@@ -57,19 +57,19 @@ class BabelNovelCrawler(Crawler):
         for item in data['data']:
             if not item['canonicalName']:
                 continue
-            # end if
+
             info = None
             if item['lastChapter']:
                 info = 'Latest: %s' % item['lastChapter']['name']
-            # end if
+
             results.append({
                 'title': item['name'],
                 'url': novel_page_url % item['canonicalName'],
                 'info': info,
             })
-        # end for
+        
         return results
-    # end def
+    
 
     def read_novel_info(self):
         # Determine cannonical novel name
@@ -78,7 +78,7 @@ class BabelNovelCrawler(Crawler):
             self.novel_hash = path_fragments[2]
         else:
             self.novel_hash = path_fragments[-1]
-        # end if
+
         self.novel_url = novel_page_url % self.novel_hash
         logger.info('Canonical name: %s', self.novel_hash)
 
@@ -96,7 +96,7 @@ class BabelNovelCrawler(Crawler):
 
         chapter_count = int(data['data']['releasedChapterCount'])
         self.get_list_of_chapters(chapter_count)
-    # end def
+    
 
     def get_list_of_chapters(self, chapter_count):
         futures_to_check = dict()
@@ -105,20 +105,20 @@ class BabelNovelCrawler(Crawler):
             list_url = chapter_list_url % (self.novel_id, self.novel_id, page)
             future = self.executor.submit(self.parse_chapter_item, list_url)
             futures_to_check[future] = str(page)
-        # end for
+        
         for future in futures.as_completed(futures_to_check):
             page = int(futures_to_check[future])
             temp_chapters[page] = future.result()
-        # end for
+        
         for page in sorted(temp_chapters.keys()):
             self.volumes.append({'id': page + 1})
             for chap in temp_chapters[page]:
                 chap['volume'] = page + 1
                 chap['id'] = 1 + len(self.chapters)
                 self.chapters.append(chap)
-            # end for
-        # end for
-    # end def
+            
+        
+    
 
     def parse_chapter_item(self, list_url):
         logger.debug('Visiting %s', list_url)
@@ -127,20 +127,20 @@ class BabelNovelCrawler(Crawler):
         for item in data['data']:
             if not (item['isFree'] or item['isLimitFree'] or item['isBought']):
                 continue
-            # end if
+
             chapters.append({
                 'title': item['name'],
                 'url': chapter_page_url % (self.novel_hash, item['canonicalName']),
                 'json_url': chapter_json_url % (self.novel_hash, item['id']),
             })
-        # end for
+        
         return chapters
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         data = self.get_json(chapter['json_url'])
         soup = self.make_soup(data['data']['content'])
         body = soup.find('body')
         return self.cleaner.extract_contents(body)
-    # end def
-# end class
+    
+

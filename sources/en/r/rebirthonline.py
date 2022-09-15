@@ -56,10 +56,10 @@ class RebirthOnlineCrawler(Crawler):
                     'url': self.absolute_url(a['href']),
                     'title': a.text.strip() or ('Chapter %d' % chap_id),
                 })
-                # end if
-            # end for
-        # end for
-    # end def
+
+
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -75,16 +75,16 @@ class RebirthOnlineCrawler(Crawler):
                 for item in remove:
                     if item in content.text:
                         content.extract()
-                    # end if
-                # end for
-            # end for
+
+
+
             tmp = ''
             for content in contents:
                 tmp = tmp + '<p>' + content.text + '</p>'
                 contents = BeautifulSoup(tmp, 'lxml')
-            # end for
-        # end if
+
+
 
         return str(contents)
-    # end def
-# end class
+
+

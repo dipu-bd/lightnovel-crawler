@@ -36,7 +36,7 @@ class GravityTalesCrawler(Crawler):
         logger.info(self.novel_author)
 
         self.get_chapter_list()
-    # end def
+    
 
     def get_chapter_list(self):
         url = chapter_list_url % self.novel_id
@@ -61,9 +61,9 @@ class GravityTalesCrawler(Crawler):
                     'title': a.text.strip(),
                     'url': self.absolute_url(a['href']),
                 })
-        # end for
+        
 
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         logger.info('Downloading %s' % chapter['url'])
@@ -72,8 +72,8 @@ class GravityTalesCrawler(Crawler):
         for tag in body.contents:
             if hasattr(tag, 'attrs'):
                 setattr(tag, 'attrs', {})    # clear attributes
-            # end if
-        # end for
+
+        
         return str(body)
-    # end def
-# end class
+    
+

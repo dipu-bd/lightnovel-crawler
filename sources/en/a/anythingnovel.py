@@ -35,11 +35,11 @@ class AnythingNovelCrawler(Crawler):
                 'title': title,
                 'url': a['href'],
             })
-        # end for
+        
 
         self.chapters.sort(key=lambda x: x['id'])
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -48,10 +48,10 @@ class AnythingNovelCrawler(Crawler):
         body = content.select('p')
         body = [str(p) for p in body if self.should_take(p)]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
+    
 
     def should_take(self, p):
         txt = p.text.strip().lower()
         return txt and txt != 'advertisement'
-    # end def
-# end class
+    
+

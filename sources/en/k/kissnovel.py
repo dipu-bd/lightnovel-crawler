@@ -45,7 +45,7 @@ class KissNovelCrawler(Crawler):
             logger.debug('Visiting %s', url)
             soup = self.get_soup(url)
             chapters.extend(soup.select('ul.main li.wp-manga-chapter a'))
-        # end for
+        
         chapters.reverse()
 
         for a in chapters:
@@ -57,15 +57,15 @@ class KissNovelCrawler(Crawler):
                     'id': vol_id,
                     'title': vol_title,
                 })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -82,5 +82,5 @@ class KissNovelCrawler(Crawler):
         #    codeblock.extract()
 
         # return str(contents)
-    # end def
-# end class
+    
+

@@ -27,10 +27,10 @@ class WuxiaSiteCrawler(Crawler):
     #             'url': self.absolute_url(a['href']),
     #             'info': '%s | Rating: %s' % (latest, votes),
     #         })
-    #     # end for
+
 
     #     return results
-    # # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -69,15 +69,15 @@ class WuxiaSiteCrawler(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': option.text.strip(),
                 'url':  self.absolute_url(option['data-redirect']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -89,5 +89,5 @@ class WuxiaSiteCrawler(Crawler):
             content = soup.select_one('.reading-content')
 
         return self.cleaner.extract_contents(content)
-    # end def
-# end class
+
+

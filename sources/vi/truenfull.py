@@ -25,13 +25,13 @@ class TruenFull(Crawler):
         possible_item = tag.select_one(css)
         if not isinstance(possible_item, Tag):
             return ''
-        # end if
+
         if attr:
             return (getattr(possible_item, 'attrs') or {}).get(attr)
         else:
             return (getattr(possible_item, 'text') or '').strip()
-        # end if
-    # end def
+
+
 
 
     def search_novel(self, query):
@@ -53,10 +53,10 @@ class TruenFull(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': ' | '.join(info),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -78,8 +78,8 @@ class TruenFull(Crawler):
            self.parse_truyentr_chapters(soup)
         else:
             self.parse_truyenfull_chapters(soup)
-        # end if
-    # end def
+
+
 
     def parse_truyentr_chapters(self, soup: Tag):
         total_page = 1
@@ -89,8 +89,8 @@ class TruenFull(Crawler):
             logger.info('Last page url: %s', last_page_url)
             if '?trang=' in last_page_url:
                 total_page = int(last_page_url.split('trang=')[1])
-            # end if
-        # end if
+
+
         logger.info('Total page count = %d', total_page)
 
         futures: List[Future] = []
@@ -99,15 +99,15 @@ class TruenFull(Crawler):
             logger.info('Visiting %s', url)
             f = self.executor.submit(self.get_soup, url)
             futures.append(f)
-        # end for
+
 
         self.parse_all_links(soup.select('.list-chapters a'))
 
         for f in futures:
             soup = f.result()
             self.parse_all_links(soup.select('.list-chapters a'))
-        # end for
-    # end def
+
+
 
     def parse_truyenfull_chapters(self, soup: Tag):
         truyen_id = self.__select_value(soup, 'input#truyen-id', 'value')
@@ -131,14 +131,14 @@ class TruenFull(Crawler):
             logger.info('Getting chapters: %s', url)
             f = self.executor.submit(self.get_json, url)
             futures.append(f)
-        # end for
+
 
         for f in futures:
             data = f.result()
             soup = self.make_soup(data['chap_list'])
             self.parse_all_links(soup.select('.list-chapter a'))
-        # end for
-    # end def
+
+
 
     def parse_all_links(self, links: List[Tag]):
         for a in links:
@@ -146,15 +146,15 @@ class TruenFull(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a['title'],
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
     def initialize(self) -> None:
         self.cleaner.bad_css = set([
@@ -172,11 +172,11 @@ class TruenFull(Crawler):
             '.ads-middle',
             '.adsbygoogle',
         ])
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('#chapter-c, .chapter-c')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

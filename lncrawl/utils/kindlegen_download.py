@@ -27,8 +27,8 @@ def get_url_by_platform():
         return WINDOWS_URL
     else:
         raise LNException('Unrecognized platform')
-    # end if
-# end def
+
+
 
 
 def extract_kindlegen_file(extractor, file_list):
@@ -45,8 +45,8 @@ def extract_kindlegen_file(extractor, file_list):
         logger.info('Renamed kindlegen.exe to kindlegen')
     else:
         raise LNException('Kindlegen executable was not found.')
-    # end if
-# end def
+
+
 
 
 def download_kindlegen():
@@ -61,25 +61,25 @@ def download_kindlegen():
         with BytesIO(byte_array) as byte_stream:
             with ZipFile(byte_stream) as file:
                 extract_kindlegen_file(file.extract, file.namelist())
-            # end with
-        # end with
+
+
     elif url.endswith('.tar.gz'):
         temp_file = tempfile.mktemp('.tar.gz')
         try:
             logger.info('Writing content to %s', temp_file)
             with FileIO(temp_file, 'w') as file:
                 file.write(byte_array)
-            # end with
+
             logger.info('Opening %s as archive', temp_file)
             with tarfile.open(temp_file) as file:
                 extract_kindlegen_file(file.extract, file.getnames())
-            # end with
+
         finally:
             os.remove(temp_file)
             logger.info('%s removed.', temp_file)
-        # end finally
-    # end if
-# end def
+
+
+
 
 
 def retrieve_kindlegen():
@@ -88,6 +88,6 @@ def retrieve_kindlegen():
     kindlegen_file = os.path.join(home, 'kindlegen')
     if os.path.exists(kindlegen_file):
         return kindlegen_file
-    # end if
+
     return None
-# end def
+

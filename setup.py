@@ -20,10 +20,10 @@ finally:
 run_pyi = 'package' in sys.argv
 if run_pyi:
     sys.argv.remove('package')
-# end if
+
 if len(sys.argv) == 1:
     sys.argv += ['build']
-# end if
+
 
 
 def parse_requirements(filename):
@@ -34,7 +34,7 @@ def parse_requirements(filename):
             if r.strip() and not r.startswith('#')
         ]
         return requirements
-# end def
+
 
 
 config.read_configuration('setup.cfg')
@@ -69,4 +69,4 @@ setup(
 if run_pyi:
     from setup_pyi import package
     package()
-# end if
+

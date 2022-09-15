@@ -35,7 +35,7 @@ class Centinni(Crawler):
             r'^Centinni is translating this novel.',
             r'^Possessing Nothing now has a chat channel! Join our discord server to chat with your team and more friends!',
         ])
-    # end def
+    
     
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -51,10 +51,10 @@ class Centinni(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -63,7 +63,7 @@ class Centinni(Crawler):
         possible_title = soup.select_one('.post-title h1')
         for span in possible_title.select('span'):
             span.extract()
-        # end for
+        
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -90,15 +90,15 @@ class Centinni(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+        
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+    
 
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div.text-left')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+    
+

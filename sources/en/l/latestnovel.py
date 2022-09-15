@@ -17,7 +17,7 @@ class LatestNovelCrawler(Crawler):
         self.cleaner.blacklist_patterns.update([
             'You can read the novel online free at LatestNovel.Net or NovelZone.Net'
         ])
-    # end def
+    
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -39,9 +39,9 @@ class LatestNovelCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': ' | '.join(filter(None, [latest, status]))
             })
-        # end for
+        
         return results
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -78,15 +78,15 @@ class LatestNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -96,6 +96,6 @@ class LatestNovelCrawler(Crawler):
             contents = soup.select_one('.reading-content')
 
         return self.cleaner.extract_contents(contents)
-    # end def
+    
 
-# end class
+

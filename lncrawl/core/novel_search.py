@@ -32,10 +32,10 @@ def get_search_result(app, link, bar):
     except Exception as e:
         if logger.isEnabledFor(logging.DEBUG):
             logging.exception('Searching failure for %s', link)
-        # end if
-    # end try
+
+
     return []
-# end def
+
 
 
 def process_results(combined_results):
@@ -46,7 +46,7 @@ def process_results(combined_results):
             continue
         combined.setdefault(key, [])
         combined[key].append(result)
-    # end for
+    
 
     processed = []
     for key, value in combined.items():
@@ -56,12 +56,12 @@ def process_results(combined_results):
             'title': value[0]['title'],
             'novels': value
         })
-    # end for
+    
 
     processed.sort(key=lambda x: -len(x['novels']))
 
     return processed[:15]  # Control the number of results
-# end def
+
 
 
 def search_novels(app):
@@ -88,11 +88,11 @@ def search_novels(app):
             logger.info('A crawler for "%s" already exists', link)
             bar.update()
             continue
-        # end if
+
         checked[crawler] = True
         future = executor.submit(get_search_result, app, link, bar)
         futures_to_check.append(future)
-    # end for
+    
 
     # Resolve all futures
     combined_results = []
@@ -109,8 +109,8 @@ def search_novels(app):
         finally:
             app.progress += 1
             bar.update()
-        # end try
-    # end for
+
+    
 
     # Cancel any remaining futures
     for f in futures_to_check:
@@ -119,10 +119,10 @@ def search_novels(app):
             f.cancel()
         elif not f.cancelled():
             combined_results += f.result()
-        # end if
-    # end for
+
+    
 
     # Process combined search results
     app.search_results = process_results(combined_results)
     bar.close()
-# end def
+

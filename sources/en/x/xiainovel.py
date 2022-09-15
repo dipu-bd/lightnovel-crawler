@@ -40,15 +40,15 @@ class YukiNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -57,12 +57,11 @@ class YukiNovelCrawler(Crawler):
 
         for d in contents.findAll('div'):
             d.extract()
-        # end for
+
 
         for comment in contents.find_all(string=lambda text: isinstance(text, Comment)):
             comment.extract()
-        # end for
+
 
         return str(contents)
-    # end def
-# end class
+

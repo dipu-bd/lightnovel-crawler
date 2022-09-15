@@ -23,10 +23,10 @@ class OMGNovelsCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -35,7 +35,7 @@ class OMGNovelsCrawler(Crawler):
         possible_title = soup.select_one(".post-title h3")
         for span in possible_title.select("span"):
             span.extract()
-        # end for
+
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
@@ -66,10 +66,10 @@ class OMGNovelsCrawler(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -79,5 +79,4 @@ class OMGNovelsCrawler(Crawler):
             bad.extract()
 
         return str(contents)
-    # end def
-# end class
+

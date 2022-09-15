@@ -14,7 +14,7 @@ class SleepyTranslations(Crawler):
         possible_title = soup.select_one('.post-title h1')
         for span in possible_title.select('span'):
             span.extract()
-        # end for
+
         self.novel_title = possible_title.text.strip()
         logger.info('Novel title: %s', self.novel_title)
 
@@ -39,7 +39,7 @@ class SleepyTranslations(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -48,12 +48,12 @@ class SleepyTranslations(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.reading-content p')
         return ''.join([str(p) for p in contents])
-    # end def
-# end class
+
+

@@ -17,7 +17,7 @@ class WanderingInnCrawler(Crawler):
             "Table of Contents",
             "Next Chapter"
         ])
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -46,15 +46,15 @@ class WanderingInnCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -62,5 +62,4 @@ class WanderingInnCrawler(Crawler):
         body_parts = soup.select_one('div.entry-content')
 
         return self.cleaner.extract_contents(body_parts)
-    # end def
-# end class
+

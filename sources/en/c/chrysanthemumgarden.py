@@ -12,7 +12,7 @@ class ChrysanthemumGarden(Crawler):
     def read_novel_info(self):
         if not self.novel_url.endswith('/'):
             self.novel_url += '/'
-        # end if
+
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
@@ -40,10 +40,10 @@ class ChrysanthemumGarden(Crawler):
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end def
+        
 
         self.volumes = [{'id': x, 'title': ''} for x in volumes]
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -57,30 +57,30 @@ class ChrysanthemumGarden(Crawler):
         for p in soup.select('#novel-content p'):
             for span in p.select('span[style*="width:0"]'):
                 span.extract()
-            # end for
+            
 
             if any(x in p.text for x in bads):
                 continue
-            # end for
+            
 
             text = ''
             for span in p.select('span.jum'):
                 text += self.descramble_text(span.text) + ' '
-            # end for
+            
 
             if not text:
                 text = p.text.strip()
-            # end if
+
 
             if not text:
                 continue
-            # end if
+
 
             contents.append(text)
-        # end for
+        
 
         return '<p>' + '</p><p>'.join(contents) + '</p>'
-    # end def
+    
 
     def descramble_text(self, cipher):
         plain = ''
@@ -95,8 +95,8 @@ class ChrysanthemumGarden(Crawler):
                 plain += upper_fixer[ord(ch) - ord('A')]
             else:
                 plain += ch
-            # end if
-        # end for
+
+        
         return plain
-    # end def
-# end class
+    
+

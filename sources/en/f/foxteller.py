@@ -28,10 +28,10 @@ class FoxtellerCrawler(Crawler):
     #             'url': self.absolute_url(a['href']),
     #             'info': a.select_one('span .text-brand').text.strip(),
     #         })
-    #     # end for
+    #     
 
     #     return results
-    # # end def
+    # 
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -59,9 +59,9 @@ class FoxtellerCrawler(Crawler):
                     'title': a.text.strip(),
                     'url':  self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
-    # end def
+            
+        
+    
 
     def download_chapter_body(self, chapter):
 
@@ -75,12 +75,12 @@ class FoxtellerCrawler(Crawler):
                 novel_id = novel_id[0]
                 chapter_id = chapter_id[0]
                 break
-            # end if
-        # end for
+
+        
 
         if not (novel_id and chapter_id):
             return None
-        # end if
+
         data = json.dumps({
             'x1': novel_id,
             'x2': chapter_id,
@@ -112,5 +112,5 @@ class FoxtellerCrawler(Crawler):
         content = self.make_soup(aux)
         content = '\n'.join(str(p) for p in content.select('p'))
         return self.clean_text(content)
-    # end def
-# end class
+    
+

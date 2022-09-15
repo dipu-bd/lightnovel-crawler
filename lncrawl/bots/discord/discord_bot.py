@@ -31,13 +31,13 @@ class DiscordBot(discord.Client):
         options['fetch_offline_members'] = False
         self.handlers: Dict[str, MessageHandler] = {}
         super().__init__(*args, loop=loop, **options)
-    # end def
+    
 
     def start_bot(self):
         self.bot_is_ready = False
         os.environ['debug_mode'] = 'yes'
         self.run(C.discord_token)
-    # end def
+    
 
     async def on_ready(self):
         # Reset handler cache
@@ -50,7 +50,7 @@ class DiscordBot(discord.Client):
                                    status=discord.Status.online)
 
         self.bot_is_ready = True
-    # end def
+    
 
     async def on_message(self, message):
         if not self.bot_is_ready:
@@ -72,20 +72,20 @@ class DiscordBot(discord.Client):
                     await message.channel.send(f"Sending you a private message <@{uid}>")
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
-                # end if
+
                 await self.handle_message(message)
-            # end if
+
         except IndexError as ex:
             logger.exception('Index error reported', ex)
         except Exception:
             logger.exception('Something went wrong processing message')
-        # end try
-    # end def
+
+    
 
     async def handle_message(self, message):
         if self.is_closed():
             return
-        # end if
+
         try:
             uid = str(message.author.id)
             discriminator = message.author.discriminator
@@ -108,11 +108,11 @@ class DiscordBot(discord.Client):
                         '-' * 25 + '\n'
                     )
                 self.handlers[uid].process(message)
-            # end if
+
         except Exception:
             logger.exception('While handling this message: %s', message)
-        # end try
-    # end def
+
+    
 
     def cleanup_handlers(self):
         try:
@@ -120,14 +120,14 @@ class DiscordBot(discord.Client):
             for handler in self.handlers.values():
                 if handler.is_busy():
                     continue
-                # end if
+
                 last_time = getattr(handler, 'last_activity', cur_time)
                 if (cur_time - last_time).seconds > C.session_retain_time_in_seconds:
                     handler.destroy()
-                # end if
-            # end for
+
+            
         except Exception:
             logger.exception('Failed to cleanup handlers')
-        # end try
-    # end def
-# end class
+
+    
+

@@ -22,9 +22,9 @@ class WorldnovelonlineCrawler(Crawler):
     #             'url': item['permalink'],
     #             'title': item['post_title'],
     #         })
-    #     # end for
+
     #     return results
-    # # end def
+
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -37,13 +37,13 @@ class WorldnovelonlineCrawler(Crawler):
         possible_image = soup.select_one('.section-novel img[alt^="Thumbnail"]')
         if isinstance(possible_image, Tag):
             self.novel_cover = self.absolute_url(possible_image['data-src'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         possible_author = soup.select_one('a[href*="/authorr/"]')
         if isinstance(possible_author, Tag):
             self.novel_author = possible_author.text.strip()
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         # path = urllib.parse.urlsplit(self.novel_url)[2]
@@ -61,27 +61,27 @@ class WorldnovelonlineCrawler(Crawler):
             url = chapter_list_url % (book_id, page + 1)
             f = self.executor.submit(self.get_json, url)
             futures.append(f)
-        # end for
+
 
         chapters = []
         for f in futures:
             chapters += f.result()
-        # end for
+
  
         for item in chapters:
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': item['permalink'],
                 'title': item['post_title'],
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -97,10 +97,10 @@ class WorldnovelonlineCrawler(Crawler):
 
         for div in contents.select('div.code-block'):
             div.extract()
-        # end for
+
         
         text = str(contents)
         text = text.replace('www.worldnovel.online', '')
         return text
-    # end def
-# end class
+
+

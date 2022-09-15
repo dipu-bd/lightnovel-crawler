@@ -31,10 +31,10 @@ class LightNovelsOnl(Crawler):
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
+        
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'], parser='html5lib')
@@ -60,5 +60,5 @@ class LightNovelsOnl(Crawler):
             if re.search(r'[\w\d]', line):
                 body += '<p>' + line + '</p>'
         return body
-    # end def
-# end class
+    
+

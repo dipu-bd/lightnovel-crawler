@@ -29,10 +29,10 @@ class NovelsPlCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '',
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -58,7 +58,7 @@ class NovelsPlCrawler(Crawler):
             data = re.findall(r"data: \{id:(\d+), novel:'([^']+)', max:(\d+), page: page\}", str(script))
             if not data:
                 continue
-            # end if
+
             data = data[0]
             novel_id = int(data[0])
             novel_hash = data[1]
@@ -69,10 +69,10 @@ class NovelsPlCrawler(Crawler):
             data = re.findall(r'totalPages: (\d+)', str(script))
             total_pages = int(data[0])
             logger.info('Total pages: %d', total_pages)
-        # end for
+
         if not (novel_id and total_pages):
             raise Exception('Could not find novel id')
-        # end if
+
 
         futures = {}
         for page in range(1, total_pages + 1):
@@ -87,7 +87,7 @@ class NovelsPlCrawler(Crawler):
                 }
             )
             futures[page] = f
-        # end for
+
         
         volumes = set([])
         for page in reversed(range(1, total_pages + 1)):
@@ -102,15 +102,15 @@ class NovelsPlCrawler(Crawler):
                     'title': tr.select_one('a').text,
                     'url': self.absolute_url(tr.select_one('a')['href']),
                 })
-            # end for
-        # end for
+
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('.panel-body.article p')
         return ''.join([str(p) for p in contents])
-    # end def
-# end class
+
+

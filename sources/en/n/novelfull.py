@@ -31,11 +31,11 @@ class NovelFullCrawler(Crawler):
                     'info': info.text.strip() if info else '',
                 }
             )
-        # end for
+
 
         return results
 
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -52,8 +52,8 @@ class NovelFullCrawler(Crawler):
         for a in soup.select('.info-holder .info a'):
             if a['href'].startswith('/author/'):
                 authors.append(a.text.strip())
-            # end if
-        # end for
+
+
         self.novel_author = ', '.join(authors)
         logger.info('Novel author: %s', self.novel_author)
 
@@ -80,11 +80,11 @@ class NovelFullCrawler(Crawler):
                     'title': chapter['title'],
                     'url': chapter['url'],
                 })
-            # end for
-        # end for
+
+
 
         self.volumes = [{'id': x} for x in possible_volumes]
-    # end def
+
 
     def download_chapter_list(self, page):
         url = self.novel_url.split('?')[0].strip('/')
@@ -97,9 +97,9 @@ class NovelFullCrawler(Crawler):
                 'title': title,
                 'url': self.absolute_url(a['href']),
             })
-        # end for
+
         return chapters
-    # end def
+
 
     def initialize(self) -> None:
         self.cleaner.blacklist_patterns.update([
@@ -109,11 +109,11 @@ class NovelFullCrawler(Crawler):
             'div[align="left"]',
             'img[src*="proxy?container=focus"]'
         ])
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div#chapter-content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

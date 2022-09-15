@@ -13,7 +13,7 @@ from .exeptions import LNException
 
 def __format_title(text):
     return re.sub(r'\s+', ' ', str(text)).strip().title()
-# end def
+
 
 
 def format_novel(crawler: Crawler):
@@ -24,7 +24,7 @@ def format_novel(crawler: Crawler):
     format_volumes(crawler)
     format_chapters(crawler)
     crawler.volumes = [x for x in crawler.volumes if x['chapter_count'] > 0]
-# end def
+
 
 
 def format_volumes(crawler: Crawler):
@@ -35,10 +35,10 @@ def format_volumes(crawler: Crawler):
         title = 'Volume %d' % vol['id']
         if not ('title' in vol and vol['title']):
             vol['title'] = title
-        # end if
+
         vol['title'] = __format_title(vol['title'])
-    # end for
-# end def
+    
+
 
 
 def format_chapters(crawler: Crawler):
@@ -46,7 +46,7 @@ def format_chapters(crawler: Crawler):
         title = '#%d' % item['id']
         if not ('title' in item and item['title']):
             item['title'] = title
-        # end if
+
         item['title'] = __format_title(item['title'])
 
         volume = [x for x in crawler.volumes if x['id'] == item['volume']]
@@ -55,15 +55,15 @@ def format_chapters(crawler: Crawler):
                             (item['volume'], item['id']))
         else:
             volume = volume[0]
-        # end if
+
 
         item['volume_title'] = volume['title']
 
         volume['chapter_count'] += 1
         volume['final_chapter'] = item['id'] if volume['final_chapter'] < item['id'] else volume['final_chapter']
         volume['start_chapter'] = item['id'] if volume['start_chapter'] > item['id'] else volume['start_chapter']
-    # end for
-# end def
+    
+
 
 
 def save_metadata(app, completed=False):
@@ -99,5 +99,5 @@ def save_metadata(app, completed=False):
     file_name = os.path.join(app.output_path, C.META_FILE_NAME)
     with open(file_name, 'w', encoding="utf-8") as file:
         json.dump(data, file, indent=2, ensure_ascii=False)
-    # end with
-# end def
+
+

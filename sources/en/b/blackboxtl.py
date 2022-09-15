@@ -28,8 +28,8 @@ class BlackboxTL(Crawler):
                 possible_author = re.sub('Author:', '', possible_author)
                 self.novel_author = possible_author.strip()
                 break
-            # end if
-        # end for
+
+        
         logger.info('Novel author: %s', self.novel_author)
 
         # Extract volume-wise chapter entries
@@ -41,7 +41,7 @@ class BlackboxTL(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     'id': chap_id,
@@ -50,9 +50,9 @@ class BlackboxTL(Crawler):
                     'title': a.text.strip() or ('Chapter %d' % chap_id),
                 }
             )
-        # end for
+        
 
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -73,7 +73,7 @@ class BlackboxTL(Crawler):
 
         return str(body_parts)
 
-    # end def
+    
 
 
-# end class
+

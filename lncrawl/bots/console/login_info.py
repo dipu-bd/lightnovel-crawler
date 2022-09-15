@@ -10,11 +10,11 @@ def get_login_info(self) -> Optional[Tuple[str, str]]:
 
     if args.login:
         return args.login
-    # end if
+
 
     if args.suppress:
         return None
-    # end if
+
 
     answer = prompt([
         {
@@ -41,7 +41,7 @@ def get_login_info(self) -> Optional[Tuple[str, str]]:
             },
         ])
         return answer['email'], answer['password']
-    # end if
+
 
     return None
-# end if
+

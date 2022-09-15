@@ -18,7 +18,7 @@ class RanobeLibCrawler(Crawler):
 
     def initialize(self) -> None:
         self.executor = ThreadPoolExecutor(max_workers=1)
-    # end def
+
 
     def read_novel_info(self):       
         soup = self.get_soup(self.novel_url)
@@ -44,7 +44,7 @@ class RanobeLibCrawler(Crawler):
         author_link = soup.select_one('.tag_list a[href*="/authors/"]')
         if isinstance(author_link, Tag):
             self.novel_author = author_link.text.strip().title()
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         chapter_list_link = soup.select_one('#fs-chapters a[title="Go to table of contents"]')
@@ -91,19 +91,19 @@ class RanobeLibCrawler(Crawler):
                 })
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update([
             '.free-support',
             'div[id^="adfox_"]'
         ])
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         article = soup.select_one('.text[itemprop="description"]')
         self.cleaner.clean_contents(article)
         return str(article)
-    # end def
-# end class
+
+

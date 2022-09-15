@@ -17,7 +17,7 @@ class MyOniyOniTranslation(Crawler):
         novel_hash = path_fragments[1]
         if novel_hash == 'category':
             novel_hash = path_fragments[2]
-        # end if
+
         self.novel_url = novel_page % novel_hash
 
         logger.debug('Visiting %s', self.novel_url)
@@ -28,10 +28,10 @@ class MyOniyOniTranslation(Crawler):
             if not a:
                 raise Exception(
                     'Fail to recognize url as a novel page: ' + self.novel_url)
-            # end if
+
             self.novel_url = a['href']
             return self.read_novel_info()
-        # end if
+
 
         possible_title = soup.select_one('header.entry-header h1.entry-title')
         assert possible_title, 'No novel title'
@@ -42,11 +42,11 @@ class MyOniyOniTranslation(Crawler):
         for p in soup.select('.x-container .x-column.x-1-2 p'):
             if re.match(r'author|trans|edit', p.text, re.I):
                 possible_authors.append(p.text.strip())
-            # end if
-        # end for
+
+
         if len(possible_authors):
             self.novel_author = ', '.join(possible_authors)
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         possible_image = soup.select_one('.x-container img.x-img')
@@ -71,27 +71,27 @@ class MyOniyOniTranslation(Crawler):
                         'title': chap.text.strip(' []'),
                         'url': self.absolute_url(chap['href']),
                     })
-                # end for
-            # end for
+
+
         else:
             self.volumes.append({'id': 1})
             for a in soup.select('.entry-content p a'):
                 possible_url = self.absolute_url(a['href'].lower())
                 if not possible_url.startswith(self.novel_url):
                     continue
-                # end if
+
                 self.chapters.append({
                     'volume': 1,
                     'id': len(self.chapters) + 1,
                     'url': possible_url,
                     'title': a.text.strip(' []'),
                 })
-            # end for
-        # end if
+
+
 
         logger.debug('%d chapters & %d volumes found',
                      len(self.chapters), len(self.volumes))
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -103,12 +103,12 @@ class MyOniyOniTranslation(Crawler):
         for tag in contents.select('*'):
             if tag.name == 'hr':
                 break
-            # end if
+
             tag.extract()
-        # end for
+
 
         self.cleaner.bad_tags.add('div')
         self.cleaner.clean_contents(contents)
         return str(contents)
-    # end def
-# end class
+
+

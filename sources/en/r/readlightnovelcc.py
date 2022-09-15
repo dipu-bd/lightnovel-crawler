@@ -17,7 +17,7 @@ class ReadlightnovelCcCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.readlightnovel.cc'
-    # end def
+
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
@@ -37,10 +37,10 @@ class ReadlightnovelCcCrawler(Crawler):
                 'url': self.absolute_url(a),
                 'info': author,
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         url = self.novel_url.replace('https://m', 'https://www')
@@ -67,16 +67,16 @@ class ReadlightnovelCcCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.select_one('p.chapter-name').text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
 
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -90,5 +90,5 @@ class ReadlightnovelCcCrawler(Crawler):
         body_parts = soup.select_one('div.chapter-entity')
         
         return self.cleaner.extract_contents(body_parts)
-    # end def
-# end class
+
+

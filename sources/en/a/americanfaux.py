@@ -29,8 +29,8 @@ class AmericanFaux(Crawler):
                 # possible_author = re.sub('Author:', '', possible_author)
                 self.novel_author = possible_author.strip()
                 break
-            # end if
-        # end for
+
+        
         logger.info('Novel author: %s', self.novel_author)
 
         # Extract volume-wise chapter entries
@@ -42,7 +42,7 @@ class AmericanFaux(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({'id': vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     'id': chap_id,
@@ -51,16 +51,16 @@ class AmericanFaux(Crawler):
                     'title': a.text.strip() or ('Chapter %d' % chap_id),
                 }
             )
-        # end for
+        
 
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('.entry-content')
         return self.cleaner.extract_contents(contents)
 
-    # end def
+    
 
 
-# end class
+

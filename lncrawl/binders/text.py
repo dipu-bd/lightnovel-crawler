@@ -25,9 +25,9 @@ def make_texts(app, data):
                 text = re.sub(r'[\r\n]+', Icons.EOL + Icons.EOL, text)
                 file.write(text)
                 text_files.append(file_name)
-            # end with
-        # end for
-    # end for
+
+        
+    
     print('Created: %d text files' % len(text_files))
     return text_files
-# end def
+

@@ -18,7 +18,7 @@ class Args:
         self.group = group
         self.mutex = mutex
         self.arguments = None
-    # end def
+    
 
     def build(self, parser=None):
         if parser is None:
@@ -28,32 +28,32 @@ class Args:
                 usage='lncrawl [options...]\n'
                 '       lightnovel-crawler [options...]'
             )
-        # end if
+
         if len(self.args) or len(self.kargs):
             parser.add_argument(*self.args, **self.kargs)
-        # end if
+
         if len(self.group):
             arg_group = parser.add_argument_group()
             for arg in self.group:
                 arg.build(arg_group)
-            # end for
-        # end if
+            
+
         if len(self.mutex):
             mutex_group = parser.add_mutually_exclusive_group()
             for arg in self.mutex:
                 arg.build(mutex_group)
-            # end for
-        # end if
+            
+
         return parser
-    # end def
+    
 
     def get_args(self):
         if self.arguments is None:
             self.arguments, _ = self.build().parse_known_args()
-        # end if
+
         return self.arguments
-    # end def
-# end class
+    
+
 
 
 _builder = Args(group=[
@@ -155,6 +155,6 @@ _builder = Args(group=[
 
 def get_args():
     return _builder.get_args()
-# end def
+
 
 atexit.register(epilog)

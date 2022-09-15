@@ -66,7 +66,7 @@ class Crawler(ABC):
         except Exception as err:
             logger.exception('Failed to initialize cloudscraper')
             self.scraper = Session()
-        # end try
+
 
         # Must resolve these fields inside `read_novel_info`
         self.novel_title = ''
@@ -94,16 +94,16 @@ class Crawler(ABC):
 
         # Setup an automatic proxy switcher
         self.enable_auto_proxy = os.getenv('use_proxy') == '1'
-    # end def
+    
 
     def __generate_proxy(self, url, timeout: int = 0):
         if not self.enable_auto_proxy or not url:
             return None
-        # end if
+
         scheme = urlparse(self.home_url).scheme
         proxy = { scheme: get_a_proxy(scheme, timeout) }
         return proxy
-    # end def
+    
 
     def __process_request(self, method: str, url, **kwargs):
         method_call = getattr(self.scraper, method)
@@ -123,7 +123,7 @@ class Crawler(ABC):
         while retry >= 0:
             if self._destroyed:
                 raise LNException('Instance is detroyed')
-            # end if
+
             try:
                 logger.debug('[%s] %s\n%s', method.upper(), url, 
                     ', '.join([f'{k}={v}' for k, v in kwargs.items()]))
@@ -142,20 +142,20 @@ class Crawler(ABC):
             except RequestException as e:
                 if retry == 0: # retry attempt depleted
                     raise e
-                # end if
+
                 logger.debug('%s | Retrying...', e)
                 retry -= 1
                 if isinstance(e, ProxyError):
                     for proxy_url in kwargs.get('proxies', {}).values():
                         remove_faulty_proxies(proxy_url)
-                    # end for
-                # end if
+                    
+
                 if retry != 0: # do not use proxy on last attemp
                     kwargs['proxies'] = self.__generate_proxy(url, 5)
-                # end if
-            # end try
-        # end while
-    # end def
+
+
+
+    
 
     # ------------------------------------------------------------------------- #
     # Implement these methods
@@ -163,32 +163,32 @@ class Crawler(ABC):
 
     def initialize(self) -> None:
         pass
-    # end def
+    
 
     def login(self, email: str, password: str) -> None:
         pass
-    # end def
+    
 
     def logout(self) -> None:
         pass
-    # end def
+    
 
     def search_novel(self, query) -> List[Dict[str, str]]:
         '''Gets a list of results matching the given query'''
         return []
-    # end def
+    
 
     @abstractmethod
     def read_novel_info(self) -> None:
         '''Get novel title, autor, cover etc'''
         raise NotImplementedError()
-    # end def
+    
 
     @abstractmethod
     def download_chapter_body(self, chapter) -> str:
         '''Download body of a single chapter and return as clean html format.'''
         raise NotImplementedError()
-    # end def
+    
 
     def download_image(self, url) -> bytes:
         '''Download image from url'''
@@ -197,7 +197,7 @@ class Crawler(ABC):
             'accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'
         })
         return response.content
-    # end def
+    
 
     def get_chapter_index_of(self, url) -> int:
         '''Return the index of chapter by given url or 0'''
@@ -205,10 +205,10 @@ class Crawler(ABC):
         for chapter in self.chapters:
             if chapter['url'] == url:
                 return chapter['id']
-            # end if
-        # end for
+
+        
         return 0
-    # end def
+    
 
     # ------------------------------------------------------------------------- #
     # Helper methods to be used
@@ -220,34 +220,34 @@ class Crawler(ABC):
         self.chapters.clear()
         self.scraper.close()
         self.executor.shutdown(False)
-    # end def
+    
 
     @property
     def headers(self) -> dict:
         return dict(self.scraper.headers)
-    # end def
+    
 
     def set_header(self, key: str, value: str) -> None:
         self.scraper.headers[key.lower()] = value
-    # end def
+    
 
     @property
     def cookies(self) -> dict:
         return {x.name: x.value for x in self.scraper.cookies}
-    # end def
+    
     
     def set_cookie(self, name: str, value: str) -> None:
         self.scraper.cookies[name] = value
-    # end def
+    
 
     def absolute_url(self, url, page_url=None) -> str:
         url = (url or '').strip()
         if len(url) > 1000 or url.startswith('data:'):
             return url
-        # end if
+
         if not page_url:
             page_url = self.last_visited_url
-        # end if
+
         if not url or len(url) == 0:
             return url
         elif url.startswith('//'):
@@ -260,15 +260,15 @@ class Crawler(ABC):
             return page_url.strip('/') + '/' + url
         else:
             return self.home_url + url
-        # end if
-    # end def
+
+    
 
     def is_relative_url(self, url) -> bool:
         page = urlparse(self.novel_url)
         url = urlparse(url)
         return (page.hostname == url.hostname
                 and url.path.startswith(page.path))
-    # end def
+    
 
     def get_response(self, url, **kwargs) -> Response:
         kwargs = kwargs or dict()
@@ -278,7 +278,7 @@ class Crawler(ABC):
         result = self.__process_request('get', url, **kwargs)
         self.last_visited_url = url.strip('/')
         return result
-    # end def
+    
 
     def post_response(self, url, data={}, headers={}, **kwargs) -> Response:
         kwargs = kwargs or dict()
@@ -289,13 +289,13 @@ class Crawler(ABC):
         kwargs['data'] = data
 
         return self.__process_request('post', url, **kwargs)
-    # end def
+    
 
     def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
         '''Submit a form using post request'''
         if self._destroyed:
             raise LNException('Instance is detroyed')
-        # end if
+
  
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('content-type', 'multipart/form-data' if multipart \
@@ -305,14 +305,14 @@ class Crawler(ABC):
         headers.setdefault('referer', self.novel_url.strip('/'))
 
         return self.post_response(url, data, headers)
-    # end def
+    
 
     def get_soup(self, url, **kwargs) -> BeautifulSoup:
         '''Downloads an URL and make a BeautifulSoup object from response'''
         parser = kwargs.pop('parser', None)
         response = self.get_response(url, **kwargs)
         return self.make_soup(response, parser)
-    # end def
+    
 
     def make_soup(self, response, parser=None) -> BeautifulSoup:
         if isinstance(response, Response):
@@ -323,13 +323,13 @@ class Crawler(ABC):
             html = str(response)
         else:
             raise LNException('Could not parse response')
-        # end if
+
         soup = BeautifulSoup(html, parser or 'lxml')
         if not soup.find('body'):
             raise ConnectionError('HTML document was not loaded properly')
-        # end if
+
         return soup
-    # end def
+    
 
     def get_json(self, *args, **kwargs) -> dict:
         kwargs = kwargs or dict()
@@ -338,25 +338,25 @@ class Crawler(ABC):
         headers.setdefault('accept', 'application/json, text/javascript, */*')
         response = self.get_response(*args, **kwargs)
         return response.json()
-    # end def
+    
 
     def post_soup(self, url, data={}, headers={}, parser='lxml') -> BeautifulSoup:
         response = self.post_response(url, data, headers)
         return self.make_soup(response, parser)
-    # end def
+    
 
     def post_json(self, url, data={}, headers={}) -> dict:
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault('accept', 'application/json, text/plain, */*')
         response = self.post_response(url, data, headers)
         return response.json()
-    # end def
+    
 
     def download_cover(self, output_file) -> None:
         response = self.get_response(self.novel_cover)
         with open(output_file, 'wb') as f:
             f.write(response.content)
-        # end with
-    # end def
+
     
-# end class
+    
+

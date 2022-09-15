@@ -19,7 +19,7 @@ class TikNovelCrawler(Crawler):
 
     def initialize(self):
         self.base_url = 'https://9kqw.com/'
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -36,8 +36,8 @@ class TikNovelCrawler(Crawler):
                 td.find('strong').extract()
                 self.novel_author = td.text.strip()
                 break
-            # end if
-        # end for
+
+        
         logger.info('Novel author: %s', self.novel_author)
 
         possible_image = soup.select_one('#content .detail-thumb-box img')
@@ -56,10 +56,10 @@ class TikNovelCrawler(Crawler):
                 'title': a['title'],
                 'url':  self.absolute_url(a['href']),
             })
-        # end for
+        
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         query_str = urlparse(chapter['url']).query
@@ -72,5 +72,5 @@ class TikNovelCrawler(Crawler):
         contents = chap_desc.split('\n\n')
         contents = [p for p in contents if p and p.strip()]
         return '<p>' + '</p><p>'.join(contents) + '</p>'
-    # end def
-# end class
+    
+

@@ -36,15 +36,15 @@ class Soxc(Crawler):
                 self.volumes.append({
                     'id': vol_id
                 })
-            # end if
+
            
             self.chapters.append({
                 'id': chap_id,
                 'url': url,
                 'volume': vol_id,
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -56,5 +56,5 @@ class Soxc(Crawler):
         content = content.replace(self.novel_url, '')
         content = content.replace('soxscc', 'mtlrealm.com ')
         return content
-    # end def
-# end class
+
+

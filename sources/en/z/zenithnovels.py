@@ -42,12 +42,12 @@ class ZenithNovelsCrawler(Crawler):
                 soup = self.get_soup(next_link['href'])
             else:
                 break
-            # end if
-        # end if
+
+
 
         self.chapters.sort(key=lambda x: x['volume'] * 1e6 + x['id'])
         self.volumes = [{'id': x, 'title': ''} for x in set(self.volumes)]
-    # end def
+
 
     def parse_chapter_list(self, soup):
         for a in soup.select('ul.lcp_catlist li a'):
@@ -55,15 +55,15 @@ class ZenithNovelsCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a['title'],
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -75,10 +75,10 @@ class ZenithNovelsCrawler(Crawler):
             self.cleaner.clean_contents(entry)
             for note in entry.select('.footnote'):
                 note.extract()
-            # end for
+
         except Exception:
             pass
-        # end try
+
 
         body = ''
         for tag in entry.children:
@@ -86,10 +86,10 @@ class ZenithNovelsCrawler(Crawler):
                 p = ' '.join(self.cleaner.extract_contents(tag))
                 if len(p.strip()):
                     body += '<p>%s</p>' % p
-                # end if
-            # end if
-        # end for
+
+
+
 
         return body
-    # end def
-# end class
+
+

@@ -60,7 +60,7 @@ def gather_hidden_imports():
         command += ['--hidden-import', p]
 
     return command
-# end def
+
 
 
 def package():
@@ -69,9 +69,9 @@ def package():
     os.makedirs(output, exist_ok=True)
     pyi.run(build_command())
     shutil.rmtree(output, ignore_errors=True)
-# end def
+
 
 
 if __name__ == '__main__':
     package()
-# end if
+

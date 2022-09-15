@@ -24,10 +24,10 @@ class BoxNovelCrawler(Crawler):
                 'url': '%s/s/%s' % (self.home_url, item['simpleName']),
                 'info': 'Latest: %s (%s)' % (item['lastIndexName'], item['lastIndexUpdateTime']),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -60,7 +60,7 @@ class BoxNovelCrawler(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.volumes) < vol_id:
                 self.volumes.append({"id": vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -69,8 +69,8 @@ class BoxNovelCrawler(Crawler):
                     "url": '%s/%s' % (self.novel_url.strip('/'), item['indexNum']),
                 }
             )
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -78,5 +78,5 @@ class BoxNovelCrawler(Crawler):
         return ''.join(['<p>%s</p>' % p.text for p in paras])
         # assert isinstance(contents, Tag), 'No contents'
         # return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

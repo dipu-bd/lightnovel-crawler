@@ -18,7 +18,7 @@ class MangatoonMobiCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://mangatoon.mobi'
-    # end def
+
 
     def read_novel_info(self):
         novel_id = self.novel_url.split('/')[5]
@@ -40,7 +40,7 @@ class MangatoonMobiCrawler(Crawler):
         possible_image = soup.select_one('.detail-top-right img, .detail-img .big-img')
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         volumes = set([])
@@ -54,10 +54,10 @@ class MangatoonMobiCrawler(Crawler):
                 'url':  self.absolute_url(a['href']),
                 'title': a.select_one('.episode-title, .episode-title-new').text,
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -65,7 +65,7 @@ class MangatoonMobiCrawler(Crawler):
         pictures = soup.select_one('.pictures')
         if pictures:
             return str(pictures)
-        # end if
+
 
         script = soup.find("script", text=re.compile(r"initialValue\s+="))
         initialValue = re.search('var initialValue = (?P<value>.*);', script.string)
@@ -75,5 +75,5 @@ class MangatoonMobiCrawler(Crawler):
         chapter_content = [p.replace(r'\-', '-') for p in chapter_content]
         chapter_content = [p.replace('\\', '') for p in chapter_content]
         return '<p>' + '</p><p>'.join(chapter_content) + '</p>'
-    # end def
-# end class
+
+

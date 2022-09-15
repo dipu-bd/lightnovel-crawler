@@ -24,15 +24,15 @@ class ScribbleHubCrawler(Crawler):
             info = novel.select_one('.search_stats')
             if not isinstance(a, Tag):
                 continue
-            # end if
+
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
                 'info': info.text.strip() if isinstance(info, Tag) else '',
             })
-        # end for
+
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -84,7 +84,7 @@ class ScribbleHubCrawler(Crawler):
                 'cookie': 'toc_show=' + str(toc_show),
             })
             futures_to_check.append(future)
-        # end for
+
 
         volumes = set()
         for f in futures_to_check:
@@ -100,22 +100,22 @@ class ScribbleHubCrawler(Crawler):
                     'url': self.absolute_url(str(chapter['href'])),
                     'title': chapter.text.strip() or ('Chapter %d' % chap_id),
                 })
-            # end for
-        # end for
+
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update([
             '.modern-footnotes-footnote',
             '.modern-footnotes-footnote__note',
         ])
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('div#chp_raw')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

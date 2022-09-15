@@ -20,7 +20,7 @@ class UsefulNovelCrawler(Crawler):
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(['h3', 'script'])
         self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
-    # end def
+
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
@@ -38,10 +38,10 @@ class UsefulNovelCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -49,7 +49,7 @@ class UsefulNovelCrawler(Crawler):
         possible_title = soup.select_one(".post-title h1")
         for span in possible_title.select("span"):
             span.extract()
-        # end for
+
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
         
@@ -57,7 +57,7 @@ class UsefulNovelCrawler(Crawler):
         
         if img_src:
             self.novel_cover = self.absolute_url(img_src["src"])
-        # end if
+
         
         logger.info("Novel cover: %s", self.novel_cover)
 
@@ -78,7 +78,7 @@ class UsefulNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -87,8 +87,8 @@ class UsefulNovelCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
@@ -102,8 +102,8 @@ class UsefulNovelCrawler(Crawler):
                 img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
-        # end for
+
         
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

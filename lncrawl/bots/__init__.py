@@ -10,7 +10,7 @@ supported_bots = [
 def run_bot(bot):
     if bot not in supported_bots:
         bot = 'console'
-    # end if
+
     if bot == 'console':
         from ..bots.console import ConsoleBot
         ConsoleBot().start()
@@ -22,5 +22,5 @@ def run_bot(bot):
         DiscordBot().start_bot()
     else:
         print('Unknown bot: %s' % bot)
-    # end def
-# end def
+    
+

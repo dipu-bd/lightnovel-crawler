@@ -28,10 +28,10 @@ class LightnovelMe(Crawler):
                 'url': 'https://lightnovels.me/novel' + item['slug'],
                 'info': f"Author: {item['authorName']} | Latest: {item['lastChapter']}",
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -55,15 +55,15 @@ class LightnovelMe(Crawler):
             vol_id = i // 100 + 1
             if i % 100 == 0:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': item['chapter_name'],
                 'url': self.absolute_url(item['slug']),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -76,6 +76,6 @@ class LightnovelMe(Crawler):
         content = content.replace('\u003c', '<').replace('\u003e', '>')
         content = content.replace('<p>' + chapter_info['chapter_name'] + '</p>', '', 1)
         return content
-    # end def
+    
 
-# end class
+

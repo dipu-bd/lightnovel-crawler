@@ -26,10 +26,10 @@ class WuxiaOnlineCrawler(Crawler):
     #             'url': self.absolute_url(a['href']),
     #             'info': 'Latest: %s' % info,
     #         })
-    #     # end for
+
 
     #     return results
-    # # end def
+
 
     def read_novel_info(self):
         url = self.novel_url
@@ -55,21 +55,21 @@ class WuxiaOnlineCrawler(Crawler):
             if last_vol != vol_id:
                 self.volumes.append(volume)
                 last_vol = vol_id
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a['title'],
                 'url':  self.absolute_url(a['href']),
             })
-        # end for
 
-    # end def
+
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
 
         parts = soup.select_one('#list_chapter .content-area')
         return self.cleaner.extract_contents(parts)
-    # end def
-# end class
+
+

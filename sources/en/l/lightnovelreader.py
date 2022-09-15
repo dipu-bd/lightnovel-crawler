@@ -28,7 +28,7 @@ class LightnovelReader(Crawler):
         self.cleaner.blacklist_patterns.update([
             r'Please read this chapter at www.lightnovelreader.com for faster releases',
         ])
-    # end def
+    
 
     def search_novel(self, query):
         self.get_response(self.home_url)
@@ -42,10 +42,10 @@ class LightnovelReader(Crawler):
                 'title': str(item['original_title']),
                 'url': self.absolute_url(item['link']),
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -64,7 +64,7 @@ class LightnovelReader(Crawler):
         possible_image = soup.select_one('.novels-detail-left img')
         if isinstance(possible_image, Tag):
             self.novel_cover = self.absolute_url(possible_image['src'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         for tag in soup.select('.container dl.text-xs'):
@@ -72,11 +72,11 @@ class LightnovelReader(Crawler):
             dd = tag.select_one('dd')
             if not (isinstance(dt, Tag) and isinstance(dd, Tag)):
                 continue
-            # end if
+
             if dt.text.strip() == 'Author(s):':
                 self.novel_author = dd.text.strip()
-            # end if
-        # end for
+
+        
         logger.info('Novel author: %s', self.novel_author)
 
         # possible_novel_id = soup.select_one('.js-load-chapters')
@@ -107,7 +107,7 @@ class LightnovelReader(Crawler):
         #         'title': a.text.strip(),
         #         'url': self.absolute_url(a['href']),
         #     })
-        # # end for
+        # 
 
         # self.volumes = [{'id': x} for x in volumes]
 
@@ -122,9 +122,9 @@ class LightnovelReader(Crawler):
                     'title': a.text.strip(),
                     'url': self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
-    # end def
+            
+        
+    
 
 
     def download_chapter_body(self, chapter):
@@ -135,5 +135,5 @@ class LightnovelReader(Crawler):
         soup = self.make_soup(html_text)
         body = soup.select_one('#chapterText')
         return self.cleaner.extract_contents(body)
-    # end def
-# end class
+    
+

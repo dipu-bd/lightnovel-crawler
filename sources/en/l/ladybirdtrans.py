@@ -19,7 +19,7 @@ class lazybirdtranslations(Crawler):
             '#jp-post-flair',
             '.entry-footer'
         ])
-    # end def
+    
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -38,8 +38,8 @@ class lazybirdtranslations(Crawler):
         authors = []
         for a in soup.select('figcaption'):
                 authors.append(a.text.strip())
-            # end if
-        # end for
+
+        
         self.novel_author = ', '.join(authors)
         logger.info('Novel author: %s', self.novel_author)
 
@@ -51,15 +51,15 @@ class lazybirdtranslations(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
+        
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -69,7 +69,7 @@ class lazybirdtranslations(Crawler):
             chapter['title'] = soup.select_one('h2').text
         else:
             chapter['title'] = chapter['title']
-        # end if
+
 
         body_parts = soup.select_one('div.entry-content')
         assert isinstance(body_parts, Tag), 'No chapter body'
@@ -80,5 +80,5 @@ class lazybirdtranslations(Crawler):
                     content.extract()
 
         return self.cleaner.extract_contents(body_parts)
-    # end def
-# end class
+    
+

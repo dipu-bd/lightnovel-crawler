@@ -15,7 +15,7 @@ class MyWuxiaWorldCrawler(Crawler):
 
     def initialize(self):
         self.home_url = 'https://www.mywuxiaworld.com/'
-    # end def
+    
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
@@ -30,10 +30,10 @@ class MyWuxiaWorldCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': info,
             })
-        # end for
+        
 
         return results
-    # end def
+    
 
     def read_novel_info(self):
         self.novel_url = self.novel_url.replace(
@@ -62,22 +62,22 @@ class MyWuxiaWorldCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a['title'],
                 'url':  self.absolute_url(a['href']),
             })
-        # end for
+        
 
-    # end def
+    
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('div.pt-read-text p')
         body = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(body) + '</p>'
-    # end def
+    
 
-# end class
+

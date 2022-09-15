@@ -16,7 +16,7 @@ class NovelFullPlus(Crawler):
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(['h1', 'h2', 'h3', 'h4'])
-    # end def
+
 
     def search_novel(self, query):
         '''Gets a list of {title, url} matching the given query'''
@@ -29,10 +29,10 @@ class NovelFullPlus(Crawler):
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         self.novel_url = self.novel_url.split('#')[0]
@@ -64,14 +64,14 @@ class NovelFullPlus(Crawler):
                 'title': a['title'].strip(),
                 'url': self.absolute_url(a['href'].strip()),
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('#chr-content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class
+
+

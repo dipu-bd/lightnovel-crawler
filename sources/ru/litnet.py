@@ -18,7 +18,7 @@ class LitnetCrawler(Crawler):
     def initialize(self):
         self.home_url = 'https://booknet.com/'
         self.executor = ThreadPoolExecutor(1)
-    # end def
+
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
@@ -35,10 +35,10 @@ class LitnetCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': 'Author: %s | %s views | %s favorites' % (author, views, favourites)
             })
-        # end for
+
 
         return results
-    # end def
+
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -56,19 +56,19 @@ class LitnetCrawler(Crawler):
         img_src = soup.select_one('.book-view-cover img')
         if not img_src:
             img_src = soup.select_one('.book-cover img')
-        # end if
+
         if img_src:
             self.novel_cover = self.absolute_url(img_src['src'])
-        # end if
+
         logger.info('Novel cover: %s', self.novel_cover)
 
         author = soup.select_one('.book-view-info a.author')
         if not author:
             author = soup.select_one('.book-head-content a.book-autor')
-        # end if
+
         if author:
             self.novel_author = author.text.strip()
-        # end if
+
         logger.info('Novel author: %s', self.novel_author)
 
         chapters = soup.find('select', {'name': 'chapter'})
@@ -77,7 +77,7 @@ class LitnetCrawler(Crawler):
         else:
             chapters = chapters.find_all('option')
             chapters = [a for a in chapters if a.attrs['value']]
-        # end if
+
 
         volumes = set([])
         for a in chapters:
@@ -93,10 +93,10 @@ class LitnetCrawler(Crawler):
                 'url': chap_url,
                 'chapter_id': a.attrs['value'],
             })
-        # end for
+
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
+
 
     def download_chapter_body(self, chapter):
         data = self._get_chapter_page(chapter)
@@ -106,10 +106,10 @@ class LitnetCrawler(Crawler):
         for page in range(2, data['totalPages'] + 1):
             data = self._get_chapter_page(chapter, page)
             content += data['data']
-        # end for
+
 
         return content
-    # end def
+
 
     def _get_chapter_page(self, chapter, page=1):
         return self.post_json(get_chapter_url, data={
@@ -120,6 +120,6 @@ class LitnetCrawler(Crawler):
             'X-CSRF-Token': self.csrf_token,
             'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
         })
-    # end def
 
-# end class
+
+

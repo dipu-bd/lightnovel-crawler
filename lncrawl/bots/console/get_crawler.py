@@ -14,7 +14,7 @@ def get_novel_url(self):
     args = get_args()
     if args.query and len(args.query) > 1:
         return args.query
-    # end if
+
 
     url = args.novel_page
     if url:
@@ -22,13 +22,13 @@ def get_novel_url(self):
             return url
         else:
             raise LNException('Invalid URL of novel page')
-        # end if
-    # end if
+
+
 
     try:
         if args.suppress:
             raise LNException()
-        # end if
+
 
         answer = prompt([
             {
@@ -41,8 +41,8 @@ def get_novel_url(self):
         return answer['novel'].strip()
     except Exception:
         raise LNException('Novel page url or query was not given')
-    # end try
-# end def
+
+
 
 
 def get_crawlers_to_search(self) -> List[str]:
@@ -50,18 +50,18 @@ def get_crawlers_to_search(self) -> List[str]:
     links = self.app.crawler_links
     if not links:
         return []
-    # end if
+
 
     args = get_args()
     if args.suppress or 'sources' not in args:
         return links
-    # end if
+
     if args.sources:
         links = [l for l in links if re.search(args.sources, l)]
-    # end if
+
     if args.suppress or len(links) <= 1:
         return links
-    # end if
+
 
     answer = prompt([
         {
@@ -74,7 +74,7 @@ def get_crawlers_to_search(self) -> List[str]:
 
     selected = answer['sites']
     return selected if len(selected) > 0 else links
-# end def
+
 
 
 def choose_a_novel(self):
@@ -96,7 +96,7 @@ def choose_a_novel(self):
 
         index = int(answer['novel'].split('.')[0])
         selected_choice = self.app.search_results[index - 1]
-    # end if
+
 
     # Choose the novel source
     novels = selected_choice['novels']
@@ -114,12 +114,12 @@ def choose_a_novel(self):
         index = int(answer['novel'].split('.')[0])
         if index == 0:
             return self.choose_a_novel()
-        # end if
+
         selected_novel = novels[index - 1]
-    # end if
+
 
     return selected_novel['url']
-# end def
+
 
 def confirm_retry(self) -> bool:
     '''Returns whether to retry on failure'''
@@ -127,7 +127,7 @@ def confirm_retry(self) -> bool:
 
     if args.suppress:
         return False
-    # end if
+
 
     answer = prompt([
         {
@@ -139,4 +139,4 @@ def confirm_retry(self) -> bool:
     ])
 
     return answer['retry']
-# end if
+

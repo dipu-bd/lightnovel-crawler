@@ -11,7 +11,7 @@ try:
     from pydrive.drive import GoogleDrive
 except Exception:
     logger.error('`pydrive` was not setup properly')
-# end try
+
 
 
 def upload(file_path, description=None) -> str: 
@@ -30,7 +30,7 @@ def upload(file_path, description=None) -> str:
     else:
         # Initialize the saved creds
         gauth.Authorize()
-    # end if
+
 
     # Save the current credentials to a file
     gauth.SaveCredentialsFile(credential_file)
@@ -51,4 +51,4 @@ def upload(file_path, description=None) -> str:
 
     logger.info('Uploaded file id: {}', f['id'])
     return 'https://drive.google.com/open?id=' + f['id'] 
-# end def
+
