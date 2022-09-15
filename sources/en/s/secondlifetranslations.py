@@ -37,7 +37,7 @@ class SecondLifeTransCrawler(Crawler):
         if novelcontent:
             author_strong = novelcontent.find('strong', string='Author: ')
             if author_strong and author_strong.next_sibling:
-                self.novel_author = author_strong.next_sibling
+                self.novel_author = author_strong.next_sibling.text
 
         logger.info('Novel author: %s', self.novel_author)
 
