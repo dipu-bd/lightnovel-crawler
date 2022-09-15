@@ -18,6 +18,9 @@ def decrypt_string(crypted_string):
 class SecondLifeTransCrawler(Crawler):
     base_url = 'https://secondlifetranslations.com/'
 
+    def initialize(self):
+        self.cleaner.bad_css.update(['.jmbl-disclaimer'])
+
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
@@ -38,18 +41,19 @@ class SecondLifeTransCrawler(Crawler):
 
         logger.info('Novel author: %s', self.novel_author)
 
-        for a in soup.select('.panel > form > div > div > a'):
-            chap_id = 1 + len(self.chapters)
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append({'id': vol_id})
+        volumes = soup.select('button.accordion')
+        for vol_id, volume in enumerate(volumes, 1):
+            self.volumes.append({'id': vol_id, 'title': volume.text})
 
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
-            })
+            for a in volume.next_sibling.select('div > div > a'):
+                chap_id = 1 + len(self.chapters)
+
+                self.chapters.append({
+                    'id': chap_id,
+                    'volume': vol_id,
+                    'title': a.text.strip(),
+                    'url': self.absolute_url(a['href']),
+                })
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
