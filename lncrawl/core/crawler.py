@@ -93,14 +93,19 @@ class Crawler(ABC):
 
         # Setup an automatic proxy switcher
         self.enable_auto_proxy = False
+        self.user_proxies = []
     # end def
 
-    def __generate_proxy(self, url, timeout:int = 0):
+    def __generate_proxy(self, url, timeout: int = 0):
         if not self.enable_auto_proxy or not url:
             return None
         # end if
-        scheme = urlparse(self.home_url).scheme
-        return { scheme: get_a_proxy(scheme, timeout) }
+        if not self.user_proxies: # Get a free proxy
+            scheme = urlparse(self.home_url).scheme
+            return { scheme: get_a_proxy(scheme, timeout) }
+        # end if
+        host, port, user, pass = random.choice(self.user_proxies).split(":")
+        return { scheme: f'{scheme}://{host}:{port}@{user}:{pass}' }
     # end def
 
     def __process_request(self, method: str, url, **kwargs):
