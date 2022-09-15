@@ -9,19 +9,22 @@ class LNTCrawler(Crawler):
     base_url = 'https://lightnovelstranslations.com/'
 
     def read_novel_info(self):
-        logger.debug('Visiting %s', self.novel_url)
-
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one('h1.entry-title')
         assert possible_title, 'No novel title'
         self.novel_title = possible_title.text
-        logger.info('Novel title: %s', self.novel_title)
 
-        # TODO: No covers on site, could not grab author name.
+        possible_cover = soup.select_one('meta[property="og:image"]')
+        if possible_cover:
+            self.novel_cover = self.absolute_url(possible_cover['content'])
 
-        # Extract volume-wise chapter entries
-        for div in soup.select('.su-accordion .su-spoiler'):
+        for p in soup.select('.entry-content > p'):
+            if 'Author' in p.text:
+                self.novel_author = p.text.replace('Author:', '').strip()
+                break
+
+        for div in soup.select('.entry-content .su-spoiler'):
             vol = div.select_one('.su-spoiler-title').text.strip()
             vol_id = int(vol) if vol.isdigit() else len(self.volumes) + 1
             self.volumes.append({
@@ -37,9 +40,6 @@ class LNTCrawler(Crawler):
                     'title': a.text.strip(),
                     'url': self.absolute_url(a['href']),
                 })
-            # end for
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         logger.info('Visiting: %s', chapter['url'])
@@ -48,11 +48,5 @@ class LNTCrawler(Crawler):
         content = soup.select_one('.entry-content')
         for bad in content.select('.alignleft, .alignright, hr, p[style*="text-align: center"]'):
             bad.extract()
-        # end for
 
         return '\n'.join([str(p) for p in content.find_all('p')])
-
-    # end def
-
-
-# end class
