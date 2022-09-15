@@ -51,13 +51,12 @@ class WuxiaComCrawler(Crawler):
         ])
         logger.info('Novel author = %s', self.novel_author)
 
-        # is_vip = False
         advance_chapter_allowed = 0
         try:
             response = self.grpc.request(
                 f'{api_home}/wuxiaworld.api.v2.Subscriptions/GetSubscriptions',
                 {'novelId': novel['id']},
-                headers={'authorization': self.bearer_token, }
+                headers={'authorization': self.bearer_token}
             )
             response.raise_for_status()
 
@@ -67,8 +66,6 @@ class WuxiaComCrawler(Crawler):
                 if 'sponsor' in subscription['plan']:
                     advance_chapter_allowed = (subscription['plan']['sponsor']
                                                ['advanceChapterCount'])
-            #    elif 'vip' in subscription['plan']:
-            #        is_vip = subscription['plan']['vip']['enabled']
 
         except Exception as e:
             logger.debug('Failed to acquire subscription details', e)
@@ -76,7 +73,7 @@ class WuxiaComCrawler(Crawler):
         response = self.grpc.request(
             f'{api_home}/wuxiaworld.api.v2.Chapters/GetChapterList',
             {'novelId': novel['id']},
-            headers={'authorization': self.bearer_token, }
+            headers={'authorization': self.bearer_token}
         )
         response.raise_for_status()
         assert response.single
@@ -94,33 +91,33 @@ class WuxiaComCrawler(Crawler):
                 if not chap['visible']:
                     continue
 
-                isFree = chap['pricingInfo']['isFree']
-
-                if not isFree and chap['sponsorInfo']['advanceChapter']:
-                    advChapNum = chap['sponsorInfo']['advanceChapterNumber']
-                    if advChapNum > advance_chapter_allowed:
+                is_free = chap['pricingInfo']['isFree']
+                if not is_free and chap['sponsorInfo']['advanceChapter']:
+                    adv_chap_num = chap['sponsorInfo']['advanceChapterNumber']
+                    if adv_chap_num > advance_chapter_allowed:
                         continue
-
-                if chap['spoilerTitle']:
-                    chap['name'] = f"Chapter {chap_id}"
+                
+                chap_title = chap['name']
+                if chap.get('spoilerTitle'):
+                    chap_title = f"Chapter {chap_id}"
 
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
-                    'title': chap['name'],
+                    'title': chap_title,
+                    'original_title': chap['name'],
                     'entityId': chap['entityId'],
-                    'url': 'https://www.wuxiaworld.com/novel/%s/%s' %
-                           (slug, chap['slug']),
+                    'url': f"https://www.wuxiaworld.com/novel/{slug}/{chap['slug']}",
                 })
 
     def download_chapter_body(self, chapter):
         response = self.grpc.request(
             f'{api_home}/wuxiaworld.api.v2.Chapters/GetChapter',
             {'chapterProperty': {'chapterId': chapter['entityId']}},
-            headers={'authorization': self.bearer_token, }
+            headers={'authorization': self.bearer_token}
         )
         response.raise_for_status()
-        assert response.single
+        assert response.single, 'Invalid response'
 
         chapter = response.single['item']
         content = chapter['content']
