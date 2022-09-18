@@ -8,7 +8,8 @@ logger = logging.getLogger(__name__)
 class MangaRosieCrawler(Crawler):
     has_manga = True
     base_url = [
-        'https://mangarosie.me/'
+        'https://mangarosie.me/',
+        'https://mangarosie.love/',
     ]
     
     search_url = (
