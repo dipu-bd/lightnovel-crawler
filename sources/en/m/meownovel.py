@@ -8,6 +8,18 @@ search_url = "https://meownovel.com/?s=%s&post_type=wp-manga&op=&author=&artist=
 
 class MeowNovel(Crawler):
     base_url = "https://meownovel.com/"
+    
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            'a',
+            '.code-block',
+            '.adsbygoogle',
+            '.adsense-code',
+            '.sharedaddy',
+            '.google-auto-placed',
+            '.ap_container",
+        ])
+    # end def
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
@@ -81,24 +93,20 @@ class MeowNovel(Crawler):
 
         contents = soup.select_one("div.text-left")
 
-        for bad in contents.select(
-            ".code-block, script, .adsbygoogle, .adsense-code, .sharedaddy, a, .google-auto-placed, .ap_container"
-        ):
-            bad.extract()
-
+        bad_text = [
+            "Read First at meownovel.com",
+            "Latest Update on meow novel.com",
+            "me ow no vel.com is releasing your favorite novel",
+            "You can read this novel at m eow no vel.com for better experience",
+            "meow novel . com will be your favorite novel site",
+            "Read only at m e o w n o v e l . c o m"
+        ]
         for content in contents.select("p"):
-            for bad in [
-                "Read First at meownovel.com",
-                "Latest Update on meow novel.com",
-                "me ow no vel.com is releasing your favorite novel",
-                "You can read this novel at m eow no vel.com for better experience",
-                "meow novel . com will be your favorite novel site",
-                "Read only at m e o w n o v e l . c o m"
-            ]:
+            for bad in bad_text:
                 if bad in content.text:
                     content.extract()
+                    break
 
         return self.cleaner.extract_contents(contents)
-
     # end def
 # end class
