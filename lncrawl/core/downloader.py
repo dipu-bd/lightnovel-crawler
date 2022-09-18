@@ -145,7 +145,7 @@ def download_chapter_body(app, chapter):
             chapter.update(**old_chapter)
         # end def
         
-        if chapter.get('body') and chapter.get('success'):
+        if chapter.get('body') and chapter.get('success', True):
             return
         # end if
 

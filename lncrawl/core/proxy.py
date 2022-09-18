@@ -1,3 +1,4 @@
+from array import array
 import atexit
 import logging
 import random
@@ -14,7 +15,7 @@ from ..utils.ssl_no_verify import no_ssl_verification
 
 logger = logging.getLogger(__name__)
 
-__has_exit = False
+__has_exit = True
 __proxy_ttl = 3600
 __max_use_per_proxy = 50
 
@@ -23,24 +24,51 @@ __proxy_list: Dict[str, List[str]] = {}
 __proxy_visited_at: Dict[str, int] = {}
 __proxy_use_count: Dict[str, int] = {}
 __circular_index: Dict[str, int] = {}
+__is_private_proxy: Dict[str, bool] = {}
+
+
+def load_proxies(proxy_file: str):
+    with open(proxy_file, encoding='utf-8') as f:
+        lines = f.read().splitlines()
+    # end with
+
+    for line in set(lines):
+        address = line.strip()
+        if not address:
+            continue
+        if '://' in address:
+            scheme, address = line.split('://')
+            schemes = [scheme]
+        else:
+            schemes = ['http', 'https']
+        # end if
+        for scheme in schemes:
+            __proxy_list.setdefault(scheme, [])
+            url = scheme + '://' + address
+            __proxy_list[scheme].append(url)
+            __is_private_proxy[url] = True
+        # end for
+    # end for
+# end def
 
 
 def get_a_proxy(scheme: str = 'http', timeout: int = 0):
     if timeout > 0:
         wait_for_first_proxy(scheme, timeout)
     # end if
-    if scheme not in __proxy_list:
-        return
+
+    proxy_list = __proxy_list.get(scheme)
+    if isinstance(proxy_list, list) and not __has_exit:
+        proxy_list = [
+            url
+            for url in proxy_list
+            if __proxy_visited_at[url] + __proxy_ttl > time.time()
+                and __proxy_use_count.get(url, 0) < __max_use_per_proxy
+        ]
+        __proxy_list[scheme] = proxy_list
     # end if
 
-    proxy_list = [
-        url
-        for url in __proxy_list[scheme]
-        if __proxy_visited_at[url] + __proxy_ttl > time.time()
-            and __proxy_use_count.get(url, 0) < __max_use_per_proxy
-    ]
-    __proxy_list[scheme] = proxy_list
-    if len(proxy_list) == 0:
+    if not proxy_list:
         return
     # end if
 
@@ -55,7 +83,7 @@ def get_a_proxy(scheme: str = 'http', timeout: int = 0):
 
 
 def remove_faulty_proxies(faulty_url: str):
-    if faulty_url:
+    if faulty_url and not __is_private_proxy[faulty_url]:
         __proxy_use_count[faulty_url] = __max_use_per_proxy + 1
     # end if
 # end def
@@ -164,6 +192,8 @@ def __find_proxies():
 
 
 def start_proxy_fetcher():
+    global __has_exit
+    __has_exit = False
     atexit.register(stop_proxy_fetcher)
     signal.signal(signal.SIGINT, stop_proxy_fetcher)
     Thread(target=__find_proxies, daemon=False).start()

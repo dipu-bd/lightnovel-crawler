@@ -72,8 +72,6 @@ def start(self):
             self.app.prepare_crawler(novel_url)
         # end if
 
-        self.app.crawler.enable_auto_proxy = args.auto_proxy
-        
         if self.app.can_do('login'):
             self.app.login_data = self.get_login_info()
         # end if

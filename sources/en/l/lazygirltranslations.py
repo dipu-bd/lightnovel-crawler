@@ -25,9 +25,9 @@ class LazyGirlTranslationsCrawler(Crawler):
         assert possible_title, 'No title found'
         self.novel_title = possible_title.text.strip()
 
-        cover_img = soup.select_one('meta[property="og:image"]')
+        cover_img = soup.select_one('.entry-content .wp-block-image img')
         if cover_img:
-            self.novel_cover = self.absolute_url(cover_img['content'])
+            self.novel_cover = self.absolute_url(cover_img['data-ezsrc'])
 
         first_p = soup.select_one(".inside-article .entry-content > p")
         if first_p:
