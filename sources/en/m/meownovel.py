@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
-from lncrawl.core.crawler import Crawler
+from urllib.parse import quote
+
 from bs4 import Tag
+
+from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = "https://meownovel.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult="
@@ -30,8 +33,7 @@ class MeowNovel(Crawler):
     # end def
 
     def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
+        soup = self.get_soup(search_url % quote(query.lower()))
 
         results = []
         for tab in soup.select(".c-tabs-item__content"):
