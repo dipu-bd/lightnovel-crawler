@@ -9,9 +9,10 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 search_url = "https://meownovel.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult="
 
+
 class MeowNovel(Crawler):
     base_url = "https://meownovel.com/"
-    
+
     def initialize(self) -> None:
         self.cleaner.bad_css.update([
             'a',
@@ -75,10 +76,11 @@ class MeowNovel(Crawler):
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
         logger.info("Novel id: %s", self.novel_id)
 
-        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
+        response = self.submit_form(self.novel_url.strip('/')
+                                    + '/ajax/chapters')
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
-            chap_id = len(self.chapters) + 1
+            chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
