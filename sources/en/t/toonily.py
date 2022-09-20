@@ -18,27 +18,28 @@ class Toonily(Crawler):
 
     # end def
 
-    def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(self.search_url % (self.home_url, query))
+    # NOTE: Search not working
+    # def search_novel(self, query):
+    #     query = query.lower().replace(" ", "+")
+    #     soup = self.get_soup(self.search_url % (self.home_url, query))
 
-        results = []
-        for tab in soup.select(".c-tabs-item__content"):
-            a = tab.select_one(".post-title h3 a")
-            latest = tab.select_one(".latest-chap .chapter a").text
-            votes = tab.select_one(".rating .total_votes").text
-            results.append(
-                {
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                    "info": "%s | Rating: %s" % (latest, votes),
-                }
-            )
-        # end for
+    #     results = []
+    #     for tab in soup.select(".c-tabs-item__content"):
+    #         a = tab.select_one(".post-title h3 a")
+    #         latest = tab.select_one(".latest-chap .chapter a").text
+    #         votes = tab.select_one(".rating .total_votes").text
+    #         results.append(
+    #             {
+    #                 "title": a.text.strip(),
+    #                 "url": self.absolute_url(a["href"]),
+    #                 "info": "%s | Rating: %s" % (latest, votes),
+    #             }
+    #         )
+    #     # end for
 
-        return results
+    #     return results
 
-    # end def
+    # # end def
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
