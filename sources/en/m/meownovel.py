@@ -20,7 +20,7 @@ class MeowNovel(Crawler):
             '.adsense-code',
             '.sharedaddy',
             '.google-auto-placed',
-            '.ap_container",
+            '.ap_container'
         ])
         self.cleaner.blacklist_patterns.update([
             "Read First at meownovel.com",
