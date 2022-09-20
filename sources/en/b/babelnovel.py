@@ -18,9 +18,11 @@ chapter_page_url = 'https://babelnovel.com/books/%s/chapters/%s'
 
 
 class BabelNovelCrawler(Crawler):
-    base_url = 'https://babelnovel.com/'
+    base_url = ['https://babelnovel.com/',
+                'https://api.babelnovel.com']
 
     def initialize(self):
+        self.home_url = 'https://babelnovel.com/'
         self.set_header('Referer', self.home_url)
         self.set_header('Origin', self.home_url.strip())
         self.set_header('User-Agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36')
