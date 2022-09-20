@@ -13,6 +13,15 @@ class MyBoxNovelCrawler(Crawler):
         'https://myboxnovel.com/',
     ]
 
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update([
+            '.para-comment',
+            '.j_open_para_comment',
+            '.j_para_comment_count',
+            '.para-comment-num'
+        ])
+    # end def
+
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % (self.home_url, query))
