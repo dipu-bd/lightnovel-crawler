@@ -141,7 +141,7 @@ class BabelNovelCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         data = self.get_json(chapter['json_url'])
-        soup = self.make_soup(data['data']['content'])
+        soup = self.make_soup(data['data']['content'].replace('\n', '<br>'))
         body = soup.find('body')
         return self.cleaner.extract_contents(body)
     # end def
