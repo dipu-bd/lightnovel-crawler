@@ -13,13 +13,6 @@ class Miraslation(Crawler):
         'https://www.miraslation.net/',
     ]
 
-    def initialize(self) -> None:
-        self.cleaner.bad_css.update([
-            '.code-block'
-        ])
-    # end def
-
-
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -45,16 +38,14 @@ class Miraslation(Crawler):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
-                self.volumes.append({ 'id': vol_id })
-            # end if
+                self.volumes.append({'id': vol_id})
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
+                'url': self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -68,5 +59,3 @@ class Miraslation(Crawler):
                     content.extract()
 
         return self.cleaner.extract_contents(body_parts)
-    # end def
-# end class

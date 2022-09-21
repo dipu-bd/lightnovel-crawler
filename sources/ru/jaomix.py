@@ -12,9 +12,6 @@ class JaomixCrawler(Crawler):
         'https://jaomix.ru/',
     ]
 
-    def initialize(self):
-        self.cleaner.bad_css.update(['.adblock-service'])
-
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 

@@ -8,14 +8,10 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+
 class AutoMTL(Crawler):
     machine_translation = True
     base_url = 'https://automtl.wordpress.com/'
-
-    def initialize(self) -> None:
-        self.cleaner.bad_css.update([
-            '.sharedaddy',
-        ])
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -40,19 +36,17 @@ class AutoMTL(Crawler):
             'div.wp-block-group__inner-container [href*="automtl.wordpress.com/"]')
 
         for a in chapters:
-            chap_id = len(self.chapters) + 1
+            chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
-                self.volumes.append({ 'id': vol_id })
-            # end if
+                self.volumes.append({'id': vol_id})
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url':  self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -66,5 +60,3 @@ class AutoMTL(Crawler):
                     content.extract()
 
         return self.cleaner.extract_contents(body_parts)
-    # end def
-# end class
