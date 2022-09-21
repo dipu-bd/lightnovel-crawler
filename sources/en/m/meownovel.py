@@ -9,9 +9,10 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 search_url = "https://meownovel.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult="
 
+
 class MeowNovel(Crawler):
     base_url = "https://meownovel.com/"
-    
+
     def initialize(self) -> None:
         self.cleaner.bad_css.update([
             'a',
@@ -20,7 +21,7 @@ class MeowNovel(Crawler):
             '.adsense-code',
             '.sharedaddy',
             '.google-auto-placed',
-            '.ap_container",
+            '.ap_container',
         ])
         self.cleaner.blacklist_patterns.update([
             "Read First at meownovel.com",
@@ -30,7 +31,6 @@ class MeowNovel(Crawler):
             "meow novel . com will be your favorite novel site",
             "Read only at m e o w n o v e l . c o m",
         ])
-    # end def
 
     def search_novel(self, query):
         soup = self.get_soup(search_url % quote(query.lower()))
@@ -47,10 +47,8 @@ class MeowNovel(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-        # end for
 
         return results
-    # end def
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -78,14 +76,15 @@ class MeowNovel(Crawler):
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
         logger.info("Novel id: %s", self.novel_id)
 
-        response = self.submit_form(self.novel_url.strip('/') + '/ajax/chapters')
+        response = self.submit_form(self.novel_url.strip('/')
+                                    + '/ajax/chapters')
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
-            chap_id = len(self.chapters) + 1
+            chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
+
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -94,13 +93,9 @@ class MeowNovel(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div.text-left")
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class

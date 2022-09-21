@@ -371,7 +371,7 @@ You are very welcome to contribute in this project. You can:
 
 <!-- auto generated supported sources list -->
 
-We are supporting 259 sources and 283 crawlers.
+We are supporting 266 sources and 289 crawlers.
 
 ### `ar` Arabic
 
@@ -384,12 +384,12 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://arnovel.me/" target="_blank">https://arnovel.me/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/ar/arnovel.py" title="22 March 2022 02:50:32 PM">20</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/ar/arnovel.py" title="22 March 2022 02:50:32 PM">20</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://rewayat.club/" target="_blank">https://rewayat.club/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/ar/rewayatclub.py" title="22 March 2022 02:50:32 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/ar/rewayatclub.py" title="22 March 2022 02:50:32 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 </tbody>
@@ -407,1062 +407,1082 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://boxnovel.org/" target="_blank">http://boxnovel.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/boxnovelorg.py" title="13 August 2022 10:15:22 AM">28</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/boxnovelorg.py" title="13 August 2022 10:15:22 AM">28</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://novelfull.com/" target="_blank">http://novelfull.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelfull.py" title="22 March 2022 02:50:32 PM">44</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelfull.py" title="22 March 2022 02:50:32 PM">44</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://ranobes.net/" target="_blank">http://ranobes.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/ranobes.py" title="01 August 2022 07:29:10 AM">8</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/ranobes.py" title="01 August 2022 07:29:10 AM">8</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://readonlinenovels.com/" target="_blank">http://readonlinenovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readonlinenovels.py" title="08 September 2022 06:05:01 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readonlinenovels.py" title="08 September 2022 06:05:01 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/amritoo"><img src="https://avatars.githubusercontent.com/u/45586379?v=4&s=24" alt="amritoo" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://wnmtl.org/" target="_blank">http://wnmtl.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://www.fujitranslation.com/" target="_blank">http://www.fujitranslation.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fujitrans.py" title="22 March 2022 02:50:32 PM">61</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fujitrans.py" title="22 March 2022 02:50:32 PM">61</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://www.wnmtl.org/" target="_blank">http://www.wnmtl.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://zenithnovels.com/" target="_blank">http://zenithnovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/z/zenithnovels.py" title="22 March 2022 02:50:32 PM">15</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/z/zenithnovels.py" title="22 March 2022 02:50:32 PM">15</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://1stkissnovel.love/" target="_blank">https://1stkissnovel.love/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/0/1stkissnovel.py" title="15 August 2022 07:12:30 PM">70</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/0/1stkissnovel.py" title="15 August 2022 07:12:30 PM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://88tangeatdrinkread.wordpress.com/" target="_blank">https://88tangeatdrinkread.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/0/88tang.py" title="22 March 2022 02:50:32 PM">71</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/0/88tang.py" title="22 March 2022 02:50:32 PM">71</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://allnovel.org/" target="_blank">https://allnovel.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/allnovel.py" title="09 April 2022 08:11:52 AM">39</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/allnovel.py" title="09 April 2022 08:11:52 AM">39</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://allnovelfull.com/" target="_blank">https://allnovelfull.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/allnovelfull.py" title="17 July 2022 01:44:13 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/allnovelfull.py" title="17 July 2022 01:44:13 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://americanfaux.com/" target="_blank">https://americanfaux.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/americanfaux.py" title="11 July 2022 09:37:38 PM">1</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/americanfaux.py" title="11 July 2022 09:37:38 PM">1</a></td>
 <td><a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://amnesiactl.com/" target="_blank">https://amnesiactl.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/amnesiactl.py" title="22 March 2022 02:50:32 PM">12</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/amnesiactl.py" title="22 March 2022 02:50:32 PM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://ancientheartloss.com/" target="_blank">https://ancientheartloss.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/ancientheartloss.py" title="17 July 2022 11:21:11 AM">71</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/ancientheartloss.py" title="17 July 2022 11:21:11 AM">71</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://ancientheartloss.wordpress.com/" target="_blank">https://ancientheartloss.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/ancientheartloss.py" title="17 July 2022 11:21:11 AM">71</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/ancientheartloss.py" title="17 July 2022 11:21:11 AM">71</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://api.babelnovel.com/" target="_blank">https://api.babelnovel.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/babelnovel.py" title="20 September 2022 08:44:28 AM">30</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://aquamanga.com/" target="_blank">https://aquamanga.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/aquamanga.py" title="17 August 2022 10:10:23 AM">72</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/aquamanga.py" title="17 August 2022 10:10:23 AM">72</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://asadatranslations.com/" target="_blank">https://asadatranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/asadatrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/asadatrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://automtl.wordpress.com/" target="_blank">https://automtl.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/automtl.py" title="22 March 2022 02:50:32 PM">65</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/automtl.py" title="22 March 2022 02:50:32 PM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://babelnovel.com/" target="_blank">https://babelnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/babelnovel.py" title="22 March 2022 02:50:32 PM">27</a></td>
-<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/babelnovel.py" title="20 September 2022 08:44:28 AM">30</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://bakapervert.wordpress.com/" target="_blank">https://bakapervert.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/bakapervert.py" title="30 March 2022 12:22:50 AM">72</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/bakapervert.py" title="30 March 2022 12:22:50 AM">72</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://beautymanga.com/" target="_blank">https://beautymanga.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/beautymanga.py" title="25 August 2022 04:51:35 PM">1</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/beautymanga.py" title="25 August 2022 04:51:35 PM">1</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://bestlightnovel.com/" target="_blank">https://bestlightnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/bestlightnovel.py" title="22 March 2022 02:50:32 PM">19</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/bestlightnovel.py" title="22 March 2022 02:50:32 PM">19</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://bonnovel.com/" target="_blank">https://bonnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/bonnovel.py" title="20 August 2022 11:52:01 AM">78</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/bonnovel.py" title="20 August 2022 11:52:01 AM">78</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://booknet.com/" target="_blank">https://booknet.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/booknet.py" title="22 March 2022 02:50:32 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/booknet.py" title="22 March 2022 02:50:32 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://boxnovel.com/" target="_blank">https://boxnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/boxnovel.py" title="22 March 2022 02:50:32 PM">63</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/boxnovel.py" title="22 March 2022 02:50:32 PM">63</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://boxnovel.org/" target="_blank">https://boxnovel.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/boxnovelorg.py" title="13 August 2022 10:15:22 AM">28</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/boxnovelorg.py" title="13 August 2022 10:15:22 AM">28</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://bronovel.com/" target="_blank">https://bronovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/bronovel.py" title="13 September 2022 11:45:23 PM">67</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/bronovel.py" title="13 September 2022 11:45:23 PM">67</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://chrysanthemumgarden.com/" target="_blank">https://chrysanthemumgarden.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/c/chrysanthemumgarden.py" title="22 March 2022 02:50:32 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/c/chrysanthemumgarden.py" title="22 March 2022 02:50:32 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://coffeemanga.com/" target="_blank">https://coffeemanga.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/c/coffeemanga.py" title="22 April 2022 03:31:42 PM">12</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/c/coffeemanga.py" title="22 April 2022 03:31:42 PM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://comrademao.com/" target="_blank">https://comrademao.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/c/fu_kemao.py" title="17 July 2022 11:51:42 AM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/c/fu_kemao.py" title="17 July 2022 11:51:42 AM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://creativenovels.com/" target="_blank">https://creativenovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/c/creativenovels.py" title="17 July 2022 01:45:43 PM">27</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/c/creativenovels.py" title="17 July 2022 01:45:43 PM">27</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/tidux"><img src="https://avatars.githubusercontent.com/u/1330562?v=4&s=24" alt="tidux" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://crescentmoon.blog/" target="_blank">https://crescentmoon.blog/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/c/crescentmoon.py" title="22 March 2022 02:50:32 PM">57</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/c/crescentmoon.py" title="22 March 2022 02:50:32 PM">57</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://daonovel.com/" target="_blank">https://daonovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/d/daonovel.py" title="22 March 2022 02:50:32 PM">14</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/d/daonovel.py" title="22 March 2022 02:50:32 PM">14</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://demontranslations.com/" target="_blank">https://demontranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/d/demontrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/d/demontrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://dmtranslationscn.com/" target="_blank">https://dmtranslationscn.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/d/dmtrans.py" title="22 March 2022 02:50:32 PM">61</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/d/dmtrans.py" title="22 March 2022 02:50:32 PM">61</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://dobelyuwai.wordpress.com/" target="_blank">https://dobelyuwai.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/d/dobelyuwai.py" title="22 March 2022 02:50:32 PM">70</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/d/dobelyuwai.py" title="22 March 2022 02:50:32 PM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://dragontea.ink/" target="_blank">https://dragontea.ink/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/d/dragon_tea.py" title="22 March 2022 02:50:32 PM">15</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/d/dragon_tea.py" title="22 March 2022 02:50:32 PM">15</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/mesmerlord"><img src="https://avatars.githubusercontent.com/u/76161333?v=4&s=24" alt="mesmerlord" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://dummynovels.com/" target="_blank">https://dummynovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/d/dummynovels.py" title="22 March 2022 03:03:29 PM">2</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/d/dummynovels.py" title="22 March 2022 03:03:29 PM">2</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://exiledrebelsscanlations.com/" target="_blank">https://exiledrebelsscanlations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/e/exiledrebels.py" title="22 March 2022 02:50:32 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/e/exiledrebels.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://f-w-o.com/" target="_blank">https://f-w-o.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fantasyworldonline.py" title="22 March 2022 02:50:32 PM">68</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fantasyworldonline.py" title="22 March 2022 02:50:32 PM">68</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://fanstranslations.com/" target="_blank">https://fanstranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fanstrans.py" title="12 September 2022 02:57:35 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fanstrans.py" title="12 September 2022 02:57:35 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://freefullnovel.com/" target="_blank">https://freefullnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/freefullnovel.py" title="31 August 2022 12:43:41 PM">75</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/freefullnovel.py" title="31 August 2022 12:43:41 PM">75</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://freemanga.me/" target="_blank">https://freemanga.me/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/freemanga.py" title="19 August 2022 04:07:59 AM">73</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/freemanga.py" title="19 August 2022 04:07:59 AM">73</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://fujitranslation.com/" target="_blank">https://fujitranslation.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fujitrans.py" title="22 March 2022 02:50:32 PM">61</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fujitrans.py" title="22 March 2022 02:50:32 PM">61</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://harimanga.com/" target="_blank">https://harimanga.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/h/harimanga.py" title="17 August 2022 10:10:54 AM">73</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/h/harimanga.py" title="17 August 2022 10:10:54 AM">73</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://hostednovel.com/" target="_blank">https://hostednovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/h/hostednovel.py" title="17 July 2022 01:37:36 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/h/hostednovel.py" title="17 July 2022 01:37:36 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://hotnovelfull.com/" target="_blank">https://hotnovelfull.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/h/hotnovelfull.py" title="22 August 2022 05:09:51 PM">69</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/h/hotnovelfull.py" title="22 August 2022 05:09:51 PM">69</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://hui3r.wordpress.com/" target="_blank">https://hui3r.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/h/hui3r.py" title="22 March 2022 02:50:32 PM">61</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/h/hui3r.py" title="22 March 2022 02:50:32 PM">61</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://inadequatetranslations.wordpress.com/" target="_blank">https://inadequatetranslations.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/i/inadequatetrans.py" title="22 March 2022 02:50:32 PM">70</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/i/inadequatetrans.py" title="22 March 2022 02:50:32 PM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://infinitenoveltranslations.net/" target="_blank">https://infinitenoveltranslations.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/i/infinitetrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/i/infinitetrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://isekaiscan.com/" target="_blank">https://isekaiscan.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/i/isekaiscan.py" title="19 August 2022 04:08:26 AM">73</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/i/isekaiscan.py" title="19 August 2022 04:08:26 AM">73</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://isekaiscan.eu/" target="_blank">https://isekaiscan.eu/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/i/isekaiscaneu.py" title="19 August 2022 04:08:41 AM">73</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/i/isekaiscaneu.py" title="19 August 2022 04:08:41 AM">73</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://isotls.com/" target="_blank">https://isotls.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/i/isotls.py" title="08 September 2022 05:57:51 PM">59</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/i/isotls.py" title="08 September 2022 05:57:51 PM">59</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://jpmtl.com/" target="_blank">https://jpmtl.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/j/jpmtl.py" title="22 March 2022 02:50:32 PM">60</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/j/jpmtl.py" title="22 March 2022 02:50:32 PM">60</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://justatranslatortranslations.com/" target="_blank">https://justatranslatortranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/j/justatrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/j/justatrans.py" title="22 March 2022 02:50:32 PM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://king-manga.com/" target="_blank">https://king-manga.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/k/kingmanga.py" title="17 August 2022 10:13:55 AM">72</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/k/kingmanga.py" title="17 August 2022 10:13:55 AM">72</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://kissmanga.in/" target="_blank">https://kissmanga.in/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/k/kissmanga.py" title="17 August 2022 10:11:21 AM">74</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/k/kissmanga.py" title="17 August 2022 10:11:21 AM">74</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://latestnovel.net/" target="_blank">https://latestnovel.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/latestnovel.py" title="22 March 2022 02:50:32 PM">73</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/latestnovel.py" title="22 March 2022 02:50:32 PM">73</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a> <a href="https://github.com/BorgSquared"><img src="https://avatars.githubusercontent.com/u/7807834?v=4&s=24" alt="BorgSquared" height="24"/></a> <a href="https://github.com/frybin"><img src="https://avatars.githubusercontent.com/u/17693407?v=4&s=24" alt="frybin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lazybirdtranslations.wordpress.com/" target="_blank">https://lazybirdtranslations.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/ladybirdtrans.py" title="22 March 2022 02:50:32 PM">64</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/ladybirdtrans.py" title="22 March 2022 02:50:32 PM">64</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lazygirltranslations.com/" target="_blank">https://lazygirltranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lazygirltranslations.py" title="11 September 2022 10:00:17 AM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lazygirltranslations.py" title="11 September 2022 10:00:17 AM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lemontreetranslations.wordpress.com/" target="_blank">https://lemontreetranslations.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lemontree.py" title="22 March 2022 02:50:32 PM">69</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lemontree.py" title="22 March 2022 02:50:32 PM">69</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://librarynovel.com/" target="_blank">https://librarynovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/librarynovel.py" title="16 July 2022 04:28:34 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/librarynovel.py" title="16 July 2022 04:28:34 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovel.world/" target="_blank">https://lightnovel.world/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelworld.py" title="22 March 2022 02:50:32 PM">60</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelworld.py" title="22 March 2022 02:50:32 PM">60</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovelbastion.com/" target="_blank">https://lightnovelbastion.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelbastion.py" title="22 March 2022 02:50:32 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelbastion.py" title="22 March 2022 02:50:32 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovelheaven.com/" target="_blank">https://lightnovelheaven.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelheaven.py" title="22 March 2022 02:50:32 PM">63</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelheaven.py" title="22 March 2022 02:50:32 PM">63</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovelreader.org/" target="_blank">https://lightnovelreader.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelreader.py" title="29 March 2022 04:52:29 AM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelreader.py" title="29 March 2022 04:52:29 AM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovels.me/" target="_blank">https://lightnovels.me/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelme.py" title="07 October 2021 04:35:06 PM">1</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelme.py" title="07 October 2021 04:35:06 PM">1</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovelsonl.com/" target="_blank">https://lightnovelsonl.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelsonl.py" title="22 March 2022 02:50:32 PM">17</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelsonl.py" title="22 March 2022 02:50:32 PM">17</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lightnovelstranslations.com/" target="_blank">https://lightnovelstranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovetrans.py" title="12 September 2022 02:41:08 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovetrans.py" title="12 September 2022 02:41:08 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/marcandjulien"><img src="https://avatars.githubusercontent.com/u/25230709?v=4&s=24" alt="marcandjulien" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://listnovel.com/" target="_blank">https://listnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/listnovel.py" title="22 March 2022 02:50:32 PM">9</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/listnovel.py" title="22 March 2022 02:50:32 PM">9</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lnmtl.com/" target="_blank">https://lnmtl.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lnmtl.py" title="22 March 2022 02:50:32 PM">93</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lnmtl.py" title="22 March 2022 02:50:32 PM">93</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lunarletters.com/" target="_blank">https://lunarletters.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lunarletters.py" title="22 March 2022 02:50:32 PM">14</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lunarletters.py" title="22 March 2022 02:50:32 PM">14</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://m.readlightnovel.cc/" target="_blank">https://m.readlightnovel.cc/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readlightnovelcc.py" title="22 March 2022 02:50:32 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readlightnovelcc.py" title="22 March 2022 02:50:32 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://m.webnovel.com/" target="_blank">https://m.webnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/webnovel.py" title="20 August 2022 04:33:54 PM">80</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/webnovel.py" title="20 August 2022 04:33:54 PM">80</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://m.wuxiaworld.co/" target="_blank">https://m.wuxiaworld.co/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wuxiaco.py" title="22 March 2022 02:56:57 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wuxiaco.py" title="22 March 2022 02:56:57 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://manga-tx.com/" target="_blank">https://manga-tx.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/manga-tx.py" title="17 August 2022 10:11:36 AM">74</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/manga-tx.py" title="17 August 2022 10:11:36 AM">74</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://mangachill.love/" target="_blank">https://mangachill.love/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mangachilllove.py" title="22 April 2022 03:31:42 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangachilllove.py" title="22 April 2022 03:31:42 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://mangarockteam.com/" target="_blank">https://mangarockteam.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mangarockteam.py" title="17 August 2022 10:12:20 AM">73</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangarockteam.py" title="17 August 2022 10:12:20 AM">73</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://mangarosie.love/" target="_blank">https://mangarosie.love/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mangarosie.py" title="18 September 2022 04:44:51 PM">74</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangarosie.py" title="18 September 2022 04:44:51 PM">74</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://mangarosie.me/" target="_blank">https://mangarosie.me/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mangarosie.py" title="18 September 2022 04:44:51 PM">74</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangarosie.py" title="18 September 2022 04:44:51 PM">74</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://mangatoon.mobi/" target="_blank">https://mangatoon.mobi/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mangatoon.py" title="22 March 2022 02:50:32 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangatoon.py" title="22 March 2022 02:50:32 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
+<td><a href="https://mangatx.com/" target="_blank">https://mangatx.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangatx.py" title="20 September 2022 05:19:09 PM">74</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://mangaweebs.in/" target="_blank">https://mangaweebs.in/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mangaweebs.py" title="17 August 2022 10:15:59 AM">72</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangaweebs.py" title="17 August 2022 10:15:59 AM">72</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://manhwachill.com/" target="_blank">https://manhwachill.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/manhwachill.py" title="22 April 2022 03:31:42 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/manhwachill.py" title="22 April 2022 03:31:42 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://meownovel.com/" target="_blank">https://meownovel.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/meownovel.py" title="20 September 2022 03:45:38 PM">14</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://miraslation.net/" target="_blank">https://miraslation.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/miraslation.py" title="22 March 2022 02:50:32 PM">62</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/miraslation.py" title="22 March 2022 02:50:32 PM">62</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://mltnovels.com/" target="_blank">https://mltnovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mltnovels.py" title="27 August 2022 04:07:27 PM">1</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mltnovels.py" title="27 August 2022 04:07:27 PM">1</a></td>
 <td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://mostnovel.com/" target="_blank">https://mostnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mostnovel.py" title="16 July 2022 04:59:21 PM">7</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mostnovel.py" title="16 July 2022 04:59:21 PM">7</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://mtlnation.com/" target="_blank">https://mtlnation.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mtlnation.py" title="18 August 2022 06:43:41 PM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mtlnation.py" title="18 August 2022 06:43:41 PM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://mtlreader.com/" target="_blank">https://mtlreader.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mtlreader.py" title="18 November 2021 01:21:47 AM">2</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mtlreader.py" title="18 November 2021 01:21:47 AM">2</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://myboxnovel.com/" target="_blank">https://myboxnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/myboxnovel.py" title="14 April 2022 03:54:52 PM">63</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/myboxnovel.py" title="20 September 2022 12:32:58 PM">64</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://mysticalmerries.com/" target="_blank">https://mysticalmerries.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mysticalmerries.py" title="22 March 2022 02:50:32 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mysticalmerries.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://noobchan.xyz/" target="_blank">https://noobchan.xyz/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/noobchan.py" title="19 August 2022 04:09:00 AM">76</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/noobchan.py" title="19 August 2022 04:09:00 AM">76</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novel27.com/" target="_blank">https://novel27.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novel27.py" title="22 March 2022 02:50:32 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novel27.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelcake.com/" target="_blank">https://novelcake.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelcake.py" title="15 September 2022 09:11:46 PM">14</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelcake.py" title="15 September 2022 09:11:46 PM">14</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelfull.com/" target="_blank">https://novelfull.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelfull.py" title="22 March 2022 02:50:32 PM">44</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelfull.py" title="22 March 2022 02:50:32 PM">44</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelfullplus.com/" target="_blank">https://novelfullplus.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelfullplus.py" title="22 March 2022 02:50:32 PM">7</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelfullplus.py" title="22 March 2022 02:50:32 PM">7</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelgate.net/" target="_blank">https://novelgate.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelgate.py" title="22 March 2022 02:50:32 PM">12</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelgate.py" title="22 March 2022 02:50:32 PM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelhi.com/" target="_blank">https://novelhi.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelhi.py" title="15 September 2022 07:30:56 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelhi.py" title="15 September 2022 07:30:56 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelmao.com/" target="_blank">https://novelmao.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelmao.py" title="22 March 2022 02:50:32 PM">2</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelmao.py" title="22 March 2022 02:50:32 PM">2</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://novelmic.com/" target="_blank">https://novelmic.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelmic.py" title="22 March 2022 02:50:32 PM">18</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelmic.py" title="22 March 2022 02:50:32 PM">18</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelonlinefree.com/" target="_blank">https://novelonlinefree.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelonlinefree.py" title="22 March 2022 02:50:32 PM">19</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelonlinefree.py" title="22 March 2022 02:50:32 PM">19</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelonlinefull.com/" target="_blank">https://novelonlinefull.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelonlinefull.py" title="22 March 2022 02:50:32 PM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelonlinefull.py" title="22 March 2022 02:50:32 PM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novels.pl/" target="_blank">https://novels.pl/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelspl.py" title="22 March 2022 02:50:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelspl.py" title="22 March 2022 02:50:32 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelsala.com/" target="_blank">https://novelsala.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelsala.py" title="13 September 2022 06:41:24 AM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelsala.py" title="13 September 2022 06:41:24 AM">10</a></td>
 <td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelsemperor.com/" target="_blank">https://novelsemperor.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelsemperor.py" title="17 September 2022 05:56:44 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelsemperor.py" title="17 September 2022 05:56:44 PM">4</a></td>
 <td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelsite.net/" target="_blank">https://novelsite.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelsite.py" title="22 March 2022 02:50:32 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelsite.py" title="22 March 2022 02:50:32 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelsonline.net/" target="_blank">https://novelsonline.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelsonline.py" title="22 March 2022 02:50:32 PM">71</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelsonline.py" title="22 March 2022 02:50:32 PM">71</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://noveltranslate.com/" target="_blank">https://noveltranslate.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/noveltranslate.py" title="20 September 2021 03:15:34 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/noveltranslate.py" title="20 September 2021 03:15:34 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://noveltrench.com/" target="_blank">https://noveltrench.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/noveltrench.py" title="09 April 2022 12:12:43 AM">65</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/noveltrench.py" title="09 April 2022 12:12:43 AM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelww.com/" target="_blank">https://novelww.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelww.py" title="27 August 2022 10:09:21 AM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelww.py" title="27 August 2022 10:09:21 AM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/jere344"><img src="https://avatars.githubusercontent.com/u/86294972?v=4&s=24" alt="jere344" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelzec.com/" target="_blank">https://novelzec.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelzec.py" title="24 June 2022 08:21:37 PM">1</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelzec.py" title="24 June 2022 08:21:37 PM">1</a></td>
 <td><a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://pianmanga.com/" target="_blank">https://pianmanga.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/p/pianmanga.py" title="17 August 2022 10:13:11 AM">74</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/p/pianmanga.py" title="17 August 2022 10:13:11 AM">74</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://randomnovel.com/" target="_blank">https://randomnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/randomnovel.py" title="31 August 2022 12:36:44 PM">75</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/randomnovel.py" title="31 August 2022 12:36:44 PM">75</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://ranobes.net/" target="_blank">https://ranobes.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/ranobes.py" title="01 August 2022 07:29:10 AM">8</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/ranobes.py" title="01 August 2022 07:29:10 AM">8</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://read.asianovel.com/" target="_blank">https://read.asianovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/asianovel.py" title="29 May 2022 09:36:57 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/asianovel.py" title="29 May 2022 09:36:57 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/mesmerlord"><img src="https://avatars.githubusercontent.com/u/76161333?v=4&s=24" alt="mesmerlord" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://readlightnovel.me/" target="_blank">https://readlightnovel.me/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readlightnovelorg.py" title="22 March 2022 02:50:32 PM">71</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readlightnovelorg.py" title="22 March 2022 02:50:32 PM">71</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://readlightnovels.net/" target="_blank">https://readlightnovels.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readlightnovelsnet.py" title="22 March 2022 02:50:32 PM">26</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readlightnovelsnet.py" title="22 March 2022 02:50:32 PM">26</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://readmanganato.com/" target="_blank">https://readmanganato.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readmanganato.py" title="22 April 2022 03:31:42 PM">57</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readmanganato.py" title="22 April 2022 03:31:42 PM">57</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://readnovelfull.com/" target="_blank">https://readnovelfull.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readnovelfull.py" title="22 March 2022 02:50:32 PM">68</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readnovelfull.py" title="22 March 2022 02:50:32 PM">68</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://readonlinenovels.com/" target="_blank">https://readonlinenovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readonlinenovels.py" title="08 September 2022 06:05:01 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readonlinenovels.py" title="08 September 2022 06:05:01 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/amritoo"><img src="https://avatars.githubusercontent.com/u/45586379?v=4&s=24" alt="amritoo" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://readwebnovels.net/" target="_blank">https://readwebnovels.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readwebnovels.py" title="22 March 2022 02:50:32 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readwebnovels.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://reaperscans.com/" target="_blank">https://reaperscans.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/reaperscans.py" title="03 September 2022 06:23:54 AM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/reaperscans.py" title="03 September 2022 06:23:54 AM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://reincarnationpalace.com/" target="_blank">https://reincarnationpalace.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/reincarnationpalace.py" title="22 March 2022 02:50:32 PM">62</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/reincarnationpalace.py" title="22 March 2022 02:50:32 PM">62</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://rpgnoob.wordpress.com/" target="_blank">https://rpgnoob.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/rpgnovels.py" title="22 March 2022 02:50:32 PM">70</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/rpgnovels.py" title="22 March 2022 02:50:32 PM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://rpgnovels.com/" target="_blank">https://rpgnovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/rpgnovels.py" title="22 March 2022 02:50:32 PM">70</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/rpgnovels.py" title="22 March 2022 02:50:32 PM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://secondlifetranslations.com/" target="_blank">https://secondlifetranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/secondlifetranslations.py" title="15 September 2022 08:14:58 AM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/secondlifetranslations.py" title="15 September 2022 08:14:58 AM">5</a></td>
 <td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://shalvationtranslations.wordpress.com/" target="_blank">https://shalvationtranslations.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/shalvation.py" title="22 March 2022 02:50:32 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/shalvation.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://skynovel.org/" target="_blank">https://skynovel.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/skynovel.py" title="22 March 2022 02:50:32 PM">12</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/skynovel.py" title="22 March 2022 02:50:32 PM">12</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://sleepytranslations.com/" target="_blank">https://sleepytranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/sleepytrans.py" title="22 March 2022 02:50:32 PM">13</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/sleepytrans.py" title="22 March 2022 02:50:32 PM">13</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://smnovels.com/" target="_blank">https://smnovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/smnovels.py" title="22 March 2022 02:50:32 PM">59</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/smnovels.py" title="22 March 2022 02:50:32 PM">59</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://steambunlightnovel.com/" target="_blank">https://steambunlightnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/steambun.py" title="28 March 2022 05:30:14 AM">13</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/steambun.py" title="28 March 2022 05:30:14 AM">13</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://supernovel.net/" target="_blank">https://supernovel.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/supernovel.py" title="22 March 2022 02:50:32 PM">64</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/supernovel.py" title="22 March 2022 02:50:32 PM">64</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://tamagotl.com/" target="_blank">https://tamagotl.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/t/tamagotl.py" title="30 August 2022 12:40:54 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/t/tamagotl.py" title="30 August 2022 12:40:54 PM">3</a></td>
 <td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://tipnovel.com/" target="_blank">https://tipnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/t/tipnovel.py" title="21 August 2022 08:06:59 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/t/tipnovel.py" title="21 August 2022 08:06:59 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://toc.qidianunderground.org/" target="_blank">https://toc.qidianunderground.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/q/qidianunderground.py" title="13 September 2022 06:10:16 AM">8</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/q/qidianunderground.py" title="13 September 2022 06:10:16 AM">8</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/BorgSquared"><img src="https://avatars.githubusercontent.com/u/7807834?v=4&s=24" alt="BorgSquared" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://tocqidianunderground.blogspot.com/" target="_blank">https://tocqidianunderground.blogspot.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/q/qidianunderground.py" title="13 September 2022 06:10:16 AM">8</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/q/qidianunderground.py" title="13 September 2022 06:10:16 AM">8</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/BorgSquared"><img src="https://avatars.githubusercontent.com/u/7807834?v=4&s=24" alt="BorgSquared" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://tomotranslations.com/" target="_blank">https://tomotranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/t/tomotrans.py" title="22 March 2022 02:50:32 PM">9</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/t/tomotrans.py" title="22 March 2022 02:50:32 PM">9</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
+<td><a href="https://toonily.com/" target="_blank">https://toonily.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/t/toonily.py" title="20 September 2022 06:18:23 PM">76</a></td>
+<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://totallytranslations.com/" target="_blank">https://totallytranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/t/totallytranslations.py" title="22 March 2022 02:50:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/t/totallytranslations.py" title="22 March 2022 02:50:32 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://travistranslations.com/" target="_blank">https://travistranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/t/travistranslations.py" title="14 June 2022 03:05:19 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/t/travistranslations.py" title="14 June 2022 03:05:19 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://usefulnovel.com/" target="_blank">https://usefulnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/u/usefulnovel.py" title="03 September 2022 09:47:47 AM">77</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/u/usefulnovel.py" title="03 September 2022 09:47:47 AM">77</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://veratales.com/" target="_blank">https://veratales.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/v/veratales.py" title="09 May 2022 06:40:51 PM">69</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/v/veratales.py" title="09 May 2022 06:40:51 PM">69</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://vipnovel.com/" target="_blank">https://vipnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/v/vipnovel.py" title="22 March 2022 02:50:32 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/v/vipnovel.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://vistranslations.wordpress.com/" target="_blank">https://vistranslations.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/v/vistrans.py" title="22 March 2022 02:50:32 PM">70</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/v/vistrans.py" title="22 March 2022 02:50:32 PM">70</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wanderinginn.com/" target="_blank">https://wanderinginn.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wanderinginn.py" title="15 August 2022 05:01:20 PM">62</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wanderinginn.py" title="15 August 2022 05:01:20 PM">62</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://webnovelonline.com/" target="_blank">https://webnovelonline.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/webnovelonlinecom.py" title="22 March 2022 02:50:32 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/webnovelonlinecom.py" title="22 March 2022 02:50:32 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://webnovelonline.net/" target="_blank">https://webnovelonline.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/webnovelonlinenet.py" title="23 April 2022 01:23:43 PM">67</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/webnovelonlinenet.py" title="23 April 2022 01:23:43 PM">67</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wnmtl.org/" target="_blank">https://wnmtl.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wondernovels.com/" target="_blank">https://wondernovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wondernovels.py" title="22 March 2022 02:50:32 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wondernovels.py" title="22 March 2022 02:50:32 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://woopread.com/" target="_blank">https://woopread.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/woopread.py" title="22 March 2022 02:50:32 PM">7</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/woopread.py" title="22 March 2022 02:50:32 PM">7</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/skyme5"><img src="https://avatars.githubusercontent.com/u/15525399?v=4&s=24" alt="skyme5" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wordexcerpt.com/" target="_blank">https://wordexcerpt.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wordexcerpt.py" title="22 March 2022 02:50:32 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wordexcerpt.py" title="22 March 2022 02:50:32 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wordrain69.com/" target="_blank">https://wordrain69.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wordrain.py" title="12 September 2022 02:37:47 PM">1</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wordrain.py" title="12 September 2022 02:37:47 PM">1</a></td>
 <td><a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wujizun.com/" target="_blank">https://wujizun.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wujizun.py" title="22 March 2022 02:56:57 PM">73</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wujizun.py" title="22 March 2022 02:56:57 PM">73</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wuxia.city/" target="_blank">https://wuxia.city/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wuxiacity.py" title="06 April 2022 02:56:19 PM">2</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wuxiacity.py" title="06 April 2022 02:56:19 PM">2</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/Joacchim"><img src="https://avatars.githubusercontent.com/u/404509?v=4&s=24" alt="Joacchim" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wuxiaworld.name/" target="_blank">https://wuxiaworld.name/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wuxiaworldio.py" title="22 March 2022 02:56:57 PM">23</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wuxiaworldio.py" title="22 March 2022 02:56:57 PM">23</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wuxiaworld.online/" target="_blank">https://wuxiaworld.online/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wuxiaonline.py" title="22 March 2022 02:50:32 PM">27</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wuxiaonline.py" title="22 March 2022 02:50:32 PM">27</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wuxiaworldsite.co/" target="_blank">https://wuxiaworldsite.co/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wuxiaworldsite.py" title="22 March 2022 02:50:32 PM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wuxiaworldsite.py" title="22 March 2022 02:50:32 PM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.allnovel.org/" target="_blank">https://www.allnovel.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/allnovel.py" title="09 April 2022 08:11:52 AM">39</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/allnovel.py" title="09 April 2022 08:11:52 AM">39</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.asianhobbyist.com/" target="_blank">https://www.asianhobbyist.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/a/asianhobbyist.py" title="22 March 2022 02:50:32 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/a/asianhobbyist.py" title="22 March 2022 02:50:32 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.blackbox-tl.com/" target="_blank">https://www.blackbox-tl.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/blackboxtl.py" title="17 July 2022 03:57:42 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/blackboxtl.py" title="17 July 2022 03:57:42 PM">3</a></td>
 <td><a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.box-novel.com/" target="_blank">https://www.box-novel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/b/boxnovelcom.py" title="22 March 2022 02:50:32 PM">14</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/b/boxnovelcom.py" title="22 March 2022 02:50:32 PM">14</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.divinedaolibrary.com/" target="_blank">https://www.divinedaolibrary.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/d/divinedaolibrary.py" title="22 March 2022 02:50:32 PM">2</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/d/divinedaolibrary.py" title="22 March 2022 02:50:32 PM">2</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.f-w-o.com/" target="_blank">https://www.f-w-o.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fantasyworldonline.py" title="22 March 2022 02:50:32 PM">68</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fantasyworldonline.py" title="22 March 2022 02:50:32 PM">68</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.fanfiction.net/" target="_blank">https://www.fanfiction.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fanfiction.py" title="22 March 2022 03:11:24 PM">14</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fanfiction.py" title="22 March 2022 03:11:24 PM">14</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.fictionpress.com/" target="_blank">https://www.fictionpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fictionpress.py" title="22 March 2022 02:50:32 PM">15</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fictionpress.py" title="22 March 2022 02:50:32 PM">15</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.flying-lines.com/" target="_blank">https://www.flying-lines.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/flyinglines.py" title="06 April 2022 02:56:19 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/flyinglines.py" title="06 April 2022 02:56:19 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.foxteller.com/" target="_blank">https://www.foxteller.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/foxteller.py" title="22 March 2022 02:50:32 PM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/foxteller.py" title="22 March 2022 02:50:32 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.freelightnovel.com/" target="_blank">https://www.freelightnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/freelightnovel.py" title="22 March 2022 02:50:32 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/freelightnovel.py" title="22 March 2022 02:50:32 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.fringecapybara.com/" target="_blank">https://www.fringecapybara.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fringecapybara.py" title="18 June 2022 09:07:50 AM">65</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fringecapybara.py" title="18 June 2022 09:07:50 AM">65</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.fuyuneko.org/" target="_blank">https://www.fuyuneko.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/f/fuyuneko.py" title="22 March 2022 02:50:32 PM">64</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/f/fuyuneko.py" title="22 March 2022 02:50:32 PM">64</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.isotls.com/" target="_blank">https://www.isotls.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/i/isotls.py" title="08 September 2022 05:57:51 PM">59</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/i/isotls.py" title="08 September 2022 05:57:51 PM">59</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.kitenovel.com/" target="_blank">https://www.kitenovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/k/kitenovel.py" title="24 June 2022 11:22:11 AM">2</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/k/kitenovel.py" title="24 June 2022 11:22:11 AM">2</a></td>
 <td><a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.koreanmtl.online/" target="_blank">https://www.koreanmtl.online/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/k/koreanmtl.py" title="22 March 2022 02:50:32 PM">8</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/k/koreanmtl.py" title="22 March 2022 02:50:32 PM">8</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.lightnovelpub.com/" target="_blank">https://www.lightnovelpub.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelpub.py" title="19 August 2022 05:31:15 PM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelpub.py" title="19 August 2022 05:31:15 PM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.lightnovelreader.org/" target="_blank">https://www.lightnovelreader.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelreader.py" title="29 March 2022 04:52:29 AM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelreader.py" title="29 March 2022 04:52:29 AM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.lightnovelworld.com/" target="_blank">https://www.lightnovelworld.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/lightnovelpub.py" title="19 August 2022 05:31:15 PM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/lightnovelpub.py" title="19 August 2022 05:31:15 PM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.ltnovel.com/" target="_blank">https://www.ltnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/l/ltnovel.py" title="22 March 2022 02:50:32 PM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/l/ltnovel.py" title="22 March 2022 02:50:32 PM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.machine-translation.org/" target="_blank">https://www.machine-translation.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/machinetransorg.py" title="22 March 2022 02:50:32 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/machinetransorg.py" title="22 March 2022 02:50:32 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://www.mangaread.org/" target="_blank">https://www.mangaread.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mangaread.py" title="17 August 2022 10:14:59 AM">72</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mangaread.py" title="17 August 2022 10:14:59 AM">72</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.miraslation.net/" target="_blank">https://www.miraslation.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/miraslation.py" title="22 March 2022 02:50:32 PM">62</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/miraslation.py" title="22 March 2022 02:50:32 PM">62</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.mtlnation.com/" target="_blank">https://www.mtlnation.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mtlnation.py" title="18 August 2022 06:43:41 PM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mtlnation.py" title="18 August 2022 06:43:41 PM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.mtlreader.com/" target="_blank">https://www.mtlreader.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/m/mtlreader.py" title="18 November 2021 01:21:47 AM">2</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/m/mtlreader.py" title="18 November 2021 01:21:47 AM">2</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.neosekaitranslations.com/" target="_blank">https://www.neosekaitranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/neosekaitranslations.py" title="22 March 2022 02:50:32 PM">72</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/neosekaitranslations.py" title="22 March 2022 02:50:32 PM">72</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a> <a href="https://github.com/frybin"><img src="https://avatars.githubusercontent.com/u/17693407?v=4&s=24" alt="frybin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.newsnovel.net/" target="_blank">https://www.newsnovel.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/newsnovel.py" title="22 June 2022 01:00:13 PM">27</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/newsnovel.py" title="22 June 2022 01:00:13 PM">27</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelall.com/" target="_blank">https://www.novelall.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelall.py" title="28 March 2022 05:28:10 AM">59</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelall.py" title="28 March 2022 05:28:10 AM">59</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://www.novelcool.com/" target="_blank">https://www.novelcool.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelcool.py" title="29 May 2022 08:49:38 PM">29</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelcool.py" title="29 May 2022 08:49:38 PM">29</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/mesmerlord"><img src="https://avatars.githubusercontent.com/u/76161333?v=4&s=24" alt="mesmerlord" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelhall.com/" target="_blank">https://www.novelhall.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelhall.py" title="22 March 2022 02:50:32 PM">57</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelhall.py" title="22 March 2022 02:50:32 PM">57</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelhunters.com/" target="_blank">https://www.novelhunters.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelhunters.py" title="13 September 2022 06:04:37 AM">68</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelhunters.py" title="13 September 2022 06:04:37 AM">68</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelmt.com/" target="_blank">https://www.novelmt.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelmt.py" title="22 March 2022 02:50:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelmt.py" title="22 March 2022 02:50:32 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelmtl.com/" target="_blank">https://www.novelmtl.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelmtl.py" title="22 March 2022 02:50:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelmtl.py" title="22 March 2022 02:50:32 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelmultiverse.com/" target="_blank">https://www.novelmultiverse.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelmultiverse.py" title="22 March 2022 02:50:32 PM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelmultiverse.py" title="22 March 2022 02:50:32 PM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelpassion.com/" target="_blank">https://www.novelpassion.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelpassion.py" title="22 March 2022 02:50:32 PM">7</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelpassion.py" title="22 March 2022 02:50:32 PM">7</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelpub.com/" target="_blank">https://www.novelpub.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelpub.py" title="29 August 2022 02:20:37 PM">17</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelpub.py" title="29 August 2022 02:20:37 PM">17</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novels.pl/" target="_blank">https://www.novels.pl/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelspl.py" title="22 March 2022 02:50:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelspl.py" title="22 March 2022 02:50:32 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.novelupdates.cc/" target="_blank">https://www.novelupdates.cc/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/n/novelupdatescc.py" title="22 March 2022 02:50:32 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/n/novelupdatescc.py" title="22 March 2022 02:50:32 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.oppatranslations.com/" target="_blank">https://www.oppatranslations.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/o/oppatrans.py" title="22 March 2022 02:50:32 PM">63</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/o/oppatrans.py" title="22 March 2022 02:50:32 PM">63</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.ornovel.com/" target="_blank">https://www.ornovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/o/ornovel.py" title="22 March 2022 02:50:32 PM">60</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/o/ornovel.py" title="22 March 2022 02:50:32 PM">60</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.readlightnovel.cc/" target="_blank">https://www.readlightnovel.cc/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readlightnovelcc.py" title="22 March 2022 02:50:32 PM">10</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readlightnovelcc.py" title="22 March 2022 02:50:32 PM">10</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.readlightnovel.me/" target="_blank">https://www.readlightnovel.me/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readlightnovelorg.py" title="22 March 2022 02:50:32 PM">71</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readlightnovelorg.py" title="22 March 2022 02:50:32 PM">71</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.readwn.com/" target="_blank">https://www.readwn.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/readwn.py" title="20 April 2022 09:39:14 AM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/readwn.py" title="20 April 2022 09:39:14 AM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.royalroad.com/" target="_blank">https://www.royalroad.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/r/royalroad.py" title="28 March 2022 05:24:55 AM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/r/royalroad.py" title="28 March 2022 05:24:55 AM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/Epicpkmn11"><img src="https://avatars.githubusercontent.com/u/41608708?v=4&s=24" alt="Epicpkmn11" height="24"/></a> <a href="https://github.com/aspin"><img src="https://avatars.githubusercontent.com/u/5728920?v=4&s=24" alt="aspin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.scribblehub.com/" target="_blank">https://www.scribblehub.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/s/scribblehub.py" title="22 March 2022 02:50:32 PM">23</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/s/scribblehub.py" title="22 March 2022 02:50:32 PM">23</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/Epicpkmn11"><img src="https://avatars.githubusercontent.com/u/41608708?v=4&s=24" alt="Epicpkmn11" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.tapread.com/" target="_blank">https://www.tapread.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/t/tapread.py" title="22 March 2022 02:50:32 PM">56</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/t/tapread.py" title="22 March 2022 02:50:32 PM">56</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.virlyce.com/" target="_blank">https://www.virlyce.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/v/virlyce.py" title="22 March 2022 02:50:32 PM">64</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/v/virlyce.py" title="22 March 2022 02:50:32 PM">64</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.volarenovels.com/" target="_blank">https://www.volarenovels.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/v/volarenovels.py" title="22 March 2022 02:50:32 PM">60</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/v/volarenovels.py" title="22 March 2022 02:50:32 PM">60</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.webnovel.com/" target="_blank">https://www.webnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/webnovel.py" title="20 August 2022 04:33:54 PM">80</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/webnovel.py" title="20 August 2022 04:33:54 PM">80</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.wnmtl.org/" target="_blank">https://www.wnmtl.org/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wnmtl.py" title="22 March 2022 09:23:50 AM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.wuxialeague.com/" target="_blank">https://www.wuxialeague.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wuxialeague.py" title="22 March 2022 02:50:32 PM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wuxialeague.py" title="22 March 2022 02:50:32 PM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.wuxiaworld.com/" target="_blank">https://www.wuxiaworld.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/w/wuxiacom.py" title="15 September 2022 05:12:40 PM">78</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/w/wuxiacom.py" title="15 September 2022 05:12:40 PM">78</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.xiainovel.com/" target="_blank">https://www.xiainovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/x/xiainovel.py" title="22 March 2022 02:50:32 PM">55</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/x/xiainovel.py" title="22 March 2022 02:50:32 PM">55</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://zetrotranslation.com/" target="_blank">https://zetrotranslation.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/z/zetrotranslation.py" title="10 September 2022 03:45:28 PM">80</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/z/zetrotranslation.py" title="10 September 2022 03:45:28 PM">80</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa">🖼️</span></td>
 <td><a href="https://zinmanga.com/" target="_blank">https://zinmanga.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/z/zinmanga.py" title="27 August 2022 05:27:56 PM">74</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/z/zinmanga.py" title="27 August 2022 05:27:56 PM">74</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/mchubby"><img src="https://avatars.githubusercontent.com/u/1490889?v=4&s=24" alt="mchubby" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://zinnovel.com/" target="_blank">https://zinnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/en/z/zinnovel.py" title="22 March 2022 02:50:32 PM">11</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/en/z/zinnovel.py" title="22 March 2022 02:50:32 PM">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 </tbody>
@@ -1480,12 +1500,12 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://cclawtranslations.home.blog/" target="_blank">https://cclawtranslations.home.blog/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/es/domentranslations.py" title="22 March 2022 02:50:32 PM">69</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/es/domentranslations.py" title="22 March 2022 02:50:32 PM">69</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://domentranslations.wordpress.com/" target="_blank">https://domentranslations.wordpress.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/es/domentranslations.py" title="22 March 2022 02:50:32 PM">69</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/es/domentranslations.py" title="22 March 2022 02:50:32 PM">69</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 </tbody>
@@ -1503,12 +1523,12 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://chireads.com/" target="_blank">https://chireads.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/fr/chireads.py" title="04 June 2022 06:09:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/fr/chireads.py" title="04 June 2022 06:09:32 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/jere344"><img src="https://avatars.githubusercontent.com/u/86294972?v=4&s=24" alt="jere344" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://lnmtlfr.com/" target="_blank">https://lnmtlfr.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/fr/lnmtlfr.py" title="04 June 2022 06:09:06 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/fr/lnmtlfr.py" title="04 June 2022 06:09:06 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/jere344"><img src="https://avatars.githubusercontent.com/u/86294972?v=4&s=24" alt="jere344" height="24"/></a></td>
 </tr>
 </tbody>
@@ -1526,82 +1546,82 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://zhi-end.blogspot.co.id/" target="_blank">http://zhi-end.blogspot.co.id/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/zhiend.py" title="22 March 2022 02:50:32 PM">61</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/zhiend.py" title="22 March 2022 02:50:32 PM">61</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://zhi-end.blogspot.com/" target="_blank">http://zhi-end.blogspot.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/zhiend.py" title="22 March 2022 02:50:32 PM">61</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/zhiend.py" title="22 March 2022 02:50:32 PM">61</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://darktranslation.com/" target="_blank">https://darktranslation.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/darktrans.py" title="22 March 2022 02:50:32 PM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/darktrans.py" title="22 March 2022 02:50:32 PM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://grensia.blogspot.com/" target="_blank">https://grensia.blogspot.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/grensia_blogspot.py" title="22 March 2022 02:50:32 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/grensia_blogspot.py" title="22 March 2022 02:50:32 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://indowebnovel.id/" target="_blank">https://indowebnovel.id/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/indowebnovel.py" title="22 March 2022 02:50:32 PM">58</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/indowebnovel.py" title="22 March 2022 02:50:32 PM">58</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://meionovel.id/" target="_blank">https://meionovel.id/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/meionovel.py" title="22 March 2022 02:50:32 PM">60</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/meionovel.py" title="22 March 2022 02:50:32 PM">60</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://morenovel.net/" target="_blank">https://morenovel.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/morenovel.py" title="22 March 2022 02:50:32 PM">7</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/morenovel.py" title="22 March 2022 02:50:32 PM">7</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelgo.id/" target="_blank">https://novelgo.id/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/novelgo.py" title="22 March 2022 02:56:57 PM">13</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/novelgo.py" title="22 March 2022 02:56:57 PM">13</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/AncientCatz"><img src="https://avatars.githubusercontent.com/u/69200720?v=4&s=24" alt="AncientCatz" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelringan.com/" target="_blank">https://novelringan.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/novelringan.py" title="22 March 2022 02:50:32 PM">57</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/novelringan.py" title="22 March 2022 02:50:32 PM">57</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://noveltoon.mobi/" target="_blank">https://noveltoon.mobi/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/noveltoon.py" title="22 March 2022 02:56:57 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/noveltoon.py" title="22 March 2022 02:56:57 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://wbnovel.com/" target="_blank">https://wbnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/wbnovel.py" title="22 March 2022 02:50:32 PM">60</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/wbnovel.py" title="22 March 2022 02:50:32 PM">60</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://webnovelindonesia.com/" target="_blank">https://webnovelindonesia.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/webnovelindonesia.py" title="22 March 2022 02:50:32 PM">4</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/webnovelindonesia.py" title="22 March 2022 02:50:32 PM">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.idqidian.us/" target="_blank">https://www.idqidian.us/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/idqidian.py" title="22 March 2022 02:50:32 PM">43</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/idqidian.py" title="22 March 2022 02:50:32 PM">43</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.webnovelover.com/" target="_blank">https://www.webnovelover.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/webnovelover.py" title="22 March 2022 02:50:32 PM">64</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/webnovelover.py" title="22 March 2022 02:50:32 PM">64</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.worldnovel.online/" target="_blank">https://www.worldnovel.online/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/worldnovelonline.py" title="22 March 2022 02:50:32 PM">80</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/worldnovelonline.py" title="22 March 2022 02:50:32 PM">80</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://yukinovel.id/" target="_blank">https://yukinovel.id/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/id/yukinovel.py" title="22 March 2022 02:50:32 PM">54</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/id/yukinovel.py" title="22 March 2022 02:50:32 PM">54</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 </tbody>
@@ -1619,72 +1639,72 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://es.mtlnovel.com/" target="_blank">http://es.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://fr.mtlnovel.com/" target="_blank">http://fr.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://id.mtlnovel.com/" target="_blank">http://id.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="http://www.mtlnovel.com/" target="_blank">http://www.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://18.foxaholic.com/" target="_blank">https://18.foxaholic.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a> <a href="https://github.com/mesmerlord"><img src="https://avatars.githubusercontent.com/u/76161333?v=4&s=24" alt="mesmerlord" height="24"/></a> <a href="https://github.com/frybin"><img src="https://avatars.githubusercontent.com/u/17693407?v=4&s=24" alt="frybin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://es.mtlnovel.com/" target="_blank">https://es.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://foxaholic.com/" target="_blank">https://foxaholic.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a> <a href="https://github.com/mesmerlord"><img src="https://avatars.githubusercontent.com/u/76161333?v=4&s=24" alt="mesmerlord" height="24"/></a> <a href="https://github.com/frybin"><img src="https://avatars.githubusercontent.com/u/17693407?v=4&s=24" alt="frybin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://fr.mtlnovel.com/" target="_blank">https://fr.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://global.foxaholic.com/" target="_blank">https://global.foxaholic.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a> <a href="https://github.com/mesmerlord"><img src="https://avatars.githubusercontent.com/u/76161333?v=4&s=24" alt="mesmerlord" height="24"/></a> <a href="https://github.com/frybin"><img src="https://avatars.githubusercontent.com/u/17693407?v=4&s=24" alt="frybin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://id.mtlnovel.com/" target="_blank">https://id.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://my.w.tt/" target="_blank">https://my.w.tt/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/wattpad.py" title="13 August 2022 05:56:47 AM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/wattpad.py" title="13 August 2022 05:56:47 AM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.foxaholic.com/" target="_blank">https://www.foxaholic.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/foxaholic.py" title="03 June 2022 05:52:36 AM">76</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/watzeedzad"><img src="https://avatars.githubusercontent.com/u/16551821?v=4&s=24" alt="watzeedzad" height="24"/></a> <a href="https://github.com/mesmerlord"><img src="https://avatars.githubusercontent.com/u/76161333?v=4&s=24" alt="mesmerlord" height="24"/></a> <a href="https://github.com/frybin"><img src="https://avatars.githubusercontent.com/u/17693407?v=4&s=24" alt="frybin" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.mtlnovel.com/" target="_blank">https://www.mtlnovel.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/mtlnovel.py" title="22 March 2022 02:50:32 PM">21</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.wattpad.com/" target="_blank">https://www.wattpad.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/multi/wattpad.py" title="13 August 2022 05:56:47 AM">66</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/multi/wattpad.py" title="13 August 2022 05:56:47 AM">66</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 </tbody>
@@ -1702,8 +1722,18 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://blnovels.net/" target="_blank">https://blnovels.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/pt/blnovels.py" title="16 July 2022 11:22:59 AM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/pt/blnovels.py" title="16 July 2022 11:22:59 AM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://centralnovel.com/" target="_blank">https://centralnovel.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/pt/centralnovel.py" title="19 September 2022 11:47:46 AM">5</a></td>
+<td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
+</tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://www.ceunovel.com/" target="_blank">https://www.ceunovel.com/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/pt/ceunovel.py" title="19 September 2022 08:30:30 AM">1</a></td>
+<td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 </tbody>
 </table>
@@ -1718,9 +1748,14 @@ We are supporting 259 sources and 283 crawlers.
 <th>Version</th>
 <th>Contributors</th>
 </tr>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://jaomix.ru/" target="_blank">https://jaomix.ru/</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/ru/jaomix.py" title="19 September 2022 04:26:54 PM">1</a></td>
+<td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
+</tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://litnet.com/" target="_blank">https://litnet.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/ru/litnet.py" title="22 March 2022 02:50:32 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/ru/litnet.py" title="22 March 2022 02:50:32 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 </tbody>
@@ -1738,22 +1773,22 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://docln.net/" target="_blank">https://docln.net/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/vi/lnhakone.py" title="01 September 2022 10:23:33 AM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/vi/lnhakone.py" title="01 September 2022 10:23:33 AM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://ln.hako.vn/" target="_blank">https://ln.hako.vn/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/vi/lnhakone.py" title="01 September 2022 10:23:33 AM">6</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/vi/lnhakone.py" title="01 September 2022 10:23:33 AM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://truyenfull.vn/" target="_blank">https://truyenfull.vn/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/vi/truenfull.py" title="22 March 2022 02:50:32 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/vi/truenfull.py" title="22 March 2022 02:50:32 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://truyentr.info/" target="_blank">https://truyentr.info/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/vi/truenfull.py" title="22 March 2022 02:50:32 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/vi/truenfull.py" title="22 March 2022 02:50:32 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 </tbody>
@@ -1771,27 +1806,27 @@ We are supporting 259 sources and 283 crawlers.
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://sj.uukanshu.com/" target="_blank">https://sj.uukanshu.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/zh/uukanshu.py" title="20 August 2022 07:48:07 AM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/zh/uukanshu.py" title="20 August 2022 07:48:07 AM">3</a></td>
 <td><a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://tw.m.ixdzs.com/" target="_blank">https://tw.m.ixdzs.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/zh/ixdzs.py" title="22 March 2022 02:50:32 PM">3</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/zh/ixdzs.py" title="22 March 2022 02:50:32 PM">3</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/junqili259"><img src="https://avatars.githubusercontent.com/u/39481617?v=4&s=24" alt="junqili259" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.aixdzs.com/" target="_blank">https://www.aixdzs.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/zh/aixdzs.py" title="17 July 2022 02:00:46 PM">16</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/zh/aixdzs.py" title="17 July 2022 02:00:46 PM">16</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.daocaorenshuwu.com/" target="_blank">https://www.daocaorenshuwu.com/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/zh/daocaorenshuwu.py" title="22 March 2022 02:50:32 PM">56</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/zh/daocaorenshuwu.py" title="22 March 2022 02:50:32 PM">56</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.soxs.cc/" target="_blank">https://www.soxs.cc/</a></td>
-<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3b740f3d52cd136afb95a6ce6b6eeec803b7a476/sources/zh/soxs.py" title="30 May 2022 10:35:34 AM">5</a></td>
+<td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/ea21e2ca1823f780e596d60f2822aa8d87839c60/sources/zh/soxs.py" title="30 May 2022 10:35:34 AM">5</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/junqili259"><img src="https://avatars.githubusercontent.com/u/39481617?v=4&s=24" alt="junqili259" height="24"/></a></td>
 </tr>
 </tbody>
