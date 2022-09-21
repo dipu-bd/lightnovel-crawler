@@ -11,6 +11,5 @@ with open(str(ROOT / 'style.css'), 'r', encoding='utf8') as f:
 
 
 def get_value():
-    t = css_minify(style)
     return css_minify(style)
 # end def
