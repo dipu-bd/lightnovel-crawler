@@ -19,7 +19,7 @@ questionary>=1.6.0
 prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
-css_html_js_minify>=2.5.5
+css-html-js-minify>=2.5.5
 
 # dev requirements
 wheel
