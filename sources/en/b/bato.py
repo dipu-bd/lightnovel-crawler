@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from urllib.parse import quote_plus
+
 import json
 import re
 
@@ -12,6 +12,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 BLOCK_SIZE = 16
+search_url = 'https://bato.to/search?word=%s'
 
 
 def decode_pass(code):
@@ -80,6 +81,21 @@ class BatoCrawler(Crawler):
         'https://hto.to/',
         'https://mangatoto.net/',
     ]
+
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % query)
+
+        results = []
+        for div in soup.select('#series-list > div'):
+            a = div.select_one('a.item-title')
+
+            results.append({
+                'title': a.text.strip(),
+                'url': f"https://bato.to{a['href']}",
+            })
+
+        return results
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
