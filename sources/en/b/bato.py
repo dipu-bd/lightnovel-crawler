@@ -83,6 +83,8 @@ class BatoCrawler(Crawler):
     ]
 
     def search_novel(self, query):
+        self.home_url = 'https://bato.to/'
+
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
 
@@ -92,7 +94,7 @@ class BatoCrawler(Crawler):
 
             results.append({
                 'title': a.text.strip(),
-                'url': f"https://bato.to{a['href']}",
+                'url': self.absolute_url(a['href']),
             })
 
         return results
@@ -128,7 +130,7 @@ class BatoCrawler(Crawler):
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text,
-                'url': self.home_url.rstrip('/') + a['href'],
+                'url': self.absolute_url(a['href']),
             })
 
     def download_chapter_body(self, chapter):
