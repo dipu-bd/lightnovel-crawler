@@ -83,8 +83,6 @@ class BatoCrawler(Crawler):
     ]
 
     def search_novel(self, query):
-        self.home_url = 'https://bato.to/'
-
         query = query.lower().replace(' ', '+')
         soup = self.get_soup(search_url % query)
 
