@@ -9,7 +9,7 @@ chapter_list_url = 'https://mangachill.love/wp-admin/admin-ajax.php'
 
 class ManhwachillLove(Crawler):
     has_manga = True
-    base_url = 'https://mangachill.love/'
+    base_url = ['https://mangachill.love/', 'https://mangachill.io/']
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
