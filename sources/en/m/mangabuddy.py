@@ -7,10 +7,27 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+search_url = '%ssearch?q=%s'
+
 
 class mangabuddyCrawler(Crawler):
     has_manga = True
     base_url = 'https://mangabuddy.com/'
+
+    def search_novel(self, query):
+        query = query.lower().replace(' ', '+')
+        soup = self.get_soup(search_url % (self.home_url, query))
+
+        results = []
+        for book in soup.select('.book-detailed-item .meta'):
+            a = book.select_one('.title a')
+
+            results.append({
+                'title': a.text.strip(),
+                'url': self.absolute_url(a['href']),
+            })
+
+        return results
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
