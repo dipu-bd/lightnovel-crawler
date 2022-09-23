@@ -33,7 +33,7 @@ class LightNovelOnline(Crawler):
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
-        soup = self.get_soup(novel_search_url % (self.home_url.removesuffix("/"), query))
+        soup = self.get_soup(novel_search_url % (self.home_url.strip("/"), query))
 
         results = []
         for a in soup.select('.novel-list .novel-item a'):
