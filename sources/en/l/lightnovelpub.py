@@ -16,6 +16,7 @@ class LightNovelOnline(Crawler):
     base_url = [
         'https://www.lightnovelpub.com/',
         'https://www.lightnovelworld.com/',
+        'https://www.novelpub.com/',
     ]
 
     def initialize(self) -> None:
