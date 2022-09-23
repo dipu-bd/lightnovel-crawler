@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 search_url = '%ssearch?q=%s'
 
 
-class mangabuddyCrawler(Crawler):
+class MangaBuddyCrawler(Crawler):
     has_manga = True
     base_url = 'https://mangabuddy.com/'
 
