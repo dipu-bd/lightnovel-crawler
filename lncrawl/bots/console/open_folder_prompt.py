@@ -13,8 +13,8 @@ def display_open_folder(folder_path: str):
     if Platform.wsl or Platform.java:
         return
 
-    # if args.suppress:
-    #     return
+    if args.suppress:
+        return
 
     answer = prompt(
         [
