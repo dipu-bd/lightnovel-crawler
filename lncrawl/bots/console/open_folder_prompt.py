@@ -1,6 +1,5 @@
 import pathlib
 import subprocess
-import os
 
 from questionary import prompt
 
@@ -11,13 +10,9 @@ from ...core.arguments import get_args
 def display_open_folder(folder_path: str):
     args = get_args()
 
-    if Platform.wsl \
-        or Platform.java \
-        or os.path.exists("/.dockerenv") \
-        or (os.path.isfile("/proc/self/cgroup") and any('docker' in line for line in open("/proc/self/cgroup"))):
-        return
-
     if args.suppress:
+        return
+    if Platform.wsl or Platform.java or Platform.docker:
         return
 
     answer = prompt(
@@ -36,10 +31,10 @@ def display_open_folder(folder_path: str):
 
     path = pathlib.Path(folder_path).as_uri()
     if Platform.windows:
-        subprocess.check_call(["explorer", "/select", path])
+        subprocess.Popen('explorer /select,"' + path + '"')
     elif Platform.linux:
-        subprocess.check_call(["xdg-open", path])
+        subprocess.Popen('xdg-open "' + path + '"')
     elif Platform.mac:
-        subprocess.check_call(["open", "--", path])
+        subprocess.Popen('open -- "' + path + '"')
     else:
         raise Exception("Platform is not supported")
