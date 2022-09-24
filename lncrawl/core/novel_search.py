@@ -8,7 +8,7 @@ from concurrent import futures
 from slugify import slugify
 from tqdm import tqdm
 
-from ..core import sources
+from ..core.sources import crawler_list
 
 SEARCH_TIMEOUT = 10
 
@@ -18,7 +18,7 @@ executor = futures.ThreadPoolExecutor(20)
 
 def get_search_result(app, link, bar):
     try:
-        CrawlerType = sources.crawler_list[link]
+        CrawlerType = crawler_list[link]
         instance = CrawlerType()
         instance.home_url = link
         results = instance.search_novel(app.user_input)
@@ -76,7 +76,7 @@ def search_novels(app):
     futures_to_check = []
     app.progress = 0
     for link in sources:
-        crawler = sources.crawler_list[link]
+        crawler = crawler_list[link]
         if crawler in checked:
             logger.info('A crawler for "%s" already exists', link)
             bar.update()
