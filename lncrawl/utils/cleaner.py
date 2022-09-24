@@ -51,6 +51,10 @@ class TextCleaner:
             '<': '&lt;',
             '>': '&gt;',
         }
+        self.allowed_inline_styles = [
+            'font-style',
+            'font-weght'
+        ]
 
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
@@ -70,18 +74,35 @@ class TextCleaner:
             for bad in div.select(','.join(self.bad_css)):
                 bad.extract()
 
+        i = 0
         for tag in div.find_all(True):
+            i += 1
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
             elif tag.name == 'br':
-                next_tag = getattr(tag, 'next_sibling')
-                if next_tag and getattr(next_tag, 'name') == 'br':
-                    tag.extract()
+                if tag.nextSibling is not None:
+                    while tag.next_sibling.text.strip() == '' or tag.next_sibling.name == 'br':
+                        tag.next_sibling.extract()
+                        if tag.nextSibling is None:
+                            break
 
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
             elif hasattr(tag, 'attrs'):
-                tag.attrs = {k: v for k, v in tag.attrs.items() if k == 'src'}
+                cleaned_attrs = {}
+                for k, v in tag.attrs.items():
+                    if k == 'src':
+                        cleaned_attrs[k] = v
+                    elif k == 'style':
+                        cleaned_styles = []
+                        styles = v.split(";")
+                        for style in styles:
+                            if style.split(":")[0].strip().lower() in self.allowed_inline_styles:
+                                cleaned_styles.append(style.strip())
+                        if len(cleaned_styles) > 0:
+                            cleaned_attrs[k] = ";".join(cleaned_styles)
+
+                tag.attrs = cleaned_attrs
 
         div.attrs = {}
         return div
