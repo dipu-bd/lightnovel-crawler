@@ -102,8 +102,8 @@ class TextCleaner:
             ">": "&gt;",
         }
         self.allowed_inline_styles = [
-            'font-style',
-            'font-weight'
+            "font-style",
+            "font-weight"
         ]
 
     def extract_contents(self, tag) -> str:
@@ -129,21 +129,21 @@ class TextCleaner:
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()   # Remove comments
-            elif tag.name == 'br':
+            elif tag.name == "br":
                 if tag.nextSibling is not None:
-                    while tag.next_sibling.text.strip() == '' or tag.next_sibling.name == 'br':
+                    while tag.next_sibling.text.strip() == "" or tag.next_sibling.name == "br":
                         tag.next_sibling.extract()
                         if tag.nextSibling is None:
                             break
 
             elif tag.name in self.bad_tags:
                 tag.extract()   # Remove bad tags
-            elif hasattr(tag, 'attrs'):
+            elif hasattr(tag, "attrs"):
                 cleaned_attrs = {}
                 for k, v in tag.attrs.items():
-                    if k == 'src':
+                    if k == "src":
                         cleaned_attrs[k] = v
-                    elif k == 'style':
+                    elif k == "style":
                         cleaned_styles = []
                         styles = v.split(";")
                         for style in styles:
