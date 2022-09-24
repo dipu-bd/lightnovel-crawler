@@ -6,18 +6,16 @@ on:
       - master
 
 jobs:
-  build:
+  lint_test:
+    name: Lint & Test
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
-
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
+
+      - name: Set up Python 3.6
         uses: actions/setup-python@v1
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.6
 
       - name: Install dependencies
         run: |
@@ -28,3 +26,11 @@ jobs:
         run: |
           pip install flake8
           flake8 --count --show-source --statistics
+
+      - name: Build wheel
+        run: python setup.py clean bdist_wheel
+
+      - name: Install and test the wheel package
+        run: |
+          pip install dist/lightnovel_crawler*.whl
+          lncrawl --list-sources

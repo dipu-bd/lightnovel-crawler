@@ -13,8 +13,6 @@ class AncientHeartloss(Crawler):
     ]
 
     def initialize(self) -> None:
-        self.cleaner.bad_css.update(['.sharedaddy', 'a[href*="paypal.me"]'])
-        self.cleaner.bad_tags.update(["script"])
         # There is a lot of TN notes at bottom of chapters and junk text I've tried to remove as much as I can.
         self.cleaner.blacklist_patterns.update(
             [

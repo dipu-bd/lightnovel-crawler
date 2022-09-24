@@ -19,9 +19,12 @@ questionary>=1.6.0
 prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
+css-html-js-minify>=2.5.5
 
 # dev requirements
 wheel
+black
+flake8
 pyinstaller
 setuptools<=60.0.0
 pycryptodome>=3.0.0,<4.0.0

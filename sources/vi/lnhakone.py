@@ -26,7 +26,7 @@ class ListNovelCrawler(Crawler):
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
-        soup = self.get_soup(search_url % (self.home_url, query))
+        soup = self.get_soup(search_url % (self.home_url.strip("/"), query))
 
         results = []
         for tab in soup.select('.sect-body .thumb-item-flow'):

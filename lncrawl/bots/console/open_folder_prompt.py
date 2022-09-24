@@ -1,32 +1,41 @@
-# -*- coding: utf-8 -*-
+import pathlib
+import subprocess
+
 from questionary import prompt
 
-from ...assets.icons import Icons
+from ...assets.platforms import Platform
 from ...core.arguments import get_args
 
 
 def display_open_folder(folder_path: str):
     args = get_args()
-    if args.suppress:
+
+    if Platform.wsl or Platform.java:
         return
 
-    answer = prompt([
-        {
-            'type': 'confirm',
-            'name': 'exit',
-            'message': 'Open the output folder?',
-            'default': True,
-        },
-    ])
+    # if args.suppress:
+    #     return
 
-    if not answer['exit']:
+    answer = prompt(
+        [
+            {
+                "type": "confirm",
+                "name": "exit",
+                "message": "Open the output folder?",
+                "default": True,
+            },
+        ]
+    )
+
+    if not answer["exit"]:
         return
 
-    if Icons.isWindows:
-        import subprocess
-        subprocess.Popen('explorer /select,"' + folder_path + '"')
+    path = pathlib.Path(folder_path).as_uri()
+    if Platform.windows:
+        subprocess.check_call(["explorer", "/select", path])
+    elif Platform.linux:
+        subprocess.check_call(["xdg-open", "--", path])
+    elif Platform.mac:
+        subprocess.check_call(["open", "--", path])
     else:
-        import pathlib
-        import webbrowser
-        url = pathlib.Path(folder_path).as_uri()
-        webbrowser.open_new(url)
+        raise Exception("Platform is not supported")
