@@ -1,4 +1,4 @@
-# EditorConfig is awesome: http://EditorConfig.org
+# EditorConfig is awesome: https://editorconfig.org/
 
 # top-most EditorConfig file
 root = true
@@ -7,3 +7,11 @@ root = true
 [*]
 end_of_line = lf
 insert_final_newline = true
+
+# Set default charset
+[*.{js,py}]
+charset = utf-8
+
+[*.py]
+indent_style = space
+indent_size = 4
