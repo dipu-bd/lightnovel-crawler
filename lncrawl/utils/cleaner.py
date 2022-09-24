@@ -103,7 +103,7 @@ class TextCleaner:
         }
         self.allowed_inline_styles = [
             'font-style',
-            'font-weght'
+            'font-weight'
         ]
 
     def extract_contents(self, tag) -> str:
