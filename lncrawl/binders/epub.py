@@ -1,13 +1,13 @@
 import logging
 import os
 
-from css_html_js_minify import html_minify
+from ..assets.epub import get_css_style
+from css_html_js_minify import html_minify, css_minify
 
 try:
     from ebooklib import epub
 except Exception as err:
     logging.fatal("Failed to import `ebooklib`")
-
 
 logger = logging.getLogger(__name__)
 
@@ -31,17 +31,7 @@ def make_intro_page(app, cover_image):
     logger.info("Creating intro page")
     github_url = "https://github.com/dipu-bd/lightnovel-crawler"
 
-    intro_html = '<div style="%s">' % ";".join(
-        [
-            "max-height: 95vh",
-            "min-height: 450px",
-            "display: flex",
-            "text-align: center",
-            "flex-direction: column",
-            "justify-content: space-between",
-            "align-items: center",
-        ]
-    )
+    intro_html = '<div id="intro">'
 
     intro_html += """
         <div>
@@ -54,16 +44,8 @@ def make_intro_page(app, cover_image):
     )
 
     if cover_image:
-        intro_html += '<img id="cover" src="%s" style="%s">' % (
+        intro_html += '<img id="cover" src="%s">' % (
             cover_image.file_name,
-            "; ".join(
-                [
-                    "max-height: 50vh",
-                    "min-height: 30vh",
-                    "object-fit: contain",
-                    "object-position: center center",
-                ]
-            ),
         )
 
     intro_html += """
@@ -78,12 +60,14 @@ def make_intro_page(app, cover_image):
 
     intro_html += "</div>"
 
-    return epub.EpubHtml(
+    intro = epub.EpubHtml(
         uid="intro",
         file_name="intro.xhtml",
         title="Intro",
         content=html_minify(intro_html),
     )
+    intro.add_link(href='style/style.css', rel='stylesheet', type='text/css')
+    return intro
 
 
 def make_chapters(book, chapters):
@@ -94,18 +78,7 @@ def make_chapters(book, chapters):
             continue
 
         xhtml_file = "chap_%s.xhtml" % str(i + 1).rjust(5, "0")
-        additional_styles = """<style>
-        img {
-            width: 100vw;
-            object-fit: scale-down;
-            object-position: center center;
-        }
-        p + br, br + br {
-            display: none;
-        }
-        </style>
-        """
-        body_html = html_minify(str(chapter["body"]) + additional_styles)
+        body_html = html_minify(str(chapter["body"]))
 
         # create chapter xhtml file
         content = epub.EpubHtml(
@@ -115,6 +88,8 @@ def make_chapters(book, chapters):
             title=chapter["title"],
             direction=book.direction,
         )
+        content.add_link(href='style/style.css', rel='stylesheet', type='text/css')
+
         book.add_item(content)
         volume.append(content)
         book.spine.append(content)
@@ -185,6 +160,10 @@ def bind_epub_book(app, chapters, volume=""):
     # Add chapter images
     image_path = os.path.join(app.output_path, "images")
     make_chapter_images(book, image_path)
+
+    # Add css
+    css = epub.EpubItem(uid="style", file_name="style/style.css", media_type="text/css", content=css_minify(get_css_style()))
+    book.add_item(css)
 
     # Save epub file
     epub_path = os.path.join(app.output_path, "epub")

@@ -124,12 +124,12 @@ class TextCleaner:
 
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
-                tag.extract()  # Remove comments
+                tag.extract()   # Remove comments
             elif tag.name == "br":
-                next_tag = getattr(tag, "next_sibling")
-                if next_tag and getattr(next_tag, "name") == "br":
+                next_tag = getattr(tag, "next_sibling", "")
+                while next_tag and getattr(next_tag, "name", '') == "br"):
                     tag.extract()
-
+                    next_tag = getattr(tag, "next_sibling", "")
             elif tag.name in self.bad_tags:
                 tag.extract()  # Remove bad tags
             elif hasattr(tag, "attrs"):

@@ -1,0 +1,26 @@
+img {
+    width: 100vw;
+    object-fit: scale-down;
+    object-position: center center;
+}
+
+p+br {
+    display: none;
+}
+
+#intro {
+    max-height: 95vh;
+    min-height: 450px;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center
+}
+
+#cover {
+    max-height: 50vh;
+    min-height: 30vh;
+    object-fit: contain;
+    object-position: center center
+}
