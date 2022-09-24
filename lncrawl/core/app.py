@@ -11,7 +11,7 @@ from slugify import slugify
 from .. import constants as C
 from ..binders import available_formats, generate_books
 from ..core.exeptions import LNException
-from ..core.sources import crawler_list, rejected_sources
+from ..core.sources import crawler_list, prepare_crawler, rejected_sources
 from .crawler import Crawler
 from .downloader import download_chapter_images, download_chapters
 from .novel_info import format_novel, save_metadata
@@ -68,7 +68,8 @@ class App:
 
         if self.user_input.startswith("http"):
             logger.info("Detected URL input")
-            self.prepare_crawler(self.user_input)
+            self.crawler = prepare_crawler(self.user_input)
+            self.crawler.novel_url = self.user_input
         else:
             logger.info("Detected query input")
             self.crawler_links = [
@@ -95,30 +96,6 @@ class App:
 
     # ----------------------------------------------------------------------- #
 
-    def prepare_crawler(self, novel_url):
-        if not novel_url:
-            return
-
-        parsed_url = urlparse(novel_url)
-        base_url = "%s://%s/" % (parsed_url.scheme, parsed_url.hostname)
-        if base_url in rejected_sources:
-            raise LNException(
-                "Source is rejected. Reason: " + rejected_sources[base_url]
-            )
-
-        CrawlerType = crawler_list.get(base_url)
-        if not CrawlerType:
-            raise LNException("No crawler found for " + base_url)
-
-        logger.info(
-            "Initializing crawler for: %s [%s]",
-            base_url,
-            getattr(CrawlerType, "file_path", "."),
-        )
-        self.crawler = CrawlerType()
-        self.crawler.home_url = base_url
-        self.crawler.novel_url = novel_url
-
     def can_do(self, prop_name):
         return prop_name in self.crawler.__class__.__dict__
 
@@ -128,7 +105,6 @@ class App:
         if not isinstance(self.crawler, Crawler):
             raise LNException("No crawler is selected")
 
-        self.crawler.initialize()
         self.crawler.scraper.headers["origin"] = self.crawler.home_url
         self.crawler.scraper.headers["referer"] = self.crawler.home_url
 

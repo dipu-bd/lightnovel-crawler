@@ -7,7 +7,8 @@ import re
 import time
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
-from typing import Dict, List, Type
+from typing import Dict, List, Optional, Type
+from urllib.parse import urlparse
 
 import requests
 from packaging import version
@@ -308,6 +309,9 @@ def __add_crawlers_from_path(path: Path):
         logger.warn("Could not load crawlers from %s. Error: %s", path, e)
 
 
+# --------------------------------------------------------------------------- #
+# Public methods
+# --------------------------------------------------------------------------- #
 def load_sources():
     __is_dev_mode = (__local_data_path / ".git" / "HEAD").exists()
 
@@ -327,3 +331,28 @@ def load_sources():
     args = get_args()
     for crawler_file in args.crawler:
         __add_crawlers_from_path(Path(crawler_file))
+
+
+def prepare_crawler(url: str) -> Optional[Crawler]:
+    if not url:
+        return None
+
+    parsed_url = urlparse(url)
+    base_url = "%s://%s/" % (parsed_url.scheme, parsed_url.hostname)
+    if base_url in rejected_sources:
+        raise LNException("Source is rejected. Reason: " + rejected_sources[base_url])
+
+    CrawlerType = crawler_list.get(base_url)
+    if not CrawlerType:
+        raise LNException("No crawler found for " + base_url)
+
+    logger.info(
+        "Initializing crawler for: %s [%s]",
+        base_url,
+        getattr(CrawlerType, "file_path", "."),
+    )
+
+    crawler = CrawlerType()
+    crawler.home_url = base_url
+    crawler.initialize()
+    return crawler

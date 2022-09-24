@@ -8,7 +8,7 @@ from concurrent import futures
 from slugify import slugify
 from tqdm import tqdm
 
-from ..core.sources import crawler_list
+from ..core.sources import crawler_list, prepare_crawler
 
 SEARCH_TIMEOUT = 10
 
@@ -18,10 +18,8 @@ executor = futures.ThreadPoolExecutor(20)
 
 def get_search_result(app, link, bar):
     try:
-        CrawlerType = crawler_list[link]
-        instance = CrawlerType()
-        instance.home_url = link
-        results = instance.search_novel(app.user_input)
+        crawler = prepare_crawler(link)
+        results = crawler.search_novel(app.user_input)
         logger.debug(results)
         logger.info("%d results from %s", len(results), link)
         return results
