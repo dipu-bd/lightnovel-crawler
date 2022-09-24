@@ -12,6 +12,7 @@ class MadaraTemplate(Crawler):
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3"])
+        self.cleaner.bad_css.update(['a[href="javascript:void(0)"]'])
 
     def search_novel(self, query) -> List[Dict[str, str]]:
         query = quote(query.lower())
