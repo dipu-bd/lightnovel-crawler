@@ -77,7 +77,7 @@ def __download_data(url: str):
 # Checking Updates
 # --------------------------------------------------------------------------- #
 
-__index_fetch_internval_in_hours = 3
+__index_fetch_internval_in_seconds = 30 * 60
 __master_index_file_url = "https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/sources/_index.json"
 
 __user_data_path = Path(os.path.expanduser("~")) / ".lncrawl"
@@ -119,11 +119,8 @@ def __load_latest_index():
     global __current_index
 
     last_download = __current_index.get("v", 0)
-    if time.time() - last_download < __index_fetch_internval_in_hours * 3600:
-        logger.debug(
-            "Current index was already downloaded once in last %d hours.",
-            __index_fetch_internval_in_hours,
-        )
+    if time.time() - last_download < __index_fetch_internval_in_seconds:
+        logger.debug("Current index was already downloaded once")
         __latest_index = __current_index
         return
 
