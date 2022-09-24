@@ -15,7 +15,11 @@ class PeryInfo(Crawler):
 
     def initialize(self) -> None:
         self.cleaner.blacklist_patterns.update(
-            ["Consider supporting Pure and whitelisting"]
+            [
+                "Consider supporting Pure and whitelisting",
+                "If you enjoy this novel, please consider turning off ad-block! thank you~",
+                "Check out our weekly update schedule HERE",
+            ],
         )
 
     def read_novel_info(self):
