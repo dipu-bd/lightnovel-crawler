@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 import logging
+from urllib.parse import urlparse
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://mangachill.love/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://mangachill.love/wp-admin/admin-ajax.php'
+search_url = 'https://manhuaplus.online/?s=%s&post_type=wp-manga&author=&artist=&release='
+post_chapter_url = 'https://manhuaplus.online/wp-admin/admin-ajax.php'
 
 
-class ManhwachillLove(Crawler):
+class ArNovelCrawler(Crawler):
     has_manga = True
-    base_url = ['https://mangachill.love/', 'https://mangachill.io/']
+    base_url = 'https://manhuaplus.online/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -42,7 +43,7 @@ class ManhwachillLove(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one('.summary_image a img')['data-src'])
+            soup.select_one('.summary_image a img')['src'])
         logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = ' '.join([
@@ -51,9 +52,22 @@ class ManhwachillLove(Crawler):
         ])
         logger.info('%s', self.novel_author)
 
-        for a in reversed(soup.select('ul.main li.wp-manga-chapter a')):
+        self.novel_id = soup.select_one(
+            '.wp-manga-action-button[data-action=bookmark]')['data-post']
+        logger.info('Novel id: %s', self.novel_id)
+
+        for span in soup.select('.page-content-listing span'):
+            span.extract()
+
+        logger.info('Sending post request to %s', post_chapter_url)
+        response = self.submit_form(post_chapter_url, data={
+            'action': 'manga_get_chapters',
+            'manga': int(self.novel_id)
+        })
+        soup = self.make_soup(response)
+        for a in reversed(soup.select('.wp-manga-chapter > a')):
             chap_id = len(self.chapters) + 1
-            vol_id = len(self.chapters) // 100 + 1
+            vol_id = chap_id // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
             # end if
@@ -61,7 +75,7 @@ class ManhwachillLove(Crawler):
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
-                'url': self.absolute_url(a['href']),
+                'url':  self.absolute_url(a['href']),
             })
         # end for
     # end def
@@ -82,6 +96,7 @@ class ManhwachillLove(Crawler):
                 img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
+        # end for
 
         return self.cleaner.extract_contents(contents)
     # end def

@@ -3,13 +3,13 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://mangachill.love/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://mangachill.love/wp-admin/admin-ajax.php'
+search_url = 'https://www.topmanhua.com/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://www.topmanhua.com/wp-admin/admin-ajax.php'
 
 
-class ManhwachillLove(Crawler):
+class TopManhua(Crawler):
     has_manga = True
-    base_url = ['https://mangachill.love/', 'https://mangachill.io/']
+    base_url = 'https://www.topmanhua.com/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -47,7 +47,7 @@ class ManhwachillLove(Crawler):
 
         self.novel_author = ' '.join([
             a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
+            for a in soup.select('.author-content a[href*="manhua-author"]')
         ])
         logger.info('%s', self.novel_author)
 
@@ -82,7 +82,8 @@ class ManhwachillLove(Crawler):
                 img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
-
+        # end for
+        
         return self.cleaner.extract_contents(contents)
     # end def
 # end class

@@ -3,13 +3,13 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://mangachill.love/?s=%s&post_type=wp-manga'
-chapter_list_url = 'https://mangachill.love/wp-admin/admin-ajax.php'
+search_url = 'https://mangastic.me/?s=%s&post_type=wp-manga'
+chapter_list_url = 'https://mangastic.me/wp-admin/admin-ajax.php'
 
 
-class ManhwachillLove(Crawler):
+class MangaStic(Crawler):
     has_manga = True
-    base_url = ['https://mangachill.love/', 'https://mangachill.io/']
+    base_url = 'https://mangastic.me/'
 
     def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -82,6 +82,7 @@ class ManhwachillLove(Crawler):
                 img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
                 parent.append(new_tag)
+        # end for
 
         return self.cleaner.extract_contents(contents)
     # end def

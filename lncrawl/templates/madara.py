@@ -51,7 +51,10 @@ class MadaraTemplate(Crawler):
     def parse_image(self, soup: BeautifulSoup):
         tag = soup.select_one(".summary_image a img")
         if isinstance(tag, Tag):
-            self.novel_cover = self.absolute_url(tag["src"])
+            if tag.has_attr("data-src"):
+                self.novel_cover = self.absolute_url(tag["data-src"])
+            elif tag.has_attr("src"):
+                self.novel_cover = self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup):
         self.novel_author = ", ".join(

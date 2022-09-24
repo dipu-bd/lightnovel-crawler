@@ -8,7 +8,8 @@ logger = logging.getLogger(__name__)
 class MangaWeebsCrawler(Crawler):
     has_manga = True
     base_url = [
-        'https://mangaweebs.in/'
+        'https://mangaweebs.in/',
+        'https://www.mangaweebs.in/'
     ]
     
     search_url = (
