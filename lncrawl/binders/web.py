@@ -2,7 +2,7 @@ import logging
 import os
 import shutil
 
-from css_html_js_minify import html_minify
+from minify_html import minify
 
 from ..assets.web import get_css_style, get_js_script
 
@@ -24,17 +24,17 @@ def bind_html_chapter(chapters, index, direction="ltr"):
     prev_filename = get_filename(prev_chapter)
     next_filename = get_filename(next_chapter)
 
-    all_chapter_options = ""
+    chapter_options = []
     for idx, item in enumerate(chapters):
         title = item["title"]
         value = get_filename(item)
-        selected = "selected" if idx == index else ""
-        all_chapter_options += f'<option value="{value}" {selected}>{title}</option>\n'
+        selected = " selected" if idx == index else ""
+        chapter_options.append(f'<option value="{value}"{selected}>{title}</option>')
 
     button_group = f"""
     <div class="link-group">
         <a class="btn prev-button" href="{prev_filename or '#'}">Previous</a>
-        <select class="toc">{all_chapter_options}</select>
+        <select class="toc">{''.join(chapter_options)}</select>
         <a class="btn next-button"  href="{next_filename or '#'}">Next</a>
     </div>
     """
@@ -68,7 +68,7 @@ def bind_html_chapter(chapters, index, direction="ltr"):
     </html>
     """
 
-    html = html_minify(html)
+    html = minify(html, minify_css=True, minify_js=True)
     return html, this_filename
 
 

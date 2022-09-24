@@ -1,4 +1,4 @@
-import pathlib
+import os
 import subprocess
 
 from questionary import prompt
@@ -12,7 +12,7 @@ def display_open_folder(folder_path: str):
 
     if args.suppress:
         return
-    if Platform.wsl or Platform.java or Platform.docker:
+    if Platform.java or Platform.docker:
         return
 
     answer = prompt(
@@ -29,12 +29,13 @@ def display_open_folder(folder_path: str):
     if not answer["exit"]:
         return
 
-    path = pathlib.Path(folder_path).as_uri()
     if Platform.windows:
-        subprocess.Popen('explorer /select,"' + path + '"')
+        os.system(f'explorer.exe "{folder_path}"')
+    elif Platform.wsl:
+        os.system(f'cd "{folder_path}" && explorer.exe .')
     elif Platform.linux:
-        subprocess.Popen('xdg-open "' + path + '"')
+        subprocess.run(f'xdg-open "{folder_path}"')
     elif Platform.mac:
-        subprocess.Popen('open -- "' + path + '"')
+        subprocess.run(f'open -- "{folder_path}"')
     else:
-        raise Exception("Platform is not supported")
+        print(f"Output Folder: {folder_path}")
