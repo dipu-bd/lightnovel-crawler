@@ -17,7 +17,6 @@ class MadaraTemplate(Crawler):
         query = quote(query.lower())
         url = f"{self.home_url}?s={query}&post_type=wp-manga&author=&artist=&release="
         soup = self.get_soup(url)
-        self.parse_search_results(soup)
         return [
             self.parse_search_item(tab) for tab in soup.select(".c-tabs-item__content")
         ]
@@ -37,7 +36,6 @@ class MadaraTemplate(Crawler):
         self.parse_title(soup)
         self.parse_image(soup)
         self.parse_authors(soup)
-        self.parse_chapter_list(soup)
         self.parse_chapter_list(self.get_chapter_list_soup(soup))
 
     def parse_title(self, soup: BeautifulSoup) -> None:
@@ -67,21 +65,20 @@ class MadaraTemplate(Crawler):
     def get_chapter_list_soup(self, soup: BeautifulSoup) -> BeautifulSoup:
         nl_id = soup.select_one('[id^="manga-chapters-holder"][data-id]')
         if isinstance(nl_id, Tag):
-            self.novel_id = nl_id["data-id"]
             response = self.submit_form(
                 f"{self.home_url}wp-admin/admin-ajax.php",
                 data={
                     "action": "manga_get_chapters",
-                    "manga": self.novel_id,
+                    "manga": nl_id["data-id"],
                 },
             )
         else:
-            clean_novel_url = self.novel_url.split("?")[0].rstrip("/")
+            clean_novel_url = self.novel_url.split("?")[0].strip("/")
             response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
         return self.make_soup(response)
 
     def parse_chapter_list(self, soup: BeautifulSoup) -> None:
-        for a in reversed(soup.select(".wp-manga-chapter a")):
+        for a in reversed(soup.select("ul.main .wp-manga-chapter > a")):
             self.chapters.append(
                 {
                     "id": len(self.chapters) + 1,
@@ -89,6 +86,7 @@ class MadaraTemplate(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
+        print(self.chapters)
 
     def download_chapter_body(self, chapter) -> None:
         soup = self.get_soup(chapter["url"])
