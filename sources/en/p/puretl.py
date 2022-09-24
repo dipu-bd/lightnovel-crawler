@@ -59,6 +59,8 @@ class PeryInfo(Crawler):
         chapter["title"] = soup.select_one(".entry-title").text.strip()
 
         contents = soup.select_one(".blog-item-content")
-        contents.find("a", string=re.compile("Index")).parent.extract()
+        nav = contents.find("a", string=re.compile("Index"))
+        if isinstance(nav, Tag):
+            nav.parent.extract()
 
         return self.cleaner.extract_contents(contents)
