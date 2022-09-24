@@ -112,7 +112,7 @@ $ docker build -t lncrawl -f ./scripts/Dockerfile .
 
 ```
 $ mkdir ~/Lightnovels
-$ docker run -v ~/Lightnovels:/app/Lightnovels -it lncrawl
+$ docker run -v ~/Lightnovels:/home/appuser/app/Lightnovels -it lncrawl
 ```
 
 > You can setup _alias_ to the above command in your terminal's profile to run using single a single-word command.
