@@ -86,7 +86,6 @@ class MadaraTemplate(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        print(self.chapters)
 
     def download_chapter_body(self, chapter) -> None:
         soup = self.get_soup(chapter["url"])

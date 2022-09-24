@@ -11,7 +11,15 @@ def get_range_selection(self, disable_args=False):
     """
     volume_count = len(self.app.crawler.volumes)
     chapter_count = len(self.app.crawler.chapters)
-    selections = ["all", "last", "first", "page", "range", "volumes", "chapters"]
+    selections = [
+        "all",
+        "last",
+        "first",
+        "page",
+        "range",
+        "volumes",
+        "chapters",
+    ]
 
     args = get_args()
 
@@ -24,18 +32,19 @@ def get_range_selection(self, disable_args=False):
         return selections[0]
 
     choices = [
-        "Everything! (%d chapters)" % chapter_count,
+        f"Everything! ({chapter_count} chapters)",
         "Last 10 chapters",
         "First 10 chapters",
         "Custom range using URL",
         "Custom range using index",
-        "Select specific volumes (%d volumes)" % volume_count,
-        "Select specific chapters "
-        + ("(warn: very big list)" if chapter_count > 50 else ""),
+        f"Select specific volumes ({volume_count} volumes)",
+        f"Select specific chapters ({chapter_count} chapters)",
     ]
     if chapter_count <= 20:
         choices.pop(1)
         choices.pop(1)
+        selections.pop(1)
+        selections.pop(1)
 
     answer = prompt(
         [
