@@ -13,7 +13,7 @@ chapter_post_url = "https://www.scribblehub.com/wp-admin/admin-ajax.php"
 
 
 class ScribbleHubCrawler(Crawler):
-    base_url = "https://www.scribblehub.com/"
+    base_url = ["https://www.scribblehub.com/", "https://scribblehub.com/"]
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update(
@@ -145,9 +145,12 @@ class ScribbleHubCrawler(Crawler):
         body += """<style type="text/css">
         table {
             text-align: center;
-            width: 100%;
-            border: 1px solid;
+            margin: 0 auto;
+            border: 2px solid;
             border-collapse: collapse;
+        }
+        table td {
+            padding: 10px;
         }
         </style>
         """
