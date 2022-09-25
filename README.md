@@ -91,6 +91,22 @@ $ lncrawl
 
 > To view extra logs, use: `lncrawl -lll`
 
+If you want to get the cutting-edge (sometimes unstable) from the `dev` branch, you can get it by:
+
+### PIP (Directly from GitHub)
+
+The `master` branch contains the latest stable code. If you can not wait for it to be released in the PyPi, you can get it like this:
+
+```
+$ pip install -U git+https://github.com/dipu-bd/lightnovel-crawler.git#egg=lightnovel-crawler
+```
+
+The `dev` branch contains cutting-edge, sometimes unstable changes. To install it:
+
+```
+$ pip install -U https://github.com/dipu-bd/lightnovel-crawler/tarball/refs/heads/dev#egg=lightnovel-crawler
+```
+
 ### Docker
 
 Docker is a convenient way to run it anywhere.
@@ -230,6 +246,7 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -301,9 +318,10 @@ optional arguments:
 ~~
 
 --------------------------------------------------------------------------------
- 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues 
+ 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues
 ================================================================================
 ```
+
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -394,7 +412,6 @@ We are supporting 280 sources and 300 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -1553,7 +1570,6 @@ We are supporting 280 sources and 300 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish, Castilian
 
 <table>
@@ -1576,7 +1592,6 @@ We are supporting 280 sources and 300 crawlers.
 </tbody>
 </table>
 
-
 ### `fr` French
 
 <table>
@@ -1598,7 +1613,6 @@ We are supporting 280 sources and 300 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -1692,7 +1706,6 @@ We are supporting 280 sources and 300 crawlers.
 </tbody>
 </table>
 
-
 ### `multi` Multilingual
 
 <table>
@@ -1775,7 +1788,6 @@ We are supporting 280 sources and 300 crawlers.
 </tbody>
 </table>
 
-
 ### `pt` Portuguese
 
 <table>
@@ -1803,7 +1815,6 @@ We are supporting 280 sources and 300 crawlers.
 </tbody>
 </table>
 
-
 ### `ru` Russian
 
 <table>
@@ -1830,7 +1841,6 @@ We are supporting 280 sources and 300 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -1863,7 +1873,6 @@ We are supporting 280 sources and 300 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 

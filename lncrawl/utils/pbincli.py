@@ -5,7 +5,6 @@ import json
 import logging
 import ntpath
 import os
-import sys
 import zlib
 from base64 import b64decode, b64encode
 from hashlib import sha256

@@ -19,8 +19,9 @@ questionary>=1.6.0
 prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
-minify_html>=0.10.0
+minify-html>=0.6.0
 python-box>=6.0.0,<7.0.0
+pycryptodome>=3.0.0,<4.0.0
 
 # dev requirements
 wheel
@@ -28,7 +29,6 @@ black
 flake8
 pyinstaller
 setuptools<=60.0.0
-pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5
 # cssutils>=1.0.0,<2.7.0
