@@ -4,5 +4,5 @@ from lncrawl.templates.novelmtl import NovelMTLTemplate
 
 logger = logging.getLogger(__name__)
 
-class NovelMTLCrawler(NovelMTLTemplate):
-    base_url = 'https://www.novelmtl.com/'
+class WuxiaXCrawler(NovelMTLTemplate):
+    base_url = 'https://www.wuxiax.com/'
