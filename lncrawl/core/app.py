@@ -75,7 +75,7 @@ class App:
             self.crawler_links = [
                 str(link)
                 for link, crawler in crawler_list.items()
-                if "search_novel" in crawler.__dict__
+                if "search_novel" in dir(crawler)
             ]
 
     def search_novel(self):
