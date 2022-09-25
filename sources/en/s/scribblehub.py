@@ -24,11 +24,13 @@ class ScribbleHubCrawler(Crawler):
                 ".chp_stats_feature",
                 ".modern-footnotes-footnote",
                 ".modern-footnotes-footnote__note",
+                ".wi_authornotes",
             ]
         )
         self.cleaner.whitelist_attributes.update(
             [
                 "border",
+                "class",
             ]
         )
         self.cleaner.whitelist_css_property.update(
