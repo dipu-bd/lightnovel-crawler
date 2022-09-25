@@ -140,15 +140,15 @@ class TextCleaner:
             if isinstance(tag, Comment):
                 tag.extract()  # Remove comments
             elif not isinstance(tag, Tag):
-                pass  # Skip elements that are not a Tag
-            elif tag.name in self.bad_tags:
+                continue  # Skip elements that are not a Tag
+            if tag.name in self.bad_tags:
                 tag.extract()  # Remove bad tags
             elif tag.name in ["br", "hr"]:
                 self.extract_on_duplicate_sibling(tag)
-            elif hasattr(tag, "attrs"):
+            else:
                 self.clean_attributes(tag)
 
-        div.attrs = {}
+        self.clean_attributes(div)
         return div
 
     def clean_text(self, text) -> str:
@@ -171,8 +171,8 @@ class TextCleaner:
             if name not in self.whitelist_attributes:
                 continue
             if name == "style":
-                attrs[name] = self.clean_style_value(value)
-            else:
+                value = self.clean_style_value(value)
+            if value:
                 attrs[name] = value
         tag.attrs = attrs
 

@@ -26,6 +26,11 @@ class ScribbleHubCrawler(Crawler):
                 ".modern-footnotes-footnote__note",
             ]
         )
+        self.cleaner.whitelist_css_property.update(
+            [
+                "text-align",
+            ]
+        )
 
     def search_novel(self, query):
         url = search_url % quote(query.lower())
@@ -128,4 +133,5 @@ class ScribbleHubCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#chp_raw")
-        return self.cleaner.extract_contents(contents)
+        self.cleaner.clean_contents(contents)
+        return str(contents)
