@@ -18,6 +18,8 @@ from urllib.parse import quote_plus, unquote_plus
 
 import cloudscraper
 
+path = os.path.realpath(os.path.abspath(__file__))
+sys.path.insert(0, os.path.dirname(os.path.dirname(path)))
 from lncrawl.core.crawler import Crawler
 
 # =========================================================================================== #

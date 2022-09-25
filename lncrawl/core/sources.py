@@ -255,8 +255,8 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
         spec = importlib.util.spec_from_file_location(module_name, file_path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
-    except:
-        logger.warn("Failed to load module: %s", file_path)
+    except Exception as e:
+        logger.warn("Module load failed: %s | %s", file_path, e)
         return []
 
     crawlers = []
