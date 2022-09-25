@@ -1,17 +1,23 @@
 # -*- coding: utf-8 -*-
 import logging
 import time
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, urlparse,urljoin
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-search_url = 'https://www.novelmtl.com/search.html'
-chapter_list_url = 'https://www.novelmtl.com/e/extend/fy.php'
-
 
 class NovelMTLCrawler(Crawler):
-    base_url = 'https://www.novelmtl.com/'
+    base_url = ['https://www.novelmtl.com/',#Check ok
+                'https://www.wuxiax.com/',#Check ok
+                'https://www.wuxiar.com/',#Check ok
+                'https://www.wuxiav.com/',#Check ok chapter title to check
+                'https://www.wuxiamtl.com/',#Check ok
+                'https://www.readwn.com/',#Check ok
+                'https://www.wuxianovelhub.com/',#Check ok
+                'https://www.ltnovel.com/',#Check ok
+                'https://www.novelmt.com/',#Check ok
+                ]
 
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
@@ -19,40 +25,44 @@ class NovelMTLCrawler(Crawler):
 
     def search_novel(self, query):
         '''Search for a novel and return the search results.'''
-        soup = self.get_soup(search_url)
-        form = soup.select_one('.search-container form[method="post"]')
-        if not form:
-            return []
-        # end if
-
-        payload = {}
-        url = self.absolute_url(form['action'])
-        for input in form.select('input'):
-            payload[input['name']] = input['value']
-        # end for
-        payload['keyboard'] = query
-
-        soup = self.post_soup(url, data=payload, headers={
-            'Referer': search_url,
-            'Origin': 'https://www.novelmtl.com',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        })
-
         result = []
-        for a in soup.select('ul.novel-list .novel-item a')[:10]:
-            for i in a.select('.material-icons'):
-                i.extract()
+        for mirror in self.base_url:
+            soup = self.get_soup(urljoin(mirror,'/search.html'))
+            form = soup.select_one('.search-container form[method="post"]')
+            if not form:
+                pass
+            # end if
+
+            payload = {}
+            url = urljoin(mirror,form['action'])
+            for input in form.select('input'):
+                payload[input['name']] = input['value']
             # end for
-            result.append({
-                'url': self.absolute_url(a['href']),
-                'title': a.select_one('.novel-title').text.strip(),
-                'info': ' | '.join([x.text.strip() for x in a.select('.novel-stats')]),
+            payload['keyboard'] = query
+
+            soup = self.post_soup(url, data=payload, headers={
+                'Referer': search_url,
+                'Origin': f'{mirror}',
+                'Content-Type': 'application/x-www-form-urlencoded',
             })
-        # end for
+            
+            
+            for a in soup.select('ul.novel-list .novel-item a')[:10]:
+                for i in a.select('.material-icons'):
+                    i.extract()
+                # end for
+                result.append({
+                    'url': urljoin(mirror,a['href']),
+                    'title': a.select_one('.novel-title').text.strip(),
+                    'info': ' | '.join([x.text.strip() for x in a.select('.novel-stats')]),
+                })
+            #end for
+        #end for
         return result
     # end def
 
     def read_novel_info(self):
+        chapter_list_url =self.absolute_url('/e/extend/fy.php')
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
 
