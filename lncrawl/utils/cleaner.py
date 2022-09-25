@@ -3,7 +3,9 @@ import re
 import sys
 import unicodedata
 
+import cssutils
 from bs4 import Comment, Tag
+from cssutils.css import CSSStyleDeclaration
 
 LINE_SEP = "<br>"
 
@@ -101,6 +103,18 @@ class TextCleaner:
             "<": "&lt;",
             ">": "&gt;",
         }
+        self.whitelist_attributes = set(
+            [
+                "src",
+                "style",
+            ]
+        )
+        self.whitelist_css_property = set(
+            [
+                "font-weight",
+                "font-style",
+            ]
+        )
 
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
@@ -125,15 +139,14 @@ class TextCleaner:
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()  # Remove comments
-            elif tag.name == "br":
-                next_tag = getattr(tag, "next_sibling", "")
-                while next_tag and getattr(next_tag, "name", "") == "br":
-                    tag.extract()
-                    next_tag = getattr(tag, "next_sibling", "")
+            elif not isinstance(tag, Tag):
+                pass  # Skip elements that are not a Tag
             elif tag.name in self.bad_tags:
                 tag.extract()  # Remove bad tags
+            elif tag.name in ["br", "hr"]:
+                self.extract_on_duplicate_sibling(tag)
             elif hasattr(tag, "attrs"):
-                tag.attrs = {k: v for k, v in tag.attrs.items() if k == "src"}
+                self.clean_attributes(tag)
 
         div.attrs = {}
         return div
@@ -143,8 +156,34 @@ class TextCleaner:
         text = text.translate(NONPRINTABLE_MAPPING)
         for k, v in self.substitutions.items():
             text = text.replace(k, v)
-
         return text
+
+    def extract_on_duplicate_sibling(self, tag: Tag):
+        next_tag = tag.next_sibling
+        if not isinstance(next_tag, Tag):
+            return
+        if next_tag.name == tag.name:
+            tag.extract()
+
+    def clean_attributes(self, tag: Tag) -> dict:
+        attrs = {}
+        for name, value in tag.attrs.items():
+            if name not in self.whitelist_attributes:
+                continue
+            if name == "style":
+                attrs[name] = self.clean_style_value(value)
+            else:
+                attrs[name] = value
+        tag.attrs = attrs
+
+    def clean_style_value(self, style: str) -> str:
+        clean_css = []
+        css: CSSStyleDeclaration = cssutils.parseStyle(style)
+        for name in self.whitelist_css_property:
+            value = css[name]
+            if value:
+                clean_css.append(f"{name}:{value}")
+        return ";".join(clean_css)
 
     def extract_paragraphs(self, tag) -> list:
         if not isinstance(tag, Tag):
