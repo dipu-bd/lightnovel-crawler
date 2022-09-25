@@ -26,6 +26,11 @@ class ScribbleHubCrawler(Crawler):
                 ".modern-footnotes-footnote__note",
             ]
         )
+        self.cleaner.whitelist_attributes.update(
+            [
+                "border",
+            ]
+        )
         self.cleaner.whitelist_css_property.update(
             [
                 "text-align",
@@ -134,4 +139,14 @@ class ScribbleHubCrawler(Crawler):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#chp_raw")
         self.cleaner.clean_contents(contents)
-        return str(contents)
+        body = str(contents)
+        body += """<style type="text/css">
+        table {
+            text-align: center;
+            width: 100%;
+            border: 1px solid;
+            border-collapse: collapse;
+        }
+        </style>
+        """
+        return body
