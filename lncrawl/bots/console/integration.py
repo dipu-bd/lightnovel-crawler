@@ -7,7 +7,7 @@ from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
 from ...core.exeptions import LNException
-from ...core.sources import rejected_sources
+from ...core.sources import prepare_crawler, rejected_sources
 from .open_folder_prompt import display_open_folder
 from .resume_download import resume_session
 
@@ -65,7 +65,7 @@ def start(self):
         if self.search_mode:
             novel_url = self.choose_a_novel()
             self.log.info("Selected novel: %s" % novel_url)
-            self.app.prepare_crawler(novel_url)
+            self.app.crawler = prepare_crawler(novel_url)
 
         if self.app.can_do("login"):
             self.app.login_data = self.get_login_info()

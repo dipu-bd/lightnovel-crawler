@@ -1,12 +1,14 @@
 import os
 import textwrap
 import traceback
+from typing import List
 
 from colorama import Fore, Style
 
 from ..assets.chars import Chars
 from ..assets.platforms import Platform
 from ..core.exeptions import LNException
+from ..models import CombinedSearchResult, SearchResult
 
 LINE_SIZE = 80
 ENABLE_BANNER = not Platform.windows or Platform.java
@@ -177,10 +179,9 @@ def url_rejected(reason):
     )
 
 
-def format_short_info_of_novel(short_info):
+def __format_search_result_info(short_info):
     if not short_info or len(short_info) == 0:
         return ""
-
     return "\n".join(
         textwrap.wrap(
             short_info.strip(),
@@ -193,30 +194,29 @@ def format_short_info_of_novel(short_info):
     )
 
 
-def format_novel_choices(choices):
+def format_novel_choices(choices: List[CombinedSearchResult]):
     items = []
     for index, item in enumerate(choices):
         text = "%d. %s [in %d sources]" % (
             index + 1,
-            item["title"],
-            len(item["novels"]),
+            item.title,
+            len(item.novels),
         )
-        if len(item["novels"]) == 1:
-            novel = item["novels"][0]
-            text += "\n" + (" " * 6) + Chars.LINK + " " + novel["url"]
-            text += format_short_info_of_novel(novel.get("info", ""))
+        if len(item.novels) == 1:
+            novel = item.novels[0]
+            text += "\n" + (" " * 6) + Chars.LINK + " " + novel.url
+            text += __format_search_result_info(novel.info)
 
         items.append({"name": text})
 
     return items
 
 
-def format_source_choices(novels):
+def format_source_choices(novels: List[SearchResult]):
     items = []
     for index, item in enumerate(novels):
-        text = "%d. %s" % (index + 1, item["url"])
-        short_info = item["info"] if "info" in item else ""
-        text += format_short_info_of_novel(short_info)
+        text = "%d. %s" % (index + 1, item.url)
+        text += __format_search_result_info(item.info)
         items.append({"name": text})
 
     return items

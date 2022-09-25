@@ -17,6 +17,7 @@ from requests import Response, Session
 from requests.exceptions import ProxyError, RequestException
 
 from ..assets.user_agents import user_agents
+from ..models import SearchResult
 from ..utils.cleaner import TextCleaner
 from ..utils.ssl_no_verify import no_ssl_verification
 from .exeptions import LNException
@@ -166,7 +167,7 @@ class Crawler(ABC):
     def logout(self) -> None:
         pass
 
-    def search_novel(self, query) -> List[Dict[str, str]]:
+    def search_novel(self, query: str) -> List[SearchResult]:
         """Gets a list of results matching the given query"""
         return []
 

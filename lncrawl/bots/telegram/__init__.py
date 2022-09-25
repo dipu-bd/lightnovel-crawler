@@ -14,6 +14,7 @@ from telegram.ext import (
 )
 
 from lncrawl.core.app import App
+from lncrawl.core.sources import prepare_crawler
 from lncrawl.utils.uploader import upload
 
 logger = logging.getLogger(__name__)
@@ -344,7 +345,7 @@ class TelegramBot:
         assert isinstance(app, App)
 
         if len(selected["novels"]) == 1:
-            app.prepare_crawler(selected["novels"][0]["url"])
+            app.crawler = prepare_crawler(selected["novels"][0]["url"])
             return self.get_novel_info(bot, update, user_data)
 
         update.message.reply_text(
@@ -393,7 +394,7 @@ class TelegramBot:
         if not selected or not (source and source.get("url")):
             return self.show_source_selection(bot, update, user_data)
 
-        app.prepare_crawler(source.get("url"))
+        app.crawler = prepare_crawler(source.get("url"))
         return self.get_novel_info(bot, update, user_data)
 
     def get_novel_info(self, bot, update, user_data):

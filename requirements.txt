@@ -20,6 +20,7 @@ prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
 minify_html>=0.10.0
+python-box>=6.0.0,<7.0.0
 
 # dev requirements
 wheel

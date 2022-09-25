@@ -4,11 +4,13 @@ To search for novels in selected sources
 import logging
 import os
 from concurrent import futures
+from typing import Dict, List
 
 from slugify import slugify
 from tqdm import tqdm
 
 from ..core.sources import crawler_list, prepare_crawler
+from ..models import CombinedSearchResult, SearchResult
 
 SEARCH_TIMEOUT = 10
 
@@ -16,38 +18,43 @@ logger = logging.getLogger(__name__)
 executor = futures.ThreadPoolExecutor(20)
 
 
-def get_search_result(app, link, bar):
+def _perform_search(app, link, bar):
     try:
         crawler = prepare_crawler(link)
         results = crawler.search_novel(app.user_input)
         logger.debug(results)
+        results = [SearchResult(**item) for item in results]
         logger.info("%d results from %s", len(results), link)
         return results
     except KeyboardInterrupt as e:
         raise e
     except Exception as e:
         if logger.isEnabledFor(logging.DEBUG):
-            logging.exception("Searching failure for %s", link)
+            logging.exception("<!> Search Failed! << %s >>", link)
+        return []
 
-    return []
 
-
-def process_results(combined_results):
-    combined = dict()
-    for result in combined_results:
-        key = slugify(result.get("title") or "")
+def _combine_results(results: List[SearchResult]) -> List[CombinedSearchResult]:
+    combined: Dict[str, List[SearchResult]] = {}
+    for item in results:
+        key = slugify(item.title)
         if len(key) <= 2:
             continue
         combined.setdefault(key, [])
-        combined[key].append(result)
+        combined[key].append(item)
 
-    processed = []
+    processed: List[CombinedSearchResult] = []
     for key, value in combined.items():
-        value.sort(key=lambda x: x["url"])
-        processed.append({"id": key, "title": value[0]["title"], "novels": value})
+        value.sort(key=lambda x: x.url)
+        processed.append(
+            CombinedSearchResult(
+                id=key,
+                title=value[0].title,
+                novels=value,
+            )
+        )
 
-    processed.sort(key=lambda x: -len(x["novels"]))
-
+    processed.sort(key=lambda x: -len(x.novels))
     return processed[:15]  # Control the number of results
 
 
@@ -76,16 +83,14 @@ def search_novels(app):
     for link in sources:
         crawler = crawler_list[link]
         if crawler in checked:
-            logger.info('A crawler for "%s" already exists', link)
             bar.update()
             continue
-
         checked[crawler] = True
-        future = executor.submit(get_search_result, app, link, bar)
+        future = executor.submit(_perform_search, app, link, bar)
         futures_to_check.append(future)
 
     # Resolve all futures
-    combined_results = []
+    results: List[SearchResult] = []
     for i, f in enumerate(futures_to_check):
         assert isinstance(f, futures.Future)
         try:
@@ -106,8 +111,8 @@ def search_novels(app):
         if not f.done():
             f.cancel()
         elif not f.cancelled():
-            combined_results += f.result()
+            results += f.result()
 
     # Process combined search results
-    app.search_results = process_results(combined_results)
+    app.search_results = _combine_results(results)
     bar.close()

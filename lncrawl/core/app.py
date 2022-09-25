@@ -11,7 +11,8 @@ from slugify import slugify
 from .. import constants as C
 from ..binders import available_formats, generate_books
 from ..core.exeptions import LNException
-from ..core.sources import crawler_list, prepare_crawler, rejected_sources
+from ..core.sources import crawler_list, prepare_crawler
+from ..models import CombinedSearchResult
 from .crawler import Crawler
 from .downloader import download_chapter_images, download_chapters
 from .novel_info import format_novel, save_metadata
@@ -29,7 +30,7 @@ class App:
         self.crawler_links: List[str] = []
         self.crawler: Optional[Crawler] = None
         self.login_data: Optional[Tuple[str, str]] = None
-        self.search_results: List[Dict[str, Any]] = []
+        self.search_results: List[CombinedSearchResult] = []
         self.output_path = C.DEFAULT_OUTPUT_PATH
         self.pack_by_volume = False
         self.chapters: List[Dict[str, Any]] = []
@@ -69,13 +70,12 @@ class App:
         if self.user_input.startswith("http"):
             logger.info("Detected URL input")
             self.crawler = prepare_crawler(self.user_input)
-            self.crawler.novel_url = self.user_input
         else:
             logger.info("Detected query input")
             self.crawler_links = [
                 str(link)
                 for link, crawler in crawler_list.items()
-                if "search_novel" in crawler.__dict__
+                if crawler.search_novel != Crawler.search_novel
             ]
 
     def search_novel(self):
@@ -97,7 +97,11 @@ class App:
     # ----------------------------------------------------------------------- #
 
     def can_do(self, prop_name):
-        return prop_name in self.crawler.__class__.__dict__
+        if not hasattr(self.crawler.__class__, prop_name):
+            return False
+        if not hasattr(Crawler, prop_name):
+            return True
+        return getattr(self.crawler.__class__, prop_name) != getattr(Crawler, prop_name)
 
     def get_novel_info(self):
         """Requires: crawler, login_data"""

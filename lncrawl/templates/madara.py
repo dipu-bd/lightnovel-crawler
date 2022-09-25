@@ -1,10 +1,11 @@
-from typing import Dict, List
+from typing import List
 from urllib.parse import quote
 
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.core.crawler import Crawler
 from lncrawl.core.exeptions import LNException
+from lncrawl.models import SearchResult
 
 
 class MadaraTemplate(Crawler):
@@ -14,23 +15,28 @@ class MadaraTemplate(Crawler):
         self.cleaner.bad_tags.update(["h3"])
         self.cleaner.bad_css.update(['a[href="javascript:void(0)"]'])
 
-    def search_novel(self, query) -> List[Dict[str, str]]:
-        query = quote(query.lower())
-        url = f"{self.home_url}?s={query}&post_type=wp-manga&author=&artist=&release="
-        soup = self.get_soup(url)
+    def search_novel(self, query) -> List[SearchResult]:
+        soup = self.get_search_page_soup(query)
         return [
-            self.parse_search_item(tab) for tab in soup.select(".c-tabs-item__content")
+            self.parse_search_item(tab)
+            for tab in soup.select(".c-tabs-item__content")
+            if isinstance(tab, Tag)
         ]
 
-    def parse_search_item(self, tab: Tag) -> Dict[str, str]:
+    def get_search_page_soup(self, query: str) -> BeautifulSoup:
+        return self.get_soup(
+            f"{self.home_url}?s={quote(query)}&post_type=wp-manga&op=&author=&artist=&release=&adult="
+        )
+
+    def parse_search_item(self, tab: Tag) -> SearchResult:
         a = tab.select_one(".post-title h3 a")
         latest = tab.select_one(".latest-chap .chapter a").text
         votes = tab.select_one(".rating .total_votes").text
-        return {
-            "title": a.text.strip(),
-            "url": self.absolute_url(a["href"]),
-            "info": "%s | Rating: %s" % (latest, votes),
-        }
+        return SearchResult(
+            title=a.text.strip(),
+            url=self.absolute_url(a["href"]),
+            info="%s | Rating: %s" % (latest, votes),
+        )
 
     def read_novel_info(self) -> None:
         soup = self.get_soup(self.novel_url)

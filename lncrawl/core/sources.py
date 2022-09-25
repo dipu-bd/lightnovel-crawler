@@ -354,5 +354,6 @@ def prepare_crawler(url: str) -> Optional[Crawler]:
 
     crawler = CrawlerType()
     crawler.home_url = base_url
+    crawler.novel_url = url
     crawler.initialize()
     return crawler

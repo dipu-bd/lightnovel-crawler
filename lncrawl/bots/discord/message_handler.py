@@ -11,6 +11,7 @@ import discord
 
 from lncrawl.core.app import App
 from lncrawl.core.crawler import Crawler
+from lncrawl.core.sources import prepare_crawler
 from lncrawl.utils.uploader import upload
 
 from .config import available_formats, disable_search, logger
@@ -311,7 +312,7 @@ class MessageHandler:
 
     def handle_search_result(self, novel):
         self.send_sync("Selected: %s" % novel["url"])
-        self.app.prepare_crawler(novel["url"])
+        self.app.crawler = prepare_crawler(novel["url"])
         self.get_novel_info()
 
     # ---------------------------------------------------------------------- #

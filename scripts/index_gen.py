@@ -18,6 +18,8 @@ from urllib.parse import quote_plus, unquote_plus
 
 import cloudscraper
 
+from lncrawl.core.crawler import Crawler
+
 # =========================================================================================== #
 # Configurations
 # =========================================================================================== #
@@ -213,9 +215,9 @@ def process_file(py_file: Path) -> float:
         md5 = hashlib.md5(f.read()).hexdigest()
 
     for crawler in __import_crawlers(py_file):
-        can_login = "login" in crawler.__dict__
-        can_logout = "logout" in crawler.__dict__
-        can_search = "search_novel" in crawler.__dict__
+        can_login = Crawler.login != crawler.login
+        can_logout = Crawler.logout != crawler.logout
+        can_search = Crawler.search_novel != crawler.search_novel
         has_manga = getattr(crawler, "has_manga", False)
         has_mtl = getattr(crawler, "machine_translation", False)
         source_id = hashlib.md5(str(crawler).encode("utf8")).hexdigest()

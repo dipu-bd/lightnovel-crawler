@@ -10,6 +10,7 @@ from ...core.app import App
 from ...core.arguments import get_args
 from ...core.crawler import Crawler
 from ...core.exeptions import LNException
+from ...core.sources import prepare_crawler
 from .open_folder_prompt import display_open_folder
 
 logger = logging.getLogger(__name__)
@@ -82,7 +83,7 @@ def load_session_from_metadata(data) -> App:
     app.no_append_after_filename = session_data["no_append_after_filename"]
 
     logger.info("Novel Url: %s", data["url"])
-    app.prepare_crawler(data["url"])
+    app.crawler = prepare_crawler(data["url"])
     if not isinstance(app.crawler, Crawler):
         raise LNException("No crawler found for " + data["url"])
 
