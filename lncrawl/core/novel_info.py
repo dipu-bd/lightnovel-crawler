@@ -45,8 +45,8 @@ def __format_chapters(crawler: Crawler, vol_id_map: Dict[int, int]):
         item["volume"] = volume["id"]
         item["volume_title"] = volume["title"]
 
-        volume["start_chapter"] = max(volume["start_chapter"], item["id"])
-        volume["final_chapter"] = min(volume["final_chapter"], item["id"])
+        volume["start_chapter"] = min(volume["start_chapter"], item["id"])
+        volume["final_chapter"] = max(volume["final_chapter"], item["id"])
         volume["chapter_count"] += 1
 
         item["title"] = __format_title(item.get("title") or "#%d" % item["id"])
