@@ -3,9 +3,7 @@ import re
 import sys
 import unicodedata
 
-import cssutils
 from bs4 import Comment, Tag
-from cssutils.css import CSSStyleDeclaration
 
 LINE_SEP = "<br>"
 
@@ -178,9 +176,13 @@ class TextCleaner:
 
     def clean_style_value(self, style: str) -> str:
         clean_css = []
-        css: CSSStyleDeclaration = cssutils.parseStyle(style)
+        css = {
+            item[0].strip().lower(): item[1].strip()
+            for item in [x.split(":", 1) for x in style.split(";")]
+            if len(item) == 2 and item[0].strip()
+        }
         for name in self.whitelist_css_property:
-            value = css[name]
+            value = css.get(name)
             if value:
                 clean_css.append(f"{name}:{value}")
         return ";".join(clean_css)
