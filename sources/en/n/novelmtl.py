@@ -26,8 +26,10 @@ class NovelMTLCrawler(Crawler):
     def search_novel(self, query):
         '''Search for a novel and return the search results.'''
         result = []
+        search_url=""
         for mirror in self.base_url:
-            soup = self.get_soup(urljoin(mirror,'/search.html'))
+            search_url=urljoin(mirror,'/search.html')
+            soup = self.get_soup(search_url)
             form = soup.select_one('.search-container form[method="post"]')
             if not form:
                 pass
