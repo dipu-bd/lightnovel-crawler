@@ -25,40 +25,41 @@ class NovelMTLTemplate(Crawler):
         self.cur_time = int(1000 * time.time())
     # end def
 
-    def search_novel(self, query)-> Dict[str, str] :
+    def search_novel(self, query)-> List[Dict[str, str]] :
         '''Search for a novel and return the search results.'''
+        
         result = []
-        search_url=self.absolute_url('/search.html')
-        soup = self.get_soup(search_url)
-        form = soup.select_one('.search-container form[method="post"]')
-        if not form:
-            pass
-        # end if
+        # search_url=urljoin(self.home_url,'/search.html')
+        # soup = self.get_soup(search_url)
+        # form = soup.select_one('.search-container form[method="post"]')
+        # if not form:
+        #     return result
+        # # end if
 
-        payload = {}
-        url = urljoin(mirror,form['action'])
-        for input in form.select('input'):
-            payload[input['name']] = input['value']
-        # end for
-        payload['keyboard'] = query
+        # payload = {}
+        # url = urljoin(self.home_url,form['action'])
+        # for input in form.select('input'):
+        #     payload[input['name']] = input['value']
+        # # end for
+        # payload['keyboard'] = query
 
-        soup = self.post_soup(url, data=payload, headers={
-            'Referer': search_url,
-            'Origin': f'{mirror}',
-            'Content-Type': 'application/x-www-form-urlencoded',
-        })
+        # soup = self.post_soup(url, data=payload, headers={
+        #     'Referer': search_url,
+        #     'Origin': f'{self.home_url}',
+        #     'Content-Type': 'application/x-www-form-urlencoded',
+        # })
         
         
-        for a in soup.select('ul.novel-list .novel-item a')[:10]:
-            for i in a.select('.material-icons'):
-                i.extract()
-            # end for
-            result.append({
-                'url': urljoin(mirror,a['href']),
-                'title': a.select_one('.novel-title').text.strip(),
-                'info': ' | '.join([x.text.strip() for x in a.select('.novel-stats')]),
-            })
-            #end for
+        # for a in soup.select('ul.novel-list .novel-item a')[:10]:
+        #     for i in a.select('.material-icons'):
+        #         i.extract()
+        #     # end for
+        #     result.append({
+        #         'url': urljoin(self.home_url,a['href']),
+        #         'title': a.select_one('.novel-title').text.strip(),
+        #         'info': ' | '.join([x.text.strip() for x in a.select('.novel-stats')]),
+        #     })
+        #     #end for
         return result
     # end def
 
