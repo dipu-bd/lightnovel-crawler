@@ -48,7 +48,12 @@ class PeryInfo(Crawler):
 
         logger.info("Novel author: %s", self.novel_author)
 
-        content = soup.select_one("#sections section:nth-of-type(2)")
+        chapter_strong = soup.find("strong", string=re.compile("Chapter List"))
+        if not isinstance(chapter_strong, Tag):
+            raise LNException("No chapters found")
+
+        content = chapter_strong.find_parent("section")
+
         for a in content.select(f"a[href*='{slug}/']"):
             self.chapters.append(
                 {
