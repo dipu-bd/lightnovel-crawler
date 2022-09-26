@@ -48,7 +48,7 @@ class PeryInfo(Crawler):
 
         logger.info("Novel author: %s", self.novel_author)
 
-        chapter_strong = soup.find("strong", string=re.compile("Chapter List"))
+        chapter_strong = soup.find("div", class_="accordion-block")
         if not isinstance(chapter_strong, Tag):
             raise LNException("No chapters found")
 
