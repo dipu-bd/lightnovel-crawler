@@ -144,7 +144,6 @@ class ScribbleHubCrawler(Crawler):
         body = str(contents)
         body += """<style type="text/css">
         table {
-            text-align: center;
             margin: 0 auto;
             border: 2px solid;
             border-collapse: collapse;
