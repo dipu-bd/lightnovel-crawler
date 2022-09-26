@@ -47,10 +47,9 @@ class LightNovelPub(Crawler):
                 "referer": f"{self.home_url}search",
             },
         )
-        print(response.text)
+        
         soup = self.make_soup(response.json()["resultview"])
 
-        print(soup)
         results = []
         for a in soup.select(".novel-list .novel-item a"):
             possible_info = a.select_one(".novel-stats")
