@@ -12,8 +12,7 @@ class MangaTx(Crawler):
     search_url = "%s?s=%s&post_type=wp-manga&author=&artist=&release="
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(["h3", "script"])
-        self.cleaner.bad_css.update([".code-block", ".adsbygoogle"])
+        self.cleaner.bad_tags.update(["h3"])
 
     # NOTE: Search not working, tried multiple ways just isn't showing novel.
     # def search_novel(self, query):

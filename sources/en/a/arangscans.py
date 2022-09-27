@@ -12,13 +12,7 @@ class ArangScans(Crawler):
     base_url = "https://arangscans.com/"
 
     def initialize(self) -> None:
-        self.cleaner.bad_css.update(
-            [
-                "h3",
-                ".code-block",
-                ".adsbygoogle",
-            ]
-        )
+        self.cleaner.bad_css.update(["h3"])
 
     # FIXME: Can't seem to get search to work not showing up when running command "lncrawl -q "Rooftop Sword Master" --sources"
     # def search_novel(self, query):

@@ -14,8 +14,7 @@ class BonNovelCrawler(Crawler):
     search_url = "%s?s=%s&post_type=wp-manga&author=&artist=&release="
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(["h3", "script"])
-        self.cleaner.bad_css.update([".code-block", ".adsbygoogle"])
+        self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")

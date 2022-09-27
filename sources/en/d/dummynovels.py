@@ -11,9 +11,6 @@ logger = logging.getLogger(__name__)
 class DummyNovelsCrawler(Crawler):
     base_url = "https://dummynovels.com/"
 
-    def initialize(self) -> None:
-        self.cleaner.bad_css.update([".code-block"])
-
     def search_novel(self, query: str):
         keywords = set(query.lower().split())
         soup = self.get_soup("%s/novels/" % self.home_url)

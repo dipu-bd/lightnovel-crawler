@@ -60,6 +60,7 @@ class TextCleaner:
                 ".adbox",
                 ".googlepublisherads",
                 ".adblock-service",
+                ".adsense-code"
                 'a[href*="paypal.me"]',
                 'a[href*="patreon.com"]',
             ]
