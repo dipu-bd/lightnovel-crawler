@@ -2,13 +2,16 @@ import itertools
 import re
 import sys
 import unicodedata
+from typing import Dict, Set, Union
 
 from bs4 import Comment, Tag
 
 LINE_SEP = "<br>"
 
 INVISIBLE_CHARS = [
-    c for c in range(sys.maxunicode) if unicodedata.category(chr(c)) in {"Cf", "Cc"}
+    code
+    for code in range(sys.maxunicode)
+    if unicodedata.category(chr(code)) in {"Cf", "Cc"}
 ]
 NONPRINTABLE = itertools.chain(range(0x00, 0x20), range(0x7F, 0xA0), INVISIBLE_CHARS)
 NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
@@ -16,9 +19,20 @@ NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
 
 class TextCleaner:
     def __init__(self) -> None:
-        self.bad_text_regex = set([])
-        self.bad_tags = set(
+        self.bad_text_regex: Set[Union[str, re.Pattern[str]]] = set(
             [
+                # remove entire paragraph containing a string or regex pattern
+                # WARNING: dangerous to use. use bad_tag_text_pairs instead
+            ]
+        )
+        self.bad_tag_text_pairs: Dict[str, Union[str, re.Pattern[str]]] = {
+            # a { tag-name: string or regex pattern } to remove.
+            # the tag will be removed if the text inside contains the pattern
+        }
+
+        self.bad_tags: Set[str] = set(
+            [
+                # tag names to remove
                 "noscript",
                 "script",
                 "style",
@@ -45,8 +59,9 @@ class TextCleaner:
                 "map",
             ]
         )
-        self.bad_css = set(
+        self.bad_css: Set[str] = set(
             [
+                # css selector to select and remoe tags
                 ".code-block",
                 ".adsbygoogle",
                 ".sharedaddy",
@@ -65,8 +80,9 @@ class TextCleaner:
                 'a[href*="patreon.com"]',
             ]
         )
-        self.p_block_tags = set(
+        self.p_block_tags: Set[str] = set(
             [
+                # tags that can be used as paragraph break
                 "p",
                 "h1",
                 "h2",
@@ -81,9 +97,17 @@ class TextCleaner:
                 "section",
             ]
         )
-        self.unchanged_tags = set(["pre", "canvas", "img"])
-        self.plain_text_tags = set(
+        self.unchanged_tags: Set[str] = set(
             [
+                # tags to keep unchanged with text and attributes
+                "pre",
+                "canvas",
+                "img",
+            ]
+        )
+        self.plain_text_tags: Set[str] = set(
+            [
+                # tags that will be joined together in a paragraph
                 "span",
                 "a",
                 "abbr",
@@ -92,24 +116,27 @@ class TextCleaner:
                 "time",
             ]
         )
-        self.substitutions = {
-            '"s': "'s",
-            "“s": "'s",
-            "”s": "'s",
+        self.substitutions: Dict[str, str] = {
+            # replace one string with another one
             "&": "&amp;",
-            "u003c": "<",
-            "u003e": ">",
             "<": "&lt;",
             ">": "&gt;",
+            "u003c": "&lt;",
+            "u003e": "&gt;",
+            # '"s': "'s",
+            # "“s": "'s",
+            # "”s": "'s",
         }
-        self.whitelist_attributes = set(
+        self.whitelist_attributes: Set[str] = set(
             [
+                # the attributes to keep while cleaning a tag
                 "src",
                 "style",
             ]
         )
-        self.whitelist_css_property = set(
+        self.whitelist_css_property: Set[str] = set(
             [
+                # the css styles to keep while cleaning style tag
                 "font-weight",
                 "font-style",
             ]
@@ -117,11 +144,14 @@ class TextCleaner:
 
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
-        body = " ".join(self.extract_paragraphs(tag))
-        # body = self.remove_bad_texts(body)
-
+        body = self.extract_paragraphs(tag)
+        paragraphs = " ".join(body).split(LINE_SEP)
         return "".join(
-            [f"<p>{x.strip()}</p>" for x in body.split(LINE_SEP) if x.strip()]
+            [
+                f"<p>{p.strip()}</p>"
+                for p in paragraphs
+                if not self.contains_bad_texts(p)
+            ]
         )
 
     def clean_contents(self, div):
@@ -141,6 +171,8 @@ class TextCleaner:
                 tag.extract()  # Remove bad tags
             elif tag.name in ["br", "hr"]:
                 self.extract_on_duplicate_sibling(tag)
+            elif self.tag_contains_bad_text(tag):
+                tag.extract()  # Remove tags containing bad texts
             else:
                 self.clean_attributes(tag)
 
@@ -152,7 +184,7 @@ class TextCleaner:
         text = text.translate(NONPRINTABLE_MAPPING)
         for k, v in self.substitutions.items():
             text = text.replace(k, v)
-        return self.remove_bad_texts(text)
+        return text
 
     def extract_on_duplicate_sibling(self, tag: Tag):
         next_tag = tag.next_sibling
@@ -171,6 +203,11 @@ class TextCleaner:
             if value:
                 attrs[name] = value
         tag.attrs = attrs
+
+    def tag_contains_bad_text(self, tag: Tag) -> bool:
+        if tag.name not in self.bad_tag_text_pairs:
+            return False
+        return re.search(self.bad_tag_text_pairs, tag.text)
 
     def clean_style_value(self, style: str) -> str:
         clean_css = []
@@ -231,10 +268,13 @@ class TextCleaner:
 
         return [x.strip() for x in body if x.strip()]
 
-    def remove_bad_texts(self, text: str) -> str:
-        if not (isinstance(text, str) and self.bad_text_regex):
-            return ""
-        pattern = "|".join(
-            [f"({p})" for p in self.bad_text_regex if isinstance(p, str)]
-        )
-        return re.sub(pattern, "", text)
+    def contains_bad_texts(self, text: str) -> bool:
+        if not text.strip():
+            return True
+        if not self.bad_text_regex:
+            return False
+        pattern = getattr(self, "__blacklist__", None)
+        if not pattern:
+            pattern = re.compile("|".join(["(%s)" % p for p in self.bad_text_regex]))
+            setattr(self, "__blacklist__", pattern)
+        return True if pattern and pattern.search(text) else False
