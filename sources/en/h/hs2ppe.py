@@ -26,9 +26,7 @@ class wspadancewichita(Crawler):
                 'url': url,
                 'title': title,
                 'info': 'Latest: %s' % last_chapter,
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -49,7 +47,6 @@ class wspadancewichita(Crawler):
             author = []
             for a in soup.select('ul.info.info-meta li')[1].select('a'):
                 author.append(a.text.strip())
-            # end for
             self.novel_author = ", ".join(author)
         except Exception as e:
             logger.warn('Failed to parse novel author. Error: %s', e)
@@ -65,27 +62,20 @@ class wspadancewichita(Crawler):
         for a in chapters:
             for span in a.findAll('span'):
                 span.extract()
-            # end for
-        # end for
 
         for chap in chapters:
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': self.absolute_url(chap['href']),
                 'title': chap['title'] or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select('#chr-content')
         return self.cleaner.extract_contents(content)
-    # end def
-# end class

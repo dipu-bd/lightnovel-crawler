@@ -33,15 +33,12 @@ class WuxiaLeagueCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({'id': vol_id})
-            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -51,16 +48,11 @@ class WuxiaLeagueCrawler(Crawler):
         for p in soup.select('#TextContent > p'):
             if not p.text.strip():
                 continue
-            # end if
             clean_first = ''.join(re.findall(r'([a-z0-9]+)', p.text.lower()))
             clean_title = ''.join(re.findall(
                 r'([a-z0-9]+)', chapter['title'].lower()))
             if clean_first == clean_title:
-                continue
-            # end if
-            body += str(p).strip()
+                continue+= str(p).strip()
         # end for
 
         return body
-    # end def
-# end class

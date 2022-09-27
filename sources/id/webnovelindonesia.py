@@ -33,7 +33,6 @@ class WebnovelIndonesia(Crawler):
 
         if not len(possible_chapter_pages):
             possible_chapter_pages = [{'data-paged': '1'}]
-        # end if
 
         novel_id = soup.select_one('#sortable-table')['data-category']
 
@@ -44,13 +43,11 @@ class WebnovelIndonesia(Crawler):
             url = chapter_list_url % (novel_id, page)
             task = self.executor.submit(self.extract_chapter_list, url)
             futures_to_check[task] = page
-        # end for
 
         temp_chapters = dict()
         for future in futures.as_completed(futures_to_check):
             page = int(futures_to_check[future])
             temp_chapters[page] = future.result()
-        # end for
 
         logger.info('Building sorted chapter list...')
         for page in sorted(temp_chapters.keys()):
@@ -59,9 +56,6 @@ class WebnovelIndonesia(Crawler):
                 chap['volume'] = page
                 chap['id'] = 1 + len(self.chapters)
                 self.chapters.append(chap)
-            # end for
-        # end for
-    # end def
 
     def extract_chapter_list(self, url):
         temp_list = []
@@ -71,9 +65,7 @@ class WebnovelIndonesia(Crawler):
             temp_list.append({
                 'title': item['post_title'],
                 'url': self.absolute_url(item['permalink']),
-            })
-        # end for
-        return temp_list
+            })n temp_list
     # end def
 
     def download_chapter_body(self, chapter):
@@ -83,9 +75,5 @@ class WebnovelIndonesia(Crawler):
         for p in soup.select('#content > p'):
             if p.text.strip():
                 body += str(p).strip()
-            # end if
-        # end for
 
         return body
-    # end def
-# end class

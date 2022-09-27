@@ -37,8 +37,6 @@ class VolareNovelsCrawler(Crawler):
                         'url': self.absolute_url(a['href']),
                     }
                 )
-            # end for
-        # end for
         return (volumes, chapters)
 
     def search_novel(self, query):
@@ -52,9 +50,7 @@ class VolareNovelsCrawler(Crawler):
             results.append({
                 'title': item['name'],
                 'url': book_url % item['slug'],
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -72,7 +68,6 @@ class VolareNovelsCrawler(Crawler):
             ].text.strip()
         except Exception:
             pass  # not so important to raise errors
-        # end try
         logger.info('Novel author: %s', self.novel_author)
 
         try:
@@ -81,14 +76,11 @@ class VolareNovelsCrawler(Crawler):
             )
         except Exception:
             pass  # not so important to raise errors
-        # end try
         logger.info('Novel cover: %s', self.novel_cover)
 
         # Extract volume-wise chapter entries
         # chapter_urls = set([])
         self.volumes, self.chapters = self.__parse_toc(soup)
-
-    # end def
 
     def download_chapter_body(self, chapter):
         logger.info('Visiting: %s', chapter['url'])
@@ -99,11 +91,5 @@ class VolareNovelsCrawler(Crawler):
             '.chapter-nav, .hidden-text, .__cf_email__, p[data-f-id=\'pbf\'], span[style*="font-size: 0"]'
         ):
             bad.extract()
-        # end for
 
         return str(content)
-
-    # end def
-
-
-# end class

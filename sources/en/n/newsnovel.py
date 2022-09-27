@@ -27,10 +27,8 @@ class NewsNovelCrawler(Crawler):
                     tab.select_one('a')['href']),
                 'info': 'Latest chapter: %s' % (latest)
             })
-        # end for
 
         return results
-    # end def """
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -82,8 +80,6 @@ class NewsNovelCrawler(Crawler):
         maxi = self.chapters[-1]['volume']
         for i in range(mini, maxi + 1):
             self.volumes.append({'id': i})
-        # end for
-    # end def
 
     def download_chapter_list(self, page, novel_id):
         # Uses an AJAX based pagination that calls this address:
@@ -105,7 +101,6 @@ class NewsNovelCrawler(Crawler):
         
         if not soup.find('body'):
             raise ConnectionError('HTML document was not loaded properly')
-        # end if
 
 
         for a in soup.select('ul.list-chapter li a'):
@@ -115,14 +110,12 @@ class NewsNovelCrawler(Crawler):
             match = re.findall(r'ch(apter)? (\d+)', title, re.IGNORECASE)
             if len(match) == 1:
                 chapter_id = int(match[0][1])
-            # end if
 
             volume_id = 1 + (chapter_id - 1) // 100
             match = re.findall(r'(book|vol|volume) (\d+)',
                                title, re.IGNORECASE)
             if len(match) == 1:
                 volume_id = int(match[0][1])
-            # end if
 
             data = {
                 'title': title,
@@ -131,8 +124,6 @@ class NewsNovelCrawler(Crawler):
                 'url': self.absolute_url(a['href']),
             }
             self.chapters.append(data)
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter): 
         soup = self.get_soup(chapter['url'])
@@ -140,8 +131,5 @@ class NewsNovelCrawler(Crawler):
         contents = soup.select_one('.chapter-c')
         for br in contents.select('br'):
             br.extract()
-        # end for
 
         return str(contents)
-    # end def
-# end class

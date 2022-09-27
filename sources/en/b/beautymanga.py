@@ -21,9 +21,7 @@ class BeautymangaCrawler(Crawler):
             results.append({
                 'title': item['title'],
                 'url': self.absolute_url(item['url'])
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -53,15 +51,12 @@ class BeautymangaCrawler(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.volumes) < vol_id:
                 self.volumes.append({'id': vol_id})
-            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text,
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -69,8 +64,5 @@ class BeautymangaCrawler(Crawler):
         if arraydata:
             urls = arraydata.text.strip().split(',')
             return ''.join([f'<img src="{src}" />' for src in urls if src])
-        # end if
         contents = soup.select_one('.reading-content')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class

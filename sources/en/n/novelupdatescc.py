@@ -22,7 +22,6 @@ class NovelUpdatesCC(Crawler):
             a = li.select_one("a.book-name")
             for bad in a.select("font"):
                 bad.extract()
-            # end for
             catalog = li.select_one(".book-catalog").text.strip()
             votes = li.select_one(".star-suite .score").text.strip()
             results.append(
@@ -32,11 +31,8 @@ class NovelUpdatesCC(Crawler):
                     "info": "%s | Rating: %s" % (catalog, votes),
                 }
             )
-        # end for
 
         return results
-
-    # end def
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -63,7 +59,6 @@ class NovelUpdatesCC(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -73,9 +68,6 @@ class NovelUpdatesCC(Crawler):
                     or ("Chapter %d" % chap_id),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
@@ -91,8 +83,3 @@ class NovelUpdatesCC(Crawler):
         body_parts = soup.select_one("div.chapter-entity")
 
         return self.cleaner.extract_contents(body_parts)
-
-    # end def
-
-
-# end class

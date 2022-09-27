@@ -21,7 +21,6 @@ class LightNovelOnline(Crawler):
 
         if soup.get_text(strip=True) == 'Sorry! No novel founded!':
             return results
-        # end if
         for tr in soup.select('tr'):
             a = tr.select('td a')
             results.append({
@@ -29,10 +28,8 @@ class LightNovelOnline(Crawler):
                 'url': self.absolute_url(a[0]['href']),
                 'info': a[1].text.strip(),
             })
-        # end for
 
         return results
-    # end def
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -59,7 +56,6 @@ class LightNovelOnline(Crawler):
             page_count = int(last_page.split(' ')[-1])
         except Exception as _:
             logger.exception('Failed to get page-count: %s', self.novel_url)
-        # end try
         logger.info('Total pages: %d', page_count)
 
         logger.info('Getting chapters...')
@@ -74,7 +70,6 @@ class LightNovelOnline(Crawler):
         for future in futures.as_completed(futures_to_check):
             page = int(futures_to_check[future])
             temp_chapters[page] = future.result()
-        # end for
 
         logger.info('Building sorted chapter list...')
         for page in reversed(sorted(temp_chapters.keys())):
@@ -82,12 +77,9 @@ class LightNovelOnline(Crawler):
                 chap['id'] = len(self.chapters) + 1
                 chap['volume'] = len(self.chapters) // 100 + 1
                 self.chapters.append(chap)
-            # end for
-        # end for
 
         self.volumes = [{'id': i + 1}
                         for i in range(1 + len(self.chapters) // 100)]
-    # end def
 
     def extract_chapter_list(self, page):
         url = novel_page_url % (self.novel_id, page)
@@ -99,9 +91,7 @@ class LightNovelOnline(Crawler):
             temp_list.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url('/' + a['href'].strip('/')),
-            })
-        # end for
-        return temp_list
+            })n temp_list
     # end def
 
     def download_chapter_body(self, chapter):
@@ -109,5 +99,3 @@ class LightNovelOnline(Crawler):
         body = soup.select_one('#chapter-content')
         return str(body)
         # return ''.join([str(p) for p in body if p.text.strip()])
-    # end def
-# end class

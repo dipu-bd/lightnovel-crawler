@@ -43,8 +43,6 @@ class LNMTLCrawler(Crawler):
             )
             logger.debug('-' * 80)
             logger.error('Failed to login')
-        # end if
-    # end def
 
     def logout(self):
         '''logout as a good citizen'''
@@ -54,8 +52,6 @@ class LNMTLCrawler(Crawler):
             logger.error('Failed to logout')
         else:
             print('Logged out')
-        # end if
-    # end def
 
     def read_novel_info(self):
         '''get list of chapters'''
@@ -72,7 +68,6 @@ class LNMTLCrawler(Crawler):
             )
         except Exception:
             pass  # novel cover is not so important to raise errors
-        # end try
         logger.info('Novel cover = %s', self.novel_cover)
 
         self.parse_volume_list(soup)
@@ -80,7 +75,6 @@ class LNMTLCrawler(Crawler):
 
         logger.info('Getting chapters...')
         self.download_chapter_list()
-    # end def
 
     def parse_volume_list(self, soup):
         self.volumes = []
@@ -97,15 +91,11 @@ class LNMTLCrawler(Crawler):
                 self.volumes.append(
                     {'id': i + 1, 'title': title, 'download_id': vol['id'], }
                 )
-            # end for
         except Exception as _:
             logger.exception('Failed parsing one possible batch')
-        # end try
 
         if len(self.volumes) == 0:
             raise Exception('Failed parsing volume list')
-        # end if
-    # end def
 
     def download_chapter_list(self):
         futures_to_wait = [
@@ -117,7 +107,6 @@ class LNMTLCrawler(Crawler):
         for future in futures.as_completed(futures_to_wait):
             vol_id, chapters = future.result()
             possible_chapters[vol_id] = chapters
-        # end for
 
         for volume in self.volumes:
             for chapter in possible_chapters[volume['id']]:
@@ -125,9 +114,6 @@ class LNMTLCrawler(Crawler):
                 chap['id'] = len(self.chapters) + 1
                 chap['volume'] = volume['id']
                 self.chapters.append(chap)
-            # end for
-        # end for
-    # end def
 
     def download_chapters_per_volume(self, volume, page=1):
         url = self.absolute_url(
@@ -141,20 +127,15 @@ class LNMTLCrawler(Crawler):
             title = chapter.get('title') or ''
             if chapter.get('number'):
                 title = '#%s %s' % (chapter.get('number'), title)
-            # end if
             chapters.append(
                 {'title': title, 'url': chapter['site_url'], }
             )
-        # end for
 
         if page != 1:
             return chapters
-        # end if
 
         for page in range(2, result['last_page'] + 1):
-            chapters += self.download_chapters_per_volume(volume, page)
-        # end for
-        return volume['id'], chapters
+            chapters += self.download_chapters_per_volume(volume, page)n volume['id'], chapters
     # end def
 
     def download_chapter_body(self, chapter):
@@ -163,7 +144,6 @@ class LNMTLCrawler(Crawler):
         body = [self.format_text(x.text) for x in body if x]
         body = '\n'.join(['<p>%s</p>' % (x) for x in body if len(x)])
         return body.strip()
-    # end def
 
     def format_text(self, text):
         '''formats the text and remove bad characters'''
@@ -172,6 +152,3 @@ class LNMTLCrawler(Crawler):
         text = re.sub(r'\u201d[, ]*', '&rdquo;', text)
         text = re.sub(r'[ ]*,[ ]+', ', ', text)
         return text.strip()
-    # end def
-
-# end class

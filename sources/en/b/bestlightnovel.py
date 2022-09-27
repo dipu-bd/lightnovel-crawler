@@ -24,9 +24,7 @@ class BestLightNovel(Crawler):
                 'title': titleSoup.body.text.title(),
                 'url': novel_page_url % novel['id_encode'],
                 'info': 'Latest: %s' % novel['lastchapter'],
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -47,24 +45,20 @@ class BestLightNovel(Crawler):
             self.novel_author = novel_data[0]['author']
         except Exception:
             logger.debug('Failed getting novel info.\n%s', Exception)
-        # end try
 
         for a in reversed(soup.select('#list_chapter .chapter-list a')):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
 
         self.get_response(change_bad_words_off)
-    # end def
 
 
     def download_chapter_body(self, chapter):
@@ -72,9 +66,6 @@ class BestLightNovel(Crawler):
 
         if 'Chapter' in soup.select_one('h1').text:
             chapter['title'] = soup.select_one('h1').text
-        # end if
 
         contents = soup.select_one('#vung_doc')
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class

@@ -24,8 +24,6 @@ class AllNovelCrawler(Crawler):
             ]
         )
 
-    # end def
-
     def search_novel(self, query):
         soup = self.get_soup(self.home_url + "search?keyword=" + quote(query))
 
@@ -34,7 +32,6 @@ class AllNovelCrawler(Crawler):
             a = div.select_one(".truyen-title a")
             if not isinstance(a, Tag):
                 continue
-            # end if
             info = div.select_one(".text-info .chapter-text")
             results.append(
                 {
@@ -43,11 +40,8 @@ class AllNovelCrawler(Crawler):
                     "info": info.text.strip() if info else "",
                 }
             )
-        # end for
 
         return results
-
-    # end def
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -119,7 +113,6 @@ class AllNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -128,9 +121,6 @@ class AllNovelCrawler(Crawler):
                     "url": self.absolute_url(opt["value"]),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
@@ -141,12 +131,5 @@ class AllNovelCrawler(Crawler):
             child.extract()
             if isinstance(child, Tag) and child.name == "h3":
                 break
-            # end if
-        # end for
 
         return self.cleaner.extract_contents(content)
-
-    # end def
-
-
-# end class

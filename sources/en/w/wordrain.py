@@ -16,8 +16,6 @@ class WordRain(Crawler):
     def initialize(self):
         self.executor = ThreadPoolExecutor(max_workers=7)
 
-    # end def
-
     # NOTE: Site search doesn't work. So this won't work.
     """ def search_novel(self, query):
         query = query.lower().replace(' ', '+')
@@ -33,10 +31,8 @@ class WordRain(Crawler):
                 'url': self.absolute_url(a['href']),
                 'info': '%s | Rating: %s' % (latest, votes),
             })
-        # end for
 
         return results
-    # end def """
 
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
@@ -76,7 +72,6 @@ class WordRain(Crawler):
             vol_id = chap_id // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
             self.chapters.append(
                 {
                     'id': chap_id,
@@ -85,9 +80,6 @@ class WordRain(Crawler):
                     'url': self.absolute_url(a['href']),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -117,8 +109,3 @@ class WordRain(Crawler):
                     content.extract()
 
         return self.cleaner.extract_contents(contents)
-
-    # end def
-
-
-# end class

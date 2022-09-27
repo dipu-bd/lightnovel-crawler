@@ -8,18 +8,17 @@ logger = logging.getLogger(__name__)
 search_url = (
     "https://1stkissnovel.love/?s=%s&post_type=wp-manga&author=&artist=&release="
 )
-wp_admin_ajax_url = 'https://1stkissnovel.love/wp-admin/admin-ajax.php'
+wp_admin_ajax_url = "https://1stkissnovel.love/wp-admin/admin-ajax.php"
 
 
 class OneKissNovelCrawler(Crawler):
     machine_translation = True
-    base_url = 'https://1stkissnovel.love/'
+    base_url = "https://1stkissnovel.love/"
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(['h3', 'script'])
-        self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
-    # end def
-    
+        self.cleaner.bad_tags.update(["h3", "script"])
+        self.cleaner.bad_css.update([".code-block", ".adsbygoogle"])
+
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)
@@ -36,10 +35,8 @@ class OneKissNovelCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-        # end for
 
         return results
-    # end def
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -48,16 +45,14 @@ class OneKissNovelCrawler(Crawler):
         possible_title = soup.select_one(".post-title h1")
         for span in possible_title.select("span"):
             span.extract()
-        # end for
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
-        
+
         img_src = soup.select_one(".summary_image a img")
-        
+
         if img_src:
             self.novel_cover = self.absolute_url(img_src["src"])
-        # end if
-        
+
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = " ".join(
@@ -83,8 +78,8 @@ class OneKissNovelCrawler(Crawler):
         #     'manga': self.novel_id,
         # })
 
-        clean_novel_url = self.novel_url.split('?')[0].strip('/')
-        response = self.submit_form(f'{clean_novel_url}/ajax/chapters/')
+        clean_novel_url = self.novel_url.split("?")[0].strip("/")
+        response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
 
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
@@ -92,7 +87,6 @@ class OneKissNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -101,13 +95,9 @@ class OneKissNovelCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-        contents = soup.select_one('div.text-left')
+        contents = soup.select_one("div.text-left")
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class

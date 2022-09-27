@@ -23,8 +23,6 @@ class NovelsRockCrawler(Crawler):
             ]
         )
 
-    # end def
-
     def search_novel(self, query):
         query = quote_plus(query.lower())
         soup = self.get_soup(search_url % query)
@@ -44,11 +42,8 @@ class NovelsRockCrawler(Crawler):
                     ),
                 }
             )
-        # end for
 
         return results
-
-    # end def
 
     def read_novel_info(self):
         self.novel_url = re.sub(
@@ -83,7 +78,6 @@ class NovelsRockCrawler(Crawler):
             vol_id = chap_id // 100 + 1
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -92,16 +86,8 @@ class NovelsRockCrawler(Crawler):
                     "title": a.select_one(".episode-item-title").text.strip(),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one(".watch-chapter-detail")
         return self.cleaner.extract_contents(contents)
-
-    # end def
-
-
-# end class

@@ -27,7 +27,6 @@ class Fu_kCom_ademao(Crawler):
             '#div-gpt-ad-comrademaocom35917',
             '#div-gpt-ad-comrademaocom35918',
         ])
-    # end def
 
     def search_novel(self, query):
         url = novel_search_url + quote_plus(query)
@@ -39,9 +38,7 @@ class Fu_kCom_ademao(Crawler):
             results.append({
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -76,7 +73,6 @@ class Fu_kCom_ademao(Crawler):
                     'url': self.absolute_url(str(a['href'])),
                     'title': a.text.strip(),
                 })
-            # end for
         elif len(paginations):
             pagination = paginations[-1]
             page_count = int(pagination.text) if isinstance(pagination, Tag) else 1
@@ -88,7 +84,6 @@ class Fu_kCom_ademao(Crawler):
                 future = self.executor.submit(
                     self.get_soup, novel_url + '/page/%d' % (page_count - i))
                 futures_to_check.append(future)
-            # end for
             futures_to_check.append(self.executor.submit(lambda: soup))
 
             volumes = set()
@@ -104,16 +99,10 @@ class Fu_kCom_ademao(Crawler):
                         'url': self.absolute_url(str(a['href'])),
                         'title': a.text.strip(),
                     })
-                # end for
-            # end for
-        # end if 
 
         self.volumes = [{'id': x} for x in volumes]
-    # end def
     
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         body = soup.select_one("#content, #chaptercontent")
         return self.cleaner.extract_contents(body)
-    # end def
-# end class

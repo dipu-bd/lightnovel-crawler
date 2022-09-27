@@ -17,7 +17,6 @@ class MTLNation(Crawler):
 
     def initialize(self):
         pass
-    # end def
 
     def login(self, email: str, password: str) -> None:
         self.post_json('https://api.mtlnation.com/api/v2/accounts/login', data=json.dumps({
@@ -27,7 +26,6 @@ class MTLNation(Crawler):
         jwt = self.cookies.get('jwt')
         self.set_header('authorization', f'JWT {jwt}')
         logger.info('Logged in with jwt %s', jwt)
-    # end def
 
     def search_novel(self, query):
         data = self.get_json('https://api.mtlnation.com/api/v2/novels/?' + urlencode({
@@ -43,9 +41,7 @@ class MTLNation(Crawler):
                 'url': f"https://mtlnation.com/novel/{item['slug']}",
                 'info': 'Chapters: %d | Rating: %d | Author: %s' % (
                     item['chapter_count'], item['rating'], item['author']),
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -62,7 +58,6 @@ class MTLNation(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if vol_id > len(self.volumes):
                 self.volumes.append({'id':vol_id})
-            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
@@ -70,11 +65,7 @@ class MTLNation(Crawler):
                 'url': f"https://mtlnation.com/novel/{slug}/{item['slug']}",
                 'data_url': f"https://api.mtlnation.com/api/v2/chapters/{slug}/{item['slug']}",
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         data = self.get_json(chapter['data_url'])
         return data['data']['content']
-    # end def
-# end class

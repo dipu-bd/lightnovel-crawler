@@ -26,9 +26,7 @@ class wspadancewichita(Crawler):
                 'url': url,
                 'title': title,
                 'info': 'last chapter : %s' % last_chapter,
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -48,7 +46,6 @@ class wspadancewichita(Crawler):
         author = []
         for a in soup.select('ul.info.info-meta li')[1].select('a'):
             author.append(a.text.strip())
-        # end for
 
         self.novel_author = ", ".join(author)
 
@@ -64,27 +61,20 @@ class wspadancewichita(Crawler):
         for a in chapters:
             for span in a.findAll('span'):
                 span.extract()
-            # end for
-        # end for
 
         for x in chapters:
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({ 'id': vol_id })
-            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'url': self.absolute_url(x['href']),
                 'title': x['title'] or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         content = soup.select('#chr-content')
         return self.cleaner.extract_contents(content)
-    # end def
-# end class

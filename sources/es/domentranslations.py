@@ -16,8 +16,6 @@ class CclawTranslations(Crawler):
     def initialize(self) -> None:
         self.cleaner.bad_text_regex.update(["CONTENIDO | SIGUIENTE"])
 
-    # end def
-
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -51,12 +49,10 @@ class CclawTranslations(Crawler):
         for a in soup.select("div.entry-content a"):
             if not re.search(hostname + r"/\d{4}/\d{2}/", a["href"]):
                 continue
-            # end if
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -65,9 +61,6 @@ class CclawTranslations(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
@@ -84,8 +77,3 @@ class CclawTranslations(Crawler):
         #         parent.append(new_tag)
 
         return self.cleaner.extract_contents(body_parts)
-
-    # end def
-
-
-# end class

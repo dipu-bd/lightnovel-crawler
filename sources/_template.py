@@ -17,10 +17,8 @@ logger = logging.getLogger(__name__)
 
 class MyCrawlerName(Crawler):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
-    base_url = [
-        'http://sample.url/'
-    ]
-    
+    base_url = ["http://sample.url/"]
+
     # TODO: [OPTIONAL] Set True if this crawler is for manga/manhua/manhwa.
     has_manga = False
 
@@ -33,7 +31,6 @@ class MyCrawlerName(Crawler):
         # You can initialize your custom `TextCleaner` instances and other
         # necessary global variables here.
         pass
-    # end def
 
     def login(self, email, password):
         # TODO: [OPTIONAL] This gets called before searching, getting novel info,
@@ -42,12 +39,10 @@ class MyCrawlerName(Crawler):
         #
         # Examle: lnmtl.py, mtlednovels.py
         pass
-    # end def
 
     def logout(self):
         # TODO: [OPTIONAL] Implement this if you think it is necessary to logout.
         pass
-    # end def
 
     def search_novel(self, query):
         # TODO: [OPTIONAL] Return a list of search results using the query.
@@ -60,7 +55,6 @@ class MyCrawlerName(Crawler):
         #
         #       You may throw an Exception or empty list in case of failure.
         pass
-    # end def
 
     def read_novel_info(self):
         # TODO: [REQUIRED] Get some necessary information about the novel.
@@ -81,7 +75,6 @@ class MyCrawlerName(Crawler):
         #
         #       You may throw an Exception in case of failure
         pass
-    # end def
 
     def download_chapter_body(self, chapter):
         # TODO: [REQUIRED] Download content of a single chapter and return it in a
@@ -90,7 +83,6 @@ class MyCrawlerName(Crawler):
         #       To keep it simple, check `extract_contents` in the `TextCleaner` class.
         #       It extracts chapter contents given a soup Tag, and returns a clean HTML.
         pass
-    # end def
 
     def get_chapter_index_of(self, url):
         # TODO: [OPTIONAL] It is useful for selecting chapter range to download using
@@ -99,5 +91,3 @@ class MyCrawlerName(Crawler):
         #       A default behavior has been implemented in the `Crawler` class.
         #       Delete this method if you want to use the default one.
         pass
-    # end def
-# end class

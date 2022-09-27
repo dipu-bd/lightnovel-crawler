@@ -18,8 +18,6 @@ class LatestNovelCrawler(Crawler):
             ["You can read the novel online free at LatestNovel.Net or NovelZone.Net"]
         )
 
-    # end def
-
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)
@@ -42,8 +40,6 @@ class LatestNovelCrawler(Crawler):
                     "info": " | ".join(filter(None, [latest, status])),
                 }
             )
-        # end for
-        return results
 
     # end def
 
@@ -84,7 +80,6 @@ class LatestNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -93,9 +88,6 @@ class LatestNovelCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
@@ -105,8 +97,3 @@ class LatestNovelCrawler(Crawler):
             contents = soup.select_one(".reading-content")
 
         return self.cleaner.extract_contents(contents)
-
-    # end def
-
-
-# end class

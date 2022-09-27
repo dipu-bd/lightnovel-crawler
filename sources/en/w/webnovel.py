@@ -27,7 +27,6 @@ class WebnovelCrawler(Crawler):
         self.get_response(self.home_url)
         self.csrf = self.cookies['_csrfToken']
         logger.debug('CSRF Token = %s', self.csrf)
-    # end def
 
     def search_novel(self, query):
         self.get_csrf()
@@ -40,9 +39,7 @@ class WebnovelCrawler(Crawler):
                 'title': book['bookName'],
                 'url': book_info_url % book['bookId'],
                 'info': '%(categoryName)s | Score: %(totalScore)s' % book,
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -64,13 +61,11 @@ class WebnovelCrawler(Crawler):
             logger.debug('book info: %s', data['bookInfo'])
             self.novel_title = data['bookInfo']['bookName']
             self.novel_cover = book_cover_url % (self.novel_id, int(1000 * time.time()))
-        # end if
 
         totalChapterNum = 0
         if 'totalChapterNum' in data['bookInfo']:
             logger.debug('chapter items: %d', data['bookInfo']['totalChapterNum'])
             totalChapterNum = data['bookInfo']['totalChapterNum']
-        # end if
 
         chap_id = data['chapterInfo']['chapterId']
 
@@ -82,12 +77,10 @@ class WebnovelCrawler(Crawler):
             
             if chap['vipStatus'] > 0:
                 continue
-            # end if
             
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({'id': vol_id})
-            # end if
             
             self.chapters.append({
                 'id': i + 1,
@@ -102,22 +95,15 @@ class WebnovelCrawler(Crawler):
             
             if chap_id == '-1':
                 break
-            # end if
-        # end for
-    # end def
 
     def get_chapter_index_of(self, url):
         if not url:
             return 0
-        # end if
         url = url.replace('http://', 'https://')
         for chap in self.chapters:
             chap_url = chapter_info_url % (self.novel_id, chap['hash'])
             if url.startswith(chap_url):
-                return chap['id']
-            # end if
-        # end for
-        return 0
+                return chap['id']n 0
     # end def
 
     def download_chapter_body(self, chapter):
@@ -130,7 +116,6 @@ class WebnovelCrawler(Crawler):
                 x['name'] for x in
                 data['bookInfo']['authorItems']
             ]) or self.novel_author
-        # end if
 
         chapter_info = data['chapterInfo']
         if 'content' in chapter_info:
@@ -144,10 +129,8 @@ class WebnovelCrawler(Crawler):
                 if x['content'].strip()
             ]
             return self.format_text('\n'.join(body))
-        # end if
 
         return None
-    # end def
 
     def format_text(self, text):
         text = re.sub(r'Find authorized novels in Webnovel(.*)for visiting\.',
@@ -157,8 +140,5 @@ class WebnovelCrawler(Crawler):
             text = re.sub(r'<', '&lt;', text)
             text = re.sub(r'>', '&gt;', text)
             text = [x.strip() for x in text.split('\n') if x.strip()]
-            text = '<p>' + '</p><p>'.join(text) + '</p>'
-        # end if
-        return text.strip()
-    # end def
+            text = '<p>' + '</p><p>'.join(text) + '</p>'ef
 # end class

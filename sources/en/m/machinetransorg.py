@@ -16,8 +16,6 @@ class MachineTransOrg(Crawler):
     def initialize(self) -> None:
         self.cleaner.bad_text_regex.update([r"^Refresh time: \d+-\d+-\d+$"])
 
-    # end def
-
     def search_novel(self, query):
         url = search_url % quote(query.lower())
         logger.debug("Visiting: %s", url)
@@ -32,8 +30,6 @@ class MachineTransOrg(Crawler):
                     "info": li.select_one(".update-info").text.strip(),
                 }
             )
-        # end for
-        return results
 
     # end def
 
@@ -60,7 +56,6 @@ class MachineTransOrg(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": ch_id,
@@ -69,20 +64,12 @@ class MachineTransOrg(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
 
         logger.debug(
             "%d chapters and %d volumes found", len(self.chapters), len(self.volumes)
         )
 
-    # end def
-
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         body = soup.select_one(".read-main .read-context")
         return self.cleaner.extract_contents(body)
-
-    # end def
-
-
-# end class

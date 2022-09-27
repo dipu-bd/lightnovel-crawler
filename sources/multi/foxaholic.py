@@ -45,9 +45,7 @@ class FoxaholicCrawler(Crawler):
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
                 'info': ' | '.join(filter(None, [latest, status]))
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -84,15 +82,12 @@ class FoxaholicCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({'id': vol_id})
-            # end if
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
                 'title': a.text.strip(),
                 'url': self.absolute_url(a['href']),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -119,7 +114,6 @@ class FoxaholicCrawler(Crawler):
         #         new_tag = soup.new_tag("img", src=src_url)
         #         parent.append(new_tag)
         return self.cleaner.extract_contents(contents)
-    # end def
 
     def download_image(self, url):
         logger.info('Foxaholic image: %s', url)
@@ -130,6 +124,3 @@ class FoxaholicCrawler(Crawler):
             headers={'Accept': 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9'},
         )
         return response.content
-    # end def
-
-# end class

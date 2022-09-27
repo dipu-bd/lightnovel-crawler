@@ -26,8 +26,6 @@ class NovelOnlineFullCrawler(Crawler):
                     "info": "Latest: %s" % novel["lastchapter"],
                 }
             )
-        # end for
-        return results
 
     # end def
 
@@ -49,14 +47,12 @@ class NovelOnlineFullCrawler(Crawler):
             self.novel_author = novel_data[0]["author"]
         except Exception:
             logger.debug("Failed getting novel info.\n%s", Exception)
-        # end try
 
         for a in reversed(soup.select("#list_chapter .chapter-list a")):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -65,9 +61,6 @@ class NovelOnlineFullCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
@@ -76,7 +69,6 @@ class NovelOnlineFullCrawler(Crawler):
             chapter["title"] = soup.select_one("h1").text
         else:
             chapter["title"] = chapter["title"]
-        # end if
 
         self.cleaner.bad_text_regex = set(
             [
@@ -87,8 +79,3 @@ class NovelOnlineFullCrawler(Crawler):
 
         contents = soup.select_one("#vung_doc")
         return self.cleaner.extract_contents(contents)
-
-    # end def
-
-
-# end class

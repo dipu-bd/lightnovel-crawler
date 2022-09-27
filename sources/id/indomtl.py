@@ -26,9 +26,7 @@ class IndoMTLCrawler(Crawler):
             results.append({
                 'url': short_page_url % item['id'],
                 'title': re.sub(r'<\/?strong>', '', item['title']),
-            })
-        # end for
-        return results
+            })n results
     # end def
 
     def read_novel_info(self):
@@ -47,8 +45,6 @@ class IndoMTLCrawler(Crawler):
             if a['href'].startswith('https://indomtl.com/penulis/'):
                 self.novel_author = a.text.strip()
                 break
-            # end if
-        # end for
         logger.info('Novel author: %s', self.novel_author)
 
         novel_id = soup.select_one('form#rating input[name=id_novel]')['value']
@@ -64,7 +60,6 @@ class IndoMTLCrawler(Crawler):
             data = self.get_json(url)
             all_items += data['items']
             hasMore = data['hasMorePages'] == 1
-        # end while
 
         for item in reversed(all_items):
             self.chapters.append({
@@ -73,16 +68,12 @@ class IndoMTLCrawler(Crawler):
                 'title': item['title'],
                 'url': item['permalink'],
             })
-        # end for
 
         self.volumes = [{'id': x + 1}
                         for x in range(len(self.chapters) // 100 + 1)]
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
         contents = soup.select('article div.entry-content p.indo')
         contents = [str(p) for p in contents if p.text.strip()]
         return '<p>' + '</p><p>'.join(contents) + '</p>'
-    # end def
-# end class

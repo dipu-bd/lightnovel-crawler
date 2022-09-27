@@ -27,8 +27,6 @@ class Reaperscans(Crawler):
             ]
         )
 
-    # end def
-
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)
@@ -45,11 +43,8 @@ class Reaperscans(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-        # end for
 
         return results
-
-    # end def
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -59,7 +54,6 @@ class Reaperscans(Crawler):
         assert isinstance(possible_title, Tag)
         for span in possible_title.select("span"):
             span.extract()
-        # end for
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
@@ -84,7 +78,6 @@ class Reaperscans(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -93,16 +86,8 @@ class Reaperscans(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div.text-left")
         return self.cleaner.extract_contents(contents)
-
-    # end def
-
-
-# end class

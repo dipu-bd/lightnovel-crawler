@@ -33,9 +33,7 @@ class UukanshuOnline(Crawler):
                     'url': url,
                     'info': f"Author: {author}",
                 }
-            )
-        # end for
-        return results
+            )n results
     # end def
 
     def read_novel_info(self):
@@ -74,16 +72,12 @@ class UukanshuOnline(Crawler):
                 vol_id = 1 + len(self.chapters) // 100
                 if chap_id % 100 == 1:
                     self.volumes.append({"id": vol_id})
-                # end if
                 self.chapters.append({
                     'id': chap_id,
                     'volume': vol_id,
                     'title': a.text,
                     'url': self.home_url + a['href'],
                 })
-            # end for
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -92,7 +86,6 @@ class UukanshuOnline(Crawler):
         content = self.cleaner.extract_contents(body)
         
         return self.format_text(content)
-    # end def
     
     def format_text(self, text):
         text = re.sub(r'[UＵ][UＵ]\s*看书\s*[wｗ][wｗ][wｗ][\.．][uｕ][uｕ][kｋ][aａ][nｎ][sｓ][hｈ][uｕ][\.．][cｃ][oｏ][mｍ]', '', text)
@@ -102,5 +95,3 @@ class UukanshuOnline(Crawler):
         text = text.replace('请记住本书首发域名：。手机版更新最快网址：', '')
         text = text.replace('www.uukanshu.com', '')
         return text
-    # end def
-# end class
