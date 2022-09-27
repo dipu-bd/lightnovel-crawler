@@ -117,7 +117,7 @@ class TextCleaner:
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
         body = " ".join(self.extract_paragraphs(tag))
-        body = self.apply_blacklist(body)
+        # body = self.remove_bad_texts(body)
 
         return "".join(
             [f"<p>{x.strip()}</p>" for x in body.split(LINE_SEP) if x.strip()]
@@ -151,7 +151,7 @@ class TextCleaner:
         text = text.translate(NONPRINTABLE_MAPPING)
         for k, v in self.substitutions.items():
             text = text.replace(k, v)
-        return text
+        return self.remove_bad_texts(text)
 
     def extract_on_duplicate_sibling(self, tag: Tag):
         next_tag = tag.next_sibling
@@ -220,10 +220,8 @@ class TextCleaner:
                 line = line.strip()
                 if not line:
                     continue
-
                 if not (is_plain or is_block):
                     line = "<%s>%s</%s>" % (elem.name, line, elem.name)
-
                 body.append(line)
                 body.append(LINE_SEP)
 
@@ -232,7 +230,7 @@ class TextCleaner:
 
         return [x.strip() for x in body if x.strip()]
 
-    def apply_blacklist(self, text: str) -> str:
+    def remove_bad_texts(self, text: str) -> str:
         if not (isinstance(text, str) and self.bad_text_regex):
             return ""
         pattern = "|".join(
