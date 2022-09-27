@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 
 from bs4 import BeautifulSoup
 
@@ -37,28 +36,14 @@ class RebirthOnlineCrawler(Crawler):
         self.novel_cover = None
         logger.info("Novel cover: %s", self.novel_cover)
 
-        last_vol = -1
-        volume = {
-            "id": 0,
-            "title": "Volume 1",
-        }
-        for item in soup.find("div", {"class": "table_of_content"}).findAll("ul"):
-            vol = volume.copy()
-            vol["id"] += 1
-            vol["title"] = "Book %s" % vol["id"]
-            volume = vol
-            self.volumes.append(volume)
-            for li in item.findAll("li"):
-                chap_id = len(self.chapters) + 1
-                a = li.select_one("a")
-                self.chapters.append(
-                    {
-                        "id": chap_id,
-                        "volume": vol["id"],
-                        "url": self.absolute_url(a["href"]),
-                        "title": a.text.strip() or ("Chapter %d" % chap_id),
-                    }
-                )
+        for a in soup.select(".table_of_content ul li a"):
+            self.chapters.append(
+                {
+                    "id": len(self.chapters) + 1,
+                    "url": self.absolute_url(a["href"]),
+                    "title": a.text.strip(),
+                }
+            )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])

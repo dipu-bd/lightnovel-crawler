@@ -51,7 +51,10 @@ def get_crawlers_to_search(self) -> List[str]:
         return links
 
     if args.sources:
-        links = [l for l in links if re.search(args.sources, l)]
+        links = [
+            link for link in links
+            if re.search(args.sources, link)
+        ]
 
     if args.suppress or len(links) <= 1:
         return links

@@ -98,7 +98,7 @@ class LNMTLCrawler(Crawler):
                         "download_id": vol["id"],
                     }
                 )
-        except Exception as _:
+        except Exception:
             logger.exception("Failed parsing one possible batch")
 
         if len(self.volumes) == 0:

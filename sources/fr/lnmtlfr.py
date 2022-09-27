@@ -27,7 +27,7 @@ class Lnmtlfr(Crawler):
                 .find("div", {"class": "summary-content"})
                 .find_all("a")
             )
-            
+
             author_names = ", ".join([a.text for a in authors])
 
             result.append({
@@ -64,7 +64,7 @@ class Lnmtlfr(Crawler):
             for vol in reversed(list_vol):
                 vol_id = len(self.volumes) + 1
                 self.volumes.append({"id": vol_id})
-                
+
                 list_chap = vol.find_all("li")
                 for chap in reversed(list_chap):
                     chap_id = len(self.chapters) + 1
@@ -74,7 +74,6 @@ class Lnmtlfr(Crawler):
                         "title": chap.find("a").text,
                         "url": self.absolute_url(chap.find("a").get("href")),
                     })
-                
         else:
             self.volumes = [{"id": 1}]
             list_chap = soup.find_all("li")

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from bs4 import Comment, Tag
+from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
 

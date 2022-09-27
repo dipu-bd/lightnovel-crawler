@@ -13,24 +13,20 @@ class NewsNovelCrawler(Crawler):
     base_url = "https://www.newsnovel.net/"
 
     # NOTE: Disabled because search doesn't work on site.
-    """ 
-    def search_novel(self, query):
-        query = query.lower().replace(' ', '+')
-        soup = self.get_soup(search_url % query)
-
-        results = []
-        for tab in soup.select('.home-truyendecu')[:20]:
-            search_title = tab.select_one('a')
-            latest = tab.select_one('.caption .label-primary').text.strip()
-            results.append({
-                'title': search_title['title'].strip(),
-                'url': self.absolute_url(
-                    tab.select_one('a')['href']),
-                'info': 'Latest chapter: %s' % (latest)
-            })
-
-        return results
-    """
+    # def search_novel(self, query):
+    #     query = query.lower().replace(' ', '+')
+    #     soup = self.get_soup(search_url % query)
+    #     results = []
+    #     for tab in soup.select('.home-truyendecu')[:20]:
+    #         search_title = tab.select_one('a')
+    #         latest = tab.select_one('.caption .label-primary').text.strip()
+    #         results.append({
+    #             'title': search_title['title'].strip(),
+    #             'url': self.absolute_url(
+    #                 tab.select_one('a')['href']),
+    #             'info': 'Latest chapter: %s' % (latest)
+    #         })
+    #     return results
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

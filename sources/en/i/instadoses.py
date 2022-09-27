@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import quote_plus
 
 from lncrawl.core.crawler import Crawler
 

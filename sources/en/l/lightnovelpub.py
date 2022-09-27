@@ -47,7 +47,7 @@ class LightNovelPub(Crawler):
                 "referer": f"{self.home_url}search",
             },
         )
-        
+
         soup = self.make_soup(response.json()["resultview"])
 
         results = []

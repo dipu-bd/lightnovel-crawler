@@ -8,7 +8,7 @@ import ssl
 from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from threading import Semaphore
-from typing import Any, AnyStr, Dict, List, Union
+from typing import Any, Dict, List, Union
 from urllib.parse import urlparse
 
 import cloudscraper
@@ -67,7 +67,7 @@ class Crawler(ABC):
                     #'mobile': False
                 },
             )
-        except Exception as err:
+        except Exception:
             logger.exception("Failed to initialize cloudscraper")
             self.scraper = Session()
 

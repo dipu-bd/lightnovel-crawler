@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
-import ast
-import requests
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)

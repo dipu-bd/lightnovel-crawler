@@ -3,7 +3,6 @@ import logging
 import re
 from concurrent import futures
 
-from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
 

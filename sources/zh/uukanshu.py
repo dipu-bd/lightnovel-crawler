@@ -2,7 +2,6 @@
 import logging
 import re
 
-from bs4.element import Tag
 
 from lncrawl.core.crawler import Crawler
 

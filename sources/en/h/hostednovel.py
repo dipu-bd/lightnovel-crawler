@@ -39,11 +39,11 @@ class HostedNovelCom(Crawler):
             int(page[0])
             for page in [
                 page_re.findall(a['href'])
-                for a in soup.select('#chapters nav[aria-label="Pagination"] a') 
+                for a in soup.select('#chapters nav[aria-label="Pagination"] a')
                 if a.has_attr('href')
             ] if len(page) == 1
         ])
-        
+
         futures = []
         raw_novel_url = re.split(r'[?#]', self.novel_url)[0]
         for page in range(final_page):

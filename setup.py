@@ -26,7 +26,7 @@ def is_ignored(fname: str):
     try:
         status = os.popen(f"git check-ignore {fname}").read()
         return bool(status.strip())
-    except:
+    except Exception:
         return False
 
 

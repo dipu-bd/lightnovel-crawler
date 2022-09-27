@@ -120,12 +120,12 @@ class CreativeNovelsCrawler(Crawler):
         for span in body.find_all("span"):
             if len(span.parent.contents) <= 3:
                 if (span.parent.name in FORMATTING_TAGS) or (
-                    span.next_sibling is not None or span.previous_sibling is not None
+                    span.next_sibling or span.previous_sibling
                 ):
-                    if span.next_sibling != None:
+                    if span.next_sibling:
                         if span.next_sibling.name == FORMATTING_TAGS:
                             span.replace_with(span.text)
-                    elif span.previous_sibling != None:
+                    elif span.previous_sibling:
                         if span.previous_sibling.name == FORMATTING_TAGS:
                             span.replace_with(span.text)
                     # If its parent is a formatting tag: Just remove the span tag

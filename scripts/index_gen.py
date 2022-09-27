@@ -18,9 +18,13 @@ from urllib.parse import quote_plus, unquote_plus
 
 import cloudscraper
 
-path = os.path.realpath(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(os.path.dirname(path)))
-from lncrawl.core.crawler import Crawler
+try:
+    path = os.path.realpath(os.path.abspath(__file__))
+    sys.path.insert(0, os.path.dirname(os.path.dirname(path)))
+    from lncrawl.core.crawler import Crawler
+except ImportError:
+    print('lncrawl not found')
+    exit(1)
 
 # =========================================================================================== #
 # Configurations
@@ -43,7 +47,7 @@ DATE_FORMAT = "%d %B %Y %I:%M:%S %p"
 
 REPO_BRANCH = "master"
 REPO_URL = "https://github.com/dipu-bd/lightnovel-crawler"
-FILE_DOWNLOAD_URL = f"https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler"
+FILE_DOWNLOAD_URL = "https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler"
 WHEEL_RELEASE_URL = (
     REPO_URL + "/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl"
 )
@@ -54,7 +58,6 @@ try:
     REPO_BRANCH = commit_hash.decode("utf-8").strip()
 except Exception:
     traceback.print_exc()
-    pass
 
 # =========================================================================================== #
 # The index data
@@ -113,7 +116,7 @@ try:
     with open(CONTRIB_CACHE_FILE, encoding="utf8") as fp:
         username_cache = json.load(fp)
 except Exception as e:
-    print("Could not load contributor cache file")
+    print("Could not load contributor cache file", e)
 
 
 print("Getting contributors...")

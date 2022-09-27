@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from urllib.parse import parse_qsl, urlparse
 
 from lncrawl.core.crawler import Crawler
 

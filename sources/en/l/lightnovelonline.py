@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 from concurrent import futures
 from urllib.parse import urlparse
 
@@ -57,7 +56,7 @@ class LightNovelOnline(Crawler):
         try:
             last_page = soup.select("ul.pagingnation li a")[-1]["title"]
             page_count = int(last_page.split(" ")[-1])
-        except Exception as _:
+        except Exception:
             logger.exception("Failed to get page-count: %s", self.novel_url)
         logger.info("Total pages: %d", page_count)
 

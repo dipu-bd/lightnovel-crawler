@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from bs4 import BeautifulSoup
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)

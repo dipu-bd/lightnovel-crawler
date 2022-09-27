@@ -48,7 +48,7 @@ class WebnovelCrawler(Crawler):
         self.get_csrf()
         url = self.novel_url
         # self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
-        if not "_" in url:
+        if "_" not in url:
             self.novel_id = re.search(r"(?<=webnovel.com/book/)\d+", url).group(0)
         else:
             self.novel_id = url.split("_")[1]

@@ -3,7 +3,6 @@
 import logging
 from lncrawl.core.crawler import Crawler
 from urllib.parse import quote_plus
-import sys
 
 logger = logging.getLogger(__name__)
 

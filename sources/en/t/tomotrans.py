@@ -24,7 +24,7 @@ class TomoTransCrawler(Crawler):
         )
         logger.info("Novel cover: %s", self.novel_cover)
 
-        author = "Tomo Translations"
+        self.novel_author = "Tomo Translations"
         logger.info("Novel author: %s", self.novel_author)
 
         volumes = set()

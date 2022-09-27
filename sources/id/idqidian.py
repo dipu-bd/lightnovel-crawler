@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -58,8 +56,8 @@ class IdqidianCrawler(Crawler):
                 str(p.extract())
                 for p in body_parts
                 if p.text.strip()
-                and not "Advertisement" in p.text
-                and not "JavaScript!" in p.text
+                and "Advertisement" not in p.text
+                and "JavaScript!" not in p.text
             ]
         )
         if body_parts == "":
@@ -70,7 +68,9 @@ class IdqidianCrawler(Crawler):
                 [
                     str(p)
                     for p in my_texts
-                    if p.strip() and not "Advertisement" in p and not "JavaScript!" in p
+                    if p.strip()
+                    and "Advertisement" not in p
+                    and "JavaScript!" not in p
                 ]
             )
 

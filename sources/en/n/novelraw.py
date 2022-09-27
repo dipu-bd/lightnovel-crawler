@@ -2,7 +2,6 @@
 import logging
 import re
 from concurrent import futures
-from urllib.parse import quote, urlparse
 
 from lncrawl.core.crawler import Crawler
 

@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import math
-import re
 
 import js2py
 from bs4.element import Tag

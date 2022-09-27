@@ -54,5 +54,5 @@ class DemonTranslations(Crawler):
             for bad in ["Previous Chapter", "Table of Contents", "Next Chapter"]:
                 if bad in content.text:
                     content.extract()
- 
+
         return self.cleaner.extract_contents(body_parts)

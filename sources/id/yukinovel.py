@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 
 from bs4 import Comment
 
@@ -11,13 +9,16 @@ logger = logging.getLogger(__name__)
 
 
 class YukiNovelCrawler(Crawler):
-    base_url = "https://yukinovel.id/"
+    base_url = [
+        "https://yukinovel.me/",
+        "https://yukinovel.id/",
+    ]
 
     def initialize(self):
         self.home_url = "https://yukinovel.id/"
 
     def read_novel_info(self):
-        url = self.novel_url.replace("https://yukinovel.me", "https://yukinovel.id")
+        self.novel_url = self.novel_url.replace("https://yukinovel.me/", self.home_url)
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 

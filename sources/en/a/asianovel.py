@@ -5,6 +5,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+
 # Created using AsianHobbyist as a template.
 class AsianNovelCrawler(Crawler):
     base_url = "https://read.asianovel.com/"

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from urllib.parse import urlparse
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)

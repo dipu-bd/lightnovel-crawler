@@ -38,9 +38,8 @@ class Chireads(Crawler):
         )
 
         metadata = content[0]
-        
         self.novel_cover = self.absolute_url(metadata.find("img").get("src"))
-        
+
         self.novel_title = metadata.find("h3", {
             "class": "inform-title"
         }).text.split("|")[0].strip()
@@ -70,7 +69,7 @@ class Chireads(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         content = soup.find("div", {
-            "id": "content", 
+            "id": "content",
             "class": "font-color-black3 article-font",
         })
         return self.cleaner.extract_contents(content)

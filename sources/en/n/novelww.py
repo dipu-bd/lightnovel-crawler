@@ -2,8 +2,6 @@
 
 import logging
 from lncrawl.core.crawler import Crawler
-from lncrawl.utils.cleaner import TextCleaner
-from bs4 import Comment, Tag
 
 logger = logging.getLogger(__name__)
 
@@ -18,20 +16,20 @@ class Eight88NovelCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.find("h1", {"class": "crop-text-1"}).text.strip()
-        
+
         try:
             rows = soup.find("table").find_all("tr")
             self.novel_author = ", ".join([
                 e.text.strip()
                 for e in rows[(1 if len(rows) == 3 else 0)].find_all("a")
             ])
-        except:
+        except Exception:
             pass
-        
+
         try:
             self.novel_cover = self.absolute_url(
                 soup.find("div", {"class": "book3d"}).find("img").get("data-src"))
-        except:
+        except Exception:
             pass
 
         self.volumes = [{"id": 1}]

@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-from urllib.parse import quote, urlparse
-import urllib.parse
-from bs4 import BeautifulSoup
 
 from lncrawl.core.crawler import Crawler
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 
 from bs4 import BeautifulSoup
 

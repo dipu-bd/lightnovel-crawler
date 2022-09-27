@@ -28,7 +28,7 @@ def _perform_search(app, link, bar):
         return results
     except KeyboardInterrupt as e:
         raise e
-    except Exception as e:
+    except Exception:
         if logger.isEnabledFor(logging.DEBUG):
             logging.exception("<!> Search Failed! << %s >>", link)
         return []

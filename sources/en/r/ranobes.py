@@ -18,6 +18,7 @@ class RanobeLibCrawler(Crawler):
 
     def initialize(self) -> None:
         self.executor = ThreadPoolExecutor(max_workers=1)
+        self.cleaner.bad_css.update([".free-support", 'div[id^="adfox_"]'])
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -55,9 +56,7 @@ class RanobeLibCrawler(Crawler):
         soup = self.get_soup(chapter_list_link)
 
         script = soup.find(
-            lambda tag: isinstance(tag, Tag)
-            and tag.name == "script"
-            and tag.text.startswith("window.__DATA__")
+            lambda tag: isinstance(tag, Tag) and tag.name == "script" and tag.text.startswith("window.__DATA__")
         )
         assert isinstance(script, Tag)
 
@@ -78,9 +77,7 @@ class RanobeLibCrawler(Crawler):
         volumes = set([])
         for soup in reversed(page_soups):
             script = soup.find(
-                lambda tag: isinstance(tag, Tag)
-                and tag.name == "script"
-                and tag.text.startswith("window.__DATA__")
+                lambda tag: isinstance(tag, Tag) and tag.name == "script" and tag.text.startswith("window.__DATA__")
             )
             assert isinstance(script, Tag)
 
@@ -101,9 +98,6 @@ class RanobeLibCrawler(Crawler):
                 )
 
         self.volumes = [{"id": x} for x in volumes]
-
-    def initialize(self) -> None:
-        self.cleaner.bad_css.update([".free-support", 'div[id^="adfox_"]'])
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])

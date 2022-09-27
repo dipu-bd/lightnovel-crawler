@@ -7,8 +7,8 @@ from ..assets.epub import get_css_style
 
 try:
     from ebooklib import epub
-except Exception as err:
-    logging.fatal("Failed to import `ebooklib`")
+except ImportError:
+    logging.fatal("Failed to import ebooklib")
 
 logger = logging.getLogger(__name__)
 

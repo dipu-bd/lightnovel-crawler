@@ -58,7 +58,7 @@ class GreensiaCrawler(Crawler):
         try:
             self.novel_author = str(data['feed']['author'][0]['name']['$t']).title()
             logger.info('Novel author: %s', self.novel_author)
-        except:
+        except Exception:
             pass
 
         vols = set([])

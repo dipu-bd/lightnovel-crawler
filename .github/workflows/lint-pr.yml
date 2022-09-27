@@ -29,7 +29,7 @@ jobs:
       - name: Lint with flake8
         run: |
           pip install flake8
-          flake8 --count --show-source --statistics
+          flake8 -v --count --show-source --statistics
 
       - name: Build wheel
         run: python setup.py clean bdist_wheel

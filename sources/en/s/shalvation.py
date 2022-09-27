@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 
 from lncrawl.core.crawler import Crawler
 

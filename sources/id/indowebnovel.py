@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
 
-from bs4 import Comment
 
 from lncrawl.core.crawler import Crawler
 

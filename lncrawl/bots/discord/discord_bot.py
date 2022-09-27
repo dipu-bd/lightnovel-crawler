@@ -14,7 +14,7 @@ def get_bot_version():
     try:
         result = subprocess.check_output(["git", "rev-list", "--count", "HEAD"])
         return result.decode("utf-8")
-    except:
+    except Exception:
         from lncrawl.assets import version
 
         return version.get_version()

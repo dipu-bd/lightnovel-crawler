@@ -108,8 +108,7 @@ def __validate_and_add(scheme: str, ip: str, url: str):
             # print('>>>>>> found', url)
             __proxy_list[scheme].append(url)
             return True
-
-    except RequestException as e:
+    except RequestException:
         # print(url, e)
         pass
 

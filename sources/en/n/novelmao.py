@@ -33,7 +33,7 @@ class NovelMaoCrawler(Crawler):
             logger.info("Novel title = %s", self.novel_title)
             logger.info("Novel cover = %s", self.novel_cover)
             logger.info("Novel author = %s", self.novel_author)
-        except Exception as e:
+        except Exception:
             possible_title = soup.select_one(
                 'meta[itemprop="itemReviewed"], meta[property="og:title"]'
             )

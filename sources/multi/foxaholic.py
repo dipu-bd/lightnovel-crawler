@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 from concurrent.futures import ThreadPoolExecutor
 
 from bs4.element import Tag

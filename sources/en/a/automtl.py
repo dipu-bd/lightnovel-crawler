@@ -23,9 +23,9 @@ class AutoMTL(Crawler):
         logger.info('Novel title: %s', self.novel_title)
 
         # FIXME: Problem downloading cover image.
-        #self.novel_cover = self.absolute_url(
+        # self.novel_cover = self.absolute_url(
         #    soup.select_one('div.site header figure img')
-        #logger.info('Novel cover: %s', self.novel_cover)
+        # logger.info('Novel cover: %s', self.novel_cover)
 
         self.novel_author = 'AutoMTL'
         logger.info('Novel author: %s', self.novel_author)
@@ -44,7 +44,7 @@ class AutoMTL(Crawler):
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
+                'url': self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
 

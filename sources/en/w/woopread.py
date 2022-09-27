@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -35,8 +35,8 @@ class WoopReadCrawler(Crawler):
     def read_novel_info(self):
         """Get novel title, autor, cover etc"""
         novel_webpage = self.get_soup(self.novel_url)
-        novel_id_string = novel_webpage.find(text=re.compile(self.regex_novel_id))
-        novel_id = re.search(self.regex_novel_id, novel_id_string).group("id")
+        # novel_id_string = novel_webpage.find(text=re.compile(self.regex_novel_id))
+        # novel_id = re.search(self.regex_novel_id, novel_id_string).group("id")
 
         self.novel_title = novel_webpage.select_one(".post-title h1").text.strip()
         logger.info("Novel title: %s", self.novel_title)

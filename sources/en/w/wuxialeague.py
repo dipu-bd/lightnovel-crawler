@@ -45,9 +45,7 @@ class WuxiaLeagueCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-
         body = ""
-        title_found = False
         for p in soup.select("#TextContent > p"):
             if not p.text.strip():
                 continue
@@ -56,5 +54,4 @@ class WuxiaLeagueCrawler(Crawler):
             if clean_first == clean_title:
                 continue
             body += str(p).strip()
-
         return body

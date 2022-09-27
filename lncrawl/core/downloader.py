@@ -214,7 +214,7 @@ def download_cover_image(app):
                 logger.debug("Saved cover: %s", filename)
                 app.progress += 1
                 break
-            except KeyboardInterrupt as e:
+            except KeyboardInterrupt:
                 raise LNException("Cover download cancelled by user")
             except Exception as e:
                 logger.debug("Failed to get cover: %s", url, e)
@@ -241,7 +241,7 @@ def download_content_image(app, url, filename, image_folder):
             img.convert("RGB").save(f, "JPEG")
             logger.debug("Saved image: %s", image_file)
 
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         raise LNException("Image download cancelled by user")
     except Exception as e:
         return f"[{filename}] Failed to get content image: {url} | {e.__class__.__name__}: {e}"
@@ -256,7 +256,7 @@ def discard_failed_images(app, chapter, failed):
     assert app.crawler is not None
     assert isinstance(chapter, dict), "Invalid chapter"
 
-    if not chapter["body"] or not "images" in chapter:
+    if not chapter["body"] or "images" not in chapter:
         return
 
     assert isinstance(chapter["images"], dict)

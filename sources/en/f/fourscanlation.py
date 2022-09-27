@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 from urllib.parse import urlparse
 from lncrawl.core.crawler import Crawler
 
