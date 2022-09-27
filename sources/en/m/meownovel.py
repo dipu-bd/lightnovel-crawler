@@ -19,10 +19,6 @@ class MeowNovel(Crawler):
         self.cleaner.bad_css.update(
             [
                 "a",
-                ".code-block",
-                ".adsbygoogle",
-                ".adsense-code",
-                ".sharedaddy",
                 ".google-auto-placed",
                 ".ap_container",
             ]

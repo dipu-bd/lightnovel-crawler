@@ -16,8 +16,7 @@ class OneKissNovelCrawler(Crawler):
     base_url = "https://1stkissnovel.love/"
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(["h3", "script"])
-        self.cleaner.bad_css.update([".code-block", ".adsbygoogle"])
+        self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")

@@ -14,18 +14,7 @@ class HanyuNovels(Crawler):
     base_url = "http://www.hanyunovels.site/"
 
     def initialize(self) -> None:
-        self.cleaner.bad_css.update(
-            [
-                ".code-block",
-                ".adsbygoogle",
-            ]
-        )
-        self.cleaner.bad_tags.update(
-            [
-                "h3",
-                "script",
-            ]
-        )
+        self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")

@@ -19,13 +19,6 @@ class Centinni(Crawler):
                 "a" "h3",
             ]
         )
-        self.cleaner.bad_css.update(
-            [
-                ".code-block",
-                ".adsbygoogle",
-                ".sharedaddy",
-            ]
-        )
         self.cleaner.bad_text_regex.update(
             [
                 r"^Link for previous chapters:",

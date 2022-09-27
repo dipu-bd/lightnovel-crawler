@@ -14,6 +14,21 @@ search_url = (
 class AsadaTranslations(Crawler):
     base_url = "https://asadatranslations.com/"
 
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update(["h3"])
+        self.cleaner.bad_text_regex.update(
+            [
+                r"^Translator:",
+                r"^Qii",
+                r"^Editor:",
+                r"^Maralynx",
+                r"^Translator and Editor Notes:",
+                r"^Support this novel on",
+                r"^NU",
+                r"^by submitting reviews and ratings or by adding it to your reading list.",
+            ]
+        )
+
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)
@@ -72,23 +87,6 @@ class AsadaTranslations(Crawler):
             )
 
         self.volumes = [{"id": x} for x in volumes]
-
-    def initialize(self) -> None:
-        self.cleaner.bad_css.update(
-            ["h3", ".code-block", ".adsbygoogle", ".sharedaddy"]
-        )
-        self.cleaner.bad_text_regex.update(
-            [
-                r"^Translator:",
-                r"^Qii",
-                r"^Editor:",
-                r"^Maralynx",
-                r"^Translator and Editor Notes:",
-                r"^Support this novel on",
-                r"^NU",
-                r"^by submitting reviews and ratings or by adding it to your reading list.",
-            ]
-        )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])

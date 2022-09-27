@@ -20,17 +20,9 @@ class LightNovelBastion(Crawler):
             [
                 "h3",
                 "blockquote",
-                "script",
             ]
         )
-        self.cleaner.bad_css.update(
-            [
-                ".lnbad-tag",
-                ".code-block",
-                ".adsbygoogle",
-                ".sharedaddy",
-            ]
-        )
+        self.cleaner.bad_css.update([".lnbad-tag"])
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
