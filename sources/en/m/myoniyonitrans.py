@@ -93,8 +93,8 @@ class MyOniyOniTranslation(Crawler):
         # clean all upto first <hr>
         for tag in contents.select("*"):
             if tag.name == "hr":
-                breakxtract()
-        # end for
+                break
+            tag.extract()
 
         self.cleaner.bad_tags.add("div")
         self.cleaner.clean_contents(contents)

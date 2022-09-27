@@ -30,8 +30,7 @@ class MachineTransOrg(Crawler):
                     "info": li.select_one(".update-info").text.strip(),
                 }
             )
-
-    # end def
+        return results
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

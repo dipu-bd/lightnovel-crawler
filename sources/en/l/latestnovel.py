@@ -40,8 +40,7 @@ class LatestNovelCrawler(Crawler):
                     "info": " | ".join(filter(None, [latest, status])),
                 }
             )
-
-    # end def
+        return results
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

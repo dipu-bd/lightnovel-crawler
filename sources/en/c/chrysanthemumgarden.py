@@ -83,7 +83,5 @@ class ChrysanthemumGarden(Crawler):
             elif ch.isupper():
                 plain += upper_fixer[ord(ch) - ord("A")]
             else:
-                plain += chef
-
-
-# end class
+                plain += ch
+        return plain

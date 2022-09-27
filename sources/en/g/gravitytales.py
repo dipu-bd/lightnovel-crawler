@@ -66,12 +66,9 @@ class GravityTalesCrawler(Crawler):
                 )
 
     def download_chapter_body(self, chapter):
-        logger.info("Downloading %s" % chapter["url"])
         soup = self.get_soup(chapter["url"])
         body = soup.select_one("#chapterContent")
         for tag in body.contents:
             if hasattr(tag, "attrs"):
                 setattr(tag, "attrs", {})  # clear attributesef
-
-
-# end class
+        return str(body)
