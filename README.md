@@ -27,6 +27,7 @@ An app to download novels from online sources and generate e-books.
   - [Installation](#installation)
     - [Standalone Bundle (Windows, Linux)](#standalone-bundle-windows-linux)
     - [PIP (Windows, Mac, and Linux)](#pip-windows-mac-and-linux)
+    - [PIP (Directly from GitHub)](#pip-directly-from-github)
     - [Docker](#docker)
     - [Termux (Android)](#termux-android)
     - [Chatbots](#chatbots)
