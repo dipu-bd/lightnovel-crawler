@@ -5,9 +5,15 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-SEARCH_URL = "https://api.mystorywave.com/story-wave-backend/api/v1/content/books/search?keyWord=%s&pageNumber=1&pageSize=50"
+SEARCH_URL = (
+    "https://api.mystorywave.com/story-wave-backend/api/v1/content/books/search"
+    + "?keyWord=%s&pageNumber=1&pageSize=50"
+)
 BOOK_INFO_URL = "https://api.mystorywave.com/story-wave-backend/api/v1/content/books/%s"
-CHAPTER_LIST_URL = "https://api.mystorywave.com/story-wave-backend/api/v1/content/chapters/page?sortDirection=ASC&bookId=%s&pageNumber=%d&pageSize=100"
+CHAPTER_LIST_URL = (
+    "https://api.mystorywave.com/story-wave-backend/api/v1/content/chapters/page"
+    + "?sortDirection=ASC&bookId=%s&pageNumber=%d&pageSize=100"
+)
 CHAPTER_CONTENT_URL = (
     "https://api.mystorywave.com/story-wave-backend/api/v1/content/chapters/%d"
 )

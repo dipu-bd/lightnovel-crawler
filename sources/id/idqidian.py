@@ -25,7 +25,8 @@ class IdqidianCrawler(Crawler):
         chapters = soup.find(
             "div",
             {
-                "style": "-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #333; color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;"
+                "style": "-moz-border-radius: 5px 5px 5px 5px; border: 1px solid #333;"
+                + " color: black; height: 400px; margin: 5px; overflow: auto; padding: 5px; width: 96%;"
             },
         ).findAll("a")
         chapters.reverse()
@@ -68,9 +69,7 @@ class IdqidianCrawler(Crawler):
                 [
                     str(p)
                     for p in my_texts
-                    if p.strip()
-                    and "Advertisement" not in p
-                    and "JavaScript!" not in p
+                    if p.strip() and "Advertisement" not in p and "JavaScript!" not in p
                 ]
             )
 

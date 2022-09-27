@@ -80,7 +80,8 @@ class WriterUpdates(Crawler):
 
         for content in contents.select("p"):
             for bad in [
-                "this chapter is only for novel updates group approval if you want me to translate it hit me on discord server but let me warren you this novel content rascim",
+                "this chapter is only for novel updates group approval if you want me to"
+                + " translate it hit me on discord server but let me warren you this novel content rascim",
                 "https://discord.gg/AyJes52",
             ]:
                 if bad in content.text:

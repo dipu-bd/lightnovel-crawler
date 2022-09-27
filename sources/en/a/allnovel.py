@@ -17,10 +17,10 @@ class AllNovelCrawler(Crawler):
     ]
 
     def initialize(self) -> None:
-        self.home_url = self.base_url[0]
         self.cleaner.bad_text_regex.update(
             [
-                "If you find any errors ( broken links, non-standard content, etc.. ), Please let us know < report chapter > so we can fix it as soon as possible."
+                "If you find any errors ( broken links, non-standard content, etc.. ), "
+                + "Please let us know < report chapter > so we can fix it as soon as possible."
             ]
         )
 

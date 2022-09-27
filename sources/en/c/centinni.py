@@ -27,12 +27,19 @@ class Centinni(Crawler):
                 r"^https://discord.gg/aqDszgB",
                 r"^Hey guys, join us now on our discord server:",
                 r"^https://www.paypal.me/centinni1",
-                r"^You may also donate through paypal to support the people who work on these novels (please specify which novel you are supporting):",
-                r"^. And get a chance to chat with your favorite translators and editors. Meet more like-minded people and have a fun time with real-time novel updates and much more.",
-                r"^You may also donate through paypal to support the people who work on these novels (please specify which novel you are supporting):",
-                r"^You can donate on Ko-fi(from main page) Extra chapter be released when 10$/chapter have been slowly accumulated on Ko-fi. Please mention the novel you are supporting.",
+                r"^You may also donate through paypal to support the people who work on "
+                + "these novels (please specify which novel you are supporting):",
+                r"^. And get a chance to chat with your favorite translators and editors."
+                + " Meet more like-minded people and have a fun time with real-time novel "
+                + "updates and much more.",
+                r"^You may also donate through paypal to support the people who work on these"
+                + " novels (please specify which novel you are supporting):",
+                r"^You can donate on Ko-fi(from main page) Extra chapter be released when"
+                + " 10$/chapter have been slowly accumulated on Ko-fi. Please mention the "
+                + "novel you are supporting.",
                 r"^Centinni is translating this novel.",
-                r"^Possessing Nothing now has a chat channel! Join our discord server to chat with your team and more friends!",
+                r"^Possessing Nothing now has a chat channel! Join our discord server to "
+                + "chat with your team and more friends!",
             ]
         )
 

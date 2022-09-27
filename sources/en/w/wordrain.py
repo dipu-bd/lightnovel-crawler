@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from bs4 import Tag
-from concurrent.futures import ThreadPoolExecutor
 
 from lncrawl.core.crawler import Crawler
 
@@ -14,7 +14,46 @@ class WordRain(Crawler):
     base_url = "https://wordrain69.com"
 
     def initialize(self):
-        self.executor = ThreadPoolExecutor(max_workers=7)
+        self.cleaner.bad_tags.update(
+            [
+                "a",
+                "h3",
+                "script",
+            ]
+        )
+        self.cleaner.bad_css.update(
+            [
+                ".code-block",
+                ".adsbygoogle",
+                ".adsense-code",
+                ".sharedaddy",
+            ]
+        )
+        self.cleaner.bad_text_regex.update(
+            [
+                "[The translation belongs to Wordrain. Support us by comments, ,"
+                + " or buy Miao a coffee (*´ｪ｀*)っ旦~]",
+                "1 ko-Fi = extra chapter",
+                "[Thanks to everyone who’s reading this on wordrain. This translation "
+                + "belongs to us. (•̀o•́)ง Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
+                "1 ko-fi= 1 bonus chapter.",
+                "[The translation belongs to Wordrain. Support us by comments, ,"
+                + " or buy Miao a coffee (*´ｪ｀*)っ~]",
+                "1 ko fi = 1 extra chapter",
+                "[The translation belongs to Wordrain. Support us by comments, ,"
+                + " or buy Miao a coffee (´ｪ｀)っ旦~]",
+                "[The translation belongs to Wordrain . Support us by comments, ,"
+                + " or buy Miao a coffee (´ｪ｀)っ旦~]",
+                "[Thanks to everyone who are reading this on the site wordrain ."
+                + " (•̀o•́)ง Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
+                "[Thanks to everyone who’s reading this on wordrain . "
+                + "This translation belongs to us. (•̀o•́)ง Support us by comments, ,"
+                + " or buy Miao a coffee (´ｪ｀)っ旦~]",
+                "[Thanks to everyone who’s reading this on wordrain ."
+                + " This translation belongs to us. ( •̀o•́)ง Support us by comments, ,"
+                + " or buy Miao a coffee ( ´ｪ｀)っ旦~]",
+            ]
+        )
 
     # NOTE: Site search doesn't work. So this won't work.
     """
@@ -85,29 +124,5 @@ class WordRain(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-
         contents = soup.select_one("div.text-left")
-
-        for bad in contents.select(
-            "h3, .code-block, script, .adsbygoogle, .adsense-code, .sharedaddy, a"
-        ):
-            bad.extract()
-
-        for content in contents.select("p"):
-            for bad in [
-                "[The translation belongs to Wordrain. Support us by comments, , or buy Miao a coffee (*´ｪ｀*)っ旦~]",
-                "1 ko-Fi = extra chapter",
-                "[Thanks to everyone who’s reading this on wordrain. This translation belongs to us. (•̀o•́)ง Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "1 ko-fi= 1 bonus chapter.",
-                "[The translation belongs to Wordrain. Support us by comments, , or buy Miao a coffee (*´ｪ｀*)っ~]",
-                "1 ko fi = 1 extra chapter",
-                "[The translation belongs to Wordrain. Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[The translation belongs to Wordrain . Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[Thanks to everyone who are reading this on the site wordrain . (•̀o•́)ง Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[Thanks to everyone who’s reading this on wordrain . This translation belongs to us. (•̀o•́)ง Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[Thanks to everyone who’s reading this on wordrain . This translation belongs to us. ( •̀o•́)ง Support us by comments, , or buy Miao a coffee ( ´ｪ｀)っ旦~]",
-            ]:
-                if bad in content.text:
-                    content.extract()
-
         return self.cleaner.extract_contents(contents)

@@ -33,7 +33,9 @@ class ReincarnationPalace(Crawler):
         logger.info("Novel author: %s", self.novel_author)
 
         # Extract volume-wise chapter entries
-        # FIXME: I've found one chapters it can't download, it has a ` or %60 at end of url which seems to make crawler ignore it for some reason. If anyone know how to fix please do so.
+        # TODO: I've found one chapters it can't download,
+        # it has a ` or %60 at end of url which seems to make crawler ignore it
+        # for some reason. If anyone know how to fix please do so.
         chapters = soup.select('h4 a[href*="reincarnationpalace"]')
 
         for a in chapters:
