@@ -17,7 +17,7 @@ class WuxiaCoCrawler(Crawler):
     def initialize(self):
         self.home_url = "https://m.wuxiaworld.co/"
         self.executor = ThreadPoolExecutor(max_workers=1)
-        self.cleaner.blacklist_patterns.update(
+        self.cleaner.bad_text_regex.update(
             [
                 r"^translat(ed by|or)",
                 r"(volume|chapter) .?\d+",

@@ -14,7 +14,7 @@ class PeryInfo(Crawler):
     base_url = ["https://puretl.com/"]
 
     def initialize(self) -> None:
-        self.cleaner.blacklist_patterns.update(
+        self.cleaner.bad_text_regex.update(
             [
                 "Consider supporting Pure and whitelisting",
                 "If you enjoy this novel, please consider turning off ad-block! thank you~",

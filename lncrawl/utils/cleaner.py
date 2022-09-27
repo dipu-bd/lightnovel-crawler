@@ -16,7 +16,7 @@ NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
 
 class TextCleaner:
     def __init__(self) -> None:
-        self.blacklist_patterns = set([])
+        self.bad_text_regex = set([])
         self.bad_tags = set(
             [
                 "noscript",
@@ -117,13 +117,10 @@ class TextCleaner:
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
         body = " ".join(self.extract_paragraphs(tag))
+        body = self.apply_blacklist(body)
 
-        return "\n".join(
-            [
-                "<p>" + x + "</p>"
-                for x in body.split(LINE_SEP)
-                if not self.is_in_blacklist(x.strip())
-            ]
+        return "".join(
+            [f"<p>{x.strip()}</p>" for x in body.split(LINE_SEP) if x.strip()]
         )
 
     def clean_contents(self, div):
@@ -235,18 +232,10 @@ class TextCleaner:
 
         return [x.strip() for x in body if x.strip()]
 
-    def is_in_blacklist(self, text) -> bool:
-        if not text:
-            return True
-
-        if not self.blacklist_patterns:
-            return False
-
-        pattern = getattr(self, "__blacklist__", None)
-        if not pattern:
-            pattern = re.compile(
-                "|".join(["(%s)" % p for p in self.blacklist_patterns])
-            )
-            setattr(self, "__blacklist__", pattern)
-
-        return True if pattern and pattern.search(text) else False
+    def apply_blacklist(self, text: str) -> str:
+        if not (isinstance(text, str) and self.bad_text_regex):
+            return ""
+        pattern = "|".join(
+            [f"({p})" for p in self.bad_text_regex if isinstance(p, str)]
+        )
+        return re.sub(pattern, "", text)

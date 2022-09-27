@@ -93,7 +93,7 @@ class NovelFullCrawler(Crawler):
         return chapters
 
     def initialize(self) -> None:
-        self.cleaner.blacklist_patterns.update(["Read more chapter on NovelFull"])
+        self.cleaner.bad_text_regex.update(["Read more chapter on NovelFull"])
         self.cleaner.bad_css.update(
             ['div[align="left"]', 'img[src*="proxy?container=focus"]']
         )
