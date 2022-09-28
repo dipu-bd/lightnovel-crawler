@@ -51,10 +51,7 @@ def get_crawlers_to_search(self) -> List[str]:
         return links
 
     if args.sources:
-        links = [
-            link for link in links
-            if re.search(args.sources, link)
-        ]
+        links = [link for link in links if re.search(args.sources, link)]
 
     if args.suppress or len(links) <= 1:
         return links
@@ -137,5 +134,8 @@ def confirm_retry(self) -> bool:
             },
         ]
     )
+
+    if "retry" not in answer:
+        raise LNException("Cancelled by user")
 
     return answer["retry"]
