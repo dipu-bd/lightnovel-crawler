@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup, Tag
 
 from lncrawl.core.crawler import Crawler
 from lncrawl.core.exeptions import LNException
-from lncrawl.models import SearchResult
+from lncrawl.models import Chapter, SearchResult
 
 
 class MadaraTemplate(Crawler):
@@ -87,15 +87,15 @@ class MadaraTemplate(Crawler):
     def parse_chapter_list(self, soup: BeautifulSoup) -> None:
         for a in reversed(soup.select("ul.main .wp-manga-chapter > a")):
             self.chapters.append(
-                {
-                    "id": len(self.chapters) + 1,
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                }
+                Chapter(
+                    id=len(self.chapters) + 1,
+                    url=self.absolute_url(a["href"]),
+                    title=a.text.strip(),
+                )
             )
 
-    def download_chapter_body(self, chapter) -> None:
-        soup = self.get_soup(chapter["url"])
+    def download_chapter_body(self, chapter: Chapter) -> None:
+        soup = self.get_soup(chapter.url)
         contents = soup.select_one("div.reading-content")
         for img in contents.select("img"):
             if img.has_attr("data-src"):

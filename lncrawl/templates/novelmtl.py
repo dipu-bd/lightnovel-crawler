@@ -9,6 +9,8 @@ from bs4 import BeautifulSoup, Tag
 from lncrawl.core.crawler import Crawler
 from lncrawl.core.exeptions import LNException
 from lncrawl.models import SearchResult
+from lncrawl.models.chapter import Chapter
+from lncrawl.models.volume import Volume
 
 
 class NovelMTLTemplate(Crawler):
@@ -89,20 +91,20 @@ class NovelMTLTemplate(Crawler):
 
         for page, f in enumerate(futures):
             soup = f.result()
-            vol_id = page + 1
-            self.volumes.append({"id": vol_id})
+            vol = Volume(id=page + 1)
+            self.volumes.append(vol)
             for a in soup.select("ul.chapter-list li a"):
                 chap_id = len(self.chapters) + 1
                 self.chapters.append(
-                    {
-                        "id": chap_id,
-                        "volume": vol_id,
-                        "url": self.absolute_url(a["href"]),
-                        "title": a.select_one(".chapter-title").text.strip(),
-                    }
+                    Chapter(
+                        id=chap_id,
+                        volume=vol.id,
+                        url=self.absolute_url(a["href"]),
+                        title=a.select_one(".chapter-title").text.strip(),
+                    )
                 )
 
-    def download_chapter_body(self, chapter) -> None:
+    def download_chapter_body(self, chapter: Chapter) -> None:
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one(".chapter-content")
         return self.cleaner.extract_contents(contents)

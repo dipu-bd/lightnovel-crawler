@@ -1,10 +1,10 @@
-import json
 import math
 import os
 import re
 from typing import Dict
 
 from .. import constants as C
+from ..models import Chapter, MetaInfo, Novel, Session, Volume
 from .crawler import Crawler
 from .exeptions import LNException
 
@@ -14,27 +14,35 @@ def __format_title(text):
 
 
 def __format_volume(crawler: Crawler, vol_id_map: Dict[int, int]):
-    if not crawler.volumes:
+    if crawler.volumes:
+        crawler.volumes = [
+            volume if isinstance(volume, Volume) else Volume(**volume)
+            for volume in crawler.volumes
+        ]
+    else:
         for i in range(math.ceil(len(crawler.chapters) / 100)):
-            crawler.volumes.append({"id": i + 1})
+            crawler.volumes.append(Volume(id=i + 1))
 
     for index, vol in enumerate(crawler.volumes):
-        if not isinstance(vol.get("id"), int) or vol["id"] < 0:
-            raise LNException(f"Unknown volume id at index {index}")
-        vol["title"] = __format_title(vol.get("title") or f"Volume {vol['id']}")
-        vol["start_chapter"] = len(crawler.chapters)
-        vol["final_chapter"] = 0
-        vol["chapter_count"] = 0
-        vol_id_map[vol["id"]] = index
+        if not isinstance(vol.id, int) or vol["id"] < 0:
+            raise LNException(f"Invalid volume id at index {index}")
+        vol.title = __format_title(vol.title or f"Volume {vol.id}")
+        vol.start_chapter = len(crawler.chapters)
+        vol.final_chapter = 0
+        vol.chapter_count = 0
+        vol_id_map[vol.id] = index
 
 
 def __format_chapters(crawler: Crawler, vol_id_map: Dict[int, int]):
     for index, item in enumerate(crawler.chapters):
-        if not isinstance(item.get("id"), int) or item["id"] < 0:
+        if not isinstance(item, Chapter):
+            item = crawler.chapters[index] = Chapter(**item)
+
+        if not isinstance(item.id, int) or item.id < 0:
             raise LNException(f"Unknown item id at index {index}")
 
         if isinstance(item.get("volume"), int):
-            vol_index = vol_id_map.get(item["volume"], -1)
+            vol_index = vol_id_map.get(item.volume, -1)
         else:
             vol_index = vol_id_map.get(index // 100 + 1, -1)
         assert vol_index >= 0 and vol_index < len(
@@ -42,14 +50,13 @@ def __format_chapters(crawler: Crawler, vol_id_map: Dict[int, int]):
         ), f"Unknown volume for chapter {item['id']}"
 
         volume = crawler.volumes[vol_index]
-        item["volume"] = volume["id"]
-        item["volume_title"] = volume["title"]
+        item.volume = volume.id
+        item.volume_title = volume.title
+        item.title = __format_title(item.title or f"#{item.id}")
 
-        volume["start_chapter"] = min(volume["start_chapter"], item["id"])
-        volume["final_chapter"] = max(volume["final_chapter"], item["id"])
-        volume["chapter_count"] += 1
-
-        item["title"] = __format_title(item.get("title") or "#%d" % item["id"])
+        volume.start_chapter = min(volume.start_chapter, item.id)
+        volume.final_chapter = max(volume.final_chapter, item.id)
+        volume.chapter_count += 1
 
 
 def format_novel(crawler: Crawler):
@@ -68,30 +75,32 @@ def save_metadata(app, completed=False):
     if not (isinstance(app, App) and isinstance(app.crawler, Crawler)):
         return
 
-    data = {
-        "url": app.crawler.novel_url,
-        "title": app.crawler.novel_title,
-        "author": app.crawler.novel_author,
-        "cover": app.crawler.novel_cover,
-        "volumes": app.crawler.volumes,
-        "chapters": [
-            {k: v for k, v in chap.items() if k != "body"}
-            for chap in app.crawler.chapters
-        ],
-        "rtl": app.crawler.is_rtl,
-        "session": {
-            "completed": completed,
-            "user_input": app.user_input,
-            "login_data": app.login_data,
-            "output_path": app.output_path,
-            "output_formats": app.output_formats,
-            "pack_by_volume": app.pack_by_volume,
-            "good_file_name": app.good_file_name,
-            "no_append_after_filename": app.no_append_after_filename,
-            "download_chapters": [chap["id"] for chap in app.chapters],
-        },
-    }
+    novel = MetaInfo(
+        novel=Novel(
+            url=app.crawler.novel_url,
+            title=app.crawler.novel_title,
+            authors=[x.strip() for x in app.crawler.novel_author.split(",")],
+            cover_url=app.crawler.novel_cover,
+            volumes=app.crawler.volumes,
+            chapters=[Chapter.without_body(chap) for chap in app.crawler.chapters],
+            is_rtl=app.crawler.is_rtl,
+        ),
+        session=Session(
+            completed=completed,
+            user_input=app.user_input,
+            login_data=app.login_data,
+            output_path=app.output_path,
+            output_formats=app.output_formats,
+            pack_by_volume=app.pack_by_volume,
+            good_file_name=app.good_file_name,
+            no_append_after_filename=app.no_append_after_filename,
+            download_chapters=[chap.id for chap in app.chapters],
+            cookies=app.crawler.cookies,
+            headers=app.crawler.headers,
+            proxies=app.crawler.scraper.proxies,
+        ),
+    )
+
     os.makedirs(app.output_path, exist_ok=True)
     file_name = os.path.join(app.output_path, C.META_FILE_NAME)
-    with open(file_name, "w", encoding="utf-8") as file:
-        json.dump(data, file, indent=2, ensure_ascii=False)
+    novel.to_json(file_name, encoding="utf-8", indent=2)

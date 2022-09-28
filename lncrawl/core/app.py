@@ -12,7 +12,7 @@ from .. import constants as C
 from ..binders import available_formats, generate_books
 from ..core.exeptions import LNException
 from ..core.sources import crawler_list, prepare_crawler
-from ..models import CombinedSearchResult
+from ..models import Chapter, CombinedSearchResult, OutputFormat
 from .crawler import Crawler
 from .downloader import download_chapter_images, download_chapters
 from .novel_info import format_novel, save_metadata
@@ -33,9 +33,9 @@ class App:
         self.search_results: List[CombinedSearchResult] = []
         self.output_path = C.DEFAULT_OUTPUT_PATH
         self.pack_by_volume = False
-        self.chapters: List[Dict[str, Any]] = []
+        self.chapters: List[Chapter] = []
         self.book_cover: Optional[str] = None
-        self.output_formats: Dict[str, bool] = {}
+        self.output_formats: Dict[OutputFormat, bool] = {}
         self.archived_outputs = None
         self.good_file_name: str = ""
         self.no_append_after_filename = False

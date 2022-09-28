@@ -23,7 +23,11 @@ def _perform_search(app, link, bar):
         crawler = prepare_crawler(link)
         results = crawler.search_novel(app.user_input)
         logger.debug(results)
-        results = [SearchResult(**item) for item in results]
+        results = [
+            item if isinstance(item, SearchResult) else SearchResult(**item)
+            for item in results
+            if item.get("url")
+        ]
         logger.info("%d results from %s", len(results), link)
         return results
     except KeyboardInterrupt as e:

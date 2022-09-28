@@ -9,6 +9,7 @@ from ..assets.chars import Chars
 from ..assets.platforms import Platform
 from ..core.exeptions import LNException
 from ..models import CombinedSearchResult, SearchResult
+from ..models.meta import MetaInfo
 
 LINE_SIZE = 80
 ENABLE_BANNER = not Platform.windows or Platform.java
@@ -222,17 +223,17 @@ def format_source_choices(novels: List[SearchResult]):
     return items
 
 
-def format_resume_choices(metadata_list):
+def format_resume_choices(meta_list: List[MetaInfo]):
     items = []
-    for index, data in enumerate(metadata_list):
-        if not data.get("session"):
+    for index, meta in enumerate(meta_list):
+        if not meta.session:
             continue
         text = "%d. %s [downloading %d chapters]" % (
             index + 1,
-            data["title"],
-            len(data["session"]["download_chapters"]),
+            meta.novel.title,
+            len(meta.session.download_chapters),
         )
-        text += "\n" + (" " * 6) + Chars.LINK + " " + data["url"]
+        text += "\n" + (" " * 6) + Chars.LINK + " " + meta["url"]
         items.append({"name": text})
 
     return items

@@ -21,14 +21,17 @@ from .proxy import get_a_proxy, remove_faulty_proxies
 logger = logging.getLogger(__name__)
 
 MAX_WORKER_COUNT = 10
-MAX_CONCURRENT_REQUEST_PER_DOMAIN = 25
+MAX_REQUESTs_PER_DOMAIN = 25
 REQUEST_SEMAPHORES: Dict[str, Semaphore] = {}
 
 
-def get_domain_semaphore(url):
-    host = urlparse(url).hostname or url
+def _domain_gate(url: str):
+    try:
+        host = urlparse(url).netloc
+    except Exception:
+        host = url
     if host not in REQUEST_SEMAPHORES:
-        REQUEST_SEMAPHORES[host] = Semaphore(MAX_CONCURRENT_REQUEST_PER_DOMAIN)
+        REQUEST_SEMAPHORES[host] = Semaphore(MAX_REQUESTs_PER_DOMAIN)
     return REQUEST_SEMAPHORES[host]
 
 
@@ -90,9 +93,9 @@ class Scraper(ABC):
         # kwargs.setdefault('allow_redirects', True)
         headers = kwargs.setdefault("headers", {})
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault("host", urlparse(self.home_url).hostname)
-        headers.setdefault("origin", self.home_url.strip("/"))
-        headers.setdefault("referer", self.novel_url.strip("/"))
+        headers.setdefault("Host", urlparse(self.home_url).hostname)
+        headers.setdefault("Origin", self.home_url.strip("/"))
+        headers.setdefault("Referer", self.novel_url.strip("/"))
         kwargs["proxies"] = self.__generate_proxy(url)
 
         while retry >= 0:
@@ -107,7 +110,7 @@ class Scraper(ABC):
                     ", ".join([f"{k}={v}" for k, v in kwargs.items()]),
                 )
 
-                with get_domain_semaphore(url):
+                with _domain_gate(url):
                     with no_ssl_verification():
                         response: Response = method_call(url, **kwargs)
 
@@ -214,7 +217,7 @@ class Scraper(ABC):
         kwargs = kwargs or dict()
         kwargs.setdefault("retry", 1)
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault("content-type", "application/json")
+        headers.setdefault("Content-Type", "application/json")
         kwargs["headers"] = headers
         kwargs["data"] = data
 
@@ -227,14 +230,14 @@ class Scraper(ABC):
 
         headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault(
-            "content-type",
+            "Content-Type",
             "multipart/form-data"
             if multipart
             else "application/x-www-form-urlencoded; charset=UTF-8",
         )
-        headers.setdefault("host", urlparse(self.home_url).hostname)
-        headers.setdefault("origin", self.home_url.strip("/"))
-        headers.setdefault("referer", self.novel_url.strip("/"))
+        headers.setdefault("Host", urlparse(self.home_url).hostname)
+        headers.setdefault("Origin", self.home_url.strip("/"))
+        headers.setdefault("Referer", self.novel_url.strip("/"))
 
         return self.post_response(url, data, headers)
 
@@ -248,7 +251,7 @@ class Scraper(ABC):
         kwargs = kwargs or dict()
         headers = kwargs.setdefault("headers", {})
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault("accept", "application/json, text/javascript, */*")
+        headers.setdefault("Accept", "application/json, text/javascript, */*")
         response = self.get_response(*args, **kwargs)
         return response.json()
 
@@ -258,7 +261,7 @@ class Scraper(ABC):
 
     def post_json(self, url, data={}, headers={}) -> dict:
         headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault("accept", "application/json, text/plain, */*")
+        headers.setdefault("Accept", "application/json, text/plain, */*")
         response = self.post_response(url, data, headers)
         return response.json()
 

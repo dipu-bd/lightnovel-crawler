@@ -528,7 +528,7 @@ class TelegramBot:
         app = user_data.get("app")
         text = update.message.text
         selected = re.findall(r"\d+", text)
-        print(selected)
+        # print(selected)
         if len(selected) != 2:
             update.message.reply_text("Sorry, I did not understand. Please try again")
             return "handle_range_chapter"
@@ -618,7 +618,7 @@ class TelegramBot:
             user_data["status"] = "Generating output files"
             update.message.reply_text(user_data.get("status"))
             output_files = app.bind_books()
-            logger.debug('Output files: %s', output_files)
+            logger.debug("Output files: %s", output_files)
             update.message.reply_text("Output files generated.")
 
         app = user_data.get("app")

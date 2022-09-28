@@ -1,28 +1,12 @@
-"""
-Crawler application
-"""
 import logging
 from abc import abstractmethod
-from threading import Semaphore
-from typing import Any, Dict, List, Union
-from urllib.parse import urlparse
+from typing import List, Union
 
-from ..models import SearchResult
+from ..models import Chapter, SearchResult, Volume
 from ..utils.cleaner import TextCleaner
 from .scraper import Scraper
 
 logger = logging.getLogger(__name__)
-
-MAX_WORKER_COUNT = 10
-MAX_CONCURRENT_REQUEST_PER_DOMAIN = 25
-REQUEST_SEMAPHORES: Dict[str, Semaphore] = {}
-
-
-def get_domain_semaphore(url):
-    host = urlparse(url).hostname or url
-    if host not in REQUEST_SEMAPHORES:
-        REQUEST_SEMAPHORES[host] = Semaphore(MAX_CONCURRENT_REQUEST_PER_DOMAIN)
-    return REQUEST_SEMAPHORES[host]
 
 
 class Crawler(Scraper):
@@ -53,7 +37,7 @@ class Crawler(Scraper):
         # Each item must contain these keys:
         # `id` - 1 based index of the volume
         # `title` - the volume title (can be ignored)
-        self.volumes: List[Dict[str, Any]] = []
+        self.volumes: List[Volume] = []
 
         # Each item must contain these keys:
         # `id` - 1 based index of the chapter
@@ -61,7 +45,7 @@ class Crawler(Scraper):
         # `volume` - the volume id of this chapter
         # `volume_title` - the volume title (can be ignored)
         # `url` - the link where to download the chapter
-        self.chapters: List[Dict[str, Any]] = []
+        self.chapters: List[Chapter] = []
 
     def destroy(self) -> None:
         super(Crawler, self).destroy()

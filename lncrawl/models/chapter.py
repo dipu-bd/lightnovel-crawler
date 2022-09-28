@@ -23,3 +23,9 @@ class Chapter(Box):
         self.body = body
         self.images = images
         self.success = success
+
+    @staticmethod
+    def without_body(item: "Chapter") -> "Chapter":
+        result = item.copy()
+        result.body = None
+        return result

@@ -12,15 +12,14 @@ class NovelStatus(str, Enum):
     unknown = "Unknown"
     ongoing = "Ongoing"
     completed = "Completed"
-    hiatus = "hiatus"
+    hiatus = "Hiatus"
 
 
 class Novel(Box):
     def __init__(
         self,
-        id: int,
         url: str,
-        title: str = "",
+        title: str,
         authors: List[str] = [],
         cover_url: Optional[str] = None,
         chapters: List[Chapter] = [],
@@ -41,7 +40,6 @@ class Novel(Box):
         english_publisher: Optional[str] = None,
         novelupdates_url: Optional[str] = None,
     ) -> None:
-        self.id = id
         self.url = url
         self.title = title
         self.authors = authors
