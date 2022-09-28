@@ -7,6 +7,7 @@ on:
 
 jobs:
   lint_test:
+    if: github.repository == 'dipu-bd/lightnovel-crawler'
     name: Lint & Test
     runs-on: ubuntu-latest
     strategy:
