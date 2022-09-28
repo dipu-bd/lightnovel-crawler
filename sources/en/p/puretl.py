@@ -10,7 +10,7 @@ from lncrawl.core.exeptions import LNException
 logger = logging.getLogger(__name__)
 
 
-class PeryInfo(Crawler):
+class PureTL(Crawler):
     base_url = ["https://puretl.com/"]
 
     def initialize(self) -> None:

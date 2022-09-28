@@ -193,7 +193,7 @@ def download_image(app, url) -> Image.Image:
     return Image.open(BytesIO(content))
 
 
-def download_cover_image(app):
+def download_file_image(app):
     from .app import App
 
     assert isinstance(app, App)
@@ -285,7 +285,7 @@ def download_chapter_images(app):
     app.progress = 0
     futures_to_check = [
         app.crawler.executor.submit(
-            download_cover_image,
+            download_file_image,
             app,
         )
     ]
