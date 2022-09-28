@@ -12,8 +12,8 @@ on:
 
 jobs:
   index_gen:
-    runs-on: ubuntu-latest
     if: github.repository == 'dipu-bd/lightnovel-crawler'
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
         with:
