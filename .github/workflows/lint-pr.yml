@@ -9,6 +9,7 @@ jobs:
   lint_test:
     name: Lint & Test
     runs-on: ubuntu-latest
+    if: github.repository == 'dipu-bd/lightnovel-crawler'
     strategy:
       matrix:
         python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
