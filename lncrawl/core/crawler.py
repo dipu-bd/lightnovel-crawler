@@ -2,28 +2,14 @@
 Crawler application
 """
 import logging
-import os
-import random
-import ssl
 from abc import abstractmethod
-from concurrent.futures import ThreadPoolExecutor
 from threading import Semaphore
 from typing import Any, Dict, List, Union
 from urllib.parse import urlparse
 
-import cloudscraper
-from bs4 import BeautifulSoup
-from requests import Response, Session
-from requests.exceptions import ProxyError, RequestException
-
-from lncrawl.core.scraper import Scraper
-
-from ..assets.user_agents import user_agents
 from ..models import SearchResult
 from ..utils.cleaner import TextCleaner
-from ..utils.ssl_no_verify import no_ssl_verification
-from .exeptions import LNException
-from .proxy import get_a_proxy, remove_faulty_proxies
+from .scraper import Scraper
 
 logger = logging.getLogger(__name__)
 
