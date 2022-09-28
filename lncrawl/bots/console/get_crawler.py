@@ -135,7 +135,4 @@ def confirm_retry(self) -> bool:
         ]
     )
 
-    if "retry" not in answer:
-        raise LNException("Cancelled by user")
-
-    return answer["retry"]
+    return answer.get("retry")

@@ -87,7 +87,9 @@ def start(self):
         except KeyboardInterrupt:
             raise LNException("Novel download cancelled by user")
         except Exception as e:
-            if not (self.search_mode and self.confirm_retry()):
+            if not self.confirm_retry():
+                raise LNException("Cancelled by user")
+            if not self.search_mode:
                 raise e
 
     self.app.start_download()
