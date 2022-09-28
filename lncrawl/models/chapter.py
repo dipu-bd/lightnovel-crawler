@@ -10,8 +10,8 @@ class Chapter(Box):
         url: str,
         title: str = "",
         volume: Optional[int] = None,
-        volume_title: str = "",
-        body: str = "",
+        volume_title: Optional[str] = None,
+        body: Optional[str] = None,
         images: Dict[str, str] = dict(),
         success: bool = False,
     ) -> None:

@@ -16,14 +16,19 @@ from threading import Event
 from typing import Dict
 from urllib.parse import quote_plus, unquote_plus
 
-import cloudscraper
+try:
+    import cloudscraper
+except ImportError:
+    print("cloudscraper not found")
+    exit(1)
 
 try:
     path = os.path.realpath(os.path.abspath(__file__))
     sys.path.insert(0, os.path.dirname(os.path.dirname(path)))
+    from lncrawl.assets.languages import language_codes
     from lncrawl.core.crawler import Crawler
 except ImportError:
-    print('lncrawl not found')
+    print("lncrawl not found")
     exit(1)
 
 # =========================================================================================== #
@@ -36,7 +41,6 @@ SOURCES_FOLDER = WORKDIR / "sources"
 INDEX_FILE = SOURCES_FOLDER / "_index.json"
 REJECTED_FILE = SOURCES_FOLDER / "_rejected.json"
 CONTRIB_CACHE_FILE = WORKDIR / ".github" / "contribs.json"
-LANGUAGE_CACHE_FILE = WORKDIR / ".github" / "lang_codes.json"
 
 README_FILE = WORKDIR / "README.md"
 SUPPORTED_SOURCE_LIST_QUE = "<!-- auto generated supported sources list -->"
@@ -62,9 +66,6 @@ except Exception:
 # =========================================================================================== #
 # The index data
 # =========================================================================================== #
-
-with open(LANGUAGE_CACHE_FILE, encoding="utf8") as fp:
-    language_codes = json.load(fp)
 
 session = cloudscraper.create_scraper()
 
