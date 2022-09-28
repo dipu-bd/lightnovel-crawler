@@ -3,7 +3,7 @@ import logging
 import os
 import shutil
 from threading import Thread
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
 from slugify import slugify

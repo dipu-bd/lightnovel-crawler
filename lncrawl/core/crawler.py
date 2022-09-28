@@ -75,11 +75,11 @@ class Crawler(Scraper):
         raise NotImplementedError()
 
     @abstractmethod
-    def download_chapter_body(self, chapter) -> str:
+    def download_chapter_body(self, chapter: Chapter) -> str:
         """Download body of a single chapter and return as clean html format."""
         raise NotImplementedError()
 
-    def download_image(self, url) -> bytes:
+    def download_image(self, url: str) -> bytes:
         """Download image from url"""
         logger.info("Downloading image: " + url)
         response = self.get_response(
@@ -90,7 +90,7 @@ class Crawler(Scraper):
         )
         return response.content
 
-    def get_chapter_index_of(self, url) -> int:
+    def get_chapter_index_of(self, url: str) -> int:
         """Return the index of chapter by given url or 0"""
         url = (url or "").strip().strip("/")
         for chapter in self.chapters:
