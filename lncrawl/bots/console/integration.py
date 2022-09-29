@@ -84,8 +84,6 @@ def start(self):
             break
         except LNException as e:
             raise e
-        except KeyboardInterrupt:
-            raise LNException("Novel download cancelled by user")
         except Exception as e:
             if not self.confirm_retry():
                 raise LNException("Cancelled by user")

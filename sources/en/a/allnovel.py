@@ -17,12 +17,6 @@ class AllNovelCrawler(Crawler):
     ]
 
     def initialize(self) -> None:
-        self.cleaner.bad_text_regex.update(
-            [
-                r"Please let us know < report chapter > so we can fix it as soon as possible",
-                r"^ChapterMid();"
-            ]
-        )
         self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
@@ -41,7 +35,6 @@ class AllNovelCrawler(Crawler):
                     "info": info.text.strip() if info else "",
                 }
             )
-
         return results
 
     def read_novel_info(self):
@@ -82,8 +75,6 @@ class AllNovelCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#chapter-content")
-
         assert isinstance(contents, Tag), "No chapter content"
-        self.cleaner.extract_contents(contents)
-
+        self.cleaner.clean_contents(contents)
         return str(contents)
