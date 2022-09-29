@@ -9,7 +9,7 @@ from lncrawl.core.exeptions import LNException
 logger = logging.getLogger(__name__)
 
 
-class XiaowazCrawler(Crawler):
+class QuotevCrawler(Crawler):
     base_url = [
         "https://www.quotev.com/",
     ]
