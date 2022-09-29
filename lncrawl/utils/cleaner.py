@@ -75,9 +75,10 @@ class TextCleaner:
                 ".adbox",
                 ".googlepublisherads",
                 ".adblock-service",
-                ".adsense-code"
-                'a[href*="paypal.me"]',
-                'a[href*="patreon.com"]',
+                ".adsense-code",
+                ".wp-post-navigation",
+                "a[href*='paypal.me']",
+                "a[href*='patreon.com']",
             ]
         )
         self.p_block_tags: Set[str] = set(
