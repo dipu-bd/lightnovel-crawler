@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class XiaowazCrawler(Crawler):
-    base_url = [
-        "https://xiaowaz.fr/",
-    ]
+    base_url = ["https://xiaowaz.fr/"]
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update(
