@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class QuotevCrawler(Crawler):
-    base_url = [
-        "https://www.quotev.com/",
-    ]
+    base_url = ["https://www.quotev.com/"]
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update([".nosel"])
