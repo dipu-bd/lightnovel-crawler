@@ -50,4 +50,6 @@ class DSRealmTranslationsCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select("div.wpb_wrapper")
-        self.cleaner.extract_contents(contents)
+        self.cleaner.clean_contents(contents)
+
+        return str(contents)
