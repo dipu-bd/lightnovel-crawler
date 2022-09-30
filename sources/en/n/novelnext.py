@@ -30,7 +30,7 @@ class NovelNextCrawler(Crawler):
         ]
 
     def read_novel_info(self):
-        self.novel_url = self.novel_url.split("#")[0]
+        self.novel_url = self.novel_url.split("#")[0].strip("/")
 
         soup = self.get_soup(self.novel_url)
 
@@ -41,12 +41,12 @@ class NovelNextCrawler(Crawler):
         self.novel_title = title_tag.text.strip()
 
         image_tag = soup.select_one(".books .book img")
+        if isinstance(image_tag, Tag):
+            self.novel_cover = self.absolute_url(image_tag["src"])
 
-        self.novel_cover = self.absolute_url(image_tag["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        split_url = self.novel_url.split("/")
-        self.novel_id = split_url[len(split_url) - 1]
+        self.novel_id = self.novel_url.split("/")[-1]
         logger.info("Novel id: %s", self.novel_id)
 
         chapters_soup = self.get_soup(
