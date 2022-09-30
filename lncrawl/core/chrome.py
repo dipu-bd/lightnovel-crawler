@@ -1,7 +1,7 @@
 # https://github.com/ultrafunkamsterdam/undetected-chromedriver
-# https://github.com/yeongbin-jo/python-chromedriver-autoinstaller
 # https://cloudbytes.dev/snippets/run-selenium-and-chrome-on-wsl2
 
+import atexit
 import logging
 import os
 import time
@@ -14,20 +14,9 @@ from requests.cookies import RequestsCookieJar
 
 from .soup import SoupMaker
 
+MAX_CHROME_INSTANCES = 8
+
 logger = logging.getLogger(__name__)
-
-try:
-    import chromedriver_autoinstaller
-except ImportError:
-    logger.warn("`chromedriver-autoinstaller` is not found")
-
-try:
-    import undetected_chromedriver as webdriver
-    from undetected_chromedriver import ChromeOptions
-
-    webdriver.logger.setLevel(logging.WARN)
-except ImportError:
-    logger.warn("`undetected-chromedriver` is not found")
 
 try:
     import selenium.webdriver.support.expected_conditions as EC
@@ -39,9 +28,24 @@ try:
     from selenium.webdriver.remote.remote_connection import LOGGER
     from selenium.webdriver.support.wait import WebDriverWait
 
-    LOGGER.setLevel(logging.WARN)
+    LOGGER.setLevel(logging.ERROR)
 except ImportError:
     logger.warn("`selenium` is not found")
+
+try:
+    import undetected_chromedriver as webdriver
+    from undetected_chromedriver import ChromeOptions
+
+    webdriver.logger.setLevel(logging.WARN)
+except ImportError:
+    logger.warn("`undetected-chromedriver` is not found")
+
+try:
+    from webdriver_manager.chrome import ChromeDriverManager
+
+    webdriver_path = ChromeDriverManager().install()
+except ImportError:
+    logger.warn("`webdriver-manager` is not found")
 
 
 __all__ = [
@@ -56,9 +60,6 @@ Selector = namedtuple(
     field_names=["by", "value"],
     defaults=[By.ID, None],
 )
-
-
-MAX_CHROME_INSTANCES = 8
 
 
 class Chrome(SoupMaker):
@@ -77,7 +78,7 @@ class Chrome(SoupMaker):
         logger.debug("Maximum instances: %d", max_instances)
 
         if not driver_path or not os.path.isfile(str(driver_path)):
-            driver_path = chromedriver_autoinstaller.install()
+            driver_path = webdriver_path
         self.driver_path = str(driver_path)
         logger.debug("Driver path: %s", driver_path)
 
@@ -92,6 +93,8 @@ class Chrome(SoupMaker):
         auth_options.is_user_verified = True
         auth_options.is_user_consenting = True
         self.auth_options = auth_options
+
+        atexit.register(self.cleanup)
 
     def cleanup(self):
         for chrome in list(self.open_browsers):

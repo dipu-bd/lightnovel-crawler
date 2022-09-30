@@ -23,7 +23,7 @@ base58~=2.1.1
 python-box>=6.0.0,<7.0.0
 pycryptodome>=3.0.0,<4.0.0
 undetected-chromedriver
-chromedriver-autoinstaller
+webdriver-manager
 
 # dev requirements
 wheel
