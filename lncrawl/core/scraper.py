@@ -17,6 +17,7 @@ from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
 from .exeptions import LNException
 from .proxy import get_a_proxy, remove_faulty_proxies
+from .soup import SoupMaker
 from .taskman import TaskManager
 
 logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ def _domain_gate(url: str = ""):
     return REQUEST_SEMAPHORES[host]
 
 
-class Scraper(TaskManager):
+class Scraper(TaskManager, SoupMaker):
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
     # ------------------------------------------------------------------------- #
@@ -162,22 +163,6 @@ class Scraper(TaskManager):
         if page_url:
             return page_url.strip("/") + "/" + url
         return self.home_url + url
-
-    def make_soup(self, response, parser=None) -> BeautifulSoup:
-        if isinstance(response, Response):
-            html = response.content.decode("utf8", "ignore")
-        elif isinstance(response, bytes):
-            html = response.decode("utf8", "ignore")
-        elif isinstance(response, str):
-            html = str(response)
-        else:
-            raise LNException("Could not parse response")
-
-        soup = BeautifulSoup(html, parser or "lxml")
-        if not soup.find("body"):
-            raise ConnectionError("HTML document was not loaded properly")
-
-        return soup
 
     def init_scraper(self, sess: Session = None):
         """Check for option: https://github.com/VeNoMouS/cloudscraper"""
