@@ -109,9 +109,6 @@ class App:
         if not isinstance(self.crawler, Crawler):
             raise LNException("No crawler is selected")
 
-        self.crawler.scraper.headers["origin"] = self.crawler.home_url
-        self.crawler.scraper.headers["referer"] = self.crawler.home_url
-
         if self.can_do("login") and self.login_data:
             logger.debug("Login with %s", self.login_data)
             self.crawler.login(*list(self.login_data))

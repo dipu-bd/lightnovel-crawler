@@ -7,7 +7,7 @@ class Chapter(Box):
     def __init__(
         self,
         id: int,
-        url: str,
+        url: str = "",
         title: str = "",
         volume: Optional[int] = None,
         volume_title: Optional[str] = None,

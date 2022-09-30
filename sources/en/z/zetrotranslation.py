@@ -4,21 +4,17 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-ajax_url = '%s/wp-admin/admin-ajax.php'
+ajax_url = "%s/wp-admin/admin-ajax.php"
 
 
 class ZetroTranslationCrawler(Crawler):
-    base_url = [
-        'https://zetrotranslation.com/'
-    ]
+    base_url = ["https://zetrotranslation.com/"]
 
-    search_url = (
-        "%s?s=%s&post_type=wp-manga&author=&artist=&release="
-    )
+    search_url = "%s?s=%s&post_type=wp-manga&author=&artist=&release="
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(['h3', 'script'])
-        self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
+        self.cleaner.bad_tags.update(["h3", "script"])
+        self.cleaner.bad_css.update([".code-block", ".adsbygoogle"])
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
@@ -66,9 +62,13 @@ class ZetroTranslationCrawler(Crawler):
 
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
 
-        response = self.submit_form(ajax_url % self.home_url.rstrip('/'),
-                                    data={'action': 'manga_get_chapters',
-                                          'manga': self.novel_id, })
+        response = self.submit_form(
+            ajax_url % self.home_url.rstrip("/"),
+            data={
+                "action": "manga_get_chapters",
+                "manga": self.novel_id,
+            },
+        )
 
         soup = self.make_soup(response)
         chap_list = soup.select(".wp-manga-chapter:not(.premium-block) a")
@@ -90,6 +90,6 @@ class ZetroTranslationCrawler(Crawler):
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-        contents = soup.select_one('div.reading-content')
+        contents = soup.select_one("div.reading-content")
 
         return self.cleaner.extract_contents(contents)

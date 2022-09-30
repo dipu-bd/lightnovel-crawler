@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from urllib.parse import urlparse
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -42,7 +43,7 @@ class FourScanlationCrawler(Crawler):
         volumes = set()
         for a in soup.select("article.page p a"):
             possible_url = self.absolute_url(a["href"])
-            if not self.is_relative_url(possible_url):
+            if urlparse(possible_url).netloc != urlparse(self.novel_url).netloc:
                 continue
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100

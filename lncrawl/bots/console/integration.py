@@ -85,10 +85,10 @@ def start(self):
         except LNException as e:
             raise e
         except Exception as e:
-            if not self.confirm_retry():
-                raise LNException("Cancelled by user")
             if not self.search_mode:
                 raise e
+            elif not self.confirm_retry():
+                raise LNException("Cancelled by user")
 
     self.app.start_download()
     self.app.bind_books()

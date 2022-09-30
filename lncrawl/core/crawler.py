@@ -1,6 +1,6 @@
 import logging
 from abc import abstractmethod
-from typing import List, Union
+from typing import List
 
 from ..models import Chapter, SearchResult, Volume
 from ..utils.cleaner import TextCleaner
@@ -14,18 +14,17 @@ class Crawler(Scraper):
 
     has_manga = False
     has_mtl = False
-    base_url: Union[str, List[str]]
+    base_url: List[str]
 
     # ------------------------------------------------------------------------- #
-    # Internal methods
+    # Constructor & Destructors
     # ------------------------------------------------------------------------- #
     def __init__(self) -> None:
-        super(Crawler, self).__init__()
+        super(Crawler, self).__init__(self.base_url[0])
 
         self.cleaner = TextCleaner()
 
-        # Automatically available with all instances
-        self.home_url = ""
+        # Available in `search_novel` or `read_novel_info`
         self.novel_url = ""
 
         # Must resolve these fields inside `read_novel_info`
@@ -53,7 +52,7 @@ class Crawler(Scraper):
         self.chapters.clear()
 
     # ------------------------------------------------------------------------- #
-    # Implement these methods
+    # Methods to implement in crawler
     # ------------------------------------------------------------------------- #
 
     def initialize(self) -> None:
@@ -78,17 +77,6 @@ class Crawler(Scraper):
     def download_chapter_body(self, chapter: Chapter) -> str:
         """Download body of a single chapter and return as clean html format."""
         raise NotImplementedError()
-
-    def download_image(self, url: str) -> bytes:
-        """Download image from url"""
-        logger.info("Downloading image: " + url)
-        response = self.get_response(
-            url,
-            headers={
-                "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9"
-            },
-        )
-        return response.content
 
     def get_chapter_index_of(self, url: str) -> int:
         """Return the index of chapter by given url or 0"""

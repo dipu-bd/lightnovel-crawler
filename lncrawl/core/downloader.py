@@ -6,51 +6,14 @@ import hashlib
 import json
 import logging
 import os
-import signal
-import threading
 from io import BytesIO
 
 from PIL import Image
-from tqdm import tqdm
 
 from ..core.exeptions import LNException
 from .arguments import get_args
 
 logger = logging.getLogger(__name__)
-
-
-def resolve_all_futures(futures_to_check, desc="", unit=""):
-    if not futures_to_check:
-        return
-
-    is_debug_mode = os.getenv("debug_mode") == "yes"
-    bar = tqdm(desc=desc, unit=unit, total=len(futures_to_check), disable=is_debug_mode)
-
-    def cancel_all(*args):
-        bar.close()
-        for future in futures_to_check:
-            if not future.done():
-                future.cancel()
-
-        if len(args):
-            raise LNException("Cancelled by user")
-
-    if threading.current_thread() is threading.main_thread():
-        signal.signal(signal.SIGINT, cancel_all)
-
-    try:
-        for future in futures_to_check:
-            try:
-                message = future.result()
-                if message and not is_debug_mode:
-                    bar.clear()
-                    logger.warning(message)
-
-            finally:
-                bar.update()
-
-    finally:
-        cancel_all()
 
 
 def get_chapter_filename(app, chapter):
@@ -103,9 +66,13 @@ def save_chapter_body(app, chapter):
 
     file_name = get_chapter_filename(app, chapter)
 
-    title = chapter["title"].replace(">", "&gt;").replace("<", "&lt;")
+    title = chapter["title"]
+    title = "&lt;".join(title.split("<"))
+    title = "&gt;".join(title.split(">"))
+
     if title not in chapter["body"]:
         chapter["body"] = "<h1>%s</h1>\n%s" % (title, chapter["body"])
+
     if get_args().add_source_url and chapter["url"] not in chapter["body"]:
         chapter["body"] += '<br><p>Source: <a href="%s">%s</a></p>' % (
             chapter["url"],
@@ -148,7 +115,7 @@ def download_chapter_body(app, chapter):
         logger.debug("Failed", e)
         return f"[{chapter['id']}] Failed to get chapter body ({e.__class__.__name__}: {e})"
     finally:
-        chapter.setdefault("body", "")
+        chapter["body"] = chapter.get("body") or ""
         save_chapter_body(app, chapter)
         app.progress += 1
 
@@ -163,7 +130,7 @@ def download_chapters(app):
         app.output_formats = {}
 
     app.progress = 0
-    futures_to_check = [
+    futures = [
         app.crawler.executor.submit(
             download_chapter_body,
             app,
@@ -173,7 +140,7 @@ def download_chapters(app):
     ]
 
     try:
-        resolve_all_futures(futures_to_check, desc="Chapters", unit="item")
+        app.crawler.resolve_all(futures, desc="Chapters", unit="item")
     finally:
         logger.info("Processed %d chapters" % app.progress)
 
@@ -205,6 +172,7 @@ def download_file_image(app):
         cover_urls = [
             app.crawler.novel_cover,
             "https://source.unsplash.com/featured/800x1032?abstract",
+            # "https://picsum.photos/800/1032",
         ]
         for url in cover_urls:
             try:
@@ -283,7 +251,7 @@ def download_chapter_images(app):
 
     # download or generate cover
     app.progress = 0
-    futures_to_check = [
+    futures = [
         app.crawler.executor.submit(
             download_file_image,
             app,
@@ -299,7 +267,7 @@ def download_chapter_images(app):
             for filename, url in chapter.get("images", {}).items()
         ]
     )
-    futures_to_check += [
+    futures += [
         app.crawler.executor.submit(
             download_content_image, app, url, filename, image_folder
         )
@@ -308,7 +276,7 @@ def download_chapter_images(app):
 
     failed = []
     try:
-        resolve_all_futures(futures_to_check, desc="  Images", unit="item")
+        app.crawler.resolve_all(futures, desc="  Images", unit="item")
         failed = [
             filename
             for filename, url in images_to_download

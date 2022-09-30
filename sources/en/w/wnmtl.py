@@ -47,7 +47,7 @@ class WNMTLCrawler(Crawler):
 
     def read_novel_info(self):
         logger.debug(self.home_url)
-        self.scraper.headers["site-domain"] = urlparse(self.novel_url).hostname or ""
+        self.set_header("site-domain", urlparse(self.novel_url).hostname or "")
 
         self.novel_id = int(urlparse(self.novel_url).path.split("/")[2].split("-")[0])
         logger.info("Novel ID %d", self.novel_id)

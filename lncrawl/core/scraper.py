@@ -2,86 +2,66 @@ import logging
 import os
 import random
 import ssl
-from abc import ABC
-from concurrent.futures import ThreadPoolExecutor
+import time
 from threading import Semaphore
-from typing import Dict
-from urllib.parse import urlparse
+from typing import Dict, Optional, Union
+from urllib.parse import ParseResult, urlparse
 
-import cloudscraper
 from bs4 import BeautifulSoup
+from cloudscraper import CloudScraper, User_Agent
 from requests import Response, Session
 from requests.exceptions import ProxyError, RequestException
+from requests.structures import CaseInsensitiveDict
 
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
 from .exeptions import LNException
 from .proxy import get_a_proxy, remove_faulty_proxies
+from .taskman import TaskManager
 
 logger = logging.getLogger(__name__)
 
-MAX_WORKER_COUNT = 10
-MAX_REQUESTs_PER_DOMAIN = 25
+MAX_REQUESTS_PER_DOMAIN = 25
 REQUEST_SEMAPHORES: Dict[str, Semaphore] = {}
 
 
 def _domain_gate(url: str):
     try:
-        host = urlparse(url).netloc
+        host = url.split("//", 1)[1].split("/", 1)[0]
     except Exception:
-        host = url
+        host = url.split("/", 1)[0]
     if host not in REQUEST_SEMAPHORES:
-        REQUEST_SEMAPHORES[host] = Semaphore(MAX_REQUESTs_PER_DOMAIN)
+        REQUEST_SEMAPHORES[host] = Semaphore(MAX_REQUESTS_PER_DOMAIN)
     return REQUEST_SEMAPHORES[host]
 
 
-class Scraper(ABC):
+class Scraper(TaskManager):
     # ------------------------------------------------------------------------- #
-    # Constructor method
+    # Constructor & Destructors
     # ------------------------------------------------------------------------- #
-    def __init__(self) -> None:
-        self.init_executor()
-        self._destroyed = False
-        self.last_visited_url = None
+    def __init__(self, origin: str) -> None:
+        super(Scraper, self).__init__()
 
-        # Initialize cloudscrapper
-        try:
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
-            self.scraper = cloudscraper.create_scraper(
-                # debug=True,
-                ssl_context=ctx,
-                browser={
-                    "custom": random.choice(user_agents),
-                    #'browser': 'chrome',
-                    #'platform': 'windows',
-                    #'mobile': False
-                },
-            )
-        except Exception:
-            logger.exception("Failed to initialize cloudscraper")
-            self.scraper = Session()
-
-        # Setup an automatic proxy switcher
+        self.home_url = origin
+        self.last_visited_url = ""
         self.enable_auto_proxy = os.getenv("use_proxy") == "1"
 
+        self.init_scraper()
+        self.change_user_agent()
+
     def destroy(self) -> None:
-        self._destroyed = True
+        super(Scraper, self).destroy()
         self.scraper.close()
-        self.executor.shutdown(False)
 
     # ------------------------------------------------------------------------- #
     # Private methods
     # ------------------------------------------------------------------------- #
 
     def __generate_proxy(self, url, timeout: int = 0):
-        if not self.enable_auto_proxy or not url:
-            return None
-
-        scheme = urlparse(self.home_url).scheme
-        proxy = {scheme: get_a_proxy(scheme, timeout)}
-        return proxy
+        if self.enable_auto_proxy and url:
+            scheme = self.origin.scheme
+            proxy = {scheme: get_a_proxy(scheme, timeout)}
+            return proxy
 
     def __process_request(self, method: str, url, **kwargs):
         method_call = getattr(self.scraper, method)
@@ -89,14 +69,15 @@ class Scraper(ABC):
 
         kwargs = kwargs or dict()
         retry = kwargs.pop("retry", 2)
-        # kwargs.setdefault('verify', False)
-        # kwargs.setdefault('allow_redirects', True)
-        headers = kwargs.setdefault("headers", {})
-        headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault("Host", urlparse(self.home_url).hostname)
-        headers.setdefault("Origin", self.home_url.strip("/"))
-        headers.setdefault("Referer", self.novel_url.strip("/"))
         kwargs["proxies"] = self.__generate_proxy(url)
+        headers = kwargs.pop("headers", {})
+        if not isinstance(headers, CaseInsensitiveDict):
+            headers = CaseInsensitiveDict(headers)
+        headers.setdefault("Host", self.origin.hostname)
+        headers.setdefault("Origin", self.home_url.strip("/"))
+        headers.setdefault("Referer", self.last_visited_url.strip("/"))
+        headers.setdefault("User-Agent", self.user_agent)
+        kwargs["headers"] = dict(headers)
 
         while retry >= 0:
             if self._destroyed:
@@ -129,34 +110,49 @@ class Scraper(ABC):
                         remove_faulty_proxies(proxy_url)
 
                 if retry != 0:  # do not use proxy on last attemp
-                    kwargs["proxies"] = self.__generate_proxy(url, 5)
+                    if self.enable_auto_proxy and url:
+                        kwargs["proxies"] = self.__generate_proxy(url, 5)
+                    else:
+                        time.sleep(2)
+                    self.change_user_agent()
+                    headers.setdefault("User-Agent", self.user_agent)
+                    kwargs["headers"] = dict(headers)
 
     # ------------------------------------------------------------------------- #
     # Helper methods to be used
     # ------------------------------------------------------------------------- #
 
     @property
-    def headers(self) -> dict:
+    def origin(self) -> ParseResult:
+        """Parsed self.home_url"""
+        return urlparse(self.home_url)
+
+    @property
+    def headers(self) -> Dict[str, Union[str, bytes]]:
+        """Default request headers"""
         return dict(self.scraper.headers)
 
     def set_header(self, key: str, value: str) -> None:
-        self.scraper.headers[key.lower()] = value
+        """Set default headers for next requests"""
+        self.scraper.headers[key] = value
 
     @property
-    def cookies(self) -> dict:
+    def cookies(self) -> Dict[str, Optional[str]]:
+        """Current session cookies"""
         return {x.name: x.value for x in self.scraper.cookies}
 
     def set_cookie(self, name: str, value: str) -> None:
-        self.scraper.cookies[name] = value
+        """Set a session cookie"""
+        self.scraper.cookies.set(name, value)
 
-    def absolute_url(self, url, page_url=None) -> str:
-        url = (url or "").strip()
-        if len(url) > 1000 or url.startswith("data:"):
+    def absolute_url(self, url: str, page_url=None) -> str:
+        url = str(url or "").strip()
+        if not url:
+            return url
+        if len(url) >= 1024 or url.startswith("data:"):
             return url
         if not page_url:
             page_url = self.last_visited_url
-        if not url or len(url) == 0:
-            return url
         elif url.startswith("//"):
             return self.home_url.split(":")[0] + ":" + url
         elif url.find("//") >= 0:
@@ -167,11 +163,6 @@ class Scraper(ABC):
             return page_url.strip("/") + "/" + url
         else:
             return self.home_url + url
-
-    def is_relative_url(self, url) -> bool:
-        page = urlparse(self.novel_url)
-        url = urlparse(url)
-        return page.hostname == url.hostname and url.path.startswith(page.path)
 
     def make_soup(self, response, parser=None) -> BeautifulSoup:
         if isinstance(response, Response):
@@ -189,16 +180,32 @@ class Scraper(ABC):
 
         return soup
 
-    def init_executor(self, workers: int = MAX_WORKER_COUNT, wait: bool = False):
-        if hasattr(self, "executor"):
-            if self.executor._max_workers == workers:
-                return
-            self.executor.shutdown(wait)
-        self.executor = ThreadPoolExecutor(
-            max_workers=workers,
-            thread_name_prefix="lncrawl_scraper",
-            initargs=(self),
-        )
+    def init_scraper(self, sess: Session = None):
+        """Check for option: https://github.com/VeNoMouS/cloudscraper"""
+        try:
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            self.scraper = CloudScraper.create_scraper(
+                sess,
+                # debug=True,
+                delay=10,
+                ssl_context=ctx,
+                interpreter="js2py",
+            )
+        except Exception:
+            logger.exception("Failed to initialize cloudscraper")
+            self.scraper = Session()
+
+    def change_user_agent(self):
+        self.user_agent = random.choice(user_agents)
+        if isinstance(self.scraper, CloudScraper):
+            self.scraper.user_agent = User_Agent(
+                allow_brotli=self.scraper.allow_brotli,
+                browser={"custom": self.user_agent},
+            )
+        elif isinstance(self.scraper, Session):
+            self.set_header("User-Agent", self.user_agent)
 
     # ------------------------------------------------------------------------- #
     # Downloader methods to be used
@@ -215,30 +222,26 @@ class Scraper(ABC):
 
     def post_response(self, url, data={}, headers={}, **kwargs) -> Response:
         kwargs = kwargs or dict()
+        if not isinstance(headers, CaseInsensitiveDict):
+            headers = CaseInsensitiveDict(headers)
         kwargs.setdefault("retry", 1)
-        headers = {k.lower(): v for k, v in headers.items()}
         headers.setdefault("Content-Type", "application/json")
         kwargs["headers"] = headers
         kwargs["data"] = data
-
         return self.__process_request("post", url, **kwargs)
 
     def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
         """Submit a form using post request"""
         if self._destroyed:
             raise LNException("Instance is detroyed")
-
-        headers = {k.lower(): v for k, v in headers.items()}
+        if not isinstance(headers, CaseInsensitiveDict):
+            headers = CaseInsensitiveDict(headers)
         headers.setdefault(
             "Content-Type",
             "multipart/form-data"
             if multipart
             else "application/x-www-form-urlencoded; charset=UTF-8",
         )
-        headers.setdefault("Host", urlparse(self.home_url).hostname)
-        headers.setdefault("Origin", self.home_url.strip("/"))
-        headers.setdefault("Referer", self.novel_url.strip("/"))
-
         return self.post_response(url, data, headers)
 
     def get_soup(self, url, **kwargs) -> BeautifulSoup:
@@ -269,3 +272,14 @@ class Scraper(ABC):
         response = self.get_response(self.novel_cover)
         with open(output_file, "wb") as f:
             f.write(response.content)
+
+    def download_image(self, url: str) -> bytes:
+        """Download image from url"""
+        logger.info("Downloading image: " + url)
+        response = self.get_response(
+            url,
+            headers={
+                "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9"
+            },
+        )
+        return response.content
