@@ -25,11 +25,11 @@ MAX_REQUESTS_PER_DOMAIN = 25
 REQUEST_SEMAPHORES: Dict[str, Semaphore] = {}
 
 
-def _domain_gate(url: str):
+def _domain_gate(url: str = ""):
     try:
         host = url.split("//", 1)[1].split("/", 1)[0]
     except Exception:
-        host = url.split("/", 1)[0]
+        host = str(url or "").split("/", 1)[0]
     if host not in REQUEST_SEMAPHORES:
         REQUEST_SEMAPHORES[host] = Semaphore(MAX_REQUESTS_PER_DOMAIN)
     return REQUEST_SEMAPHORES[host]
@@ -145,24 +145,23 @@ class Scraper(TaskManager):
         """Set a session cookie"""
         self.scraper.cookies.set(name, value)
 
-    def absolute_url(self, url: str, page_url=None) -> str:
+    def absolute_url(self, url: str, page_url: Optional[str] = None) -> str:
         url = str(url or "").strip()
         if not url:
             return url
         if len(url) >= 1024 or url.startswith("data:"):
             return url
         if not page_url:
-            page_url = self.last_visited_url
-        elif url.startswith("//"):
+            page_url = str(self.last_visited_url or self.home_url)
+        if url.startswith("//"):
             return self.home_url.split(":")[0] + ":" + url
-        elif url.find("//") >= 0:
+        if url.find("//") >= 0:
             return url
-        elif url.startswith("/"):
+        if url.startswith("/"):
             return self.home_url.strip("/") + url
-        elif page_url:
+        if page_url:
             return page_url.strip("/") + "/" + url
-        else:
-            return self.home_url + url
+        return self.home_url + url
 
     def make_soup(self, response, parser=None) -> BeautifulSoup:
         if isinstance(response, Response):
@@ -268,8 +267,8 @@ class Scraper(TaskManager):
         response = self.post_response(url, data, headers)
         return response.json()
 
-    def download_file(self, output_file) -> None:
-        response = self.get_response(self.novel_cover)
+    def download_file(self, url: str, output_file: str) -> None:
+        response = self.get_response(url)
         with open(output_file, "wb") as f:
             f.write(response.content)
 

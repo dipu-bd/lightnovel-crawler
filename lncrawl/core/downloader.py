@@ -98,9 +98,7 @@ def download_chapter_body(app, chapter):
             logger.debug("Restoring from %s", file_name)
             with open(file_name, "r", encoding="utf-8") as file:
                 old_chapter = json.load(file)
-
             chapter.update(**old_chapter)
-
         if chapter.get("body") and chapter.get("success", True):
             return
 
