@@ -12,14 +12,14 @@ except ImportError:
 
 logger = logging.getLogger(__name__)
 
-NEW_COVER_XML = b'''
+NEW_COVER_XML = b"""
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="en" xml:lang="en">
  <head>
  </head>
  <body>
    <img width="100%" src="" alt="" />
  </body>
-</html>'''
+</html>"""
 
 
 def make_cover_image(app):
@@ -145,7 +145,7 @@ def bind_epub_book(app, chapters, volume=""):
     book.add_author(app.crawler.novel_author)
     book.set_identifier(app.output_path + volume)
     book.set_direction("rtl" if app.crawler.is_rtl else "default")
-    book.templates['cover']=NEW_COVER_XML
+    book.templates["cover"] = NEW_COVER_XML
 
     # Create intro page
     cover_image = make_cover_image(app)
