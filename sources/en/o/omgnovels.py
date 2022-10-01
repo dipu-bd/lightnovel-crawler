@@ -50,7 +50,7 @@ class OMGNovelsCrawler(Crawler):
             else:
                 self.novel_author = author[0].text
         except Exception as e:
-            logger.debug("Failed to parse novel author. Error: %s", e)
+            logger.debug("Failed to parse novel author. %s", e)
         logger.info("Novel author: %s", self.novel_author)
 
         volumes = set()

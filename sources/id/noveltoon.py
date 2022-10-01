@@ -70,7 +70,7 @@ class NovelsRockCrawler(Crawler):
                 ".detail-top .detail-author"
             ).text.strip()
         except Exception as e:
-            logger.debug("Failed to get novel author", e)
+            logger.debug("Failed to get novel author. %s", e)
         logger.info("Novel author: %s", self.novel_author)
 
         for a in soup.select("a.episodes-info-a-item"):

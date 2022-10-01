@@ -62,6 +62,13 @@ _builder = Args(
             help="Set log levels. (-l = warn, -ll = info, -lll = debug).",
         ),
         Args(
+            "--log-file",
+            nargs="?",
+            metavar="FILE",
+            type=str,
+            help="To store application logs to a file.",
+        ),
+        Args(
             "--list-sources",
             action="store_true",
             help="Display a list of available sources.",

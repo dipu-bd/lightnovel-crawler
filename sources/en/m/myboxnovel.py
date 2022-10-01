@@ -68,7 +68,7 @@ class MyBoxNovelCrawler(Crawler):
             else:
                 self.novel_author = author[0].text
         except Exception as e:
-            logger.debug("Failed to parse novel author. Error: %s", e)
+            logger.debug("Failed to parse novel author. %s", e)
         logger.info("Novel author: %s", self.novel_author)
 
         possible_novel_id = soup.select_one("#manga-chapters-holder")

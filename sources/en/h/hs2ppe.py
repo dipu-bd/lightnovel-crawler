@@ -51,7 +51,7 @@ class wspadancewichita(Crawler):
                 author.append(a.text.strip())
             self.novel_author = ", ".join(author)
         except Exception as e:
-            logger.warn("Failed to parse novel author. Error: %s", e)
+            logger.warn("Failed to parse novel author. %s", e)
         logger.info("Novel author: %s", self.novel_author)
 
         novel_id = soup.select_one("div#rating")["data-novel-id"]

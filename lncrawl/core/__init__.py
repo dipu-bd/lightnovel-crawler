@@ -7,19 +7,12 @@ import signal
 import sys
 
 import colorama
-import urllib3
-from colorama import Fore
 
 from ..assets.version import get_version
 from ..bots import run_bot
 from .arguments import get_args
-from .display import (
-    cancel_method,
-    debug_mode,
-    description,
-    error_message,
-    input_suppression,
-)
+from .display import cancel_method, description, error_message, input_suppression
+from .logconfig import configure_logging
 from .proxy import load_proxies, start_proxy_fetcher, stop_proxy_fetcher
 from .sources import load_sources
 
@@ -39,31 +32,10 @@ def init():
     colorama.init(wrap=True)
     description()
 
+    configure_logging()
+
     args = get_args()
-
-    levels = ["NOTSET", "WARN", "INFO", "DEBUG"]
-    level = os.getenv("LOG_LEVEL")
-    if not level:
-        level = levels[args.log] if args.log else "NOTSET"
-        os.environ["LOG_LEVEL"] = level
-        urllib3.disable_warnings()
-
-    if level != "NOTSET":
-        os.environ["debug_mode"] = "yes"
-        urllib3.add_stderr_logger(logging.INFO)
-        logging.basicConfig(
-            level=logging.getLevelName(level),
-            format=Fore.CYAN
-            + "%(asctime)s "
-            + Fore.RED
-            + "[%(levelname)s] "
-            + Fore.YELLOW
-            + "(%(name)s)\n"
-            + Fore.WHITE
-            + "%(message)s"
-            + Fore.RESET,
-        )
-        debug_mode(level)
+    logger.debug("Arguments: %s", args)
 
     if args.suppress:
         input_suppression()
@@ -74,10 +46,6 @@ def init():
 
     for key, val in args.extra.items():
         os.environ[key] = val[0]
-
-    # requests.urllib3.disable_warnings(
-    #     requests.urllib3.exceptions.InsecureRequestWarning)
-    #
 
 
 def start_app():

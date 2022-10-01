@@ -83,6 +83,7 @@ def get_output_formats(self):
     """Returns a dictionary of output formats."""
     args = get_args()
 
+    defaults = ["json", "epub", "web"]
     formats = args.output_formats
     if not (formats or args.suppress):
         answer = prompt(
@@ -92,7 +93,10 @@ def get_output_formats(self):
                     "name": "formats",
                     "message": "Which output formats to create?",
                     "choices": [
-                        {"name": x, "checked": x in ["epub", "json"]}
+                        {
+                            "name": x,
+                            "checked": x in defaults,
+                        }
                         for x in available_formats
                     ],
                 },
@@ -101,7 +105,7 @@ def get_output_formats(self):
         formats = answer["formats"]
 
     if not formats or len(formats) == 0:
-        formats = ["epub", "json"]  # default to epub if none selected
+        formats = defaults  # default to epub if none selected
 
     return {x: (x in formats) for x in available_formats}
 

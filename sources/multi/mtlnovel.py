@@ -61,7 +61,7 @@ class MtlnovelCrawler(Crawler):
                 'table.info a[href*="/novel-author/"]'
             ).text.strip()
         except Exception as e:
-            logger.debug("Could not find novel author. Error %s", e)
+            logger.debug("Could not find novel author. %s", e)
         logger.info("Novel author: %s", self.novel_author)
 
         for item in soup.select("div.ch-list amp-list"):

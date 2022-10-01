@@ -73,11 +73,12 @@ def search_novels(app):
     sources = app.crawler_links.copy()
     # random.shuffle(sources)
 
+    is_debug = os.getenv("debug_mode") == "yes"
     bar = tqdm(
         desc="Searching",
         total=len(sources),
         unit="source",
-        disable=os.getenv("debug_mode") == "yes",
+        disable=is_debug,
     )
 
     # Add future tasks
@@ -104,7 +105,8 @@ def search_novels(app):
         except TimeoutError:
             f.cancel()
         except Exception as e:
-            logger.debug("Failed to complete search", e)
+            if is_debug:
+                logger.error("Failed to complete search", e)
         finally:
             app.progress += 1
             bar.update()

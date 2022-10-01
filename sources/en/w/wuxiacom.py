@@ -78,7 +78,7 @@ class WuxiaComCrawler(Crawler):
                     ]
 
         except Exception as e:
-            logger.debug("Failed to acquire subscription details", e)
+            logger.debug("Failed to acquire subscription details. %s", e)
 
         response = self.grpc.request(
             f"{api_home}/wuxiaworld.api.v2.Chapters/GetChapterList",
