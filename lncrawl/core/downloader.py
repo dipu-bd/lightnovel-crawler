@@ -11,6 +11,7 @@ from io import BytesIO
 from PIL import Image
 
 from ..core.exeptions import LNException
+from ..utils.imgen import generate_cover_image
 from .arguments import get_args
 
 logger = logging.getLogger(__name__)
@@ -167,26 +168,24 @@ def download_file_image(app):
     filename = os.path.join(app.output_path, "cover.jpg")
 
     if not os.path.isfile(filename):
-        cover_urls = [
-            app.crawler.novel_cover,
-            "https://source.unsplash.com/featured/800x1032?abstract",
-            # "https://picsum.photos/800/1032",
-        ]
-        for url in cover_urls:
-            try:
-                logger.info("Downloading cover image: %s", url)
-                img = download_image(app, url)
-                img.convert("RGB").save(filename, "JPEG")
-                logger.debug("Saved cover: %s", filename)
-                app.progress += 1
-                break
-            except KeyboardInterrupt:
-                raise LNException("Cover download cancelled by user")
-            except Exception as e:
-                logger.debug("Failed to get cover: %s", url, e)
+        try:
+            url = app.crawler.novel_cover
+            logger.info("Downloading cover image: %s", url)
+            img = download_image(app, url)
+            img.convert("RGB").save(filename, "JPEG")
+            logger.debug("Saved cover: %s", filename)
+        except Exception as e:
+            logger.exception("Failed to download cover: %s | %s", url, e)
 
     if not os.path.isfile(filename):
-        return f"[{filename}] Failed to download cover image"
+        try:
+            generate_cover_image(filename)
+        except Exception as e:
+            logger.debug("Failed to generate cover: %s | %s", e)
+
+    app.progress += 1
+    if not os.path.isfile(filename):
+        return f"[{filename}] Failed to get cover image"
 
     app.crawler.novel_cover = filename
     app.book_cover = filename
