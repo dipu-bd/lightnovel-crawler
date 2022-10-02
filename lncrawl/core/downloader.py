@@ -10,7 +10,6 @@ from io import BytesIO
 
 from PIL import Image
 
-from ..core.exeptions import LNException
 from ..utils.imgen import generate_cover_image
 from .arguments import get_args
 

@@ -17,8 +17,7 @@ logger = logging.getLogger(__name__)
 def start(self):
     from . import ConsoleBot
 
-    if not isinstance(self, ConsoleBot):
-        raise LNException("Unknown self: " + type(self))
+    assert isinstance(self, ConsoleBot)
 
     args = get_args()
     if args.list_sources:

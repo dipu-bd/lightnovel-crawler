@@ -2,6 +2,7 @@ supported_bots = [
     "console",
     "telegram",
     "discord",
+    "lookup",
 ]
 
 
@@ -21,5 +22,9 @@ def run_bot(bot):
         from ..bots.discord import DiscordBot
 
         DiscordBot().start_bot()
+    elif bot == "lookup":
+        from ..bots.lookup import LookupBot
+
+        LookupBot().start()
     else:
         print("Unknown bot: %s" % bot)
