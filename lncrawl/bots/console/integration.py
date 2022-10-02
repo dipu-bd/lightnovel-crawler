@@ -34,7 +34,7 @@ def start(self):
 
     # Set filename if provided
     self.app.good_file_name = (args.filename or "").strip()
-    self.app.no_append_after_filename = args.filename_only
+    self.app.no_suffix_after_filename = args.filename_only
 
     # Process user input
     self.app.user_input = self.get_novel_url()

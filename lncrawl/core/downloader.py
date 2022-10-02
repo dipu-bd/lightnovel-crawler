@@ -150,7 +150,7 @@ def download_image(app, url) -> Image.Image:
     assert isinstance(app, App)
     assert app.crawler is not None
 
-    assert isinstance(url, str), "Invalid image url"
+    assert url, "Invalid image url"
     if len(url) > 1000 or url.startswith("data:"):
         content = base64.b64decode(url.split("base64,")[-1])
     else:
@@ -187,7 +187,6 @@ def download_file_image(app):
     if not os.path.isfile(filename):
         return f"[{filename}] Failed to get cover image"
 
-    app.crawler.novel_cover = filename
     app.book_cover = filename
 
 

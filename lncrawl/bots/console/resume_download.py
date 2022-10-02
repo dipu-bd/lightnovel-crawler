@@ -88,7 +88,7 @@ def load_session_from_metadata(meta: MetaInfo) -> App:
     app.pack_by_volume = meta.session.pack_by_volume
     app.output_formats = meta.session.output_formats
     app.good_file_name = meta.session.good_file_name
-    app.no_append_after_filename = meta.session.no_append_after_filename
+    app.no_suffix_after_filename = meta.session.no_append_after_filename
     logger.info("Novel Url: %s", meta.novel.url)
 
     app.crawler = prepare_crawler(meta.novel.url)

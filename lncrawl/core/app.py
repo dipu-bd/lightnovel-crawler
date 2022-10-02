@@ -38,7 +38,7 @@ class App:
         self.output_formats: Dict[OutputFormat, bool] = {}
         self.archived_outputs = None
         self.good_file_name: str = ""
-        self.no_append_after_filename = False
+        self.no_suffix_after_filename = False
         atexit.register(self.destroy)
 
     def __background(self, target_method, *args, **kwargs):
