@@ -7,6 +7,7 @@ from threading import Semaphore
 from typing import Dict, Optional, Union
 from urllib.parse import ParseResult, urlparse
 
+from box import Box
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
 from requests import Response, Session
@@ -72,8 +73,7 @@ class Scraper(TaskManager, SoupMaker):
         retry = kwargs.pop("retry", 2)
         kwargs["proxies"] = self.__generate_proxy(url)
         headers = kwargs.pop("headers", {})
-        if not isinstance(headers, CaseInsensitiveDict):
-            headers = CaseInsensitiveDict(headers)
+        headers = CaseInsensitiveDict(headers)
         headers.setdefault("Host", self.origin.hostname)
         headers.setdefault("Origin", self.home_url.strip("/"))
         headers.setdefault("Referer", self.last_visited_url.strip("/"))
@@ -195,75 +195,122 @@ class Scraper(TaskManager, SoupMaker):
     # Downloader methods to be used
     # ------------------------------------------------------------------------- #
 
-    def get_response(self, url, **kwargs) -> Response:
-        kwargs = kwargs or dict()
-        kwargs.setdefault("retry", 3)
-        kwargs.setdefault("timeout", (7, 301))  # in seconds
-
-        result = self.__process_request("get", url, **kwargs)
+    def get_response(self, url, retry=3, timeout=(7, 301), **kwargs) -> Response:
+        """Fetch the content and return the response"""
         self.last_visited_url = url.strip("/")
-        return result
+        return self.__process_request(
+            "get",
+            url,
+            retry=retry,
+            timeout=timeout,
+            **kwargs,
+        )
 
-    def post_response(self, url, data={}, headers={}, **kwargs) -> Response:
-        kwargs = kwargs or dict()
-        if not isinstance(headers, CaseInsensitiveDict):
-            headers = CaseInsensitiveDict(headers)
-        kwargs.setdefault("retry", 1)
-        headers.setdefault("Content-Type", "application/json")
-        kwargs["headers"] = headers
-        kwargs["data"] = data
-        return self.__process_request("post", url, **kwargs)
+    def post_response(self, url, data={}, retry=1, **kwargs) -> Response:
+        """Make a POST request and return the response"""
+        return self.__process_request(
+            "post",
+            url,
+            data=data,
+            retry=1,
+            **kwargs,
+        )
 
-    def submit_form(self, url, data={}, multipart=False, headers={}) -> Response:
-        """Submit a form using post request"""
-        if self._destroyed:
-            raise LNException("Instance is detroyed")
-        if not isinstance(headers, CaseInsensitiveDict):
-            headers = CaseInsensitiveDict(headers)
+    def submit_form(
+        self, url, data={}, multipart=False, headers={}, **kwargs
+    ) -> Response:
+        """Simulate submit form request and return the response"""
+        headers = CaseInsensitiveDict(headers)
         headers.setdefault(
             "Content-Type",
             "multipart/form-data"
             if multipart
             else "application/x-www-form-urlencoded; charset=UTF-8",
         )
-        return self.post_response(url, data, headers)
+        return self.post_response(url, data=data, headers=headers, **kwargs)
 
-    def get_soup(self, url, **kwargs) -> BeautifulSoup:
-        """Downloads an URL and make a BeautifulSoup object from response"""
-        parser = kwargs.pop("parser", None)
-        response = self.get_response(url, **kwargs)
-        return self.make_soup(response, parser)
-
-    def get_json(self, *args, **kwargs) -> dict:
-        kwargs = kwargs or dict()
-        headers = kwargs.setdefault("headers", {})
-        headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault("Accept", "application/json, text/javascript, */*")
-        response = self.get_response(*args, **kwargs)
-        return response.json()
-
-    def post_soup(self, url, data={}, headers={}, parser="lxml") -> BeautifulSoup:
-        response = self.post_response(url, data, headers)
-        return self.make_soup(response, parser)
-
-    def post_json(self, url, data={}, headers={}) -> dict:
-        headers = {k.lower(): v for k, v in headers.items()}
-        headers.setdefault("Accept", "application/json, text/plain, */*")
-        response = self.post_response(url, data, headers)
-        return response.json()
-
-    def download_file(self, url: str, output_file: str) -> None:
-        response = self.get_response(url)
+    def download_file(self, url: str, output_file: str, **kwargs) -> None:
+        """Download content of the url to a file"""
+        response = self.__process_request("get", url, **kwargs)
         with open(output_file, "wb") as f:
             f.write(response.content)
 
-    def download_image(self, url: str) -> bytes:
+    def download_image(self, url: str, headers={}, **kwargs) -> bytes:
         """Download image from url"""
-        logger.info("Downloading image: " + url)
-        response = self.get_response(
-            url,
-            headers={
-                "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9"
-            },
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault(
+            "Accept",
+            "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
         )
+        response = self.__process_request("get", url, headers=headers, **kwargs)
         return response.content
+
+    def get_json(self, url, headers={}, **kwargs) -> Box:
+        """Fetch the content and return the content as JSON object"""
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault(
+            "Accept",
+            "application/json,text/plain,*/*",
+        )
+        response = self.get_response(url, headers=headers, **kwargs)
+        return Box(response.json())
+
+    def post_json(self, url, data={}, headers={}) -> Box:
+        """Make a POST request and return the content as JSON object"""
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault(
+            "Accept",
+            "application/json,text/plain,*/*",
+        )
+        response = self.post_response(url, data=data, headers=headers)
+        return Box(response.json())
+
+    def submit_form_json(
+        self, url, data={}, headers={}, multipart=False, **kwargs
+    ) -> Box:
+        """Simulate submit form request and return the content as JSON object"""
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault(
+            "Accept",
+            "application/json,text/plain,*/*",
+        )
+        response = self.submit_form(
+            url, data=data, headers=headers, multipart=multipart, **kwargs
+        )
+        return Box(response.json())
+
+    def get_soup(self, url, headers={}, parser=None, **kwargs) -> BeautifulSoup:
+        """Fetch the content and return a BeautifulSoup instance of the page"""
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault(
+            "Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9",
+        )
+        response = self.get_response(url, **kwargs)
+        return self.make_soup(response, parser)
+
+    def post_soup(
+        self, url, data={}, headers={}, parser=None, **kwargs
+    ) -> BeautifulSoup:
+        """Make a POST request and return BeautifulSoup instance of the response"""
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault(
+            "Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9",
+        )
+        response = self.post_response(url, data=data, headers=headers, **kwargs)
+        return self.make_soup(response, parser)
+
+    def submit_form_for_soup(
+        self, url, data={}, headers={}, multipart=False, parser=None, **kwargs
+    ) -> BeautifulSoup:
+        """Simulate submit form request and return a BeautifulSoup instance of the response"""
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault(
+            "Accept",
+            "text/html,application/xhtml+xml,application/xml;q=0.9",
+        )
+        response = self.submit_form(
+            url, data=data, headers=headers, multipart=multipart, **kwargs
+        )
+        return self.make_soup(response, parser)
