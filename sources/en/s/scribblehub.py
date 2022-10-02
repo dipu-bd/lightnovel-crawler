@@ -4,6 +4,7 @@ from math import ceil
 from urllib.parse import quote
 
 from bs4 import Tag
+from cloudscraper.exceptions import CloudflareChallengeError
 
 from lncrawl.core.crawler import Crawler
 
@@ -61,10 +62,16 @@ class ScribbleHubCrawler(Crawler):
         return results
 
     def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
+        try:
+            soup = self.get_soup(self.novel_url)
+        except CloudflareChallengeError:
+            soup = self.browser.get_soup(
+                self.novel_url,
+                headless=False,
+                wait_for_css=("div.fic_title"),
+            )
 
-        possible_title = soup.find("div", {"class": "fic_title"})
+        possible_title = soup.select_one("div.fic_title")
         assert isinstance(possible_title, Tag)
         self.novel_title = str(possible_title["title"]).strip()
         logger.info("Novel title: %s", self.novel_title)

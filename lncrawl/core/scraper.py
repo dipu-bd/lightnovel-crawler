@@ -16,6 +16,7 @@ from requests.structures import CaseInsensitiveDict
 
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
+from .chrome import Chrome
 from .exeptions import LNException
 from .proxy import get_a_proxy, remove_faulty_proxies
 from .soup import SoupMaker
@@ -48,6 +49,7 @@ class Scraper(TaskManager, SoupMaker):
         self.last_visited_url = ""
         self.enable_auto_proxy = os.getenv("use_proxy") == "1"
 
+        self.browser = Chrome()
         self.init_scraper()
         self.change_user_agent()
 
@@ -70,7 +72,7 @@ class Scraper(TaskManager, SoupMaker):
         assert callable(method_call), f"No request method: {method}"
 
         kwargs = kwargs or dict()
-        retry = kwargs.pop("retry", 2)
+        retry = kwargs.pop("retry", 1)
         kwargs["proxies"] = self.__generate_proxy(url)
         headers = kwargs.pop("headers", {})
         headers = CaseInsensitiveDict(headers)
@@ -173,7 +175,7 @@ class Scraper(TaskManager, SoupMaker):
             self.scraper = CloudScraper.create_scraper(
                 sess,
                 # debug=True,
-                delay=10,
+                # delay=10,
                 ssl_context=ctx,
                 interpreter="js2py",
             )
@@ -195,7 +197,7 @@ class Scraper(TaskManager, SoupMaker):
     # Downloader methods to be used
     # ------------------------------------------------------------------------- #
 
-    def get_response(self, url, retry=3, timeout=(7, 301), **kwargs) -> Response:
+    def get_response(self, url, retry=1, timeout=(7, 301), **kwargs) -> Response:
         """Fetch the content and return the response"""
         self.last_visited_url = url.strip("/")
         return self.__process_request(
@@ -212,7 +214,7 @@ class Scraper(TaskManager, SoupMaker):
             "post",
             url,
             data=data,
-            retry=1,
+            retry=retry,
             **kwargs,
         )
 

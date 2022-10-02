@@ -5,13 +5,13 @@ import atexit
 import logging
 import os
 import time
-from collections import namedtuple
 from threading import Semaphore
 from typing import List, Optional
 
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 
+from ..assets.platforms import Platform
 from .soup import SoupMaker
 
 MAX_CHROME_INSTANCES = 8
@@ -55,13 +55,6 @@ __all__ = [
 ]
 
 
-Selector = namedtuple(
-    typename="ElementSelector",
-    field_names=["by", "value"],
-    defaults=[By.ID, None],
-)
-
-
 class Chrome(SoupMaker):
     def __init__(
         self,
@@ -69,7 +62,9 @@ class Chrome(SoupMaker):
         driver_path: Optional[str] = None,
         options: Optional[ChromeOptions] = None,
         auth_options: Optional[VirtualAuthenticatorOptions] = None,
+        cookie_store: Optional[RequestsCookieJar] = None,
     ) -> None:
+        self.cookie_store = cookie_store
         self.open_browsers: List[webdriver.Chrome] = []
 
         if not isinstance(max_instances, int):
@@ -100,7 +95,11 @@ class Chrome(SoupMaker):
         for chrome in list(self.open_browsers):
             chrome.quit()
 
-    def browser(self, timeout: Optional[float] = None) -> webdriver.Chrome:
+    def browser(
+        self,
+        headless: bool = True,
+        timeout: Optional[float] = None,
+    ) -> webdriver.Chrome:
         """
         Acquire a chrome browser instane. There is a limit of the number of
         browser instances you can keep open at a time. You must call quit()
@@ -113,13 +112,19 @@ class Chrome(SoupMaker):
 
         NOTE: You must call quit() to cleanup the queue.
         """
+        if Platform.docker or Platform.wsl:
+            headless = True
+
+        if headless:
+            timeout = 60
+
         if not self.semaphore.acquire(True, timeout):
             raise Exception("Failed to acquire semaphore")
 
         logger.debug("Created new chrome browser instance")
         chrome = webdriver.Chrome(
             debug=False,
-            headless=True,
+            headless=headless,
             options=self.options,
             log_level=logging.ERROR,
             enable_cdp_events=False,
@@ -145,17 +150,17 @@ class Chrome(SoupMaker):
     def get_html(
         self,
         url: str,
+        headless: bool = True,
         timeout: float = 300,
-        wait_for: Optional[Selector] = None,
-        cookies: Optional[RequestsCookieJar] = None,
+        wait_for_css: Optional[str] = None,
     ) -> str:
         chrome = None
         try:
             _start = time.time()
-            chrome = self.browser(timeout)
+            chrome = self.browser(headless, timeout)
 
-            if isinstance(cookies, RequestsCookieJar):
-                for cookie in cookies:
+            if self.cookie_store:
+                for cookie in self.cookie_store:
                     chrome.add_cookie(
                         {
                             "name": cookie.name,
@@ -170,9 +175,9 @@ class Chrome(SoupMaker):
 
             chrome.get(url)
 
-            if isinstance(cookies, RequestsCookieJar):
+            if isinstance(self.cookie_store, RequestsCookieJar):
                 for cookie in chrome.get_cookies():
-                    cookies.set(
+                    self.cookie_store.set(
                         name=cookie.get("name"),
                         value=cookie.get("value"),
                         path=cookie.get("path"),
@@ -180,17 +185,19 @@ class Chrome(SoupMaker):
                         secure=cookie.get("secure"),
                         expires=cookie.get("expiry"),
                     )
-                logger.debug("Cookies retrieved: %s", cookies)
+                logger.debug("Cookies retrieved: %s", self.cookie_store)
 
-            if wait_for:
+            if wait_for_css:
                 _remains = timeout - (time.time() - _start)
                 logger.info(
                     "Waiting maximum of %d seconds for %s to be visible",
                     _remains,
-                    wait_for,
+                    wait_for_css,
                 )
                 waiter = WebDriverWait(chrome, _remains)
-                waiter.until(EC.visibility_of((wait_for.by, wait_for.value)))
+                waiter.until(
+                    EC.visibility_of_element_located((By.CSS_SELECTOR, wait_for_css))
+                )
 
             return chrome.page_source
         finally:
@@ -200,14 +207,14 @@ class Chrome(SoupMaker):
     def get_soup(
         self,
         url,
+        headless: bool = True,
         timeout: float = 300,
-        wait_for: Optional[Selector] = None,
-        cookies: Optional[RequestsCookieJar] = None,
+        wait_for_css: Optional[str] = None,
     ) -> BeautifulSoup:
         html = self.get_html(
             url=url,
+            headless=headless,
             timeout=timeout,
-            wait_for=wait_for,
-            cookies=cookies,
+            wait_for_css=wait_for_css,
         )
         return self.make_soup(html)
