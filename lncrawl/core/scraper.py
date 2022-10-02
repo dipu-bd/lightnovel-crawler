@@ -74,7 +74,7 @@ class Scraper(TaskManager, SoupMaker):
         kwargs["proxies"] = self.__generate_proxy(url)
         headers = kwargs.pop("headers", {})
         headers = CaseInsensitiveDict(headers)
-        headers.setdefault("Host", self.origin.hostname)
+        headers.setdefault("Host", urlparse(url).hostname)
         headers.setdefault("Origin", self.home_url.strip("/"))
         headers.setdefault("Referer", self.last_visited_url.strip("/"))
         headers.setdefault("User-Agent", self.user_agent)
