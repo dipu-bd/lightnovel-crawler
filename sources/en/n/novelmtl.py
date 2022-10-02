@@ -1,8 +1,11 @@
 import logging
+
 from lncrawl.templates.novelmtl import NovelMTLTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class NovelMTLCrawler(NovelMTLTemplate):
-    base_url = "https://www.novelmtl.com/"
+class Novelmtl(NovelMTLTemplate):
+    has_mtl = False
+    has_manga = False
+    base_url = ["https://www.novelmtl.com/"]

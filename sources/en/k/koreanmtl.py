@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class LightNovelsOnl(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://www.koreanmtl.online/"
 
     def read_novel_info(self):

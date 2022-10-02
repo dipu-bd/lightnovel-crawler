@@ -6,4 +6,4 @@ logger = logging.getLogger(__name__)
 
 class WuxiaMTLCrawler(NovelMTLTemplate):
     base_url = "https://www.wuxiamtl.com"
-    machine_translation = True
+    has_mtl = True

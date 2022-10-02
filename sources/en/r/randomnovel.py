@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class RandomNovelCrawler(Crawler):
     has_manga = False
-    machine_translation = False
+    has_mtl = False
 
     base_url = ["https://randomnovel.com/"]
 

@@ -183,11 +183,11 @@ def __save_source_data(source_id, data):
     logger.debug("Source update downloaded: %s", dst_file.name)
 
 
-def __get_file_md5(file: Path):
-    if not file.is_file():
-        return None
-    with open(file, "rb") as f:
-        return hashlib.md5(f.read()).hexdigest()
+# def __get_file_md5(file: Path):
+#     if not file.is_file():
+#         return None
+#     with open(file, "rb") as f:
+#         return hashlib.md5(f.read()).hexdigest()
 
 
 def __download_sources():
@@ -312,6 +312,10 @@ def __add_crawlers_from_path(path: Path):
 # --------------------------------------------------------------------------- #
 # Public methods
 # --------------------------------------------------------------------------- #
+
+sources_path = (__local_data_path / "sources").absolute()
+
+
 def load_sources():
     __is_dev_mode = (__local_data_path / ".git" / "HEAD").exists()
 

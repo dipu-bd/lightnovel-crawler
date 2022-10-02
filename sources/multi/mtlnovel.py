@@ -8,7 +8,7 @@ search_url = "%s/wp-admin/admin-ajax.php?action=autosuggest&q=%s"
 
 
 class MtlnovelCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
 
     base_url = [
         "https://www.mtlnovel.com/",

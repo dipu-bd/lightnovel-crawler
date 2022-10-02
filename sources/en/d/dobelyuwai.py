@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class Dobelyuwai(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://dobelyuwai.wordpress.com/"
 
     def initialize(self) -> None:

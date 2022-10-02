@@ -18,7 +18,7 @@ class WuxiaCityCrawler(Crawler):
     has_manga = False
 
     # Set True if this source contains machine translations.
-    machine_translation = True
+    has_mtl = True
 
     def search_novel(self, query):
         query = quote_plus(str(query).lower())

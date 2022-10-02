@@ -13,7 +13,7 @@ chapter_list_url = "https://indomtl.com/wp-admin/admin-ajax.php?action=mtl_chapt
 
 
 class IndoMTLCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
 
     base_url = "https://indomtl.com/"
 

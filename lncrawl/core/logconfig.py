@@ -20,15 +20,14 @@ def configure_logging():
     os.environ["LOG_LEVEL"] = level
     os.environ["LOG_FILE"] = log_file
 
-    if level == "NOTSET":
+    if level == "NOTSET" and not log_file:
         urllib3.disable_warnings()
-    else:
+        return
+
+    if level != "NOTSET":
         debug_mode(level)
         os.environ["debug_mode"] = "yes"
         atexit.register(logging.shutdown)
-
-    if level == "NOTSET" and not log_file:
-        return
 
     config = {
         "version": 1,

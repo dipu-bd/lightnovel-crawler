@@ -225,7 +225,7 @@ def process_file(py_file: Path) -> float:
         can_logout = Crawler.logout != crawler.logout
         can_search = Crawler.search_novel != crawler.search_novel
         has_manga = getattr(crawler, "has_manga", False)
-        has_mtl = getattr(crawler, "machine_translation", False)
+        has_mtl = getattr(crawler, "has_mtl", False)
         source_id = hashlib.md5(str(crawler).encode("utf8")).hexdigest()
 
         # Test crawler instance

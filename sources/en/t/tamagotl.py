@@ -13,7 +13,7 @@ class TamagoTlCrawler(Crawler):
     base_url = [
         "https://tamagotl.com/",
     ]
-    machine_translation = True
+    has_mtl = True
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")

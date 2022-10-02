@@ -5,5 +5,5 @@ logger = logging.getLogger(__name__)
 
 
 class ReadWNCrawler(NovelMTLTemplate):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://www.readwn.com/"

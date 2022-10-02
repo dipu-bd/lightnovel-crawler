@@ -12,7 +12,7 @@ wp_admin_ajax_url = "https://1stkissnovel.love/wp-admin/admin-ajax.php"
 
 
 class OneKissNovelCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://1stkissnovel.love/"
 
     def initialize(self) -> None:

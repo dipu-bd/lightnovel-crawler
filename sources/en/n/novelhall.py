@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 
 class NovelhallCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://www.novelhall.com/"
 
     def read_novel_info(self):

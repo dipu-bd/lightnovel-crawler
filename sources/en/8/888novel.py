@@ -10,7 +10,7 @@ class Eight88NovelCrawler(Crawler):
     base_url = ["https://888novel.com/"]
 
     has_manga = False
-    machine_translation = False
+    has_mtl = False
 
     def search_novel(self, query):
         query = query.replace(" ", "+")
@@ -41,13 +41,15 @@ class Eight88NovelCrawler(Crawler):
                     e.text
                     for e in novel.find("span", {"itemprop": "name"}).find_all("a")
                 ]
-                result.append({
-                    "title": a.get("title"),
-                    "url": a.get("href").strip(),
-                    "info": self.cleaner.clean_text(
-                        f"Author{'s' if len(author)>1 else ''} : {', '.join(author)}"
-                    ),
-                })
+                result.append(
+                    {
+                        "title": a.get("title"),
+                        "url": a.get("href").strip(),
+                        "info": self.cleaner.clean_text(
+                            f"Author{'s' if len(author)>1 else ''} : {', '.join(author)}"
+                        ),
+                    }
+                )
         return result
 
     def read_novel_info(self):
@@ -57,16 +59,19 @@ class Eight88NovelCrawler(Crawler):
 
         try:
             rows = soup.find("table").find_all("tr")
-            self.novel_author = ", ".join([
-                e.text.strip()
-                for e in rows[(1 if len(rows) == 3 else 0)].find_all("a")
-            ])
+            self.novel_author = ", ".join(
+                [
+                    e.text.strip()
+                    for e in rows[(1 if len(rows) == 3 else 0)].find_all("a")
+                ]
+            )
         except Exception:
             pass
 
         try:
             self.novel_cover = self.absolute_url(
-                soup.find("div", {"class": "book3d"}).find("img").get("data-src"))
+                soup.find("div", {"class": "book3d"}).find("img").get("data-src")
+            )
         except Exception:
             pass
 

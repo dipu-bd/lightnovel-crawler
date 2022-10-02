@@ -15,7 +15,7 @@ logout_url = "https://lnmtl.com/auth/logout"
 
 
 class LNMTLCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://lnmtl.com/"
 
     def login(self, email, password):

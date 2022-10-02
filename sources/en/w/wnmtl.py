@@ -20,7 +20,7 @@ CHAPTER_CONTENT_URL = (
 
 
 class WNMTLCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
 
     base_url = [
         "https://www.wnmtl.org/",

@@ -23,7 +23,7 @@ class MyCrawlerName(Crawler):
     has_manga = False
 
     # TODO: [OPTIONAL] Set True if this source contains machine translations.
-    machine_translation = False
+    has_mtl = False
 
     def initialize(self):
         # TODO: [OPTIONAL] This gets called before executing all other methods.

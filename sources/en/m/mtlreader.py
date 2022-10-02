@@ -13,7 +13,7 @@ CHAPTER_DETAIL_API = "https://www.mtlreader.com/api/chapter-content/%s"
 
 
 class MtlReaderCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = [
         "https://mtlreader.com/",
         "https://www.mtlreader.com/",

@@ -9,7 +9,7 @@ search_url = (
 
 
 class NovelTranslateCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://noveltranslate.com/"
 
     def search_novel(self, query):

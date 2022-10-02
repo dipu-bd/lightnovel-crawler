@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class NovelMaoCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = ["https://novelmao.com/"]
 
     def read_novel_info(self):

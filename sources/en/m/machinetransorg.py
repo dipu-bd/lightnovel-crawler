@@ -10,7 +10,7 @@ search_url = "https://www.machine-translation.org/novel/search/?keywords=%s"
 
 
 class MachineTransOrg(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://www.machine-translation.org/"
 
     def initialize(self) -> None:

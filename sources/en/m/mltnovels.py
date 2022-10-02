@@ -13,7 +13,7 @@ class MltNovelsCrawler(Crawler):
     base_url = [
         "https://mltnovels.com/",
     ]
-    machine_translation = True
+    has_mtl = True
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")

@@ -9,7 +9,7 @@ search_url = "https://novelsrock.com/?s=%s&post_type=wp-manga&op=&author=&artist
 
 
 class NovelsRockCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://novelsrock.com/"
 
     def search_novel(self, query):

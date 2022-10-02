@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class ZinMangaCrawler(Crawler):
     has_manga = True
-    machine_translation = False
+    has_mtl = False
 
     base_url = ["https://zinmanga.com/"]
 

@@ -15,7 +15,7 @@ novel_search_url = b64decode(
 
 
 class Fu_kCom_ademao(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 
     def initialize(self) -> None:

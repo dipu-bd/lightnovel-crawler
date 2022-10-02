@@ -9,7 +9,7 @@ chapters_url = "https://jpmtl.com/v2/chapter/%s/list?state=published&structured=
 
 
 class JpmtlCrawler(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = "https://jpmtl.com/"
 
     def initialize(self):

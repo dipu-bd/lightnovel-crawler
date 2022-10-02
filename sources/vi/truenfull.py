@@ -14,7 +14,7 @@ search_url = "https://truyentr.info/?s=%s"
 
 
 class TruenFull(Crawler):
-    machine_translation = True
+    has_mtl = True
     base_url = ["https://truyenfull.vn/", "https://truyentr.info/"]
 
     @staticmethod
