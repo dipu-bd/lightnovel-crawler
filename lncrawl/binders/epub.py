@@ -109,7 +109,7 @@ def bind_epub_book(
         book.add_item(volume_item)
         spine.append(volume_item)
 
-        volume_contents = [volume_item]
+        volume_contents = []
         for chapter in chapters:
             chapter_html = minify(
                 str(chapter["body"]),

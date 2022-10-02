@@ -147,7 +147,7 @@ class Scraper(TaskManager, SoupMaker):
         self.scraper.cookies.set(name, value)
 
     def absolute_url(self, url: str, page_url: Optional[str] = None) -> str:
-        url = str(url or "").strip()
+        url = str(url or "").strip().rstrip("/")
         if not url:
             return url
         if len(url) >= 1024 or url.startswith("data:"):

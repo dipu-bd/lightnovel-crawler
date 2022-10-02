@@ -1,25 +1,24 @@
 # -*- coding: utf-8 -*-
 import time
 from concurrent.futures import Future
-from typing import List
+from typing import Generator, Iterable, List
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.core.crawler import Crawler
-from lncrawl.core.exeptions import LNException
-from lncrawl.models import SearchResult
-from lncrawl.models.chapter import Chapter
-from lncrawl.models.volume import Volume
+from ..core.exeptions import LNException
+from ..models import Chapter, SearchResult
+from .soup.paginated_toc import PaginatedSoupTemplate
+from .soup.searchable import SearchableSoupTemplate
 
 
-class NovelMTLTemplate(Crawler):
+class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
     is_template = True
 
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
 
-    def search_novel(self, query) -> List[SearchResult]:
+    def get_search_page_soup(self, query: str) -> BeautifulSoup:
         soup = self.get_soup(f"{self.home_url}search.html")
         form = soup.select_one('.search-container form[method="post"]')
         assert isinstance(form, Tag), "No search form"
@@ -28,12 +27,10 @@ class NovelMTLTemplate(Crawler):
         payload = {input["name"]: input["value"] for input in form.select("input")}
         payload["keyboard"] = query
         response = self.submit_form(action_url, payload)
-        soup = self.make_soup(response)
+        return self.make_soup(response)
 
-        return [
-            self.parse_search_item(a)
-            for a in soup.select("ul.novel-list .novel-item a")[:10]
-        ]
+    def select_novel_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+        return soup.select("ul.novel-list .novel-item a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         title = tag.select_one(".novel-title").text.strip()
@@ -43,20 +40,13 @@ class NovelMTLTemplate(Crawler):
             info=" | ".join([x.text.strip() for x in tag.select(".novel-stats")]),
         )
 
-    def read_novel_info(self) -> None:
-        soup = self.get_soup(self.novel_url)
-        self.parse_title(soup)
-        self.parse_image(soup)
-        self.parse_authors(soup)
-        self.parse_chapter_list(soup)
-
     def parse_title(self, soup: BeautifulSoup) -> None:
         tag = soup.select_one(".novel-info .novel-title")
         if not isinstance(tag, Tag):
             raise LNException("No title found")
         self.novel_title = tag.text.strip()
 
-    def parse_image(self, soup: BeautifulSoup):
+    def parse_cover(self, soup: BeautifulSoup):
         tag = soup.select_one("#novel figure.cover img")
         if isinstance(tag, Tag):
             if tag.has_attr("data-src"):
@@ -72,7 +62,9 @@ class NovelMTLTemplate(Crawler):
             ]
         )
 
-    def parse_chapter_list(self, soup: BeautifulSoup) -> BeautifulSoup:
+    def generate_page_soups(
+        self, soup: BeautifulSoup
+    ) -> Generator[BeautifulSoup, None, None]:
         last_page = soup.select("#chapters .pagination li a")[-1]["href"]
         last_page_qs = parse_qs(urlparse(last_page).query)
         max_page = int(last_page_qs["page"][0])
@@ -87,24 +79,23 @@ class NovelMTLTemplate(Crawler):
                 "X-Requested-With": "XMLHttpRequest",
             }
             url = f"{self.home_url}e/extend/fy.php?{urlencode(payload)}"
-            futures.append(self.executor.submit(self.get_soup, url))
+            f = self.executor.submit(self.get_soup, url)
+            futures.append(f)
 
-        for page, f in enumerate(futures):
-            soup = f.result()
-            vol = Volume(id=page + 1)
-            self.volumes.append(vol)
-            for a in soup.select("ul.chapter-list li a"):
-                chap_id = len(self.chapters) + 1
-                self.chapters.append(
-                    Chapter(
-                        id=chap_id,
-                        volume=vol.id,
-                        url=self.absolute_url(a["href"]),
-                        title=a.select_one(".chapter-title").text.strip(),
-                    )
-                )
+        self.resolve_futures(futures, desc="TOC", unit="page")
+        for i, future in enumerate(futures):
+            assert future.done(), f"Failed to get page {i + 1}"
+            yield future.result()
 
-    def download_chapter_body(self, chapter: Chapter) -> None:
-        soup = self.get_soup(chapter["url"])
-        contents = soup.select_one(".chapter-content")
-        return self.cleaner.extract_contents(contents)
+    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+        return soup.select("ul.chapter-list li a")
+
+    def parse_chapter_item(self, a: Tag, id: int) -> Chapter:
+        return Chapter(
+            id=id,
+            url=self.absolute_url(a["href"]),
+            title=a.select_one(".chapter-title").text.strip(),
+        )
+
+    def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        return soup.select_one(".chapter-content")

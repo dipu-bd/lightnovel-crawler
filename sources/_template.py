@@ -84,7 +84,7 @@ class MyCrawlerName(Crawler):
         #       It extracts chapter contents given a soup Tag, and returns a clean HTML.
         pass
 
-    def get_chapter_index_of(self, url):
+    def index_of_chapter(self, url):
         # TODO: [OPTIONAL] It is useful for selecting chapter range to download using
         #       chapter urls. Return the index of chapter by given url or -1.
         #

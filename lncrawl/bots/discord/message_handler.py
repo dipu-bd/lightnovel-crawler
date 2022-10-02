@@ -410,7 +410,7 @@ class MessageHandler:
                     if name.isdigit():
                         cid = int(name)
                     elif isinstance(self.app.crawler, Crawler):
-                        cid = self.app.crawler.get_chapter_index_of(name)
+                        cid = self.app.crawler.index_of_chapter(name)
 
                     return cid - 1
 

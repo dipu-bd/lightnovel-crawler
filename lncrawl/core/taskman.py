@@ -4,7 +4,7 @@ import signal
 import threading
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
-from typing import List
+from typing import Generator, List, TypeVar
 
 from tqdm import tqdm
 
@@ -13,6 +13,8 @@ from .exeptions import LNException
 logger = logging.getLogger(__name__)
 
 MAX_WORKER_COUNT = 10
+
+T = TypeVar("T")
 
 
 class TaskManager(ABC):
@@ -35,12 +37,14 @@ class TaskManager(ABC):
             initargs=(self),
         )
 
-    def cancel_all(self, futures: List[Future]):
+    def cancel_futures(self, futures: List[Future]) -> None:
+        if not futures:
+            return
         for future in futures:
             if not future.done():
                 future.cancel()
 
-    def resolve_all(self, futures: List[Future], desc="", unit="") -> None:
+    def resolve_futures(self, futures: List[Future], desc="", unit="") -> None:
         if not futures:
             return
 
@@ -54,7 +58,7 @@ class TaskManager(ABC):
 
         def _cancel(*args):
             bar.close()
-            self.cancel_all(futures)
+            self.cancel_futures(futures)
             if len(args):
                 raise LNException("Cancelled by user")
 
@@ -64,7 +68,11 @@ class TaskManager(ABC):
         try:
             for future in futures:
                 try:
-                    message = future.result()
+                    future.result()
+                except KeyboardInterrupt as e:
+                    raise e
+                except Exception as e:
+                    message = f"{e.__class__.__name__}: {e}"
                     if message and not is_debug_mode:
                         bar.clear()
                         logger.warning(message)

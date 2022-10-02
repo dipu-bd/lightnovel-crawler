@@ -108,11 +108,6 @@ def download_chapter_body(app, chapter):
         chapter["body"] = app.crawler.download_chapter_body(chapter)
         extract_chapter_images(app, chapter)
         chapter["success"] = True
-    except KeyboardInterrupt:
-        raise LNException("Chapter download cancelled by user")
-    except Exception as e:
-        logger.debug("Failed", e)
-        return f"[{chapter['id']}] Failed to get chapter body ({e.__class__.__name__}: {e})"
     finally:
         chapter["body"] = chapter.get("body") or ""
         save_chapter_body(app, chapter)
@@ -139,7 +134,7 @@ def download_chapters(app):
     ]
 
     try:
-        app.crawler.resolve_all(futures, desc="Chapters", unit="item")
+        app.crawler.resolve_futures(futures, desc="Chapters", unit="item")
     finally:
         logger.info("Processed %d chapters" % app.progress)
 
@@ -204,11 +199,6 @@ def download_content_image(app, url, filename, image_folder):
         with open(image_file, "wb") as f:
             img.convert("RGB").save(f, "JPEG")
             logger.debug("Saved image: %s", image_file)
-
-    except KeyboardInterrupt:
-        raise LNException("Image download cancelled by user")
-    except Exception as e:
-        return f"[{filename}] Failed to get content image: {url} | {e.__class__.__name__}: {e}"
     finally:
         app.progress += 1
 
@@ -265,14 +255,18 @@ def download_chapter_images(app):
     )
     futures += [
         app.crawler.executor.submit(
-            download_content_image, app, url, filename, image_folder
+            download_content_image,
+            app,
+            url,
+            filename,
+            image_folder,
         )
         for filename, url in images_to_download
     ]
 
     failed = []
     try:
-        app.crawler.resolve_all(futures, desc="  Images", unit="item")
+        app.crawler.resolve_futures(futures, desc="  Images", unit="item")
         failed = [
             filename
             for filename, url in images_to_download

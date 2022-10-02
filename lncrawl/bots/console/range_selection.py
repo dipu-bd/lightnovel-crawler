@@ -65,12 +65,12 @@ def get_range_using_urls(self, disable_args=False):
     args = get_args()
 
     if args.page:
-        start = self.app.crawler.get_chapter_index_of(args.page[0]) - 1
+        start = self.app.crawler.index_of_chapter(args.page[0]) - 1
     else:
         start = -1
 
     if args.page and len(args.page) > 1:
-        stop = self.app.crawler.get_chapter_index_of(args.page[1]) - 1
+        stop = self.app.crawler.index_of_chapter(args.page[1]) - 1
     else:
         stop = -1
 
@@ -84,7 +84,7 @@ def get_range_using_urls(self, disable_args=False):
                 try:
                     if is_optional and not val:
                         return True
-                    if self.app.crawler.get_chapter_index_of(val) > 0:
+                    if self.app.crawler.index_of_chapter(val) > 0:
                         return True
                 except Exception:
                     pass
@@ -118,8 +118,8 @@ def get_range_using_urls(self, disable_args=False):
                 ]
             ),
         )
-        start = self.app.crawler.get_chapter_index_of(answer["start_url"]) - 1
-        stop = self.app.crawler.get_chapter_index_of(answer["stop_url"]) - 1
+        start = self.app.crawler.index_of_chapter(answer["start_url"]) - 1
+        stop = self.app.crawler.index_of_chapter(answer["stop_url"]) - 1
 
     if stop < 0:
         stop = len(self.app.crawler.chapters) - 1
@@ -251,7 +251,7 @@ def get_range_from_chapters(self, times=0, disable_args=False):
         )
         selected = [int(val.split(" ")[0]) for val in answer["chapters"]]
     else:
-        selected = [self.app.crawler.get_chapter_index_of(x) for x in selected if x]
+        selected = [self.app.crawler.index_of_chapter(x) for x in selected if x]
 
     if times < 3 and len(selected) == 0:
         return self.get_range_from_chapters(times + 1)

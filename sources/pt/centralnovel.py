@@ -50,7 +50,7 @@ class CentralNovelCrawler(Crawler):
 
         for span in soup.select(".spe span"):
             text = span.text.strip()
-            if text.startswith("Autor:"):
+            if text.startswith("Author:"):
                 authors = span.select("a")
                 if len(authors) == 2:
                     self.novel_author = authors[0].text + " (" + authors[1].text + ")"

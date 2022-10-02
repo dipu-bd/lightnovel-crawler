@@ -62,7 +62,7 @@ class LitnetCrawler(Crawler):
 
         author = soup.select_one(".book-view-info a.author")
         if not author:
-            author = soup.select_one(".book-head-content a.book-autor")
+            author = soup.select_one(".book-head-content a.book-author")
         if author:
             self.novel_author = author.text.strip()
         logger.info("Novel author: %s", self.novel_author)

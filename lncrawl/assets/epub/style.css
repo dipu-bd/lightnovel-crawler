@@ -22,11 +22,12 @@ p + br {
 }
 
 #intro .header {
-  height: 150px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  height: 200px;
 }
 
+#intro h1 {
+  opacity: 1;
+}
 #intro h3 {
   opacity: 0.6;
 }

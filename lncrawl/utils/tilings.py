@@ -129,7 +129,6 @@ class TileGenerator(Enum):
         image_width: int,
         image_height: int,
     ) -> Generator[List[Tuple[int, int]], None, None]:
-        print(self, self.value)
         self.value(image_width, image_height)
 
 

@@ -70,7 +70,7 @@ class Crawler(Scraper):
 
     @abstractmethod
     def read_novel_info(self) -> None:
-        """Get novel title, autor, cover etc"""
+        """Get novel title, author, cover, volumes and chapters"""
         raise NotImplementedError()
 
     @abstractmethod
@@ -78,11 +78,10 @@ class Crawler(Scraper):
         """Download body of a single chapter and return as clean html format."""
         raise NotImplementedError()
 
-    def get_chapter_index_of(self, url: str) -> int:
+    def index_of_chapter(self, url: str) -> int:
         """Return the index of chapter by given url or 0"""
-        url = (url or "").strip().strip("/")
+        url = self.absolute_url(url)
         for chapter in self.chapters:
-            if chapter["url"] == url:
-                return chapter["id"]
-
+            if chapter.url.rsplit("/") == url:
+                return chapter.id
         return 0
