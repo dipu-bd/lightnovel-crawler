@@ -59,7 +59,14 @@ def bind_epub_book(
     logger.debug("Adding cover image")
     assert book_cover and os.path.isfile(book_cover), "No book cover"
     with open(book_cover, "rb") as fp:
-        book.set_cover(COVER_IMAGE_NAME, fp.read(), create_page=True)
+        book.set_cover(COVER_IMAGE_NAME, fp.read())
+    cover_item = epub.EpubCoverHtml(image_name=COVER_IMAGE_NAME)
+    cover_item.add_link(
+        href=style_item.file_name,
+        rel="stylesheet",
+        type="text/css",
+    )
+    book.add_item(cover_item)
 
     logger.debug("Creating intro page")
     intro_html = f"""
@@ -106,6 +113,11 @@ def bind_epub_book(
             content=volume_html,
             title=volume_title,
         )
+        volume_item.add_link(
+            href="../" + style_item.file_name,
+            rel="stylesheet",
+            type="text/css",
+        )
         book.add_item(volume_item)
         spine.append(volume_item)
 
@@ -120,6 +132,11 @@ def bind_epub_book(
                 file_name=f"chapters/{chapter.id}.xhtml",
                 content=chapter_html,
                 title=chapter["title"],
+            )
+            chapter_item.add_link(
+                href="../" + style_item.file_name,
+                rel="stylesheet",
+                type="text/css",
             )
             book.add_item(chapter_item)
             spine.append(chapter_item)
