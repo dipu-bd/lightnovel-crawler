@@ -39,6 +39,7 @@ class Novel(Box):
         original_publisher: Optional[str] = None,
         english_publisher: Optional[str] = None,
         novelupdates_url: Optional[str] = None,
+        **kwargs,
     ) -> None:
         self.url = url
         self.title = title
@@ -61,6 +62,7 @@ class Novel(Box):
         self.original_publisher = original_publisher
         self.english_publisher = english_publisher
         self.novelupdates_url = novelupdates_url
+        self.update(kwargs)
 
     @property
     def language(self) -> str:

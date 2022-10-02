@@ -4,7 +4,7 @@ import signal
 import threading
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
-from typing import Generator, List, TypeVar
+from typing import List, TypeVar
 
 from tqdm import tqdm
 

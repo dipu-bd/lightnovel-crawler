@@ -14,6 +14,7 @@ class Chapter(Box):
         body: Optional[str] = None,
         images: Dict[str, str] = dict(),
         success: bool = False,
+        **kwargs,
     ) -> None:
         self.id = id
         self.url = url
@@ -23,6 +24,7 @@ class Chapter(Box):
         self.body = body
         self.images = images
         self.success = success
+        self.update(kwargs)
 
     @staticmethod
     def without_body(item: "Chapter") -> "Chapter":

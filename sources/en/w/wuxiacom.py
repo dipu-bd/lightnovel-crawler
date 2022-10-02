@@ -26,8 +26,6 @@ class WuxiaComCrawler(Crawler):
         self.bearer_token = email + " " + password
 
     def read_novel_info(self):
-        self.get_response(self.novel_url)
-
         slug = re.findall(r"/novel/([^/]+)", self.novel_url)[0]
         logger.debug("Novel slug: %s", slug)
 

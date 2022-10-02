@@ -20,6 +20,7 @@ class Session(Box):
         headers: Dict[str, str] = dict(),
         cookies: Dict[str, str] = dict(),
         proxies: Dict[str, str] = dict(),
+        **kwargs,
     ) -> None:
         self.user_input = user_input
         self.output_path = output_path
@@ -33,3 +34,4 @@ class Session(Box):
         self.headers = headers
         self.cookies = cookies
         self.proxies = proxies
+        self.update(kwargs)

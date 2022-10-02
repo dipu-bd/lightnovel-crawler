@@ -11,6 +11,8 @@ class MetaInfo(Box):
         self,
         novel: Optional[Novel] = None,
         session: Optional[Session] = None,
+        **kwargs,
     ) -> None:
         self.novel = novel
         self.session = session
+        self.update(kwargs)
