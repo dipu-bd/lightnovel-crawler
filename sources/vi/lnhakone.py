@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
 from bs4 import Tag
@@ -21,7 +20,7 @@ class ListNovelCrawler(Crawler):
     ]
 
     def initialize(self):
-        self.executor = ThreadPoolExecutor(1)
+        self.init_executor(1)
 
     def search_novel(self, query):
         query = quote_plus(query.lower())

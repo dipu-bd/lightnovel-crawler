@@ -56,11 +56,11 @@ def start_app():
 
     args = get_args()
     if args.proxy_file:
-        os.environ["use_proxy"] = "1"
+        os.environ["use_proxy"] = "file"
         load_proxies(args.proxy_file)
 
     if args.auto_proxy:
-        os.environ["use_proxy"] = "1"
+        os.environ["use_proxy"] = "auto"
         start_proxy_fetcher()
 
     try:

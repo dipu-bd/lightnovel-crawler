@@ -1,6 +1,7 @@
+import hashlib
 import logging
 from abc import abstractmethod
-from typing import List
+from typing import Generator, List
 
 from ..models import Chapter, SearchResult, Volume
 from ..utils.cleaner import TextCleaner
@@ -46,8 +47,8 @@ class Crawler(Scraper):
         # `url` - the link where to download the chapter
         self.chapters: List[Chapter] = []
 
-    def destroy(self) -> None:
-        super(Crawler, self).destroy()
+    def __del__(self) -> None:
+        super(Crawler, self).__del__()
         self.volumes.clear()
         self.chapters.clear()
 
@@ -85,3 +86,47 @@ class Crawler(Scraper):
             if chapter.url.rsplit("/") == url:
                 return chapter.id
         return 0
+
+    # ------------------------------------------------------------------------- #
+    # Utility methods that can be overriden
+    # ------------------------------------------------------------------------- #
+
+    def extract_chapter_images(self, chapter: Chapter) -> None:
+        if not chapter.body:
+            return
+
+        chapter.setdefault("images", {})
+        soup = self.make_soup(chapter.body)
+        for img in soup.select("img[src]"):
+            full_url = self.absolute_url(img["src"], page_url=chapter["url"])
+            if not full_url.startswith("http"):
+                continue
+
+            filename = hashlib.md5(full_url.encode()).hexdigest() + ".jpg"
+            img.attrs = {"src": "images/" + filename, "alt": filename}
+            chapter.images[filename] = full_url
+
+        chapter.body = soup.find("body").decode_contents()
+
+    def download_chapters(self, chapters: List[Chapter]) -> Generator[int, None, None]:
+        futures = {
+            index: self.executor.submit(self.download_chapter_body, chapter)
+            for index, chapter in enumerate(chapters)
+            if not chapter.success
+        }
+        yield len(chapters) - len(futures)
+
+        self.resolve_futures(futures.values(), desc="Chapters", unit="item")
+        for (index, future) in futures.items():
+            try:
+                chapter = chapters[index]
+                chapter.body = future.result()
+                self.extract_chapter_images(chapter)
+                chapter.success = True
+            except Exception as e:
+                chapter.body = ""
+                chapter.success = False
+                if isinstance(e, KeyboardInterrupt):
+                    break
+            finally:
+                yield 1

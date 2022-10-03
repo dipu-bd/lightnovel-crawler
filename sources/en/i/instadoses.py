@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures import ThreadPoolExecutor
 
 from lncrawl.core.crawler import Crawler
 
@@ -11,9 +10,6 @@ post_chapter_url = "https://instadoses.com/wp-admin/admin-ajax.php"
 
 class InstadosesCrawler(Crawler):
     base_url = "https://instadoses.com/"
-
-    def initialize(self):
-        self.executor = ThreadPoolExecutor(max_workers=7)
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

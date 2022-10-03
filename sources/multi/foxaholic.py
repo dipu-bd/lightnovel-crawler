@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures import ThreadPoolExecutor
 
 from bs4.element import Tag
 
@@ -23,7 +22,7 @@ class FoxaholicCrawler(Crawler):
     ]
 
     def initialize(self) -> None:
-        self.executor = ThreadPoolExecutor(max_workers=1)
+        self.init_executor(1)
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")

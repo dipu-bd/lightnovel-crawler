@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures import ThreadPoolExecutor
 
 import js2py
 from bs4.element import Tag
@@ -17,7 +16,7 @@ class RanobeLibCrawler(Crawler):
     ]
 
     def initialize(self) -> None:
-        self.executor = ThreadPoolExecutor(max_workers=1)
+        self.init_executor(1)
         self.cleaner.bad_css.update([".free-support", 'div[id^="adfox_"]'])
 
     def read_novel_info(self):
@@ -56,7 +55,9 @@ class RanobeLibCrawler(Crawler):
         soup = self.get_soup(chapter_list_link)
 
         script = soup.find(
-            lambda tag: isinstance(tag, Tag) and tag.name == "script" and tag.text.startswith("window.__DATA__")
+            lambda tag: isinstance(tag, Tag)
+            and tag.name == "script"
+            and tag.text.startswith("window.__DATA__")
         )
         assert isinstance(script, Tag)
 
@@ -77,7 +78,9 @@ class RanobeLibCrawler(Crawler):
         volumes = set([])
         for soup in reversed(page_soups):
             script = soup.find(
-                lambda tag: isinstance(tag, Tag) and tag.name == "script" and tag.text.startswith("window.__DATA__")
+                lambda tag: isinstance(tag, Tag)
+                and tag.name == "script"
+                and tag.text.startswith("window.__DATA__")
             )
             assert isinstance(script, Tag)
 

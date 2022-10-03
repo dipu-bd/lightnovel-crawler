@@ -1,15 +1,16 @@
+import base64
 import logging
 import os
 import random
 import ssl
-import time
-from threading import Semaphore
+from io import BytesIO
 from typing import Dict, Optional, Union
 from urllib.parse import ParseResult, urlparse
 
 from box import Box
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
+from PIL import Image
 from requests import Response, Session
 from requests.exceptions import ProxyError, RequestException
 from requests.structures import CaseInsensitiveDict
@@ -24,80 +25,67 @@ from .taskman import TaskManager
 
 logger = logging.getLogger(__name__)
 
-MAX_REQUESTS_PER_DOMAIN = 25
-REQUEST_SEMAPHORES: Dict[str, Semaphore] = {}
 
-
-def _domain_gate(url: str = ""):
-    try:
-        host = url.split("//", 1)[1].split("/", 1)[0]
-    except Exception:
-        host = str(url or "").split("/", 1)[0]
-    if host not in REQUEST_SEMAPHORES:
-        REQUEST_SEMAPHORES[host] = Semaphore(MAX_REQUESTS_PER_DOMAIN)
-    return REQUEST_SEMAPHORES[host]
-
-
-class Scraper(TaskManager):
+class Scraper(TaskManager, SoupMaker):
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
     # ------------------------------------------------------------------------- #
-    def __init__(self, origin: str) -> None:
-        super(Scraper, self).__init__()
+    def __init__(
+        self,
+        origin: str,
+        workers: int = None,
+        parser: str = None,
+    ) -> None:
+        super(Scraper, self).__init__(workers)
+        self._soup_tool = SoupMaker(parser)
+        self.make_soup = self._soup_tool.make_soup
 
         self.home_url = origin
-        self.last_visited_url = ""
-        self.enable_auto_proxy = os.getenv("use_proxy") == "1"
+        self.last_soup_url = ""
+        self.use_proxy = os.getenv("use_proxy")
 
         self.browser = Browser()
         self.init_scraper()
         self.change_user_agent()
 
-        self._soup_tool = SoupMaker()
-        self.make_soup = self._soup_tool.make_soup
-
-    def destroy(self) -> None:
-        super(Scraper, self).destroy()
+    def __del__(self) -> None:
+        super(Scraper, self).__del__()
         self.scraper.close()
 
     # ------------------------------------------------------------------------- #
-    # Private methods
+    # Internal methods
     # ------------------------------------------------------------------------- #
 
-    def __generate_proxy(self, url, timeout: int = 0):
-        if self.enable_auto_proxy and url:
-            scheme = self.origin.scheme
-            proxy = {scheme: get_a_proxy(scheme, timeout)}
-            return proxy
+    def __get_proxies(self, scheme, timeout: int = 0):
+        if self.use_proxy and scheme:
+            return {scheme: get_a_proxy(scheme, timeout)}
+        return {}
 
     def __process_request(self, method: str, url, **kwargs):
         method_call = getattr(self.scraper, method)
         assert callable(method_call), f"No request method: {method}"
 
+        _parsed = urlparse(url)
+
         kwargs = kwargs or dict()
         retry = kwargs.pop("retry", 1)
-        kwargs["proxies"] = self.__generate_proxy(url)
+        kwargs["proxies"] = self.__get_proxies(_parsed.scheme)
         headers = kwargs.pop("headers", {})
         headers = CaseInsensitiveDict(headers)
-        headers.setdefault("Host", urlparse(url).hostname)
+        headers.setdefault("Host", _parsed.hostname)
         headers.setdefault("Origin", self.home_url.strip("/"))
-        headers.setdefault("Referer", self.last_visited_url.strip("/"))
+        headers.setdefault("Referer", self.last_soup_url.strip("/"))
         headers.setdefault("User-Agent", self.user_agent)
-        kwargs["headers"] = dict(headers)
+        kwargs["headers"] = headers
 
         while retry >= 0:
-            if self._destroyed:
-                raise LNException("Instance is detroyed")
-
             try:
                 logger.debug(
-                    "[%s] %s\n%s",
-                    method.upper(),
-                    url,
-                    ", ".join([f"{k}={v}" for k, v in kwargs.items()]),
+                    f"[{method.upper()}] {url}\n"
+                    + ", ".join([f"{k}={v}" for k, v in kwargs.items()])
                 )
 
-                with _domain_gate(url):
+                with self.domain_gate(_parsed.hostname):
                     with no_ssl_verification():
                         response: Response = method_call(url, **kwargs)
 
@@ -109,23 +97,19 @@ class Scraper(TaskManager):
                 if retry == 0:  # retry attempt depleted
                     raise e
 
-                logger.debug("%s | Retrying...", e)
                 retry -= 1
+                logger.debug(f"{type(e).__qualname__}: {e} | Retrying...", e)
+
+                self.change_user_agent()
+                kwargs["headers"].setdefault("User-Agent", self.user_agent)
+
                 if isinstance(e, ProxyError):
                     for proxy_url in kwargs.get("proxies", {}).values():
                         remove_faulty_proxies(proxy_url)
-
-                if retry != 0:  # do not use proxy on last attemp
-                    if self.enable_auto_proxy and url:
-                        kwargs["proxies"] = self.__generate_proxy(url, 5)
-                    else:
-                        time.sleep(2)
-                    self.change_user_agent()
-                    headers.setdefault("User-Agent", self.user_agent)
-                    kwargs["headers"] = dict(headers)
+                    kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
 
     # ------------------------------------------------------------------------- #
-    # Helper methods to be used
+    # Helpers
     # ------------------------------------------------------------------------- #
 
     @property
@@ -158,7 +142,7 @@ class Scraper(TaskManager):
         if len(url) >= 1024 or url.startswith("data:"):
             return url
         if not page_url:
-            page_url = str(self.last_visited_url or self.home_url)
+            page_url = str(self.last_soup_url or self.home_url)
         if url.startswith("//"):
             return self.home_url.split(":")[0] + ":" + url
         if url.find("//") >= 0:
@@ -199,12 +183,11 @@ class Scraper(TaskManager):
             self.set_header("User-Agent", self.user_agent)
 
     # ------------------------------------------------------------------------- #
-    # Downloader methods to be used
+    # Downloaders
     # ------------------------------------------------------------------------- #
 
     def get_response(self, url, retry=1, timeout=(7, 301), **kwargs) -> Response:
         """Fetch the content and return the response"""
-        self.last_visited_url = url.strip("/")
         return self.__process_request(
             "get",
             url,
@@ -242,15 +225,19 @@ class Scraper(TaskManager):
         with open(output_file, "wb") as f:
             f.write(response.content)
 
-    def download_image(self, url: str, headers={}, **kwargs) -> bytes:
+    def download_image(self, url: str, headers={}, **kwargs) -> Image:
         """Download image from url"""
-        headers = CaseInsensitiveDict(headers)
-        headers.setdefault(
-            "Accept",
-            "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
-        )
-        response = self.__process_request("get", url, headers=headers, **kwargs)
-        return response.content
+        if url.startswith("data:"):
+            content = base64.b64decode(url.split("base64,")[-1])
+        else:
+            headers = CaseInsensitiveDict(headers)
+            headers.setdefault(
+                "Accept",
+                "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
+            )
+            response = self.__process_request("get", url, headers=headers, **kwargs)
+            content = response.content
+        return Image.open(BytesIO(content))
 
     def get_json(self, url, headers={}, **kwargs) -> Box:
         """Fetch the content and return the content as JSON object"""
@@ -294,6 +281,7 @@ class Scraper(TaskManager):
             "text/html,application/xhtml+xml,application/xml;q=0.9",
         )
         response = self.get_response(url, **kwargs)
+        self.last_soup_url = url
         return self.make_soup(response, parser)
 
     def post_soup(

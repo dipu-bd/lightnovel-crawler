@@ -4,11 +4,11 @@ Decryptor: https://github.com/Pioverpie/privatebin-api/blob/master/privatebinapi
 """
 import logging
 import re
-from concurrent.futures.thread import ThreadPoolExecutor
 from datetime import datetime
 from urllib.parse import urlsplit
 
 import regex
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -24,11 +24,10 @@ class QidianComCrawler(Crawler):
         "https://tocqidianunderground.blogspot.com/",
     ]
 
-    def __init__(self):
-        super().__init__()
+    def initialize(self):
+        self.init_executor(1)
         self.chapter_cache = {}
         self.set_header("Accept", "application/json")
-        self.executor = ThreadPoolExecutor(max_workers=1)
 
     @property
     def novel_list(self):

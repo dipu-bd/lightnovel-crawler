@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures import ThreadPoolExecutor
 
 from lncrawl.core.crawler import Crawler
 
@@ -11,9 +10,6 @@ post_chapter_url = "https://www.webnovelover.com/wp-admin/admin-ajax.php"
 
 class WebNoveLover(Crawler):
     base_url = "https://www.webnovelover.com/"
-
-    def initialize(self):
-        self.executor = ThreadPoolExecutor(max_workers=7)
 
     # NOTE: Site search doesn't work. So this won't work.
     def search_novel(self, query):

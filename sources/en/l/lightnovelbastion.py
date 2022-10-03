@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures.thread import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
 from lncrawl.core.crawler import Crawler
@@ -15,7 +14,7 @@ class LightNovelBastion(Crawler):
     base_url = "https://lightnovelbastion.com/"
 
     def initialize(self) -> None:
-        self.executor = ThreadPoolExecutor(1)
+        self.init_executor(1)
         self.cleaner.bad_tags.update(
             [
                 "h3",

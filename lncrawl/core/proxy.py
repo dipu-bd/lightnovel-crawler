@@ -165,7 +165,7 @@ def __find_proxies():
         except RequestException:
             err_count += 1
         except Exception as e:
-            if os.getenv("debug_mode") == "yes":
+            if os.getenv("debug_mode"):
                 logger.error("Failed to update proxy list", e)
             stop_proxy_fetcher()
 

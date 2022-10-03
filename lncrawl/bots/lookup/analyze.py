@@ -29,7 +29,7 @@ def analyze_url(base_url: str, url: str) -> Type[Crawler]:
         print(f"[{index + 1} of {len(template_list)}]", Style.RESET_ALL)
 
         # To disable tqdm
-        debug_mode = os.getenv("debug_mode", "no")
+        debug_mode = os.getenv("debug_mode")
         os.environ["debug_mode"] = "yes"
         try:
             print(" ", Chars.RIGHT_ARROW, "Create instance", end=" ")
@@ -72,7 +72,8 @@ def analyze_url(base_url: str, url: str) -> Type[Crawler]:
             print(":", Fore.RED + "failed" + Fore.RESET)
             print(Style.DIM + message + Style.RESET_ALL)
         finally:
-            os.environ["debug_mode"] = debug_mode
             print()
+            if not debug_mode:
+                os.environ.pop("debug_mode")
 
     raise LNException("No template match found for the url")

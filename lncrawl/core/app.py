@@ -14,7 +14,7 @@ from ..core.exeptions import LNException
 from ..core.sources import crawler_list, prepare_crawler
 from ..models import Chapter, CombinedSearchResult, OutputFormat
 from .crawler import Crawler
-from .downloader import download_chapter_images, download_chapters
+from .downloader import fetch_chapter_images, fetch_chapter_body
 from .novel_info import format_novel, save_metadata
 from .novel_search import search_novels
 
@@ -53,9 +53,7 @@ class App:
         logger.info("Initialized App")
 
     def destroy(self):
-        if self.crawler:
-            self.crawler.destroy()
-
+        self.crawler.__del__()
         self.chapters.clear()
         logger.info("App destroyed")
 
@@ -153,9 +151,9 @@ class App:
         assert self.crawler
 
         save_metadata(self)
-        download_chapters(self)
+        fetch_chapter_body(self)
         save_metadata(self)
-        download_chapter_images(self)
+        fetch_chapter_images(self)
         save_metadata(self, True)
 
         if not self.output_formats.get("json", False):

@@ -3,7 +3,7 @@
 
 import atexit
 import logging
-from threading import Semaphore
+from threading import Lock, Semaphore
 from typing import Iterable, List, Optional
 
 from bs4 import BeautifulSoup
@@ -38,8 +38,6 @@ except ImportError:
 
 try:
     from webdriver_manager.chrome import ChromeDriverManager
-
-    webdriver_path = ChromeDriverManager().install()
 except ImportError:
     logger.warn("`webdriver-manager` is not found")
 
@@ -53,8 +51,14 @@ __all__ = [
 
 MAX_BROWSER_INSTANCES = 8
 
+__installer_lock = Lock()
 __semaphore = Semaphore(MAX_BROWSER_INSTANCES)
 __open_browsers: List[webdriver.Chrome] = []
+
+
+def __get_driver_path():
+    with __installer_lock:
+        return ChromeDriverManager().install()
 
 
 def __decorate(chrome, method_name):
@@ -99,6 +103,8 @@ def create_chrome(
         width = int(max(640, Screen.view_width * 2 / 3))
         height = int(max(480, Screen.view_height * 2 / 3))
         options.add_argument(f"--window-size={width},{height}")
+
+    driver_path = __get_driver_path()
 
     logger.debug(
         f"Creating chrome instance | headerless={headless} | options={options} | path={webdriver_path}"

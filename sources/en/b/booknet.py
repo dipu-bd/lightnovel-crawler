@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures.thread import ThreadPoolExecutor
 from urllib.parse import quote_plus
 
 from lncrawl.core.crawler import Crawler
@@ -17,7 +16,7 @@ class LitnetCrawler(Crawler):
 
     def initialize(self):
         self.home_url = "https://booknet.com/"
-        self.executor = ThreadPoolExecutor(1)
+        self.init_executor(1)
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
@@ -80,7 +79,7 @@ class LitnetCrawler(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             volumes.add(vol_id)
 
-            abs_url = self.last_visited_url.replace("/en/book/", "/en/reader/")
+            abs_url = self.last_soup_url.replace("/en/book/", "/en/reader/")
             chap_url = abs_url + ("?c=%s" % a.attrs["value"])
             self.chapters.append(
                 {

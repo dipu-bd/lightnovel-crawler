@@ -216,7 +216,7 @@ def __download_sources():
         desc="Updating sources",
         total=len(futures),
         unit="file",
-        disable=os.getenv("debug_mode") == "yes",
+        disable=os.getenv("debug_mode"),
     )
 
     for sid, future in futures.items():

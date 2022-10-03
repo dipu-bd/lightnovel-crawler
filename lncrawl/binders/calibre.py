@@ -14,7 +14,7 @@ def run_ebook_convert(*args):
     Visit https://manual.calibre-ebook.com/generated/en/ebook-convert.html for argument list.
     """
     try:
-        isdebug = os.getenv("debug_mode") == "yes"
+        isdebug = os.getenv("debug_mode")
         with open(os.devnull, "w", encoding="utf8") as dumper:
             subprocess.call(
                 [EBOOK_CONVERT] + list(args),

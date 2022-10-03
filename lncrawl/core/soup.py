@@ -1,4 +1,5 @@
 import logging
+from abc import ABC
 from typing import Optional, Union
 
 from bs4 import BeautifulSoup
@@ -12,12 +13,15 @@ logger = logging.getLogger(__name__)
 DEFAULT_PARSER = "lxml"
 
 
-class SoupMaker:
+class SoupMaker(ABC):
     def __init__(
         self,
         parser: Optional[str] = None,
     ) -> None:
         self.parser = parser or DEFAULT_PARSER
+
+    def __del__(self) -> None:
+        pass
 
     def make_soup(
         self,

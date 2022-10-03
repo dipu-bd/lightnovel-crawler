@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import quote
 
 from lncrawl.core.crawler import Crawler
@@ -16,7 +15,7 @@ class WuxiaCoCrawler(Crawler):
 
     def initialize(self):
         self.home_url = "https://m.wuxiaworld.co/"
-        self.executor = ThreadPoolExecutor(max_workers=1)
+        self.init_executor(1)
         self.cleaner.bad_text_regex.update(
             [
                 r"^translat(ed by|or)",

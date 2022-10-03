@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures import ThreadPoolExecutor
 
 from lncrawl.core.crawler import Crawler
 
@@ -12,7 +11,7 @@ class RoyalRoadCrawler(Crawler):
     base_url = "https://www.royalroad.com/"
 
     def initialize(self):
-        self.executor = ThreadPoolExecutor(1)
+        self.init_executor(1)
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
