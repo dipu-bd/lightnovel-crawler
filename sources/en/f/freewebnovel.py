@@ -5,7 +5,6 @@ from typing import Generator, Iterable, List
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.core.exeptions import LNException
 from lncrawl.models import Chapter, SearchResult
 from lncrawl.templates.soup.paginated_toc import PaginatedSoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
@@ -19,7 +18,7 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, PaginatedSoupTemplate):
             f"{self.home_url}search/", data={"searchkey": query.lower()}
         )
 
-    def select_novel_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
         return soup.select(".col-content .con .txt h3 a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
@@ -30,17 +29,17 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, PaginatedSoupTemplate):
 
     def parse_title(self, soup: BeautifulSoup) -> None:
         tag = soup.select_one(".m-desc h1.tit")
-        if not isinstance(tag, Tag):
-            raise LNException("No title found")
+        assert isinstance(tag, Tag), "No title found"
         self.novel_title = tag.text.strip()
 
     def parse_cover(self, soup: BeautifulSoup):
         tag = soup.select_one(".m-imgtxt img")
-        if isinstance(tag, Tag):
-            if tag.has_attr("data-src"):
-                self.novel_cover = self.absolute_url(tag["data-src"])
-            elif tag.has_attr("src"):
-                self.novel_cover = self.absolute_url(tag["src"])
+        if not isinstance(tag, Tag):
+            return
+        if tag.has_attr("data-src"):
+            self.novel_cover = self.absolute_url(tag["data-src"])
+        elif tag.has_attr("src"):
+            self.novel_cover = self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup):
         self.novel_author = ", ".join(

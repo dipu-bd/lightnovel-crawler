@@ -109,12 +109,12 @@ def bind_epub_book(
         </div>
         """
         volume_item = epub.EpubHtml(
-            file_name=f"volumes/{volume_id}.xhtml",
+            file_name=f"volume_{volume_id}.xhtml",
             content=volume_html,
             title=volume_title,
         )
         volume_item.add_link(
-            href="../" + style_item.file_name,
+            href=style_item.file_name,
             rel="stylesheet",
             type="text/css",
         )
@@ -129,12 +129,12 @@ def bind_epub_book(
                 minify_js=True,
             )
             chapter_item = epub.EpubHtml(
-                file_name=f"chapters/{chapter.id}.xhtml",
+                file_name=f"chapter_{chapter.id}.xhtml",
                 content=chapter_html,
                 title=chapter["title"],
             )
             chapter_item.add_link(
-                href="../" + style_item.file_name,
+                href=style_item.file_name,
                 rel="stylesheet",
                 type="text/css",
             )
@@ -154,11 +154,10 @@ def bind_epub_book(
     for image_path in images:
         filename = os.path.basename(image_path)
         with open(image_path, "rb") as fp:
-            image_item = epub.EpubImage(
-                file_name=f"images/{filename}",
-                media_type="image/jpeg",
-                content=fp.read(),
-            )
+            image_item = epub.EpubImage()
+            image_item.file_name = f"images/{filename}"
+            image_item.media_type = "image/jpeg"
+            image_item.content = fp.read()
         book.add_item(image_item)
 
     logger.debug("Saving epub file")

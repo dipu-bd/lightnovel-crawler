@@ -12,8 +12,15 @@ class SearchableSoupTemplate(Crawler):
 
     def search_novel(self, query) -> Iterable[SearchResult]:
         soup = self.get_search_page_soup(query)
-        tags = self.select_novel_tags(soup)
-        return list(self.process_search_results(tags))
+        tags = self.select_search_items(soup)
+        results = []
+        for sr in self.process_search_results(tags):
+            if len(results) >= 10:
+                break
+            if not sr:
+                continue
+            results.append(sr)
+        return results
 
     def process_search_results(self, tags: Iterable[Tag]) -> Generator[Tag, None, None]:
         """Process novel item tag and generates search results"""
@@ -28,7 +35,7 @@ class SearchableSoupTemplate(Crawler):
         raise NotImplementedError()
 
     @abstractmethod
-    def select_novel_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
         """Select novel items found in search page soup"""
         raise NotImplementedError()
 

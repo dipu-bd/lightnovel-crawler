@@ -29,7 +29,7 @@ class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
         response = self.submit_form(action_url, payload)
         return self.make_soup(response)
 
-    def select_novel_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
         return soup.select("ul.novel-list .novel-item a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
@@ -48,11 +48,12 @@ class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
 
     def parse_cover(self, soup: BeautifulSoup):
         tag = soup.select_one("#novel figure.cover img")
-        if isinstance(tag, Tag):
-            if tag.has_attr("data-src"):
-                self.novel_cover = self.absolute_url(tag["data-src"])
-            elif tag.has_attr("src"):
-                self.novel_cover = self.absolute_url(tag["src"])
+        if not isinstance(tag, Tag):
+            return
+        if tag.has_attr("data-src"):
+            self.novel_cover = self.absolute_url(tag["data-src"])
+        elif tag.has_attr("src"):
+            self.novel_cover = self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup):
         self.novel_author = ", ".join(

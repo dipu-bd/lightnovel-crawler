@@ -28,7 +28,7 @@ class MadaraTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
         )
         return self.get_soup(f"{self.home_url}?{urlencode(params)}")
 
-    def select_novel_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
         return soup.select(".c-tabs-item__content")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
@@ -51,11 +51,12 @@ class MadaraTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
 
     def parse_cover(self, soup: BeautifulSoup) -> None:
         tag = soup.select_one(".summary_image a img")
-        if isinstance(tag, Tag):
-            if tag.has_attr("data-src"):
-                self.novel_cover = self.absolute_url(tag["data-src"])
-            elif tag.has_attr("src"):
-                self.novel_cover = self.absolute_url(tag["src"])
+        if not isinstance(tag, Tag):
+            return
+        if tag.has_attr("data-src"):
+            self.novel_cover = self.absolute_url(tag["data-src"])
+        elif tag.has_attr("src"):
+            self.novel_cover = self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup) -> None:
         self.novel_author = ", ".join(
