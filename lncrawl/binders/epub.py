@@ -59,7 +59,7 @@ def bind_epub_book(
     logger.debug("Adding cover image")
     assert book_cover and os.path.isfile(book_cover), "No book cover"
     with open(book_cover, "rb") as fp:
-        book.set_cover(COVER_IMAGE_NAME, fp.read())
+        book.set_cover(COVER_IMAGE_NAME, fp.read(), create_page=False)
     cover_item = epub.EpubCoverHtml(image_name=COVER_IMAGE_NAME)
     cover_item.add_link(
         href=style_item.file_name,

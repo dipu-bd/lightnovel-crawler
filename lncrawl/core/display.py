@@ -6,7 +6,7 @@ from typing import List
 from colorama import Fore, Style
 
 from ..assets.chars import Chars
-from ..assets.platforms import Platform
+from ..utils.platforms import Platform
 from ..core.exeptions import LNException
 from ..models import CombinedSearchResult, SearchResult
 from ..models.meta import MetaInfo

@@ -13,9 +13,33 @@ def is_docker():
     return False
 
 
+class Screen:
+    width = 1920
+    height = 1080
+    view_width = 1920
+    view_height = 1080
+
+
+def has_display():
+    try:
+        from tkinter import Tk
+
+        tk = Tk()
+        Screen.width = tk.winfo_screenwidth()
+        Screen.height = tk.winfo_screenheight()
+        Screen.view_width = tk.maxsize()[0]
+        Screen.view_height = tk.maxsize()[1]
+        tk.destroy()
+        del Tk
+        return True
+    except Exception:
+        return False
+
+
 class Platform:
     name = platform.platform()
     docker = is_docker()
+    display = has_display()
     java = platform.system() == "Java"
     mac = platform.system() == "Darwin"
     linux = platform.system() == "Linux"

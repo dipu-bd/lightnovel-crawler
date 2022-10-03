@@ -1,4 +1,4 @@
-from .platforms import Platform
+from ..utils.platforms import Platform
 
 
 class Chars:

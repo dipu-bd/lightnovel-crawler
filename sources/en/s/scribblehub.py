@@ -4,17 +4,18 @@ from math import ceil
 from urllib.parse import quote
 
 from bs4 import Tag
-from cloudscraper.exceptions import CloudflareChallengeError
 
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = "https://www.scribblehub.com/?s=%s&post_type=fictionposts"
 chapter_post_url = "https://www.scribblehub.com/wp-admin/admin-ajax.php"
 
 
 class ScribbleHubCrawler(Crawler):
-    base_url = ["https://www.scribblehub.com/", "https://scribblehub.com/"]
+    base_url = [
+        "https://www.scribblehub.com/",
+        "https://scribblehub.com/",
+    ]
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update(
@@ -41,7 +42,7 @@ class ScribbleHubCrawler(Crawler):
         )
 
     def search_novel(self, query):
-        url = search_url % quote(query.lower())
+        url = f"{self.home_url}?s={quote(query)}&post_type=fictionposts"
         soup = self.get_soup(url)
 
         results = []
@@ -62,14 +63,7 @@ class ScribbleHubCrawler(Crawler):
         return results
 
     def read_novel_info(self):
-        try:
-            soup = self.get_soup(self.novel_url)
-        except CloudflareChallengeError:
-            soup = self.browser.get_soup(
-                self.novel_url,
-                headless=False,
-                wait_for_css=("div.fic_title"),
-            )
+        soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one("div.fic_title")
         assert isinstance(possible_title, Tag)
@@ -100,49 +94,24 @@ class ScribbleHubCrawler(Crawler):
         mypostid = int(str(possible_mypostid["value"]))
         logger.info("#mypostid = %d", mypostid)
 
-        possible_chpcounter = soup.select_one("input#chpcounter")
-        assert isinstance(possible_chpcounter, Tag)
-        chpcounter = int(str(possible_chpcounter["value"]))
-        logger.info("#chpcounter = %d", chpcounter)
+        response = self.submit_form(
+            f"{self.home_url}wp-admin/admin-ajax.php",
+            {
+                "action": "wi_getreleases_pagination",
+                "pagenum": -1,
+                "mypostid": mypostid,
+            },
+        )
 
-        toc_show = 50
-        page_count = ceil(chpcounter / toc_show)
-        logger.info("#page count = %d", page_count)
-
-        futures_to_check = []
-        for i in range(page_count):
-            future = self.executor.submit(
-                self.submit_form,
-                chapter_post_url,
+        soup = self.make_soup(response)
+        for chapter in reversed(soup.select(".toc_ol a.toc_a")):
+            self.chapters.append(
                 {
-                    "action": "wi_getreleases_pagination",
-                    "pagenum": page_count - i,
-                    "mypostid": mypostid,
-                },
-                headers={
-                    "cookie": "toc_show=" + str(toc_show),
-                },
+                    "id": len(self.chapters) + 1,
+                    "url": self.absolute_url(str(chapter["href"])),
+                    "title": chapter.text.strip(),
+                }
             )
-            futures_to_check.append(future)
-
-        volumes = set()
-        for f in futures_to_check:
-            response = f.result()
-            soup = self.make_soup(response)
-            for chapter in reversed(soup.select(".toc_ol a.toc_a")):
-                chap_id = len(self.chapters) + 1
-                vol_id = len(self.chapters) // 100 + 1
-                volumes.add(vol_id)
-                self.chapters.append(
-                    {
-                        "id": chap_id,
-                        "volume": vol_id,
-                        "url": self.absolute_url(str(chapter["href"])),
-                        "title": chapter.text.strip() or ("Chapter %d" % chap_id),
-                    }
-                )
-
-        self.volumes = [{"id": x} for x in volumes]
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])

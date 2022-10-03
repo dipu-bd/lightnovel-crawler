@@ -13,6 +13,12 @@ DEFAULT_PARSER = "lxml"
 
 
 class SoupMaker:
+    def __init__(
+        self,
+        parser: Optional[str] = None,
+    ) -> None:
+        self.parser = parser or DEFAULT_PARSER
+
     def make_soup(
         self,
         data: Union[Response, bytes, str],
@@ -26,9 +32,4 @@ class SoupMaker:
             html = str(data)
         else:
             raise LNException("Could not parse response")
-
-        soup = BeautifulSoup(html, parser or DEFAULT_PARSER)
-        if not soup.find("body"):
-            raise ConnectionError("HTML document was not loaded properly")
-
-        return soup
+        return BeautifulSoup(html, parser or self.parser)

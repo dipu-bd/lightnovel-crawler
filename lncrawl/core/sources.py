@@ -14,7 +14,7 @@ import requests
 from packaging import version
 from tqdm.std import tqdm
 
-from ..assets.platforms import Platform
+from ..utils.platforms import Platform
 from ..assets.version import get_version
 from .arguments import get_args
 from .crawler import Crawler

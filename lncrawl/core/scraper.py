@@ -16,7 +16,7 @@ from requests.structures import CaseInsensitiveDict
 
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
-from .chrome import Chrome
+from .browser import Browser
 from .exeptions import LNException
 from .proxy import get_a_proxy, remove_faulty_proxies
 from .soup import SoupMaker
@@ -38,7 +38,7 @@ def _domain_gate(url: str = ""):
     return REQUEST_SEMAPHORES[host]
 
 
-class Scraper(TaskManager, SoupMaker):
+class Scraper(TaskManager):
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
     # ------------------------------------------------------------------------- #
@@ -49,9 +49,12 @@ class Scraper(TaskManager, SoupMaker):
         self.last_visited_url = ""
         self.enable_auto_proxy = os.getenv("use_proxy") == "1"
 
-        self.browser = Chrome()
+        self.browser = Browser()
         self.init_scraper()
         self.change_user_agent()
+
+        self._soup_tool = SoupMaker()
+        self.make_soup = self._soup_tool.make_soup
 
     def destroy(self) -> None:
         super(Scraper, self).destroy()
@@ -166,14 +169,14 @@ class Scraper(TaskManager, SoupMaker):
             return page_url.strip("/") + "/" + url
         return self.home_url + url
 
-    def init_scraper(self, sess: Session = None):
+    def init_scraper(self, session: Optional[Session] = None):
         """Check for option: https://github.com/VeNoMouS/cloudscraper"""
         try:
             ctx = ssl.create_default_context()
             ctx.check_hostname = False
             ctx.verify_mode = ssl.CERT_NONE
             self.scraper = CloudScraper.create_scraper(
-                sess,
+                session,
                 # debug=True,
                 # delay=10,
                 ssl_context=ctx,
@@ -181,7 +184,9 @@ class Scraper(TaskManager, SoupMaker):
             )
         except Exception:
             logger.exception("Failed to initialize cloudscraper")
-            self.scraper = Session()
+            self.scraper = session or Session()
+        finally:
+            self.browser.cookie_store = self.scraper.cookies
 
     def change_user_agent(self):
         self.user_agent = random.choice(user_agents)

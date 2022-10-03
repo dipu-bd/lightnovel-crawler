@@ -3,7 +3,7 @@ import subprocess
 
 from questionary import prompt
 
-from ...assets.platforms import Platform
+from ...utils.platforms import Platform
 from ...core.arguments import get_args
 
 
