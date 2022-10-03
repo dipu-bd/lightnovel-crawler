@@ -11,7 +11,7 @@ from lncrawl.templates.soup.paginated_toc import PaginatedSoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 
-class FreeWebNovelCtawler(SearchableSoupTemplate, PaginatedSoupTemplate):
+class FreeWebNovelCrawler(SearchableSoupTemplate, PaginatedSoupTemplate):
     base_url = ["https://freewebnovel.com/"]
 
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
