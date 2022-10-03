@@ -62,12 +62,6 @@ def configure_logging():
             "level": logging.NOTSET,
             "handlers": ["file", "console"],
         },
-        "loggers": {
-            "urllib3.connectionpool": {
-                "level": logging.ERROR,
-                "handlers": ["file", "console"],
-            }
-        },
     }
     if not log_file:
         del config["handlers"]["file"]

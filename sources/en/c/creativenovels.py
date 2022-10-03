@@ -42,7 +42,7 @@ class CreativeNovelsCrawler(Crawler):
         self.novel_title = self.novel_title.split("–")[0].strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        possible_image = soup.select_one(".x-bar-content-area img.book_cover")
+        possible_image = soup.select_one("img.book_cover")
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel Cover: %s", self.novel_cover)
