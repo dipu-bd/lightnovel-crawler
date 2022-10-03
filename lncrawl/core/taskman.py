@@ -2,9 +2,8 @@ import logging
 import os
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
-from threading import Semaphore, Thread
+from threading import Semaphore
 from typing import Dict, Iterable, TypeVar
-from urllib.parse import urlparse
 
 from tqdm import tqdm
 

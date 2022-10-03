@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
-from concurrent.futures import Future
-from typing import Generator, Iterable, List
+from typing import Generator, Iterable
 from urllib.parse import quote_plus
 
 from bs4 import BeautifulSoup, Tag
-from requests import Response
 
 from lncrawl.models import Chapter, SearchResult
 from lncrawl.templates.soup.paginated_toc import PaginatedSoupTemplate

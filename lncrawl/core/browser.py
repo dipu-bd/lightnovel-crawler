@@ -46,6 +46,7 @@ __all__ = [
     "By",
     "EC",
     "Browser",
+    "create_chrome",
 ]
 
 
@@ -107,7 +108,7 @@ def create_chrome(
     driver_path = __get_driver_path()
 
     logger.debug(
-        f"Creating chrome instance | headerless={headless} | options={options} | path={webdriver_path}"
+        f"Creating chrome instance | headerless={headless} | options={options} | path={driver_path}"
     )
     chrome = webdriver.Chrome(
         debug=False,
@@ -115,7 +116,7 @@ def create_chrome(
         headless=headless,
         log_level=logging.ERROR,
         enable_cdp_events=False,
-        driver_executable_path=webdriver_path,
+        driver_executable_path=driver_path,
     )
     chrome.set_window_position(0, 0)
     __open_browsers.append(chrome)

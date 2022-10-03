@@ -18,7 +18,6 @@ from requests.structures import CaseInsensitiveDict
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
 from .browser import Browser
-from .exeptions import LNException
 from .proxy import get_a_proxy, remove_faulty_proxies
 from .soup import SoupMaker
 from .taskman import TaskManager
