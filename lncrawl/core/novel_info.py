@@ -16,15 +16,15 @@ def __format_title(text):
 def __format_volume(crawler: Crawler, vol_id_map: Dict[int, int]):
     if crawler.volumes:
         crawler.volumes = [
-            volume if isinstance(volume, Volume) else Volume(**volume)
-            for volume in crawler.volumes
+            vol if isinstance(vol, Volume) else Volume(**vol)
+            for vol in sorted(crawler.volumes, key=lambda x: x.get("id"))
         ]
     else:
         for i in range(math.ceil(len(crawler.chapters) / 100)):
             crawler.volumes.append(Volume(id=i + 1))
 
     for index, vol in enumerate(crawler.volumes):
-        if not isinstance(vol.id, int) or vol["id"] < 0:
+        if not isinstance(vol.id, int) or vol.id < 0:
             raise LNException(f"Invalid volume id at index {index}")
         vol.title = __format_title(vol.title or f"Volume {vol.id}")
         vol.start_chapter = len(crawler.chapters)
@@ -34,6 +34,10 @@ def __format_volume(crawler: Crawler, vol_id_map: Dict[int, int]):
 
 
 def __format_chapters(crawler: Crawler, vol_id_map: Dict[int, int]):
+    crawler.chapters = [
+        chap if isinstance(chap, Chapter) else Chapter(**chap)
+        for chap in sorted(crawler.chapters, key=lambda x: x.get("id"))
+    ]
     for index, item in enumerate(crawler.chapters):
         if not isinstance(item, Chapter):
             item = crawler.chapters[index] = Chapter(**item)
