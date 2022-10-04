@@ -40,12 +40,6 @@ logger = logging.getLogger("uc")
 logger.setLevel(logging.getLogger().getEffectiveLevel())
 
 
-try:
-    from __future__ import annotations
-except ImportError:
-    pass
-
-
 class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
     """
 
