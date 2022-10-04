@@ -7,4 +7,10 @@ logger = logging.getLogger(__name__)
 
 
 class AllNovelCrawler(NovelFullTemplate):
-    base_url = ["https://allnovel.org/", "https://www.allnovel.org/"]
+    base_url = [
+        "https://allnovel.org/",
+        "https://www.allnovel.org/",
+    ]
+
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(["h3"])

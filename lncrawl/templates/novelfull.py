@@ -1,16 +1,16 @@
 import re
-from typing import Iterable
+from typing import Generator, Iterable
 from urllib.parse import quote_plus
 
 from bs4 import BeautifulSoup, Tag
 
 from ..core.exeptions import LNException
 from ..models import Chapter, SearchResult
+from .soup.paginated_toc import PaginatedSoupTemplate
 from .soup.searchable import SearchableSoupTemplate
-from .soup.single_page import SinglePageSoupTemplate
 
 
-class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
+class NovelFullTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
     is_template = True
 
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
@@ -22,8 +22,7 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
         return soup.select("#list-page .row h3[class*='title'] > a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
-        title = tag["title"] if tag.has_attr("title") else tag.get_text()
-
+        title = tag.get("title", tag.get_text())
         return SearchResult(
             title=title.strip(),
             url=self.absolute_url(tag["href"]),
@@ -33,7 +32,6 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
         tag = soup.select_one("h3.title")
         if not isinstance(tag, Tag):
             raise LNException("No title found")
-
         self.novel_title = tag.text.strip()
 
     def parse_cover(self, soup: BeautifulSoup) -> None:
@@ -58,25 +56,24 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
             ]
         )
 
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def generate_page_soups(
+        self, soup: BeautifulSoup
+    ) -> Generator[BeautifulSoup, None, None]:
         nl_id_tag = soup.select_one("#rating[data-novel-id]")
         if not isinstance(nl_id_tag, Tag):
             raise LNException("No novel_id found")
 
-        soup = self.get_soup(
-            self.make_chapter_list_url(soup, nl_id_tag["data-novel-id"])
-        )
-
-        return soup.select("ul.list-chapter > li > a, select > option")
-
-    def make_chapter_list_url(self, soup: BeautifulSoup, nl_id: str) -> str:
-        url = f"{self.home_url}ajax/chapter-archive?novelId={nl_id}"
-
+        nl_id = nl_id_tag["data-novel-id"]
         script = soup.find("script", text=re.compile(r"ajaxChapterOptionUrl\s+="))
         if isinstance(script, Tag):
             url = f"{self.home_url}ajax-chapter-option?novelId={nl_id}"
+        else:
+            url = f"{self.home_url}ajax/chapter-archive?novelId={nl_id}"
 
-        return url
+        return self.get_soup(url)
+
+    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+        return soup.select("ul.list-chapter > li > a, select > option")
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
@@ -92,4 +89,5 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
         for img in body.select("img"):
             if img.has_attr("data-src"):
                 img.attrs = {"src": img["data-src"]}
+        self.cleaner.clean_contents(body)
         return body
