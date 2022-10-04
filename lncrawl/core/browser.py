@@ -9,8 +9,6 @@ from typing import Iterable, List, Optional
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 
-from .. import chromedriver as webdriver
-from ..chromedriver import ChromeOptions
 from ..utils.platforms import Platform, Screen
 from .soup import SoupMaker
 
@@ -34,6 +32,12 @@ try:
     from webdriver_manager.chrome import ChromeDriverManager
 except ImportError:
     logger.warn("`webdriver-manager` is not found")
+
+try:
+    from .. import chromedriver as webdriver
+    from ..chromedriver import ChromeOptions
+except ImportError:
+    logger.warn("`chromedriver` is not found")
 
 
 __all__ = [

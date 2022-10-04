@@ -26,22 +26,18 @@ import subprocess
 import tempfile
 import time
 
+import selenium.webdriver.chrome.service
+import selenium.webdriver.chrome.webdriver
+import selenium.webdriver.common.service
+import selenium.webdriver.remote.webdriver
+
 from ..utils.platforms import Platform
 from .dprocess import start_detached
+from .options import ChromeOptions
 from .patcher import Patcher
 from .utils import find_chrome_executable
 
 logger = logging.getLogger("uc")
-
-try:
-    import selenium.webdriver.chrome.service
-    import selenium.webdriver.chrome.webdriver
-    import selenium.webdriver.common.service
-    import selenium.webdriver.remote.webdriver
-
-    from .options import ChromeOptions
-except ImportError:
-    logger.warn("`selenium` is not found")
 
 
 class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
