@@ -49,7 +49,10 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
             [
                 a.text.strip()
                 for a in soup.select(
-                    ".info a[href*='/au/'], .info a[href*='/authors/']"
+                    ".info a[href*='/au/'],"
+                    + ".info a[href*='/authors/',"
+                    + ".info a[href*='/author/',"
+                    + ".info a[href*='/a/']"
                 )
             ]
         )
