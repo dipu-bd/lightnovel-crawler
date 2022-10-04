@@ -18,9 +18,9 @@ __version__ = "3.1.5r4"
 
 
 import json
+import locale
 import logging
 import os
-import re
 import shutil
 import subprocess
 import tempfile
@@ -28,7 +28,6 @@ import time
 
 from ..utils.platforms import Platform
 from .dprocess import start_detached
-from .options import ChromeOptions
 from .patcher import Patcher
 from .utils import find_chrome_executable
 
@@ -39,6 +38,8 @@ try:
     import selenium.webdriver.chrome.webdriver
     import selenium.webdriver.common.service
     import selenium.webdriver.remote.webdriver
+
+    from .options import ChromeOptions
 except ImportError:
     logger.warn("`selenium` is not found")
 
@@ -87,7 +88,6 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
     def __init__(
         self,
         options=None,
-        user_data_dir=None,
         driver_executable_path=None,
         browser_executable_path=None,
         port=0,
@@ -116,11 +116,6 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
             this takes an instance of ChromeOptions, mainly to customize browser behavior.
             anything other dan the default, for example extensions or startup options
             are not supported in case of failure, and can probably lowers your undetectability.
-
-
-        user_data_dir: str , optional, default: None (creates temp profile)
-            if user_data_dir is a path to a valid chrome profile directory, use it,
-            and turn off automatic removal mechanism at exit.
 
         driver_executable_path: str, optional, default: None(=downloads and patches new binary)
 
@@ -216,76 +211,20 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
         options.add_argument("--remote-debugging-host=%s" % debug_host)
         options.add_argument("--remote-debugging-port=%s" % debug_port)
 
-        if user_data_dir:
-            options.add_argument("--user-data-dir=%s" % user_data_dir)
+        self.user_data_dir = os.path.normpath(tempfile.mkdtemp())
+        self.keep_user_data_dir = False
+        options.add_argument("--user-data-dir=%s" % self.user_data_dir)
+        logger.debug(
+            "Created a temporary folder in which the user-data (profile): "
+            + self.user_data_dir
+        )
 
-        language, keep_user_data_dir = None, bool(user_data_dir)
-
-        # see if a custom user profile is specified in options
-        for arg in options.arguments:
-
-            if "lang" in arg:
-                m = re.search("(?:--)?lang(?:[ =])?(.*)", arg)
-                try:
-                    language = m[1]
-                except IndexError:
-                    logger.debug("will set the language to en-US,en;q=0.9")
-                    language = "en-US,en;q=0.9"
-
-            if "user-data-dir" in arg:
-                m = re.search("(?:--)?user-data-dir(?:[ =])?(.*)", arg)
-                try:
-                    user_data_dir = m[1]
-                    logger.debug(
-                        "user-data-dir found in user argument %s => %s" % (arg, m[1])
-                    )
-                    keep_user_data_dir = True
-
-                except IndexError:
-                    logger.debug(
-                        "no user data dir could be extracted from supplied argument %s "
-                        % arg
-                    )
-
-        if not user_data_dir:
-
-            # backward compatiblity
-            # check if an old uc.ChromeOptions is used, and extract the user data dir
-
-            if hasattr(options, "user_data_dir") and getattr(
-                options, "user_data_dir", None
-            ):
-                import warnings
-
-                warnings.warn(
-                    "using ChromeOptions.user_data_dir might stop working in future versions."
-                    "use uc.Chrome(user_data_dir='/xyz/some/data') in case you need existing profile folder"
-                )
-                options.add_argument("--user-data-dir=%s" % options.user_data_dir)
-                keep_user_data_dir = True
-                logger.debug(
-                    "user_data_dir property found in options object: %s" % user_data_dir
-                )
-
-            else:
-                user_data_dir = os.path.normpath(tempfile.mkdtemp())
-                keep_user_data_dir = False
-                arg = "--user-data-dir=%s" % user_data_dir
-                options.add_argument(arg)
-                logger.debug(
-                    "created a temporary folder in which the user-data (profile) will be stored during this\n"
-                    "session, and added it to chrome startup arguments: %s" % arg
-                )
-
+        try:
+            language = locale.getdefaultlocale()[0].replace("_", "-")
+        except Exception:
+            pass
         if not language:
-            try:
-                import locale
-
-                language = locale.getdefaultlocale()[0].replace("_", "-")
-            except Exception:
-                pass
-            if not language:
-                language = "en-US"
+            language = "en-US"
 
         options.add_argument("--lang=%s" % language)
 
@@ -296,11 +235,13 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
 
         self._delay = 3
 
-        self.user_data_dir = user_data_dir
-        self.keep_user_data_dir = keep_user_data_dir
-
         if suppress_welcome:
-            options.arguments.extend(["--no-default-browser-check", "--no-first-run"])
+            options.arguments.extend(
+                [
+                    "--no-default-browser-check",
+                    "--no-first-run",
+                ]
+            )
         if headless or options.headless:
             options.headless = True
             options.add_argument("--window-size=1920,1080")
@@ -312,12 +253,12 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
         options.add_argument("--log-level=%d" % (log_level or 0))
 
         if hasattr(options, "handle_prefs"):
-            options.handle_prefs(user_data_dir)
+            options.handle_prefs(self.user_data_dir)
 
         # fix exit_type flag to prevent tab-restore nag
         try:
             with open(
-                os.path.join(user_data_dir, "Default/Preferences"),
+                os.path.join(self.user_data_dir, "Default/Preferences"),
                 encoding="latin1",
                 mode="r+",
             ) as fs:
@@ -506,14 +447,9 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
         except Exception:
             pass
 
-        if (
-            hasattr(self, "keep_user_data_dir")
-            and hasattr(self, "user_data_dir")
-            and not self.keep_user_data_dir
-        ):
+        if self.user_data_dir and not self.keep_user_data_dir:
             for _ in range(5):
                 try:
-
                     shutil.rmtree(self.user_data_dir, ignore_errors=False)
                 except FileNotFoundError:
                     pass
