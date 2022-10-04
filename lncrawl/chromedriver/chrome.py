@@ -211,7 +211,7 @@ def create_chrome(
             executable_path=executable_path,
             options=options,
         )
-    except:
+    except Exception:
         chrome = None
 
     if not chrome:
