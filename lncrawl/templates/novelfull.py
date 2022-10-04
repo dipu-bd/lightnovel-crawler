@@ -15,19 +15,19 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
 
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
         return self.get_soup(
-            f"{self.home_url}ajax/search-novel?keyword={quote_plus(query.lower())}"
+            f"{self.home_url}search?keyword={quote_plus(query.lower())}"
         )
 
     def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select("a:not([href^='/s'])")
+        return soup.select("#list-page .row h3[class*='title'] > a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
-        return [
-            SearchResult(
-                title=tag.text.strip(),
-                url=self.absolute_url(tag["href"]),
-            )
-        ]
+        title = tag["title"] if tag.has_attr("title") else tag.get_text()
+
+        return SearchResult(
+            title=title.strip(),
+            url=self.absolute_url(tag["href"]),
+        )
 
     def parse_title(self, soup: BeautifulSoup) -> None:
         tag = soup.select_one("h3.title")
