@@ -1,5 +1,6 @@
 import os
 import platform
+import sys
 
 
 def is_docker():
@@ -43,5 +44,7 @@ class Platform:
     java = platform.system() == "Java"
     mac = platform.system() == "Darwin"
     linux = platform.system() == "Linux"
+    cygwin = sys.platform.startswith("cygwin")
+    posix = sys.platform.startswith(("darwin", "cygwin", "linux"))
     windows = platform.system() == "Windows"
     wsl = "wsl" in platform.release().lower()

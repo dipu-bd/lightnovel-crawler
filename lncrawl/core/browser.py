@@ -9,6 +9,8 @@ from typing import Iterable, List, Optional
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 
+from .. import chromedriver as webdriver
+from ..chromedriver import ChromeOptions
 from ..utils.platforms import Platform, Screen
 from .soup import SoupMaker
 
@@ -27,14 +29,6 @@ try:
     LOGGER.setLevel(logging.ERROR)
 except ImportError:
     logger.warn("`selenium` is not found")
-
-try:
-    import undetected_chromedriver as webdriver
-    from undetected_chromedriver import ChromeOptions
-
-    webdriver.logger.setLevel(logging.WARN)
-except ImportError:
-    logger.warn("`undetected-chromedriver` is not found")
 
 try:
     from webdriver_manager.chrome import ChromeDriverManager
