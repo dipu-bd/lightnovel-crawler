@@ -40,14 +40,18 @@ class NovelNextCrawler(Crawler):
 
         self.novel_title = title_tag.text.strip()
 
+        rating_tag = soup.select_one("#rating[data-novel-id]")
+        if not isinstance(rating_tag, Tag):
+            raise LNException("No novel_id found")
+
+        self.novel_id = rating_tag["data-novel-id"]
+        logger.info("Novel id: %s", self.novel_id)
+
         image_tag = soup.select_one(".books .book img")
         if isinstance(image_tag, Tag):
             self.novel_cover = self.absolute_url(image_tag["src"])
 
         logger.info("Novel cover: %s", self.novel_cover)
-
-        self.novel_id = self.novel_url.split("/")[-1]
-        logger.info("Novel id: %s", self.novel_id)
 
         chapters_soup = self.get_soup(
             f"{self.home_url}ajax/chapter-archive?novelId={self.novel_id}"
