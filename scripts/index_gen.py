@@ -160,7 +160,10 @@ def search_user_by(query):
 
 def git_history(file_path):
     try:
-        cmd = 'git log --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
+        cmd = (
+            'git log --follow --diff-filter=ACMT --pretty="%%at||%%aN||%%aE||%%s" "%s"'
+            % file_path
+        )
         # cmd = 'git log -1 --diff-filter=ACMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
         logs = subprocess.check_output(cmd, shell=True).decode("utf-8").strip()
         logs = [line.strip().split("||", maxsplit=4) for line in logs.splitlines(False)]
