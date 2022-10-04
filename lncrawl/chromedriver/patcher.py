@@ -14,9 +14,9 @@ import zipfile
 from distutils.version import LooseVersion
 from urllib.request import urlopen, urlretrieve
 
-logger = logging.getLogger(__name__)
+from ..utils.platforms import Platform
 
-IS_POSIX = sys.platform.startswith(("darwin", "cygwin", "linux"))
+logger = logging.getLogger(__name__)
 
 
 class Patcher(object):
@@ -69,7 +69,7 @@ class Patcher(object):
                 self.data_path, "_".join([prefix, self.exe_name])
             )
 
-        if not IS_POSIX:
+        if not Platform.posix:
             if executable_path:
                 if not executable_path[-4:] == ".exe":
                     executable_path += ".exe"
@@ -194,7 +194,7 @@ class Patcher(object):
         :return: True on success else False
         """
         exe_name = os.path.basename(exe_name)
-        if IS_POSIX:
+        if Platform.posix:
             r = os.system("kill -f -9 $(pidof %s)" % exe_name)
         else:
             r = os.system("taskkill /f /im %s" % exe_name)

@@ -3,9 +3,15 @@
 
 
 import json
+import logging
 import os
 
-from selenium.webdriver.chromium.options import ChromiumOptions as _ChromiumOptions
+logger = logging.getLogger(__name__)
+
+try:
+    from selenium.webdriver.chromium.options import ChromiumOptions as _ChromiumOptions
+except ImportError:
+    logger.warn("`selenium` is not found")
 
 
 class ChromeOptions(_ChromiumOptions):

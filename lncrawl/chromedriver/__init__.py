@@ -26,18 +26,21 @@ import subprocess
 import tempfile
 import time
 
-import selenium.webdriver.chrome.service
-import selenium.webdriver.chrome.webdriver
-import selenium.webdriver.common.service
-import selenium.webdriver.remote.webdriver
-
+from ..utils.platforms import Platform
 from .dprocess import start_detached
 from .options import ChromeOptions
-from .patcher import IS_POSIX, Patcher
+from .patcher import Patcher
 from .utils import find_chrome_executable
 
 logger = logging.getLogger("uc")
-logger.setLevel(logging.getLogger().getEffectiveLevel())
+
+try:
+    import selenium.webdriver.chrome.service
+    import selenium.webdriver.chrome.webdriver
+    import selenium.webdriver.common.service
+    import selenium.webdriver.remote.webdriver
+except ImportError:
+    logger.warn("`selenium` is not found")
 
 
 class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
@@ -306,10 +309,7 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
             # fixes "could not connect to chrome" error when running
             # on linux using privileged user like root (which i don't recommend)
 
-        options.add_argument(
-            "--log-level=%d" % log_level
-            or divmod(logging.getLogger().getEffectiveLevel(), 10)[0]
-        )
+        options.add_argument("--log-level=%d" % (log_level or 0))
 
         if hasattr(options, "handle_prefs"):
             options.handle_prefs(user_data_dir)
@@ -346,7 +346,7 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                close_fds=IS_POSIX,
+                close_fds=Platform.posix,
             )
             self.browser_pid = browser.pid
 

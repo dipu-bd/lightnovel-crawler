@@ -1,7 +1,7 @@
 import os
 import sys
 
-from .patcher import IS_POSIX
+from ..utils.platforms import Platform
 
 
 def find_chrome_executable():
@@ -15,7 +15,7 @@ def find_chrome_executable():
 
     """
     candidates = set()
-    if IS_POSIX:
+    if Platform.posix:
         for item in os.environ.get("PATH").split(os.pathsep):
             for subitem in (
                 "google-chrome",
