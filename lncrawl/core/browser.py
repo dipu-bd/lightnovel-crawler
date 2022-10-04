@@ -238,7 +238,7 @@ class Browser:
         # Return from cache if available
         old_html = getattr(self, "_html_", None)
         if old_html == self.html:
-            return getattr(self, "_soup")
+            return getattr(self, "_soup_")
         # Create new soup and save to cache
         soup = self._soup_tool.make_soup(self.html)
         setattr(self, "_html_", self.html)

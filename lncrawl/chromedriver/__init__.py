@@ -469,25 +469,6 @@ class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
             self._hook_remove_cdc_props()
         return super().get(url)
 
-    def tab_new(self, url: str):
-        """
-        this opens a url in a new tab.
-        apparently, that passes all tests directly!
-
-        Parameters
-        ----------
-        url
-
-        Returns
-        -------
-
-        """
-        if not hasattr(self, "cdp"):
-            from .cdp import CDP
-
-            cdp = CDP(self.options)
-            cdp.tab_new(url)
-
     def reconnect(self, timeout=0.1):
         try:
             self.service.stop()

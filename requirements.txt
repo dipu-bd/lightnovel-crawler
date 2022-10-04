@@ -24,7 +24,6 @@ python-box>=6.0.0,<7.0.0
 pycryptodome>=3.0.0,<4.0.0
 undetected-chromedriver
 webdriver-manager
-websockets
 selenium
 
 # dev requirements
