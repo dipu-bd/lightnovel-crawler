@@ -11,6 +11,7 @@ from .soup.single_page import SinglePageSoupTemplate
 
 class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
     is_template = True
+    ajax_url = "ajax/chapter-archive"
 
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
         return self.get_soup(
@@ -50,8 +51,8 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
                 a.text.strip()
                 for a in soup.select(
                     ".info a[href*='/au/'],"
-                    + ".info a[href*='/authors/',"
-                    + ".info a[href*='/author/',"
+                    + ".info a[href*='/authors/'],"
+                    + ".info a[href*='/author/'],"
                     + ".info a[href*='/a/']"
                 )
             ]
@@ -63,20 +64,22 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
             raise LNException("No novel_id found")
 
         soup = self.get_soup(
-            f"{self.home_url}ajax/chapter-archive?novelId={nl_id_tag['data-novel-id']}"
+            f"{self.home_url}{self.ajax_url}?novelId={nl_id_tag['data-novel-id']}"
         )
 
-        return soup.select("ul.list-chapter > li > a")
+        return soup.select("ul.list-chapter > li > a, select > option")
 
-    def parse_chapter_item(self, a: Tag, id: int) -> Chapter:
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
             id=id,
-            title=a.text.strip(),
-            url=self.absolute_url(a["href"]),
+            title=tag.text.strip(),
+            url=self.absolute_url(
+                tag["href"] if tag.has_attr("href") else tag["value"]
+            ),
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        body = soup.select_one("#chr-content")
+        body = soup.select_one("#chr-content, #chapter-content")
         for img in body.select("img"):
             if img.has_attr("data-src"):
                 img.attrs = {"src": img["data-src"]}
