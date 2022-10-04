@@ -1,3 +1,4 @@
+import re
 from typing import Iterable
 from urllib.parse import quote_plus
 
@@ -11,7 +12,6 @@ from .soup.single_page import SinglePageSoupTemplate
 
 class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
     is_template = True
-    ajax_url = "ajax/chapter-archive"
 
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
         return self.get_soup(
@@ -64,10 +64,19 @@ class NovelFullTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
             raise LNException("No novel_id found")
 
         soup = self.get_soup(
-            f"{self.home_url}{self.ajax_url}?novelId={nl_id_tag['data-novel-id']}"
+            self.make_chapter_list_url(soup, nl_id_tag["data-novel-id"])
         )
 
         return soup.select("ul.list-chapter > li > a, select > option")
+
+    def make_chapter_list_url(self, soup: BeautifulSoup, nl_id: str) -> str:
+        url = f"{self.home_url}ajax/chapter-archive?novelId={nl_id}"
+
+        script = soup.find("script", text=re.compile(r"ajaxChapterOptionUrl\s+="))
+        if isinstance(script, Tag):
+            url = f"{self.home_url}ajax-chapter-option?novelId={nl_id}"
+
+        return url
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(

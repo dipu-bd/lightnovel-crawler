@@ -8,4 +8,3 @@ logger = logging.getLogger(__name__)
 
 class AllNovelCrawler(NovelFullTemplate):
     base_url = ["https://allnovel.org/", "https://www.allnovel.org/"]
-    ajax_url = "ajax-chapter-option"
