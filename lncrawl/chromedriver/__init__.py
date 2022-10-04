@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-from __future__ import annotations
-
-import subprocess
-
 """
 
          888                                                  888         d8b
@@ -27,6 +22,7 @@ import logging
 import os
 import re
 import shutil
+import subprocess
 import tempfile
 import time
 
@@ -42,6 +38,12 @@ from .utils import find_chrome_executable
 
 logger = logging.getLogger("uc")
 logger.setLevel(logging.getLogger().getEffectiveLevel())
+
+
+try:
+    from __future__ import annotations
+except ImportError:
+    pass
 
 
 class Chrome(selenium.webdriver.chrome.webdriver.WebDriver):
