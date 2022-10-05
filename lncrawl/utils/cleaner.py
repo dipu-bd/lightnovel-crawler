@@ -33,58 +33,61 @@ class TextCleaner:
         self.bad_tags: Set[str] = set(
             [
                 # tag names to remove
-                "noscript",
-                "script",
-                "style",
-                "iframe",
-                "ins",
-                "header",
-                "footer",
-                "button",
-                "input",
-                "amp-auto-ads",
-                "pirate",
-                "figcaption",
                 "address",
-                "tfoot",
-                "object",
-                "video",
+                "amp-auto-ads",
                 "audio",
-                "source",
-                "nav",
-                "output",
-                "select",
-                "textarea",
+                "button",
+                "figcaption",
+                "footer",
                 "form",
+                "header",
+                "iframe",
+                "input",
+                "ins",
                 "map",
+                "nav",
+                "noscript",
+                "object",
+                "output",
+                "pirate",
+                "script",
+                "select",
+                "source",
+                "style",
+                "textarea",
+                "tfoot",
+                "video",
             ]
         )
         self.bad_css: Set[str] = set(
             [
                 # css selector to select and remoe tags
-                ".code-block",
-                ".adsbygoogle",
-                ".sharedaddy",
-                ".inline-ad-slot",
+                ".adblock-service",
+                ".adbox",
                 ".ads-middle",
-                ".jp-relatedposts",
-                ".ezoic-adpicker-ad",
+                ".ads",
+                ".adsbygoogle",
+                ".adsense-code",
+                ".cb_p6_patreon_button",
+                ".code-block",
                 ".ezoic-ad-adaptive",
                 ".ezoic-ad",
-                ".cb_p6_patreon_button",
-                ".adbox",
+                ".ezoic-adpicker-ad",
                 ".googlepublisherads",
-                ".adblock-service",
-                ".adsense-code",
+                ".inline-ad-slot",
+                ".jp-relatedposts",
+                ".sharedaddy",
                 ".wp-post-navigation",
-                "a[href*='paypal.me']",
                 "a[href*='patreon.com']",
+                "a[href*='paypal.me']",
             ]
         )
         self.p_block_tags: Set[str] = set(
             [
                 # tags that can be used as paragraph break
-                "p",
+                "article",
+                "aside",
+                "div",
                 "h1",
                 "h2",
                 "h3",
@@ -92,28 +95,26 @@ class TextCleaner:
                 "h5",
                 "h6",
                 "main",
-                "aside",
-                "article",
-                "div",
+                "p",
                 "section",
             ]
         )
         self.unchanged_tags: Set[str] = set(
             [
                 # tags to keep unchanged with text and attributes
-                "pre",
                 "canvas",
                 "img",
+                "pre",
             ]
         )
         self.plain_text_tags: Set[str] = set(
             [
                 # tags that will be joined together in a paragraph
-                "span",
                 "a",
                 "abbr",
                 "acronym",
                 "label",
+                "span",
                 "time",
             ]
         )
@@ -138,8 +139,8 @@ class TextCleaner:
         self.whitelist_css_property: Set[str] = set(
             [
                 # the css styles to keep while cleaning style tag
-                "font-weight",
                 "font-style",
+                "font-weight",
             ]
         )
 

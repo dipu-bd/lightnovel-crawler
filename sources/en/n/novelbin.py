@@ -6,5 +6,5 @@ from lncrawl.templates.novelfull import NovelFullTemplate
 logger = logging.getLogger(__name__)
 
 
-class HotNovelFullCrawler(NovelFullTemplate):
-    base_url = ["https://hotnovelfull.com/"]
+class NovelbinCrawler(NovelFullTemplate):
+    base_url = ["https://novelbin.com/"]

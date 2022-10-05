@@ -21,7 +21,8 @@ class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
         soup = self.get_soup(f"{self.home_url}search.html")
         form = soup.select_one('.search-container form[method="post"]')
-        assert isinstance(form, Tag), "No search form"
+        if not isinstance(form, Tag):
+            raise LNException("No search form")
 
         action_url = self.absolute_url(form["action"])
         payload = {input["name"]: input["value"] for input in form.select("input")}
@@ -85,7 +86,8 @@ class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
 
         self.resolve_futures(futures, desc="TOC", unit="page")
         for i, future in enumerate(futures):
-            assert future.done(), f"Failed to get page {i + 1}"
+            if not future.done():
+                raise LNException(f"Failed to get page {i + 1}")
             yield future.result()
 
     def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
