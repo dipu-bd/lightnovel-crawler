@@ -10,6 +10,13 @@ full_chapter_url = "https://hotnovelfull.com/ajax/chapter-archive?novelId=%s"
 class HotNovelFullCrawler(Crawler):
     base_url = "https://hotnovelfull.com/"
 
+    def initialize(self) -> None:
+        self.cleaner.bad_text_regex.update(
+            [
+                "This chapter upload first at NovelNext.com",
+            ]
+        )
+
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)
