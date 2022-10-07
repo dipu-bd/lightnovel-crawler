@@ -34,8 +34,8 @@ def display_open_folder(folder_path: str):
     elif Platform.wsl:
         os.system(f'cd "{folder_path}" && explorer.exe .')
     elif Platform.linux:
-        subprocess.run(f'xdg-open "{folder_path}"')
+        os.system(f'xdg-open "{folder_path}"')
     elif Platform.mac:
-        subprocess.run(f'open -- "{folder_path}"')
+        os.system(f'open "{folder_path}"')
     else:
         print(f"Output Folder: {folder_path}")
