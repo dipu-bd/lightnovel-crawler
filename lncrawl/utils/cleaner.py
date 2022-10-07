@@ -2,7 +2,7 @@ import itertools
 import re
 import sys
 import unicodedata
-from typing import Dict, Set, Union
+from typing import AnyStr, Dict, Iterable, List, Set, Union
 
 from bs4 import Comment, Tag
 
@@ -25,7 +25,7 @@ class TextCleaner:
                 # WARNING: dangerous to use. use bad_tag_text_pairs instead
             ]
         )
-        self.bad_tag_text_pairs: Dict[str, Union[str, re.Pattern[str]]] = {
+        self.bad_tag_text_pairs: Dict[str, Union[str, re.Pattern[str], List[AnyStr]]] = {
             # a { tag-name: string or regex pattern } to remove.
             # the tag will be removed if the text inside contains the pattern
         }
@@ -164,6 +164,10 @@ class TextCleaner:
             for bad in div.select(",".join(self.bad_css)):
                 bad.extract()
 
+        for tag in div.select(','.join(self.bad_tag_text_pairs.keys())):
+            if self.tag_contains_bad_text(tag):
+                tag.extract()
+
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()  # Remove comments
@@ -173,11 +177,9 @@ class TextCleaner:
                 tag.extract()  # Remove bad tags
             elif tag.name in ["br", "hr"]:
                 self.extract_on_duplicate_sibling(tag)
-            elif self.tag_contains_bad_text(tag):
-                tag.extract()  # Remove tags containing bad texts
             else:
                 self.clean_attributes(tag)
-
+        
         self.clean_attributes(div)
         return div
 
@@ -207,9 +209,17 @@ class TextCleaner:
         tag.attrs = attrs
 
     def tag_contains_bad_text(self, tag: Tag) -> bool:
-        if tag.name not in self.bad_tag_text_pairs:
+        pattern = self.bad_tag_text_pairs.get(tag.name)
+        if not tag.text:
+            return True
+        if not pattern:
             return False
-        return re.search(self.bad_tag_text_pairs, tag.text)
+        if isinstance(pattern, list):
+            pattern = '|'.join([f'({x})' for x in pattern if x])
+        if not isinstance(pattern, re.Pattern):
+            pattern = re.compile(pattern, re.M)
+            self.bad_tag_text_pairs[tag.name] = pattern
+        return pattern.search(tag.text)
 
     def clean_style_value(self, style: str) -> str:
         clean_css = []
