@@ -13,19 +13,17 @@ class SearchableSoupTemplate(GeneralSoupTemplate):
         tags = self.select_search_items(soup)
         results = []
         for sr in self.process_search_results(tags):
-            if len(results) >= 10:
-                break
-            if not sr:
-                continue
-            results.append(sr)
+            if sr:
+                results.append(sr)
+                if len(results) == 10:
+                    break
         return results
 
     def process_search_results(self, tags: Iterable[Tag]) -> Generator[Tag, None, None]:
         """Process novel item tag and generates search results"""
-        for tag in tags[:10]:
-            if not isinstance(tag, Tag):
-                continue
-            yield self.parse_search_item(tag)
+        for tag in tags:
+            if isinstance(tag, Tag):
+                yield self.parse_search_item(tag)
 
     @abstractmethod
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
@@ -33,7 +31,7 @@ class SearchableSoupTemplate(GeneralSoupTemplate):
         raise NotImplementedError()
 
     @abstractmethod
-    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def select_search_items(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
         """Select novel items found in search page soup"""
         raise NotImplementedError()
 

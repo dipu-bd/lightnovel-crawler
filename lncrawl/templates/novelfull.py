@@ -28,33 +28,28 @@ class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             url=self.absolute_url(tag["href"]),
         )
 
-    def parse_title(self, soup: BeautifulSoup) -> None:
+    def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one("h3.title")
-        if not isinstance(tag, Tag):
-            raise LNException("No title found")
+        assert tag
         self.novel_title = tag.text.strip()
 
-    def parse_cover(self, soup: BeautifulSoup) -> None:
+    def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".book img")
-        if not isinstance(tag, Tag):
-            return
+        assert tag
         if tag.has_attr("data-src"):
-            self.novel_cover = self.absolute_url(tag["data-src"])
-        elif tag.has_attr("src"):
-            self.novel_cover = self.absolute_url(tag["src"])
+            return self.absolute_url(tag["data-src"])
+        if tag.has_attr("src"):
+            return self.absolute_url(tag["src"])
 
-    def parse_authors(self, soup: BeautifulSoup) -> None:
-        self.novel_author = ", ".join(
-            [
-                a.text.strip()
-                for a in soup.select(
-                    ".info a[href*='/au/'],"
-                    + ".info a[href*='/authors/'],"
-                    + ".info a[href*='/author/'],"
-                    + ".info a[href*='/a/']"
-                )
-            ]
-        )
+    def parse_authors(self, soup: BeautifulSoup):
+        possible_selectors = [
+            "a[href*='/a/']",
+            "a[href*='/au/']",
+            "a[href*='/authors/']",
+            "a[href*='/author/']",
+        ]
+        for a in soup.select_one(".info").select(",".join(possible_selectors)):
+            yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup):
         nl_id_tag = soup.select_one("#rating[data-novel-id]")
@@ -69,20 +64,14 @@ class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             url = f"{self.home_url}ajax/chapter-archive?novelId={nl_id}"
 
         soup = self.get_soup(url)
-        yield from soup.select("ul.list-chapter > li > a, select > option")
+        yield from soup.select("ul.list-chapter > li > a[href], select > option[value]")
 
-    def parse_chapter_item(self, id: int, tag: Tag, soup: BeautifulSoup) -> Chapter:
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
             id=id,
             title=tag.text.strip(),
-            url=self.absolute_url(
-                tag["href"] if tag.has_attr("href") else tag["value"]
-            ),
+            url=self.absolute_url(tag.get("href") or tag.get("value")),
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        body = soup.select_one("#chr-content, #chapter-content")
-        for img in body.select("img"):
-            if img.has_attr("data-src"):
-                img.attrs = {"src": img["data-src"]}
-        return body
+        return soup.select_one("#chr-content, #chapter-content")

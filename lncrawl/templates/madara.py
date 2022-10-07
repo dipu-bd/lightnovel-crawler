@@ -1,9 +1,7 @@
-from typing import Iterable
 from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
-from ..core.exeptions import LNException
 from ..models import Chapter, SearchResult
 from .soup.chapter_only import ChapterOnlySoupTemplate
 from .soup.searchable import SearchableSoupTemplate
@@ -28,8 +26,8 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         )
         return self.get_soup(f"{self.home_url}?{urlencode(params)}")
 
-    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select(".c-tabs-item__content")
+    def select_search_items(self, soup: BeautifulSoup):
+        yield from soup.select(".c-tabs-item__content")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         a = tag.select_one(".post-title h3 a")
@@ -41,32 +39,26 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             info="%s | Rating: %s" % (latest, votes),
         )
 
-    def parse_title(self, soup: BeautifulSoup) -> None:
+    def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".post-title h1")
-        if not isinstance(tag, Tag):
-            raise LNException("No title found")
+        assert tag
         for span in tag.select("span"):
             span.extract()
-        self.novel_title = tag.text.strip()
+        return tag.text.strip()
 
-    def parse_cover(self, soup: BeautifulSoup) -> None:
+    def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".summary_image a img")
-        if not isinstance(tag, Tag):
-            return
+        assert tag
         if tag.has_attr("data-src"):
-            self.novel_cover = self.absolute_url(tag["data-src"])
-        elif tag.has_attr("src"):
-            self.novel_cover = self.absolute_url(tag["src"])
+            return self.absolute_url(tag["data-src"])
+        if tag.has_attr("src"):
+            return self.absolute_url(tag["src"])
 
-    def parse_authors(self, soup: BeautifulSoup) -> None:
-        self.novel_author = ", ".join(
-            [
-                a.text.strip()
-                for a in soup.select('.author-content a[href*="manga-author"]')
-            ]
-        )
+    def parse_authors(self, soup: BeautifulSoup):
+        for a in soup.select('.author-content a[href*="manga-author"]'):
+            yield a.text.strip()
 
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def select_chapter_tags(self, soup: BeautifulSoup):
         nl_id = soup.select_one('[id^="manga-chapters-holder"][data-id]')
         if isinstance(nl_id, Tag):
             response = self.submit_form(
@@ -81,18 +73,14 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
 
         soup = self.make_soup(response)
-        return reversed(soup.select("ul.main .wp-manga-chapter > a"))
+        yield from reversed(soup.select("ul.main .wp-manga-chapter > a"))
 
-    def parse_chapter_item(self, id: int, a: Tag, soup: BeautifulSoup) -> Chapter:
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
             id=id,
-            title=a.text.strip(),
-            url=self.absolute_url(a["href"]),
+            title=tag.text.strip(),
+            url=self.absolute_url(tag["href"]),
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        body = soup.select_one("div.reading-content")
-        for img in body.select("img"):
-            if img.has_attr("data-src"):
-                img.attrs = {"src": img["data-src"]}
-        return body
+        return soup.select_one("div.reading-content")

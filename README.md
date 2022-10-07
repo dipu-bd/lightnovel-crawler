@@ -374,9 +374,12 @@ You are very welcome to contribute in this project. You can:
 
 ### Adding new source
 
-- Create new crawler using the [`sources/_template.py`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/_template.py) as template. Read the comments on the file for instructions.
-- You can find plenty examples in the `sources` folder.
-- Put your source file inside the language folder. The `en` folder has too many files, therefore it is grouped using the first letter of the domain name.
+- Use `lncrawl --bot lookup` first to auto-generate your crawler from an existing template.
+- Check inside the [`sources/_examples`](https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/_examples). Read all the comments of all the files. And pick the one you like.
+- You can find plenty examples in the `sources` folder. Try to check the latest ones
+- Put your source file inside the language folder.
+  The `en` folder has too many files, therefore it is grouped using the first letter of the domain name.
+- Before making commit format files using `blake` formatter, and use `scripts/lint.sh` or `scripts/lint.bat` to check linting issues.
 
 ### Adding new Bot
 

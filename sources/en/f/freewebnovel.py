@@ -19,7 +19,7 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         )
 
     def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select(".col-content .con .txt h3 a")
+        yield from soup.select(".col-content .con .txt h3 a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         return SearchResult(
@@ -27,24 +27,22 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             url=self.absolute_url(tag["href"]),
         )
 
-    def parse_title(self, soup: BeautifulSoup) -> None:
+    def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".m-desc h1.tit")
-        assert isinstance(tag, Tag), "No title found"
-        self.novel_title = tag.text.strip()
+        assert isinstance(tag, Tag)
+        return tag.text.strip()
 
-    def parse_cover(self, soup: BeautifulSoup):
+    def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".m-imgtxt img")
-        if not isinstance(tag, Tag):
-            return
+        assert isinstance(tag, Tag)
         if tag.has_attr("data-src"):
-            self.novel_cover = self.absolute_url(tag["data-src"])
-        elif tag.has_attr("src"):
-            self.novel_cover = self.absolute_url(tag["src"])
+            return self.absolute_url(tag["data-src"])
+        if tag.has_attr("src"):
+            return self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup):
-        self.novel_author = ", ".join(
-            [a.text.strip() for a in soup.select(".m-imgtxt a[href*='/authors/']")]
-        )
+        for a in soup.select(".m-imgtxt a[href*='/authors/']"):
+            yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup):
         pages = soup.select("#indexselect > option")
@@ -61,11 +59,11 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             soup = future.result()
             yield from soup.select(".m-newest2 li > a")
 
-    def parse_chapter_item(self, id: int, a: Tag, soup: BeautifulSoup) -> Chapter:
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
             id=id,
-            url=self.absolute_url(a["href"]),
-            title=a.text.strip(),
+            url=self.absolute_url(tag["href"]),
+            title=tag.text.strip(),
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:

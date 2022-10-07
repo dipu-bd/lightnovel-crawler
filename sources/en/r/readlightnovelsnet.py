@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from typing import Iterable
 from urllib.parse import quote_plus
 
 from bs4 import BeautifulSoup, Tag
@@ -20,8 +19,8 @@ class ReadLightNovelsNet(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
         return self.get_soup(f"{self.home_url}?s={quote_plus(query)}")
 
-    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select(".home-truyendecu")
+    def select_search_items(self, soup: BeautifulSoup):
+        yield from soup.select(".home-truyendecu")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         a = tag.select_one("a")
@@ -36,21 +35,19 @@ class ReadLightNovelsNet(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             info=f"Latest chapter: {latest}",
         )
 
-    def parse_title(self, soup: BeautifulSoup) -> None:
+    def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".title")
-        assert isinstance(tag, Tag), "No title found"
-        self.novel_title = " ".join(
-            [str(x) for x in tag.contents if isinstance(x, str)]
-        )
+        assert tag
+        return " ".join([str(x) for x in tag.contents if isinstance(x, str)])
 
-    def parse_cover(self, soup: BeautifulSoup):
+    def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".book img[src]")
-        if not isinstance(tag, Tag):
-            return
-        self.novel_cover = self.absolute_url(tag["src"])
+        assert tag
+        return self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup):
-        self.novel_author = ", ".join([a.text.strip() for a in soup.select(".info a")])
+        for a in soup.select(".info a"):
+            yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup):
         novel_id = soup.select_one("#id_post")["value"]
@@ -67,7 +64,7 @@ class ReadLightNovelsNet(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         soup = self.make_soup(resp)
         yield from soup.select("option")
 
-    def parse_chapter_item(self, id: int, tag: Tag, soup: BeautifulSoup) -> Chapter:
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
             id=id,
             title=tag.text.strip(),

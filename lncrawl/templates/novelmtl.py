@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import time
 from concurrent.futures import Future
-from typing import Iterable, List
+from typing import List
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from bs4 import BeautifulSoup, Tag
@@ -30,8 +30,8 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         response = self.submit_form(action_url, payload)
         return self.make_soup(response)
 
-    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select("ul.novel-list .novel-item a")
+    def select_search_items(self, soup: BeautifulSoup):
+        yield from soup.select("ul.novel-list .novel-item a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         title = tag.select_one(".novel-title").text.strip()
@@ -41,28 +41,22 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             info=" | ".join([x.text.strip() for x in tag.select(".novel-stats")]),
         )
 
-    def parse_title(self, soup: BeautifulSoup) -> None:
+    def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".novel-info .novel-title")
-        if not isinstance(tag, Tag):
-            raise LNException("No title found")
-        self.novel_title = tag.text.strip()
+        assert tag
+        return tag.text.strip()
 
-    def parse_cover(self, soup: BeautifulSoup):
+    def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one("#novel figure.cover img")
-        if not isinstance(tag, Tag):
-            return
+        assert tag
         if tag.has_attr("data-src"):
-            self.novel_cover = self.absolute_url(tag["data-src"])
+            return self.absolute_url(tag["data-src"])
         elif tag.has_attr("src"):
-            self.novel_cover = self.absolute_url(tag["src"])
+            return self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup):
-        self.novel_author = ", ".join(
-            [
-                a.text.strip()
-                for a in soup.select('.novel-info .author span[itemprop="author"]')
-            ]
-        )
+        for a in soup.select('.novel-info .author span[itemprop="author"]'):
+            yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup):
         last_page = soup.select("#chapters .pagination li a")[-1]["href"]
@@ -89,11 +83,11 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             soup = future.result()
             yield from soup.select("ul.chapter-list li a")
 
-    def parse_chapter_item(self, id: int, a: Tag, soup: BeautifulSoup) -> Chapter:
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
             id=id,
-            url=self.absolute_url(a["href"]),
-            title=a.select_one(".chapter-title").text.strip(),
+            url=self.absolute_url(tag["href"]),
+            title=tag.select_one(".chapter-title").text.strip(),
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
