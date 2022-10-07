@@ -152,7 +152,7 @@ class TextCleaner:
         paragraphs = " ".join(body).split(LINE_SEP)
         return "".join(
             [
-                f"<p>{p}</p>"
+                f"<p>{p.strip()}</p>"
                 for p in paragraphs
                 if not self.contains_bad_texts(p)
             ]
@@ -166,9 +166,10 @@ class TextCleaner:
             for bad in div.select(",".join(self.bad_css)):
                 bad.extract()
 
-        for tag in div.select(",".join(self.bad_tag_text_pairs.keys())):
-            if self.tag_contains_bad_text(tag):
-                tag.extract()
+        if self.bad_tag_text_pairs:
+            for tag in div.select(",".join(self.bad_tag_text_pairs.keys())):
+                if self.tag_contains_bad_text(tag):
+                    tag.extract()
 
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
@@ -188,8 +189,10 @@ class TextCleaner:
     def clean_text(self, text) -> str:
         text = str(text).strip()
         text = text.translate(NONPRINTABLE_MAPPING)
-        if not hasattr(self, '_subs_'):
-            self._subs_ = re.compile('|'.join([f'({x})' for x in self.substitutions.keys()]))
+        if not hasattr(self, "_subs_"):
+            self._subs_ = re.compile(
+                "|".join([f"({x})" for x in self.substitutions.keys()])
+            )
         text = self._subs_.sub(lambda m: self.substitutions[m.group(0)], text)
         return text
 
@@ -288,7 +291,7 @@ class TextCleaner:
             return True
         if not self.bad_text_regex:
             return False
-        if not hasattr(self, '__blacklist__'):
+        if not hasattr(self, "__blacklist__"):
             pattern = re.compile("|".join(["(%s)" % p for p in self.bad_text_regex]))
             self.__blacklist__ = pattern
         return self.__blacklist__.search(text)

@@ -8,8 +8,6 @@ from ...models import SearchResult
 
 
 class SearchableSoupTemplate(Crawler):
-    is_template = True
-
     def search_novel(self, query) -> Iterable[SearchResult]:
         soup = self.get_search_page_soup(query)
         tags = self.select_search_items(soup)

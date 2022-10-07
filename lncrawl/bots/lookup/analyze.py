@@ -9,8 +9,7 @@ from ...assets.chars import Chars
 from ...core.crawler import Crawler
 from ...core.exeptions import LNException
 from ...core.novel_info import format_novel
-from ...core.sources import crawler_list, rejected_sources
-from ...templates import template_list
+from ...core.sources import crawler_list, rejected_sources, template_list
 
 logger = logging.getLogger(__name__)
 

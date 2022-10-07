@@ -7,15 +7,15 @@ import re
 import time
 from concurrent.futures import Future, ThreadPoolExecutor
 from pathlib import Path
-from typing import Dict, List, Optional, Type
+from typing import Dict, List, Optional, Set, Type
 from urllib.parse import urlparse
 
 import requests
 from packaging import version
 from tqdm.std import tqdm
 
-from ..utils.platforms import Platform
 from ..assets.version import get_version
+from ..utils.platforms import Platform
 from .arguments import get_args
 from .crawler import Crawler
 from .display import new_version_news
@@ -32,6 +32,7 @@ __all__ = [
 ]
 
 rejected_sources = {}
+template_list: Set[Type[Crawler]] = set()
 crawler_list: Dict[str, Type[Crawler]] = {}
 
 # --------------------------------------------------------------------------- #
@@ -264,7 +265,9 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
         crawler = getattr(module, key)
         if type(crawler) != type(Crawler) or not issubclass(crawler, Crawler):
             continue
+
         if crawler.__dict__.get("is_template"):
+            template_list.add(crawler)
             continue
 
         urls = getattr(crawler, "base_url", [])

@@ -67,7 +67,7 @@ class Crawler(Scraper):
 
     def search_novel(self, query: str) -> List[SearchResult]:
         """Gets a list of results matching the given query"""
-        return []
+        raise NotImplementedError()
 
     @abstractmethod
     def read_novel_info(self) -> None:
@@ -79,6 +79,10 @@ class Crawler(Scraper):
         """Download body of a single chapter and return as clean html format."""
         raise NotImplementedError()
 
+    # ------------------------------------------------------------------------- #
+    # Utility methods that can be overriden
+    # ------------------------------------------------------------------------- #
+
     def index_of_chapter(self, url: str) -> int:
         """Return the index of chapter by given url or 0"""
         url = self.absolute_url(url)
@@ -86,10 +90,6 @@ class Crawler(Scraper):
             if chapter.url.rsplit("/") == url:
                 return chapter.id
         return 0
-
-    # ------------------------------------------------------------------------- #
-    # Utility methods that can be overriden
-    # ------------------------------------------------------------------------- #
 
     def extract_chapter_images(self, chapter: Chapter) -> None:
         if not chapter.body:

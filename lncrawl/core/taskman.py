@@ -22,8 +22,12 @@ class TaskManager(ABC):
     def __init__(self, workers: int = MAX_WORKER_COUNT) -> None:
         self.init_executor(workers)
 
+    @property
+    def executor(self):
+        return self._executor
+
     def __del__(self) -> None:
-        self.executor.shutdown(wait=False, cancel_futures=True)
+        self._executor.shutdown(wait=False)
 
     def init_executor(self, workers: int):
         """Initializes a new executor.
@@ -34,11 +38,11 @@ class TaskManager(ABC):
         Args:
             workers: Number of workers to expect in the new executor.
         """
-        if hasattr(self, "executor"):
-            if self.executor._max_workers == workers:
+        if hasattr(self, "_executor"):
+            if self._executor._max_workers == workers:
                 return
-            self.executor.shutdown(wait=False, cancel_futures=True)
-        self.executor = ThreadPoolExecutor(
+            self._executor.shutdown(wait=False)
+        self._executor = ThreadPoolExecutor(
             max_workers=workers,
             thread_name_prefix="lncrawl_scraper",
             initargs=(self),

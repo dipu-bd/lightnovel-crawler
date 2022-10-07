@@ -7,8 +7,6 @@ from ...models import Chapter
 
 
 class GeneralSoupTemplate(Crawler):
-    is_template = True
-
     def read_novel_info(self) -> None:
         soup = self.get_soup(self.novel_url)
         self.parse_title(soup)

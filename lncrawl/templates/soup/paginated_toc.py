@@ -8,8 +8,6 @@ from .general import GeneralSoupTemplate
 
 
 class PaginatedSoupTemplate(GeneralSoupTemplate):
-    is_template = True
-
     def parse_chapter_list(self, soup: BeautifulSoup) -> None:
         for page in self.generate_page_soups(soup):
             tags = self.select_chapter_tags(page)
