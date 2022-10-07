@@ -53,7 +53,8 @@ class App:
         logger.info("Initialized App")
 
     def destroy(self):
-        self.crawler.__del__()
+        if self.crawler:
+            self.crawler.__del__()
         self.chapters.clear()
         logger.info("App destroyed")
 

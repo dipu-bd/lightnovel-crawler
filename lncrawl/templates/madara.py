@@ -5,11 +5,11 @@ from bs4 import BeautifulSoup, Tag
 
 from ..core.exeptions import LNException
 from ..models import Chapter, SearchResult
+from .soup.chapter_only import ChapterOnlySoupTemplate
 from .soup.searchable import SearchableSoupTemplate
-from .soup.single_page import SinglePageSoupTemplate
 
 
-class MadaraTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
+class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     is_template = True
 
     def initialize(self) -> None:
@@ -83,7 +83,7 @@ class MadaraTemplate(SearchableSoupTemplate, SinglePageSoupTemplate):
         soup = self.make_soup(response)
         return reversed(soup.select("ul.main .wp-manga-chapter > a"))
 
-    def parse_chapter_item(self, a: Tag, id: int) -> Chapter:
+    def parse_chapter_item(self, id: int, a: Tag, soup: BeautifulSoup) -> Chapter:
         return Chapter(
             id=id,
             title=a.text.strip(),

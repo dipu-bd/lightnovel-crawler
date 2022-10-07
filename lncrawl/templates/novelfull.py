@@ -1,16 +1,16 @@
 import re
-from typing import Generator, Iterable
+from typing import Iterable
 from urllib.parse import quote_plus
 
 from bs4 import BeautifulSoup, Tag
 
 from ..core.exeptions import LNException
 from ..models import Chapter, SearchResult
-from .soup.paginated_toc import PaginatedSoupTemplate
+from .soup.chapter_only import ChapterOnlySoupTemplate
 from .soup.searchable import SearchableSoupTemplate
 
 
-class NovelFullTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
+class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     is_template = True
 
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
@@ -56,9 +56,7 @@ class NovelFullTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
             ]
         )
 
-    def generate_page_soups(
-        self, soup: BeautifulSoup
-    ) -> Generator[BeautifulSoup, None, None]:
+    def select_chapter_tags(self, soup: BeautifulSoup):
         nl_id_tag = soup.select_one("#rating[data-novel-id]")
         if not isinstance(nl_id_tag, Tag):
             raise LNException("No novel_id found")
@@ -70,12 +68,10 @@ class NovelFullTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
         else:
             url = f"{self.home_url}ajax/chapter-archive?novelId={nl_id}"
 
-        return self.get_soup(url)
+        soup = self.get_soup(url)
+        yield from soup.select("ul.list-chapter > li > a, select > option")
 
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select("ul.list-chapter > li > a, select > option")
-
-    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
+    def parse_chapter_item(self, id: int, tag: Tag, soup: BeautifulSoup) -> Chapter:
         return Chapter(
             id=id,
             title=tag.text.strip(),

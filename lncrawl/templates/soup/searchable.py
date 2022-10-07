@@ -3,11 +3,11 @@ from typing import Generator, Iterable
 
 from bs4 import BeautifulSoup, Tag
 
-from ...core.crawler import Crawler
 from ...models import SearchResult
+from .general import GeneralSoupTemplate
 
 
-class SearchableSoupTemplate(Crawler):
+class SearchableSoupTemplate(GeneralSoupTemplate):
     def search_novel(self, query) -> Iterable[SearchResult]:
         soup = self.get_search_page_soup(query)
         tags = self.select_search_items(soup)

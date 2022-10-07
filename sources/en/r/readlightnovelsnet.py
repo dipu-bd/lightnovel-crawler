@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 import logging
-from typing import Generator, Iterable
+from typing import Iterable
 from urllib.parse import quote_plus
 
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.paginated_toc import PaginatedSoupTemplate
+from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class ReadLightNovelsNet(SearchableSoupTemplate, PaginatedSoupTemplate):
+class ReadLightNovelsNet(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     base_url = [
         "https://readlightnovels.net/",
     ]
@@ -52,9 +52,7 @@ class ReadLightNovelsNet(SearchableSoupTemplate, PaginatedSoupTemplate):
     def parse_authors(self, soup: BeautifulSoup):
         self.novel_author = ", ".join([a.text.strip() for a in soup.select(".info a")])
 
-    def generate_page_soups(
-        self, soup: BeautifulSoup
-    ) -> Generator[BeautifulSoup, None, None]:
+    def select_chapter_tags(self, soup: BeautifulSoup):
         novel_id = soup.select_one("#id_post")["value"]
         logger.info(f"Novel id: {novel_id}")
 
@@ -66,12 +64,10 @@ class ReadLightNovelsNet(SearchableSoupTemplate, PaginatedSoupTemplate):
                 "id": novel_id,
             },
         )
-        yield self.make_soup(resp)
+        soup = self.make_soup(resp)
+        yield from soup.select("option")
 
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select("option")
-
-    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
+    def parse_chapter_item(self, id: int, tag: Tag, soup: BeautifulSoup) -> Chapter:
         return Chapter(
             id=id,
             title=tag.text.strip(),

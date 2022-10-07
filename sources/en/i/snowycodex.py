@@ -7,12 +7,12 @@ from bs4 import BeautifulSoup, Tag
 
 from lncrawl.core.exeptions import LNException
 from lncrawl.models import Chapter
-from lncrawl.templates.soup.single_page import SinglePageSoupTemplate
+from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class SnowyCodexCrawler(SinglePageSoupTemplate):
+class SnowyCodexCrawler(ChapterOnlySoupTemplate):
     base_url = "https://snowycodex.com/"
 
     def initialize(self) -> None:
@@ -41,7 +41,7 @@ class SnowyCodexCrawler(SinglePageSoupTemplate):
     def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
         return soup.select(".entry-content a[href*='/chapter']")
 
-    def parse_chapter_item(self, a: Tag, id: int) -> Chapter:
+    def parse_chapter_item(self, id: int, a: Tag, soup: BeautifulSoup) -> Chapter:
         return Chapter(
             id=id,
             title=a.text.strip(),

@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 import time
 from concurrent.futures import Future
-from typing import Generator, Iterable, List
+from typing import Iterable, List
 from urllib.parse import parse_qs, urlencode, urlparse
 
 from bs4 import BeautifulSoup, Tag
 
 from ..core.exeptions import LNException
 from ..models import Chapter, SearchResult
-from .soup.paginated_toc import PaginatedSoupTemplate
+from .soup.chapter_only import ChapterOnlySoupTemplate
 from .soup.searchable import SearchableSoupTemplate
 
 
-class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
+class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     is_template = True
 
     def initialize(self) -> None:
@@ -64,9 +64,7 @@ class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
             ]
         )
 
-    def generate_page_soups(
-        self, soup: BeautifulSoup
-    ) -> Generator[BeautifulSoup, None, None]:
+    def select_chapter_tags(self, soup: BeautifulSoup):
         last_page = soup.select("#chapters .pagination li a")[-1]["href"]
         last_page_qs = parse_qs(urlparse(last_page).query)
         max_page = int(last_page_qs["page"][0])
@@ -88,12 +86,10 @@ class NovelMTLTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
         for i, future in enumerate(futures):
             if not future.done():
                 raise LNException(f"Failed to get page {i + 1}")
-            yield future.result()
+            soup = future.result()
+            yield from soup.select("ul.chapter-list li a")
 
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select("ul.chapter-list li a")
-
-    def parse_chapter_item(self, a: Tag, id: int) -> Chapter:
+    def parse_chapter_item(self, id: int, a: Tag, soup: BeautifulSoup) -> Chapter:
         return Chapter(
             id=id,
             url=self.absolute_url(a["href"]),

@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from concurrent.futures import Future
-from typing import Generator, Iterable, List
+from typing import Iterable, List
 
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.paginated_toc import PaginatedSoupTemplate
+from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 
-class FreeWebNovelCrawler(SearchableSoupTemplate, PaginatedSoupTemplate):
+class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     base_url = ["https://freewebnovel.com/"]
 
     def get_search_page_soup(self, query: str) -> BeautifulSoup:
@@ -46,9 +46,7 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, PaginatedSoupTemplate):
             [a.text.strip() for a in soup.select(".m-imgtxt a[href*='/authors/']")]
         )
 
-    def generate_page_soups(
-        self, soup: BeautifulSoup
-    ) -> Generator[BeautifulSoup, None, None]:
+    def select_chapter_tags(self, soup: BeautifulSoup):
         pages = soup.select("#indexselect > option")
 
         futures: List[Future] = []
@@ -60,12 +58,10 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, PaginatedSoupTemplate):
         self.resolve_futures(futures, desc="TOC", unit="page")
         for i, future in enumerate(futures):
             assert future.done(), f"Failed to get page {i + 1}"
-            yield future.result()
+            soup = future.result()
+            yield from soup.select(".m-newest2 li > a")
 
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select(".m-newest2 li > a")
-
-    def parse_chapter_item(self, a: Tag, id: int) -> Chapter:
+    def parse_chapter_item(self, id: int, a: Tag, soup: BeautifulSoup) -> Chapter:
         return Chapter(
             id=id,
             url=self.absolute_url(a["href"]),
