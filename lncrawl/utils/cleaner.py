@@ -2,7 +2,7 @@ import itertools
 import re
 import sys
 import unicodedata
-from typing import AnyStr, Dict, Iterable, List, Set, Union
+from typing import AnyStr, Dict, List, Set, Union
 
 from bs4 import Comment, Tag
 
@@ -25,7 +25,9 @@ class TextCleaner:
                 # WARNING: dangerous to use. use bad_tag_text_pairs instead
             ]
         )
-        self.bad_tag_text_pairs: Dict[str, Union[str, re.Pattern[str], List[AnyStr]]] = {
+        self.bad_tag_text_pairs: Dict[
+            str, Union[str, re.Pattern[str], List[AnyStr]]
+        ] = {
             # a { tag-name: string or regex pattern } to remove.
             # the tag will be removed if the text inside contains the pattern
         }
@@ -123,8 +125,8 @@ class TextCleaner:
             "&": "&amp;",
             "<": "&lt;",
             ">": "&gt;",
-            "u003c": "&lt;",
-            "u003e": "&gt;",
+            r"\u003c": "&lt;",
+            r"\u003e": "&gt;",
             # '"s': "'s",
             # "“s": "'s",
             # "”s": "'s",
@@ -150,7 +152,7 @@ class TextCleaner:
         paragraphs = " ".join(body).split(LINE_SEP)
         return "".join(
             [
-                f"<p>{p.strip()}</p>"
+                f"<p>{p}</p>"
                 for p in paragraphs
                 if not self.contains_bad_texts(p)
             ]
@@ -164,7 +166,7 @@ class TextCleaner:
             for bad in div.select(",".join(self.bad_css)):
                 bad.extract()
 
-        for tag in div.select(','.join(self.bad_tag_text_pairs.keys())):
+        for tag in div.select(",".join(self.bad_tag_text_pairs.keys())):
             if self.tag_contains_bad_text(tag):
                 tag.extract()
 
@@ -179,15 +181,16 @@ class TextCleaner:
                 self.extract_on_duplicate_sibling(tag)
             else:
                 self.clean_attributes(tag)
-        
+
         self.clean_attributes(div)
         return div
 
     def clean_text(self, text) -> str:
         text = str(text).strip()
         text = text.translate(NONPRINTABLE_MAPPING)
-        for k, v in self.substitutions.items():
-            text = text.replace(k, v)
+        if not hasattr(self, '_subs_'):
+            self._subs_ = re.compile('|'.join([f'({x})' for x in self.substitutions.keys()]))
+        text = self._subs_.sub(lambda m: self.substitutions[m.group(0)], text)
         return text
 
     def extract_on_duplicate_sibling(self, tag: Tag):
@@ -215,7 +218,7 @@ class TextCleaner:
         if not pattern:
             return False
         if isinstance(pattern, list):
-            pattern = '|'.join([f'({x})' for x in pattern if x])
+            pattern = "|".join([f"({x})" for x in pattern if x])
         if not isinstance(pattern, re.Pattern):
             pattern = re.compile(pattern, re.M)
             self.bad_tag_text_pairs[tag.name] = pattern
@@ -285,8 +288,7 @@ class TextCleaner:
             return True
         if not self.bad_text_regex:
             return False
-        pattern = getattr(self, "__blacklist__", None)
-        if not pattern:
+        if not hasattr(self, '__blacklist__'):
             pattern = re.compile("|".join(["(%s)" % p for p in self.bad_text_regex]))
-            setattr(self, "__blacklist__", pattern)
-        return True if pattern and pattern.search(text) else False
+            self.__blacklist__ = pattern
+        return self.__blacklist__.search(text)

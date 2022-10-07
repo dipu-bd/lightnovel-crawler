@@ -89,5 +89,4 @@ class NovelFullTemplate(SearchableSoupTemplate, PaginatedSoupTemplate):
         for img in body.select("img"):
             if img.has_attr("data-src"):
                 img.attrs = {"src": img["data-src"]}
-        self.cleaner.clean_contents(body)
         return body
