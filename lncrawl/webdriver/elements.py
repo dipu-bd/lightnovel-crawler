@@ -3,23 +3,25 @@ from enum import Enum
 from typing import List, Union
 
 from bs4 import Tag
+from selenium.webdriver.remote.command import Command
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement as _WebElement
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.relative_locator import RelativeBy
+from selenium.webdriver.support.wait import WebDriverWait
 
 from ..core.soup import SoupMaker
 
 logger = logging.getLogger(__name__)
 
-try:
-    import selenium.webdriver.support.expected_conditions as EC
-    from selenium.webdriver.remote.webelement import WebElement as _WebElement
-    from selenium.webdriver.support.relative_locator import RelativeBy
-except ImportError:
-    logger.error("`selenium` is not found")
 
 __all__ = [
     "EC",
     "By",
+    "Command",
     "RelativeBy",
     "WebElement",
+    "WebDriverWait",
 ]
 
 
@@ -76,3 +78,21 @@ class WebElement(_WebElement):
         if isinstance(by, By):
             by = str(by)
         return self.find_element(by, selector)
+
+
+def _add_virtual_authenticator(chrome: WebDriver):
+    try:
+        # For Python 3.7+
+        from selenium.webdriver.common.virtual_authenticator import (
+            Transport,
+            VirtualAuthenticatorOptions,
+        )
+
+        auth_options = VirtualAuthenticatorOptions()
+        auth_options.transport = Transport.INTERNAL
+        auth_options.has_user_verification = True
+        auth_options.is_user_verified = True
+        auth_options.is_user_consenting = True
+        chrome.add_virtual_authenticator(auth_options)
+    except Exception as e:
+        logger.debug("Could not attach a virtual authenticator | %s", e)

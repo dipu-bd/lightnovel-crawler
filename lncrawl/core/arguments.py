@@ -255,6 +255,12 @@ _builder = Args(
             help="Discord bot shard counts (default: 1)",
         ),
         Args(
+            "--selenium-grid",
+            type=str,
+            metavar="URL",
+            help="Selenium Grid URL for Chrome Webdriver",
+        ),
+        Args(
             "--suppress",
             action="store_true",
             help="Suppress all input prompts and use defaults.",

@@ -6,11 +6,11 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup
 
-from lncrawl.chromedriver.elements import By
 from lncrawl.core.exeptions import FallbackToBrowser
 from lncrawl.models import Chapter, SearchResult
 from lncrawl.models.volume import Volume
 from lncrawl.templates.browser.basic import BasicBrowserTemplate
+from lncrawl.webdriver.elements import By
 
 logger = logging.getLogger(__name__)
 

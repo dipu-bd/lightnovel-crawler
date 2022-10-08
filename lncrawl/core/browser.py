@@ -4,26 +4,12 @@ from typing import Any, Iterable, List, Optional, Union
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 
-from ..chromedriver.chrome import (
-    ChromeOptions,
-    WebDriver,
-    WebDriverWait,
-    check_if_active,
-    create_chrome,
-)
-from ..chromedriver.elements import EC, By, RelativeBy, WebElement
+from ..webdriver import ChromeOptions, WebDriver, create_new
+from ..webdriver.elements import EC, By, RelativeBy, WebDriverWait, WebElement
+from ..webdriver.queue import check_active
 from .soup import SoupMaker
 
 logger = logging.getLogger(__name__)
-
-
-__all__ = [
-    "By",
-    "EC",
-    "Browser",
-    "RelativeBy",
-    "create_chrome",
-]
 
 
 class Browser:
@@ -41,7 +27,7 @@ class Browser:
         Args:
         - headless (bool, optional): True to hide the UI, False to show the UI. Default: True.
         - timeout (Optional[int], optional): Maximum wait duration in seconds for an element to be available. Default: 120.
-        - options (Optional[&quot;ChromeOptions&quot;], optional): Chrome webdriver options. Default: None.
+        - options (Optional[&quot;ChromeOptions&quot;], optional): Webdriver options. Default: None.
         - cookie_store (Optional[RequestsCookieJar], optional): A cookie store to synchronize cookies. Default: None.
         - soup_parser (Optional[str], optional): Parser for page content. Default: None.
         """
@@ -71,7 +57,7 @@ class Browser:
     def _init_browser(self):
         if self._driver:
             return
-        self._driver = create_chrome(
+        self._driver = create_new(
             options=self.options,
             timeout=self.timeout,
             headless=self.headless,
@@ -116,7 +102,7 @@ class Browser:
 
     @property
     def active(self):
-        return check_if_active(self._driver)
+        return check_active(self._driver)
 
     @property
     def current_url(self):
