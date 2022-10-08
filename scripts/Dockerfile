@@ -1,4 +1,4 @@
-FROM python:3.9.10-slim-bullseye
+FROM python:3.10-slim-bullseye
 
 RUN apt-get update -yq \
     && apt-get install -yq \
