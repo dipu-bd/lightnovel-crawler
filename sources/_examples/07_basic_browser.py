@@ -4,14 +4,13 @@
 
 This is a sample using the BasicBrowserTemplate as a template. This template
 provides a basic wrapper around the base Crawler. In case a scraper based request
-fails with URLError, it retries with the webdriver based scraping.
+fails with `ScraperNotSupported`, it retries with the webdriver based scraping.
 
 Put your source file inside the language folder. The `en` folder has too many
 files, therefore it is grouped using the first letter of the domain name.
 """
 import logging
 from typing import List
-from urllib.error import URLError
 
 from lncrawl.models.chapter import Chapter
 from lncrawl.models.search_result import SearchResult
@@ -49,7 +48,8 @@ class MyCrawlerName(BasicBrowserTemplate):
 
     # TODO: [OPTIONAL] Search for novels with `self.scraper` requests
     def search_novel_in_scraper(self, query: str) -> List[SearchResult]:
-        raise URLError()
+        # raise ScraperNotSupported()
+        pass
 
     # TODO: [OPTIONAL] Search for novels with `self.browser`
     def search_novel_in_browser(self, query: str) -> List[SearchResult]:
@@ -70,7 +70,7 @@ class MyCrawlerName(BasicBrowserTemplate):
         #       `self.volumes`: the list of all volumes
         #
         # You may throw an Exception in case of failure.
-        # `raise URLError()` to use the browser only.
+        # `raise ScraperNotSupported()` to use the browser only.
         pass
 
     # TODO: [REQUIRED] Read novel info with `self.browser`
@@ -98,7 +98,7 @@ class MyCrawlerName(BasicBrowserTemplate):
         # You can use `self.get_soup`, `self.get_json` etc. utilities to fetch contents.
         # To clean chapter HTML easily, use `self.cleaner.extract_contents`.
         #
-        # `raise URLError()` to use the browser only.
+        # `raise ScraperNotSupported()` to use the browser only.
         pass
 
     # TODO: [REQUIRED] Download the chapter contents using the `self.browser`

@@ -1,10 +1,10 @@
 import logging
 from typing import Generator
-from urllib.error import URLError
 
 from bs4 import BeautifulSoup, Tag
+from cloudscraper.exceptions import CloudflareException
 
-from ...core.exeptions import LNException
+from ...core.exeptions import LNException, ScraperNotSupported
 from ...models import Chapter
 from ..soup.general import GeneralSoupTemplate
 from .basic import BasicBrowserTemplate
@@ -17,9 +17,19 @@ class GeneralBrowserTemplate(GeneralSoupTemplate, BasicBrowserTemplate):
 
     def read_novel_info(self) -> None:
         try:
+            if self.using_browser:
+                raise ScraperNotSupported()
             return super().read_novel_info()
-        except URLError:
-            return self.read_novel_info_in_browser(self.novel_url)
+        except CloudflareException:
+            return self.read_novel_info_in_browser()
+
+    def download_chapter_body(self, chapter: Chapter) -> str:
+        try:
+            if self.using_browser:
+                raise ScraperNotSupported()
+            return super().download_chapter_body(chapter)
+        except CloudflareException:
+            return self.download_chapter_body_in_browser(chapter)
 
     def read_novel_info_in_browser(self) -> None:
         self.visit_novel_page_in_browser()
@@ -42,15 +52,18 @@ class GeneralBrowserTemplate(GeneralSoupTemplate, BasicBrowserTemplate):
 
         self.parse_chapter_list_in_browser()
 
+    def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
+        self.visit_chapter_page_in_browser(chapter)
+        try:
+            body = self.select_chapter_body_in_browser()
+            assert body
+            return self.parse_chapter_body(body)
+        except Exception as e:
+            raise LNException("Failed to parse chapter body", e)
+
     def visit_novel_page_in_browser(self) -> BeautifulSoup:
         """Open the Novel URL in the browser"""
         self.browser.visit(self.novel_url)
-
-    def download_chapter_body(self, chapter: Chapter) -> str:
-        try:
-            return super().download_chapter_body(chapter)
-        except URLError:
-            return self.download_chapter_body_in_browser(chapter)
 
     def parse_title_in_browser(self) -> str:
         """Parse and return the novel title in the browser"""
@@ -67,15 +80,6 @@ class GeneralBrowserTemplate(GeneralSoupTemplate, BasicBrowserTemplate):
     def parse_chapter_list_in_browser(self) -> None:
         """Parse and return the volumes and chapters in the browser"""
         return self.parse_chapter_list(self.browser.soup)
-
-    def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
-        self.visit_chapter_page_in_browser(chapter)
-        try:
-            body = self.select_chapter_body_in_browser()
-            assert body
-            return self.parse_chapter_body(body)
-        except Exception as e:
-            raise LNException("Failed to parse chapter body", e)
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> BeautifulSoup:
         """Open the Chapter URL in the browser"""

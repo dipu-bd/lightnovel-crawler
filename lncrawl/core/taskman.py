@@ -37,7 +37,8 @@ class TaskManager(ABC):
         return self._executor._max_workers
 
     def __del__(self) -> None:
-        self._executor.shutdown(wait=False)
+        if hasattr(self, "_executor"):
+            self._executor.shutdown(wait=False)
 
     def init_executor(self, workers: int):
         """Initializes a new executor.

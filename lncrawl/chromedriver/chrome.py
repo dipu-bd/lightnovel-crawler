@@ -8,7 +8,7 @@ import logging
 import os
 from enum import Enum
 from threading import Lock, Semaphore
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from bs4 import Tag
 
@@ -284,3 +284,17 @@ class WebElement(OriginalWebElement):
             self._html = html
             self._tag = self.__soup_maker.make_tag(self._tag)
         return self._tag
+
+    def find_all(
+        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
+    ) -> List["WebElement"]:
+        if isinstance(by, By):
+            by = str(by)
+        self.find_elements(by, selector)
+
+    def find(
+        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
+    ) -> "WebElement":
+        if isinstance(by, By):
+            by = str(by)
+        self.find_element(by, selector)

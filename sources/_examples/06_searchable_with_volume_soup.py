@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 # TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
-class MyCrawlerName(ChapterWithVolumeSoupTemplate, SearchableSoupTemplate):
+class MyCrawlerName(SearchableSoupTemplate, ChapterWithVolumeSoupTemplate):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = ["http://sample.url/"]
 

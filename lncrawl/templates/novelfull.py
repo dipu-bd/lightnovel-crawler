@@ -4,10 +4,10 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
-from ..core.exeptions import LNException
-from ..models import Chapter, SearchResult
-from .soup.chapter_only import ChapterOnlySoupTemplate
-from .soup.searchable import SearchableSoupTemplate
+from lncrawl.core.exeptions import LNException
+from lncrawl.models import Chapter, SearchResult
+from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
+from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 
 class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):

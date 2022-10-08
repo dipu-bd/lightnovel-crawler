@@ -15,14 +15,14 @@ from typing import Generator
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult, Volume
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate
-from lncrawl.templates.soup.with_volume import ChapterWithVolumeSoupTemplate
+from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
+from lncrawl.templates.browser.with_volume import ChapterWithVolumeBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
 
 # TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
-class MyCrawlerName(SearchableSoupTemplate, ChapterWithVolumeSoupTemplate):
+class MyCrawlerName(SearchableBrowserTemplate, ChapterWithVolumeBrowserTemplate):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = ["http://sample.url/"]
 
@@ -57,7 +57,7 @@ class MyCrawlerName(SearchableSoupTemplate, ChapterWithVolumeSoupTemplate):
         #   soup = self.post_soup(f"{self.home_url}search?{urlencode(params)}")
         #   yield from soup.select(".col-content .con .txt h3 a")
         #
-        # `raise URLError()` to use the browser only.
+        # `raise ScraperNotSupported()` to use the browser only.
         pass
 
     # TODO: [REQUIRED] Parse a tag and return single search result

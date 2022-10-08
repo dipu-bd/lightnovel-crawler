@@ -15,13 +15,13 @@ from typing import Generator
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, Volume
-from lncrawl.templates.soup.with_volume import ChapterWithVolumeSoupTemplate
+from lncrawl.templates.browser.with_volume import ChapterWithVolumeBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
 
 # TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
-class MyCrawlerName(ChapterWithVolumeSoupTemplate):
+class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = ["http://sample.url/"]
 

@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 # TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
-class MyCrawlerName(ChapterOnlyBrowserTemplate, SearchableBrowserTemplate):
+class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = ["http://sample.url/"]
 
@@ -38,7 +38,7 @@ class MyCrawlerName(ChapterOnlyBrowserTemplate, SearchableBrowserTemplate):
         pass
 
     # TODO: [REQUIRED] Select novel items found by the query using the browser
-    def select_search_items_browser(self, query: str) -> Generator[Tag, None, None]:
+    def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
         # The query here is the input from user.
         #
         # Example:
@@ -57,7 +57,7 @@ class MyCrawlerName(ChapterOnlyBrowserTemplate, SearchableBrowserTemplate):
         #   soup = self.post_soup(f"{self.home_url}search?{urlencode(params)}")
         #   yield from soup.select(".col-content .con .txt h3 a")
         #
-        # `raise URLError()` to use the browser only.
+        # `raise ScraperNotSupported()` to use the browser only.
         pass
 
     # TODO: [REQUIRED] Parse a tag and return single search result

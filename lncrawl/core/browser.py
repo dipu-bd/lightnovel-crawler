@@ -198,7 +198,7 @@ class Browser:
         self,
         selector: str,
         by: Union[By, RelativeBy] = By.CSS_SELECTOR,
-        value: str = "",
+        text: str = "",
         clear: bool = True,
     ) -> None:
         """Select a form and submit it."""
@@ -207,7 +207,7 @@ class Browser:
         elem = self.find(selector, by)
         if clear:
             elem.clear()
-        elem.send_keys(value)
+        elem.send_keys(text)
 
     def execute_js(self, script: str, *args, is_async=False):
         """

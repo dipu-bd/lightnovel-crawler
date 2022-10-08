@@ -1,10 +1,12 @@
 import logging
 from abc import abstractmethod
 from typing import List, Optional
-from urllib.error import URLError
+
+from cloudscraper.exceptions import CloudflareException
 
 from ...core.browser import Browser
 from ...core.crawler import Crawler
+from ...core.exeptions import ScraperNotSupported
 from ...models import Chapter
 from ...models.search_result import SearchResult
 
@@ -16,17 +18,17 @@ class BasicBrowserTemplate(Crawler):
 
     def __init__(
         self,
-        headless: bool = True,
+        headless: bool = False,
         timeout: Optional[int] = 120,
         workers: Optional[int] = None,
         parser: Optional[str] = None,
     ) -> None:
+        self.timeout = timeout
+        self.headless = headless
         super().__init__(
             workers=workers,
             parser=parser,
         )
-        self.timeout = timeout
-        self.headless = headless
 
     @property
     def using_browser(self) -> bool:
@@ -61,14 +63,14 @@ class BasicBrowserTemplate(Crawler):
     def search_novel(self, query: str) -> List[SearchResult]:
         try:
             if self.using_browser:
-                raise URLError()  # fallback to browser
+                raise ScraperNotSupported()  # fallback to browser
             return self.search_novel_in_scraper(query)  # with cloudscraper
-        except URLError:
+        except CloudflareException:
             return self.search_novel_in_browser(query)  # with browser
 
     def search_novel_in_scraper(self, query: str) -> List[SearchResult]:
         """Search for novels with `self.scraper` requests"""
-        raise URLError()  # fallback to browser
+        raise ScraperNotSupported()  # fallback to browser
 
     def search_novel_in_browser(self, query: str) -> List[SearchResult]:
         """Search for novels with `self.browser`"""
@@ -77,14 +79,14 @@ class BasicBrowserTemplate(Crawler):
     def read_novel_info(self) -> None:
         try:
             if self.using_browser:
-                raise URLError()  # fallback to browser
+                raise ScraperNotSupported()  # fallback to browser
             return self.read_novel_info_in_scraper()  # with cloudscraper
-        except URLError:
+        except CloudflareException:
             return self.read_novel_info_in_browser()  # with browser
 
     def read_novel_info_in_scraper(self) -> None:
         """Read novel info with `self.scraper` requests"""
-        raise URLError()  # fallback to browser
+        raise ScraperNotSupported()  # fallback to browser
 
     @abstractmethod
     def read_novel_info_in_browser(self) -> None:
@@ -94,14 +96,14 @@ class BasicBrowserTemplate(Crawler):
     def download_chapter_body(self, chapter: Chapter) -> str:
         try:
             if self.using_browser:
-                raise URLError()  # fallback to browser
+                raise ScraperNotSupported()  # fallback to browser
             return self.download_chapter_body_in_scraper()  # with cloudscraper
-        except URLError:
+        except CloudflareException:
             return self.download_chapter_body_in_browser()  # with browser
 
     def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
         """Download the chapter contents using the `self.scraper` requests"""
-        raise URLError()  # fallback to browser
+        raise ScraperNotSupported()  # fallback to browser
 
     @abstractmethod
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:

@@ -36,7 +36,7 @@ class MyCrawlerName(SearchableBrowserTemplate):
         pass
 
     # TODO: [REQUIRED] Select novel items found by the query using the browser
-    def select_search_items_browser(self, query: str) -> Generator[Tag, None, None]:
+    def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
         # The query here is the input from user.
         #
         # Example:
@@ -55,7 +55,7 @@ class MyCrawlerName(SearchableBrowserTemplate):
         #   soup = self.post_soup(f"{self.home_url}search?{urlencode(params)}")
         #   yield from soup.select(".col-content .con .txt h3 a")
         #
-        # `raise URLError()` to use the browser only.
+        # `raise ScraperNotSupported()` to use the browser only.
         pass
 
     # TODO: [REQUIRED] Parse a tag and return single search result

@@ -1,7 +1,9 @@
 import logging
 from abc import abstractmethod
-from urllib.error import URLError
 
+from cloudscraper.exceptions import CloudflareException
+
+from ...core.exeptions import ScraperNotSupported
 from .general import GeneralBrowserTemplate
 
 logger = logging.getLogger(__name__)
@@ -13,14 +15,14 @@ class LoginBrowserTemplate(GeneralBrowserTemplate):
     def login(self, email: str, password: str) -> None:
         try:
             if self.using_browser:
-                raise URLError()
+                raise ScraperNotSupported()
             return self.login_in_scraper(email, password)
-        except URLError:
+        except CloudflareException:
             return self.login_in_browser(email, password)
 
     def login_in_scraper(self, email: str, password: str) -> None:
         """Login to the website using the scraper"""
-        raise URLError()
+        raise CloudflareException()
 
     @abstractmethod
     def login_in_browser(self, email: str, password: str) -> None:

@@ -1,3 +1,9 @@
+from cloudscraper.exceptions import CloudflareException
+
+
 class LNException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
+    pass
+
+
+class ScraperNotSupported(CloudflareException):
+    pass
