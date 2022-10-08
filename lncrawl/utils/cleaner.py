@@ -145,6 +145,13 @@ class TextCleaner:
                 "font-weight",
             ]
         )
+        self.image_src_attributes: Set[str] = set(
+            [
+                "data-lazy-src",
+                "data-src",
+                "src",
+            ]
+        )
 
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
@@ -181,11 +188,7 @@ class TextCleaner:
             elif tag.name in ["br", "hr"]:
                 self.extract_on_duplicate_sibling(tag)
             elif tag.name == "img":
-                src = tag.get("data-src", tag.get("src"))
-                if not src:
-                    tag.extract()
-                else:
-                    tag.attrs = {"src": src}
+                self.clean_image(tag)
             else:
                 self.clean_attributes(tag)
 
@@ -232,6 +235,17 @@ class TextCleaner:
             pattern = re.compile(pattern, re.M)
             self.bad_tag_text_pairs[tag.name] = pattern
         return pattern.search(tag.text)
+
+    def clean_image(self, tag: Tag):
+        src = None
+        for name in self.image_src_attributes:
+            src = tag.get(name)
+            if src:
+                break
+        if not src:
+            tag.extract()
+        else:
+            tag.attrs = {"src": src}
 
     def clean_style_value(self, style: str) -> str:
         clean_css = []
