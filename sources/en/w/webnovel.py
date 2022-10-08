@@ -24,15 +24,12 @@ class WebnovelCrawler(BasicBrowserTemplate):
     def initialize(self) -> None:
         self.headless = True
         self.home_url = "https://www.webnovel.com/"
-        self.re_cleaner = re.compile(
-            "|".join(
-                [
-                    r"(\<pirate\>(.*?)\<\/pirate\>)"
-                    r"(Find authorized novels in Webnovel(.*)for visiting\.)",
-                ]
-            ),
-            re.MULTILINE,
-        )
+
+        bad_text = [
+            r"(\<pirate\>(.*?)\<\/pirate\>)"
+            r"(Find authorized novels in Webnovel(.*)for visiting\.)",
+        ]
+        self.re_cleaner = re.compile("|".join(bad_text), re.M)
 
     def get_csrf(self):
         logger.info("Getting CSRF Token")
