@@ -20,10 +20,7 @@ services:
       context: .
       dockerfile: ./scripts/Dockerfile
     restart: unless-stopped
-    command: |
-      python -m lncrawl --suppress \
-        --bot discord --shard-id 0 --shard-count 1 \
-        --selenium-grid http://localhost:4444
+    command: python -m lncrawl --suppress --bot discord --shard-id 0 --shard-count 1 --selenium-grid "http://localhost:4444"
     depends_on:
       - chrome
     environment:
@@ -38,8 +35,7 @@ services:
       context: .
       dockerfile: ./scripts/Dockerfile
     restart: unless-stopped
-    command: |
-      python -m lncrawl --suppress --bot telegram
+    command: python -m lncrawl --suppress --bot telegram
     environment:
       CLOUD_DRIVE: "GOFILE"
       TELEGRAM_TOKEN: "${TELEGRAM_TOKEN}"

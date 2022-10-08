@@ -89,11 +89,12 @@ def create_remote(
             command_executor=address,
             options=options,
         )
-    except Exception:
+    except Exception as e:
+        logger.exception("Failed to create remote instance", e)
         chrome = None
 
     if not chrome:
-        raise LNException("Failed to create remote instance")
+        raise LNException("Could not obtain a webdriver")
 
     logger.info("Created remote instance > %s", chrome.session_id)
 

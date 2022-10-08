@@ -124,11 +124,12 @@ def create_local(
             executable_path=executable_path,
             options=options,
         )
-    except Exception:
+    except Exception as e:
+        logger.exception("Failed to create chrome instance", e)
         chrome = None
 
     if not chrome:
-        raise LNException("Failed to create chrome instance")
+        raise LNException("Could not obtain a webdriver")
 
     logger.info("Created chrome instance > %s", chrome.session_id)
     chrome.set_window_position(0, 0)
