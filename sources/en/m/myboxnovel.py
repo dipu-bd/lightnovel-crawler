@@ -4,6 +4,7 @@ from lncrawl.templates.madara import MadaraTemplate
 
 logger = logging.getLogger(__name__)
 
+
 class MyBoxNovelCrawler(MadaraTemplate):
     base_url = ["https://myboxnovel.com/"]
 
