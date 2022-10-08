@@ -2,11 +2,9 @@ import logging
 from abc import abstractmethod
 from typing import Generator, List, Optional
 
-from cloudscraper.exceptions import CloudflareException
-
 from ...core.browser import Browser
 from ...core.crawler import Crawler
-from ...core.exeptions import ScraperNotSupported
+from ...core.exeptions import FallbackToBrowser, ScraperErrorGroup
 from ...models import Chapter
 from ...models.search_result import SearchResult
 
@@ -35,10 +33,8 @@ class BasicBrowserTemplate(Crawler):
         return hasattr(self, "_browser") and self._browser.active
 
     def __del__(self) -> None:
+        self.close_browser()
         super().__del__()
-        if self.using_browser:
-            self._browser.__del__()
-            delattr(self, "_browser")
 
     @property
     def browser(self) -> "Browser":
@@ -52,6 +48,7 @@ class BasicBrowserTemplate(Crawler):
     def init_browser(self):
         if self.using_browser:
             return
+        self._max_workers = self.workers
         self.init_executor(1)
         self._browser = Browser(
             headless=self.headless,
@@ -59,20 +56,68 @@ class BasicBrowserTemplate(Crawler):
             timeout=self.timeout,
             soup_maker=self,
         )
+        self._visit = self._browser.visit
+        self._browser.visit = self.visit
+
+    def visit(self, url: str) -> None:
+        self._visit(url)
+        self.last_soup_url = self.browser.current_url
+        self.browser._restore_cookies()
+
+    def close_browser(self):
+        if not self.using_browser:
+            return
+        self._browser.__del__()
+        self.init_executor(self._max_workers)
 
     def search_novel(self, query: str) -> List[SearchResult]:
         try:
-            if self.using_browser:
-                raise ScraperNotSupported()
-            return list(self.search_novel_in_scraper(query))
-        except CloudflareException:
-            return list(self.search_novel_in_browser(query))
+            results = list(self.search_novel_in_scraper(query))
+        except ScraperErrorGroup:
+            self.init_browser()
+            results = list(self.search_novel_in_browser(query))
+        finally:
+            self.close_browser()
+        return results
+
+    def read_novel_info(self) -> None:
+        try:
+            self.read_novel_info_in_scraper()
+        except ScraperErrorGroup:
+            self.init_browser()
+            self.read_novel_info_in_browser()
+        finally:
+            self.close_browser()
+
+    def download_chapters(self, chapters: List[Chapter]) -> Generator[int, None, None]:
+        try:
+            yield from super().download_chapters(chapters, fail_fast=True)
+        except ScraperErrorGroup:
+            self.init_browser()
+            for chapter in self.progress_bar(chapters, desc="Chapters", unit="item"):
+                if not isinstance(chapter, Chapter) or chapter.success:
+                    yield 1
+                    continue
+                try:
+                    chapter.body = self.download_chapter_body_in_browser(chapter)
+                    self.extract_chapter_images(chapter)
+                    chapter.success = True
+                except Exception as e:
+                    logger.error("Failed to get chapter: %s", e)
+                    chapter.body = ""
+                    chapter.success = False
+                    if isinstance(e, KeyboardInterrupt):
+                        break
+                finally:
+                    yield 1
+        finally:
+            self.close_browser()
 
     def search_novel_in_scraper(
         self, query: str
     ) -> Generator[SearchResult, None, None]:
         """Search for novels with `self.scraper` requests"""
-        raise ScraperNotSupported()
+        raise FallbackToBrowser()
 
     def search_novel_in_browser(
         self, query: str
@@ -80,17 +125,9 @@ class BasicBrowserTemplate(Crawler):
         """Search for novels with `self.browser`"""
         return []
 
-    def read_novel_info(self) -> None:
-        try:
-            if self.using_browser:
-                raise ScraperNotSupported()
-            return self.read_novel_info_in_scraper()
-        except CloudflareException:
-            return self.read_novel_info_in_browser()
-
     def read_novel_info_in_scraper(self) -> None:
         """Read novel info with `self.scraper` requests"""
-        raise ScraperNotSupported()
+        raise FallbackToBrowser()
 
     @abstractmethod
     def read_novel_info_in_browser(self) -> None:
@@ -98,16 +135,11 @@ class BasicBrowserTemplate(Crawler):
         raise NotImplementedError()
 
     def download_chapter_body(self, chapter: Chapter) -> str:
-        try:
-            if self.using_browser:
-                raise ScraperNotSupported()
-            return self.download_chapter_body_in_scraper()
-        except CloudflareException:
-            return self.download_chapter_body_in_browser()
+        return self.download_chapter_body_in_scraper(chapter)
 
     def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
         """Download the chapter contents using the `self.scraper` requests"""
-        raise ScraperNotSupported()
+        raise FallbackToBrowser()
 
     @abstractmethod
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:

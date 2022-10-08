@@ -43,7 +43,7 @@ class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         #
         # Example:
         #   params = {"searchkey": query}
-        #   self.browser.visit(f"{self.home_url}search?{urlencode(params)}")
+        #   self.visit(f"{self.home_url}search?{urlencode(params)}")
         #   for elem in self.browser.find_all(".col-content .con .txt h3 a"):
         #       yield elem.as_tag()
         pass
@@ -73,7 +73,7 @@ class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
 
     # TODO: [OPTIONAL] Open the Novel URL in the browser
     def visit_novel_page_in_browser(self) -> BeautifulSoup:
-        # self.browser.visit(self.novel_url)
+        # self.visit(self.novel_url)
         pass
 
     # TODO: [OPTIONAL] Parse and return the novel title in the browser
@@ -127,7 +127,7 @@ class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
 
     # TODO: [OPTIONAL] Open the Chapter URL in the browser
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> BeautifulSoup:
-        # self.browser.visit(chapter.url)
+        # self.visit(chapter.url)
         pass
 
     # TODO: [OPTIONAL] Select chapter list item tags from the browser

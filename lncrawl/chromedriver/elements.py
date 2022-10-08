@@ -9,9 +9,9 @@ from ..core.soup import SoupMaker
 logger = logging.getLogger(__name__)
 
 try:
+    import selenium.webdriver.support.expected_conditions as EC
     from selenium.webdriver.remote.webelement import WebElement as _WebElement
     from selenium.webdriver.support.relative_locator import RelativeBy
-    import selenium.webdriver.support.expected_conditions as EC
 except ImportError:
     logger.error("`selenium` is not found")
 
@@ -43,9 +43,9 @@ class WebElement(_WebElement):
         super().__init__(parent, id_)
 
     @property
-    def __soup_maker(self) -> SoupMaker:
-        if hasattr(self._parent, "soup_maker"):
-            maker = getattr(self._parent, "soup_maker")
+    def _soup_maker(self) -> SoupMaker:
+        if hasattr(self._parent, "_soup_maker"):
+            maker = getattr(self._parent, "_soup_maker")
             if isinstance(maker, SoupMaker):
                 return maker
         return SoupMaker()
@@ -60,7 +60,7 @@ class WebElement(_WebElement):
         html = self.outer_html()
         if not hasattr(self, "_tag") or self._html != html:
             self._html = html
-            self._tag = self.__soup_maker.make_tag(self._tag)
+            self._tag = self._soup_maker.make_tag(self._tag)
         return self._tag
 
     def find_all(
@@ -68,11 +68,11 @@ class WebElement(_WebElement):
     ) -> List["WebElement"]:
         if isinstance(by, By):
             by = str(by)
-        self.find_elements(by, selector)
+        return self.find_elements(by, selector)
 
     def find(
         self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
     ) -> "WebElement":
         if isinstance(by, By):
             by = str(by)
-        self.find_element(by, selector)
+        return self.find_element(by, selector)

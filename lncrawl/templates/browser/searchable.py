@@ -2,9 +2,8 @@ from abc import abstractmethod
 from typing import Generator, List
 
 from bs4 import Tag
-from cloudscraper.exceptions import CloudflareException
 
-from ...core.exeptions import ScraperNotSupported
+from ...core.exeptions import FallbackToBrowser, ScraperErrorGroup
 from ...models import SearchResult
 from ..soup.searchable import SearchableSoupTemplate
 from .general import GeneralBrowserTemplate
@@ -16,7 +15,7 @@ class SearchableBrowserTemplate(SearchableSoupTemplate, GeneralBrowserTemplate):
     def search_novel(self, query: str) -> List[SearchResult]:
         try:
             return super().search_novel(query)
-        except CloudflareException:
+        except ScraperErrorGroup:
             return self.search_novel_in_browser(query)
 
     def search_novel_in_browser(self, query: str) -> List[SearchResult]:
@@ -25,7 +24,7 @@ class SearchableBrowserTemplate(SearchableSoupTemplate, GeneralBrowserTemplate):
 
     @abstractmethod
     def select_search_items(self, query: str) -> Generator[Tag, None, None]:
-        raise ScraperNotSupported()
+        raise FallbackToBrowser()
 
     @abstractmethod
     def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:

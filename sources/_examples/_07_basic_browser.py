@@ -77,7 +77,7 @@ class MyCrawlerName(BasicBrowserTemplate):
     def read_novel_info_in_browser(self) -> None:
         # This gets called only when the `read_novel_info_in_scraper` fails.
         # The current input url is available at `self.novel_url`.
-        # You can use `self.browser.visit`, `self.browser.wait` etc. utilities.
+        # You can use `self.visit`, `self.browser.wait` etc. utilities.
         # Get a BeautifulSoup Tag instance from browser: `self.browser.find(..).as_tag()`
         #
         # You must set the following parameters:
@@ -104,7 +104,7 @@ class MyCrawlerName(BasicBrowserTemplate):
     # TODO: [REQUIRED] Download the chapter contents using the `self.browser`
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
         # Use the `chapter['url']` to get the chapter contents.
-        # You can use `self.browser.visit` to visit the chapter in browser tab.
+        # You can use `self.visit` to visit the chapter in browser tab.
         # There can be only one thread using the browser at a time.
         # Get a BeautifulSoup Tag instance from browser: `self.browser.find(..).as_tag()`
         # To clean chapter HTML easily, use `self.cleaner.extract_contents`.

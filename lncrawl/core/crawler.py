@@ -65,11 +65,11 @@ class Crawler(Scraper):
         )
 
     def __del__(self) -> None:
-        super().__del__()
         if hasattr(self, "volumes"):
             self.volumes.clear()
         if hasattr(self, "chapters"):
             self.chapters.clear()
+        super().__del__()
 
     # ------------------------------------------------------------------------- #
     # Methods to implement in crawler
@@ -127,7 +127,11 @@ class Crawler(Scraper):
 
         chapter.body = soup.find("body").decode_contents()
 
-    def download_chapters(self, chapters: List[Chapter]) -> Generator[int, None, None]:
+    def download_chapters(
+        self,
+        chapters: List[Chapter],
+        fail_fast=False,
+    ) -> Generator[int, None, None]:
         futures = {
             index: self.executor.submit(self.download_chapter_body, chapter)
             for index, chapter in enumerate(chapters)
@@ -135,7 +139,12 @@ class Crawler(Scraper):
         }
         yield len(chapters) - len(futures)
 
-        self.resolve_futures(futures.values(), desc="Chapters", unit="item")
+        self.resolve_futures(
+            futures.values(),
+            desc="Chapters",
+            unit="item",
+            fail_fast=fail_fast,
+        )
         for (index, future) in futures.items():
             try:
                 chapter = chapters[index]

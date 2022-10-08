@@ -2,9 +2,8 @@ import logging
 from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
-from cloudscraper.exceptions import CloudflareException
 
-from ...core.exeptions import LNException, ScraperNotSupported
+from ...core.exeptions import FallbackToBrowser, LNException, ScraperErrorGroup
 from ...models import Chapter
 from ..soup.general import GeneralSoupTemplate
 from .basic import BasicBrowserTemplate
@@ -17,19 +16,9 @@ class GeneralBrowserTemplate(GeneralSoupTemplate, BasicBrowserTemplate):
 
     def read_novel_info(self) -> None:
         try:
-            if self.using_browser:
-                raise ScraperNotSupported()
             return super().read_novel_info()
-        except CloudflareException:
+        except ScraperErrorGroup:
             return self.read_novel_info_in_browser()
-
-    def download_chapter_body(self, chapter: Chapter) -> str:
-        try:
-            if self.using_browser:
-                raise ScraperNotSupported()
-            return super().download_chapter_body(chapter)
-        except CloudflareException:
-            return self.download_chapter_body_in_browser(chapter)
 
     def read_novel_info_in_browser(self) -> None:
         self.visit_novel_page_in_browser()
@@ -37,7 +26,7 @@ class GeneralBrowserTemplate(GeneralSoupTemplate, BasicBrowserTemplate):
         try:
             self.novel_title = self.parse_title_in_browser()
         except Exception as e:
-            raise LNException("Failed to parse novel title", e)
+            raise FallbackToBrowser() from e
 
         try:
             self.novel_cover = self.parse_cover_in_browser()
@@ -63,7 +52,7 @@ class GeneralBrowserTemplate(GeneralSoupTemplate, BasicBrowserTemplate):
 
     def visit_novel_page_in_browser(self) -> BeautifulSoup:
         """Open the Novel URL in the browser"""
-        self.browser.visit(self.novel_url)
+        self.visit(self.novel_url)
 
     def parse_title_in_browser(self) -> str:
         """Parse and return the novel title in the browser"""
@@ -83,7 +72,7 @@ class GeneralBrowserTemplate(GeneralSoupTemplate, BasicBrowserTemplate):
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> BeautifulSoup:
         """Open the Chapter URL in the browser"""
-        self.browser.visit(chapter.url)
+        self.visit(chapter.url)
 
     def select_chapter_body_in_browser(self) -> Tag:
         """Select the tag containing the chapter text in the browser"""

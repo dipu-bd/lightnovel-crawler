@@ -57,9 +57,9 @@ class Scraper(TaskManager, SoupMaker):
         super().__init__(workers)
 
     def __del__(self) -> None:
-        super().__del__()
         if hasattr(self, "scraper"):
             self.scraper.close()
+        super().__del__()
 
     # ------------------------------------------------------------------------- #
     # Internal methods
