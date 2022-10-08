@@ -19,23 +19,16 @@ class AsianHobbyistCrawler(Crawler):
         self.novel_title = possible_title.text
         logger.info("Novel title: %s", self.novel_title)
 
-        possible_image = soup.select_one(".main-wrap .background img")
+        possible_image = soup.select_one(".main-wrap .background img[data-lazy-src]")
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image["data-lazy-src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.volumes.append({"id": 1})
         for a in soup.select(".divTable .tableBody div.fn a"):
             title = a.text.strip()
-
             chap_id = len(self.chapters) + 1
-            match = re.findall(r"ch(apter)? (\d+)", title, re.IGNORECASE)
-            if len(match) == 1:
-                chap_id = int(match[0][1])
-
             self.chapters.append(
                 {
-                    "volume": 1,
                     "id": chap_id,
                     "title": title,
                     "url": self.absolute_url(a["href"]),
@@ -43,10 +36,6 @@ class AsianHobbyistCrawler(Crawler):
             )
 
     def download_chapter_body(self, chapter):
-        logger.debug("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-
         content = soup.select_one(".entry-content")
-        self.cleaner.clean_contents(content)
-
-        return "".join([str(p) for p in content.select("p") if len(p.text.strip()) > 1])
+        return self.cleaner.extract_contents(content)
