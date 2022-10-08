@@ -28,7 +28,7 @@ class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one("h3.title")
         assert tag
-        self.novel_title = tag.text.strip()
+        return tag.text.strip()
 
     def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".book img")
