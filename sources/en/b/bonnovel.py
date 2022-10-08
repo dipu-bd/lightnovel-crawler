@@ -5,26 +5,21 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-wp_admin_ajax_url = '%s/wp-admin/admin-ajax.php'
+wp_admin_ajax_url = "%s/wp-admin/admin-ajax.php"
+
 
 class BonNovelCrawler(Crawler):
-    base_url = [
-        'https://bonnovel.com/'
-    ]
-    
-    search_url = (
-        "%s?s=%s&post_type=wp-manga&author=&artist=&release="
-    )
-        
+    base_url = ["https://bonnovel.com/"]
+
+    search_url = "%s?s=%s&post_type=wp-manga&author=&artist=&release="
+
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(['h3', 'script'])
-        self.cleaner.bad_css.update(['.code-block', '.adsbygoogle'])
-    # end def
+        self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(self.search_url % (self.home_url, query))
-        
+
         results = []
         for tab in soup.select(".c-tabs-item__content"):
             a = tab.select_one(".post-title h3 a")
@@ -37,10 +32,8 @@ class BonNovelCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-        # end for
 
         return results
-    # end def
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -49,16 +42,14 @@ class BonNovelCrawler(Crawler):
         possible_title = soup.select_one(".post-title h1")
         for span in possible_title.select("span"):
             span.extract()
-        # end for
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
-        
+
         img_src = soup.select_one(".summary_image a img")
-        
+
         if img_src:
             self.novel_cover = self.absolute_url(img_src["src"])
-        # end if
-        
+
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = " ".join(
@@ -68,13 +59,16 @@ class BonNovelCrawler(Crawler):
             ]
         )
         logger.info("%s", self.novel_author)
-        
+
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
-        
-        response = self.submit_form(wp_admin_ajax_url % self.home_url, data={
-            'action': 'manga_get_chapters',
-            'manga': self.novel_id,
-        })
+
+        response = self.submit_form(
+            wp_admin_ajax_url % self.home_url,
+            data={
+                "action": "manga_get_chapters",
+                "manga": self.novel_id,
+            },
+        )
 
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
@@ -82,7 +76,6 @@ class BonNovelCrawler(Crawler):
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -91,14 +84,10 @@ class BonNovelCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-        contents = soup.select_one('div.text-left')
-        
+        contents = soup.select_one("div.text-left")
+
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class

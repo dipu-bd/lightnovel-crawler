@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-import re
-from urllib.parse import urlparse
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://lightnovelkiss.com/?s=%s&post_type=wp-manga&author=&artist=&release='
-chapter_list_url = 'https://lightnovelkiss.com/wp-admin/admin-ajax.php'
+search_url = (
+    "https://lightnovelkiss.com/?s=%s&post_type=wp-manga&author=&artist=&release="
+)
+chapter_list_url = "https://lightnovelkiss.com/wp-admin/admin-ajax.php"
 
 
 class LightNovelKiss(Crawler):
-    base_url = 'https://lightnovelkiss.com/'
+    base_url = "https://lightnovelkiss.com/"
 
     # NOTE: Disabled because it takes unusually long time
     # def search_novel(self, query):
@@ -34,7 +33,7 @@ class LightNovelKiss(Crawler):
     # # end def
 
     def read_novel_info(self):
-        logger.debug('Visiting %s', self.novel_url)
+        logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         # NOTE: Title has "Novel" at the end of book title, this code should work but can't test at moment because site is having problems.
@@ -42,48 +41,44 @@ class LightNovelKiss(Crawler):
         # self.novel_title = title.rsplit(' ', 1)[0].strip()
         # logger.debug('Novel title = %s', self.novel_title)
 
-        possible_title = soup.select_one('.post-title h1')
-        for span in possible_title.select('span'):
+        possible_title = soup.select_one(".post-title h1")
+        for span in possible_title.select("span"):
             span.extract()
-        # end for
         self.novel_title = possible_title.text.strip()
-        logger.info('Novel title: %s', self.novel_title)
+        logger.info("Novel title: %s", self.novel_title)
 
-        possible_image = soup.select_one('.summary_image a img')
+        possible_image = soup.select_one(".summary_image a img")
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image['src'])
-        logger.info('Novel cover: %s', self.novel_cover)
+            self.novel_cover = self.absolute_url(possible_image["src"])
+        logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = ' '.join([
-            a.text.strip()
-            for a in soup.select('.author-content a[href*="author"]')
-        ])
-        logger.info('%s', self.novel_author)
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.author-content a[href*="author"]')]
+        )
+        logger.info("%s", self.novel_author)
 
-        self.novel_id = soup.select_one('#manga-chapters-holder')['data-id']
-        logger.info('Novel id: %s', self.novel_id)
+        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
+        logger.info("Novel id: %s", self.novel_id)
 
         response = self.submit_form(
-            chapter_list_url, data='action=manga_get_chapters&manga=' + self.novel_id)
+            chapter_list_url, data="action=manga_get_chapters&manga=" + self.novel_id
+        )
         soup = self.make_soup(response)
-        for a in reversed(soup.select('.wp-manga-chapter a')):
+        for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
-                self.volumes.append({'id': vol_id})
-            # end if
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'title': a.text.strip(),
-                'url':  self.absolute_url(a['href']),
-            })
-        # end for
-    # end def
+                self.volumes.append({"id": vol_id})
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                }
+            )
 
     def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter['url'])
-        contents = soup.select('.reading-content p')
-        return ''.join([str(p) for p in contents])
-    # end def
-# end class
+        soup = self.get_soup(chapter["url"])
+        contents = soup.select(".reading-content p")
+        return "".join([str(p) for p in contents])

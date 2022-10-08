@@ -1,164 +1,184 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-import time
-from urllib.parse import quote_plus
+from time import time
+from urllib.parse import urlencode
 
-from lncrawl.core.crawler import Crawler
+from bs4 import BeautifulSoup
+
+from lncrawl.core.exeptions import FallbackToBrowser
+from lncrawl.models import Chapter, SearchResult
+from lncrawl.models.volume import Volume
+from lncrawl.templates.browser.basic import BasicBrowserTemplate
+from lncrawl.webdriver.elements import By
 
 logger = logging.getLogger(__name__)
 
-book_info_url = 'https://www.webnovel.com/book/%s'
-chapter_info_url = 'https://www.webnovel.com/book/%s/%s?encryptType=3&_fsae=0'
-book_cover_url = 'https://img.webnovel.com/bookcover/%s/600/600.jpg?coverUpdateTime=%s&imageMogr2/quality/80'
-chapter_list_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=0&encryptType=3&_fsae=0'
-chapter_body_url = 'https://www.webnovel.com/go/pcm/chapter/getContent?_csrfToken=%s&bookId=%s&chapterId=%s&encryptType=3&_fsae=0'
-search_url = 'https://www.webnovel.com/go/pcm/search/result?_csrfToken=%s&pageIndex=1&encryptType=3&_fsae=0&keywords=%s'
 
-
-class WebnovelCrawler(Crawler):
+class WebnovelCrawler(BasicBrowserTemplate):
     base_url = [
-        'https://m.webnovel.com',
-        'https://www.webnovel.com',
+        "https://m.webnovel.com/",
+        "https://www.webnovel.com/",
     ]
 
+    def initialize(self) -> None:
+        self.headless = True
+        self.home_url = "https://www.webnovel.com/"
+        bad_text = [
+            r"(\<pirate\>(.*?)\<\/pirate\>)"
+            r"(Find authorized novels in Webnovel(.*)for visiting\.)",
+        ]
+        self.re_cleaner = re.compile("|".join(bad_text), re.M)
+
     def get_csrf(self):
-        logger.info('Getting CSRF Token')
+        logger.info("Getting CSRF Token")
         self.get_response(self.home_url)
-        self.csrf = self.cookies['_csrfToken']
-        logger.debug('CSRF Token = %s', self.csrf)
-    # end def
+        self.csrf = self.cookies["_csrfToken"]
+        logger.debug("CSRF Token = %s", self.csrf)
 
-    def search_novel(self, query):
+    def search_novel_in_scraper(self, query: str):
         self.get_csrf()
-        query = quote_plus(str(query).lower())
-        data = self.get_json(search_url % (self.csrf, query))
+        params = {
+            "_csrfToken": self.csrf,
+            "pageIndex": 1,
+            "encryptType": 3,
+            "_fsae": 0,
+            "keywords": query,
+        }
+        data = self.get_json(f"{self.home_url}go/pcm/search/result?{urlencode(params)}")
+        for book in data["data"]["bookInfo"]["bookItems"]:
+            yield SearchResult(
+                title=book["bookName"],
+                url=f"{self.home_url}book/{book['bookId']}",
+                info="%(categoryName)s | Score: %(totalScore)s" % book,
+            )
 
-        results = []
-        for book in data['data']['bookInfo']['bookItems']:
-            results.append({
-                'title': book['bookName'],
-                'url': book_info_url % book['bookId'],
-                'info': '%(categoryName)s | Score: %(totalScore)s' % book,
-            })
-        # end for
-        return results
-    # end def
+    def search_novel_in_browser(self, query: str):
+        params = {"keywords": query}
+        self.visit(f"{self.home_url}search?{urlencode(params)}")
+        self.last_soup_url = self.browser.current_url
+        for li in self.browser.soup.select(".search-result-container li"):
+            a = li.find("a")
+            yield SearchResult(
+                url=self.absolute_url(a.get("href")),
+                title=a.get("data-bookname"),
+                info=li.find(".g_star_num small").text.strip(),
+            )
 
-    def read_novel_info(self):
+    def read_novel_info_in_scraper(self):
         self.get_csrf()
         url = self.novel_url
-        #self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
-        if not "_" in url:
-            self.novel_id = re.search(r'(?<=webnovel.com/book/)\d+', url).group(0)
+        if "_" not in url:
+            ids = re.findall(r"/book/(\d+)", url)
+            assert ids, "Please enter a correct novel URL"
+            self.novel_id = ids[0]
         else:
             self.novel_id = url.split("_")[1]
-        logger.info('Novel Id: %s', self.novel_id)
+        logger.info("Novel Id: %s", self.novel_id)
 
-        url = chapter_list_url % (self.csrf, self.novel_id)
-        logger.info('Downloading novel info from %s', url)
-        response = self.get_response(url)
-        data = response.json()['data']
+        response = self.get_response(
+            f"{self.home_url}go/pcm/chapter/getContent"
+            + f"?_csrfToken={self.csrf}&bookId={self.novel_id}&chapterId=0"
+            + "&encryptType=3&_fsae=0"
+        )
+        data = response.json()
+        logger.debug("Book Response:\n%s", data)
 
-        if 'bookInfo' in data:
-            logger.debug('book info: %s', data['bookInfo'])
-            self.novel_title = data['bookInfo']['bookName']
-            self.novel_cover = book_cover_url % (self.novel_id, int(1000 * time.time()))
-        # end if
+        assert "data" in data, "Data not found"
+        data = data["data"]
 
-        totalChapterNum = 0
-        if 'totalChapterNum' in data['bookInfo']:
-            logger.debug('chapter items: %d', data['bookInfo']['totalChapterNum'])
-            totalChapterNum = data['bookInfo']['totalChapterNum']
-        # end if
+        assert "bookInfo" in data, "Book info not found"
+        book_info = data["bookInfo"]
 
-        chap_id = data['chapterInfo']['chapterId']
+        assert "bookName" in book_info, "Book name not found"
+        self.novel_title = book_info["bookName"]
 
-        for i in range(totalChapterNum):
-            url = chapter_body_url % (self.csrf, self.novel_id, chap_id)
-            response = self.get_response(url)
-            json_content = response.json()
-            chap = json_content['data']['chapterInfo']
-            
-            if chap['vipStatus'] > 0:
-                continue
-            # end if
-            
-            vol_id = len(self.chapters) // 100 + 1
-            if len(self.chapters) % 100 == 0:
-                self.volumes.append({'id': vol_id})
-            # end if
-            
-            self.chapters.append({
-                'id': i + 1,
-                'hash': chap['chapterId'],
-                'title': 'Chapter %s: %s' % (chap['chapterIndex'], chap['chapterName'].strip()),
-                'url': chapter_body_url % (self.csrf, self.novel_id, chap['chapterId']),
-                'volume': vol_id,
-                'json_content': json_content,
-            })
-            
-            chap_id = chap['nextChapterId']
-            
-            if chap_id == '-1':
-                break
-            # end if
-        # end for
-    # end def
+        self.novel_cover = (
+            f"{self.origin.scheme}://img.webnovel.com/bookcover/{self.novel_id}/600/600.jpg"
+            + f"?coverUpdateTime{int(1000 * time())}&imageMogr2/quality/40"
+        )
 
-    def get_chapter_index_of(self, url):
-        if not url:
-            return 0
-        # end if
-        url = url.replace('http://', 'https://')
-        for chap in self.chapters:
-            chap_url = chapter_info_url % (self.novel_id, chap['hash'])
-            if url.startswith(chap_url):
-                return chap['id']
-            # end if
-        # end for
-        return 0
-    # end def
+        if "authorName" in book_info:
+            self.novel_author = book_info["authorName"]
+        elif "authorItems" in book_info:
+            self.novel_author = ", ".join(
+                [x.get("name") for x in book_info["authorItems"] if x.get("name")]
+            )
 
-    def download_chapter_body(self, chapter):
-        data = chapter['json_content']['data']
+        # To get the chapter list catalog
+        soup = self.get_soup(f"{self.novel_url.strip('/')}/catalog")
+        self.parse_chapter_catalog(soup)
+        if not self.chapters:
+            raise FallbackToBrowser()
 
-        if 'authorName' in data['bookInfo']:
-            self.novel_author = data['bookInfo']['authorName'] or self.novel_author
-        if 'authorItems' in data['bookInfo']:
-            self.novel_author = ', '.join([
-                x['name'] for x in
-                data['bookInfo']['authorItems']
-            ]) or self.novel_author
-        # end if
+    def read_novel_info_in_browser(self) -> None:
+        self.visit(f"{self.novel_url.strip('/')}/catalog")
+        self.last_soup_url = self.browser.current_url
+        self.browser.wait(".j_catalog_list")
+        self.parse_chapter_catalog(self.browser.soup)
 
-        chapter_info = data['chapterInfo']
-        if 'content' in chapter_info:
-            body = chapter_info['content']
-            body = re.sub(r'[\n\r]+', '\n', body)
-            return self.format_text(body)
-        elif 'contents' in chapter_info:
+    def parse_chapter_catalog(self, soup: BeautifulSoup) -> None:
+        for div in soup.select(".j_catalog_list .volume-item"):
+            vol = Volume(
+                id=len(self.volumes) + 1,
+                title=div.find("h4").text.strip(),
+            )
+            self.volumes.append(vol)
+            for li in div.select("li"):
+                a = li.find("a")
+                chap = Chapter(
+                    id=len(self.chapters) + 1,
+                    volume=vol.id,
+                    title=a.get("title"),
+                    cid=li.get("data-report-cid"),
+                    url=self.absolute_url(a.get("href")),
+                )
+                self.chapters.append(chap)
+
+    def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
+        self.visit(chapter.url)
+        self.browser.wait(f"j_chapter_{chapter.cid}", By.CLASS_NAME)
+
+        body = ""
+        for p in self.browser.soup.select(f".j_chapter_{chapter.cid} .cha-paragraph p"):
+            body += str(p)
+        return body
+
+    def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
+        logger.info("Chapter Id: %s", chapter.cid)
+
+        response = self.get_response(
+            f"{self.home_url}go/pcm/chapter/getContent?encryptType=3&_fsae=0"
+            + f"&_csrfToken={self.csrf}&bookId={self.novel_id}&chapterId={chapter.cid}"
+        )
+        data = response.json()
+        logger.debug("Chapter Response:\n%s", data)
+
+        assert "data" in data, "Data not found"
+        data = data["data"]
+
+        assert "chapterInfo" in data, "Chapter Info not found"
+        chapter_info = data["chapterInfo"]
+
+        chapter.title = chapter_info["chapterName"] or f"Chapter #{chapter.id}"
+
+        if "content" in chapter_info:
+            return self._format_content(chapter_info["content"])
+
+        if "contents" in chapter_info:
             body = [
-                re.sub(r'[\n\r]+', '\n', x['content'])
-                for x in chapter_info['contents']
-                if x['content'].strip()
+                self._format_content(x["content"])
+                for x in chapter_info["contents"]
+                if "content" in x
             ]
-            return self.format_text('\n'.join(body))
-        # end if
+            return "".join([x for x in body if x.strip()])
 
-        return None
-    # end def
-
-    def format_text(self, text):
-        text = re.sub(r'Find authorized novels in Webnovel(.*)for visiting\.',
-                      '', text, re.MULTILINE)
-        text = re.sub(r'\<pirate\>(.*?)\<\/pirate\>', '', text, re.MULTILINE)
-        if not (('<p>' in text) and ('</p>' in text)):
-            text = re.sub(r'<', '&lt;', text)
-            text = re.sub(r'>', '&gt;', text)
-            text = [x.strip() for x in text.split('\n') if x.strip()]
-            text = '<p>' + '</p><p>'.join(text) + '</p>'
-        # end if
+    def _format_content(self, text: str):
+        if ("<p>" not in text) or ("</p>" not in text):
+            text = "".join(text.split("\r"))
+            text = "&lt;".join(text.split("<"))
+            text = "&gt;".join(text.split(">"))
+            text = [x.strip() for x in text.split("\n") if x.strip()]
+            text = "<p>" + "</p><p>".join(text) + "</p>"
+        text = self.re_cleaner.sub("", text)
         return text.strip()
-    # end def
-# end class

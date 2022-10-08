@@ -8,15 +8,13 @@ logger = logging.getLogger(__name__)
 
 class AncientHeartloss(Crawler):
     base_url = [
-        'https://ancientheartloss.com/',
-        'https://ancientheartloss.wordpress.com/',
+        "https://ancientheartloss.com/",
+        "https://ancientheartloss.wordpress.com/",
     ]
 
     def initialize(self) -> None:
-        self.cleaner.bad_css.update(['.sharedaddy', 'a[href*="paypal.me"]'])
-        self.cleaner.bad_tags.update(["script"])
         # There is a lot of TN notes at bottom of chapters and junk text I've tried to remove as much as I can.
-        self.cleaner.blacklist_patterns.update(
+        self.cleaner.bad_text_regex.update(
             [
                 "PREVIOUS CHAPTER",
                 "CHAPTER LIST",
@@ -30,29 +28,27 @@ class AncientHeartloss(Crawler):
             ]
         )
 
-    # end def
-
     def read_novel_info(self):
-        logger.debug('Visiting %s', self.novel_url)
+        logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one('meta[property="og:title"]')
-        assert possible_title, 'No novel title'
-        self.novel_title = possible_title['content']
-        logger.info('Novel title: %s', self.novel_title)
+        assert possible_title, "No novel title"
+        self.novel_title = possible_title["content"]
+        logger.info("Novel title: %s", self.novel_title)
 
         possible_novel_cover = soup.select_one('meta[property="og:image"]')
         if possible_novel_cover:
-            self.novel_cover = self.absolute_url(possible_novel_cover['content'])
-        logger.info('Novel cover: %s', self.novel_cover)
+            self.novel_cover = self.absolute_url(possible_novel_cover["content"])
+        logger.info("Novel cover: %s", self.novel_cover)
 
         # No author names listed
         self.novel_author = "Translated by AncientHeartloss"
-        logger.info('Novel author: %s', self.novel_author)
+        logger.info("Novel author: %s", self.novel_author)
 
         # Removes none TOC links from bottom of page.
-        toc_parts = soup.select_one('.entry-content')
-        for notoc in toc_parts.select('.sharedaddy'):
+        toc_parts = soup.select_one(".entry-content")
+        for notoc in toc_parts.select(".sharedaddy"):
             notoc.extract()
 
         # Extract volume-wise chapter entries
@@ -63,26 +59,17 @@ class AncientHeartloss(Crawler):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
-                self.volumes.append({'id': vol_id})
-            # end if
+                self.volumes.append({"id": vol_id})
             self.chapters.append(
                 {
-                    'id': chap_id,
-                    'volume': vol_id,
-                    'url': self.absolute_url(a['href']),
-                    'title': a.text.strip() or ('Chapter %d' % chap_id),
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "url": self.absolute_url(a["href"]),
+                    "title": a.text.strip() or ("Chapter %d" % chap_id),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter['url'])
-        body_parts = soup.select_one('.entry-content')
+        soup = self.get_soup(chapter["url"])
+        body_parts = soup.select_one(".entry-content")
         return self.cleaner.extract_contents(body_parts)
-
-    # end def
-
-
-# end class

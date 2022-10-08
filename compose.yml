@@ -1,12 +1,28 @@
 version: '3'
 
 services:
+  chrome:
+    image: selenium/standalone-chrome:latest
+    shm_size: 6gb
+    restart: unless-stopped
+    ports:
+      - "7900:7900"
+    environment:
+      - SE_VNC_VIEW_ONLY=1
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - NODE_MAX_INSTANCE=8
+      - NODE_MAX_SESSION=8
+
   discord-bot:
     image: lncrawl
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
-    command: python -m lncrawl --bot discord --shard-id 0 --shard-count 1 --suppress
+    restart: unless-stopped
+    command: python -m lncrawl --suppress --bot discord --shard-id 0 --shard-count 1 --selenium-grid "http://chrome:4444"
+    depends_on:
+      - chrome
     environment:
       CLOUD_DRIVE: "GOFILE"
       DISCORD_TOKEN: "${DISCORD_TOKEN}"
@@ -18,8 +34,8 @@ services:
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
-    command: python -m lncrawl --bot telegram
+    restart: unless-stopped
+    command: python -m lncrawl --suppress --bot telegram
     environment:
       CLOUD_DRIVE: "GOFILE"
       TELEGRAM_TOKEN: "${TELEGRAM_TOKEN}"
- 

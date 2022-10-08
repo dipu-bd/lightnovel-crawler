@@ -25,3 +25,4 @@ client_secrets.json
 /lightnovel-crawler-*
 __pycache__/
 .idea/
+/test.py

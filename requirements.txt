@@ -2,6 +2,7 @@
 ascii
 regex
 packaging
+minify-html
 pyease-grpc>=1.3.0
 python-dotenv>=0.15.0,<1.0.0
 beautifulsoup4>=4.8.0,<5.0.0
@@ -19,12 +20,17 @@ questionary>=1.6.0
 prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
+python-box>=6.0.0,<7.0.0
+pycryptodome>=3.0.0,<4.0.0
+webdriver-manager
+selenium>=3.141.0
 
 # dev requirements
 wheel
+black
+flake8
 pyinstaller
 setuptools<=60.0.0
-pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5
 # cssutils>=1.0.0,<2.7.0

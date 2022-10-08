@@ -40,8 +40,7 @@ main {
   padding: 0 10px;
 }
 
-p + br,
-br + br {
+p + br{
   display: none;
 }
 

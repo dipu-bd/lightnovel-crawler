@@ -5,19 +5,14 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = 'https://arangscans.com/?s=%s&post_type=wp-manga'
+search_url = "https://arangscans.com/?s=%s&post_type=wp-manga"
 
 
 class ArangScans(Crawler):
-    base_url = 'https://arangscans.com/'
+    base_url = "https://arangscans.com/"
 
     def initialize(self) -> None:
-        self.cleaner.bad_css.update([
-            'h3',
-            '.code-block',
-            '.adsbygoogle',
-        ])
-    # end def
+        self.cleaner.bad_css.update(["h3"])
 
     # FIXME: Can't seem to get search to work not showing up when running command "lncrawl -q "Rooftop Sword Master" --sources"
     # def search_novel(self, query):
@@ -42,44 +37,43 @@ class ArangScans(Crawler):
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one('.post-title h1')
-        for span in possible_title.select('span'):
+        possible_title = soup.select_one(".post-title h1")
+        for span in possible_title.select("span"):
             span.extract()
-        # end for
         self.novel_title = possible_title.text.strip()
-        logger.info('Novel title: %s', self.novel_title)
+        logger.info("Novel title: %s", self.novel_title)
 
-        possible_image = soup.select_one('.summary_image a img')
+        possible_image = soup.select_one(".summary_image a img")
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image['src'])
-        logger.info('Novel cover: %s', self.novel_cover)
+            self.novel_cover = self.absolute_url(possible_image["src"])
+        logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = ' '.join([
-            a.text.strip()
-            for a in soup.select('.author-content a[href*="manga-author"]')
-        ])
-        logger.info('%s', self.novel_author)
+        self.novel_author = " ".join(
+            [
+                a.text.strip()
+                for a in soup.select('.author-content a[href*="manga-author"]')
+            ]
+        )
+        logger.info("%s", self.novel_author)
 
         volumes = set()
-        chapters = soup.select('ul.main li.wp-manga-chapter a')
+        chapters = soup.select("ul.main li.wp-manga-chapter a")
         for a in reversed(chapters):
             chap_id = len(self.chapters) + 1
             vol_id = (chap_id - 1) // 100 + 1
             volumes.add(vol_id)
-            self.chapters.append({
-                'id': chap_id,
-                'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
-                'title': a.text.strip() or ('Chapter %d' % chap_id),
-            })
-        # end for
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "volume": vol_id,
+                    "url": self.absolute_url(a["href"]),
+                    "title": a.text.strip() or ("Chapter %d" % chap_id),
+                }
+            )
 
-        self.volumes = [{'id': x} for x in volumes]
-    # end def
+        self.volumes = [{"id": x} for x in volumes]
 
     def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('div.text-left')
+        soup = self.get_soup(chapter["url"])
+        contents = soup.select_one("div.text-left")
         return self.cleaner.extract_contents(contents)
-    # end def
-# end class

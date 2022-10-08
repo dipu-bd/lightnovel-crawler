@@ -1,12 +1,24 @@
 name: Lint pull requests
 
 on:
+  push:
+    branches:
+      - dev
+    paths:
+      - "sources/_index.json"
   pull_request:
     branches:
       - master
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  lint_test:
+    if: github.repository == 'dipu-bd/lightnovel-crawler'
+    name: Lint & Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,6 +31,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip wheel setuptools
@@ -27,4 +40,12 @@ jobs:
       - name: Lint with flake8
         run: |
           pip install flake8
-          flake8 --count --show-source --statistics
+          flake8 -v --count --show-source --statistics
+
+      - name: Build wheel
+        run: python setup.py clean bdist_wheel
+
+      - name: Install and test the wheel package
+        run: |
+          pip install dist/lightnovel_crawler*.whl
+          lncrawl --list-sources

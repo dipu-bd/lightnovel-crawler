@@ -7,15 +7,10 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
+
 class DemonTranslations(Crawler):
     base_url = 'https://demontranslations.com/'
 
-    def initialize(self) -> None:
-        self.cleaner.bad_css.update([
-            '.sharedaddy',
-        ])
-    # end def
-    
     def read_novel_info(self):
         logger.debug('Visiting %s', self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -39,16 +34,14 @@ class DemonTranslations(Crawler):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             if len(self.volumes) < vol_id:
-                self.volumes.append({ 'id': vol_id })
-            # end if
+                self.volumes.append({'id': vol_id})
+
             self.chapters.append({
                 'id': chap_id,
                 'volume': vol_id,
-                'url':  self.absolute_url(a['href']),
+                'url': self.absolute_url(a['href']),
                 'title': a.text.strip() or ('Chapter %d' % chap_id),
             })
-        # end for
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
@@ -61,7 +54,5 @@ class DemonTranslations(Crawler):
             for bad in ["Previous Chapter", "Table of Contents", "Next Chapter"]:
                 if bad in content.text:
                     content.extract()
- 
+
         return self.cleaner.extract_contents(body_parts)
-    # end def
-# end class

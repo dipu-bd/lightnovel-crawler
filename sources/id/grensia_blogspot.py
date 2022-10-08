@@ -15,18 +15,18 @@ novel_info_url = '/feeds/posts/default/-/%s?&orderby=published&alt=json-in-scrip
 _underscorer1 = re.compile(r'(.)([A-Z][a-z]+)')
 _underscorer2 = re.compile('([a-z0-9])([A-Z])')
 
+
 def camel_to_title(s):
     s = _underscorer1.sub(r'\1_\2', s)
     s = _underscorer2.sub(r'\1_\2', s).lower()
     return ' '.join([x.title() for x in s.split('_')])
 
+
 class GreensiaCrawler(Crawler):
     base_url = 'https://grensia.blogspot.com/'
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(['h1', 'header'])
-        self.cleaner.bad_css.update(['.googlepublisherads'])
-    # end def
+        self.cleaner.bad_tags.update(['h1'])
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -58,7 +58,7 @@ class GreensiaCrawler(Crawler):
         try:
             self.novel_author = str(data['feed']['author'][0]['name']['$t']).title()
             logger.info('Novel author: %s', self.novel_author)
-        except:
+        except Exception:
             pass
 
         vols = set([])
@@ -80,10 +80,8 @@ class GreensiaCrawler(Crawler):
                 title=entry['title']['$t'],
                 url=self.absolute_url(a_href),
             ))
-        # end for
 
         self.volumes = [dict(id=x) for x in vols]
-    # end def
 
     def download_chapter_body(self, chapter):
         logger.debug('Visiting %s', chapter['url'])
@@ -91,6 +89,3 @@ class GreensiaCrawler(Crawler):
         body = soup.select_one('.post-body')
         assert isinstance(body, Tag)
         return self.cleaner.extract_contents(body)
-    # end def
-
-# end class

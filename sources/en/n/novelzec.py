@@ -32,7 +32,6 @@ class NovelZec(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -41,16 +40,8 @@ class NovelZec(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one(".content-story")
         return self.cleaner.extract_contents(contents)
-
-    # end def
-
-
-# end class

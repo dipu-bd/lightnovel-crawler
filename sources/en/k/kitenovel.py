@@ -42,7 +42,6 @@ class KiteNovel(Crawler):
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append({"id": vol_id})
-            # end if
             self.chapters.append(
                 {
                     "id": chap_id,
@@ -51,9 +50,6 @@ class KiteNovel(Crawler):
                     "url": self.absolute_url(a["href"]),
                 }
             )
-        # end for
-
-    # end def
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
@@ -69,8 +65,3 @@ class KiteNovel(Crawler):
                 break
 
         return self.cleaner.extract_contents(contents)
-
-    # end def
-
-
-# end class

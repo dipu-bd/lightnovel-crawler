@@ -2,13 +2,12 @@ name: Build and Publish
 
 on:
   push:
-    # branches:
-    # - master
     tags:
       - "v*"
 
 jobs:
   validate:
+    if: github.repository == 'dipu-bd/lightnovel-crawler'
     name: Lint & Test
     runs-on: ubuntu-latest
     strategy:
@@ -36,7 +35,7 @@ jobs:
       - name: Lint with flake8
         run: |
           pip install flake8
-          flake8 --count --show-source --statistics
+          flake8 -v --count --show-source --statistics
 
       - name: Build wheel
         run: python setup.py clean bdist_wheel
@@ -48,6 +47,7 @@ jobs:
           lncrawl -s 'https://novelfull.com/the-kings-avatar-for-the-glory.html' --first 2 -f --format epub --suppress -lll
 
   build-windows:
+    if: github.repository == 'dipu-bd/lightnovel-crawler'
     needs: validate
     name: Windows Build
     runs-on: windows-latest
@@ -56,10 +56,10 @@ jobs:
         run: choco install -y --no-progress openssl
 
       - uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python 3.10
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.10
 
       - name: Build package
         env:
@@ -81,6 +81,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
+    if: github.repository == 'dipu-bd/lightnovel-crawler'
     needs: [validate, build-windows]
     name: Linux Build & Publish
     runs-on: ubuntu-latest
