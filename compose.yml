@@ -3,7 +3,7 @@ version: '3'
 services:
   chrome:
     image: selenium/standalone-chrome:latest
-    shm_size: 2gb
+    shm_size: 6gb
     restart: unless-stopped
     ports:
       - "4444:4444"
@@ -11,6 +11,8 @@ services:
     environment:
       - SE_EVENT_BUS_PUBLISH_PORT=4442
       - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+      - NODE_MAX_INSTANCE=8
+      - NODE_MAX_SESSION=8
 
   discord-bot:
     image: lncrawl
