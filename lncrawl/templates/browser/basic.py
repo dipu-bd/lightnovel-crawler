@@ -1,12 +1,16 @@
 import logging
 from abc import abstractmethod
+from io import BytesIO
 from typing import Generator, List, Optional
+
+from PIL import Image
 
 from ...core.browser import Browser
 from ...core.crawler import Crawler
 from ...core.exeptions import FallbackToBrowser, ScraperErrorGroup
 from ...models import Chapter
 from ...models.search_result import SearchResult
+from ...webdriver.elements import By
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +56,6 @@ class BasicBrowserTemplate(Crawler):
         self.init_executor(1)
         self._browser = Browser(
             headless=self.headless,
-            cookie_store=self.scraper.cookies,
             timeout=self.timeout,
             soup_maker=self,
         )
@@ -73,7 +76,9 @@ class BasicBrowserTemplate(Crawler):
     def search_novel(self, query: str) -> List[SearchResult]:
         try:
             results = list(self.search_novel_in_scraper(query))
-        except ScraperErrorGroup:
+        except ScraperErrorGroup as e:
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.exception("Failed search novel: %s", e)
             self.init_browser()
             results = list(self.search_novel_in_browser(query))
         finally:
@@ -83,7 +88,9 @@ class BasicBrowserTemplate(Crawler):
     def read_novel_info(self) -> None:
         try:
             self.read_novel_info_in_scraper()
-        except ScraperErrorGroup:
+        except ScraperErrorGroup as e:
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.exception("Failed in read novel info: %s", e)
             self.init_browser()
             self.read_novel_info_in_browser()
         finally:
@@ -92,7 +99,9 @@ class BasicBrowserTemplate(Crawler):
     def download_chapters(self, chapters: List[Chapter]) -> Generator[int, None, None]:
         try:
             yield from super().download_chapters(chapters, fail_fast=True)
-        except ScraperErrorGroup:
+        except ScraperErrorGroup as e:
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.exception("Failed in scraper: %s", e)
             self.init_browser()
             for chapter in self.progress_bar(chapters, desc="Chapters", unit="item"):
                 if not isinstance(chapter, Chapter) or chapter.success:
@@ -112,6 +121,18 @@ class BasicBrowserTemplate(Crawler):
                     yield 1
         finally:
             self.close_browser()
+
+    def download_image(self, url: str, headers={}, **kwargs) -> Image:
+        try:
+            return super().download_image(url, headers, **kwargs)
+        except ScraperErrorGroup as e:
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.exception("Failed in download image: %s", e)
+            self.init_browser()
+            self.browser.visit(url)
+            self.browser.wait("img", By.TAG_NAME)
+            png = self.browser.find("img", By.TAG_NAME).screenshot_as_png
+            return Image.open(BytesIO(png))
 
     def search_novel_in_scraper(
         self, query: str

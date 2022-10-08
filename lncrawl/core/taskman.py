@@ -89,7 +89,7 @@ class TaskManager(ABC):
         if hasattr(self, "_executor"):
             if self.workers == workers:
                 return
-            self._executor.shutdown(wait=True)
+            self._executor.shutdown(wait=False)
 
         self._executor = ThreadPoolExecutor(
             max_workers=workers,

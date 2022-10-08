@@ -24,7 +24,6 @@ class WebnovelCrawler(BasicBrowserTemplate):
     def initialize(self) -> None:
         self.headless = True
         self.home_url = "https://www.webnovel.com/"
-
         bad_text = [
             r"(\<pirate\>(.*?)\<\/pirate\>)"
             r"(Find authorized novels in Webnovel(.*)for visiting\.)",
@@ -145,13 +144,12 @@ class WebnovelCrawler(BasicBrowserTemplate):
             body += str(p)
         return body
 
-    def download_chapter_body_in_scraper(self, chapter: Chapter):
+    def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
         logger.info("Chapter Id: %s", chapter.cid)
 
         response = self.get_response(
-            f"{self.home_url}go/pcm/chapter/getContent"
-            + f"?_csrfToken={self.csrf}&bookId={self.novel_id}&chapterId={chapter.cid}"
-            + "&encryptType=3&_fsae=0"
+            f"{self.home_url}go/pcm/chapter/getContent?encryptType=3&_fsae=0"
+            + f"&_csrfToken={self.csrf}&bookId={self.novel_id}&chapterId={chapter.cid}"
         )
         data = response.json()
         logger.debug("Chapter Response:\n%s", data)
