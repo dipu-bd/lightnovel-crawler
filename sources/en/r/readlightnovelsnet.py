@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-from urllib.parse import quote_plus
+from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
@@ -16,10 +16,9 @@ class ReadLightNovelsNet(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         "https://readlightnovels.net/",
     ]
 
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
-        return self.get_soup(f"{self.home_url}?s={quote_plus(query)}")
-
-    def select_search_items(self, soup: BeautifulSoup):
+    def select_search_items(self, query: str):
+        params = {"s": query}
+        soup = self.get_soup(f"{self.home_url}?{urlencode(params)}")
         yield from soup.select(".home-truyendecu")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:

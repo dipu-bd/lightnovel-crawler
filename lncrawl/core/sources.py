@@ -292,6 +292,9 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
 
 
 def __add_crawlers_from_path(path: Path):
+    if "/_" in str(path.relative_to(__local_data_path)):
+        return
+
     if not path.exists():
         logger.warn("Path does not exists: %s", path)
         return

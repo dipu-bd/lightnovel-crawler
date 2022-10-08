@@ -1,38 +1,33 @@
 from abc import abstractmethod
-from typing import Generator, Iterable
+from typing import Generator, List
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import Tag
 
 from ...models import SearchResult
 from .general import GeneralSoupTemplate
 
 
 class SearchableSoupTemplate(GeneralSoupTemplate):
-    def search_novel(self, query) -> Iterable[SearchResult]:
-        soup = self.get_search_page_soup(query)
-        tags = self.select_search_items(soup)
-        results = []
-        for sr in self.process_search_results(tags):
-            if sr:
-                results.append(sr)
-                if len(results) == 10:
-                    break
-        return results
+    def search_novel(self, query) -> List[SearchResult]:
+        tags = self.select_search_items(query)
+        return list(self.process_search_results(tags))
 
-    def process_search_results(self, tags: Iterable[Tag]) -> Generator[Tag, None, None]:
+    def process_search_results(
+        self, tags: Generator[Tag, None, None]
+    ) -> Generator[Tag, None, None]:
         """Process novel item tag and generates search results"""
+        count = 0
         for tag in tags:
-            if isinstance(tag, Tag):
-                yield self.parse_search_item(tag)
+            if not isinstance(tag, Tag):
+                continue
+            count += 1
+            if count == 10:
+                break
+            yield self.parse_search_item(tag)
 
     @abstractmethod
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
-        """Get the search page soup from the query"""
-        raise NotImplementedError()
-
-    @abstractmethod
-    def select_search_items(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        """Select novel items found in search page soup"""
+    def select_search_items(self, query: str) -> Generator[Tag, None, None]:
+        """Select novel items found on the search page by the query"""
         raise NotImplementedError()
 
     @abstractmethod

@@ -6,10 +6,14 @@ import json
 import locale
 import logging
 import os
+from enum import Enum
 from threading import Lock, Semaphore
 from typing import List, Optional
 
+from bs4 import Tag
+
 from ..core.exeptions import LNException
+from ..core.soup import SoupMaker
 from ..utils.platforms import Platform, Screen
 from . import scripts
 
@@ -24,10 +28,10 @@ try:
     import selenium.webdriver.support.expected_conditions as EC
     from selenium.webdriver.chrome.options import Options as ChromeOptions
     from selenium.webdriver.chrome.webdriver import WebDriver
-    from selenium.webdriver.common.by import By
     from selenium.webdriver.remote.command import Command
     from selenium.webdriver.remote.remote_connection import LOGGER
-    from selenium.webdriver.remote.webelement import WebElement
+    from selenium.webdriver.remote.webelement import WebElement as OriginalWebElement
+    from selenium.webdriver.support.relative_locator import RelativeBy
     from selenium.webdriver.support.wait import WebDriverWait
 
     LOGGER.setLevel(logging.ERROR)
@@ -39,9 +43,11 @@ __all__ = [
     "By",
     "EC",
     "Command",
+    "RelativeBy",
     "WebElement",
     "WebDriverWait",
     "create_chrome",
+    "check_if_active",
 ]
 
 
@@ -55,14 +61,6 @@ __semaphore = Semaphore(MAX_BROWSER_INSTANCES)
 def __get_driver_path():
     with __installer_lock:
         return ChromeDriverManager().install()
-
-
-def cleanup():
-    for chrome in __open_browsers:
-        chrome.quit()
-
-
-atexit.register(cleanup)
 
 
 def __override_quit(chrome: WebDriver):
@@ -133,6 +131,7 @@ def create_chrome(
     host: str = "127.0.0.1",
     port: Optional[int] = None,
     user_data_dir: Optional[str] = None,
+    soup_maker: Optional[SoupMaker] = None,
 ) -> WebDriver:
     """
     Acquire a chrome browser instane. There is a limit of the number of
@@ -219,8 +218,69 @@ def create_chrome(
 
     logger.info("Created chrome instance > %s", chrome.session_id)
     chrome.set_window_position(0, 0)
+
     __open_browsers.append(chrome)
     __override_quit(chrome)
     __override_get(chrome)
     __add_virtual_authenticator(chrome)
+
+    if not soup_maker:
+        soup_maker = SoupMaker()
+    chrome.soup_maker = soup_maker
+
     return chrome
+
+
+def check_if_active(chrome: WebDriver) -> False:
+    if not isinstance(chrome, WebDriver):
+        return False
+    return chrome.session_id in __open_browsers
+
+
+def cleanup():
+    for chrome in __open_browsers:
+        chrome.quit()
+
+
+atexit.register(cleanup)
+
+
+# from selenium.webdriver.common.by import By
+class By(str, Enum):
+    ID = "id"
+    XPATH = "xpath"
+    LINK_TEXT = "link text"
+    PARTIAL_LINK_TEXT = "partial link text"
+    NAME = "name"
+    TAG_NAME = "tag name"
+    CLASS_NAME = "class name"
+    CSS_SELECTOR = "css selector"
+
+    def __str__(self) -> str:
+        return self.value
+
+
+class WebElement(OriginalWebElement):
+    def __init__(self, parent, id_):
+        super().__init__(parent, id_)
+
+    @property
+    def __soup_maker(self) -> SoupMaker:
+        if hasattr(self._parent, "soup_maker"):
+            maker = getattr(self._parent, "soup_maker")
+            if isinstance(maker, SoupMaker):
+                return maker
+        return SoupMaker()
+
+    def inner_html(self) -> str:
+        return self.get_attribute("innerHTML")
+
+    def outer_html(self) -> str:
+        return self.get_attribute("outerHTML")
+
+    def as_tag(self) -> Tag:
+        html = self.outer_html()
+        if not hasattr(self, "_tag") or self._html != html:
+            self._html = html
+            self._tag = self.__soup_maker.make_tag(self._tag)
+        return self._tag

@@ -2,7 +2,7 @@ import logging
 from abc import ABC
 from typing import Optional, Union
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from requests import Response
 
 from .exeptions import LNException
@@ -18,6 +18,12 @@ class SoupMaker(ABC):
         self,
         parser: Optional[str] = None,
     ) -> None:
+        """This is a helper for Beautiful Soup. It is being used as a superclass of the Crawler.
+
+        Args:
+        - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
+            ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
+        """
         self.parser = parser or DEFAULT_PARSER
 
     def __del__(self) -> None:
@@ -36,4 +42,12 @@ class SoupMaker(ABC):
             html = str(data)
         else:
             raise LNException("Could not parse response")
-        return BeautifulSoup(html, parser or self.parser)
+        return BeautifulSoup(html, features=parser or self.parser)
+
+    def make_tag(
+        self,
+        data: Union[Response, bytes, str],
+        parser: Optional[str] = None,
+    ) -> Tag:
+        soup = self.make_soup(data, parser)
+        return next(soup.find("body").children)

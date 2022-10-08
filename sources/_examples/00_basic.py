@@ -8,9 +8,10 @@ Put your source file inside the language folder. The `en` folder has too many
 files, therefore it is grouped using the first letter of the domain name.
 """
 import logging
-from typing import Iterable
+from typing import List
 
-from lncrawl.core.crawler import Chapter, Crawler, SearchResult
+from lncrawl.core.crawler import Crawler
+from lncrawl.models import Chapter, SearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +44,7 @@ class MyCrawlerName(Crawler):
         pass
 
     # TODO: [OPTIONAL] Return a list of search results using the query.
-    def search_novel(self, query) -> Iterable[SearchResult]:
+    def search_novel(self, query) -> List[SearchResult]:
         # You may raise an Exception or return empty list in case of failure.
         pass
 

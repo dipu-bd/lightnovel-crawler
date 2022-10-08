@@ -1,5 +1,5 @@
 import logging
-from typing import Iterable, Optional
+from typing import Iterable, List, Optional, Union
 
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
@@ -8,8 +8,11 @@ from ..chromedriver.chrome import (
     EC,
     By,
     ChromeOptions,
+    RelativeBy,
     WebDriver,
     WebDriverWait,
+    WebElement,
+    check_if_active,
     create_chrome,
 )
 from .soup import SoupMaker
@@ -21,6 +24,7 @@ __all__ = [
     "By",
     "EC",
     "Browser",
+    "RelativeBy",
     "create_chrome",
 ]
 
@@ -29,11 +33,21 @@ class Browser:
     def __init__(
         self,
         headless: bool = True,
-        timeout: Optional[int] = 300,
+        timeout: Optional[int] = 120,
         options: Optional["ChromeOptions"] = None,
         cookie_store: Optional[RequestsCookieJar] = None,
         soup_parser: Optional[str] = None,
     ) -> None:
+        """
+        Interface to interact with chrome webdriver.
+
+        Args:
+        - headless (bool, optional): True to hide the UI, False to show the UI. Default: True.
+        - timeout (Optional[int], optional): Maximum wait duration in seconds for an element to be available. Default: 120.
+        - options (Optional[&quot;ChromeOptions&quot;], optional): Chrome webdriver options. Default: None.
+        - cookie_store (Optional[RequestsCookieJar], optional): A cookie store to synchronize cookies. Default: None.
+        - soup_parser (Optional[str], optional): Parser for page content. Default: None.
+        """
         self._driver: WebDriver = None
         self.options = options
         self.timeout = timeout
@@ -42,7 +56,7 @@ class Browser:
         self._soup_tool = SoupMaker(soup_parser)
 
     def __del__(self):
-        if not self._driver:
+        if not check_if_active(self._driver):
             return
         self._restore_cookies()
         self._driver.quit()
@@ -52,7 +66,7 @@ class Browser:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        if not self._driver:
+        if not check_if_active(self._driver):
             return
         self._restore_cookies()
         self._driver.quit()
@@ -64,11 +78,14 @@ class Browser:
             options=self.options,
             timeout=self.timeout,
             headless=self.headless,
+            soup_maker=self._soup_tool,
         )
+        self._driver.implicitly_wait(30)
+        self._driver.set_page_load_timeout(30)
         self._apply_cookies()
 
     def _apply_cookies(self):
-        if not self._driver:
+        if not check_if_active(self._driver):
             return
         if not isinstance(self.cookie_store, RequestsCookieJar):
             return
@@ -86,7 +103,7 @@ class Browser:
         logger.debug("Cookies applied: %s", self._driver.get_cookies())
 
     def _restore_cookies(self):
-        if not self._driver:
+        if not check_if_active(self._driver):
             return
         if not isinstance(self.cookie_store, RequestsCookieJar):
             return
@@ -102,23 +119,27 @@ class Browser:
         logger.debug("Cookies retrieved: %s", self.cookie_store)
 
     @property
+    def active(self):
+        return check_if_active(self._driver)
+
+    @property
     def current_url(self):
         """Get the current url if available, otherwise None"""
-        if not self._driver:
+        if not check_if_active(self._driver):
             return None
         return self._driver.current_url
 
     @property
     def session_id(self) -> Optional[str]:
         """Get the current session id if available, otherwise None"""
-        if not self._driver:
+        if not check_if_active(self._driver):
             return None
         return self._driver.session_id
 
     @property
     def html(self) -> str:
         """Get the current page html"""
-        if not self._driver:
+        if not check_if_active(self._driver):
             return ""
         return str(self._driver.page_source)
 
@@ -139,36 +160,51 @@ class Browser:
         """Visit an URL. Create new session if it does not exist"""
         self._init_browser()
         self._driver.get(url)
+        self._restore_cookies()
 
-    # def find(self, selector: str, by=By.CSS_SELECTOR) -> WebElement:
-    #     if not self._driver:
-    #         return None
-    #     self._driver.find_element(by, selector)
+    def find_all(
+        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
+    ) -> List[WebElement]:
+        if not check_if_active(self._driver):
+            return None
+        if isinstance(by, By):
+            by = str(by)
+        self._driver.find_elements(by, selector)
 
-    # def find_all(self, selector: str, by=By.CSS_SELECTOR) -> List[WebElement]:
-    #     if not self._driver:
-    #         return None
-    #     self._driver.find_elements(by, selector)
+    def find(
+        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
+    ) -> WebElement:
+        if not check_if_active(self._driver):
+            return None
+        if isinstance(by, By):
+            by = str(by)
+        self._driver.find_element(by, selector)
 
-    def click(self, selector: str, by=By.CSS_SELECTOR) -> None:
+    def click(self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR) -> None:
         "Select and click on an element."
-        if not self._driver:
+        if not check_if_active(self._driver):
             return None
-        self._driver.find_element(by, selector).click()
+        self.find(selector, by).click()
 
-    def submit(self, selector: str, by=By.CSS_SELECTOR) -> None:
-        """Select a form and submit it."""
-        if not self._driver:
-            return None
-        self._driver.find_element(by, selector).submit()
-
-    def send_keys(
-        self, selector: str, by=By.CSS_SELECTOR, value: str = "", clear: bool = True
+    def submit(
+        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
     ) -> None:
         """Select a form and submit it."""
-        if not self._driver:
+        if not check_if_active(self._driver):
             return None
-        elem = self._driver.find_element(by, selector)
+        self.find(selector, by).submit()
+
+    def send_keys(
+        self,
+        selector: str,
+        by: Union[By, RelativeBy] = By.CSS_SELECTOR,
+        value: str = "",
+        clear: bool = True,
+    ) -> None:
+        """Select a form and submit it."""
+        if not check_if_active(self._driver):
+            return None
+        elem = self.find(selector, by)
         if clear:
             elem.clear()
         elem.send_keys(value)
@@ -182,7 +218,7 @@ class Browser:
          - \\*args: Any applicable arguments for your JavaScript.
          - is_async: Whether to run as async script
         """
-        if not self._driver:
+        if not check_if_active(self._driver):
             return None
         if is_async:
             self._driver.execute_async_script(script, *args)
@@ -192,7 +228,7 @@ class Browser:
     def wait(
         self,
         selector: str,
-        by: str = By.CSS_SELECTOR,
+        by: Union[By, RelativeBy] = By.CSS_SELECTOR,
         timeout: Optional[float] = 60,
         poll_frequency: Optional[float] = 0.5,
         ignored_exceptions: Iterable[Exception] = [],
@@ -206,10 +242,12 @@ class Browser:
          - poll_frequency - Sleep interval between calls. Default: 0.5
          - ignored_exceptions - List of exception classes to ignore. Default: [NoSuchElementException]
         """
-        if not self._driver:
+        if not check_if_active(self._driver):
             return
         if not selector or not callable(expected_conditon):
             return
+        if isinstance(by, By):
+            by = str(by)
         logger.info(
             f"Wait {timeout} seconds for {expected_conditon.__name__} by {by}:{selector}"
         )

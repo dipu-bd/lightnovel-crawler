@@ -14,7 +14,7 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         self.cleaner.bad_tags.update(["h3"])
         self.cleaner.bad_css.update(['a[href="javascript:void(0)"]'])
 
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
+    def select_search_items(self, query: str):
         params = dict(
             s=query,
             post_type="wp-manga",
@@ -24,9 +24,7 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             release="",
             adult="",
         )
-        return self.get_soup(f"{self.home_url}?{urlencode(params)}")
-
-    def select_search_items(self, soup: BeautifulSoup):
+        soup = self.get_soup(f"{self.home_url}?{urlencode(params)}")
         yield from soup.select(".c-tabs-item__content")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:

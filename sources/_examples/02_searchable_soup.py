@@ -46,20 +46,14 @@ class MyCrawlerName(SearchableSoupTemplate):
     def logout(self):
         pass
 
-    # TODO: [REQUIRED] Get the search page soup from the query
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
+    # TODO: [REQUIRED] Select novel items found in search page from the query
+    def select_search_items(self, query: str) -> Generator[Tag, None, None]:
         # The query here is the input from user.
         #
-        # return self.post_soup(
-        #     f"{self.home_url}search/", data={"searchkey": query.lower()}
-        # )
-        pass
-
-    # TODO: [REQUIRED] Select novel items found in search page soup
-    def select_search_items(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        # The soup here is the result of `self.get_soup(self.get_search_page_soup(query))`
-        #
-        # Example: yield from soup.select(".col-content .con .txt h3 a")
+        # Example:
+        #   params = {"searchkey": query}
+        #   soup = self.post_soup(f"{self.home_url}search?{urlencode(params)}")
+        #   yield from soup.select(".col-content .con .txt h3 a")
         pass
 
     # TODO: [REQUIRED] Parse a tag and return single search result
@@ -100,6 +94,13 @@ class MyCrawlerName(SearchableSoupTemplate):
     # TODO: [REQUIRED] Parse and set the volumes and chapters
     def parse_chapter_list(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
+        pass
+
+    # TODO: [REQUIRED] Select the tag containing the chapter text
+    def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        # The soup here is the result of `self.get_soup(chapter.url)`
+        #
+        # Example: return soup.select_one(".m-read .txt")
         pass
 
     # TODO: [OPTIONAL] Return the index in self.chapters which contains a chapter URL

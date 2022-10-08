@@ -20,11 +20,21 @@ _host_semaphores: Dict[str, Semaphore] = {}
 
 class TaskManager(ABC):
     def __init__(self, workers: int = MAX_WORKER_COUNT) -> None:
+        """A helper class for task queueing and parallel task execution.
+        It is being used as a superclass of the Crawler.
+
+        Args:
+        - workers (int, optional): Number of concurrent workers to expect. Default: 10.
+        """
         self.init_executor(workers)
 
     @property
     def executor(self):
         return self._executor
+
+    @property
+    def workers(self):
+        return self._executor._max_workers
 
     def __del__(self) -> None:
         self._executor.shutdown(wait=False)
@@ -39,9 +49,10 @@ class TaskManager(ABC):
             workers: Number of workers to expect in the new executor.
         """
         if hasattr(self, "_executor"):
-            if self._executor._max_workers == workers:
+            if self.workers == workers:
                 return
             self._executor.shutdown(wait=True)
+
         self._executor = ThreadPoolExecutor(
             max_workers=workers,
             thread_name_prefix="lncrawl_scraper",

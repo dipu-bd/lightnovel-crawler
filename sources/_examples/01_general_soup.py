@@ -3,7 +3,7 @@
 # TODO: Read the TODOs carefully and remove all existing comments in this file.
 
 This is a sample using the GeneralSoupTemplate as the template. This template
-provides a general wrapper around the base Crawler to have more readability.
+provides some extra components over the base Crawler to improve readability.
 
 Put your source file inside the language folder. The `en` folder has too many
 files, therefore it is grouped using the first letter of the domain name.
@@ -72,6 +72,13 @@ class MyCrawlerName(GeneralSoupTemplate):
     # TODO: [REQUIRED] Parse and set the volumes and chapters
     def parse_chapter_list(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
+        pass
+
+    # TODO: [REQUIRED] Select the tag containing the chapter text
+    def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        # The soup here is the result of `self.get_soup(chapter.url)`
+        #
+        # Example: return soup.select_one(".m-read .txt")
         pass
 
     # TODO: [OPTIONAL] Return the index in self.chapters which contains a chapter URL

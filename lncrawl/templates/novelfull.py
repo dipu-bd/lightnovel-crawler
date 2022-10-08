@@ -1,6 +1,6 @@
 import re
 from typing import Iterable
-from urllib.parse import quote_plus
+from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
@@ -13,13 +13,10 @@ from .soup.searchable import SearchableSoupTemplate
 class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     is_template = True
 
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
-        return self.get_soup(
-            f"{self.home_url}search?keyword={quote_plus(query.lower())}"
-        )
-
-    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select("#list-page .row h3[class*='title'] > a")
+    def select_search_items(self, query: str) -> Iterable[Tag]:
+        params = {"keyword": query}
+        soup = self.get_soup(f"{self.home_url}search?{urlencode(params)}")
+        yield from soup.select("#list-page .row h3[class*='title'] > a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         title = tag.get("title", tag.get_text())

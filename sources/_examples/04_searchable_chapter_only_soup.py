@@ -3,10 +3,7 @@
 # TODO: Read the TODOs carefully and remove all existing comments in this file.
 
 This is a sample using the SearchableSoupTemplate and ChapterOnlySoupTemplate as the template.
-It should be able to do searching and generating only the chapter list excluding the volumes list.
-
-This is a sample using the SearchableSoupTemplate and ChapterWithVolumeSoupTemplate as the template.
-It should be able to do searching and generating both the volumes list and the chapter list.
+It should be able to do searching and generating only chapter list excluding volumes list.
 
 Put your source file inside the language folder. The `en` folder has too many
 files, therefore it is grouped using the first letter of the domain name.
@@ -16,15 +13,15 @@ from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.models import Chapter, SearchResult
+from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
-from lncrawl.templates.soup.with_volume import ChapterWithVolumeSoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
 # TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
-class MyCrawlerName(SearchableSoupTemplate, ChapterWithVolumeSoupTemplate):
+class MyCrawlerName(ChapterOnlySoupTemplate, SearchableSoupTemplate):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = ["http://sample.url/"]
 
@@ -50,20 +47,14 @@ class MyCrawlerName(SearchableSoupTemplate, ChapterWithVolumeSoupTemplate):
     def logout(self):
         pass
 
-    # TODO: [REQUIRED] Get the search page soup from the query
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
+    # TODO: [REQUIRED] Select novel items found in search page from the query
+    def select_search_items(self, query: str) -> Generator[Tag, None, None]:
         # The query here is the input from user.
         #
-        # return self.post_soup(
-        #     f"{self.home_url}search/", data={"searchkey": query.lower()}
-        # )
-        pass
-
-    # TODO: [REQUIRED] Select novel items found in search page soup
-    def select_search_items(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        # The soup here is the result of `self.get_soup(self.get_search_page_soup(query))`
-        #
-        # Example: yield from soup.select(".col-content .con .txt h3 a")
+        # Example:
+        #   params = {"searchkey": query}
+        #   soup = self.post_soup(f"{self.home_url}search?{urlencode(params)}")
+        #   yield from soup.select(".col-content .con .txt h3 a")
         pass
 
     # TODO: [REQUIRED] Parse a tag and return single search result
@@ -101,48 +92,24 @@ class MyCrawlerName(SearchableSoupTemplate, ChapterWithVolumeSoupTemplate):
         #       yield a.text.strip()
         pass
 
-    # TODO: [REQUIRED] Select volume list item tags from the page soup
-    def select_volume_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
+    # TODO: [REQUIRED] Select chapter list item tags from the page soup
+    def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         #
-        # Example: yield from soup.select("#toc .vol-item")
-        pass
-
-    # TODO: [REQUIRED] Parse a single volume from volume list item tag
-    def parse_volume_item(self, tag: Tag, id: int) -> Volume:
-        # The tag here comes from `self.select_volume_tags`
-        # The id here is the next available volume id
-        #
-        # Example:
-        # return Volume(
-        #     id=id,
-        #     title= tag.text.strip(),
-        # )
-        pass
-
-    # TODO: [REQUIRED] Select chapter list item tags from volume tag and page soup
-    def select_chapter_tags(self, tag: Tag, vol: Volume) -> Generator[Tag, None, None]:
-        # The tag here comes from `self.select_volume_tags`
-        # The vol here comes from `self.parse_volume_item`
-        #
-        # Example: yield from tag.select(".chapter-item")
+        # Example: yield from soup.select(".m-newest2 li > a")
         pass
 
     # TODO: [REQUIRED] Parse a single chapter from chapter list item tag
-    def parse_chapter_item(self, tag: Tag, id: int, vol: Volume) -> Chapter:
-        # The tag here comes from `self.select_chapter_tags`
-        # The vol here comes from `self.parse_volume_item`
-        # The id here is the next available chapter id
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
+        # The soup here is the result of `self.get_soup(self.novel_url)`
         #
         # Example:
         # return Chapter(
         #     id=id,
-        #     volume=vol.id,
         #     title=tag.text.strip(),
         #     url=self.absolute_url(tag["href"]),
         # )
         pass
-        raise NotImplementedError()
 
     # TODO: [REQUIRED] Select the tag containing the chapter text
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:

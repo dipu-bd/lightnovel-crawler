@@ -10,9 +10,14 @@ from .general import GeneralSoupTemplate
 class ChapterOnlySoupTemplate(GeneralSoupTemplate):
     def parse_chapter_list(self, soup: BeautifulSoup) -> None:
         for tag in self.select_chapter_tags(soup):
-            next_id = len(self.chapters) + 1
-            item = self.parse_chapter_item(tag, next_id)
-            self.chapters.append(item)
+            if not isinstance(tag, Tag):
+                continue
+            self.process_chapters(tag)
+
+    def process_chapters(self, tag: Tag) -> None:
+        next_id = len(self.chapters) + 1
+        item = self.parse_chapter_item(tag, next_id)
+        self.chapters.append(item)
 
     @abstractmethod
     def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:

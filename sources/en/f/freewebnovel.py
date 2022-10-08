@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from concurrent.futures import Future
-from typing import Iterable, List
+from typing import List
 
 from bs4 import BeautifulSoup, Tag
 
@@ -13,12 +13,9 @@ from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     base_url = ["https://freewebnovel.com/"]
 
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
-        return self.post_soup(
-            f"{self.home_url}search/", data={"searchkey": query.lower()}
-        )
-
-    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
+    def select_search_items(self, query: str):
+        data = {"searchkey": query}
+        soup = self.post_soup(f"{self.home_url}search/", data=data)
         yield from soup.select(".col-content .con .txt h3 a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:

@@ -4,9 +4,8 @@ from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.core.exeptions import LNException
-
 from ...core.crawler import Crawler
+from ...core.exeptions import LNException
 from ...models import Chapter
 
 logger = logging.getLogger(__name__)

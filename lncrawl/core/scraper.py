@@ -32,10 +32,19 @@ class Scraper(TaskManager, SoupMaker):
     def __init__(
         self,
         origin: str,
-        workers: int = None,
-        parser: str = None,
+        workers: Optional[int] = None,
+        parser: Optional[str] = None,
     ) -> None:
-        super(Scraper, self).__init__(workers)
+        """Creates a standalone Scraper instance.
+        It is primarily being used as a superclass of the Crawler.
+
+        Args:
+        - origin (str): The origin URL of the scraper.
+        - workers (int, optional): Number of concurrent workers to expect. Default: 10.
+        - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
+            ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
+        """
+        super().__init__(workers)
         self._soup_tool = SoupMaker(parser)
         self.make_soup = self._soup_tool.make_soup
 
@@ -48,7 +57,7 @@ class Scraper(TaskManager, SoupMaker):
         self.change_user_agent()
 
     def __del__(self) -> None:
-        super(Scraper, self).__del__()
+        super().__del__()
         self.scraper.close()
 
     # ------------------------------------------------------------------------- #

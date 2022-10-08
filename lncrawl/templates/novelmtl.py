@@ -18,7 +18,7 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
 
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
+    def select_search_items(self, query: str):
         soup = self.get_soup(f"{self.home_url}search.html")
         form = soup.select_one('.search-container form[method="post"]')
         if not isinstance(form, Tag):
@@ -28,9 +28,8 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         payload = {input["name"]: input["value"] for input in form.select("input")}
         payload["keyboard"] = query
         response = self.submit_form(action_url, payload)
-        return self.make_soup(response)
 
-    def select_search_items(self, soup: BeautifulSoup):
+        soup = self.make_soup(response)
         yield from soup.select("ul.novel-list .novel-item a")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:

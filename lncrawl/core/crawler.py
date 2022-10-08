@@ -1,7 +1,7 @@
 import hashlib
 import logging
 from abc import abstractmethod
-from typing import Generator, List
+from typing import Generator, List, Optional
 
 from ..models import Chapter, SearchResult, Volume
 from ..utils.cleaner import TextCleaner
@@ -20,8 +20,24 @@ class Crawler(Scraper):
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
     # ------------------------------------------------------------------------- #
-    def __init__(self) -> None:
-        super(Crawler, self).__init__(self.base_url[0])
+    def __init__(
+        self,
+        workers: Optional[int] = None,
+        parser: Optional[str] = None,
+    ) -> None:
+        """
+        Creates a standalone Crawler instance.
+
+        Args:
+        - workers (int, optional): Number of concurrent workers to expect. Default: 10.
+        - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
+            ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
+        """
+        super().__init__(
+            origin=self.base_url[0],
+            workers=workers,
+            parser=parser,
+        )
 
         self.cleaner = TextCleaner()
 
@@ -48,7 +64,7 @@ class Crawler(Scraper):
         self.chapters: List[Chapter] = []
 
     def __del__(self) -> None:
-        super(Crawler, self).__del__()
+        super().__del__()
         self.volumes.clear()
         self.chapters.clear()
 
