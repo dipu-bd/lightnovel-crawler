@@ -4,11 +4,9 @@ import os
 import random
 import ssl
 from io import BytesIO
-from typing import Dict, Optional, Union
-from urllib.error import URLError
+from typing import Any, Dict, Optional, Union
 from urllib.parse import ParseResult, urlparse
 
-from box import Box
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
 from PIL import Image
@@ -18,6 +16,7 @@ from requests.structures import CaseInsensitiveDict
 
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
+from .exeptions import ScraperErrorGroup
 from .proxy import get_a_proxy, remove_faulty_proxies
 from .soup import SoupMaker
 from .taskman import TaskManager
@@ -102,7 +101,7 @@ class Scraper(TaskManager, SoupMaker):
                 response.encoding = "utf8"
                 self.cookies.update({x.name: x.value for x in response.cookies})
                 return response
-            except URLError as e:
+            except ScraperErrorGroup as e:
                 if retry == 0:  # retry attempt depleted
                     raise e
 
@@ -246,7 +245,7 @@ class Scraper(TaskManager, SoupMaker):
             content = response.content
         return Image.open(BytesIO(content))
 
-    def get_json(self, url, headers={}, **kwargs) -> Box:
+    def get_json(self, url, headers={}, **kwargs) -> Any:
         """Fetch the content and return the content as JSON object"""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault(
@@ -254,9 +253,9 @@ class Scraper(TaskManager, SoupMaker):
             "application/json,text/plain,*/*",
         )
         response = self.get_response(url, headers=headers, **kwargs)
-        return Box(response.json())
+        return response.json()
 
-    def post_json(self, url, data={}, headers={}) -> Box:
+    def post_json(self, url, data={}, headers={}) -> Any:
         """Make a POST request and return the content as JSON object"""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault(
@@ -264,11 +263,11 @@ class Scraper(TaskManager, SoupMaker):
             "application/json,text/plain,*/*",
         )
         response = self.post_response(url, data=data, headers=headers)
-        return Box(response.json())
+        return response.json()
 
     def submit_form_json(
         self, url, data={}, headers={}, multipart=False, **kwargs
-    ) -> Box:
+    ) -> Any:
         """Simulate submit form request and return the content as JSON object"""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault(
@@ -278,7 +277,7 @@ class Scraper(TaskManager, SoupMaker):
         response = self.submit_form(
             url, data=data, headers=headers, multipart=multipart, **kwargs
         )
-        return Box(response.json())
+        return response.json()
 
     def get_soup(self, url, headers={}, parser=None, **kwargs) -> BeautifulSoup:
         """Fetch the content and return a BeautifulSoup instance of the page"""
