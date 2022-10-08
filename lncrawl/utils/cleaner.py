@@ -180,6 +180,12 @@ class TextCleaner:
                 tag.extract()  # Remove bad tags
             elif tag.name in ["br", "hr"]:
                 self.extract_on_duplicate_sibling(tag)
+            elif tag.name == "img":
+                src = tag.get("data-src", tag.get("src"))
+                if not src:
+                    tag.extract()
+                else:
+                    tag.attrs = {"src": src}
             else:
                 self.clean_attributes(tag)
 

@@ -7,6 +7,7 @@ from colorama import Fore, Style
 
 from ...assets.chars import Chars
 from ...core.crawler import Crawler
+from ...core.display import LINE_SIZE
 from ...core.exeptions import LNException
 from ...core.novel_info import format_novel
 from ...core.sources import crawler_list, rejected_sources, template_list
@@ -61,7 +62,7 @@ def analyze_url(base_url: str, url: str) -> Type[Crawler]:
             message = "\n".join(
                 textwrap.wrap(
                     str(e),
-                    width=80,
+                    width=LINE_SIZE,
                     initial_indent=(" " * 4),
                     subsequent_indent=(" " * 4),
                     drop_whitespace=True,

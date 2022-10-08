@@ -12,10 +12,10 @@ class HotNovelFullCrawler(NovelFullTemplate):
     def initialize(self) -> None:
         self.cleaner.bad_tag_text_pairs.update(
             {
-                'h4': [
-                    r'Chapter \d+',
-                    r'^\s*(Translator|Editor):.*$',
+                "h4": [
+                    r"Chapter \d+",
+                    r"^\s*(Translator|Editor):.*$",
                 ],
-                'strong': r"This chapter upload first at NovelNext\.com",
+                "strong": r"This chapter upload first at NovelNext\.com",
             }
         )

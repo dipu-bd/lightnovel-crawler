@@ -186,7 +186,7 @@ def __format_search_result_info(short_info):
     return "\n".join(
         textwrap.wrap(
             short_info.strip(),
-            width=70,
+            width=LINE_SIZE - 10,
             initial_indent="\n" + (" " * 6) + Chars.INFO + " ",
             subsequent_indent=(" " * 8),
             drop_whitespace=True,

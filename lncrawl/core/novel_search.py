@@ -12,7 +12,7 @@ from tqdm import tqdm
 from ..core.sources import crawler_list, prepare_crawler
 from ..models import CombinedSearchResult, SearchResult
 
-SEARCH_TIMEOUT = 10
+SEARCH_TIMEOUT = 60
 
 logger = logging.getLogger(__name__)
 executor = futures.ThreadPoolExecutor(20)
@@ -21,13 +21,15 @@ executor = futures.ThreadPoolExecutor(20)
 def _perform_search(app, link, bar):
     try:
         crawler = prepare_crawler(link)
-        results = crawler.search_novel(app.user_input)
+        results = []
+        for item in crawler.search_novel(app.user_input):
+            if not item.get("url"):
+                continue
+            if not isinstance(item, SearchResult):
+                item = SearchResult(**item)
+            results.append(item)
+
         logger.debug(results)
-        results = [
-            item if isinstance(item, SearchResult) else SearchResult(**item)
-            for item in results
-            if item.get("url")
-        ]
         logger.info("%d results from %s", len(results), link)
         return results
     except KeyboardInterrupt as e:

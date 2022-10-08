@@ -1,9 +1,19 @@
 name: Lint pull requests
 
 on:
+  push:
+    branches:
+      - dev
+    paths:
+      - "sources/_index.json"
   pull_request:
     branches:
       - master
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   lint_test:

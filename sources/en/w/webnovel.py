@@ -1,33 +1,35 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-import time
-from urllib.parse import quote_plus
+from time import time
+from urllib.parse import urlencode
 
-from lncrawl.core.crawler import Crawler
-from lncrawl.models.chapter import Chapter
+from bs4 import BeautifulSoup
+
+from lncrawl.chromedriver.elements import By
+from lncrawl.core.exeptions import FallbackToBrowser
+from lncrawl.models import Chapter, SearchResult
+from lncrawl.models.volume import Volume
+from lncrawl.templates.browser.basic import BasicBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class WebnovelCrawler(Crawler):
+class WebnovelCrawler(BasicBrowserTemplate):
     base_url = [
         "https://m.webnovel.com/",
         "https://www.webnovel.com/",
     ]
 
     def initialize(self) -> None:
-        self.init_executor(1)
+        self.headless = True
         self.home_url = "https://www.webnovel.com/"
-        self.re_cleaner = re.compile(
-            "|".join(
-                [
-                    r"(\<pirate\>(.*?)\<\/pirate\>)"
-                    r"(Find authorized novels in Webnovel(.*)for visiting\.)",
-                ]
-            ),
-            re.MULTILINE,
-        )
+
+        bad_text = [
+            r"(\<pirate\>(.*?)\<\/pirate\>)"
+            r"(Find authorized novels in Webnovel(.*)for visiting\.)",
+        ]
+        self.re_cleaner = re.compile("|".join(bad_text), re.M)
 
     def get_csrf(self):
         logger.info("Getting CSRF Token")
@@ -35,26 +37,36 @@ class WebnovelCrawler(Crawler):
         self.csrf = self.cookies["_csrfToken"]
         logger.debug("CSRF Token = %s", self.csrf)
 
-    def search_novel(self, query):
+    def search_novel_in_scraper(self, query: str):
         self.get_csrf()
-        query = quote_plus(str(query).lower())
-        data = self.get_json(
-            f"{self.home_url}go/pcm/search/result"
-            + f"?_csrfToken={self.csrf}&pageIndex=1&encryptType=3&_fsae=0&keywords={query}"
-        )
-
-        results = []
+        params = {
+            "_csrfToken": self.csrf,
+            "pageIndex": 1,
+            "encryptType": 3,
+            "_fsae": 0,
+            "keywords": query,
+        }
+        data = self.get_json(f"{self.home_url}go/pcm/search/result?{urlencode(params)}")
         for book in data["data"]["bookInfo"]["bookItems"]:
-            results.append(
-                {
-                    "title": book["bookName"],
-                    "url": f"{self.home_url}book/{book['bookId']}",
-                    "info": "%(categoryName)s | Score: %(totalScore)s" % book,
-                }
+            yield SearchResult(
+                title=book["bookName"],
+                url=f"{self.home_url}book/{book['bookId']}",
+                info="%(categoryName)s | Score: %(totalScore)s" % book,
             )
-        return results
 
-    def read_novel_info(self):
+    def search_novel_in_browser(self, query: str):
+        params = {"keywords": query}
+        self.visit(f"{self.home_url}search?{urlencode(params)}")
+        self.last_soup_url = self.browser.current_url
+        for li in self.browser.soup.select(".search-result-container li"):
+            a = li.find("a")
+            yield SearchResult(
+                url=self.absolute_url(a.get("href")),
+                title=a.get("data-bookname"),
+                info=li.find(".g_star_num small").text.strip(),
+            )
+
+    def read_novel_info_in_scraper(self):
         self.get_csrf()
         url = self.novel_url
         if "_" not in url:
@@ -84,7 +96,7 @@ class WebnovelCrawler(Crawler):
 
         self.novel_cover = (
             f"{self.origin.scheme}://img.webnovel.com/bookcover/{self.novel_id}/600/600.jpg"
-            + f"?coverUpdateTime{int(1000 * time.time())}&imageMogr2/quality/40"
+            + f"?coverUpdateTime{int(1000 * time())}&imageMogr2/quality/40"
         )
 
         if "authorName" in book_info:
@@ -94,25 +106,51 @@ class WebnovelCrawler(Crawler):
                 [x.get("name") for x in book_info["authorItems"] if x.get("name")]
             )
 
-        self.chapter_ids = {}
-        if "firstChapterId" in book_info:
-            self.chapter_ids[1] = book_info["firstChapterId"]
-        elif "chapterId" in data.get("chapterInfo"):
-            self.chapter_ids[1] = data["chapterInfo"]["chapterId"]
-        else:
-            raise Exception("First chapter id not found")
+        # To get the chapter list catalog
+        soup = self.get_soup(f"{self.novel_url.strip('/')}/catalog")
+        self.parse_chapter_catalog(soup)
+        if not self.chapters:
+            raise FallbackToBrowser()
 
-        assert "totalChapterNum" in book_info, "Total chapter number not found"
-        for i in range(book_info["totalChapterNum"]):
-            self.chapters.append(Chapter(id=i + 1))
+    def read_novel_info_in_browser(self) -> None:
+        self.visit(f"{self.novel_url.strip('/')}/catalog")
+        self.last_soup_url = self.browser.current_url
+        self.browser.wait(".j_catalog_list")
+        self.parse_chapter_catalog(self.browser.soup)
 
-    def download_chapter_body(self, chapter: Chapter):
-        chapter_id = self.chapter_ids.get(chapter.id)
-        assert chapter_id, "Previous chapter id not available"
+    def parse_chapter_catalog(self, soup: BeautifulSoup) -> None:
+        for div in soup.select(".j_catalog_list .volume-item"):
+            vol = Volume(
+                id=len(self.volumes) + 1,
+                title=div.find("h4").text.strip(),
+            )
+            self.volumes.append(vol)
+            for li in div.select("li"):
+                a = li.find("a")
+                chap = Chapter(
+                    id=len(self.chapters) + 1,
+                    volume=vol.id,
+                    title=a.get("title"),
+                    cid=li.get("data-report-cid"),
+                    url=self.absolute_url(a.get("href")),
+                )
+                self.chapters.append(chap)
+
+    def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
+        self.visit(chapter.url)
+        self.browser.wait(f"j_chapter_{chapter.cid}", By.CLASS_NAME)
+
+        body = ""
+        for p in self.browser.soup.select(f".j_chapter_{chapter.cid} .cha-paragraph p"):
+            body += str(p)
+        return body
+
+    def download_chapter_body_in_scraper(self, chapter: Chapter):
+        logger.info("Chapter Id: %s", chapter.cid)
 
         response = self.get_response(
             f"{self.home_url}go/pcm/chapter/getContent"
-            + f"?_csrfToken={self.csrf}&bookId={self.novel_id}&chapterId={chapter_id}"
+            + f"?_csrfToken={self.csrf}&bookId={self.novel_id}&chapterId={chapter.cid}"
             + "&encryptType=3&_fsae=0"
         )
         data = response.json()
@@ -125,7 +163,6 @@ class WebnovelCrawler(Crawler):
         chapter_info = data["chapterInfo"]
 
         chapter.title = chapter_info["chapterName"] or f"Chapter #{chapter.id}"
-        self.chapter_ids[chapter.id + 1] = chapter_info["nextChapterId"]
 
         if "content" in chapter_info:
             return self._format_content(chapter_info["content"])

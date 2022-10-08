@@ -5,6 +5,7 @@ import random
 import ssl
 from io import BytesIO
 from typing import Dict, Optional, Union
+from urllib.error import URLError
 from urllib.parse import ParseResult, urlparse
 
 from box import Box
@@ -12,12 +13,11 @@ from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
 from PIL import Image
 from requests import Response, Session
-from requests.exceptions import ProxyError, RequestException
+from requests.exceptions import ProxyError
 from requests.structures import CaseInsensitiveDict
 
 from ..assets.user_agents import user_agents
 from ..utils.ssl_no_verify import no_ssl_verification
-from .browser import Browser
 from .proxy import get_a_proxy, remove_faulty_proxies
 from .soup import SoupMaker
 from .taskman import TaskManager
@@ -32,10 +32,18 @@ class Scraper(TaskManager, SoupMaker):
     def __init__(
         self,
         origin: str,
-        workers: int = None,
-        parser: str = None,
+        workers: Optional[int] = None,
+        parser: Optional[str] = None,
     ) -> None:
-        super(Scraper, self).__init__(workers)
+        """Creates a standalone Scraper instance.
+        It is primarily being used as a superclass of the Crawler.
+
+        Args:
+        - origin (str): The origin URL of the scraper.
+        - workers (int, optional): Number of concurrent workers to expect. Default: 10.
+        - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
+            ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
+        """
         self._soup_tool = SoupMaker(parser)
         self.make_soup = self._soup_tool.make_soup
 
@@ -43,13 +51,15 @@ class Scraper(TaskManager, SoupMaker):
         self.last_soup_url = ""
         self.use_proxy = os.getenv("use_proxy")
 
-        self.browser = Browser()
         self.init_scraper()
         self.change_user_agent()
 
+        super().__init__(workers)
+
     def __del__(self) -> None:
-        super(Scraper, self).__del__()
-        self.scraper.close()
+        if hasattr(self, "scraper"):
+            self.scraper.close()
+        super().__del__()
 
     # ------------------------------------------------------------------------- #
     # Internal methods
@@ -92,7 +102,7 @@ class Scraper(TaskManager, SoupMaker):
                 response.encoding = "utf8"
                 self.cookies.update({x.name: x.value for x in response.cookies})
                 return response
-            except RequestException as e:
+            except URLError as e:
                 if retry == 0:  # retry attempt depleted
                     raise e
 
@@ -168,8 +178,6 @@ class Scraper(TaskManager, SoupMaker):
         except Exception:
             logger.exception("Failed to initialize cloudscraper")
             self.scraper = session or Session()
-        finally:
-            self.browser.cookie_store = self.scraper.cookies
 
     def change_user_agent(self):
         self.user_agent = random.choice(user_agents)

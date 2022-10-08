@@ -6,12 +6,14 @@ import json
 import locale
 import logging
 import os
-from threading import Lock, Semaphore
+from threading import Lock, Semaphore, Thread
 from typing import List, Optional
 
 from ..core.exeptions import LNException
+from ..core.soup import SoupMaker
 from ..utils.platforms import Platform, Screen
 from . import scripts
+from .elements import WebElement
 
 logger = logging.getLogger(__name__)
 
@@ -21,27 +23,20 @@ except ImportError:
     logger.warn("`webdriver-manager` is not found")
 
 try:
-    import selenium.webdriver.support.expected_conditions as EC
     from selenium.webdriver.chrome.options import Options as ChromeOptions
     from selenium.webdriver.chrome.webdriver import WebDriver
-    from selenium.webdriver.common.by import By
     from selenium.webdriver.remote.command import Command
     from selenium.webdriver.remote.remote_connection import LOGGER
-    from selenium.webdriver.remote.webelement import WebElement
     from selenium.webdriver.support.wait import WebDriverWait
-
-    LOGGER.setLevel(logging.ERROR)
 except ImportError:
     logger.error("`selenium` is not found")
 
 
 __all__ = [
-    "By",
-    "EC",
     "Command",
-    "WebElement",
     "WebDriverWait",
     "create_chrome",
+    "check_if_active",
 ]
 
 
@@ -57,23 +52,16 @@ def __get_driver_path():
         return ChromeDriverManager().install()
 
 
-def cleanup():
-    for chrome in __open_browsers:
-        chrome.quit()
-
-
-atexit.register(cleanup)
-
-
 def __override_quit(chrome: WebDriver):
-    original = chrome.quit
+    original = Thread(target=chrome.quit)
 
-    def override(*args, **kwargs):
+    def override():
         if chrome in __open_browsers:
             __semaphore.release()
             __open_browsers.remove(chrome)
             logger.info("Destroyed instance: %s", chrome.session_id)
-        original(*args, **kwargs)
+        if not original._started.is_set():
+            original.start()
 
     chrome.quit = override
 
@@ -129,10 +117,10 @@ def create_chrome(
     options: Optional["ChromeOptions"] = None,
     timeout: Optional[float] = None,
     headless: bool = True,
-    log_level: int = 0,
     host: str = "127.0.0.1",
     port: Optional[int] = None,
     user_data_dir: Optional[str] = None,
+    soup_maker: Optional[SoupMaker] = None,
 ) -> WebDriver:
     """
     Acquire a chrome browser instane. There is a limit of the number of
@@ -146,6 +134,7 @@ def create_chrome(
 
     NOTE: You must call quit() to cleanup the queue for next instances.
     """
+    is_debug = os.getenv("debug_mode")
     assert __semaphore.acquire(True, timeout), "Failed to acquire semaphore"
 
     if not options:
@@ -172,8 +161,14 @@ def create_chrome(
         pass
     options.add_argument("--lang=%s" % (language or "en-US"))
 
+    # Logging configs
+    LOGGER.setLevel(logging.WARN)
+    options.add_argument(f"--log-level={0 if is_debug else 3}")
+    if not is_debug:
+        LOGGER.setLevel(1000)
+        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+
     # Suppress bothersome stuffs
-    options.add_argument("--log-level=0")
     options.add_argument("--no-default-browser-check")
     options.add_argument("--disable-infobars")
     options.add_argument("--no-first-run")
@@ -219,8 +214,30 @@ def create_chrome(
 
     logger.info("Created chrome instance > %s", chrome.session_id)
     chrome.set_window_position(0, 0)
+
     __open_browsers.append(chrome)
     __override_quit(chrome)
     __override_get(chrome)
     __add_virtual_authenticator(chrome)
+
+    if not soup_maker:
+        soup_maker = SoupMaker()
+    chrome._soup_maker = soup_maker
+    chrome._web_element_cls = WebElement
+
     return chrome
+
+
+def check_if_active(chrome: WebDriver) -> bool:
+    if not isinstance(chrome, WebDriver):
+        return False
+    return chrome in __open_browsers
+
+
+def cleanup():
+    for chrome in __open_browsers:
+        chrome.close()
+        chrome.quit()
+
+
+atexit.register(cleanup)

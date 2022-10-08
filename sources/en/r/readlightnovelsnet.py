@@ -1,27 +1,25 @@
 # -*- coding: utf-8 -*-
 import logging
-from typing import Generator, Iterable
-from urllib.parse import quote_plus
+from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.paginated_toc import PaginatedSoupTemplate
+from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class ReadLightNovelsNet(SearchableSoupTemplate, PaginatedSoupTemplate):
+class ReadLightNovelsNet(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     base_url = [
         "https://readlightnovels.net/",
     ]
 
-    def get_search_page_soup(self, query: str) -> BeautifulSoup:
-        return self.get_soup(f"{self.home_url}?s={quote_plus(query)}")
-
-    def select_search_items(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select(".home-truyendecu")
+    def select_search_items(self, query: str):
+        params = {"s": query}
+        soup = self.get_soup(f"{self.home_url}?{urlencode(params)}")
+        yield from soup.select(".home-truyendecu")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         a = tag.select_one("a")
@@ -36,25 +34,21 @@ class ReadLightNovelsNet(SearchableSoupTemplate, PaginatedSoupTemplate):
             info=f"Latest chapter: {latest}",
         )
 
-    def parse_title(self, soup: BeautifulSoup) -> None:
+    def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".title")
-        assert isinstance(tag, Tag), "No title found"
-        self.novel_title = " ".join(
-            [str(x) for x in tag.contents if isinstance(x, str)]
-        )
+        assert tag
+        return " ".join([str(x) for x in tag.contents if isinstance(x, str)])
 
-    def parse_cover(self, soup: BeautifulSoup):
+    def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".book img[src]")
-        if not isinstance(tag, Tag):
-            return
-        self.novel_cover = self.absolute_url(tag["src"])
+        assert tag
+        return self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup):
-        self.novel_author = ", ".join([a.text.strip() for a in soup.select(".info a")])
+        for a in soup.select(".info a"):
+            yield a.text.strip()
 
-    def generate_page_soups(
-        self, soup: BeautifulSoup
-    ) -> Generator[BeautifulSoup, None, None]:
+    def select_chapter_tags(self, soup: BeautifulSoup):
         novel_id = soup.select_one("#id_post")["value"]
         logger.info(f"Novel id: {novel_id}")
 
@@ -66,10 +60,8 @@ class ReadLightNovelsNet(SearchableSoupTemplate, PaginatedSoupTemplate):
                 "id": novel_id,
             },
         )
-        yield self.make_soup(resp)
-
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Iterable[Tag]:
-        return soup.select("option")
+        soup = self.make_soup(resp)
+        yield from soup.select("option")
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(

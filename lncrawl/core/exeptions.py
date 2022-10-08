@@ -1,3 +1,20 @@
+from urllib.error import URLError
+
+from cloudscraper.exceptions import CloudflareException
+from requests.exceptions import RequestException
+
+
 class LNException(Exception):
-    def __init__(self, *args: object) -> None:
-        super().__init__(*args)
+    pass
+
+
+class FallbackToBrowser(Exception):
+    pass
+
+
+ScraperErrorGroup = (
+    URLError,
+    CloudflareException,
+    RequestException,
+    FallbackToBrowser,
+)

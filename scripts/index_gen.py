@@ -208,7 +208,7 @@ def process_contributors(history):
 
 
 def process_file(py_file: Path) -> float:
-    if not py_file.name[0].isalnum():
+    if py_file.name.startswith("_") or not py_file.name[0].isalnum():
         return 0
 
     start = time.time()
