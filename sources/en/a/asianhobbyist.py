@@ -37,4 +37,5 @@ class AsianHobbyistCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         content = soup.select_one(".entry-content")
-        return self.cleaner.extract_contents(content)
+        self.cleaner.extract_contents(content)
+        return content.decode_contents()
