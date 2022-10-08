@@ -10,6 +10,10 @@ on:
       - "scripts/index_gen.py"
       - "lncrawl/VERSION"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   index_gen:
     if: github.repository == 'dipu-bd/lightnovel-crawler'

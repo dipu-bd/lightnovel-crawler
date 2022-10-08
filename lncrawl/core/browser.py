@@ -5,16 +5,13 @@ from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 
 from ..chromedriver.chrome import (
-    EC,
-    By,
     ChromeOptions,
-    RelativeBy,
     WebDriver,
     WebDriverWait,
-    WebElement,
     check_if_active,
     create_chrome,
 )
+from ..chromedriver.elements import EC, By, RelativeBy, WebElement
 from .soup import SoupMaker
 
 logger = logging.getLogger(__name__)
@@ -36,7 +33,7 @@ class Browser:
         timeout: Optional[int] = 120,
         options: Optional["ChromeOptions"] = None,
         cookie_store: Optional[RequestsCookieJar] = None,
-        soup_parser: Optional[str] = None,
+        soup_maker: Optional[SoupMaker] = None,
     ) -> None:
         """
         Interface to interact with chrome webdriver.
@@ -53,7 +50,7 @@ class Browser:
         self.timeout = timeout
         self.headless = headless
         self.cookie_store = cookie_store
-        self._soup_tool = SoupMaker(soup_parser)
+        self.soup_maker = soup_maker
 
     def __del__(self):
         if not check_if_active(self._driver):
@@ -78,7 +75,7 @@ class Browser:
             options=self.options,
             timeout=self.timeout,
             headless=self.headless,
-            soup_maker=self._soup_tool,
+            soup_maker=self.soup_maker,
         )
         self._driver.implicitly_wait(30)
         self._driver.set_page_load_timeout(30)
@@ -151,7 +148,7 @@ class Browser:
         if old_html == self.html:
             return getattr(self, "_soup_")
         # Create new soup and save to cache
-        soup = self._soup_tool.make_soup(self.html)
+        soup = self.soup_maker.make_soup(self.html)
         setattr(self, "_html_", self.html)
         setattr(self, "_soup_", soup)
         return soup
