@@ -13,6 +13,9 @@ from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     base_url = ["https://freewebnovel.com/"]
 
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(["h4"])
+
     def select_search_items(self, query: str):
         data = {"searchkey": query}
         soup = self.post_soup(f"{self.home_url}search/", data=data)

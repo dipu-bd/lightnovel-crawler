@@ -84,7 +84,7 @@ class Scraper(TaskManager, SoupMaker):
         headers.setdefault("Origin", self.home_url.strip("/"))
         headers.setdefault("Referer", self.last_soup_url.strip("/"))
         headers.setdefault("User-Agent", self.user_agent)
-        kwargs["headers"] = {quote(k): quote(v) for k, v in headers.items()}
+        kwargs["headers"] = {quote(k): quote(v) for k, v in headers.items() if v}
 
         while retry >= 0:
             try:
@@ -234,6 +234,8 @@ class Scraper(TaskManager, SoupMaker):
             content = base64.b64decode(url.split("base64,")[-1])
         else:
             headers = CaseInsensitiveDict(headers)
+            headers.setdefault("Origin", None)
+            headers.setdefault("Referer", None)
             headers.setdefault(
                 "Accept",
                 "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
