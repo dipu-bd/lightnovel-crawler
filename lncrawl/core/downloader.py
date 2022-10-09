@@ -125,13 +125,11 @@ def _fetch_cover_image(app):
                 cover_file,
             )
         except Exception as e:
-            logger.exception("Failed to download cover", e)
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.exception("Failed to download cover", e)
 
     if not os.path.isfile(cover_file):
-        try:
-            generate_cover_image(cover_file)
-        except Exception as e:
-            logger.exception("Failed to generate cover", e)
+        generate_cover_image(cover_file)
 
     app.progress += 1
     app.book_cover = cover_file

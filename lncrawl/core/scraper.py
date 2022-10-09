@@ -236,10 +236,10 @@ class Scraper(TaskManager, SoupMaker):
             headers = CaseInsensitiveDict(headers)
             headers.setdefault("Origin", None)
             headers.setdefault("Referer", None)
-            headers.setdefault(
-                "Accept",
-                "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
-            )
+            # headers.setdefault(
+            #     "Accept",
+            #     "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
+            # )
             response = self.__process_request("get", url, headers=headers, **kwargs)
             content = response.content
         return Image.open(BytesIO(content))
