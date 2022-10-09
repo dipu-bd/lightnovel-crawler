@@ -213,7 +213,7 @@ class Browser:
         timeout: Optional[float] = 60,
         poll_frequency: Optional[float] = 0.5,
         ignored_exceptions: Iterable[Exception] = [],
-        expected_conditon=EC.visibility_of_all_elements_located,
+        expected_conditon=EC.presence_of_element_located,
     ):
         """Waits for a element to be visible on the current page by CSS selector.
 

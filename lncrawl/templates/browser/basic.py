@@ -129,7 +129,7 @@ class BasicBrowserTemplate(Crawler):
             if logger.isEnabledFor(logging.DEBUG):
                 logger.exception("Failed in download image: %s", e)
             self.init_browser()
-            self.browser.visit(url)
+            self._browser.visit(url)
             self.browser.wait("img", By.TAG_NAME)
             png = self.browser.find("img", By.TAG_NAME).screenshot_as_png
             return Image.open(BytesIO(png))

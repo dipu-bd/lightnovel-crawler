@@ -62,7 +62,7 @@ class WebElement(_WebElement):
         html = self.outer_html()
         if not hasattr(self, "_tag") or self._html != html:
             self._html = html
-            self._tag = self._soup_maker.make_tag(self._tag)
+            self._tag = self._soup_maker.make_tag(html)
         return self._tag
 
     def find_all(
