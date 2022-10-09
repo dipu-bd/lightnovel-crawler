@@ -9,11 +9,14 @@ logger = logging.getLogger(__name__)
 
 
 class MTLNation(Crawler):
-    base_url = ["https://mtlnation.com/", "https://www.mtlnation.com/"]
+    base_url = [
+        "https://mtlnation.com/",
+        "https://www.mtlnation.com/",
+    ]
     has_mtl = True
 
     def initialize(self):
-        pass
+        self.init_executor(3)
 
     def login(self, email: str, password: str) -> None:
         self.post_json(

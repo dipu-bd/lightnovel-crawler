@@ -3,34 +3,40 @@ import json
 import logging
 import re
 
-from lncrawl.core.crawler import Crawler
 from pyease_grpc import RpcSession
+
+from lncrawl.core.exeptions import FallbackToBrowser
+from lncrawl.models import Chapter, Volume
+from lncrawl.templates.browser.basic import BasicBrowserTemplate
+from lncrawl.webdriver.elements import By
 
 logger = logging.getLogger(__name__)
 
-api_home = "https://api2.wuxiaworld.com"
 
-
-class WuxiaComCrawler(Crawler):
-    base_url = ["https://www.wuxiaworld.com/"]
+class WuxiaComCrawler(BasicBrowserTemplate):
+    base_url = [
+        "https://www.wuxiaworld.com/",
+    ]
 
     def initialize(self):
-        self.home_url = "https://www.wuxiaworld.com"
+        # self.headless = True
+        self.api_url = "https://api2.wuxiaworld.com"
         self.grpc = RpcSession.from_descriptor(WUXIWORLD_PROTO)
         self.grpc._session = self.scraper
         self.cleaner.bad_css.clear()
         self.cleaner.bad_tags.add("hr")
         self.bearer_token = None
+        self.cleaner.unchanged_tags.update(["span"])
 
     def login(self, email: str, password: str) -> None:
         self.bearer_token = email + " " + password
 
-    def read_novel_info(self):
+    def read_novel_info_in_scraper(self) -> None:
         slug = re.findall(r"/novel/([^/]+)", self.novel_url)[0]
         logger.debug("Novel slug: %s", slug)
 
         response = self.grpc.request(
-            f"{api_home}/wuxiaworld.api.v2.Novels/GetNovel",
+            f"{self.api_url}/wuxiaworld.api.v2.Novels/GetNovel",
             {"slug": slug},
             headers={
                 "origin": self.home_url,
@@ -39,8 +45,8 @@ class WuxiaComCrawler(Crawler):
             },
         )
         response.raise_for_status()
-        assert response.single
 
+        assert response.single
         novel = response.single["item"]
         logger.info("Novel details: %s", novel)
 
@@ -61,7 +67,7 @@ class WuxiaComCrawler(Crawler):
         advance_chapter_allowed = 0
         try:
             response = self.grpc.request(
-                f"{api_home}/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
+                f"{self.api_url}/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
                 {"novelId": novel["id"]},
                 headers={"authorization": self.bearer_token},
             )
@@ -74,12 +80,11 @@ class WuxiaComCrawler(Crawler):
                     advance_chapter_allowed = subscription["plan"]["sponsor"][
                         "advanceChapterCount"
                     ]
-
         except Exception as e:
             logger.debug("Failed to acquire subscription details. %s", e)
 
         response = self.grpc.request(
-            f"{api_home}/wuxiaworld.api.v2.Chapters/GetChapterList",
+            f"{self.api_url}/wuxiaworld.api.v2.Chapters/GetChapterList",
             {"novelId": novel["id"]},
             headers={"authorization": self.bearer_token},
         )
@@ -90,10 +95,10 @@ class WuxiaComCrawler(Crawler):
         for group in sorted(volumes, key=lambda x: x.get("order", 0)):
             vol_id = len(self.volumes) + 1
             self.volumes.append(
-                {
-                    "id": vol_id,
-                    "title": group["title"],
-                }
+                Volume(
+                    id=vol_id,
+                    title=group["title"],
+                )
             )
 
             for chap in group["chapterList"]:
@@ -112,28 +117,29 @@ class WuxiaComCrawler(Crawler):
                     chap_title = f"Chapter {chap_id}"
 
                 self.chapters.append(
-                    {
-                        "id": chap_id,
-                        "volume": vol_id,
-                        "title": chap_title,
-                        "original_title": chap["name"],
-                        "entityId": chap["entityId"],
-                        "url": f"https://www.wuxiaworld.com/novel/{slug}/{chap['slug']}",
-                    }
+                    Chapter(
+                        id=chap_id,
+                        volume=vol_id,
+                        title=chap_title,
+                        original_title=chap["name"],
+                        chapterId=chap["entityId"],
+                        url=f"https://www.wuxiaworld.com/novel/{slug}/{chap['slug']}",
+                    )
                 )
 
-    def download_chapter_body(self, chapter):
+        if not self.chapters:
+            raise FallbackToBrowser()
+
+    def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
         response = self.grpc.request(
-            f"{api_home}/wuxiaworld.api.v2.Chapters/GetChapter",
-            {"chapterProperty": {"chapterId": chapter["entityId"]}},
+            f"{self.api_url}/wuxiaworld.api.v2.Chapters/GetChapter",
+            {"chapterProperty": {"chapterId": chapter["chapterId"]}},
             headers={"authorization": self.bearer_token},
         )
         response.raise_for_status()
+
         assert response.single, "Invalid response"
-
-        chapter = response.single["item"]
-        content = chapter["content"]
-
+        content = response.single["item"]["content"]
         if "translatorThoughts" in response.single["item"]:
             content += "<hr/>"
             content += "<blockquote><b>Translator's Thoughts</b>"
@@ -142,6 +148,78 @@ class WuxiaComCrawler(Crawler):
 
         content = re.sub(r'(background-)?color: [^\\";]+', "", content)
         return content
+
+    def read_novel_info_in_browser(self) -> None:
+        self.visit(self.novel_url)
+        self.browser.wait(".items-start h1, img.drop-shadow-ww-novel-cover-image")
+
+        # Parse cover image and title
+        img = self.browser.find("img.drop-shadow-ww-novel-cover-image")
+        if img:
+            self.novel_title = img.get_attribute("alt")
+            self.novel_cover = self.absolute_url(img.get_attribute("src"))
+
+        # Parse title from h1 if not available
+        if not self.novel_title:
+            h1 = self.browser.find(".items-start h1")
+            if h1:
+                self.novel_title = h1.text.strip()
+
+        # Parse author
+        author_tag = self.browser.find("//*[text()='Author:']", By.XPATH)
+        if author_tag:
+            author_tag = author_tag.find("following-sibling::*", By.XPATH)
+        if author_tag:
+            self.novel_author = author_tag.text.strip()
+
+        # Open chapters menu
+        self.browser.click("#novel-tabs #full-width-tab-1")
+        self.browser.wait("#full-width-tabpanel-1 .MuiAccordion-root")
+
+        # Get volume list and a progress bar
+        volumes = self.browser.find_all(".MuiAccordion-root")
+        bar = self.progress_bar(
+            total=len(volumes),
+            desc="Volumes",
+            unit="vol",
+        )
+
+        # Expand all volumes
+        for index, root in enumerate(reversed(volumes)):
+            root.click()
+            nth = len(volumes) - index
+            self.browser.wait(f".MuiAccordion-root:nth-of-type({nth}) a[href]")
+
+            tag = root.as_tag()
+            head = tag.select_one(".MuiAccordionSummary-content")
+            title = head.select_one("section span.font-set-sb18").text.strip()
+            vol = Volume(
+                id=len(self.volumes) + 1,
+                title=title,
+            )
+            self.volumes.append(vol)
+
+            for a in reversed(tag.select("a[href]")):
+                data = json.loads(a["data-amplitude-params"])
+                chap = Chapter(
+                    volume=vol.id,
+                    id=len(self.chapters) + 1,
+                    url=self.absolute_url(a["href"]),
+                    title=data["chapterTitle"],
+                    chapterId=data["chapterId"],
+                )
+                self.chapters.append(chap)
+
+            bar.update()
+
+        # Close progress bar
+        bar.close()
+
+    def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
+        self.visit(chapter.url)
+        self.browser.wait(".chapter-content p span")
+        content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
+        return self.cleaner.extract_contents(content)
 
 
 WUXIWORLD_PROTO = json.loads(

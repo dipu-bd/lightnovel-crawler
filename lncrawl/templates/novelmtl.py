@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import time
 from concurrent.futures import Future
 from typing import List

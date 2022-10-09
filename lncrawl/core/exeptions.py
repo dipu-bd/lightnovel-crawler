@@ -1,6 +1,7 @@
 from urllib.error import URLError
 
 from cloudscraper.exceptions import CloudflareException
+from PIL import UnidentifiedImageError
 from requests.exceptions import RequestException
 from urllib3.exceptions import HTTPError
 
@@ -19,4 +20,5 @@ ScraperErrorGroup = (
     CloudflareException,
     RequestException,
     FallbackToBrowser,
+    UnidentifiedImageError,
 )
