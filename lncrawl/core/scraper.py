@@ -5,7 +5,7 @@ import random
 import ssl
 from io import BytesIO
 from typing import Any, Dict, Optional, Union
-from urllib.parse import ParseResult, urlparse
+from urllib.parse import ParseResult, quote, urlparse
 
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
@@ -84,7 +84,7 @@ class Scraper(TaskManager, SoupMaker):
         headers.setdefault("Origin", self.home_url.strip("/"))
         headers.setdefault("Referer", self.last_soup_url.strip("/"))
         headers.setdefault("User-Agent", self.user_agent)
-        kwargs["headers"] = headers
+        kwargs["headers"] = {quote(k): quote(v) for k, v in headers.items()}
 
         while retry >= 0:
             try:
@@ -96,9 +96,9 @@ class Scraper(TaskManager, SoupMaker):
                 with self.domain_gate(_parsed.hostname):
                     with no_ssl_verification():
                         response: Response = method_call(url, **kwargs)
+                        response.encoding = "utf8"
 
                 response.raise_for_status()
-                response.encoding = "utf8"
                 self.cookies.update({x.name: x.value for x in response.cookies})
                 return response
             except ScraperErrorGroup as e:
@@ -107,9 +107,6 @@ class Scraper(TaskManager, SoupMaker):
 
                 retry -= 1
                 logger.debug(f"{type(e).__qualname__}: {e} | Retrying...", e)
-
-                self.change_user_agent()
-                kwargs["headers"].setdefault("User-Agent", self.user_agent)
 
                 if isinstance(e, ProxyError):
                     for proxy_url in kwargs.get("proxies", {}).values():

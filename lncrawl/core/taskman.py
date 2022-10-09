@@ -167,10 +167,11 @@ class TaskManager(ABC):
                 except Exception as e:
                     if isinstance(e, KeyboardInterrupt):
                         break
-                    message = f"{type(e).__name__}: {e}"
-                    if not bar.disable:
+                    if bar.disable:
+                        logger.exception("Failure to resolve future")
+                    else:
                         bar.clear()
-                    logger.warning(message)
+                        logger.warning(f"{type(e).__name__}: {e}")
                 finally:
                     bar.update()
         finally:
