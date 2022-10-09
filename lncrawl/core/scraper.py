@@ -80,9 +80,9 @@ class Scraper(TaskManager, SoupMaker):
         kwargs["proxies"] = self.__get_proxies(_parsed.scheme)
         headers = kwargs.pop("headers", {})
         headers = CaseInsensitiveDict(headers)
-        headers.setdefault("Host", _parsed.hostname)
+        # headers.setdefault("Host", _parsed.hostname)
         headers.setdefault("Origin", self.home_url.strip("/"))
-        headers.setdefault("Referer", self.last_soup_url.strip("/"))
+        headers.setdefault("Referer", self.last_soup_url or self.home_url)
         headers.setdefault("User-Agent", self.user_agent)
         kwargs["headers"] = {quote(k): quote(v) for k, v in headers.items() if v}
 
@@ -257,6 +257,7 @@ class Scraper(TaskManager, SoupMaker):
     def post_json(self, url, data={}, headers={}) -> Any:
         """Make a POST request and return the content as JSON object"""
         headers = CaseInsensitiveDict(headers)
+        headers.setdefault("Content-Type", "application/json")
         headers.setdefault(
             "Accept",
             "application/json,text/plain,*/*",
