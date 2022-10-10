@@ -17,16 +17,17 @@ class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         params = dict(s=query)
         soup = self.get_soup(f"{self.home_url}?{urlencode(params)}")
 
-        yield from soup.select(".listupd > .maindet")
+        yield from soup.select(".listupd > article")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
-        a = tag.select_one(".mdinfo a.tip")
-        info = tag.select_one(".mdinfo span.nchapter")
+        a = tag.select_one("a.tip")
+        title = tag.select_one("span.ntitle")
+        info = tag.select_one("span.nchapter")
 
         return SearchResult(
-            title=a.text.strip(),
+            title=title.text.strip() if title else a.text.strip(),
             url=self.absolute_url(a["href"]),
-            info=info,
+            info=info.text.strip() if info else "",
         )
 
     def parse_title(self, soup: BeautifulSoup) -> str:
