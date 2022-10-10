@@ -2,7 +2,7 @@
 import logging
 import re
 from time import time
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 
 from bs4 import BeautifulSoup
 
@@ -112,7 +112,8 @@ class WebnovelCrawler(BasicBrowserTemplate):
             raise FallbackToBrowser()
 
     def read_novel_info_in_browser(self) -> None:
-        self.visit(f"{self.novel_url.strip('/')}/catalog")
+        path = urlparse(self.novel_url).path.strip("/")
+        self.visit(f"{self.home_url}{path}/catalog")
         self.last_soup_url = self.browser.current_url
         self.browser.wait(".j_catalog_list")
         self.parse_chapter_catalog(self.browser.soup)
@@ -136,7 +137,8 @@ class WebnovelCrawler(BasicBrowserTemplate):
                 self.chapters.append(chap)
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
-        self.visit(chapter.url)
+        path = urlparse(chapter.url).path.strip("/")
+        self.visit(f"{self.home_url}{path}")
         self.browser.wait(f"j_chapter_{chapter.cid}", By.CLASS_NAME)
 
         body = ""
