@@ -27,7 +27,7 @@ class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         return SearchResult(
             title=title.text.strip() if title else a.text.strip(),
             url=self.absolute_url(a["href"]),
-            info=info.text.strip() if info else "",
+            info=info.text.strip() if isinstance(info, Tag) else "",
         )
 
     def parse_title(self, soup: BeautifulSoup) -> str:
@@ -36,31 +36,39 @@ class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         return tag.text.strip()
 
     def parse_cover(self, soup: BeautifulSoup) -> str:
-        tag = soup.select_one(".thumbook img.wp-post-image")
+        tag = soup.select_one(".thumbook img, meta[property='og:image']")
         if tag.has_attr("data-src"):
             return self.absolute_url(tag["data-src"])
 
         if tag.has_attr("src"):
             return self.absolute_url(tag["src"])
 
+        if tag.has_attr("content"):
+            return self.absolute_url(tag["content"])
+
     def parse_authors(self, soup: BeautifulSoup):
         for a in soup.select(".spe a[href*='/writer/']"):
             yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup):
-        chapters = soup.select(".eplister li > a")
+        chapters = soup.select(".eplister li > a, .eplister li .eph-num > a")
         first_li = soup.select_one(".eplister li")
-        if "tseplsfrst" not in first_li.get("class", ""):
+        if "tseplsfrst" not in first_li.get("class", "") or 1 == first_li.get(
+            "data-num", 0
+        ):
             chapters = reversed(chapters)
 
         yield from chapters
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
+        title = tag.select_one(".epl-title")
         return Chapter(
             id=id,
-            title=tag.select_one(".epl-title").text.strip(),
+            title=title.text.strip()
+            if isinstance(title, Tag)
+            else tag.select_one("span").text.strip(),
             url=self.absolute_url(tag["href"]),
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        return soup.select_one(".entry-content")
+        return soup.select_one("#readernovel, .entry-content")
