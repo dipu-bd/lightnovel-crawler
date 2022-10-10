@@ -71,4 +71,4 @@ class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        return soup.select_one("#readernovel, .entry-content")
+        return soup.select_one("#readernovel, #readerarea, .entry-content")
