@@ -15,7 +15,7 @@ class NovelNextCrawler(NovelFullTemplate):
                 "h4": [
                     r"Chapter \d+",
                     r"^\s*(Translator|Editor):.*$",
-                    ],
+                ],
                 "p": [
                     r"^\s*(Translator|Editor):.*$",
                     r"Bookmark this website \( ",
@@ -24,4 +24,3 @@ class NovelNextCrawler(NovelFullTemplate):
                 "strong": r"NovelNext\.com",
             }
         )
-        
