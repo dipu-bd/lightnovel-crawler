@@ -10,7 +10,7 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 search_url = "https://lightnovels.me/api/search?keyword=%s&index=0&limit=20"
-chapter_list_url = "https://lightnovels.me/api/chapters?id=%d&index=%d&limit=%d"
+chapter_list_url = "https://lightnovels.me/api/chapters?id=%d&index=1&limit=15000"
 
 
 class LightnovelMe(Crawler):
@@ -23,9 +23,9 @@ class LightnovelMe(Crawler):
         for item in data["results"]:
             results.append(
                 {
-                    "title": item["title"],
-                    "url": "https://lightnovels.me/novel" + item["slug"],
-                    "info": f"Author: {item['authorName']} | Latest: {item['lastChapter']}",
+                    "title": item["novel_name"],
+                    "url": "https://lightnovels.me/novel" + item["novel_slug"],
+                    "info": f"Status: {item['status']} | Latest: {item['chapter_name']}",
                 }
             )
 
@@ -38,17 +38,14 @@ class LightnovelMe(Crawler):
         data = json.loads(script.text)
 
         novel_info = data["props"]["pageProps"]["novelInfo"]
-        novel_id = novel_info["id"]
-        self.novel_title = novel_info["title"]
-        self.novel_cover = self.absolute_url(novel_info["image"])
+        novel_id = novel_info["novel_id"]
+        self.novel_title = novel_info["novel_name"]
+        self.novel_cover = self.absolute_url(novel_info["novel_image"])
         self.novel_author = ", ".join(
             [x["name"] for x in data["props"]["pageProps"]["authors"]]
         )
 
-        latest_index = data["props"]["pageProps"]["cachedLatestChapters"][0][
-            "chapter_index"
-        ]
-        data = self.get_json(chapter_list_url % (novel_id, 1, latest_index + 10))
+        data = self.get_json(chapter_list_url % (novel_id))
 
         for i, item in enumerate(data["results"]):
             chap_id = i + 1
