@@ -24,6 +24,7 @@ class NovelUpdatesCom(Crawler):
             {
                 "a": [
                     r"ToC",
+                    r"TOC",
                     r"<<",
                     r">>"
                 ]
