@@ -22,7 +22,11 @@ class NovelUpdatesCom(Crawler):
         )
         self.cleaner.bad_tag_text_pairs.update(
             {
-                "a": r"ToC",
+                "a": [
+                    r"ToC",
+                    r"<<",
+                    r">>"
+                ]
             }
         )
 
