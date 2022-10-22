@@ -18,6 +18,11 @@ class NovelUpdatesCom(Crawler):
         self.cleaner.bad_css.update(
             [
                 "a[href*='ko-fi.com']",
+                ".navigation-content",
+                "h6.title",
+                ".testimonial-group",
+                ".comments-block",
+                ".comments-blocks"
             ]
         )
         self.cleaner.bad_tag_text_pairs.update(
