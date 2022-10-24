@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 from urllib.parse import quote_plus
 
 from bs4 import Tag
