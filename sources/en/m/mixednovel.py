@@ -31,7 +31,7 @@ class ListNovelCrawler(Crawler):
                 {
                     "title": a.text,
                     "url": self.absolute_url(a["href"]),
-                    "info": "%s | %s" % (alternative, author),
+                    "info": "Alternative title(s): %s | Author(s): %s" % (alternative, author),
                 }
             )
 
