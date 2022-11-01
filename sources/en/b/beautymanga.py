@@ -38,7 +38,7 @@ class BeautymangaCrawler(Crawler):
 
         possible_image = soup.select_one(".summary_image img")
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
+            self.novel_cover = self.absolute_url(possible_image["data-src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = ", ".join(
