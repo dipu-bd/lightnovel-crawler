@@ -42,7 +42,7 @@ class NovelTranslateCrawler(Crawler):
         logger.info("Novel title: %s", self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one(".summary_image a img")["src"]
+            soup.select_one(".summary_image a img")["data-lazy-src"]
         )
         logger.info("Novel cover: %s", self.novel_cover)
 
