@@ -40,10 +40,10 @@ class NovelTranslateCrawler(Crawler):
             span.extract()
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
-
-        self.novel_cover = self.absolute_url(
-            soup.select_one(".summary_image a img")["data-lazy-src"]
-        )
+        
+        pimg = soup.select_one(".summary_image a img")
+        if pimg:
+            self.novel_cover = self.absolute_url(pimg["data-lazy-src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = " ".join(
