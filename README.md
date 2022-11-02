@@ -147,7 +147,7 @@ $ docker run -v ~/Lightnovels:/home/appuser/app/Lightnovels -it lncrawl
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
 - Open the app and run these commands one by one:
   - `pkg upgrade`
-  - `pkg install python libxml2 libxslt libjpeg-turbo`
+  - `pkg install python libxml2 libxslt libjpeg-turbo webp rust`
   - `pip install -U pip wheel setuptools`
   - `pip install lightnovel-crawler`
   - `termux-setup-storage`
@@ -247,6 +247,7 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -320,9 +321,10 @@ options:
 ~~
 
 --------------------------------------------------------------------------------
- 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues 
+ 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues
 ================================================================================
 ```
+
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -482,7 +484,6 @@ We are supporting 314 sources and 301 crawlers.
 </tbody>
 </table>
 
-
 ### `ar` Arabic
 
 <table>
@@ -504,7 +505,6 @@ We are supporting 314 sources and 301 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -1818,7 +1818,6 @@ We are supporting 314 sources and 301 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish; Castilian
 
 <table>
@@ -1840,7 +1839,6 @@ We are supporting 314 sources and 301 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `fr` French
 
@@ -1868,7 +1866,6 @@ We are supporting 314 sources and 301 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -1967,7 +1964,6 @@ We are supporting 314 sources and 301 crawlers.
 </tbody>
 </table>
 
-
 ### `pt` Portuguese
 
 <table>
@@ -1995,7 +1991,6 @@ We are supporting 314 sources and 301 crawlers.
 </tbody>
 </table>
 
-
 ### `ru` Russian
 
 <table>
@@ -2022,7 +2017,6 @@ We are supporting 314 sources and 301 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -2055,7 +2049,6 @@ We are supporting 314 sources and 301 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 
