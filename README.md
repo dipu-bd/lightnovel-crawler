@@ -896,7 +896,7 @@ We are supporting 314 sources and 301 crawlers.
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
-<td><a href="https://lightnovelreader.me/" target="_blank">https://lightnovelreader.me/</a></td>
+<td><a href="https://lightnovelreader.org/" target="_blank">https://lightnovelreader.org/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3529257ff8dbe3da978748c4b8e2f1300540311c/sources/en/l/lightnovelreader.py" title="27 September 2022 07:22:47 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
@@ -1551,7 +1551,7 @@ We are supporting 314 sources and 301 crawlers.
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/Galunid"><img src="https://avatars.githubusercontent.com/u/10298730?v=4&s=24" alt="Galunid" height="24"/></a> <a href="https://github.com/jere344"><img src="https://avatars.githubusercontent.com/u/86294972?v=4&s=24" alt="jere344" height="24"/></a></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
-<td><a href="https://www.lightnovelreader.me/" target="_blank">https://www.lightnovelreader.me/</a></td>
+<td><a href="https://www.lightnovelreader.org/" target="_blank">https://www.lightnovelreader.org/</a></td>
 <td><a href="https://github.com/dipu-bd/lightnovel-crawler/blob/3529257ff8dbe3da978748c4b8e2f1300540311c/sources/en/l/lightnovelreader.py" title="27 September 2022 07:22:47 PM">6</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
