@@ -54,7 +54,7 @@ class MangaReadCrawler(Crawler):
         self.novel_author = " ".join(
             [
                 a.text.strip()
-                for a in soup.select('.author-content a[href*="manga-author"]')
+                for a in soup.select('.author-content a[href*="m-author"]')
             ]
         )
         logger.info("%s", self.novel_author)
