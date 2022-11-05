@@ -7,10 +7,9 @@ from bs4 import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = "%s/?s=%s&post_type=wp-manga"
 
 
-class ListNovelCrawler(Crawler):
+class MixedNovelNet(Crawler):
     has_mtl = True
     base_url = [
         "https://mixednovel.net/",
@@ -21,7 +20,7 @@ class ListNovelCrawler(Crawler):
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
-        soup = self.get_soup(search_url % (self.home_url.strip("/"), query))
+        soup = self.get_soup(f"{self.home_url.strip('/')}/?s={query}&post_type=wp-manga")
         results = []
         for tab in soup.select(".c-tabs-item .c-tabs-item__content"):
             a = tab.select_one(".post-title a")
@@ -31,7 +30,7 @@ class ListNovelCrawler(Crawler):
                 {
                     "title": a.text,
                     "url": self.absolute_url(a["href"]),
-                    "info": "Alternative title(s): %s | Author(s): %s" % (alternative, author),
+                    "info": f"Alternative title(s): {alternative} | Author(s): {author}",
                 }
             )
 
@@ -56,8 +55,7 @@ class ListNovelCrawler(Crawler):
             self.novel_cover = self.absolute_url(urls) if urls else None
         logger.info("Novel cover: %s", self.novel_cover)
 
-        chapter_url = "%s/ajax/chapters/"
-        chapter_soup = self.post_soup(chapter_url % (self.novel_url.strip("/")))
+        chapter_soup = self.post_soup(f"{self.novel_url.strip('/')}/ajax/chapters/")
         all_chapter_soup = chapter_soup.select(".main .wp-manga-chapter")
         for chapter in all_chapter_soup:
             chap_id = len(all_chapter_soup) - len(self.chapters)
@@ -72,5 +70,5 @@ class ListNovelCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        contents = soup.select(".reading-content .text-left")
-        return "".join([str(p) for p in contents])
+        contents = soup.select_one(".reading-content .text-left")
+        return self.cleaner.extract_contents(contents)
