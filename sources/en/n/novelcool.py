@@ -41,7 +41,7 @@ class NovelCool(Crawler):
                     "id": chap_id,
                     "volume": vol_id,
                     "url": self.absolute_url(x["href"]),
-                    "title": x.text.strip() or ("Chapter %d" % chap_id),
+                    "title": x.select_one(".chapter-item-title").text.strip() or ("Chapter %d" % chap_id),
                 }
             )
 
