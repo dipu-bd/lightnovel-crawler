@@ -44,7 +44,7 @@ class CentralNovelCrawler(Crawler):
 
         possible_image = soup.select_one(".thumbook img.wp-post-image")
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["data-src"])
+            self.novel_cover = self.absolute_url(possible_image["src"])
 
         logger.info("Novel cover: %s", self.novel_cover)
 
