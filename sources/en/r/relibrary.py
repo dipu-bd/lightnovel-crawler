@@ -52,7 +52,7 @@ class relibCrawler(ChapterOnlySoupTemplate):
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        sleep(5) # to circonvent wordfence protection
+        sleep(5)
         tag = soup.select_one(".entry-content")
         assert tag
         return tag
