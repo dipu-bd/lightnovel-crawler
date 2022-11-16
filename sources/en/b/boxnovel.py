@@ -23,6 +23,6 @@ class BoxNovelCrawler(MadaraTemplate):
         )
         self.cleaner.bad_tag_text_pairs.update(
             {
-                "p": r"Thank you for reading on myboxnovel.com",
+                "p": r"Thank you for reading on myboxnovel.com"
             }
         )
