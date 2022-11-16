@@ -21,3 +21,8 @@ class BoxNovelCrawler(MadaraTemplate):
                 ".subtitle ",
             ]
         )
+        self.cleaner.bad_tag_text_pairs.update(
+            {
+                "p": r"Thank you for reading on myboxnovel.com",
+            }
+        )
