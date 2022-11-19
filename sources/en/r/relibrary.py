@@ -2,7 +2,6 @@ import logging
 from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
-from time import sleep
 
 from lncrawl.models import Chapter
 from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
@@ -14,6 +13,7 @@ class relibCrawler(ChapterOnlySoupTemplate):
     base_url = ["https://re-library.com/"]
 
     def initialize(self) -> None:
+        self.init_executor(1)
         self.cleaner.bad_css.update(
             [
                 ".nextPageLink",
@@ -52,7 +52,6 @@ class relibCrawler(ChapterOnlySoupTemplate):
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        sleep(5)
         tag = soup.select_one(".entry-content")
         assert tag
         return tag
