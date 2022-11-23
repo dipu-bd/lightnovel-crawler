@@ -8,6 +8,11 @@ logger = logging.getLogger(__name__)
 add_script_to_evaluate_on_new_document = "Page.addScriptToEvaluateOnNewDocument"
 set_user_agent_override = "Network.setUserAgentOverride"
 
+scroll_into_view_if_needed = """
+window.scrollTo(0, 0);
+arguments[0].scrollIntoViewIfNeeded();
+"""
+
 hide_webdriver_from_navigator_script = """
 Object.defineProperty(window, 'navigator', {
     value: new Proxy(navigator, {

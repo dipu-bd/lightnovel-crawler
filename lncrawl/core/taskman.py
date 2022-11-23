@@ -110,7 +110,7 @@ class TaskManager(ABC):
 
             def wait_and_submit(*args, **kwargs):
                 time.sleep(wait / 1000)
-                original(*args, **kwargs)
+                return original(*args, **kwargs)
 
             self._executor.submit = wait_and_submit
 

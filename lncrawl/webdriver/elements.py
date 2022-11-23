@@ -11,6 +11,7 @@ from selenium.webdriver.support.relative_locator import RelativeBy
 from selenium.webdriver.support.wait import WebDriverWait
 
 from ..core.soup import SoupMaker
+from .scripts import scroll_into_view_if_needed
 
 logger = logging.getLogger(__name__)
 
@@ -78,6 +79,9 @@ class WebElement(_WebElement):
         if isinstance(by, By):
             by = str(by)
         return self.find_element(by, selector)
+
+    def scroll_to_view(self):
+        self.parent.execute_script(scroll_into_view_if_needed, self)
 
 
 def _add_virtual_authenticator(chrome: WebDriver):
