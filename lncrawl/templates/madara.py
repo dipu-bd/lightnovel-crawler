@@ -59,7 +59,11 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     def select_chapter_tags(self, soup: BeautifulSoup):
         try:
             clean_novel_url = self.novel_url.split("?")[0].strip("/")
-            response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
+            response = self.submit_form(f"{clean_novel_url}/ajax/chapters/", retry=0)
+            soup = self.make_soup(response)
+            chapters = soup.select("ul.main .wp-manga-chapter a")
+            if not chapters:
+                raise Exception("No chapters on first URL")
         except Exception:
             nl_id = soup.select_one("#manga-chapters-holder[data-id]")
             assert isinstance(nl_id, Tag)
@@ -70,9 +74,10 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
                     "manga": nl_id["data-id"],
                 },
             )
+            soup = self.make_soup(response)
+            chapters = soup.select("ul.main .wp-manga-chapter a")
 
-        soup = self.make_soup(response)
-        yield from reversed(soup.select("ul.main .wp-manga-chapter > a"))
+        yield from reversed(chapters)
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
