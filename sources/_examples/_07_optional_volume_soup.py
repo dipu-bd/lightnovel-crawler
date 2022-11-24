@@ -2,9 +2,9 @@
 """
 # TODO: Read the TODOs carefully and remove all existing comments in this file.
 
-This is a sample using the ChapterWithVolumeBrowserTemplate as the template.
-It provides a wrapper around the GeneralBrowserTemplate that generates both
-volumes list and chapter list.
+This is a sample using the OptionalVolumeSoupTemplate as the template.
+It provides a wrapper around the ChapterWithVolumeSoupTemplate that makes the
+volume list generation optional.
 
 Put your source file inside the language folder. The `en` folder has too many
 files, therefore it is grouped using the first letter of the domain name.
@@ -15,13 +15,13 @@ from typing import Generator
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, Volume
-from lncrawl.templates.browser.with_volume import ChapterWithVolumeBrowserTemplate
+from lncrawl.templates.soup.optional_volume import OptionalVolumeSoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
 # TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
-class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
+class MyCrawlerName(OptionalVolumeSoupTemplate):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = ["http://sample.url/"]
 
@@ -36,14 +36,15 @@ class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
         # You can customize `TextCleaner` and other necessary things.
         pass
 
-    # TODO: [OPTIONAL] Open the Novel URL in the browser
-    def visit_novel_page_in_browser(self) -> BeautifulSoup:
-        # self.visit(self.novel_url)
+    # TODO: [OPTIONAL] This is called once per session before searching and fetching novel info.
+    def login(self, username_or_email: str, password_or_token: str) -> None:
+        # Examples:
+        # - https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/multi/mtlnovel.py
+        # - https://github.com/dipu-bd/lightnovel-crawler/blob/master/sources/multi/ranobes.py
         pass
 
-    # TODO: [OPTIONAL] Parse and return the novel title in the browser
-    def parse_title_in_browser(self) -> str:
-        # return self.parse_title(self.browser.soup)
+    # TODO: [OPTIONAL] If it is necessary to logout after session is finished, you can implement this.
+    def logout(self):
         pass
 
     # TODO: [REQUIRED] Parse and return the novel title
@@ -51,19 +52,9 @@ class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
         # The soup here is the result of `self.get_soup(self.novel_url)`
         pass
 
-    # TODO: [OPTIONAL] Parse and return the novel cover image in the browser
-    def parse_cover_in_browser(self) -> str:
-        # return self.parse_cover(self.browser.soup)
-        pass
-
     # TODO: [REQUIRED] Parse and return the novel cover
     def parse_cover(self, soup: BeautifulSoup) -> str:
         # The soup here is the result of `self.get_soup(self.novel_url)`
-        pass
-
-    # TODO: [OPTIONAL] Parse and return the novel author in the browser
-    def parse_authors_in_browser(self) -> Generator[Tag, None, None]:
-        # yield from self.parse_authors(self.browser.soup)
         pass
 
     # TODO: [REQUIRED] Parse and return the novel authors
@@ -80,37 +71,17 @@ class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
         #       yield a.text.strip()
         pass
 
-    # TODO: [OPTIONAL] Parse and return the volumes and chapters in the browser
-    def parse_chapter_list_in_browser(self) -> None:
-        # return self.parse_chapter_list(self.browser.soup)
-        pass
-
-    # TODO: [REQUIRED] Parse and set the volumes and chapters
-    def parse_chapter_list(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
-        pass
-
-    # TODO: [OPTIONAL] Open the Chapter URL in the browser
-    def visit_chapter_page_in_browser(self, chapter: Chapter) -> BeautifulSoup:
-        # self.visit(chapter.url)
-        pass
-
-    # TODO: [OPTIONAL] Select volume list item tags from the browser
-    def select_volume_tags_in_browser(self) -> Generator[Tag, None, None]:
-        # return self.select_volume_tags(self.browser.soup)
-        pass
-
-    # TODO: [REQUIRED] Select volume list item tags from the page soup
+    # TODO: [OPTIONAL] Select volume list item tags from the page soup
     def select_volume_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         #
         # Example: yield from soup.select("#toc .vol-item")
         pass
 
-    # TODO: [REQUIRED] Parse a single volume from volume list item tag
+    # TODO: [OPTIONAL] Parse a single volume from volume list item tag
     def parse_volume_item(self, tag: Tag, id: int) -> Volume:
-        # The tag here comes from `self.select_volume_tags`
-        # The id here is the next available volume id
+        # The tag here is either `html` or comes from `self.select_volume_tags`
+        # The id here is the next available volume id.
         #
         # Example:
         # return Volume(
@@ -120,9 +91,8 @@ class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
         pass
 
     # TODO: [REQUIRED] Select chapter list item tags from volume tag and page soup
-    def select_chapter_tags(self, tag: Tag, vol: Volume) -> Generator[Tag, None, None]:
-        # The tag here comes from `self.select_volume_tags`
-        # The vol here comes from `self.parse_volume_item`
+    def select_chapter_tags(self, tag: Tag) -> Generator[Tag, None, None]:
+        # The tag here is either `html` or comes from `self.select_volume_tags`
         #
         # Example: yield from tag.select(".chapter-item")
         pass
@@ -141,11 +111,7 @@ class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
         #     url=self.absolute_url(tag["href"]),
         # )
         pass
-
-    # TODO: [OPTIONAL] Select the tag containing the chapter text in the browser
-    def select_chapter_body_in_browser(self) -> Tag:
-        # return self.select_chapter_body(self.browser.soup)
-        pass
+        raise NotImplementedError()
 
     # TODO: [REQUIRED] Select the tag containing the chapter text
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:

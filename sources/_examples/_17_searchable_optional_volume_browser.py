@@ -2,9 +2,9 @@
 """
 # TODO: Read the TODOs carefully and remove all existing comments in this file.
 
-This is a sample using the SearchableBrowserTemplate and ChapterOnlyBrowserTemplate as
-the template. It should be able to do searching and generating only chapter list
-excluding volumes list.
+This is a sample using the SearchableBrowserTemplate and OptionalVolumeBrowserTemplate
+as the template. It should be able to do searching and generating the chapter list and
+optionally the volumes list too.
 
 Put your source file inside the language folder. The `en` folder has too many
 files, therefore it is grouped using the first letter of the domain name.
@@ -14,15 +14,15 @@ from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
+from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
+from lncrawl.templates.browser.optional_volume import OptionalVolumeBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
 
 # TODO: You can safely delete all [OPTIONAL] methods if you do not need them.
-class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
+class MyCrawlerName(SearchableBrowserTemplate, OptionalVolumeBrowserTemplate):
     # TODO: [REQUIRED] Provide the URLs supported by this crawler.
     base_url = ["http://sample.url/"]
 
@@ -38,7 +38,7 @@ class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         pass
 
     # TODO: [REQUIRED] Select novel items found by the query using the browser
-    def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
+    def select_search_items_browser(self, query: str) -> Generator[Tag, None, None]:
         # The query here is the input from user.
         #
         # Example:
@@ -69,6 +69,11 @@ class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         #     title=tag.text.strip(),
         #     url=self.absolute_url(tag["href"]),
         # )
+        pass
+
+    # TODO: [OPTIONAL] Parse a tag and return single search result
+    def parse_search_item_in_browser(self, tag: Tag) -> SearchResult:
+        # self.parse_search_item(tag)
         pass
 
     # TODO: [OPTIONAL] Open the Novel URL in the browser
@@ -130,28 +135,66 @@ class MyCrawlerName(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         # self.visit(chapter.url)
         pass
 
-    # TODO: [OPTIONAL] Select chapter list item tags from the browser
-    def select_chapter_tags_in_browser(self) -> Generator[Tag, None, None]:
-        # return self.select_chapter_tags(self.browser.soup)
-        pass
-
-    # TODO: [REQUIRED] Select chapter list item tags from the page soup
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
+    # TODO: [OPTIONAL] Select volume list item tags from the page soup
+    def select_volume_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         #
-        # Example: yield from soup.select(".m-newest2 li > a")
+        # Example: yield from soup.select("#toc .vol-item")
+        pass
+
+    # TODO: [OPTIONAL] Select volume list item tags from the browser
+    def select_volume_tags_in_browser(self) -> Generator[Tag, None, None]:
+        # return self.select_volume_tags(self.browser.soup)
+        pass
+
+    # TODO: [OPTIONAL] Parse a single volume from volume list item tag
+    def parse_volume_item(self, tag: Tag, id: int) -> Volume:
+        # The tag here comes from `self.select_volume_tags`
+        # The id here is the next available volume id
+        #
+        # Example:
+        # return Volume(
+        #     id=id,
+        #     title= tag.text.strip(),
+        # )
+        pass
+
+    # TODO: [OPTIONAL] Parse a single volume from volume list item tag when using browser
+    def parse_volume_item_in_browser(self, tag: Tag, id: int) -> Volume:
+        # return self.parse_volume_item(tag, id)
+        pass
+
+    # TODO: [REQUIRED] Select chapter list item tags from volume tag and page soup
+    def select_chapter_tags(self, tag: Tag) -> Generator[Tag, None, None]:
+        # The tag here comes from `self.select_volume_tags`
+        # The vol here comes from `self.parse_volume_item`
+        #
+        # Example: yield from tag.select(".chapter-item")
+        pass
+
+    # TODO: [OPTIONAL] Select chapter list item tags from volume tag and page soup when in browser
+    def select_chapter_tags_in_browser(self, tag: Tag) -> Generator[Tag, None, None]:
+        # raise self.select_chapter_tags(tag, vol)
         pass
 
     # TODO: [REQUIRED] Parse a single chapter from chapter list item tag
-    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
+    def parse_chapter_item(self, tag: Tag, id: int, vol: Volume) -> Chapter:
+        # The tag here comes from `self.select_chapter_tags`
+        # The vol here comes from `self.parse_volume_item`
+        # The id here is the next available chapter id
         #
         # Example:
         # return Chapter(
         #     id=id,
+        #     volume=vol.id,
         #     title=tag.text.strip(),
         #     url=self.absolute_url(tag["href"]),
         # )
+        pass
+
+    # TODO: [OPTIONAL] Parse a single chapter from chapter list item tag  when in browser
+    def parse_chapter_item_in_browser(self, tag: Tag, id: int, vol: Volume) -> Chapter:
+        # raise self.parse_chapter_item(tag, id, vol)
         pass
 
     # TODO: [OPTIONAL] Select the tag containing the chapter text in the browser

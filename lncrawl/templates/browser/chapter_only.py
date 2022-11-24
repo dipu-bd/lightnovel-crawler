@@ -17,4 +17,4 @@ class ChapterOnlyBrowserTemplate(GeneralBrowserTemplate, ChapterOnlySoupTemplate
 
     def select_chapter_tags_in_browser(self) -> Generator[Tag, None, None]:
         """Select chapter list item tags from the browser"""
-        return self.select_chapter_tags(self.browser.soup)
+        yield from self.select_chapter_tags(self.browser.soup)
