@@ -14,8 +14,8 @@ chapter_load_url = "/novel/load-chapters"
 
 class LightnovelReader(Crawler):
     base_url = [
-        "https://lightnovelreader.org/",
-        "https://www.lightnovelreader.org/",
+        "https://lightnovelreader.me/",
+        "https://www.lightnovelreader.me/",
     ]
 
     def initialize(self) -> None:

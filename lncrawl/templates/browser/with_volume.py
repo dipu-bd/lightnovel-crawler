@@ -7,7 +7,7 @@ from .general import GeneralBrowserTemplate
 
 
 class ChapterWithVolumeBrowserTemplate(
-    ChapterWithVolumeSoupTemplate, GeneralBrowserTemplate
+    GeneralBrowserTemplate, ChapterWithVolumeSoupTemplate
 ):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
 

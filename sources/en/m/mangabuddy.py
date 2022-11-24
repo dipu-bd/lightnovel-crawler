@@ -39,10 +39,11 @@ class MangaBuddyCrawler(Crawler):
 
         logger.info("Novel title: %s", self.novel_title)
 
-        img_src = soup.select_one(".img-cover img")
+        possible_img = soup.select_one(".img-cover img")
 
-        if img_src:
-            self.novel_cover = self.absolute_url(img_src["src"])
+        if possible_img:
+            src = possible_img.attrs.get("data-src") or possible_img.attrs.get("src")
+            self.novel_cover = self.absolute_url(src)
 
         logger.info("Novel cover: %s", self.novel_cover)
 
@@ -83,3 +84,12 @@ class MangaBuddyCrawler(Crawler):
         image_urls = [f'<img src="{main_server}{img}">' for img in img_list]
 
         return "<p>" + "</p><p>".join(image_urls) + "</p>"
+
+    def download_image(self, url: str, **kwargs):
+        return super().download_image(
+            url,
+            headers={
+                "referer": self.home_url,
+                "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            },
+        )

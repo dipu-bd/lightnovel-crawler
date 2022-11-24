@@ -3,6 +3,7 @@ from typing import Any, Iterable, List, Optional, Union
 
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
+from selenium.webdriver.common.action_chains import ActionChains
 
 from ..webdriver import ChromeOptions, WebDriver, create_new
 from ..webdriver.elements import EC, By, RelativeBy, WebDriverWait, WebElement
@@ -65,6 +66,7 @@ class Browser:
         )
         self._driver.implicitly_wait(30)
         self._driver.set_page_load_timeout(30)
+        self._action_chain = ActionChains(self._driver)
 
     def _apply_cookies(self):
         if not self._driver:
@@ -117,6 +119,15 @@ class Browser:
         if not self._driver:
             return None
         return self._driver.session_id
+
+    @property
+    def action_chain(self) -> ActionChains:
+        """
+        ActionChains are a way to automate low level interactions such as mouse movements,
+        mouse button actions, key press, and context menu interactions. This is useful
+        for doing more complex actions like hover over and drag and drop.
+        """
+        return self._action_chain
 
     @property
     def html(self) -> str:

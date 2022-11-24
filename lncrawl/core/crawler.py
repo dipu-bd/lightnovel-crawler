@@ -106,7 +106,7 @@ class Crawler(Scraper):
         """Return the index of chapter by given url or 0"""
         url = self.absolute_url(url)
         for chapter in self.chapters:
-            if chapter.url.rsplit("/") == url:
+            if chapter.url.rstrip("/") == url:
                 return chapter.id
         return 0
 

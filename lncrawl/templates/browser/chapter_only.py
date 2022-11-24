@@ -6,7 +6,7 @@ from ..soup.chapter_only import ChapterOnlySoupTemplate
 from .general import GeneralBrowserTemplate
 
 
-class ChapterOnlyBrowserTemplate(ChapterOnlySoupTemplate, GeneralBrowserTemplate):
+class ChapterOnlyBrowserTemplate(GeneralBrowserTemplate, ChapterOnlySoupTemplate):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
 
     def parse_chapter_list_in_browser(self) -> None:

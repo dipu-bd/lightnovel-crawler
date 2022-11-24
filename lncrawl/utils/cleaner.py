@@ -122,7 +122,7 @@ class TextCleaner:
         )
         self.substitutions: Dict[str, str] = {
             # replace one string with another one
-            "&": "&amp;",
+            # "&": "&amp;",
             "<": "&lt;",
             ">": "&gt;",
             r"\u003c": "&lt;",
@@ -200,9 +200,12 @@ class TextCleaner:
         text = text.translate(NONPRINTABLE_MAPPING)
         if not hasattr(self, "_subs_"):
             self._subs_ = re.compile(
-                "|".join([f"({x})" for x in self.substitutions.keys()])
+                "|".join([f"({x})" for x in self.substitutions.keys()]),
+                flags=re.IGNORECASE,
             )
-        text = self._subs_.sub(lambda m: self.substitutions[m.group(0)], text)
+        text = self._subs_.sub(
+            lambda m: self.substitutions[str(m.group(0)).lower()], text
+        )
         return text
 
     def extract_on_duplicate_sibling(self, tag: Tag):

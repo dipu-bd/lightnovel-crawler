@@ -153,6 +153,9 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.visit(self.novel_url)
         self.browser.wait(".items-start h1, img.drop-shadow-ww-novel-cover-image")
 
+        # Clear the annoying top menubar
+        self.browser.find("header#header").outer_html = ""
+
         # Parse cover image and title
         img = self.browser.find("img.drop-shadow-ww-novel-cover-image")
         if img:
@@ -177,7 +180,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.browser.wait("#full-width-tabpanel-1 .MuiAccordion-root")
 
         # Get volume list and a progress bar
-        volumes = self.browser.find_all(".MuiAccordion-root")
+        volumes = self.browser.find_all("#app .MuiAccordion-root")
         bar = self.progress_bar(
             total=len(volumes),
             desc="Volumes",
@@ -186,9 +189,11 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
         # Expand all volumes
         for index, root in enumerate(reversed(volumes)):
+            root.scroll_to_view()
             root.click()
+
             nth = len(volumes) - index
-            self.browser.wait(f".MuiAccordion-root:nth-of-type({nth}) a[href]")
+            self.browser.wait(f"#app .MuiAccordion-root:nth-of-type({nth}) a[href]")
 
             tag = root.as_tag()
             head = tag.select_one(".MuiAccordionSummary-content")
@@ -217,9 +222,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
         self.visit(chapter.url)
-        self.browser.wait(".chapter-content p span")
+        # self.browser.wait("chapter-content", By.CLASS_NAME)
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
-        return self.cleaner.extract_contents(content)
+        self.cleaner.clean_contents(content)
+        return content.decode_contents()
 
 
 WUXIWORLD_PROTO = json.loads(

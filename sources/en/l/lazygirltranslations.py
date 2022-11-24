@@ -31,7 +31,9 @@ class LazyGirlTranslationsCrawler(Crawler):
 
         cover_img = soup.select_one(".entry-content .wp-block-image img")
         if cover_img:
-            self.novel_cover = self.absolute_url(cover_img["data-ezsrc"])
+            src = cover_img.get("data-ezsrc") or cover_img.get("src")
+            if src:
+                self.novel_cover = self.absolute_url(src)
 
         first_p = soup.select_one(".inside-article .entry-content > p")
         if first_p:

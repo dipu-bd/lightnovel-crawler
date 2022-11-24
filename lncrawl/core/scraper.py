@@ -5,7 +5,7 @@ import random
 import ssl
 from io import BytesIO
 from typing import Any, Dict, Optional, Union
-from urllib.parse import ParseResult, quote, urlparse
+from urllib.parse import ParseResult, urlparse
 
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
@@ -84,7 +84,11 @@ class Scraper(TaskManager, SoupMaker):
         headers.setdefault("Origin", self.home_url.strip("/"))
         headers.setdefault("Referer", self.last_soup_url or self.home_url)
         headers.setdefault("User-Agent", self.user_agent)
-        kwargs["headers"] = {quote(k): quote(v) for k, v in headers.items() if v}
+        kwargs["headers"] = {
+            str(k).encode("ascii"): str(v).encode("ascii")
+            for k, v in headers.items()
+            if v
+        }
 
         while retry >= 0:
             try:
@@ -210,7 +214,7 @@ class Scraper(TaskManager, SoupMaker):
         )
 
     def submit_form(
-        self, url, data={}, multipart=False, headers={}, **kwargs
+        self, url, data=None, multipart=False, headers={}, **kwargs
     ) -> Response:
         """Simulate submit form request and return the response"""
         headers = CaseInsensitiveDict(headers)
