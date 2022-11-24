@@ -16,7 +16,7 @@ class MTLNation(Crawler):
     has_mtl = True
 
     def initialize(self):
-        self.init_executor(3)
+        self.init_executor(1)
 
     def login(self, email: str, password: str) -> None:
         self.post_json(
