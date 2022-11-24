@@ -41,7 +41,7 @@ class NovelCool(Crawler):
                     "id": chap_id,
                     "volume": vol_id,
                     "url": self.absolute_url(x["href"]),
-                    "title": x.text.strip() or ("Chapter %d" % chap_id),
+                    "title": x.select_one(".chapter-item-title").text.strip(),
                 }
             )
 
@@ -52,7 +52,6 @@ class NovelCool(Crawler):
         chapter_start = soup.select_one(".chapter-start-mark")
         body_parts = chapter_start.parent
 
-        # FIXED: Chapters title removed.
         if chapter_title:
             chapter_title.extract()
 
@@ -61,7 +60,6 @@ class NovelCool(Crawler):
         for report in body_parts.find("div", {"model_target_name": "report"}):
             report.extract()
 
-        # Removes End of Chapter junk text.
         for junk in body_parts.find("p", {"class": "chapter-end-mark"}):
             junk.extract()
 

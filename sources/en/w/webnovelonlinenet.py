@@ -53,24 +53,13 @@ class WebNovelOnlineNet(Crawler):
             self.novel_author = author[0].text
         logger.info("Novel author: %s", self.novel_author)
 
-        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
-        logger.info("Novel id: %s", self.novel_id)
-
-        response = self.submit_form(
-            chapter_list_url, data="action=manga_get_chapters&manga=" + self.novel_id
-        )
-        soup = self.make_soup(response)
-        for a in reversed(soup.select(".wp-manga-chapter a")):
-            chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append({"id": vol_id})
+        for li in reversed(soup.select(".listing-chapters_wrap ul li")):
+            a = li.select_one("a")
             self.chapters.append(
                 {
-                    "id": chap_id,
-                    "volume": vol_id,
-                    "title": a.text.strip(),
+                    "id": len(self.chapters) + 1,
                     "url": self.absolute_url(a["href"]),
+                    "title": a.text.strip(),
                 }
             )
 

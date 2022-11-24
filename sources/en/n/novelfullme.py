@@ -40,7 +40,7 @@ class NovelFullMeCrawler(Crawler):
 
         img_tag = soup.select_one(".img-cover img")
         if isinstance(img_tag, Tag):
-            self.novel_cover = self.absolute_url(img_tag["src"])
+            self.novel_cover = self.absolute_url(img_tag["data-src"])
 
         logger.info("Novel cover: %s", self.novel_cover)
 

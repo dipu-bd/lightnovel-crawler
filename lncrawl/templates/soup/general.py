@@ -33,16 +33,6 @@ class GeneralSoupTemplate(Crawler):
 
         self.parse_chapter_list(soup)
 
-    def download_chapter_body(self, chapter: Chapter) -> str:
-        soup = self.get_soup(chapter.url)
-
-        try:
-            body = self.select_chapter_body(soup)
-            assert body
-            return self.parse_chapter_body(body)
-        except Exception as e:
-            raise LNException("Failed to parse chapter body", e)
-
     @abstractmethod
     def parse_title(self, soup: BeautifulSoup) -> str:
         """Parse and return the novel title"""
@@ -62,6 +52,11 @@ class GeneralSoupTemplate(Crawler):
     def parse_chapter_list(self, soup: BeautifulSoup) -> None:
         """Parse and set the volumes and chapters"""
         raise NotImplementedError()
+
+    def download_chapter_body(self, chapter: Chapter) -> str:
+        soup = self.get_soup(chapter.url)
+        body = self.select_chapter_body(soup)
+        return self.parse_chapter_body(body)
 
     @abstractmethod
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:

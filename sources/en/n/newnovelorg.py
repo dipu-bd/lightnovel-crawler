@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import logging
 
 from lncrawl.templates.madara import MadaraTemplate
@@ -6,8 +5,10 @@ from lncrawl.templates.madara import MadaraTemplate
 logger = logging.getLogger(__name__)
 
 
-class BoxNovelCrawler(MadaraTemplate):
-    base_url = ["https://boxnovel.com/"]
+class NewNovelOrg(MadaraTemplate):
+    has_mtl = False
+    has_manga = False
+    base_url = ["https://newnovel.org/"]
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update(
@@ -20,9 +21,4 @@ class BoxNovelCrawler(MadaraTemplate):
                 ".cha-tit",
                 ".subtitle ",
             ]
-        )
-        self.cleaner.bad_tag_text_pairs.update(
-            {
-                "p": r"Thank you for reading on myboxnovel.com"
-            }
         )

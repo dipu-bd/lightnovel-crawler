@@ -61,6 +61,6 @@ class ReadOnlineNovelsCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        contents = soup.select_one('.read-context .reading_area')
+        contents = soup.select_one('.read-context')
         assert contents, 'No chapter contents found'
         return self.cleaner.extract_contents(contents)
