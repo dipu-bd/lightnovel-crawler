@@ -3,20 +3,18 @@ from typing import Generator, List
 
 from bs4 import Tag
 
-from ...core.exeptions import FallbackToBrowser, ScraperErrorGroup
+from ...core.exeptions import FallbackToBrowser
 from ...models import SearchResult
 from ..soup.searchable import SearchableSoupTemplate
 from .general import GeneralBrowserTemplate
 
 
-class SearchableBrowserTemplate(SearchableSoupTemplate, GeneralBrowserTemplate):
+class SearchableBrowserTemplate(GeneralBrowserTemplate, SearchableSoupTemplate):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
 
-    def search_novel(self, query: str) -> List[SearchResult]:
-        try:
-            return super().search_novel(query)
-        except ScraperErrorGroup:
-            return self.search_novel_in_browser(query)
+    def search_novel_in_scraper(self, query: str):
+        tags = self.select_search_items(query)
+        return list(self.process_search_results(tags))
 
     def search_novel_in_browser(self, query: str) -> List[SearchResult]:
         tags = self.select_search_items_in_browser(query)
