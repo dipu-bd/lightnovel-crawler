@@ -2,12 +2,12 @@ from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate
+from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.templates.browser.optional_volume import OptionalVolumeBrowserTemplate
+from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
 
 
-class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
+class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTemplate):
     is_template = True
 
     def initialize(self) -> None:
@@ -16,14 +16,17 @@ class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     def select_search_items(self, query: str):
         params = dict(s=query)
         soup = self.get_soup(f"{self.home_url}?{urlencode(params)}")
-
         yield from soup.select(".listupd > article")
+
+    def select_search_items_in_browser(self, query: str):
+        params = dict(s=query)
+        self.visit(f"{self.home_url}?{urlencode(params)}")
+        yield from self.browser.soup.select(".listupd > article")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         a = tag.select_one("a.tip")
         title = tag.select_one("span.ntitle")
         info = tag.select_one("span.nchapter")
-
         return SearchResult(
             title=title.text.strip() if title else a.text.strip(),
             url=self.absolute_url(a["href"]),
@@ -31,9 +34,13 @@ class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         )
 
     def parse_title(self, soup: BeautifulSoup) -> str:
-        tag = soup.select_one("h1.entry-title")
+        title = soup.select_one("h1.entry-title")
+        assert title
+        return title.text.strip()
 
-        return tag.text.strip()
+    def parse_title_in_browser(self) -> str:
+        self.browser.wait("h1.entry-title")
+        return self.parse_title(self.browser.soup)
 
     def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".thumbook img, meta[property='og:image']")
@@ -50,17 +57,22 @@ class MangaStreamTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         for a in soup.select(".spe a[href*='/writer/']"):
             yield a.text.strip()
 
-    def select_chapter_tags(self, soup: BeautifulSoup):
-        chapters = soup.select(".eplister li > a, .eplister li .eph-num > a")
-        first_li = soup.select_one(".eplister li")
-        if "tseplsfrst" not in first_li.get("class", "") or 1 == first_li.get(
-            "data-num", 0
-        ):
-            chapters = reversed(chapters)
+    def select_volume_tags(self, soup: BeautifulSoup):
+        return []
 
-        yield from chapters
+    def parse_volume_item(self, tag: Tag, id: int) -> Volume:
+        return Volume(id=id)
 
-    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
+    def select_chapter_tags(self, tag: Tag):
+        chapters = tag.select(".eplister li a")
+        first_li = tag.select_one(".eplister li")
+        li_class = first_li.get("class", "") if first_li else ""
+        if first_li.get("data-num", 0) == 1 or "tseplsfrst" not in li_class:
+            yield from reversed(chapters)
+        else:
+            yield from chapters
+
+    def parse_chapter_item(self, tag: Tag, id: int, vol: Volume) -> Chapter:
         title = tag.select_one(".epl-title")
         return Chapter(
             id=id,
