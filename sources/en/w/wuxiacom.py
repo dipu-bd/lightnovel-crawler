@@ -222,9 +222,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
         self.visit(chapter.url)
-        self.browser.wait(".chapter-content p span")
+        # self.browser.wait("chapter-content", By.CLASS_NAME)
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
-        return self.cleaner.extract_contents(content)
+        self.cleaner.clean_contents(content)
+        return content.decode_contents()
 
 
 WUXIWORLD_PROTO = json.loads(
