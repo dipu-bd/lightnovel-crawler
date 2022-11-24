@@ -44,7 +44,6 @@ class relibCrawler(ChapterOnlySoupTemplate):
             yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        print("hello")
         yield from soup.select(".page_item > a")
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
