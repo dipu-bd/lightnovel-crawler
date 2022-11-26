@@ -88,6 +88,7 @@ def create_local(
     options.add_argument("--disable-infobars")
     options.add_argument("--no-first-run")
     options.set_capability("quietExceptions", True)
+    options.set_capability("acceptInsecureCerts", True)
 
     # Chrome specific options
     options.accept_insecure_certs = True
