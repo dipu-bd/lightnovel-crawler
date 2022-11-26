@@ -1,6 +1,5 @@
 import logging
 import os
-import time
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Semaphore, Thread
@@ -14,26 +13,20 @@ T = TypeVar("T")
 
 MAX_WORKER_COUNT = 10
 MAX_REQUESTS_PER_DOMAIN = 25
-WAIT_BEFORE_SUBMIT = 100
 
 _resolver = Semaphore(1)
 _host_semaphores: Dict[str, Semaphore] = {}
 
 
 class TaskManager(ABC):
-    def __init__(
-        self,
-        workers: int = MAX_WORKER_COUNT,
-        wait: int = WAIT_BEFORE_SUBMIT,
-    ) -> None:
+    def __init__(self, workers: int = MAX_WORKER_COUNT) -> None:
         """A helper class for task queueing and parallel task execution.
         It is being used as a superclass of the Crawler.
 
         Args:
         - workers (int, optional): Number of concurrent workers to expect. Default: 10.
-        - wait (int, optional): Number of milliseconds to wait before submitting the next task.
         """
-        self.init_executor(workers, wait)
+        self.init_executor(workers)
 
     @property
     def executor(self):
@@ -84,7 +77,7 @@ class TaskManager(ABC):
 
         return bar
 
-    def init_executor(self, workers: int, wait: int = WAIT_BEFORE_SUBMIT):
+    def init_executor(self, workers: int):
         """Initializes a new executor.
 
         If the number of workers are not the same as the current executor,
@@ -92,7 +85,6 @@ class TaskManager(ABC):
 
         Args:
         - workers (int): Number of workers to expect in the new executor.
-        - wait (int, optional): Number of milliseconds to wait before submitting the next task.
         """
         if hasattr(self, "_executor"):
             if self.workers == workers:
@@ -104,15 +96,6 @@ class TaskManager(ABC):
             thread_name_prefix="lncrawl_scraper",
             initargs=(self),
         )
-
-        if wait > 0:
-            original = self._executor.submit
-
-            def wait_and_submit(*args, **kwargs):
-                time.sleep(wait / 1000)
-                return original(*args, **kwargs)
-
-            self._executor.submit = wait_and_submit
 
     def domain_gate(self, hostname: str = ""):
         """Limit number of entry per hostname.
