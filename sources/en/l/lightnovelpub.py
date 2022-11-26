@@ -71,7 +71,9 @@ class LightNovelPubCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
         self.visit(f"{self.novel_url}/chapters")
         soup = self.browser.soup.select(".pagination-container li a")
         if len(soup) > 0:
-            max_page = int(search("-([1-9]*)$", soup[-1]["href"]).group(1))
+            max_page = max(
+                [int(search("-([1-9]*)$", s["href"]).group(1)) for s in soup]
+            )
 
         for p in [
             f"{self.novel_url}/chapters/page-{p}" for p in range(1, max_page + 1)
@@ -91,7 +93,9 @@ class LightNovelPubCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
             ".pagination-container li a"
         )
         if len(soup) > 0:
-            max_page = int(search("-([1-9]*)$", soup[-1]["href"]).group(1))
+            max_page = max(
+                [int(search("-([1-9]*)$", s["href"]).group(1)) for s in soup]
+            )
 
         for p in [
             f"{self.novel_url}/chapters/page-{p}" for p in range(1, max_page + 1)
