@@ -2,8 +2,6 @@ import logging
 import os
 import shutil
 
-from minify_html import minify
-
 from ..assets.web import get_css_style, get_js_script
 
 logger = logging.getLogger(__name__)
@@ -68,7 +66,8 @@ def bind_html_chapter(chapters, index, direction="ltr"):
     </html>
     """
 
-    html = minify(html, minify_css=True, minify_js=True)
+    # Since this will only be viewed locally, minify is unnecessary.
+    # html = minify(html, minify_css=True, minify_js=True)
     return html, this_filename
 
 
