@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import re
 from typing import Generator
-
-from re import search
 
 from bs4 import BeautifulSoup, Tag
 
@@ -12,6 +11,8 @@ from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
 
 logger = logging.getLogger(__name__)
+
+digit_regex = re.compile(r"page-(\d+)$")
 
 
 class LightNovelPubCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
@@ -66,52 +67,6 @@ class LightNovelPubCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
             url=self.absolute_url(tag["href"]),
         )
 
-    def parse_chapter_list_in_browser(self) -> None:
-        max_page = 1
-        self.visit(f"{self.novel_url}/chapters")
-        soup = self.browser.soup.select(".pagination-container li a")
-        if len(soup) > 0:
-            max_page = max(
-                [int(search("-([1-9]*)$", s["href"]).group(1)) for s in soup]
-            )
-
-        for p in [
-            f"{self.novel_url}/chapters/page-{p}" for p in range(1, max_page + 1)
-        ]:
-            self.visit(p)
-            for tag in self.select_chapter_tags_in_browser():
-                if not isinstance(tag, Tag):
-                    continue
-                self.process_chapters(tag)
-
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        yield from soup.select("ul.chapter-list li a")
-
-    def parse_chapter_list(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        max_page = 1
-        soup = self.get_soup(f"{self.novel_url}/chapters").select(
-            ".pagination-container li a"
-        )
-        if len(soup) > 0:
-            max_page = max(
-                [int(search("-([1-9]*)$", s["href"]).group(1)) for s in soup]
-            )
-
-        for p in [
-            f"{self.novel_url}/chapters/page-{p}" for p in range(1, max_page + 1)
-        ]:
-            for tag in self.select_chapter_tags(self.get_soup(p)):
-                if not isinstance(tag, Tag):
-                    continue
-                self.process_chapters(tag)
-
-    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
-        return Chapter(
-            id=id,
-            title=tag.text.strip(),
-            url=self.absolute_url(tag["href"]),
-        )
-
     def parse_title(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".novel-title")
         assert tag
@@ -128,6 +83,47 @@ class LightNovelPubCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         for a in soup.findAll("span", {"itemprop": "author"}):
             yield a.text.strip()
+
+    def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
+        chapter_page = f"{self.novel_url.strip('/')}/chapters"
+        soup = self.get_soup(chapter_page)
+        yield from soup.select("ul.chapter-list li a")
+
+        page_count = max(
+            [
+                int(digit_regex.search(a["href"]).group(1))
+                for a in soup.select(".pagination-container li a[href]")
+            ]
+        )
+        if not page_count:
+            page_count = 1
+
+        futures = [
+            self.executor.submit(self.get_soup, f"{chapter_page}/page-{p}")
+            for p in range(2, page_count + 1)
+        ]
+        self.resolve_futures(futures, desc="TOC", unit="page")
+
+        for f in futures:
+            soup = f.result()
+            yield from soup.select("ul.chapter-list li a")
+
+    def select_chapter_tags_in_browser(self) -> None:
+        self.visit(f"{self.novel_url.strip('/')}/chapters")
+        yield from self.browser.soup.select("ul.chapter-list li a")
+
+        next_link = self.browser.find('.PagedList-skipToNext a[rel="next"]')
+        while next_link:
+            self.browser.visit(next_link.get_attribute("href"))
+            yield from self.browser.soup.select("ul.chapter-list li a")
+            next_link = self.browser.find('.PagedList-skipToNext a[rel="next"]')
+
+    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
+        return Chapter(
+            id=id,
+            title=tag["title"],
+            url=self.absolute_url(tag["href"]),
+        )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         return soup.select_one(".chapter-content")
