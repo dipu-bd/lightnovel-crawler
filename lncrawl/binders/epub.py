@@ -2,8 +2,6 @@ import logging
 import os
 from typing import Dict, List
 
-from minify_html import minify
-
 from ..assets.epub import epub_chapter_xhtml, epub_cover_xhtml, epub_style_css
 from ..models.chapter import Chapter
 
@@ -123,14 +121,10 @@ def bind_epub_book(
 
         volume_contents = []
         for chapter in chapters:
-            chapter_html = minify(
-                str(chapter["body"]),
-                minify_css=True,
-                minify_js=True,
-            )
+            # ebooklib does pretty-print for xhtml. minify is useless :(
             chapter_item = epub.EpubHtml(
                 file_name=f"chapter_{chapter.id}.xhtml",
-                content=chapter_html,
+                content=str(chapter["body"]),
                 title=chapter["title"],
             )
             chapter_item.add_link(
