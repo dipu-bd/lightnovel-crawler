@@ -44,7 +44,6 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                 "authorization": self.bearer_token,
             },
         )
-        response.raise_for_status()
 
         assert response.single
         novel = response.single["item"]
@@ -88,7 +87,6 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             {"novelId": novel["id"]},
             headers={"authorization": self.bearer_token},
         )
-        response.raise_for_status()
         assert response.single
 
         volumes = response.single["items"]
