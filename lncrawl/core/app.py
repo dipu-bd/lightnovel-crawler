@@ -14,7 +14,7 @@ from ..core.exeptions import LNException
 from ..core.sources import crawler_list, prepare_crawler
 from ..models import Chapter, CombinedSearchResult, OutputFormat
 from .crawler import Crawler
-from .downloader import fetch_chapter_images, fetch_chapter_body
+from .downloader import fetch_chapter_body, fetch_chapter_images
 from .novel_info import format_novel, save_metadata
 from .novel_search import search_novels
 
