@@ -70,7 +70,7 @@ class TaskManager(ABC):
         self._submit = self._executor.submit
         self._executor.submit = self.submit_task
 
-    def submit_task(self, fn, /, *args, **kwargs) -> Future:
+    def submit_task(self, fn, *args, **kwargs) -> Future:
         """Submits a callable to be executed with the given arguments.
 
         Schedules the callable to be executed as fn(*args, **kwargs) and returns
