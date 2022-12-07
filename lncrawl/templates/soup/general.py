@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 class GeneralSoupTemplate(Crawler):
     def read_novel_info(self) -> None:
-        soup = self.get_soup(self.novel_url)
+        soup = self.get_novel_soup()
 
         try:
             self.novel_title = self.parse_title(soup)
@@ -33,6 +33,9 @@ class GeneralSoupTemplate(Crawler):
 
         self.parse_chapter_list(soup)
 
+    def get_novel_soup(self) -> BeautifulSoup:
+        return self.get_soup(self.novel_url)
+
     @abstractmethod
     def parse_title(self, soup: BeautifulSoup) -> str:
         """Parse and return the novel title"""
@@ -44,7 +47,7 @@ class GeneralSoupTemplate(Crawler):
         raise NotImplementedError()
 
     @abstractmethod
-    def parse_authors(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
+    def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         """Parse and return the novel authors"""
         raise NotImplementedError()
 

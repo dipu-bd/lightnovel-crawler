@@ -114,6 +114,7 @@ class App:
 
         print("Retrieving novel info...")
         print(self.crawler.novel_url)
+        previous = self.crawler.novel_url
         self.__background(self.crawler.read_novel_info)
 
         format_novel(self.crawler)
@@ -122,7 +123,9 @@ class App:
         if not len(self.crawler.volumes):
             raise Exception("No volumes found")
 
-        print("NOVEL: %s" % self.crawler.novel_title)
+        if self.crawler.novel_url != previous:
+            print(self.crawler.novel_url)
+        print("TITLE: %s" % self.crawler.novel_title)
         print(
             "%d volumes and %d chapters found"
             % (len(self.crawler.volumes), len(self.crawler.chapters))

@@ -58,6 +58,8 @@ Without it, you will only get output in epub, text, and web formats.
 
 <!-- Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/ -->
 
+<!-- brew install python-tk -->
+
 ### Standalone Bundle (Windows, Linux)
 
 ⏬ **Windows**: [lncrawl.exe ~ 25MB](https://rebrand.ly/lncrawl)
@@ -247,6 +249,7 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -320,9 +323,10 @@ options:
 ~~
 
 --------------------------------------------------------------------------------
- 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues 
+ 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues
 ================================================================================
 ```
+
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -482,7 +486,6 @@ We are supporting 321 sources and 310 crawlers.
 </tbody>
 </table>
 
-
 ### `ar` Arabic
 
 <table>
@@ -504,7 +507,6 @@ We are supporting 321 sources and 310 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -1848,7 +1850,6 @@ We are supporting 321 sources and 310 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish; Castilian
 
 <table>
@@ -1870,7 +1871,6 @@ We are supporting 321 sources and 310 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `fr` French
 
@@ -1903,7 +1903,6 @@ We are supporting 321 sources and 310 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -2002,7 +2001,6 @@ We are supporting 321 sources and 310 crawlers.
 </tbody>
 </table>
 
-
 ### `pt` Portuguese
 
 <table>
@@ -2030,7 +2028,6 @@ We are supporting 321 sources and 310 crawlers.
 </tbody>
 </table>
 
-
 ### `ru` Russian
 
 <table>
@@ -2057,7 +2054,6 @@ We are supporting 321 sources and 310 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -2090,7 +2086,6 @@ We are supporting 321 sources and 310 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 
