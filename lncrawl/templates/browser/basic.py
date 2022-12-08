@@ -156,7 +156,12 @@ class BasicBrowserTemplate(Crawler):
         raise NotImplementedError()
 
     def download_chapter_body(self, chapter: Chapter) -> str:
-        return self.download_chapter_body_in_scraper(chapter)
+        try:
+            return self.download_chapter_body_in_scraper(chapter)
+        except ScraperErrorGroup as e:
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.exception("Failed in scraper: %s", e)
+            return self.download_chapter_body_in_browser(chapter)
 
     def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
         """Download the chapter contents using the `self.scraper` requests"""

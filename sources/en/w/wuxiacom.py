@@ -70,7 +70,6 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                 {"novelId": novel["id"]},
                 headers={"authorization": self.bearer_token},
             )
-            response.raise_for_status()
 
             subscriptions = response.single["items"]
             logger.debug("User subscriptions: %s", subscriptions)
@@ -134,7 +133,6 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             {"chapterProperty": {"chapterId": chapter["chapterId"]}},
             headers={"authorization": self.bearer_token},
         )
-        response.raise_for_status()
 
         assert response.single, "Invalid response"
         content = response.single["item"]["content"]

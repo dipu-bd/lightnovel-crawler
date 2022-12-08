@@ -15,7 +15,7 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
 
     def read_novel_info_in_scraper(self) -> None:
-        soup = self.get_soup(self.novel_url)
+        soup = self.get_novel_soup()
 
         try:
             self.novel_title = self.parse_title(soup)
@@ -83,7 +83,7 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         body = self.select_chapter_body_in_browser()
         return self.parse_chapter_body(body)
 
-    def visit_chapter_page_in_browser(self, chapter: Chapter) -> BeautifulSoup:
+    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
         """Open the Chapter URL in the browser"""
         self.visit(chapter.url)
 

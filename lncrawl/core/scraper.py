@@ -77,6 +77,7 @@ class Scraper(TaskManager, SoupMaker):
 
         kwargs = kwargs or dict()
         retry = kwargs.pop("retry", 1)
+        kwargs.setdefault("allow_redirects", True)
         kwargs["proxies"] = self.__get_proxies(_parsed.scheme)
         headers = kwargs.pop("headers", {})
         headers = CaseInsensitiveDict(headers)
@@ -100,9 +101,9 @@ class Scraper(TaskManager, SoupMaker):
                 with self.domain_gate(_parsed.hostname):
                     with no_ssl_verification():
                         response: Response = method_call(url, **kwargs)
+                        response.raise_for_status()
                         response.encoding = "utf8"
 
-                response.raise_for_status()
                 self.cookies.update({x.name: x.value for x in response.cookies})
                 return response
             except ScraperErrorGroup as e:
