@@ -11,7 +11,7 @@ from selenium.webdriver.support.relative_locator import RelativeBy
 from selenium.webdriver.support.wait import WebDriverWait
 
 from ..core.soup import SoupMaker
-from .scripts import scroll_into_view_if_needed
+from . import scripts
 
 logger = logging.getLogger(__name__)
 
@@ -53,9 +53,11 @@ class WebElement(_WebElement):
                 return maker
         return SoupMaker()
 
+    @property
     def inner_html(self) -> str:
         return self.get_attribute("innerHTML")
 
+    @property
     def outer_html(self) -> str:
         return self.get_attribute("outerHTML")
 
@@ -80,8 +82,11 @@ class WebElement(_WebElement):
             by = str(by)
         return self.find_element(by, selector)
 
+    def remove(self):
+        self.parent.execute_script(scripts.remove_element, self)
+
     def scroll_to_view(self):
-        self.parent.execute_script(scroll_into_view_if_needed, self)
+        self.parent.execute_script(scripts.scroll_into_view_if_needed, self)
 
 
 def _add_virtual_authenticator(chrome: WebDriver):

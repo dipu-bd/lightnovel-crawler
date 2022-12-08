@@ -150,7 +150,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.browser.wait(".items-start h1, img.drop-shadow-ww-novel-cover-image")
 
         # Clear the annoying top menubar
-        self.browser.find("header#header").outer_html = ""
+        self.browser.find("header#header").remove()
 
         # Parse cover image and title
         img = self.browser.find("img.drop-shadow-ww-novel-cover-image")

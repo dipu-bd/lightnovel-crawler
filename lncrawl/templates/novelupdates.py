@@ -36,6 +36,9 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     def select_search_items_in_browser(self, query: str):
         query = dict(sf=1, sh=query, sort="srank", order="desc")
         self.visit(f"https://www.novelupdates.com/series-finder/?{urlencode(query)}")
+        overlay = self.browser.find("#uniccmp")
+        if overlay:
+            overlay.remove()
         yield from self.browser.soup.select(".l-main .search_main_box_nu")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
@@ -69,6 +72,12 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
             return self.get_soup(self.novel_url)
         else:
             return self.guess_novelupdates_link(self.novel_url)
+
+    def visit_novel_page_in_browser(self) -> BeautifulSoup:
+        self.visit(self.novel_url)
+        overlay = self.browser.find("#uniccmp")
+        if overlay:
+            overlay.remove()
 
     def guess_novelupdates_link(self, url: str) -> str:
         # Guess novel title
@@ -165,6 +174,9 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
         self.visit(chapter.url)
+        overlay = self.browser.find("#uniccmp")
+        if overlay:
+            overlay.remove()
         self.browser.wait("title")
         self.browser.wait(
             "#challenge-running",

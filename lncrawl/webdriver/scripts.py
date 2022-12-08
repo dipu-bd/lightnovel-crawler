@@ -13,6 +13,8 @@ window.scrollTo(0, 0);
 arguments[0].scrollIntoViewIfNeeded();
 """
 
+remove_element = "arguments[0].remove()"
+
 hide_webdriver_from_navigator_script = """
 Object.defineProperty(window, 'navigator', {
     value: new Proxy(navigator, {
