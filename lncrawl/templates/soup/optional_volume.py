@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Generator
+from typing import Generator, Union
 
 from bs4 import BeautifulSoup, Tag
 
@@ -8,33 +8,42 @@ from .general import GeneralSoupTemplate
 
 
 class OptionalVolumeSoupTemplate(GeneralSoupTemplate):
-    def parse_chapter_list(self, soup: BeautifulSoup) -> None:
+    def parse_chapter_list(
+        self, soup: BeautifulSoup
+    ) -> Generator[Union[Chapter, Volume], None, None]:
+        vol_id = 0
+        chap_id = 0
         for vol in self.select_volume_tags(soup):
             if not isinstance(vol, Tag):
                 continue
-            vol_id = len(self.volumes) + 1
+            vol_id += 1
             vol_item = self.parse_volume_item(vol, vol_id)
-            self.volumes.append(vol_item)
+            yield vol_item
             for tag in self.select_chapter_tags(vol):
-                next_id = len(self.chapters) + 1
-                item = self.parse_chapter_item(tag, next_id, vol_item)
+                if not isinstance(tag, Tag):
+                    continue
+                chap_id += 1
+                item = self.parse_chapter_item(tag, chap_id, vol_item)
                 item.volume = vol_id
-                self.chapters.append(item)
+                yield item
 
-        if self.chapters:
+        if chap_id > 0:
             return
 
+        vol_id = 0
+        chap_id = 0
         parent = soup.select_one("html")
         for tag in self.select_chapter_tags(parent):
-            next_id = len(self.chapters) + 1
-            vol_id = len(self.chapters) // 100 + 1
-            if len(self.volumes) != vol_id:
+            if not isinstance(tag, Tag):
+                continue
+            if chap_id % 100 == 0:
+                vol_id = chap_id // 100 + 1
                 vol_item = self.parse_volume_item(parent, vol_id)
-                self.volumes.append(vol_item)
-            vol_item = self.volumes[-1]
-            item = self.parse_chapter_item(tag, next_id, vol_item)
-            item.volume = vol_item
-            self.chapters.append(item)
+                yield vol_item
+            chap_id += 1
+            item = self.parse_chapter_item(tag, chap_id, vol_item)
+            item.volume = vol_id
+            yield item
 
     def select_volume_tags(self, soup: BeautifulSoup):
         return []

@@ -1,10 +1,10 @@
 import logging
-from typing import Generator
+from typing import Generator, Union
 
 from bs4 import BeautifulSoup, Tag
 
 from ...core.exeptions import FallbackToBrowser
-from ...models import Chapter
+from ...models import Chapter, Volume
 from ..soup.general import GeneralSoupTemplate
 from .basic import BasicBrowserTemplate
 
@@ -33,7 +33,11 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         except Exception as e:
             logger.warn("Failed to parse novel authors | %s", e)
 
-        self.parse_chapter_list(soup)
+        for item in self.parse_chapter_list(soup):
+            if isinstance(item, Chapter):
+                self.chapters.append(item)
+            elif isinstance(item, Volume):
+                self.volumes.append(item)
 
     def visit_novel_page_in_browser(self) -> BeautifulSoup:
         """Open the Novel URL in the browser"""
@@ -55,7 +59,11 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         except Exception as e:
             logger.warn("Failed to parse novel authors | %s", e)
 
-        self.parse_chapter_list_in_browser()
+        for item in self.parse_chapter_list_in_browser():
+            if isinstance(item, Chapter):
+                self.chapters.append(item)
+            elif isinstance(item, Volume):
+                self.volumes.append(item)
 
     def parse_title_in_browser(self) -> str:
         """Parse and return the novel title in the browser"""
@@ -69,7 +77,9 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         """Parse and return the novel author in the browser"""
         yield from self.parse_authors(self.browser.soup)
 
-    def parse_chapter_list_in_browser(self) -> None:
+    def parse_chapter_list_in_browser(
+        self,
+    ) -> Generator[Union[Chapter, Volume], None, None]:
         """Parse and return the volumes and chapters in the browser"""
         return self.parse_chapter_list(self.browser.soup)
 

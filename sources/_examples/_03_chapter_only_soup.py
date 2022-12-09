@@ -47,6 +47,10 @@ class MyCrawlerName(ChapterOnlySoupTemplate):
     def logout(self):
         pass
 
+    # TODO: [OPTIONAL] Get a BeautifulSoup instance from the self.novel_url
+    def get_novel_soup(self) -> BeautifulSoup:
+        return self.get_soup(self.novel_url)
+
     # TODO: [REQUIRED] Parse and return the novel title
     def parse_title(self, soup: BeautifulSoup) -> str:
         # The soup here is the result of `self.get_soup(self.novel_url)`

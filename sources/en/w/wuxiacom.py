@@ -185,7 +185,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
         # Expand all volumes
         for index, root in enumerate(reversed(volumes)):
-            root.scroll_to_view()
+            root.scroll_into_view()
             root.click()
 
             nth = len(volumes) - index

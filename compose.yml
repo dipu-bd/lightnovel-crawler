@@ -7,6 +7,7 @@ services:
     restart: unless-stopped
     ports:
       - "7900:7900"
+      - "4444:4444"
     environment:
       - SE_VNC_VIEW_ONLY=1
       - SE_EVENT_BUS_PUBLISH_PORT=4442

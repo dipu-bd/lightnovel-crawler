@@ -59,12 +59,13 @@ class TaskManager(ABC):
         if hasattr(self, "_executor"):
             if self.workers == workers:
                 return
-            self.__del__()
+            self._submit = None
+            self._futures.clear()
+            self._executor.shutdown(wait=False)
 
         self._executor = ThreadPoolExecutor(
             max_workers=workers,
             thread_name_prefix="lncrawl_scraper",
-            initargs=(self),
         )
 
         self._submit = self._executor.submit

@@ -75,9 +75,8 @@ class CreativeNovelsCrawler(Crawler):
                 action="crn_chapter_list", view_id=self.novel_id, s=list_security_key
             ),
         )
-        self.parse_chapter_list(response.content.decode("utf8"))
 
-    def parse_chapter_list(self, content):
+        content = response.content.decode("utf8")
         if not content.startswith("success"):
             return
 

@@ -9,11 +9,11 @@ Put your source file inside the language folder. The `en` folder has too many
 files, therefore it is grouped using the first letter of the domain name.
 """
 import logging
-from typing import Generator
+from typing import Generator, Union
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.models import SearchResult
+from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 logger = logging.getLogger(__name__)
@@ -67,6 +67,10 @@ class MyCrawlerName(SearchableSoupTemplate):
         # )
         pass
 
+    # TODO: [OPTIONAL] Get a BeautifulSoup instance from the self.novel_url
+    def get_novel_soup(self) -> BeautifulSoup:
+        return self.get_soup(self.novel_url)
+
     # TODO: [REQUIRED] Parse and return the novel title
     def parse_title(self, soup: BeautifulSoup) -> str:
         # The soup here is the result of `self.get_soup(self.novel_url)`
@@ -92,7 +96,9 @@ class MyCrawlerName(SearchableSoupTemplate):
         pass
 
     # TODO: [REQUIRED] Parse and set the volumes and chapters
-    def parse_chapter_list(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
+    def parse_chapter_list(
+        self, soup: BeautifulSoup
+    ) -> Generator[Union[Chapter, Volume], None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         pass
 

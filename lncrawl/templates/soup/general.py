@@ -1,12 +1,12 @@
 import logging
 from abc import abstractmethod
-from typing import Generator
+from typing import Generator, Union
 
 from bs4 import BeautifulSoup, Tag
 
 from ...core.crawler import Crawler
 from ...core.exeptions import LNException
-from ...models import Chapter
+from ...models import Chapter, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,11 @@ class GeneralSoupTemplate(Crawler):
         except Exception as e:
             logger.warn("Failed to parse novel authors | %s", e)
 
-        self.parse_chapter_list(soup)
+        for item in self.parse_chapter_list(soup):
+            if isinstance(item, Chapter):
+                self.chapters.append(item)
+            elif isinstance(item, Volume):
+                self.volumes.append(item)
 
     def get_novel_soup(self) -> BeautifulSoup:
         return self.get_soup(self.novel_url)
@@ -52,7 +56,9 @@ class GeneralSoupTemplate(Crawler):
         raise NotImplementedError()
 
     @abstractmethod
-    def parse_chapter_list(self, soup: BeautifulSoup) -> None:
+    def parse_chapter_list(
+        self, soup: BeautifulSoup
+    ) -> Generator[Union[Chapter, Volume], None, None]:
         """Parse and set the volumes and chapters"""
         raise NotImplementedError()
 

@@ -1,13 +1,14 @@
 import logging
-from typing import Any, Iterable, List, Optional, Union
+from typing import Any, Iterable, List, Optional
 
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 from selenium.webdriver.common.action_chains import ActionChains
 
 from ..webdriver import ChromeOptions, WebDriver, create_new
-from ..webdriver.elements import EC, By, RelativeBy, WebDriverWait, WebElement
-from ..webdriver.queue import check_active
+from ..webdriver.elements import EC, By, WebElement
+from ..webdriver.job_queue import check_active
+from ..webdriver.wait import WebDriverWait
 from .soup import SoupMaker
 
 logger = logging.getLogger(__name__)
@@ -154,33 +155,27 @@ class Browser:
         self._init_browser()
         self._driver.get(url)
 
-    def find_all(
-        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
-    ) -> List[WebElement]:
+    def find_all(self, selector: str, by: By = By.CSS_SELECTOR) -> List[WebElement]:
         if not self._driver:
             return None
         if isinstance(by, By):
             by = str(by)
         return self._driver.find_elements(by, selector)
 
-    def find(
-        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
-    ) -> WebElement:
+    def find(self, selector: str, by: By = By.CSS_SELECTOR) -> WebElement:
         if not self._driver:
             return None
         if isinstance(by, By):
             by = str(by)
         return self._driver.find_element(by, selector)
 
-    def click(self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR) -> None:
+    def click(self, selector: str, by: By = By.CSS_SELECTOR) -> None:
         "Select and click on an element."
         if not self._driver:
             return None
         self.find(selector, by).click()
 
-    def submit(
-        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
-    ) -> None:
+    def submit(self, selector: str, by: By = By.CSS_SELECTOR) -> None:
         """Select a form and submit it."""
         if not self._driver:
             return None
@@ -189,7 +184,7 @@ class Browser:
     def send_keys(
         self,
         selector: str,
-        by: Union[By, RelativeBy] = By.CSS_SELECTOR,
+        by: By = By.CSS_SELECTOR,
         text: str = "",
         clear: bool = True,
     ) -> None:
@@ -220,11 +215,12 @@ class Browser:
     def wait(
         self,
         selector: str,
-        by: Union[By, RelativeBy] = By.CSS_SELECTOR,
+        by: By = By.CSS_SELECTOR,
         timeout: Optional[float] = 60,
         poll_frequency: Optional[float] = 0.5,
         ignored_exceptions: Iterable[Exception] = [],
         expected_conditon=EC.presence_of_element_located,
+        reversed: bool = False,
     ):
         """Waits for a element to be visible on the current page by CSS selector.
 
@@ -233,6 +229,7 @@ class Browser:
          - timeout - Number of seconds before timing out
          - poll_frequency - Sleep interval between calls. Default: 0.5
          - ignored_exceptions - List of exception classes to ignore. Default: [NoSuchElementException]
+         - reversed - Wait until the condition not matched
         """
         if not self._driver:
             return
@@ -247,6 +244,9 @@ class Browser:
             waiter = WebDriverWait(
                 self._driver, timeout, poll_frequency, ignored_exceptions
             )
-            waiter.until(expected_conditon((by, selector)))
+            if reversed:
+                waiter.until_not(expected_conditon((by, selector)))
+            else:
+                waiter.until(expected_conditon((by, selector)))
         except Exception as e:
             logger.info("Waiting could not be finished | %s", e)

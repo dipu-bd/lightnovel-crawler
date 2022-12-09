@@ -1,14 +1,20 @@
 import logging
 from enum import Enum
-from typing import List, Union
+from typing import List
 
 from bs4 import Tag
 from selenium.webdriver.remote.command import Command
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.remote.webelement import WebElement as _WebElement
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.relative_locator import RelativeBy
-from selenium.webdriver.support.wait import WebDriverWait
+
+try:
+    from undetected_chromedriver.webelement import WebElement as _WebElement
+
+    using_undetected_chromedriver = True
+except Exception:
+    from selenium.webdriver.remote.webelement import WebElement as _WebElement
+
+    using_undetected_chromedriver = False
 
 from ..core.soup import SoupMaker
 from . import scripts
@@ -20,9 +26,7 @@ __all__ = [
     "EC",
     "By",
     "Command",
-    "RelativeBy",
     "WebElement",
-    "WebDriverWait",
 ]
 
 
@@ -62,22 +66,18 @@ class WebElement(_WebElement):
         return self.get_attribute("outerHTML")
 
     def as_tag(self) -> Tag:
-        html = self.outer_html()
+        html = self.outer_html
         if not hasattr(self, "_tag") or self._html != html:
             self._html = html
             self._tag = self._soup_maker.make_tag(html)
         return self._tag
 
-    def find_all(
-        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
-    ) -> List["WebElement"]:
+    def find_all(self, selector: str, by: By = By.CSS_SELECTOR) -> List["WebElement"]:
         if isinstance(by, By):
             by = str(by)
         return self.find_elements(by, selector)
 
-    def find(
-        self, selector: str, by: Union[By, RelativeBy] = By.CSS_SELECTOR
-    ) -> "WebElement":
+    def find(self, selector: str, by: By = By.CSS_SELECTOR) -> "WebElement":
         if isinstance(by, By):
             by = str(by)
         return self.find_element(by, selector)
@@ -85,7 +85,7 @@ class WebElement(_WebElement):
     def remove(self):
         self.parent.execute_script(scripts.remove_element, self)
 
-    def scroll_to_view(self):
+    def scroll_into_view(self):
         self.parent.execute_script(scripts.scroll_into_view_if_needed, self)
 
 
