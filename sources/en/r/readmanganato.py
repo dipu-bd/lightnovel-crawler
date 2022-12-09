@@ -6,7 +6,10 @@ logger = logging.getLogger(__name__)
 
 
 class ReadMangaNato(Crawler):
-    base_url = ["https://readmanganato.com/"]
+    base_url = [
+        "https://readmanganato.com/",
+        "https://chapmanganato.com/",
+    ]
 
     has_manga = True
 
