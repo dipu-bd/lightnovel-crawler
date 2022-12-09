@@ -3,7 +3,7 @@ import os
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Semaphore, Thread
-from typing import Dict, Iterable, TypeVar
+from typing import Dict, Iterable, List, TypeVar
 
 from tqdm import tqdm
 
@@ -26,19 +26,63 @@ class TaskManager(ABC):
         Args:
         - workers (int, optional): Number of concurrent workers to expect. Default: 10.
         """
+        self._futures: List[Future] = []
         self.init_executor(workers)
 
+    def __del__(self) -> None:
+        if hasattr(self, "_executor"):
+            self._submit = None
+            self._futures.clear()
+            self._executor.shutdown(wait=False)
+
     @property
-    def executor(self):
+    def executor(self) -> ThreadPoolExecutor:
         return self._executor
+
+    @property
+    def futures(self) -> List[Future]:
+        return self._futures
 
     @property
     def workers(self):
         return self._executor._max_workers
 
-    def __del__(self) -> None:
+    def init_executor(self, workers: int):
+        """Initializes a new executor.
+
+        If the number of workers are not the same as the current executor,
+        it will shutdown the current executor, and cancel all pending tasks.
+
+        Args:
+        - workers (int): Number of workers to expect in the new executor.
+        """
         if hasattr(self, "_executor"):
+            if self.workers == workers:
+                return
+            self._submit = None
+            self._futures.clear()
             self._executor.shutdown(wait=False)
+
+        self._executor = ThreadPoolExecutor(
+            max_workers=workers,
+            thread_name_prefix="lncrawl_scraper",
+        )
+
+        self._submit = self._executor.submit
+        self._executor.submit = self.submit_task
+
+    def submit_task(self, fn, *args, **kwargs) -> Future:
+        """Submits a callable to be executed with the given arguments.
+
+        Schedules the callable to be executed as fn(*args, **kwargs) and returns
+        a Future instance representing the execution of the callable.
+
+        Returns:
+            A Future representing the given call.
+        """
+        future = self._submit(fn, *args, **kwargs)
+        self._futures.append(future)
+        return future
 
     def progress_bar(
         self,
@@ -76,26 +120,6 @@ class TaskManager(ABC):
         bar.close = extended_close
 
         return bar
-
-    def init_executor(self, workers: int):
-        """Initializes a new executor.
-
-        If the number of workers are not the same as the current executor,
-        it will shutdown the current executor, and cancel all pending tasks.
-
-        Args:
-        - workers (int): Number of workers to expect in the new executor.
-        """
-        if hasattr(self, "_executor"):
-            if self.workers == workers:
-                return
-            self._executor.shutdown(wait=False)
-
-        self._executor = ThreadPoolExecutor(
-            max_workers=workers,
-            thread_name_prefix="lncrawl_scraper",
-            initargs=(self),
-        )
 
     def domain_gate(self, hostname: str = ""):
         """Limit number of entry per hostname.

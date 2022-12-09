@@ -11,7 +11,7 @@ from selenium.webdriver.remote.remote_connection import LOGGER
 from ..core.exeptions import LNException
 from ..core.soup import SoupMaker
 from .elements import WebElement, _add_virtual_authenticator
-from .queue import _acquire_queue, _release_queue
+from .job_queue import _acquire_queue, _release_queue
 from .scripts import _override_get
 
 logger = logging.getLogger(__name__)
@@ -50,10 +50,13 @@ def create_remote(
     options.add_argument("--no-default-browser-check")
     options.add_argument("--disable-infobars")
     options.add_argument("--no-first-run")
+
+    # Add capabilities
     options.set_capability("quietExceptions", True)
     options.set_capability("acceptInsecureCerts", True)
+    options.set_capability("useAutomationExtension", False)
 
-    # Chrome specific options
+    # Chrome specific experimental options
     options.accept_insecure_certs = True
     options.unhandled_prompt_behavior = "dismiss"
     options.strict_file_interactability = False
@@ -89,6 +92,7 @@ def create_remote(
         chrome = WebDriver(
             command_executor=address,
             options=options,
+            desired_capabilities=options.to_capabilities(),
         )
     except Exception as e:
         logger.exception("Failed to create remote instance", e)

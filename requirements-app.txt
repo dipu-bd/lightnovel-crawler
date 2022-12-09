@@ -9,7 +9,7 @@ requests>=2.20.0,<3.0.0
 python-slugify>=4.0.0,<8.0.0
 colorama>=0.4.0,<0.5.0
 tqdm>=4.60,<5.0
-js2py==0.74
+js2py>=0.71
 ebooklib>=0.17.0,<1.0.0
 pillow>=6.0.0
 cloudscraper>=1.2.60
@@ -22,3 +22,5 @@ python-box>=6.0.0,<7.0.0
 pycryptodome>=3.0.0,<4.0.0
 webdriver-manager
 selenium>=3.141.0
+undetected-chromedriver
+readability-lxml>=0.8.0,<1.0.0

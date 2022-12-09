@@ -4,6 +4,7 @@ import logging
 import re
 
 from bs4 import Tag
+
 from lncrawl.core.crawler import Crawler
 from lncrawl.core.exeptions import LNException
 
@@ -50,10 +51,9 @@ class PureTL(Crawler):
 
         chapter_div = soup.find("div", class_="accordion-block")
         if not isinstance(chapter_div, Tag):
-            raise LNException("No chapters found")
+            return
 
         content = chapter_div.find_parent("section")
-
         for a in content.select(f"a[href*='{slug}/']"):
             self.chapters.append(
                 {

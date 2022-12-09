@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Generator
+from typing import Generator, Union
 
 from bs4 import BeautifulSoup, Tag
 
@@ -8,18 +8,24 @@ from .general import GeneralSoupTemplate
 
 
 class ChapterWithVolumeSoupTemplate(GeneralSoupTemplate):
-    def parse_chapter_list(self, soup: BeautifulSoup) -> None:
+    def parse_chapter_list(
+        self, soup: BeautifulSoup
+    ) -> Generator[Union[Chapter, Volume], None, None]:
+        vol_id = 0
+        chap_id = 0
         for vol in self.select_volume_tags(soup):
             if not isinstance(vol, Tag):
                 continue
-            vol_id = len(self.volumes) + 1
+            vol_id += 1
             vol_item = self.parse_volume_item(vol, vol_id)
-            self.volumes.append(vol_item)
+            yield vol_item
             for tag in self.select_chapter_tags(vol, vol_item):
-                next_id = len(self.chapters) + 1
-                item = self.parse_chapter_item(tag, next_id, vol_item)
+                if not isinstance(tag, Tag):
+                    continue
+                chap_id += 1
+                item = self.parse_chapter_item(tag, chap_id, vol_item)
                 item.volume = vol_id
-                self.chapters.append(item)
+                yield item
 
     @abstractmethod
     def select_volume_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:

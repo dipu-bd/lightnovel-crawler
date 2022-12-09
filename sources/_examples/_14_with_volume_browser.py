@@ -80,18 +80,8 @@ class MyCrawlerName(ChapterWithVolumeBrowserTemplate):
         #       yield a.text.strip()
         pass
 
-    # TODO: [OPTIONAL] Parse and return the volumes and chapters in the browser
-    def parse_chapter_list_in_browser(self) -> None:
-        # return self.parse_chapter_list(self.browser.soup)
-        pass
-
-    # TODO: [REQUIRED] Parse and set the volumes and chapters
-    def parse_chapter_list(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
-        pass
-
     # TODO: [OPTIONAL] Open the Chapter URL in the browser
-    def visit_chapter_page_in_browser(self, chapter: Chapter) -> BeautifulSoup:
+    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
         # self.visit(chapter.url)
         pass
 

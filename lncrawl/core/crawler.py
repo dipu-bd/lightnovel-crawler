@@ -4,7 +4,7 @@ from abc import abstractmethod
 from typing import Generator, List, Optional
 
 from ..models import Chapter, SearchResult, Volume
-from ..utils.cleaner import TextCleaner
+from .cleaner import TextCleaner
 from .scraper import Scraper
 
 logger = logging.getLogger(__name__)
@@ -65,10 +65,10 @@ class Crawler(Scraper):
         )
 
     def __del__(self) -> None:
-        if hasattr(self, "volumes"):
-            self.volumes.clear()
-        if hasattr(self, "chapters"):
-            self.chapters.clear()
+        # if hasattr(self, "volumes"):
+        #     self.volumes.clear()
+        # if hasattr(self, "chapters"):
+        #     self.chapters.clear()
         super().__del__()
 
     # ------------------------------------------------------------------------- #

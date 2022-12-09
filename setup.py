@@ -3,8 +3,8 @@ import os
 import sys
 from glob import glob
 
-if sys.version_info[:2] < (3, 6):
-    raise RuntimeError("Lightnovel crawler only supports Python 3.6 and later.")
+if sys.version_info[:2] < (3, 7):
+    raise RuntimeError("Lightnovel crawler only supports Python 3.7 and later.")
 
 try:
     from setuptools import config, setup
