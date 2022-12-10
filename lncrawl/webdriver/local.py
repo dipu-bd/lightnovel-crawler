@@ -13,7 +13,7 @@ from undetected_chromedriver import Chrome, ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 
 from ..core.soup import SoupMaker
-from ..utils.platforms import Platform, Screen
+from ..utils.platforms import Screen, has_display
 from .elements import WebElement
 from .job_queue import _acquire_queue, _release_queue
 
@@ -49,7 +49,7 @@ def create_local(
     if not options:
         options = ChromeOptions()
 
-    if not Platform.display:
+    if not has_display():
         headless = True
 
     # Set default language
