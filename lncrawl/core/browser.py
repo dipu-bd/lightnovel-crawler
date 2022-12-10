@@ -224,12 +224,12 @@ class Browser:
     ):
         """Waits for a element to be visible on the current page by CSS selector.
 
-        :Args:
-         - chrome - Instance of WebDriver / Browser
-         - timeout - Number of seconds before timing out
-         - poll_frequency - Sleep interval between calls. Default: 0.5
-         - ignored_exceptions - List of exception classes to ignore. Default: [NoSuchElementException]
-         - reversed - Wait until the condition not matched
+        Args:
+        - chrome: Instance of WebDriver / Browser
+        - timeout: Number of seconds before timing out
+        - poll_frequency: Sleep interval between calls. Default: 0.5
+        - ignored_exceptions: List of exception classes to ignore. Default: [NoSuchElementException]
+        - reversed: Wait until the condition not matched
         """
         if not self._driver:
             return

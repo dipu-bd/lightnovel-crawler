@@ -24,6 +24,6 @@ function shutdown {
 
 trap shutdown SIGTERM SIGINT
 
-sleep 10
+sleep 30
 exec /usr/bin/python3 -m lncrawl --suppress $@ &
 wait ${SUPERVISOR_PID}

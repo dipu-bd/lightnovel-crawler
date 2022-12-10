@@ -3,7 +3,7 @@
 from lncrawl.templates.novelpub import NovelPubTemplate
 
 
-class LightnovelpubCrawler(NovelPubTemplate):
+class WebnovelpubCrawler(NovelPubTemplate):
     base_url = [
-        "https://www.lightnovelpub.com/",
+        "https://www.webnovelpub.com/",
     ]
