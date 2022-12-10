@@ -90,14 +90,11 @@ class BasicBrowserTemplate(Crawler):
             if logger.isEnabledFor(logging.DEBUG):
                 logger.exception("Failed in read novel info: %s", e)
             self.init_browser()
-
-        if self.browser:
-            try:
-                self.volumes.clear()
-                self.chapters.clear()
-                self.read_novel_info_in_browser()
-            finally:
-                self.close_browser()
+            self.volumes.clear()
+            self.chapters.clear()
+            self.read_novel_info_in_browser()
+        finally:
+            self.close_browser()
 
     def download_chapters(self, chapters: List[Chapter]) -> Generator[int, None, None]:
         try:

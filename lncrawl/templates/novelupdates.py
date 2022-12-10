@@ -1,11 +1,13 @@
 import logging
 import re
+import time
 from typing import Mapping
 from urllib.parse import urlencode, urlparse
 
 from bs4 import BeautifulSoup, Tag
 from readability import Document
 
+from lncrawl.core.browser import EC
 from lncrawl.core.crawler import Crawler
 from lncrawl.core.exeptions import LNException
 from lncrawl.models import Chapter, SearchResult
@@ -27,15 +29,19 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     _cached_crawlers: Mapping[str, Crawler] = {}
     _title_matcher = re.compile(r"^(c|ch|chap|chapter)?[^\w\d]*(\d+)$", flags=re.I)
 
-    def visit(self, url: str) -> None:
-        super().visit(url)
-        # wait for cloudflare
-        if "cf_clearance" not in self.cookies:
-            try:
-                self.browser.wait("#challenge-running", reversed=True, timeout=20)
-            except Exception:
-                pass
-        # cleanup prompts
+    def wait_for_cloudflare(self):
+        if "cf_clearance" in self.cookies:
+            return
+        try:
+            self.browser.wait(
+                "#challenge-running",
+                expected_conditon=EC.invisibility_of_element,
+                timeout=20,
+            )
+        except Exception:
+            pass
+
+    def cleanup_prompts(self):
         try:
             self.browser.find("#uniccmp").remove()
         except Exception:
@@ -51,10 +57,7 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     def select_search_items_in_browser(self, query: str):
         query = dict(sf=1, sh=query, sort="srank", order="desc")
         self.visit(f"https://www.novelupdates.com/series-finder/?{urlencode(query)}")
-        try:
-            self.browser.find("#uniccmp").remove()
-        except Exception:
-            pass
+        self.browser.wait(".search_main_box_nu")
         yield from self.browser.soup.select(".l-main .search_main_box_nu")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
@@ -139,6 +142,7 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
         yield from reversed(soup.select(".sp_li_chp a[data-id]"))
 
     def select_chapter_tags_in_browser(self):
+        self.cleanup_prompts()
         el = self.browser.find(".my_popupreading_open")
         el.scroll_into_view()
         el.click()
@@ -166,10 +170,11 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
         self.visit(chapter.url)
-        try:
-            self.browser.find("#uniccmp").remove()
-        except Exception:
-            pass
+        for i in range(30):
+            if not self.browser.current_url.startswith(chapter.url):
+                break
+            time.sleep(1)
+
         logger.info("%s => %s", chapter.url, self.browser.current_url)
         chapter.url = self.browser.current_url
         return self.parse_chapter_body(chapter, self.browser.html)
