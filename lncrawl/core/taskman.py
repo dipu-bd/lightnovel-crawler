@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
-MAX_WORKER_COUNT = 10
+MAX_WORKER_COUNT = 5
 MAX_REQUESTS_PER_DOMAIN = 25
 
 _resolver = Semaphore(1)
