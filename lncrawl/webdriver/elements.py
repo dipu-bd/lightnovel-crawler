@@ -6,15 +6,7 @@ from bs4 import Tag
 from selenium.webdriver.remote.command import Command
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
-
-try:
-    from undetected_chromedriver.webelement import WebElement as _WebElement
-
-    using_undetected_chromedriver = True
-except Exception:
-    from selenium.webdriver.remote.webelement import WebElement as _WebElement
-
-    using_undetected_chromedriver = False
+from undetected_chromedriver.webelement import WebElement as _WebElement
 
 from ..core.soup import SoupMaker
 from . import scripts
@@ -91,7 +83,6 @@ class WebElement(_WebElement):
 
 def _add_virtual_authenticator(chrome: WebDriver):
     try:
-        # For Python 3.7+
         from selenium.webdriver.common.virtual_authenticator import (
             Transport,
             VirtualAuthenticatorOptions,

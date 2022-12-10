@@ -314,7 +314,10 @@ sources_path = (__local_data_path / "sources").absolute()
 
 
 def load_sources():
-    __is_dev_mode = (__local_data_path / ".git" / "HEAD").exists()
+    __is_dev_mode = (
+        os.getenv("LNCRAWL_MODE") == "dev"
+        or (__local_data_path / ".git" / "HEAD").exists()
+    )
 
     if not __is_dev_mode:
         __check_updates()

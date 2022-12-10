@@ -1,35 +1,51 @@
-FROM python:3.10-slim-bullseye
+FROM selenium/standalone-chrome:latest
 
+USER root
+# Install general dependencies
 RUN apt-get update -yq \
     && apt-get install -yq \
-    wget tar xz-utils make cmake g++ libffi-dev libegl1 libopengl0 \
-    libnss3 libgl1-mesa-glx libxcomposite1 libxrandr2 libxi6 fontconfig \
-    libxkbcommon-x11-0 libxtst6 libxkbfile1 \
-    && rm -rf /var/lib/apt/lists/* \
+    wget tar xz-utils make cmake g++ \
+    python3-dev python3-pip python3-tk \
     && apt-get clean autoclean \
     && apt-get autoremove -yq
 
-RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
+# Install calibre dependencies
+RUN apt-get install -yq libffi-dev libegl1 libopengl0 \
+    libnss3 libgl1-mesa-glx libxcomposite1 libxrandr2 \
+    libxi6 fontconfig libxkbcommon-x11-0 libxtst6 libxkbfile1 \
+    && apt-get clean autoclean \
+    && apt-get autoremove -yq
 
-RUN ln -s /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
+# Install calibre
+RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin \
+    && ln -s /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
 
-RUN useradd -ms /bin/bash appuser
-USER appuser
+# Setup the app environment
+WORKDIR /home/seluser/app
+USER seluser
 
-WORKDIR /home/appuser/app
+# Install global requirements
+RUN alias python=python3
+RUN alias pip=pip3
+RUN export PATH="/home/seluser/.local/bin:$PATH"
+RUN pip install -U pip wheel setuptools
 
-RUN export PATH="/home/appuser/.local/bin:$PATH"
-RUN pip install -U pip wheel
-
+# Install app requirements
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY lncrawl lncrawl
+# Copy source files
 COPY sources sources
+COPY lncrawl lncrawl
 
+# Grant access to source files
 USER root
-RUN chown -R appuser:appuser /home/appuser/app
+RUN chown -R seluser:seluser /home/seluser/app
+ARG VNC_PASSWORD
+RUN x11vnc -storepasswd "$VNC_PASSWORD" /home/seluser/.vnc/passwd
 
-USER appuser
+# Switch to seluser
+USER seluser
+COPY scripts/entry_point.sh entry_point.sh
 
-ENTRYPOINT [ "python", "-m", "lncrawl" ]
+ENTRYPOINT [ "bash", "entry_point.sh" ]

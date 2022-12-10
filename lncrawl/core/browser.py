@@ -4,11 +4,11 @@ from typing import Any, Iterable, List, Optional
 from bs4 import BeautifulSoup
 from requests.cookies import RequestsCookieJar
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
 
 from ..webdriver import ChromeOptions, WebDriver, create_new
 from ..webdriver.elements import EC, By, WebElement
 from ..webdriver.job_queue import check_active
-from ..webdriver.wait import WebDriverWait
 from .soup import SoupMaker
 
 logger = logging.getLogger(__name__)
@@ -216,8 +216,8 @@ class Browser:
         self,
         selector: str,
         by: By = By.CSS_SELECTOR,
-        timeout: Optional[float] = 60,
-        poll_frequency: Optional[float] = 0.5,
+        timeout: Optional[float] = 30,
+        poll_frequency: Optional[float] = 0.25,
         ignored_exceptions: Iterable[Exception] = [],
         expected_conditon=EC.presence_of_element_located,
         reversed: bool = False,

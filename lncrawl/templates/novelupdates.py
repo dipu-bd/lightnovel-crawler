@@ -29,13 +29,13 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
 
     def visit(self, url: str) -> None:
         super().visit(url)
-        # # wait for cloudflare
-        # if "cf_clearance" not in self.cookies:
-        #     try:
-        #         self.browser.wait("#challenge-running", reversed=True, timeout=20)
-        #     except Exception:
-        #         pass
-        # cleeanup prompts
+        # wait for cloudflare
+        if "cf_clearance" not in self.cookies:
+            try:
+                self.browser.wait("#challenge-running", reversed=True, timeout=20)
+            except Exception:
+                pass
+        # cleanup prompts
         try:
             self.browser.find("#uniccmp").remove()
         except Exception:
