@@ -6,10 +6,10 @@ from typing import List
 from colorama import Fore, Style
 
 from ..assets.chars import Chars
-from ..utils.platforms import Platform
 from ..core.exeptions import LNException
 from ..models import CombinedSearchResult, SearchResult
 from ..models.meta import MetaInfo
+from ..utils.platforms import Platform
 
 LINE_SIZE = 80
 ENABLE_BANNER = not Platform.windows or Platform.java
@@ -161,6 +161,17 @@ def url_not_recognized():
     # print('You can request developers to add support for this site here:')
     # print(Fore.CYAN, Chars.LINK,
     #       'https://github.com/dipu-bd/lightnovel-crawler/issues', Fore.RESET)
+
+
+def guessed_url_for_novelupdates():
+    print()
+    print(
+        Fore.GREEN,
+        Chars.CLOVER,
+        "You can search novelupdates to find this novel!",
+        Fore.RESET,
+    )
+    print()
 
 
 def url_rejected(reason):

@@ -145,6 +145,8 @@ class MessageHandler:
                         "Sorry! I do not recognize this sources yet.",
                         "See list of supported sources here:",
                         "https://github.com/dipu-bd/lightnovel-crawler#c3-supported-sources",
+                        "",
+                        "You can send the novelupdates link of the novel too.",
                     ]
                 )
             )
