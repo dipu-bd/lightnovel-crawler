@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
-from time import time
+import json
 import logging
 import re
+from time import time
 from urllib.parse import urlparse
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-
-chapter_info_url = (
-    "https://www.wattpad.com/v4/parts/%s?fields=id,title,pages,text_url&_=%d"
-)
-story_info_url = "https://www.wattpad.com/api/v3/stories/%s"
 
 
 class WattpadCrawler(Crawler):
@@ -24,7 +21,7 @@ class WattpadCrawler(Crawler):
 
     def login(self, email: str, password: str) -> None:
         resp = self.submit_form(
-            "https://www.wattpad.com/login?nextUrl=/home",
+            f"{self.home_url}login?nextUrl=/home",
             data={
                 "username": email,
                 "password": password,
@@ -37,7 +34,7 @@ class WattpadCrawler(Crawler):
         self.set_header("authorization", apiAuthKey[0])
 
         data = self.get_json(
-            "https://www.wattpad.com/api/v3/internal/current_user?fields=email,username,name"
+            f"{self.home_url}api/v3/internal/current_user?fields=email,username,name",
         )
         logger.debug("current user", data)
         if email.lower() != data["username"].lower():
@@ -47,13 +44,10 @@ class WattpadCrawler(Crawler):
         )
 
     def read_novel_info(self):
-
-        search_id = re.compile(r"\d+")
+        search_id = re.compile(r"(\d+)")
         id_no = search_id.search(self.novel_url)
-        story_url = story_info_url % (id_no.group())
-
-        logger.debug("Visiting %s", story_url)
-        story_info = self.get_json(story_url)
+        response = self.get_response(f"{self.home_url}api/v3/stories/{id_no.group()}")
+        story_info = response.json()
 
         self.novel_title = story_info["title"]
         logger.info("Novel title: %s", self.novel_title)
@@ -64,9 +58,7 @@ class WattpadCrawler(Crawler):
         self.novel_author = story_info["user"]["name"]
         logger.info("Novel author: %s", self.novel_author)
 
-        chapters = story_info["parts"]
-
-        for a in chapters:
+        for a in story_info["parts"]:
             self.chapters.append(
                 {
                     "id": len(self.chapters) + 1,
@@ -77,14 +69,16 @@ class WattpadCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         chapter_id = urlparse(chapter["url"]).path.split("-")[0].strip("/")
-        info_url = chapter_info_url % (chapter_id, int(time() * 1000))
+        info_url = f"{self.home_url}v4/parts/{chapter_id}?fields=id,title,pages,text_url&_={int(time() * 1000)}"
 
         logger.info("Getting info %s", info_url)
-        data = self.get_json(info_url)
+        response = self.get_response(info_url)
+        data = response.json()
         chapter["title"] = data["title"]
-
         text_url = data["text_url"]["text"]
+
         logger.info("Getting text %s", text_url)
-        text = self.get_response(text_url).content.decode("utf8")
+        response = self.get_response(text_url)
+        text = response.content.decode("utf8")
         text = re.sub(r'<p data-p-id="[a-f0-9]+>"', "<p>", text)
         return text
