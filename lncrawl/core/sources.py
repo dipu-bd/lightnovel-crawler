@@ -14,7 +14,6 @@ import requests
 from packaging import version
 
 from ..assets.version import get_version
-from ..templates.novelupdates import NovelupdatesTemplate
 from ..utils.platforms import Platform
 from .arguments import get_args
 from .crawler import Crawler
@@ -348,11 +347,7 @@ def prepare_crawler(url: str) -> Optional[Crawler]:
 
     CrawlerType = crawler_list.get(base_url)
     if not CrawlerType:
-        # raise LNException("No crawler found for " + base_url)
-        logger.info(f"No crawler for {base_url} |> Trying with www.novelupdates.com")
-        base_url = "https://www.novelupdates.com/"
-        CrawlerType = NovelupdatesTemplate
-        CrawlerType.base_url = [base_url]
+        raise LNException("No crawler found for " + base_url)
 
     logger.info(
         "Initializing crawler for: %s [%s]",

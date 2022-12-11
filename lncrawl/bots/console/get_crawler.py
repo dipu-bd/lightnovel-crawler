@@ -40,9 +40,28 @@ def get_novel_url(self):
         raise LNException("Novel page url or query was not given")
 
 
-def get_crawlers_to_search(self) -> List[str]:
+def confirm_guessed_novel(self, guessed_title: str):
+    """Returns a novel page url from a novelupdates query"""
+    args = get_args()
+    if args.suppress:
+        return guessed_title
+
+    answer = prompt(
+        [
+            {
+                "type": "input",
+                "name": "novel",
+                "message": "Enter novelupdates query:",
+                "default": guessed_title,
+                "validate": lambda a: True if a else "Input should not be empty",
+            },
+        ]
+    )
+    return answer["novel"].strip()
+
+
+def get_crawlers_to_search(self, links: List[str]) -> List[str]:
     """Returns user choice to search the choosen sites for a novel"""
-    links = self.app.crawler_links
     if not links:
         return []
 

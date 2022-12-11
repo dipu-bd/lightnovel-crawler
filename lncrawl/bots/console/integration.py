@@ -6,8 +6,9 @@ from questionary import prompt
 from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
+from ...core.crawler import Crawler
 from ...core.exeptions import LNException
-from ...core.sources import prepare_crawler, rejected_sources
+from ...core.sources import crawler_list, prepare_crawler, rejected_sources
 from .open_folder_prompt import display_open_folder
 from .resume_download import resume_session
 
@@ -37,25 +38,36 @@ def start(self):
 
     # Process user input
     self.app.user_input = self.get_novel_url()
-    try:
-        self.app.prepare_search()
-        self.search_mode = not self.app.crawler
-    except LNException as e:
-        raise e
-    except Exception as e:
-        if self.app.user_input.startswith("http"):
-            url = urlparse(self.app.user_input)
-            url = "%s://%s/" % (url.scheme, url.hostname)
-            if url in rejected_sources:
-                display.url_rejected(rejected_sources[url])
-            else:
-                display.url_not_recognized()
-
-        raise LNException(f"Fail to init crawler. Error: {e}")
+    if not self.app.user_input.startswith("http"):
+        logger.info("Detected query input")
+        search_links = [
+            str(link)
+            for link, crawler in crawler_list.items()
+            if crawler.search_novel != Crawler.search_novel
+        ]
+        self.search_mode = True
+    else:
+        url = urlparse(self.app.user_input)
+        url = "%s://%s/" % (url.scheme, url.hostname)
+        if url in rejected_sources:
+            display.url_rejected(rejected_sources[url])
+            raise LNException("Fail to init crawler: %s is rejected", url)
+        try:
+            logger.info("Detected URL input")
+            self.app.crawler = prepare_crawler(self.app.user_input)
+            self.search_mode = False
+        except Exception as e:
+            display.url_not_recognized()
+            logger.debug("Trying to find it in novelupdates", e)
+            guess = self.app.guess_novel_title(self.app.user_input)
+            display.guessed_url_for_novelupdates()
+            self.app.user_input = self.confirm_guessed_novel(guess)
+            search_links = ["https://www.novelupdates.com/"]
+            self.search_mode = True
 
     # Search for novels
     if self.search_mode:
-        self.app.crawler_links = self.get_crawlers_to_search()
+        self.app.crawler_links = self.get_crawlers_to_search(search_links)
         self.app.search_novel()
 
     def _download_novel():

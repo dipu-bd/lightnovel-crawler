@@ -9,7 +9,6 @@ from readability import Document
 
 from lncrawl.core.browser import EC
 from lncrawl.core.crawler import Crawler
-from lncrawl.core.exeptions import LNException
 from lncrawl.models import Chapter, SearchResult
 from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
@@ -57,7 +56,7 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     def select_search_items_in_browser(self, query: str):
         query = dict(sf=1, sh=query, sort="srank", order="desc")
         self.visit(f"https://www.novelupdates.com/series-finder/?{urlencode(query)}")
-        self.browser.wait(".search_main_box_nu")
+        self.browser.wait(".l-main .search_main_box_nu")
         yield from self.browser.soup.select(".l-main .search_main_box_nu")
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
@@ -85,32 +84,6 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
             info=" | ".join(info),
             url=self.absolute_url(a["href"]),
         )
-
-    def get_novel_soup(self) -> BeautifulSoup:
-        if self.novel_url.startswith("https://www.novelupdates.com"):
-            return self.get_soup(self.novel_url)
-        else:
-            return self.guess_novelupdates_link(self.novel_url)
-
-    def guess_novelupdates_link(self, url: str) -> str:
-        # Guess novel title
-        response = self.get_response(url)
-        reader = Document(response.text)
-        title = reader.short_title()
-        logger.info("Original title = %s", title)
-
-        title = title.rsplit("-", 1)[0].strip() or title
-        title = re.sub(r"[^\w\d ]+", " ", title.lower())
-        title = " ".join(title.split(" ")[:10])
-        logger.info("Guessed title = %s", title)
-
-        # Search by guessed title in novelupdates
-        novels = self.search_novel(title)
-        if len(novels) != 1:
-            raise LNException("Not supported for " + self.novel_url)
-
-        self.novel_url = novels[0].url
-        return self.get_soup(self.novel_url)
 
     def parse_title(self, soup: BeautifulSoup) -> str:
         return soup.select_one(".seriestitlenu").text

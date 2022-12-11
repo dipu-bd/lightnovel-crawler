@@ -17,6 +17,7 @@ digit_regex = re.compile(r"page-(\d+)$")
 
 class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
     def initialize(self) -> None:
+        self.init_executor(3)
         self.cleaner.bad_tags.update(["div"])
         self.cleaner.bad_css.update(
             [
