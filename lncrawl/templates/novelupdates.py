@@ -47,14 +47,14 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
             pass
 
     def select_search_items(self, query: str):
-        query = dict(sf=1, sh=query, sort="srank", order="desc")
+        query = dict(sf=1, sh=query, sort="srank", order="asc", rl=1, mrl="min")
         soup = self.get_soup(
             f"https://www.novelupdates.com/series-finder/?{urlencode(query)}"
         )
         yield from soup.select(".l-main .search_main_box_nu")
 
     def select_search_items_in_browser(self, query: str):
-        query = dict(sf=1, sh=query, sort="srank", order="desc")
+        query = dict(sf=1, sh=query, sort="srank", order="asc", rl=1, mrl="min")
         self.visit(f"https://www.novelupdates.com/series-finder/?{urlencode(query)}")
         self.browser.wait(".l-main .search_main_box_nu")
         yield from self.browser.soup.select(".l-main .search_main_box_nu")
