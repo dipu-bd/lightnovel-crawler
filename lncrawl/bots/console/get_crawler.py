@@ -104,12 +104,14 @@ def choose_a_novel(self):
                     "type": "list",
                     "name": "novel",
                     "message": "Which one is your novel?",
-                    "choices": display.format_novel_choices(choices),
+                    "choices": display.format_novel_choices(choices) + ["0. Cancel"],
                 }
             ]
         )
 
         index = int(answer["novel"].split(".")[0])
+        if index < 1 and index > len(self.app.search_results):
+            raise LNException("Cancelled by user")
         selected_choice = self.app.search_results[index - 1]
 
     # Choose the novel source
@@ -130,9 +132,7 @@ def choose_a_novel(self):
         index = int(answer["novel"].split(".")[0])
         if index == 0:
             return self.choose_a_novel()
-
         selected_novel = novels[index - 1]
-
     return selected_novel["url"]
 
 
