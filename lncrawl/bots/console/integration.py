@@ -81,7 +81,14 @@ def start(self):
         if self.app.can_do("login"):
             self.app.login_data = self.get_login_info()
 
+        print("Retrieving novel info...")
         self.app.get_novel_info()
+        display.display_novel_title(
+            self.app.crawler.novel_title,
+            len(self.app.crawler.volumes),
+            len(self.app.crawler.chapters),
+            self.app.crawler.novel_url,
+        )
 
         self.app.output_path = self.get_output_path()
         self.app.chapters = self.process_chapter_range()

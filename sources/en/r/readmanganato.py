@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -10,9 +11,7 @@ class ReadMangaNato(Crawler):
         "https://readmanganato.com/",
         "https://chapmanganato.com/",
     ]
-
     has_manga = True
-
     has_mtl = False
 
     def read_novel_info(self):
@@ -38,13 +37,9 @@ class ReadMangaNato(Crawler):
 
         for a in reversed(soup.select(".row-content-chapter li.a-h a.chapter-name")):
             chap_id = len(self.chapters) + 1
-            vol_id = len(self.chapters) // 100 + 1
-            if len(self.chapters) % 100 == 0:
-                self.volumes.append({"id": vol_id})
             self.chapters.append(
                 {
                     "id": chap_id,
-                    "volume": vol_id,
                     "title": a.text.strip(),
                     "url": self.absolute_url(a["href"]),
                 }
@@ -58,3 +53,13 @@ class ReadMangaNato(Crawler):
 
         contents = soup.select_one("div.container-chapter-reader")
         return self.cleaner.extract_contents(contents)
+
+    def download_image(self, url: str, headers={}, **kwargs):
+        return super().download_image(
+            url,
+            headers={
+                "referer": self.home_url,
+                "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            },
+            **kwargs
+        )

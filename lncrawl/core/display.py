@@ -224,6 +224,43 @@ def format_novel_choices(choices: List[CombinedSearchResult]):
     return items
 
 
+def display_novel_title(title: str, vol_count: int, chap_count: int, link: str):
+    print()
+    print(
+        Style.BRIGHT,
+        Fore.YELLOW,
+        Chars.BOOK,
+        " ",
+        Fore.GREEN,
+        title,
+        Style.RESET_ALL,
+        sep="",
+    )
+    print(
+        Fore.CYAN,
+        vol_count,
+        Fore.RESET,
+        Style.DIM,
+        " volumes and ",
+        Fore.CYAN,
+        chap_count,
+        Fore.RESET,
+        Style.DIM,
+        " chapters found.",
+        Style.RESET_ALL,
+        sep="",
+    )
+    print(
+        Fore.CYAN,
+        Chars.LINK,
+        " ",
+        link,
+        Fore.RESET,
+        sep="",
+    )
+    print()
+
+
 def format_source_choices(novels: List[SearchResult]):
     items = []
     for index, item in enumerate(novels):
