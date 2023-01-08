@@ -29,7 +29,8 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
                     r"\/ Please Keep reading 0n FreewebNOVEL\.C0M",
                     r"\[ Follow current novels on Freewebnovel\.com \]",
                     r"‘Freewebnovel\.com\*\’",
-                    r"\‘Search Freewebnovel\.com\, on google\’"
+                    r"\‘Search Freewebnovel\.com\, on google\’",
+                    r"\‘ Search Freewebnovel\.com\(\) \‘"
                 ],
                 "i": [
                     r"\[ Follow current novels on Freewebnovel\.com \]"
