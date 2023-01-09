@@ -14,7 +14,29 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     base_url = ["https://freewebnovel.com/"]
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(["h4"])
+        self.cleaner.bad_tags.update(["h4", "sub"])
+
+        self.cleaner.bad_tag_text_pairs.update(
+            {
+                "p": [
+                    r"freewebnovel\.com",
+                    r"Updates by Freewebnovel\. com",
+                    r"” Search Freewebnovel\.com\. on google”\.",
+                    r"\/ Please Keep reading on MYFreeWebNovel\.C0M",
+                    r"please keep reading on Freewebnovel\(dot\)C0M",
+                    r"Continue\_reading on Freewebnovel\.com",
+                    r"Continue \-reading on Freewebnovel\.com",
+                    r"\/ Please Keep reading 0n FreewebNOVEL\.C0M",
+                    r"\[ Follow current novels on Freewebnovel\.com \]",
+                    r"‘Freewebnovel\.com\*\’",
+                    r"\‘Search Freewebnovel\.com\, on google\’",
+                    r"\‘ Search Freewebnovel\.com\(\) \‘"
+                ],
+                "i": [
+                    r"\[ Follow current novels on Freewebnovel\.com \]"
+                ]
+            }
+        )
 
     def select_search_items(self, query: str):
         data = {"searchkey": query}
