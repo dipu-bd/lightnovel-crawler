@@ -50,12 +50,11 @@ class NovelHiCrawler(Crawler):
         self.novel_title = possible_image["alt"]
         logger.info("Novel title: %s", self.novel_title)
 
-        for item in soup.select(".book_info ul.list span.item"):
-            item.text.startswith("Author")
-            possible_author = item.select_one("em")
-            if isinstance(possible_author, Tag):
-                self.novel_author = possible_author.text
-            break
+        for span in soup.select(".book_info ul.list span.item"):
+            if span.get_text().startswith("Author"):
+                author = span.find_next().text
+                self.novel_author = author
+                #print('Author: %s ' % author)
         logger.info("Novel author: %s", self.novel_author)
 
         data = self.get_json(fetch_chapter_list_url % (self.home_url, self.novel_id))
