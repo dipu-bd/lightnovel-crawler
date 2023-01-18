@@ -41,7 +41,7 @@ class NovelsPlCrawler(Crawler):
 
         possible_image = soup.select_one(".imageCover img.img-thumbnail")
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
+            self.novel_cover = self.absolute_url(possible_image["src"], "https://www.novels.pl/novel")
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = soup.select_one(
