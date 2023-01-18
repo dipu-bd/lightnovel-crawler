@@ -48,7 +48,7 @@ class BonNovelCrawler(Crawler):
         img_src = soup.select_one(".summary_image a img")
 
         if img_src:
-            self.novel_cover = self.absolute_url(img_src["src"])
+            self.novel_cover = self.absolute_url(img_src["data-src"])
 
         logger.info("Novel cover: %s", self.novel_cover)
 
