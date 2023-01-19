@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+from urllib.parse import quote_plus
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -12,9 +13,7 @@ class SyosetuCrawler(Crawler):
     base_url = "https://ncode.syosetu.com/"
 
     def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
-
+        soup = self.get_soup(search_url % quote_plus(query))
         results = []
         for tab in soup.select(".searchkekka_box"):
             a = tab.select_one(".novel_h a")
@@ -27,32 +26,29 @@ class SyosetuCrawler(Crawler):
                     "info": "%s | %s" % (latest, votes),
                 }
             )
-
         return results
 
     def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one(".novel_title").text.strip()
-        logger.info("Novel title: %s", self.novel_title)
 
         # No novel cover.
-
-        self.novel_author = soup.select_one(".novel_writername a").text.strip()
-        logger.info("Author: %s", self.novel_author)
+        
+        author_tag = soup.select_one(".novel_writername a")
+        if author_tag:
+            self.novel_author = author_tag.text.strip()
 
         # Syosetu calls parts "chapters"
-        volume_id = 0
+        volume_id = 1
         chapter_id = 1
-        self.volumes = []
         for tag in soup.select(".chapter_title, .subtitle a"):
             if tag.name == "a":
                 # Chapter
                 self.chapters.append(
                     {
                         "id": chapter_id,
-                        "volume": volume_id if volume_id != 0 else 1,
+                        "volume": volume_id,
                         "url": self.absolute_url(tag["href"]),
                         "title": tag.text.strip() or ("Chapter %d" % chapter_id),
                     }
@@ -60,14 +56,15 @@ class SyosetuCrawler(Crawler):
                 chapter_id += 1
             else:
                 # Part/volume (there might be none)
+                self.volumes.append(
+                    {
+                        "id": volume_id,
+                        "title": tag.text.strip(),
+                    }
+                )
                 volume_id += 1
-                print({"id": volume_id, "title": tag.text.strip()})
-                self.volumes.append({"id": volume_id, "title": tag.text.strip()})
 
     def download_chapter_body(self, chapter):
-        """Download body of a single chapter and return as clean html format."""
-        logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-
         contents = soup.select_one("#novel_honbun")
         return self.cleaner.extract_contents(contents)
