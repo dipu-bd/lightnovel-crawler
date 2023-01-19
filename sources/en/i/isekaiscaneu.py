@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-
 import logging
+from urllib.parse import quote_plus
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
+
+chapter_list_url = "https://isekaiscan.eu/wp-admin/admin-ajax.php"
 
 
 class IsekaiScanEUCrawler(Crawler):
@@ -16,8 +18,7 @@ class IsekaiScanEUCrawler(Crawler):
         self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(self.search_url % (self.home_url, query))
+        soup = self.get_soup(self.search_url % (self.home_url, quote_plus(query)))
 
         results = []
         for tab in soup.select(".c-tabs-item__content"):
@@ -31,7 +32,6 @@ class IsekaiScanEUCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-
         return results
 
     def read_novel_info(self):
@@ -47,7 +47,7 @@ class IsekaiScanEUCrawler(Crawler):
         img_src = soup.select_one(".summary_image a img")
 
         if img_src:
-            self.novel_cover = self.absolute_url(img_src["src"])
+            self.novel_cover = self.absolute_url(img_src["data-src"])
 
         logger.info("Novel cover: %s", self.novel_cover)
 
@@ -59,8 +59,14 @@ class IsekaiScanEUCrawler(Crawler):
         )
         logger.info("%s", self.novel_author)
 
-        clean_novel_url = self.novel_url.split("?")[0].strip("/")
-        response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
+        novel_id = soup.select("a.wp-manga-action-button")[0]["data-post"]
+        response = self.submit_form(
+            chapter_list_url,
+            data={
+                "action": "manga_get_chapters",
+                "manga": novel_id,
+            },
+        )
 
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):

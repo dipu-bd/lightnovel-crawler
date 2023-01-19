@@ -51,7 +51,7 @@ class MixedNovelNet(Crawler):
 
         possible_image = soup.select_one(".summary_image img")
         if isinstance(possible_image, Tag):
-            urls = possible_image['src']
+            urls = possible_image['data-lazy-src']
             self.novel_cover = self.absolute_url(urls) if urls else None
         logger.info("Novel cover: %s", self.novel_cover)
 
