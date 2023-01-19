@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-
 import logging
+from urllib.parse import quote_plus
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
 chapter_list_url = "https://isekaiscan.eu/wp-admin/admin-ajax.php"
+
 
 class IsekaiScanEUCrawler(Crawler):
     has_manga = True
@@ -17,8 +18,7 @@ class IsekaiScanEUCrawler(Crawler):
         self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(self.search_url % (self.home_url, query))
+        soup = self.get_soup(self.search_url % (self.home_url, quote_plus(query)))
 
         results = []
         for tab in soup.select(".c-tabs-item__content"):
@@ -32,7 +32,6 @@ class IsekaiScanEUCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-
         return results
 
     def read_novel_info(self):
@@ -62,16 +61,14 @@ class IsekaiScanEUCrawler(Crawler):
 
         novel_id = soup.select("a.wp-manga-action-button")[0]["data-post"]
         response = self.submit_form(
-                chapter_list_url,
-                data={
-                    "action": "manga_get_chapters",
-                    "manga": novel_id,
-                },
-            )
+            chapter_list_url,
+            data={
+                "action": "manga_get_chapters",
+                "manga": novel_id,
+            },
+        )
         
         soup = self.make_soup(response)
-
-
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
