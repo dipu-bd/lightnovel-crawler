@@ -67,7 +67,7 @@ class IsekaiScanEUCrawler(Crawler):
                 "manga": novel_id,
             },
         )
-        
+
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
