@@ -8,6 +8,7 @@ search_url = (
     "https://yomou.syosetu.com/search.php?word=%s"
 )
 
+
 class SyosetuCrawler(Crawler):
     has_mtl = True
     base_url = "https://ncode.syosetu.com/"
@@ -17,8 +18,8 @@ class SyosetuCrawler(Crawler):
         results = []
         for tab in soup.select(".searchkekka_box"):
             a = tab.select_one(".novel_h a")
-            latest = tab.select_one(".left").get_text(separator=" ").strip() # e.g.: 連載中 (全604部分)
-            votes = tab.select_one(".attention").text.strip() # e.g.: "総合ポイント： 625,717 pt"
+            latest = tab.select_one(".left").get_text(separator=" ").strip()  # e.g.: 連載中 (全604部分)
+            votes = tab.select_one(".attention").text.strip()  # e.g.: "総合ポイント： 625,717 pt"
             results.append(
                 {
                     "title": a.text.strip(),
@@ -34,7 +35,7 @@ class SyosetuCrawler(Crawler):
         self.novel_title = soup.select_one(".novel_title").text.strip()
 
         # No novel cover.
-        
+
         author_tag = soup.select_one(".novel_writername a")
         if author_tag:
             self.novel_author = author_tag.text.strip()
