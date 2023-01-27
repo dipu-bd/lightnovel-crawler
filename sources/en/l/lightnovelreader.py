@@ -16,6 +16,8 @@ class LightnovelReader(Crawler):
     base_url = [
         "https://lightnovelreader.me/",
         "https://www.lightnovelreader.me/",
+        "https://lnreader.org/",
+        "https://www.lnreader.org/",
     ]
 
     def initialize(self) -> None:
