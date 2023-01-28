@@ -27,6 +27,9 @@ def bind_epub_book(
     book_cover: str,
     novel_title: str,
     novel_url: str,
+    novel_synopsis: str,
+    novel_language: str,
+    novel_tags: list,
     good_file_name: str,
     suffix: str,  # suffix to the file name
     no_suffix_after_filename: bool = False,
@@ -36,11 +39,14 @@ def bind_epub_book(
 
     logger.debug("Creating EpubBook instance")
     book = epub.EpubBook()
-    book.set_language("en")
+    book.set_language(novel_language)
     book.set_title(book_title)
     book.add_author(novel_author)
     book.set_identifier(output_path + suffix)
     # book.set_direction("rtl" if is_rtl else "default")
+    
+    for tag in novel_tags:
+        book.add_metadata("DC", "subject", tag)
 
     logger.debug("Adding %s", STYLE_FILE_NAME)
     style_item = epub.EpubItem(
@@ -74,6 +80,9 @@ def bind_epub_book(
             <h3>{novel_author}</h3>
         </div>
         <img class="cover" src="{COVER_IMAGE_NAME}">
+        <div class="synopsis">
+            <p>{novel_synopsis}</p>
+        </div>
         <div class="footer">
             <b>Source:</b> <a href="{novel_url}">{novel_url}</a>
             <br>
@@ -203,6 +212,9 @@ def make_epubs(app, data: Dict[str, List[Chapter]]) -> List[str]:
             novel_title=app.crawler.novel_title,
             novel_author=app.crawler.novel_author or app.crawler.home_url,
             novel_url=app.crawler.novel_url,
+            novel_synopsis=app.crawler.novel_synopsis,
+            novel_language=app.crawler.novel_language,
+            novel_tags=app.crawler.novel_tags,
             output_path=app.output_path,
             book_cover=app.book_cover,
             good_file_name=app.good_file_name,
