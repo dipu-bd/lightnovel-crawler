@@ -43,7 +43,8 @@ def gather_data_files():
 
     command = []
     for src, dst in file_map.items():
-        command += ["--add-data", src.as_posix() + os.pathsep + dst]
+        if src.exists():
+            command += ["--add-data", src.as_posix() + os.pathsep + dst]
 
     return command
 
