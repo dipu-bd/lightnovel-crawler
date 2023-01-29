@@ -42,7 +42,7 @@ class Chireads(Crawler):
         metadata = content[0]
 
         self.novel_synopsis = self.cleaner.extract_contents(
-            metadata.find("div", {"class":"inform-txt-show font-color-black6"})
+            metadata.find("div", {"class": "inform-txt-show font-color-black6"})
         )
 
         for tag in soup.find("div", {"class": "lable-list"}).find_all("a"):

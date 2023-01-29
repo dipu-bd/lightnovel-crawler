@@ -47,17 +47,14 @@ class Crawler(Scraper):
         self.novel_synopsis = ""
         self.novel_tags = []
 
-
         # The folder in which the crawler is located
         # If the source contains multiple languages it need to be overridden by crawlers to avoid having language='multi'
         crawler_path = Path(self.file_path)
         # English source are store inside a second folder
-        if crawler_path.parent.parent.name == 'en': 
+        if crawler_path.parent.parent.name == 'en':
             self.novel_language = 'en'
         else :
             self.novel_language = crawler_path.parent.name
-
-
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume
