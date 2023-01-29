@@ -44,7 +44,7 @@ def bind_epub_book(
     book.add_author(novel_author)
     book.set_identifier(output_path + suffix)
     # book.set_direction("rtl" if is_rtl else "default")
-    
+
     for tag in novel_tags:
         book.add_metadata("DC", "subject", tag)
 
@@ -125,7 +125,7 @@ def bind_epub_book(
     if novel_synopsis:
         spine.append(synopsis_item)
     spine.append("nav")
-    
+
     for chapters in chapter_groups:
         first_chapter = chapters[0]
         volume_id = first_chapter.volume
