@@ -80,9 +80,6 @@ def bind_epub_book(
             <h3>{novel_author}</h3>
         </div>
         <img class="cover" src="{COVER_IMAGE_NAME}">
-        <div class="synopsis">
-            <p>{novel_synopsis}</p>
-        </div>
         <div class="footer">
             <b>Source:</b> <a href="{novel_url}">{novel_url}</a>
             <br>
@@ -103,9 +100,27 @@ def bind_epub_book(
     )
     book.add_item(intro_item)
 
+    synopsis_html = f"""
+    <div class="synopsis">
+        <h1>Synopsis</h1>
+        <p>{novel_synopsis}</p>
+    </div>
+    """
+    synopsis_item = epub.EpubHtml(
+        title="Synopsis",
+        file_name="synopsis.xhtml",
+        content=synopsis_html,
+    )
+    synopsis_item.add_link(
+        href=STYLE_FILE_NAME,
+        rel="stylesheet",
+        type="text/css",
+    )
+    book.add_item(synopsis_item)
+
     logger.debug("Creating chapter contents")
     toc = []
-    spine = ["cover", intro_item, "nav"]
+    spine = ["cover", intro_item, synopsis_item, "nav"]
     for chapters in chapter_groups:
         first_chapter = chapters[0]
         volume_id = first_chapter.volume
