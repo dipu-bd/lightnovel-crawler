@@ -100,27 +100,32 @@ def bind_epub_book(
     )
     book.add_item(intro_item)
 
-    synopsis_html = f"""
-    <div class="synopsis">
-        <h1>Synopsis</h1>
-        <p>{novel_synopsis}</p>
-    </div>
-    """
-    synopsis_item = epub.EpubHtml(
-        title="Synopsis",
-        file_name="synopsis.xhtml",
-        content=synopsis_html,
-    )
-    synopsis_item.add_link(
-        href=STYLE_FILE_NAME,
-        rel="stylesheet",
-        type="text/css",
-    )
-    book.add_item(synopsis_item)
+    if novel_synopsis:
+        synopsis_html = f"""
+        <div class="synopsis">
+            <h1>Synopsis</h1>
+            <p>{novel_synopsis}</p>
+        </div>
+        """
+        synopsis_item = epub.EpubHtml(
+            title="Synopsis",
+            file_name="synopsis.xhtml",
+            content=synopsis_html,
+        )
+        synopsis_item.add_link(
+            href=STYLE_FILE_NAME,
+            rel="stylesheet",
+            type="text/css",
+        )
+        book.add_item(synopsis_item)
 
     logger.debug("Creating chapter contents")
     toc = []
-    spine = ["cover", intro_item, synopsis_item, "nav"]
+    spine = ["cover", intro_item]
+    if novel_synopsis:
+        spine.append(synopsis_item)
+    spine.append("nav")
+    
     for chapters in chapter_groups:
         first_chapter = chapters[0]
         volume_id = first_chapter.volume
