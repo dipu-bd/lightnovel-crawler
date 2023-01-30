@@ -9,7 +9,7 @@ chapter_list_url = "https://mangastic.me/wp-admin/admin-ajax.php"
 
 class MangaStic(Crawler):
     has_manga = True
-    base_url = "https://mangastic.me/"
+    base_url = "https://mangastic.net/"
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
@@ -41,7 +41,7 @@ class MangaStic(Crawler):
         logger.info("Novel title: %s", self.novel_title)
 
         self.novel_cover = self.absolute_url(
-            soup.select_one(".summary_image a img")["data-src"]
+            soup.select_one(".summary_image a img")["src"]
         )
         logger.info("Novel cover: %s", self.novel_cover)
 
@@ -76,8 +76,8 @@ class MangaStic(Crawler):
         contents = soup.select_one("div.reading-content")
 
         for img in contents.findAll("img"):
-            if img.has_attr("data-src"):
-                src_url = img["data-src"]
+            if img.has_attr("src"):
+                src_url = img["src"]
                 parent = img.parent
                 img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
