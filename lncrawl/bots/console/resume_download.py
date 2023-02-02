@@ -101,6 +101,9 @@ def load_session_from_metadata(meta: MetaInfo) -> App:
     app.crawler.volumes = meta.novel.volumes
     app.crawler.chapters = meta.novel.chapters
     app.crawler.is_rtl = meta.novel.is_rtl
+    app.crawler.novel_language = meta.novel.language
+    app.crawler.novel_synopsis = meta.novel.synopsis
+    app.crawler.novel_tags = meta.novel.novel_tags
 
     for k, v in meta.session.cookies.items():
         app.crawler.set_cookie(k, v)

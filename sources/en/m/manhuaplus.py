@@ -9,7 +9,7 @@ search_url = (
 post_chapter_url = "https://manhuaplus.online/wp-admin/admin-ajax.php"
 
 
-class ArNovelCrawler(Crawler):
+class ManhuaPlus(Crawler):
     has_manga = True
     base_url = "https://manhuaplus.online/"
 

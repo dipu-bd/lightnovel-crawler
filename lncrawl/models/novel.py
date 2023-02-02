@@ -25,6 +25,9 @@ class Novel(Box):
         chapters: List[Chapter] = [],
         volumes: List[Volume] = [],
         is_rtl: Optional[bool] = None,
+        synopsis: Optional[str] = None,
+        language: Optional[str] = None,
+        novel_tags: List[str] = [],
         has_manga: Optional[bool] = None,
         has_mtl: Optional[bool] = None,
         language_code: List[str] = [],
@@ -35,7 +38,6 @@ class Novel(Box):
         genres: List[str] = [],
         tags: List[str] = [],
         description: Optional[str] = None,
-        synopsis: Optional[str] = None,
         original_publisher: Optional[str] = None,
         english_publisher: Optional[str] = None,
         novelupdates_url: Optional[str] = None,
@@ -48,6 +50,9 @@ class Novel(Box):
         self.chapters = chapters
         self.volumes = volumes
         self.is_rtl = is_rtl
+        self.synopsis = synopsis
+        self.language = language
+        self.novel_tags = novel_tags
         self.has_manga = has_manga
         self.has_mtl = has_mtl
         self.language_code = language_code
@@ -58,7 +63,6 @@ class Novel(Box):
         self.genres = genres
         self.tags = tags
         self.description = description
-        self.synopsis = synopsis
         self.original_publisher = original_publisher
         self.english_publisher = english_publisher
         self.novelupdates_url = novelupdates_url

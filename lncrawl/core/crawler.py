@@ -16,6 +16,7 @@ class Crawler(Scraper):
     has_manga = False
     has_mtl = False
     base_url: List[str]
+    novel_language = ""
 
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
@@ -43,6 +44,8 @@ class Crawler(Scraper):
         self.novel_author = ""
         self.novel_cover = None
         self.is_rtl = False
+        self.novel_synopsis = ""
+        self.novel_tags = []
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume

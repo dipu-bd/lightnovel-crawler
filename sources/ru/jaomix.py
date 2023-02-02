@@ -34,40 +34,9 @@ class JaomixCrawler(Crawler):
         if img_src:
             self.novel_cover = self.absolute_url(img_src["src"])
 
-        self.novel_id = soup.select_one("div.like-but")["id"]
-
-        pages_soup = self.make_soup(
-            self.submit_form(
-                ajax_url,
-                data={
-                    "action": "toc",
-                    "selectall": self.novel_id,
-                },
-            )
-        )
-
-        pages = reversed(pages_soup.select("select.sel-toc > option")[1:])
-
-        for page in pages:
-            pageId = page["value"]
-
-            page_soup = self.make_soup(
-                self.submit_form(
-                    ajax_url,
-                    data={
-                        "action": "toc",
-                        "page": pageId,
-                        "termid": self.novel_id,
-                    },
-                )
-            )
-
-            self.parse_chapters(page_soup)
-
-        self.parse_chapters(soup)
-
-    def parse_chapters(self, page_soup):
-        for a in reversed(page_soup.select(".hiddenstab .title > a")):
+        for a in reversed(soup.select('.bott-tabs-book a')):
+            if 'glava' not in a['href']:
+                continue
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
@@ -78,7 +47,7 @@ class JaomixCrawler(Crawler):
                     "id": chap_id,
                     "volume": vol_id,
                     "title": a.text.strip(),
-                    "url": self.home_url.rstrip("/") + a["href"],
+                    "url": self.absolute_url(a['href']),
                 }
             )
 

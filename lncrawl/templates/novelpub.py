@@ -76,6 +76,10 @@ class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         assert tag
         return tag.text.strip()
 
+    def parse_title_in_browser(self) -> str:
+        self.browser.wait("article#novel")
+        return self.parse_title(self.browser.soup)
+
     def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one("article#novel figure.cover > img")
         assert tag
@@ -134,3 +138,8 @@ class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         self.browser.wait(".chapter-content")
         return soup.select_one(".chapter-content")
+
+    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
+        """Open the Chapter URL in the browser"""
+        self.visit(chapter.url)
+        self.browser.wait(".chapter-content", timeout=6)
