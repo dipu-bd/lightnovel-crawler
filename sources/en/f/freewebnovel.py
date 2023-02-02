@@ -21,16 +21,26 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
                 "p": [
                     r"freewebnovel\.com",
                     r"Updates by Freewebnovel\. com",
-                    r"” Search Freewebnovel\.com\. on google”\.",
+                    r"\” Search Freewebnovel\.com\. on google\”\.",
                     r"\/ Please Keep reading on MYFreeWebNovel\.C0M",
                     r"please keep reading on Freewebnovel\(dot\)C0M",
                     r"Continue\_reading on Freewebnovel\.com",
                     r"Continue \-reading on Freewebnovel\.com",
                     r"\/ Please Keep reading 0n FreewebNOVEL\.C0M",
                     r"\[ Follow current novels on Freewebnovel\.com \]",
-                    r"‘Freewebnovel\.com\*\’",
+                    r"\‘Freewebnovel\.com\*\’",
                     r"\‘Search Freewebnovel\.com\, on google\’",
-                    r"\‘ Search Freewebnovel\.com\(\) \‘"
+                    r"\‘ Search Freewebnovel\.com\(\) \‘",
+                    r"\“Freewebnovel\.com \.\”",
+                    r"\“Please reading on Freewebnovel\.com\.\”",
+                    r"\“Search Freewebnovel\.com\. on google\”",
+                    r"\“Read more on Freewebnovel\.com\. org\”",
+                    r"Thank you for reading on FreeWebNovel\.me",
+                    r"Please reading \-on Freewebnovel\.com",
+                    r"\”Search \(Freewebnovel\.com\(\) on google\”\?",
+                    r"\“Please reading on Freewebnovel\.com \:\”",
+                    r"\”Please reading on Freewebnovel\.com\.\”\?",
+                    r"\“Please reading on Freewebnovel\.com\&gt\; \”"
                 ],
                 "i": [
                     r"\[ Follow current novels on Freewebnovel\.com \]"
