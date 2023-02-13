@@ -77,13 +77,15 @@ def fetch_chapter_body(app):
         )
         if not os.path.exists(file_name):
             continue
-        with open(file_name, "r", encoding="utf-8") as file:
-            old_chapter = json.load(file)
-            chapter.update(**old_chapter)
+        #file exist but contain 0 data
+        if os.stat(file_name).st_size > 2: #less than 2 bytes, consider the file as problematic
+            with open(file_name, "r", encoding="utf-8") as file:
+                old_chapter = json.load(file)
+                chapter.update(**old_chapter)
         if chapter.success:
             logger.debug(f"Restored chapter {chapter.id} from {file_name}")
 
-    # downlaod remaining chapters
+    # download remaining chapters
     app.progress = 0
     for progress in app.crawler.download_chapters(app.chapters):
         app.progress += progress
