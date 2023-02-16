@@ -7,6 +7,23 @@ logger = logging.getLogger(__name__)
 EBOOK_CONVERT = "ebook-convert"
 CALIBRE_LINK = "https://calibre-ebook.com/download"
 
+# ebook-convert + [
+#     '/home/mira/Projects/misc/lightnovel-crawler/.discord_bot_output/novelfull-com/Birth Of The Demonic Sword/epub/Birth Of The Demonic Sword c1-5.epub',
+#     '/home/mira/Projects/misc/lightnovel-crawler/.discord_bot_output/novelfull-com/Birth Of The Demonic Sword/mobi/Birth Of The Demonic Sword c1-5.mobi',
+#     '--unsmarten-punctuation',
+#     '--no-chapters-in-toc',
+#     '--title', 'Birth Of The Demonic Sword c1-5',
+#     '--authors', 'Eveofchaos',
+#     '--comments', '',
+#     '--language', 'en',
+#     '--tags', [],
+#     '--series', 'Birth Of The Demonic Sword',
+#     '--publisher', 'https://novelfull.com/',
+#     '--book-producer', 'Lightnovel Crawler',
+#     '--enable-heuristics',
+#     '--disable-renumber-headings',
+#     '--cover', '/home/mira/Projects/misc/lightnovel-crawler/.discord_bot_output/novelfull-com/Birth Of The Demonic Sword/cover.jpg']
+
 
 def run_ebook_convert(*args):
     """
@@ -14,10 +31,11 @@ def run_ebook_convert(*args):
     Visit https://manual.calibre-ebook.com/generated/en/ebook-convert.html for argument list.
     """
     try:
+        # print(f"{EBOOK_CONVERT} {' '.join(list(args))}")
         isdebug = os.getenv("debug_mode")
         with open(os.devnull, "w", encoding="utf8") as dumper:
             subprocess.call(
-                [EBOOK_CONVERT] + list(args),
+                args=[EBOOK_CONVERT] + list(args),
                 stdout=None if isdebug else dumper,
                 stderr=None if isdebug else dumper,
             )
@@ -56,12 +74,12 @@ def epub_to_calibre(app, epub_file, out_fmt):
         file_name_without_ext,
         "--authors",
         app.crawler.novel_author,
-        '--comments',
-        app.crawler.synopsis,
-        '--language',
-        app.crawler.language,
-        '--tags',
-        app.crawler.novel_tags,
+        "--comments",
+        app.crawler.novel_synopsis,
+        "--language",
+        app.crawler.novel_language,
+        "--tags",
+        ",".join(app.crawler.novel_tags),
         "--series",
         app.crawler.novel_title,
         "--publisher",
@@ -89,6 +107,7 @@ def epub_to_calibre(app, epub_file, out_fmt):
         print("Created: %s" % out_file_name)
         return out_file
     else:
+        print("conversion failed")
         logger.error("[%s] conversion failed: %s", out_fmt, epub_file_name)
         return None
 

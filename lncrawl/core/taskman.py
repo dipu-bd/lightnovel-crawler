@@ -28,6 +28,7 @@ class TaskManager(ABC):
         """
         self._futures: List[Future] = []
         self.init_executor(workers)
+        self.future_progress = 0
 
     def __del__(self) -> None:
         if hasattr(self, "_executor"):
@@ -181,9 +182,11 @@ class TaskManager(ABC):
         )
 
         try:
+            self.future_progress = 0
             for future in futures:
                 if fail_fast:
                     future.result(timeout)
+                    self.future_progress += 1
                     bar.update()
                     continue
                 try:
@@ -197,6 +200,7 @@ class TaskManager(ABC):
                         bar.clear()
                         logger.warning(f"{type(e).__name__}: {e}")
                 finally:
+                    self.future_progress += 1
                     bar.update()
         finally:
             Thread(target=lambda: self.cancel_futures(futures)).start()

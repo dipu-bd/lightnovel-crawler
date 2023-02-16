@@ -57,15 +57,21 @@ def generate_books(app, data):
     for fmt in formats_to_generate:
         try:
             if fmt == "text":
+                print("text")
+                logger.info("creating text")
                 outputs[fmt] = make_texts(app, data)
             elif fmt == "web":
                 outputs[fmt] = make_webs(app, data)
             elif fmt == "epub":
+                logger.info("creating epub")
                 outputs[fmt] = make_epubs(app, data)
             elif fmt in depends_on_epub:
+                logger.info("creating %s", fmt)
+                print(fmt)
                 outputs[fmt] = make_calibres(app, outputs["epub"], fmt)
 
         except Exception as err:
+            print(err)
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
         finally:
             progress += 1
