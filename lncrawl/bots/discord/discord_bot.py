@@ -9,7 +9,7 @@ class Bot(discord.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.redis = redis.from_url(url=C.redis_uri)
+        self.redis = redis.from_url(url=C.redis_uri, decode_responses=True)
         self.load_extension("lncrawl.bots.discord.cogs.novels")
 
     async def on_ready(self):
