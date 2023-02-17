@@ -26,8 +26,8 @@ available_formats = [
     "text",
     "web",
     "mobi",
-    #'pdf',
-    #'fb2',
+    "pdf",
+    "fb2",
 ]
 
 os.makedirs("logs", exist_ok=True)

@@ -61,7 +61,7 @@ class App:
         if self.crawler:
             self.crawler.__del__()
         self.chapters.clear()
-        logger.info("App destroyed")
+        logger.debug("App destroyed")
 
     # ----------------------------------------------------------------------- #
 
