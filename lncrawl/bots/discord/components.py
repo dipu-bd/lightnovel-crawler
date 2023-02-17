@@ -34,15 +34,22 @@ class NovelSelectMenu(discord.ui.Select):
 
         message = ""
         novel_count = len(novel_list)
+        responded = False
+        reply = (
+            lambda msg: interaction.response.send_message(msg.strip())
+            if not responded
+            else interaction.followup.send(msg.strip())
+        )
         # split into separate messages w/ length up to 2000 chars
         for i, line in enumerate(novel_list):
-            message_len = len(line)
-            if message_len >= 2000:
-                await interaction.response.send_message(message.strip())
+            message_len = len(message)
+            if (message_len + len(line) + 1) >= 2000:
+                await reply(message)
+                responded = True
                 message = ""
             message += line + "\n"
             if i == novel_count - 1:
-                await interaction.response.send_message(message.strip())
+                await reply(message)
 
         return
 
