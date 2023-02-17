@@ -43,7 +43,7 @@ def novel_by_url(url: str) -> App:
 
 
 @to_thread
-def upload_file(filename: str, archive: str) -> str | io.BufferedIOBase | None:
+def upload_file(archive: str) -> str | io.BufferedIOBase | None:
     # Check file size
     file_size = os.stat(archive).st_size
     if file_size >= 8388608:
@@ -91,6 +91,15 @@ async def get_hash_value(redis: redis.Redis, hash: str, source: str) -> str | No
         name=hash,
         key=source,
     )
+
+
+def configure_output_path(app: App):
+    # set output path
+    root = os.path.abspath(".discord_bot_output")
+    output_path = os.path.join(root, app.good_source_name, app.good_file_name)
+    shutil.rmtree(output_path, ignore_errors=True)
+    os.makedirs(output_path, exist_ok=True)
+    return output_path
 
 
 class Novels(commands.Cog):
@@ -164,26 +173,24 @@ class Novels(commands.Cog):
         else:
             app.chapters = app.crawler.chapters[int(start) : int(end)]
 
-        # set formats
-        app.output_formats = {x: (x in formats_list) for x in available_formats}
-
-        # set output path
-        root = os.path.abspath(".discord_bot_output")
-        app.output_path = os.path.join(root, app.good_source_name, app.good_file_name)
-        shutil.rmtree(app.output_path, ignore_errors=True)
-        os.makedirs(app.output_path, exist_ok=True)
-
         followUp = await ctx.respond(
             f"I don't have this file, downloading {len(app.chapters)} chapters, this will take a while."
         )
+
+        # set formats
+        app.output_formats = {x: (x in formats_list) for x in available_formats}
+        # set up directories
+        app.output_path = configure_output_path(app)
+        # update the user with dl progress
         progress_report = update_progress(app, followUp.edit)
         asyncio.create_task(progress_report)
 
+        # start the download
         archive_list = await download_novel(app)
 
         for archive in archive_list:
             archive_format, archive_name = archive_metadata(archive)
-            result = await upload_file(archive_name, archive)
+            result = await upload_file(archive)
             if isinstance(result, str):
                 await ctx.respond(f"Download URL: {result}")
             elif isinstance(result, io.BufferedReader):
@@ -199,14 +206,6 @@ class Novels(commands.Cog):
                 )
             else:
                 await ctx.respond(f"Failed to upload {archive_name}")
-
-    # @discord.slash_command(name="hello", description="Say hello to the bot")
-    # async def hello(self, ctx):
-    #     await ctx.respond("Hey!")
-
-    @discord.slash_command(name="goodbye", description="Say goodbye to the bot")
-    async def goodbye(self, ctx):
-        await ctx.respond("Goodbye!")
 
 
 def setup(bot):  # this is called by Pycord to setup the cog

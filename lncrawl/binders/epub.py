@@ -196,7 +196,7 @@ def bind_epub_book(
     os.makedirs(epub_path, exist_ok=True)
     epub.write_epub(file_path, book, {})
 
-    print("Created: %s.epub" % file_name)
+    logger.info("Created: %s.epub" % file_name)
     return file_path
 
 

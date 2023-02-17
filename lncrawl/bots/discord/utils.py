@@ -1,7 +1,6 @@
 import asyncio
 import functools
-from typing import List
-import typing
+from typing import Callable, Coroutine, List
 from .config import available_formats
 
 
@@ -12,7 +11,7 @@ def validate_formats(xs: List[str]):
     return True
 
 
-def to_thread(func: typing.Callable) -> typing.Coroutine:
+def to_thread(func: Callable) -> Coroutine:
     @functools.wraps(func)
     async def wrapper(*args, **kwargs):
         return await asyncio.to_thread(func, *args, **kwargs)
