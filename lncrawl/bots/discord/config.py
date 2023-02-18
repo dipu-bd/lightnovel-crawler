@@ -11,7 +11,6 @@ shard_count = get_args().shard_count
 signal = os.getenv("DISCORD_SIGNAL_CHAR") or "!"
 discord_token = os.getenv("DISCORD_TOKEN")
 disable_search = os.getenv("DISCORD_DISABLE_SEARCH") == "true"
-redis_uri = os.getenv("REDIS_CONNECTION_URI")
 session_retain_time_in_seconds = 4 * 60 * 60
 max_active_handles = 150
 

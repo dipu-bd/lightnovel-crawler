@@ -1,5 +1,5 @@
-from typing import List
 import discord
+import typing as t
 
 from lncrawl.models.search_result import CombinedSearchResult
 
@@ -14,7 +14,7 @@ class NovelSelectMenu(discord.ui.Select):
         )
         self.novelList = []
 
-    def fill_options(self, novelList: List[CombinedSearchResult]) -> None:
+    def fill_options(self, novelList: t.List[CombinedSearchResult]) -> None:
         self.novelList = novelList
         for i, item in enumerate(novelList):
             nc = len(item.novels)
@@ -55,7 +55,7 @@ class NovelSelectMenu(discord.ui.Select):
 
 
 class NovelMenu(discord.ui.View):
-    def add_items(self, novelList: List[CombinedSearchResult]) -> None:
+    def add_items(self, novelList: t.List[CombinedSearchResult]) -> None:
         selectMenu = NovelSelectMenu()
         selectMenu.fill_options(novelList)
         self.add_item(selectMenu)

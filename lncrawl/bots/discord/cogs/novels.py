@@ -3,7 +3,6 @@ import io
 import math
 import discord
 import logging
-import redis
 from discord.ext import commands
 
 from lncrawl.core.app import App
@@ -13,9 +12,7 @@ from ..utils import validate_formats
 from ..config import available_formats
 from ..novel_handlers import (
     archive_metadata,
-    build_hash_novel_key,
     configure_output_path,
-    get_hash_value,
     destroy_app,
     download_novel,
     novel_by_title,
@@ -30,7 +27,6 @@ logger = logging.getLogger(__name__)
 class Novels(commands.Cog):
     def __init__(self, bot):
         self.bot: discord.Bot = bot
-        self.redis: redis.Redis = self.bot.get_redis()
 
     @discord.slash_command(name="download", description="Download a novel by URL")
     @discord.option("url", description="Novel URL")
@@ -71,28 +67,6 @@ class Novels(commands.Cog):
         embed.add_field(name="Chapters", value=len(app.crawler.chapters))
         await ctx.respond(embed=embed)
 
-        # check if we have this cached
-        # todo: use HKEYS and check if there are other sources, propose those to the user
-        existingFiles = {
-            k: await get_hash_value(
-                redis=self.redis,
-                hash=build_hash_novel_key(app, start, end, k),
-                source=app.good_source_name,
-            )
-            for k in formats_list
-        }
-        for fmt, cachedUrl in existingFiles.items():
-            if not cachedUrl:
-                continue
-            logger.debug("format %s exists: %s", fmt, cachedUrl)
-            formats_list.remove(fmt)
-            await ctx.respond(f"**{fmt}**: {cachedUrl}")
-
-        if not formats_list:
-            logger.debug("no formats left to dl, returning")
-            await destroy_app(app)
-            return
-
         # set chapters
         if math.isinf(end):
             app.chapters = app.crawler.chapters[int(start) :]
@@ -121,16 +95,11 @@ class Novels(commands.Cog):
                 if isinstance(result, str):
                     await ctx.respond(f"Download URL: {result}")
                 elif isinstance(result, io.BufferedReader):
-                    fileResponse = await ctx.respond(
+                    await ctx.respond(
                         file=discord.File(filename=archive_name, fp=result)
                     )
-                    attachment, *_ = fileResponse.attachments
-                    # files:novel_name:1_12329:fb2 source_name https://source
-                    await self.redis.hset(
-                        name=build_hash_novel_key(app, start, end, archive_format),
-                        key=app.good_source_name,
-                        value=attachment.url,
-                    )
+                    # cache if needed
+                    # attachment, *_ = fileResponse.attachments
                 else:
                     await ctx.respond(f"Failed to upload {archive_name}")
         finally:

@@ -1,13 +1,11 @@
 import asyncio
 import io
-import math
 import os
 import re
 import shutil
+import typing as t
 import logging
-import redis
 
-from typing import Callable, Tuple
 from .utils import to_thread
 from ...core.app import App
 from ...core.sources import crawler_list, prepare_crawler
@@ -75,11 +73,11 @@ def destroy_app(app: App):
     app.destroy()
 
 
-def archive_metadata(archive) -> Tuple[str, str]:
+def archive_metadata(archive) -> t.Tuple[str, str]:
     return os.path.basename(os.path.dirname(archive)), os.path.basename(archive)
 
 
-async def update_progress(app: App, editFollowup: Callable[[str], None]):
+async def update_progress(app: App, editFollowup: t.Callable[[str], None]):
     chapterCount = len(app.chapters)
     lastProgress = 0
     while app.crawler.future_progress < chapterCount:
@@ -91,24 +89,6 @@ async def update_progress(app: App, editFollowup: Callable[[str], None]):
         await asyncio.sleep(1)
     # not cool, but we're risking this property to be reset by further downloads
     await editFollowup(f"Done: {chapterCount}/{chapterCount}. Uploading your file.")
-
-
-def build_hash_novel_key(app: App, start: float, end: float, format: str) -> str:
-    return ":".join(
-        [
-            "files",
-            app.good_file_name,
-            f"{int(start)}_{'' if math.isinf(end) else str(int(end))}",
-            format,
-        ]
-    )
-
-
-async def get_hash_value(redis: redis.Redis, hash: str, source: str) -> str | None:
-    return await redis.hget(
-        name=hash,
-        key=source,
-    )
 
 
 def configure_output_path(app: App):

@@ -30,14 +30,14 @@ services:
   #   environment:
   #     CLOUD_DRIVE: "GOFILE"
   #     TELEGRAM_TOKEN: "${TELEGRAM_TOKEN}"
-  redis:
-    image: redis:alpine
-    restart: always
-    ports:
-      - "6379:6379"
-    command: redis-server --save 20 1 --loglevel warning
-    volumes:
-      - redis_data:/data
+  # redis:
+  #   image: redis:alpine
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   command: redis-server --save 20 1 --loglevel warning
+  #   volumes:
+  #     - redis_data:/data
 
   discord-bot:
     image: lncrawl
@@ -54,6 +54,6 @@ services:
       DISCORD_SIGNAL_CHAR: "${DISCORD_SIGNAL_CHAR}"
       DISCORD_DISABLE_SEARCH: "${DISCORD_DISABLE_SEARCH}"
 
-volumes:
-  redis_data:
-    driver: local
+# volumes:
+#   redis_data:
+#     driver: local
