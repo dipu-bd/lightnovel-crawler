@@ -75,13 +75,17 @@ def fetch_chapter_body(app):
             pack_by_volume=app.pack_by_volume,
             output_path=app.output_path,
         )
-        if not os.path.exists(file_name):
-            continue
-        #file exist but contain 0 data
-        if os.stat(file_name).st_size > 2: #less than 2 bytes, consider the file as problematic
+        try:
             with open(file_name, "r", encoding="utf-8") as file:
                 old_chapter = json.load(file)
                 chapter.update(**old_chapter)
+        except FileNotFoundError:
+            logger.info("Missing File: %s Retrieved!" % (file_name))
+        except json.JSONDecodeError:
+            logger.info("Unable to decode JSON from the file: %s" % (file_name))
+        except Exception as e:
+            logger.exception("An error occurred while reading the file:", e)
+
         if chapter.success:
             logger.debug(f"Restored chapter {chapter.id} from {file_name}")
 
