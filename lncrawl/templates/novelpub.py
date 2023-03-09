@@ -136,6 +136,7 @@ class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        self.browser.wait(".chapter-content")
         return soup.select_one(".chapter-content")
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:

@@ -7,7 +7,7 @@ search_url = "https://arnovel.me/?s=%s&post_type=wp-manga&author=&artist=&releas
 chapter_list_url = "https://arnovel.me/wp-admin/admin-ajax.php"
 
 
-class ArNovelCrawler(Crawler):
+class ArNovel(Crawler):
     base_url = "https://arnovel.me/"
 
     def search_novel(self, query):

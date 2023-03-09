@@ -14,6 +14,7 @@ import requests
 from packaging import version
 
 from ..assets.version import get_version
+from ..assets.languages import language_codes
 from ..utils.platforms import Platform
 from .arguments import get_args
 from .crawler import Crawler
@@ -250,6 +251,12 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
         logger.warn("Module load failed: %s | %s", file_path, e)
         return []
 
+    language_code = ""
+    for part in reversed(file_path.parts):
+        if part in language_codes:
+            language_code = part
+            break
+
     crawlers = []
     for key in dir(module):
         crawler = getattr(module, key)
@@ -275,6 +282,9 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
                 raise LNException(f"Should be callable: {method} @{file_path}")
 
         setattr(crawler, "base_url", urls)
+        setattr(crawler, "novel_language", language_code)
+        setattr(crawler, "file_path", str(file_path.absolute()))
+
         crawlers.append(crawler)
 
     __cache_crawlers[file_path] = crawlers

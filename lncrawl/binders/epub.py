@@ -28,12 +28,12 @@ def bind_epub_book(
     novel_title: str,
     novel_url: str,
     novel_synopsis: str,
-    novel_language: str,
     novel_tags: list,
     good_file_name: str,
     suffix: str,  # suffix to the file name
     no_suffix_after_filename: bool = False,
     is_rtl: bool = False,
+    novel_language: str = "en",
 ):
     logger.info("Binding epub for %s", book_title)
 
@@ -43,7 +43,8 @@ def bind_epub_book(
     book.set_title(book_title)
     book.add_author(novel_author)
     book.set_identifier(output_path + suffix)
-    # book.set_direction("rtl" if is_rtl else "default")
+    if is_rtl:
+        book.set_direction("rtl")
 
     for tag in novel_tags:
         book.add_metadata("DC", "subject", tag)
