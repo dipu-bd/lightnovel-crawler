@@ -33,16 +33,18 @@ class RoyalRoadCrawler(Crawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h1", {"property": "name"}).text.strip()
+        headerSoup = soup.find("div", {"class": "fic-title"})
+
+        self.novel_title = headerSoup.find("h1").text.strip()
         logger.info("Novel title: %s", self.novel_title)
+
+        self.novel_author = headerSoup.find("a").text.strip()
+        logger.info("Novel author: %s", self.novel_author)
 
         self.novel_cover = self.absolute_url(
             soup.find("img", {"class": "thumbnail inline-block"})["src"]
         )
         logger.info("Novel cover: %s", self.novel_cover)
-
-        self.novel_author = soup.find("span", {"property": "name"}).text.strip()
-        logger.info("Novel author: %s", self.novel_author)
 
         chapter_rows = soup.find("tbody").findAll("tr")
         chapters = [row.find("a", href=True) for row in chapter_rows]
