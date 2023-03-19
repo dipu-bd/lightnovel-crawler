@@ -33,7 +33,7 @@ class RoyalRoadCrawler(Crawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h1", {"property": "name"}).text.strip()
+        self.novel_title = soup.find("h1", {"class": "font-white"}).text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
         self.novel_cover = self.absolute_url(
@@ -41,8 +41,12 @@ class RoyalRoadCrawler(Crawler):
         )
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = soup.find("span", {"property": "name"}).text.strip()
+        self.novel_author = soup.find("a", {"class": "font-white"}).text.strip()
         logger.info("Novel author: %s", self.novel_author)
+
+        for tag in soup.find_all("a", {"class": "fiction-tag"}):
+            self.novel_tags.append(tag.text)
+        logger.info("Novel tags: %s", self.novel_tags)
 
         chapter_rows = soup.find("tbody").findAll("tr")
         chapters = [row.find("a", href=True) for row in chapter_rows]
