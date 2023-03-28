@@ -42,6 +42,7 @@ def bind_epub_book(
     book.set_language(novel_language)
     book.set_title(book_title)
     book.add_author(novel_author)
+    book.add_metadata('DC', 'description', novel_synopsis)
     book.set_identifier(output_path + suffix)
     if is_rtl:
         book.set_direction("rtl")
