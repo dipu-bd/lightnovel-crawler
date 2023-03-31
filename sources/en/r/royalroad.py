@@ -44,6 +44,9 @@ class RoyalRoadCrawler(Crawler):
         self.novel_author = soup.find("a", {"class": "font-white"}).text.strip()
         logger.info("Novel author: %s", self.novel_author)
 
+        self.novel_synopsis = self.cleaner.extract_contents(soup.find("div", {"class": "hidden-content"}))
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
+
         for tag in soup.find_all("a", {"class": "fiction-tag"}):
             self.novel_tags.append(tag.text)
         logger.info("Novel tags: %s", self.novel_tags)
