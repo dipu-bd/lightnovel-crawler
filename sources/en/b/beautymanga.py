@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 class BeautymangaCrawler(Crawler):
     has_manga = True
     base_url = [
+        "https://beautymanga.com/",
         "https://myreadingmanga.fit/",
     ]
 
