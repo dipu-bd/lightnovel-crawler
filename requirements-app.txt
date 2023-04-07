@@ -18,7 +18,7 @@ questionary>=1.6.0
 prompt-toolkit~=3.0
 html5lib~=1.1
 base58~=2.1.1
-python-box>=6.0.0,<7.0.0
+python-box>=6.0.0,<8.0.0
 pycryptodome>=3.0.0,<4.0.0
 webdriver-manager
 selenium>=3.141.0
