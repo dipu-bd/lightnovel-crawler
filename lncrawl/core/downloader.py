@@ -109,7 +109,13 @@ def _fetch_content_image(app, url, image_file):
         try:
             img = app.crawler.download_image(url)
             os.makedirs(os.path.dirname(image_file), exist_ok=True)
-            img.convert("RGB").save(image_file, "JPEG")
+            if img.mode not in ("L", "RGB", "YCbCr", "RGBX"):
+                if img.mode == "RGBa":
+                    #RGBa -> RGB isn't supported so we go through RGBA first
+                    img.convert("RGBA").convert("RGB")
+                else:
+                    img = img.convert("RGB")
+            img.save(image_file, "JPEG", optimized=True)
             logger.debug("Saved image: %s", image_file)
         finally:
             app.progress += 1
