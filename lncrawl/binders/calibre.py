@@ -57,7 +57,7 @@ def epub_to_calibre(app, epub_file, out_fmt):
         "--authors",
         app.crawler.novel_author,
         '--comments',
-        app.crawler.synopsis,
+        app.crawler.novel_synopsis,
         '--language',
         app.crawler.language,
         '--tags',

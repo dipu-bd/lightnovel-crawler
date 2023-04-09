@@ -50,7 +50,7 @@ class Lnmtlfr(Crawler):
             soup.find("div", {"class": "summary_image"}).find("img").get("src")
         )
 
-        self.synopsis = self.cleaner.extract_contents(soup.find("div", {"class": "summary__content"}).find("p"))
+        self.novel_synopsis = self.cleaner.extract_contents(soup.find("div", {"class": "summary__content"}).find("p"))
         self.language = "fr"
 
         self.novel_author = ", ".join(
