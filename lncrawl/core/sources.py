@@ -282,7 +282,7 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
                 raise LNException(f"Should be callable: {method} @{file_path}")
 
         setattr(crawler, "base_url", urls)
-        setattr(crawler, "novel_language", language_code)
+        setattr(crawler, "language", language_code)
         setattr(crawler, "file_path", str(file_path.absolute()))
 
         crawlers.append(crawler)
