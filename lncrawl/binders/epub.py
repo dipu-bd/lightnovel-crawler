@@ -33,13 +33,13 @@ def bind_epub_book(
     suffix: str,  # suffix to the file name
     no_suffix_after_filename: bool = False,
     is_rtl: bool = False,
-    novel_language: str = "en",
+    language: str = "en",
 ):
     logger.info("Binding epub for %s", book_title)
 
     logger.debug("Creating EpubBook instance")
     book = epub.EpubBook()
-    book.set_language(novel_language)
+    book.set_language(language)
     book.set_title(book_title)
     book.add_author(novel_author)
     book.add_metadata('DC', 'description', novel_synopsis)
@@ -235,7 +235,7 @@ def make_epubs(app, data: Dict[str, List[Chapter]]) -> List[str]:
             novel_author=app.crawler.novel_author or app.crawler.home_url,
             novel_url=app.crawler.novel_url,
             novel_synopsis=app.crawler.novel_synopsis,
-            novel_language=app.crawler.novel_language,
+            language=app.crawler.language,
             novel_tags=app.crawler.novel_tags,
             output_path=app.output_path,
             book_cover=app.book_cover,
