@@ -97,7 +97,7 @@ class animesama(Crawler):
             group_var = re.findall(r"(var \w+=\s*\[\n(?:'[^']*'(?:,\n)?)+\];)", js_code)
             url_lists = []
             for var in group_var:
-                name = re.search(r"var (\w+)", var).group(1)
+                name = int(re.search(r"var eps(\d+)", var).group(1))
                 urls = re.findall(r"'([^']*)'", var)
                 url_lists.append([name, urls])
 
@@ -132,5 +132,5 @@ class animesama(Crawler):
                 )
 
     def download_chapter_body(self, chapter):
-        list_of_img = self.all_content[chapter["volume"]][chapter["id"]]
+        list_of_img = self.all_content[chapter["volume"]][chapter["id"] - 1]
         return "".join([f'<img src="{src}" />' for src in list_of_img])
