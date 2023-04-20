@@ -51,7 +51,7 @@ class BestLightNovel(Crawler):
         synopsis = soup.select_one("#noidungm")
         if synopsis.select_one("p"):
             synopsis.select_one("p").extract()
-        self.novel_synopsis = synopsis.text.strip()
+        self.novel_synopsis = self.cleaner.extract_contents(synopsis)
 
         self.novel_tags = [
             a.text.strip()
