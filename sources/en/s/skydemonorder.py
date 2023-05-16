@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class SkyDemonOrder(Crawler):
-    base_url = ["https://skydemonorder.com"]
+    base_url = "https://skydemonorder.com"
 
     def read_novel_info(self) -> None:
         logger.debug("Visiting %s", self.novel_url)
