@@ -18,7 +18,7 @@ class SkyDemonOrder(Crawler):
         self.novel_title = possible_title
         logger.info("Novel title: %s", self.novel_title)
 
-        possible_image = soup.select_one(f"img[alt='{self.novel_title}']")
+        possible_image = soup.select_one("img[alt='{self.novel_title}']")
         if possible_image:
             self.novel_cover = possible_image["src"]
         logger.info("Novel cover: %s", self.novel_cover)
