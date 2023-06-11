@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 automation_warning = """
 <div style="opacity: 0.5; padding: 14px; text-align: center; border: 1px solid #000; font-style: italic; font-size: 0.825rem">
-    Parsed with an automated reader. The content accuracy is not guranteed.
+    Parsed with an automated reader. The content accuracy is not guaranteed.
 </div>
 """.strip()
 
