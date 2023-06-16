@@ -6,21 +6,22 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = (
-    "https://1stkissnovel.org/?s=%s&post_type=wp-manga&author=&artist=&release="
+    "%s?s=%s&post_type=wp-manga&author=&artist=&release="
 )
-wp_admin_ajax_url = "https://1stkissnovel.org/wp-admin/admin-ajax.php"
-
 
 class OneKissNovelCrawler(Crawler):
     has_mtl = True
-    base_url = "https://1stkissnovel.org/"
+    base_url = [
+        "https://1stkissnovel.org/",
+        "https://1stkissnovel.love/",
+    ]
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3"])
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
+        soup = self.get_soup(search_url % (self.home_url, query))
 
         results = []
         for tab in soup.select(".c-tabs-item__content"):
@@ -34,7 +35,6 @@ class OneKissNovelCrawler(Crawler):
                     "info": "%s | Rating: %s" % (latest, votes),
                 }
             )
-
         return results
 
     def read_novel_info(self):
@@ -48,10 +48,8 @@ class OneKissNovelCrawler(Crawler):
         logger.info("Novel title: %s", self.novel_title)
 
         img_src = soup.select_one(".summary_image a img")
-
         if img_src:
             self.novel_cover = self.absolute_url(img_src["data-src"])
-
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = " ".join(
@@ -64,18 +62,6 @@ class OneKissNovelCrawler(Crawler):
 
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
         logger.info("Novel id: %s", self.novel_id)
-
-        # For getting cookies
-        # self.submit_form(wp_admin_ajax_url, data={
-        #    'action': 'manga_views',
-        #    'manga': self.novel_id,
-        # })
-
-        # Deprecated way to fetch chapters
-        # response = self.submit_form(wp_admin_ajax_url, data={
-        #     'action': 'manga_get_chapters',
-        #     'manga': self.novel_id,
-        # })
 
         clean_novel_url = self.novel_url.split("?")[0].strip("/")
         response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
