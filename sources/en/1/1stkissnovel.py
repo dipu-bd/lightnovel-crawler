@@ -9,6 +9,7 @@ search_url = (
     "%s?s=%s&post_type=wp-manga&author=&artist=&release="
 )
 
+
 class OneKissNovelCrawler(Crawler):
     has_mtl = True
     base_url = [
@@ -82,7 +83,6 @@ class OneKissNovelCrawler(Crawler):
             )
 
     def download_chapter_body(self, chapter):
-        logger.info("Visiting %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div.text-left")
         return self.cleaner.extract_contents(contents)
