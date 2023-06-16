@@ -6,14 +6,14 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = (
-    "https://1stkissnovel.love/?s=%s&post_type=wp-manga&author=&artist=&release="
+    "https://1stkissnovel.org/?s=%s&post_type=wp-manga&author=&artist=&release="
 )
-wp_admin_ajax_url = "https://1stkissnovel.love/wp-admin/admin-ajax.php"
+wp_admin_ajax_url = "https://1stkissnovel.org/wp-admin/admin-ajax.php"
 
 
 class OneKissNovelCrawler(Crawler):
     has_mtl = True
-    base_url = "https://1stkissnovel.love/"
+    base_url = "https://1stkissnovel.org/"
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3"])
