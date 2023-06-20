@@ -47,5 +47,5 @@ class ExiledRebelsScanlations(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        contents = soup.select("div#wtr-content")
+        contents = soup.select_one("div#wtr-content")
         return self.cleaner.extract_contents(contents)
