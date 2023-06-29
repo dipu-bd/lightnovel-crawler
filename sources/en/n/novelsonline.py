@@ -1,76 +1,78 @@
 # -*- coding: utf-8 -*-
+
 import logging
-import re
-from lncrawl.core.crawler import Crawler
+from typing import Generator, Union
+
+from bs4 import BeautifulSoup, Tag
+
+from lncrawl.models import Chapter, Volume
+from lncrawl.templates.browser.general import GeneralBrowserTemplate
 
 logger = logging.getLogger(__name__)
-search_url = "https://novelsonline.net/search/autocomplete"
 
 
-class NovelsOnline(Crawler):
-    base_url = "https://novelsonline.net/"
+class NovelsOnline(GeneralBrowserTemplate):
+    base_url = ["https://novelsonline.net/"]
+    has_manga = False
+    has_mtl = False
 
-    def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
-
-        possible_title = soup.select_one(".block-title h1")
-        assert possible_title, "No novel title"
-        self.novel_title = possible_title.text
-        logger.info("Novel title: %s", self.novel_title)
-
-        self.novel_cover = self.absolute_url(
-            soup.find("img", {"alt": self.novel_title})["src"]
+    # TODO: [OPTIONAL] This is called before all other methods.
+    def initialize(self) -> None:
+        self.cleaner.bad_tags.update(["div"])
+        self.cleaner.bad_css.update(
+            [
+                ".trinity-player-iframe-wrapper",
+                ".hidden",
+                ".ads-title",
+                "script",
+                "center",
+                "interaction",
+                "a[href*=remove-ads]",
+                "a[target=_blank]",
+                "hr",
+                "br",
+                "#growfoodsmart",
+                ".col-md-6",
+                ".trv_player_container",
+                ".ad1",
+            ]
         )
-        logger.info("Novel cover: %s", self.novel_cover)
 
-        author_link = soup.select_one("a[href*=author]")
-        if author_link:
-            self.novel_author = author_link.text.strip().title()
-        logger.info("Novel author: %s", self.novel_author)
+    # TODO: [OPTIONAL] Open the Novel URL in the browser
+    def visit_novel_page_in_browser(self) -> BeautifulSoup:
+        self.visit(self.novel_url)
+        self.browser.wait(".container--content")
 
-        volume_ids = set()
+    def parse_title(self, soup: BeautifulSoup) -> str:
+        tag = soup.select_one(".block-title h1")
+        assert tag
+        return tag.text.strip()
+
+    def parse_cover(self, soup: BeautifulSoup) -> str:
+        tag = soup.find("img", {"alt": self.novel_title})
+        assert tag
+        if tag.has_attr("data-src"):
+            return self.absolute_url(tag["data-src"])
+        elif tag.has_attr("src"):
+            return self.absolute_url(tag["src"])
+
+    def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        for a in soup.select("a[href*=author]"):
+            yield a.text.strip()
+
+    def parse_chapter_list(
+        self, soup: BeautifulSoup
+    ) -> Generator[Union[Chapter, Volume], None, None]:
+        _id = 0
         for a in soup.select(".chapters .chapter-chs li a"):
-            chap_id = len(self.chapters) + 1
-            vol_id = (chap_id - 1) // 100 + 1
-            volume_ids.add(vol_id)
-            self.chapters.append(
-                {
-                    "id": chap_id,
-                    "volume": vol_id,
-                    "url": self.absolute_url(a["href"]),
-                    "title": a.text.strip() or ("Chapter %d" % chap_id),
-                }
+            _id += 1
+            yield Chapter(
+                id=_id, url=self.absolute_url(a["href"]), title=a.text.strip()
             )
 
-        self.volumes = [{"id": i} for i in volume_ids]
+    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
+        self.visit(chapter.url)
+        self.browser.wait(".container--content")
 
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-
-        div = soup.select_one(".chapter-content3")
-
-        bad_selectors = [
-            ".trinity-player-iframe-wrapper" ".hidden",
-            ".ads-title",
-            "script",
-            "center",
-            "interaction",
-            "a[href*=remove-ads]",
-            "a[target=_blank]",
-            "hr",
-            "br",
-            "#growfoodsmart",
-            ".col-md-6",
-        ]
-        for hidden in div.select(", ".join(bad_selectors)):
-            hidden.extract()
-
-        body = self.cleaner.extract_contents(div)
-        if re.search(r"c?hapter .?\d+", body[0], re.IGNORECASE):
-            title = body[0].replace("<strong>", "").replace("</strong>", "").strip()
-            title = ("C" if title.startswith("hapter") else "") + title
-            chapter["title"] = title.strip()
-            body = body[1:]
-
-        return "<p>" + "</p><p>".join(body) + "</p>"
+    def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        return soup.select_one("#contentall")
