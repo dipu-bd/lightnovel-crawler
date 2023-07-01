@@ -74,7 +74,7 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
             int(a["value"]) for a in self.browser.soup.select(".form_submit option")
         )
         if not _pages:
-            _page = 1
+            _pages = 1
         tags = self.browser.soup.select(".chapters__container .cat_line a")
         for i in range(2, _pages + 1):
             self.browser.visit(
