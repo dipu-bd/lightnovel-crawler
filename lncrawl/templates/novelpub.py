@@ -12,7 +12,7 @@ from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
-digit_regex = re.compile(r"page-(\d+)$")
+digit_regex = re.compile(r"page[-,=](\d+)")
 
 
 class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
