@@ -31,7 +31,7 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
     def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
         self.visit(urljoin(self.home_url, "/search/{}/".format(quote_plus(query))))
         self.browser.wait(".breadcrumbs-panel")
-        for elem in self.browser.find_all(".short-cont .title a"):
+        for elem in self.browser.select(".short-cont .title a"):
             yield elem.as_tag()
 
     def select_search_items(self, query: str) -> Generator[Tag, None, None]:
