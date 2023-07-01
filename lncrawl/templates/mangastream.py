@@ -43,7 +43,9 @@ class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTempla
         return self.parse_title(self.browser.soup)
 
     def parse_cover(self, soup: BeautifulSoup) -> str:
-        tag = soup.select_one(".thumbook img, meta[property='og:image']")
+        tag = soup.select_one(
+            ".thumbook img, meta[property='og:image'],.sertothumb img"
+        )
         if tag.has_attr("data-src"):
             return self.absolute_url(tag["data-src"])
 
@@ -84,3 +86,7 @@ class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTempla
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         return soup.select_one("#readernovel, #readerarea, .entry-content")
+
+    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
+        self.visit(chapter.url)
+        self.browser.wait("#readernovel, #readerarea, .entry-content,.mainholder")

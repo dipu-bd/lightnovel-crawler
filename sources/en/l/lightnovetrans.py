@@ -1,52 +1,52 @@
 # -*- coding: utf-8 -*-
+
 import logging
-from lncrawl.core.crawler import Crawler
+from typing import Generator, Union
+
+from bs4 import BeautifulSoup, Tag
+
+from lncrawl.models import Chapter, Volume
+from lncrawl.templates.soup.general import GeneralSoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class LNTCrawler(Crawler):
-    base_url = 'https://lightnovelstranslations.com/'
+class LNTCrawler(GeneralSoupTemplate):
+    base_url = ["https://lightnovelstranslations.com/"]
 
-    def read_novel_info(self):
-        soup = self.get_soup(self.novel_url)
+    has_manga = False
+    has_mtl = False
 
-        possible_title = soup.select_one('h1.entry-title')
-        assert possible_title, 'No novel title'
-        self.novel_title = possible_title.text
+    def get_novel_soup(self) -> BeautifulSoup:
+        return self.get_soup(f"{self.novel_url}/?tab=table_contents")
 
-        possible_cover = soup.select_one('meta[property="og:image"]')
-        if possible_cover:
-            self.novel_cover = self.absolute_url(possible_cover['content'])
+    def parse_title(self, soup: BeautifulSoup) -> str:
+        tag = soup.select_one(".novel_title")
+        assert tag
+        return tag.text.strip()
 
-        for p in soup.select('.entry-content > p'):
-            if 'Author' in p.text:
-                self.novel_author = p.text.replace('Author:', '').strip()
-                break
+    def parse_cover(self, soup: BeautifulSoup) -> str:
+        tag = soup.select_one(".novel-image img")
+        assert tag
+        if tag.has_attr("data-src"):
+            return self.absolute_url(tag["data-src"])
+        if tag.has_attr("src"):
+            return self.absolute_url(tag["src"])
 
-        for div in soup.select('.entry-content .su-spoiler'):
-            vol = div.select_one('.su-spoiler-title').text.strip()
-            vol_id = int(vol) if vol.isdigit() else len(self.volumes) + 1
-            self.volumes.append({
-                'id': vol_id,
-                'title': vol,
-            })
-            for a in div.select('.su-spoiler-content p a'):
-                if not a.has_attr('href'):
-                    continue
-                self.chapters.append({
-                    'id': len(self.chapters) + 1,
-                    'volume': vol_id,
-                    'title': a.text.strip(),
-                    'url': self.absolute_url(a['href']),
-                })
+    def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        for p in soup.select(".entry-content > p"):
+            if "Author" in p.text:
+                yield p.text.replace("Author:", "").strip()
 
-    def download_chapter_body(self, chapter):
-        logger.info('Visiting: %s', chapter['url'])
-        soup = self.get_soup(chapter['url'])
+    def parse_chapter_list(
+        self, soup: BeautifulSoup
+    ) -> Generator[Union[Chapter, Volume], None, None]:
+        _id = 0
+        for a in soup.select(".novel_list_chapter_content li.unlock a"):
+            _id += 1
+            yield Chapter(
+                id=_id, url=self.absolute_url(a["href"]), title=a.text.strip()
+            )
 
-        content = soup.select_one('.entry-content')
-        for bad in content.select('.alignleft, .alignright, hr, p[style*="text-align: center"]'):
-            bad.extract()
-
-        return '\n'.join([str(p) for p in content.find_all('p')])
+    def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        return soup.select_one(".text_story")
