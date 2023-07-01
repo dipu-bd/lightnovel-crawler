@@ -57,8 +57,8 @@ class OptionalVolumeBrowserTemplate(GeneralBrowserTemplate, OptionalVolumeSoupTe
 
     def select_chapter_tags_in_browser(self, tag: Tag) -> Generator[Tag, None, None]:
         """Select chapter list item tags from volume tag from the browser"""
-        raise self.select_chapter_tags(tag)
+        return self.select_chapter_tags(tag)
 
     def parse_chapter_item_in_browser(self, tag: Tag, id: int, vol: Volume) -> Chapter:
         """Parse a single chapter from chapter list item tag from the browser"""
-        raise self.parse_chapter_item(tag, id, vol)
+        return self.parse_chapter_item(tag, id, vol)
