@@ -58,10 +58,6 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
             )
         )
         self.browser.wait(".search")
-        for a in self.browser.soup.select(
-            ".fic .search_main_box .search_body .search_title a"
-        ):
-            print(a)
         for elem in self.browser.soup.select(
             ".fic .search_main_box .search_body .search_title a"
         ):
@@ -108,7 +104,7 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
             ]
         )
         if not _pages:
-            _page = 1
+            _pages = 1
         tags = self.browser.soup.select(".main .toc li a")
         for i in range(2, _pages + 1):
             self.browser.visit(urljoin(self.novel_url, f"?toc={i}#content1"))
