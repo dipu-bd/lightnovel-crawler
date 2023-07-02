@@ -74,9 +74,9 @@ def create_local(
     # options.add_argument("--disable-dev-shm-usage")
 
     # Add capabilities
-    options.set_capability("quietExceptions", True)
+    #options.set_capability("quietExceptions", True)
     options.set_capability("acceptInsecureCerts", True)
-    options.set_capability("useAutomationExtension", False)
+    #options.set_capability("useAutomationExtension", False)
 
     # Configure window behavior
     if headless:
