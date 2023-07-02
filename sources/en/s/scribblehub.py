@@ -1,21 +1,31 @@
 # -*- coding: utf-8 -*-
+
 import logging
-from math import ceil
-from urllib.parse import quote
+import re
 
-from bs4 import Tag
+from typing import Generator, Union
 
-from lncrawl.core.crawler import Crawler
+from bs4 import BeautifulSoup, Tag
+
+from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
+from lncrawl.core.exeptions import FallbackToBrowser
+
+from urllib.parse import urljoin, quote_plus
 
 logger = logging.getLogger(__name__)
-chapter_post_url = "https://www.scribblehub.com/wp-admin/admin-ajax.php"
+
+digit_regex = re.compile(r"\?toc=(\d+)#content1$")
 
 
-class ScribbleHubCrawler(Crawler):
+class ScribbleHubCrawler(SearchableBrowserTemplate):
     base_url = [
         "https://www.scribblehub.com/",
         "https://scribblehub.com/",
     ]
+
+    has_manga = False
+    has_mtl = False
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update(
@@ -41,92 +51,83 @@ class ScribbleHubCrawler(Crawler):
             ]
         )
 
-    def search_novel(self, query):
-        url = f"{self.home_url}?s={quote(query)}&post_type=fictionposts"
-        soup = self.get_soup(url)
-
-        results = []
-        for novel in soup.select("div.search_body"):
-            a = novel.select_one(".search_title a")
-            info = novel.select_one(".search_stats")
-            if not isinstance(a, Tag):
-                continue
-
-            results.append(
-                {
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                    "info": info.text.strip() if isinstance(info, Tag) else "",
-                }
+    def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
+        self.visit(
+            urljoin(
+                self.home_url, "/?s={}&post_type=fictionposts".format(quote_plus(query))
             )
-
-        return results
-
-    def read_novel_info(self):
-        soup = self.get_soup(self.novel_url)
-
-        possible_title = soup.select_one("div.fic_title")
-        assert isinstance(possible_title, Tag)
-        self.novel_title = str(possible_title["title"]).strip()
-        logger.info("Novel title: %s", self.novel_title)
-
-        possible_image = soup.find("div", {"class": "fic_image"})
-        if isinstance(possible_image, Tag):
-            possible_image = possible_image.find("img")
-            if isinstance(possible_image, Tag):
-                self.novel_cover = self.absolute_url(possible_image["src"])
-        logger.info("Novel cover: %s", self.novel_cover)
-
-        possible_author = soup.find("span", {"class": "auth_name_fic"})
-        if isinstance(possible_author, Tag):
-            self.novel_author = possible_author.text.strip()
-        logger.info("Novel author: %s", self.novel_author)
-
-        chapter_count = soup.find("span", {"class": "cnt_toc"})
-        chapter_count = (
-            int(chapter_count.text) if isinstance(chapter_count, Tag) else -1
         )
-        page_count = ceil(chapter_count / 15.0)
-        logger.info("Chapter list pages: %d" % page_count)
+        self.browser.wait(".search")
+        for a in self.browser.soup.select(
+            ".fic .search_main_box .search_body .search_title a"
+        ):
+            print(a)
+        for elem in self.browser.soup.select(
+            ".fic .search_main_box .search_body .search_title a"
+        ):
+            yield elem
 
-        possible_mypostid = soup.select_one("input#mypostid")
-        assert isinstance(possible_mypostid, Tag)
-        mypostid = int(str(possible_mypostid["value"]))
-        logger.info("#mypostid = %d", mypostid)
+    def select_search_items(self, query: str) -> Generator[Tag, None, None]:
+        raise FallbackToBrowser()
 
-        response = self.submit_form(
-            f"{self.home_url}wp-admin/admin-ajax.php",
-            {
-                "action": "wi_getreleases_pagination",
-                "pagenum": -1,
-                "mypostid": mypostid,
-            },
+    def parse_search_item(self, tag: Tag) -> SearchResult:
+        return SearchResult(
+            title=tag.text.strip(),
+            url=self.absolute_url(tag["href"]),
         )
 
-        soup = self.make_soup(response)
-        for chapter in reversed(soup.select(".toc_ol a.toc_a")):
-            self.chapters.append(
-                {
-                    "id": len(self.chapters) + 1,
-                    "url": self.absolute_url(str(chapter["href"])),
-                    "title": chapter.text.strip(),
-                }
+    def visit_novel_page_in_browser(self) -> BeautifulSoup:
+        self.visit(self.novel_url)
+        self.browser.wait(".fictionposts-template-default")
+
+    def parse_title(self, soup: BeautifulSoup) -> str:
+        tag = soup.select_one(".fic_title")
+        assert tag
+        return tag.text.strip()
+
+    def parse_cover(self, soup: BeautifulSoup) -> str:
+        tag = soup.select_one(".fic_image img")
+        assert tag
+        if tag.has_attr("data-src"):
+            return self.absolute_url(tag["data-src"])
+        elif tag.has_attr("src"):
+            return self.absolute_url(tag["src"])
+
+    def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        for a in soup.select(".nauth_name_fic"):
+            yield a.text.strip()
+
+    def parse_chapter_list_in_browser(
+        self,
+    ) -> Generator[Union[Chapter, Volume], None, None]:
+        _pages = max(
+            [
+                int(digit_regex.search(a["href"]).group(1))
+                for a in self.browser.soup.select(".simple-pagination a")
+                if digit_regex.search(a["href"]) is not None
+            ]
+        )
+        if not _pages:
+            _page = 1
+        tags = self.browser.soup.select(".main .toc li a")
+        for i in range(2, _pages + 1):
+            self.browser.visit(urljoin(self.novel_url, f"?toc={i}#content1"))
+            self.browser.wait(".main")
+            tags += self.browser.soup.select(".main .toc li a")
+
+        for _id, _t in enumerate(reversed(tags)):
+            yield Chapter(
+                id=_id, url=self.absolute_url(_t.get("href")), title=_t.text.strip()
             )
 
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        contents = soup.select_one("div#chp_raw")
-        self.cleaner.clean_contents(contents)
-        body = str(contents)
-        body += """<style type="text/css">
-        table {
-            margin: 0 auto;
-            border: 2px solid;
-            border-collapse: collapse;
-        }
-        table td {
-            padding: 10px;
-        }
-        </style>
-        """
-        return body
+    def parse_chapter_list(
+        self, soup: BeautifulSoup
+    ) -> Generator[Union[Chapter, Volume], None, None]:
+        pass
+
+    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
+        self.visit(chapter.url)
+        self.browser.wait(".site-content-contain")
+
+    def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        return soup.select_one("div#chp_raw")
