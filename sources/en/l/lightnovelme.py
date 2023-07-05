@@ -60,7 +60,7 @@ class LightNovelsLive(Crawler):
             [author['name'] for author in data['props']['pageProps']['authors']]
         )
 
-        # Add proper spacing in the synopsis. (often lacking)
+        # Adds proper spacing in the synopsis. (often lacking)
         for paragraph in re.split('\\.(?=\\S)', str(novel_info['novel_description'])):
             if self.novel_synopsis == "":
                 self.novel_synopsis += paragraph
