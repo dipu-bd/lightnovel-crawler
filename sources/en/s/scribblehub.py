@@ -11,7 +11,6 @@ from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
 from lncrawl.core.exeptions import FallbackToBrowser
 
-from math import ceil
 from urllib.parse import urljoin, quote_plus
 
 logger = logging.getLogger(__name__)
