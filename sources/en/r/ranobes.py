@@ -21,6 +21,9 @@ digit_regex = re.compile(r"\/(\d+)-")
 class RanobeLibCrawler(SearchableBrowserTemplate):
     base_url = [
         "https://ranobes.top/",
+        "http://ranobes.top/",
+        "https://ranobes.net/",
+        "http://ranobes.net/",
     ]
     has_manga = False
     has_mtl = False
@@ -32,10 +35,15 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
         self.visit(urljoin(self.home_url, "/search/{}/".format(quote_plus(query))))
         self.browser.wait(".breadcrumbs-panel")
         for elem in self.browser.select(".short-cont .title a"):
-            yield elem.as_tag()
+            yield elem
 
     def select_search_items(self, query: str) -> Generator[Tag, None, None]:
-        raise FallbackToBrowser()
+        soup = self.get_soup(
+            urljoin(self.home_url, "/search/{}/".format(quote_plus(query)))
+        )
+
+        for elem in soup.select(".short-cont .title a"):
+            yield elem
 
     def parse_search_item(self, tag: Tag) -> SearchResult:
         return SearchResult(
@@ -91,7 +99,22 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
     def parse_chapter_list(
         self, soup: BeautifulSoup
     ) -> Generator[Union[Chapter, Volume], None, None]:
-        pass
+        _pages = max(
+            int(a["value"]) for a in soup.select(".form_submit option")
+        )
+        if not _pages:
+            _pages = 1
+        tags = soup.select(".chapters__container .cat_line a")
+        for i in range(2, _pages + 1):
+            soup=self.get_soup(
+                urljoin(self.home_url, f"/chapters/{self.novel_id}/page/{i}/")
+            )
+            tags += soup.select(".chapters__container .cat_line a")
+
+        for _id, _t in enumerate(reversed(tags)):
+            yield Chapter(
+                id=_id, url=self.absolute_url(_t.get("href")), title=_t.get("title")
+            )
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
         self.visit(chapter.url)
