@@ -124,7 +124,6 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
         chapter_count = (
             int(chapter_count.text) if isinstance(chapter_count, Tag) else -1
         )
-        page_count = ceil(chapter_count / 15.0)
 
         possible_mypostid = soup.select_one("input#mypostid")
         assert isinstance(possible_mypostid, Tag)
@@ -142,10 +141,10 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
         soup = self.make_soup(response)
         for chapter in reversed(soup.select(".toc_ol a.toc_a")):
             yield Chapter(
-                    id= len(self.chapters) + 1,
-                    url=self.absolute_url(str(chapter["href"])),
-                    title=chapter.text.strip(),
-                )
+                id=len(self.chapters) + 1,
+                url=self.absolute_url(str(chapter["href"])),
+                title=chapter.text.strip(),
+            )
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
         self.visit(chapter.url)
