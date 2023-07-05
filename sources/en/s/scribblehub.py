@@ -11,6 +11,7 @@ from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
 from lncrawl.core.exeptions import FallbackToBrowser
 
+from math import ceil
 from urllib.parse import urljoin, quote_plus
 
 logger = logging.getLogger(__name__)
@@ -119,7 +120,32 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
     def parse_chapter_list(
         self, soup: BeautifulSoup
     ) -> Generator[Union[Chapter, Volume], None, None]:
-        pass
+        chapter_count = soup.find("span", {"class": "cnt_toc"})
+        chapter_count = (
+            int(chapter_count.text) if isinstance(chapter_count, Tag) else -1
+        )
+        page_count = ceil(chapter_count / 15.0)
+
+        possible_mypostid = soup.select_one("input#mypostid")
+        assert isinstance(possible_mypostid, Tag)
+        mypostid = int(str(possible_mypostid["value"]))
+        logger.info("#mypostid = %d", mypostid)
+
+        response = self.submit_form(
+            f"{self.home_url}wp-admin/admin-ajax.php",
+            {
+                "action": "wi_getreleases_pagination",
+                "pagenum": -1,
+                "mypostid": mypostid,
+            },
+        )
+        soup = self.make_soup(response)
+        for chapter in reversed(soup.select(".toc_ol a.toc_a")):
+            yield Chapter(
+                    id= len(self.chapters) + 1,
+                    url=self.absolute_url(str(chapter["href"])),
+                    title=chapter.text.strip(),
+                )
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
         self.visit(chapter.url)
