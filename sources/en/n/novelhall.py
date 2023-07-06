@@ -30,7 +30,7 @@ class NovelHallCrawler(Crawler):
             chapter_number = latest_chapter[0]
 
             if chapter_number.isdigit():
-                latest_chapter = "Chapter %s: %s", (chapter_number, latest_chapter[1])
+                latest_chapter = "Chapter %s: %s" % (chapter_number, latest_chapter[1])
             else:
                 latest_chapter = "Latest chapter: " + latest_chapter[0]
 
