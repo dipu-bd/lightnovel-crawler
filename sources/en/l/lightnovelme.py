@@ -61,6 +61,8 @@ class LightNovelsLive(Crawler):
         )
 
         # Adds proper spacing in the synopsis. (lossy)
+        #
+        # Regex101 link: https://regex101.com/r/lajsXs/3
         for paragraph in re.split(r'[.!?](?=\w+)(?!\S+[.!?()]+(\s|\w))', novel_info['novel_description']):
             if paragraph is None:
                 self.novel_synopsis += "<br/><br/>"
