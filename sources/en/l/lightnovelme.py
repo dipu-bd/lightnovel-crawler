@@ -60,14 +60,15 @@ class LightNovelsLive(Crawler):
             [author['name'] for author in data['props']['pageProps']['authors']]
         )
 
-        # Adds proper spacing in the synopsis. (often lacking)
-        for paragraph in re.split('\\.(?=\\S)', str(novel_info['novel_description'])):
-            if self.novel_synopsis == "":
-                self.novel_synopsis += paragraph
-            else:
-                self.novel_synopsis += "<br/><br/>" + paragraph
+        # Adds proper spacing in the synopsis. (lossy)
+        for paragraph in re.split(r'[.!?](?=\w+)(?!\S+[.!?()]+(\s|\w))', novel_info['novel_description']):
+            if paragraph is None:
+                self.novel_synopsis += "<br/><br/>"
+                continue
 
-            if paragraph.endswith('!') | paragraph.endswith('?'):
+            self.novel_synopsis += paragraph
+
+            if paragraph.endswith('!') | paragraph.endswith('?') | paragraph.endswith('.'):
                 pass
             else:
                 self.novel_synopsis += "."
@@ -98,7 +99,7 @@ class LightNovelsLive(Crawler):
     def download_chapter_body(self, chapter):
         tag = self.get_soup(chapter['url']).select_one(".chapter-content div")
 
-        str_chapter = self.cleaner.extract_contents(tag).replace("\\'", "'").strip()
+        str_chapter = self.cleaner.extract_contents(tag).replace(r"\'", "'").strip()
         if str_chapter == "":
             print(f"  Warning: no contents in chapter {chapter['id']}, {chapter['title']}.")
             str_chapter = '<h4>Empty chapter.</h4>' +\
