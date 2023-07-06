@@ -99,10 +99,9 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
         self, soup: BeautifulSoup
     ) -> Generator[Union[Chapter, Volume], None, None]:
         self.novel_id = digit_regex.search(self.novel_url).group(1)
-        chapter_list_link=urljoin(self.home_url, f"/chapters/{self.novel_id}/")
-        soup=self.get_soup(chapter_list_link)
+        chapter_list_link = urljoin(self.home_url, f"/chapters/{self.novel_id}/")
+        soup = self.get_soup(chapter_list_link)
         script = soup.find(
-            
             lambda tag: isinstance(tag, Tag)
             and tag.name == "script"
             and tag.text.startswith("window.__DATA__")
@@ -122,8 +121,7 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
             futures.append(f)
         page_soups += [f.result() for f in futures]
 
-        
-        _i=0
+        _i = 0
         for soup in reversed(page_soups):
             script = soup.find(
                 lambda tag: isinstance(tag, Tag)
@@ -134,13 +132,13 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
 
             data = js2py.eval_js(script.text).to_dict()
             assert isinstance(data, dict)
-            
+
             for chapter in reversed(data["chapters"]):
-                _i+=1
+                _i += 1
                 yield Chapter(
-                        id = _i,
-                        title = chapter["title"],
-                        url = self.absolute_url(chapter["link"]),
+                    id=_i,
+                    title=chapter["title"],
+                    url=self.absolute_url(chapter["link"]),
                 )
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
@@ -149,4 +147,3 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         return soup.select_one("div#arrticle")
-
