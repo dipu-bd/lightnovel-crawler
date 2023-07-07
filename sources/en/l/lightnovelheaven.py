@@ -52,6 +52,15 @@ class LightNovelHeaven(Crawler):
             self.novel_author = author[0].text
         logger.info("Novel author: %s", self.novel_author)
 
+        self.novel_tags = [tag.text.strip() for tag in soup.select(".genres-content a")]
+        logger.info("Novel tags: %s", self.novel_tags)
+
+        synopsis = soup.select_one(".summary__content")
+        for h3 in synopsis.select("h3"):
+            h3.extract()
+        self.novel_synopsis = self.cleaner.extract_contents(synopsis)
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
+
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
         logger.info("Novel id: %s", self.novel_id)
 
