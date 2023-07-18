@@ -57,28 +57,32 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup):
-        last_page = soup.select("#chapters .pagination li a")[-1]["href"]
-        last_page_qs = parse_qs(urlparse(last_page).query)
-        max_page = int(last_page_qs["page"][0])
-        wjm = last_page_qs["wjm"][0]
+        tag = soup.select("#chapters .pagination li a")
+        if tag:
+            last_page=tag[-1]["href"]
+            last_page_qs = parse_qs(urlparse(last_page).query)
+            max_page = int(last_page_qs["page"][0])
+            wjm = last_page_qs["wjm"][0]
 
-        futures: List[Future] = []
-        for i in range(max_page + 1):
-            payload = {
-                "page": i,
-                "wjm": wjm,
-                "_": self.cur_time,
-                "X-Requested-With": "XMLHttpRequest",
-            }
-            url = f"{self.home_url}e/extend/fy.php?{urlencode(payload)}"
-            f = self.executor.submit(self.get_soup, url)
-            futures.append(f)
+            futures: List[Future] = []
+            for i in range(max_page + 1):
+                payload = {
+                    "page": i,
+                    "wjm": wjm,
+                    "_": self.cur_time,
+                    "X-Requested-With": "XMLHttpRequest",
+                }
+                url = f"{self.home_url}e/extend/fy.php?{urlencode(payload)}"
+                f = self.executor.submit(self.get_soup, url)
+                futures.append(f)
 
-        self.resolve_futures(futures, desc="TOC", unit="page")
-        for i, future in enumerate(futures):
-            if not future.done():
-                raise LNException(f"Failed to get page {i + 1}")
-            soup = future.result()
+            self.resolve_futures(futures, desc="TOC", unit="page")
+            for i, future in enumerate(futures):
+                if not future.done():
+                    raise LNException(f"Failed to get page {i + 1}")
+                soup = future.result()
+                yield from soup.select("ul.chapter-list li a")
+        else:
             yield from soup.select("ul.chapter-list li a")
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
