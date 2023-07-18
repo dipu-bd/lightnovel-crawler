@@ -59,7 +59,7 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     def select_chapter_tags(self, soup: BeautifulSoup):
         tag = soup.select("#chapters .pagination li a")
         if tag:
-            last_page=tag[-1]["href"]
+            last_page = tag[-1]["href"]
             last_page_qs = parse_qs(urlparse(last_page).query)
             max_page = int(last_page_qs["page"][0])
             wjm = last_page_qs["wjm"][0]
