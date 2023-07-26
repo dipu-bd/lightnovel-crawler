@@ -9,9 +9,10 @@ from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
-from lncrawl.core.exeptions import FallbackToBrowser
+from lncrawl.core.exeptions import FallbackToBrowser, LNException
 
-from urllib.parse import urljoin, quote_plus
+#from urllib.parse import urljoin, quote_plus
+from urllib.parse import urljoin
 
 logger = logging.getLogger(__name__)
 
@@ -52,16 +53,17 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
         )
 
     def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
-        self.visit(
-            urljoin(
-                self.home_url, "/?s={}&post_type=fictionposts".format(quote_plus(query))
-            )
-        )
-        self.browser.wait(".search")
-        for elem in self.browser.soup.select(
-            ".fic .search_main_box .search_body .search_title a"
-        ):
-            yield elem
+        # self.visit(
+        #     urljoin(
+        #         self.home_url, "/?s={}&post_type=fictionposts".format(quote_plus(query))
+        #     )
+        # )
+        # self.browser.wait(".search")
+        # for elem in self.browser.soup.select(
+        #     ".fic .search_main_box .search_body .search_title a"
+        # ):
+        #     yield elem
+        raise LNException('Browser Search not supported')
 
     def select_search_items(self, query: str) -> Generator[Tag, None, None]:
         raise FallbackToBrowser()
