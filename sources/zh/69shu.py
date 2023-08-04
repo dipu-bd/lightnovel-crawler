@@ -89,7 +89,7 @@ class sixnineshu(Crawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        possible_author = soup.select_one(f'.booknav2 p a[href*="authorarticle"]')
+        possible_author = soup.select_one('.booknav2 p a[href*="authorarticle"]')
         if isinstance(possible_author, Tag):
             self.novel_author = possible_author.text.strip()
         logger.info("Novel Author: %s", self.novel_author)
@@ -100,7 +100,7 @@ class sixnineshu(Crawler):
         logger.info("Novel Synopsis: %s", self.novel_synopsis)
 
         # Only one category per novel on this website
-        possible_tag = soup.select_one(f'.booknav2 p a[href*="top"]')
+        possible_tag = soup.select_one('.booknav2 p a[href*="top"]')
         if isinstance(possible_tag, Tag):
             self.novel_tags = [possible_tag.text.strip()]
         logger.info("Novel Tag: %s", self.novel_tags)
