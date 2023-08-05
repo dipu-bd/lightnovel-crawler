@@ -93,4 +93,7 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        return soup.select_one(".chapter-content")
+        time.sleep(15)
+        text = soup.select_one(".chapter-content")
+        time.sleep(15)
+        return text
