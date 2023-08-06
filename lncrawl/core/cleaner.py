@@ -279,8 +279,8 @@ class TextCleaner:
                 continue
             if elem.name == "hr":
                 body.append(LINE_SEP)
-                # body.append('-' * 8)
-                # body.append(LINE_SEP)
+                body.append('-' * 8)
+                body.append(LINE_SEP)
                 continue
             if elem.name == "br":
                 body.append(LINE_SEP)
