@@ -69,4 +69,4 @@ class SkyDemonOrder(Crawler):
         return self.cleaner.extract_contents(contents)
 
     def _make_url(self, slug, project_slug):
-        return self.base_url[0] + "/" + "projects" + "/" + project_slug + "/" + slug
+        return self.absolute_url("/" + "projects" + "/" + project_slug + "/" + slug)
