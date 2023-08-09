@@ -1,5 +1,5 @@
 import logging
-
+import json
 from lncrawl.core.crawler import Crawler
 from lncrawl.models import Chapter
 
@@ -23,9 +23,27 @@ class SkyDemonOrder(Crawler):
             self.novel_cover = possible_image["src"]
         logger.info("Novel cover: %s", self.novel_cover)
 
-        chapters = soup.select(
-            'section[x-data="{ expanded: 1 }"] div.text-sm div.flex a'
-        )
+        section = soup.find_all("section", attrs={"x-data": True})
+
+        if len(section) == 1:
+            chapter_section = section[0]
+        else:
+            chapter_section = section[1]
+
+        section_data = "".join(chapter_section.get("x-data").split("})(")[1].split())[
+            :-2
+        ]  # remove all whitespace & remove last 2 chars
+
+        chapters_obj = json.loads(section_data)
+
+        if isinstance(chapters_obj, list) is False:
+            chapters = []
+            for _, value in chapters_obj.items():
+                chapters.append(value)
+
+        else:
+            chapters = chapters_obj
+
         chapters.reverse()
 
         for item in chapters:
@@ -39,8 +57,8 @@ class SkyDemonOrder(Crawler):
                 {
                     "id": chap_id,
                     "volume": vol_id,
-                    "url": self.absolute_url(item["href"]),
-                    "title": item.text,
+                    "url": self._make_url(item["slug"], item["project"]["slug"]),
+                    "title": item["full_title"],
                 }
             )
 
@@ -49,3 +67,6 @@ class SkyDemonOrder(Crawler):
         contents = soup.select_one(".prose")
 
         return self.cleaner.extract_contents(contents)
+
+    def _make_url(self, slug, project_slug):
+        return self.absolute_url("/" + "projects" + "/" + project_slug + "/" + slug)
