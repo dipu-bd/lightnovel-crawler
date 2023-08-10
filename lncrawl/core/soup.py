@@ -7,6 +7,8 @@ from requests import Response
 
 from .exeptions import LNException
 
+import chardet
+
 logger = logging.getLogger(__name__)
 
 
@@ -33,11 +35,16 @@ class SoupMaker(ABC):
         self,
         data: Union[Response, bytes, str],
         parser: Optional[str] = None,
+        encoding: Optional[str] = None,
     ) -> BeautifulSoup:
         if isinstance(data, Response):
-            html = data.content.decode("utf8", "ignore")
+            if encoding is None:
+                encoding = chardet.detect(data.content)["encoding"]
+            html = data.content.decode(encoding, "ignore")
         elif isinstance(data, bytes):
-            html = data.decode("utf8", "ignore")
+            if encoding is None:
+                encoding = chardet.detect(data)["encoding"]
+            html = data.decode(encoding, "ignore")
         elif isinstance(data, str):
             html = str(data)
         else:
