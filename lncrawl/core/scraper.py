@@ -285,7 +285,7 @@ class Scraper(TaskManager, SoupMaker):
         )
         return response.json()
 
-    def get_soup(self, url, headers={}, parser=None, **kwargs) -> BeautifulSoup:
+    def get_soup(self, url, headers={}, parser=None, encoding=None, **kwargs) -> BeautifulSoup:
         """Fetch the content and return a BeautifulSoup instance of the page"""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault(
@@ -294,10 +294,10 @@ class Scraper(TaskManager, SoupMaker):
         )
         response = self.get_response(url, **kwargs)
         self.last_soup_url = url
-        return self.make_soup(response, parser)
+        return self.make_soup(response, parser, encoding)
 
     def post_soup(
-        self, url, data={}, headers={}, parser=None, **kwargs
+        self, url, data={}, headers={}, parser=None, encoding=None, **kwargs
     ) -> BeautifulSoup:
         """Make a POST request and return BeautifulSoup instance of the response"""
         headers = CaseInsensitiveDict(headers)
@@ -306,10 +306,10 @@ class Scraper(TaskManager, SoupMaker):
             "text/html,application/xhtml+xml,application/xml;q=0.9",
         )
         response = self.post_response(url, data=data, headers=headers, **kwargs)
-        return self.make_soup(response, parser)
+        return self.make_soup(response, parser, encoding)
 
     def submit_form_for_soup(
-        self, url, data={}, headers={}, multipart=False, parser=None, **kwargs
+        self, url, data={}, headers={}, multipart=False, parser=None, encoding=None, **kwargs
     ) -> BeautifulSoup:
         """Simulate submit form request and return a BeautifulSoup instance of the response"""
         headers = CaseInsensitiveDict(headers)
@@ -320,4 +320,4 @@ class Scraper(TaskManager, SoupMaker):
         response = self.submit_form(
             url, data=data, headers=headers, multipart=multipart, **kwargs
         )
-        return self.make_soup(response, parser)
+        return self.make_soup(response, parser, encoding)
