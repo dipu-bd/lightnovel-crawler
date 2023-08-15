@@ -8,7 +8,7 @@ from lncrawl.core.crawler import Crawler
 logger = logging.getLogger(__name__)
 
 
-class RanobeLibCrawler(Crawler):
+class RanobeLibMeCrawler(Crawler):
     base_url = [
         "https://ranobelib.me/",
     ]
