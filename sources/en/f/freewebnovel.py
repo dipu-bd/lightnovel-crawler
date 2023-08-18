@@ -14,8 +14,8 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
     base_url = ["https://freewebnovel.com/"]
 
     def initialize(self) -> None:
+        self.init_executor(1)
         self.cleaner.bad_tags.update(["h4", "sub"])
-
         self.cleaner.bad_tag_text_pairs.update(
             {
                 "p": [
