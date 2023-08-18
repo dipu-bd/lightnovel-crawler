@@ -30,18 +30,24 @@ class RanobeLibMeCrawler(Crawler):
                 ";\t\n "
             )
             content = json.loads(text)
+            break
 
         self.novel_title = content["manga"]["rusName"]
         logger.info("Novel title: %s", self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.select_one(".media-sidebar__cover > img:nth-child(1)")["src"]
-        )
+        possible_image = soup.select_one(".media-sidebar__cover > img:nth-child(1)")
+        if possible_image:
+            self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = soup.select_one(
-            "div.media-info-list__item:nth-child(6) > div:nth-child(2) > a:nth-child(1)"
-        ).text.strip()
+        for list_value in soup.find_all("div", {"class": "media-info-list__value"}):
+            possible_author_ref = list_value.find("a")
+            if not possible_author_ref:
+                continue
+            if "ranobelib.me/people" not in possible_author_ref["href"]:
+                continue
+            self.novel_author = possible_author_ref.text.strip()
+            break
         logger.info("Novel author: %s", self.novel_author)
 
         self.novel_synopsis = self.cleaner.extract_contents(
