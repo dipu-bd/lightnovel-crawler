@@ -27,7 +27,7 @@ class InfiniteNovelTranslations(Crawler):
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
         chapters = soup.select(
-            '.entry-content .su-spoiler-content a[href*="infinitenoveltranslations.net"]'
+            '.entry-content p a[href*="infinitenoveltranslations.net"]'
         )
 
         for a in chapters:

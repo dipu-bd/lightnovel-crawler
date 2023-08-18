@@ -22,5 +22,5 @@ python-box>=6.0.0,<7.0.0
 pycryptodome>=3.0.0,<4.0.0
 webdriver-manager
 selenium>=3.141.0
-undetected-chromedriver
+undetected-chromedriver==3.5.0
 readability-lxml>=0.8.0,<1.0.0
