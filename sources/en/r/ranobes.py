@@ -148,6 +148,6 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         if soup.select_one("div#arrticle"):
-                return soup.select_one("div#arrticle")
+            return soup.select_one("div#arrticle")
         else:
             raise FallbackToBrowser
