@@ -1,3 +1,4 @@
+import re
 from urllib.parse import urlencode
 
 from bs4 import BeautifulSoup, Tag
@@ -5,6 +6,8 @@ from bs4 import BeautifulSoup, Tag
 from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.browser.optional_volume import OptionalVolumeBrowserTemplate
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
+
+digit_regex = re.compile(r"page[-,=](\d+)")
 
 
 class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTemplate):
@@ -34,17 +37,17 @@ class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTempla
         )
 
     def parse_title(self, soup: BeautifulSoup) -> str:
-        title = soup.select_one("h1.entry-title")
+        title = soup.select_one("h1.entry-title,h2.text-2xl")
         assert title
         return title.text.strip()
 
-    def parse_title_in_browser(self) -> str:
-        self.browser.wait("h1.entry-title")
-        return self.parse_title(self.browser.soup)
+    def visit_novel_page_in_browser(self) -> BeautifulSoup:
+        self.visit(self.novel_url)
+        self.browser.wait("h1.entry-title, .container")
 
     def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(
-            ".thumbook img, meta[property='og:image'],.sertothumb img"
+            ".thumbook img, meta[property='og:image'],.sertothumb img,img.h-full"
         )
         if tag.has_attr("data-src"):
             return self.absolute_url(tag["data-src"])
@@ -66,13 +69,60 @@ class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTempla
         return Volume(id=id)
 
     def select_chapter_tags(self, tag: Tag):
-        chapters = tag.select(".eplister li a")
-        first_li = tag.select_one(".eplister li")
-        li_class = first_li.get("class", "") if first_li else ""
-        if first_li.get("data-num", 0) == 1 or "tseplsfrst" not in li_class:
-            yield from reversed(chapters)
-        else:
-            yield from chapters
+        if tag.select(".eplister"):
+            chapters = tag.select(".eplister li a")
+            first_li = tag.select_one(".eplister li")
+            li_class = first_li.get("class", "") if first_li else ""
+            if first_li.get("data-num", 0) == 1 or "tseplsfrst" not in li_class:
+                yield from reversed(chapters)
+            else:
+                yield from chapters
+        if tag.select("li.pagination-link"):
+            page_count = max(
+                [
+                    int(digit_regex.search(li.get("onclick")).group(1))
+                    for li in tag.select("li.pagination-link", onclick=True)
+                    if li.get("onclick")
+                ]
+            )
+
+            if not page_count:
+                page_count = 1
+
+            futures = [self.executor.submit(lambda x: x, tag)]
+            futures += [
+                self.executor.submit(self.get_soup, f"{self.novel_url}?page={p}")
+                for p in range(2, page_count + 1)
+            ]
+            self.resolve_futures(futures, desc="TOC", unit="page")
+
+            for f in reversed(futures):
+                soup = f.result()
+                yield from reversed(soup.select("#chapters-list a"))
+
+    def select_chapter_tags_in_browser(self, tag: Tag):
+        if self.browser.soup.select(".eplister"):
+            yield from self.select_chapter_tags(self.browser.soup)
+        if self.browser.soup.select("li.pagination-link"):
+            page_count = max(
+                [
+                    int(digit_regex.search(li.get("onclick")).group(1))
+                    for li in self.browser.soup.select(
+                        "li.pagination-link", onclick=True
+                    )
+                    if li.get("onclick")
+                ]
+            )
+            if not page_count:
+                page_count = 1
+            futures_pages = [self.browser.soup]
+            for p in range(2, page_count + 1):
+                self.browser.visit(f"{self.novel_url}?page={p}")
+                self.browser.wait("h1.entry-title, .container")
+                futures_pages += [self.browser.soup]
+
+            for f in reversed(futures_pages):
+                yield from reversed(f.select("#chapters-list a"))
 
     def parse_chapter_item(self, tag: Tag, id: int, vol: Volume) -> Chapter:
         title = tag.select_one(".epl-title")
@@ -85,8 +135,12 @@ class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTempla
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        return soup.select_one("#readernovel, #readerarea, .entry-content")
+        return soup.select_one(
+            "#readernovel, #readerarea, .entry-content,.chap-content"
+        )
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
         self.visit(chapter.url)
-        self.browser.wait("#readernovel, #readerarea, .entry-content,.mainholder")
+        self.browser.wait(
+            "#readernovel, #readerarea, .entry-content,.mainholder,.chap-content"
+        )
