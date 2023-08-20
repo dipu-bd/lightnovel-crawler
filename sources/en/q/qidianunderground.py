@@ -71,17 +71,32 @@ class QidianComCrawler(Crawler):
 
         data = self.get_json(self.novel_url)
         for vol_id, item in enumerate(data, 1):
-            start_ch, final_ch = re.findall(r"(\d+) - (\d+)", item["Text"])[0]
-            self.volumes.append(
-                {
-                    "id": vol_id,
-                    "title": "Chapters %s - %s" % (start_ch, final_ch),
-                }
-            )
-            for j in range(int(start_ch), int(final_ch) + 1):
+            if "-" in item["Text"]:
+                start_ch, final_ch = re.findall(r"(\d+) - (\d+)", item["Text"])[0]
+                self.volumes.append(
+                    {
+                        "id": vol_id,
+                        "title": "Chapters %s - %s" % (start_ch, final_ch),
+                    }
+                )
+                for j in range(int(start_ch), int(final_ch) + 1):
+                    self.chapters.append(
+                        {
+                            "id": j,
+                            "volume": vol_id,
+                            "url": item["Href"],
+                        }
+                    )
+            else:
+                self.volumes.append(
+                    {
+                        "id": vol_id,
+                        "title": "Chapters %s" % (item["Text"]),
+                    }
+                )
                 self.chapters.append(
                     {
-                        "id": j,
+                        "id": int(item["Text"]),
                         "volume": vol_id,
                         "url": item["Href"],
                     }
