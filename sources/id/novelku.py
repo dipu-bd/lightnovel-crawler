@@ -1,38 +1,49 @@
 # -*- coding: utf-8 -*-
 import logging
 
-
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
 
-class IndowebnovelCrawler(Crawler):
-    base_url = "https://indowebnovel.id/"
+class NovelkuCrawler(Crawler):
+    base_url = "https://novelku.id/"
 
     def initialize(self):
-        self.home_url = "https://indowebnovel.id/"
+        self.home_url = "https://novelku.id/"
 
     def read_novel_info(self):
-        # url = self.novel_url.replace('https://yukinovel.me', 'https://yukinovel.id')
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one("div.series-title")
+        possible_title = soup.select_one(".post-title h1")
         assert possible_title, "No novel title"
         self.novel_title = possible_title.get_text(" ")
         logger.info("Novel title: %s", self.novel_title)
 
-        self.novel_author = "Translated by Indowebnovel"
+        possible_author = soup.select_one(".author-content a")
+        assert possible_author, "No novel author"
+        self.novel_author = possible_author.get_text(" ")
         logger.info("Novel author: %s", self.novel_author)
 
-        possible_image = soup.select_one("div.series-thumb img")
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
+        meta = soup.select("head meta")
+        possible_image = None
+        for m in meta:
+            if m.get("property") == "og:image":
+                possible_image = m.get("content")
+                break
+
+        if possible_image is None:
+            cover = soup.select_one(".summary_image a img")
+            if cover:
+                self.novel_cover = self.absolute_url(cover["data-src"])
+        else:
+            self.novel_cover = self.absolute_url(possible_image)
+
         logger.info("Novel cover: %s", self.novel_cover)
 
         # Extract volume-wise chapter entries
-        chapters = soup.select("div.series-chapter ul li a")
+        chapters = soup.select("li.wp-manga-chapter a")
 
         chapters.reverse()
 
@@ -51,7 +62,8 @@ class IndowebnovelCrawler(Crawler):
             )
 
     def download_chapter_body(self, chapter):
+        logger.info("download body chapter: %s", chapter["url"])
         soup = self.get_soup(chapter["url"])
-        contents = soup.select("div.content div.reader p")
+        contents = soup.select("div.text-left p")
         body = [str(p) for p in contents if p.text.strip()]
         return "<p>" + "</p><p>".join(body) + "</p>"

@@ -45,7 +45,7 @@ class Chireads(Crawler):
             metadata.find("div", {"class": "inform-txt-show font-color-black6"})
         )
 
-        for tag in soup.find("div", {"class": "lable-list"}).find_all("a"):
+        for tag in soup.select("div.lable-list a"):
             self.novel_tags.append(tag.text)
 
         self.novel_cover = self.absolute_url(metadata.find("img").get("src"))

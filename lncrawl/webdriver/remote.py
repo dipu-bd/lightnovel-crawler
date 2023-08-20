@@ -52,9 +52,9 @@ def create_remote(
     options.add_argument("--no-first-run")
 
     # Add capabilities
-    options.set_capability("quietExceptions", True)
+    #options.set_capability("quietExceptions", True)
     options.set_capability("acceptInsecureCerts", True)
-    options.set_capability("useAutomationExtension", False)
+    #options.set_capability("useAutomationExtension", False)
 
     # Chrome specific experimental options
     options.accept_insecure_certs = True

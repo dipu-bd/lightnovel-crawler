@@ -74,16 +74,16 @@ def create_local(
     # options.add_argument("--disable-dev-shm-usage")
 
     # Add capabilities
-    options.set_capability("quietExceptions", True)
+    #options.set_capability("quietExceptions", True)
     options.set_capability("acceptInsecureCerts", True)
-    options.set_capability("useAutomationExtension", False)
+    #options.set_capability("useAutomationExtension", False)
 
     # Configure window behavior
     if headless:
         options.add_argument("--window-size=1920,1080")
         options.add_argument("--start-maximized")
         options.add_argument("--no-sandbox")
-        options.add_argument("--headless")
+        options.add_argument("--headless=new")
     else:
         width = max(640, Screen.view_width * 3 // 4)
         height = max(480, Screen.view_height * 3 // 4)

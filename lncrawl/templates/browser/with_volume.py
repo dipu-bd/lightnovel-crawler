@@ -43,8 +43,8 @@ class ChapterWithVolumeBrowserTemplate(
         self, tag: Tag, vol: Volume
     ) -> Generator[Tag, None, None]:
         """Select chapter list item tags from volume tag from the browser"""
-        raise self.select_chapter_tags(tag, vol)
+        return self.select_chapter_tags(tag, vol)
 
     def parse_chapter_item_in_browser(self, tag: Tag, id: int, vol: Volume) -> Chapter:
         """Parse a single chapter from chapter list item tag from the browser"""
-        raise self.parse_chapter_item(tag, id, vol)
+        return self.parse_chapter_item(tag, id, vol)

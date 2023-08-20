@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-
+from bs4 import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -37,14 +37,26 @@ class BestLightNovel(Crawler):
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        try:
-            novel_data = self.submit_form(
-                search_url, {"searchword": self.novel_title}
-            ).json()
-            self.novel_cover = novel_data[0]["image"]
-            self.novel_author = novel_data[0]["author"]
-        except Exception:
-            logger.debug("Failed getting novel info.\n%s", Exception)
+        possible_image = soup.select_one(".info_image img")
+        if isinstance(possible_image, Tag):
+            self.novel_cover = self.absolute_url(possible_image["src"])
+        logger.info("Novel cover: %s", self.novel_cover)
+
+        self.novel_author = ', '.join([
+            a.text.strip()
+            for a in soup.select('.truyen_info_right a[href*="search_author"]')
+        ])
+        logger.info('%s', self.novel_author)
+
+        synopsis = soup.select_one("#noidungm")
+        if synopsis.select_one("p"):
+            synopsis.select_one("p").extract()
+        self.novel_synopsis = self.cleaner.extract_contents(synopsis)
+
+        self.novel_tags = [
+            a.text.strip()
+            for a in soup.select('.truyen_info_right a[href*="novel_list?type=latest&category="]')
+        ]
 
         for a in reversed(soup.select("#list_chapter .chapter-list a")):
             chap_id = len(self.chapters) + 1
