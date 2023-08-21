@@ -1,35 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from requests import Response
-
 from lncrawl.core.crawler import Crawler
-import requests
+from urllib.parse import urlparse
 
 logger = logging.getLogger(__name__)
-
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5",
-    "Content-Type": "multipart/form-data; boundary=---------------------------371654104016101047241770203416",
-    "Origin": "https://chrysanthemumgarden.com",
-    "DNT": "1",
-    "Connection": "keep-alive",
-    "Referer": "https://chrysanthemumgarden.com/novel-tl/ygbg/ygbg-153/",
-    "Upgrade-Insecure-Requests": "1",
-    "Sec-Fetch-Dest": "document",
-    "Sec-Fetch-Mode": "navigate",
-    "Sec-Fetch-Site": "same-origin",
-    "Sec-Fetch-User": "?1",
-}
 
 
 class ChrysanthemumGarden(Crawler):
     base_url = "https://chrysanthemumgarden.com/"
-
-    def submit_form(self, url, data=None) -> Response:
-        return requests.post(url, headers=headers, data=data)
 
     def read_novel_info(self):
         if not self.novel_url.endswith("/"):
@@ -54,9 +33,7 @@ class ChrysanthemumGarden(Crawler):
 
         # possible_synopsis = soup.select_one(".entry-content")
         # if possible_synopsis:
-        #     self.novel_synopsis = self.cleaner.extract_contents(
-        #         possible_synopsis
-        #     )
+        #     self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
         # logger.info("Novel synopsis: %s", self.novel_synopsis)
 
         self.novel_tags = [
@@ -89,17 +66,19 @@ class ChrysanthemumGarden(Crawler):
         self.password = password
 
     def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
+
+        chapter_url = chapter["url"]
+        soup = self.get_soup(chapter_url)
 
         if soup.select_one("#site-pass"):
-            nonce = soup.select_one("#nonce-site-pass")["value"]
-            data = f'-----------------------------371654104016101047241770203416\r\nContent-Disposition: form-data; name="site-pass"\r\n\r\n{self.password}\r\n-----------------------------371654104016101047241770203416\r\nContent-Disposition: form-data; name="nonce-site-pass"\r\n\r\n{nonce}\r\n-----------------------------371654104016101047241770203416\r\n'  # noqa: E501
+            payload = {
+                "site-pass": self.password,
+                "nonce-site-pass": soup.select_one("#nonce-site-pass")["value"],
+                "_wp_http_referer": urlparse(chapter_url).path,
+            }
 
             soup = self.make_soup(
-                self.submit_form(
-                    url=self.absolute_url(chapter["url"]), 
-                    data=data
-                ),
+                self.submit_form(url=self.absolute_url(chapter_url), data=payload),
             )
 
         bads = ["chrysanthemumgarden (dot) com", "Chrysanthemum Garden"]
@@ -114,7 +93,10 @@ class ChrysanthemumGarden(Crawler):
 
             text = ""
             for span in p.select("span.jum"):
-                text += self.descramble_text(span.text) + " "
+                try:
+                    text += self.descramble_text(span.text) + " "
+                except IndexError:
+                    pass
 
             if not text:
                 text = p.text.strip()
