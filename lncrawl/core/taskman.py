@@ -99,7 +99,8 @@ class TaskManager(ABC):
                 self._submit = None
                 self._futures.clear()
                 self._executor.shutdown(wait=False)
-
+        if ratelimit > 0:
+            workers = 1  # no need for more than one since there is only one lock if ratelimited
         self._executor = ThreadPoolExecutor(
             max_workers=workers,
             thread_name_prefix="lncrawl_scraper",
@@ -108,9 +109,10 @@ class TaskManager(ABC):
         self._submit = self._executor.submit
         self._executor.submit = self.submit_task
 
-        if not hasattr(self, "lock"):
-            if self.lock.ratelimit != ratelimit:
-                return
+        if hasattr(self, "_lock"):
+            del self._lock
+        if ratelimit > 0:
+            self._lock = RatelimitLock(ratelimit)
 
     def submit_task(self, fn, *args, **kwargs) -> Future:
         """Submits a callable to be executed with the given arguments.
@@ -121,7 +123,7 @@ class TaskManager(ABC):
         Returns:
             A Future representing the given call.
         """
-        if self.lock:
+        if hasattr(self, "_lock"):
             future = self._submit(self.lockfn, fn, *args, **kwargs)
         else:
             future = self._submit(fn, *args, **kwargs)
@@ -130,7 +132,8 @@ class TaskManager(ABC):
         return future
 
     def lockfn(self, fn, *args, **kwargs):
-        with self.lock:
+        # Wrapper function for ratelimiting
+        with self._lock:
             return fn(*args, **kwargs)
 
     def progress_bar(
