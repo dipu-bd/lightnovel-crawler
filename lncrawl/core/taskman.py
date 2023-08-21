@@ -85,7 +85,7 @@ class TaskManager(ABC):
     def workers(self):
         return self._executor._max_workers
 
-    def init_executor(self, workers: int, ratelimit: int = 0):
+    def init_executor(self, workers: int = MAX_WORKER_COUNT, ratelimit: int = 0):
         """Initializes a new executor.
 
         If the number of workers are not the same as the current executor,
