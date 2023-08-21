@@ -16,7 +16,7 @@ class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
 
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
-        self.init_executor(1,1.4)
+        self.init_executor(1, 1.4)
 
     def select_search_items(self, query: str):
         soup = self.get_soup(f"{self.home_url}search.html")
