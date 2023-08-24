@@ -24,10 +24,10 @@ class RatelimitLock(object):
     """Class for a ratelimiting lock
     Ratelimit parametter defines the number of querry per seconds that can be pulled before trigerring the antibot system
     Args:
-    - ratelimit (int, optional): Number requests per seconds. Default: 10.
+    - ratelimit (float, optional): Number requests per seconds. Default: 0.
     """
 
-    def __init__(self, ratelimit: int = 0):
+    def __init__(self, ratelimit: float = 0.0):
         self._lock = Lock()
         self.lasttime = self.currenttime()
         self.ratelimit = ratelimit
@@ -57,7 +57,7 @@ class RatelimitLock(object):
 
 
 class TaskManager(ABC):
-    def __init__(self, workers: int = MAX_WORKER_COUNT, ratelimit: int = 0) -> None:
+    def __init__(self, workers: int = MAX_WORKER_COUNT, ratelimit: float = 0) -> None:
         """A helper class for task queueing and parallel task execution.
         It is being used as a superclass of the Crawler.
 
@@ -85,7 +85,7 @@ class TaskManager(ABC):
     def workers(self):
         return self._executor._max_workers
 
-    def init_executor(self, workers: int = MAX_WORKER_COUNT, ratelimit: int = 0):
+    def init_executor(self, workers: int = MAX_WORKER_COUNT, ratelimit: float = 0):
         """Initializes a new executor.
 
         If the number of workers are not the same as the current executor,
