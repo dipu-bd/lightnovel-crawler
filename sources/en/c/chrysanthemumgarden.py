@@ -78,7 +78,7 @@ class ChrysanthemumGarden(Crawler):
             }
 
             soup = self.make_soup(
-                self.submit_form(url=self.absolute_url(chapter_url), data=payload),
+                self.submit_form(url=self.absolute_url(chapter_url), data=payload, multipart=True),
             )
 
         bads = ["chrysanthemumgarden (dot) com", "Chrysanthemum Garden"]
