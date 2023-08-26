@@ -79,9 +79,7 @@ class NovelGate(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-
         contents = soup.select_one("#chapter-body")
-
         return str(contents)
 
     def format_text(self, text):
