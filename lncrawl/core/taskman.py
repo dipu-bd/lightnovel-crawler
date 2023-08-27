@@ -1,8 +1,10 @@
 import logging
 import os
+import time
+
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
-from threading import Semaphore, Thread
+from threading import Semaphore, Thread, Lock
 from typing import Dict, Iterable, List, TypeVar
 
 from tqdm import tqdm
@@ -18,8 +20,44 @@ _resolver = Semaphore(1)
 _host_semaphores: Dict[str, Semaphore] = {}
 
 
+class RatelimitLock(object):
+    """Class for a ratelimiting lock
+    Ratelimit parametter defines the number of querry per seconds that can be pulled before trigerring the antibot system
+    Args:
+    - ratelimit (float, optional): Number requests per seconds. Default: 0.
+    """
+
+    def __init__(self, ratelimit: float = 0.0):
+        self._lock = Lock()
+        self.lasttime = self.currenttime()
+        self.ratelimit = ratelimit
+        self.period = None
+        if ratelimit > 0:
+            self.period = 1 / self.ratelimit
+
+    def acquire(self):
+        self._lock.acquire()
+
+    def release(self):
+        if self.currenttime() < (self.lasttime + self.period):
+            time.sleep((self.lasttime + self.period) - self.currenttime())
+        self.lasttime = self.currenttime()
+        self._lock.release()
+
+    def __enter__(self):
+        self.acquire()
+
+    def __exit__(self, type, value, traceback):
+        self.release()
+
+    def currenttime(self):
+        if hasattr(time, "monotonic"):
+            return time.monotonic()
+        return time.time()
+
+
 class TaskManager(ABC):
-    def __init__(self, workers: int = MAX_WORKER_COUNT) -> None:
+    def __init__(self, workers: int = MAX_WORKER_COUNT, ratelimit: float = 0) -> None:
         """A helper class for task queueing and parallel task execution.
         It is being used as a superclass of the Crawler.
 
@@ -27,7 +65,7 @@ class TaskManager(ABC):
         - workers (int, optional): Number of concurrent workers to expect. Default: 10.
         """
         self._futures: List[Future] = []
-        self.init_executor(workers)
+        self.init_executor(workers, ratelimit)
 
     def __del__(self) -> None:
         if hasattr(self, "_executor"):
@@ -47,7 +85,7 @@ class TaskManager(ABC):
     def workers(self):
         return self._executor._max_workers
 
-    def init_executor(self, workers: int):
+    def init_executor(self, workers: int = MAX_WORKER_COUNT, ratelimit: float = 0):
         """Initializes a new executor.
 
         If the number of workers are not the same as the current executor,
@@ -57,12 +95,12 @@ class TaskManager(ABC):
         - workers (int): Number of workers to expect in the new executor.
         """
         if hasattr(self, "_executor"):
-            if self.workers == workers:
-                return
-            self._submit = None
-            self._futures.clear()
-            self._executor.shutdown(wait=False)
-
+            if self.workers != workers:
+                self._submit = None
+                self._futures.clear()
+                self._executor.shutdown(wait=False)
+        if ratelimit > 0:
+            workers = 1  # no need for more than one since there is only one lock if ratelimited
         self._executor = ThreadPoolExecutor(
             max_workers=workers,
             thread_name_prefix="lncrawl_scraper",
@@ -70,6 +108,11 @@ class TaskManager(ABC):
 
         self._submit = self._executor.submit
         self._executor.submit = self.submit_task
+
+        if hasattr(self, "_lock"):
+            del self._lock
+        if ratelimit > 0:
+            self._lock = RatelimitLock(ratelimit)
 
     def submit_task(self, fn, *args, **kwargs) -> Future:
         """Submits a callable to be executed with the given arguments.
@@ -80,9 +123,18 @@ class TaskManager(ABC):
         Returns:
             A Future representing the given call.
         """
-        future = self._submit(fn, *args, **kwargs)
+        if hasattr(self, "_lock"):
+            future = self._submit(self.lockfn, fn, *args, **kwargs)
+        else:
+            future = self._submit(fn, *args, **kwargs)
+
         self._futures.append(future)
         return future
+
+    def lockfn(self, fn, *args, **kwargs):
+        # Wrapper function for ratelimiting
+        with self._lock:
+            return fn(*args, **kwargs)
 
     def progress_bar(
         self,
