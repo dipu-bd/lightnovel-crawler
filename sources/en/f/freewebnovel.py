@@ -21,7 +21,7 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             {
                 "p": [
                     r"freewebnovel\.com",
-                    r"innread\.com"
+                    r"innread\.com",
                     r"Updates by Freewebnovel\. com",
                     r"” Search Freewebnovel\.com\. on google”\.",
                     r"\/ Please Keep reading on MYFreeWebNovel\.C0M",
