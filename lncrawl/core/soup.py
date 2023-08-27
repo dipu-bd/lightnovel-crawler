@@ -24,7 +24,7 @@ class SoupMaker(ABC):
         - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
             ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
         """
-        self.parser = parser or DEFAULT_PARSER
+        self._parser = parser or DEFAULT_PARSER
 
     def __del__(self) -> None:
         pass
@@ -32,22 +32,22 @@ class SoupMaker(ABC):
     def make_soup(
         self,
         data: Union[Response, bytes, str],
-        parser: Optional[str] = None,
+        encoding: Optional[str] = None,
     ) -> BeautifulSoup:
         if isinstance(data, Response):
-            html = data.content.decode("utf8", "ignore")
+            return self.make_soup(data.content, encoding)
         elif isinstance(data, bytes):
-            html = data.decode("utf8", "ignore")
+            html = data.decode(encoding or "utf8", "ignore")
         elif isinstance(data, str):
-            html = str(data)
+            html = data
         else:
             raise LNException("Could not parse response")
-        return BeautifulSoup(html, features=parser or self.parser)
+        return BeautifulSoup(html, features=self._parser)
 
     def make_tag(
         self,
         data: Union[Response, bytes, str],
-        parser: Optional[str] = None,
+        encoding: Optional[str] = None,
     ) -> Tag:
-        soup = self.make_soup(data, parser)
+        soup = self.make_soup(data, encoding)
         return next(soup.find("body").children)

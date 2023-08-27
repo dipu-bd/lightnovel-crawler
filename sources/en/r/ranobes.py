@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
+from lncrawl.core.exeptions import FallbackToBrowser
 
 from urllib.parse import urljoin, quote_plus
 
@@ -146,4 +147,7 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
         self.browser.wait(".structure")
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        return soup.select_one("div#arrticle")
+        if soup.select_one("div#arrticle"):
+            return soup.select_one("div#arrticle")
+        else:
+            raise FallbackToBrowser

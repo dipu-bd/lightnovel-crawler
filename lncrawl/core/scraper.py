@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 class Scraper(TaskManager, SoupMaker):
     # ------------------------------------------------------------------------- #
-    # Constructor & Destructors
+    # Initializers
     # ------------------------------------------------------------------------- #
     def __init__(
         self,
@@ -43,22 +43,41 @@ class Scraper(TaskManager, SoupMaker):
         - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
             ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
         """
-        self._soup_tool = SoupMaker(parser)
-        self.make_soup = self._soup_tool.make_soup
-
         self.home_url = origin
         self.last_soup_url = ""
         self.use_proxy = os.getenv("use_proxy")
 
         self.init_scraper()
         self.change_user_agent()
-
-        super().__init__(workers)
+        self.init_parser(parser)
+        self.init_executor(workers)
 
     def __del__(self) -> None:
         if hasattr(self, "scraper"):
             self.scraper.close()
         super().__del__()
+
+    def init_parser(self, parser: Optional[str] = None):
+        self._soup_tool = SoupMaker(parser)
+        self.make_tag = self._soup_tool.make_tag
+        self.make_soup = self._soup_tool.make_soup
+
+    def init_scraper(self, session: Optional[Session] = None):
+        """Check for option: https://github.com/VeNoMouS/cloudscraper"""
+        try:
+            ctx = ssl.create_default_context()
+            ctx.check_hostname = False
+            ctx.verify_mode = ssl.CERT_NONE
+            self.scraper = CloudScraper.create_scraper(
+                session,
+                # debug=True,
+                # delay=10,
+                ssl_context=ctx,
+                interpreter="js2py",
+            )
+        except Exception:
+            logger.exception("Failed to initialize cloudscraper")
+            self.scraper = session or Session()
 
     # ------------------------------------------------------------------------- #
     # Internal methods
@@ -162,23 +181,6 @@ class Scraper(TaskManager, SoupMaker):
         if page_url:
             return page_url.strip("/") + "/" + url
         return self.home_url + url
-
-    def init_scraper(self, session: Optional[Session] = None):
-        """Check for option: https://github.com/VeNoMouS/cloudscraper"""
-        try:
-            ctx = ssl.create_default_context()
-            ctx.check_hostname = False
-            ctx.verify_mode = ssl.CERT_NONE
-            self.scraper = CloudScraper.create_scraper(
-                session,
-                # debug=True,
-                # delay=10,
-                ssl_context=ctx,
-                interpreter="js2py",
-            )
-        except Exception:
-            logger.exception("Failed to initialize cloudscraper")
-            self.scraper = session or Session()
 
     def change_user_agent(self):
         self.user_agent = random.choice(user_agents)
@@ -284,7 +286,7 @@ class Scraper(TaskManager, SoupMaker):
         )
         return response.json()
 
-    def get_soup(self, url, headers={}, parser=None, **kwargs) -> BeautifulSoup:
+    def get_soup(self, url, headers={}, encoding=None, **kwargs) -> BeautifulSoup:
         """Fetch the content and return a BeautifulSoup instance of the page"""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault(
@@ -293,10 +295,10 @@ class Scraper(TaskManager, SoupMaker):
         )
         response = self.get_response(url, **kwargs)
         self.last_soup_url = url
-        return self.make_soup(response, parser)
+        return self.make_soup(response, encoding)
 
     def post_soup(
-        self, url, data={}, headers={}, parser=None, **kwargs
+        self, url, data={}, headers={}, encoding=None, **kwargs
     ) -> BeautifulSoup:
         """Make a POST request and return BeautifulSoup instance of the response"""
         headers = CaseInsensitiveDict(headers)
@@ -305,10 +307,10 @@ class Scraper(TaskManager, SoupMaker):
             "text/html,application/xhtml+xml,application/xml;q=0.9",
         )
         response = self.post_response(url, data=data, headers=headers, **kwargs)
-        return self.make_soup(response, parser)
+        return self.make_soup(response, encoding)
 
     def submit_form_for_soup(
-        self, url, data={}, headers={}, multipart=False, parser=None, **kwargs
+        self, url, data={}, headers={}, multipart=False, encoding=None, **kwargs
     ) -> BeautifulSoup:
         """Simulate submit form request and return a BeautifulSoup instance of the response"""
         headers = CaseInsensitiveDict(headers)
@@ -319,4 +321,4 @@ class Scraper(TaskManager, SoupMaker):
         response = self.submit_form(
             url, data=data, headers=headers, multipart=multipart, **kwargs
         )
-        return self.make_soup(response, parser)
+        return self.make_soup(response, encoding)

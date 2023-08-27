@@ -113,7 +113,7 @@ def create_local(
         + f"driver_path={executable_path}"
     )
     chrome = Chrome(
-        executable_path=executable_path,
+        driver_executable_path=executable_path,
         options=options,
         desired_capabilities=options.to_capabilities(),
         keep_alive=True,
