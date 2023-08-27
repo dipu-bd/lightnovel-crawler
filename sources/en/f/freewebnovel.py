@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import unicodedata
 
 from concurrent.futures import Future
 from typing import List
@@ -11,7 +12,7 @@ from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 
 class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
-    base_url = ["https://freewebnovel.com/"]
+    base_url = ["https://freewebnovel.com/", "https://bednovel.com/", "https://innread.com/"]
 
     def initialize(self) -> None:
         self.init_executor(ratelimit=2)
@@ -98,5 +99,13 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             title=tag.text.strip(),
         )
 
+    def normalize_text(self, text: str) -> str:
+        return unicodedata.normalize("NFKC", text)
+
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        return soup.select_one(".m-read .txt")
+        body_tag = soup.select_one(".m-read .txt")
+        if body_tag:
+            normalized_body = self.normalize_text(str(body_tag))
+            normalized_soup = BeautifulSoup(normalized_body, "html.parser")
+            return normalized_soup
+        return body_tag
