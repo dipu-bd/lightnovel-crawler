@@ -43,6 +43,8 @@ class Scraper(TaskManager, SoupMaker):
         - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
             ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
         """
+        super().__init__()
+
         self._soup_tool = SoupMaker(parser)
         self.make_soup = self._soup_tool.make_soup
 
@@ -52,8 +54,7 @@ class Scraper(TaskManager, SoupMaker):
 
         self.init_scraper()
         self.change_user_agent()
-
-        super().__init__(workers)
+        self.init_executor(workers)
 
     def __del__(self) -> None:
         if hasattr(self, "scraper"):
