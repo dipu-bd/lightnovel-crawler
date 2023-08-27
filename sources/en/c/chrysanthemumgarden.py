@@ -66,19 +66,20 @@ class ChrysanthemumGarden(Crawler):
         self.password = password
 
     def download_chapter_body(self, chapter):
-
         chapter_url = chapter["url"]
-        soup = self.get_soup(chapter_url)
+        soup = self.get_soup(chapter_url, encoding="utf8")
 
         if soup.select_one("#site-pass"):
-            payload = {
-                "site-pass": self.password,
-                "nonce-site-pass": soup.select_one("#nonce-site-pass")["value"],
-                "_wp_http_referer": urlparse(chapter_url).path,
-            }
-
-            soup = self.make_soup(
-                self.submit_form(url=self.absolute_url(chapter_url), data=payload, multipart=True),
+            soup = self.submit_form_for_soup(
+                url=self.absolute_url(chapter_url),
+                multipart=True,
+                headers={"Content-Encoding": "utf8"},
+                data={
+                    "site-pass": self.password,
+                    "nonce-site-pass": soup.select_one("#nonce-site-pass")["value"],
+                    "_wp_http_referer": urlparse(chapter_url).path,
+                },
+                encoding="utf8",
             )
 
         bads = ["chrysanthemumgarden (dot) com", "Chrysanthemum Garden"]
@@ -108,14 +109,12 @@ class ChrysanthemumGarden(Crawler):
 
         return "<p>" + "</p><p>".join(contents) + "</p>"
 
-    def descramble_text(self, cipher):
+    def descramble_text(self, cipher: str):
         plain = ""
         lower_fixer = "tonquerzlawicvfjpsyhgdmkbx"
         upper_fixer = "JKABRUDQZCTHFVLIWNEYPSXGOM"
         for ch in cipher.strip():
-            if not ch.isalpha():
-                plain += ch
-            elif ch.islower():
+            if ch.islower():
                 plain += lower_fixer[ord(ch) - ord("a")]
             elif ch.isupper():
                 plain += upper_fixer[ord(ch) - ord("A")]

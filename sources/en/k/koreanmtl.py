@@ -10,6 +10,9 @@ class LightNovelsOnl(Crawler):
     has_mtl = True
     base_url = "https://www.koreanmtl.online/"
 
+    def initialize(self) -> None:
+        self.init_parser("html5lib")
+
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -37,7 +40,7 @@ class LightNovelsOnl(Crawler):
         self.volumes = [{"id": x} for x in volumes]
 
     def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"], parser="html5lib")
+        soup = self.get_soup(chapter["url"])
         contents = soup.select_one(".post-body.entry-content")
         for el in contents.select('div[style="text-align:center;"]'):
             el.extract()
