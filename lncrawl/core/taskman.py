@@ -29,16 +29,14 @@ class TaskManager(ABC):
         - workers (int, optional): Number of concurrent workers to expect. Default: 10.
         - ratelimit (float, optional): Number of requests per second.
         """
-        self._futures: List[Future] = []
-        self._limiter: RateLimiter = None
         self.init_executor(MAX_WORKER_COUNT)
 
     def __del__(self) -> None:
         if hasattr(self, "_executor"):
             self._submit = None
-            self._limiter = None
-            self._futures.clear()
             self._executor.shutdown(wait=False)
+        if hasattr(self, "_limiter"):
+            self._limiter.shutdown()
 
     @property
     def executor(self) -> ThreadPoolExecutor:
@@ -65,11 +63,14 @@ class TaskManager(ABC):
         Args:
         - workers (int): Number of workers to expect in the new executor.
         """
+        self._futures: List[Future] = []
         self.__del__()  # cleanup previous initialization
 
         if ratelimit and ratelimit > 0:
             workers = 1  # use single worker if ratelimit is being applied
             self._limiter = RateLimiter(ratelimit)
+        elif hasattr(self, "_limiter"):
+            del self._limiter
 
         self._executor = ThreadPoolExecutor(
             max_workers=workers,
@@ -88,16 +89,11 @@ class TaskManager(ABC):
         Returns:
             A Future representing the given call.
         """
-        if self._limiter:
-            future = self._submit(self._ratelimit_wrapper, fn, *args, **kwargs)
-        else:
-            future = self._submit(fn, *args, **kwargs)
+        if hasattr(self, "_limiter"):
+            fn = self._limiter.wrap(fn)
+        future = self._submit(fn, *args, **kwargs)
         self._futures.append(future)
         return future
-
-    def _ratelimit_wrapper(self, fn, *args, **kwargs):
-        with self._limiter:
-            return fn(*args, **kwargs)
 
     def progress_bar(
         self,
