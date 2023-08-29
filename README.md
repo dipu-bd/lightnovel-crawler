@@ -76,7 +76,7 @@ Without it, you will only get output in epub, text, and web formats.
 
 📦 A python package named `lightnovel-crawler` is available at [pypi](https://pypi.org/project/lightnovel-crawler).
 
-> Make sure you have installed **Python** v3.7 or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
+> Make sure you have installed **Python v3.8** or higher and have **pip** enabled. Visit these links to install python with pip in [Windows](https://stackoverflow.com/a/44437176/1583052), [Linux](https://stackoverflow.com/a/51799221/1583052) and [MacOS](https://itsevans.com/install-pip-osx/). Feel free to ask on the Discord server if you are stuck.
 
 To install this app or to update installed one via `pip`, just run:
 
@@ -202,7 +202,7 @@ $ git clone https://github.com/dipu-bd/lightnovel-crawler
 $ pip install -r requirements.txt
 ```
 
-- Run the program (use python v3.7 or higher):
+- Run the program (use python v3.8 or higher):
 
 ```bash
 $ python lncrawl
@@ -249,6 +249,7 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -322,9 +323,10 @@ options:
 ~~
 
 --------------------------------------------------------------------------------
- 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues 
+ 🔗  https://github.com/dipu-bd/lightnovel-crawler/issues
 ================================================================================
 ```
+
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -494,7 +496,6 @@ We are supporting 353 sources and 326 crawlers.
 </tbody>
 </table>
 
-
 ### `ar` Arabic
 
 <table>
@@ -521,7 +522,6 @@ We are supporting 353 sources and 326 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -1990,7 +1990,6 @@ We are supporting 353 sources and 326 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish; Castilian
 
 <table>
@@ -2012,7 +2011,6 @@ We are supporting 353 sources and 326 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `fr` French
 
@@ -2050,7 +2048,6 @@ We are supporting 353 sources and 326 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -2154,7 +2151,6 @@ We are supporting 353 sources and 326 crawlers.
 </tbody>
 </table>
 
-
 ### `pt` Portuguese
 
 <table>
@@ -2182,7 +2178,6 @@ We are supporting 353 sources and 326 crawlers.
 </tbody>
 </table>
 
-
 ### `ru` Russian
 
 <table>
@@ -2209,7 +2204,6 @@ We are supporting 353 sources and 326 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -2242,7 +2236,6 @@ We are supporting 353 sources and 326 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 
