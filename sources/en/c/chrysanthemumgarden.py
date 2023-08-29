@@ -72,7 +72,6 @@ class ChrysanthemumGarden(Crawler):
         if soup.select_one("#site-pass"):
             soup = self.submit_form_for_soup(
                 url=self.absolute_url(chapter_url),
-                multipart=True,
                 headers={"Content-Encoding": "utf8"},
                 data={
                     "site-pass": self.password,
