@@ -2,9 +2,9 @@
 import logging
 import re
 from lncrawl.templates.mangastream import MangaStreamTemplate
-
+from lncrawl.core.cleaner import TextCleaner
 logger = logging.getLogger(__name__)
-search_url = 'https://novelsemperor.com/series?title=%s&type=novels&status='
+search_url = 'https://novelsemperor.com/series?title=%s&type=&status='
 
 
 class NovelsEmperorCrawler(MangaStreamTemplate):
@@ -42,9 +42,11 @@ class NovelsEmperorCrawler(MangaStreamTemplate):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
+        cleaner = TextCleaner()
+
         possible_title = soup.select_one("h2.text-2xl")
         assert possible_title, "No novel title"
-        self.novel_title = possible_title.text
+        self.novel_title = cleaner.clean_attributes('span')
         logger.info("Novel title: %s", self.novel_title)
 
         author = soup.select('p:nth-child(4) > span.capitalize')
