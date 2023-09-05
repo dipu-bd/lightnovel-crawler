@@ -293,6 +293,7 @@ class Scraper(TaskManager, SoupMaker):
             "Accept",
             "text/html,application/xhtml+xml,application/xml;q=0.9",
         )
+        kwargs["headers"] = headers
         response = self.get_response(url, **kwargs)
         self.last_soup_url = url
         return self.make_soup(response, encoding)
