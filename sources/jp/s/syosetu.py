@@ -13,6 +13,9 @@ class SyosetuCrawler(Crawler):
     has_mtl = True
     base_url = "https://ncode.syosetu.com/"
 
+    def __init__(self, workers: int | None = None, parser: str | None = None) -> None:
+        super().__init__(workers, 'xml')
+
     def search_novel(self, query):
         soup = self.get_soup(search_url % quote_plus(query))
         results = []
@@ -57,13 +60,13 @@ class SyosetuCrawler(Crawler):
                 chapter_id += 1
             else:
                 # Part/volume (there might be none)
+                volume_id += 1
                 self.volumes.append(
                     {
                         "id": volume_id,
                         "title": tag.text.strip(),
                     }
                 )
-                volume_id += 1
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
