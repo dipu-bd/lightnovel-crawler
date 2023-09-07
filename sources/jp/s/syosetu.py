@@ -44,7 +44,7 @@ class SyosetuCrawler(Crawler):
             self.novel_author = author_tag.text.strip()
 
         # Syosetu calls parts "chapters"
-        volume_id = 1
+        volume_id = 0 if len(soup.select(".chapter_title")) != 0 else 1
         chapter_id = 1
         for tag in soup.select(".chapter_title, .subtitle a"):
             if tag.name == "a":
@@ -53,12 +53,12 @@ class SyosetuCrawler(Crawler):
                     {
                         "id": chapter_id,
                         "volume": volume_id,
-                        "url": self.absolute_url(tag["href"]),
                         "title": tag.text.strip() or ("Chapter %d" % chapter_id),
+                        "url": self.absolute_url(tag["href"]),
                     }
                 )
                 chapter_id += 1
-            else:
+            elif tag.name == "div":
                 # Part/volume (there might be none)
                 volume_id += 1
                 self.volumes.append(
@@ -71,4 +71,5 @@ class SyosetuCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("#novel_honbun")
-        return self.cleaner.extract_contents(contents)
+        contents = self.cleaner.extract_contents(contents)
+        return contents
