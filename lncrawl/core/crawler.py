@@ -128,7 +128,7 @@ class Crawler(Scraper):
             img.attrs = {"src": "images/" + filename, "alt": filename}
             chapter.images[filename] = full_url
 
-        if soup.find("body") != None:
+        if soup.find("body") is not None:
             chapter.body = soup.find("body").decode_contents()
 
     def download_chapters(
