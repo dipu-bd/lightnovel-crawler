@@ -12,9 +12,9 @@ headers = {
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
     "Accept-Language": "en-US,en;q=0.5",
     "Content-Type": "application/x-www-form-urlencoded",
-    "Origin": "https://www.69shu.com",
+    "Origin": "https://www.69shuba.com",    # Updated to the new domain
     "DNT": "1",
-    "Alt-Used": "www.69shu.com",
+    "Alt-Used": "www.69shuba.com",      # Updated to the new domain
     "Connection": "keep-alive",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Fetch-Dest": "document",
@@ -24,11 +24,11 @@ headers = {
 }
 
 logger = logging.getLogger(__name__)
-search_url = "https://www.69shu.com/modules/article/search.php"
+search_url = "https://www.69shuba.com/modules/article/search.php"    # Updated to the new domain
 
 
 class sixnineshu(Crawler):
-    base_url = "https://www.69shu.com/"
+    base_url = ["https://www.69shuba.com/", "https://www.69shu.com/"]        # Updated to the new domain
 
     def get_soup(self, url):
         """overwrite the get_soup function to set the encoding"""
@@ -40,7 +40,7 @@ class sixnineshu(Crawler):
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))
         data = requests.post(
-            "https://www.69shu.com/modules/article/search.php",
+            "https://www.69shuba.com/modules/article/search.php",    # Updated to the new domain
             headers=headers,
             data=f"searchkey={query}&searchtype=all",
         )
@@ -105,7 +105,7 @@ class sixnineshu(Crawler):
             self.novel_tags = [possible_tag.text.strip()]
         logger.info("Novel Tag: %s", self.novel_tags)
 
-        # https://www.69shu.com/txt/A43616.htm -> https://www.69shu.com/A43616/
+        # https://www.69shuba.com/txt/A43616.htm -> https://www.69shuba.com/A43616/
         soup = self.get_soup(self.novel_url.replace("/txt/", "/").replace(".htm", "/"))
 
         for li in soup.select("div.catalog ul li"):
