@@ -128,7 +128,10 @@ class Crawler(Scraper):
             img.attrs = {"src": "images/" + filename, "alt": filename}
             chapter.images[filename] = full_url
 
-        chapter.body = soup.find("body").decode_contents()
+        try:
+            chapter.body = soup.find("body").decode_contents()
+        except Exception as e:
+            logger.warn(f'Error: {e}')
 
     def download_chapters(
         self,
