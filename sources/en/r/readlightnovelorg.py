@@ -29,6 +29,19 @@ class ReadLightNovelCrawler(Crawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
+        possible_synopsis = soup.select_one(
+            ".novel-right .novel-detail-item .novel-detail-body"
+        )
+        if isinstance(possible_synopsis, Tag):
+            self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
+
+        tags = soup.select(
+            ".novel-left .novel-detail-item .novel-detail-body a[href*=genre]"
+        )
+        self.novel_tags = [tag.text.strip() for tag in tags if isinstance(tag, Tag)]
+        logger.info("Novel genre: %s", self.novel_tags)
+
         author_link = soup.select_one("a[href*=author]")
         if isinstance(author_link, Tag):
             self.novel_author = author_link.text.strip().title()
