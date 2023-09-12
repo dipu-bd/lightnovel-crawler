@@ -2486,11 +2486,9 @@ We are supporting 355 sources and 327 crawlers.
 - LRF
 - OEB
 - PDB
-- PML
 - RB
 - SNB
 - TCR
-- HTML
 
 ## Sponsors
 
