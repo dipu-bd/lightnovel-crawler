@@ -29,6 +29,7 @@ class TaskManager(ABC):
         - workers (int, optional): Number of concurrent workers to expect. Default: 10.
         - ratelimit (float, optional): Number of requests per second.
         """
+        self.future_progress = 0
         self.init_executor(MAX_WORKER_COUNT)
 
     def __del__(self) -> None:
@@ -192,9 +193,11 @@ class TaskManager(ABC):
         )
 
         try:
+            self.future_progress = 0
             for future in futures:
                 if fail_fast:
                     future.result(timeout)
+                    self.future_progress += 1
                     bar.update()
                     continue
                 try:
@@ -208,6 +211,7 @@ class TaskManager(ABC):
                         bar.clear()
                         logger.warning(f"{type(e).__name__}: {e}")
                 finally:
+                    self.future_progress += 1
                     bar.update()
         finally:
             Thread(target=lambda: self.cancel_futures(futures)).start()

@@ -7,6 +7,23 @@ logger = logging.getLogger(__name__)
 EBOOK_CONVERT = "ebook-convert"
 CALIBRE_LINK = "https://calibre-ebook.com/download"
 
+# ebook-convert + [
+#     '/home/mira/Projects/misc/lightnovel-crawler/.discord_bot_output/novelfull-com/Birth Of The Demonic Sword/epub/Birth Of The Demonic Sword c1-5.epub',
+#     '/home/mira/Projects/misc/lightnovel-crawler/.discord_bot_output/novelfull-com/Birth Of The Demonic Sword/mobi/Birth Of The Demonic Sword c1-5.mobi',
+#     '--unsmarten-punctuation',
+#     '--no-chapters-in-toc',
+#     '--title', 'Birth Of The Demonic Sword c1-5',
+#     '--authors', 'Eveofchaos',
+#     '--comments', '',
+#     '--language', 'en',
+#     '--tags', [],
+#     '--series', 'Birth Of The Demonic Sword',
+#     '--publisher', 'https://novelfull.com/',
+#     '--book-producer', 'Lightnovel Crawler',
+#     '--enable-heuristics',
+#     '--disable-renumber-headings',
+#     '--cover', '/home/mira/Projects/misc/lightnovel-crawler/.discord_bot_output/novelfull-com/Birth Of The Demonic Sword/cover.jpg']
+
 
 def run_ebook_convert(*args):
     """
@@ -14,6 +31,7 @@ def run_ebook_convert(*args):
     Visit https://manual.calibre-ebook.com/generated/en/ebook-convert.html for argument list.
     """
     try:
+        # print(f"{EBOOK_CONVERT} {' '.join(list(args))}")
         isdebug = os.getenv("debug_mode")
         with open(os.devnull, "w", encoding="utf8") as dumper:
             subprocess.call(

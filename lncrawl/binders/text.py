@@ -25,5 +25,5 @@ def make_texts(app, data):
                 file.write(text)
                 text_files.append(file_name)
 
-    print("Created: %d text files" % len(text_files))
+    logger.info("Created: %d text files" % len(text_files))
     return text_files

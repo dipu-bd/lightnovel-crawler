@@ -41,6 +41,7 @@ class App:
         self.book_cover: Optional[str] = None
         self.output_formats: Dict[OutputFormat, bool] = {}
         self.archived_outputs = None
+        self.good_source_name: str = ""
         self.good_file_name: str = ""
         self.no_suffix_after_filename = False
         atexit.register(self.destroy)
@@ -60,7 +61,7 @@ class App:
         if self.crawler:
             self.crawler.__del__()
         self.chapters.clear()
-        logger.info("App destroyed")
+        logger.debug("App destroyed")
 
     # ----------------------------------------------------------------------- #
 
@@ -147,9 +148,9 @@ class App:
                 word_boundary=True,
             )
 
-        source_name = slugify(urlparse(self.crawler.home_url).netloc)
+        self.good_source_name = slugify(urlparse(self.crawler.home_url).netloc)
         self.output_path = os.path.join(
-            C.DEFAULT_OUTPUT_PATH, source_name, self.good_file_name
+            C.DEFAULT_OUTPUT_PATH, self.good_source_name, self.good_file_name
         )
 
     # ----------------------------------------------------------------------- #
@@ -177,7 +178,7 @@ class App:
 
     def bind_books(self):
         """Requires: crawler, chapters, output_path, pack_by_volume, book_cover, output_formats"""
-        logger.info("Processing data for binding")
+        logger.debug("Processing data for binding")
         assert self.crawler
 
         data = {}
@@ -205,23 +206,26 @@ class App:
     # ----------------------------------------------------------------------- #
 
     def compress_books(self, archive_singles=False):
-        logger.info("Compressing output...")
-
+        logger.debug("Compressing output...")
         # Get which paths to be archived with their base names
         path_to_process = []
-        for fmt in available_formats:
+
+        for fmt in list({k: v for k, v in self.output_formats.items() if v == True}):
             root_dir = os.path.join(self.output_path, fmt)
             if os.path.isdir(root_dir):
                 path_to_process.append(
                     [root_dir, self.good_file_name + " (" + fmt + ")"]
                 )
 
+        logger.debug("path_to_process: %s", path_to_process)
+
         # Archive files
         self.archived_outputs = []
         for root_dir, output_name in path_to_process:
             file_list = os.listdir(root_dir)
+            logger.debug("file_list: %s", file_list)
             if len(file_list) == 0:
-                logger.info("It has no files: %s", root_dir)
+                logger.debug("It has no files: %s", root_dir)
                 continue
 
             archived_file = None
@@ -230,17 +234,20 @@ class App:
                 and not archive_singles
                 and not os.path.isdir(os.path.join(root_dir, file_list[0]))
             ):
-                logger.info("Not archiving single file inside %s" % root_dir)
+                logger.debug("Not archiving single file inside %s" % root_dir)
                 archived_file = os.path.join(root_dir, file_list[0])
             else:
-                base_path = os.path.join(self.output_path, output_name)
-                logger.info("Compressing %s to %s" % (root_dir, base_path))
+                base_path = os.path.join(root_dir, output_name)
+                logger.debug("Compressing %s to %s" % (root_dir, base_path))
                 archived_file = shutil.make_archive(
                     base_path,
                     format="zip",
                     root_dir=root_dir,
                 )
-                logger.info("Compressed:", os.path.basename(archived_file))
+                logger.debug(f"Compressed: {os.path.basename(archived_file)}")
 
             if archived_file:
+                logger.debug(
+                    "appending archived file to archived_outputs: %s", archived_file
+                )
                 self.archived_outputs.append(archived_file)
