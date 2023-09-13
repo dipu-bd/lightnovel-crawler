@@ -4,13 +4,15 @@ import re
 import shutil
 from urllib.parse import urlparse
 
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
+    Application,
     CommandHandler,
+    ContextTypes,
     ConversationHandler,
-    Filters,
     MessageHandler,
-    Updater,
+    filters,
+    Job
 )
 
 from lncrawl.core.app import App
@@ -33,148 +35,151 @@ class TelegramBot:
     def start(self):
         os.environ["debug_mode"] = "yes"
 
-        # Create the EventHandler and pass it your bot's token.
-        self.updater = Updater(
-            os.getenv("TELEGRAM_TOKEN", ""),
-            # persistence=PicklePersistence('lncrawl.botdata') # No persistency under v12.0
-        )
-
-        # Get the dispatcher to register handlers
-        dp = self.updater.dispatcher
-
+        # Build the Application and with bot's token.
+        TOKEN = os.getenv("TELEGRAM_TOKEN", "")
+        self.application = Application.builder().token(TOKEN).build()
+        
         # Add a command helper for help
-        dp.add_handler(CommandHandler("help", self.show_help))
+        self.application.add_handler(CommandHandler("help", self.show_help))
 
         # Add conversation handler with states
         conv_handler = ConversationHandler(
             entry_points=[
-                CommandHandler("start", self.init_app, pass_user_data=True),
+                CommandHandler("start", self.init_app),
                 MessageHandler(
-                    Filters.text, self.handle_novel_url, pass_user_data=True
+                    filters.TEXT & ~(filters.COMMAND), self.handle_novel_url
                 ),
             ],
             fallbacks=[
-                CommandHandler("cancel", self.destroy_app, pass_user_data=True),
+                CommandHandler("cancel", self.destroy_app),
             ],
             states={
                 "handle_novel_url": [
                     MessageHandler(
-                        Filters.text, self.handle_novel_url, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_novel_url
                     ),
                 ],
                 "handle_crawler_to_search": [
                     CommandHandler(
-                        "skip", self.handle_crawler_to_search, pass_user_data=True
+                        "skip", self.handle_crawler_to_search
                     ),
                     MessageHandler(
-                        Filters.text, self.handle_crawler_to_search, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_crawler_to_search
                     ),
                 ],
                 "handle_select_novel": [
                     MessageHandler(
-                        Filters.text, self.handle_select_novel, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_select_novel
                     ),
                 ],
                 "handle_select_source": [
                     MessageHandler(
-                        Filters.text, self.handle_select_source, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_select_source
                     ),
                 ],
                 "handle_delete_cache": [
                     MessageHandler(
-                        Filters.text, self.handle_delete_cache, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_delete_cache
                     ),
                 ],
                 "handle_range_selection": [
-                    CommandHandler("all", self.handle_range_all, pass_user_data=True),
-                    CommandHandler("last", self.handle_range_last, pass_user_data=True),
+                    CommandHandler("all", self.handle_range_all),
+                    CommandHandler("last", self.handle_range_last),
                     CommandHandler(
-                        "first", self.handle_range_first, pass_user_data=True
+                        "first", self.handle_range_first
                     ),
                     CommandHandler(
-                        "volume", self.handle_range_volume, pass_user_data=True
+                        "volume", self.handle_range_volume
                     ),
                     CommandHandler(
-                        "chapter", self.handle_range_chapter, pass_user_data=True
+                        "chapter", self.handle_range_chapter
                     ),
-                    MessageHandler(Filters.text, self.display_range_selection_help),
+                    MessageHandler(filters.TEXT & ~(filters.COMMAND), self.display_range_selection_help),
                 ],
                 "handle_volume_selection": [
                     MessageHandler(
-                        Filters.text, self.handle_volume_selection, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_volume_selection
                     ),
                 ],
                 "handle_chapter_selection": [
                     MessageHandler(
-                        Filters.text, self.handle_chapter_selection, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_chapter_selection
                     ),
                 ],
                 "handle_pack_by_volume": [
                     MessageHandler(
-                        Filters.text, self.handle_pack_by_volume, pass_user_data=True
+                        filters.TEXT & ~(filters.COMMAND), self.handle_pack_by_volume
                     ),
                 ],
                 "handle_output_format": [
                     MessageHandler(
-                        Filters.text,
-                        self.handle_output_format,
-                        pass_job_queue=True,
-                        pass_user_data=True,
+                        filters.TEXT & ~(filters.COMMAND), self.handle_output_format
                     ),
                 ],
             },
         )
-        dp.add_handler(conv_handler)
+        self.application.add_handler(conv_handler)
 
         # Fallback helper
-        dp.add_handler(
-            MessageHandler(Filters.text, self.handle_downloader, pass_user_data=True)
+        self.application.add_handler(
+            MessageHandler(filters.TEXT, self.handle_downloader)
         )
 
         # Log all errors
-        dp.add_error_handler(self.error_handler)
-
-        # Start the Bot
-        self.updater.start_polling()
+        self.application.add_error_handler(self.error_handler)
 
         print("Telegram bot is online!")
 
         # Run the bot until you press Ctrl-C or the process receives SIGINT,
         # SIGTERM or SIGABRT. This should be used most of the time, since
         # start_polling() is non-blocking and will stop the bot gracefully.
-        self.updater.idle()
+        # Start the Bot
+        self.application.run_polling(allowed_updates=Update.ALL_TYPES)
 
-    def error_handler(self, bot, update, error):
+    async def error_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Log Errors caused by Updates."""
-        logger.warn("Error: %s\nCaused by: %s", error, update)
+        logger.warn("Error: %s\nCaused by: %s", context.error, update)
 
-    def show_help(self, bot, update):
-        update.message.reply_text("Send /start to create new session.\n")
+    async def show_help(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        await update.message.reply_text("Send /start to create new session.\n")
         return ConversationHandler.END
 
-    def destroy_app(self, bot, update, user_data):
-        if user_data.get("job"):
-            user_data.pop("job").schedule_removal()
+    def get_current_jobs(self, update: Update, context: ContextTypes.DEFAULT_TYPE, chat_id=None):
+        if update:
+            name = str(update.effective_message.chat_id)
+        else:
+            name = chat_id
+        current_jobs = context.job_queue.get_jobs_by_name(name)
+        return current_jobs
 
-        if user_data.get("app"):
-            app = user_data.pop("app")
+    async def destroy_app(self, update: Update, context: ContextTypes.DEFAULT_TYPE, job: Job=None):
+        if update:
+            chat_id = str(update.effective_message.chat_id)
+        else:
+            chat_id = job.chat_id
+
+        for job in self.get_current_jobs(update, context, chat_id):
+            job.schedule_removal()
+
+        if job or context.user_data.get("app"):
+            app = job.data.pop("app", None) or context.user_data.pop("app")
             app.destroy()
             # remove output path
             # shutil.rmtree(app.output_path, ignore_errors=True)
 
-        update.message.reply_text("Session closed", reply_markup=ReplyKeyboardRemove())
+        await context.bot.send_message(chat_id, text="Session closed", reply_markup=ReplyKeyboardRemove())
         return ConversationHandler.END
 
-    def init_app(self, bot, update, user_data):
-        if user_data.get("app"):
-            self.destroy_app(bot, update, user_data)
+    async def init_app(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if context.user_data.get("app"):
+            await self.destroy_app(update, context)
 
         app = App()
         app.initialize()
-        user_data["app"] = app
-        update.message.reply_text("A new session is created.")
+        context.user_data["app"] = app
+        await update.message.reply_text("A new session is created.")
 
-        update.message.reply_text(
+        await update.message.reply_text(
             "I recognize input of these two categories:\n"
             "- Profile page url of a lightnovel.\n"
             "- A query to search your lightnovel.\n"
@@ -182,55 +187,55 @@ class TelegramBot:
         )
         return "handle_novel_url"
 
-    def handle_novel_url(self, bot, update, user_data):
-        if user_data.get("job"):
-            app = user_data.get("app")
-            update.message.reply_text(
+    async def handle_novel_url(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        if self.get_current_jobs(update, context):
+            app = context.user_data.get("app")
+            await update.message.reply_text(
                 "%s\n"
                 "%d out of %d chapters has been downloaded.\n"
                 "To terminate this session send /cancel."
-                % (user_data.get("status"), app.progress, len(app.chapters))
+                % (context.user_data.get("status"), app.progress, len(app.chapters))
             )
         else:
-            if user_data.get("app"):
-                app = user_data.get("app")
+            if context.user_data.get("app"):
+                app = context.user_data.get("app")
             else:
                 app = App()
                 app.initialize()
-                user_data["app"] = app
+                context.user_data["app"] = app
 
             app.user_input = update.message.text.strip()
 
             try:
                 app.prepare_search()
             except Exception:
-                update.message.reply_text(
+                await update.message.reply_text(
                     "Sorry! I only recognize these sources:\n"
                     + "https://github.com/dipu-bd/lightnovel-crawler#supported-sources"
                 )
-                update.message.reply_text(
+                await update.message.reply_text(
                     "Enter something again or send /cancel to stop."
                 )
-                update.message.reply_text(
+                await update.message.reply_text(
                     "You can send the novelupdates link of the novel too.",
                 )
                 return "handle_novel_url"
 
             if app.crawler:
-                update.message.reply_text("Got your page link")
-                return self.get_novel_info(bot, update, user_data)
+                await update.message.reply_text("Got your page link")
+                return await self.get_novel_info(update, context)
 
             if len(app.user_input) < 5:
-                update.message.reply_text(
+                await update.message.reply_text(
                     "Please enter a longer query text (at least 5 letters)."
                 )
                 return "handle_novel_url"
 
-            update.message.reply_text("Got your query text")
-            return self.show_crawlers_to_search(bot, update, user_data)
+            await update.message.reply_text("Got your query text")
+            return await self.show_crawlers_to_search(update, context)
 
-    def show_crawlers_to_search(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def show_crawlers_to_search(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
 
         buttons = []
 
@@ -247,15 +252,15 @@ class TelegramBot:
                 ]
             ]
 
-        update.message.reply_text(
+        await update.message.reply_text(
             "Choose where to search for your novel, \n"
             "or send /skip to search everywhere.",
             reply_markup=ReplyKeyboardMarkup(buttons, one_time_keyboard=True),
         )
         return "handle_crawler_to_search"
 
-    def handle_crawler_to_search(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_crawler_to_search(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
 
         link = update.message.text
         if link:
@@ -272,33 +277,33 @@ class TelegramBot:
             if len(selected_crawlers) != 0:
                 app.crawler_links = selected_crawlers
 
-        update.message.reply_text(
+        await update.message.reply_text(
             'Searching for "%s" in %d sites. Please wait.'
             % (app.user_input, len(app.crawler_links)),
             reply_markup=ReplyKeyboardRemove(),
         )
-        update.message.reply_text(
+        await update.message.reply_text(
             "DO NOT type anything until I reply.\n"
             "You can only send /cancel to stop this session."
         )
 
         app.search_novel()
-        return self.show_novel_selection(bot, update, user_data)
+        return await self.show_novel_selection(update, context)
 
-    def show_novel_selection(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def show_novel_selection(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
 
         if len(app.search_results) == 0:
-            update.message.reply_text(
+            await update.message.reply_text(
                 "No results found by your query.\n" "Try again or send /cancel to stop."
             )
             return "handle_novel_url"
 
         if len(app.search_results) == 1:
-            user_data["selected"] = app.search_results[0]
-            return self.show_source_selection(bot, update, user_data)
+            context.user_data["selected"] = app.search_results[0]
+            return self.show_source_selection(update, context)
 
-        update.message.reply_text(
+        await update.message.reply_text(
             "Choose any one of the following novels,"
             + " or send /cancel to stop this session.",
             reply_markup=ReplyKeyboardMarkup(
@@ -315,8 +320,8 @@ class TelegramBot:
 
         return "handle_select_novel"
 
-    def handle_select_novel(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_select_novel(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
 
         selected = None
         text = update.message.text
@@ -336,21 +341,21 @@ class TelegramBot:
                     break
 
         if not selected:
-            return self.show_novel_selection(bot, update, user_data)
+            return await self.show_novel_selection(update, context)
 
-        user_data["selected"] = selected
-        return self.show_source_selection(bot, update, user_data)
+        context.user_data["selected"] = selected
+        return await self.show_source_selection(update, context)
 
-    def show_source_selection(self, bot, update, user_data):
-        app = user_data.get("app")
-        selected = user_data.get("selected")
+    async def show_source_selection(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
+        selected = context.user_data.get("selected")
         assert isinstance(app, App)
 
         if len(selected["novels"]) == 1:
             app.crawler = prepare_crawler(selected["novels"][0]["url"])
-            return self.get_novel_info(bot, update, user_data)
+            return await self.get_novel_info(update, context)
 
-        update.message.reply_text(
+        await update.message.reply_text(
             ('Choose a source to download "%s", ' % selected["title"])
             + "or send /cancel to stop this session.",
             reply_markup=ReplyKeyboardMarkup(
@@ -371,9 +376,9 @@ class TelegramBot:
 
         return "handle_select_source"
 
-    def handle_select_source(self, bot, update, user_data):
-        app = user_data.get("app")
-        selected = user_data.get("selected")
+    async def handle_select_source(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
+        selected = context.user_data.get("selected")
         assert isinstance(app, App)
 
         source = None
@@ -394,27 +399,27 @@ class TelegramBot:
                     break
 
         if not selected or not (source and source.get("url")):
-            return self.show_source_selection(bot, update, user_data)
+            return await self.show_source_selection(update, context)
 
         app.crawler = prepare_crawler(source.get("url"))
-        return self.get_novel_info(bot, update, user_data)
+        return await self.get_novel_info(update, context)
 
-    def get_novel_info(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def get_novel_info(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         # user = update.message.from_user
 
-        update.message.reply_text(app.crawler.novel_url)
+        await update.message.reply_text(app.crawler.novel_url)
 
         # TODO: Implement login feature. Create login_info_dict of (email, password)
         # if app.can_do('login'):
         #     app.login_data = login_info_dict.get(app.crawler.home_url)
         #
 
-        update.message.reply_text("Reading novel info...")
+        await update.message.reply_text("Reading novel info...")
         app.get_novel_info()
 
         if os.path.exists(app.output_path):
-            update.message.reply_text(
+            await update.message.reply_text(
                 "Local cache found do you want to use it",
                 reply_markup=ReplyKeyboardMarkup(
                     [["Yes", "No"]], one_time_keyboard=True
@@ -424,15 +429,15 @@ class TelegramBot:
         else:
             os.makedirs(app.output_path, exist_ok=True)
             # Get chapter range
-            update.message.reply_text(
+            await update.message.reply_text(
                 "%d volumes and %d chapters found."
                 % (len(app.crawler.volumes), len(app.crawler.chapters)),
                 reply_markup=ReplyKeyboardRemove(),
             )
-            return self.display_range_selection_help(bot, update)
+            return await self.display_range_selection_help(update)
 
-    def handle_delete_cache(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_delete_cache(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         text = update.message.text
         if text.startswith("No"):
             if os.path.exists(app.output_path):
@@ -440,15 +445,15 @@ class TelegramBot:
             os.makedirs(app.output_path, exist_ok=True)
 
         # Get chapter range
-        update.message.reply_text(
+        await update.message.reply_text(
             "%d volumes and %d chapters found."
             % (len(app.crawler.volumes), len(app.crawler.chapters)),
             reply_markup=ReplyKeyboardRemove(),
         )
-        return self.display_range_selection_help(bot, update)
+        return await self.display_range_selection_help(update)
 
-    def display_range_selection_help(self, bot, update):
-        update.message.reply_text(
+    async def display_range_selection_help(self, update):
+        await update.message.reply_text(
             "\n".join(
                 [
                     "Send /all to download everything.",
@@ -462,15 +467,15 @@ class TelegramBot:
         )
         return "handle_range_selection"
 
-    def range_selection_done(self, bot, update, user_data):
-        app = user_data.get("app")
-        update.message.reply_text(
+    async def range_selection_done(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
+        await update.message.reply_text(
             "You have selected %d chapters to download" % len(app.chapters)
         )
         if len(app.chapters) == 0:
-            return self.display_range_selection_help(bot, update)
+            return await self.display_range_selection_help(update)
 
-        update.message.reply_text(
+        await update.message.reply_text(
             "Do you want to generate a single file or split the books into volumes?",
             reply_markup=ReplyKeyboardMarkup(
                 [["Single file", "Split by volumes"]], one_time_keyboard=True
@@ -478,37 +483,37 @@ class TelegramBot:
         )
         return "handle_pack_by_volume"
 
-    def handle_range_all(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_range_all(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         app.chapters = app.crawler.chapters[:]
-        return self.range_selection_done(bot, update, user_data)
+        return await self.range_selection_done(update, context)
 
-    def handle_range_first(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_range_first(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         app.chapters = app.crawler.chapters[:50]
-        return self.range_selection_done(bot, update, user_data)
+        return await self.range_selection_done(update, context)
 
-    def handle_range_last(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_range_last(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         app.chapters = app.crawler.chapters[-50:]
-        return self.range_selection_done(bot, update, user_data)
+        return await self.range_selection_done(update, context)
 
-    def handle_range_volume(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_range_volume(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         buttons = [str(vol["id"]) for vol in app.crawler.volumes]
-        update.message.reply_text(
+        await update.message.reply_text(
             "I got these volumes: "
             + ", ".join(buttons)
             + "\nEnter which one these volumes you want to download separated space or commas."
         )
         return "handle_volume_selection"
 
-    def handle_volume_selection(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_volume_selection(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
 
         text = update.message.text
         selected = re.findall(r"\d+", text)
-        update.message.reply_text(
+        await update.message.reply_text(
             "Got the volumes: " + ", ".join(selected),
         )
 
@@ -516,45 +521,45 @@ class TelegramBot:
         app.chapters = [
             chap for chap in app.crawler.chapters if selected.count(chap["volume"]) > 0
         ]
-        return self.range_selection_done(bot, update, user_data)
+        return await self.range_selection_done(update, context)
 
-    def handle_range_chapter(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_range_chapter(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         chapters = app.crawler.chapters
-        update.message.reply_text(
+        await update.message.reply_text(
             "I got %s  chapters" % len(chapters)
             + "\nEnter which start and end chapter you want to generate separated space or comma.",
         )
         return "handle_chapter_selection"
 
-    def handle_chapter_selection(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_chapter_selection(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
         text = update.message.text
         selected = re.findall(r"\d+", text)
         # print(selected)
         if len(selected) != 2:
-            update.message.reply_text("Sorry, I did not understand. Please try again")
+            await update.message.reply_text("Sorry, I did not understand. Please try again")
             return "handle_range_chapter"
         else:
             selected = [int(x) for x in selected]
             app.chapters = app.crawler.chapters[selected[0] - 1 : selected[1]]
-            update.message.reply_text(
+            await update.message.reply_text(
                 "Got the start chapter : %s" % selected[0]
                 + "\nThe end chapter : %s" % selected[1]
                 + "\nTotal chapter chosen is %s" % len(app.chapters),
             )
-        return self.range_selection_done(bot, update, user_data)
+        return await self.range_selection_done(update, context)
 
-    def handle_pack_by_volume(self, bot, update, user_data):
-        app = user_data.get("app")
+    async def handle_pack_by_volume(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
 
         text = update.message.text
         app.pack_by_volume = text.startswith("Split")
 
         if app.pack_by_volume:
-            update.message.reply_text("I will split output files into volumes")
+            await update.message.reply_text("I will split output files into volumes")
         else:
-            update.message.reply_text(
+            await update.message.reply_text(
                 "I will generate single output files whenever possible"
             )
 
@@ -564,7 +569,7 @@ class TelegramBot:
             new_list.append(available_formats[i : i + 2])
             i += 2
 
-        update.message.reply_text(
+        await update.message.reply_text(
             "In which format you want me to generate your book?",
             reply_markup=ReplyKeyboardMarkup(
                 new_list,
@@ -574,8 +579,8 @@ class TelegramBot:
 
         return "handle_output_format"
 
-    def handle_output_format(self, bot, update, job_queue, user_data):
-        app = user_data.get("app")
+    async def handle_output_format(self, update, context):
+        app = context.user_data.get("app")
         user = update.message.from_user
 
         text = update.message.text.strip().lower()
@@ -588,18 +593,20 @@ class TelegramBot:
                     app.output_formats[x] = False
 
         elif text != "all":
-            update.message.reply_text("Sorry, I did not understand.")
+            await update.message.reply_text("Sorry, I did not understand.")
             return
 
-        job = job_queue.run_once(
+        chat_id = update.effective_message.chat_id
+        job = context.job_queue.run_once(
             self.process_download_request,
             1,
-            context=(update, user_data),
             name=str(user.id),
+            chat_id=chat_id,
+            data=context.user_data
         )
-        user_data["job"] = job
+        context.user_data["job"] = job
 
-        update.message.reply_text(
+        await update.message.reply_text(
             "Your request has been received."
             'I will generate book in "%s" format' % text,
             reply_markup=ReplyKeyboardRemove(),
@@ -607,60 +614,60 @@ class TelegramBot:
 
         return ConversationHandler.END
 
-    def process_download_request(self, bot, job):
-        update, user_data = job.context
-
+    async def process_download_request(self, context):
+        job = context.job
+        user_data = job.data
         app = user_data.get("app")
         if app:
             user_data["status"] = 'Downloading "%s"' % app.crawler.novel_title
             app.start_download()
-            update.message.reply_text("Download finished.")
+            await context.bot.send_message(job.chat_id, text="Download finished.")
 
         app = user_data.get("app")
         if app:
             user_data["status"] = "Generating output files"
-            update.message.reply_text(user_data.get("status"))
+            await context.bot.send_message(job.chat_id, text=user_data.get("status"))
             output_files = app.bind_books()
             logger.debug("Output files: %s", output_files)
-            update.message.reply_text("Output files generated.")
+            await context.bot.send_message(job.chat_id, text="Output files generated.")
 
         app = user_data.get("app")
         if app:
             user_data["status"] = "Compressing output folder."
-            update.message.reply_text(user_data.get("status"))
+            await context.bot.send_message(job.chat_id, text=user_data.get("status"))
             app.compress_books()
 
         for archive in app.archived_outputs:
             file_size = os.stat(archive).st_size
             if file_size < 49.99 * 1024 * 1024:
-                update.message.reply_document(
-                    open(archive, "rb"),
-                    timeout=24 * 3600,  # 24 hours
+                await context.bot.send_document(
+                    job.chat_id,
+                    open(archive, "rb")
                 )
             else:
-                update.message.reply_text(
+                await context.bot.send_message(job.chat_id, text=
                     "File size more than 50 MB so cannot be sent via telegram bot.\n"
                     + "Uploading to alternative cloud storage"
                 )
                 try:
                     description = "Generated By : Lightnovel Crawler Telegram Bot"
                     direct_link = upload(archive, description)
-                    update.message.reply_text("Get your file here: %s" % direct_link)
+                    await context.bot.send_message(job.chat_id, text="Get your file here: %s" % direct_link)
                 except Exception as e:
                     logger.error("Failed to upload file: %s", archive, e)
 
-        self.destroy_app(bot, update, user_data)
+        await self.destroy_app(None, context, job)
 
-    def handle_downloader(self, bot, update, user_data):
-        app = user_data.get("app")
-        job = user_data.get("job")
+    async def handle_downloader(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
+        app = context.user_data.get("app")
+        job = self.get_current_jobs(update, context)
 
         if app or job:
-            update.message.reply_text(
+            await update.message.reply_text(
                 "%s\n"
                 "%d out of %d chapters has been downloaded.\n"
                 "To terminate this session send /cancel."
-                % (user_data.get("status"), app.progress, len(app.chapters))
+                % (context.user_data.get("status"), app.progress, len(app.chapters))
             )
         # else:
         #     self.show_help(bot, update)
