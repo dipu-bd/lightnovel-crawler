@@ -19,7 +19,7 @@ class LightnovelReader(Crawler):
         "https://lnreader.org/",
         "https://www.lnreader.org/",
         "http://readlightnovel.online/",
-        "https://readlightnovel.app/"
+        "https://readlightnovel.app/",
     ]
 
     def initialize(self) -> None:
@@ -75,6 +75,18 @@ class LightnovelReader(Crawler):
         if isinstance(possible_image, Tag):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
+
+        possibles_syn = soup.select(".row .col-md-12.mb-3")
+        for i, e in enumerate(possibles_syn):
+            if e.text.strip() == "DESCRIPTION":
+                break
+        if (len(possibles_syn) >= i + 1) and isinstance(possibles_syn[i + 1], Tag):
+            self.novel_synopsis = self.cleaner.extract_contents(possibles_syn[i + 1])
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
+
+        tags = soup.select(".novels-detail-right-in-right a[href*=category]")
+        self.novel_tags = [tag.text.strip() for tag in tags if isinstance(tag, Tag)]
+        logger.info("Novel genre: %s", self.novel_tags)
 
         for tag in soup.select(".container dl.text-xs"):
             dt = tag.select_one("dt")
