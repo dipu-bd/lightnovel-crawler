@@ -4,9 +4,7 @@ from urllib.parse import quote_plus
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = (
-    "https://yomou.syosetu.com/search.php?word=%s"
-)
+search_url = "https://yomou.syosetu.com/search.php?word=%s"
 
 
 class SyosetuCrawler(Crawler):
@@ -18,8 +16,12 @@ class SyosetuCrawler(Crawler):
         results = []
         for tab in soup.select(".searchkekka_box"):
             a = tab.select_one(".novel_h a")
-            latest = tab.select_one(".left").get_text(separator=" ").strip()  # e.g.: 連載中 (全604部分)
-            votes = tab.select_one(".attention").text.strip()  # e.g.: "総合ポイント： 625,717 pt"
+            latest = (
+                tab.select_one(".left").get_text(separator=" ").strip()
+            )  # e.g.: 連載中 (全604部分)
+            votes = tab.select_one(
+                ".attention"
+            ).text.strip()  # e.g.: "総合ポイント： 625,717 pt"
             results.append(
                 {
                     "title": a.text.strip(),
@@ -30,9 +32,11 @@ class SyosetuCrawler(Crawler):
         return results
 
     def read_novel_info(self):
+        self.init_parser('xml')
         soup = self.get_soup(self.novel_url)
 
         self.novel_title = soup.select_one(".novel_title").text.strip()
+        logger.debug('Novel title: %s', self.novel_title)
 
         # No novel cover.
 
@@ -41,31 +45,31 @@ class SyosetuCrawler(Crawler):
             self.novel_author = author_tag.text.strip()
 
         # Syosetu calls parts "chapters"
-        volume_id = 1
-        chapter_id = 1
-        for tag in soup.select(".chapter_title, .subtitle a"):
-            if tag.name == "a":
+        chapter_id = 0
+        volume = {"id": 0}
+        self.volumes.append(volume)
+        for tag in soup.select(".index_box .chapter_title, .index_box .subtitle a"):
+            if 'chapter_title' in tag.attrs.get('class', ''):
+                # Part/volume (there might be none)
+                volume = {
+                    "id": volume['id'] + 1,
+                    "title": tag.text.strip(),
+                }
+                self.volumes.append(volume)
+            elif tag.name == "a":
                 # Chapter
+                chapter_id += 1
                 self.chapters.append(
                     {
                         "id": chapter_id,
-                        "volume": volume_id,
-                        "url": self.absolute_url(tag["href"]),
+                        "volume": volume['id'],
                         "title": tag.text.strip() or ("Chapter %d" % chapter_id),
+                        "url": self.absolute_url(tag["href"]),
                     }
                 )
-                chapter_id += 1
-            else:
-                # Part/volume (there might be none)
-                self.volumes.append(
-                    {
-                        "id": volume_id,
-                        "title": tag.text.strip(),
-                    }
-                )
-                volume_id += 1
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("#novel_honbun")
-        return self.cleaner.extract_contents(contents)
+        contents = self.cleaner.extract_contents(contents)
+        return contents
