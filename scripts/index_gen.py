@@ -50,11 +50,11 @@ HELP_RESULT_QUE = "<!-- auto generated command line output -->"
 DATE_FORMAT = "%d %B %Y %I:%M:%S %p"
 
 REPO_BRANCH = "master"
-REPO_URL = "https://github.com/dipu-bd/lightnovel-crawler"
-FILE_DOWNLOAD_URL = "https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler"
-WHEEL_RELEASE_URL = (
-    REPO_URL + "/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl"
-)
+REPO_OWNER = 'dipu-bd'
+REPO_NAME = 'lightnovel-crawler'
+REPO_URL = f"https://github.com/{REPO_OWNER}/{REPO_NAME}"
+FILE_DOWNLOAD_URL = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}"
+WHEEL_RELEASE_URL = f"{REPO_URL}/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl"
 
 # Current git branch
 try:
@@ -160,16 +160,20 @@ def search_user_by(query):
 
 def git_history(file_path):
     try:
-        cmd = (
-            'git log --follow --diff-filter=ACMT --pretty="%%at||%%aN||%%aE||%%s" "%s"'
-            % file_path
-        )
-        # cmd = 'git log -1 --diff-filter=ACMT --pretty="%%at||%%aN||%%aE||%%s" "%s"' % file_path
+        # cmd = f'git log -1 --diff-filter=ACMT --pretty="%at||%aN||%aE||%s" "{file_path}"'
+        cmd = f'git log --follow --diff-filter=ACMT --pretty="%at||%aN||%aE||%s" "{file_path}"'
         logs = subprocess.check_output(cmd, shell=True).decode("utf-8").strip()
-        logs = [line.strip().split("||", maxsplit=4) for line in logs.splitlines(False)]
         logs = [
-            {"time": int(x[0]), "author": x[1], "email": x[2], "subject": x[3]}
-            for x in logs
+            {
+                "time": int(x[0]),
+                "author": x[1],
+                "email": x[2],
+                "subject": x[3]
+            }
+            for x in [
+                line.strip().split("||", maxsplit=4)
+                for line in logs.splitlines(False)
+            ]
         ]
         return logs
     except Exception:
@@ -189,16 +193,25 @@ def process_contributors(history):
             contribs.add(username_cache[email])
             continue
         if author in repo_contribs:
+            username_cache[author] = author
+            username_cache[email] = author
             contribs.add(author)
             continue
-        name = search_user_by(quote_plus("%s in:email" % email))
+        if session.head(f'https://github.com/{author}/{REPO_NAME}').status_code == 200:
+            username_cache[author] = author
+            username_cache[email] = author
+            contribs.add(author)
+            continue
+        name = search_user_by(quote_plus(f"{email} in:email"))
         if name in repo_contribs:
+            username_cache[author] = name
             username_cache[email] = name
             contribs.add(name)
             continue
-        name = search_user_by(quote_plus("%s in:name" % author))
+        name = search_user_by(quote_plus(f"{author} in:name"))
         if name in repo_contribs:
             username_cache[author] = name
+            username_cache[email] = name
             contribs.add(name)
             continue
         username_cache[author] = None
