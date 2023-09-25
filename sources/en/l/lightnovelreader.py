@@ -88,13 +88,10 @@ class LightnovelReader(Crawler):
         self.novel_tags = [tag.text.strip() for tag in tags if isinstance(tag, Tag)]
         logger.info("Novel genre: %s", self.novel_tags)
 
-        for tag in soup.select(".container dl.text-xs"):
-            dt = tag.select_one("dt")
-            dd = tag.select_one("dd")
-            if not (isinstance(dt, Tag) and isinstance(dd, Tag)):
-                continue
-            if dt.text.strip() == "Author(s):":
-                self.novel_author = dd.text.strip()
+        self.novel_author = ', '.join([
+            a.text.strip()
+            for a in soup.select('.container .novels-detail-right-in-right a[href*="/author/"]')
+        ])
         logger.info("Novel author: %s", self.novel_author)
 
         # possible_novel_id = soup.select_one('.js-load-chapters')
