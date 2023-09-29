@@ -12,6 +12,18 @@ logger = logging.getLogger(__name__)
 class HostedNovelCom(Crawler):
     base_url = 'https://hostednovel.com/'
 
+    def extract_numbers_from_string(self, input_string):
+        # Define a regular expression pattern to match numbers (integers and decimals)
+        pattern = r"[-+]?\d*\.\d+|\d+"
+
+        # Use the findall() method to extract all matching numbers from the input string
+        numbers = re.findall(pattern, input_string)
+
+        # Convert the matched strings to actual numbers (float or int)
+        numbers = [float(number) if '.' in number else int(number) for number in numbers]
+
+        return numbers
+
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
@@ -34,19 +46,16 @@ class HostedNovelCom(Crawler):
 
         logger.info('Novel author: %s', self.novel_author)
 
-        page_re = re.compile(r'page=(\d+)#chapters')
-        final_page = max([
-            int(page[0])
-            for page in [
-                page_re.findall(a['href'])
-                for a in soup.select('#chapters nav[aria-label="Pagination"] a')
-                if a.has_attr('href')
-            ] if len(page) == 1
-        ])
-
+        if soup.select_one('#chapters nav[aria-label="Pagination"] a:nth-last-child(1)'):
+            final_pg = soup.select_one('#chapters nav[aria-label="Pagination"] a:nth-last-child(1)')
+            logger.info(f'max_page = {self.extract_numbers_from_string(final_pg["href"])[0]}')
+            final_pg = self.extract_numbers_from_string(final_pg["href"])[0]
+        else:
+            final_pg = 1
+            logger.info(f'max_page = {final_pg}')
         futures = []
         raw_novel_url = re.split(r'[?#]', self.novel_url)[0]
-        for page in range(final_page):
+        for page in range(final_pg):
             page_url = raw_novel_url + f'?page={page + 1}'
             logger.info('Getting chapters from "%s"', page_url)
             f = self.executor.submit(self.get_soup, page_url)
