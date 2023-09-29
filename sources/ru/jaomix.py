@@ -34,9 +34,7 @@ class JaomixCrawler(Crawler):
         if img_src:
             self.novel_cover = self.absolute_url(img_src["src"])
 
-        for a in reversed(soup.select('.bott-tabs-book a')):
-            if 'glava' not in a['href']:
-                continue
+        for a in reversed(soup.select('.flex-dow-txt a')):
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
