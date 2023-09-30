@@ -6,7 +6,7 @@ RUN apt-get update -yq \
     && apt-get install -yq \
     wget tar xz-utils make cmake g++ libffi-dev libegl1 libopengl0 \
     libnss3 libgl1-mesa-glx libxcomposite1 libxrandr2 libxi6 fontconfig \
-    libxkbcommon-x11-0 libxtst6 libxkbfile1 \
+    libxkbcommon-x11-0 libxtst6 libxkbfile1 libxcomposite-dev libxdamage-dev \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean autoclean \
     && apt-get autoremove -yq
