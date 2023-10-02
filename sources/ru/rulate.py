@@ -11,6 +11,17 @@ class RulateCrawler(Crawler):
         "https://tl.rulate.ru/",
     ]
 
+    def login(self, email: str, password: str):
+        login_url = "https://tl.rulate.ru/"
+        login_data = {
+            'login[login]': email,
+            'login[pass]': password
+        }
+        self.post_response(
+            login_url,
+            data=login_data
+        )
+
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
@@ -47,7 +58,7 @@ class RulateCrawler(Crawler):
                 self.novel_author = possible_author.text
         logger.info("Novel author: %s", self.novel_author)
 
-        possible_synopsis = soup.select_one("#Info > div:nth-child(3)")
+        possible_synopsis = soup.select_one("strong > span")
         if possible_synopsis:
             self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
         logger.info("Novel synopsis: %s", self.novel_synopsis)
