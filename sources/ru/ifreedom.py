@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
-from typing import List
 
 from lncrawl.core.crawler import Crawler
-from lncrawl.models import Chapter, SearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +9,7 @@ logger = logging.getLogger(__name__)
 class IfreedomCrawler(Crawler):
     base_url = ["https://ifreedom.su/"]
 
-    def read_novel_info(self) -> None:
+    def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one("h1.entry-title")
@@ -49,7 +47,7 @@ class IfreedomCrawler(Crawler):
                 }
             )
 
-    def download_chapter_body(self, chapter: Chapter) -> str:
+    def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         content = soup.select_one("div.entry-content")
         return self.cleaner.extract_contents(content)
