@@ -12,6 +12,11 @@ class JaomixCrawler(Crawler):
         "https://jaomix.ru/",
     ]
 
+    def initialize(self):
+        self.init_executor(
+            workers=1
+        )
+
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
@@ -28,6 +33,12 @@ class JaomixCrawler(Crawler):
                 break
 
         logger.info("Novel author: %s", self.novel_author)
+
+        possible_synopsis = soup.select_one("div#desc-tab")
+        if possible_synopsis:
+            self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
+
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
 
         img_src = soup.select_one("div.img-book img")
 
