@@ -62,7 +62,6 @@ class RulateCrawler(Crawler):
         possible_thumbnail = possible_synopsis.select_one("div.thumbnail")
         if possible_thumbnail:
             possible_synopsis.select_one("div.thumbnail").decompose()
-        print(possible_synopsis)
         if possible_synopsis:
             self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
         logger.info("Novel synopsis: %s", self.novel_synopsis)
