@@ -58,7 +58,11 @@ class RulateCrawler(Crawler):
                 self.novel_author = possible_author.text
         logger.info("Novel author: %s", self.novel_author)
 
-        possible_synopsis = soup.select_one("strong > span")
+        possible_synopsis = soup.select_one("#Info > div:nth-child(3)")
+        possible_thumbnail = possible_synopsis.select_one("div.thumbnail")
+        if possible_thumbnail:
+            possible_synopsis.select_one("div.thumbnail").decompose()
+        print(possible_synopsis)
         if possible_synopsis:
             self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
         logger.info("Novel synopsis: %s", self.novel_synopsis)
