@@ -8,7 +8,7 @@ EBOOK_CONVERT = "ebook-convert"
 CALIBRE_LINK = "https://calibre-ebook.com/download"
 
 
-def run_ebook_convert(*args):
+def run_ebook_convert(*args) -> bool:
     """
     Calls `ebook-convert` with given args
     Visit https://manual.calibre-ebook.com/generated/en/ebook-convert.html for argument list.
@@ -16,27 +16,29 @@ def run_ebook_convert(*args):
     try:
         isdebug = os.getenv("debug_mode")
         with open(os.devnull, "w", encoding="utf8") as dumper:
-            subprocess.call(
+            subprocess.run(
                 args=[EBOOK_CONVERT] + list(args),
                 stdout=None if isdebug else dumper,
                 stderr=None if isdebug else dumper,
+                check=True
             )
 
         return True
-    except Exception:
-        if logger.isEnabledFor(logging.DEBUG):
-            logger.exception("Failed to convert ebook with args: %s", list(args))
-
+    except subprocess.CalledProcessError:
+        logger.exception("Failed to convert ebook with args: %s", list(args))
+        return False
+    except Exception as e:
+        logger.exception("An unexpected error occurred: %s", str(e))
         return False
 
 
-def epub_to_calibre(app, epub_file, out_fmt):
+def epub_to_calibre(app, epub_file, out_fmt) -> Union[str, None]:
     if not os.path.exists(epub_file):
         return None
 
     epub_path = os.path.dirname(epub_file)
     epub_file_name = os.path.basename(epub_file)
-    file_name_without_ext = epub_file_name.replace(".epub", "")
+    file_name_without_ext, _ = os.path.splitext(epub_file_name)
 
     work_path = os.path.dirname(epub_path)
     out_path = os.path.join(work_path, out_fmt)
@@ -93,7 +95,7 @@ def epub_to_calibre(app, epub_file, out_fmt):
         return None
 
 
-def make_calibres(app, epubs, out_fmt):
+def make_calibres(app, epubs, out_fmt) -> List[str]:
     if out_fmt == "epub" or not epubs:
         return epubs
 
