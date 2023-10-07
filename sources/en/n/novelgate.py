@@ -4,15 +4,18 @@ import re
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = "https://novelgate.net/search/%s"
+search_url = "%ssearch/%s"
 
 
 class NovelGate(Crawler):
-    base_url = "https://novelgate.net/"
+    base_url = [
+        "https://novelgate.net/",
+        "https://home.novel-gate.com/",
+    ]
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "%20")
-        soup = self.get_soup(search_url % query)
+        soup = self.get_soup(search_url % (self.home_url, query))
 
         results = []
         for tab in soup.select(".film-item"):
