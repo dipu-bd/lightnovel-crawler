@@ -12,6 +12,11 @@ class JaomixCrawler(Crawler):
         "https://jaomix.ru/",
     ]
 
+    def initialize(self):
+        self.init_executor(
+            workers=1
+        )
+
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
@@ -29,14 +34,18 @@ class JaomixCrawler(Crawler):
 
         logger.info("Novel author: %s", self.novel_author)
 
+        possible_synopsis = soup.select_one("div#desc-tab")
+        if possible_synopsis:
+            self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
+
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
+
         img_src = soup.select_one("div.img-book img")
 
         if img_src:
             self.novel_cover = self.absolute_url(img_src["src"])
 
-        for a in reversed(soup.select('.bott-tabs-book a')):
-            if 'glava' not in a['href']:
-                continue
+        for a in reversed(soup.select('.flex-dow-txt a')):
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
