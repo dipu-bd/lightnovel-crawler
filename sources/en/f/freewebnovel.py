@@ -9,7 +9,7 @@ from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 
 class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
-    base_url = ["https://freewebnovel.com/", "https://bednovel.com/", "https://innread.com/"]
+    base_url = ["https://freewebnovel.com/", "https://bednovel.com/", "https://innread.com/", "https://innnovel.com/"]
 
     def initialize(self) -> None:
         self.init_executor(ratelimit=2)
