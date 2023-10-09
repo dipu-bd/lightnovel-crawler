@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import unicodedata
 
-from concurrent.futures import Future
-from typing import List
-
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult
