@@ -33,21 +33,22 @@ class WanderingInnCrawler(Crawler):
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
-        chapters = soup.select('div.entry-content a[href*="wanderinginn"]')
-
-        for a in chapters:
-            chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
+        volumes = soup.select("div#table-of-contents div[id*='vol']")
+        for volume in volumes:
+            chapters = volume.select('div#table-of-contents .chapter-entry a[href*="wanderinginn"]')
+            vol_id = 1 + len(self.volumes)
             if len(self.volumes) < vol_id:
                 self.volumes.append({"id": vol_id})
-            self.chapters.append(
-                {
-                    "id": chap_id,
-                    "volume": vol_id,
-                    "url": self.absolute_url(a["href"]),
-                    "title": a.text.strip() or ("Chapter %d" % chap_id),
-                }
-            )
+            for a in chapters:
+                chap_id = len(self.chapters) + 1
+                self.chapters.append(
+                    {
+                        "id": chap_id,
+                        "volume": vol_id,
+                        "url": self.absolute_url(a["href"]),
+                        "title": a.text.strip() or ("Chapter %d" % chap_id),
+                    }
+                )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
