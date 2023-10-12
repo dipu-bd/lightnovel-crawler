@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 import unicodedata
 
-from concurrent.futures import Future
-from typing import List
-
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult
@@ -12,7 +9,7 @@ from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 
 class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
-    base_url = ["https://freewebnovel.com/", "https://bednovel.com/", "https://innread.com/"]
+    base_url = ["https://freewebnovel.com/", "https://bednovel.com/", "https://innread.com/", "https://innnovel.com/"]
 
     def initialize(self) -> None:
         self.init_executor(ratelimit=2)
@@ -80,19 +77,9 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
             yield a.text.strip()
 
     def select_chapter_tags(self, soup: BeautifulSoup):
-        pages = soup.select("#indexselect > option")
-
-        futures: List[Future] = []
-        for page in pages:
-            url = self.absolute_url(page["value"])
-            f = self.executor.submit(self.get_soup, url)
-            futures.append(f)
-
-        self.resolve_futures(futures, desc="TOC", unit="page")
-        for i, future in enumerate(futures):
-            assert future.done(), f"Failed to get page {i + 1}"
-            soup = future.result()
-            yield from soup.select(".m-newest2 li > a")
+        chapters = soup.select("#idData")
+        for chapter in chapters:
+            yield from chapter.select("li > a")
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
         return Chapter(
