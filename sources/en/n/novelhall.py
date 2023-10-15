@@ -70,11 +70,17 @@ class NovelHallCrawler(Crawler):
 
         author = soup.select("div.book-info div.total.booktag span.blue")[0]
         author.select_one("p").extract()
-        self.novel_author = author.text.strip()
+        self.novel_author = author.text.replace("Author：", "").strip()
         logger.info("Novel author: %s", self.novel_author)
 
         self.novel_tags = [soup.select_one("div.book-info div.total.booktag a.red").text.strip()]
         logger.info("Novel tags: %s", self.novel_tags)
+
+        synopsis = soup.select_one(".js-close-wrap")
+        if synopsis:
+            synopsis.select_one(".blue").extract()
+            self.novel_synopsis = self.cleaner.extract_contents(synopsis)
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
 
         for a in soup.select("div#morelist.book-catalog ul li a"):
             chap_id = len(self.chapters) + 1
