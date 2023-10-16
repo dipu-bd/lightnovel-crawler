@@ -266,6 +266,11 @@ _builder = Args(
             help="Suppress all input prompts and use defaults.",
         ),
         Args(
+            "--ignore-images",
+            action="store_true",
+            help="Ignore images in chapters when downloading.",
+        ),
+        Args(
             "--close-directly",
             action="store_true",
             help="Do not prompt to close at the end for windows platforms.",
