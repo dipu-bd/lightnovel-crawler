@@ -46,6 +46,18 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
         except Exception:
             pass
 
+    def relibrary_url_transformation(self, response, chapter: Chapter) -> str:
+        soup = BeautifulSoup(response.text, "lxml")
+        post_url = soup.select("div > p > a")[-1]["href"]
+        if "page_id" in post_url:
+            return post_url
+        novel_url = f"https://re-library.com/translations/{post_url.split('/')[4:5][0]}"
+        time.sleep(5)
+        response = self.get_soup(novel_url)
+        chapters = response.select(".page_item > a")
+        time.sleep(5)
+        return chapters[chapter.id - 1]["href"]
+
     def select_search_items(self, query: str):
         query = dict(sf=1, sh=query, sort="srank", order="asc", rl=1, mrl="min")
         soup = self.get_soup(
@@ -138,6 +150,8 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     def download_chapter_body_in_scraper(self, chapter: Chapter) -> None:
         response = self.get_response(chapter.url, allow_redirects=True)
         logger.info("%s => %s", chapter.url, response.url)
+        if "re-library" in response.url and "translations" not in response.url:
+            response.url = self.relibrary_url_transformation(response, chapter)
         chapter.url = response.url
         return self.parse_chapter_body(chapter, response.text)
 
