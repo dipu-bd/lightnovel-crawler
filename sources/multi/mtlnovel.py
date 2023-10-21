@@ -21,6 +21,9 @@ class MtlnovelCrawler(Crawler):
         "http://es.mtlnovel.com/",
     ]
 
+    def initialize(self):
+        self.home_url = "https://mtlnovel.com/"
+
     def search_novel(self, query):
         query = query.lower().replace(" ", "%20")
         # soup = self.get_soup(search_url % query)
