@@ -163,7 +163,7 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     def parse_chapter_body(self, chapter: Chapter, text: str) -> str:
         if "re-library" in chapter.url and "translations" not in chapter.url:
             soup = self.get_soup(chapter.url)
-            post_url = soup.select(".entry-content > p[style*='center'] a")[-1]['href']
+            post_url = soup.select_one(".entry-content > p[style*='center'] a")['href']
             if "page_id" in post_url:
                 chapter.url = post_url
             else:
