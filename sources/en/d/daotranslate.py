@@ -11,7 +11,7 @@ search_url = "https://daotranslate.com/?s=%s"
 
 class DaoTranslateCrawler(Crawler):
     base_url = "https://daotranslate.com/"
-    has_mtl= True
+    has_mtl = True
 
     def initialize(self):
         self.init_executor(ratelimit=1.1)
@@ -57,7 +57,6 @@ class DaoTranslateCrawler(Crawler):
             self.novel_cover = possible_image["data-src"]
         logger.info("Novel cover: %s", self.novel_cover)
 
-        
         possible_author = soup.select_one(
             ".info-content .spe span:nth-child(3) a"
         )
