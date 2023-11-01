@@ -9,7 +9,7 @@ from urllib.parse import ParseResult, urlparse
 
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 from requests import Response, Session
 from requests.exceptions import ProxyError
 from requests.structures import CaseInsensitiveDict
@@ -239,17 +239,25 @@ class Scraper(TaskManager, SoupMaker):
         """Download image from url"""
         if url.startswith("data:"):
             content = base64.b64decode(url.split("base64,")[-1])
-        else:
-            headers = CaseInsensitiveDict(headers)
-            headers.setdefault("Origin", None)
-            headers.setdefault("Referer", None)
-            # headers.setdefault(
-            #     "Accept",
-            #     "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
-            # )
+            return Image.open(BytesIO(content))
+
+        headers = CaseInsensitiveDict(headers)
+        headers.setdefault("Origin", None)
+        headers.setdefault("Referer", None)
+
+        try:
             response = self.__process_request("get", url, headers=headers, **kwargs)
             content = response.content
-        return Image.open(BytesIO(content))
+            return Image.open(BytesIO(content))
+
+        except UnidentifiedImageError:
+            headers.setdefault(
+                "Accept",
+                "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.9",
+            )
+            response = self.__process_request("get", url, headers=headers, **kwargs)
+            content = response.content
+            return Image.open(BytesIO(content))
 
     def get_json(self, url, headers={}, **kwargs) -> Any:
         """Fetch the content and return the content as JSON object"""
