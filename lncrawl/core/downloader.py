@@ -47,7 +47,7 @@ def _save_chapter(app, chapter: Chapter):
     title = "&gt;".join(title.split(">"))
     title = f"<h1>{title}</h1>"
     if not chapter.body.startswith(title):
-        chapter.body = title + chapter.body
+        chapter.body = "".join([title, chapter.body])
 
     file_name = _chapter_file(
         chapter,
@@ -116,6 +116,7 @@ def _fetch_content_image(app, url, image_file):
                 else:
                     img = img.convert("RGB")
             img.save(image_file, "JPEG", optimized=True)
+            img.close()
             logger.debug("Saved image: %s", image_file)
         finally:
             app.progress += 1
