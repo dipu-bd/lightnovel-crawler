@@ -7,17 +7,18 @@ window.addEventListener("keyup", function (evt) {
     window.location.href = href;
   }
 
-  switch (evt.key) {
-    case "ArrowLeft":
-      goToHref(document.querySelector("a.prev-button"));
-      break;
-    case "ArrowRight":
-      goToHref(document.querySelector("a.next-button"));
-      break;
-    default:
-      break;
-  }
-});
+
+    switch (evt.key) {
+      case "ArrowLeft":
+        goToHref(document.querySelector("a.prev-button"));
+        break;
+      case "ArrowRight":
+        goToHref(document.querySelector("a.next-button"));
+        break;
+      default:
+        break;
+    }
+  });
 
 // Handle next TOC select
 function addTocSelectListener() {
@@ -29,18 +30,20 @@ function addTocSelectListener() {
 }
 
 // Handle update reading progress on scroll
-window.addEventListener("scroll", function (e) {
-  try {
+let debounceTimeout;
+function debouncedUpdate(evt) {
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(() => {
     var scroll = window.scrollY;
     var height = document.body.scrollHeight - window.innerHeight + 10;
     var percent = Math.round((100.0 * scroll) / height);
     document.getElementById("readpos").innerText = percent + "%";
-  } catch (err) {
-    // ignore
-  }
-});
+  }, 100);  // 100ms delay
+}
 
-// Add element wise listeners after page load
+
+window.addEventListener("scroll", debouncedUpdate);
+
 window.addEventListener("load", function (evt) {
   addTocSelectListener();
 });
