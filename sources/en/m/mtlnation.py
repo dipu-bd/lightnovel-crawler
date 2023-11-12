@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 from urllib.parse import urlencode, urlparse
 
@@ -19,18 +18,9 @@ class MTLNation(Crawler):
         self.init_executor(1)
 
     def login(self, email: str, password: str) -> None:
-        self.post_json(
-            "https://api.mtlnation.com/api/v2/accounts/login",
-            data=json.dumps(
-                {
-                    "identity": email,
-                    "password": password,
-                }
-            ),
-        )
-        jwt = self.cookies.get("jwt")
-        self.set_header("authorization", f"JWT {jwt}")
-        logger.info("Logged in with jwt %s", jwt)
+        self.set_header("Authorization", f"{email} {password}")
+        response = self.get_json("https://api.mtlnation.com/api/v2/users/me")
+        logger.info("Logged in as %s" % response["data"]["name"])
 
     def search_novel(self, query):
         data = self.get_json(

@@ -28,6 +28,11 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
     _cached_crawlers: Mapping[str, Crawler] = {}
     _title_matcher = re.compile(r"^(c|ch|chap|chapter)?[^\w\d]*(\d+)$", flags=re.I)
 
+    def initialize(self):
+        self.init_executor(
+            workers=4,
+        )
+
     def wait_for_cloudflare(self):
         if "cf_clearance" in self.cookies:
             return
@@ -156,6 +161,19 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
         return super().select_chapter_body(soup)
 
     def parse_chapter_body(self, chapter: Chapter, text: str) -> str:
+        if "re-library" in chapter.url and "translations" not in chapter.url:
+            soup = self.get_soup(chapter.url)
+            post_url = soup.select_one(".entry-content > p[style*='center'] a")['href']
+            if "page_id" in post_url:
+                chapter.url = post_url
+            else:
+                time.sleep(2.5)
+                novel_url = f"https://re-library.com/translations/{post_url.split('/')[4:5][0]}"
+                response = self.get_soup(novel_url)
+                chapters = response.select(".page_item > a")
+                chapter.url = chapters[chapter.id - 1]["href"]
+                time.sleep(2.5)
+
         crawler = self._find_original_crawler(chapter)
         if hasattr(crawler, "download_chapter_body_in_scraper"):
             return crawler.download_chapter_body_in_scraper(chapter)

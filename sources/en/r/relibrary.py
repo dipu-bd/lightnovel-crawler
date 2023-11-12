@@ -18,6 +18,7 @@ class relibCrawler(ChapterOnlySoupTemplate):
         self.init_executor(1)
         self.cleaner.bad_css.update(
             [
+                "tr",
                 ".nextPageLink",
                 ".prevPageLink",
                 ".su-button",

@@ -3,6 +3,7 @@ import logging
 from abc import abstractmethod
 from typing import Generator, List, Optional
 
+from .arguments import get_args
 from ..models import Chapter, SearchResult, Volume
 from .cleaner import TextCleaner
 from .scraper import Scraper
@@ -114,6 +115,10 @@ class Crawler(Scraper):
         return 0
 
     def extract_chapter_images(self, chapter: Chapter) -> None:
+        ignore_images = get_args().ignore_images
+        if ignore_images:
+            return
+
         if not chapter.body:
             return
 
