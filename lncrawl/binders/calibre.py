@@ -1,6 +1,7 @@
 import logging
 import os
 import subprocess
+from typing import Union, List
 logger = logging.getLogger(__name__)
 EBOOK_CONVERT = "ebook-convert"
 CALIBRE_LINK = "https://calibre-ebook.com/download"
