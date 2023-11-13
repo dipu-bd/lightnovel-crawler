@@ -47,7 +47,7 @@ class NovelsEmperorCrawler(Crawler):
 
         self.novel_cover = self.absolute_url(
             soup.select_one("img.size-post-thumbnail")["src"]
-        )
+        ).split("?")[0]
         logger.info("Novel cover: %s", self.novel_cover)
 
         for a in soup.select("div.eplister ul li a"):
