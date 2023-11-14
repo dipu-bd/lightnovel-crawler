@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+import re
 
 from lncrawl.core.crawler import Crawler
 
@@ -15,7 +16,10 @@ class Shanghaifantasy(Crawler):
         soup = self.get_soup(self.novel_url)
 
         novel_id = soup.select_one("div#likebox").attrs["data-novel"]
-        total_chapters = soup.select("div.grid p.text-sm")[1].text.split(": ")[1]
+        total_chapters_text = soup.select("div.grid p.text-sm")[1].text.split(": ")[1]
+        total_chapters = sum(int(num) for num in re.findall(r"\b\d+\b", total_chapters_text))
+        if total_chapters == 0:
+            total_chapters = 999
         get_novel_json = self.get_response(self.wp_json_novel % novel_id).json()
 
         novel_title = get_novel_json["title"]["rendered"]
@@ -48,5 +52,13 @@ class Shanghaifantasy(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        content = soup.select_one("div.contenta")
+        possible_chap_id = soup.select_one("a.comment-reply-link")
+        if possible_chap_id:
+            chap_id = possible_chap_id.attrs["data-postid"]
+        else:
+            possible_chap_id = soup.select_one("input#comment_post_ID")
+            chap_id = possible_chap_id.attrs["value"]
+        data = self.get_json("https://shanghaifantasy.com/wp-json/wp/v2/posts/%s" % chap_id)["content"]["rendered"]
+        soup = self.make_soup(data.replace("\n", " "))
+        content = soup.find("body")
         return self.cleaner.extract_contents(content)
