@@ -65,6 +65,8 @@ class TextCleaner:
             [
                 # css selector to select and remove tags
                 ".adblock-service",
+                ".sharedaddy",
+                ".saboxplugin-wrap",
                 ".adbox",
                 ".ads-middle",
                 ".ads",
