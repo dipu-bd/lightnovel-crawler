@@ -75,6 +75,9 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
         )
 
     def visit_novel_page_in_browser(self) -> BeautifulSoup:
+        url_parts = self.novel_url.split("/")
+        self.novel_url = f'{url_parts[0]}/{url_parts[2]}/{url_parts[3]}/{url_parts[4]}/'
+        logger.debug(self.novel_url)
         self.visit(self.novel_url)
         self.browser.wait(".fictionposts-template-default")
 
