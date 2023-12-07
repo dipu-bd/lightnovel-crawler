@@ -11,6 +11,9 @@ class RulateCrawler(Crawler):
         "https://tl.rulate.ru/",
     ]
 
+    def initialize(self):
+        self.cleaner.bad_css.update([".thumbnail"])
+
     def login(self, email: str, password: str):
         login_url = "https://tl.rulate.ru/"
         login_data = {
@@ -59,9 +62,6 @@ class RulateCrawler(Crawler):
         logger.info("Novel author: %s", self.novel_author)
 
         possible_synopsis = soup.select_one("#Info > div:nth-child(3)")
-        possible_thumbnail = possible_synopsis.select_one("div.thumbnail")
-        if possible_thumbnail:
-            possible_synopsis.select_one("div.thumbnail").decompose()
         if possible_synopsis:
             self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
         logger.info("Novel synopsis: %s", self.novel_synopsis)
