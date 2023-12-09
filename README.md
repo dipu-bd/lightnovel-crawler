@@ -54,7 +54,14 @@ An app to download novels from online sources and generate e-books.
 
 **This application uses _Calibre_ to convert ebooks.** <br>
 **Install it from https://calibre-ebook.com/download** <br>
-Without it, you will only get output in epub, text, and web formats.
+Without it, you will only get output in epub, text, and web formats. <br>
+
+**For macOS, you need to manually add the path to Calibre.** <br>
+Before starting lncrawl, use the command:
+```bash
+$ export PATH="$PATH:/Applications/calibre.app/Contents/MacOS"
+```
+If you used a folder other than Applications during installation, replace `/Applications/` with your path to Calibre.
 
 <!-- Also, you have to install **node.js** to access cloudflare enabled sites (e.g. https://novelplanet.com/). Download and install node.js from here: https://nodejs.org/en/download/ -->
 
