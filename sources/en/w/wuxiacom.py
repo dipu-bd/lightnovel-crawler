@@ -30,10 +30,9 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.cleaner.unchanged_tags.update(["span"])
         self.wuxia_login_info = list()
         self.start_download_chapter_body_in_browser = False
-        #self.loged_in = False
+
 
     def login(self, email: str, password: str) -> None:
-        #self.loged_in = False
         if email == 'Bearer':
             logger.debug("login type: %s", email)
             self.bearer_token = email + " " + password
@@ -47,19 +46,9 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             self.browser.find("input#Username").send_keys(email)
             self.browser.find("input#Password").send_keys(password)
             self.browser.find("button").click()
-            #time.sleep(10) # wait 10sec instead for waiting for elemnt in case login failed
-            #driver.find_element(By.CSS_SELECTOR, "h6 button").click()
-            #driver.find_element(By.CSS_SELECTOR, "input#Username").send_keys(email)
-            #driver.find_element(By.ID, "Password").send_keys(password)
-            #driver.find_element(By.NAME, "button").click()
-            #self.wuxia_cookies = self.get_cookies()
-            #self._restore_cookies()
-            #logger.debug("cookies: Email(%s)", str(self.cookies))
-            #logger.debug("headers: Email(%s)", str(self.headers))
             try:
                 self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
                 self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
-                #self.loged_in = True
                 storage = LocalStorage(self.browser._driver)
                 if storage.has('oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'):
                     self.bearer_token = '{token_type} {access_token}'.format(**json.loads(storage['oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa']))
@@ -217,14 +206,6 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         if author_tag:
             self.novel_author = author_tag.text.strip()
 
-        # Open chapters menu
-        #try:
-        #    self.browser.find("#novel-tabs #full-width-tab-2")
-        #    self.browser.click("#novel-tabs #full-width-tab-0")
-        #    self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
-        #except:
-        #    self.browser.click("#novel-tabs #full-width-tab-1")
-        #    self.browser.wait("#full-width-tabpanel-1 .MuiAccordion-root")
         if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]',By.XPATH)) == 3:
             self.browser.click("#novel-tabs #full-width-tab-0")
             self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
@@ -270,15 +251,13 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
             bar.update()
 
-        # Close progress bar
+
         bar.close()
-        #time.sleep(1000)
+
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
-        #logger.debug("login type: %s", str(self.get_cookies()))
+
         if not self.start_download_chapter_body_in_browser:
-            #if self.loged_in:
-            #    self.login(*self.wuxia_login_info)
             if self.bearer_token:
                 self.visit('https://www.wuxiaworld.com/manage/profile/')
                 storage = LocalStorage(self.browser._driver)
@@ -295,14 +274,12 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             
             self.start_download_chapter_body_in_browser = True
         self.visit(chapter.url)
-        # self.browser.wait("chapter-content", By.CLASS_NAME)
         try:
             self.browser.wait("chapter-content", By.CLASS_NAME)
-            #if self.loged_in or self.bearer_token:
             if self.bearer_token:
                 self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
                 self.browser.find("//button[normalize-space()='Favorite']", By.XPATH)
-                #self.browser.wait("loading-container", By.CLASS_NAME, timeout=10, ignored_exceptions=[],reversed=True)
+
         except:
             logger.debug("error loading chapter (%s) or chapter is locked", str(chapter.url))
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
