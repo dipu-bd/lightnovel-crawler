@@ -31,8 +31,9 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.wuxia_login_info = list()
         self.start_download_chapter_body_in_browser = False
 
-
     def login(self, email: str, password: str) -> None:
+        # Login now will use Bearer Token if supplied as main login method,
+        # and if username used it will exctract Bearer Token and use it for further login process
         if email == 'Bearer':
             logger.debug("login type: %s", email)
             self.bearer_token = email + " " + password
@@ -47,6 +48,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             self.browser.find("input#Password").send_keys(password)
             self.browser.find("button").click()
             try:
+                # Testing if logging has succeeded
                 self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
                 self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
                 storage = LocalStorage(self.browser._driver)
@@ -174,6 +176,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
     def read_novel_info_in_browser(self) -> None:
         self.visit(self.novel_url)
+        # Login
         if self.bearer_token:
             storage = LocalStorage(self.browser._driver)
             logger.debug("LocalStorage: %s", storage)
@@ -206,6 +209,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         if author_tag:
             self.novel_author = author_tag.text.strip()
 
+        # Open chapters menu (note: the order of tabs in novel info change whether if you are logged in or not)
         if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]',By.XPATH)) == 3:
             self.browser.click("#novel-tabs #full-width-tab-0")
             self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
@@ -251,12 +255,13 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
             bar.update()
 
-
+        # Close progress bar
         bar.close()
 
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
 
+        # login
         if not self.start_download_chapter_body_in_browser:
             if self.bearer_token:
                 self.visit('https://www.wuxiaworld.com/manage/profile/')
@@ -275,17 +280,18 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             self.start_download_chapter_body_in_browser = True
         self.visit(chapter.url)
         try:
+            # wait untill chapter fully loaded
             self.browser.wait("chapter-content", By.CLASS_NAME)
             if self.bearer_token:
                 self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
                 self.browser.find("//button[normalize-space()='Favorite']", By.XPATH)
-
         except:
             logger.debug("error loading chapter (%s) or chapter is locked", str(chapter.url))
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
         self.cleaner.clean_contents(content)
         return content.decode_contents()
 
+# this class to read browser LocalStorage
 class LocalStorage:
 
     def __init__(self, driver) :
