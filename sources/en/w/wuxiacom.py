@@ -4,12 +4,12 @@ import logging
 import re
 
 from pyease_grpc import RpcSession
-import time
 
 from lncrawl.core.exeptions import FallbackToBrowser
 from lncrawl.models import Chapter, Volume
 from lncrawl.templates.browser.basic import BasicBrowserTemplate
 from lncrawl.webdriver.elements import By
+import selenium
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +28,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.cleaner.bad_tags.add("hr")
         self.bearer_token = None
         self.cleaner.unchanged_tags.update(["span"])
-        self.wuxia_login_info = list()
         self.start_download_chapter_body_in_browser = False
+        self.localstorageuser = 'oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'
 
     def login(self, email: str, password: str) -> None:
         # Login now will use Bearer Token if supplied as main login method,
@@ -52,13 +52,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                 self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
                 self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
                 storage = LocalStorage(self.browser._driver)
-                if storage.has('oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'):
-                    self.bearer_token = '{token_type} {access_token}'.format(**json.loads(storage['oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa']))
-            except:
+                if storage.has(self.localstorageuser):
+                    self.bearer_token = '{token_type} {access_token}'.format(**json.loads(storage[self.localstorageuser]))
+            except Exception as e:
                 logger.debug("login Email: Failed")
-            self.wuxia_login_info = [email,password]
-            
-            
 
     def read_novel_info_in_scraper(self) -> None:
         slug = re.findall(r"/novel/([^/]+)", self.novel_url)[0]
@@ -180,8 +177,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         if self.bearer_token:
             storage = LocalStorage(self.browser._driver)
             logger.debug("LocalStorage: %s", storage)
-            if not storage.has('oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'):
-                storage['oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'] = '{"access_token":"%s","token_type":"%s"}' % tuple(self.bearer_token.split(" ",1)[::-1])
+            if not storage.has(self.localstorageuser):
+                storage[self.localstorageuser] = '{"access_token":"%s","token_type":"%s"}' % tuple(self.bearer_token.split(" ",1)[::-1])
                 logger.debug("LocalStorage: %s", storage)
                 self.visit(self.novel_url)
             self.browser.wait("#novel-tabs #full-width-tab-2")
@@ -258,25 +255,22 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         # Close progress bar
         bar.close()
 
-
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
-
         # login
         if not self.start_download_chapter_body_in_browser:
             if self.bearer_token:
                 self.visit('https://www.wuxiaworld.com/manage/profile/')
                 storage = LocalStorage(self.browser._driver)
                 logger.debug("LocalStorage: %s", storage)
-                if not storage.has('oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'):
-                    storage['oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'] = '{"access_token":"%s","token_type":"%s"}' % tuple(self.bearer_token.split(" ",1)[::-1])
+                if not storage.has(self.localstorageuser):
+                    storage[self.localstorageuser] = '{"access_token":"%s","token_type":"%s"}' % tuple(self.bearer_token.split(" ",1)[::-1])
                     logger.debug("LocalStorage: %s", storage)
                     self.visit('https://www.wuxiaworld.com/manage/profile/')
                     try:
                         self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
                         self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
-                    except:
+                    except Exception as e:
                         logger.debug("login Email: Failed")
-            
             self.start_download_chapter_body_in_browser = True
         self.visit(chapter.url)
         try:
@@ -285,7 +279,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             if self.bearer_token:
                 self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
                 self.browser.find("//button[normalize-space()='Favorite']", By.XPATH)
-        except:
+        except Exception as e:
             logger.debug("error loading chapter (%s) or chapter is locked", str(chapter.url))
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
         self.cleaner.clean_contents(content)
