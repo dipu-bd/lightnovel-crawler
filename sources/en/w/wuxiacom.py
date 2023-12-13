@@ -177,7 +177,11 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             storage = LocalStorage(self.browser._driver)
             logger.debug("LocalStorage: %s", storage)
             if not storage.has(self.localstorageuser):
-                storage[self.localstorageuser] = '{"access_token":"%s","token_type":"%s"}' % tuple(self.bearer_token.split(" ",1)[::-1])
+                token_type, token = self.bearer_token.split(" ", 1)
+                storage[self.localstorageuser] = json.dumps({
+                    "access_token": token,
+                    "token_type": token_type,
+                })
                 logger.debug("LocalStorage: %s", storage)
                 self.visit(self.novel_url)
             self.browser.wait("#novel-tabs #full-width-tab-2")
@@ -345,6 +349,7 @@ class LocalStorage:
 
     def __repr__(self):
         return self.items().__str__()
+
 
 WUXIWORLD_PROTO = json.loads(
 """
