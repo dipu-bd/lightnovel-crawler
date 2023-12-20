@@ -110,15 +110,15 @@ class Browser:
                 )
             logger.debug("Cookies retrieved: %s", self.cookie_store)
         if isinstance(self.browser_storage, dict):
-            self.browser_storage['localStorage'] = self._driver.execute_script( \
-                "var ls = window.localStorage, items = {}; " \
-                "for (var i = 0, k; i < ls.length; ++i) " \
-                "  items[k = ls.key(i)] = ls.getItem(k); " \
+            self.browser_storage['localStorage'] = self._driver.execute_script(
+                "var ls = window.localStorage, items = {}; "
+                "for (var i = 0, k; i < ls.length; ++i) "
+                "  items[k = ls.key(i)] = ls.getItem(k); "
                 "return items; ")
-            self.browser_storage['sessionStorage'] = self._driver.execute_script( \
-                "var ls = window.sessionStorage, items = {}; " \
-                "for (var i = 0, k; i < ls.length; ++i) " \
-                "  items[k = ls.key(i)] = ls.getItem(k); " \
+            self.browser_storage['sessionStorage'] = self._driver.execute_script(
+                "var ls = window.sessionStorage, items = {}; "
+                "for (var i = 0, k; i < ls.length; ++i) "
+                "  items[k = ls.key(i)] = ls.getItem(k); "
                 "return items; ")
             logger.debug("Storage retrieved: %s", self.browser_storage)
 
