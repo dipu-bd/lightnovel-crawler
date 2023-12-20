@@ -351,4 +351,4 @@ class LocalStorage:
         return self.items().__str__()
 
 
-WUXIWORLD_PROTO = json.loads(open('wuxiacom.proto').read()) # noqa: E501
+WUXIWORLD_PROTO = json.loads(open('wuxiacom.proto').read())  # noqa: E501
