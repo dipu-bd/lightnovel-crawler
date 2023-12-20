@@ -19,7 +19,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
     ]
 
     def initialize(self):
-        #self.headless = True
+        # self.headless = True
         self.api_url = "https://api2.wuxiaworld.com"
         self.grpc = RpcSession.from_descriptor(WUXIWORLD_PROTO)
         self.grpc._session = self.scraper
@@ -28,11 +28,14 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.bearer_token = None
         self.cleaner.unchanged_tags.update(["span"])
         self.start_download_chapter_body_in_browser = False
-        self.localstorageuser = 'oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'
+        self.localstorageuser = 'oidc.user:' \
+                                'https://identity.wuxiaworld.com' \
+                                ':wuxiaworld_spa'
 
     def login(self, email: str, password: str) -> None:
         # Login now will use Bearer Token if supplied as main login method,
-        # and if username used it will exctract Bearer Token and use it for further login process
+        # and if username used it will exctract Bearer Token
+        # and use it for further login process
         if email == 'Bearer':
             logger.debug("login type: %s", email)
             self.bearer_token = email + " " + password
@@ -48,11 +51,14 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             self.browser.find("button").click()
             try:
                 # Testing if logging has succeeded
-                self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
+                self.browser.wait("//h2[normalize-space()='Your Profile']",
+                                  By.XPATH, 10)
+                self.browser.find("//h2[normalize-space()='Your Profile']",
+                                  By.XPATH)
                 storage = LocalStorage(self.browser._driver)
                 if storage.has(self.localstorageuser):
-                    self.bearer_token = '{token_type} {access_token}'.format(**json.loads(storage[self.localstorageuser]))
+                    self.bearer_token = '{token_type} {access_token}'.format(
+                        **json.loads(storage[self.localstorageuser]))
             except Exception as e:
                 logger.debug("login Email: Failed", e)
 
@@ -91,7 +97,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         advance_chapter_allowed = 0
         try:
             response = self.grpc.request(
-                f"{self.api_url}/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
+                f"{self.api_url}" +
+                "/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
                 {"novelId": novel["id"]},
                 headers={"authorization": self.bearer_token},
             )
@@ -145,7 +152,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                         title=chap_title,
                         original_title=chap["name"],
                         chapterId=chap["entityId"],
-                        url=f"https://www.wuxiaworld.com/novel/{slug}/{chap['slug']}",
+                        url="https://www.wuxiaworld.com/novel" +
+                        f"/{slug}/{chap['slug']}",
                     )
                 )
 
@@ -185,7 +193,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                 logger.debug("LocalStorage: %s", storage)
                 self.visit(self.novel_url)
             self.browser.wait("#novel-tabs #full-width-tab-2")
-        self.browser.wait(".items-start h1, img.drop-shadow-ww-novel-cover-image")
+        self.browser.wait(".items-start h1, " +
+                          "img.drop-shadow-ww-novel-cover-image")
 
         # Clear the annoying top menubar
         self.browser.find("header#header").remove()
@@ -209,8 +218,11 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         if author_tag:
             self.novel_author = author_tag.text.strip()
 
-        # Open chapters menu (note: the order of tabs in novel info change whether if you are logged in or not)
-        if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]', By.XPATH)) == 3:
+        # Open chapters menu (note: the order of tabs in novel info
+        # change whether if you are logged in or not)
+        if len(self.browser.find_all('//*[starts-with' +
+                                     '(@id, "full-width-tab-")]',
+                                     By.XPATH)) == 3:
             self.browser.click("#novel-tabs #full-width-tab-0")
             self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
         else:
@@ -231,7 +243,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             root.click()
 
             nth = len(volumes) - index
-            self.browser.wait(f"#app .MuiAccordion-root:nth-of-type({nth}) a[href]")
+            self.browser.wait("#app .MuiAccordion-root:" +
+                              f"nth-of-type({nth}) a[href]")
 
             tag = root.as_tag()
             head = tag.select_one(".MuiAccordionSummary-content")
@@ -274,8 +287,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                     logger.debug("LocalStorage: %s", storage)
                     self.visit('https://www.wuxiaworld.com/manage/profile/')
                     try:
-                        self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                        self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
+                        self.browser.wait("//h2[normalize-space()" +
+                                          "='Your Profile']", By.XPATH, 10)
+                        self.browser.find("//h2[normalize-space()" +
+                                          "='Your Profile']", By.XPATH)
                     except Exception as e:
                         logger.debug("login Email: Failed", e)
             self.start_download_chapter_body_in_browser = True
@@ -284,8 +299,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             # wait untill chapter fully loaded
             self.browser.wait("chapter-content", By.CLASS_NAME)
             if self.bearer_token:
-                self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
-                self.browser.find("//button[normalize-space()='Favorite']", By.XPATH)
+                self.browser.wait("//button[normalize-space()" +
+                                  "='Favorite']", By.XPATH, 10)
+                self.browser.find("//button[normalize-space()" +
+                                  "='Favorite']", By.XPATH)
         except Exception as e:
             logger.debug("error loading (%s)", str(chapter.url), e)
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
@@ -295,13 +312,13 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
 # Class for reading localStorage from Browser
 class LocalStorage:
-    def __init__(self, driver) :
+    def __init__(self, driver):
         self.driver = driver
 
     def __len__(self):
         return self.driver.execute_script("return window.localStorage.length;")
 
-    def items(self) :
+    def items(self):
         return self.driver.execute_script(
             "var ls = window.localStorage, items = {}; "
             "for (var i = 0, k; i < ls.length; ++i) "
@@ -309,7 +326,7 @@ class LocalStorage:
             "return items; "
         )
 
-    def keys(self) :
+    def keys(self):
         return self.driver.execute_script(
             "var ls = window.localStorage, keys = []; "
             "for (var i = 0; i < ls.length; ++i) "
@@ -318,21 +335,25 @@ class LocalStorage:
         )
 
     def get(self, key):
-        return self.driver.execute_script("return window.localStorage.getItem(arguments[0]);", key)
+        return self.driver.execute_script(
+            "return window.localStorage.getItem(arguments[0]);", key)
 
     def set(self, key, value):
-        self.driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
+        self.driver.execute_script(
+            "window.localStorage.setItem(arguments[0], arguments[1]);",
+            key, value)
 
     def has(self, key):
         return key in self.keys()
 
     def remove(self, key):
-        self.driver.execute_script("window.localStorage.removeItem(arguments[0]);", key)
+        self.driver.execute_script(
+            "window.localStorage.removeItem(arguments[0]);", key)
 
     def clear(self):
         self.driver.execute_script("window.localStorage.clear();")
 
-    def __getitem__(self, key) :
+    def __getitem__(self, key):
         value = self.get(key)
         if value is None:
             raise KeyError(key)
