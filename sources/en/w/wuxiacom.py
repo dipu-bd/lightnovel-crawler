@@ -97,8 +97,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         advance_chapter_allowed = 0
         try:
             response = self.grpc.request(
-                f"{self.api_url}" +
-                "/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
+                f"{self.api_url}/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
                 {"novelId": novel["id"]},
                 headers={"authorization": self.bearer_token},
             )
@@ -152,8 +151,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                         title=chap_title,
                         original_title=chap["name"],
                         chapterId=chap["entityId"],
-                        url="https://www.wuxiaworld.com/novel" +
-                        f"/{slug}/{chap['slug']}",
+                        url=f"https://www.wuxiaworld.com/novel/{slug}/{chap['slug']}",
                     )
                 )
 
