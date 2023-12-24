@@ -193,8 +193,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                 logger.debug("LocalStorage: %s", storage)
                 self.visit(self.novel_url)
             self.browser.wait("#novel-tabs #full-width-tab-2")
-        self.browser.wait(".items-start h1, " +
-                          "img.drop-shadow-ww-novel-cover-image")
+        self.browser.wait(".items-start h1, img.drop-shadow-ww-novel-cover-image")
 
         # Clear the annoying top menubar
         self.browser.find("header#header").remove()
@@ -220,8 +219,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
         # Open chapters menu (note: the order of tabs in novel info
         # change whether if you are logged in or not)
-        if len(self.browser.find_all('//*[starts-with' +
-                                     '(@id, "full-width-tab-")]',
+        if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]',
                                      By.XPATH)) == 3:
             self.browser.click("#novel-tabs #full-width-tab-0")
             self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
@@ -243,8 +241,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             root.click()
 
             nth = len(volumes) - index
-            self.browser.wait("#app .MuiAccordion-root:" +
-                              f"nth-of-type({nth}) a[href]")
+            self.browser.wait(f"#app .MuiAccordion-root:nth-of-type({nth}) a[href]")
 
             tag = root.as_tag()
             head = tag.select_one(".MuiAccordionSummary-content")
@@ -287,10 +284,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                     logger.debug("LocalStorage: %s", storage)
                     self.visit('https://www.wuxiaworld.com/manage/profile/')
                     try:
-                        self.browser.wait("//h2[normalize-space()" +
-                                          "='Your Profile']", By.XPATH, 10)
-                        self.browser.find("//h2[normalize-space()" +
-                                          "='Your Profile']", By.XPATH)
+                        self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
+                        self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
                     except Exception as e:
                         logger.debug("login Email: Failed", e)
             self.start_download_chapter_body_in_browser = True
@@ -299,10 +294,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             # wait untill chapter fully loaded
             self.browser.wait("chapter-content", By.CLASS_NAME)
             if self.bearer_token:
-                self.browser.wait("//button[normalize-space()" +
-                                  "='Favorite']", By.XPATH, 10)
-                self.browser.find("//button[normalize-space()" +
-                                  "='Favorite']", By.XPATH)
+                self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
+                self.browser.find("//button[normalize-space()='Favorite']", By.XPATH)
         except Exception as e:
             logger.debug("error loading (%s)", str(chapter.url), e)
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
