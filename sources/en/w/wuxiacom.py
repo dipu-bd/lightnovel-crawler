@@ -19,7 +19,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
     ]
 
     def initialize(self):
-        #self.headless = True
+        # self.headless = True
         self.api_url = "https://api2.wuxiaworld.com"
         self.grpc = RpcSession.from_descriptor(WUXIWORLD_PROTO)
         self.grpc._session = self.scraper
@@ -28,11 +28,14 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         self.bearer_token = None
         self.cleaner.unchanged_tags.update(["span"])
         self.start_download_chapter_body_in_browser = False
-        self.localstorageuser = 'oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa'
+        self.localstorageuser = 'oidc.user:' \
+                                'https://identity.wuxiaworld.com' \
+                                ':wuxiaworld_spa'
 
     def login(self, email: str, password: str) -> None:
         # Login now will use Bearer Token if supplied as main login method,
-        # and if username used it will exctract Bearer Token and use it for further login process
+        # and if username used it will exctract Bearer Token
+        # and use it for further login process
         if email == 'Bearer':
             logger.debug("login type: %s", email)
             self.bearer_token = email + " " + password
@@ -48,11 +51,14 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             self.browser.find("button").click()
             try:
                 # Testing if logging has succeeded
-                self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
+                self.browser.wait("//h2[normalize-space()='Your Profile']",
+                                  By.XPATH, 10)
+                self.browser.find("//h2[normalize-space()='Your Profile']",
+                                  By.XPATH)
                 storage = LocalStorage(self.browser._driver)
                 if storage.has(self.localstorageuser):
-                    self.bearer_token = '{token_type} {access_token}'.format(**json.loads(storage[self.localstorageuser]))
+                    self.bearer_token = '{token_type} {access_token}'.format(
+                        **json.loads(storage[self.localstorageuser]))
             except Exception as e:
                 logger.debug("login Email: Failed", e)
 
@@ -91,7 +97,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         advance_chapter_allowed = 0
         try:
             response = self.grpc.request(
-                f"{self.api_url}/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
+                f"{self.api_url}" +
+                "/wuxiaworld.api.v2.Subscriptions/GetSubscriptions",
                 {"novelId": novel["id"]},
                 headers={"authorization": self.bearer_token},
             )
@@ -145,7 +152,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                         title=chap_title,
                         original_title=chap["name"],
                         chapterId=chap["entityId"],
-                        url=f"https://www.wuxiaworld.com/novel/{slug}/{chap['slug']}",
+                        url="https://www.wuxiaworld.com/novel" +
+                        f"/{slug}/{chap['slug']}",
                     )
                 )
 
@@ -185,7 +193,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                 logger.debug("LocalStorage: %s", storage)
                 self.visit(self.novel_url)
             self.browser.wait("#novel-tabs #full-width-tab-2")
-        self.browser.wait(".items-start h1, img.drop-shadow-ww-novel-cover-image")
+        self.browser.wait(".items-start h1, " +
+                          "img.drop-shadow-ww-novel-cover-image")
 
         # Clear the annoying top menubar
         self.browser.find("header#header").remove()
@@ -209,8 +218,11 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         if author_tag:
             self.novel_author = author_tag.text.strip()
 
-        # Open chapters menu (note: the order of tabs in novel info change whether if you are logged in or not)
-        if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]', By.XPATH)) == 3:
+        # Open chapters menu (note: the order of tabs in novel info
+        # change whether if you are logged in or not)
+        if len(self.browser.find_all('//*[starts-with' +
+                                     '(@id, "full-width-tab-")]',
+                                     By.XPATH)) == 3:
             self.browser.click("#novel-tabs #full-width-tab-0")
             self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
         else:
@@ -231,7 +243,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             root.click()
 
             nth = len(volumes) - index
-            self.browser.wait(f"#app .MuiAccordion-root:nth-of-type({nth}) a[href]")
+            self.browser.wait("#app .MuiAccordion-root:" +
+                              f"nth-of-type({nth}) a[href]")
 
             tag = root.as_tag()
             head = tag.select_one(".MuiAccordionSummary-content")
@@ -274,8 +287,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
                     logger.debug("LocalStorage: %s", storage)
                     self.visit('https://www.wuxiaworld.com/manage/profile/')
                     try:
-                        self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                        self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
+                        self.browser.wait("//h2[normalize-space()" +
+                                          "='Your Profile']", By.XPATH, 10)
+                        self.browser.find("//h2[normalize-space()" +
+                                          "='Your Profile']", By.XPATH)
                     except Exception as e:
                         logger.debug("login Email: Failed", e)
             self.start_download_chapter_body_in_browser = True
@@ -284,8 +299,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             # wait untill chapter fully loaded
             self.browser.wait("chapter-content", By.CLASS_NAME)
             if self.bearer_token:
-                self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
-                self.browser.find("//button[normalize-space()='Favorite']", By.XPATH)
+                self.browser.wait("//button[normalize-space()" +
+                                  "='Favorite']", By.XPATH, 10)
+                self.browser.find("//button[normalize-space()" +
+                                  "='Favorite']", By.XPATH)
         except Exception as e:
             logger.debug("error loading (%s)", str(chapter.url), e)
         content = self.browser.find("chapter-content", By.CLASS_NAME).as_tag()
@@ -295,13 +312,13 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
 # Class for reading localStorage from Browser
 class LocalStorage:
-    def __init__(self, driver) :
+    def __init__(self, driver):
         self.driver = driver
 
     def __len__(self):
         return self.driver.execute_script("return window.localStorage.length;")
 
-    def items(self) :
+    def items(self):
         return self.driver.execute_script(
             "var ls = window.localStorage, items = {}; "
             "for (var i = 0, k; i < ls.length; ++i) "
@@ -309,7 +326,7 @@ class LocalStorage:
             "return items; "
         )
 
-    def keys(self) :
+    def keys(self):
         return self.driver.execute_script(
             "var ls = window.localStorage, keys = []; "
             "for (var i = 0; i < ls.length; ++i) "
@@ -318,21 +335,25 @@ class LocalStorage:
         )
 
     def get(self, key):
-        return self.driver.execute_script("return window.localStorage.getItem(arguments[0]);", key)
+        return self.driver.execute_script(
+            "return window.localStorage.getItem(arguments[0]);", key)
 
     def set(self, key, value):
-        self.driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
+        self.driver.execute_script(
+            "window.localStorage.setItem(arguments[0], arguments[1]);",
+            key, value)
 
     def has(self, key):
         return key in self.keys()
 
     def remove(self, key):
-        self.driver.execute_script("window.localStorage.removeItem(arguments[0]);", key)
+        self.driver.execute_script(
+            "window.localStorage.removeItem(arguments[0]);", key)
 
     def clear(self):
         self.driver.execute_script("window.localStorage.clear();")
 
-    def __getitem__(self, key) :
+    def __getitem__(self, key):
         value = self.get(key)
         if value is None:
             raise KeyError(key)
@@ -351,4 +372,227 @@ class LocalStorage:
         return self.items().__str__()
 
 
-WUXIWORLD_PROTO = json.loads(open('wuxiacom.proto').read())  # noqa: E501
+WUXIWORLD_PROTO = json.loads(
+    '{"file": [{"name": "google/protobuf/wrappers.proto", "package": "' +
+    'google.protobuf", "messageType": [{"name": "DoubleValue", "field"' +
+    ': [{"name": "value", "number": 1, "label": "LABEL_OPTIONAL", "typ' +
+    'e": "TYPE_DOUBLE", "jsonName": "value"}]}, {"name": "FloatValue",' +
+    ' "field": [{"name": "value", "number": 1, "label": "LABEL_OPTIONA' +
+    'L", "type": "TYPE_FLOAT", "jsonName": "value"}]}, {"name": "Int64' +
+    'Value", "field": [{"name": "value", "number": 1, "label": "LABEL_' +
+    'OPTIONAL", "type": "TYPE_INT64", "jsonName": "value"}]}, {"name":' +
+    ' "UInt64Value", "field": [{"name": "value", "number": 1, "label":' +
+    ' "LABEL_OPTIONAL", "type": "TYPE_UINT64", "jsonName": "value"}]},' +
+    ' {"name": "Int32Value", "field": [{"name": "value", "number": 1, ' +
+    '"label": "LABEL_OPTIONAL", "type": "TYPE_INT32", "jsonName": "val' +
+    'ue"}]}, {"name": "UInt32Value", "field": [{"name": "value", "numb' +
+    'er": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_UINT32", "jsonNa' +
+    'me": "value"}]}, {"name": "BoolValue", "field": [{"name": "value"' +
+    ', "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_BOOL", "j' +
+    'sonName": "value"}]}, {"name": "StringValue", "field": [{"name": ' +
+    '"value", "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_ST' +
+    'RING", "jsonName": "value"}]}, {"name": "BytesValue", "field": [{' +
+    '"name": "value", "number": 1, "label": "LABEL_OPTIONAL", "type": ' +
+    '"TYPE_BYTES", "jsonName": "value"}]}], "options": {"javaPackage":' +
+    ' "com.google.protobuf", "javaOuterClassname": "WrappersProto", "j' +
+    'avaMultipleFiles": true, "goPackage": "google.golang.org/protobuf' +
+    '/types/known/wrapperspb", "ccEnableArenas": true, "objcClassPrefi' +
+    'x": "GPB", "csharpNamespace": "Google.Protobuf.WellKnownTypes"}, ' +
+    '"syntax": "proto3"}, {"name": "google/protobuf/timestamp.proto", ' +
+    '"package": "google.protobuf", "messageType": [{"name": "Timestamp' +
+    '", "field": [{"name": "seconds", "number": 1, "label": "LABEL_OPT' +
+    'IONAL", "type": "TYPE_INT64", "jsonName": "seconds"}, {"name": "n' +
+    'anos", "number": 2, "label": "LABEL_OPTIONAL", "type": "TYPE_INT3' +
+    '2", "jsonName": "nanos"}]}], "options": {"javaPackage": "com.goog' +
+    'le.protobuf", "javaOuterClassname": "TimestampProto", "javaMultip' +
+    'leFiles": true, "goPackage": "google.golang.org/protobuf/types/kn' +
+    'own/timestamppb", "ccEnableArenas": true, "objcClassPrefix": "GPB' +
+    '", "csharpNamespace": "Google.Protobuf.WellKnownTypes"}, "syntax"' +
+    ': "proto3"}, {"name": "wuxia.proto", "package": "wuxiaworld.api.v' +
+    '2", "dependency": ["google/protobuf/wrappers.proto", "google/prot' +
+    'obuf/timestamp.proto"], "messageType": [{"name": "RelatedChapterU' +
+    'serInfo", "field": [{"name": "isChapterUnlocked", "number": 1, "l' +
+    'abel": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName": ".go' +
+    'ogle.protobuf.BoolValue", "jsonName": "isChapterUnlocked"}, {"nam' +
+    'e": "isNovelUnlocked", "number": 2, "label": "LABEL_OPTIONAL", "t' +
+    'ype": "TYPE_MESSAGE", "typeName": ".google.protobuf.BoolValue", "' +
+    'jsonName": "isNovelUnlocked"}, {"name": "isChapterFavorite", "num' +
+    'ber": 3, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "type' +
+    'Name": ".google.protobuf.BoolValue", "jsonName": "isChapterFavori' +
+    'te"}, {"name": "isNovelOwned", "number": 4, "label": "LABEL_OPTIO' +
+    'NAL", "type": "TYPE_MESSAGE", "typeName": ".google.protobuf.BoolV' +
+    'alue", "jsonName": "isNovelOwned"}, {"name": "isChapterOwned", "n' +
+    'umber": 5, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "ty' +
+    'peName": ".google.protobuf.BoolValue", "jsonName": "isChapterOwne' +
+    'd"}]}, {"name": "ChapterSponsor", "field": [{"name": "advanceChap' +
+    'ter", "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_BOOL"' +
+    ', "jsonName": "advanceChapter"}, {"name": "advanceChapterNumber",' +
+    ' "number": 2, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", ' +
+    '"typeName": ".google.protobuf.Int32Value", "jsonName": "advanceCh' +
+    'apterNumber"}, {"name": "plans", "number": 3, "label": "LABEL_REP' +
+    'EATED", "type": "TYPE_MESSAGE", "typeName": ".wuxiaworld.api.v2.C' +
+    'hapterSponsor.AdvanceChapterPlan", "jsonName": "plans"}], "nested' +
+    'Type": [{"name": "AdvanceChapterPlan", "field": [{"name": "name",' +
+    ' "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_STRING", "' +
+    'jsonName": "name"}, {"name": "advanceChapterCount", "number": 2, ' +
+    '"label": "LABEL_OPTIONAL", "type": "TYPE_INT32", "jsonName": "adv' +
+    'anceChapterCount"}]}]}, {"name": "ChapterPricing", "field": [{"na' +
+    'me": "isFree", "number": 1, "label": "LABEL_OPTIONAL", "type": "T' +
+    'YPE_BOOL", "jsonName": "isFree"}, {"name": "isLastHoldback", "num' +
+    'ber": 2, "label": "LABEL_OPTIONAL", "type": "TYPE_BOOL", "jsonNam' +
+    'e": "isLastHoldback"}]}, {"name": "ChapterItem", "field": [{"name' +
+    '": "entityId", "number": 1, "label": "LABEL_OPTIONAL", "type": "T' +
+    'YPE_INT32", "jsonName": "entityId"}, {"name": "name", "number": 2' +
+    ', "label": "LABEL_OPTIONAL", "type": "TYPE_STRING", "jsonName": "' +
+    'name"}, {"name": "slug", "number": 3, "label": "LABEL_OPTIONAL", ' +
+    '"type": "TYPE_STRING", "jsonName": "slug"}, {"name": "content", "' +
+    'number": 5, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "t' +
+    'ypeName": ".google.protobuf.StringValue", "jsonName": "content"},' +
+    ' {"name": "novelId", "number": 6, "label": "LABEL_OPTIONAL", "typ' +
+    'e": "TYPE_INT32", "jsonName": "novelId"}, {"name": "visible", "nu' +
+    'mber": 7, "label": "LABEL_OPTIONAL", "type": "TYPE_BOOL", "jsonNa' +
+    'me": "visible"}, {"name": "isTeaser", "number": 8, "label": "LABE' +
+    'L_OPTIONAL", "type": "TYPE_BOOL", "jsonName": "isTeaser"}, {"name' +
+    '": "spoilerTitle", "number": 10, "label": "LABEL_OPTIONAL", "type' +
+    '": "TYPE_BOOL", "jsonName": "spoilerTitle"}, {"name": "sponsorInf' +
+    'o", "number": 15, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAG' +
+    'E", "typeName": ".wuxiaworld.api.v2.ChapterSponsor", "jsonName": ' +
+    '"sponsorInfo"}, {"name": "relatedUserInfo", "number": 16, "label"' +
+    ': "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName": ".wuxiawo' +
+    'rld.api.v2.RelatedChapterUserInfo", "jsonName": "relatedUserInfo"' +
+    '}, {"name": "publishedAt", "number": 18, "label": "LABEL_OPTIONAL' +
+    '", "type": "TYPE_MESSAGE", "typeName": ".google.protobuf.Timestam' +
+    'p", "jsonName": "publishedAt"}, {"name": "translatorThoughts", "n' +
+    'umber": 19, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "t' +
+    'ypeName": ".google.protobuf.StringValue", "jsonName": "translator' +
+    'Thoughts"}, {"name": "pricingInfo", "number": 20, "label": "LABEL' +
+    '_OPTIONAL", "type": "TYPE_MESSAGE", "typeName": ".wuxiaworld.api.' +
+    'v2.ChapterPricing", "jsonName": "pricingInfo"}]}, {"name": "Chapt' +
+    'erGroupItem", "field": [{"name": "id", "number": 1, "label": "LAB' +
+    'EL_OPTIONAL", "type": "TYPE_INT32", "jsonName": "id"}, {"name": "' +
+    'title", "number": 2, "label": "LABEL_OPTIONAL", "type": "TYPE_STR' +
+    'ING", "jsonName": "title"}, {"name": "order", "number": 3, "label' +
+    '": "LABEL_OPTIONAL", "type": "TYPE_INT32", "jsonName": "order"}, ' +
+    '{"name": "chapterList", "number": 6, "label": "LABEL_REPEATED", "' +
+    'type": "TYPE_MESSAGE", "typeName": ".wuxiaworld.api.v2.ChapterIte' +
+    'm", "jsonName": "chapterList"}]}, {"name": "SponsorPlanItem", "fi' +
+    'eld": [{"name": "id", "number": 1, "label": "LABEL_OPTIONAL", "ty' +
+    'pe": "TYPE_INT32", "jsonName": "id"}, {"name": "name", "number": ' +
+    '2, "label": "LABEL_OPTIONAL", "type": "TYPE_STRING", "jsonName": ' +
+    '"name"}, {"name": "enabled", "number": 4, "label": "LABEL_OPTIONA' +
+    'L", "type": "TYPE_BOOL", "jsonName": "enabled"}, {"name": "visibl' +
+    'e", "number": 5, "label": "LABEL_OPTIONAL", "type": "TYPE_BOOL", ' +
+    '"jsonName": "visible"}, {"name": "advanceChapterCount", "number":' +
+    ' 6, "label": "LABEL_OPTIONAL", "type": "TYPE_INT32", "jsonName": ' +
+    '"advanceChapterCount"}, {"name": "paused", "number": 10, "label":' +
+    ' "LABEL_OPTIONAL", "type": "TYPE_BOOL", "jsonName": "paused"}]}, ' +
+    '{"name": "NovelItem", "field": [{"name": "id", "number": 1, "labe' +
+    'l": "LABEL_OPTIONAL", "type": "TYPE_INT32", "jsonName": "id"}, {"' +
+    'name": "name", "number": 2, "label": "LABEL_OPTIONAL", "type": "T' +
+    'YPE_STRING", "jsonName": "name"}, {"name": "coverUrl", "number": ' +
+    '10, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName"' +
+    ': ".google.protobuf.StringValue", "jsonName": "coverUrl"}, {"name' +
+    '": "translatorName", "number": 11, "label": "LABEL_OPTIONAL", "ty' +
+    'pe": "TYPE_MESSAGE", "typeName": ".google.protobuf.StringValue", ' +
+    '"jsonName": "translatorName"}, {"name": "authorName", "number": 1' +
+    '3, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName":' +
+    ' ".google.protobuf.StringValue", "jsonName": "authorName"}, {"nam' +
+    'e": "isSneakPeek", "number": 18, "label": "LABEL_OPTIONAL", "type' +
+    '": "TYPE_BOOL", "jsonName": "isSneakPeek"}]}, {"name": "UnlockedI' +
+    'tem", "field": [{"name": "novelId", "number": 2, "label": "LABEL_' +
+    'OPTIONAL", "type": "TYPE_INT32", "oneofIndex": 0, "jsonName": "no' +
+    'velId"}, {"name": "chapterId", "number": 3, "label": "LABEL_OPTIO' +
+    'NAL", "type": "TYPE_INT32", "oneofIndex": 0, "jsonName": "chapter' +
+    'Id"}], "oneofDecl": [{"name": "id"}]}, {"name": "VipItem", "field' +
+    '": [{"name": "id", "number": 1, "label": "LABEL_OPTIONAL", "type"' +
+    ': "TYPE_INT32", "jsonName": "id"}, {"name": "name", "number": 2, ' +
+    '"label": "LABEL_OPTIONAL", "type": "TYPE_STRING", "jsonName": "na' +
+    'me"}, {"name": "enabled", "number": 7, "label": "LABEL_OPTIONAL",' +
+    ' "type": "TYPE_BOOL", "jsonName": "enabled"}, {"name": "visible",' +
+    ' "number": 8, "label": "LABEL_OPTIONAL", "type": "TYPE_BOOL", "js' +
+    'onName": "visible"}]}, {"name": "SubscriptionItem", "field": [{"n' +
+    'ame": "id", "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE' +
+    '_INT32", "jsonName": "id"}, {"name": "active", "number": 2, "labe' +
+    'l": "LABEL_OPTIONAL", "type": "TYPE_BOOL", "jsonName": "active"},' +
+    ' {"name": "plan", "number": 3, "label": "LABEL_OPTIONAL", "type":' +
+    ' "TYPE_MESSAGE", "typeName": ".wuxiaworld.api.v2.SubscriptionItem' +
+    '.Plan", "jsonName": "plan"}], "nestedType": [{"name": "Plan", "fi' +
+    'eld": [{"name": "vip", "number": 1, "label": "LABEL_OPTIONAL", "t' +
+    'ype": "TYPE_MESSAGE", "typeName": ".wuxiaworld.api.v2.VipItem", "' +
+    'oneofIndex": 0, "jsonName": "vip"}, {"name": "sponsor", "number":' +
+    ' 2, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName"' +
+    ': ".wuxiaworld.api.v2.SponsorPlanItem", "oneofIndex": 0, "jsonNam' +
+    'e": "sponsor"}], "oneofDecl": [{"name": "plan"}]}]}, {"name": "Ge' +
+    'tChapterByProperty", "field": [{"name": "chapterId", "number": 1,' +
+    ' "label": "LABEL_OPTIONAL", "type": "TYPE_INT32", "oneofIndex": 0' +
+    ', "jsonName": "chapterId"}, {"name": "slugs", "number": 2, "label' +
+    '": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName": ".wuxiaw' +
+    'orld.api.v2.GetChapterByProperty.ByNovelAndChapterSlug", "oneofIn' +
+    'dex": 0, "jsonName": "slugs"}], "nestedType": [{"name": "ByNovelA' +
+    'ndChapterSlug", "field": [{"name": "novelSlug", "number": 1, "lab' +
+    'el": "LABEL_OPTIONAL", "type": "TYPE_STRING", "jsonName": "novelS' +
+    'lug"}, {"name": "chapterSlug", "number": 2, "label": "LABEL_OPTIO' +
+    'NAL", "type": "TYPE_STRING", "jsonName": "chapterSlug"}]}], "oneo' +
+    'fDecl": [{"name": "byProperty"}]}, {"name": "GetNovelRequest", "f' +
+    'ield": [{"name": "id", "number": 1, "label": "LABEL_OPTIONAL", "t' +
+    'ype": "TYPE_INT32", "oneofIndex": 0, "jsonName": "id"}, {"name": ' +
+    '"slug", "number": 2, "label": "LABEL_OPTIONAL", "type": "TYPE_STR' +
+    'ING", "oneofIndex": 0, "jsonName": "slug"}], "oneofDecl": [{"name' +
+    '": "selector"}]}, {"name": "GetNovelResponse", "field": [{"name":' +
+    ' "item", "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_ME' +
+    'SSAGE", "typeName": ".wuxiaworld.api.v2.NovelItem", "jsonName": "' +
+    'item"}]}, {"name": "GetChapterListRequest", "field": [{"name": "n' +
+    'ovelId", "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_IN' +
+    'T32", "jsonName": "novelId"}, {"name": "filter", "number": 2, "la' +
+    'bel": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName": ".wux' +
+    'iaworld.api.v2.GetChapterListRequest.FilterChapters", "jsonName":' +
+    ' "filter"}], "nestedType": [{"name": "FilterChapters", "field": [' +
+    '{"name": "chapterGroupId", "number": 1, "label": "LABEL_OPTIONAL"' +
+    ', "type": "TYPE_MESSAGE", "typeName": ".google.protobuf.Int32Valu' +
+    'e", "jsonName": "chapterGroupId"}, {"name": "isAdvanceChapter", "' +
+    'number": 2, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "t' +
+    'ypeName": ".google.protobuf.BoolValue", "jsonName": "isAdvanceCha' +
+    'pter"}]}]}, {"name": "GetChapterListResponse", "field": [{"name":' +
+    ' "items", "number": 1, "label": "LABEL_REPEATED", "type": "TYPE_M' +
+    'ESSAGE", "typeName": ".wuxiaworld.api.v2.ChapterGroupItem", "json' +
+    'Name": "items"}, {"name": "novelInfo", "number": 2, "label": "LAB' +
+    'EL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName": ".wuxiaworld.ap' +
+    'i.v2.NovelItem", "jsonName": "novelInfo"}]}, {"name": "GetChapter' +
+    'Request", "field": [{"name": "chapterProperty", "number": 1, "lab' +
+    'el": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "typeName": ".wuxi' +
+    'aworld.api.v2.GetChapterByProperty", "jsonName": "chapterProperty' +
+    '"}]}, {"name": "GetChapterResponse", "field": [{"name": "item", "' +
+    'number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_MESSAGE", "t' +
+    'ypeName": ".wuxiaworld.api.v2.ChapterItem", "jsonName": "item"}]}' +
+    ', {"name": "UnlockItemRequest", "field": [{"name": "unlockMethod"' +
+    ', "number": 1, "label": "LABEL_OPTIONAL", "type": "TYPE_ENUM", "t' +
+    'ypeName": ".wuxiaworld.api.v2.UnlockItemMethod", "jsonName": "unl' +
+    'ockMethod"}, {"name": "item", "number": 2, "label": "LABEL_OPTION' +
+    'AL", "type": "TYPE_MESSAGE", "typeName": ".wuxiaworld.api.v2.Unlo' +
+    'ckedItem", "jsonName": "item"}]}, {"name": "UnlockItemResponse", ' +
+    '"field": [{"name": "unlockedItem", "number": 1, "label": "LABEL_O' +
+    'PTIONAL", "type": "TYPE_MESSAGE", "typeName": ".wuxiaworld.api.v2' +
+    '.UnlockedItem", "jsonName": "unlockedItem"}]}, {"name": "GetSubsc' +
+    'riptionsRequest", "field": [{"name": "novelId", "number": 2, "lab' +
+    'el": "LABEL_OPTIONAL", "type": "TYPE_INT32", "jsonName": "novelId' +
+    '"}]}, {"name": "GetSubscriptionsResponse", "field": [{"name": "it' +
+    'ems", "number": 1, "label": "LABEL_REPEATED", "type": "TYPE_MESSA' +
+    'GE", "typeName": ".wuxiaworld.api.v2.SubscriptionItem", "jsonName' +
+    '": "items"}]}], "enumType": [{"name": "UnlockItemMethod", "value"' +
+    ': [{"name": "UnlockMethodNone", "number": 0}, {"name": "UnlockMet' +
+    'hodKarma", "number": 1}, {"name": "UnlockMethodVip", "number": 2}' +
+    ', {"name": "UnlockMethodSponsor", "number": 3}]}], "service": [{"' +
+    'name": "Novels", "method": [{"name": "GetNovel", "inputType": ".w' +
+    'uxiaworld.api.v2.GetNovelRequest", "outputType": ".wuxiaworld.api' +
+    '.v2.GetNovelResponse"}]}, {"name": "Chapters", "method": [{"name"' +
+    ': "GetChapterList", "inputType": ".wuxiaworld.api.v2.GetChapterLi' +
+    'stRequest", "outputType": ".wuxiaworld.api.v2.GetChapterListRespo' +
+    'nse"}, {"name": "GetChapter", "inputType": ".wuxiaworld.api.v2.Ge' +
+    'tChapterRequest", "outputType": ".wuxiaworld.api.v2.GetChapterRes' +
+    'ponse"}]}, {"name": "Unlocks", "method": [{"name": "UnlockItem", ' +
+    '"inputType": ".wuxiaworld.api.v2.UnlockItemRequest", "outputType"' +
+    ': ".wuxiaworld.api.v2.UnlockItemResponse"}]}, {"name": "Subscript' +
+    'ions", "method": [{"name": "GetSubscriptions", "inputType": ".wux' +
+    'iaworld.api.v2.GetSubscriptionsRequest", "outputType": ".wuxiawor' +
+    'ld.api.v2.GetSubscriptionsResponse"}]}], "publicDependency": [0, ' +
+    '1], "syntax": "proto3"}]}')  # noqa: E501
