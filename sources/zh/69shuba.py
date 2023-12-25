@@ -29,9 +29,9 @@ search_url = "https://www.69shuba.com/modules/article/search.php"    # Updated t
 
 class sixnineshu(Crawler):
     base_url = [
-        "https://www.69shuba.com/", 
+        "https://www.69shuba.com/",
         "https://www.69shu.com/",
-        "https://www.69xinshu.com/" # new domain
+        "https://www.69xinshu.com/",    # new domain
     ]
 
     def get_soup(self, url):
