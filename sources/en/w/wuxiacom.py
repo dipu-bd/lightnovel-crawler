@@ -19,7 +19,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
     ]
 
     def initialize(self):
-        #self.headless = True
+        # self.headless = True
         self.api_url = "https://api2.wuxiaworld.com"
         self.grpc = RpcSession.from_descriptor(WUXIWORLD_PROTO)
         self.grpc._session = self.scraper
@@ -32,7 +32,8 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
     def login(self, email: str, password: str) -> None:
         # Login now will use Bearer Token if supplied as main login method,
-        # and if username used it will exctract Bearer Token and use it for further login process
+        # and if username used it will exctract Bearer Token
+        # and use it for further login process
         if email == 'Bearer':
             logger.debug("login type: %s", email)
             self.bearer_token = email + " " + password
@@ -48,11 +49,14 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             self.browser.find("button").click()
             try:
                 # Testing if logging has succeeded
-                self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
+                self.browser.wait("//h2[normalize-space()='Your Profile']",
+                                  By.XPATH, 10)
+                self.browser.find("//h2[normalize-space()='Your Profile']",
+                                  By.XPATH)
                 storage = LocalStorage(self.browser._driver)
                 if storage.has(self.localstorageuser):
-                    self.bearer_token = '{token_type} {access_token}'.format(**json.loads(storage[self.localstorageuser]))
+                    self.bearer_token = '{token_type} {access_token}'.format(
+                        **json.loads(storage[self.localstorageuser]))
             except Exception as e:
                 logger.debug("login Email: Failed", e)
 
@@ -209,8 +213,10 @@ class WuxiaComCrawler(BasicBrowserTemplate):
         if author_tag:
             self.novel_author = author_tag.text.strip()
 
-        # Open chapters menu (note: the order of tabs in novel info change whether if you are logged in or not)
-        if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]', By.XPATH)) == 3:
+        # Open chapters menu (note: the order of tabs in novel info
+        # change whether if you are logged in or not)
+        if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]',
+                                     By.XPATH)) == 3:
             self.browser.click("#novel-tabs #full-width-tab-0")
             self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
         else:
@@ -281,7 +287,7 @@ class WuxiaComCrawler(BasicBrowserTemplate):
             self.start_download_chapter_body_in_browser = True
         self.visit(chapter.url)
         try:
-            # wait untill chapter fully loaded
+            # wait until chapter fully loaded
             self.browser.wait("chapter-content", By.CLASS_NAME)
             if self.bearer_token:
                 self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
@@ -295,13 +301,13 @@ class WuxiaComCrawler(BasicBrowserTemplate):
 
 # Class for reading localStorage from Browser
 class LocalStorage:
-    def __init__(self, driver) :
+    def __init__(self, driver):
         self.driver = driver
 
     def __len__(self):
         return self.driver.execute_script("return window.localStorage.length;")
 
-    def items(self) :
+    def items(self):
         return self.driver.execute_script(
             "var ls = window.localStorage, items = {}; "
             "for (var i = 0, k; i < ls.length; ++i) "
@@ -309,7 +315,7 @@ class LocalStorage:
             "return items; "
         )
 
-    def keys(self) :
+    def keys(self):
         return self.driver.execute_script(
             "var ls = window.localStorage, keys = []; "
             "for (var i = 0; i < ls.length; ++i) "
@@ -318,21 +324,25 @@ class LocalStorage:
         )
 
     def get(self, key):
-        return self.driver.execute_script("return window.localStorage.getItem(arguments[0]);", key)
+        return self.driver.execute_script(
+            "return window.localStorage.getItem(arguments[0]);", key)
 
     def set(self, key, value):
-        self.driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
+        self.driver.execute_script(
+            "window.localStorage.setItem(arguments[0], arguments[1]);",
+            key, value)
 
     def has(self, key):
         return key in self.keys()
 
     def remove(self, key):
-        self.driver.execute_script("window.localStorage.removeItem(arguments[0]);", key)
+        self.driver.execute_script(
+            "window.localStorage.removeItem(arguments[0]);", key)
 
     def clear(self):
         self.driver.execute_script("window.localStorage.clear();")
 
-    def __getitem__(self, key) :
+    def __getitem__(self, key):
         value = self.get(key)
         if value is None:
             raise KeyError(key)
