@@ -21,6 +21,7 @@ class Browser:
         timeout: Optional[int] = 120,
         options: Optional["ChromeOptions"] = None,
         cookie_store: Optional[RequestsCookieJar] = None,
+        browser_storage: Optional[dict] = None,
         soup_maker: Optional[SoupMaker] = None,
     ) -> None:
         """
@@ -31,6 +32,7 @@ class Browser:
         - timeout (Optional[int], optional): Maximum wait duration in seconds for an element to be available. Default: 120.
         - options (Optional[&quot;ChromeOptions&quot;], optional): Webdriver options. Default: None.
         - cookie_store (Optional[RequestsCookieJar], optional): A cookie store to synchronize cookies. Default: None.
+        - browser_storage (Optional[dict], optional): A Storage to save some user info that is saved in your Browser storage. Default: None.
         - soup_parser (Optional[str], optional): Parser for page content. Default: None.
         """
         self._driver: WebDriver = None
@@ -38,6 +40,7 @@ class Browser:
         self.timeout = timeout
         self.headless = headless
         self.cookie_store = cookie_store
+        self.browser_storage = browser_storage
         self.soup_maker = soup_maker or SoupMaker()
 
     def __del__(self):
@@ -72,36 +75,52 @@ class Browser:
     def _apply_cookies(self):
         if not self._driver:
             return
-        if not isinstance(self.cookie_store, RequestsCookieJar):
-            return
-        for cookie in self.cookie_store:
-            self._driver.add_cookie(
-                {
-                    "name": cookie.name,
-                    "value": cookie.value,
-                    "path": cookie.path,
-                    "domain": cookie.domain,
-                    "secure": cookie.secure,
-                    "expiry": cookie.expires,
-                }
-            )
-        logger.debug("Cookies applied: %s", self._driver.get_cookies())
+        if isinstance(self.cookie_store, RequestsCookieJar):
+            for cookie in self.cookie_store:
+                self._driver.add_cookie(
+                    {
+                        "name": cookie.name,
+                        "value": cookie.value,
+                        "path": cookie.path,
+                        "domain": cookie.domain,
+                        "secure": cookie.secure,
+                        "expiry": cookie.expires,
+                    }
+                )
+            logger.debug("Cookies applied: %s", self._driver.get_cookies())
+        if isinstance(self.browser_storage, dict):
+            for key, value in self.browser_storage['localStorage'].items():
+                self._driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
+            for key, value in self.browser_storage['sessionStorage'].items():
+                self._driver.execute_script("window.sessionStorage.setItem(arguments[0], arguments[1]);", key, value)
+            logger.debug("Storage applied: %s", self.browser_storage)
 
     def _restore_cookies(self):
         if not self._driver:
             return
-        if not isinstance(self.cookie_store, RequestsCookieJar):
-            return
-        for cookie in self._driver.get_cookies():
-            self.cookie_store.set(
-                name=cookie.get("name"),
-                value=cookie.get("value"),
-                path=cookie.get("path"),
-                domain=cookie.get("domain"),
-                secure=cookie.get("secure"),
-                expires=cookie.get("expiry"),
-            )
-        logger.debug("Cookies retrieved: %s", self.cookie_store)
+        if isinstance(self.cookie_store, RequestsCookieJar):
+            for cookie in self._driver.get_cookies():
+                self.cookie_store.set(
+                    name=cookie.get("name"),
+                    value=cookie.get("value"),
+                    path=cookie.get("path"),
+                    domain=cookie.get("domain"),
+                    secure=cookie.get("secure"),
+                    expires=cookie.get("expiry"),
+                )
+            logger.debug("Cookies retrieved: %s", self.cookie_store)
+        if isinstance(self.browser_storage, dict):
+            self.browser_storage['localStorage'] = self._driver.execute_script(
+                "var ls = window.localStorage, items = {}; "
+                "for (var i = 0, k; i < ls.length; ++i) "
+                "  items[k = ls.key(i)] = ls.getItem(k); "
+                "return items; ")
+            self.browser_storage['sessionStorage'] = self._driver.execute_script(
+                "var ls = window.sessionStorage, items = {}; "
+                "for (var i = 0, k; i < ls.length; ++i) "
+                "  items[k = ls.key(i)] = ls.getItem(k); "
+                "return items; ")
+            logger.debug("Storage retrieved: %s", self.browser_storage)
 
     @property
     def active(self):
