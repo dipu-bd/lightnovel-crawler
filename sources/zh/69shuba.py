@@ -31,8 +31,8 @@ class sixnineshu(Crawler):
     base_url = [
         "https://www.69shuba.com/",
         "https://www.69shu.com/",
-        "https://www.69xinshu.com/",    # new domain
-    ]       # Updated to the new domain
+        "https://www.69xinshu.com/",
+    ]
 
     def get_soup(self, url):
         """overwrite the get_soup function to set the encoding"""
