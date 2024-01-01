@@ -28,7 +28,11 @@ search_url = "https://www.69shuba.com/modules/article/search.php"    # Updated t
 
 
 class sixnineshu(Crawler):
-    base_url = ["https://www.69shuba.com/", "https://www.69shu.com/"]        # Updated to the new domain
+    base_url = [
+        "https://www.69shuba.com/",
+        "https://www.69shu.com/",
+        "https://www.69xinshu.com/",    # new domain
+    ]       # Updated to the new domain
 
     def get_soup(self, url):
         """overwrite the get_soup function to set the encoding"""
