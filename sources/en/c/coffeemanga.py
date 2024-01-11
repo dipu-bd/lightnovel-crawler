@@ -3,13 +3,12 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = "https://coffeemanga.com/?s=%s&post_type=wp-manga"
-chapter_list_url = "https://coffeemanga.com/wp-admin/admin-ajax.php"
+search_url = "https://coffeemanga.io/?s=%s&post_type=wp-manga"
 
 
 class CoffeeManga(Crawler):
     has_manga = True
-    base_url = ["https://coffeemanga.com/", "https://coffeemanga.io/"]
+    base_url = ["https://coffeemanga.io/"]
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
