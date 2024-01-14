@@ -3,13 +3,12 @@ import logging
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = "https://coffeemanga.com/?s=%s&post_type=wp-manga"
-chapter_list_url = "https://coffeemanga.com/wp-admin/admin-ajax.php"
+search_url = "https://coffeemanga.io/?s=%s&post_type=wp-manga"
 
 
 class CoffeeManga(Crawler):
     has_manga = True
-    base_url = "https://coffeemanga.com/"
+    base_url = ["https://coffeemanga.io/"]
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
@@ -53,7 +52,8 @@ class CoffeeManga(Crawler):
         )
         logger.info("%s", self.novel_author)
 
-        for a in reversed(soup.select("ul.main li.wp-manga-chapter a")):
+        soup = self.post_soup(f"{self.novel_url}ajax/chapters/")
+        for a in reversed(soup.select("li.wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:

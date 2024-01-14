@@ -139,10 +139,10 @@ class BatoCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        soup = soup.find("script", string=re.compile(r"const imgHttpLis = \["))
+        soup = soup.find("script", string=re.compile(r"const imgHttps = \["))
 
         img_list = json.loads(
-            re.search(r"const imgHttpLis = (.*);", soup.text).group(1)
+            re.search(r"const imgHttps = (.*);", soup.text).group(1)
         )
 
         bato_pass = decode_pass(
