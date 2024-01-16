@@ -18,10 +18,22 @@ class TigerTranslations(Crawler):
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one("h1.entry-title")
-        assert isinstance(possible_title, Tag)
-        self.novel_title = possible_title.text
+        content = soup.select_one("div.the-content")
+
+        entry_title = soup.select_one("h1.entry-title")
+        assert isinstance(entry_title, Tag)  # this must be here, is part of normal site structure/framework
+        self.novel_title = entry_title.text
+        self.novel_author = "TigerTranslations"
+
+        for line in content.text.splitlines():
+            if "author:" in line.lower():
+                self.novel_author = line[line.find(':') + 1:].strip()
+                # Use synopsis to refer to translator / source -> not sure if ok to do
+                self.novel_synopsis = "Translated by TigerTranslations.org"
+                break  # no need to continue after finding author
+
         logger.info("Novel title: %s", self.novel_title)
+        logger.info("Novel author: %s", self.novel_author)
 
         # image may or may not be wrapped (in a p) in a span element
         image_locations = ['div.the-content > img',
@@ -29,16 +41,11 @@ class TigerTranslations(Crawler):
                            'div.the-content > p > span > img']
 
         for location in image_locations:
-            possible_image = soup.select_one(location)
-            if isinstance(possible_image, Tag):
-                self.novel_cover = self.absolute_url(possible_image["src"])
+            possible_cover = soup.select_one(location)
+            if isinstance(possible_cover, Tag):
+                self.novel_cover = self.absolute_url(possible_cover["src"])
 
         logger.info("Novel cover: %s", self.novel_cover)
-
-        # Author is located at a different place each time in a "random"
-        # <p> tag, can't really consistently access it
-        self.novel_author = "Unknown"
-        logger.info("Novel author: %s", self.novel_author)
 
         for a in soup.select("div.the-content > p > a"):
             # The selector gets all chapters but also a donation link
@@ -56,13 +63,13 @@ class TigerTranslations(Crawler):
 
             # chapter name is only present in chapter page, not in overview
             # this workaround makes titles "Chapter-x"
-            title = a.text
+            entry_title = a.text
 
             self.chapters.append(
                 Chapter(
                     id=chap_id,
                     url=self.absolute_url(a["href"]),
-                    title=title,
+                    title=entry_title,
                     volume=vol_id,
                     volume_title=vol_title
                 ),
@@ -90,6 +97,14 @@ class TigerTranslations(Crawler):
         contents_html = soup.select_one("div.the-content")
         contents_html = self.cleaner.clean_contents(contents_html)
         contents_str = self.cleaner.extract_contents(contents_html)
+        # There's a novel title wrapped in tags at the end, we remove it here
+        # in a way that likely won't remove it from "real" chapter text. Example Input:
+        # ...this is chapter text.</p><p>PAGE 2</p><p>Jack of all Trades</p>
+        novel_title = re.search(f"(<p>{self.novel_title}</p>)", contents_str, re.IGNORECASE).group()
+        if novel_title:
+            logger.info("Removing novel title at end of chapter like this: %s", novel_title)
+            contents_str = contents_str.replace(novel_title, '')
+
         if soup2 is not None:
             contents_html = soup2.select_one("div.the-content")
             contents_html = self.cleaner.clean_contents(contents_html)
@@ -100,10 +115,6 @@ class TigerTranslations(Crawler):
             contents_str = contents_str.replace(text, '')
             contents_str = contents_str.replace(text.upper(), '')
             contents_str = contents_str.replace(text.lower(), '')
-            # because the novel's name is usually appended every 2nd page
-            # it's also manually removed
-            novel_name = ' '.join([p.capitalize() for p in chap_uri.split('-')][:-1])
-            contents_str = contents_str.replace(novel_name, '')
 
         return contents_str
 
@@ -113,11 +124,13 @@ class TigerTranslations(Crawler):
         results = []
 
         for novel in novels:
-            results.append(
-                SearchResult(
-                    title=novel.text,
-                    url=novel["href"]
+            # simple but at least won't taint results
+            if query.lower() in novel.text.lower():
+                results.append(
+                    SearchResult(
+                        title=novel.text,
+                        url=novel["href"]
+                    )
                 )
-            )
 
         return results
