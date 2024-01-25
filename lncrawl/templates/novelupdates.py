@@ -111,7 +111,7 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
         response = self.submit_form(
             "https://www.novelupdates.com/wp-admin/admin-ajax.php",
             data=dict(
-                action="nd_getchapters",
+                action="nd_getchapters_full",
                 mygrr="1",
                 mypostid=postid,
             ),
