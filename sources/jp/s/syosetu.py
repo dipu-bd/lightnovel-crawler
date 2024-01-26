@@ -10,6 +10,8 @@ search_url = "https://yomou.syosetu.com/search.php?word=%s"
 class SyosetuCrawler(Crawler):
     has_mtl = True
     base_url = "https://ncode.syosetu.com/"
+    def initialize(self) -> None:
+        self.init_executor(2)
 
     def search_novel(self, query):
         soup = self.get_soup(search_url % quote_plus(query))
@@ -47,26 +49,55 @@ class SyosetuCrawler(Crawler):
         # Syosetu calls parts "chapters"
         chapter_id = 0
         volume = {"id": 0}
-        self.volumes.append(volume)
-        for tag in soup.select(".index_box .chapter_title, .index_box .subtitle a"):
-            if 'chapter_title' in tag.attrs.get('class', ''):
-                # Part/volume (there might be none)
-                volume = {
-                    "id": volume['id'] + 1,
-                    "title": tag.text.strip(),
-                }
+        if soup.find_all("a", {"class": "novelview_pager-last"}):
+            page_num = int(soup.select_one("a[class='novelview_pager-last']")["href"].split("=", 1)[1])
+            for x in range(1, page_num+1):
+                if self.novel_url.endswith('/'):
+                    soup = self.get_soup(self.novel_url + f'?p={x}')
+                else:
+                    soup = self.get_soup(self.novel_url + f'/?p={x}')
                 self.volumes.append(volume)
-            elif tag.name == "a":
-                # Chapter
-                chapter_id += 1
-                self.chapters.append(
-                    {
-                        "id": chapter_id,
-                        "volume": volume['id'],
-                        "title": tag.text.strip() or ("Chapter %d" % chapter_id),
-                        "url": self.absolute_url(tag["href"]),
+                for tag in soup.select(".index_box .chapter_title, .index_box .subtitle a"):
+                    if 'chapter_title' in tag.attrs.get('class', ''):
+                        # Part/volume (there might be none)
+                        volume = {
+                            "id": volume['id'] + 1,
+                            "title": tag.text.strip(),
+                        }
+                        self.volumes.append(volume)
+                    elif tag.name == "a":
+                        # Chapter
+                        chapter_id += 1
+                        self.chapters.append(
+                            {
+                                "id": chapter_id,
+                                "volume": volume['id'],
+                                "title": tag.text.strip() or ("Chapter %d" % chapter_id),
+                                "url": self.absolute_url(tag["href"]),
+                            }
+                        )
+                #volume['id'] = volume['id'] + 1
+        else:
+            self.volumes.append(volume)
+            for tag in soup.select(".index_box .chapter_title, .index_box .subtitle a"):
+                if 'chapter_title' in tag.attrs.get('class', ''):
+                    # Part/volume (there might be none)
+                    volume = {
+                        "id": volume['id'] + 1,
+                        "title": tag.text.strip(),
                     }
-                )
+                    self.volumes.append(volume)
+                elif tag.name == "a":
+                    # Chapter
+                    chapter_id += 1
+                    self.chapters.append(
+                        {
+                            "id": chapter_id,
+                            "volume": volume['id'],
+                            "title": tag.text.strip() or ("Chapter %d" % chapter_id),
+                            "url": self.absolute_url(tag["href"]),
+                        }
+                    )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
