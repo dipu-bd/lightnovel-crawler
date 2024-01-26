@@ -28,8 +28,6 @@ def initialize(self) -> None:
             r"^to get Notification for latest Chapter Releases",
             r"^Can’t wait to read more? Want to show your support? Click",
             r"^to be a sponsor and get additional chapters ahead of time!",
-            r"^Also check out my other novels:",
-            r"^Villainess Wants To Turn Over A New Leaf , The Villainess Is Changing Her Role To A BroCon , I Help the Richest Man Spend Money to Prevent Disasters\nand\nThe Legitimate Daughter Doesn’t Care!"
         ]
     )
     self.cleaner.bad_tags.update(["a"])
