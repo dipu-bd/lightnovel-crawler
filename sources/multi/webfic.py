@@ -43,8 +43,10 @@ class Webfic(Crawler):
         logger.info("book metadata %s", metadata)
 
         lang, book_id = re.match("https://www.webfic.com(/?.*)/book_info/(\\d+)/.*", self.novel_url).groups()
+        self.language = "en"
         if lang:
             logger.info("Novel is not english, instead is: %s", lang)
+            self.language = lang[1:]
 
         cinfo_template = f"https://www.webfic.com{lang}/catalog/{book_id}/"
         found_premium = False
