@@ -49,6 +49,7 @@ class WtrLab(Crawler):
         # examples:
         lang = re.match(f"{self.host}(/?.*)/serie-\\d+/.+/?", self.novel_url).group(1)
         # lang will be something like "/en" or "/es"
+        self.language = lang[1:]
         serie_id = metadata['props']['pageProps']['serie']['serie_data']['raw_id']
 
         for idx, chapter in enumerate(metadata['props']['pageProps']['serie']['chapters']):
