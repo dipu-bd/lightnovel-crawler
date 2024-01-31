@@ -156,7 +156,7 @@ $ docker run -v ~/Lightnovels:/home/appuser/app/Lightnovels -it lncrawl
 - Install [Termux](https://play.google.com/store/apps/details?id=com.termux) from playstore.
 - Open the app and run these commands one by one:
   - `pkg upgrade`
-  - `pkg install python libxml2 libxslt libjpeg-turbo webp rust`
+  - `pkg install python libxml2 libxslt libjpeg-turbo rust python-lxml python-grpcio`
   - `pip install -U pip wheel setuptools`
   - `pip install lightnovel-crawler`
   - `termux-setup-storage`
