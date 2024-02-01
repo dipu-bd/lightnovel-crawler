@@ -31,10 +31,11 @@ class FaqWiki(Crawler):
             self.novel_title = self.novel_title[0:self.novel_title.find(" – All Chapters")]
         self.novel_author = "FaqWiki"
         cover = content.select_one('img[importance="high"]')
-        self.novel_cover = self.absolute_url(cover["src"])
-
+        # is missing in some rarer cases
+        if cover:
+            self.novel_cover = self.absolute_url(cover["src"])
         # remove any optimized image size GET args from novel cover URL
-        if "?" in self.novel_cover:
+        if self.novel_cover and "?" in self.novel_cover:
             self.novel_cover = self.novel_cover[0:self.novel_cover.find("?")]
 
         metadata_container = soup.select_one("div.book-review-block__meta-item-value")
