@@ -41,8 +41,5 @@ class IsotlsCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        # contents = soup.select('article p')
-        # body = [str(p) for p in contents if p.text.strip()]
-        # return '<p>' + '</p><p>'.join(body) + '</p>'
         contents = soup.select_one("div.content")
         return self.cleaner.extract_contents(contents)
