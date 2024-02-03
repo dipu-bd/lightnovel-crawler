@@ -79,8 +79,7 @@ class RoyalRoadCrawler(Crawler):
 
         classnames = []
         for style in soup.select("style"):
-            style = str(style.text)
-            style = style.replace(" ", "").replace("\n", "")
+            style = style.text.replace(" ", "").replace("\n", "")
             if style.endswith("{display:none;speak:never;}"):
                 classnames.append(style[1:-27])
 
