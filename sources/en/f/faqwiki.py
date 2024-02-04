@@ -66,7 +66,10 @@ class FaqWiki(Crawler):
         logger.info("Novel cover: %s", self.novel_cover)
 
         chap_list = soup.select_one('#lcp_instance_0').select("li>a")
-        chap_list.reverse()  # since newest chapter is first child, reverse
+
+        # in rare cases the chapter list is newest to oldest
+        if not chap_list[0].text.lower().replace(' ', '').endswith(("chapter0", "chapter1")):
+            chap_list.reverse()
         for idx, a in enumerate(chap_list):
             if "chapter" not in a.text.strip().lower():
                 continue
