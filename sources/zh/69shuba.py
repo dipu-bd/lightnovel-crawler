@@ -4,19 +4,23 @@ from bs4 import Tag
 from lncrawl.core.crawler import Crawler
 import urllib.parse
 
-import requests
-from bs4 import BeautifulSoup
+from lncrawl.models import Volume, Chapter
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.5",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,"
+              "application/signed-exchange;v=b3;q=0.7",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9,de-CH;q=0.8,de;q=0.7",
+    "Cache-Control": "no-cache",
     "Content-Type": "application/x-www-form-urlencoded",
-    "Origin": "https://www.69shuba.com",    # Updated to the new domain
+    "Origin": "https://www.69xinshu.com",
     "DNT": "1",
-    "Alt-Used": "www.69shuba.com",      # Updated to the new domain
+    "Referer": "https://www.69xinshu.com/modules/article/search.php",
     "Connection": "keep-alive",
     "Upgrade-Insecure-Requests": "1",
+    "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Opera GX";v="106"',
+    "Sec-Ch-Ua-Platform": "Windows",
     "Sec-Fetch-Dest": "document",
     "Sec-Fetch-Mode": "navigate",
     "Sec-Fetch-Site": "same-origin",
@@ -24,7 +28,7 @@ headers = {
 }
 
 logger = logging.getLogger(__name__)
-search_url = "https://www.69shuba.com/modules/article/search.php"    # Updated to the new domain
+search_url = "https://www.69xinshu.com/modules/article/search.php"    # Updated to the new domain
 
 
 class sixnineshu(Crawler):
@@ -34,54 +38,32 @@ class sixnineshu(Crawler):
         "https://www.69xinshu.com/",
     ]
 
-    def get_soup(self, url):
-        """overwrite the get_soup function to set the encoding"""
-        data = requests.get(url, headers=headers)
-        data.encoding = "gbk"
-        soup = BeautifulSoup(data.text, "html.parser")
-        return soup
-
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))
-        data = requests.post(
-            "https://www.69shuba.com/modules/article/search.php",    # Updated to the new domain
+        data = f"searchkey={query}&submit=Search"
+        soup = self.post_soup(
+            search_url,
             headers=headers,
-            data=f"searchkey={query}&searchtype=all",
+            data=data,
+            encoding="gbk",
+            # cookies=self.cookies2,
         )
-        data.encoding = "gbk"
 
-        soup = BeautifulSoup(data.text, "html.parser")
-
-        # If only one result is found, we will be redirected to the novel page
-        # We can check the URL to see if we are redirected or not
-
-        redirected = data.url != search_url
-
-        if not redirected:
-            results = []
-            for novel in soup.select("div.newbox ul li"):
-                results.append(
-                    {
-                        "title": novel.select_one("h3 a").text.title(),
-                        "url": novel.select_one("a")["href"],
-                        "info": "Latest: %s" % novel.select_one("div.zxzj p").text,
-                    }
-                )
-
-        else:
-            results = [
+        results = []
+        for novel in soup.select("div.newbox ul li"):
+            results.append(
                 {
-                    "title": soup.select_one("div.booknav2 h1").text.strip(),
-                    "url": data.url,
-                    "info": "Latest: %s" % soup.select_one("div.qustime ul li").text,
+                    "title": novel.select_one("h3 a:not([imgbox])").text.title(),
+                    "url": novel.select_one("a")["href"],
+                    "info": "Latest: %s" % novel.select_one("div.zxzj p").text,
                 }
-            ]
+            )
 
         return results
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
+        soup = self.get_soup(self.novel_url, encoding="gbk")
 
         possible_title = soup.select_one("div.booknav2 h1")
         assert possible_title, "No novel title"
@@ -110,24 +92,26 @@ class sixnineshu(Crawler):
         logger.info("Novel Tag: %s", self.novel_tags)
 
         # https://www.69shuba.com/txt/A43616.htm -> https://www.69shuba.com/A43616/
-        soup = self.get_soup(self.novel_url.replace("/txt/", "/").replace(".htm", "/"))
+        soup = self.get_soup(self.novel_url.replace("/txt/", "/").replace(".htm", "/"), encoding="gbk")
 
         for li in soup.select("div.catalog ul li"):
             chap_id = int(li["data-num"])
+            if chap_id == 7:
+                print(str(li.select_one("a")["href"]))
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
-                self.volumes.append({"id": vol_id})
+                self.volumes.append(Volume(vol_id))
             self.chapters.append(
-                {
-                    "id": chap_id,
-                    "volume": vol_id,
-                    "title": li.text.strip(),
-                    "url": self.absolute_url(li.select_one("a")["href"]),
-                }
+                Chapter(
+                    chap_id,
+                    url=self.absolute_url(li.select_one("a")["href"]),
+                    title=li.text.strip(),
+                    volume=vol_id
+                )
             )
 
     def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
+        soup = self.get_soup(chapter.url, encoding="gbk")
 
         contents = soup.select_one("div.txtnav")
         contents.select_one("h1").decompose()
