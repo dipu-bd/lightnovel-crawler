@@ -38,6 +38,10 @@ class sixnineshu(Crawler):
         "https://www.69xinshu.com/",
     ]
 
+    def initialize(self):
+        # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
+        self.init_parser("html.parser")
+
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))
         data = f"searchkey={query}&submit=Search"
@@ -94,17 +98,26 @@ class sixnineshu(Crawler):
         # https://www.69shuba.com/txt/A43616.htm -> https://www.69shuba.com/A43616/
         soup = self.get_soup(self.novel_url.replace("/txt/", "/").replace(".htm", "/"), encoding="gbk")
 
-        for li in soup.select("div.catalog ul li"):
+        # manually correct their false chapter identifiers if need be
+        correction = 0
+        for idx, li in enumerate(soup.select("div#catalog ul li")):
             chap_id = int(li["data-num"])
-            if chap_id == 7:
-                print(str(li.select_one("a")["href"]))
+            if idx == 0:
+                # 1-2 = -1; 1-1 = 0; 1 - 0 = +1
+                correction = 1 - chap_id
+            chap_id += correction
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append(Volume(vol_id))
+            a = li.select_one("a")
+            if not a:
+                # this should not occur with html.parser, if it does, likely due to parser/encoding issue
+                logger.warning("Failed to get Chapter %d! Missing Link", chap_id)
+                continue
             self.chapters.append(
                 Chapter(
                     chap_id,
-                    url=self.absolute_url(li.select_one("a")["href"]),
+                    url=a["href"],
                     title=li.text.strip(),
                     volume=vol_id
                 )
