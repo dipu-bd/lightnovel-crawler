@@ -30,10 +30,17 @@ class FaqWiki(Crawler):
         if self.novel_title.endswith(" – All Chapters"):
             self.novel_title = self.novel_title[0:self.novel_title.find(" – All Chapters")]
         self.novel_author = "FaqWiki"
-        cover = content.select_one('img[importance="high"]')
+        cover = content.select_one('.wp-block-image img')
         # is missing in some rarer cases
         if cover:
-            self.novel_cover = self.absolute_url(cover["src"])
+            src = str(cover['src'])
+            # may be replaced with JS after load, in such case try and get the real img hidden in data-values
+            if src.startswith("data:"):
+                try:
+                    src = cover["data-ezsrc"]
+                except KeyError:
+                    pass
+            self.novel_cover = self.absolute_url(src)
         # remove any optimized image size GET args from novel cover URL
         if self.novel_cover and "?" in self.novel_cover:
             self.novel_cover = self.novel_cover[0:self.novel_cover.find("?")]
@@ -67,11 +74,8 @@ class FaqWiki(Crawler):
 
         chap_list = soup.select_one('#lcp_instance_0').select("li>a")
 
-        # in rare cases the chapter list is newest to oldest
-        if not chap_list[0].text.lower().replace(' ', '').endswith(("chapter0", "chapter1")):
-            chap_list.reverse()
         for idx, a in enumerate(chap_list):
-            if "chapter" not in a.text.strip().lower():
+            if "chapter" not in a.text.lower():
                 continue
             chap_id = 1 + idx
             vol_id = 1 + len(self.chapters) // 100
