@@ -19,7 +19,7 @@ class LightnovelReader(Crawler):
         "https://lnreader.org/",
         "https://www.lnreader.org/",
         "http://readlightnovel.online/",
-        "https://readlightnovel.app/",
+        "https://readlitenovel.com/",
     ]
 
     def initialize(self) -> None:
