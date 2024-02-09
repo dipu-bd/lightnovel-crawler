@@ -12,7 +12,7 @@ chapter_list_url = "%s&page=%d"
 
 
 class UukanshuOnline(Crawler):
-    base_url = ["https://sj.uukanshu.com/"]
+    base_url = ["https://sj.uukanshu.net/"]  # previously .com, redirects .com to .net though
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
