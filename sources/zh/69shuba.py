@@ -58,7 +58,7 @@ class sixnineshu(Crawler):
             results.append(
                 {
                     "title": novel.select_one("h3 a:not([imgbox])").text.title(),
-                    "url": novel.select_one("a")["href"],
+                    "url": self.absolute_url(novel.select_one("a")["href"]),
                     "info": "Latest: %s" % novel.select_one("div.zxzj p").text,
                 }
             )
@@ -117,9 +117,9 @@ class sixnineshu(Crawler):
             self.chapters.append(
                 Chapter(
                     chap_id,
-                    url=a["href"],
+                    url=self.absolute_url(a["href"]),
                     title=li.text.strip(),
-                    volume=vol_id
+                    volume=vol_id,
                 )
             )
 
