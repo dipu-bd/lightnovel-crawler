@@ -151,10 +151,17 @@ class BatoCrawler(Crawler):
 
         bato_word = re.search(r"const batoWord = (.*);", soup.text).group(1).strip('"')
 
+        # looks like some kind of "access" GET args that may be necessary, not always though
         query_args = json.loads(decrypt(bato_word, bato_pass).decode())
 
-        image_urls = [
-            f'<img src="{img}?{args}">' for img, args in zip(img_list, query_args)
-        ]
+        # so if it ends up empty or mismatches, just ignore it and return the img list instead
+        if len(query_args) != len(img_list):
+            image_urls = [
+                f'<img src="{img}" alt="img">' for img in img_list
+            ]
+        else:
+            image_urls = [
+                f'<img src="{img}?{args}">' for img, args in zip(img_list, query_args)
+            ]
 
         return "<p>" + "</p><p>".join(image_urls) + "</p>"
