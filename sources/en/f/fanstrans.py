@@ -38,7 +38,7 @@ class FansTranslations(Crawler):
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3"])
-        self.init_executor(4) 
+        self.init_executor(4)
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
