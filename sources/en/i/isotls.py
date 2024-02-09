@@ -26,7 +26,7 @@ class IsotlsCrawler(Crawler):
         if possible_novel_author:
             self.novel_author = possible_novel_author['content']
 
-        for a in soup.select('main section div:nth-child(2) ul li a'):
+        for a in soup.select('main section:nth-child(3) nav ul li a'):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
@@ -41,6 +41,5 @@ class IsotlsCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])
-        contents = soup.select('article p')
-        body = [str(p) for p in contents if p.text.strip()]
-        return '<p>' + '</p><p>'.join(body) + '</p>'
+        contents = soup.select_one("div.content")
+        return self.cleaner.extract_contents(contents)
