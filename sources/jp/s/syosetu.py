@@ -10,7 +10,7 @@ search_url = "https://yomou.syosetu.com/search.php?word=%s"
 class SyosetuCrawler(Crawler):
     has_mtl = True
     base_url = "https://ncode.syosetu.com/"
-    
+
     def initialize(self) -> None:
         self.init_executor(2)
 
@@ -60,7 +60,7 @@ class SyosetuCrawler(Crawler):
 
         volume_id = 0
         chapter_id = 0
-        self.volumes.append({ 'id': 0 })
+        self.volumes.append({'id': 0})
         for soup in soups:
             for tag in soup.select(".index_box .chapter_title, .index_box .subtitle a"):
                 if 'chapter_title' in tag.attrs.get('class', ''):
