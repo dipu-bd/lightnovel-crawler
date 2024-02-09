@@ -53,7 +53,7 @@ class SyosetuCrawler(Crawler):
         if pager_last and 'href' in pager_last.attrs:
             page_num = int(pager_last["href"].split("=")[-1])
             for x in range(1, page_num + 1):
-                soup = self.get_soup(self.novel_url + f'{self.novel_url}?p={x}')
+                soup = self.get_soup(f'{self.novel_url}?p={x}')
                 soups.append(soup)
         else:
             soups.append(soup)
