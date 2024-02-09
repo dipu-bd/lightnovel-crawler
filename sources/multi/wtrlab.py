@@ -20,11 +20,14 @@ class WtrLab(Crawler):
         But luckily all necessary data is stored in a consistent JSON that's always in the same script tag
         Essentially the same framework as webfic though with some other keys, urls, etc.
     """
+
     base_url = ["https://wtr-lab.com/"]
     has_manga = False
     has_mtl = True
+    host = ""
 
-    host = base_url[0][:-1]  # remove trailing /
+    def initialize(self) -> None:
+        self.host = self.home_url[:-1] if self.home_url.endswith("/") else self.home_url
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -120,6 +123,7 @@ class WtrLab(Crawler):
                 url=f"{self.host}/en/serie-{novel['raw_id']}/f{novel['slug']}",
                 info=info
             )
+        return []
 
     @staticmethod
     def status_idx_to_text(idx):
