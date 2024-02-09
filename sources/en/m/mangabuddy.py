@@ -12,7 +12,7 @@ search_url = "%ssearch?q=%s"
 
 class MangaBuddyCrawler(Crawler):
     has_manga = True
-    base_url = "https://mangabuddy.com/"
+    base_url = ["https://mangabuddy.com/"]
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
@@ -76,7 +76,9 @@ class MangaBuddyCrawler(Crawler):
         server = soup.find("script", string=re.compile(r"var mainServer = "))
         images = soup.find("script", string=re.compile(r"var chapImages = "))
 
-        main_server = re.search(r'var mainServer = "(.*)";', server.text).group(1)
+        main_server = ""  # no "main server" present, in such a case img_list contains full URLs
+        if server:
+            main_server = re.search(r'var mainServer = "(.*)";', server.text).group(1)
         img_list = (
             re.search(r"var chapImages = \'(.*)\'", images.text).group(1).split(",")
         )
