@@ -44,7 +44,9 @@ class RoyalRoadCrawler(Crawler):
         self.novel_author = soup.find("a", {"class": "font-white"}).text.strip()
         logger.info("Novel author: %s", self.novel_author)
 
-        self.novel_synopsis = self.cleaner.extract_contents(soup.find("div", {"class": "hidden-content"}))
+        self.novel_synopsis = self.cleaner.extract_contents(
+            soup.find("div", {"class": "hidden-content"})
+        )
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
         for tag in soup.find_all("a", {"class": "fiction-tag"}):
@@ -74,6 +76,16 @@ class RoyalRoadCrawler(Crawler):
         possible_title = soup.select_one("h2")
         if possible_title and "Chapter" in possible_title.text:
             chapter["title"] = possible_title.text.strip()
+
+        classnames = []
+        for style in soup.select("style"):
+            style = style.text.replace(" ", "").replace("\n", "")
+            if style.endswith("{display:none;speak:never;}"):
+                classnames.append(style[1:-27])
+
+        for classname in classnames:
+            for div in soup.find_all("p", {"class": classname}):
+                div.decompose()
 
         contents = soup.select_one(".chapter-content")
         self.cleaner.clean_contents(contents)
