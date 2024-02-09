@@ -11,7 +11,7 @@ novel_search_url = "%ssearch.aspx?k=%s"
 chapter_list_url = "%s&page=%d"
 
 
-class UukanshuOnline(Crawler):
+class UukanshuOnlineSJ(Crawler):
     base_url = ["https://sj.uukanshu.net/"]  # previously .com, redirects .com to .net though
 
     def search_novel(self, query):
@@ -88,7 +88,8 @@ class UukanshuOnline(Crawler):
 
         return self.format_text(content)
 
-    def format_text(self, text):
+    @staticmethod
+    def format_text(text):
         text = re.sub(
             r"[UＵ][UＵ]\s*看书\s*[wｗ][wｗ][wｗ][\.．][uｕ][uｕ][kｋ][aａ][nｎ][sｓ][hｈ][uｕ][\.．][cｃ][oｏ][mｍ]",
             "",
