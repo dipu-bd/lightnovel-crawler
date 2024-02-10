@@ -137,7 +137,7 @@ def __load_latest_index():
     except Exception as e:
         if "crawlers" not in __current_index:
             raise LNException("Could not fetch sources index")
-        logger.warn("Could not download latest index. Error: %s", e)
+        logger.warning("Could not download latest index. Error: %s", e)
         __latest_index = __current_index
 
 
@@ -223,7 +223,7 @@ def __download_sources():
         try:
             __save_source_data(sid, data)
         except Exception as e:
-            logger.warn("Failed to save source file. Error: %s", e)
+            logger.warning("Failed to save source file. Error: %s", e)
 
 
 # --------------------------------------------------------------------------- #
@@ -248,7 +248,7 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
     except Exception as e:
-        logger.warn("Module load failed: %s | %s", file_path, e)
+        logger.warning("Module load failed: %s | %s", file_path, e)
         return []
 
     language_code = ""
@@ -296,7 +296,7 @@ def __add_crawlers_from_path(path: Path):
         return
 
     if not path.exists():
-        logger.warn("Path does not exists: %s", path)
+        logger.warning("Path does not exists: %s", path)
         return
 
     if path.is_dir():
@@ -312,7 +312,7 @@ def __add_crawlers_from_path(path: Path):
             for url in getattr(crawler, "base_url"):
                 crawler_list[url] = crawler
     except Exception as e:
-        logger.warn("Could not load crawlers from %s. Error: %s", path, e)
+        logger.warning("Could not load crawlers from %s. Error: %s", path, e)
 
 
 # --------------------------------------------------------------------------- #
