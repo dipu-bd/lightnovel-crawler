@@ -25,13 +25,13 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         try:
             self.novel_cover = self.parse_cover(soup)
         except Exception as e:
-            logger.warn("Failed to parse novel cover | %s", e)
+            logger.warning("Failed to parse novel cover | %s", e)
 
         try:
             authors = set(list(self.parse_authors(soup)))
             self.novel_author = ", ".join(authors)
         except Exception as e:
-            logger.warn("Failed to parse novel authors | %s", e)
+            logger.warning("Failed to parse novel authors | %s", e)
 
         for item in self.parse_chapter_list(soup):
             if isinstance(item, Chapter):
@@ -51,13 +51,13 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         try:
             self.novel_cover = self.parse_cover_in_browser()
         except Exception as e:
-            logger.warn("Failed to parse novel cover | %s", e)
+            logger.warning("Failed to parse novel cover | %s", e)
 
         try:
             authors = set(list(self.parse_authors_in_browser()))
             self.novel_author = ", ".join(authors)
         except Exception as e:
-            logger.warn("Failed to parse novel authors | %s", e)
+            logger.warning("Failed to parse novel authors | %s", e)
 
         for item in self.parse_chapter_list_in_browser():
             if isinstance(item, Chapter):

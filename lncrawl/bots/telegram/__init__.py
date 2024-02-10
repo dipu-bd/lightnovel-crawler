@@ -131,7 +131,7 @@ class TelegramBot:
 
     async def error_handler(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         """Log Errors caused by Updates."""
-        logger.warn("Error: %s\nCaused by: %s", context.error, update)
+        logger.warning("Error: %s\nCaused by: %s", context.error, update)
 
     async def show_help(self, update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Send /start to create new session.\n")

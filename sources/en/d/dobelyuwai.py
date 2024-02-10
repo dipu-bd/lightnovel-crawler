@@ -32,7 +32,7 @@ class Dobelyuwai(Crawler):
         # try:
         #     self.novel_author = soup.select_one('div.entry-content > p:nth-child(2)').text.strip()
         # except Exception as e:
-        #     logger.warn('Failed to get novel auth. Error: %s', e)
+        #     logger.warning('Failed to get novel auth. Error: %s', e)
         # logger.info('%s', self.novel_author)
 
         # Removes none TOC links from bottom of page.
