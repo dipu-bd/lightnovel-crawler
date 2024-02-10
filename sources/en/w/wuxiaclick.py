@@ -9,7 +9,7 @@ home_url = "https://wuxia.click/"
 
 
 class WuxiaClick(Crawler):
-    base_url = ["https://wuxia.click/"]
+    base_url = ["https://wuxia.click/", "https://www.wuxia.click/"]
     search_results_data = []
 
     def search_novel(self, query):
