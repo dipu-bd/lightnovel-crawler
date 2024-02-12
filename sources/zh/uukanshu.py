@@ -1,102 +1,74 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
 
+from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
+from lncrawl.models import Chapter, Volume
+from sources.zh.uukanshu_sj import UukanshuOnlineSJ
 
 logger = logging.getLogger(__name__)
 
 novel_search_url = "%ssearch.aspx?k=%s"
-chapter_list_url = "%s&page=%d"
 
 
 class UukanshuOnline(Crawler):
-    base_url = ["https://sj.uukanshu.com/"]
+    # www is simplified cn, tw is traditional cn but both use same site structure
+    base_url = ["https://www.uukanshu.net/", "https://tw.uukanshu.net/"]
 
-    def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(novel_search_url % (self.home_url, query))
-        results = []
+    encoding = "gbk"
 
-        for data in soup.select("#bookList li"):
-            title = data.select_one(".book-title a.name")["title"]
-            author = data.select_one(".book-title .aut").get_text()
-            url = self.home_url + data.select_one(".book-title a.name")["href"]
+    def initialize(self):
+        # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
+        self.init_parser("html.parser")
 
-            results.append(
-                {
-                    "title": title,
-                    "url": url,
-                    "info": f"Author: {author}",
-                }
-            )
-        return results
+    def read_novel_info(self) -> None:
+        # the encoding for tw is utf-8, for www. is gbk -> otherwise output is messed up with wrong symbols.
+        if "tw." in self.novel_url:
+            self.encoding = "utf-8"
 
-    def read_novel_info(self):
-        soup = self.get_soup(self.novel_url)
+        soup = self.get_soup(self.novel_url, encoding=self.encoding)
+        info = soup.select_one("dl.jieshao")
+        assert info  # if this fails, HTML structure has fundamentally changed -> needs update
+        meta = info.select_one("dd.jieshao_content")
 
-        self.novel_title = soup.select_one(".bookname").text.strip()
-        logger.info("Novel title: %s", self.novel_title)
+        img = info.select_one("dt.jieshao-img img")
+        if img:
+            self.novel_cover = self.absolute_url(img["src"])
 
-        possible_image = soup.select_one(".book-info img")
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
-        logger.info("Novel cover: %s", self.novel_cover)
+        self.novel_title = meta.select_one("h1 > a").text
+        self.novel_author = meta.select_one("h2 > a").text
+        self.novel_synopsis = meta.select_one("h3 > p").text
 
-        self.novel_author = (
-            soup.select_one(".book-info dd").text.replace("作者：", "").strip()
-        )
-        logger.info("Novel author: %s", self.novel_author)
-
-        logger.info("Getting chapters...")
-        soup = self.get_soup(chapter_list_url % (self.novel_url, 1))
-        try:
-            last_page = soup.select_one(".pages a:last-child")
-            page_count = int(re.findall(r"&page=(\d+)", str(last_page["href"]))[0])
-        except Exception as err:
-            logger.debug("Failed to parse page count. Error: %s", err)
-            page_count = 0
-        logger.info("Total pages: %d", page_count)
-
-        futures = [
-            self.executor.submit(self.get_soup, chapter_list_url % (self.novel_url, p))
-            for p in range(2, page_count + 1)
-        ]
-        page_soups = [soup] + [f.result() for f in futures]
-
-        for soup in page_soups:
-            for a in soup.select("ul#chapterList li a"):
-                chap_id = len(self.chapters) + 1
-                vol_id = 1 + len(self.chapters) // 100
-                if chap_id % 100 == 1:
-                    self.volumes.append({"id": vol_id})
-                self.chapters.append(
-                    {
-                        "id": chap_id,
-                        "volume": vol_id,
-                        "title": a.text,
-                        "url": self.home_url + a["href"],
-                    }
+        chapters = soup.select_one("ul#chapterList")
+        for chapter in list(chapters.children)[::-1]:  # reverse order as it's newest to oldest
+            # convince typehint that we're looking at Tags & also make sure we skip random text within the ul if any
+            if not isinstance(chapter, Tag):
+                continue
+            # find chapters
+            if chapter.has_attr("class") and "volume" in chapter["class"]:
+                self.volumes.append(
+                    Volume(
+                        id=len(self.volumes) + 1,
+                        title=chapter.text.strip(),
+                    )
                 )
+                continue
+            anchor = chapter.select_one("a")
+            if not anchor:
+                logger.warning("Found <li> in chapter list, not volume, without link: %s", chapter)
+                continue
+            self.chapters.append(
+                Chapter(
+                    id=len(self.chapters) + 1,
+                    url=self.absolute_url(anchor["href"]),
+                    title=anchor.text,
+                    volume=len(self.volumes),
+                )
+            )
 
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        body = soup.select_one("#bookContent")
-
-        content = self.cleaner.extract_contents(body)
-
-        return self.format_text(content)
-
-    def format_text(self, text):
-        text = re.sub(
-            r"[UＵ][UＵ]\s*看书\s*[wｗ][wｗ][wｗ][\.．][uｕ][uｕ][kｋ][aａ][nｎ][sｓ][hｈ][uｕ][\.．][cｃ][oｏ][mｍ]",
-            "",
-            text,
-        )
-        text = text.replace("章节缺失、错误举报", "")
-        text = text.replace("注：如你看到本章节内容是防盗错误内容、本书断更等问题请登录后→→", "")
-        text = text.replace("最新网址：", "")
-        text = text.replace("请记住本书首发域名：。手机版更新最快网址：", "")
-        text = text.replace("www.uukanshu.com", "")
-        return text
+    def download_chapter_body(self, chapter: Chapter) -> str:
+        soup = self.get_soup(chapter.url, encoding=self.encoding)
+        content = soup.select_one("div#contentbox")
+        # use same filters as already implemented on essentially same site
+        return UukanshuOnlineSJ.format_text(self.cleaner.extract_contents(content))
