@@ -240,7 +240,7 @@ class App:
                     format="zip",
                     root_dir=root_dir,
                 )
-                logger.info("Compressed:", os.path.basename(archived_file))
+                logger.info("Compressed: %s", os.path.basename(archived_file))
 
             if archived_file:
                 self.archived_outputs.append(archived_file)

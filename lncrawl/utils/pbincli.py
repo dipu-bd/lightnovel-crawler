@@ -23,7 +23,7 @@ class PBinCLIException(Exception):
 
 
 def PBinCLIError(message):
-    logger.warn("PBinCLI Error: {}".format(message))
+    logger.warning("PBinCLI Error: {}".format(message))
 
 
 def path_leaf(path):
