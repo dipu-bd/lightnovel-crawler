@@ -43,7 +43,7 @@ class NovelDeGlace(Crawler):
         tabs = soup.select_one("div.su-tabs-panes")
         if not tabs:
             raise LNException("Failed to find chapters")
-        
+        volume_id = 1
         # get all divs with class su-row. these all contain one tome
         rows = tabs.find_all("div", class_="su-row")
         for row in rows:
@@ -53,28 +53,32 @@ class NovelDeGlace(Crawler):
                 self.novel_cover = img["src"]
             else:
                 logger.debug("Failed to find novel cover")
+            volume = row.find("span", class_="roman volume")
+            if volume:
+                volume_title = volume.text.strip()
+                self.volumes.append(Volume(id=volume_id, title=volume_title))
+            else:
+                logger.debug("Failed to find volume title")
+                self.volumes.append(Volume(id=volume_id, title=f"Tome {volume_id}"))
+            volume_id += 1
 
-        #links = tabs.find_all("a", href=True)
-        #processed_urls: Set[str] = set()
-        #processed_volumes: Set[int] = set()
-        #for link in links:
-        #    href = link["href"]
-        #    if href.startswith("https://noveldeglace.com/chapitre/"):
-        #        if href in processed_urls:
-        #            continue
-        #        else:
-        #            # search for the string "tome-<nr>" in the href
-        #            tome = int(href.split("tome-")[1].split("-")[0])
-        #            if tome not in processed_volumes:
-        #                # TODO: Get proper title
-        #                self.volumes.append(Volume(id=tome, title=f"Tome {tome}"))
-        #                processed_volumes.add(tome)
-        #            self.chapters.append(
-        #                Chapter(
-        #                    id=len(self.chapters) + 1, title=link.text.strip(), url=href, volume=tome
-        #                )
-        #            )
-        #            processed_urls.add(href)
+            # get the next ul
+            ul = row.find("ul")
+            if not ul:
+                raise LNException("Failed to find chapters")
+            # get all li elements
+            chapters_lis = ul.find_all("li")
+            # for each chapter, get the first link
+            for li in chapters_lis:
+                a = li.find("a")
+                if a:
+                    self.chapters.append(
+                        Chapter(
+                            id=len(self.chapters) + 1, title=a.text.strip(), url=a["href"], volume=volume_id
+                        )
+                    )
+                else:
+                    logger.debug("Failed to find chapter link")
 
         # Log all chapters
         logger.debug("%s", self.chapters)
