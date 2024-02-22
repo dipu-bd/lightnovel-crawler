@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 class NovelDeGlace(Crawler):
     base_url = "https://noveldeglace.com/"
-    last_updated = "2024-02-21"
+    last_updated = "2024-02-22"
     has_mtl = False
 
     def read_novel_info(self) -> None:
@@ -57,34 +57,42 @@ class NovelDeGlace(Crawler):
             else:
                 logger.debug("Failed to find novel cover")
 
-            ul = row.find("ul")
-            if not ul:
+            uls = row.find_all("ul")
+
+            if len(uls) == 0:
                 raise LNException("Failed to find chapters")
-            chapters_lis = ul.find_all("li")
             volume_span = row.find("span", class_="roman volume")
-            for li in chapters_lis:
-                a = li.find("a")
-                if a:
-                    self.chapters.append(
-                        Chapter(
-                            id=len(self.chapters) + 1,
-                            title=a.text.strip(),
-                            url=a["href"],
-                            volume=volume_id,
-                            volume_title=volume_span.text.strip(),
+
+            for ul in uls: # There is one ul for each arc
+                chapters_lis = ul.find_all("li")
+                for li in chapters_lis:
+                    a = li.find("a")
+                    if a:
+                        self.chapters.append(
+                            Chapter(
+                                id=len(self.chapters) + 1,
+                                title=a.text.strip(),
+                                url=a["href"],
+                                volume=volume_id,
+                                volume_title=volume_span.text.strip(),
+                            )
                         )
-                    )
-                else:
-                    logger.debug("Failed to find chapter link")
+                    else:
+                        logger.debug("Failed to find chapter link")
 
             self.volumes.append(Volume(id=volume_id, title=volume_span.text.strip()))
             volume_id += 1
+
+        logger.debug("Chapters: %s", self.chapters)
 
     def download_chapter_body(self, chapter: Chapter) -> str:
         logger.debug("Visiting %s", chapter.url)
         soup = self.get_soup(chapter.url)
         # get div with entry-content-chapitre
         body = soup.select_one("div.entry-content-chapitre")
+        # remove the first h2
+        if body.h2:
+            body.h2.decompose()
         if not body:
             raise LNException("Failed to find chapter content")
         return str(body)
