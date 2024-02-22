@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
+import time
 from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = "https://reaperscans.com/?s=%s&post_type=wp-manga"
 
 
 class Reaperscans(Crawler):
@@ -22,72 +23,97 @@ class Reaperscans(Crawler):
                 "https://discord.gg/MaRegMFhRb",
                 "https://discord.gg/reapercomics",
                 "h ttps://discord.gg/reapercomic",
+                "https://discord.gg/sb2jqkv",
                 "____",
-                "Join our Discord for updates on releases!",
+                "Join our Discord",
             ]
         )
+        self.init_executor(ratelimit=0.9)
 
-    def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
+    def get_chapters_from_page(self, page, body, token):
+        url = self.absolute_url("/livewire/message/" + body["fingerprint"]["name"])
+        body["updates"] = [
+            {
+                "type": "callMethod",
+                "payload": {
+                    "id": "00000",
+                    "method": "gotoPage",
+                    "params": [page, "page"],
+                },
+            }
+        ]
 
-        results = []
-        for tab in soup.select(".c-tabs-item__content"):
-            a = tab.select_one(".post-title h3 a")
-            latest = tab.select_one(".latest-chap .chapter a").text
-            votes = tab.select_one(".rating .total_votes").text
-            results.append(
+        response = self.post_json(url=url, data=json.dumps(body), timeout=10)
+        return self.make_soup(response["effects"]["html"])
+
+    def get_chapters_from_doc(self, dom):
+        return [
+            {
+                "title": a.select_one("p").text.strip(),
+                "url": self.absolute_url(a["href"]),
+            }
+            for a in dom.select("div[wire\\3A id] ul[role] li a")
+        ]
+
+    def insert_chapters(self, total_count, chapter_list):
+        for ch in chapter_list:
+            self.chapters.insert(
+                0,
                 {
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                    "info": "%s | Rating: %s" % (latest, votes),
-                }
+                    "id": total_count - len(self.chapters),
+                    "title": ch["title"],
+                    "url": ch["url"],
+                },
             )
-
-        return results
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one(".post-title h1")
+        possible_title = soup.select_one("h1")
         assert isinstance(possible_title, Tag)
-        for span in possible_title.select("span"):
-            span.extract()
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        possible_image = soup.select_one(".summary_image a img")
+        possible_image = soup.select_one(".h-full .w-full img")
         if isinstance(possible_image, Tag):
-            self.novel_cover = self.absolute_url(possible_image["data-src"])
+            self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = " ".join(
-            [a.text.strip() for a in soup.select('.author-content a[href*="author"]')]
-        )
-        logger.info("%s", self.novel_author)
+        # prolly not even needed, didn't check
+        csrf = soup.select_one('meta[name="csrf-token"]')["content"]
+        # livewire container
+        container = soup.select_one("main div[wire\\:id][wire\\:initial-data]")
+        # first page ssr json
+        data = container["wire:initial-data"]
+        body = json.loads(data)
+        # del the dom effects attr
+        body.pop("effects")
 
-        chapter_list_url = self.absolute_url("ajax/chapters", self.novel_url)
-        soup = self.post_soup(chapter_list_url, headers={"accept": "*/*"})
-        for a in reversed(
-            soup.select('.wp-manga-chapter:not(.premium-block) a[href*="/chapter"]')
-        ):  # This stops it from trying to download locked premium chapters.
-            for span in a.findAll("span"):  # Removes time and date from chapter title.
-                span.extract()
-            chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append({"id": vol_id})
-            self.chapters.append(
-                {
-                    "id": chap_id,
-                    "volume": vol_id,
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                }
-            )
+        page_count = int(
+            container.select_one(
+                'span[wire\\:key^="paginator-page"]:nth-last-child(2)'
+            ).text.strip()
+        )
+        # meh but i can't find a better selector
+        chapter_count = int(
+            container.select_one(
+                "nav > div:last-child > div:first-child > p > span:nth-last-child(2)"
+            ).text.strip()
+        )
+
+        chaps = self.get_chapters_from_doc(container)
+        self.insert_chapters(chapter_count, chaps)
+
+        for k in range(2, page_count + 1):
+            dom = self.get_chapters_from_page(k, body, csrf)
+            chaps = self.get_chapters_from_doc(dom)
+            self.insert_chapters(chapter_count, chaps)
+            # 429 otherwise, could use executor here tho maybe
+            time.sleep(1)
 
     def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        contents = soup.select_one("div.text-left")
+        # TODO: better retry/timeout settings
+        soup = self.get_soup(chapter["url"], retry=3, timeout=10)
+        contents = soup.select_one("article")
         return self.cleaner.extract_contents(contents)
