@@ -61,7 +61,7 @@ class NovelDeGlace(Crawler):
                 chapters_lis = ul.find_all("li")
                 for li in chapters_lis:
                     a = li.find("a")
-                    if a:
+                    if a and a.has_attr("href"):
                         self.chapters.append(
                             Chapter(
                                 id=len(self.chapters) + 1,
@@ -77,13 +77,14 @@ class NovelDeGlace(Crawler):
             self.volumes.append(Volume(id=volume_id, title=volume_span.text.strip()))
             volume_id += 1
 
-        logger.debug("Chapters: %s", self.chapters)
-
     def download_chapter_body(self, chapter: Chapter) -> str:
         logger.debug("Visiting %s", chapter.url)
         soup = self.get_soup(chapter.url)
+        body = soup.select_one("div.content-tome")
+        if not body:
+            body = soup.select_one("div.entry-content-chapitre")
+
         # get div with entry-content-chapitre
-        body = soup.select_one("div.entry-content-chapitre")
         # remove the first h2
         if body.h2:
             body.h2.decompose()
