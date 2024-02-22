@@ -1,5 +1,4 @@
 import logging
-from typing import List, Set
 
 from lncrawl.core.crawler import Crawler
 from lncrawl.core.exeptions import LNException
@@ -8,22 +7,18 @@ from lncrawl.models.volume import Volume
 
 logger = logging.getLogger(__name__)
 
-# TODO: Skip links that only link to parts of the same chapter
-# TODO: Check if images work
-
 
 class NovelDeGlace(Crawler):
     base_url = "https://noveldeglace.com/"
     last_updated = "2024-02-21"
     has_mtl = False
 
-    # https://noveldeglace.com/roman/genjitsushugisha-no-oukokukaizouki/
     def read_novel_info(self) -> None:
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
         # novel details under su-column-inner su-clearfix
-        novel_details = soup.select_one("div.su-column-inner.su-clearfix")
+        novel_details = soup.select_one("div.entry-content")
         if not novel_details:
             raise LNException("Failed to find novel details")
 
@@ -37,9 +32,14 @@ class NovelDeGlace(Crawler):
             strong_text = strong.text.strip()
             # Get title and cover
             if strong_text == "Titre complet :":
-                self.novel_title = div.text.split(":")[1].strip()
+                self.novel_title = (
+                    div.text.split(":")[1].split("RSS")[0].split("CMS")[0].strip()
+                )
             elif strong_text == "Auteur :":
                 self.novel_author = div.text.split(":")[1].strip()
+
+        if not self.novel_title:
+            logger.debug("Failed to find novel title")
 
         # get su-tabs-panes div
         tabs = soup.select_one("div.su-tabs-panes")
@@ -48,7 +48,7 @@ class NovelDeGlace(Crawler):
         volume_id = 0
         # get all divs with class su-row. these all contain one tome
         rows = tabs.find_all("div", class_="su-row")
-        #current_chapter_id = 0
+        # current_chapter_id = 0
         for row in rows:
             # get the first img
             img = row.find("img")
@@ -56,15 +56,11 @@ class NovelDeGlace(Crawler):
                 self.novel_cover = img["src"]
             else:
                 logger.debug("Failed to find novel cover")
-            
 
-            # get the next ul
             ul = row.find("ul")
             if not ul:
                 raise LNException("Failed to find chapters")
-            # get all li elements
             chapters_lis = ul.find_all("li")
-            # for each chapter, get the first link
             volume_span = row.find("span", class_="roman volume")
             for li in chapters_lis:
                 a = li.find("a")
@@ -80,18 +76,9 @@ class NovelDeGlace(Crawler):
                     )
                 else:
                     logger.debug("Failed to find chapter link")
-            
+
             self.volumes.append(Volume(id=volume_id, title=volume_span.text.strip()))
             volume_id += 1
-
-        # print chapters and volumes to file
-        with open("chapters.txt", "w") as f:
-            f.write(str(self.chapters))
-        with open("volumes.txt", "w") as f:
-            f.write(str(self.volumes))
-
-        # Log all chapters
-        logger.debug("%s", self.chapters)
 
     def download_chapter_body(self, chapter: Chapter) -> str:
         logger.debug("Visiting %s", chapter.url)
