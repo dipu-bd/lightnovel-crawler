@@ -17,20 +17,15 @@ class NovelDeGlace(Crawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        # novel details under su-column-inner su-clearfix
         novel_details = soup.select_one("div.entry-content")
         if not novel_details:
             raise LNException("Failed to find novel details")
 
-        # Now look through all the divs with class line_roman
         for div in novel_details.find_all("div", class_="line_roman"):
-            # get the strong tag
             strong = div.find("strong")
             if not strong:
                 continue
-            # get the text of the strong tag
             strong_text = strong.text.strip()
-            # Get title and cover
             if strong_text == "Titre complet :":
                 self.novel_title = (
                     div.text.split(":")[1].split("RSS")[0].split("CMS")[0].strip()
@@ -41,16 +36,15 @@ class NovelDeGlace(Crawler):
         if not self.novel_title:
             logger.debug("Failed to find novel title")
 
-        # get su-tabs-panes div
         tabs = soup.select_one("div.su-tabs-panes")
         if not tabs:
             raise LNException("Failed to find chapters")
         volume_id = 0
-        # get all divs with class su-row. these all contain one tome
+
         rows = tabs.find_all("div", class_="su-row")
-        # current_chapter_id = 0
+
         for row in rows:
-            # get the first img
+
             img = row.find("img")
             if img:
                 self.novel_cover = img["src"]
@@ -63,7 +57,7 @@ class NovelDeGlace(Crawler):
                 raise LNException("Failed to find chapters")
             volume_span = row.find("span", class_="roman volume")
 
-            for ul in uls: # There is one ul for each arc
+            for ul in uls:  # There is one ul for each arc
                 chapters_lis = ul.find_all("li")
                 for li in chapters_lis:
                     a = li.find("a")
