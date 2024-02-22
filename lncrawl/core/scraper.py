@@ -223,9 +223,11 @@ class Scraper(TaskManager, SoupMaker):
         headers = CaseInsensitiveDict(headers)
         headers.setdefault(
             "Content-Type",
-            "multipart/form-data"
-            if multipart
-            else "application/x-www-form-urlencoded; charset=UTF-8",
+            (
+                "multipart/form-data"
+                if multipart
+                else "application/x-www-form-urlencoded; charset=UTF-8"
+            ),
         )
         return self.post_response(url, data=data, headers=headers, **kwargs)
 
@@ -269,7 +271,7 @@ class Scraper(TaskManager, SoupMaker):
         response = self.get_response(url, headers=headers, **kwargs)
         return response.json()
 
-    def post_json(self, url, data={}, headers={}) -> Any:
+    def post_json(self, url, data={}, headers={}, **kwargs) -> Any:
         """Make a POST request and return the content as JSON object"""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault("Content-Type", "application/json")
@@ -277,7 +279,7 @@ class Scraper(TaskManager, SoupMaker):
             "Accept",
             "application/json,text/plain,*/*",
         )
-        response = self.post_response(url, data=data, headers=headers)
+        response = self.post_response(url, data=data, headers=headers, **kwargs)
         return response.json()
 
     def submit_form_json(
