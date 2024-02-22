@@ -2,6 +2,7 @@
 import json
 import logging
 import time
+import re
 from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
@@ -30,7 +31,7 @@ class Reaperscans(Crawler):
         )
         self.init_executor(ratelimit=0.9)
 
-    def get_chapters_from_page(self, page, body, token):
+    def get_chapters_from_page(self, page, body):
         url = self.absolute_url("/livewire/message/" + body["fingerprint"]["name"])
         body["updates"] = [
             {
@@ -70,9 +71,7 @@ class Reaperscans(Crawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        possible_title = soup.select_one("h1")
-        assert isinstance(possible_title, Tag)
-        self.novel_title = possible_title.text.strip()
+        self.novel_title = soup.select_one("h1").text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
         possible_image = soup.select_one(".h-full .w-full img")
@@ -80,33 +79,36 @@ class Reaperscans(Crawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        # prolly not even needed, didn't check
-        csrf = soup.select_one('meta[name="csrf-token"]')["content"]
         # livewire container
         container = soup.select_one("main div[wire\\:id][wire\\:initial-data]")
         # first page ssr json
-        data = container["wire:initial-data"]
-        body = json.loads(data)
-        # del the dom effects attr
+        body = json.loads(container["wire:initial-data"])
         body.pop("effects")
 
-        page_count = int(
-            container.select_one(
-                'span[wire\\:key^="paginator-page"]:nth-last-child(2)'
-            ).text.strip()
-        )
         # meh but i can't find a better selector
         chapter_count = int(
-            container.select_one(
-                "nav > div:last-child > div:first-child > p > span:nth-last-child(2)"
-            ).text.strip()
+            re.search(
+                r"\d+",
+                soup.find(
+                    lambda tag: tag.name == "h1" and "Chapters" in tag.text
+                ).text.strip(),
+            )[0]
         )
 
         chaps = self.get_chapters_from_doc(container)
         self.insert_chapters(chapter_count, chaps)
 
+        page_count = 1
+        last_page = container.select_one(
+            'span[wire\\:key^="paginator-page"]:nth-last-child(2)'
+        )
+        if isinstance(last_page, Tag):
+            page_count = int(last_page.text.strip())
+        if page_count != 1:
+            return
+
         for k in range(2, page_count + 1):
-            dom = self.get_chapters_from_page(k, body, csrf)
+            dom = self.get_chapters_from_page(k, body)
             chaps = self.get_chapters_from_doc(dom)
             self.insert_chapters(chapter_count, chaps)
             # 429 otherwise, could use executor here tho maybe
