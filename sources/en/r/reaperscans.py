@@ -104,7 +104,8 @@ class Reaperscans(Crawler):
         )
         if isinstance(last_page, Tag):
             page_count = int(last_page.text.strip())
-        if page_count != 1:
+        else:
+            # if we don't have the pagination el
             return
 
         for k in range(2, page_count + 1):
