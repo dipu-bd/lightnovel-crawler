@@ -84,10 +84,12 @@ class NovelDeGlace(Crawler):
         if not body:
             body = soup.select_one("div.entry-content-chapitre")
 
-        # get div with entry-content-chapitre
-        # remove the first h2
         if body.h2:
             body.h2.decompose()
+        mistape_caption = body.find("div", class_="mistape_caption")
+        if mistape_caption:
+            mistape_caption.decompose()
         if not body:
             raise LNException("Failed to find chapter content")
+
         return str(body)
