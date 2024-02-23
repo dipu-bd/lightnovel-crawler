@@ -56,16 +56,15 @@ class Reaperscans(Crawler):
             for a in dom.select("div[wire\\3A id] ul[role] li a")
         ]
 
-    def insert_chapters(self, total_count, chapter_list):
-        for ch in chapter_list:
-            self.chapters.insert(
-                0,
-                {
-                    "id": total_count - len(self.chapters),
-                    "title": ch["title"],
-                    "url": ch["url"],
-                },
-            )
+    def insert_chapters(self, chapters):
+        self.chapters = [
+            {
+                "id": i + 1,
+                "title": x["title"],
+                "url": x["url"],
+            }
+            for i, x in enumerate(reversed(chapters))
+        ]
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -95,25 +94,29 @@ class Reaperscans(Crawler):
             )[0]
         )
 
-        chaps = self.get_chapters_from_doc(container)
-        self.insert_chapters(chapter_count, chaps)
-
+        chapters = self.get_chapters_from_doc(container)
         page_count = 1
         last_page = container.select_one(
             'span[wire\\:key^="paginator-page"]:nth-last-child(2)'
         )
+
         if isinstance(last_page, Tag):
             page_count = int(last_page.text.strip())
         else:
+            self.insert_chapters(chapters)
             # if we don't have the pagination el
             return
 
-        for k in range(2, page_count + 1):
-            dom = self.get_chapters_from_page(k, body)
-            chaps = self.get_chapters_from_doc(dom)
-            self.insert_chapters(chapter_count, chaps)
-            # 429 otherwise, could use executor here tho maybe
-            time.sleep(1)
+        toc_futures = [
+            self.executor.submit(self.get_chapters_from_page, k, body)
+            for k in range(2, page_count + 1)
+        ]
+        self.resolve_futures(toc_futures, desc="TOC", unit="page")
+        for f in toc_futures:
+            dom = f.result()
+            chapters.extend(self.get_chapters_from_doc(dom))
+
+        self.insert_chapters(chapters)
 
     def download_chapter_body(self, chapter):
         # TODO: better retry/timeout settings
