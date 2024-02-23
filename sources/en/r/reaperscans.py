@@ -83,17 +83,7 @@ class Reaperscans(Crawler):
         # first page ssr json
         body = json.loads(container["wire:initial-data"])
         body.pop("effects")
-
-        # meh but i can't find a better selector
-        chapter_count = int(
-            re.search(
-                r"\d+",
-                soup.find(
-                    lambda tag: tag.name == "h1" and "Chapters" in tag.text
-                ).text.strip(),
-            )[0]
-        )
-
+        # initial chapters from soup
         chapters = self.get_chapters_from_doc(container)
         page_count = 1
         last_page = container.select_one(
