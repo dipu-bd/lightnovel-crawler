@@ -101,8 +101,7 @@ class Reaperscans(Crawler):
         ]
         self.resolve_futures(toc_futures, desc="TOC", unit="page")
         for f in toc_futures:
-            dom = f.result()
-            chapters.extend(self.get_chapters_from_doc(dom))
+            chapters.extend(self.get_chapters_from_doc(f.result()))
 
         self.insert_chapters(chapters)
 
