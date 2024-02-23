@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
-import time
-import re
 from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
