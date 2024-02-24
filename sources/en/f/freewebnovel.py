@@ -14,7 +14,8 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         "https://bednovel.com/",
         "https://innread.com/",
         "https://innnovel.com/",
-        "https://libread.com/"
+        "https://libread.com/",
+        "https://libread.org/",
     ]
 
     def initialize(self) -> None:
