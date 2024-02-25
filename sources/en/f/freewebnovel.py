@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import unicodedata
+import re
 
 from bs4 import BeautifulSoup, Tag
 
@@ -14,7 +15,8 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         "https://bednovel.com/",
         "https://innread.com/",
         "https://innnovel.com/",
-        "https://libread.com/"
+        "https://libread.com/",
+        "https://libread.org/",
     ]
 
     def initialize(self) -> None:
@@ -99,8 +101,16 @@ class FreeWebNovelCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         body_tag = soup.select_one(".m-read .txt")
+        # style element on page that hides usually last paragraph which contains randomised self-promo text
+        has_promo = soup.find("style", text=re.compile("p:nth-last-child\\(\\d\\)"))
         if body_tag:
             normalized_body = self.normalize_text(str(body_tag))
             normalized_soup = BeautifulSoup(normalized_body, "html.parser")
+            if has_promo:
+                # get index out of css selector and manually remove it via decompose
+                idx = int(re.match(re.compile(".+p:nth-last-child\\((\\d)\\).+"), has_promo.text)[1])
+                random_self_promo = normalized_soup.find_all("p")[-idx]
+                if isinstance(random_self_promo, Tag):
+                    random_self_promo.decompose()
             return normalized_soup
         return body_tag
