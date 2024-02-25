@@ -38,7 +38,12 @@ class UukanshuOnline(Crawler):
 
         self.novel_title = meta.select_one("h1 > a").text
         self.novel_author = meta.select_one("h2 > a").text
-        self.novel_synopsis = meta.select_one("h3 > p").text
+        synopsis = meta.select_one("h3")
+        # in some cases the synopsis is only h3 without self-promo, but otherwise actual content is in paragraph
+        if synopsis:
+            self.novel_synopsis = synopsis.text
+            if synopsis.select_one("p"):
+                self.novel_synopsis = synopsis.select_one("p").text
 
         chapters = soup.select_one("ul#chapterList")
         for chapter in list(chapters.children)[::-1]:  # reverse order as it's newest to oldest
