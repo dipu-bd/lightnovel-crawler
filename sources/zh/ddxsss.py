@@ -4,7 +4,6 @@ import re
 
 from bs4 import Tag
 from lncrawl.core.crawler import Crawler
-import urllib.parse
 
 from lncrawl.models import Volume, Chapter, SearchResult
 
