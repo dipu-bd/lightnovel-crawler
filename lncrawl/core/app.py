@@ -2,6 +2,7 @@ import atexit
 import logging
 import os
 import shutil
+from pathlib import Path
 from threading import Thread
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
@@ -167,7 +168,7 @@ class App:
         fetch_chapter_images(self)
         save_metadata(self, True)
 
-        if not self.output_formats.get("json", False):
+        if not self.output_formats.get(OutputFormat.json.value, False):
             shutil.rmtree(os.path.join(self.output_path, "json"), ignore_errors=True)
 
         if self.can_do("logout"):
@@ -233,7 +234,7 @@ class App:
                 logger.info("Not archiving single file inside %s" % root_dir)
                 archived_file = os.path.join(root_dir, file_list[0])
             else:
-                base_path = os.path.join(self.output_path, output_name)
+                base_path = Path(self.output_path) / output_name
                 logger.info("Compressing %s to %s" % (root_dir, base_path))
                 archived_file = shutil.make_archive(
                     base_path,

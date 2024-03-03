@@ -80,9 +80,9 @@ def fetch_chapter_body(app):
                 old_chapter = json.load(file)
                 chapter.update(**old_chapter)
         except FileNotFoundError:
-            logger.info("Missing File: %s Retrieved!" % (file_name))
+            logger.info("Missing File: %s Retrieved!" % file_name)
         except json.JSONDecodeError:
-            logger.info("Unable to decode JSON from the file: %s" % (file_name))
+            logger.info("Unable to decode JSON from the file: %s" % file_name)
         except Exception as e:
             logger.exception("An error occurred while reading the file:", e)
 
