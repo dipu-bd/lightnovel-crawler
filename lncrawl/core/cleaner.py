@@ -138,6 +138,13 @@ class TextCleaner:
                 # the attributes to keep while cleaning a tag
                 "src",
                 "style",
+                # table and table children attributes
+                "colspan",
+                "rowspan",
+                "headers",
+                "scope",
+                "axis",
+                "id",  # id required for headers ref
             ]
         )
         self.whitelist_css_property: Set[str] = set(
