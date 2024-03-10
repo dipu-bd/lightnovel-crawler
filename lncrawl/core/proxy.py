@@ -156,7 +156,7 @@ def __find_proxies():
                 __proxy_list.setdefault(scheme, [])
                 if __proxy_visited_at.get(url, 0) + __proxy_ttl < time.time():
                     __validate_and_add(scheme, ip, url)
-                    __proxy_visited_at[url] = time.time()
+                    __proxy_visited_at[url] = int(time.time())
 
             wait_times = 3 * 60
             while wait_times and not __has_exit:
@@ -178,6 +178,6 @@ def start_proxy_fetcher():
     Thread(target=__find_proxies, daemon=False).start()
 
 
-def stop_proxy_fetcher():
+def stop_proxy_fetcher(*args, **kwargs):
     global __has_exit
     __has_exit = True

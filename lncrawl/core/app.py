@@ -1,7 +1,7 @@
 import atexit
 import logging
-import os
 import shutil
+from pathlib import Path
 from threading import Thread
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
@@ -148,15 +148,13 @@ class App:
             )
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
-        self.output_path = os.path.join(
-            C.DEFAULT_OUTPUT_PATH, source_name, self.good_file_name
-        )
+        self.output_path = Path(C.DEFAULT_OUTPUT_PATH) / source_name / self.good_file_name
 
     # ----------------------------------------------------------------------- #
 
     def start_download(self):
         """Requires: crawler, chapters, output_path"""
-        if not self.output_path or not os.path.isdir(self.output_path):
+        if not self.output_path or not Path(self.output_path).is_dir():
             raise LNException("Output path is not defined")
 
         assert self.crawler
@@ -167,8 +165,8 @@ class App:
         fetch_chapter_images(self)
         save_metadata(self, True)
 
-        if not self.output_formats.get("json", False):
-            shutil.rmtree(os.path.join(self.output_path, "json"), ignore_errors=True)
+        if not self.output_formats.get(OutputFormat.json.value, False):
+            shutil.rmtree(Path(self.output_path) / "json", ignore_errors=True)
 
         if self.can_do("logout"):
             self.crawler.logout()
@@ -208,39 +206,38 @@ class App:
         logger.info("Compressing output...")
 
         # Get which paths to be archived with their base names
-        path_to_process = []
+        path_to_process: list[tuple[Path, str]] = []
         for fmt in available_formats:
-            root_dir = os.path.join(self.output_path, fmt)
-            if os.path.isdir(root_dir):
+            root_dir: Path = Path(self.output_path) / fmt
+            if root_dir.is_dir():
                 path_to_process.append(
-                    [root_dir, self.good_file_name + " (" + fmt + ")"]
+                    (root_dir, self.good_file_name + " (" + fmt + ")")
                 )
 
         # Archive files
         self.archived_outputs = []
         for root_dir, output_name in path_to_process:
-            file_list = os.listdir(root_dir)
+            file_list = list(root_dir.glob("*"))
             if len(file_list) == 0:
                 logger.info("It has no files: %s", root_dir)
                 continue
 
-            archived_file = None
             if (
                 len(file_list) == 1
                 and not archive_singles
-                and not os.path.isdir(os.path.join(root_dir, file_list[0]))
+                and not (root_dir / file_list[0]).is_dir()
             ):
                 logger.info("Not archiving single file inside %s" % root_dir)
-                archived_file = os.path.join(root_dir, file_list[0])
+                archived_file = (root_dir / file_list[0]).as_posix()
             else:
-                base_path = os.path.join(self.output_path, output_name)
+                base_path = Path(self.output_path) / output_name
                 logger.info("Compressing %s to %s" % (root_dir, base_path))
                 archived_file = shutil.make_archive(
-                    base_path,
+                    base_path.as_posix(),
                     format="zip",
                     root_dir=root_dir,
                 )
-                logger.info("Compressed: %s", os.path.basename(archived_file))
+                logger.info("Compressed: %s", Path(archived_file).name)
 
             if archived_file:
                 self.archived_outputs.append(archived_file)

@@ -3,7 +3,7 @@ To download chapter bodies
 """
 import json
 import logging
-import os
+from pathlib import Path
 
 from ..models.chapter import Chapter
 from ..utils.imgen import generate_cover_image
@@ -17,13 +17,13 @@ def _chapter_file(
     output_path: str,
     pack_by_volume: bool,
 ):
-    dir_name = os.path.join(output_path, "json")
+    dir_name = Path(output_path) / "json"
     if pack_by_volume:
         vol_name = "Volume " + str(chapter.volume).rjust(2, "0")
-        dir_name = os.path.join(dir_name, vol_name)
+        dir_name = dir_name / vol_name
 
     chapter_name = str(chapter.id).rjust(5, "0")
-    json_file = os.path.join(dir_name, chapter_name + ".json")
+    json_file = dir_name / (chapter_name + ".json")
     return json_file
 
 
@@ -54,8 +54,8 @@ def _save_chapter(app, chapter: Chapter):
         output_path=app.output_path,
         pack_by_volume=app.pack_by_volume,
     )
-    os.makedirs(os.path.dirname(file_name), exist_ok=True)
-    with open(file_name, "w", encoding="utf-8") as fp:
+    file_name.parent.mkdir(parents=True, exist_ok=True)
+    with file_name.open("w", encoding="utf-8") as fp:
         json.dump(chapter, fp, ensure_ascii=False)
 
 
@@ -80,9 +80,9 @@ def fetch_chapter_body(app):
                 old_chapter = json.load(file)
                 chapter.update(**old_chapter)
         except FileNotFoundError:
-            logger.info("Missing File: %s Retrieved!" % (file_name))
+            logger.info("Missing File: %s Retrieved!" % file_name)
         except json.JSONDecodeError:
-            logger.info("Unable to decode JSON from the file: %s" % (file_name))
+            logger.info("Unable to decode JSON from the file: %s" % file_name)
         except Exception as e:
             logger.exception("An error occurred while reading the file:", e)
 
@@ -100,22 +100,22 @@ def fetch_chapter_body(app):
     logger.info(f"Processed {len(app.chapters)} chapters [{app.progress} fetched]")
 
 
-def _fetch_content_image(app, url, image_file):
+def _fetch_content_image(app, url, image_file: Path):
     from .app import App
 
     assert isinstance(app, App)
 
-    if url and not os.path.isfile(image_file):
+    if url and not (image_file.exists() and image_file.is_file()):
         try:
             img = app.crawler.download_image(url)
-            os.makedirs(os.path.dirname(image_file), exist_ok=True)
+            image_file.parent.mkdir(parents=True, exist_ok=True)
             if img.mode not in ("L", "RGB", "YCbCr", "RGBX"):
                 if img.mode == "RGBa":
                     #RGBa -> RGB isn't supported so we go through RGBA first
                     img.convert("RGBA").convert("RGB")
                 else:
                     img = img.convert("RGB")
-            img.save(image_file, "JPEG", optimized=True)
+            img.save(image_file.as_posix(), "JPEG", optimized=True)
             img.close()
             logger.debug("Saved image: %s", image_file)
         finally:
@@ -129,7 +129,7 @@ def _fetch_cover_image(app):
     assert app.crawler is not None
 
     filename = "cover.jpg"
-    cover_file = os.path.join(app.output_path, filename)
+    cover_file = Path(app.output_path) / filename
     if app.crawler.novel_cover:
         try:
             _fetch_content_image(
@@ -141,12 +141,12 @@ def _fetch_cover_image(app):
             if logger.isEnabledFor(logging.DEBUG):
                 logger.exception("Failed to download cover", e)
 
-    if not os.path.isfile(cover_file):
-        generate_cover_image(cover_file)
+    if not cover_file.exists() and cover_file.is_file():
+        generate_cover_image(cover_file.as_posix())
 
     app.progress += 1
     app.book_cover = cover_file
-    assert os.path.isfile(app.book_cover), "Failed to download or generate cover image"
+    assert Path(app.book_cover).is_file(), "Failed to download or generate cover image"
 
 
 def _discard_failed_images(app, chapter, failed):
@@ -191,7 +191,7 @@ def fetch_chapter_images(app):
     ]
 
     # download content images
-    image_folder = os.path.join(app.output_path, "images")
+    image_folder = Path(app.output_path) / "images"
     images_to_download = set(
         [
             (filename, url)
@@ -204,7 +204,7 @@ def fetch_chapter_images(app):
             _fetch_content_image,
             app,
             url,
-            os.path.join(image_folder, filename),
+            image_folder / filename,
         )
         for filename, url in images_to_download
     ]
@@ -215,7 +215,7 @@ def fetch_chapter_images(app):
         failed = [
             filename
             for filename, url in images_to_download
-            if not os.path.isfile(os.path.join(image_folder, filename))
+            if not (image_folder / filename).is_file()
         ]
     finally:
         logger.info("Processed %d images [%d failed]" % (app.progress, len(failed)))

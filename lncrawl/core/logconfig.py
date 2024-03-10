@@ -65,8 +65,8 @@ def configure_logging():
     }
     if not log_file:
         del config["handlers"]["file"]
-        config["root"]["level"] = level
+        config["root"]["level"] = logging.getLevelName(level)
         config["root"]["handlers"] = ["console"]
-        config["handlers"]["console"]["level"] = level
+        config["handlers"]["console"]["level"] = logging.getLevelName(level)
 
     logging.config.dictConfig(config)

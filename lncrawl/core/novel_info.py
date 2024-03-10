@@ -1,6 +1,6 @@
 import math
-import os
 import re
+from pathlib import Path
 from typing import Dict
 
 from .. import constants as C
@@ -108,6 +108,6 @@ def save_metadata(app, completed=False):
         ),
     )
 
-    os.makedirs(app.output_path, exist_ok=True)
-    file_name = os.path.join(app.output_path, C.META_FILE_NAME)
+    Path(app.output_path).mkdir(parents=True, exist_ok=True)
+    file_name = Path(app.output_path) / C.META_FILE_NAME
     novel.to_json(file_name, encoding="utf-8", indent=2)

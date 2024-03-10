@@ -83,7 +83,7 @@ def __download_data(url: str):
 __index_fetch_internval_in_seconds = 30 * 60
 __master_index_file_url = "https://raw.githubusercontent.com/dipu-bd/lightnovel-crawler/master/sources/_index.json"
 
-__user_data_path = Path(os.path.expanduser("~")) / ".lncrawl"
+__user_data_path = Path("~").expanduser() / ".lncrawl"
 __local_data_path = Path(__file__).parent.parent.absolute()
 if not (__local_data_path / "sources").is_dir():
     __local_data_path = __local_data_path.parent
@@ -110,7 +110,7 @@ def __load_current_index():
 
 def __save_current_index():
     index_file = __user_data_path / "sources" / "_index.json"
-    os.makedirs(index_file.parent, exist_ok=True)
+    index_file.parent.mkdir(parents=True, exist_ok=True)
 
     logger.debug("Saving current index data to %s", index_file)
     with open(index_file, "w", encoding="utf8") as fp:
@@ -170,12 +170,12 @@ def __save_source_data(source_id, data):
     dst_dir = dst_file.parent
     temp_file = dst_dir / ("." + dst_file.name)
 
-    os.makedirs(dst_dir, exist_ok=True)
+    dst_dir.mkdir(parents=True, exist_ok=True)
     with open(temp_file, "wb") as fp:
         fp.write(data)
 
     if dst_file.exists():
-        os.remove(dst_file)
+        dst_file.unlink()
     temp_file.rename(dst_file)
 
     global __current_index
