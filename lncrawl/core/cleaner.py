@@ -4,7 +4,7 @@ import sys
 import unicodedata
 from typing import AnyStr, Dict, List, Set, Union
 
-from bs4 import Comment, Tag, PageElement
+from bs4 import Comment, Tag
 
 LINE_SEP = "<br>"
 
@@ -15,8 +15,6 @@ INVISIBLE_CHARS = [
 ]
 NONPRINTABLE = itertools.chain(range(0x00, 0x20), range(0x7F, 0xA0), INVISIBLE_CHARS)
 NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
-
-TAG_LIKE = Union[Comment, PageElement, Tag]
 
 
 class TextCleaner:
@@ -176,7 +174,8 @@ class TextCleaner:
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()  # Remove comments
-            elif not isinstance(tag, Tag):
+                continue
+            if not isinstance(tag, Tag):
                 continue  # Skip elements that are not a Tag
             if tag.name in self.bad_tags:
                 tag.extract()  # Remove bad tags
@@ -203,14 +202,14 @@ class TextCleaner:
         )
         return text
 
-    def extract_on_duplicate_sibling(self, tag: TAG_LIKE):
+    def extract_on_duplicate_sibling(self, tag: Tag):
         next_tag = tag.next_sibling
         if not isinstance(next_tag, Tag):
             return
         if next_tag.name == tag.name:
             tag.extract()
 
-    def clean_attributes(self, tag: TAG_LIKE):
+    def clean_attributes(self, tag: Tag):
         attrs = {}
         for name, value in tag.attrs.items():
             if name not in self.whitelist_attributes:
@@ -234,7 +233,7 @@ class TextCleaner:
             self.bad_tag_text_pairs[tag.name] = pattern
         return bool(pattern.search(tag.text))
 
-    def clean_image(self, tag: TAG_LIKE):
+    def clean_image(self, tag: Tag):
         src = None
         for name in self.image_src_attributes:
             src = tag.get(name)
