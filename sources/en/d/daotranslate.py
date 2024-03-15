@@ -10,7 +10,7 @@ search_url = "https://daotranslate.us/?s=%s"
 
 
 class DaoTranslateCrawler(Crawler):
-    base_url = ["https://daotranslate.com/","https://daotranslate.us/"]
+    base_url = ["https://daotranslate.com/", "https://daotranslate.us/"]
     has_mtl = True
 
     def initialize(self):
