@@ -113,12 +113,12 @@ class WebToonsCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         logger.info("Visiting %s", chapter["url"])
-        soup = self.get_soup(chapter["url"])
+        soup = self.get_soup(chapter["url"], headers={'Referer': f'{self.novel_url}'})
         contents = soup.select_one("#_imageList")
 
         for img in contents.findAll("img"):
-            if img.has_attr("data-src"):
-                src_url = img["data-src"]
+            if img.has_attr("data-url"):
+                src_url = img["data-url"]
                 parent = img.parent
                 img.extract()
                 new_tag = soup.new_tag("img", src=src_url)
