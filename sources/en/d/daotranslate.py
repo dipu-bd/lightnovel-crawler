@@ -6,11 +6,11 @@ from bs4 import Tag
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
-search_url = "https://daotranslate.us/?s=%s"
+search_url = "https://daotranslate.com/?s=%s"
 
 
 class DaoTranslateCrawler(Crawler):
-    base_url = ["https://daotranslate.com/", "https://daotranslate.us/"]
+    base_url = "https://daotranslate.com/"
     has_mtl = True
 
     def initialize(self):
