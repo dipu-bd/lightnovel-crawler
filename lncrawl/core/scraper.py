@@ -105,7 +105,7 @@ class Scraper(TaskManager, SoupMaker):
         headers.setdefault("Referer", self.last_soup_url or self.home_url)
         headers.setdefault("User-Agent", self.user_agent)
         kwargs["headers"] = {
-            str(k).encode("ascii"): str(v).encode("ascii")
+            str(k).encode("utf-8"): str(v).encode("utf-8")
             for k, v in headers.items()
             if v
         }
