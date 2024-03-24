@@ -16,6 +16,8 @@ class RenovelsCrawler(Crawler):
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
+        script = json.loads(soup.select_one("script#__NEXT_DATA__").get_text())
+        novel_id = script["props"]["pageProps"]["fallbackData"]["content"]['branches'][0]["id"]
 
         possible_title = soup.select_one("h1[itemprop='name']")
         if possible_title:
@@ -28,15 +30,12 @@ class RenovelsCrawler(Crawler):
             self.novel_synopsis = possible_synopsis.get_text()
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
-        img_src = soup.select_one("div img")
-        if img_src:
-            self.novel_cover = self.absolute_url(img_src["src"])
+        img_src = script["props"]["pageProps"]["fallbackData"]["content"]['img']['high']
+        self.novel_cover = self.base_url[0].rstrip("/") + img_src
+        logger.info("Novel cover: %s", self.novel_cover)
 
-        script = json.loads(soup.select_one("script#__NEXT_DATA__").get_text())
-        novel_id = script["props"]["pageProps"]["fallbackData"]["content"]['branches'][0]["id"]
         page = 1
         pre_chapters = []
-
         while True:
             chapters = self.get_json(chapters_api.format(novel_id, page))["content"]
             for chapter in chapters:
