@@ -7,7 +7,10 @@ logger = logging.getLogger(__name__)
 
 
 class IfreedomCrawler(Crawler):
-    base_url = ["https://ifreedom.su/"]
+    base_url = [
+        "https://ifreedom.su/",
+        "https://bookhamster.ru/"
+    ]
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
