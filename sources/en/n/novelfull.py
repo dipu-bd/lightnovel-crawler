@@ -10,6 +10,7 @@ class NovelFullCrawler(NovelFullTemplate):
     base_url = [
         "http://novelfull.com/",
         "https://novelfull.com/",
+        "https://novelfull.net/",
     ]
 
     def initialize(self) -> None:

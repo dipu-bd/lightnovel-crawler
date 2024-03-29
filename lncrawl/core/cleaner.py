@@ -32,96 +32,86 @@ class TextCleaner:
             # the tag will be removed if the text inside contains the pattern
         }
 
-        self.bad_tags: Set[str] = set(
-            [
-                # tag names to remove
-                "address",
-                "amp-auto-ads",
-                "audio",
-                "button",
-                "figcaption",
-                "footer",
-                "form",
-                "header",
-                "iframe",
-                "input",
-                "ins",
-                "map",
-                "nav",
-                "noscript",
-                "object",
-                "output",
-                "pirate",
-                "script",
-                "select",
-                "source",
-                "style",
-                "textarea",
-                "tfoot",
-                "video",
-            ]
-        )
-        self.bad_css: Set[str] = set(
-            [
-                # css selector to select and remove tags
-                ".adblock-service",
-                ".sharedaddy",
-                ".saboxplugin-wrap",
-                ".adbox",
-                ".ads-middle",
-                ".ads",
-                ".adsbygoogle",
-                ".adsense-code",
-                ".cb_p6_patreon_button",
-                ".code-block",
-                ".ezoic-ad-adaptive",
-                ".ezoic-ad",
-                ".ezoic-adpicker-ad",
-                ".googlepublisherads",
-                ".inline-ad-slot",
-                ".jp-relatedposts",
-                ".sharedaddy",
-                ".wp-post-navigation",
-                "a[href*='patreon.com']",
-                "a[href*='paypal.me']",
-            ]
-        )
-        self.p_block_tags: Set[str] = set(
-            [
-                # tags that can be used as paragraph break
-                "article",
-                "aside",
-                "div",
-                "h1",
-                "h2",
-                "h3",
-                "h4",
-                "h5",
-                "h6",
-                "main",
-                "p",
-                "section",
-            ]
-        )
-        self.unchanged_tags: Set[str] = set(
-            [
-                # tags to keep unchanged with text and attributes
-                "canvas",
-                "img",
-                "pre",
-            ]
-        )
-        self.plain_text_tags: Set[str] = set(
-            [
-                # tags that will be joined together in a paragraph
-                "a",
-                "abbr",
-                "acronym",
-                "label",
-                "span",
-                "time",
-            ]
-        )
+        self.bad_tags: Set[str] = {
+            # tag names to remove
+            "address",
+            "amp-auto-ads",
+            "audio",
+            "button",
+            "figcaption",
+            "footer",
+            "form",
+            "header",
+            "iframe",
+            "input",
+            "ins",
+            "map",
+            "nav",
+            "noscript",
+            "object",
+            "output",
+            "pirate",
+            "script",
+            "select",
+            "source",
+            "style",
+            "textarea",
+            "tfoot",
+            "video",
+        }
+        self.bad_css: Set[str] = {
+            # css selector to select and remove tags
+            ".adblock-service",
+            ".sharedaddy",
+            ".saboxplugin-wrap",
+            ".adbox",
+            ".ads-middle",
+            ".ads",
+            ".adsbygoogle",
+            ".adsense-code",
+            ".cb_p6_patreon_button",
+            ".code-block",
+            ".ezoic-ad-adaptive",
+            ".ezoic-ad",
+            ".ezoic-adpicker-ad",
+            ".googlepublisherads",
+            ".inline-ad-slot",
+            ".jp-relatedposts",
+            ".sharedaddy",
+            ".wp-post-navigation",
+            "a[href*='patreon.com']",
+            "a[href*='paypal.me']",
+        }
+        self.p_block_tags: Set[str] = {
+            # tags that can be used as paragraph break
+            "article",
+            "aside",
+            "div",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "main",
+            "p",
+            "section",
+        }
+        self.unchanged_tags: Set[str] = {
+            # tags to keep unchanged with text and attributes
+            "canvas",
+            "img",
+            "pre",
+        }
+        self.plain_text_tags: Set[str] = {
+            # tags that will be joined together in a paragraph
+            "a",
+            "abbr",
+            "acronym",
+            "label",
+            "span",
+            "time",
+        }
         self.substitutions: Dict[str, str] = {
             # replace one string with another one
             # "&": "&amp;",
@@ -133,27 +123,28 @@ class TextCleaner:
             # "“s": "'s",
             # "”s": "'s",
         }
-        self.whitelist_attributes: Set[str] = set(
-            [
-                # the attributes to keep while cleaning a tag
-                "src",
-                "style",
-            ]
-        )
-        self.whitelist_css_property: Set[str] = set(
-            [
-                # the css styles to keep while cleaning style tag
-                "font-style",
-                "font-weight",
-            ]
-        )
-        self.image_src_attributes: Set[str] = set(
-            [
-                "data-lazy-src",
-                "data-src",
-                "src",
-            ]
-        )
+        self.whitelist_attributes: Set[str] = {
+            # the attributes to keep while cleaning a tag
+            "src",
+            "style",
+            # table and table children attributes
+            "colspan",
+            "rowspan",
+            "headers",
+            "scope",
+            "axis",
+            "id",  # id required for headers ref
+        }
+        self.whitelist_css_property: Set[str] = {
+            # the css styles to keep while cleaning style tag
+            "font-style",
+            "font-weight",
+        }
+        self.image_src_attributes: Set[str] = {
+            "data-lazy-src",
+            "data-src",
+            "src",
+        }
 
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
@@ -183,7 +174,8 @@ class TextCleaner:
         for tag in div.find_all(True):
             if isinstance(tag, Comment):
                 tag.extract()  # Remove comments
-            elif not isinstance(tag, Tag):
+                continue
+            if not isinstance(tag, Tag):
                 continue  # Skip elements that are not a Tag
             if tag.name in self.bad_tags:
                 tag.extract()  # Remove bad tags
@@ -217,7 +209,7 @@ class TextCleaner:
         if next_tag.name == tag.name:
             tag.extract()
 
-    def clean_attributes(self, tag: Tag) -> dict:
+    def clean_attributes(self, tag: Tag):
         attrs = {}
         for name, value in tag.attrs.items():
             if name not in self.whitelist_attributes:
@@ -239,7 +231,7 @@ class TextCleaner:
         if not isinstance(pattern, re.Pattern):
             pattern = re.compile(pattern, re.M)
             self.bad_tag_text_pairs[tag.name] = pattern
-        return pattern.search(tag.text)
+        return bool(pattern.search(tag.text))
 
     def clean_image(self, tag: Tag):
         src = None
@@ -319,4 +311,4 @@ class TextCleaner:
         if not hasattr(self, "__blacklist__"):
             pattern = re.compile("|".join(["(%s)" % p for p in self.bad_text_regex]))
             self.__blacklist__ = pattern
-        return self.__blacklist__.search(text)
+        return bool(self.__blacklist__.search(text))
