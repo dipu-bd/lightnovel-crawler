@@ -155,6 +155,7 @@ class Crawler(Scraper):
             unit="item",
             fail_fast=fail_fast,
         )
+        chapter = None
         for (index, future) in futures.items():
             try:
                 chapter = chapters[index]
@@ -162,8 +163,9 @@ class Crawler(Scraper):
                 self.extract_chapter_images(chapter)
                 chapter.success = True
             except Exception as e:
-                chapter.body = ""
-                chapter.success = False
+                if isinstance(chapter, Chapter):
+                    chapter.body = ""
+                    chapter.success = False
                 if isinstance(e, KeyboardInterrupt):
                     break
             finally:

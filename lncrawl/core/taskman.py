@@ -136,7 +136,7 @@ class TaskManager(ABC):
         """Limit number of entry per hostname.
 
         Args:
-            url: A fully qualified url.
+            hostname: A fully qualified url.
 
         Returns:
             A semaphore object to wait.
@@ -179,6 +179,7 @@ class TaskManager(ABC):
             disable_bar: Hides the progress bar if True.
             desc: The progress bar description
             unit: The progress unit name
+            fail_fast: Fail on first error
         """
         if not futures:
             return
