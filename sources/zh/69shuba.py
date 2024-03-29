@@ -14,9 +14,9 @@ headers = {
     "Accept-Language": "en-US,en;q=0.9,de-CH;q=0.8,de;q=0.7",
     "Cache-Control": "no-cache",
     "Content-Type": "application/x-www-form-urlencoded",
-    "Origin": "https://www.69xinshu.com",
+    "Origin": "https://www.69shu.pro",
     "DNT": "1",
-    "Referer": "https://www.69xinshu.com/modules/article/search.php",
+    "Referer": "https://www.69shu.pro/modules/article/search.php",
     "Connection": "keep-alive",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Opera GX";v="106"',
@@ -28,7 +28,7 @@ headers = {
 }
 
 logger = logging.getLogger(__name__)
-search_url = "https://www.69xinshu.com/modules/article/search.php"    # Updated to the new domain
+search_url = "https://www.69shu.pro/modules/article/search.php"    # Updated to the new domain
 
 
 class sixnineshu(Crawler):
@@ -36,6 +36,7 @@ class sixnineshu(Crawler):
         "https://www.69shuba.com/",
         "https://www.69shu.com/",
         "https://www.69xinshu.com/",
+        "https://www.69shu.pro/"
     ]
 
     def initialize(self):

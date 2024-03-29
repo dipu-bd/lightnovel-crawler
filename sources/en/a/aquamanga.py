@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class AquaMangaCrawler(Crawler):
     has_manga = True
-    base_url = ["https://aquamanga.com/"]
+    base_url = ["https://aquamanga.com/", "https://aquamanga.org/"]
 
     search_url = "%s?s=%s&post_type=wp-manga&author=&artist=&release="
 
