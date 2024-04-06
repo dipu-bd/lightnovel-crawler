@@ -6,6 +6,7 @@ import os
 from concurrent import futures
 from typing import Dict, List
 
+from bs4 import Tag
 from slugify import slugify
 from tqdm import tqdm
 
@@ -43,9 +44,17 @@ def _perform_search(app, link, bar):
 def _combine_results(results: List[SearchResult]) -> List[CombinedSearchResult]:
     combined: Dict[str, List[SearchResult]] = {}
     for item in results:
+
+        if item.title is None:
+            continue
+        elif isinstance(item.title, Tag):
+            item.title = item.title.get_text()
+
         key = slugify(item.title)
+
         if len(key) <= 2:
             continue
+
         combined.setdefault(key, [])
         combined[key].append(item)
 
