@@ -162,11 +162,11 @@ class Crawler(Scraper):
                 chapter.body = future.result()
                 self.extract_chapter_images(chapter)
                 chapter.success = True
-            except Exception as e:
+            except KeyboardInterrupt:
+                break
+            except Exception:
                 if isinstance(chapter, Chapter):
                     chapter.body = ""
                     chapter.success = False
-                if isinstance(e, KeyboardInterrupt):
-                    break
             finally:
                 yield 1
