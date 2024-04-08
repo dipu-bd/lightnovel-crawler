@@ -45,13 +45,6 @@ def _combine_results(results: List[SearchResult]) -> List[CombinedSearchResult]:
     combined: Dict[str, List[SearchResult]] = {}
     for item in results:
 
-        if item.title is None:
-            logger.warn(f'Title is type None in {item}')
-            continue
-        elif isinstance(item.title, Tag):
-            logger.warn(f'Title is type Tag in {item}')
-            item.title = item.title.get_text()
-
         key = slugify(item.title)
 
         if len(key) <= 2:
