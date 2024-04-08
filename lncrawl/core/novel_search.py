@@ -6,7 +6,6 @@ import os
 from concurrent import futures
 from typing import Dict, List
 
-from bs4 import Tag
 from slugify import slugify
 from tqdm import tqdm
 
