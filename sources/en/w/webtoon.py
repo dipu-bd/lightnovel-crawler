@@ -11,7 +11,7 @@ class WebToonsCrawler(Crawler):
     has_manga = True
     base_url = ["https://www.webtoons.com/"]
 
-    search_url = "%ssearch?keyword=%s"
+    search_url = "%s/en/search?keyword=%s"
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3"])
@@ -28,7 +28,7 @@ class WebToonsCrawler(Crawler):
         results = []
         for tab in soup.select("ul.card_lst li"):
             a = tab.select_one("a")
-            title = tab.select_one("p.subj")
+            title = tab.select_one("p.subj").get_text()
             results.append(
                 {
                     "title": title,
@@ -38,7 +38,7 @@ class WebToonsCrawler(Crawler):
 
         for tab in soup1.select("div.challenge_lst.search ul"):
             a = tab.select_one("a.challenge_item")
-            title = tab.select_one("p.subj")
+            title = tab.select_one("p.subj").get_text()
             results.append(
                 {
                     "title": title,
@@ -53,6 +53,8 @@ class WebToonsCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         possible_title = soup.select_one("h1.subj")
+        if possible_title is None:
+            possible_title = soup.select_one("h3.subj")
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
