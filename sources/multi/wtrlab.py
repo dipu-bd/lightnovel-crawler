@@ -85,9 +85,9 @@ class WtrLab(Crawler):
         assert chapter_json
 
         logger.info("chapeter %s", chapter_json)
-
+        chapter_details = chapter_json['props']['pageProps']['serie']['chapter']
         # adjust chapter title as the one from the overview usually lacks details
-        chapter.title = chapter_json['props']['pageProps']['serie']['chapter_data']['data']['title']
+        chapter.title = chapter_details['code'] + " " + chapter_details['title']
         # get all text
         text_lines = chapter_json['props']['pageProps']['serie']['chapter_data']['data']['body']
 
