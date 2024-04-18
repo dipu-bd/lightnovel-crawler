@@ -59,7 +59,7 @@ class WtrLab(Crawler):
             chap_id = 1 + idx
             vol_id = 1 + len(self.chapters) // 100
             vol_title = f"Volume {vol_id}"
-            url = f"{self.host}{lang}/serie-{serie_id}/{novel_slug}/chapter-{chapter['slug']}"
+            url = f"{self.host}{lang}/serie-{serie_id}/{novel_slug}/chapter-{chapter['order']}"
             if chap_id % 100 == 1:
                 self.volumes.append(
                     Volume(
