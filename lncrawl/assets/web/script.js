@@ -1,5 +1,7 @@
-// Handle key events
-window.addEventListener("keyup", function (evt) {
+let keyPressTimer = null;
+let navigationInterval = null;
+
+window.addEventListener("keydown", function (evt) {
   function goToHref(el) {
     if (!el) return;
     const href = el.getAttribute("href");
@@ -7,18 +9,34 @@ window.addEventListener("keyup", function (evt) {
     window.location.href = href;
   }
 
-
-    switch (evt.key) {
-      case "ArrowLeft":
+  // Start navigation on keydown event
+  switch (evt.key) {
+    case "ArrowLeft":
+      keyPressTimer = setTimeout(() => {
         goToHref(document.querySelector("a.prev-button"));
-        break;
-      case "ArrowRight":
+        navigationInterval = setInterval(() => {
+          goToHref(document.querySelector("a.prev-button"));
+        }, 50);
+      }, 10);
+      break;
+    case "ArrowRight":
+      keyPressTimer = setTimeout(() => {
         goToHref(document.querySelector("a.next-button"));
-        break;
-      default:
-        break;
-    }
-  });
+        navigationInterval = setInterval(() => {
+          goToHref(document.querySelector("a.next-button"));
+        }, 50);
+      }, 10);
+      break;
+    default:
+      break;
+  }
+});
+
+window.addEventListener("keyup", function (evt) {
+  // Stop navigation when key is released
+  clearInterval(keyPressTimer);
+  clearInterval(navigationInterval);
+});
 
 // Handle next TOC select
 function addTocSelectListener() {
@@ -38,9 +56,8 @@ function debouncedUpdate(evt) {
     var height = document.body.scrollHeight - window.innerHeight + 10;
     var percent = Math.round((100.0 * scroll) / height);
     document.getElementById("readpos").innerText = percent + "%";
-  }, 100);  // 100ms delay
+  }, 100); // 100ms delay
 }
-
 
 window.addEventListener("scroll", debouncedUpdate);
 
