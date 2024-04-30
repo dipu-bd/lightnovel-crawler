@@ -11,9 +11,9 @@ class SearchResult(Box):
         info: str = "",
         **kwargs,
     ) -> None:
-        self.title = title
-        self.url = url
-        self.info = info
+        self.title = str(title)
+        self.url = str(url)
+        self.info = str(info)
         self.update(kwargs)
 
 
@@ -26,6 +26,6 @@ class CombinedSearchResult(Box):
         **kwargs,
     ) -> None:
         self.id = id
-        self.title = title
+        self.title = str(title)
         self.novels = novels
         self.update(kwargs)

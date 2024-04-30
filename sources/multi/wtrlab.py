@@ -59,7 +59,7 @@ class WtrLab(Crawler):
             chap_id = 1 + idx
             vol_id = 1 + len(self.chapters) // 100
             vol_title = f"Volume {vol_id}"
-            url = f"{self.host}{lang}/serie-{serie_id}/{novel_slug}/chapter-{chapter['slug']}"
+            url = f"{self.host}{lang}/serie-{serie_id}/{novel_slug}/chapter-{chapter['order']}"
             if chap_id % 100 == 1:
                 self.volumes.append(
                     Volume(
@@ -85,9 +85,9 @@ class WtrLab(Crawler):
         assert chapter_json
 
         logger.info("chapeter %s", chapter_json)
-
+        chapter_details = chapter_json['props']['pageProps']['serie']['chapter']
         # adjust chapter title as the one from the overview usually lacks details
-        chapter.title = chapter_json['props']['pageProps']['serie']['chapter_data']['data']['title']
+        chapter.title = chapter_details['code'] + " " + chapter_details['title']
         # get all text
         text_lines = chapter_json['props']['pageProps']['serie']['chapter_data']['data']['body']
 

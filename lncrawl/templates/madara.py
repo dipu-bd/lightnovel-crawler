@@ -46,11 +46,12 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
 
     def parse_cover(self, soup: BeautifulSoup) -> str:
         tag = soup.select_one(".summary_image a img")
-        assert tag
-        if tag.has_attr("data-src"):
-            return self.absolute_url(tag["data-src"])
-        if tag.has_attr("src"):
-            return self.absolute_url(tag["src"])
+        if isinstance(tag, Tag):
+            if tag.has_attr("data-src"):
+                return self.absolute_url(tag["data-src"])
+            if tag.has_attr("src"):
+                return self.absolute_url(tag["src"])
+        return ''
 
     def parse_authors(self, soup: BeautifulSoup):
         for a in soup.select('.author-content a[href*="manga-author"]'):
@@ -66,7 +67,8 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
                 raise Exception("No chapters on first URL")
         except Exception:
             nl_id = soup.select_one("#manga-chapters-holder[data-id]")
-            assert isinstance(nl_id, Tag)
+            if not isinstance(nl_id, Tag):
+                raise Exception('No chapter chapter id tag found')
             response = self.submit_form(
                 f"{self.home_url}wp-admin/admin-ajax.php",
                 data={

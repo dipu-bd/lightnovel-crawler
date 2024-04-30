@@ -43,7 +43,7 @@ class ChrysanthemumGarden(Crawler):
 
         possible_image = soup.select_one(".novel-cover img")
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
+            self.novel_cover = self.absolute_url(possible_image["data-breeze"])
         logger.info("Novel cover: %s", self.novel_cover)
 
         volumes = set([])

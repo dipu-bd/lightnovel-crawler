@@ -3,15 +3,13 @@ import os
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Semaphore, Thread
-from typing import Dict, Iterable, List, Optional, TypeVar
+from typing import Any, Dict, Iterable, List, Optional
 
 from tqdm import tqdm
 
 from ..utils.ratelimit import RateLimiter
 
 logger = logging.getLogger(__name__)
-
-T = TypeVar("T")
 
 MAX_WORKER_COUNT = 5
 MAX_REQUESTS_PER_DOMAIN = 25
@@ -21,15 +19,19 @@ _host_semaphores: Dict[str, Semaphore] = {}
 
 
 class TaskManager(ABC):
-    def __init__(self) -> None:
+    def __init__(
+        self,
+        workers: int = MAX_WORKER_COUNT,
+        ratelimit: Optional[float] = None,
+    ) -> None:
         """A helper class for task queueing and parallel task execution.
         It is being used as a superclass of the Crawler.
 
         Args:
-        - workers (int, optional): Number of concurrent workers to expect. Default: 10.
+        - workers (int, optional): Number of concurrent workers to expect. Default: 5.
         - ratelimit (float, optional): Number of requests per second.
         """
-        self.init_executor(MAX_WORKER_COUNT)
+        self.init_executor(workers, ratelimit)
 
     def __del__(self) -> None:
         if hasattr(self, "_executor"):
@@ -61,7 +63,8 @@ class TaskManager(ABC):
         it will shutdown the current executor, and cancel all pending tasks.
 
         Args:
-        - workers (int): Number of workers to expect in the new executor.
+        - workers (int, optional): Number of concurrent workers to expect. Default: 5.
+        - ratelimit (float, optional): Number of requests per second.
         """
         self._futures: List[Future] = []
         self.__del__()  # cleanup previous initialization
@@ -78,7 +81,7 @@ class TaskManager(ABC):
         )
 
         self._submit = self._executor.submit
-        self._executor.submit = self.submit_task
+        setattr(self._executor, 'submit', self.submit_task)
 
     def submit_task(self, fn, *args, **kwargs) -> Future:
         """Submits a callable to be executed with the given arguments.
@@ -91,6 +94,8 @@ class TaskManager(ABC):
         """
         if hasattr(self, "_limiter"):
             fn = self._limiter.wrap(fn)
+        if not self._submit:
+            raise Exception('No executor is available')
         future = self._submit(fn, *args, **kwargs)
         self._futures.append(future)
         return future
@@ -102,7 +107,7 @@ class TaskManager(ABC):
         total=None,
         unit=None,
         disable=False,
-        timeout: float = None,
+        timeout: Optional[float] = None,
     ):
         if os.getenv("debug_mode"):
             disable = True
@@ -164,12 +169,12 @@ class TaskManager(ABC):
     def resolve_futures(
         self,
         futures: Iterable[Future],
-        timeout: float = None,
+        timeout: Optional[float] = None,
         disable_bar=False,
         desc=None,
         unit=None,
         fail_fast=False,
-    ) -> None:
+    ) -> List[Any]:
         """Wait for the futures to be done.
 
         Args:
@@ -182,27 +187,32 @@ class TaskManager(ABC):
             fail_fast: Fail on first error
         """
         if not futures:
-            return
+            return []
 
+        _futures = list(futures or [])
         bar = self.progress_bar(
             desc=desc,
             unit=unit,
-            total=len(futures),
+            total=len(_futures),
             disable=disable_bar,
             timeout=timeout,
         )
 
+        _results = []
         try:
-            for future in futures:
+            for future in _futures:
                 if fail_fast:
-                    future.result(timeout)
+                    r = future.result(timeout)
+                    _results.append(r)
                     bar.update()
                     continue
                 try:
-                    future.result(timeout)
+                    r = future.result(timeout)
+                    _results.append(r)
+                except KeyboardInterrupt:
+                    break
                 except Exception as e:
-                    if isinstance(e, KeyboardInterrupt):
-                        break
+                    _results.append(None)
                     if bar.disable:
                         logger.exception("Failure to resolve future")
                     else:
@@ -210,6 +220,10 @@ class TaskManager(ABC):
                         logger.warning(f"{type(e).__name__}: {e}")
                 finally:
                     bar.update()
+        except KeyboardInterrupt:
+            pass
         finally:
             Thread(target=lambda: self.cancel_futures(futures)).start()
             bar.close()
+
+        return _results

@@ -11,7 +11,8 @@ import colorama
 from ..assets.version import get_version
 from ..bots import run_bot
 from .arguments import get_args
-from .display import cancel_method, description, error_message, input_suppression
+from .display import (cancel_method, description, error_message,
+                      input_suppression)
 from .logconfig import configure_logging
 from .proxy import load_proxies, start_proxy_fetcher, stop_proxy_fetcher
 from .sources import load_sources
@@ -66,9 +67,10 @@ def start_app():
     try:
         bot = os.getenv("BOT", "").lower()
         run_bot(bot)
-    except Exception as e:
-        if not isinstance(e, KeyboardInterrupt):
-            error_message(*sys.exc_info())
+    except KeyboardInterrupt:
+        pass
+    except Exception:
+        error_message(*sys.exc_info())
 
     if args.auto_proxy:
         stop_proxy_fetcher()

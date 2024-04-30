@@ -10,6 +10,7 @@ class AllNovelCrawler(NovelFullTemplate):
     base_url = [
         "https://allnovel.org/",
         "https://www.allnovel.org/",
+        "https://allnovelxo.com/"
     ]
 
     def initialize(self) -> None:

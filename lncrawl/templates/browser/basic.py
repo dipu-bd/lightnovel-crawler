@@ -96,7 +96,11 @@ class BasicBrowserTemplate(Crawler):
         finally:
             self.close_browser()
 
-    def download_chapters(self, chapters: List[Chapter]) -> Generator[int, None, None]:
+    def download_chapters(
+            self,
+            chapters: List[Chapter],
+            fail_fast=False,
+    ) -> Generator[int, None, None]:
         try:
             yield from super().download_chapters(chapters, fail_fast=True)
         except ScraperErrorGroup as e:
