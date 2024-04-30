@@ -16,7 +16,7 @@ window.addEventListener("keydown", function (evt) {
         goToHref(document.querySelector("a.prev-button"));
         navigationInterval = setInterval(() => {
           goToHref(document.querySelector("a.prev-button"));
-        }, 50);
+        }, 400);
       }, 10);
       break;
     case "ArrowRight":
@@ -24,7 +24,7 @@ window.addEventListener("keydown", function (evt) {
         goToHref(document.querySelector("a.next-button"));
         navigationInterval = setInterval(() => {
           goToHref(document.querySelector("a.next-button"));
-        }, 50);
+        }, 400);
       }, 10);
       break;
     default:
