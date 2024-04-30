@@ -107,7 +107,7 @@ class TaskManager(ABC):
         total=None,
         unit=None,
         disable=False,
-        timeout: float | None = None,
+        timeout: Optional[float] = None,
     ):
         if os.getenv("debug_mode"):
             disable = True
@@ -169,7 +169,7 @@ class TaskManager(ABC):
     def resolve_futures(
         self,
         futures: Iterable[Future],
-        timeout: float | None = None,
+        timeout: Optional[float] = None,
         disable_bar=False,
         desc=None,
         unit=None,
