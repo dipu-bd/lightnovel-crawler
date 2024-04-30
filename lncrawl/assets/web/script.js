@@ -1,41 +1,49 @@
 let keyPressTimer = null;
 let navigationInterval = null;
 
-window.addEventListener("keydown", function (evt) {
-  function goToHref(el) {
-    if (!el) return;
-    const href = el.getAttribute("href");
-    if (href === "#") return;
-    window.location.href = href;
-  }
+function goToHref(el) {
+  if (!el) return;
+  const href = el.getAttribute("href");
+  if (href === "#") return;
+  window.location.href = href;
+}
 
-  // Start navigation on keydown event
+window.addEventListener("keyup", function (evt) {
+  clearInterval(keyPressTimer);
+  clearInterval(navigationInterval);
   switch (evt.key) {
     case "ArrowLeft":
-      keyPressTimer = setTimeout(() => {
-        goToHref(document.querySelector("a.prev-button"));
-        navigationInterval = setInterval(() => {
-          goToHref(document.querySelector("a.prev-button"));
-        }, 400);
-      }, 10);
+      goToHref(document.querySelector("a.prev-button"));
       break;
     case "ArrowRight":
-      keyPressTimer = setTimeout(() => {
-        goToHref(document.querySelector("a.next-button"));
-        navigationInterval = setInterval(() => {
-          goToHref(document.querySelector("a.next-button"));
-        }, 400);
-      }, 10);
+      goToHref(document.querySelector("a.next-button"));
       break;
     default:
       break;
   }
 });
 
-window.addEventListener("keyup", function (evt) {
-  // Stop navigation when key is released
+window.addEventListener("keydown", function (evt) {
   clearInterval(keyPressTimer);
   clearInterval(navigationInterval);
+  switch (evt.key) {
+    case "ArrowLeft":
+      keyPressTimer = setTimeout(() => {
+        navigationInterval = setInterval(() => {
+          goToHref(document.querySelector("a.prev-button"));
+        }, 50);
+      }, 450);
+      break;
+    case "ArrowRight":
+      keyPressTimer = setTimeout(() => {
+        navigationInterval = setInterval(() => {
+          goToHref(document.querySelector("a.next-button"));
+        }, 50);
+      }, 450);
+      break;
+    default:
+      break;
+  }
 });
 
 // Handle next TOC select
