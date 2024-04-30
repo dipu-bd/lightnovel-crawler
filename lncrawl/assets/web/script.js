@@ -1,24 +1,50 @@
-// Handle key events
+let keyPressTimer = null;
+let navigationInterval = null;
+
+function goToHref(el) {
+  if (!el) return;
+  const href = el.getAttribute("href");
+  if (href === "#") return;
+  window.location.href = href;
+}
+
 window.addEventListener("keyup", function (evt) {
-  function goToHref(el) {
-    if (!el) return;
-    const href = el.getAttribute("href");
-    if (href === "#") return;
-    window.location.href = href;
+  clearInterval(keyPressTimer);
+  clearInterval(navigationInterval);
+  switch (evt.key) {
+    case "ArrowLeft":
+      goToHref(document.querySelector("a.prev-button"));
+      break;
+    case "ArrowRight":
+      goToHref(document.querySelector("a.next-button"));
+      break;
+    default:
+      break;
   }
+});
 
-
-    switch (evt.key) {
-      case "ArrowLeft":
-        goToHref(document.querySelector("a.prev-button"));
-        break;
-      case "ArrowRight":
-        goToHref(document.querySelector("a.next-button"));
-        break;
-      default:
-        break;
-    }
-  });
+window.addEventListener("keydown", function (evt) {
+  clearInterval(keyPressTimer);
+  clearInterval(navigationInterval);
+  switch (evt.key) {
+    case "ArrowLeft":
+      keyPressTimer = setTimeout(() => {
+        navigationInterval = setInterval(() => {
+          goToHref(document.querySelector("a.prev-button"));
+        }, 50);
+      }, 450);
+      break;
+    case "ArrowRight":
+      keyPressTimer = setTimeout(() => {
+        navigationInterval = setInterval(() => {
+          goToHref(document.querySelector("a.next-button"));
+        }, 50);
+      }, 450);
+      break;
+    default:
+      break;
+  }
+});
 
 // Handle next TOC select
 function addTocSelectListener() {
@@ -38,9 +64,8 @@ function debouncedUpdate(evt) {
     var height = document.body.scrollHeight - window.innerHeight + 10;
     var percent = Math.round((100.0 * scroll) / height);
     document.getElementById("readpos").innerText = percent + "%";
-  }, 100);  // 100ms delay
+  }, 100); // 100ms delay
 }
-
 
 window.addEventListener("scroll", debouncedUpdate);
 
