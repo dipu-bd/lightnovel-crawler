@@ -52,6 +52,12 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
             ]
         )
 
+    def read_novel_info(self) -> None:
+        novel_soup = super().read_novel_info()
+
+        self.novel_tags = [a.text.strip() for a in novel_soup.select(".stag")]
+        self.novel_synopsis = novel_soup.select_one(".wi_fic_desc").text.strip()
+
     def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
         # self.visit(
         #     urljoin(

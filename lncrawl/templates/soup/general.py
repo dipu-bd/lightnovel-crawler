@@ -12,7 +12,11 @@ logger = logging.getLogger(__name__)
 
 
 class GeneralSoupTemplate(Crawler):
-    def read_novel_info(self) -> None:
+    def read_novel_info(self) -> BeautifulSoup:
+        '''Read novel information from the source
+
+        Returns soup to allow further parsing in subclasses
+        '''
         soup = self.get_novel_soup()
 
         try:
@@ -36,6 +40,8 @@ class GeneralSoupTemplate(Crawler):
                 self.chapters.append(item)
             elif isinstance(item, Volume):
                 self.volumes.append(item)
+
+        return soup
 
     def get_novel_soup(self) -> BeautifulSoup:
         return self.get_soup(self.novel_url)
