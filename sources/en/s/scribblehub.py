@@ -95,7 +95,7 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
             return self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
-        for a in soup.select(".nauth_name_fic"):
+        for a in soup.select(".auth_name_fic"):
             yield a.text.strip()
 
     def parse_chapter_list_in_browser(
