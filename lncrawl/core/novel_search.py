@@ -85,7 +85,7 @@ def search_novels(app):
         for item in f.result() or []:
             if not (item and item.title):
                 continue
-            key = slugify(item.title)
+            key = slugify(str(item.title))
             if len(key) <= 2:
                 continue
             combined.setdefault(key, [])
