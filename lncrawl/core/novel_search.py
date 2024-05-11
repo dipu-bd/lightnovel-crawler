@@ -83,7 +83,7 @@ def search_novels(app):
         if not f or not f.done() or f.cancelled():
             continue
         for item in f.result() or []:
-            if not item:
+            if not (item and item.title):
                 continue
             key = slugify(item.title)
             if len(key) <= 2:
