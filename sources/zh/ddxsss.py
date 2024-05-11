@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 class DdxSss(Crawler):
     base_url = [
-        "https://www.ddxsss.com/",
+        "https://www.ddxss.cc/",
     ]
     # custom banned text as it's all loose and the cleaner deletes the whole chapter if used in bad_text_*
     banned_text = [
