@@ -7,6 +7,7 @@ from typing import Dict, List
 
 from concurrent.futures import Future
 from slugify import slugify
+import difflib
 
 from ..models import CombinedSearchResult, SearchResult
 from .sources import crawler_list, prepare_crawler
@@ -101,5 +102,10 @@ def search_novels(app):
                 novels=value,
             )
         )
-    processed.sort(key=lambda x: -len(x.novels))
+    processed.sort(
+        key=lambda x: (
+            -len(x.novels),
+            -difflib.SequenceMatcher(None, x.title, app.user_input).ratio(),
+        )
+    )
     app.search_results = processed[:MAX_RESULTS]
