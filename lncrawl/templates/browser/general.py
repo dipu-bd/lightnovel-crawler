@@ -39,6 +39,8 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
             elif isinstance(item, Volume):
                 self.volumes.append(item)
 
+        return soup
+
     def visit_novel_page_in_browser(self) -> BeautifulSoup:
         """Open the Novel URL in the browser"""
         self.visit(self.novel_url)
