@@ -39,7 +39,7 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
             elif isinstance(item, Volume):
                 self.volumes.append(item)
 
-        return soup
+        self.parse_additional_info(soup)
 
     def visit_novel_page_in_browser(self) -> BeautifulSoup:
         """Open the Novel URL in the browser"""
@@ -66,6 +66,8 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
                 self.chapters.append(item)
             elif isinstance(item, Volume):
                 self.volumes.append(item)
+
+        self.parse_additional_info_in_browser()
 
     def parse_title_in_browser(self) -> str:
         """Parse and return the novel title in the browser"""
@@ -102,3 +104,12 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
     def select_chapter_body_in_browser(self) -> Tag:
         """Select the tag containing the chapter text in the browser"""
         return self.select_chapter_body(self.browser.soup)
+
+    def parse_additional_info_in_browser(self) -> None:
+        """Parse additional information from the novel page in the browser"""
+        self.parse_additional_info(self.browser.soup)
+
+    def parse_additional_info(self, soup: BeautifulSoup) -> None:
+        """Parse additional information from the novel page"""
+        pass
+

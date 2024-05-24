@@ -12,11 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class GeneralSoupTemplate(Crawler):
-    def read_novel_info(self) -> BeautifulSoup:
-        '''Read novel information from the source
-
-        Returns soup to allow further parsing in subclasses
-        '''
+    def read_novel_info(self) -> None:
         soup = self.get_novel_soup()
 
         try:

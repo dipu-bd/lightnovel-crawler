@@ -52,9 +52,7 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
             ]
         )
 
-    def read_novel_info_in_scraper(self) -> None:
-        novel_soup = super().read_novel_info_in_scraper()
-
+    def parse_additional_info(self, soup: BeautifulSoup) -> None:
         self.novel_tags = [a.text.strip() for a in novel_soup.select(".stag")]
         self.novel_synopsis = novel_soup.select_one(".wi_fic_desc").text.strip()
 
