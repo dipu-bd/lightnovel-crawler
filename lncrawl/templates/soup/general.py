@@ -37,8 +37,6 @@ class GeneralSoupTemplate(Crawler):
             elif isinstance(item, Volume):
                 self.volumes.append(item)
 
-        return soup
-
     def get_novel_soup(self) -> BeautifulSoup:
         return self.get_soup(self.novel_url)
 
