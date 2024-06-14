@@ -105,7 +105,9 @@ class NovelasLigerasCrawler(Crawler):
         last_vol_id = 0
         chapters_count = 0
 
-        for a in soup.select(".wpb_wrapper a:not([id],[title],[target],[href$='suscripciones/'])"):
+        for a in soup.select(
+            ".wpb_wrapper a:not([id],[title],[href$='suscripciones/'],[href*='patreon'],[href*='paypal'])"
+        ):
             if not re.search(pattern, a["href"]):
                 continue
             chapters_count += 1
@@ -119,15 +121,26 @@ class NovelasLigerasCrawler(Crawler):
                 vol_id = last_vol_id
 
             vol_present = any(vol["id"] == vol_id for vol in self.volumes)
+            vol_title = f"Volumen {vol_id}"
             if not vol_present:
-                self.volumes.append(Volume(id=vol_id, title=f"Vol. {vol_id}"))
+                self.volumes.append(Volume(id=vol_id, title=vol_title))
+
+            temp_title = a.text.strip()
+            temp_title = re.sub(r"\bCapitulo\b", "Capítulo", temp_title)
+
+            if "Parte" in temp_title and "Capítulo" in temp_title:
+                partes = temp_title.split(" – ")
+                title = " – ".join(partes[::-1])
+            else:
+                title = temp_title
 
             self.chapters.append(
                 Chapter(
                     id=chap_id,
-                    title=a.text.strip(),
+                    title=title,
                     url=self.absolute_url(a["href"]),
                     volume=vol_id,
+                    volume_title=vol_title,
                 )
             )
 
