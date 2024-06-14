@@ -105,7 +105,7 @@ class NovelasLigerasCrawler(Crawler):
         last_vol_id = 0
         chapters_count = 0
 
-        for a in soup.select(".wpb_wrapper p a"):
+        for a in soup.select(".wpb_wrapper a:not([id],[title],[target],[href$='suscripciones/'])"):
             if not re.search(pattern, a["href"]):
                 continue
             chapters_count += 1
