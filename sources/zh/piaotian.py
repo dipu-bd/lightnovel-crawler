@@ -21,7 +21,7 @@ class PiaoTian(Crawler):
         # https://www.piaotia.com/bookinfo/8/8866.html -> https://www.piaotia.com/html/8/8866/
         if self.novel_url.startswith("%sbookinfo/" % self.home_url):
             self.novel_url = self.novel_url.replace("/bookinfo/", "/html/").replace(".html", "/")
-        
+
         if self.novel_url.endswith("index.html"):
             self.novel_url = self.novel_url.replace("/index.html", "/")
 
