@@ -43,7 +43,7 @@ class sixnineshu(Crawler):
     def initialize(self):
         # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
         self.init_parser("html.parser")
-        self.init_executor(ratelimit=3)
+        self.init_executor(ratelimit=20)
 
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))
