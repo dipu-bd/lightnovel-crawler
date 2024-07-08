@@ -19,7 +19,7 @@ class IxdzsCrawler(Crawler):
         """
         This manually 'fixes' URLs and prepares them for usage later on in string templating.
         """
-        url = url[:-1] if not url.endswith("/") else url
+        url = url[:-1] if url.endswith("/") else url
         if "https://tw.m.ixdzs.com" in url:
             return url.replace("https://tw.m.ixdzs.com", "https://ixdzs8.tw")
         if "https://www.aixdzs.com" in url:
