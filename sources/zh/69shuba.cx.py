@@ -86,8 +86,8 @@ class sixnineshu(Crawler):
             self.novel_tags = [possible_tag.text.strip()]
         logger.info("Novel Tag: %s", self.novel_tags)
 
-        chapter_catalog = self.get_soup(f'{self.novel_url[:-4]}/', encoding="gbk")
 
+        chapter_catalog = self.get_soup(f'{self.novel_url[:-4]}/', encoding="gbk")
         chapter_list = chapter_catalog.select("div#catalog li")
 
         for item in reversed(chapter_list):
