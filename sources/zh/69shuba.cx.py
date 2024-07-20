@@ -37,7 +37,6 @@ class sixnineshu(Crawler):
     ]
 
     def initialize(self):
-        # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
         self.init_parser("html.parser")
         self.init_executor(ratelimit=20)
 
@@ -49,7 +48,6 @@ class sixnineshu(Crawler):
             headers=headers,
             data=data,
             encoding="gbk",
-            # cookies=self.cookies2,
         )
 
         results = []
@@ -83,19 +81,15 @@ class sixnineshu(Crawler):
             self.novel_author = possible_author.text.strip()
         logger.info("Novel Author: %s", self.novel_author)
 
-        # Only one category per novel on this website
         possible_tag = soup.select_one('div.booknav2 > p:nth-child(4) > a')
         if isinstance(possible_tag, Tag):
             self.novel_tags = [possible_tag.text.strip()]
         logger.info("Novel Tag: %s", self.novel_tags)
 
-        # https://www.69shuba.com/txt/A43616.htm -> https://www.69shuba.com/A43616/
-        # soup = self.get_soup(self.novel_url.replace("/txt/", "/").replace(".htm", "/"), encoding="gbk")
-
-        # manually correct their false chapter identifiers if need be
         chapter_catalog = self.get_soup(f'{self.novel_url[:-4]}/', encoding="gbk")
-        # logger.debug(chapter_catalog.select("div#catalog li"))
+
         chapter_list = chapter_catalog.select("div#catalog li")
+
         for item in reversed(chapter_list):
             chap_id = int(item["data-num"])
             vol_id = len(self.chapters) // 100 + 1
