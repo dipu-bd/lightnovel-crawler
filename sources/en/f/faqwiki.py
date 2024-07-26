@@ -9,7 +9,10 @@ logger = logging.getLogger(__name__)
 
 
 class FaqWiki(Crawler):
-    base_url = ["https://faqwiki.us/"]
+    base_url = [
+        "https://faqwiki.us/",
+        "https://www.faqwiki.us/",
+    ]
     has_manga = False
     has_mtl = True
 
