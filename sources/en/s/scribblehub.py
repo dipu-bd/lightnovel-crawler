@@ -52,6 +52,10 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
             ]
         )
 
+    def parse_additional_info(self, soup: BeautifulSoup) -> None:
+        self.novel_tags = [a.text.strip() for a in novel_soup.select(".stag")]
+        self.novel_synopsis = novel_soup.select_one(".wi_fic_desc").text.strip()
+
     def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
         # self.visit(
         #     urljoin(
@@ -95,7 +99,7 @@ class ScribbleHubCrawler(SearchableBrowserTemplate):
             return self.absolute_url(tag["src"])
 
     def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
-        for a in soup.select(".nauth_name_fic"):
+        for a in soup.select(".auth_name_fic"):
             yield a.text.strip()
 
     def parse_chapter_list_in_browser(
