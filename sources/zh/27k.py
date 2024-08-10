@@ -58,7 +58,7 @@ class LeYueDu(Crawler):
             results.append(
                 {
                     "title": novel.select_one("h3 a:not([imgbox])").text.title(),
-                    "url": self.absolute_url(novel.select_one("li a.imgbox")["href"]),
+                    "url": self.absolute_url(novel.select_one("h3 a")["href"]),
                     "info": "Latest: %s" % novel.select_one("div.zxzj p").text.replace("最近章节", ""),
                 }
             )
