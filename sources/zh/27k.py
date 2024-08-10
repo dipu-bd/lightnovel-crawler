@@ -36,6 +36,8 @@ class LeYueDu(Crawler):
         "https://so.27k.net",
         "https://www.27k.net",
         "https://m.27k.net",
+        "https://tw.27k.net",
+        "https://www.lreads.com",
     ]
 
     def initialize(self):
