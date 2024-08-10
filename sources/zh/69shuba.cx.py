@@ -43,7 +43,7 @@ class sixnineshu(Crawler):
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))
         data = f"searchkey={query}&searchtype=all"
-        soup = self.get_soup(
+        soup = self.post_soup(
             search_url,
             headers=headers,
             data=data,
@@ -55,8 +55,8 @@ class sixnineshu(Crawler):
             results.append(
                 {
                     "title": novel.select_one("h3 a:not([imgbox])").text.title(),
-                    "url": self.absolute_url(novel.select_one("h3 a.imgbox")["href"]),
-                    "info": "Latest: %s" % novel.select_one("div.zxzj p").text,
+                    "url": self.absolute_url(novel.select_one("h3 a")["href"]),
+                    "info": "Latest: %s" % novel.select_one("div.zxzj p").text.replace("最近章节", ""),
                 }
             )
 
