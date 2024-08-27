@@ -141,7 +141,7 @@ def _fetch_cover_image(app):
             if logger.isEnabledFor(logging.DEBUG):
                 logger.exception("Failed to download cover", e)
 
-    if not cover_file.exists() and cover_file.is_file():
+    if not cover_file.is_file():
         generate_cover_image(cover_file.as_posix())
 
     app.progress += 1
