@@ -2,6 +2,28 @@
 import logging
 
 from lncrawl.core.crawler import Crawler
+import urllib.parse
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,"
+              "application/signed-exchange;v=b3;q=0.7",
+    "Accept-Encoding": "gzip, deflate, utf-8",
+    "Accept-Language": "en-US,en;q=0.9,de-CH;q=0.8,de;q=0.7",
+    "Cache-Control": "no-cache",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Origin": "https://www.piaotia.com",
+    "DNT": "1",
+    "Referer": "https://www.piaotia.com/modules/article/search.php",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Ch-Ua": '"Not_A Brand";v="8", "Chromium";v="120", "Opera GX";v="106"',
+    "Sec-Ch-Ua-Platform": "Windows",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-User": "?1",
+}
 
 logger = logging.getLogger(__name__)
 
@@ -13,8 +35,51 @@ class PiaoTian(Crawler):
     base_url = [
         "https://www.piaotian.com",
         "https://www.ptwxz.com",
-        "https://www.piaotia.com"
+        "https://www.piaotia.com",
     ]
+
+    def search_novel(self, query):
+        query = urllib.parse.quote(query.encode("gbk"))
+        search = urllib.parse.quote(" 搜 索 ".encode("gbk"))
+        data = f"searchtype=articlename&searchkey={query}&Submit={search}"
+        headers["Origin"] = self.home_url
+        headers["Referer"] = novel_search_url % self.home_url
+
+        response = self.post_response(
+            novel_search_url % self.home_url,
+            headers=headers,
+            data=data,
+        )
+        soup = self.make_soup(response, "gbk")
+
+        results = []
+
+        # if there is only one result, the search page redirects to bookinfo page of that result
+        if response.url.startswith("%sbookinfo/" % self.home_url):
+            author = soup.select('div#content table tr td[width]')[2].get_text()
+            author = author.replace(u'\xa0', "").replace("作 者：", "")
+            results.append(
+                {
+                    "title": soup.select_one("div#content table table table h1").get_text(),
+                    "url": response.url,
+                    "info": f"Author: {author}",
+                }
+            )
+
+        else:
+            for data in soup.select("div#content table tr")[1:]:
+                title = data.select_one("td a").get_text()
+                author = data.select("td")[2].get_text()
+                url = data.select_one("td a")["href"]
+
+                results.append(
+                    {
+                        "title": title,
+                        "url": url,
+                        "info": f"Author: {author}",
+                    }
+                )
+        return results
 
     def read_novel_info(self):
         # Transform bookinfo page into chapter list page
