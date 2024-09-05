@@ -28,12 +28,13 @@ headers = {
 }
 
 logger = logging.getLogger(__name__)
-search_url = "https://69shuba.cx/modules/article/search.php"
+search_url = "%s/modules/article/search.php"
 
 
 class sixnineshu(Crawler):
     base_url = [
-        "https://69shuba.cx"
+        "https://69shuba.cx",
+        "https://69shu.me",
     ]
 
     def initialize(self):
@@ -43,8 +44,11 @@ class sixnineshu(Crawler):
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))
         data = f"searchkey={query}&searchtype=all"
+        headers["Origin"] = self.home_url
+        headers["Referer"] = search_url % self.home_url
+
         soup = self.post_soup(
-            search_url,
+            search_url % self.home_url,
             headers=headers,
             data=data,
             encoding="gbk",
