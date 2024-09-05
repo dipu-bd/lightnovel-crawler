@@ -13,13 +13,12 @@ logger = logging.getLogger(__name__)
 class DdxSss(Crawler):
     base_url = [
         "https://www.ddxss.cc/",
-    ]
-    # custom banned text as it's all loose and the cleaner deletes the whole chapter if used in bad_text_*
-    banned_text = [
-        "请收藏本站：https://www.ddxsss.com。顶点小说手机版：https://m.ddxsss.com",
+        "https://www.ddtxt8.cc/",
     ]
 
     def initialize(self):
+        self.init_executor(ratelimit=20)
+
         # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
         self.init_parser("html.parser")
         self.cleaner.bad_tags.update(["script", "a"])
@@ -27,6 +26,19 @@ class DdxSss(Crawler):
             ".noshow",
             "div.Readpage.pagedown",
         ])
+
+        # p tags should only show up after being parsed and formatted the first time
+        self.cleaner.bad_tag_text_pairs["p"] = [
+            "请收藏本站：",
+            "顶点小说手机版：",
+            "您可以在百度里搜索",
+            "最新章节地址：",
+            "全文阅读地址：",
+            "txt下载地址：",
+            "手机阅读：",
+            '为了方便下次阅读，你可以点击下方的"收藏"记录本次',
+            "请向你的朋友（QQ、博客、微信等方式）推荐本书，谢谢您的支持！！",
+        ]
 
     def search_novel(self, query):
         data = self.get_json(
@@ -105,9 +117,9 @@ class DdxSss(Crawler):
         soup = self.get_soup(chapter.url, encoding="utf-8")
         contents = soup.select_one("div#chaptercontent")
         text = self.cleaner.extract_contents(contents)
-        for bad_text in self.banned_text:
-            text = text.replace(bad_text, "")
         # chapter title is usually present but without space between chapter X and the title
         text = text.replace(chapter.title, "")
         text = text.replace(chapter.title.replace(" ", ""), "")
+        # remove paragraphs with bad text after parsing linebreaks
+        text = self.cleaner.extract_contents(self.make_soup(text))
         return text
