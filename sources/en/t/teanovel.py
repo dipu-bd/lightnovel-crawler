@@ -36,7 +36,7 @@ class TeaNovelCrawler(Crawler):
         if isinstance(img_tag, Tag):
             self.novel_cover = self.absolute_url(img_tag["src"])
 
-        chapters = self.get_soup(self.novel_url + "/chapter-list").select("a.border-b[href*='became']")
+        chapters = self.get_soup(self.novel_url + "/chapter-list").select("a.border-b")
         for chapter in chapters:
             chapter_id = len(self.chapters) + 1
             self.chapters.append(
