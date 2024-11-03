@@ -27,12 +27,14 @@ class MyDramaNovel(Crawler):
 
         # the synopsis may start like this :
         # "<p>Original Title: 春花厌</p><p>Author: Hei Yan</p><p>Raw Link : Chun Hua Yan</p><p>Mal..."
-        # try to extract the author from the synopsis safely
-        try:
-            self.novel_author = (
-                self.novel_synopsis.split("<p>Author:")[1].split("</p>")[0].strip()
-            )
-        except:
+        parts = self.novel_synopsis.split("<p>Author:")
+        if len(parts) > 1:
+            author_part = parts[1].split("</p>")
+            if len(author_part) > 0:
+                self.novel_author = author_part[0].strip()
+            else:
+                self.novel_author = None
+        else:
             self.novel_author = None
 
         self.volumes.append(
