@@ -12,7 +12,7 @@ from ..utils.ratelimit import RateLimiter
 logger = logging.getLogger(__name__)
 
 MAX_WORKER_COUNT = 5
-MAX_REQUESTS_PER_DOMAIN = 25
+MAX_REQUESTS_PER_DOMAIN = 3
 
 _resolver = Semaphore(1)
 _host_semaphores: Dict[str, Semaphore] = {}
