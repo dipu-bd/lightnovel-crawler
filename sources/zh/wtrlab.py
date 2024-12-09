@@ -46,24 +46,33 @@ class WtrLabCrawler(GeneralSoupTemplate):
             yield "Unknown Author"
 
     def parse_chapter_list(
-        self, soup: BeautifulSoup
-    ) -> Generator[Union[Chapter, Volume], None, None]:
-        chapters_section = soup.find("div", class_="chapter-list")
-        if not chapters_section:
-            raise ValueError("Chapter list not found on the page.")
+    self, soup: BeautifulSoup
+) -> Generator[Union[Chapter, Volume], None, None]:
+    # Locate the chapter list container
+    chapters_section = soup.find("div", class_="chapter-list")
+    if not chapters_section:
+        logger.error("Chapter list not found on the page.")
+        raise ValueError("Chapter list not found on the page.")
+    
+    # Initialize volume
+    volume_id = 1
+    volume = Volume(id=volume_id, title=f"Volume {volume_id}")
+    yield volume
 
-        volume_id = 1
-        volume = Volume(id=volume_id, title=f"Volume {volume_id}")
-        yield volume
+    # Parse chapters
+    for chapter_tag in chapters_section.find_all("a", class_="chapter-item"):
+        chapter_title = chapter_tag.find("span").text.strip()
+        chapter_url = self.absolute_url(chapter_tag["href"])
 
-        for chapter_tag in chapters_section.find_all("a", class_="chapter-item"):
-            chapter = Chapter(
-                id=len(self.chapters) + 1,
-                title=chapter_tag.find("span").text.strip(),
-                url=self.absolute_url(chapter_tag["href"]),
-                volume=volume_id,
-            )
-            yield chapter
+        # Generate Chapter object
+        chapter = Chapter(
+            id=len(self.chapters) + 1,
+            title=chapter_title,
+            url=chapter_url,
+            volume=volume_id,
+        )
+        yield chapter
+
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         chapter_body = soup.find("div", class_="chapter-content")
