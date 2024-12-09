@@ -10,7 +10,12 @@ logger = logging.getLogger(__name__)
 
 
 class WtrLabCrawler(GeneralSoupTemplate):
-    base_url = ["https://wtr-lab.com/en"]
+    base_url = ["https://wtr-lab.com/en",
+                "http://wtr-lab.com/en",
+                "https://www.wtr-lab.com/en",
+                "http://www.wtr-lab.com/en",
+                "https://wtr-lab.com",
+                "http://wtr-lab.com"]
 
     def initialize(self) -> None:
         logger.info("Initializing WtrLabCrawler")
