@@ -15,7 +15,7 @@ class WtrLabCrawler(GeneralSoupTemplate):
                 "https://www.wtr-lab.com/en",
                 "http://www.wtr-lab.com/en",
                 "https://wtr-lab.com",
-                "http://wtr-lab.com"]
+                "http://wtr-lab.com",]
 
     def initialize(self) -> None:
         logger.info("Initializing WtrLabCrawler")
