@@ -21,7 +21,12 @@ class WtrLab(Crawler):
         Essentially the same framework as webfic though with some other keys, urls, etc.
     """
 
-    base_url = ["https://wtr-lab.com/"]
+    base_url = [
+        "https://wtr-lab.com",
+        "http://wtr-lab.com",
+        "https://www.wtr-lab.com",
+        "http://www.wtr-lab.com",
+    ]
     has_manga = False
     has_mtl = True
     host = ""
