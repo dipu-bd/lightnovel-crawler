@@ -31,7 +31,7 @@ black
 flake8
 tk-tools
 pyinstaller
-setuptools<=60.0.0
+setuptools>=70.0.0
 # cryptography<=3.3.2
 # cssutils>=1.0.0,<2.7.0
 # win_unicode_console~=0.5
