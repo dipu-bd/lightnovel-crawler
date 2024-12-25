@@ -19,6 +19,14 @@ class MtlnovelCrawler(Crawler):
         "http://id.mtlnovel.com/",
         "http://fr.mtlnovel.com/",
         "http://es.mtlnovel.com/",
+        "https://www.mtlnovels.com/",
+        "https://id.mtlnovels.com/",
+        "https://fr.mtlnovels.com/",
+        "https://es.mtlnovels.com/",
+        "http://www.mtlnovels.com/",
+        "http://id.mtlnovels.com/",
+        "http://fr.mtlnovels.com/",
+        "http://es.mtlnovels.com/",
     ]
 
     def initialize(self):
