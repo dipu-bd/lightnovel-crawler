@@ -91,6 +91,5 @@ class SyosetuCrawler(Crawler):
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one(".p-novel__body")
-        logger.debug(f'Contents: {contents}')
         contents = self.cleaner.extract_contents(contents)
         return contents
