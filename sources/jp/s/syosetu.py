@@ -65,7 +65,6 @@ class SyosetuCrawler(Crawler):
         chapter_id = 0
         self.volumes.append({'id': 0})
         for soup in soups:
-            # soup.contents[1].contents[3].contents[5].contents[1].contents[18].contents[14].contents
             for tag in soup.select_one(".p-eplist"):
 
                 if type(tag) is element.NavigableString:
