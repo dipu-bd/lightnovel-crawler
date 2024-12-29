@@ -77,11 +77,15 @@ class RoyalRoadCrawler(Crawler):
         if possible_title and "Chapter" in possible_title.text:
             chapter["title"] = possible_title.text.strip()
 
-        chapter_contents = soup.select(".chapter-content")
-        for chapter_content in chapter_contents:
-            for html_tags in chapter_content.contents:
-                if html_tags.name == 'div':
-                    html_tags.decompose()
+        classnames = []
+        for style in soup.select("style"):
+            style = style.text.replace(" ", "").replace("\n", "")
+            if style.endswith("{display:none;speak:never;}"):
+                classnames.append(style[1:-27])
+
+        for classname in classnames:
+            for div in soup.find_all("p", {"class": classname}):
+                div.decompose()
 
         contents = soup.select_one(".chapter-content")
         self.cleaner.clean_contents(contents)
