@@ -70,7 +70,7 @@ class SyosetuCrawler(Crawler):
                 if type(tag) is element.NavigableString:
                     continue
 
-                if 'p-eplist__chapter-title'in tag.attrs.get('class', ''):
+                if 'p-eplist__chapter-title' in tag.attrs.get('class', ''):
                     # Part/volume (there might be none)
                     volume_id += 1
                     self.volumes.append({
