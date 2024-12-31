@@ -8,7 +8,7 @@ search_url = "https://www.royalroad.com/fictions/search?keyword=%s"
 
 
 class RoyalRoadCrawler(Crawler):
-    base_url = "https://www.royalroad.com/",
+    base_url = "https://www.royalroad.com/"
 
     def initialize(self):
         self.init_executor(1)
