@@ -8,53 +8,7 @@ search_url = "https://www.royalroad.com/fictions/search?keyword=%s"
 
 
 class RoyalRoadCrawler(Crawler):
-    base_url = "https://www.royalroad.com/",
-    watermark_set = set("This book's true home is on another platform. Check it out there for the real experience.",
-                        "This tale has been unlawfully lifted from Royal Road. If you spot it on Amazon, please report it.",
-                        "This novel's true home is a different platform. Support the author by finding it there.",
-                        "Stolen from its rightful place, this narrative is not meant to be on Amazon; report any sightings.",
-                        "If you discover this tale on Amazon, be aware that it has been stolen. Please report the violation.",
-                        "If you find this story on Amazon, be aware that it has been stolen. Please report the infringement.",
-                        "Enjoying this book? Seek out the original to ensure the author gets credit.",
-                        "Did you know this text is from a different site? Read the official version to support the creator.",
-                        "The tale has been illicitly lifted; should you spot it on Amazon, report the violation.",
-                        "The tale has been taken without authorization; if you see it on Amazon, report the incident.",
-                        "Ensure your favorite authors get the support they deserve. Read this novel on Royal Road.",
-                        "Reading on Amazon or a pirate site? This novel is from Royal Road. Support the author by reading it there.",
-                        "The tale has been stolen; if detected on Amazon, report the violation.",
-                        "A case of content theft: this narrative is not rightfully on Amazon; if you spot it, report the violation.",
-                        "Love this novel? Read it on Royal Road to ensure the author gets credit.",
-                        "The story has been stolen; if detected on Amazon, report the violation.",
-                        "If you come across this story on Amazon, be aware that it has been stolen from Royal Road. Please report it.",
-                        "Stolen from its original source, this story is not meant to be on Amazon; report any sightings.",
-                        "The author's narrative has been misappropriated; report any instances of this story on Amazon.",
-                        "If you come across this story on Amazon, it's taken without permission from the author. Report it.",
-                        "The author's tale has been misappropriated; report any instances of this story on Amazon.",
-                        "Stolen from its rightful author, this tale is not meant to be on Amazon; report any sightings.",
-                        "Stolen content alert: this content belongs on Royal Road. Report any occurrences.",
-                        "Did you know this story is from Royal Road? Read the official version for free and support the author.",
-                        "Unauthorized duplication: this tale has been taken without consent. Report sightings.",
-                        "This narrative has been unlawfully taken from Royal Road. If you see it on Amazon, please report it.",
-                        "Stolen content warning: this content belongs on Royal Road. Report any occurrences.",
-                        "Help support creative writers by finding and reading their stories on the original site.",
-                        "If you stumble upon this narrative on Amazon, it's taken without the author's consent. Report it.",
-                        "If you discover this narrative on Amazon, be aware that it has been stolen. Please report the violation.",
-                        "If you spot this narrative on Amazon, know that it has been stolen. Report the violation.",
-                        "This tale has been unlawfully lifted without the author's consent. Report any appearances on Amazon.",
-                        "If you encounter this tale on Amazon, note that it's taken without the author's consent. Report it.",
-                        "This tale has been pilfered from Royal Road. If found on Amazon, kindly file a report.",
-                        "This story has been stolen from Royal Road. If you read it on Amazon, please report it",
-                        "Enjoying the story? Show your support by reading it on the official site.",
-                        "The genuine version of this novel can be found on another site. Support the author by reading it there.",
-                        "This story is posted elsewhere by the author. Help them out by reading the authentic version.",
-                        "Love what you're reading? Discover and support the author on the platform they originally published on.",
-                        "Stolen story; please report.",
-                        "The narrative has been stolen; if detected on Amazon, report the infringement.",
-                        "Support the creativity of authors by visiting the original site for this novel and more.",
-                        "This tale has been unlawfully obtained from Royal Road. If you discover it on Amazon, kindly report it.",
-                        "Reading on this site? This novel is published elsewhere. Support the author by seeking out the original.",
-                        "Stolen from Royal Road, this story should be reported if encountered on Amazon.",
-                        "This story originates from a different website. Ensure the author gets the support they deserve by reading it there.")
+    base_url = "https://www.royalroad.com/"
 
     def initialize(self):
         self.init_executor(1)
@@ -123,11 +77,15 @@ class RoyalRoadCrawler(Crawler):
         if possible_title and "Chapter" in possible_title.text:
             chapter["title"] = possible_title.text.strip()
 
-        chapter_contents = soup.select(".chapter-content")
-        for chapter_content in chapter_contents:
-            for html_tags in chapter_content.contents:
-                if html_tags.name == 'div' and html_tags.string in self.watermark_set:
-                    html_tags.decompose()
+        classnames = []
+        for style in soup.select("style"):
+            style = style.text.replace(" ", "").replace("\n", "")
+            if style.endswith("{display:none;speak:never;}"):
+                classnames.append(style[1:-27])
+
+        for classname in classnames:
+            for div in soup.find_all("p", {"class": classname}):
+                div.decompose()
 
         contents = soup.select_one(".chapter-content")
         self.cleaner.clean_contents(contents)
