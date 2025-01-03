@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from urllib.parse import urlencode
-import js2py
+import execjs
 from bs4.element import Tag
 
 from lncrawl.core.crawler import Crawler
@@ -26,7 +26,7 @@ class NovelMaoCrawler(Crawler):
             assert isinstance(possible_script, Tag)
             script_text = possible_script.get_text()
 
-            data = js2py.eval_js(script_text)
+            data = execjs.eval(script_text)
             self.novel_title = data[2]["name"]
             self.novel_cover = data[2]["image"]
             self.novel_author = data[2]["author"]["name"]

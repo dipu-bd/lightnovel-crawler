@@ -73,7 +73,7 @@ class Scraper(TaskManager, SoupMaker):
                 # debug=True,
                 # delay=10,
                 ssl_context=ctx,
-                interpreter="js2py",
+                # interpreter="nodejs",
             )
         except Exception:
             logger.exception("Failed to initialize cloudscraper")
