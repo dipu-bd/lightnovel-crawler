@@ -79,7 +79,7 @@ class MtlnovelCrawler(Crawler):
                 "title": a.text.strip(),
                 "url": self.absolute_url(a['href']).strip('/') + '/',
             })
-        
+
         # NOTE: JSON files are not available now
         # for item in soup.select("div.ch-list amp-list"):
         #     data = self.get_json(item["src"])
