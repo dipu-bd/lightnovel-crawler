@@ -278,11 +278,19 @@ def process_file(py_file: Path) -> float:
 futures = {}
 for py_file in sorted(SOURCES_FOLDER.glob("**/*.py")):
     futures[py_file] = executor.submit(process_file, py_file)
+failures = []
 for py_file, future in futures.items():
-    print("> %-40s" % py_file.name, end="")
-    runtime = future.result()
-    print("%.3fs" % runtime)
-
+    print("> %-40s " % py_file.name, end="")
+    try:
+        runtime = future.result()
+    except Exception as e:
+        failures.append("<!> %-40s %s" % (py_file.name, e))
+    finally:
+        print("%.3fs" % runtime)
+if failures:
+    print("-" * 50)
+    print('\n'.join(failures))
+    
 print("-" * 50)
 print(
     "%d crawlers." % len(INDEX_DATA["crawlers"]),

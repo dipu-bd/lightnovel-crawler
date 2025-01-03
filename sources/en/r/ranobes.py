@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-import js2py
+import execjs
 from typing import Generator, Union
 
 from bs4 import BeautifulSoup, Tag
@@ -25,8 +25,6 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
         "https://ranobes.net/",
         "http://ranobes.net/",
     ]
-    has_manga = False
-    has_mtl = False
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update([".free-support", 'div[id^="adfox_"]'])
@@ -108,7 +106,7 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
             and tag.text.startswith("window.__DATA__")
         )
         assert isinstance(script, Tag)
-        data = js2py.eval_js(script.text).to_dict()
+        data = execjs.eval(script.text)
         assert isinstance(data, dict)
 
         pages_count = data["pages_count"]
@@ -131,7 +129,7 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
             )
             assert isinstance(script, Tag)
 
-            data = js2py.eval_js(script.text).to_dict()
+            data = execjs.eval(script.text)
             assert isinstance(data, dict)
 
             for chapter in reversed(data["chapters"]):
