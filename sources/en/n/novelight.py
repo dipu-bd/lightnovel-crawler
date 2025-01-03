@@ -3,7 +3,7 @@
 import logging
 import re
 from typing import List
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, urlencode
 
 from bs4 import Tag
 
@@ -83,8 +83,13 @@ class NoveLightCrawler(Crawler):
         for page in reversed(chapters_lists):
             if encountered_paid_chapter:
                 break
+            params = {
+                "csrfmiddlewaretoken": csrfmiddlewaretoken,
+                "book_id": book_id,
+                "page": page["value"]
+            }
             chapters_response = self.get_json(
-                f"{self.home_url}book/ajax/chapter-pagination?csrfmiddlewaretoken={csrfmiddlewaretoken}&book_id={book_id}&page={page["value"]}",
+                f"{self.home_url}book/ajax/chapter-pagination?{urlencode(params)}",
                 headers=headers
             )
             chapters_soup = self.make_soup(chapters_response["html"])
