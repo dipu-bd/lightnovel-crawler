@@ -34,7 +34,7 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
             logger.warning("Failed to parse novel authors | %s", e)
 
         try:
-            tags = set(list(self.parse_categories(soup)))
+            tags = set(list(self.parse_genres(soup)))
             self.novel_tags = ", ".join(tags)
         except Exception as e:
             logger.warning("Failed to parse novel tags | %s", e)
@@ -71,7 +71,7 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
             logger.warning("Failed to parse novel authors | %s", e)
 
         try:
-            tags = set(list(self.parse_categories_in_browser()))
+            tags = set(list(self.parse_genres_in_browser()))
             self.novel_tags = ", ".join(tags)
         except Exception as e:
             logger.warning("Failed to parse novel tags | %s", e)
@@ -99,9 +99,9 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         """Parse and return the novel author in the browser"""
         yield from self.parse_authors(self.browser.soup)
 
-    def parse_categories_in_browser(self) -> Generator[str, None, None]:
+    def parse_genres_in_browser(self) -> Generator[str, None, None]:
         """Parse and return the novel categories in the browser"""
-        yield from self.parse_categories(self.browser.soup)
+        yield from self.parse_genres(self.browser.soup)
 
     def parse_summary_in_browser(self) -> str:
         """Parse and return the novel summary or synopsis in the browser"""

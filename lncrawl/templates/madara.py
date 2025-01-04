@@ -60,14 +60,13 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         for a in soup.select('.author-content a[href*="manga-author"]'):
             yield a.text.strip()
 
-    def parse_categories(self, soup):
+    def parse_genres(self, soup):
         for a in soup.select('.genres-content a[rel="tag"]'):
             yield a.text.strip()
 
     def parse_summary(self, soup):
         possible_summary = soup.select_one(".description-summary a")
-        if possible_summary:
-            return self.cleaner.extract_contents(possible_summary)
+        return self.cleaner.extract_contents(possible_summary)
 
     def select_chapter_tags(self, soup: BeautifulSoup):
         try:

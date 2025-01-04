@@ -76,7 +76,7 @@ class MyCrawlerName(ChapterOnlySoupTemplate):
         pass
 
     # TODO: [OPTIONAL] Parse and return the novel categories or tags
-    def parse_categories(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+    def parse_genres(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         #
         # See the `parse_authors` example above for a similar implementation.

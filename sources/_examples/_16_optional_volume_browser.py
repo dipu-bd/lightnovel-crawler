@@ -82,11 +82,11 @@ class MyCrawlerName(OptionalVolumeBrowserTemplate):
 
     # TODO: [OPTIONAL] Parse and return the novel author in the browser
     def parse_categorie_in_browser(self) -> Generator[str, None, None]:
-        # yield from self.parse_categories(self.browser.soup)
+        # yield from self.parse_genres(self.browser.soup)
         pass
 
     # TODO: [OPTIONAL] Parse and return the novel categories or tags
-    def parse_categories(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+    def parse_genres(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         #
         # See the `parse_authors` example above for a similar implementation.
