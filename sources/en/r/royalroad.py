@@ -8,7 +8,7 @@ search_url = "https://www.royalroad.com/fictions/search?keyword=%s"
 
 
 class RoyalRoadCrawler(Crawler):
-    base_url = "https://www.royalroad.com/",
+    base_url = "https://www.royalroad.com/"
     watermark_set = {
         "This book's true home is on another platform. Check it out there for the real experience.",
         "This tale has been unlawfully lifted from Royal Road. If you spot it on Amazon, please report it.",
@@ -128,7 +128,7 @@ class RoyalRoadCrawler(Crawler):
         chapter_contents = soup.select(".chapter-content")
         for chapter_content in chapter_contents:
             for html_tags in chapter_content.contents:
-                if html_tags.name == 'div' and html_tags.string in self.watermark_set:
+                if html_tags.name == "div" and html_tags.string in self.watermark_set:
                     html_tags.decompose()
 
         contents = soup.select_one(".chapter-content")

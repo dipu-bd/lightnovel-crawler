@@ -1,6 +1,7 @@
 """
 Interactive application to take user inputs
 """
+
 import logging
 import os
 import signal
@@ -11,8 +12,7 @@ import colorama
 from ..assets.version import get_version
 from ..bots import run_bot
 from .arguments import get_args
-from .display import (cancel_method, description, error_message,
-                      input_suppression)
+from .display import cancel_method, description, error_message, input_suppression
 from .logconfig import configure_logging
 from .proxy import load_proxies, start_proxy_fetcher, stop_proxy_fetcher
 from .sources import load_sources

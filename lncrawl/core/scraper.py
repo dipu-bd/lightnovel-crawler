@@ -206,7 +206,7 @@ class Scraper(TaskManager, SoupMaker):
             **kwargs,
         )
 
-    def post_response(self, url, data={}, retry=1, **kwargs) -> Response:
+    def post_response(self, url, data={}, retry=0, **kwargs) -> Response:
         """Make a POST request and return the response"""
         return self.__process_request(
             "post",
