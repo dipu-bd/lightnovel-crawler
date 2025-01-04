@@ -61,7 +61,7 @@ class MyCrawlerName(ChapterOnlyBrowserTemplate):
         # The soup here is the result of `self.get_soup(self.novel_url)`
         pass
 
-     # TODO: [OPTIONAL] Parse and return the novel author in the browser
+    # TODO: [OPTIONAL] Parse and return the novel author in the browser
     def parse_authors_in_browser(self) -> Generator[str, None, None]:
         # yield from self.parse_authors(self.browser.soup)
         pass
