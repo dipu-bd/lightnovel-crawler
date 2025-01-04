@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-import logging
 import json
-import re
+import logging
+from urllib.parse import urlparse
 
 import requests
 
@@ -13,64 +13,66 @@ logger = logging.getLogger(__name__)
 
 class WtrLab(Crawler):
     """
-        This site has multilingual novels, basically all MTL, supposedly through translators like Google
-        but the output seems pretty decent for that
-        The whole site obfuscates classes via Angular or some type of minifier
-        so the only constant HTML comes from display text & HTML IDs
-        But luckily all necessary data is stored in a consistent JSON that's always in the same script tag
-        Essentially the same framework as webfic though with some other keys, urls, etc.
+    This site has multilingual novels, basically all MTL, supposedly through translators like Google
+    but the output seems pretty decent for that
+    The whole site obfuscates classes via Angular or some type of minifier
+    so the only constant HTML comes from display text & HTML IDs
+    But luckily all necessary data is stored in a consistent JSON that's always in the same script tag
+    Essentially the same framework as webfic though with some other keys, urls, etc.
     """
 
-    base_url = [
-        "https://wtr-lab.com",
-        "http://wtr-lab.com",
-        "https://www.wtr-lab.com",
-        "http://www.wtr-lab.com",
-    ]
-    has_manga = False
+    base_url = "https://wtr-lab.com"
     has_mtl = True
-    host = ""
 
-    def initialize(self) -> None:
-        self.host = self.home_url[:-1] if self.home_url.endswith("/") else self.home_url
+    def search_novel(self, query: str):
+        novels = requests.post(
+            "https://www.wtr-lab.com/api/search",
+            json={"text": query},
+        ).json()
+        logger.info("Search results: %s", novels)
+
+        for novel in novels["data"]:
+            data = novel["data"]
+            meta = {
+                "Chapters": novel["chapter_count"],
+                "Author": data["author"],
+                "Status": "Ongoing" if novel["status"] else "Completed",
+            }
+            yield SearchResult(
+                title=data["title"],
+                url=f"https://www.wtr-lab.com/en/serie-{novel['raw_id']}/f{novel['slug']}",
+                info=" | ".join(f"{k}: {v}" for k, v in meta.items()),
+            )
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
-        metadata_json = soup.select_one('script#__NEXT_DATA__')
+        metadata_json = soup.select_one("script#__NEXT_DATA__")
         metadata = json.loads(metadata_json.text)
-        assert metadata  # this is where we get everything so it's kinda required
 
-        novel_slug = metadata['props']['pageProps']['serie']['serie_data']['slug']
-        self.novel_title = metadata['props']['pageProps']['serie']['serie_data']['data']['title']
-        self.novel_cover = metadata['props']['pageProps']['serie']['serie_data']['data']['image']
-        try:
-            self.novel_tags = [tag["title"] for tag in metadata['props']['pageProps']['tags']]
-        except KeyError:
-            # worst case we miss out on tags
-            pass
-        self.novel_synopsis = metadata['props']['pageProps']['serie']['serie_data']['data']['description']
-        self.novel_author = metadata['props']['pageProps']['serie']['serie_data']['data']['author']
+        series = metadata["props"]["pageProps"]["serie"]
+        series_data = series["serie_data"]
 
-        logger.info("book metadata %s", metadata)
+        novel_slug = series_data["slug"]
+        self.novel_title = series_data["data"]["title"]
+        self.novel_cover = series_data["data"]["image"]
+        self.novel_synopsis = series_data["data"]["description"]
+        self.novel_author = series_data["data"]["author"]
+        self.novel_tags = [
+            tag["title"]
+            for tag in metadata["props"]["pageProps"]["tags"]
+            if tag.get("title")
+        ]
+        self.language = urlparse(self.novel_url).path.split("/")[0]
 
-        # examples:
-        lang = re.match(f"{self.host}(/?.*)/serie-\\d+/.+/?", self.novel_url).group(1)
-        # lang will be something like "/en" or "/es"
-        self.language = lang[1:]
-        serie_id = metadata['props']['pageProps']['serie']['serie_data']['raw_id']
-
-        for idx, chapter in enumerate(metadata['props']['pageProps']['serie']['chapters']):
+        serie_id = series_data["raw_id"]
+        for idx, chapter in enumerate(series["chapters"]):
             chap_id = 1 + idx
             vol_id = 1 + len(self.chapters) // 100
             vol_title = f"Volume {vol_id}"
-            url = f"{self.host}{lang}/serie-{serie_id}/{novel_slug}/chapter-{chapter['order']}"
+            url = f"{self.home_url}{self.language}/serie-{serie_id}/{novel_slug}/chapter-{chapter['order']}"
             if chap_id % 100 == 1:
-                self.volumes.append(
-                    Volume(
-                        id=vol_id,
-                        title=vol_title
-                    ))
+                self.volumes.append(Volume(id=vol_id, title=vol_title))
 
             self.chapters.append(
                 Chapter(
@@ -78,7 +80,7 @@ class WtrLab(Crawler):
                     url=url,
                     title=chapter["title"],
                     volume=vol_id,
-                    volume_title=vol_title
+                    volume_title=vol_title,
                 ),
             )
 
@@ -89,54 +91,17 @@ class WtrLab(Crawler):
         chapter_json = json.loads(chapter_metadata.text)
         assert chapter_json
 
-        logger.info("chapeter %s", chapter_json)
-        chapter_details = chapter_json['props']['pageProps']['serie']['chapter']
-        # adjust chapter title as the one from the overview usually lacks details
-        chapter.title = chapter_details['code'] + " " + chapter_details['title']
-        # get all text
-        text_lines = chapter_json['props']['pageProps']['serie']['chapter_data']['data']['body']
+        series_data = chapter_json["props"]["pageProps"]["serie"]
 
-        # copied straight outta self.cleaner.extract_contents because we lack a TAG...
-        # otherwise the output looks very mushed together cause it ignores all the newlines otherwise
-        text = "".join(
+        # adjust chapter title as the one from the overview usually lacks details
+        details = series_data["chapter"]
+        chapter.title = f"#{details['slug']}: {details['title']}"
+
+        text_lines = series_data["chapter_data"]["data"]["body"]
+        return "".join(
             [
                 f"<p>{t.strip()}</p>"
                 for t in text_lines
                 if not self.cleaner.contains_bad_texts(t)
             ]
         )
-
-        return text
-
-    def search_novel(self, query: str):
-        novels = requests.post(f"{self.host}/api/search", json={"text": query}).json()
-        logger.info("Search results: %s", novels)
-
-        for novel in novels["data"]:
-            data = novel["data"]
-            meta = {
-                "Chapters": novel["chapter_count"],
-                "Status": self.status_idx_to_text(novel["status"]),
-                "Author": data["author"]
-
-            }
-            info = " | ".join(f"{k}: {v}" for k, v in meta.items())
-
-            yield SearchResult(
-                title=data["title"],
-                # default to EN
-                url=f"{self.host}/en/serie-{novel['raw_id']}/f{novel['slug']}",
-                info=info
-            )
-        return []
-
-    @staticmethod
-    def status_idx_to_text(idx):
-        return "Ongoing" if idx else "Completed"
-
-    @staticmethod
-    def premium_idx_to_text(idx):
-        if idx == 2:
-            return "Partial Paywall"
-        else:
-            return "Unknown"
