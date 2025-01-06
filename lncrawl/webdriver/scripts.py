@@ -141,13 +141,14 @@ function functionToString() {
 Function.prototype.toString = functionToString
 """
 
+__all__ = ["_override_get"]
 
-def __send_cdp(driver, cmd, params={}):
-    resource = "/session/%s/chromium/send_command_and_get_result" % driver.session_id
-    url = driver.command_executor._url + resource
+
+def __send_cdp(driver: WebDriver, cmd: str, params: dict = {}):
+    resource = f"/session/{driver.session_id}/chromium/send_command_and_get_result"
+    url = f"{driver.command_executor._client_config.remote_server_addr}{resource}"
     body = json.dumps({"cmd": cmd, "params": params})
-    response = driver.command_executor._request("POST", url, body)
-    return response.get("value")
+    driver.command_executor._request("POST", url, body)
 
 
 def _override_get(driver: WebDriver):

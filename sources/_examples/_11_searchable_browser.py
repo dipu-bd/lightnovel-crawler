@@ -35,7 +35,7 @@ class MyCrawlerName(SearchableBrowserTemplate):
         # You can customize `TextCleaner` and other necessary things.
         pass
 
-    # TODO: [REQUIRED] Select novel items found by the query using the browser
+    # TODO: [OPTIONAL] Select novel items found by the query using the browser
     def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
         # The query here is the input from user.
         #

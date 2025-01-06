@@ -88,9 +88,10 @@ class Scraper(TaskManager, SoupMaker):
             return {scheme: get_a_proxy(scheme, timeout)}
         return {}
 
-    def __process_request(self, method: str, url, **kwargs):
+    def __process_request(self, method: str, url: str, **kwargs):
         method_call = getattr(self.scraper, method)
-        assert callable(method_call), f"No request method: {method}"
+        if not callable(method_call):
+            raise Exception(f"No request method: {method}")
 
         _parsed = urlparse(url)
 

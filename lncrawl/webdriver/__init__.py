@@ -20,7 +20,7 @@ def create_new(
     timeout: Optional[float] = None,
     user_data_dir: Optional[str] = None,
     soup_maker: Optional[SoupMaker] = None,
-    headless: bool = True,
+    headless: bool = False,
     **kwargs,
 ) -> WebDriver:
     args = get_args()

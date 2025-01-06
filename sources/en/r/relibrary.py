@@ -2,14 +2,13 @@ import logging
 from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
-
 from lncrawl.models import Chapter
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
+from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class relibCrawler(ChapterOnlySoupTemplate):
+class ReLibraryCrawler(ChapterOnlyBrowserTemplate):
     base_url = [
         "https://re-library.com/",
     ]
@@ -56,3 +55,19 @@ class relibCrawler(ChapterOnlySoupTemplate):
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
         return soup.select_one(".entry-content")
+
+    def parse_chapter_body(self, chapter: Chapter, text: str) -> str:
+        if "translations" not in chapter.url:
+            soup = self.get_soup(chapter.url)
+            page_el = soup.select_one(".entry-content > p[style*='center'] a")
+            post_url = self.absolute_url(page_el["href"])
+            if "page_id" in post_url:
+                chapter.url = post_url
+            else:
+                novel_url = (
+                    f"https://re-library.com/translations/{post_url.split('/')[4:5][0]}"
+                )
+                response = self.get_soup(novel_url)
+                chapters = response.select(".page_item > a")
+                chapter.url = chapters[chapter.id - 1]["href"]
+        return super().parse_chapter_body(chapter, text)

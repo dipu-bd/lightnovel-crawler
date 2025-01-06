@@ -115,8 +115,8 @@ class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
             soup = f.result()
             yield from soup.select("ul.chapter-list li a")
 
-    def select_chapter_tags_in_browser(self) -> None:
-        next_link = f"{self.novel_url.strip('/')}/chapters"
+    def select_chapter_tags_in_browser(self):
+        next_link = f"{self.novel_url}chapters"
         while next_link:
             self.browser.visit(next_link)
             self.browser.wait("ul.chapter-list li")

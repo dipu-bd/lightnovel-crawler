@@ -3,6 +3,7 @@ import logging
 import json
 import operator
 
+from bs4 import BeautifulSoup
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
@@ -21,17 +22,7 @@ class RanobeLibMeCrawler(Crawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(f"{clean_url}?section=info")
 
-        for script in soup.find_all("script"):
-            json_var = "window.__DATA__ = "
-            text = script.text.strip()
-            if not text or not text.startswith(json_var):
-                continue
-            text = text[len(json_var) : text.find("window._SITE_COLOR_")].strip(
-                ";\t\n "
-            )
-            content = json.loads(text)
-            break
-
+        content = self.extract_page_data(soup)
         self.novel_title = content["manga"]["rusName"]
         logger.info("Novel title: %s", self.novel_title)
 
@@ -98,3 +89,14 @@ class RanobeLibMeCrawler(Crawler):
         contents = soup.select_one(".reader-container")
         self.cleaner.clean_contents(contents)
         return str(contents)
+
+    def extract_page_data(self, soup: BeautifulSoup) -> dict:
+        for script in soup.find_all("script"):
+            json_var = "window.__DATA__ = "
+            text = script.text.strip()
+            if not text or not text.startswith(json_var):
+                continue
+            text = text[len(json_var) : text.find("window._SITE_COLOR_")].strip(
+                ";\t\n "
+            )
+            return json.loads(text)

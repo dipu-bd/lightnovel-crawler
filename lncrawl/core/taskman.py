@@ -11,8 +11,8 @@ from ..utils.ratelimit import RateLimiter
 
 logger = logging.getLogger(__name__)
 
-MAX_WORKER_COUNT = 5
-MAX_REQUESTS_PER_DOMAIN = 25
+MAX_WORKER_COUNT = 7
+MAX_REQUESTS_PER_DOMAIN = 5
 
 _resolver = Semaphore(1)
 _host_semaphores: Dict[str, Semaphore] = {}
@@ -81,7 +81,7 @@ class TaskManager(ABC):
         )
 
         self._submit = self._executor.submit
-        setattr(self._executor, 'submit', self.submit_task)
+        setattr(self._executor, "submit", self.submit_task)
 
     def submit_task(self, fn, *args, **kwargs) -> Future:
         """Submits a callable to be executed with the given arguments.
@@ -95,7 +95,7 @@ class TaskManager(ABC):
         if hasattr(self, "_limiter"):
             fn = self._limiter.wrap(fn)
         if not self._submit:
-            raise Exception('No executor is available')
+            raise Exception("No executor is available")
         future = self._submit(fn, *args, **kwargs)
         self._futures.append(future)
         return future

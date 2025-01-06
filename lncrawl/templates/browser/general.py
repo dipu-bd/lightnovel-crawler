@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
 
-    def read_novel_info_in_scraper(self) -> None:
+    def read_novel_info_in_soup(self) -> None:
         soup = self.get_novel_soup()
 
         try:
@@ -113,7 +113,7 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         """Parse and return the volumes and chapters in the browser"""
         return self.parse_chapter_list(self.browser.soup)
 
-    def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
+    def download_chapter_body_in_soup(self, chapter: Chapter) -> str:
         soup = self.get_soup(chapter.url)
         body = self.select_chapter_body(soup)
         return self.parse_chapter_body(body)

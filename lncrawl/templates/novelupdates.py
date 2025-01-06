@@ -140,7 +140,7 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
             url=self.absolute_url(tag["href"]),
         )
 
-    def download_chapter_body_in_scraper(self, chapter: Chapter) -> None:
+    def download_chapter_body_in_soup(self, chapter: Chapter) -> None:
         response = self.get_response(chapter.url, allow_redirects=True)
         logger.info("%s => %s", chapter.url, response.url)
         chapter.url = response.url
@@ -162,21 +162,11 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
 
     def parse_chapter_body(self, chapter: Chapter, text: str) -> str:
         if "re-library" in chapter.url and "translations" not in chapter.url:
-            soup = self.get_soup(chapter.url)
-            post_url = soup.select_one(".entry-content > p[style*='center'] a")['href']
-            if "page_id" in post_url:
-                chapter.url = post_url
-            else:
-                time.sleep(2.5)
-                novel_url = f"https://re-library.com/translations/{post_url.split('/')[4:5][0]}"
-                response = self.get_soup(novel_url)
-                chapters = response.select(".page_item > a")
-                chapter.url = chapters[chapter.id - 1]["href"]
-                time.sleep(2.5)
+            self._custom_fix_for_relibrary(chapter)
 
         crawler = self._find_original_crawler(chapter)
-        if hasattr(crawler, "download_chapter_body_in_scraper"):
-            return crawler.download_chapter_body_in_scraper(chapter)
+        if hasattr(crawler, "download_chapter_body_in_soup"):
+            return crawler.download_chapter_body_in_soup(chapter)
         elif hasattr(crawler, "download_chapter_body"):
             return crawler.download_chapter_body(chapter)
         else:
@@ -202,3 +192,15 @@ class NovelupdatesTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate
                 logger.info("Failed with original crawler.", e)
 
         return None
+
+    def _custom_fix_for_relibrary(self, chapter: Chapter):
+        soup = self.get_soup(chapter.url)
+        page_el = soup.select_one(".entry-content > p[style*='center'] a")
+        post_url = self.absolute_url(page_el["href"])
+        novel_url = f"https://re-library.com/translations/{post_url.split('/')[4:5][0]}"
+        if "page_id" in post_url:
+            chapter.url = post_url
+        else:
+            response = self.get_soup(novel_url)
+            chapters = response.select(".page_item > a")
+            chapter.url = chapters[chapter.id - 1]["href"]

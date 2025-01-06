@@ -4,13 +4,13 @@ from urllib.parse import urlencode
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
+from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class MadaraTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
+class MadaraTemplate(SearchableSoupTemplate, ChapterOnlyBrowserTemplate):
     is_template = True
 
     def initialize(self) -> None:

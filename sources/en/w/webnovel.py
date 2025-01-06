@@ -36,7 +36,7 @@ class WebnovelCrawler(BasicBrowserTemplate):
         self.csrf = self.cookies["_csrfToken"]
         logger.debug("CSRF Token = %s", self.csrf)
 
-    def search_novel_in_scraper(self, query: str):
+    def search_novel_in_soup(self, query: str):
         self.get_csrf()
         params = {
             "_csrfToken": self.csrf,
@@ -65,7 +65,7 @@ class WebnovelCrawler(BasicBrowserTemplate):
                 info=li.find(".g_star_num small").text.strip(),
             )
 
-    def read_novel_info_in_scraper(self):
+    def read_novel_info_in_soup(self):
         self.get_csrf()
         url = self.novel_url
         if "_" not in url:
@@ -146,7 +146,7 @@ class WebnovelCrawler(BasicBrowserTemplate):
             body += str(p)
         return body
 
-    def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
+    def download_chapter_body_in_soup(self, chapter: Chapter) -> str:
         logger.info("Chapter Id: %s", chapter.cid)
 
         response = self.get_response(

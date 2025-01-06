@@ -287,7 +287,7 @@ def format_resume_choices(meta_list: List[MetaInfo]):
             meta.novel.title,
             len(meta.session.download_chapters),
         )
-        text += "\n" + (" " * 6) + Chars.LINK + " " + meta["url"]
+        text += "\n" + (" " * 6) + Chars.LINK + " " + meta.novel.url
         items.append({"name": text})
 
     return items

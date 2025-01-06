@@ -5,25 +5,27 @@ import logging
 from bs4 import BeautifulSoup, Tag
 
 from lncrawl.models import Chapter
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
+from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class SnowyCodexCrawler(ChapterOnlySoupTemplate):
+class SnowyCodexCrawler(ChapterOnlyBrowserTemplate):
     base_url = "https://snowycodex.com/"
 
     def initialize(self) -> None:
-        self.cleaner.bad_tags.update(
-            [
-                "h2",
-            ]
-        )
         self.cleaner.bad_css.update(
-            [
+            {
                 ".wpulike",
-                'p[style="text-align: center;"]',
-            ]
+                ".sharedaddy",
+                ".wpulike-default",
+                '[style="text-align:center;"]',
+            }
+        )
+        self.cleaner.bad_tag_text_pairs.update(
+            {
+                "p": r"[\u4E00-\u9FFF]+",
+            }
         )
 
     def parse_title(self, soup: BeautifulSoup) -> str:
