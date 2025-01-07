@@ -157,9 +157,9 @@ def __check_updates():
     __save_current_index()
 
     global rejected_sources
-    rejected_sources = __current_index["rejected"]
-    for url, reason in rejected_sources.items():
+    for url, reason in __current_index["rejected"].items():
         no_www = url.replace("://www.", "://")
+        rejected_sources[url] = reason
         rejected_sources[no_www] = reason
         rejected_sources[urlparse(url).hostname] = reason
         rejected_sources[urlparse(no_www).hostname] = reason
