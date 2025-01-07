@@ -8,16 +8,14 @@ from lncrawl.models import Chapter
 logger = logging.getLogger(__name__)
 
 
-class MyCrawlerName(Crawler):
+class RaeiTranslationsCrawler(Crawler):
     base_url = ["https://raeitranslations.com/"]
     novel_json_url_prefix = "https://api.raeitranslations.com/api/novels/"
     novel_cover_url_prefix = "https://raeitranslations.com/assets/"
     novel_chapters_list_url_prefix = "https://api.raeitranslations.com/api/chapters/list?"
     novel_chapter_url_prefix = "https://api.raeitranslations.com/api/chapters/single?"
     json_request_headers = {
-        "Accept": "*/*",
-        "Origin": "https://raeitranslations.com",
-        "Referer": "https://raeitranslations.com/"
+        "Accept": "*/*"
     }
 
     def read_novel_info(self) -> None:
