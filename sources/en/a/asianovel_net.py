@@ -13,7 +13,10 @@ logger = logging.getLogger(__name__)
 
 
 class AsiaNovelNetCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
-    base_url = ["https://www.asianovel.net/"]
+    base_url = [
+        "https://www.asianovel.net/",
+        "https://www.wuxiasky.net/"
+    ]
 
     def initialize(self) -> None:
         self.init_executor(ratelimit=1)
