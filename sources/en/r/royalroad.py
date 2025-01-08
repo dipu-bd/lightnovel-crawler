@@ -76,7 +76,7 @@ class RoyalRoadCrawler(Crawler):
             clean_text = re.sub(r"[\n\s]+", "", style.text.strip(), re.MULTILINE)
             matches = re.findall(r"(.[\d\w]+)\{display:none;speak:never;\}", clean_text)
             if matches:
-                hidden_class = matches[0]
+                hidden_class = ",".join(matches)
                 break
 
         contents = soup.select_one(".chapter .chapter-content")
