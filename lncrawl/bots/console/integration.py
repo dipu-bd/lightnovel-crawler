@@ -108,7 +108,7 @@ def start(self):
             if not self.search_mode:
                 raise e
             elif not self.confirm_retry():
-                raise LNException("Cancelled by user")
+                raise LNException("Cancelled by user") from e
 
     self.app.start_download()
     self.app.bind_books()
