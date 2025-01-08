@@ -46,7 +46,9 @@ class UukanshuOnline(Crawler):
                 self.novel_synopsis = synopsis.select_one("p").text
 
         chapters = soup.select_one("ul#chapterList")
-        for chapter in list(chapters.children)[::-1]:  # reverse order as it's newest to oldest
+        for chapter in list(chapters.children)[
+            ::-1
+        ]:  # reverse order as it's newest to oldest
             # convince typehint that we're looking at Tags & also make sure we skip random text within the ul if any
             if not isinstance(chapter, Tag):
                 continue
@@ -61,7 +63,9 @@ class UukanshuOnline(Crawler):
                 continue
             anchor = chapter.select_one("a")
             if not anchor:
-                logger.warning("Found <li> in chapter list, not volume, without link: %s", chapter)
+                logger.info(
+                    "Found <li> in chapter list, not volume, without link: %s", chapter
+                )
                 continue
             self.chapters.append(
                 Chapter(

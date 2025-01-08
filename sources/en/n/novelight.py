@@ -21,7 +21,9 @@ class NoveLightCrawler(Crawler):
         self.cleaner.bad_css.update(["div.advertisment"])
 
     def search_novel(self, query) -> List[SearchResult]:
-        soup = self.get_soup(f"{self.home_url}catalog/?search={quote_plus(query.lower())}")
+        soup = self.get_soup(
+            f"{self.home_url}catalog/?search={quote_plus(query.lower())}"
+        )
 
         return [
             SearchResult(title=a.text.strip(), url=self.absolute_url(a["href"]))
@@ -47,7 +49,9 @@ class NoveLightCrawler(Crawler):
         if isinstance(novel_synopsis, Tag):
             self.novel_synopsis = self.cleaner.extract_contents(novel_synopsis)
 
-        novel_tags = soup.select("div#information section.tags a[href^='/catalog/?tags=']")
+        novel_tags = soup.select(
+            "div#information section.tags a[href^='/catalog/?tags=']"
+        )
         for tag in novel_tags:
             self.novel_tags.append(tag.get_text().strip())
 
@@ -57,13 +61,15 @@ class NoveLightCrawler(Crawler):
         logger.info("Novel author: %s", self.novel_author)
 
         page_scripts = soup.select("body > script:not([src])")
-        scripts_joined = '\n'.join(str(s) for s in page_scripts)
+        scripts_joined = "\n".join(str(s) for s in page_scripts)
         book_id = re.search(r'.*const BOOK_ID = "(\d+)".*', scripts_joined).group(1)
         if not book_id:
             raise LNException("Could not extract book_id from novel page")
         logger.debug("book_id: %s", book_id)
         # this is different token than the 'csrftoken' in cookies
-        csrfmiddlewaretoken = re.search(r'.*window.CSRF_TOKEN = "(\w+)".*', scripts_joined).group(1)
+        csrfmiddlewaretoken = re.search(
+            r'.*window.CSRF_TOKEN = "(\w+)".*', scripts_joined
+        ).group(1)
         if not csrfmiddlewaretoken:
             raise LNException("Could not extract csrfmiddlewaretoken from novel page")
         logger.debug("csrfmiddlewaretoken: %s", csrfmiddlewaretoken)
@@ -71,13 +77,11 @@ class NoveLightCrawler(Crawler):
         headers = {
             "Accept": "*/*",
             "Referer": self.novel_url,
-            "x-requested-with": "XMLHttpRequest"
+            "x-requested-with": "XMLHttpRequest",
         }
         chapters_lists = soup.select("select#select-pagination-chapter > option")
         bar = self.progress_bar(
-            total=len(chapters_lists),
-            desc="Chapters list",
-            unit="page"
+            total=len(chapters_lists), desc="Chapters list", unit="page"
         )
         encountered_paid_chapter = False
         for page in reversed(chapters_lists):
@@ -86,11 +90,11 @@ class NoveLightCrawler(Crawler):
             params = {
                 "csrfmiddlewaretoken": csrfmiddlewaretoken,
                 "book_id": book_id,
-                "page": page["value"]
+                "page": page["value"],
             }
             chapters_response = self.get_json(
                 f"{self.home_url}book/ajax/chapter-pagination?{urlencode(params)}",
-                headers=headers
+                headers=headers,
             )
             chapters_soup = self.make_soup(chapters_response["html"])
             for a in reversed(chapters_soup.select("a[href^='/book/chapter/']")):
@@ -108,7 +112,9 @@ class NoveLightCrawler(Crawler):
             bar.update()
         bar.close()
         if encountered_paid_chapter:
-            logger.warning("WARNING: Paid chapters are not supported and will be skipped.")
+            logger.warning(
+                "WARNING: Paid chapters are not supported and will be skipped."
+            )
 
     def download_chapter_body(self, chapter: Chapter):
         soup = self.get_soup(chapter.url)

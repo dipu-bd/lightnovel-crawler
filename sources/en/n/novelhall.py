@@ -23,10 +23,10 @@ class NovelHallCrawler(Crawler):
         soup = self.get_soup(self.absolute_url(search_url + quote_plus(query.lower())))
 
         results = []
-        for novel in soup.select('.section3 table tbody tr'):
-            novel = novel.findAll('a')
+        for novel in soup.select(".section3 table tbody tr"):
+            novel = novel.findAll("a")
             novel_link = novel[1]
-            latest_chapter = novel[2].text.strip().split('.')
+            latest_chapter = novel[2].text.strip().split(".")
             chapter_number = latest_chapter[0]
 
             if chapter_number.isdigit():
@@ -37,8 +37,8 @@ class NovelHallCrawler(Crawler):
             results.append(
                 {
                     "title": novel_link.text.strip(),
-                    "url": self.absolute_url(novel_link['href']),
-                    "info": latest_chapter
+                    "url": self.absolute_url(novel_link["href"]),
+                    "info": latest_chapter,
                 }
             )
 
@@ -60,20 +60,16 @@ class NovelHallCrawler(Crawler):
         possible_image = soup.select_one("div.book-img img")
         if possible_image:
             self.novel_cover = self.absolute_url(possible_image["src"])
-
-            if possible_image['src'] == "":
-                logger.warning("Novel cover: unavailable")
-            else:
-                logger.info("Novel cover: %s", self.novel_cover)
-        else:
-            logger.info("Novel cover: unavailable")
+        logger.info("Novel cover: %s", self.novel_cover)
 
         author = soup.select("div.book-info div.total.booktag span.blue")[0]
         author.select_one("p").extract()
         self.novel_author = author.text.replace("Author：", "").strip()
         logger.info("Novel author: %s", self.novel_author)
 
-        self.novel_tags = [soup.select_one("div.book-info div.total.booktag a.red").text.strip()]
+        self.novel_tags = [
+            soup.select_one("div.book-info div.total.booktag a.red").text.strip()
+        ]
         logger.info("Novel tags: %s", self.novel_tags)
 
         synopsis = soup.select_one(".js-close-wrap")
