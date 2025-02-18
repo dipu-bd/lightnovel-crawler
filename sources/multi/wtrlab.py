@@ -79,10 +79,10 @@ class WtrLab(Crawler):
             vol_title = f"Volume {vol_id}"
             url = f"{self.home_url}{self.language}/serie-{serie_id}/{novel_slug}/chapter-{chap_id}"
             chapter_title = f"Chapter {chap_id}"
-            
+
             if chap_id % 100 == 1:
                 self.volumes.append(Volume(id=vol_id, title=vol_title))
-        
+
             self.chapters.append(
                 Chapter(
                     id=chap_id,
@@ -110,7 +110,7 @@ class WtrLab(Crawler):
             details = series_data.get("chapter", {})
             chapter.title = f"#{details.get('slug', chapter.title)}: {details.get('title', chapter.title)}"
             text_lines = series_data.get("chapter_data", {}).get("data", {}).get("body", [])
-        
+
         return "".join(
             [
                 f"<p>{t.strip()}</p>"
