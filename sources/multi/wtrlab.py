@@ -77,7 +77,6 @@ class WtrLab(Crawler):
             chap_id = idx + 1
             vol_id = 1 + len(self.chapters) // 100
             vol_title = f"Volume {vol_id}"
-            # Construct chapter URL using the updated structure
             url = f"{self.home_url}{self.language}/serie-{serie_id}/{novel_slug}/chapter-{chap_id}"
             chapter_title = f"Chapter {chap_id}"
             
@@ -104,11 +103,9 @@ class WtrLab(Crawler):
         # The chapter details now reside in the "chapter" key.
         if "chapter" in page_props:
             chapter_data = page_props["chapter"]["data"]
-            # Update chapter title using new details (falling back if keys are missing)
             chapter.title = f"#{chapter_data.get('slug', chapter.title)}: {chapter_data.get('title', chapter.title)}"
             text_lines = chapter_data.get("body", [])
         else:
-            # Fallback to the old structure if necessary
             series_data = page_props["serie"]
             details = series_data.get("chapter", {})
             chapter.title = f"#{details.get('slug', chapter.title)}: {details.get('title', chapter.title)}"
