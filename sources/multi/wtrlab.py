@@ -13,10 +13,12 @@ logger = logging.getLogger(__name__)
 
 class WtrLab(Crawler):
     """
-    This site has multilingual novels. The necessary data is stored in a consistent JSON within a script tag,
-    but the JSON structure has changed. This updated version:
-      - Uses a fallback for tags (using "genres" if "tags" is missing)
-      - Looks for chapter details under the "chapter" key on chapter pages.
+    This site has multilingual novels, basically all MTL, supposedly through translators like Google
+    but the output seems pretty decent for that
+    The whole site obfuscates classes via Angular or some type of minifier
+    so the only constant HTML comes from display text & HTML IDs
+    But luckily all necessary data is stored in a consistent JSON that's always in the same script tag
+    Essentially the same framework as webfic though with some other keys, urls, etc.
     """
 
     base_url = "https://wtr-lab.com"
