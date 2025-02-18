@@ -13,12 +13,10 @@ logger = logging.getLogger(__name__)
 
 class WtrLab(Crawler):
     """
-    This site has multilingual novels, basically all MTL, supposedly through translators like Google
-    but the output seems pretty decent for that
-    The whole site obfuscates classes via Angular or some type of minifier
-    so the only constant HTML comes from display text & HTML IDs
-    But luckily all necessary data is stored in a consistent JSON that's always in the same script tag
-    Essentially the same framework as webfic though with some other keys, urls, etc.
+    This site has multilingual novels. The necessary data is stored in a consistent JSON within a script tag,
+    but the JSON structure has changed. This updated version:
+      - Uses a fallback for tags (using "genres" if "tags" is missing)
+      - Looks for chapter details under the "chapter" key on chapter pages.
     """
 
     base_url = "https://wtr-lab.com"
@@ -46,7 +44,6 @@ class WtrLab(Crawler):
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
-
         metadata_json = soup.select_one("script#__NEXT_DATA__")
         metadata = json.loads(metadata_json.text)
 
@@ -58,46 +55,63 @@ class WtrLab(Crawler):
         self.novel_cover = series_data["data"]["image"]
         self.novel_synopsis = series_data["data"]["description"]
         self.novel_author = series_data["data"]["author"]
-        self.novel_tags = [
-            tag["title"]
-            for tag in metadata["props"]["pageProps"]["tags"]
-            if tag.get("title")
-        ]
+
+        # Check if "tags" exists; if not, use the "genres" field as a fallback.
+        if "tags" in metadata["props"]["pageProps"]:
+            self.novel_tags = [
+                tag["title"]
+                for tag in metadata["props"]["pageProps"]["tags"]
+                if tag.get("title")
+            ]
+        else:
+            # Convert numeric genre IDs to strings (or use a mapping if available)
+            self.novel_tags = list(map(str, series_data.get("genres", [])))
+
         self.language = urlparse(self.novel_url).path.split("/")[0]
 
         serie_id = series_data["raw_id"]
-        for idx, chapter in enumerate(series["chapters"]):
-            chap_id = 1 + idx
+        chapter_count = series_data["chapter_count"]
+        for idx in range(chapter_count):
+            chap_id = idx + 1
             vol_id = 1 + len(self.chapters) // 100
             vol_title = f"Volume {vol_id}"
-            url = f"{self.home_url}{self.language}/serie-{serie_id}/{novel_slug}/chapter-{chapter['order']}"
+            # Construct chapter URL using the updated structure
+            url = f"{self.home_url}{self.language}/serie-{serie_id}/{novel_slug}/chapter-{chap_id}"
+            chapter_title = f"Chapter {chap_id}"
+            
             if chap_id % 100 == 1:
                 self.volumes.append(Volume(id=vol_id, title=vol_title))
-
+        
             self.chapters.append(
                 Chapter(
                     id=chap_id,
                     url=url,
-                    title=chapter["title"],
+                    title=chapter_title,
                     volume=vol_id,
                     volume_title=vol_title,
-                ),
+                )
             )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter.url)
-
         chapter_metadata = soup.select_one("script#__NEXT_DATA__")
         chapter_json = json.loads(chapter_metadata.text)
         assert chapter_json
 
-        series_data = chapter_json["props"]["pageProps"]["serie"]
-
-        # adjust chapter title as the one from the overview usually lacks details
-        details = series_data["chapter"]
-        chapter.title = f"#{details['slug']}: {details['title']}"
-
-        text_lines = series_data["chapter_data"]["data"]["body"]
+        page_props = chapter_json["props"]["pageProps"]
+        # The chapter details now reside in the "chapter" key.
+        if "chapter" in page_props:
+            chapter_data = page_props["chapter"]["data"]
+            # Update chapter title using new details (falling back if keys are missing)
+            chapter.title = f"#{chapter_data.get('slug', chapter.title)}: {chapter_data.get('title', chapter.title)}"
+            text_lines = chapter_data.get("body", [])
+        else:
+            # Fallback to the old structure if necessary
+            series_data = page_props["serie"]
+            details = series_data.get("chapter", {})
+            chapter.title = f"#{details.get('slug', chapter.title)}: {details.get('title', chapter.title)}"
+            text_lines = series_data.get("chapter_data", {}).get("data", {}).get("body", [])
+        
         return "".join(
             [
                 f"<p>{t.strip()}</p>"
