@@ -32,7 +32,7 @@ class WebnovelCrawler(BasicBrowserTemplate):
 
     def get_csrf(self):
         logger.info("Getting CSRF Token")
-        self.get_response(self.home_url)
+        self.get_response(f"{self.home_url}stories/novel")
         self.csrf = self.cookies["_csrfToken"]
         logger.debug("CSRF Token = %s", self.csrf)
 
@@ -94,8 +94,8 @@ class WebnovelCrawler(BasicBrowserTemplate):
         self.novel_title = book_info["bookName"]
 
         self.novel_cover = (
-            f"{self.origin.scheme}://img.webnovel.com/bookcover/{self.novel_id}/600/600.jpg"
-            + f"?coverUpdateTime{int(1000 * time())}&imageMogr2/quality/40"
+            f"{self.origin.scheme}://book-pic.webnovel.com/bookcover/{self.novel_id}"
+            + f"?coverUpdateTime{int(1000 * time())}&imageMogr2/thumbnail/600x"
         )
 
         if "authorName" in book_info:
