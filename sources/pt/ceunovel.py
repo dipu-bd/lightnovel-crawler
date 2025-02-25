@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""
 import logging
 
 from lncrawl.core.crawler import Crawler
@@ -65,3 +66,6 @@ class CeuNovelCrawler(Crawler):
         soup = self.get_soup(chapter['url'])
         contents = soup.select_one('#contentatt')
         return self.cleaner.extract_contents(contents)
+"""
+#it doesn't work because site was shutdown or the name was changed again for the 14th time{
+#nowadays the link leads to *insert casino/ad site*
