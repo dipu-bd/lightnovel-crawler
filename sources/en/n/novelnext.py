@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 class NovelNextCrawler(NovelFullTemplate):
-    base_url = ["https://novelnext.com/"]
+    base_url = ["https://novelnext.com/", "https://novelnext.dramanovels.io/"]
 
     def initialize(self) -> None:
         self.cleaner.bad_tag_text_pairs.update(
