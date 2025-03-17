@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
+from time import sleep
+
+from bs4 import BeautifulSoup, Tag
 
 from lncrawl.templates.novelfull import NovelFullTemplate
 
@@ -24,3 +27,7 @@ class NovelNextCrawler(NovelFullTemplate):
                 "strong": r"NovelNext\.com",
             }
         )
+
+    def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
+        sleep(5)
+        return soup.select_one("#chr-content, #chapter-content")
