@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from time import sleep
 
 from bs4 import BeautifulSoup, Tag
 
