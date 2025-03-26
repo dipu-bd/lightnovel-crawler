@@ -13,6 +13,7 @@ class NovelNextCrawler(NovelFullTemplate):
     base_url = ["https://novelnext.com/", "https://novelnext.dramanovels.io/"]
 
     def initialize(self) -> None:
+        self.init_executor(ratelimit=0.2)
         self.cleaner.bad_tag_text_pairs.update(
             {
                 "h4": [
@@ -29,5 +30,4 @@ class NovelNextCrawler(NovelFullTemplate):
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        sleep(5)
         return soup.select_one("#chr-content, #chapter-content")
