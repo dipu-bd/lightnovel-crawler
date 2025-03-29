@@ -188,6 +188,11 @@ class TaskManager(ABC):
         """
         if not futures:
             return []
+        
+        if desc is None:
+            raise Exception("resolve_future's \"desc\" parameter is None.")
+        if unit is None:
+            raise Exception("resolve_future's \"unit\" parameter is None.")
 
         _futures = list(futures or [])
         bar = self.progress_bar(
