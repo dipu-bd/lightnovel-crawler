@@ -7,11 +7,19 @@ from io import BytesIO
 from typing import Any, Dict, Optional, Union
 from urllib.parse import ParseResult, urlparse
 
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_exponential,
+    retry_if_exception,
+    retry_if_exception_type,
+    RetryCallState,
+)
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
 from PIL import Image, UnidentifiedImageError
 from requests import Response, Session
-from requests.exceptions import ProxyError
+from requests.exceptions import HTTPError, ProxyError
 from requests.structures import CaseInsensitiveDict
 
 from ..assets.user_agents import user_agents
@@ -88,6 +96,15 @@ class Scraper(TaskManager, SoupMaker):
             return {scheme: get_a_proxy(scheme, timeout)}
         return {}
 
+    @retry(
+        wait=wait_exponential(multiplier=1, min=1, max=300),
+        retry=retry_if_exception(
+            lambda e: isinstance(e, HTTPError)
+            and e.response is not None
+            and e.response.status_code == 429
+        ),
+        reraise=True,
+    )
     def __process_request(self, method: str, url: str, **kwargs):
         method_call = getattr(self.scraper, method)
         if not callable(method_call):
@@ -96,7 +113,7 @@ class Scraper(TaskManager, SoupMaker):
         _parsed = urlparse(url)
 
         kwargs = kwargs or dict()
-        retry = kwargs.pop("retry", 1)
+        retry_count = kwargs.pop("retry", 1)
         kwargs.setdefault("allow_redirects", True)
         kwargs["proxies"] = self.__get_proxies(_parsed.scheme)
         headers = kwargs.pop("headers", {})
@@ -111,32 +128,37 @@ class Scraper(TaskManager, SoupMaker):
             if v
         }
 
-        while retry >= 0:
-            try:
-                logger.debug(
-                    f"[{method.upper()}] {url}\n"
-                    + ", ".join([f"{k}={v}" for k, v in kwargs.items()])
-                )
+        def _before_sleep(retry_state: RetryCallState):
+            e = retry_state.outcome.exception()
+            logger.debug(f"{type(e).__qualname__}: {e} | Retrying...", e)
 
-                with self.domain_gate(_parsed.hostname):
-                    with no_ssl_verification():
-                        response: Response = method_call(url, **kwargs)
-                        response.raise_for_status()
-                        response.encoding = "utf8"
+            if isinstance(e, ProxyError):
+                for proxy_url in kwargs.get("proxies", {}).values():
+                    remove_faulty_proxies(proxy_url)
+                kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
 
-                self.cookies.update({x.name: x.value for x in response.cookies})
-                return response
-            except ScraperErrorGroup as e:
-                if retry == 0:  # retry attempt depleted
-                    raise e
+        @retry(
+            stop=stop_after_attempt(retry_count + 1),
+            retry=retry_if_exception_type(ScraperErrorGroup),
+            before_sleep=_before_sleep,
+            reraise=True,
+        )
+        def _do_request():
+            logger.debug(
+                f"[{method.upper()}] {url}\n"
+                + ", ".join([f"{k}={v}" for k, v in kwargs.items()])
+            )
 
-                retry -= 1
-                logger.debug(f"{type(e).__qualname__}: {e} | Retrying...", e)
+            with self.domain_gate(_parsed.hostname):
+                with no_ssl_verification():
+                    response: Response = method_call(url, **kwargs)
+                    response.raise_for_status()
+                    response.encoding = "utf8"
 
-                if isinstance(e, ProxyError):
-                    for proxy_url in kwargs.get("proxies", {}).values():
-                        remove_faulty_proxies(proxy_url)
-                    kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
+            self.cookies.update({x.name: x.value for x in response.cookies})
+            return response
+
+        return _do_request()
 
     # ------------------------------------------------------------------------- #
     # Helpers
