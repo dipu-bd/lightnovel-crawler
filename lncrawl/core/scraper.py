@@ -10,7 +10,7 @@ from urllib.parse import ParseResult, urlparse
 from tenacity import (
     retry,
     stop_after_attempt,
-    wait_exponential,
+    wait_random_exponential,
     retry_if_exception,
     retry_if_exception_type,
     RetryCallState,
@@ -97,7 +97,8 @@ class Scraper(TaskManager, SoupMaker):
         return {}
 
     @retry(
-        wait=wait_exponential(multiplier=1, min=1, max=300),
+        stop=stop_after_attempt(10),
+        wait=wait_random_exponential(multiplier=0.5, max=60),
         retry=retry_if_exception(
             lambda e: isinstance(e, HTTPError)
             and e.response is not None
