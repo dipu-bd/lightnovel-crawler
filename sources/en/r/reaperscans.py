@@ -107,6 +107,6 @@ class Reaperscans(Crawler):
 
     def download_chapter_body(self, chapter):
         # TODO: better retry/timeout settings
-        soup = self.get_soup(chapter["url"], retry=3, timeout=10)
+        soup = self.get_soup(chapter["url"], timeout=10)
         contents = soup.select_one("article")
         return self.cleaner.extract_contents(contents)

@@ -19,7 +19,7 @@ class Luminarynovels(MadaraTemplate):
     def select_chapter_tags(self, soup: BeautifulSoup):
         try:
             clean_novel_url = self.novel_url.split("?")[0].strip("/")
-            response = self.submit_form(f"{clean_novel_url}/ajax/chapters/", retry=0)
+            response = self.submit_form(f"{clean_novel_url}/ajax/chapters/", max_retries=0)
             soup = self.make_soup(response)
             chapters = soup.select(" div.page-content-listing.single-page > div > ul > li > a")
             if not chapters:

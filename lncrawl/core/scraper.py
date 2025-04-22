@@ -11,7 +11,6 @@ from tenacity import (
     retry,
     stop_after_attempt,
     wait_random_exponential,
-    retry_if_exception,
     retry_if_exception_type,
     RetryCallState,
 )
@@ -19,7 +18,7 @@ from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
 from PIL import Image, UnidentifiedImageError
 from requests import Response, Session
-from requests.exceptions import HTTPError, ProxyError
+from requests.exceptions import ProxyError
 from requests.structures import CaseInsensitiveDict
 
 from ..assets.user_agents import user_agents
@@ -96,17 +95,7 @@ class Scraper(TaskManager, SoupMaker):
             return {scheme: get_a_proxy(scheme, timeout)}
         return {}
 
-    @retry(
-        stop=stop_after_attempt(10),
-        wait=wait_random_exponential(multiplier=0.5, max=60),
-        retry=retry_if_exception(
-            lambda e: isinstance(e, HTTPError)
-            and e.response is not None
-            and e.response.status_code == 429
-        ),
-        reraise=True,
-    )
-    def __process_request(self, method: str, url: str, **kwargs):
+    def __process_request(self, method: str, url: str, max_retries: int = 10, **kwargs):
         method_call = getattr(self.scraper, method)
         if not callable(method_call):
             raise Exception(f"No request method: {method}")
@@ -114,7 +103,6 @@ class Scraper(TaskManager, SoupMaker):
         _parsed = urlparse(url)
 
         kwargs = kwargs or dict()
-        retry_count = kwargs.pop("retry", 1)
         kwargs.setdefault("allow_redirects", True)
         kwargs["proxies"] = self.__get_proxies(_parsed.scheme)
         headers = kwargs.pop("headers", {})
@@ -139,7 +127,8 @@ class Scraper(TaskManager, SoupMaker):
                 kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
 
         @retry(
-            stop=stop_after_attempt(retry_count + 1),
+            stop=stop_after_attempt(max_retries),
+            wait=wait_random_exponential(multiplier=0.5, max=60),
             retry=retry_if_exception_type(ScraperErrorGroup),
             before_sleep=_before_sleep,
             reraise=True,
@@ -220,23 +209,22 @@ class Scraper(TaskManager, SoupMaker):
     # Downloaders
     # ------------------------------------------------------------------------- #
 
-    def get_response(self, url, retry=1, timeout=(7, 301), **kwargs) -> Response:
+    def get_response(self, url, timeout=(7, 301), **kwargs) -> Response:
         """Fetch the content and return the response"""
         return self.__process_request(
             "get",
             url,
-            retry=retry,
             timeout=timeout,
             **kwargs,
         )
 
-    def post_response(self, url, data={}, retry=0, **kwargs) -> Response:
+    def post_response(self, url, data={}, max_retries=0, **kwargs) -> Response:
         """Make a POST request and return the response"""
         return self.__process_request(
             "post",
             url,
             data=data,
-            retry=retry,
+            max_retries=max_retries,
             **kwargs,
         )
 
