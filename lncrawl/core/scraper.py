@@ -117,20 +117,21 @@ class Scraper(TaskManager, SoupMaker):
             if v
         }
 
-        def _before_sleep(retry_state: RetryCallState):
+        def _after_retry(retry_state: RetryCallState):
             e = retry_state.outcome.exception()
-            logger.debug(f"{type(e).__qualname__}: {e} | Retrying...", e)
+            if isinstance(e, ScraperErrorGroup):
+                logger.debug(f"{type(e).__qualname__}: {e} | Retrying...", e)
 
-            if isinstance(e, ProxyError):
-                for proxy_url in kwargs.get("proxies", {}).values():
-                    remove_faulty_proxies(proxy_url)
-                kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
+                if isinstance(e, ProxyError):
+                    for proxy_url in kwargs.get("proxies", {}).values():
+                        remove_faulty_proxies(proxy_url)
+                    kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
 
         @retry(
             stop=stop_after_attempt(max_retries),
             wait=wait_random_exponential(multiplier=0.5, max=60),
             retry=retry_if_exception_type(ScraperErrorGroup),
-            before_sleep=_before_sleep,
+            after=_after_retry,
             reraise=True,
         )
         def _do_request():
