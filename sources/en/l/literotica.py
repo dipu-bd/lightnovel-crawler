@@ -58,7 +58,7 @@ class LiteroticaCrawler(Crawler):
             )
 
     def download_chapter_body(self, chapter: Chapter) -> str:
-        soup = self.get_soup(f"{chapter['url'].replace("www.", "speedy.", 1)}", timeout=50, verify=False)
+        soup = self.get_soup(f"{chapter['url'].replace('www.', 'speedy.', 1)}", timeout=50, verify=False)
         chapterText = ""
         while 1:
             chapterText += self.cleaner.extract_contents(soup.select_one("div.aa_ht"))
