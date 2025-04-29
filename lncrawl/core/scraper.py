@@ -95,7 +95,12 @@ class Scraper(TaskManager, SoupMaker):
             return {scheme: get_a_proxy(scheme, timeout)}
         return {}
 
-    def __process_request(self, method: str, url: str, max_retries: int = 10, **kwargs):
+    def __process_request(
+        self, method: str, url: str, max_retries: Optional[int] = None, **kwargs
+    ):
+        if max_retries is None:
+            max_retries = self.workers + 3
+
         method_call = getattr(self.scraper, method)
         if not callable(method_call):
             raise Exception(f"No request method: {method}")
