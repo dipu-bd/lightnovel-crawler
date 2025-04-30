@@ -171,8 +171,8 @@ class TaskManager(ABC):
         futures: Iterable[Future],
         timeout: Optional[float] = None,
         disable_bar=False,
-        desc=None,
-        unit=None,
+        desc='',
+        unit='item',
         fail_fast=False,
     ) -> List[Any]:
         """Wait for the futures to be done.
