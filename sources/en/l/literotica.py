@@ -33,7 +33,7 @@ class LiteroticaCrawler(Crawler):
         soup = self.get_soup(self.novel_url.replace("www.", "speedy.", 1), timeout=50, verify=False)
         isSeries = "/series/" in self.novel_url
         seriesLink = soup.select_one("a.bn_av")
-        self.novel_cover = soup.select_one("img.undefined")["src"] or None
+        self.novel_cover = soup.select_one("a.y_eR > img")["src"] or None
 
         if isSeries or seriesLink:
             if seriesLink:
