@@ -67,7 +67,5 @@ class LiteroticaCrawler(Crawler):
                 soup = self.get_soup(nextUrl, timeout=100, verify=False)
             except Exception:
                 break
-        # You can use `chapter['url']` to get the contents.
-        # To keep it simple, check `self.cleaner.extract_contents`.
         return chapterText.replace("\"/images/", "\"https://speedy.literotica.com/images/").replace(
             "https://www.literotica.com/images/", "https://speedy.literotica.com/images/")
