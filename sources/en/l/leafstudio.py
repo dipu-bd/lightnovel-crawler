@@ -43,4 +43,4 @@ class LiteroticaCrawler(Crawler):
         chapterText = ""
         for item in soup.select("p.chapter_content"):
             chapterText += self.cleaner.extract_contents(item)
-        return chapterText.replace("Login to buy access to this Chapter.","")
+        return chapterText.replace("Login to buy access to this Chapter.", "")
