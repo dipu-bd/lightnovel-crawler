@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 import logging
+from typing import List
 
 from lncrawl.core.crawler import Crawler
-from lncrawl.models import Chapter
+from lncrawl.models import Chapter, SearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +13,18 @@ class LiteroticaCrawler(Crawler):
 
     def initialize(self) -> None:
         self.init_executor(ratelimit=2)
+
+    def search_novel(self, query) -> List[SearchResult]:
+        soup = self.get_soup(f"{self.home_url}novels?search={query}&type=&language=&status=&sort=")
+        results = []
+        for item in soup.select("a.novel-item"):
+            results.append(
+                SearchResult(
+                    title=item.select_one("p.novel-item-title").text.strip(),
+                    url=item["href"]
+                )
+            )
+        return results
 
     def read_novel_info(self) -> None:
         soup = self.get_soup(self.novel_url)
