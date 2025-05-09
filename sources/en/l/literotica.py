@@ -15,7 +15,6 @@ class LiteroticaCrawler(Crawler):
         self.init_executor(ratelimit=2)
 
     def search_novel(self, query) -> List[SearchResult]:
-        pass
         soup = self.get_soup(
             f"https://search.literotica.com/?query={query}",
             timeout=50)
