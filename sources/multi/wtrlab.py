@@ -100,7 +100,8 @@ class WtrLab(Crawler):
         })
         headers = {'Content-Type': 'application/json'}
         jsonData = self.get_json(url, data=payload, headers=headers)
-        chapter.title = jsonData["data"]["data"]["title"]
+        title = jsonData["chapter"]["title"]
+        chapter.title =f"Chapter {chapter.id}: {title[0].upper() + title[1:]}"
         body = jsonData["data"]["data"]["body"]
         chapterText = ""
         for line in body:
