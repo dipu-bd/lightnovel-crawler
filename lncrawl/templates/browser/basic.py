@@ -3,7 +3,7 @@ from abc import abstractmethod
 from io import BytesIO
 from typing import Generator, List, Optional
 
-from PIL import Image, ImageFile
+from PIL import Image
 
 from ...core.browser import Browser, By
 from ...core.crawler import Crawler
@@ -157,7 +157,7 @@ class BasicBrowserTemplate(Crawler):
             self.init_browser()
             return self.download_chapter_body_in_browser(chapter)
 
-    def download_image(self, url: str, headers={}, **kwargs) -> ImageFile:
+    def download_image(self, url: str, headers={}, **kwargs):
         try:
             return super().download_image(url, headers, **kwargs)
         except ScraperErrorGroup as e:
