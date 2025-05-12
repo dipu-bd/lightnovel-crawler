@@ -9,7 +9,7 @@ from urllib.parse import ParseResult, urlparse
 
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageFile, UnidentifiedImageError
 from requests import Response, Session
 from requests.exceptions import ProxyError
 from requests.structures import CaseInsensitiveDict
@@ -238,7 +238,7 @@ class Scraper(TaskManager, SoupMaker):
         with open(output_file, "wb") as f:
             f.write(response.content)
 
-    def download_image(self, url: str, headers={}, **kwargs) -> Image:
+    def download_image(self, url: str, headers={}, **kwargs) -> ImageFile:
         """Download image from url"""
         if url.startswith("data:"):
             content = base64.b64decode(url.split("base64,")[-1])

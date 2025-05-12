@@ -28,11 +28,7 @@ def _chapter_file(
     return json_file
 
 
-def _save_chapter(app, chapter: Chapter):
-    from .app import App
-
-    assert isinstance(app, App)
-
+def _save_chapter(file_name: Path, chapter: Chapter):
     if not chapter.body:
         chapter.body = "<p><i>Failed to download chapter body</i></p>"
 
@@ -50,32 +46,28 @@ def _save_chapter(app, chapter: Chapter):
     if not chapter.body.startswith(title):
         chapter.body = "".join([title, chapter.body])
 
-    file_name = _chapter_file(
-        chapter,
-        output_path=app.output_path,
-        pack_by_volume=app.pack_by_volume,
-    )
     file_name.parent.mkdir(parents=True, exist_ok=True)
     with file_name.open("w", encoding="utf-8") as fp:
         json.dump(chapter, fp, ensure_ascii=False)
 
 
 def fetch_chapter_body(app):
-    from .app import App
-
+    from .app import App, Crawler
     assert isinstance(app, App)
-    assert app.crawler is not None
+    assert isinstance(app.crawler, Crawler)
 
     if not app.output_formats:
         app.output_formats = {}
 
     # attempt to restore from file cache
+    file_names = {}
     for chapter in app.chapters:
         file_name = _chapter_file(
             chapter,
             pack_by_volume=app.pack_by_volume,
             output_path=app.output_path,
         )
+        file_names[chapter.id] = file_name
         try:
             with open(file_name, "r", encoding="utf-8") as file:
                 old_chapter = json.load(file)
@@ -88,22 +80,23 @@ def fetch_chapter_body(app):
             logger.debug("Unable to decode JSON from the file: %s" % file_name)
         except Exception as e:
             logger.exception("An error occurred while reading the file:", e)
+    logger.info(f"Processed {len(app.chapters)} chapters")
 
     # download remaining chapters
-    app.progress = 0
-    for progress in app.crawler.download_chapters(app.chapters):
-        app.progress += progress
-
-    for chapter in app.chapters:
-        _save_chapter(app, chapter)
-
-    logger.info(f"Processed {len(app.chapters)} chapters [{app.progress} fetched]")
+    pending_chapters = [
+        chapter for chapter in app.chapters if not chapter.success
+    ]
+    app.progress = len(app.chapters) - len(pending_chapters)
+    for chapter in app.crawler.download_chapters(pending_chapters):
+        app.progress += 1
+        _save_chapter(file_names.get(chapter.id), chapter)
+    logger.info(f"Fetched {len(pending_chapters)} chapters")
 
 
 def _fetch_content_image(app, url, image_file: Path):
-    from .app import App
-
+    from .app import App, Crawler
     assert isinstance(app, App)
+    assert isinstance(app.crawler, Crawler)
 
     if url and not (image_file.exists() and image_file.is_file()):
         try:
@@ -211,7 +204,11 @@ def fetch_chapter_images(app):
 
     failed = []
     try:
-        app.crawler.resolve_futures(futures, desc="  Images", unit="item")
+        app.crawler.resolve_futures(
+            futures,
+            desc="  Images",
+            unit="item"
+        )
         failed = [
             filename
             for filename, url in images_to_download

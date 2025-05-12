@@ -3,7 +3,7 @@ import os
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Semaphore, Thread
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Dict, Generator, Iterable, List, Optional, TypeVar
 
 from tqdm import tqdm
 
@@ -16,6 +16,8 @@ MAX_REQUESTS_PER_DOMAIN = 5
 
 _resolver = Semaphore(1)
 _host_semaphores: Dict[str, Semaphore] = {}
+
+T = TypeVar('T')
 
 
 class TaskManager(ABC):
@@ -123,18 +125,17 @@ class TaskManager(ABC):
             desc=desc,
             unit=unit,
             total=total,
-            disable=disable or os.getenv("debug_mode"),
+            disable=disable,
         )
 
         original_close = bar.close
 
-        def extended_close():
+        def extended_close() -> None:
             if not bar.disable:
                 _resolver.release()
             original_close()
 
-        bar.close = extended_close
-
+        bar.close = extended_close  # type: ignore
         return bar
 
     def domain_gate(self, hostname: str = ""):
@@ -166,16 +167,16 @@ class TaskManager(ABC):
             if not future.done():
                 future.cancel()
 
-    def resolve_futures(
+    def resolve_future_generator(
         self,
-        futures: Iterable[Future],
+        futures: Iterable[Future[T]],
         timeout: Optional[float] = None,
         disable_bar=False,
         desc='',
         unit='item',
         fail_fast=False,
-    ) -> List[Any]:
-        """Wait for the futures to be done.
+    ) -> Generator[Optional[T], None, None]:
+        """Create a generator output to resolve the futures.
 
         Args:
             futures: A iterable list of futures to resolve.
@@ -187,9 +188,9 @@ class TaskManager(ABC):
             fail_fast: Fail on first error
         """
         if not futures:
-            return []
+            yield from ()
 
-        _futures = list(futures or [])
+        _futures = list(futures)
         bar = self.progress_bar(
             desc=desc,
             unit=unit,
@@ -198,21 +199,19 @@ class TaskManager(ABC):
             timeout=timeout,
         )
 
-        _results = []
         try:
             for future in _futures:
                 if fail_fast:
-                    r = future.result(timeout)
-                    _results.append(r)
+                    yield future.result(timeout)
                     bar.update()
                     continue
+
                 try:
-                    r = future.result(timeout)
-                    _results.append(r)
+                    yield future.result(timeout)
                 except KeyboardInterrupt:
-                    break
+                    raise
                 except Exception as e:
-                    _results.append(None)
+                    yield None
                     if bar.disable:
                         logger.exception("Failure to resolve future")
                     else:
@@ -221,9 +220,40 @@ class TaskManager(ABC):
                 finally:
                     bar.update()
         except KeyboardInterrupt:
-            pass
+            raise
         finally:
             Thread(target=lambda: self.cancel_futures(futures)).start()
+            yield from ()
             bar.close()
 
-        return _results
+    def resolve_futures(
+        self,
+        futures: Iterable[Future[T]],
+        timeout: Optional[float] = None,
+        disable_bar=False,
+        desc='',
+        unit='item',
+        fail_fast=False,
+    ) -> List[Optional[T]]:
+        """Wait for the futures to be done.
+
+        Args:
+            futures: A iterable list of futures to resolve.
+            timeout: The number of seconds to wait for the result of a future.
+                If None, then there is no limit on the wait time.
+            disable_bar: Hides the progress bar if True.
+            desc: The progress bar description
+            unit: The progress unit name
+            fail_fast: Fail on first error
+        """
+
+        return list(
+            self.resolve_future_generator(
+                futures=futures,
+                timeout=timeout,
+                disable_bar=disable_bar,
+                desc=desc,
+                unit=unit,
+                fail_fast=fail_fast,
+            )
+        )
