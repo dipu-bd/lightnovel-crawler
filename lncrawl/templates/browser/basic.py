@@ -100,33 +100,29 @@ class BasicBrowserTemplate(Crawler):
         self,
         chapters: List[Chapter],
         fail_fast=False,
-    ) -> Generator[int, None, None]:
+    ) -> Generator[Chapter, None, None]:
         # Try to use scraper first (since it is faster)
         try:
-            futures = {
-                index: self.executor.submit(self.download_chapter_body_in_soup, chapter)
-                for index, chapter in enumerate(chapters)
-                if not chapter.success
-            }
-            yield len(chapters) - len(futures)
-
-            self.resolve_futures(
-                futures.values(),
+            futures = [
+                self.executor.submit(self.download_chapter_body_in_soup, chapter)
+                for chapter in chapters
+            ]
+            generator = self.resolve_future_generator(
+                futures,
                 desc="Chapters",
                 unit="item",
                 fail_fast=True,
             )
-
-            for index, future in futures.items():
+            for index, result in enumerate(generator):
                 try:
                     chapter = chapters[index]
-                    chapter.body = future.result()
+                    chapter.body = result
                     self.extract_chapter_images(chapter)
                     chapter.success = True
-                    yield 1
                 except KeyboardInterrupt:
-                    return
-
+                    return  # failed
+                finally:
+                    yield chapter
             return  # successfully downloaded all the chapters
         except ScraperErrorGroup as e:
             if logger.isEnabledFor(logging.DEBUG):
@@ -148,7 +144,7 @@ class BasicBrowserTemplate(Crawler):
                 if fail_fast:
                     raise e
             finally:
-                yield 1
+                yield chapter
 
         self.close_browser()
 
@@ -161,7 +157,7 @@ class BasicBrowserTemplate(Crawler):
             self.init_browser()
             return self.download_chapter_body_in_browser(chapter)
 
-    def download_image(self, url: str, headers={}, **kwargs) -> Image:
+    def download_image(self, url: str, headers={}, **kwargs):
         try:
             return super().download_image(url, headers, **kwargs)
         except ScraperErrorGroup as e:
@@ -181,7 +177,7 @@ class BasicBrowserTemplate(Crawler):
         self, query: str
     ) -> Generator[SearchResult, None, None]:
         """Search for novels with `self.browser`"""
-        return []
+        yield from ()
 
     def read_novel_info_in_soup(self) -> None:
         """Read novel info with `self.scraper` requests"""

@@ -8,3 +8,4 @@ pycryptodome>=3.0.0,<4.0.0
 # cryptography<=3.3.2
 # win_unicode_console~=0.5
 # cssutils>=1.0.0,<1.1.0
+types-tqdm

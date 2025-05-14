@@ -48,7 +48,7 @@ class FanMTLCrawler(ChapterOnlyBrowserTemplate):
         for page in range(page_count):
             page_url = f"{common_page_url}?page={page}&wjm={params['wjm'][0]}"
             futures.append(self.executor.submit(self.get_soup, page_url))
-        for soup in self.resolve_futures(futures, desc="Pages"):
+        for soup in self.resolve_futures(futures, desc="TOC", unit="page"):
             yield from soup.select("ul.chapter-list li a")
 
     def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
