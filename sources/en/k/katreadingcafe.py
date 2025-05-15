@@ -132,10 +132,10 @@ class KatReadingCafeCrawler(ChapterOnlyBrowserTemplate):
         if not vols or not conts or len(vols) != len(conts):
             return []
         chapters: List[Tag] = []
-        # Process volumes in appearance order, but individual chapters oldest-first
-        for vol_section, vol_content in zip(vols, conts):
+        # Reverse volume order so oldest volume is processed first
+        for vol_section, vol_content in zip(reversed(vols), reversed(conts)):
             vol_title = vol_section.text.strip()
-            # Reverse li list to ensure oldest chapter first
+            # Reverse li list to ensure oldest chapter first within volume
             items = vol_content.select(".eplister ul li")
             for li in reversed(items):
                 link = li.select_one("a")
@@ -149,7 +149,7 @@ class KatReadingCafeCrawler(ChapterOnlyBrowserTemplate):
         if not ul:
             return []
         links = [a for a in ul.select("li a") if self._valid_chapter_link(a)]
-        # reverse to get oldest first if site lists newest first
+        # Reverse to get oldest first if site lists newest first
         return list(reversed(links))
 
     def _parse_fallback_links(self, soup: BeautifulSoup) -> List[Tag]:
@@ -159,7 +159,7 @@ class KatReadingCafeCrawler(ChapterOnlyBrowserTemplate):
                 continue
             if re.search(r"ch(?:apter)?\.?\s*\d+", a.text.strip(), re.IGNORECASE):
                 links.append(a)
-        # sort by chapter number ascending
+        # Sort by chapter number ascending
         links.sort(key=self._extract_chapter_number)
         return links
 
@@ -192,12 +192,12 @@ class KatReadingCafeCrawler(ChapterOnlyBrowserTemplate):
             title = f"{num} - {title_el.text.strip()}"
         else:
             title = tag.text.strip()
-        # ensure number prefix
+        # Ensure chapter number prefix
         if not re.match(r"^(?:chapter|ch)\.?\s*\d+", title, re.IGNORECASE):
             num = self._extract_chapter_number(tag)
             if num != float("inf"):
                 title = f"Chapter {int(num)}: {title}"
-        # include volume info
+        # Include volume info
         vol = tag.get("volume")
         if vol and "Vol" not in title:
             title = f"{vol} {title}"
@@ -212,7 +212,7 @@ class KatReadingCafeCrawler(ChapterOnlyBrowserTemplate):
         return content
 
     def _clean_chapter_content(self, content: Tag):
-        # remove unwanted selectors
+        # Remove unwanted selectors
         for sel in [
             ".navimedia",
             ".naveps",
@@ -222,14 +222,14 @@ class KatReadingCafeCrawler(ChapterOnlyBrowserTemplate):
         ]:
             for el in content.select(sel):
                 el.decompose()
-        # remove anti-scraping spans
+        # Remove anti-scraping spans
         for span in content.select("span[style*='position: absolute']"):
             span.decompose()
-        # strip weird attributes
+        # Strip weird attributes
         for el in content.select("[aria-5e703], [_63dbbd8], [custom-d9a6e5]"):
             for attr in list(el.attrs):
                 del el.attrs[attr]
-        # remove comments and nav links
+        # Remove comments and nav links
         for item in content.find_all(text=lambda t: isinstance(t, Comment)):
             item.extract()
         for a in content.select("a"):
@@ -246,7 +246,7 @@ class KatReadingCafeCrawler(ChapterOnlyBrowserTemplate):
                 )
             ):
                 a.decompose()
-        # drop empty paragraphs
+        # Drop empty paragraphs
         for p in content.select("p"):
             if not p.text.strip():
                 p.decompose()
