@@ -12,7 +12,7 @@ from .general import GeneralBrowserTemplate
 class SearchableBrowserTemplate(GeneralBrowserTemplate, SearchableSoupTemplate):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
 
-    def search_novel_in_scraper(self, query: str) -> List[SearchResult]:
+    def search_novel_in_soup(self, query: str) -> List[SearchResult]:
         tags = self.select_search_items(query)
         return list(self.process_search_results(tags))
 
@@ -37,10 +37,9 @@ class SearchableBrowserTemplate(GeneralBrowserTemplate, SearchableSoupTemplate):
     def select_search_items(self, query: str) -> Generator[Tag, None, None]:
         raise FallbackToBrowser()
 
-    @abstractmethod
     def select_search_items_in_browser(self, query: str) -> Generator[Tag, None, None]:
         """Select novel items found by the query using the browser"""
-        raise NotImplementedError()
+        yield from self.select_search_items(self.browser.soup)
 
     def parse_search_item_in_browser(self, tag: Tag) -> SearchResult:
         """Parse a tag and return single search result"""

@@ -73,7 +73,7 @@ class Scraper(TaskManager, SoupMaker):
                 # debug=True,
                 # delay=10,
                 ssl_context=ctx,
-                interpreter="js2py",
+                # interpreter="nodejs",
             )
         except Exception:
             logger.exception("Failed to initialize cloudscraper")
@@ -88,9 +88,10 @@ class Scraper(TaskManager, SoupMaker):
             return {scheme: get_a_proxy(scheme, timeout)}
         return {}
 
-    def __process_request(self, method: str, url, **kwargs):
+    def __process_request(self, method: str, url: str, **kwargs):
         method_call = getattr(self.scraper, method)
-        assert callable(method_call), f"No request method: {method}"
+        if not callable(method_call):
+            raise Exception(f"No request method: {method}")
 
         _parsed = urlparse(url)
 
@@ -206,7 +207,7 @@ class Scraper(TaskManager, SoupMaker):
             **kwargs,
         )
 
-    def post_response(self, url, data={}, retry=1, **kwargs) -> Response:
+    def post_response(self, url, data={}, retry=0, **kwargs) -> Response:
         """Make a POST request and return the response"""
         return self.__process_request(
             "post",

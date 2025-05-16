@@ -71,4 +71,8 @@ class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         )
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        return soup.select_one("#chr-content, #chapter-content")
+        contents = soup.select_one("#chr-content, #chapter-content")
+        for ads in contents.select("div"):
+            ads.extract()
+
+        return contents

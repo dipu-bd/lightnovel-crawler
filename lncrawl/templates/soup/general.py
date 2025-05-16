@@ -31,6 +31,17 @@ class GeneralSoupTemplate(Crawler):
         except Exception as e:
             logger.warning("Failed to parse novel authors | %s", e)
 
+        try:
+            tags = set(list(self.parse_genres(soup)))
+            self.novel_tags = ", ".join(tags)
+        except Exception as e:
+            logger.warning("Failed to parse novel tags | %s", e)
+
+        try:
+            self.novel_synopsis = self.parse_summary(soup)
+        except Exception as e:
+            logger.warning("Failed to parse novel synopsis | %s", e)
+
         for item in self.parse_chapter_list(soup):
             if isinstance(item, Chapter):
                 self.chapters.append(item)
@@ -50,10 +61,17 @@ class GeneralSoupTemplate(Crawler):
         """Parse and return the novel cover image"""
         raise NotImplementedError()
 
-    @abstractmethod
     def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         """Parse and return the novel authors"""
-        raise NotImplementedError()
+        return []
+
+    def parse_genres(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        """Parse and return the novel categories"""
+        return []
+
+    def parse_summary(self, soup: BeautifulSoup) -> str:
+        """Parse and return the novel summary or synopsis"""
+        return ""
 
     @abstractmethod
     def parse_chapter_list(

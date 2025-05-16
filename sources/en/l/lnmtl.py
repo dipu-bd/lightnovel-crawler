@@ -3,7 +3,7 @@ import logging
 import re
 from concurrent import futures
 
-import js2py
+import execjs
 from bs4 import BeautifulSoup
 
 from lncrawl.core.crawler import Crawler
@@ -84,9 +84,10 @@ class LNMTLCrawler(Crawler):
         script = soup.find(name="main").find_next_sibling(name="script").string
 
         try:
-            data = js2py.eval_js(
-                "(function() {" + script + "return window.lnmtl;})()"
-            ).to_dict()
+            data = execjs.eval(
+                "(function() {var window = { lnmtl: {} }; var lnmtl = window.lnmtl;" + script + "return window.lnmtl;})()"
+            )
+            assert isinstance(data, dict)
             for i, vol in enumerate(data["volumes"]):
                 title = vol.get("title", "") or ""
                 title = re.sub(r"[^\u0000-\u00FF]", "", title)

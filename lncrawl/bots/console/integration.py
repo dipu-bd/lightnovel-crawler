@@ -43,21 +43,23 @@ def start(self):
         search_links = [
             str(link)
             for link, crawler in crawler_list.items()
-            if crawler.search_novel != Crawler.search_novel
+            if crawler.search_novel != Crawler.search_novel and link.startswith("http")
         ]
         self.search_mode = True
     else:
-        url = urlparse(self.app.user_input)
-        url = "%s://%s/" % (url.scheme, url.hostname)
-        if url in rejected_sources:
-            display.url_rejected(rejected_sources[url])
-            raise LNException("Fail to init crawler: %s is rejected", url)
+        hostname = urlparse(self.app.user_input).hostname
+        if hostname in rejected_sources:
+            display.url_rejected(rejected_sources[hostname])
+            raise LNException("Fail to init crawler: %s is rejected", hostname)
         try:
             logger.info("Detected URL input")
             self.app.crawler = prepare_crawler(self.app.user_input)
             self.search_mode = False
         except Exception as e:
-            display.url_not_recognized()
+            if "No crawler found for" in str(e):
+                display.url_not_recognized()
+            else:
+                logger.error("Failed to prepare crawler", e)
             logger.debug("Trying to find it in novelupdates", e)
             guess = self.app.guess_novel_title(self.app.user_input)
             display.guessed_url_for_novelupdates()
@@ -106,7 +108,7 @@ def start(self):
             if not self.search_mode:
                 raise e
             elif not self.confirm_retry():
-                raise LNException("Cancelled by user")
+                raise LNException("Cancelled by user") from e
 
     self.app.start_download()
     self.app.bind_books()

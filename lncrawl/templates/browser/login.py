@@ -12,11 +12,11 @@ class LoginBrowserTemplate(GeneralBrowserTemplate):
 
     def login(self, email: str, password: str) -> None:
         try:
-            return self.login_in_scraper(email, password)
+            return self.login_in_soup(email, password)
         except ScraperErrorGroup:
             return self.login_in_browser(email, password)
 
-    def login_in_scraper(self, email: str, password: str) -> None:
+    def login_in_soup(self, email: str, password: str) -> None:
         """Login to the website using the scraper"""
         raise FallbackToBrowser()
 

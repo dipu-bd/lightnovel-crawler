@@ -30,6 +30,10 @@ class DiscordBot(discord.Client):
         options["guild_subscriptions"] = False
         options["fetch_offline_members"] = False
         self.handlers: Dict[str, MessageHandler] = {}
+        intents = discord.Intents.default()
+        intents.message_content = True
+        intents.emojis_and_stickers = False
+        options["intents"] = intents
         super().__init__(*args, loop=loop, **options)
 
     def start_bot(self):
@@ -50,10 +54,10 @@ class DiscordBot(discord.Client):
 
         self.bot_is_ready = True
 
-    async def on_message(self, message):
+    async def on_message(self, message: discord.Message):
         if not self.bot_is_ready:
             return  # Not ready yet
-        if message.author == self.user:
+        if message.author.id == self.user.id:
             return  # I am not crazy to talk with myself
         if message.author.bot:
             return  # Other bots are not edible
@@ -72,15 +76,13 @@ class DiscordBot(discord.Client):
                     )
                 if uid in self.handlers:
                     self.handlers[uid].destroy()
-
                 await self.handle_message(message)
-
         except IndexError as ex:
             logger.exception("Index error reported", ex)
         except Exception:
             logger.exception("Something went wrong processing message")
 
-    async def handle_message(self, message):
+    async def handle_message(self, message: discord.Message):
         if self.is_closed():
             return
 
@@ -92,12 +94,15 @@ class DiscordBot(discord.Client):
             )
             if uid in self.handlers:
                 self.handlers[uid].process(message)
-            # elif len(self.handlers) > C.max_active_handles or discriminator not in C.vip_users_ids:
-            #     async with message.author.typing():
-            #         await message.author.send(
-            #             "Sorry! I am too busy processing requests of other users.\n"
-            #             "Please knock again in a few hours."
-            #         )
+            elif (
+                len(self.handlers) > C.max_active_handles
+                or discriminator not in C.vip_users_ids
+            ):
+                async with message.author.typing():
+                    await message.author.send(
+                        "Sorry! I am too busy processing requests of other users.\n"
+                        "Please knock again in a few hours."
+                    )
             else:
                 logger.info(
                     "New handler for %s#%s [%s]",

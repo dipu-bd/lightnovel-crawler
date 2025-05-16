@@ -15,7 +15,8 @@ assignees: ''
 
 **Novel URL**:     <your novel url or query> <!-- What is your novel URL? -->
 **App Location**:    PIP | EXE | Discord | Telegram <!-- Where did you find this issue? -->
-**App Version**:   x.y.z  <!-- or the name of the bot -->
+<!-- Check if you are using the latest version, your issue might have been fixed in an update. -->
+**App Version**:   x.y.z  <!--Try the latest version  or the name of the bot -->
 
 ## Describe this issue
 

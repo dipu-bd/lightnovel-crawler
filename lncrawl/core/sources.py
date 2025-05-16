@@ -32,9 +32,9 @@ __all__ = [
     "rejected_sources",
 ]
 
-rejected_sources = {}
 template_list: Set[Type[Crawler]] = set()
 crawler_list: Dict[str, Type[Crawler]] = {}
+rejected_sources: Dict[str, str] = {}
 
 # --------------------------------------------------------------------------- #
 # Utilities
@@ -98,7 +98,8 @@ def __load_current_index():
         if not index_file.is_file():
             index_file = __local_data_path / "sources" / "_index.json"
 
-        assert index_file.is_file(), "Invalid index file"
+        if not index_file.is_file():
+            raise LNException("Invalid index file")
 
         logger.debug("Loading current index data from %s", index_file)
         with open(index_file, "r", encoding="utf8") as fp:
@@ -156,7 +157,12 @@ def __check_updates():
     __save_current_index()
 
     global rejected_sources
-    rejected_sources = __current_index["rejected"]
+    for url, reason in __current_index["rejected"].items():
+        no_www = url.replace("://www.", "://")
+        rejected_sources[url] = reason
+        rejected_sources[no_www] = reason
+        rejected_sources[urlparse(url).hostname] = reason
+        rejected_sources[urlparse(no_www).hostname] = reason
 
 
 # --------------------------------------------------------------------------- #
@@ -239,8 +245,8 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
     if file_path in __cache_crawlers:
         return __cache_crawlers[file_path]
 
-    # logger.debug('+ %s', file_path)
-    assert file_path.is_file(), "Invalid crawler file path"
+    if not file_path.is_file():
+        raise LNException("Invalid crawler file path")
 
     try:
         module_name = hashlib.md5(file_path.name.encode()).hexdigest()
@@ -273,7 +279,8 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
         if not urls:
             continue
         for url in urls:
-            assert __url_regex.match(url), f"Invalid base url: {url} @{file_path}"
+            if not __url_regex.match(url):
+                raise LNException(f"Invalid base url: {url} @{file_path}")
 
         for method in ["read_novel_info", "download_chapter_body"]:
             if not hasattr(crawler, method):
@@ -309,8 +316,13 @@ def __add_crawlers_from_path(path: Path):
         crawlers = __import_crawlers(path)
         for crawler in crawlers:
             setattr(crawler, "file_path", str(path.absolute()))
-            for url in getattr(crawler, "base_url"):
+            base_urls: list[str] = getattr(crawler, "base_url")
+            for url in base_urls:
+                no_www = url.replace("://www.", "://")
                 crawler_list[url] = crawler
+                crawler_list[no_www] = crawler
+                crawler_list[urlparse(url).hostname] = crawler
+                crawler_list[urlparse(no_www).hostname] = crawler
     except Exception as e:
         logger.warning("Could not load crawlers from %s. Error: %s", path, e)
 
@@ -351,21 +363,22 @@ def prepare_crawler(url: str) -> Optional[Crawler]:
         return None
 
     parsed_url = urlparse(url)
-    base_url = "%s://%s/" % (parsed_url.scheme, parsed_url.hostname)
-    if base_url in rejected_sources:
-        raise LNException("Source is rejected. Reason: " + rejected_sources[base_url])
+    hostname = parsed_url.hostname
+    home_url = f"{parsed_url.scheme}://{hostname}/"
 
-    CrawlerType = crawler_list.get(base_url)
+    if hostname in rejected_sources:
+        raise LNException("Source is rejected. Reason: " + rejected_sources[hostname])
+
+    CrawlerType = crawler_list.get(hostname)
     if not CrawlerType:
-        raise LNException("No crawler found for " + base_url)
+        raise LNException("No crawler found for " + hostname)
 
     logger.info(
-        "Initializing crawler for: %s [%s]",
-        base_url,
+        f"Initializing crawler for: {home_url} [%s]",
         getattr(CrawlerType, "file_path", "."),
     )
     crawler = CrawlerType()
-    crawler.home_url = base_url
     crawler.novel_url = url
+    crawler.home_url = home_url
     crawler.initialize()
     return crawler

@@ -60,7 +60,7 @@ class App:
         if self.crawler:
             self.crawler.__del__()
         self.chapters.clear()
-        logger.info("App destroyed")
+        logger.info("DONE")
 
     # ----------------------------------------------------------------------- #
 
@@ -79,6 +79,7 @@ class App:
                 str(link)
                 for link, crawler in crawler_list.items()
                 if crawler.search_novel != Crawler.search_novel
+                and link.startswith("http")
             ]
 
     def guess_novel_title(self, url: str) -> str:
@@ -148,7 +149,9 @@ class App:
             )
 
         source_name = slugify(urlparse(self.crawler.home_url).netloc)
-        self.output_path = Path(C.DEFAULT_OUTPUT_PATH) / source_name / self.good_file_name
+        self.output_path = (
+            Path(C.DEFAULT_OUTPUT_PATH) / source_name / self.good_file_name
+        )
 
     # ----------------------------------------------------------------------- #
 

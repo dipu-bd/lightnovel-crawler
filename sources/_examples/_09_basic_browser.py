@@ -47,7 +47,7 @@ class MyCrawlerName(BasicBrowserTemplate):
         pass
 
     # TODO: [OPTIONAL] Search for novels with `self.scraper` requests
-    def search_novel_in_scraper(self, query: str) -> List[SearchResult]:
+    def search_novel_in_soup(self, query: str) -> List[SearchResult]:
         # raise ScraperNotSupported()
         pass
 
@@ -56,7 +56,7 @@ class MyCrawlerName(BasicBrowserTemplate):
         pass
 
     # TODO: [OPTIONAL] Read novel info with `self.scraper` requests
-    def read_novel_info_in_scraper(self) -> None:
+    def read_novel_info_in_soup(self) -> None:
         # The current input url is available at `self.novel_url`.
         # You can use `self.get_soup`, `self.get_json` etc. utilities to fetch contents.
         #
@@ -75,7 +75,7 @@ class MyCrawlerName(BasicBrowserTemplate):
 
     # TODO: [REQUIRED] Read novel info with `self.browser`
     def read_novel_info_in_browser(self) -> None:
-        # This gets called only when the `read_novel_info_in_scraper` fails.
+        # This gets called only when the `read_novel_info_in_soup` fails.
         # The current input url is available at `self.novel_url`.
         # You can use `self.visit`, `self.browser.wait` etc. utilities.
         # Get a BeautifulSoup Tag instance from browser: `self.browser.find(..).as_tag()`
@@ -93,7 +93,7 @@ class MyCrawlerName(BasicBrowserTemplate):
         pass
 
     # TODO: [OPTIONAL] Download the chapter contents using the self.scraper requests
-    def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
+    def download_chapter_body_in_soup(self, chapter: Chapter) -> str:
         # Use the `chapter['url']` to get the chapter contents.
         # You can use `self.get_soup`, `self.get_json` etc. utilities to fetch contents.
         # To clean chapter HTML easily, use `self.cleaner.extract_contents`.

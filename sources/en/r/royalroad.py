@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import re
 import logging
 
 from lncrawl.core.crawler import Crawler
@@ -16,57 +17,50 @@ class RoyalRoadCrawler(Crawler):
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)
-
         results = []
-        for a in soup.select("h2.fiction-title a")[:5]:
-            url = self.absolute_url(a["href"])
+        for a in soup.select("h2.fiction-title a[href]")[:5]:
             results.append(
                 {
-                    "url": url,
                     "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
                 }
             )
-
         return results
 
     def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.find("h1", {"class": "font-white"}).text.strip()
+        self.novel_title = soup.select_one(".fic-header h1").text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        self.novel_cover = self.absolute_url(
-            soup.find("img", {"class": "thumbnail inline-block"})["src"]
-        )
+        possible_cover = soup.select_one(".fic-header img.thumbnail[src]")
+        if possible_cover:
+            self.novel_cover = self.absolute_url(possible_cover["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = soup.find("a", {"class": "font-white"}).text.strip()
+        self.novel_author = ", ".join(
+            [a.text.strip() for a in soup.select('.fic-header a[href^="/profile/"]')]
+        )
         logger.info("Novel author: %s", self.novel_author)
 
         self.novel_synopsis = self.cleaner.extract_contents(
-            soup.find("div", {"class": "hidden-content"})
+            soup.select_one(".fiction-info .description .hidden-content")
         )
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
-        for tag in soup.find_all("a", {"class": "fiction-tag"}):
-            self.novel_tags.append(tag.text)
+        self.novel_tags = [
+            a.text.strip()
+            for a in soup.select('.fiction-info .tags a[href^="/fictions/search"]')
+        ]
         logger.info("Novel tags: %s", self.novel_tags)
 
-        chapter_rows = soup.find("tbody").findAll("tr")
-        chapters = [row.find("a", href=True) for row in chapter_rows]
-
-        for x in chapters:
+        for a in soup.select("#chapters .chapter-row td:first-child a[href]"):
             chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if len(self.volumes) < vol_id:
-                self.volumes.append({"id": vol_id})
             self.chapters.append(
                 {
                     "id": chap_id,
-                    "volume": vol_id,
-                    "url": self.absolute_url(x["href"]),
-                    "title": x.text.strip() or ("Chapter %d" % chap_id),
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
                 }
             )
 
@@ -77,16 +71,18 @@ class RoyalRoadCrawler(Crawler):
         if possible_title and "Chapter" in possible_title.text:
             chapter["title"] = possible_title.text.strip()
 
-        classnames = []
-        for style in soup.select("style"):
-            style = style.text.replace(" ", "").replace("\n", "")
-            if style.endswith("{display:none;speak:never;}"):
-                classnames.append(style[1:-27])
+        hidden_class = ""
+        for style in soup.select("head > style"):
+            clean_text = re.sub(r"[\n\s]+", "", style.text.strip(), re.MULTILINE)
+            matches = re.findall(r"(.[\d\w]+)\{display:none;speak:never;\}", clean_text)
+            if matches:
+                hidden_class = ",".join(matches)
+                break
 
-        for classname in classnames:
-            for div in soup.find_all("p", {"class": classname}):
-                div.decompose()
+        contents = soup.select_one(".chapter .chapter-content")
+        if hidden_class:
+            for p in contents.select(hidden_class):
+                p.decompose()
 
-        contents = soup.select_one(".chapter-content")
         self.cleaner.clean_contents(contents)
         return str(contents)

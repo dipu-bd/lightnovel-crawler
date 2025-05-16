@@ -7,7 +7,7 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 search_url = "https://wordrain69.com/?s=%s"
-post_chapter_url = "https://wordrain69.com/wp-admin/admin-ajax.php"
+post_chapter_suffix = "/ajax/chapters/"
 
 
 class WordRain(Crawler):
@@ -27,31 +27,6 @@ class WordRain(Crawler):
                 ".adsbygoogle",
                 ".adsense-code",
                 ".sharedaddy",
-            ]
-        )
-        self.cleaner.bad_text_regex.update(
-            [
-                "[The translation belongs to Wordrain. Support us by comments, ,"
-                + " or buy Miao a coffee (*´ｪ｀*)っ旦~]",
-                "1 ko-Fi = extra chapter",
-                "[Thanks to everyone who’s reading this on wordrain. This translation "
-                + "belongs to us. (•̀o•́)ง Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "1 ko-fi= 1 bonus chapter.",
-                "[The translation belongs to Wordrain. Support us by comments, ,"
-                + " or buy Miao a coffee (*´ｪ｀*)っ~]",
-                "1 ko fi = 1 extra chapter",
-                "[The translation belongs to Wordrain. Support us by comments, ,"
-                + " or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[The translation belongs to Wordrain . Support us by comments, ,"
-                + " or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[Thanks to everyone who are reading this on the site wordrain ."
-                + " (•̀o•́)ง Support us by comments, , or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[Thanks to everyone who’s reading this on wordrain . "
-                + "This translation belongs to us. (•̀o•́)ง Support us by comments, ,"
-                + " or buy Miao a coffee (´ｪ｀)っ旦~]",
-                "[Thanks to everyone who’s reading this on wordrain ."
-                + " This translation belongs to us. ( •̀o•́)ง Support us by comments, ,"
-                + " or buy Miao a coffee ( ´ｪ｀)っ旦~]",
             ]
         )
 
@@ -97,15 +72,14 @@ class WordRain(Crawler):
         )
         logger.info("%s", self.novel_author)
 
-        self.novel_id = soup.select_one(
-            ".wp-manga-action-button[data-action=bookmark]"
-        )["data-post"]
+        self.novel_id = self.novel_url.removesuffix("/").split("/")[-1]
         logger.info("Novel id: %s", self.novel_id)
+
+        post_chapter_url = f"{self.base_url[0]}/manga/{self.novel_id}{post_chapter_suffix}"
 
         logger.info("Sending post request to %s", post_chapter_url)
         response = self.submit_form(
             post_chapter_url,
-            data={"action": "manga_get_chapters", "manga": int(self.novel_id)},
         )
         soup = self.make_soup(response)
         for a in reversed(soup.select(".wp-manga-chapter > a")):

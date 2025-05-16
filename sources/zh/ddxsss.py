@@ -22,10 +22,12 @@ class DdxSss(Crawler):
         # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
         self.init_parser("html.parser")
         self.cleaner.bad_tags.update(["script", "a"])
-        self.cleaner.bad_css.update([
-            ".noshow",
-            "div.Readpage.pagedown",
-        ])
+        self.cleaner.bad_css.update(
+            [
+                ".noshow",
+                "div.Readpage.pagedown",
+            ]
+        )
 
         # p tags should only show up after being parsed and formatted the first time
         self.cleaner.bad_tag_text_pairs["p"] = [
@@ -44,10 +46,10 @@ class DdxSss(Crawler):
         data = self.get_json(
             f"{self.home_url}user/search.html?q={query}",
             # if this cookie "expires" it might return INT results again -> maybe remove search functionality
-            cookies={"hm": "7c2cee175bfbf597f805ebc48957806e"}
+            cookies={"hm": "7c2cee175bfbf597f805ebc48957806e"},
         )
         if isinstance(data, int):
-            logger.warning("Failed to get any results, likely auth failure")
+            logger.info("Failed to get any results, likely auth failure")
             return []
 
         results = []
@@ -56,7 +58,7 @@ class DdxSss(Crawler):
                 SearchResult(
                     title=book["articlename"],
                     url=self.absolute_url(book["url_list"]),
-                    info=f"Author: {book['author']} | Synopsis: {book['intro']}"
+                    info=f"Author: {book['author']} | Synopsis: {book['intro']}",
                 )
             )
         return results
@@ -78,7 +80,7 @@ class DdxSss(Crawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        possible_author = meta.find('.small span', text=r"作者：")
+        possible_author = meta.find(".small span", text=r"作者：")
         if isinstance(possible_author, Tag):
             self.novel_author = possible_author.text.strip().replace("作者：", "")
         logger.info("Novel Author: %s", self.novel_author)
@@ -96,13 +98,15 @@ class DdxSss(Crawler):
                 logger.info("Skipping non-chapter link: %s", a["href"])
                 continue
 
-            chap_id = int(re.match(re.compile(f".*/book/{book_id}/(\\d+).*"), a["href"])[1])
+            chap_id = int(
+                re.match(re.compile(f".*/book/{book_id}/(\\d+).*"), a["href"])[1]
+            )
             vol_id = len(self.chapters) // 100 + 1
             if len(self.chapters) % 100 == 0:
                 self.volumes.append(Volume(vol_id))
             if not a:
                 # this should not occur with html.parser, if it does, likely due to parser/encoding issue
-                logger.warning("Failed to get Chapter %d! Missing Link", chap_id)
+                logger.info("Failed to get Chapter %d! Missing Link", chap_id)
                 continue
             self.chapters.append(
                 Chapter(

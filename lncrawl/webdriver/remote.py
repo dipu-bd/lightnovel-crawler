@@ -50,11 +50,13 @@ def create_remote(
     options.add_argument("--no-default-browser-check")
     options.add_argument("--disable-infobars")
     options.add_argument("--no-first-run")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--disable-client-side-phishing-detection")
+    options.add_argument("--disable-blink-features=AutomationControlled")
 
     # Add capabilities
-    #options.set_capability("quietExceptions", True)
     options.set_capability("acceptInsecureCerts", True)
-    #options.set_capability("useAutomationExtension", False)
+    # options.set_capability("quietExceptions", True)
 
     # Chrome specific experimental options
     options.accept_insecure_certs = True
@@ -62,8 +64,8 @@ def create_remote(
     options.strict_file_interactability = False
     options.add_experimental_option("useAutomationExtension", False)
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    if not is_debug:
-        options.add_experimental_option("excludeSwitches", ["enable-logging"])
+    # if not is_debug:
+    #     options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
     # Set default language
     try:
@@ -92,7 +94,6 @@ def create_remote(
         chrome = WebDriver(
             command_executor=address,
             options=options,
-            desired_capabilities=options.to_capabilities(),
         )
     except Exception as e:
         logger.exception("Failed to create remote instance", e)

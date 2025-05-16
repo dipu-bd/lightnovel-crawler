@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
 
-    def read_novel_info_in_scraper(self) -> None:
+    def read_novel_info_in_soup(self) -> None:
         soup = self.get_novel_soup()
 
         try:
@@ -32,6 +32,17 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
             self.novel_author = ", ".join(authors)
         except Exception as e:
             logger.warning("Failed to parse novel authors | %s", e)
+
+        try:
+            tags = set(list(self.parse_genres(soup)))
+            self.novel_tags = ", ".join(tags)
+        except Exception as e:
+            logger.warning("Failed to parse novel tags | %s", e)
+
+        try:
+            self.novel_synopsis = self.parse_summary(soup)
+        except Exception as e:
+            logger.warning("Failed to parse novel synopsis | %s", e)
 
         for item in self.parse_chapter_list(soup):
             if isinstance(item, Chapter):
@@ -59,6 +70,17 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         except Exception as e:
             logger.warning("Failed to parse novel authors | %s", e)
 
+        try:
+            tags = set(list(self.parse_genres_in_browser()))
+            self.novel_tags = ", ".join(tags)
+        except Exception as e:
+            logger.warning("Failed to parse novel tags | %s", e)
+
+        try:
+            self.novel_synopsis = self.parse_summary_in_browser()
+        except Exception as e:
+            logger.warning("Failed to parse novel synopsis | %s", e)
+
         for item in self.parse_chapter_list_in_browser():
             if isinstance(item, Chapter):
                 self.chapters.append(item)
@@ -73,9 +95,17 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         """Parse and return the novel cover image in the browser"""
         return self.parse_cover(self.browser.soup)
 
-    def parse_authors_in_browser(self) -> Generator[Tag, None, None]:
+    def parse_authors_in_browser(self) -> Generator[str, None, None]:
         """Parse and return the novel author in the browser"""
         yield from self.parse_authors(self.browser.soup)
+
+    def parse_genres_in_browser(self) -> Generator[str, None, None]:
+        """Parse and return the novel categories in the browser"""
+        yield from self.parse_genres(self.browser.soup)
+
+    def parse_summary_in_browser(self) -> str:
+        """Parse and return the novel summary or synopsis in the browser"""
+        return self.parse_summary(self.browser.soup)
 
     def parse_chapter_list_in_browser(
         self,
@@ -83,7 +113,7 @@ class GeneralBrowserTemplate(BasicBrowserTemplate, GeneralSoupTemplate):
         """Parse and return the volumes and chapters in the browser"""
         return self.parse_chapter_list(self.browser.soup)
 
-    def download_chapter_body_in_scraper(self, chapter: Chapter) -> str:
+    def download_chapter_body_in_soup(self, chapter: Chapter) -> str:
         soup = self.get_soup(chapter.url)
         body = self.select_chapter_body(soup)
         return self.parse_chapter_body(body)

@@ -1,6 +1,7 @@
 """
 To download chapter bodies
 """
+
 import json
 import logging
 from pathlib import Path
@@ -68,7 +69,7 @@ def fetch_chapter_body(app):
     if not app.output_formats:
         app.output_formats = {}
 
-    # restore from file cache
+    # attempt to restore from file cache
     for chapter in app.chapters:
         file_name = _chapter_file(
             chapter,
@@ -79,15 +80,14 @@ def fetch_chapter_body(app):
             with open(file_name, "r", encoding="utf-8") as file:
                 old_chapter = json.load(file)
                 chapter.update(**old_chapter)
+                if chapter.success:
+                    logger.info(f"Restored chapter {chapter.id} from {file_name}")
         except FileNotFoundError:
-            logger.info("Missing File: %s Retrieved!" % file_name)
+            pass
         except json.JSONDecodeError:
-            logger.info("Unable to decode JSON from the file: %s" % file_name)
+            logger.debug("Unable to decode JSON from the file: %s" % file_name)
         except Exception as e:
             logger.exception("An error occurred while reading the file:", e)
-
-        if chapter.success:
-            logger.debug(f"Restored chapter {chapter.id} from {file_name}")
 
     # download remaining chapters
     app.progress = 0
@@ -111,7 +111,7 @@ def _fetch_content_image(app, url, image_file: Path):
             image_file.parent.mkdir(parents=True, exist_ok=True)
             if img.mode not in ("L", "RGB", "YCbCr", "RGBX"):
                 if img.mode == "RGBa":
-                    #RGBa -> RGB isn't supported so we go through RGBA first
+                    # RGBa -> RGB isn't supported so we go through RGBA first
                     img.convert("RGBA").convert("RGB")
                 else:
                     img = img.convert("RGB")

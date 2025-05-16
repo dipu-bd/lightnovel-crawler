@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
-import js2py
-from typing import Generator, Union
+import json
+from typing import Generator
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.models import Chapter, SearchResult
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
-from lncrawl.core.exeptions import FallbackToBrowser
 
 from urllib.parse import urljoin, quote_plus
 
@@ -21,12 +20,8 @@ digit_regex = re.compile(r"\/(\d+)-")
 class RanobeLibCrawler(SearchableBrowserTemplate):
     base_url = [
         "https://ranobes.top/",
-        "http://ranobes.top/",
         "https://ranobes.net/",
-        "http://ranobes.net/",
     ]
-    has_manga = False
-    has_mtl = False
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update([".free-support", 'div[id^="adfox_"]'])
@@ -73,44 +68,34 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
         for a in soup.select('.tag_list a[href*="/authors/"]'):
             yield a.text.strip()
 
-    def parse_chapter_list_in_browser(
-        self,
-    ) -> Generator[Union[Chapter, Volume], None, None]:
-        self.browser.visit(urljoin(self.home_url, f"/chapters/{self.novel_id}/"))
-        self.browser.wait(".chapters__container")
-        _pages = max(
-            int(a["value"]) for a in self.browser.soup.select(".form_submit option")
-        )
-        if not _pages:
-            _pages = 1
-        tags = self.browser.soup.select(".chapters__container .cat_line a")
-        for i in range(2, _pages + 1):
-            self.browser.visit(
-                urljoin(self.home_url, f"/chapters/{self.novel_id}/page/{i}/")
-            )
-            self.browser.wait(".chapters__container")
-            tags += self.browser.soup.select(".chapters__container .cat_line a")
+    def parse_chapter_list_in_browser(self) -> Generator[Chapter, None, None]:
+        self.browser._driver.implicitly_wait(1)
+        self.browser.click('a[href^="/chapters/"][title="Go to table of contents"]')
 
-        for _id, _t in enumerate(reversed(tags)):
-            yield Chapter(
-                id=_id, url=self.absolute_url(_t.get("href")), title=_t.get("title")
-            )
+        index = 0
+        while True:
+            self.browser.wait(".cat_line a")
+            for tag in self.browser.find_all(".cat_line a"):
+                index += 1
+                yield Chapter(
+                    id=index,
+                    title=tag.get_attribute("title"),
+                    url=self.absolute_url(tag.get_attribute("href")),
+                )
 
-    def parse_chapter_list(
-        self, soup: BeautifulSoup
-    ) -> Generator[Union[Chapter, Volume], None, None]:
+            next_page = self.browser.find(".page_next a")
+            if not next_page:
+                break
+            self.browser._driver.implicitly_wait(1)
+            next_page.scroll_into_view()
+            next_page.click()
+
+    def parse_chapter_list(self, soup: BeautifulSoup) -> Generator[Chapter, None, None]:
         self.novel_id = digit_regex.search(self.novel_url).group(1)
         chapter_list_link = urljoin(self.home_url, f"/chapters/{self.novel_id}/")
         soup = self.get_soup(chapter_list_link)
-        script = soup.find(
-            lambda tag: isinstance(tag, Tag)
-            and tag.name == "script"
-            and tag.text.startswith("window.__DATA__")
-        )
-        assert isinstance(script, Tag)
-        data = js2py.eval_js(script.text).to_dict()
-        assert isinstance(data, dict)
 
+        data = self.extract_page_data(soup)
         pages_count = data["pages_count"]
         logger.info("Total pages: %d", pages_count)
 
@@ -118,36 +103,37 @@ class RanobeLibCrawler(SearchableBrowserTemplate):
         page_soups = [soup]
         for i in range(2, pages_count + 1):
             chapter_page_url = chapter_list_link.strip("/") + ("/page/%d" % i)
-            f = self.executor.submit(self.get_soup, chapter_page_url)
-            futures.append(f)
+            futures.append(self.executor.submit(self.get_soup, chapter_page_url))
         page_soups += [f.result() for f in futures]
 
-        _i = 0
-        for soup in reversed(page_soups):
-            script = soup.find(
-                lambda tag: isinstance(tag, Tag)
-                and tag.name == "script"
-                and tag.text.startswith("window.__DATA__")
-            )
-            assert isinstance(script, Tag)
-
-            data = js2py.eval_js(script.text).to_dict()
-            assert isinstance(data, dict)
-
+        index = 0
+        for soup in enumerate(reversed(page_soups)):
+            data = self.extract_page_data(soup)
             for chapter in reversed(data["chapters"]):
-                _i += 1
+                index += 1
                 yield Chapter(
-                    id=_i,
+                    id=index,
                     title=chapter["title"],
                     url=self.absolute_url(chapter["link"]),
                 )
 
     def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
         self.visit(chapter.url)
-        self.browser.wait(".structure")
+        self.browser.wait("#arrticle")
 
     def select_chapter_body(self, soup: BeautifulSoup) -> Tag:
-        if soup.select_one("div#arrticle"):
-            return soup.select_one("div#arrticle")
-        else:
-            raise FallbackToBrowser
+        return soup.select_one("div#arrticle")
+
+    def extract_page_data(self, soup: BeautifulSoup) -> dict:
+        script = soup.find(
+            lambda tag: isinstance(tag, Tag)
+            and tag.name == "script"
+            and tag.text.startswith("window.__DATA__")
+        )
+        assert isinstance(script, Tag)
+
+        content = script.text.strip()
+        content = content.replace("window.__DATA__ = ", "")
+
+        data = json.loads(content)
+        return data

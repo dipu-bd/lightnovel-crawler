@@ -62,11 +62,11 @@ class MyCrawlerName(OptionalVolumeBrowserTemplate):
         pass
 
     # TODO: [OPTIONAL] Parse and return the novel author in the browser
-    def parse_authors_in_browser(self) -> Generator[Tag, None, None]:
+    def parse_authors_in_browser(self) -> Generator[str, None, None]:
         # yield from self.parse_authors(self.browser.soup)
         pass
 
-    # TODO: [REQUIRED] Parse and return the novel authors
+    # TODO: [OPTIONAL] Parse and return the novel authors
     def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         #
@@ -78,6 +78,28 @@ class MyCrawlerName(OptionalVolumeBrowserTemplate):
         # Example 2: <multiple authors example>
         #   for a in soup.select(".m-imgtxt a[href*='/authors/']"):
         #       yield a.text.strip()
+        pass
+
+    # TODO: [OPTIONAL] Parse and return the novel author in the browser
+    def parse_categorie_in_browser(self) -> Generator[str, None, None]:
+        # yield from self.parse_genres(self.browser.soup)
+        pass
+
+    # TODO: [OPTIONAL] Parse and return the novel categories or tags
+    def parse_genres(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        # The soup here is the result of `self.get_soup(self.novel_url)`
+        #
+        # See the `parse_authors` example above for a similar implementation.
+        pass
+
+    # TODO: [OPTIONAL] Parse and return the novel summary or synopsis in the browser
+    def parse_summary_in_browser(self) -> str:
+        # return self.parse_summary(self.browser.soup)
+        pass
+
+    # TODO: [OPTIONAL] Parse and return the novel summary or synopsis
+    def parse_summary(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        # The soup here is the result of `self.get_soup(self.novel_url)`
         pass
 
     # TODO: [OPTIONAL] Open the Chapter URL in the browser

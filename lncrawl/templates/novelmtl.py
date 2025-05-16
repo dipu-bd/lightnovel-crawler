@@ -7,11 +7,11 @@ from bs4 import BeautifulSoup, Tag
 
 from lncrawl.core.exeptions import LNException
 from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate
+from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
+from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 
 
-class NovelMTLTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
+class NovelMTLTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
     is_template = True
 
     def initialize(self) -> None:

@@ -1,11 +1,28 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
-from bs4 import Tag
+from lxml import etree
+import json
+import base64
+from bs4 import BeautifulSoup
+import re
+from urllib.parse import urlparse
 
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
+
+CHAPTER_LIST_URL = (
+    "https://api.reaperscans.com/chapters/{}?page={}&perPage=100&order=asc"
+)
+NOVEL_URL = "https://api.reaperscans.com/series/{}"
+
+INIT_PATTERN = re.compile(
+    r"\(self\.__next_f\s?=\s?self\.__next_f\s?\|\|\s?\[\]\)\.push\((\[.+?\])\)"
+)
+PAYLOAD_PATTERN = re.compile(r"self\.__next_f\.push\((\[.+)\)$")
+TEXT_PATTERN = re.compile(r"^[a-fA-F0-9]+:T(.*)", re.DOTALL)
+HEX_PREFIX_PATTERN = re.compile(r"^([0-9a-fA-F]+),\n")
+ID_MARKER_PATTERN = re.compile(r"\n(?=[a-fA-F0-9]+:)")
 
 
 class Reaperscans(Crawler):
@@ -29,84 +46,108 @@ class Reaperscans(Crawler):
         )
         self.init_executor(ratelimit=0.9)
 
-    def get_chapters_from_page(self, page, body):
-        url = self.absolute_url("/livewire/message/" + body["fingerprint"]["name"])
-        body["updates"] = [
-            {
-                "type": "callMethod",
-                "payload": {
-                    "id": "00000",
-                    "method": "gotoPage",
-                    "params": [page, "page"],
-                },
-            }
-        ]
-
-        response = self.post_json(url=url, data=json.dumps(body), timeout=10)
-        return self.make_soup(response["effects"]["html"])
-
-    def get_chapters_from_doc(self, dom):
-        return [
-            {
-                "title": a.select_one("p").text.strip(),
-                "url": self.absolute_url(a["href"]),
-            }
-            for a in dom.select("div[wire\\3A id] ul[role] li a")
-        ]
-
-    def insert_chapters(self, chapters):
-        self.chapters = [
-            {
-                "id": i + 1,
-                "title": x["title"],
-                "url": x["url"],
-            }
-            for i, x in enumerate(reversed(chapters))
-        ]
-
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
 
-        self.novel_title = soup.select_one("h1").text.strip()
+        novel_slug = urlparse(self.novel_url).path.split("/")[2]
+        data = self.get_json(NOVEL_URL.format(novel_slug))
+
+        self.novel_id = data["id"]
+        logger.info("Novel ID: %d", self.novel_id)
+
+        self.novel_title = data["title"]
         logger.info("Novel title: %s", self.novel_title)
 
-        possible_image = soup.select_one(".h-full .w-full img")
-        if isinstance(possible_image, Tag):
-            self.novel_cover = self.absolute_url(possible_image["src"])
+        self.novel_cover = data["thumbnail"]
         logger.info("Novel cover: %s", self.novel_cover)
 
-        # livewire container
-        container = soup.select_one("main div[wire\\:id][wire\\:initial-data]")
-        # first page ssr json
-        body = json.loads(container["wire:initial-data"])
-        body.pop("effects")
-        # initial chapters from soup
-        chapters = self.get_chapters_from_doc(container)
-        page_count = 1
-        last_page = container.select_one(
-            'span[wire\\:key^="paginator-page"]:nth-last-child(2)'
-        )
+        chapters = []
+        data = self.get_json(CHAPTER_LIST_URL.format(self.novel_id, 1))
+        chapters += data["data"]
 
-        if isinstance(last_page, Tag):
-            page_count = int(last_page.text.strip())
-        else:
-            self.insert_chapters(chapters)
-            # if we don't have the pagination el
-            return
+        futures = []
+        for page in range(2, data["meta"]["last_page"] + 1):
+            url = CHAPTER_LIST_URL.format(self.novel_id, page)
+            futures.append(self.executor.submit(self.get_json, url))
 
-        toc_futures = [
-            self.executor.submit(self.get_chapters_from_page, k, body)
-            for k in range(2, page_count + 1)
-        ]
-        self.resolve_futures(toc_futures, desc="TOC", unit="page")
-        for f in toc_futures:
-            chapters.extend(self.get_chapters_from_doc(f.result()))
+        for f in futures:
+            data = f.result()
+            chapters += data["data"]
 
-        self.insert_chapters(chapters)
+        for item in chapters:
+            chap_id = 1 + (len(self.chapters))
+            chap_name = item["chapter_name"]
+            self.chapters.append(
+                {
+                    "id": chap_id,
+                    "url": f"{self.novel_url}/{item['chapter_slug']}",
+                    "title": chap_name if chap_name else item["chapter_title"],
+                }
+            )
+
+    def extract_nextjs_flight_text(self, html: str) -> str:
+        """
+        Extracts text content from Next.js flight data in HTML.
+        """
+        tree = etree.HTML(html)
+        scripts = tree.xpath("//script/text()")
+
+        raw_chunks = []
+        for script in filter(None, scripts):
+            for line in script.strip().splitlines():
+                for pattern in (INIT_PATTERN, PAYLOAD_PATTERN):
+                    match = pattern.search(line)
+                    if match and match.group(1):
+                        try:
+                            raw_chunks.append(json.loads(match.group(1)))
+                            break
+                        except json.JSONDecodeError:
+                            pass
+
+        if not raw_chunks:
+            return ""
+
+        decoded_data = []
+        for chunk in raw_chunks:
+            if not isinstance(chunk, list) or len(chunk) < 2:
+                continue
+
+            typ, val = chunk[0], chunk[1]
+            if not isinstance(val, str):
+                continue
+
+            # Add string directly or decode base64
+            if typ == 1:
+                decoded_data.append(val)
+            elif typ == 3:
+                try:
+                    decoded_data.append(
+                        base64.b64decode(val).decode("utf-8", errors="replace")
+                    )
+                except (base64.binascii.Error, UnicodeDecodeError):
+                    pass
+
+        if not decoded_data:
+            return ""
+
+        combined = "\n".join(decoded_data)
+        segments = []
+
+        for line in ID_MARKER_PATTERN.split(combined):
+            match = TEXT_PATTERN.match(line)
+            if match:
+                content = match.group(1)
+                # Remove hex length prefix if present
+                hex_match = HEX_PREFIX_PATTERN.match(content)
+                if hex_match:
+                    content = content[hex_match.end() :]
+                segments.append(content)
+
+        return segments
 
     def download_chapter_body(self, chapter):
-        # TODO: better retry/timeout settings
-        soup = self.get_soup(chapter["url"], retry=3, timeout=10)
-        contents = soup.select_one("article")
-        return self.cleaner.extract_contents(contents)
+        response = self.get_response(chapter["url"], timeout=10)
+        html_text = response.content.decode("utf8", "ignore")
+        content = self.extract_nextjs_flight_text(html_text)[0]
+        chapter_body = BeautifulSoup(content, "lxml")
+        return self.cleaner.extract_contents(chapter_body)

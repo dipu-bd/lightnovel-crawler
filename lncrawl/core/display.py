@@ -139,9 +139,15 @@ def new_version_news(latest):
 def url_supported_list():
     from .sources import crawler_list
 
-    print("List of %d supported sources:" % len(crawler_list))
-    for url in sorted(crawler_list.keys()):
-        print(Fore.LIGHTGREEN_EX, Chars.RIGHT_ARROW, url, Fore.RESET)
+    crawlers = list(set(crawler_list.values()))
+    print(f"List of supported sources in {len(crawlers)} crawlers:")
+    for crawler in sorted(crawlers, key=lambda x: x.__name__):
+        crawler_name = crawler.__name__.split(".")[-1]
+        crawler_path = getattr(crawler, "file_path", crawler.__module__)
+        print(Fore.LIGHTGREEN_EX + Chars.RIGHT_ARROW, crawler_name + Fore.RESET, end="")
+        print(Style.DIM, "(" + crawler_path + ")", Style.RESET_ALL)
+        for url in crawler.base_url:
+            print("    " + Fore.CYAN + Chars.LINK, url + Fore.RESET)
 
 
 def url_not_recognized():
@@ -281,7 +287,7 @@ def format_resume_choices(meta_list: List[MetaInfo]):
             meta.novel.title,
             len(meta.session.download_chapters),
         )
-        text += "\n" + (" " * 6) + Chars.LINK + " " + meta["url"]
+        text += "\n" + (" " * 6) + Chars.LINK + " " + meta.novel.url
         items.append({"name": text})
 
     return items

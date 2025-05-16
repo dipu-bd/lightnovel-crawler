@@ -61,7 +61,7 @@ class MyCrawlerName(ChapterWithVolumeSoupTemplate):
         # The soup here is the result of `self.get_soup(self.novel_url)`
         pass
 
-    # TODO: [REQUIRED] Parse and return the novel authors
+    # TODO: [OPTIONAL] Parse and return the novel authors
     def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         # The soup here is the result of `self.get_soup(self.novel_url)`
         #
@@ -73,6 +73,18 @@ class MyCrawlerName(ChapterWithVolumeSoupTemplate):
         # Example 2: <multiple authors example>
         #   for a in soup.select(".m-imgtxt a[href*='/authors/']"):
         #       yield a.text.strip()
+        pass
+
+    # TODO: [OPTIONAL] Parse and return the novel categories or tags
+    def parse_genres(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        # The soup here is the result of `self.get_soup(self.novel_url)`
+        #
+        # See the `parse_authors` example above for a similar implementation.
+        pass
+
+    # TODO: [OPTIONAL] Parse and return the novel summary or synopsis
+    def parse_summary(self, soup: BeautifulSoup) -> Generator[str, None, None]:
+        # The soup here is the result of `self.get_soup(self.novel_url)`
         pass
 
     # TODO: [REQUIRED] Select volume list item tags from the page soup

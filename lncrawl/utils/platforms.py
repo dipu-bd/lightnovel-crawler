@@ -31,10 +31,17 @@ def has_display():
         Screen.view_width = tk.maxsize()[0]
         Screen.view_height = tk.maxsize()[1]
         tk.destroy()
-        del Tk
+        del tk
+
         return True
     except Exception:
-        return False
+        try:
+            import matplotlib
+
+            backend = matplotlib.get_backend()
+            return "Agg" not in backend
+        except Exception:
+            return False
 
 
 class Platform:

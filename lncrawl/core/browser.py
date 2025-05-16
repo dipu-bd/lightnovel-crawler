@@ -89,10 +89,18 @@ class Browser:
                 )
             logger.debug("Cookies applied: %s", self._driver.get_cookies())
         if isinstance(self.browser_storage, dict):
-            for key, value in self.browser_storage['localStorage'].items():
-                self._driver.execute_script("window.localStorage.setItem(arguments[0], arguments[1]);", key, value)
-            for key, value in self.browser_storage['sessionStorage'].items():
-                self._driver.execute_script("window.sessionStorage.setItem(arguments[0], arguments[1]);", key, value)
+            for key, value in self.browser_storage["localStorage"].items():
+                self._driver.execute_script(
+                    "window.localStorage.setItem(arguments[0], arguments[1]);",
+                    key,
+                    value,
+                )
+            for key, value in self.browser_storage["sessionStorage"].items():
+                self._driver.execute_script(
+                    "window.sessionStorage.setItem(arguments[0], arguments[1]);",
+                    key,
+                    value,
+                )
             logger.debug("Storage applied: %s", self.browser_storage)
 
     def _restore_cookies(self):
@@ -110,16 +118,18 @@ class Browser:
                 )
             logger.debug("Cookies retrieved: %s", self.cookie_store)
         if isinstance(self.browser_storage, dict):
-            self.browser_storage['localStorage'] = self._driver.execute_script(
+            self.browser_storage["localStorage"] = self._driver.execute_script(
                 "var ls = window.localStorage, items = {}; "
                 "for (var i = 0, k; i < ls.length; ++i) "
                 "  items[k = ls.key(i)] = ls.getItem(k); "
-                "return items; ")
-            self.browser_storage['sessionStorage'] = self._driver.execute_script(
+                "return items; "
+            )
+            self.browser_storage["sessionStorage"] = self._driver.execute_script(
                 "var ls = window.sessionStorage, items = {}; "
                 "for (var i = 0, k; i < ls.length; ++i) "
                 "  items[k = ls.key(i)] = ls.getItem(k); "
-                "return items; ")
+                "return items; "
+            )
             logger.debug("Storage retrieved: %s", self.browser_storage)
 
     @property
@@ -192,13 +202,17 @@ class Browser:
         "Select and click on an element."
         if not self._driver:
             return None
-        self.find(selector, by).click()
+        elem = self.find(selector, by)
+        elem.scroll_into_view()
+        elem.click()
 
     def submit(self, selector: str, by: By = By.CSS_SELECTOR) -> None:
         """Select a form and submit it."""
         if not self._driver:
             return None
-        self.find(selector, by).submit()
+        elem = self.find(selector, by)
+        elem.scroll_into_view()
+        elem.submit()
 
     def send_keys(
         self,
@@ -211,6 +225,7 @@ class Browser:
         if not self._driver:
             return None
         elem = self.find(selector, by)
+        elem.scroll_into_view()
         if clear:
             elem.clear()
         elem.send_keys(text)

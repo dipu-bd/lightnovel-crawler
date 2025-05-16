@@ -6,7 +6,7 @@ from bs4 import Tag
 from selenium.webdriver.remote.command import Command
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
-from undetected_chromedriver.webelement import WebElement as _WebElement
+from selenium.webdriver.remote.webelement import WebElement as _WebElement
 
 from ..core.soup import SoupMaker
 from . import scripts
@@ -40,14 +40,11 @@ class By(str, Enum):
 class WebElement(_WebElement):
     def __init__(self, parent, id_):
         super().__init__(parent, id_)
+        self.__soup_maker = getattr(self._parent, "_soup_maker", SoupMaker())
 
     @property
-    def _soup_maker(self) -> SoupMaker:
-        if hasattr(self._parent, "_soup_maker"):
-            maker = getattr(self._parent, "_soup_maker")
-            if isinstance(maker, SoupMaker):
-                return maker
-        return SoupMaker()
+    def parent(self) -> WebDriver:
+        return self._parent
 
     @property
     def inner_html(self) -> str:
@@ -56,6 +53,10 @@ class WebElement(_WebElement):
     @property
     def outer_html(self) -> str:
         return self.get_attribute("outerHTML")
+
+    @property
+    def _soup_maker(self) -> SoupMaker:
+        return self.__soup_maker
 
     def as_tag(self) -> Tag:
         html = self.outer_html

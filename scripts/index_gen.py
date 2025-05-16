@@ -50,11 +50,13 @@ HELP_RESULT_QUE = "<!-- auto generated command line output -->"
 DATE_FORMAT = "%d %B %Y %I:%M:%S %p"
 
 REPO_BRANCH = "master"
-REPO_OWNER = 'dipu-bd'
-REPO_NAME = 'lightnovel-crawler'
+REPO_OWNER = "dipu-bd"
+REPO_NAME = "lightnovel-crawler"
 REPO_URL = f"https://github.com/{REPO_OWNER}/{REPO_NAME}"
 FILE_DOWNLOAD_URL = f"https://raw.githubusercontent.com/{REPO_OWNER}/{REPO_NAME}"
-WHEEL_RELEASE_URL = f"{REPO_URL}/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl"
+WHEEL_RELEASE_URL = (
+    f"{REPO_URL}/releases/download/v%s/lightnovel_crawler-%s-py3-none-any.whl"
+)
 
 # Current git branch
 try:
@@ -164,15 +166,9 @@ def git_history(file_path):
         cmd = f'git log --follow --diff-filter=ACMT --pretty="%at||%aN||%aE||%s" "{file_path}"'
         logs = subprocess.check_output(cmd, shell=True).decode("utf-8").strip()
         logs = [
-            {
-                "time": int(x[0]),
-                "author": x[1],
-                "email": x[2],
-                "subject": x[3]
-            }
+            {"time": int(x[0]), "author": x[1], "email": x[2], "subject": x[3]}
             for x in [
-                line.strip().split("||", maxsplit=4)
-                for line in logs.splitlines(False)
+                line.strip().split("||", maxsplit=4) for line in logs.splitlines(False)
             ]
         ]
         return logs
@@ -197,7 +193,7 @@ def process_contributors(history):
             username_cache[email] = author
             contribs.add(author)
             continue
-        if session.head(f'https://github.com/{author}/{REPO_NAME}').status_code == 200:
+        if session.head(f"https://github.com/{author}/{REPO_NAME}").status_code == 200:
             username_cache[author] = author
             username_cache[email] = author
             contribs.add(author)
@@ -278,10 +274,18 @@ def process_file(py_file: Path) -> float:
 futures = {}
 for py_file in sorted(SOURCES_FOLDER.glob("**/*.py")):
     futures[py_file] = executor.submit(process_file, py_file)
+failures = []
 for py_file, future in futures.items():
-    print("> %-40s" % py_file.name, end="")
-    runtime = future.result()
-    print("%.3fs" % runtime)
+    print("> %-40s " % py_file.name, end="")
+    try:
+        runtime = future.result()
+    except Exception as e:
+        failures.append("<!> %-40s %s" % (py_file.name, e))
+    finally:
+        print("%.3fs" % runtime)
+if failures:
+    print("-" * 50)
+    print("\n".join(failures))
 
 print("-" * 50)
 print(

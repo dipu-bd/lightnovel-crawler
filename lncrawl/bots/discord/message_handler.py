@@ -5,7 +5,7 @@ import re
 import shutil
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import Optional
+from typing import Optional, Coroutine, Any
 
 import discord
 
@@ -18,7 +18,7 @@ from .config import available_formats, disable_search, logger
 
 
 class MessageHandler:
-    def __init__(self, uid, client):
+    def __init__(self, uid, client: discord.Client):
         self.app = App()
         self.uid = uid
         self.client = client
@@ -27,14 +27,13 @@ class MessageHandler:
         self.closed = False
         self.get_current_status = None
         self.selected_novel: Optional[dict] = None
-        self.executor = ThreadPoolExecutor(max_workers=10, thread_name_prefix=uid)
+        self.executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix=uid)
 
-    def process(self, message):
+    def process(self, message: discord.Message):
         self.last_activity = datetime.now()
         self.executor.submit(self.handle_message, message)
 
     def destroy(self):
-        # self.send_sync('Closing current session')
         self.executor.submit(self.destroy_sync)
 
     def destroy_sync(self):
@@ -68,12 +67,11 @@ class MessageHandler:
 
     # ---------------------------------------------------------------------- #
 
-    def wait_for(self, async_coroutine):
-        asyncio.run_coroutine_threadsafe(async_coroutine, self.client.loop).result(
-            timeout=3 * 60
-        )
+    def wait_for(self, async_coroutine: Coroutine[Any, Any, None]):
+        future = asyncio.run_coroutine_threadsafe(async_coroutine, self.client.loop)
+        future.result(timeout=3 * 60)
 
-    async def send(self, *contents):
+    async def send(self, *contents: str):
         if self.closed:
             return
         self.last_activity = datetime.now()
@@ -84,7 +82,7 @@ class MessageHandler:
 
                 await self.user.send(text)
 
-    def send_sync(self, *contents):
+    def send_sync(self, *contents: str):
         self.wait_for(self.send(*contents))
 
     def busy_state(self):
