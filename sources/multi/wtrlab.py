@@ -93,12 +93,10 @@ class WtrLab(Crawler):
 
     def download_chapter_body(self, chapter):
         url = f"{self.home_url}/api/reader/get"
-        payload = json.dumps({
-            "language": "en",
-            "raw_id": int(chapter.url),
-            "chapter_no": chapter.id
-        })
-        headers = {'Content-Type': 'application/json'}
+        payload = json.dumps(
+            {"language": "en", "raw_id": int(chapter.url), "chapter_no": chapter.id}
+        )
+        headers = {"Content-Type": "application/json"}
         jsonData = self.get_json(url, data=payload, headers=headers)
         title = jsonData["chapter"]["title"]
         chapter.title = f"Chapter {chapter.id}: {title[0].upper() + title[1:]}"
