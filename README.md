@@ -168,7 +168,7 @@ $ docker run -v ~/Lightnovels:/home/appuser/app/Lightnovels -it lncrawl
 
 - Install [Termux](https://github.com/termux/termux-app/releases/) from github.
 - Open the app and run these commands one by one:
-  - `pkg upgrade -y && termux-change-repo && termux-setup-storage` run to update repo to local and setup storage
+  - `termux-change-repo && pkg upgrade -y && termux-setup-storage` run to update repo to local and setup storage
   - `pkg upgrade -y && pkg install python-grpcio python-lxml python-pillow -y` run to setup depends
   - `CFLAGS="-Wno-error=incompatible-function-pointer-types" pip install -U setuptools lightnovel-crawler` run to install
   - `cd ~/storage/downloads` set storage location to downloads folder
