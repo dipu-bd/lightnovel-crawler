@@ -1,10 +1,12 @@
 import hashlib
 import logging
 from abc import abstractmethod
-from typing import Generator, List, Optional
+from typing import Generator, List, Optional, Union
 
-from .arguments import get_args
+from bs4 import Tag
+
 from ..models import Chapter, SearchResult, Volume
+from .arguments import get_args
 from .cleaner import TextCleaner
 from .scraper import Scraper
 
@@ -14,9 +16,9 @@ logger = logging.getLogger(__name__)
 class Crawler(Scraper):
     """Blueprint for creating new crawlers"""
 
+    base_url: Union[str, List[str]]
     has_manga = False
     has_mtl = False
-    base_url: List[str]
     language = ""
 
     # ------------------------------------------------------------------------- #
@@ -41,12 +43,12 @@ class Crawler(Scraper):
         self.novel_url = ""
 
         # Must resolve these fields inside `read_novel_info`
-        self.novel_title = ""
-        self.novel_author = ""
-        self.novel_cover = None
-        self.is_rtl = False
-        self.novel_synopsis = ""
-        self.novel_tags = []
+        self.novel_title: str = ""
+        self.novel_author: str = ""
+        self.novel_cover: Optional[str] = None
+        self.is_rtl: bool = False
+        self.novel_synopsis: str = ""
+        self.novel_tags: list[str] = []
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume
@@ -126,7 +128,9 @@ class Crawler(Scraper):
         chapter.setdefault("images", {})
         soup = self.make_soup(chapter.body)
         for img in soup.select("img[src]"):
-            full_url = self.absolute_url(img["src"], page_url=chapter["url"])
+            src_url = img.get("src")
+            assert isinstance(src_url, str)
+            full_url = self.absolute_url(src_url, page_url=chapter["url"])
             if not full_url.startswith("http"):
                 continue
             filename = hashlib.md5(full_url.encode()).hexdigest() + ".jpg"
@@ -135,36 +139,36 @@ class Crawler(Scraper):
             has_changes = True
 
         if has_changes:
-            chapter.body = soup.find("body").decode_contents()
+            body = soup.find("body")
+            assert isinstance(body, Tag)
+            chapter.body = body.decode_contents()
 
     def download_chapters(
         self,
         chapters: List[Chapter],
         fail_fast=False,
-    ) -> Generator[int, None, None]:
-        futures = {
-            index: self.executor.submit(self.download_chapter_body, chapter)
-            for index, chapter in enumerate(chapters)
-            if not chapter.success
-        }
-        yield len(chapters) - len(futures)
+    ) -> Generator[Chapter, None, None]:
+        futures = [
+            self.executor.submit(self.download_chapter_body, chapter)
+            for chapter in chapters
+        ]
 
-        self.resolve_futures(
-            futures.values(),
+        generator = self.resolve_future_generator(
+            futures,
             desc="Chapters",
             unit="item",
             fail_fast=fail_fast,
         )
 
-        for index, future in futures.items():
+        for index, result in enumerate(generator):
             try:
                 chapter = chapters[index]
                 chapter.body = ""
                 chapter.images = {}
-                chapter.body = future.result()
+                chapter.body = result
                 self.extract_chapter_images(chapter)
-                chapter.success = True
+                chapter.success = bool(result)
             except KeyboardInterrupt:
                 break
             finally:
-                yield 1
+                yield chapter

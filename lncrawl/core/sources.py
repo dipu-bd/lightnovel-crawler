@@ -13,8 +13,8 @@ from urllib.parse import urlparse
 import requests
 from packaging import version
 
-from ..assets.version import get_version
 from ..assets.languages import language_codes
+from ..assets.version import get_version
 from ..utils.platforms import Platform
 from .arguments import get_args
 from .crawler import Crawler
@@ -43,7 +43,7 @@ rejected_sources: Dict[str, str] = {}
 __executor = TaskManager()
 
 
-def __download_data(url: str):
+def __download_data(url: str) -> bytes:
     logger.debug("Downloading %s", url)
 
     if Platform.windows:
@@ -150,13 +150,11 @@ def __check_updates():
     if version.parse(latest_app_version) > version.parse(get_version()):
         new_version_news(latest_app_version)
 
-    global __current_index
     __current_index["app"] = __latest_index["app"]
     __current_index["supported"] = __latest_index["supported"]
     __current_index["rejected"] = __latest_index["rejected"]
     __save_current_index()
 
-    global rejected_sources
     for url, reason in __current_index["rejected"].items():
         no_www = url.replace("://www.", "://")
         rejected_sources[url] = reason
@@ -170,7 +168,7 @@ def __check_updates():
 # --------------------------------------------------------------------------- #
 
 
-def __save_source_data(source_id, data):
+def __save_source_data(source_id: str, data: bytes):
     latest = __latest_index["crawlers"][source_id]
     dst_file = __user_data_path / str(latest["file_path"])
     dst_dir = dst_file.parent
@@ -184,7 +182,6 @@ def __save_source_data(source_id, data):
         dst_file.unlink()
     temp_file.rename(dst_file)
 
-    global __current_index
     __current_index["crawlers"][source_id] = latest
     __save_current_index()
 
@@ -206,7 +203,7 @@ def __download_sources():
     for sid in tbd_sids:
         del __current_index["crawlers"][sid]
 
-    futures: Dict[str, Future] = {}
+    futures = {}
     for sid, latest in __latest_index["crawlers"].items():
         current = __current_index["crawlers"].get(sid)
         has_new_version = not current or current["version"] < latest["version"]
@@ -222,6 +219,7 @@ def __download_sources():
 
     __executor.resolve_futures(futures.values(), desc="Sources", unit="file")
     for sid, future in futures.items():
+        assert isinstance(future, Future)
         try:
             data = future.result()
         except Exception:
@@ -236,7 +234,7 @@ def __download_sources():
 # Loading sources
 # --------------------------------------------------------------------------- #
 
-__cache_crawlers = {}
+__cache_crawlers: Dict[Path, List[Type[Crawler]]] = {}
 __url_regex = re.compile(r"^^(https?|ftp)://[^\s/$.?#].[^\s]*$", re.I)
 
 
@@ -251,7 +249,9 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
     try:
         module_name = hashlib.md5(file_path.name.encode()).hexdigest()
         spec = importlib.util.spec_from_file_location(module_name, file_path)
+        assert spec is not None
         module = importlib.util.module_from_spec(spec)
+        assert spec.loader is not None
         spec.loader.exec_module(module)
     except Exception as e:
         logger.warning("Module load failed: %s | %s", file_path, e)
@@ -311,7 +311,6 @@ def __add_crawlers_from_path(path: Path):
             __add_crawlers_from_path(py_file)
         return
 
-    global crawler_list
     try:
         crawlers = __import_crawlers(path)
         for crawler in crawlers:
@@ -319,10 +318,14 @@ def __add_crawlers_from_path(path: Path):
             base_urls: list[str] = getattr(crawler, "base_url")
             for url in base_urls:
                 no_www = url.replace("://www.", "://")
+                hostname = urlparse(url).hostname
+                no_www_hostname = urlparse(no_www).hostname
                 crawler_list[url] = crawler
                 crawler_list[no_www] = crawler
-                crawler_list[urlparse(url).hostname] = crawler
-                crawler_list[urlparse(no_www).hostname] = crawler
+                if hostname:
+                    crawler_list[hostname] = crawler
+                if no_www_hostname:
+                    crawler_list[no_www_hostname] = crawler
     except Exception as e:
         logger.warning("Could not load crawlers from %s. Error: %s", path, e)
 
@@ -364,6 +367,9 @@ def prepare_crawler(url: str) -> Optional[Crawler]:
 
     parsed_url = urlparse(url)
     hostname = parsed_url.hostname
+    if not hostname:
+        return None
+
     home_url = f"{parsed_url.scheme}://{hostname}/"
 
     if hostname in rejected_sources:
