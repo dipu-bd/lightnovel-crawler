@@ -15,13 +15,15 @@ class LiteroticaCrawler(Crawler):
         self.init_executor(ratelimit=2)
 
     def search_novel(self, query) -> List[SearchResult]:
-        soup = self.get_soup(f"{self.home_url}novels?search={query}&type=&language=&status=&sort=")
+        soup = self.get_soup(
+            f"{self.home_url}novels?search={query}&type=&language=&status=&sort="
+        )
         results = []
         for item in soup.select("a.novel-item"):
             results.append(
                 SearchResult(
                     title=item.select_one("p.novel-item-title").text.strip(),
-                    url=item["href"]
+                    url=item["href"],
                 )
             )
         return results
@@ -39,7 +41,7 @@ class LiteroticaCrawler(Crawler):
             )
 
     def download_chapter_body(self, chapter: Chapter) -> str:
-        soup = self.get_soup(chapter['url'])
+        soup = self.get_soup(chapter["url"])
         chapterText = ""
         for item in soup.select("p.chapter_content"):
             chapterText += self.cleaner.extract_contents(item)
