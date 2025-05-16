@@ -1,7 +1,7 @@
 import hashlib
 import logging
 from abc import abstractmethod
-from typing import Generator, List, Optional
+from typing import Generator, List, Optional, Union
 
 from bs4 import Tag
 
@@ -16,9 +16,9 @@ logger = logging.getLogger(__name__)
 class Crawler(Scraper):
     """Blueprint for creating new crawlers"""
 
+    base_url: Union[str, List[str]]
     has_manga = False
     has_mtl = False
-    base_url: List[str]
     language = ""
 
     # ------------------------------------------------------------------------- #

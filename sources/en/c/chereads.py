@@ -15,7 +15,7 @@ class ChereadsCrawler(Crawler):
     base_url = ["https://www.chereads.com/"]
 
     def initialize(self):
-        self.init_executor(ratelimit=1)
+        self.init_executor(workers=5)
 
     def parse_metadata(self, soup: BeautifulSoup) -> Box:
         metadata_json = soup.select_one("script#__NEXT_DATA__, script#vite-plugin-ssr_pageContext")

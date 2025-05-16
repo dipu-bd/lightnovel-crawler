@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import requests
 
 from lncrawl.core.crawler import Crawler
-from lncrawl.models import Volume, Chapter, SearchResult
+from lncrawl.models import Chapter, SearchResult, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ class WtrLab(Crawler):
     Essentially the same framework as webfic though with some other keys, urls, etc.
     """
 
-    base_url = "https://wtr-lab.com"
+    base_url = ["https://wtr-lab.com"]
     has_mtl = True
 
     def search_novel(self, query: str):
@@ -93,13 +93,15 @@ class WtrLab(Crawler):
 
     def download_chapter_body(self, chapter):
         url = f"{self.home_url}/api/reader/get"
-        payload = json.dumps(
-            {"language": "en", "raw_id": int(chapter.url), "chapter_no": chapter.id}
-        )
+        payload = json.dumps({
+            "language": "en",
+            "raw_id": int(chapter.url),
+            "chapter_no": chapter.id,
+        })
         headers = {"Content-Type": "application/json"}
         jsonData = self.get_json(url, data=payload, headers=headers)
         title = jsonData["chapter"]["title"]
-        chapter.title = f"Chapter {chapter.id}: {title[0].upper() + title[1:]}"
+        chapter.title = f"Chapter {chapter.id}: {str(title[0]).upper() + title[1:]}"
         body = jsonData["data"]["data"]["body"]
         chapterText = ""
         for line in body:
