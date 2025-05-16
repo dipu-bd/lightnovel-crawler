@@ -7,6 +7,13 @@ from io import BytesIO
 from typing import Any, Dict, Optional, Union
 from urllib.parse import ParseResult, urlparse
 
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_random_exponential,
+    retry_if_exception_type,
+    RetryCallState,
+)
 from bs4 import BeautifulSoup
 from cloudscraper import CloudScraper, User_Agent
 from PIL import Image, UnidentifiedImageError
@@ -88,7 +95,12 @@ class Scraper(TaskManager, SoupMaker):
             return {scheme: get_a_proxy(scheme, timeout)}
         return {}
 
-    def __process_request(self, method: str, url: str, **kwargs):
+    def __process_request(
+        self, method: str, url: str, max_retries: Optional[int] = None, **kwargs
+    ):
+        if max_retries is None:
+            max_retries = self.workers + 3
+
         method_call = getattr(self.scraper, method)
         if not callable(method_call):
             raise Exception(f"No request method: {method}")
@@ -96,7 +108,6 @@ class Scraper(TaskManager, SoupMaker):
         _parsed = urlparse(url)
 
         kwargs = kwargs or dict()
-        retry = kwargs.pop("retry", 1)
         kwargs.setdefault("allow_redirects", True)
         kwargs["proxies"] = self.__get_proxies(_parsed.scheme)
         headers = kwargs.pop("headers", {})
@@ -111,32 +122,39 @@ class Scraper(TaskManager, SoupMaker):
             if v
         }
 
-        while retry >= 0:
-            try:
-                logger.debug(
-                    f"[{method.upper()}] {url}\n"
-                    + ", ".join([f"{k}={v}" for k, v in kwargs.items()])
-                )
-
-                with self.domain_gate(_parsed.hostname):
-                    with no_ssl_verification():
-                        response: Response = method_call(url, **kwargs)
-                        response.raise_for_status()
-                        response.encoding = "utf8"
-
-                self.cookies.update({x.name: x.value for x in response.cookies})
-                return response
-            except ScraperErrorGroup as e:
-                if retry == 0:  # retry attempt depleted
-                    raise e
-
-                retry -= 1
+        def _after_retry(retry_state: RetryCallState):
+            e = retry_state.outcome.exception()
+            if isinstance(e, ScraperErrorGroup):
                 logger.debug(f"{type(e).__qualname__}: {e} | Retrying...", e)
 
                 if isinstance(e, ProxyError):
                     for proxy_url in kwargs.get("proxies", {}).values():
                         remove_faulty_proxies(proxy_url)
                     kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
+
+        @retry(
+            stop=stop_after_attempt(max_retries),
+            wait=wait_random_exponential(multiplier=0.5, max=60),
+            retry=retry_if_exception_type(ScraperErrorGroup),
+            after=_after_retry,
+            reraise=True,
+        )
+        def _do_request():
+            logger.debug(
+                f"[{method.upper()}] {url}\n"
+                + ", ".join([f"{k}={v}" for k, v in kwargs.items()])
+            )
+
+            with self.domain_gate(_parsed.hostname):
+                with no_ssl_verification():
+                    response: Response = method_call(url, **kwargs)
+                    response.raise_for_status()
+                    response.encoding = "utf8"
+
+            self.cookies.update({x.name: x.value for x in response.cookies})
+            return response
+
+        return _do_request()
 
     # ------------------------------------------------------------------------- #
     # Helpers
@@ -197,23 +215,22 @@ class Scraper(TaskManager, SoupMaker):
     # Downloaders
     # ------------------------------------------------------------------------- #
 
-    def get_response(self, url, retry=1, timeout=(7, 301), **kwargs) -> Response:
+    def get_response(self, url, timeout=(7, 301), **kwargs) -> Response:
         """Fetch the content and return the response"""
         return self.__process_request(
             "get",
             url,
-            retry=retry,
             timeout=timeout,
             **kwargs,
         )
 
-    def post_response(self, url, data={}, retry=0, **kwargs) -> Response:
+    def post_response(self, url, data={}, max_retries=0, **kwargs) -> Response:
         """Make a POST request and return the response"""
         return self.__process_request(
             "post",
             url,
             data=data,
-            retry=retry,
+            max_retries=max_retries,
             **kwargs,
         )
 
