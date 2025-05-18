@@ -48,7 +48,7 @@ def load_proxies(proxy_file: str):
             __is_private_proxy[url] = True
 
 
-def get_a_proxy(scheme: str = "http", timeout: int = 0):
+def get_a_proxy(scheme: str = "http", timeout: float = 0):
     if timeout > 0:
         wait_for_first_proxy(scheme, timeout)
 
@@ -79,7 +79,7 @@ def remove_faulty_proxies(faulty_url: str):
         __proxy_use_count[faulty_url] = __max_use_per_proxy + 1
 
 
-def wait_for_first_proxy(scheme: str, timeout: int = 0):
+def wait_for_first_proxy(scheme: str, timeout: float = 0):
     if timeout <= 0:
         timeout = 10 * 60
 

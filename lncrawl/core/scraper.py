@@ -95,7 +95,7 @@ class Scraper(TaskManager, SoupMaker):
     # Internal methods
     # ------------------------------------------------------------------------- #
 
-    def __get_proxies(self, scheme, timeout: int = 0):
+    def __get_proxies(self, scheme, timeout: float = 0):
         if self.use_proxy and scheme:
             return {scheme: get_a_proxy(scheme, timeout)}
         return {}
@@ -225,7 +225,7 @@ class Scraper(TaskManager, SoupMaker):
     def get_response(
         self,
         url: str,
-        timeout: Optional[float | Tuple[float, float]] = (7, 301),
+        timeout: Optional[Union[float, Tuple[float, float]]] = (7, 301),
         **kwargs,
     ) -> Response:
         """
