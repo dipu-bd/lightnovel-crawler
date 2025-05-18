@@ -3,7 +3,7 @@ import os
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor
 from threading import Semaphore, Thread
-from typing import Dict, Generator, Iterable, List, Optional, TypeVar
+from typing import Any, Dict, Generator, Iterable, List, Optional
 
 from tqdm import tqdm
 
@@ -15,8 +15,6 @@ MAX_REQUESTS_PER_DOMAIN = 5
 
 _resolver = Semaphore(1)
 _host_semaphores: Dict[str, Semaphore] = {}
-
-T = TypeVar('T')
 
 
 class TaskManager(ABC):
@@ -170,13 +168,13 @@ class TaskManager(ABC):
 
     def resolve_as_generator(
         self,
-        futures: Iterable[Future[T]],
+        futures: Iterable[Future],
         timeout: Optional[float] = None,
         disable_bar: bool = False,
         desc: Optional[str] = None,
         unit: Optional[str] = None,
         fail_fast: bool = False,
-    ) -> Generator[Optional[T], None, None]:
+    ) -> Generator[Any, None, None]:
         """Create a generator output to resolve the futures.
 
         Args:
@@ -197,7 +195,7 @@ class TaskManager(ABC):
         )
         try:
             for step in bar:
-                future: Future[T] = step
+                future: Future = step
                 if fail_fast:
                     yield future.result(timeout)
                     bar.update()
@@ -224,13 +222,13 @@ class TaskManager(ABC):
 
     def resolve_futures(
         self,
-        futures: Iterable[Future[T]],
+        futures: Iterable[Future],
         timeout: Optional[float] = None,
         disable_bar: bool = False,
         desc: Optional[str] = None,
         unit: Optional[str] = None,
         fail_fast: bool = False,
-    ) -> List[Optional[T]]:
+    ) -> list:
         """Wait for the futures to be done.
 
         Args:
@@ -245,7 +243,7 @@ class TaskManager(ABC):
 
         return list(
             self.resolve_as_generator(
-                futures=futures,  # type:ignore
+                futures=futures,
                 timeout=timeout,
                 disable_bar=disable_bar,
                 desc=desc,
