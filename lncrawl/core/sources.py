@@ -239,7 +239,6 @@ __url_regex = re.compile(r"^^(https?|ftp)://[^\s/$.?#].[^\s]*$", re.I)
 
 
 def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
-    global __cache_crawlers
     if file_path in __cache_crawlers:
         return __cache_crawlers[file_path]
 
