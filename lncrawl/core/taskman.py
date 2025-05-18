@@ -11,7 +11,6 @@ from ..utils.ratelimit import RateLimiter
 
 logger = logging.getLogger(__name__)
 
-MAX_WORKER_COUNT = 7
 MAX_REQUESTS_PER_DOMAIN = 5
 
 _resolver = Semaphore(1)
@@ -23,7 +22,7 @@ T = TypeVar('T')
 class TaskManager(ABC):
     def __init__(
         self,
-        workers: int = MAX_WORKER_COUNT,
+        workers: Optional[int] = None,
         ratelimit: Optional[float] = None,
     ) -> None:
         """A helper class for task queueing and parallel task execution.
@@ -56,7 +55,7 @@ class TaskManager(ABC):
 
     def init_executor(
         self,
-        workers: int = MAX_WORKER_COUNT,
+        workers: Optional[int] = None,
         ratelimit: Optional[float] = None,
     ):
         """Initializes a new executor.
@@ -104,13 +103,13 @@ class TaskManager(ABC):
 
     def progress_bar(
         self,
-        iterable=None,
-        desc=None,
-        total=None,
-        unit=None,
-        disable=False,
+        iterable: Optional[Iterable] = None,
+        unit: Optional[str] = None,
+        desc: Optional[str] = None,
+        total: Optional[float] = None,
         timeout: Optional[float] = None,
-    ):
+        disable: bool = False,
+    ) -> tqdm:
         if os.getenv("debug_mode"):
             disable = True
 
@@ -122,8 +121,8 @@ class TaskManager(ABC):
 
         bar = tqdm(
             iterable=iterable,
-            desc=desc,
-            unit=unit,
+            desc=desc or '',
+            unit=unit or 'item',
             total=total,
             disable=disable,
         )
@@ -138,7 +137,7 @@ class TaskManager(ABC):
         bar.close = extended_close  # type: ignore
         return bar
 
-    def domain_gate(self, hostname: str = ""):
+    def domain_gate(self, hostname: Optional[str]):
         """Limit number of entry per hostname.
 
         Args:
@@ -151,6 +150,8 @@ class TaskManager(ABC):
             with self.domain_gate(url):
                 self.scraper.get(url)
         """
+        if hostname is None:
+            hostname = ''
         if hostname not in _host_semaphores:
             _host_semaphores[hostname] = Semaphore(MAX_REQUESTS_PER_DOMAIN)
         return _host_semaphores[hostname]
@@ -167,14 +168,14 @@ class TaskManager(ABC):
             if not future.done():
                 future.cancel()
 
-    def resolve_future_generator(
+    def resolve_as_generator(
         self,
         futures: Iterable[Future[T]],
         timeout: Optional[float] = None,
-        disable_bar=False,
-        desc='',
-        unit='item',
-        fail_fast=False,
+        disable_bar: bool = False,
+        desc: Optional[str] = None,
+        unit: Optional[str] = None,
+        fail_fast: bool = False,
     ) -> Generator[Optional[T], None, None]:
         """Create a generator output to resolve the futures.
 
@@ -187,25 +188,20 @@ class TaskManager(ABC):
             unit: The progress unit name
             fail_fast: Fail on first error
         """
-        if not futures:
-            yield from ()
-
-        _futures = list(futures)
         bar = self.progress_bar(
+            futures,
             desc=desc,
             unit=unit,
-            total=len(_futures),
-            disable=disable_bar,
             timeout=timeout,
+            disable=disable_bar,
         )
-
         try:
-            for future in _futures:
+            for step in bar:
+                future: Future[T] = step
                 if fail_fast:
                     yield future.result(timeout)
                     bar.update()
                     continue
-
                 try:
                     yield future.result(timeout)
                 except KeyboardInterrupt:
@@ -230,10 +226,10 @@ class TaskManager(ABC):
         self,
         futures: Iterable[Future[T]],
         timeout: Optional[float] = None,
-        disable_bar=False,
-        desc='',
-        unit='item',
-        fail_fast=False,
+        disable_bar: bool = False,
+        desc: Optional[str] = None,
+        unit: Optional[str] = None,
+        fail_fast: bool = False,
     ) -> List[Optional[T]]:
         """Wait for the futures to be done.
 
@@ -248,8 +244,8 @@ class TaskManager(ABC):
         """
 
         return list(
-            self.resolve_future_generator(
-                futures=futures,
+            self.resolve_as_generator(
+                futures=futures,  # type:ignore
                 timeout=timeout,
                 disable_bar=disable_bar,
                 desc=desc,

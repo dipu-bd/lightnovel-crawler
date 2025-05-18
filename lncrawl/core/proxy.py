@@ -83,7 +83,7 @@ def wait_for_first_proxy(scheme: str, timeout: int = 0):
     if timeout <= 0:
         timeout = 10 * 60
 
-    elapsed = 0
+    elapsed: float = 0
     while not __has_exit and elapsed < timeout:
         for k, v in __proxy_list.items():
             if v and (not scheme or k == scheme):

@@ -153,7 +153,7 @@ class Crawler(Scraper):
             for chapter in chapters
         ]
 
-        generator = self.resolve_future_generator(
+        generator = self.resolve_as_generator(
             futures,
             desc="Chapters",
             unit="item",

@@ -107,7 +107,7 @@ class BasicBrowserTemplate(Crawler):
                 self.executor.submit(self.download_chapter_body_in_soup, chapter)
                 for chapter in chapters
             ]
-            generator = self.resolve_future_generator(
+            generator = self.resolve_as_generator(
                 futures,
                 desc="Chapters",
                 unit="item",

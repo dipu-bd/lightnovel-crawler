@@ -22,3 +22,11 @@ ScraperErrorGroup = (
     FallbackToBrowser,
     UnidentifiedImageError,
 )
+
+RetryErrorGroup = (
+    URLError,
+    HTTPError,
+    CloudflareException,
+    RequestException,
+    UnidentifiedImageError,
+)
