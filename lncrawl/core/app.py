@@ -209,7 +209,7 @@ class App:
         logger.info("Compressing output...")
 
         # Get which paths to be archived with their base names
-        path_to_process: list[tuple[Path, str]] = []
+        path_to_process: List[tuple[Path, str]] = []
         for fmt in available_formats:
             root_dir: Path = Path(self.output_path) / fmt
             if root_dir.is_dir():

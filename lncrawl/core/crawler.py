@@ -48,7 +48,7 @@ class Crawler(Scraper):
         self.novel_cover: Optional[str] = None
         self.is_rtl: bool = False
         self.novel_synopsis: str = ""
-        self.novel_tags: list[str] = []
+        self.novel_tags: List[str] = []
 
         # Each item must contain these keys:
         # `id` - 1 based index of the volume

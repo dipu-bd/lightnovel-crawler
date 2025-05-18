@@ -4,7 +4,7 @@ import os
 import random
 import ssl
 from io import BytesIO
-from typing import Any, Callable, MutableMapping, Optional, Tuple, Union
+from typing import Any, Callable, Dict, MutableMapping, Optional, Tuple, Union
 from urllib.parse import ParseResult, urlparse
 
 from bs4 import BeautifulSoup
@@ -173,7 +173,7 @@ class Scraper(TaskManager, SoupMaker):
         return urlparse(self.home_url)
 
     @property
-    def headers(self) -> dict[str, Union[str, bytes]]:
+    def headers(self) -> Dict[str, Union[str, bytes]]:
         """Default request headers"""
         return dict(self.scraper.headers)
 
@@ -182,7 +182,7 @@ class Scraper(TaskManager, SoupMaker):
         self.scraper.headers[key] = value
 
     @property
-    def cookies(self) -> dict[str, Optional[str]]:
+    def cookies(self) -> Dict[str, Optional[str]]:
         """Current session cookies"""
         return {x.name: x.value for x in self.scraper.cookies}
 
