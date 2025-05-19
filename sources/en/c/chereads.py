@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import logging
+import re
 
 from box import Box
 from bs4 import BeautifulSoup
@@ -67,4 +68,10 @@ class ChereadsCrawler(Crawler):
         soup = self.get_soup(chapter.url)
         metadata = self.parse_metadata(soup)
         contents = metadata.pageProps.pageData.chapterInfo.contents
-        return "".join([item.content for item in contents])
+
+        paras = [str(item.content) for item in contents]
+        if re.match(r'<p>[Cc]h(ap(ter)?)?.\d+', paras[0]):
+            chapter.title = paras[0][3:-4]
+            paras = paras[1:]
+
+        return "".join(paras)

@@ -170,5 +170,4 @@ class Crawler(Scraper):
                 chapter.success = bool(result)
             except KeyboardInterrupt:
                 break
-            finally:
-                yield chapter
+            yield chapter
