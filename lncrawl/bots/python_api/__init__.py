@@ -1,14 +1,11 @@
 import logging
 import os
-import shutil
 from typing import Dict, List, Any, Optional
 import traceback
 import threading
 from lncrawl.models.formats import OutputFormat
-
 from lncrawl.core.app import App
 from lncrawl.core.sources import prepare_crawler
-from lncrawl.utils.uploader import upload
 
 logger = logging.getLogger(__name__)
 
