@@ -8,10 +8,7 @@ search_url = "https://meionovels.com/wp-admin/admin-ajax.php"
 
 
 class MeionovelCrawler(Crawler):
-    base_url = [
-        "https://meionovel.id/", 
-        "https://meionovels.com/"
-    ]
+    base_url = ["https://meionovel.id/", "https://meionovels.com/"]
 
     def initialize(self):
         self.home_url = "https://meionovels.com/"
@@ -41,7 +38,7 @@ class MeionovelCrawler(Crawler):
         soup = self.get_soup(self.novel_url)
 
         # Title
-        possible_title = soup.select_one('.post-title h1')
+        possible_title = soup.select_one(".post-title h1")
         assert possible_title, "No novel title"
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
@@ -71,7 +68,7 @@ class MeionovelCrawler(Crawler):
         if possible_tags:
             self.novel_tags = [a.text.strip() for a in possible_tags]
         logger.info("Novel tags: %s", self.novel_tags)
-        
+
         # Chapters
         response = self.submit_form(self.novel_url.strip("/") + "/ajax/chapters")
         soup = self.make_soup(response)
