@@ -95,6 +95,8 @@ class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
     def parse_genres(self, soup):
         for a in soup.select(".categories a"):
             yield a.text.strip()
+        for a in soup.select(".tags a"):
+            yield a.text.strip()
 
     def parse_summary(self, soup: BeautifulSoup) -> str:
         return self.cleaner.extract_contents(soup.select_one(".summary .content"))
