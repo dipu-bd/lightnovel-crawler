@@ -92,6 +92,15 @@ class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         for a in soup.find_all("span", {"itemprop": "author"}):
             yield a.text.strip()
 
+    def parse_genres(self, soup):
+        for a in soup.select(".categories a"):
+            yield a.text.strip()
+        for a in soup.select(".tags a"):
+            yield a.text.strip()
+
+    def parse_summary(self, soup: BeautifulSoup) -> str:
+        return self.cleaner.extract_contents(soup.select_one(".summary .content"))
+
     def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
         chapter_page = f"{self.novel_url.strip('/')}/chapters"
         soup = self.get_soup(chapter_page)
