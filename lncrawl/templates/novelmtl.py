@@ -57,6 +57,13 @@ class NovelMTLTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
         for a in soup.select('.novel-info .author span[itemprop="author"]'):
             yield a.text.strip()
 
+    def parse_genres(self, soup):
+        for a in soup.select(".categories a"):
+            yield a.text.strip()
+
+    def parse_summary(self, soup: BeautifulSoup) -> str:
+        return self.cleaner.extract_contents(soup.select_one(".summary .content"))
+
     def select_chapter_tags(self, soup: BeautifulSoup):
         tag = soup.select("#chapters .pagination li a")
         if tag:
