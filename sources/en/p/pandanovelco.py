@@ -13,12 +13,7 @@ class PandaNovelCo(NovelPubTemplate):
     # We override because we do not have a request token like other novel pub
     # (without that wrong error is raised and browser search isn't triggered)
     def select_search_items(self, query: str) -> Generator[Tag, None, None]:
-        soup = self.get_soup(f"{self.home_url}search")
-        token_tag = soup.select_one(
-            '#novelSearchForm input[name="__LNRequestVerifyToken"]'
-        )
-
-        response = self.submit_form(
+        self.submit_form(
             f"{self.home_url}lnsearchlive",
             data={"inputContent": query},
             headers={
