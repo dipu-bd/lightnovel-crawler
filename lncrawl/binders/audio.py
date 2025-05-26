@@ -2,6 +2,7 @@ import logging
 import os
 import asyncio
 import time
+import re
 from typing import Dict, List
 from pathlib import Path
 
@@ -15,13 +16,28 @@ try:
 except ImportError:
     logging.fatal("Failed to import edge-tts")
 
-async def list_available_voices():
+async def list_available_voices(language: str):
     """Get a list of available voices from edge-tts"""
+
     voices = await edge_tts.list_voices()
-    return [voice for voice in voices if voice["Locale"].startswith("en")]  # Filter English voices
+    filtered_voices = [voice for voice in voices if voice["Locale"].startswith(language)]
+    
+    if not filtered_voices:
+        logger.warning(f"No voices found for language '{language}', defaulting to English")
+        filtered_voices = [voice for voice in voices if voice["Locale"].startswith("en")]
+    
+    return filtered_voices
 
 async def monitor_audio_progress(output_file: str, total_chars: int, bar, rate: str) -> None:
-    """Monitor the audio generation progress by checking file size"""
+    """
+    Monitor the audio generation progress by checking file size.
+
+    To be honest, this is not very (at all) accurate, its more just to 
+    show the user that the audio is being generated. and that it's not frozen.
+
+    If you know a better way to do this, feel free to improve this.
+    """
+
     # Convert rate string (e.g. "+25%", "-50%") to multiplier
     rate_multiplier = 1.0
     if rate:
@@ -44,7 +60,7 @@ async def monitor_audio_progress(output_file: str, total_chars: int, bar, rate: 
             bar.n = int(progress)
             bar.refresh()
             
-            # Check if file size has stopped growing for 2 seconds
+            # Check if file size has stopped growing for 2 seconds, if it has, we can assume the audio is done.
             last_size = current_size
             await asyncio.sleep(2)
             if os.path.exists(output_file):
@@ -75,6 +91,7 @@ async def generate_audio(
     rate: str = "+0%",  # default rate
 ):
     """Generate audio from text using edge-tts"""
+
     logger.info("Generating audio for %s", book_title)
     logger.debug("Using voice: %s at rate: %s", voice, rate)
     
@@ -108,37 +125,38 @@ async def generate_audio(
             text = chapter.body.replace("</p><p", "</p>\n<p")
             text = text.replace("<p>", "").replace("</p>", "\n")
             text = text.replace("<br>", "\n").replace("<br/>", "\n")
+            
+            # Additional cleaning for text-to-speech
+            text = re.sub(r'<[^>]+>', '', text)  # Remove any remaining HTML tags
+            text = re.sub(r'&[^;]+;', '', text)  # Remove HTML entities
+            text = text.strip()
+            
             all_text.append(f"Chapter {chapter.id}: {chapter.title}\n{text}\n")
     
     full_text = "\n".join(all_text)
     total_chars = len(full_text)
     
-    try:
-        logger.info("Starting audio generation")
-        communicate = edge_tts.Communicate(full_text, voice, rate=rate)
-        
-        # Start progress monitoring in background
-        monitor_task = asyncio.create_task(
-            monitor_audio_progress(output_file, total_chars, bar, rate)
-        )
-        
-        logger.debug("Saving audio file to %s", output_file)
-        await communicate.save(output_file)
-        
-        # Wait for monitoring to complete
-        await monitor_task
-        
-        bar.n = 100
-        bar.refresh()
-        bar.close()
-        
-        logger.info("Created: %s", output_file)
-        print("Created: %s.mp3" % file_name)
-        return output_file
-        
-    except Exception as e:
-        logger.error("Failed to generate audio: %s", str(e))
-        return None
+    logger.info("Starting audio generation")
+    communicate = edge_tts.Communicate(full_text, voice, rate=rate)
+    
+    # Start progress monitoring in background
+    monitor_task = asyncio.create_task(
+        monitor_audio_progress(output_file, total_chars, bar, rate)
+    )
+    
+    logger.debug("Saving audio file to %s", output_file)
+    await communicate.save(output_file)
+    
+    # Wait for monitoring to complete
+    await monitor_task
+    
+    bar.n = 100
+    bar.refresh()
+    bar.close()
+    
+    logger.info("Created: %s", output_file)
+    print("Created: %s.mp3" % file_name)
+    return output_file
 
 def make_mp3s(app, data: Dict[str, List[Chapter]]) -> List[str]:
     from ..core.app import App
@@ -147,7 +165,7 @@ def make_mp3s(app, data: Dict[str, List[Chapter]]) -> List[str]:
 
     # Get voice and rate selection first
     logger.info("Fetching available voices")
-    voices = asyncio.run(list_available_voices())
+    voices = asyncio.run(list_available_voices(app.crawler.language))
     voice_choices = [f"{v['ShortName']} ({v['Gender']})" for v in voices]
     
     from questionary import prompt
@@ -205,6 +223,10 @@ def make_mp3s(app, data: Dict[str, List[Chapter]]) -> List[str]:
                 for filename in os.listdir(image_path)
                 if filename.endswith(".jpg")
             }
+        # Display warning about long processing time
+        print("\n⚠️  WARNING: ⚠️")
+        print("  MP3 generation can take a VERY long time. Please be")
+        print("  patient as the process cannot be paused once started.\n")
 
         output = asyncio.run(generate_audio(
             chapter_groups=list(volumes.values()),
