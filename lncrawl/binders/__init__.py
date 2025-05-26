@@ -7,6 +7,7 @@ from .epub import make_epubs
 from .web import make_webs
 from .text import make_texts
 from .calibre import make_calibres
+from .audio import make_mp3s
 
 logger = logging.getLogger(__name__)
 
