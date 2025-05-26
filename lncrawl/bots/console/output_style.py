@@ -83,7 +83,7 @@ def get_output_formats(self):
     """Returns a dictionary of output formats."""
     args = get_args()
 
-    defaults = ["json", "epub", "web"]
+    defaults = ["json", "epub", "web", "mp3"]
     formats = args.output_formats
     if not (formats or args.suppress):
         answer = prompt(

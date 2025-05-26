@@ -47,7 +47,17 @@ def generate_books(app, data):
 
     out_formats = {x: out_formats.get(x, False) for x in available_formats}
 
-    # Resolve formats to output maintaining dependencies
+    # Handle MP3 format first if selected
+    if out_formats.get("mp3", False):
+        try:
+            outputs = {"mp3": make_mp3s(app, data)}
+            app.progress = 100
+            return outputs
+        except Exception as err:
+            logger.exception('Failed to generate "mp3": %s' % err)
+            return {}
+
+    # Handle other formats
     after_epub = [x for x in depends_on_epub if out_formats[x]]
     need_epub = "epub" if len(after_epub) else None
     after_any = [x for x in depends_on_none if out_formats[x] or x == need_epub]
@@ -64,11 +74,8 @@ def generate_books(app, data):
                 outputs[fmt] = make_webs(app, data)
             elif fmt == "epub":
                 outputs[fmt] = make_epubs(app, data)
-            elif fmt == "mp3":
-                outputs[fmt] = make_mp3s(app, data)
             elif fmt in depends_on_epub:
                 outputs[fmt] = make_calibres(app, outputs["epub"], fmt)
-
         except Exception as err:
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
         finally:
