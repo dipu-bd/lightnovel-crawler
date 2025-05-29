@@ -4,39 +4,65 @@ from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
 
-search_url = 'https://www.xbanxia.com/modules/article/search_t.php'
-headers = {'Content-Type': 'application/x-www-form-urlencoded',
-           'Cookie': 'jieqiUserCharset=utf-8;',
-           'Origin': 'https://www.xbanxia.com',
-           'Referer': 'https://www.xbanxia.com/',
-           'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1788.0'}
+search_url = "https://www.banxia.cc/modules/article/search_t.php"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0",
+    "Content-Type": "application/x-www-form-urlencoded",
+    "Origin": "https://www.banxia.cc",
+    "Referer": "https://www.banxia.cc/",
+    "Cookie": "jieqiUserCharset=utf-8;",
+}
 
 
 class Xbanxia(Crawler):
-    base_url = ['https://www.xbanxia.com/']
+    base_url = ["https://www.xbanxia.com/", "https://www.banxia.cc/"]
     has_manga = False
     has_mtl = False
 
     def search_novel(self, query):
-
         logger.debug(f"Searching {query} on Xbanxia")
 
-        data = {'searchkey': f'{query}', 'submit': ''}
-        soup = self.post_soup(search_url, data , headers,)
+        # The search URL redirect to the closest match instead of a list of results
+        data = {"searchkey": f"{query}", "Submit": ""}
+        soup = self.post_soup(
+            search_url,
+            data,
+            headers,
+        )
 
-        results = []
-        for tab in soup.select("div ol li"):
-            a = tab.select_one("a")
-            author = tab.select_one("ol li span").text
-            results.append(
+        title = soup.select_one("div.book-describe h1")
+        if title:
+
+            possible_last_update = ""
+            for p in soup.select("div.book-describe p"):
+                if p.text.startswith("最近更新︰"):
+                    possible_last_update = p.text.replace("最近更新︰", "").strip()
+
+            possible_last_chap = soup.select_one("div.book-describe p")
+            for p in soup.select("div.book-describe p"):
+                if p.text.startswith("最新章節︰"):
+                    possible_last_chap = p.text.replace("最新章節︰", "").strip()
+                    break
+
+            canonical_link = soup.select_one("link[rel='canonical']")
+            if canonical_link and "href" in canonical_link.attrs:
+                novel_url = canonical_link["href"]
+            else:
+                novel_url = self.absolute_url(
+                    soup.select_one("div.book-describe a")["href"]
+                )
+
+            chapter_count = len(soup.select("div.book-list ul li a"))
+
+            return [
                 {
-                    "title": a["title"],
-                    "url": self.absolute_url(a["href"]),
-                    "author": "%s" % (author),
+                    "title": title.text,
+                    "url": novel_url,
+                    "info": f"Chapters: {chapter_count} | Latest: {possible_last_chap} | Last update: {possible_last_update}",
                 }
-            )
+            ]
 
-        return results
+        return []
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -59,16 +85,22 @@ class Xbanxia(Crawler):
         )
         logger.info("Novel cover: %s", self.novel_cover)
 
+        for possible_genre in soup.select("div.book-describe p"):
+            if possible_genre.text.startswith("類型︰"):
+                self.novel_tags.append(
+                    possible_genre.text.replace("類型︰", "").strip()
+                )
+        logger.info("Novel tags: %s", self.novel_tags)
+
+        possible_synopsis = soup.select_one("div.book-describe .describe-html")
+        if possible_synopsis:
+            self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
+
         for div in soup.select("div.book-list ul li"):
-            vol_title = div.select_one("a").text
-            vol_id = [int(x) for x in re.findall(r"\d+", vol_title)]
-            vol_id = vol_id[0] if len(vol_id) else len(self.volumes) + 1
-            self.volumes.append(
-                {
-                    "id": vol_id,
-                    "title": vol_title,
-                }
-            )
+            vol_id = len(self.chapters) // 100 + 1
+            if len(self.chapters) % 100 == 0:
+                self.volumes.append({"id": vol_id})
 
             for a in div.select("a"):
                 ch_title = a.text
