@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
+import re
 from bs4 import Tag
 from lncrawl.core.crawler import Crawler
 import urllib.parse
 
-from lncrawl.models import Volume, Chapter
-
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,"
-              "application/signed-exchange;v=b3;q=0.7",
+    "application/signed-exchange;v=b3;q=0.7",
     "Accept-Encoding": "gzip, deflate, br",
     "Accept-Language": "en-US,en;q=0.9,de-CH;q=0.8,de;q=0.7",
     "Cache-Control": "no-cache",
@@ -28,7 +27,7 @@ headers = {
 }
 
 logger = logging.getLogger(__name__)
-search_url = "https://www.69shu.pro/modules/article/search.php"    # Updated to the new domain
+search_url = "https://www.69shuba.com/modules/article/search.php"
 
 
 class sixnineshu(Crawler):
@@ -37,7 +36,7 @@ class sixnineshu(Crawler):
         "https://www.69shu.com/",
         "https://www.69xinshu.com/",
         "https://www.69shu.pro/",
-        "https://www.69shuba.pro/"
+        "https://www.69shuba.pro/",
     ]
 
     def initialize(self):
@@ -82,14 +81,25 @@ class sixnineshu(Crawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        possible_author = soup.select_one('.booknav2 p a[href*="authorarticle"]')
+        possible_author = soup.select_one('.booknav2 p a[href*="author"]')
         if isinstance(possible_author, Tag):
             self.novel_author = possible_author.text.strip()
         logger.info("Novel Author: %s", self.novel_author)
 
-        possible_synopsis = soup.select_one("div.navtxt p")
+        # tags are in a script tag and js add them to the page
+        match = re.search(r"tags:\s*'([^']+)'", str(soup))
+        if match:
+            tags = match.group(1)
+            self.novel_tags = [tag.strip() for tag in tags.split("|") if tag.strip()]
+        possible_tags = soup.select('.booknav2 p a[href*="/class/"]')
+        for tag in possible_tags:
+            self.novel_tags.append(tag.text.strip())
+
+        logger.info("Novel Tags: %s", self.novel_tags)
+
+        possible_synopsis = soup.select_one("div.navtxt")
         if isinstance(possible_synopsis, Tag):
-            self.novel_synopsis = possible_synopsis.text.strip()
+            self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
         logger.info("Novel Synopsis: %s", self.novel_synopsis)
 
         # Only one category per novel on this website
@@ -99,31 +109,24 @@ class sixnineshu(Crawler):
         logger.info("Novel Tag: %s", self.novel_tags)
 
         # https://www.69shuba.com/txt/A43616.htm -> https://www.69shuba.com/A43616/
-        soup = self.get_soup(self.novel_url.replace("/txt/", "/").replace(".htm", "/"), encoding="gbk")
+        soup = self.get_soup(
+            self.novel_url.replace("/txt/", "/").replace(".htm", "/"), encoding="gbk"
+        )
 
-        # manually correct their false chapter identifiers if need be
-        correction = 0
-        for idx, li in enumerate(soup.select("div#catalog ul li")):
-            chap_id = int(li["data-num"])
-            if idx == 0:
-                # 1-2 = -1; 1-1 = 0; 1 - 0 = +1
-                correction = 1 - chap_id
-            chap_id += correction
-            vol_id = len(self.chapters) // 100 + 1
-            if len(self.chapters) % 100 == 0:
-                self.volumes.append(Volume(vol_id))
+        volumes = set([])
+        for li in soup.select("div#catalog ul li"):
             a = li.select_one("a")
-            if not a:
-                # this should not occur with html.parser, if it does, likely due to parser/encoding issue
-                logger.warning("Failed to get Chapter %d! Missing Link", chap_id)
-                continue
+            assert isinstance(a, Tag)
+            ch_id = len(self.chapters) + 1
+            vol_id = 1 + len(self.chapters) // 100
+            volumes.add(vol_id)
             self.chapters.append(
-                Chapter(
-                    chap_id,
-                    url=self.absolute_url(a["href"]),
-                    title=li.text.strip(),
-                    volume=vol_id,
-                )
+                {
+                    "id": ch_id,
+                    "volume": vol_id,
+                    "title": a.text.strip(),
+                    "url": self.absolute_url(a["href"]),
+                }
             )
 
     def download_chapter_body(self, chapter):
