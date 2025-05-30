@@ -42,11 +42,27 @@ class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         possible_selectors = [
             "a[href*='/a/']",
             "a[href*='/au/']",
-            "a[href*='/authors/']",
-            "a[href*='/author/']",
+            "a[href*='author']",
         ]
         for a in soup.select_one(".info").select(",".join(possible_selectors)):
             yield a.text.strip()
+
+    def parse_genres(self, soup: BeautifulSoup):
+        info_section = soup.select_one(".info, .info-meta")
+        if not info_section:
+            return
+
+        for li in info_section.select("li"):
+            header = li.select_one("h3")
+            if not header or ("Genre" not in header.text and "Tag" not in header.text):
+                continue
+
+            for a in li.select("a"):
+                if a and a.text.strip():
+                    yield a.text.strip()
+
+    def parse_summary(self, soup: BeautifulSoup) -> str:
+        return self.cleaner.extract_contents(soup.select_one(".desc-text"))
 
     def select_chapter_tags(self, soup: BeautifulSoup):
         nl_id_tag = soup.select_one("#rating[data-novel-id]")

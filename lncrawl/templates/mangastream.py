@@ -59,6 +59,13 @@ class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTempla
         for a in soup.select(".spe a[href*='/writer/']"):
             yield a.text.strip()
 
+    def parse_genres(self, soup: BeautifulSoup):
+        for a in soup.select(".bottom.tags a[href*='/tag/']"):
+            yield a.text.strip()
+
+    def parse_summary(self, soup: BeautifulSoup) -> str:
+        return self.cleaner.extract_contents(soup.select_one(".entry-content"))
+
     def select_volume_tags(self, soup: BeautifulSoup):
         return []
 
@@ -78,9 +85,11 @@ class MangaStreamTemplate(SearchableBrowserTemplate, OptionalVolumeBrowserTempla
         title = tag.select_one(".epl-title")
         return Chapter(
             id=id,
-            title=title.text.strip()
-            if isinstance(title, Tag)
-            else tag.select_one("span").text.strip(),
+            title=(
+                title.text.strip()
+                if isinstance(title, Tag)
+                else tag.select_one("span").text.strip()
+            ),
             url=self.absolute_url(tag["href"]),
         )
 
