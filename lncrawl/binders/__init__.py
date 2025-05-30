@@ -7,6 +7,7 @@ from .epub import make_epubs
 from .web import make_webs
 from .text import make_texts
 from .calibre import make_calibres
+from .audio import make_mp3s
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ depends_on_none = [
     "epub",
     "text",
     "web",
+    "mp3",
 ]
 depends_on_epub = [
     "docx",
@@ -62,9 +64,10 @@ def generate_books(app, data):
                 outputs[fmt] = make_webs(app, data)
             elif fmt == "epub":
                 outputs[fmt] = make_epubs(app, data)
+            elif fmt == "mp3":
+                outputs[fmt] = make_mp3s(app, data)
             elif fmt in depends_on_epub:
                 outputs[fmt] = make_calibres(app, outputs["epub"], fmt)
-
         except Exception as err:
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
         finally:

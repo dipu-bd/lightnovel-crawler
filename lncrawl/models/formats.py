@@ -20,3 +20,4 @@ class OutputFormat(str, Enum):
     rb = "rb"
     snb = "snb"
     tcr = "tcr"
+    mp3 = "mp3"
