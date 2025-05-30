@@ -42,8 +42,6 @@ class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
         possible_selectors = [
             "a[href*='/a/']",
             "a[href*='/au/']",
-            "a[href*='/authors/']",
-            "a[href*='/author/']",
             "a[href*='author']",
         ]
         for a in soup.select_one(".info").select(",".join(possible_selectors)):
