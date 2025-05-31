@@ -10,7 +10,8 @@ RD /S /Q "dist" "venv" "build" "lightnovel_crawler.egg-info" &
 %PY% -m venv venv
 CALL venv\Scripts\activate.bat
 
-%PIP% install -U pip wheel setuptools<81
+%PIP% install -U pip
+%PIP% install wheel setuptools<81
 %PIP% install -r requirements-dev.txt
 %PIP% install -r requirements-app.txt
 
