@@ -74,8 +74,8 @@ session = cloudscraper.create_scraper()
 INDEX_DATA = {
     "v": int(time.time()),
     "app": {
-        "windows": "https://rebrand.ly/lncrawl",
-        "linux": "https://rebrand.ly/lncrawl-linux",
+        "windows": "https://go.bitanon.dev/lncrawl-windows",
+        "linux": "https://go.bitanon.dev/lncrawl-linux",
     },
     "rejected": {},
     "supported": {},
@@ -83,7 +83,7 @@ INDEX_DATA = {
 }
 
 print("-" * 50)
-res = session.get("https://pypi.org/pypi/lightnovel-crawler/json")
+res = session.get("https://go.bitanon.dev/lncrawl-pip", allow_redirects=True)
 res.raise_for_status()
 pypi_data = res.json()
 print("Latest version:", pypi_data["info"]["version"])

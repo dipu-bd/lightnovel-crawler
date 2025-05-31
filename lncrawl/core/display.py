@@ -126,14 +126,6 @@ def new_version_news(latest):
         Style.RESET_ALL,
     )
 
-    # if Platform.windows:
-    #     print('', Chars.RIGHT_ARROW, Style.DIM + 'Download:',
-    #           Fore.YELLOW + 'https://rebrand.ly/lncrawl', Style.RESET_ALL)
-    # elif Platform.linux:
-    #     print('', Chars.RIGHT_ARROW, Style.DIM + 'Download:',
-    #           Fore.YELLOW + 'https://rebrand.ly/lncrawl-linux', Style.RESET_ALL)
-    #
-
     print("-" * LINE_SIZE)
 
 
