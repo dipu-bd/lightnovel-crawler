@@ -10,8 +10,7 @@ rm -rf venv build dist *.egg-info
 $PY -m venv venv
 . venv/bin/activate
 
-$PIP install -U pip
-$PIP install wheel setuptools<81
+$PIP install -U pip wheel setuptools
 $PIP install -r requirements-dev.txt
 $PIP install -r requirements-app.txt
 
