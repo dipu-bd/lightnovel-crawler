@@ -1,20 +1,71 @@
+from ..utils.common import static_cached_property
 from ..utils.platforms import Platform
 
 
 class Chars:
-    __supported = Platform.linux or Platform.mac
+    @static_cached_property
+    @staticmethod
+    def __supported():
+        return Platform.linux or Platform.mac
 
     # --------------------------------------- #
 
-    EOL = "\r\n" if Platform.windows else "\n"
-    EMPTY = " "
-    BOOK = "📒" if __supported else "[#]"
-    CLOVER = "🍀" if __supported else "*"
-    LINK = "🔗" if __supported else "-"
-    HANDS = "🙏" if __supported else "-"
-    ERROR = "❗" if __supported else "!"
-    PARTY = "📦" if __supported else "$"
-    SOUND = "🔊" if __supported else "<<"
-    SPARKLE = "✨" if __supported else "*"
-    INFO = "💁" if __supported else ">"
-    RIGHT_ARROW = "➡" if __supported else "->"
+    @static_cached_property
+    @staticmethod
+    def EOL() -> str:
+        return "\r\n" if Platform.windows else "\n"
+
+    @static_cached_property
+    @staticmethod
+    def EMPTY():
+        return " "
+
+    @static_cached_property
+    @staticmethod
+    def BOOK():
+        return "📒" if Chars.__supported else "[#]"
+
+    @static_cached_property
+    @staticmethod
+    def CLOVER():
+        return "🍀" if Chars.__supported else "*"
+
+    @static_cached_property
+    @staticmethod
+    def LINK():
+        return "🔗" if Chars.__supported else "-"
+
+    @static_cached_property
+    @staticmethod
+    def HANDS():
+        return "🙏" if Chars.__supported else "-"
+
+    @static_cached_property
+    @staticmethod
+    def ERROR():
+        return "❗" if Chars.__supported else "!"
+
+    @static_cached_property
+    @staticmethod
+    def PARTY():
+        return "📦" if Chars.__supported else "$"
+
+    @static_cached_property
+    @staticmethod
+    def SOUND():
+        return "🔊" if Chars.__supported else "<<"
+
+    @static_cached_property
+    @staticmethod
+    def SPARKLE():
+        return "✨" if Chars.__supported else "*"
+
+    @static_cached_property
+    @staticmethod
+    def INFO():
+        return "💁" if Chars.__supported else ">"
+
+    @static_cached_property
+    @staticmethod
+    def RIGHT_ARROW():
+        return "➡" if Chars.__supported else "->"

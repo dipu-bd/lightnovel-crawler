@@ -238,9 +238,10 @@ __cache_crawlers: Dict[Path, List[Type[Crawler]]] = {}
 __url_regex = re.compile(r"^^(https?|ftp)://[^\s/$.?#].[^\s]*$", re.I)
 
 
-def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
-    if file_path in __cache_crawlers:
-        return __cache_crawlers[file_path]
+def __import_crawlers(file_path: Path, no_cache=False) -> List[Type[Crawler]]:
+    if not no_cache:
+        if file_path in __cache_crawlers:
+            return __cache_crawlers[file_path]
 
     if not file_path.is_file():
         raise LNException("Invalid crawler file path")
@@ -293,25 +294,28 @@ def __import_crawlers(file_path: Path) -> List[Type[Crawler]]:
 
         crawlers.append(crawler)
 
-    __cache_crawlers[file_path] = crawlers
+    if not no_cache:
+        __cache_crawlers[file_path] = crawlers
     return crawlers
 
 
-def __add_crawlers_from_path(path: Path):
+def __get_crawlers_from_path(path: Path, no_cache=False) -> dict:
+    results: dict = {}
+
     if path.name.startswith("_") or not path.name[0].isalnum():
-        return
+        return results
 
     if not path.exists():
         logger.warning("Path does not exists: %s", path)
-        return
+        return results
 
     if path.is_dir():
         for py_file in path.glob("**/*.py"):
-            __add_crawlers_from_path(py_file)
-        return
+            results.update(__get_crawlers_from_path(py_file, no_cache))
+        return results
 
     try:
-        crawlers = __import_crawlers(path)
+        crawlers = __import_crawlers(path, no_cache)
         for crawler in crawlers:
             setattr(crawler, "file_path", str(path.absolute()))
             base_urls: list[str] = getattr(crawler, "base_url")
@@ -319,14 +323,19 @@ def __add_crawlers_from_path(path: Path):
                 no_www = url.replace("://www.", "://")
                 hostname = urlparse(url).hostname
                 no_www_hostname = urlparse(no_www).hostname
-                crawler_list[url] = crawler
-                crawler_list[no_www] = crawler
+                results[url] = crawler
+                results[no_www] = crawler
                 if hostname:
-                    crawler_list[hostname] = crawler
+                    results[hostname] = crawler
                 if no_www_hostname:
-                    crawler_list[no_www_hostname] = crawler
+                    results[no_www_hostname] = crawler
     except Exception as e:
         logger.warning("Could not load crawlers from %s. Error: %s", path, e)
+    return results
+
+
+def __add_crawlers_from_path(path: Path):
+    crawler_list.update(__get_crawlers_from_path(path))
 
 
 # --------------------------------------------------------------------------- #
@@ -360,21 +369,22 @@ def load_sources():
         __add_crawlers_from_path(Path(crawler_file))
 
 
-def prepare_crawler(url: str) -> Optional[Crawler]:
-    if not url:
-        return None
-
+def prepare_crawler(url: str, crawler_file: Optional[str] = None) -> Crawler:
     parsed_url = urlparse(url)
     hostname = parsed_url.hostname
     if not hostname:
-        return None
+        raise LNException("No crawler defined for empty hostname")
 
     home_url = f"{parsed_url.scheme}://{hostname}/"
 
     if hostname in rejected_sources:
         raise LNException("Source is rejected. Reason: " + rejected_sources[hostname])
 
-    CrawlerType = crawler_list.get(hostname)
+    current_list = crawler_list
+    if crawler_file:
+        current_list = __get_crawlers_from_path(Path(crawler_file), True)
+
+    CrawlerType = current_list.get(hostname)
     if not CrawlerType:
         raise LNException("No crawler found for " + hostname)
 

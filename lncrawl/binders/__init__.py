@@ -3,11 +3,6 @@ To bind into ebooks
 """
 import logging
 
-from .epub import make_epubs
-from .web import make_webs
-from .text import make_texts
-from .calibre import make_calibres
-
 logger = logging.getLogger(__name__)
 
 depends_on_none = [
@@ -57,12 +52,16 @@ def generate_books(app, data):
     for fmt in formats_to_generate:
         try:
             if fmt == "text":
+                from .text import make_texts
                 outputs[fmt] = make_texts(app, data)
             elif fmt == "web":
+                from .web import make_webs
                 outputs[fmt] = make_webs(app, data)
             elif fmt == "epub":
+                from .epub import make_epubs
                 outputs[fmt] = make_epubs(app, data)
             elif fmt in depends_on_epub:
+                from .calibre import make_calibres
                 outputs[fmt] = make_calibres(app, outputs["epub"], fmt)
 
         except Exception as err:

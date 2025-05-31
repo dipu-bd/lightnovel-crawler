@@ -1,3 +1,4 @@
+import atexit
 import logging
 import os
 from abc import ABC
@@ -7,6 +8,7 @@ from typing import Any, Dict, Generator, Iterable, List, Optional
 
 from tqdm import tqdm
 
+from .exeptions import LNException
 from ..utils.ratelimit import RateLimiter
 
 logger = logging.getLogger(__name__)
@@ -33,11 +35,7 @@ class TaskManager(ABC):
         self.init_executor(workers, ratelimit)
 
     def __del__(self) -> None:
-        if hasattr(self, "_executor"):
-            self._submit = None
-            self._executor.shutdown(wait=False)
-        if hasattr(self, "_limiter"):
-            self._limiter.shutdown()
+        self.shutdown()
 
     @property
     def executor(self) -> ThreadPoolExecutor:
@@ -50,6 +48,13 @@ class TaskManager(ABC):
     @property
     def workers(self):
         return self._executor._max_workers
+
+    def shutdown(self, wait=False):
+        if hasattr(self, "_executor"):
+            self._submit = None
+            self._executor.shutdown(wait)
+        if hasattr(self, "_limiter"):
+            self._limiter.shutdown()
 
     def init_executor(
         self,
@@ -99,8 +104,8 @@ class TaskManager(ABC):
         self._futures.append(future)
         return future
 
+    @staticmethod
     def progress_bar(
-        self,
         iterable: Optional[Iterable] = None,
         unit: Optional[str] = None,
         desc: Optional[str] = None,
@@ -126,8 +131,10 @@ class TaskManager(ABC):
         )
 
         original_close = bar.close
+        atexit.register(original_close)
 
         def extended_close() -> None:
+            atexit.unregister(original_close)
             if not bar.disable:
                 _resolver.release()
             original_close()
@@ -204,6 +211,9 @@ class TaskManager(ABC):
                     yield future.result(timeout)
                 except KeyboardInterrupt:
                     raise
+                except LNException as e:
+                    bar.clear()
+                    print(str(e))
                 except Exception as e:
                     yield None
                     if bar.disable:

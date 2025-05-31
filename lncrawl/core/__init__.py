@@ -4,31 +4,20 @@ Interactive application to take user inputs
 
 import logging
 import os
-import signal
 import sys
 
-import colorama
-
-from ..assets.version import get_version
-from ..bots import run_bot
-from .arguments import get_args
-from .display import cancel_method, description, error_message, input_suppression
-from .logconfig import configure_logging
-from .proxy import load_proxies, start_proxy_fetcher, stop_proxy_fetcher
-from .sources import load_sources
+import colorama  # type:ignore
 
 logger = logging.getLogger(__name__)
 
 
-def destroy(*args, **kwargs):
-    error_message("", "Cancelled by user", None)
-    stop_proxy_fetcher()
-    sys.exit(1)
-
-
 def init():
+    from ..assets.version import get_version
+    from .arguments import get_args
+    from .display import description, input_suppression
+    from .logconfig import configure_logging
+
     os.environ["version"] = get_version()
-    signal.signal(signal.SIGINT, destroy)
 
     colorama.init(wrap=True)
     description()
@@ -50,6 +39,12 @@ def init():
 
 
 def start_app():
+    from ..bots import run_bot
+    from .arguments import get_args
+    from .display import cancel_method, error_message
+    from .proxy import load_proxies, start_proxy_fetcher, stop_proxy_fetcher
+    from .sources import load_sources
+
     init()
 
     load_sources()

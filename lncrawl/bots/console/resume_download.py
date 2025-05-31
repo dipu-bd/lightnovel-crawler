@@ -1,7 +1,7 @@
 import json
 import logging
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from box import Box
 from questionary import prompt
@@ -34,7 +34,7 @@ def resume_session():
         except Exception as e:
             logger.debug("Failed to read file %s | %s", meta_file, e)
 
-    meta: MetaInfo = None
+    meta: Optional[MetaInfo] = None
     if len(resumable_meta_data) == 1:
         meta = resumable_meta_data[0]
     elif len(resumable_meta_data) > 1:
@@ -48,8 +48,8 @@ def resume_session():
                 }
             ]
         )
-        index = int(answer["resume"].split(".")[0])
-        meta = resumable_meta_data[index - 1]
+        index = answer["resume"]
+        meta = resumable_meta_data[index]
 
     if not meta:
         print("No unfinished download to resume\n")

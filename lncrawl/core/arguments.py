@@ -1,12 +1,11 @@
 import argparse
-import atexit
 from urllib.parse import parse_qs
 
 from .. import constants as C
 from ..assets.version import get_version
 from ..binders import available_formats
 from ..bots import supported_bots
-from .display import LINE_SIZE, epilog
+from .display import LINE_SIZE
 
 
 class Args:
@@ -299,6 +298,3 @@ _builder = Args(
 
 def get_args():
     return _builder.get_args()
-
-
-atexit.register(epilog)

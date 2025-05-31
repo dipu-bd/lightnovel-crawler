@@ -1,4 +1,6 @@
+import atexit
 import logging
+import sys
 from urllib.parse import urlparse
 
 from questionary import prompt
@@ -17,8 +19,9 @@ logger = logging.getLogger(__name__)
 
 def start(self):
     from . import ConsoleBot
-
     assert isinstance(self, ConsoleBot)
+
+    atexit.register(display.epilog)
 
     args = get_args()
     if args.list_sources:
@@ -102,13 +105,16 @@ def start(self):
         try:
             _download_novel()
             break
+        except KeyboardInterrupt:
+            break
         except LNException as e:
             raise e
         except Exception as e:
             if not self.search_mode:
                 raise e
             elif not self.confirm_retry():
-                raise LNException("Cancelled by user") from e
+                display.error_message(LNException, "Cancelled by user", e.__traceback__)
+                sys.exit(0)
 
     self.app.start_download()
     self.app.bind_books()

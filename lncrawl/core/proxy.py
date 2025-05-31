@@ -2,7 +2,6 @@ import atexit
 import logging
 import os
 import random
-import signal
 import time
 from threading import Thread
 from typing import Dict, List
@@ -174,10 +173,10 @@ def start_proxy_fetcher():
     global __has_exit
     __has_exit = False
     atexit.register(stop_proxy_fetcher)
-    signal.signal(signal.SIGINT, stop_proxy_fetcher)
     Thread(target=__find_proxies, daemon=False).start()
 
 
 def stop_proxy_fetcher(*args, **kwargs):
+    atexit.unregister(stop_proxy_fetcher)
     global __has_exit
     __has_exit = True

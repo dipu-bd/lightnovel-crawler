@@ -2,32 +2,36 @@ import itertools
 import re
 import sys
 import unicodedata
-from typing import AnyStr, Dict, List, Set, Union
+from typing import Any, Dict, List, Set, Union
 
 from bs4 import Comment, Tag
-
-LINE_SEP = "<br>"
-
-INVISIBLE_CHARS = [
-    code
-    for code in range(sys.maxunicode)
-    if unicodedata.category(chr(code)) in {"Cf", "Cc"}
-]
-NONPRINTABLE = itertools.chain(range(0x00, 0x20), range(0x7F, 0xA0), INVISIBLE_CHARS)
-NONPRINTABLE_MAPPING = {character: None for character in NONPRINTABLE}
 
 
 class TextCleaner:
     def __init__(self) -> None:
+        self.line_separator = "<br>"
+        self.invisible_chars = [
+            code
+            for code in range(sys.maxunicode)
+            if unicodedata.category(chr(code)) in {"Cf", "Cc"}
+        ]
+        self.unprintable_chars = itertools.chain(
+            range(0x00, 0x20),
+            range(0x7F, 0xA0),
+            self.invisible_chars,
+        )
+        self.nonprintable_mapping = {
+            character: None
+            for character in self.unprintable_chars
+        }
+
         self.bad_text_regex: Set[Union[str, re.Pattern[str]]] = set(
             [
                 # remove entire paragraph containing a string or regex pattern
                 # WARNING: dangerous to use. use bad_tag_text_pairs instead
             ]
         )
-        self.bad_tag_text_pairs: Dict[
-            str, Union[str, re.Pattern[str], List[AnyStr]]
-        ] = {
+        self.bad_tag_text_pairs: Dict[str, Union[str, re.Pattern[str], List[Any]]] = {
             # a { tag-name: string or regex pattern } to remove.
             # the tag will be removed if the text inside contains the pattern
         }
@@ -149,7 +153,7 @@ class TextCleaner:
     def extract_contents(self, tag) -> str:
         self.clean_contents(tag)
         body = self.extract_paragraphs(tag)
-        paragraphs = " ".join(body).split(LINE_SEP)
+        paragraphs = " ".join(body).split(self.line_separator)
         return "".join(
             [
                 f"<p>{p.strip()}</p>"
@@ -191,7 +195,7 @@ class TextCleaner:
 
     def clean_text(self, text) -> str:
         text = str(text).strip()
-        text = text.translate(NONPRINTABLE_MAPPING)
+        text = text.translate(self.nonprintable_mapping)
         if not hasattr(self, "_subs_"):
             self._subs_ = re.compile(
                 "|".join([f"({x})" for x in self.substitutions.keys()]),
@@ -215,7 +219,7 @@ class TextCleaner:
             if name not in self.whitelist_attributes:
                 continue
             if name == "style":
-                value = self.clean_style_value(value)
+                value = self.clean_style_value(str(value))
             if value:
                 attrs[name] = value
         tag.attrs = attrs
@@ -272,12 +276,12 @@ class TextCleaner:
                 body.append(str(elem))
                 continue
             if elem.name == "hr":
-                body.append(LINE_SEP)
+                body.append(self.line_separator)
                 # body.append('-' * 8)
                 # body.append(LINE_SEP)
                 continue
             if elem.name == "br":
-                body.append(LINE_SEP)
+                body.append(self.line_separator)
                 continue
             # if not elem.text.strip():
             #     continue
@@ -287,18 +291,18 @@ class TextCleaner:
             content = " ".join(self.extract_paragraphs(elem))
 
             if is_block:
-                body.append(LINE_SEP)
+                body.append(self.line_separator)
 
-            for line in content.split(LINE_SEP):
+            for line in content.split(self.line_separator):
                 line = line.strip()
                 if not line:
                     continue
                 if not (is_plain or is_block):
                     line = "<%s>%s</%s>" % (elem.name, line, elem.name)
                 body.append(line)
-                body.append(LINE_SEP)
+                body.append(self.line_separator)
 
-            if body and body[-1] == LINE_SEP and not is_block:
+            if body and body[-1] == self.line_separator and not is_block:
                 body.pop()
 
         return [x.strip() for x in body if x.strip()]

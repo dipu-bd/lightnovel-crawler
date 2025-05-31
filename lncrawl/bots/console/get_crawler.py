@@ -104,15 +104,15 @@ def choose_a_novel(self):
                     "type": "list",
                     "name": "novel",
                     "message": "Which one is your novel?",
-                    "choices": display.format_novel_choices(choices) + ["0. Cancel"],
+                    "choices": display.format_novel_choices(choices),
                 }
             ]
         )
 
-        index = int(answer["novel"].split(".")[0])
-        if index < 1 and index > len(self.app.search_results):
+        index = answer['novel']
+        if index == -1:
             raise LNException("Cancelled by user")
-        selected_choice = self.app.search_results[index - 1]
+        selected_choice = self.app.search_results[index]
 
     # Choose the novel source
     novels = selected_choice["novels"]
@@ -124,15 +124,15 @@ def choose_a_novel(self):
                     "type": "list",
                     "name": "novel",
                     "message": "Choose a source to download?",
-                    "choices": ["0. Back"] + display.format_source_choices(novels),
+                    "choices": display.format_source_choices(novels),
                 }
             ]
         )
 
-        index = int(answer["novel"].split(".")[0])
-        if index == 0:
+        index = answer["novel"]
+        if index == -1:
             return self.choose_a_novel()
-        selected_novel = novels[index - 1]
+        selected_novel = novels[index]
     return selected_novel["url"]
 
 
@@ -154,4 +154,4 @@ def confirm_retry(self) -> bool:
         ]
     )
 
-    return answer.get("retry")
+    return answer.get("retry", False)

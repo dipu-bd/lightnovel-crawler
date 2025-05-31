@@ -4,9 +4,9 @@ import traceback
 from typing import List
 
 from colorama import Fore, Style
+from questionary import Choice
 
 from ..assets.chars import Chars
-from ..core.exeptions import LNException
 from ..models import CombinedSearchResult, SearchResult
 from ..models.meta import MetaInfo
 from ..utils.platforms import Platform
@@ -87,6 +87,7 @@ def cancel_method():
 
 
 def error_message(ex_type, message, tb):
+    from ..core.exeptions import LNException
     print()
     tb_summary = "".join(traceback.format_tb(tb)[-4:]).strip()
     print(Fore.RED, Chars.ERROR, "Error:", message, Fore.RESET)
@@ -215,18 +216,17 @@ def __format_search_result_info(short_info):
 def format_novel_choices(choices: List[CombinedSearchResult]):
     items = []
     for index, item in enumerate(choices):
-        text = "%d. %s [in %d sources]" % (
+        title = "%d. %s [in %d sources]" % (
             index + 1,
             item.title,
             len(item.novels),
         )
         if len(item.novels) == 1:
             novel = item.novels[0]
-            text += "\n" + (" " * 6) + Chars.LINK + " " + novel.url
-            text += __format_search_result_info(novel.info)
-
-        items.append({"name": text})
-
+            title += "\n" + (" " * 6) + Chars.LINK + " " + novel.url
+            title += __format_search_result_info(novel.info)
+        items.append(Choice(value=index, title=title))
+    items.append(Choice(title="0. Cancel", value=-1))
     return items
 
 
@@ -269,11 +269,11 @@ def display_novel_title(title: str, vol_count: int, chap_count: int, link: str):
 
 def format_source_choices(novels: List[SearchResult]):
     items = []
+    items.append(Choice(title="0. Back", value=-1))
     for index, item in enumerate(novels):
         text = "%d. %s" % (index + 1, item.url)
         text += __format_search_result_info(item.info)
-        items.append({"name": text})
-
+        items.append(Choice(value=index, title=text))
     return items
 
 
@@ -288,6 +288,5 @@ def format_resume_choices(meta_list: List[MetaInfo]):
             len(meta.session.download_chapters),
         )
         text += "\n" + (" " * 6) + Chars.LINK + " " + meta.novel.url
-        items.append({"name": text})
-
+        items.append(Choice(value=index, title=text))
     return items

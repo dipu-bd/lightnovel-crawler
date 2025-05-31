@@ -108,6 +108,9 @@ def save_metadata(app, completed=False):
         ),
     )
 
-    Path(app.output_path).mkdir(parents=True, exist_ok=True)
-    file_name = Path(app.output_path) / C.META_FILE_NAME
-    novel.to_json(file_name, encoding="utf-8", indent=2)
+    try:
+        Path(app.output_path).mkdir(parents=True, exist_ok=True)
+        file_name = Path(app.output_path) / C.META_FILE_NAME
+        novel.to_json(file_name, encoding="utf-8", indent=2)
+    except Exception:
+        pass

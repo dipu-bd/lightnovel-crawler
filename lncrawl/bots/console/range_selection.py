@@ -31,7 +31,7 @@ def get_range_selection(self, disable_args=False):
     if args.suppress:
         return selections[0]
 
-    choices = [
+    choice_list = [
         f"Everything! ({chapter_count} chapters)",
         "Last 10 chapters",
         "First 10 chapters",
@@ -41,8 +41,8 @@ def get_range_selection(self, disable_args=False):
         f"Select specific chapters ({chapter_count} chapters)",
     ]
     if chapter_count <= 20:
-        choices.pop(1)
-        choices.pop(1)
+        choice_list.pop(1)
+        choice_list.pop(1)
         selections.pop(1)
         selections.pop(1)
 
@@ -52,12 +52,13 @@ def get_range_selection(self, disable_args=False):
                 "type": "list",
                 "name": "choice",
                 "message": "Which chapters to download?",
-                "choices": choices,
+                "choices": choice_list,
             },
         ]
     )
 
-    return selections[choices.index(answer["choice"])]
+    index = choice_list.index(answer["choice"])
+    return selections[index]
 
 
 def get_range_using_urls(self, disable_args=False):

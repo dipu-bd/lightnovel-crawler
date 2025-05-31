@@ -57,6 +57,7 @@ class App:
         logger.info("Initialized App")
 
     def destroy(self):
+        atexit.unregister(self.destroy)
         if self.crawler:
             self.crawler.__del__()
         self.chapters.clear()

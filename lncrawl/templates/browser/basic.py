@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 class BasicBrowserTemplate(Crawler):
     """Attempts to crawl using cloudscraper first, if failed use the browser."""
+    can_use_browser = True
 
     def __init__(
         self,
@@ -49,6 +50,8 @@ class BasicBrowserTemplate(Crawler):
         return self._browser
 
     def init_browser(self):
+        if not self.can_use_browser:
+            raise
         if self.using_browser:
             return
         self._max_workers = self.workers
@@ -59,7 +62,7 @@ class BasicBrowserTemplate(Crawler):
             soup_maker=self,
         )
         self._visit = self._browser.visit
-        self._browser.visit = self.visit
+        self._browser.visit = self.visit  # type:ignore
 
     def visit(self, url: str) -> None:
         self._visit(url)

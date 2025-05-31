@@ -10,7 +10,7 @@ from selenium.webdriver import Chrome, ChromeOptions
 from selenium.webdriver.remote.remote_connection import LOGGER
 
 from ..core.soup import SoupMaker
-from ..utils.platforms import Screen, has_display
+from ..utils.platforms import Screen, Platform
 from .elements import WebElement
 from .job_queue import _acquire_queue, _release_queue
 from .scripts import _override_get
@@ -39,7 +39,7 @@ def create_local(
     if not options:
         options = ChromeOptions()
 
-    if not headless and not has_display():
+    if not headless and not Platform.has_display:
         headless = True
 
     # Options for chrome driver
