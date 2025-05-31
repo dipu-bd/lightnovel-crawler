@@ -109,8 +109,8 @@ jobs:
 
       - name: Update download links
         env:
-          REBRANDLY_API_KEY: ${{ secrets.REBRANDLY_API_KEY }}
-        run: sh ./scripts/rebrandly.sh
+          SHLINK_API_KEY: ${{ secrets.SHLINK_API_KEY }}
+        run: sh ./scripts/bitanon.sh
 
       - name: Publish
         env:
