@@ -11,6 +11,9 @@ search_url = "http://boxnovel.org/search?keyword=%s"
 
 
 class BoxNovelOrgCrawler(Crawler):
+    is_disabled = True
+    disable_reason = 'No longer operational'
+
     base_url = [
         "http://boxnovel.org/",
         "https://boxnovel.org/",

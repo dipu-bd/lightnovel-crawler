@@ -2,6 +2,7 @@
 """
 Build lightnovel-crawler source index to use for update checking.
 """
+import check_sources
 import hashlib
 import json
 import os
@@ -111,8 +112,11 @@ except ImportError:
 
 assert SOURCES_FOLDER.is_dir()
 
+print('Getting rejected sources')
+rejected_sources = check_sources.main()
 with open(REJECTED_FILE, encoding="utf8") as fp:
-    rejected_sources = json.load(fp)
+    rejected_sources.update(json.load(fp))
+print("-" * 50)
 
 username_cache = {}
 try:

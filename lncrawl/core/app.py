@@ -21,6 +21,7 @@ from .exeptions import ScraperErrorGroup
 from .novel_info import format_novel, save_metadata
 from .novel_search import search_novels
 from .scraper import Scraper
+from .sources import rejected_sources
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +82,7 @@ class App:
                 for link, crawler in crawler_list.items()
                 if crawler.search_novel != Crawler.search_novel
                 and link.startswith("http")
+                and link not in rejected_sources
             ]
 
     def guess_novel_title(self, url: str) -> str:
