@@ -1,11 +1,10 @@
-name: Lint pull requests
+name: Lint
 
 on:
   push:
     branches:
+      - master
       - dev
-    paths:
-      - "sources/_index.json"
   pull_request:
     branches:
       - master
