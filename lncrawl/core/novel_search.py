@@ -68,7 +68,7 @@ def _run(p: Process, hostname: str, signal: Event):
 def search_novels(app):
     from ..models import CombinedSearchResult, SearchResult
     from .app import App
-    from .sources import crawler_list
+    from .sources import crawler_list, rejected_sources
     from .taskman import TaskManager
 
     assert isinstance(app, App)
@@ -85,6 +85,9 @@ def search_novels(app):
     signal = Event()
     futures: List[Future] = []
     for link in app.crawler_links:
+        if link in rejected_sources:
+            continue
+
         hostname = urlparse(link).hostname
         CrawlerType = crawler_list.get(hostname or '')
         if CrawlerType in checked:
