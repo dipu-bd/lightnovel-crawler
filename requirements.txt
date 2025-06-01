@@ -36,6 +36,7 @@ pyinstaller
 # cssutils>=1.0.0,<2.7.0
 # win_unicode_console~=0.5
 types-tqdm
+types-colorama
 
 # bot requirements
 discord.py>=2.0.0

@@ -222,6 +222,9 @@ class Scraper(TaskManager, SoupMaker):
     # Downloaders
     # ------------------------------------------------------------------------- #
 
+    def _ping_request(self, url: str, timeout=5, **kwargs):
+        return self.__process_request("head", url, **kwargs, max_retries=2, timeout=timeout)
+
     def get_response(
         self,
         url: str,

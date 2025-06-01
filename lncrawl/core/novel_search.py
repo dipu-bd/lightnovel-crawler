@@ -15,7 +15,7 @@ from slugify import slugify
 
 CONCURRENCY = 25
 MAX_RESULTS = 10
-SEARCH_TIMEOUT = 20
+SEARCH_TIMEOUT = 30
 
 logger = logging.getLogger(__name__)
 
