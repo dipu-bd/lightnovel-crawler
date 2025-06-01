@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
 
     steps:
       - uses: actions/checkout@v4
@@ -110,7 +110,7 @@ jobs:
 
   build-linux:
     if: github.repository == 'dipu-bd/lightnovel-crawler'
-    needs: [validate, build-mac, build-windows]
+    needs: validate
     name: Linux Build & Publish
     runs-on: ubuntu-latest
     steps:
