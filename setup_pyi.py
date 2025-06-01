@@ -6,7 +6,7 @@ from pathlib import Path
 from PyInstaller import __main__ as pyi
 
 ROOT = Path(__file__).parent
-site_packages = list(ROOT.glob("venv/**/site-packages"))[0]
+site_packages = list(ROOT.glob(".venv/**/site-packages"))[0]
 
 
 def build_command():
@@ -42,11 +42,12 @@ def gather_data_files():
         site_packages / "text_unidecode/data.bin": "text_unidecode",
     }
 
-    return [
-        c for src, dst in file_map.items()
-        if src.exists()
-        for c in ["--add-data", src.as_posix() + os.pathsep + dst]
-    ]
+    command = []
+    for src, dst in file_map.items():
+        if src.exists():
+            command += ["--add-data", src.as_posix() + os.pathsep + dst]
+
+    return command
 
 
 def gather_hidden_imports():
