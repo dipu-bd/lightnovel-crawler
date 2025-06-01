@@ -11,16 +11,33 @@ from ...core.arguments import get_args
 from ...core.crawler import Crawler
 from ...core.exeptions import LNException
 from ...core.sources import crawler_list, prepare_crawler, rejected_sources
+from ...utils.platforms import Platform
 from .open_folder_prompt import display_open_folder
 from .resume_download import resume_session
 
 logger = logging.getLogger(__name__)
 
 
+def confirm_exit():
+    try:
+        input("Press ENTER to exit...")
+    except KeyboardInterrupt:
+        pass
+    except EOFError:
+        pass
+
+
 def start(self):
     from . import ConsoleBot
     assert isinstance(self, ConsoleBot)
 
+    if (
+        getattr(sys, "frozen", False)
+        and hasattr(sys, "_MEIPASS")
+        and Platform.windows
+        and not get_args().close_directly
+    ):
+        atexit.register(confirm_exit)
     atexit.register(display.epilog)
 
     args = get_args()

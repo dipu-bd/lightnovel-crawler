@@ -2,6 +2,7 @@
 ascii
 regex
 packaging
+lxml[html-clean]
 pyease-grpc>=1.6.0
 python-dotenv>=0.15.0,<2.0.0
 beautifulsoup4>=4.8.0,<5.0.0
@@ -13,8 +14,6 @@ PyExecJS>=1.5.1,<2.0.0
 ebooklib>=0.17.0,<1.0.0
 pillow>=6.0.0
 cloudscraper>=1.2.71
-lxml>=5.0.0
-lxml-html-clean>=0.1.0
 readability-lxml>=0.8.0,<1.0.0
 questionary>=1.6.0
 prompt-toolkit~=3.0

@@ -26,3 +26,5 @@ client_secrets.json
 __pycache__/
 .idea/
 /test.py
+.venv/
+.DS_Store

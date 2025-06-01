@@ -69,15 +69,3 @@ def start_app():
 
     if args.auto_proxy:
         stop_proxy_fetcher()
-
-    if (
-        getattr(sys, "frozen", False)
-        and hasattr(sys, "_MEIPASS")
-        and not args.close_directly
-    ):
-        try:
-            input("Press ENTER to exit...")
-        except KeyboardInterrupt:
-            pass
-        except EOFError:
-            pass
