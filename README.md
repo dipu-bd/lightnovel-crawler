@@ -2,8 +2,9 @@
 
 [![download win](https://img.shields.io/badge/download-lncrawl.exe-red?logo=windows&style=for-the-badge)](https://go.bitanon.dev/lncrawl-windows)
 [![download linux](<https://img.shields.io/badge/download-lncrawl_(linux)-brown?logo=linux&style=for-the-badge>)](https://go.bitanon.dev/lncrawl-linux)
-[![Discord](https://img.shields.io/discord/578550900231110656?logo=discord&label=discord&style=for-the-badge)](https://discord.gg/wMECG2Q)
+[![download mac](<https://img.shields.io/badge/download-lncrawl_(mac)-blue?logo=mac&style=for-the-badge>)](https://go.bitanon.dev/lncrawl-mac)
 <br>
+[![Discord](https://img.shields.io/discord/578550900231110656?logo=discord&label=discord)](https://discord.gg/wMECG2Q)
 [![PyPI version](https://img.shields.io/pypi/v/lightnovel-crawler.svg?logo=python)](https://pypi.org/project/lightnovel-crawler)
 [![Python version](https://img.shields.io/pypi/pyversions/lightnovel-crawler.svg)](https://pypi.org/project/lightnovel-crawler)
 [![Downloads](https://pepy.tech/badge/lightnovel-crawler)](https://pepy.tech/project/lightnovel-crawler)
@@ -82,13 +83,17 @@ If you used a folder other than Applications during installation, replace `/Appl
 
 ### Standalone Bundle (Windows, Linux)
 
-⏬ **Windows**: [lncrawl.exe ~ 37MB](https://go.bitanon.dev/lncrawl-windows)
+⏬ **Windows**: [lncrawl.exe ~ 36MB](https://go.bitanon.dev/lncrawl-windows)
 
 > In Windows 8, 10 or later versions, it might say that `lncrawl.exe` is not safe to dowload or execute. You should bypass/ignore this security check to execute this program.
 
 ⏬ **Linux**: [lncrawl ~ 54MB](https://go.bitanon.dev/lncrawl-linux)
 
 > It is recommended to install via **pip** if you are on Linux
+
+⏬ **MacOS**: [lncrawl ~ 33MB](https://go.bitanon.dev/lncrawl-mac)
+
+> It is recommended to install via **pip** if you are on Mac
 
 ⏬ _To get older versions visit the [Releases page](https://github.com/dipu-bd/lightnovel-crawler/releases)_
 
@@ -267,6 +272,7 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
 ================================================================================
@@ -340,6 +346,7 @@ options:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ~~
 ```
+
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -519,7 +526,6 @@ We are supporting 332 sources and 375 crawlers.
 </tbody>
 </table>
 
-
 ### `ar` Arabic
 
 <table>
@@ -541,7 +547,6 @@ We are supporting 332 sources and 375 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -1830,7 +1835,6 @@ We are supporting 332 sources and 375 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish; Castilian
 
 <table>
@@ -1857,7 +1861,6 @@ We are supporting 332 sources and 375 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `fr` French
 
@@ -1895,7 +1898,6 @@ We are supporting 332 sources and 375 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -1959,7 +1961,6 @@ We are supporting 332 sources and 375 crawlers.
 </tbody>
 </table>
 
-
 ### `pt` Portuguese
 
 <table>
@@ -1981,7 +1982,6 @@ We are supporting 332 sources and 375 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `ru` Russian
 
@@ -2035,7 +2035,6 @@ We are supporting 332 sources and 375 crawlers.
 </tbody>
 </table>
 
-
 ### `tr` Turkish
 
 <table>
@@ -2052,7 +2051,6 @@ We are supporting 332 sources and 375 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -2080,7 +2078,6 @@ We are supporting 332 sources and 375 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 

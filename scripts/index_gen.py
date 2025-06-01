@@ -77,6 +77,7 @@ INDEX_DATA = {
     "app": {
         "windows": "https://go.bitanon.dev/lncrawl-windows",
         "linux": "https://go.bitanon.dev/lncrawl-linux",
+        "mac": "https://go.bitanon.dev/lncrawl-mac",
     },
     "rejected": {},
     "supported": {},
