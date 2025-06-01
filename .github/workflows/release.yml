@@ -79,9 +79,38 @@ jobs:
           artifacts: "dist/lncrawl*"
           token: ${{ secrets.GITHUB_TOKEN }}
 
+  build-mac:
+    if: github.repository == 'dipu-bd/lightnovel-crawler'
+    needs: validate
+    name: MacOS Build
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Build package
+        run: |
+          sh ./scripts/build.sh
+          mv ./dist/lncrawl ./dist/lncrawl-mac
+
+      - name: Test the executable package
+        run: ./dist/lncrawl-mac --list-sources
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with: # See available options at https://github.com/ncipollo/release-action
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "dist/lncrawl-mac"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
   build-linux:
     if: github.repository == 'dipu-bd/lightnovel-crawler'
-    needs: [validate, build-windows]
+    needs: [validate, build-mac, build-windows]
     name: Linux Build & Publish
     runs-on: ubuntu-latest
     steps:
@@ -92,10 +121,12 @@ jobs:
           python-version: "3.10"
 
       - name: Build package
-        run: sh ./scripts/build.sh
+        run: |
+          sh ./scripts/build.sh
+          mv ./dist/lncrawl ./dist/lncrawl-linux
 
       - name: Test the executable package
-        run: ./dist/lncrawl --list-sources
+        run: ./dist/lncrawl-linux --list-sources
 
       - name: Release
         uses: ncipollo/release-action@v1
@@ -103,7 +134,7 @@ jobs:
         with: # See available options at https://github.com/ncipollo/release-action
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "dist/lncrawl,dist/*.whl"
+          artifacts: "dist/lncrawl-linux,dist/*.whl"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update download links
