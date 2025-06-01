@@ -6,7 +6,7 @@ from pathlib import Path
 from PyInstaller import __main__ as pyi
 
 ROOT = Path(__file__).parent
-site_packages = list(ROOT.glob("venv/**/site-packages"))[0]
+site_packages = list(ROOT.glob(".venv/**/site-packages"))[0]
 
 
 def build_command():

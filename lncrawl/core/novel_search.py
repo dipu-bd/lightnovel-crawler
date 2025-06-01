@@ -3,11 +3,10 @@ To search for novels in selected sources
 """
 import atexit
 import logging
-import time
-from threading import Event
 from concurrent.futures import Future
 from difflib import SequenceMatcher
-from multiprocessing import Manager, Process
+from multiprocessing import Manager, Process, Queue
+from threading import Event
 from typing import Dict, List
 from urllib.parse import urlparse
 
@@ -15,13 +14,18 @@ from slugify import slugify
 
 CONCURRENCY = 25
 MAX_RESULTS = 10
-SEARCH_TIMEOUT = 30
+SEARCH_TIMEOUT = 60
 
 logger = logging.getLogger(__name__)
 
 
 # This function runs in a separate process
-def _search_process(results: list, link: str, file_path: str, query: str):
+def _search_process(
+    results: Queue,
+    link: str,
+    query: str,
+    file_path: str,
+):
     try:
         from ..models import SearchResult
         from .sources import prepare_crawler
@@ -35,7 +39,7 @@ def _search_process(results: list, link: str, file_path: str, query: str):
             if not (item.url and item.title):
                 continue
             item.title = item.title.lower().title()
-            results.append(item)
+            results.put(item)
     except KeyboardInterrupt:
         pass
     except Exception:
@@ -46,7 +50,6 @@ def _search_process(results: list, link: str, file_path: str, query: str):
 # This runs in a thread to execute the processes
 def _run(p: Process, hostname: str, signal: Event):
     from .exeptions import LNException
-    start_time = time.time()
     try:
         atexit.register(p.kill)
         p.start()
@@ -59,10 +62,11 @@ def _run(p: Process, hostname: str, signal: Event):
         else:
             if p.is_alive():
                 raise LNException(f"[{hostname}] Timeout")
+    except KeyboardInterrupt:
+        pass
     finally:
         atexit.unregister(p.kill)
         p.kill()
-    return (start_time, hostname)
 
 
 def search_novels(app):
@@ -77,13 +81,13 @@ def search_novels(app):
         return
 
     manager = Manager()
-    results = manager.list()
+    results = manager.Queue()
     taskman = TaskManager(CONCURRENCY)
 
     # Create tasks for the queue
     checked = set()
     signal = Event()
-    futures: List[Future] = []
+    futures: list[Future] = []
     for link in app.crawler_links:
         if link in rejected_sources:
             continue
@@ -100,8 +104,8 @@ def search_novels(app):
             args=(
                 results,
                 link,
+                app.user_input,
                 getattr(CrawlerType, 'file_path'),
-                app.user_input
             ),
         )
 
@@ -113,15 +117,8 @@ def search_novels(app):
     # Wait for all tasks to finish
     try:
         app.progress = 0
-        for start_time, hostname in taskman.resolve_as_generator(
-            futures,
-            unit='source',
-            desc='Search',
-            timeout=SEARCH_TIMEOUT,
-        ):
+        for _ in taskman.resolve_as_generator(futures, unit='source', desc='Search'):
             app.progress += 1
-            run_time = round(time.time() - start_time)
-            logging.debug(f"[{hostname}] {run_time} seconds")
     except KeyboardInterrupt:
         pass
     except Exception:
@@ -134,8 +131,8 @@ def search_novels(app):
 
     # Combine the search results
     combined: Dict[str, List[SearchResult]] = {}
-    for item in results:
-        assert isinstance(item, SearchResult)
+    while not results.empty():
+        item: SearchResult = results.get()
         if not (item and item.title):
             continue
         key = slugify(str(item.title))
