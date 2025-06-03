@@ -36,7 +36,6 @@ services:
 
   server:
     platform: linux/amd64
-    container_name: lncrawl-server
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
@@ -46,15 +45,12 @@ services:
     command: python -m lncrawl -l --suppress --bot server --port 8000 --selenium-grid "http://chrome:4444"
     environment:
       - PYTHONUNBUFFERED=1
-      - OUTPUT_PATH=/out/app
-      - SERVER_SECRET="${SERVER_SECRET}"
-      - SERVER_ADMIN_EMAIL="${SERVER_ADMIN_EMAIL}"
-      - SERVER_ADMIN_PASSWORD="${SERVER_ADMIN_PASSWORD}"
-      - DATABASE_URL=sqlite:////out/appsqlite.db
+      - OUTPUT_PATH=/home/lncrawl/output
+      - DATABASE_URL=sqlite:////home/lncrawl/output/sqlite.db
     volumes:
-      - output_dir:/out/app
+      - output_path:/home/lncrawl/output
     depends_on:
       - chrome
 
 volumes:
-  output_dir:
+  output_path:

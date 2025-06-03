@@ -165,13 +165,16 @@ class App:
         self.output_path = str(
             Path(C.DEFAULT_OUTPUT_PATH) / source_name / self.good_file_name
         )
+        os.makedirs(self.output_path, exist_ok=True)
 
     # ----------------------------------------------------------------------- #
 
     def start_download(self):
         """Requires: crawler, chapters, output_path"""
-        if not self.output_path or not Path(self.output_path).is_dir():
+        if not self.output_path:
             raise LNException("Output path is not defined")
+        if not Path(self.output_path).is_dir():
+            raise LNException(f"Output path does not exists: ({self.output_path})")
 
         assert self.crawler
 

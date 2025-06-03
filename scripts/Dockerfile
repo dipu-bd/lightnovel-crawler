@@ -19,22 +19,23 @@ RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev
 RUN useradd -ms /bin/bash lncrawl
 USER lncrawl
 
-# Setup the app environment
-WORKDIR /app
-
 # Install global requirements
 RUN alias python=python3
 RUN alias pip=pip3
 RUN export PATH="/home/lncrawl/.local/bin:$PATH"
 RUN pip install -U pip wheel
 
+WORKDIR /app
+
 # Install app requirements
-COPY requirements.txt .
+COPY --chown=lncrawl:lncrawl requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy source files
-# COPY --chown=lncrawl:lncrawl .env .env
-COPY --chown=lncrawl:lncrawl sources sources
-COPY --chown=lncrawl:lncrawl lncrawl lncrawl
+COPY .env .env
+COPY lncrawl lncrawl
+COPY sources sources
+
+ENV OUTPUT_PATH=/home/lncrawl/output
+RUN mkdir -p $OUTPUT_PATH
 
 ENTRYPOINT [ "python", "-m", "lncrawl" ]
