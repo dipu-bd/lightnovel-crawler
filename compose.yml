@@ -18,18 +18,40 @@ services:
       SE_SCREEN_HEIGHT: "1080"
       SE_NODE_GRID_URL: "false"
 
-  discord-bot:
-    platform: linux/amd64
+  # discord-bot:
+  #   platform: linux/amd64
+  #   image: lncrawl
+  #   build:
+  #     context: .
+  #     dockerfile: ./scripts/Dockerfile
+  #   restart: unless-stopped
+  #   environment:
+  #     CLOUD_DRIVE: "GOFILE"
+  #     DISCORD_TOKEN: "${DISCORD_TOKEN}"
+  #     DISCORD_SIGNAL_CHAR: "${DISCORD_SIGNAL_CHAR}"
+  #     DISCORD_DISABLE_SEARCH: "${DISCORD_DISABLE_SEARCH}"
+  #   command: python -m lncrawl --suppress --bot discord --shard-id 0 --shard-count 1 --selenium-grid "http://chrome:4444"
+  #   depends_on:
+  #     - chrome
+
+  server:
     image: lncrawl
+    platform: linux/amd64
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
     restart: unless-stopped
+    ports:
+      - "23457:8000"
+    command: python -m lncrawl --suppress --bot server --port 8000 --selenium-grid "http://chrome:4444"
+    volumes:
+      - server-data:/app/.server # Persist SQLite DB
+      - novel-output:/app/Lightnovels # Novel outputs
     environment:
-      CLOUD_DRIVE: "GOFILE"
-      DISCORD_TOKEN: "${DISCORD_TOKEN}"
-      DISCORD_SIGNAL_CHAR: "${DISCORD_SIGNAL_CHAR}"
-      DISCORD_DISABLE_SEARCH: "${DISCORD_DISABLE_SEARCH}"
-    command: python -m lncrawl --suppress --bot discord --shard-id 0 --shard-count 1 --selenium-grid "http://chrome:4444"
+      - PYTHONUNBUFFERED=1
     depends_on:
       - chrome
+
+volumes:
+  novel-output:
+  server-data:

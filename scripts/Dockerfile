@@ -16,16 +16,16 @@ RUN wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev
     && ln -s /opt/calibre/ebook-convert /usr/local/bin/ebook-convert
 
 # Add app user
-RUN useradd -ms /bin/bash appuser
-USER appuser
+RUN useradd -ms /bin/bash lncrawl
+USER lncrawl
 
 # Setup the app environment
-WORKDIR /home/appuser/app
+WORKDIR /app
 
 # Install global requirements
 RUN alias python=python3
 RUN alias pip=pip3
-RUN export PATH="/home/appuser/.local/bin:$PATH"
+RUN export PATH="/home/lncrawl/.local/bin:$PATH"
 RUN pip install -U pip wheel
 
 # Install app requirements
@@ -38,9 +38,9 @@ COPY lncrawl lncrawl
 
 # Grant access to source files
 USER root
-RUN chown -R appuser:appuser /home/appuser/app
+RUN chown -R lncrawl:lncrawl /app
 
 # Switch to app user
-USER appuser
+USER lncrawl
 
 ENTRYPOINT [ "python", "-m", "lncrawl" ]
