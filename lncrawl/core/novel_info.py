@@ -42,7 +42,7 @@ def __format_chapters(crawler: Crawler, vol_id_map: Dict[int, int]):
         if not isinstance(item, Chapter):
             item = crawler.chapters[index] = Chapter(**item)
 
-        if not item.id < 0:
+        if not isinstance(item.id, int) or item.id < 0:
             raise LNException(f"Unknown item id at index {index}")
 
         if item.volume:
@@ -104,7 +104,9 @@ def save_metadata(app, completed=False):
             no_append_after_filename=app.no_suffix_after_filename,
             download_chapters=[chap.id for chap in app.chapters],
             proxies=dict(app.crawler.scraper.proxies),
-            cookies={k: v for k, v in app.crawler.cookies.items() if v},
+            cookies={
+                k: v for k, v in app.crawler.cookies.items() if v
+            },
             headers={
                 k: (v if isinstance(v, str) else bytes(v).decode())
                 for k, v in app.crawler.headers.items()

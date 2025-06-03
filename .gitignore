@@ -28,4 +28,4 @@ __pycache__/
 /test.py
 .venv/
 .DS_Store
-/.server/
+/sqlite.db

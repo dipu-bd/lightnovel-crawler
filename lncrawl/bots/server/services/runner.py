@@ -37,6 +37,7 @@ class JobRunner:
 
     def start(self):
         logger.info('Starting scheduler')
+        logging.getLogger("apscheduler").setLevel(logging.WARNING)
         self._scheduler = BackgroundScheduler()
         interval = self.ctx.config.app.runner_interval
         self._scheduler.add_job(
