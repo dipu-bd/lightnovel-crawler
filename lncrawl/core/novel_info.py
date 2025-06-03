@@ -42,25 +42,26 @@ def __format_chapters(crawler: Crawler, vol_id_map: Dict[int, int]):
         if not isinstance(item, Chapter):
             item = crawler.chapters[index] = Chapter(**item)
 
-        if not isinstance(item.id, int) or item.id < 0:
+        if not item.id < 0:
             raise LNException(f"Unknown item id at index {index}")
 
-        if isinstance(item.get("volume"), int):
+        if item.volume:
             vol_index = vol_id_map.get(item.volume, -1)
         else:
             vol_index = vol_id_map.get(index // 100 + 1, -1)
-        assert vol_index >= 0 and vol_index < len(
-            crawler.volumes
-        ), f"Unknown volume for chapter {item['id']}"
+        assert vol_index >= 0 and vol_index < len(crawler.volumes), \
+            f"Unknown volume for chapter {item['id']}"
 
         volume = crawler.volumes[vol_index]
         item.volume = volume.id
         item.volume_title = volume.title
         item.title = __format_title(item.title or f"#{item.id}")
 
-        volume.start_chapter = min(volume.start_chapter, item.id)
-        volume.final_chapter = max(volume.final_chapter, item.id)
-        volume.chapter_count += 1
+        volume.chapter_count = (volume.chapter_count or 0) + 1
+        if not volume.start_chapter or item.id < volume.start_chapter:
+            volume.start_chapter = item.id
+        if not volume.final_chapter or item.id > volume.final_chapter:
+            volume.final_chapter = item.id
 
 
 def format_novel(crawler: Crawler):
@@ -87,14 +88,14 @@ def save_metadata(app, completed=False):
             cover_url=app.crawler.novel_cover,
             synopsis=app.crawler.novel_synopsis,
             language=app.crawler.language,
-            novel_tags=app.crawler.novel_tags,
+            tags=app.crawler.novel_tags,
             volumes=app.crawler.volumes,
             chapters=[Chapter.without_body(chap) for chap in app.crawler.chapters],
             is_rtl=app.crawler.is_rtl,
         ),
         session=Session(
             completed=completed,
-            user_input=app.user_input,
+            user_input=app.user_input or '',
             login_data=app.login_data,
             output_path=app.output_path,
             output_formats=app.output_formats,
@@ -102,9 +103,12 @@ def save_metadata(app, completed=False):
             good_file_name=app.good_file_name,
             no_append_after_filename=app.no_suffix_after_filename,
             download_chapters=[chap.id for chap in app.chapters],
-            cookies=app.crawler.cookies,
-            headers=app.crawler.headers,
-            proxies=app.crawler.scraper.proxies,
+            proxies=dict(app.crawler.scraper.proxies),
+            cookies={k: v for k, v in app.crawler.cookies.items() if v},
+            headers={
+                k: (v if isinstance(v, str) else bytes(v).decode())
+                for k, v in app.crawler.headers.items()
+            },
         ),
     )
 

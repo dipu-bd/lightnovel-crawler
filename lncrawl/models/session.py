@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 from box import Box
 
@@ -13,7 +13,7 @@ class Session(Box):
         completed: bool = False,
         pack_by_volume: bool = False,
         download_chapters: List[int] = [],
-        good_file_name: Optional[str] = None,
+        good_file_name: str = "",
         no_append_after_filename: bool = False,
         login_data: Optional[Tuple[str, str]] = None,
         output_formats: Dict[OutputFormat, bool] = dict(),

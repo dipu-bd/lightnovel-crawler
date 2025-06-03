@@ -1,16 +1,17 @@
 import atexit
 import logging
 import shutil
+import zipfile
 from pathlib import Path
 from threading import Thread
 from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse
 
-from readability import Document
+from readability import Document  # type: ignore
 from slugify import slugify
 
 from .. import constants as C
-from ..binders import available_formats, generate_books
+from ..binders import generate_books
 from ..core.exeptions import LNException
 from ..core.sources import crawler_list, prepare_crawler
 from ..models import Chapter, CombinedSearchResult, OutputFormat
@@ -40,7 +41,9 @@ class App:
         self.pack_by_volume = False
         self.chapters: List[Chapter] = []
         self.book_cover: Optional[str] = None
-        self.output_formats: Dict[str, bool] = {}
+        self.output_formats: Dict[OutputFormat, bool] = {}
+        self.generated_books: Dict[OutputFormat, List[str]] = {}
+        self.generated_archives: Dict[OutputFormat, str] = {}
         self.archived_outputs = None
         self.good_file_name: str = ""
         self.no_suffix_after_filename = False
@@ -142,16 +145,22 @@ class App:
         if not len(self.crawler.volumes):
             raise Exception("No volumes found")
 
+        self.prepare_novel_output_path(
+            self.crawler.novel_url,
+            self.crawler.novel_title
+        )
+
+    def prepare_novel_output_path(self, novel_url: str, novel_title: str):
         if not self.good_file_name:
             self.good_file_name = slugify(
-                self.crawler.novel_title,
+                novel_title,
                 max_length=50,
                 separator=" ",
                 lowercase=False,
                 word_boundary=True,
             )
 
-        source_name = slugify(urlparse(self.crawler.home_url).netloc)
+        source_name = slugify(urlparse(novel_url).netloc)
         self.output_path = str(
             Path(C.DEFAULT_OUTPUT_PATH) / source_name / self.good_file_name
         )
@@ -201,49 +210,44 @@ class App:
         else:
             first_id = self.chapters[0]["id"]
             last_id = self.chapters[-1]["id"]
-            vol = "c%s-%s" % (first_id, last_id)
-            data[vol] = self.chapters
+            data[f"c{first_id}-{last_id}"] = self.chapters
 
-        generate_books(self, data)
+        self.generated_books = generate_books(self, data)
 
     # ----------------------------------------------------------------------- #
 
     def compress_books(self, archive_singles=False):
         logger.info("Compressing output...")
 
-        # Get which paths to be archived with their base names
-        path_to_process = []
-        for fmt in available_formats:
-            root_dir = Path(self.output_path) / fmt
-            if root_dir.is_dir():
-                path_to_process.append(
-                    (root_dir, self.good_file_name + " (" + fmt + ")")
-                )
-
         # Archive files
         self.archived_outputs = []
-        for root_dir, output_name in path_to_process:
-            file_list = list(root_dir.glob("*"))
-            if len(file_list) == 0:
-                logger.info("It has no files: %s", root_dir)
+        for fmt, file_list in self.generated_books.items():
+            if not file_list:
+                logger.info(f"No files for {fmt}")
                 continue
 
             if (
                 len(file_list) == 1
                 and not archive_singles
-                and not (root_dir / file_list[0]).is_dir()
+                and Path(file_list[0]).is_file()
             ):
-                logger.info("Not archiving single file inside %s" % root_dir)
-                archived_file = (root_dir / file_list[0]).as_posix()
+                logger.info(f"Not archiving single file for {fmt}")
+                archived_file = file_list[0]
             else:
+                root_file = Path(self.output_path) / fmt
+                output_name = f"{self.good_file_name} ({fmt}).zip"
                 base_path = Path(self.output_path) / output_name
-                logger.info("Compressing %s to %s" % (root_dir, base_path))
-                archived_file = shutil.make_archive(
-                    base_path.as_posix(),
-                    format="zip",
-                    root_dir=root_dir,
-                )
-                logger.info("Compressed: %s", Path(archived_file).name)
+
+                logger.info(f"Compressing {len(file_list)} files")
+                with zipfile.ZipFile(base_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+                    for file in file_list:
+                        startp = len(root_file.as_posix()) + 1
+                        arcname = Path(file).as_posix()[startp:]
+                        zipf.write(file, arcname=arcname)
+
+                archived_file = str(base_path)
+                logger.info("Compressed: %s", output_name)
 
             if archived_file:
                 self.archived_outputs.append(archived_file)
+                self.generated_archives[fmt] = archived_file

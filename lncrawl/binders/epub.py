@@ -206,7 +206,7 @@ def make_epubs(app, data: Dict[str, List[Chapter]]) -> List[str]:
 
     assert isinstance(app, App)
 
-    epub_files = []
+    epub_files : List[str] = []
     for volume, chapters in data.items():
         if not chapters:
             continue

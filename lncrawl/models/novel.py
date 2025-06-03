@@ -1,18 +1,10 @@
-from enum import Enum
 from typing import List, Optional
 
 from box import Box
 
+from ..assets.languages import find_code
 from .chapter import Chapter
 from .volume import Volume
-from ..assets.languages import language_codes
-
-
-class NovelStatus(str, Enum):
-    unknown = "Unknown"
-    ongoing = "Ongoing"
-    completed = "Completed"
-    hiatus = "Hiatus"
 
 
 class Novel(Box):
@@ -24,23 +16,12 @@ class Novel(Box):
         cover_url: Optional[str] = None,
         chapters: List[Chapter] = [],
         volumes: List[Volume] = [],
-        is_rtl: Optional[bool] = None,
-        synopsis: Optional[str] = None,
+        is_rtl: bool = False,
+        synopsis: str = "",
         language: Optional[str] = None,
-        novel_tags: List[str] = [],
+        tags: List[str] = [],
         has_manga: Optional[bool] = None,
         has_mtl: Optional[bool] = None,
-        language_code: List[str] = [],
-        source: Optional[str] = None,
-        editors: List[str] = [],
-        translators: List[str] = [],
-        status: Optional[NovelStatus] = NovelStatus.unknown,
-        genres: List[str] = [],
-        tags: List[str] = [],
-        description: Optional[str] = None,
-        original_publisher: Optional[str] = None,
-        english_publisher: Optional[str] = None,
-        novelupdates_url: Optional[str] = None,
         **kwargs,
     ) -> None:
         self.url = url
@@ -51,23 +32,8 @@ class Novel(Box):
         self.volumes = volumes
         self.is_rtl = is_rtl
         self.synopsis = synopsis
-        self.language = language
-        self.novel_tags = novel_tags
         self.has_manga = has_manga
         self.has_mtl = has_mtl
-        self.language_code = language_code
-        self.source = source
-        self.editors = editors
-        self.translators = translators
-        self.status = status
-        self.genres = genres
+        self.language = find_code(language)
         self.tags = tags
-        self.description = description
-        self.original_publisher = original_publisher
-        self.english_publisher = english_publisher
-        self.novelupdates_url = novelupdates_url
         self.update(kwargs)
-
-    @property
-    def language(self) -> str:
-        return language_codes.get(self.language_code, "Unknown")

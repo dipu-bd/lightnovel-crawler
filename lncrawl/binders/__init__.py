@@ -2,32 +2,35 @@
 To bind into ebooks
 """
 import logging
+from typing import Dict, List
+
+from ..models import OutputFormat
 
 logger = logging.getLogger(__name__)
 
 depends_on_none = [
-    "json",
-    "epub",
-    "text",
-    "web",
+    OutputFormat.json,
+    OutputFormat.epub,
+    OutputFormat.text,
+    OutputFormat.web,
 ]
 depends_on_epub = [
-    "docx",
-    "mobi",
-    "pdf",
-    "rtf",
-    "txt",
-    "azw3",
-    "fb2",
-    "lit",
-    "lrf",
-    "oeb",
-    "pdb",
-    "rb",
-    "snb",
-    "tcr",
-    # 'pml',
-    # 'html',
+    OutputFormat.docx,
+    OutputFormat.mobi,
+    OutputFormat.pdf,
+    OutputFormat.rtf,
+    OutputFormat.txt,
+    OutputFormat.azw3,
+    OutputFormat.fb2,
+    OutputFormat.lit,
+    OutputFormat.lrf,
+    OutputFormat.oeb,
+    OutputFormat.pdb,
+    OutputFormat.rb,
+    OutputFormat.snb,
+    OutputFormat.tcr,
+    # OutputFormat.pml,
+    # OutputFormat.html,
 ]
 available_formats = depends_on_none + depends_on_epub
 
@@ -44,26 +47,26 @@ def generate_books(app, data):
     after_epub = [x for x in depends_on_epub if out_formats[x]]
     need_epub = "epub" if len(after_epub) else None
     after_any = [x for x in depends_on_none if out_formats[x] or x == need_epub]
-    formats_to_generate = after_any + after_epub
+    formats_to_generate = [x for x in after_any + after_epub]
 
     # Generate output files
     progress = 0
-    outputs = dict()
+    outputs: Dict[OutputFormat, List[str]] = dict()
     for fmt in formats_to_generate:
+        outputs[fmt] = []
         try:
-            if fmt == "text":
+            if fmt == OutputFormat.text:
                 from .text import make_texts
-                outputs[fmt] = make_texts(app, data)
-            elif fmt == "web":
+                outputs[fmt] += make_texts(app, data)
+            elif fmt == OutputFormat.web:
                 from .web import make_webs
-                outputs[fmt] = make_webs(app, data)
-            elif fmt == "epub":
+                outputs[fmt] += make_webs(app, data)
+            elif fmt == OutputFormat.epub:
                 from .epub import make_epubs
-                outputs[fmt] = make_epubs(app, data)
+                outputs[fmt] += make_epubs(app, data)
             elif fmt in depends_on_epub:
                 from .calibre import make_calibres
-                outputs[fmt] = make_calibres(app, outputs["epub"], fmt)
-
+                outputs[fmt] += make_calibres(app, outputs[OutputFormat.epub], fmt)
         except Exception as err:
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
         finally:

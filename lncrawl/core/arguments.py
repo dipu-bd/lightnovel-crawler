@@ -260,6 +260,20 @@ _builder = Args(
             help="Selenium Grid URL for Chrome Webdriver",
         ),
         Args(
+            '--host',
+            dest="server_host",
+            type=str,
+            metavar="HOSTNAME",
+            help="Server host name. Default: 0.0.0.0",
+        ),
+        Args(
+            '--port',
+            dest="server_port",
+            type=int,
+            metavar="PORT",
+            help="Server port. Default: 8080",
+        ),
+        Args(
             "--suppress",
             action="store_true",
             help="Suppress all input prompts and use defaults.",

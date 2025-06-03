@@ -24,6 +24,18 @@ pycryptodome>=3.0.0,<4.0.0
 selenium>=3.141.0
 tenacity>=9.0.0
 
+# bot requirements
+discord.py>=2.0.0
+python-telegram-bot[job-queue]~=20.0
+uvicorn
+fastapi[standard]
+cachetools
+sqlmodel
+passlib[argon2]
+python-jose[cryptography]
+python-dateutil
+apscheduler
+
 # dev requirements
 wheel
 black
@@ -31,13 +43,9 @@ flake8
 tk-tools
 setuptools
 pyinstaller
-# cryptography<=3.3.2
-# cssutils>=1.0.0,<2.7.0
-# win_unicode_console~=0.5
 types-tqdm
 types-colorama
-
-# bot requirements
-discord.py>=2.0.0
-python-telegram-bot[job-queue]~=20.0
-# pydrive>=1.3.1,<2.0.0
+types-cachetools
+types-python-dateutil
+types-passlib
+types-python-jose

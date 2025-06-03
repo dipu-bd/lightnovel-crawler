@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+from typing import List
 
 from ..assets.web import get_css_style, get_js_script
 
@@ -77,7 +78,7 @@ def make_webs(app, data):
 
     assert isinstance(app, App)
 
-    web_files = []
+    web_files: List[str] = []
     for vol, chapters in data.items():
         assert isinstance(vol, str) and vol in data, "Invalid volume name"
         dir_name = os.path.join(app.output_path, "web", vol)

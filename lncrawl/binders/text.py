@@ -1,6 +1,7 @@
 import logging
 import os
 import re
+from typing import List
 
 from bs4 import BeautifulSoup
 
@@ -10,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 def make_texts(app, data):
-    text_files = []
+    text_files: List[str] = []
     for vol in data:
         dir_name = os.path.join(app.output_path, "text", vol)
         os.makedirs(dir_name, exist_ok=True)

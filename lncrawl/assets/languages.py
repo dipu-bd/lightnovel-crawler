@@ -1,3 +1,5 @@
+from typing import Optional
+
 language_codes = {
     "": "Unknown",
     "ab": "Abkhaz",
@@ -185,3 +187,13 @@ language_codes = {
     "za": "Zhuang, Chuang",
     "zu": "Zulu",
 }
+
+
+def find_code(language: Optional[str]):
+    query = (language or '').lower()
+    if language in language_codes:
+        return language
+    for key, value in language_codes.items():
+        if value.lower() == query:
+            return key
+    return ''

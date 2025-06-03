@@ -1,9 +1,6 @@
-import json
 import logging
-from pathlib import Path
 from typing import List, Optional
 
-from box import Box
 from questionary import prompt
 
 from ... import constants as C
@@ -11,9 +8,9 @@ from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
 from ...core.crawler import Crawler
-from ...core.exeptions import LNException
-from ...core.sources import prepare_crawler
 from ...models import MetaInfo
+from ...utils.resume_download import (load_all_metadata_from_path,
+                                      update_session_from_metadata)
 from .open_folder_prompt import display_open_folder
 
 logger = logging.getLogger(__name__)
@@ -23,16 +20,11 @@ def resume_session():
     args = get_args()
     output_path = args.resume or C.DEFAULT_OUTPUT_PATH
 
-    resumable_meta_data: List[MetaInfo] = []
-    for meta_file in Path(output_path).glob("**/" + C.META_FILE_NAME):
-        try:
-            with open(meta_file, "r", encoding="utf-8") as fp:
-                data = json.load(fp)
-                meta: MetaInfo = Box(**data)
-            if meta.novel and meta.session and not meta.session.completed:
-                resumable_meta_data.append(meta)
-        except Exception as e:
-            logger.debug("Failed to read file %s | %s", meta_file, e)
+    resumable_meta_data: List[MetaInfo] = [
+        meta
+        for meta in load_all_metadata_from_path(output_path)
+        if meta.novel and meta.session and not meta.session.completed
+    ]
 
     meta: Optional[MetaInfo] = None
     if len(resumable_meta_data) == 1:
@@ -56,7 +48,8 @@ def resume_session():
         display.app_complete()
         return
 
-    app = load_session_from_metadata(meta)
+    app = App()
+    update_session_from_metadata(app, meta)
     assert isinstance(app.crawler, Crawler)
 
     print("Resuming", app.crawler.novel_title)
@@ -75,48 +68,3 @@ def resume_session():
     app.destroy()
     display.app_complete()
     display_open_folder(app.output_path)
-
-
-def load_session_from_metadata(meta: MetaInfo) -> App:
-    app = App()
-    assert meta.novel, "MetaInfo Novel is empty"
-    assert meta.session, "MetaInfo Session is empty"
-
-    app.output_path = meta.session.output_path
-    app.user_input = meta.session.user_input
-    app.login_data = meta.session.login_data
-    app.pack_by_volume = meta.session.pack_by_volume
-    app.output_formats = meta.session.output_formats
-    app.good_file_name = meta.session.good_file_name
-    app.no_suffix_after_filename = meta.session.no_append_after_filename
-    logger.info("Novel Url: %s", meta.novel.url)
-
-    app.crawler = prepare_crawler(meta.novel.url)
-    if not isinstance(app.crawler, Crawler):
-        raise LNException("No crawler found for " + meta.novel.url)
-
-    app.crawler.novel_title = meta.novel.title
-    app.crawler.novel_author = ", ".join(meta.novel.authors)
-    app.crawler.novel_cover = meta.novel.cover_url
-    app.crawler.volumes = meta.novel.volumes
-    app.crawler.chapters = meta.novel.chapters
-    app.crawler.is_rtl = meta.novel.is_rtl
-    app.crawler.language = meta.novel.language
-    app.crawler.novel_synopsis = meta.novel.synopsis
-    app.crawler.novel_tags = meta.novel.novel_tags
-
-    for k, v in meta.session.cookies.items():
-        app.crawler.set_cookie(k, v)
-    for k, v in meta.session.headers.items():
-        app.crawler.set_header(k, v)
-    app.crawler.scraper.proxies = meta.session.proxies
-
-    app.chapters = [
-        chap
-        for chap in app.crawler.chapters
-        if chap.id in meta.session.download_chapters
-    ]
-    logger.info("Number of chapters to download: %d", len(app.chapters))
-    logger.debug(app.chapters)
-
-    return app

@@ -1,7 +1,8 @@
 import logging
 import os
 import subprocess
-from typing import Union, List
+from typing import List, Union
+
 logger = logging.getLogger(__name__)
 EBOOK_CONVERT = "ebook-convert"
 CALIBRE_LINK = "https://calibre-ebook.com/download"
@@ -96,7 +97,8 @@ def make_calibres(app, epubs, out_fmt) -> List[str]:
     if not run_ebook_convert("--version"):
         logger.error("Install Calibre to generate %s: %s", out_fmt, CALIBRE_LINK),
         return
-    out_files = []
+
+    out_files: List[str] = []
     for epub in epubs:
         out = epub_to_calibre(app, epub, out_fmt)
         out_files += [out]
