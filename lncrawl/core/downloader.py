@@ -73,7 +73,7 @@ def fetch_chapter_body(app):
                 old_chapter = json.load(file)
                 chapter.update(**old_chapter)
                 if chapter.success:
-                    logger.info(f"Restored chapter {chapter.id} from {file_name}")
+                    logger.debug(f"Restored chapter {chapter.id} from {file_name}")
         except FileNotFoundError:
             pass
         except json.JSONDecodeError:

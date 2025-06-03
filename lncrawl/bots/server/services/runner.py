@@ -30,13 +30,13 @@ class JobRunner:
         setattr(self.app, 'token', self.token)
 
     def close(self):
-        logger.info('Shutting down')
+        logger.debug('Shutting down')
         self.job = None
         self.app.destroy()
         self._scheduler.shutdown()
 
     def start(self):
-        logger.info('Starting scheduler')
+        logger.debug('Starting scheduler')
         logging.getLogger("apscheduler").setLevel(logging.WARNING)
         self._scheduler = BackgroundScheduler()
         interval = self.ctx.config.app.runner_interval
@@ -51,12 +51,12 @@ class JobRunner:
 
     def run(self):
         if self.job:
-            logger.info(f'Already running a job <{self.job.id}>')
+            logger.debug(f'Already running a job <{self.job.id}>')
             return
 
         self.job = self.__get_job()
         if not self.job:
-            logger.info('No job to run')
+            logger.debug('No job to run')
             return
 
         try:

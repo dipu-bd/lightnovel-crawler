@@ -5,6 +5,7 @@ from typing import List
 
 import dotenv
 
+from lncrawl import constants as C
 from lncrawl.models import OutputFormat
 
 
@@ -59,7 +60,7 @@ class ServerConfig:
 class App:
     @cached_property
     def output_path(self) -> str:
-        return env('OUTPUT_PATH', '')
+        return env('OUTPUT_PATH', C.DEFAULT_OUTPUT_PATH)
 
     @cached_property
     def runner_interval(self) -> int:
