@@ -21,10 +21,10 @@ class UserService:
         )
         self.__prepare_admin()
 
-    def __hash(self, plain_password: str) -> str:
+    def _hash(self, plain_password: str) -> str:
         return self._passlib.hash(plain_password)
 
-    def __check(self, plain: str, hashed: str) -> bool:
+    def _check(self, plain: str, hashed: str) -> bool:
         return self._passlib.verify(plain, hashed)
 
     def __prepare_admin(self):
@@ -35,17 +35,16 @@ class UserService:
             user = sess.exec(q).first()
             if not user:
                 user = User(
-                    id='root',
                     email=email,
                     is_active=True,
                     name="Server Admin",
                     role=UserRole.ADMIN,
-                    password=self.__hash(password),
+                    password=self._hash(password),
                 )
             else:
                 user.is_active = True
                 user.role = UserRole.ADMIN
-                user.password = self.__hash(password)
+                user.password = self._hash(password)
             sess.add(user)
             sess.commit()
 
@@ -91,7 +90,7 @@ class UserService:
                 raise AppErrors.no_such_user
             if not user.is_active:
                 raise AppErrors.inactive_user
-        if not self.__check(creds.password, user.password):
+        if not self._check(creds.password, user.password):
             raise AppErrors.unauthorized
         return user
 
@@ -103,7 +102,7 @@ class UserService:
             user = User(
                 name=body.name,
                 email=body.email,
-                password=self.__hash(body.password),
+                password=self._hash(body.password),
             )
             sess.add(user)
             sess.commit()
@@ -121,7 +120,7 @@ class UserService:
                 user.name = body.name
                 updated = True
             if body.password is not None:
-                user.password = self.__hash(body.password)
+                user.password = self._hash(body.password)
                 updated = True
             if body.role is not None:
                 user.role = body.role
