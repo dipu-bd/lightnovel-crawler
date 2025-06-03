@@ -86,7 +86,7 @@ class UserService:
     def verify(self, creds: LoginRequest) -> User:
         with self._db.session() as sess:
             q = select(User).where(User.email == creds.email)
-            user = sess.exec(q).one()
+            user = sess.exec(q).first()
             if not user:
                 raise AppErrors.no_such_user
             if not user.is_active:
