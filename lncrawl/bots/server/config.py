@@ -53,7 +53,7 @@ class ServerConfig:
 
     @cached_property
     def database_url(self) -> str:
-        return env('DATABASE_URL')
+        return env('DATABASE_URL', 'sqlite:///sqlite.db')
 
 
 class App:

@@ -34,15 +34,6 @@ services:
   #   depends_on:
   #     - chrome
 
-  mariadb:
-    image: mariadb:10.11
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: lncrawl
-    volumes:
-      - server-data:/var/lib/mysql
-
   server:
     image: lncrawl
     platform: linux/amd64
@@ -52,19 +43,17 @@ services:
     restart: unless-stopped
     ports:
       - "23457:8000"
-    command: python -m lncrawl --suppress --bot server --port 8000 --selenium-grid "http://chrome:4444"
-    volumes:
-      - novel-output:/app/Lightnovels
+    command: python -m lncrawl -lll --suppress --bot server --port 8000 --selenium-grid "http://chrome:4444"
     environment:
       - PYTHONUNBUFFERED=1
       - SERVER_SECRET="${SERVER_SECRET}"
       - SERVER_ADMIN_EMAIL="${SERVER_ADMIN_EMAIL}"
       - SERVER_ADMIN_PASSWORD="${SERVER_ADMIN_PASSWORD}"
-      - DATABASE_URL="mariadb+mariadbconnector://root:password@mariadb:3306/lncrawl"
+      - DATABASE_URL=sqlite:///sqlite.db
+    volumes:
+      - workdir:/app
     depends_on:
       - chrome
-      - mariadb
 
 volumes:
-  novel-output:
-  server-data:
+  workdir:

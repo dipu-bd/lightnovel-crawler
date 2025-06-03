@@ -33,14 +33,9 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy source files
-COPY sources sources
-COPY lncrawl lncrawl
+COPY --chown=lncrawl:lncrawl sources sources
+COPY --chown=lncrawl:lncrawl lncrawl lncrawl
 
-# Grant access to source files
-USER root
-RUN chown -R lncrawl:lncrawl /app
-
-# Switch to app user
-USER lncrawl
+RUN mkdir -p /app/.server && chmod 777 /app/.server
 
 ENTRYPOINT [ "python", "-m", "lncrawl" ]
