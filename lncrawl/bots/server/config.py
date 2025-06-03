@@ -60,7 +60,7 @@ class ServerConfig:
 class App:
     @cached_property
     def output_path(self) -> str:
-        return C.DEFAULT_OUTPUT_PATH
+        return env('OUTPUT_PATH', C.DEFAULT_OUTPUT_PATH)
 
     @cached_property
     def runner_interval(self) -> int:

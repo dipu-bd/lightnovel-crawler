@@ -1,4 +1,4 @@
 import os
 
-DEFAULT_OUTPUT_PATH = os.path.abspath("Lightnovels")
+DEFAULT_OUTPUT_PATH = os.getenv('OUTPUT_PATH', os.path.abspath("Lightnovels"))
 META_FILE_NAME = "meta.json"
