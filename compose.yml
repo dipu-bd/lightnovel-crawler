@@ -49,6 +49,10 @@ services:
       - novel-output:/app/Lightnovels # Novel outputs
     environment:
       - PYTHONUNBUFFERED=1
+      - SERVER_SECRET="${SERVER_SECRET}"
+      - SERVER_ADMIN_EMAIL="${SERVER_ADMIN_EMAIL}"
+      - SERVER_ADMIN_PASSWORD="${SERVER_ADMIN_PASSWORD}"
+      - DATABASE_URL="${DATABASE_URL}"
     depends_on:
       - chrome
 
