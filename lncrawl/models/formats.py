@@ -20,3 +20,6 @@ class OutputFormat(str, Enum):
     rb = "rb"
     snb = "snb"
     tcr = "tcr"
+
+    def __str__(self) -> str:
+        return self.value

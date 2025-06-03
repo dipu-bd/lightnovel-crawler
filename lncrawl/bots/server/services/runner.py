@@ -226,6 +226,7 @@ class JobRunner:
     def __bind_novel(self):
         self.app.bind_books()
         self.app.compress_books()
+        self.app.cleanup()
 
     def __create_artifact(self, format: OutputFormat, file: str):
         if not self.job:

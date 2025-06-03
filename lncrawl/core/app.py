@@ -1,5 +1,6 @@
 import atexit
 import logging
+import os
 import shutil
 import zipfile
 from pathlib import Path
@@ -180,9 +181,6 @@ class App:
         fetch_chapter_images(self)
         save_metadata(self, True)
 
-        if not self.output_formats.get(OutputFormat.json.value, False):
-            shutil.rmtree(Path(self.output_path) / "json", ignore_errors=True)
-
         if self.can_do("logout"):
             self.crawler.logout()
 
@@ -219,6 +217,10 @@ class App:
     def compress_books(self, archive_singles=False):
         logger.info("Compressing output...")
 
+        output_path = Path(self.output_path)
+        archive_path = output_path / 'archives'
+        os.makedirs(archive_path, exist_ok=True)
+
         # Archive files
         self.archived_outputs = []
         for fmt, file_list in self.generated_books.items():
@@ -226,28 +228,37 @@ class App:
                 logger.info(f"No files for {fmt}")
                 continue
 
-            if (
-                len(file_list) == 1
-                and not archive_singles
-                and Path(file_list[0]).is_file()
-            ):
+            first_file = Path(file_list[0])
+            if (not archive_singles and len(file_list) == 1 and first_file.is_file()):
                 logger.info(f"Not archiving single file for {fmt}")
-                archived_file = file_list[0]
+                archive_file = archive_path / first_file.name
+                shutil.copyfile(file_list[0], archive_file)
             else:
-                root_file = Path(self.output_path) / fmt
                 output_name = f"{self.good_file_name} ({fmt}).zip"
-                base_path = Path(self.output_path) / output_name
-
+                archive_file = archive_path / output_name
                 logger.info(f"Compressing {len(file_list)} files")
-                with zipfile.ZipFile(base_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+                with zipfile.ZipFile(archive_file, "w", zipfile.ZIP_DEFLATED) as zipf:
+                    root_file = output_path / fmt
                     for file in file_list:
-                        startp = len(root_file.as_posix()) + 1
-                        arcname = Path(file).as_posix()[startp:]
-                        zipf.write(file, arcname=arcname)
+                        file_path = Path(file)
+                        if file_path.is_relative_to(root_file):
+                            arcname = file_path.relative_to(root_file).as_posix()
+                        elif file_path.is_relative_to(output_path):
+                            arcname = file_path.relative_to(output_path).as_posix()
+                        else:
+                            continue
+                        zipf.write(file, arcname)
 
-                archived_file = str(base_path)
                 logger.info("Compressed: %s", output_name)
 
-            if archived_file:
-                self.archived_outputs.append(archived_file)
-                self.generated_archives[fmt] = archived_file
+            if archive_file:
+                self.archived_outputs.append(str(archive_file))
+                self.generated_archives[fmt] = str(archive_file)
+
+    def cleanup(self):
+        output_path = Path(self.output_path)
+        for fmt in OutputFormat:
+            if fmt == OutputFormat.json:
+                continue
+            format_path = output_path / fmt
+            shutil.rmtree(format_path, ignore_errors=True)

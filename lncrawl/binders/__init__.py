@@ -55,6 +55,9 @@ def generate_books(app, data):
     for fmt in formats_to_generate:
         outputs[fmt] = []
         try:
+            if fmt == OutputFormat.json:
+                from .json import make_jsons
+                outputs[fmt] += make_jsons(app, data)
             if fmt == OutputFormat.text:
                 from .text import make_texts
                 outputs[fmt] += make_texts(app, data)
