@@ -33,7 +33,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy source files
-COPY --chown=lncrawl:lncrawl .env .env
+# COPY --chown=lncrawl:lncrawl .env .env
 COPY --chown=lncrawl:lncrawl sources sources
 COPY --chown=lncrawl:lncrawl lncrawl lncrawl
 

@@ -35,8 +35,8 @@ services:
   #     - chrome
 
   server:
-    image: lncrawl
     platform: linux/amd64
+    container_name: lncrawl-server
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
