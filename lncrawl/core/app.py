@@ -247,9 +247,8 @@ class App:
             data[f"c{first_id}-{last_id}"] = self.chapters
 
         self.generated_books = {}
-        for fmt, file in generate_books(self, data):
-            self.generated_books.setdefault(fmt, [])
-            self.generated_books[fmt].append(file)
+        for fmt, files in generate_books(self, data):
+            self.generated_books[fmt] = files
             save_metadata(self)
 
     # ----------------------------------------------------------------------- #

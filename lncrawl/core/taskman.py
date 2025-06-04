@@ -235,7 +235,7 @@ class TaskManager(ABC):
             Thread(
                 target=self.cancel_futures,
                 kwargs=dict(futures=futures),
-                daemon=True,
+                # daemon=True,
             ).start()
             bar.close()
 

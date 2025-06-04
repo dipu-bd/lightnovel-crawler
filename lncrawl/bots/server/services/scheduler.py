@@ -1,11 +1,13 @@
 import logging
+from collections import deque
 from threading import Event, Thread
-from typing import Dict, Optional
+from typing import Deque, Dict, Optional
 
 from sqlmodel import asc, desc, or_, select
 
 from ..context import ServerContext
-from ..models.job import Job, JobStatus
+from ..models.job import Job, JobRunnerHistoryItem, JobStatus
+from ..utils.time_utils import current_timestamp
 from .runner import microtask
 
 logger = logging.getLogger(__name__)
@@ -17,14 +19,18 @@ class JobScheduler:
     def __init__(self, ctx: ServerContext) -> None:
         self.ctx = ctx
         self.db = ctx.db
+        self.last_run_ts = 0
         self.signal: Optional[Event] = None
+        self.history: Deque[JobRunnerHistoryItem] = deque(maxlen=20)
 
     def close(self):
         self.stop()
 
     @property
-    def running(self):
-        return self.signal and not self.signal.is_set()
+    def running(self) -> bool:
+        if not self.signal:
+            return False
+        return not self.signal.is_set()
 
     def start(self):
         if self.running:
@@ -49,13 +55,7 @@ class JobScheduler:
                 if signal.is_set():
                     break
                 logger.debug('Running scheduled task')
-                try:
-                    self.__task(signal)
-                except KeyboardInterrupt:
-                    raise
-                except Exception:
-                    logger.exception('Failed to complete scheduled run')
-
+                self.__task(signal)
                 logger.debug('Finished scheduled task')
         except KeyboardInterrupt:
             signal.set()
@@ -86,11 +86,20 @@ class JobScheduler:
                 t = Thread(
                     target=microtask,
                     args=(sess, job, signal),
-                    daemon=True,
+                    # daemon=True,
                 )
                 t.start()
                 threads[job.novel_id] = t
+                self.history.append(
+                    JobRunnerHistoryItem(
+                        time=current_timestamp(),
+                        job_id=job.id,
+                        user_id=job.user_id,
+                        novel_id=job.novel_id,
+                        status=job.status,
+                        run_state=job.run_state,
+                    )
+                )
 
             for t in threads.values():
-                if t.is_alive():
-                    t.join(1)
+                t.join()

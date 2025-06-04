@@ -109,4 +109,4 @@ def fetch_chapter_body(app, signal=Event()):
         current += 1
         app.fetch_content_progress = 100 * current / len(app.chapters)
         yield chapter
-    logger.info(f"Downloaded {current}/{len(pending_chapters)} chapters")
+    logger.info(f"Downloaded {len(pending_chapters)} chapters")

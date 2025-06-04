@@ -1,7 +1,6 @@
 from enum import Enum, IntEnum
 from typing import List, Optional
 
-from pydantic import HttpUrl
 from sqlalchemy import event
 from sqlmodel import JSON, Column, Field, Relationship, SQLModel
 
@@ -89,12 +88,22 @@ def auto_update_timestamp(mapper, connection, target: Job):
         target.finished_at = current_timestamp()
 
 
-class JobInput(SQLModel):
-    url: HttpUrl = Field(description='The novel page url')
-
-
 class JobDetail(SQLModel):
     job: Job = Field(description='Job')
     novel: Optional[Novel] = Field(description='Novel')
     artifacts: Optional[List[Artifact]] = Field(description='Artifacts')
     user: Optional[User] = Field(description='User')
+
+
+class JobRunnerHistoryItem(SQLModel):
+    time: int = Field(description='UNIX timestamp (seconds)')
+    job_id: str = Field(description='Job')
+    user_id: str = Field(description='User')
+    novel_id: Optional[str] = Field(description='Novel')
+    status: JobStatus = Field(description="Current status")
+    run_state: Optional[RunState] = Field(description="State of the job in progress status")
+
+
+class JobRunnerStatus(SQLModel):
+    running: bool = Field(description='Job runner status')
+    history: List[JobRunnerHistoryItem] = Field(description='Runner history')

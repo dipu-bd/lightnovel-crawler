@@ -2,7 +2,7 @@
 To bind into ebooks
 """
 import logging
-from typing import Generator, Tuple
+from typing import Generator, Tuple, List
 
 from ..models import OutputFormat
 
@@ -35,7 +35,7 @@ depends_on_epub = [
 available_formats = depends_on_none + depends_on_epub
 
 
-def generate_books(app, data) -> Generator[Tuple[OutputFormat, str], None, None]:
+def generate_books(app, data) -> Generator[Tuple[OutputFormat, List[str]], None, None]:
     from ..core.app import App
     assert isinstance(app, App) and app.crawler, 'App instance'
 
@@ -47,24 +47,19 @@ def generate_books(app, data) -> Generator[Tuple[OutputFormat, str], None, None]
                 continue
             if fmt == OutputFormat.json:
                 from .json import make_jsons
-                for file in make_jsons(app, data):
-                    yield (fmt, file)
+                yield fmt, list(make_jsons(app, data))
             if fmt == OutputFormat.text:
                 from .text import make_texts
-                for file in make_texts(app, data):
-                    yield (fmt, file)
+                yield fmt, list(make_texts(app, data))
             elif fmt == OutputFormat.web:
                 from .web import make_webs
-                for file in make_webs(app, data):
-                    yield (fmt, file)
+                yield fmt, list(make_webs(app, data))
             elif fmt == OutputFormat.epub:
                 from .epub import make_epubs
-                for file in make_epubs(app, data):
-                    yield (fmt, file)
+                yield fmt, list(make_epubs(app, data))
             elif fmt in depends_on_epub:
                 from .calibre import make_calibres
-                for file in make_calibres(app, fmt):
-                    yield (fmt, file)
+                yield fmt, list(make_calibres(app, fmt))
         except Exception as err:
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
         finally:

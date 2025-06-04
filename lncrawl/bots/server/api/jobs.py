@@ -1,9 +1,10 @@
 from typing import Optional
 
-from fastapi import APIRouter, Body, Depends, Path, Query, Security
+from fastapi import APIRouter, Depends, Form, Path, Query, Security
+from pydantic import HttpUrl
 
 from ..context import ServerContext
-from ..models.job import JobInput, JobPriority, JobStatus
+from ..models.job import JobPriority, JobStatus
 from ..models.user import User
 from ..security import ensure_user
 
@@ -37,11 +38,11 @@ def list_jobs(
 
 @router.post("", summary='Creates a new job')
 def create_job(
-    input: JobInput = Body(),
     ctx: ServerContext = Depends(),
     user: User = Security(ensure_user),
+    url: HttpUrl = Form(description='The novel page url'),
 ):
-    return ctx.jobs.create(input, user)
+    return ctx.jobs.create(url, user)
 
 
 @router.delete("/{job_id}", summary='Deletes a job')

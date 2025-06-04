@@ -1,11 +1,12 @@
 from typing import List, Optional
 
+from pydantic import HttpUrl
 from sqlmodel import asc, desc, func, select
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
-from ..models.job import (Artifact, Job, JobDetail, JobInput, JobPriority,
-                          JobStatus, Novel)
+from ..models.job import (Artifact, Job, JobDetail, JobPriority, JobStatus,
+                          Novel)
 from ..models.pagination import Paginated
 from ..models.user import User, UserRole
 from .tier import JOB_PRIORITY_LEVEL
@@ -60,10 +61,10 @@ class JobService:
                 items=list(jobs),
             )
 
-    def create(self, input: JobInput, user: User) -> Job:
+    def create(self, url: HttpUrl, user: User) -> Job:
         with self._db.session() as sess:
             # get or create novel
-            novel_url = input.url.encoded_string()
+            novel_url = url.encoded_string()
             novel = sess.exec(select(Novel).where(Novel.url == novel_url)).first()
             if not novel:
                 novel = Novel(url=novel_url)
