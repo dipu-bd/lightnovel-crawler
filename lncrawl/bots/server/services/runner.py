@@ -220,6 +220,10 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                 if archive and str(fmt) != str(OutputFormat.json):
                     output = Path(app.output_path) / fmt
                     shutil.rmtree(output, ignore_errors=True)
+                job.progress = round(app.progress)
+                sess.add(job)
+                sess.commit()
+                sess.refresh(job)
             save_metadata(app)
 
             job.run_state = RunState.PREPARE_ARTIFACTS

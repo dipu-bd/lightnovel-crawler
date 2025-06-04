@@ -62,8 +62,8 @@ class App:
             self.search_progress * 1
             + self.fetch_novel_progress * 0.05
             + self.fetch_content_progress * 0.45
-            + self.fetch_images_progress * 0.45
-            + self.binding_progress * 0.05
+            + self.fetch_images_progress * 0.40
+            + self.binding_progress * 0.1
         )
 
     # ----------------------------------------------------------------------- #

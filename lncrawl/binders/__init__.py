@@ -2,7 +2,7 @@
 To bind into ebooks
 """
 import logging
-from typing import Generator, Tuple, List
+from typing import Generator, List, Tuple
 
 from ..models import OutputFormat
 
@@ -39,12 +39,15 @@ def generate_books(app, data) -> Generator[Tuple[OutputFormat, List[str]], None,
     from ..core.app import App
     assert isinstance(app, App) and app.crawler, 'App instance'
 
-    progress = 0
+    enabled_formats = [
+        fmt
+        for fmt in available_formats
+        if app.output_formats.get(fmt)
+    ]
+
     app.binding_progress = 0
-    for fmt in available_formats:
+    for i, fmt in enumerate(enabled_formats):
         try:
-            if not app.output_formats.get(fmt):
-                continue
             if fmt == OutputFormat.json:
                 from .json import make_jsons
                 yield fmt, list(make_jsons(app, data))
@@ -63,5 +66,4 @@ def generate_books(app, data) -> Generator[Tuple[OutputFormat, List[str]], None,
         except Exception as err:
             logger.exception('Failed to generate "%s": %s' % (fmt, err))
         finally:
-            progress += 1
-            app.binding_progress = 100 * progress / len(available_formats)
+            app.binding_progress = 100 * (i + 1) / len(enabled_formats)

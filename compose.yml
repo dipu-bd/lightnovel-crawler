@@ -3,6 +3,8 @@ services:
     platform: linux/amd64
     image: selenium/standalone-chrome:latest
     shm_size: 6gb
+    mem_limit: 1800m
+    cpus: 1
     restart: unless-stopped
     ports:
       - "7900:7900"
@@ -39,6 +41,8 @@ services:
     build:
       context: .
       dockerfile: ./scripts/Dockerfile
+    mem_limit: 3200m
+    cpus: 1.6
     restart: unless-stopped
     ports:
       - "23457:8000"
