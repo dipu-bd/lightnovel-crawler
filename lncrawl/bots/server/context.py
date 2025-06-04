@@ -1,7 +1,6 @@
 from functools import cached_property
 from typing import Optional
 
-from .utils.decorators import autoclose
 
 _cache: Optional['ServerContext'] = None
 
@@ -13,13 +12,18 @@ class ServerContext:
             _cache = super().__new__(cls)
         return _cache
 
+    def cleanup(self):
+        self.db.close()
+        self.scheduler.close()
+        global _cache
+        _cache = None
+
     @cached_property
     def config(self):
         from .config import Config
         return Config()
 
     @cached_property
-    @autoclose
     def db(self):
         from .db import DB
         return DB(self)
@@ -45,7 +49,6 @@ class ServerContext:
         return ArtifactService(self)
 
     @cached_property
-    @autoclose
     def scheduler(self):
         from .services.scheduler import JobScheduler
         return JobScheduler(self)

@@ -1,7 +1,9 @@
 import logging
 import os
 import shutil
+import time
 from pathlib import Path
+from threading import Event
 
 from sqlmodel import Session, select
 
@@ -15,10 +17,10 @@ from lncrawl.models import OutputFormat
 
 from ..context import ServerContext
 from ..models.job import Artifact, Job, JobStatus, RunState
-from .tier import BATCH_DOWNLOAD_LIMIT, ENABLED_FORMATS
+from .tier import ENABLED_FORMATS, SLOT_TIMEOUT_IN_SECOND
 
 
-def microtask(sess: Session, job: Job) -> bool:
+def microtask(sess: Session, job: Job, signal=Event()) -> None:
     app = App()
     ctx = ServerContext()
     logger = logging.getLogger(f'Job:{job.id}')
@@ -29,7 +31,7 @@ def microtask(sess: Session, job: Job) -> bool:
         #
         if job.status == JobStatus.COMPLETED:
             logger.error('Job is already done')
-            return False
+            return
 
         #
         # State: SUCCESS
@@ -37,7 +39,7 @@ def microtask(sess: Session, job: Job) -> bool:
         if job.run_state == RunState.SUCCESS:
             job.status = JobStatus.COMPLETED
             sess.add(job)
-            return True
+            return
 
         #
         # State: FAILED
@@ -46,7 +48,7 @@ def microtask(sess: Session, job: Job) -> bool:
             job.status = JobStatus.COMPLETED
             logger.error(job.error)
             sess.add(job)
-            return True
+            return
 
         #
         # State: PENDING
@@ -56,7 +58,7 @@ def microtask(sess: Session, job: Job) -> bool:
             job.status = JobStatus.RUNNING
             job.run_state = RunState.FETCHING_NOVEL
             sess.add(job)
-            return True
+            return
 
         #
         # Prepare user, novel, app, crawler
@@ -66,14 +68,14 @@ def microtask(sess: Session, job: Job) -> bool:
             job.error = 'User is not available'
             logger.error(job.error)
             sess.add(job)
-            return True
+            return
 
         novel = job.novel
         if not novel:
             job.error = 'Novel is not available'
             logger.error(job.error)
             sess.add(job)
-            return True
+            return
 
         if novel.orphan:
             job.run_state = RunState.FETCHING_NOVEL
@@ -90,7 +92,7 @@ def microtask(sess: Session, job: Job) -> bool:
             job.error = 'No crawler available for this novel'
             logger.error(job.error)
             sess.add(job)
-            return True
+            return
 
         #
         # State: FETCHING_NOVEL
@@ -115,7 +117,7 @@ def microtask(sess: Session, job: Job) -> bool:
 
             sess.add(novel)
             sess.add(job)
-            return True
+            return
 
         #
         # Restore session
@@ -124,7 +126,7 @@ def microtask(sess: Session, job: Job) -> bool:
             job.error = 'Failed to fetch novel'
             logger.error(job.error)
             sess.add(job)
-            return True
+            return
 
         crawler.novel_url = novel.url
         crawler.novel_title = novel.title
@@ -139,7 +141,7 @@ def microtask(sess: Session, job: Job) -> bool:
             job.error = 'Failed to restore metadata'
             logger.error(job.error)
             sess.add(job)
-            return True
+            return
 
         #
         # State: FETCHING_CHAPTERS
@@ -148,20 +150,30 @@ def microtask(sess: Session, job: Job) -> bool:
             app.chapters = crawler.chapters
             logger.info(f'Fetching ({len(app.chapters)} chapters)')
 
-            batch_limit = BATCH_DOWNLOAD_LIMIT[user.tier]
-            for i, chapter in enumerate(fetch_chapter_body(app)):
-                if i == batch_limit:
+            last_report = 0.0
+            start_time = time.time()
+            timeout = SLOT_TIMEOUT_IN_SECOND[user.tier]
+            for _ in fetch_chapter_body(app, signal):
+                cur_time = time.time()
+                if cur_time - start_time > timeout:
                     break
+                if cur_time - last_report > 10:
+                    last_report = cur_time
+                    job.progress = round(app.progress)
+                    sess.add(job)
+                    sess.commit()
+                    sess.refresh(job)
             else:
                 save_metadata(app)
-                job.run_state = RunState.FETCHING_IMAGES
-                logger.info('Fetch chapter completed')
+                if not signal.is_set():
+                    job.run_state = RunState.FETCHING_IMAGES
+                    logger.info('Fetch chapter completed')
 
             job.progress = round(app.progress)
             logger.info(f'Current progress: {job.progress}%')
 
             sess.add(job)
-            return True
+            return
 
         app.chapters = crawler.chapters
         restore_chapter_body(app)
@@ -171,20 +183,30 @@ def microtask(sess: Session, job: Job) -> bool:
         if job.run_state == RunState.FETCHING_IMAGES:
             logger.info(f'Fetching images from ({len(app.chapters)} chapters)')
 
-            batch_limit = BATCH_DOWNLOAD_LIMIT[user.tier]
-            for i, _ in enumerate(fetch_chapter_images(app)):
-                if i == batch_limit:
+            last_report = 0.0
+            start_time = time.time()
+            timeout = SLOT_TIMEOUT_IN_SECOND[user.tier]
+            for _ in fetch_chapter_images(app, signal):
+                cur_time = time.time()
+                if cur_time - start_time > timeout:
                     break
+                if cur_time - last_report > 10:
+                    last_report = cur_time
+                    job.progress = round(app.progress)
+                    sess.add(job)
+                    sess.commit()
+                    sess.refresh(job)
             else:
                 save_metadata(app)
-                job.run_state = RunState.BINDING_NOVEL
-                logger.info('Fetch image completed')
+                if not signal.is_set():
+                    job.run_state = RunState.BINDING_NOVEL
+                    logger.info('Fetch image completed')
 
             job.progress = round(app.progress)
             logger.info(f'Current progress: {job.progress}%')
 
             sess.add(job)
-            return True
+            return
 
         #
         # State: BINDING_NOVEL
@@ -207,13 +229,13 @@ def microtask(sess: Session, job: Job) -> bool:
             job.progress = round(app.progress)
             logger.info(f'Current progress: {job.progress}%')
             sess.add(job)
-            return True
+            return
 
         if not app.generated_archives:
             job.error = 'No archives available'
             logger.error(job.error)
             sess.add(job)
-            return True
+            return
 
         #
         # State: PREPARE_ARTIFACTS
@@ -245,16 +267,14 @@ def microtask(sess: Session, job: Job) -> bool:
             job.progress = 100
             job.run_state = RunState.SUCCESS
             sess.add(job)
-            return True
+            return
 
     except Exception as e:
         logger.exception('Job failed')
         job.run_state = RunState.FAILED
         job.error = str(e)
         sess.add(job)
-        return True
 
     finally:
+        sess.commit()
         app.destroy()
-
-    return False

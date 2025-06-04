@@ -31,8 +31,8 @@ ENABLED_FORMATS = {
     UserTier.VIP: list(OutputFormat),
 }
 
-BATCH_DOWNLOAD_LIMIT = {
-    UserTier.BASIC: 10,
-    UserTier.PREMIUM: 100,
-    UserTier.VIP: 10000,
+SLOT_TIMEOUT_IN_SECOND = {
+    UserTier.BASIC: 60,
+    UserTier.PREMIUM: 5 * 60,
+    UserTier.VIP: 2 * 60 * 60,
 }
