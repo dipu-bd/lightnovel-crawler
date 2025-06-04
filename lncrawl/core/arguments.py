@@ -151,7 +151,12 @@ _builder = Args(
             metavar="PATH",
             help="Path where the downloads to be stored.",
         ),
-        Args("--filename", type=str, metavar="NAME", help="Set the output file name"),
+        Args(
+            "--filename",
+            type=str,
+            metavar="NAME",
+            help="Set the output file name",
+        ),
         Args(
             "--filename-only",
             action="store_true",
@@ -175,7 +180,8 @@ _builder = Args(
         ),
         Args(
             mutex=[
-                Args("--all", action="store_true", help="Download all chapters."),
+                Args("--all", action="store_true",
+                     help="Download all chapters."),
                 Args(
                     "--first",
                     type=int,

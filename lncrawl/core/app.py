@@ -1,8 +1,6 @@
 import atexit
 import logging
 import os
-import shutil
-import zipfile
 from pathlib import Path
 from threading import Event
 from typing import Dict, List, Optional, Tuple
@@ -126,7 +124,8 @@ class App:
     def search_novel(self):
         """Requires: user_input, crawler_links"""
         """Produces: search_results"""
-        logger.info("Searching for novels in %d sites...", len(self.crawler_links))
+        logger.info("Searching for novels in %d sites...",
+                    len(self.crawler_links))
 
         self.fetch_novel_progress = 0
         self.fetch_content_progress = 0
@@ -203,7 +202,8 @@ class App:
         if not self.output_path:
             raise LNException("Output path is not defined")
         if not Path(self.output_path).is_dir():
-            raise LNException(f"Output path does not exists: ({self.output_path})")
+            raise LNException(
+                f"Output path does not exists: ({self.output_path})")
 
         save_metadata(self)
         if signal.is_set():
@@ -223,8 +223,11 @@ class App:
 
     # ----------------------------------------------------------------------- #
 
-    def bind_books(self):
-        """Requires: crawler, chapters, output_path, pack_by_volume, book_cover, output_formats"""
+    def bind_books(self, signal=Event()):
+        """
+        Requires: crawler, chapters, output_path, pack_by_volume, book_cover,
+        output_formats
+        """
         logger.info("Processing data for binding")
         assert self.crawler
 
@@ -246,55 +249,8 @@ class App:
             last_id = self.chapters[-1]["id"]
             data[f"c{first_id}-{last_id}"] = self.chapters
 
-        self.generated_books = {}
-        for fmt, files in generate_books(self, data):
-            self.generated_books[fmt] = files
-            yield fmt, files
-
-    # ----------------------------------------------------------------------- #
-
-    def archive_books(self, archive_singles=False):
-        logger.info("Compressing output...")
-        self.archived_outputs = []
-        self.generated_archives = {}
-        for fmt, files in self.generated_books.items():
-            archive_file = self.create_archive(fmt, files, archive_singles)
-            if archive_file:
-                self.archived_outputs.append(str(archive_file))
-        save_metadata(self)
-
-    def create_archive(self, fmt: OutputFormat, files: List[str], archive_singles=False):
-        if not files:
-            logger.info(f"No files for {fmt}")
-            return
-
-        output_path = Path(self.output_path)
-        archive_path = output_path / 'archives'
-        os.makedirs(archive_path, exist_ok=True)
-
-        first_file = Path(files[0])
-        if (not archive_singles and len(files) == 1 and first_file.is_file()):
-            logger.info(f"Not archiving single file for {fmt}")
-            archive_file = archive_path / first_file.name
-            shutil.copyfile(files[0], archive_file)
-            return
-
-        output_name = f"{self.good_file_name} ({fmt}).zip"
-        archive_file = archive_path / output_name
-        logger.info(f"Compressing {len(files)} files")
-        with zipfile.ZipFile(archive_file, "w", zipfile.ZIP_DEFLATED) as zipf:
-            root_file = output_path / fmt
-            for file in files:
-                file_path = Path(file)
-                if file_path.is_relative_to(root_file):
-                    arcname = file_path.relative_to(root_file).as_posix()
-                elif file_path.is_relative_to(output_path):
-                    arcname = file_path.relative_to(output_path).as_posix()
-                else:
-                    continue
-                zipf.write(file, arcname)
-        logger.info("Compressed: %s", output_name)
-
-        if archive_file:
-            self.generated_archives[fmt] = str(archive_file)
-            return archive_file
+        for fmt in generate_books(self, data):
+            save_metadata(self)
+            if signal.is_set():
+                break
+            yield fmt, self.generated_archives[fmt]

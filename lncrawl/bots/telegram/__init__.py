@@ -168,7 +168,6 @@ class TelegramBot:
             await self.destroy_app(update, context)
 
         app = App()
-        app.initialize()
         context.user_data["app"] = app
         await update.message.reply_text("A new session is created.")
 
@@ -194,7 +193,6 @@ class TelegramBot:
                 app = context.user_data.get("app")
             else:
                 app = App()
-                app.initialize()
                 context.user_data["app"] = app
 
             app.user_input = update.message.text.strip()

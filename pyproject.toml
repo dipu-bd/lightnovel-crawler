@@ -1,0 +1,61 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools>=61.0", "wheel"]
+
+[project]
+authors = [
+  {name = "Sudipto Chandra", email = "dipu.sudipta@gmail.com"},
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Natural Language :: English",
+  "Intended Audience :: Developers",
+  "Topic :: Games/Entertainment",
+  "Environment :: Console",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+description = "Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx, pdf etc."
+dynamic = ["version", "dependencies"]
+keywords = ["lightnovel", "crawler", "lncrawl", "novel", "pdf", "epub", "mobi", "scraper"]
+license = "GPL-3.0-or-later"
+name = "lightnovel-crawler"
+readme = "README.rst"
+requires-python = ">=3.8"
+
+[project.urls]
+"Documentation" = "https://github.com/dipu-bd/lightnovel-crawler/blob/master/README.md"
+"Issue Tracker" = "https://github.com/dipu-bd/lightnovel-crawler/issues"
+"Source Code" = "https://github.com/dipu-bd/lightnovel-crawler"
+
+[project.scripts]
+lightnovel-crawler = "lncrawl:main"
+lightnovel_crawler = "lncrawl:main"
+lncrawl = "lncrawl:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements-app.txt"}
+version = {file = "lncrawl/VERSION"}
+
+[tool.setuptools.packages.find]
+exclude = ["tests*", "docs*", "build*", "dist*"]
+include = ["lncrawl*", "sources*"]
+where = ["."]
+
+[tool.setuptools.package-data]
+lncrawl = ["**/*", "!**/*.py", "!**/__pycache__/*"]
+sources = ["**/*", "!**/*.py", "!**/__pycache__/*"]
+
+[tool.setuptools.exclude-package-data]
+"*" = ["__pycache__/*", "**/__pycache__/*"]
+
+[tool.black]
+line-length = 150

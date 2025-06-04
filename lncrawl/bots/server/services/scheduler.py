@@ -12,7 +12,7 @@ from .runner import microtask
 
 logger = logging.getLogger(__name__)
 
-CONCURRENCY = 5
+CONCURRENCY = 2
 
 
 class JobScheduler:
@@ -43,9 +43,10 @@ class JobScheduler:
         ).start()
 
     def stop(self):
-        if self.signal:
-            self.signal.set()
-            self.signal = None
+        if not self.signal:
+            return
+        self.signal.set()
+        self.signal = None
 
     def run(self, signal=Event()):
         logger.info('Scheduler started')
@@ -53,16 +54,15 @@ class JobScheduler:
             while not signal.is_set():
                 signal.wait(self.ctx.config.app.runner_cooldown)
                 if signal.is_set():
-                    break
-                logger.debug('Running scheduled task')
-                self.__task(signal)
-                logger.debug('Finished scheduled task')
+                    return
+                self.__add(signal)
         except KeyboardInterrupt:
             signal.set()
         finally:
             logger.info('Scheduler stoppped')
 
-    def __task(self, signal=Event()):
+    def __add(self, signal=Event()):
+        logger.debug('Running new task')
         with self.db.session() as sess:
             jobs = sess.exec(
                 select(Job)
@@ -79,17 +79,19 @@ class JobScheduler:
                 .limit(CONCURRENCY)
             ).all()
 
-            threads: Dict[Optional[str], Thread] = {}
+            # create threads
+            threads: Dict[str, Thread] = {}
             for job in jobs:
                 if job.novel_id in threads:
                     continue  # no concurrency for same novel
-                t = Thread(
+
+                t = threads[job.novel_id] = Thread(
                     target=microtask,
                     args=(sess, job, signal),
                     # daemon=True,
                 )
                 t.start()
-                threads[job.novel_id] = t
+
                 self.history.append(
                     JobRunnerHistoryItem(
                         time=current_timestamp(),
@@ -101,5 +103,6 @@ class JobScheduler:
                     )
                 )
 
+            # wait in same session for completion
             for t in threads.values():
                 t.join()

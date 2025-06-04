@@ -15,7 +15,6 @@ class SampleBot:
         # inputs and self.app methods to process them.
         #
         self.app = App()
-        self.app.initialize()
         #
         # Checkout console.py for a sample implementation
 

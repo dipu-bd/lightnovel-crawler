@@ -3,7 +3,8 @@ typer
 ascii
 regex
 packaging
-lxml[html-clean]
+html-clean
+lxml>=5.4.0,<6.0.0
 pyease-grpc>=1.6.0
 python-dotenv>=0.15.0,<2.0.0
 beautifulsoup4>=4.8.0,<5.0.0
@@ -50,3 +51,4 @@ types-cachetools
 types-python-dateutil
 types-passlib
 types-python-jose
+types-setuptools

@@ -526,12 +526,6 @@ class MessageHandler:
             )
             self.send_sync("Binding books...")
             self.app.bind_books()
-            self.get_current_status = None
-            if self.closed:
-                return
-
-            self.send_sync("Compressing output folder...")
-            self.app.archive_books()
             if self.closed:
                 return
 

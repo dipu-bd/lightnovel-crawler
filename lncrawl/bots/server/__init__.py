@@ -2,7 +2,8 @@ import logging
 
 import uvicorn
 
-from ...core.arguments import get_args
+from lncrawl.core.arguments import get_args
+
 from .app import app
 from .context import ServerContext
 

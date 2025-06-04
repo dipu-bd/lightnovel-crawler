@@ -28,7 +28,9 @@ def bind_html_chapter(chapters, index, direction="ltr"):
         title = item["title"]
         value = get_filename(item)
         selected = " selected" if idx == index else ""
-        chapter_options.append(f'<option value="{value}"{selected}>{title}</option>')
+        chapter_options.append(
+            f'<option value="{value}"{selected}>{title}</option>'
+        )
 
     button_group = f"""
     <div class="link-group">

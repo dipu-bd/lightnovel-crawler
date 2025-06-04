@@ -4,7 +4,7 @@ import shutil
 import time
 from pathlib import Path
 from threading import Event
-
+import uuid
 from sqlmodel import Session, select
 
 from lncrawl.core.app import App
@@ -18,6 +18,9 @@ from lncrawl.models import OutputFormat
 from ..context import ServerContext
 from ..models.job import Artifact, Job, JobStatus, RunState
 from .tier import ENABLED_FORMATS, SLOT_TIMEOUT_IN_SECOND
+
+
+__runner_id = uuid.uuid4()
 
 
 def microtask(sess: Session, job: Job, signal=Event()) -> None:
@@ -178,6 +181,7 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
         app.chapters = crawler.chapters
         restore_chapter_body(app)
 
+        #
         # State: FETCHING_IMAGES
         #
         if job.run_state == RunState.FETCHING_IMAGES:
@@ -199,7 +203,7 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
             else:
                 save_metadata(app)
                 if not signal.is_set():
-                    job.run_state = RunState.BINDING_NOVEL
+                    job.run_state = RunState.CREATING_ARTIFACTS
                     logger.info('Fetch image completed')
 
             job.progress = round(app.progress)
@@ -209,62 +213,49 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
             return
 
         #
-        # State: BINDING_NOVEL
+        # State: CREATING_ARTIFACTS
         #
-        if job.run_state == RunState.BINDING_NOVEL:
-            logger.info('Binding novel')
+        if job.run_state == RunState.CREATING_ARTIFACTS:
+            logger.info('Creating artifacts')
 
-            app.generated_archives = {}
-            for fmt, files in app.bind_books():
-                archive = app.create_archive(fmt, files)
-                if archive and str(fmt) != str(OutputFormat.json):
-                    output = Path(app.output_path) / fmt
-                    shutil.rmtree(output, ignore_errors=True)
+            for fmt, archive_file in app.bind_books(signal):
+                # save progress
                 job.progress = round(app.progress)
                 sess.add(job)
                 sess.commit()
                 sess.refresh(job)
-            save_metadata(app)
 
-            job.run_state = RunState.PREPARE_ARTIFACTS
-            job.progress = round(app.progress)
-            logger.info(f'Current progress: {job.progress}%')
-            sess.add(job)
-            return
-
-        if not app.generated_archives:
-            job.error = 'No archives available'
-            logger.error(job.error)
-            sess.add(job)
-            return
-
-        #
-        # State: PREPARE_ARTIFACTS
-        #
-        if job.run_state == RunState.PREPARE_ARTIFACTS:
-            logger.info('Creating artifacts')
-
-            for format, file in app.generated_archives.items():
-                if not file:
-                    continue
+                # create or update artifact entry
                 artifact = sess.exec(
                     select(Artifact)
                     .where(Artifact.novel_id == job.novel_id)
-                    .where(Artifact.format == format)
+                    .where(Artifact.format == fmt)
                 ).first()
                 if not artifact:
                     artifact = Artifact(
+                        format=fmt,
                         novel_id=novel.id,
-                        output_file=file,
-                        format=format,
+                        output_file=str(archive_file),
                     )
-                elif artifact.output_file != file:
-                    if artifact.output_file and os.path.isfile(artifact.output_file):
-                        os.remove(artifact.output_file)  # remove old file
-                    artifact.output_file = file
+                else:
+                    if (
+                        artifact.output_file
+                        and artifact.output_file != str(archive_file)
+                        and os.path.isfile(artifact.output_file)
+                    ):  # remove old file
+                        os.remove(artifact.output_file)
+                    artifact.output_file = str(archive_file)
                 sess.add(artifact)
+                sess.commit()
+
+            # remove output folders (except json)
+            for fmt in OutputFormat:
+                if str(fmt) != str(OutputFormat.json):
+                    output = Path(app.output_path) / fmt
+                    shutil.rmtree(output, ignore_errors=True)
 
             logger.info('Success!')
+            job.progress = round(app.progress)
             job.run_state = RunState.SUCCESS
             sess.add(job)
             return

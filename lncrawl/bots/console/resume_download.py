@@ -54,7 +54,6 @@ def resume_session():
     print("Resuming", app.crawler.novel_title)
     print("Output path:", app.output_path)
 
-    app.initialize()
     app.crawler.initialize()
 
     if app.can_do("login") and app.login_data:
@@ -63,7 +62,6 @@ def resume_session():
 
     app.start_download()
     app.bind_books()
-    app.archive_books()
     app.destroy()
     display.app_complete()
     display_open_folder(app.output_path)

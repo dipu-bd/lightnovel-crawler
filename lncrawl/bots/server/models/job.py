@@ -27,8 +27,7 @@ class RunState(str, Enum):
     FETCHING_NOVEL = 'Fetching metadata'
     FETCHING_CHAPTERS = 'Fetching chapters'
     FETCHING_IMAGES = 'Fetching images'
-    BINDING_NOVEL = 'Binding books'
-    PREPARE_ARTIFACTS = 'Preparing artifacts'
+    CREATING_ARTIFACTS = 'Creating artifacts'
     FAILED = 'Failed'
     SUCCESS = 'Success'
 

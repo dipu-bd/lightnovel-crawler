@@ -1,0 +1,49 @@
+name: Deployment CI
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🛎️ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔐 Configure SSH Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_SECRET }}" > ~/.ssh/bitanon.pem
+          chmod 600 ~/.ssh/bitanon.pem
+
+      - name: ⚙️ Setup Environment File
+        run: echo "${{ secrets.ENV_FILE }}" > .env
+
+      - name: 🐳 Build Docker Image
+        run: docker build -f ./scripts/Dockerfile -t lncrawl .
+
+      - name: 📦 Save and Transfer Docker Image
+        run: |
+          docker save lncrawl | bzip2 | \
+          ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
+              "${{ secrets.DEPLOY_SERVER }}" docker load
+
+      - name: 📂 Upload Compose File
+        run: |
+          ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
+              "${{ secrets.DEPLOY_SERVER }}" "mkdir -p ~/lncrawl"
+
+          scp -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
+              ./scripts/server-compose.yml \
+              "${{ secrets.DEPLOY_SERVER }}:~/lncrawl/compose.yml"
+
+      - name: 🚀 Run Container via Docker Compose
+        run: |
+          ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
+              "${{ secrets.DEPLOY_SERVER }}" \
+              docker compose -f ~/lncrawl/compose.yml up -d
