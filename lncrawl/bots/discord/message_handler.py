@@ -531,7 +531,7 @@ class MessageHandler:
                 return
 
             self.send_sync("Compressing output folder...")
-            self.app.compress_books()
+            self.app.archive_books()
             if self.closed:
                 return
 

@@ -46,7 +46,7 @@ class App:
         self.output_formats: Dict[OutputFormat, bool] = {}
         self.generated_books: Dict[OutputFormat, List[str]] = {}
         self.generated_archives: Dict[OutputFormat, str] = {}
-        self.archived_outputs = None
+        self.archived_outputs: Optional[List[str]] = None
         self.good_file_name: str = ""
         self.no_suffix_after_filename = False
         self.search_progress: float = 0
@@ -81,9 +81,9 @@ class App:
         self.fetch_content_progress = 0
         self.fetch_images_progress = 0
         self.binding_progress = 0
-        self.archived_outputs = None
         self.generated_books = {}
         self.generated_archives = {}
+        self.archived_outputs = None
         logger.debug("DONE")
 
     # ----------------------------------------------------------------------- #
@@ -249,49 +249,52 @@ class App:
         self.generated_books = {}
         for fmt, files in generate_books(self, data):
             self.generated_books[fmt] = files
-            save_metadata(self)
+            yield fmt, files
 
     # ----------------------------------------------------------------------- #
 
-    def compress_books(self, archive_singles=False):
+    def archive_books(self, archive_singles=False):
         logger.info("Compressing output...")
+        self.archived_outputs = []
+        self.generated_archives = {}
+        for fmt, files in self.generated_books.items():
+            archive_file = self.create_archive(fmt, files, archive_singles)
+            if archive_file:
+                self.archived_outputs.append(str(archive_file))
+        save_metadata(self)
+
+    def create_archive(self, fmt: OutputFormat, files: List[str], archive_singles=False):
+        if not files:
+            logger.info(f"No files for {fmt}")
+            return
 
         output_path = Path(self.output_path)
         archive_path = output_path / 'archives'
         os.makedirs(archive_path, exist_ok=True)
 
-        # Archive files
-        self.archived_outputs = []
-        self.generated_archives = {}
-        for fmt, file_list in self.generated_books.items():
-            if not file_list:
-                logger.info(f"No files for {fmt}")
-                continue
+        first_file = Path(files[0])
+        if (not archive_singles and len(files) == 1 and first_file.is_file()):
+            logger.info(f"Not archiving single file for {fmt}")
+            archive_file = archive_path / first_file.name
+            shutil.copyfile(files[0], archive_file)
+            return
 
-            first_file = Path(file_list[0])
-            if (not archive_singles and len(file_list) == 1 and first_file.is_file()):
-                logger.info(f"Not archiving single file for {fmt}")
-                archive_file = archive_path / first_file.name
-                shutil.copyfile(file_list[0], archive_file)
-            else:
-                output_name = f"{self.good_file_name} ({fmt}).zip"
-                archive_file = archive_path / output_name
-                logger.info(f"Compressing {len(file_list)} files")
-                with zipfile.ZipFile(archive_file, "w", zipfile.ZIP_DEFLATED) as zipf:
-                    root_file = output_path / fmt
-                    for file in file_list:
-                        file_path = Path(file)
-                        if file_path.is_relative_to(root_file):
-                            arcname = file_path.relative_to(root_file).as_posix()
-                        elif file_path.is_relative_to(output_path):
-                            arcname = file_path.relative_to(output_path).as_posix()
-                        else:
-                            continue
-                        zipf.write(file, arcname)
+        output_name = f"{self.good_file_name} ({fmt}).zip"
+        archive_file = archive_path / output_name
+        logger.info(f"Compressing {len(files)} files")
+        with zipfile.ZipFile(archive_file, "w", zipfile.ZIP_DEFLATED) as zipf:
+            root_file = output_path / fmt
+            for file in files:
+                file_path = Path(file)
+                if file_path.is_relative_to(root_file):
+                    arcname = file_path.relative_to(root_file).as_posix()
+                elif file_path.is_relative_to(output_path):
+                    arcname = file_path.relative_to(output_path).as_posix()
+                else:
+                    continue
+                zipf.write(file, arcname)
+        logger.info("Compressed: %s", output_name)
 
-                logger.info("Compressed: %s", output_name)
-
-            if archive_file:
-                self.archived_outputs.append(str(archive_file))
-                self.generated_archives[fmt] = str(archive_file)
-                save_metadata(self)
+        if archive_file:
+            self.generated_archives[fmt] = str(archive_file)
+            return archive_file

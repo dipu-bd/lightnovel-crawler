@@ -214,16 +214,13 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
         if job.run_state == RunState.BINDING_NOVEL:
             logger.info('Binding novel')
 
-            app.bind_books()
-            app.compress_books()
-
-            for fmt in OutputFormat:
-                if str(fmt) == str(OutputFormat.json):
-                    continue
-                shutil.rmtree(
-                    Path(app.output_path) / fmt,
-                    ignore_errors=True,
-                )
+            app.generated_archives = {}
+            for fmt, files in app.bind_books():
+                archive = app.create_archive(fmt, files)
+                if archive and str(fmt) != str(OutputFormat.json):
+                    output = Path(app.output_path) / fmt
+                    shutil.rmtree(output, ignore_errors=True)
+            save_metadata(app)
 
             job.run_state = RunState.PREPARE_ARTIFACTS
             job.progress = round(app.progress)
@@ -264,7 +261,6 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                 sess.add(artifact)
 
             logger.info('Success!')
-            job.progress = 100
             job.run_state = RunState.SUCCESS
             sess.add(job)
             return

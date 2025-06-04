@@ -63,7 +63,7 @@ def resume_session():
 
     app.start_download()
     app.bind_books()
-    app.compress_books()
+    app.archive_books()
     app.destroy()
     display.app_complete()
     display_open_folder(app.output_path)
