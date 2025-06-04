@@ -2,10 +2,12 @@ from enum import Enum, IntEnum
 from typing import List, Optional
 
 from pydantic import HttpUrl
+from sqlalchemy import event
 from sqlmodel import JSON, Column, Field, Relationship, SQLModel
 
 from lncrawl.models import OutputFormat
 
+from ..utils.time_utils import current_timestamp
 from ._base import BaseModel
 from .user import User
 
@@ -17,19 +19,19 @@ class JobStatus(str, Enum):
 
 
 class JobPriority(IntEnum):
-    NORMAL = 0
-    PREMIUM = 1
-    VIP = 2
+    LOW = 0
+    NORMAL = 1
+    HIGH = 2
 
 
 class RunState(str, Enum):
-    PREPARING = 'preparing'
-    FETCHING_NOVEL = 'fetching-novel'
-    FETCHING_CONTENT = 'fetching-content'
-    BINDING_NOVEL = 'binding-novel'
-    UPLOADING_NOVEL = 'uploading-novel'
-    FAILED = 'failed'
-    SUCCESS = 'success'
+    FETCHING_NOVEL = 'Fetching metadata'
+    FETCHING_CHAPTERS = 'Fetching chapters'
+    FETCHING_IMAGES = 'Fetching images'
+    BINDING_NOVEL = 'Binding books'
+    PREPARE_ARTIFACTS = 'Preparing artifacts'
+    FAILED = 'Failed'
+    SUCCESS = 'Success'
 
 
 class Artifact(BaseModel, table=True):
@@ -65,7 +67,7 @@ class Job(BaseModel, table=True):
 
     url: str = Field(description="Download link")
 
-    priority: JobPriority = Field(default=JobPriority.NORMAL, index=True, description="The job priority")
+    priority: JobPriority = Field(default=JobPriority.LOW, index=True, description="The job priority")
     status: JobStatus = Field(default=JobStatus.PENDING, index=True, description="Current status")
     run_state: Optional[RunState] = Field(default=None, description="State of the job in progress status")
 
@@ -75,13 +77,24 @@ class Job(BaseModel, table=True):
     finished_at: Optional[int] = Field(default=None, description="Job finish time (UNIX ms)")
 
 
+@event.listens_for(Job, "before_update", propagate=True)
+def auto_update_timestamp(mapper, connection, target: Job):
+    if target.error:
+        target.run_state = RunState.FAILED
+    if target.run_state in (RunState.SUCCESS, RunState.FAILED):
+        target.status = JobStatus.COMPLETED
+    if not target.started_at and target.status != JobStatus.PENDING:
+        target.started_at = current_timestamp()
+    if not target.finished_at and target.status == JobStatus.COMPLETED:
+        target.finished_at = current_timestamp()
+
+
 class JobInput(SQLModel):
-    priority: JobPriority = Field(default=JobPriority.NORMAL, description="The job priority")
     url: HttpUrl = Field(description='The novel page url')
 
 
 class JobDetail(SQLModel):
     job: Job = Field(description='Job')
-    user: Optional[User] = Field(description='User')
     novel: Optional[Novel] = Field(description='Novel')
     artifacts: Optional[List[Artifact]] = Field(description='Artifacts')
+    user: Optional[User] = Field(description='User')

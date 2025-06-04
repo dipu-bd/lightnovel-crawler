@@ -3,13 +3,13 @@ import logging
 import os
 from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
-from threading import Semaphore, Thread
+from threading import Event, Semaphore, Thread
 from typing import Any, Dict, Generator, Iterable, List, Optional
 
 from tqdm import tqdm
 
-from .exeptions import LNException
 from ..utils.ratelimit import RateLimiter
+from .exeptions import LNException
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class TaskManager(ABC):
         """
         self.init_executor(workers, ratelimit)
 
-    def __del__(self) -> None:
+    def close(self) -> None:
         self.shutdown()
 
     @property
@@ -71,7 +71,7 @@ class TaskManager(ABC):
         - ratelimit (float, optional): Number of requests per second.
         """
         self._futures: List[Future] = []
-        self.__del__()  # cleanup previous initialization
+        self.close()  # cleanup previous initialization
 
         if ratelimit and ratelimit > 0:
             workers = 1  # use single worker if ratelimit is being applied
@@ -179,6 +179,7 @@ class TaskManager(ABC):
         desc: Optional[str] = None,
         unit: Optional[str] = None,
         fail_fast: bool = False,
+        signal=Event(),
     ) -> Generator[Any, None, None]:
         """Create a generator output to resolve the futures.
 
@@ -204,6 +205,8 @@ class TaskManager(ABC):
         )
         try:
             for future in as_completed(futures):
+                if signal.is_set():
+                    return  # cancelled
                 if fail_fast:
                     yield future.result()
                     bar.update()
@@ -211,6 +214,7 @@ class TaskManager(ABC):
                 try:
                     yield future.result()
                 except KeyboardInterrupt:
+                    signal.set()
                     raise
                 except LNException as e:
                     bar.clear()
@@ -225,9 +229,14 @@ class TaskManager(ABC):
                 finally:
                     bar.update()
         except KeyboardInterrupt:
+            signal.set()
             raise
         finally:
-            Thread(target=lambda: self.cancel_futures(futures)).start()
+            Thread(
+                target=self.cancel_futures,
+                kwargs=dict(futures=futures),
+                daemon=True,
+            ).start()
             bar.close()
 
     def resolve_futures(
@@ -237,6 +246,7 @@ class TaskManager(ABC):
         desc: Optional[str] = None,
         unit: Optional[str] = None,
         fail_fast: bool = False,
+        signal=Event(),
     ) -> list:
         """Wait for the futures to be done.
 
@@ -257,5 +267,6 @@ class TaskManager(ABC):
                 desc=desc,
                 unit=unit,
                 fail_fast=fail_fast,
+                signal=signal,
             )
         )

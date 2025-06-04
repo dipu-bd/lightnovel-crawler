@@ -26,7 +26,7 @@ class SoupMaker(ABC):
         """
         self._parser = parser or DEFAULT_PARSER
 
-    def __del__(self) -> None:
+    def close(self) -> None:
         pass
 
     def make_soup(

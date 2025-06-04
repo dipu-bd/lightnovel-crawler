@@ -1,6 +1,7 @@
 import hashlib
 import logging
 from abc import abstractmethod
+from threading import Event
 from typing import Generator, List, Optional, Union
 
 from bs4 import Tag
@@ -73,12 +74,12 @@ class Crawler(Scraper):
             parser=parser,
         )
 
-    def __del__(self) -> None:
+    def close(self) -> None:
         # if hasattr(self, "volumes"):
         #     self.volumes.clear()
         # if hasattr(self, "chapters"):
         #     self.chapters.clear()
-        super().__del__()
+        super().close()
 
     # ------------------------------------------------------------------------- #
     # Methods to implement in crawler
@@ -150,6 +151,7 @@ class Crawler(Scraper):
         self,
         chapters: List[Chapter],
         fail_fast=False,
+        signal=Event(),
     ) -> Generator[Chapter, None, None]:
         futures = [
             self.executor.submit(self.download_chapter_body, chapter)
@@ -161,11 +163,12 @@ class Crawler(Scraper):
             desc="Chapters",
             unit="item",
             fail_fast=fail_fast,
+            signal=signal,
         )
 
         for index, result in enumerate(generator):
+            chapter = chapters[index]
             try:
-                chapter = chapters[index]
                 chapter.body = ""
                 chapter.images = {}
                 chapter.body = result
@@ -173,4 +176,5 @@ class Crawler(Scraper):
                 chapter.success = bool(result)
             except KeyboardInterrupt:
                 break
-            yield chapter
+            finally:
+                yield chapter

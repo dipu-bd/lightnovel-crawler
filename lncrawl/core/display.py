@@ -272,12 +272,12 @@ def format_source_choices(novels: List[SearchResult]):
 def format_resume_choices(meta_list: List[MetaInfo]):
     items = []
     for index, meta in enumerate(meta_list):
-        if not meta.session:
+        if not meta.session or not meta.novel:
             continue
         text = "%d. %s [downloading %d chapters]" % (
             index + 1,
             meta.novel.title,
-            len(meta.session.download_chapters),
+            len(meta.session.chapters_to_download),
         )
         text += "\n" + (" " * 6) + Chars.LINK + " " + meta.novel.url
         items.append(Choice(value=index, title=text))

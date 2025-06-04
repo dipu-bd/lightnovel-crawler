@@ -50,15 +50,17 @@ def start(self):
         return
 
     self.app = App()
-    self.app.initialize()
 
     # Set filename if provided
     self.app.good_file_name = (args.filename or "").strip()
     self.app.no_suffix_after_filename = args.filename_only
 
     # Process user input
-    self.app.user_input = self.get_novel_url()
-    if not self.app.user_input.startswith("http"):
+    user_inp = self.get_novel_url()
+    self.app.user_input = user_inp
+    if not user_inp:
+        pass  # this case is not possible
+    elif not user_inp.startswith("http"):
         logger.info("Detected query input")
         search_links = [
             str(link)
@@ -67,13 +69,13 @@ def start(self):
         ]
         self.search_mode = True
     else:
-        hostname = urlparse(self.app.user_input).hostname
+        hostname = urlparse(user_inp).hostname
         if hostname in rejected_sources:
             display.url_rejected(rejected_sources[hostname])
             raise LNException("Fail to init crawler: %s is rejected", hostname)
         try:
             logger.info("Detected URL input")
-            self.app.crawler = prepare_crawler(self.app.user_input)
+            self.app.crawler = prepare_crawler(user_inp)
             self.search_mode = False
         except Exception as e:
             if "No crawler found for" in str(e):
@@ -81,7 +83,7 @@ def start(self):
             else:
                 logger.error("Failed to prepare crawler", e)
             logger.debug("Trying to find it in novelupdates", e)
-            guess = self.app.guess_novel_title(self.app.user_input)
+            guess = self.app.guess_novel_title(user_inp)
             display.guessed_url_for_novelupdates()
             self.app.user_input = self.confirm_guessed_novel(guess)
             search_links = ["https://www.novelupdates.com/"]

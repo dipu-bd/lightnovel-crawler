@@ -12,8 +12,12 @@ class ServerBot:
 
     def start(self):
         args = get_args()
+
         ctx = ServerContext()
-        ctx.runner.start()
+        ctx.db.prepare()
+        ctx.users.prepare()
+        ctx.scheduler.start()
+
         uvicorn.run(
             app,
             log_level=logging.DEBUG,

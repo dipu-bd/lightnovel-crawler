@@ -2,7 +2,7 @@ from fastapi import APIRouter, Body, Depends
 
 from ..context import ServerContext
 from ..models.user import (CreateRequest, LoginRequest, LoginResponse,
-                           UpdateRequest, User, UserRole)
+                           SignupRequest, UpdateRequest, User)
 from ..security import ensure_user
 
 # The root router
@@ -25,13 +25,17 @@ def login(
 @router.post('/signup', summary='Signup as a new user')
 def signup(
     ctx: ServerContext = Depends(),
-    body: CreateRequest = Body(
+    body: SignupRequest = Body(
         default=...,
         description='The signup request',
     ),
 ):
-    body.role = UserRole.USER
-    user = ctx.users.create(body)
+    request = CreateRequest(
+        password=body.password,
+        email=body.email,
+        name=body.name,
+    )
+    user = ctx.users.create(request)
     token = ctx.users.generate_token(user.id)
     return LoginResponse(token=token, user=user)
 
@@ -53,5 +57,6 @@ def self_update(
     ),
 ):
     body.role = None
+    body.tier = None
     body.is_active = None
     return ctx.users.update(user.id, body)

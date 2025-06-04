@@ -1,12 +1,10 @@
 import logging
 import os
 from functools import cached_property
-from typing import List
 
 import dotenv
 
 from lncrawl import constants as C
-from lncrawl.models import OutputFormat
 
 
 def env(key, default_value=None):
@@ -63,18 +61,9 @@ class App:
         return env('OUTPUT_PATH', C.DEFAULT_OUTPUT_PATH)
 
     @cached_property
-    def runner_interval(self) -> int:
-        '''in seconds'''
-        return int(env('RUNNER_INTERVAL_IN_SECOND', 10))
-
-    @property
-    def enabled_formats(self) -> List[OutputFormat]:
-        return [
-            OutputFormat.json,
-            OutputFormat.epub,
-            OutputFormat.text,
-            OutputFormat.web,
-        ]
+    def runner_cooldown(self) -> int:
+        '''time (seconds) to sleep before starting next job'''
+        return int(env('RUNNER_COOLDOWN_IN_SECONDS', 5))
 
 
 class Config:

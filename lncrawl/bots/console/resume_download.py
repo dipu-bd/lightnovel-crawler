@@ -8,9 +8,8 @@ from ...core import display
 from ...core.app import App
 from ...core.arguments import get_args
 from ...core.crawler import Crawler
+from ...core.metadata import get_metadata_list, load_metadata
 from ...models import MetaInfo
-from ...utils.resume_download import (load_all_metadata_from_path,
-                                      update_session_from_metadata)
 from .open_folder_prompt import display_open_folder
 
 logger = logging.getLogger(__name__)
@@ -22,7 +21,7 @@ def resume_session():
 
     resumable_meta_data: List[MetaInfo] = [
         meta
-        for meta in load_all_metadata_from_path(output_path)
+        for meta in get_metadata_list(output_path)
         if meta.novel and meta.session and not meta.session.completed
     ]
 
@@ -49,7 +48,7 @@ def resume_session():
         return
 
     app = App()
-    update_session_from_metadata(app, meta)
+    load_metadata(app, meta)
     assert isinstance(app.crawler, Crawler)
 
     print("Resuming", app.crawler.novel_title)

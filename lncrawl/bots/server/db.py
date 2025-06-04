@@ -13,10 +13,13 @@ class DB:
             ctx.config.server.database_url,
             echo=logger.isEnabledFor(logging.DEBUG),
         )
-        SQLModel.metadata.create_all(self.engine)
 
     def close(self):
         self.engine.dispose()
+
+    def prepare(self):
+        logger.info('Creating tables')
+        SQLModel.metadata.create_all(self.engine)
 
     def session(
         self, *,

@@ -1,7 +1,9 @@
 import logging
 import os
 import subprocess
-from typing import List, Union
+from typing import Generator
+
+from lncrawl.models import OutputFormat
 
 logger = logging.getLogger(__name__)
 EBOOK_CONVERT = "ebook-convert"
@@ -32,19 +34,23 @@ def run_ebook_convert(*args) -> bool:
         return False
 
 
-def epub_to_calibre(app, epub_file, out_fmt) -> Union[str, None]:
+def epub_to_calibre(app, epub_file: str, fmt: OutputFormat):
+    from ..core.app import App
+    assert isinstance(app, App) and app.crawler
+
     if not os.path.exists(epub_file):
-        return None
+        return
 
     epub_path = os.path.dirname(epub_file)
     epub_file_name = os.path.basename(epub_file)
     file_name_without_ext, _ = os.path.splitext(epub_file_name)
 
     work_path = os.path.dirname(epub_path)
-    out_path = os.path.join(work_path, out_fmt)
-    out_file_name = file_name_without_ext + "." + out_fmt
+    out_path = os.path.join(work_path, fmt)
+    out_file_name = file_name_without_ext + "." + fmt
     out_file = os.path.join(out_path, out_file_name)
     os.makedirs(out_path, exist_ok=True)
+
     logger.debug('Converting "%s" to "%s"', epub_file, out_file)
     args = [
         epub_file,
@@ -70,9 +76,10 @@ def epub_to_calibre(app, epub_file, out_fmt) -> Union[str, None]:
         "--enable-heuristics",
         "--disable-renumber-headings",
     ]
+
     if app.book_cover:
         args += ["--cover", app.book_cover]
-    if out_fmt == "pdf":
+    if fmt == "pdf":
         args += [
             "--paper-size",
             "letter",
@@ -81,25 +88,26 @@ def epub_to_calibre(app, epub_file, out_fmt) -> Union[str, None]:
             "--pdf-header-template",
             '<p style="text-align:center; color:#555; font-size:0.9em">⦗ _TITLE_ &mdash; _SECTION_ ⦘</p>',
         ]
+
     run_ebook_convert(*args)
     if os.path.exists(out_file):
-        logger.info("Created: %s" % out_file_name)
-        return out_file
+        logger.info("Created: %s", out_file_name)
+        yield out_file
     else:
-        logger.error("[%s] conversion failed: %s", out_fmt, epub_file_name)
-        return None
+        logger.error("[%s] conversion failed: %s", fmt, epub_file_name)
 
 
-def make_calibres(app, epubs, out_fmt) -> List[str]:
-    if out_fmt == "epub" or not epubs:
-        return epubs
+def make_calibres(app, fmt: OutputFormat) -> Generator[str, None, None]:
+    from ..core.app import App
+    assert isinstance(app, App) and app.crawler
 
-    if not run_ebook_convert("--version"):
-        logger.error("Install Calibre to generate %s: %s", out_fmt, CALIBRE_LINK),
+    epubs = app.generated_books.get(OutputFormat.epub)
+    if not epubs:
         return
 
-    out_files: List[str] = []
+    if not run_ebook_convert("--version"):
+        logger.error(f"Install Calibre to generate {fmt}: {CALIBRE_LINK}")
+        return
+
     for epub in epubs:
-        out = epub_to_calibre(app, epub, out_fmt)
-        out_files += [out]
-    return out_files
+        yield from epub_to_calibre(app, epub, fmt)

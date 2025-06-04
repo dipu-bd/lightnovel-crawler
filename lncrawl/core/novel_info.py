@@ -1,10 +1,8 @@
 import math
 import re
-from pathlib import Path
 from typing import Dict
 
-from .. import constants as C
-from ..models import Chapter, MetaInfo, Novel, Session, Volume
+from ..models import Chapter, Volume
 from .crawler import Crawler
 from .exeptions import LNException
 
@@ -71,52 +69,3 @@ def format_novel(crawler: Crawler):
     __format_volume(crawler, vol_id_map)
     __format_chapters(crawler, vol_id_map)
     crawler.volumes = [x for x in crawler.volumes if x["chapter_count"] > 0]
-
-
-def save_metadata(app, completed=False):
-    from ..core.app import App
-    from .crawler import Crawler
-
-    if not (isinstance(app, App) and isinstance(app.crawler, Crawler)):
-        return
-
-    novel = MetaInfo(
-        novel=Novel(
-            url=app.crawler.novel_url,
-            title=app.crawler.novel_title,
-            authors=[x.strip() for x in app.crawler.novel_author.split(",")],
-            cover_url=app.crawler.novel_cover,
-            synopsis=app.crawler.novel_synopsis,
-            language=app.crawler.language,
-            tags=app.crawler.novel_tags,
-            volumes=app.crawler.volumes,
-            chapters=[Chapter.without_body(chap) for chap in app.crawler.chapters],
-            is_rtl=app.crawler.is_rtl,
-        ),
-        session=Session(
-            completed=completed,
-            user_input=app.user_input or '',
-            login_data=app.login_data,
-            output_path=app.output_path,
-            output_formats=app.output_formats,
-            pack_by_volume=app.pack_by_volume,
-            good_file_name=app.good_file_name,
-            no_append_after_filename=app.no_suffix_after_filename,
-            download_chapters=[chap.id for chap in app.chapters],
-            proxies=dict(app.crawler.scraper.proxies),
-            cookies={
-                k: v for k, v in app.crawler.cookies.items() if v
-            },
-            headers={
-                k: (v if isinstance(v, str) else bytes(v).decode())
-                for k, v in app.crawler.headers.items()
-            },
-        ),
-    )
-
-    try:
-        Path(app.output_path).mkdir(parents=True, exist_ok=True)
-        file_name = Path(app.output_path) / C.META_FILE_NAME
-        novel.to_json(file_name, encoding="utf-8", indent=2)
-    except Exception:
-        pass

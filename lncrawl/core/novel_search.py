@@ -63,6 +63,7 @@ def _run(p: Process, hostname: str, signal: Event):
             if p.is_alive():
                 raise LNException(f"[{hostname}] Timeout")
     except KeyboardInterrupt:
+        signal.set()
         pass
     finally:
         atexit.unregister(p.kill)
@@ -115,15 +116,23 @@ def search_novels(app):
         futures.append(f)
 
     # Wait for all tasks to finish
-    try:
-        app.progress = 0
-        for _ in taskman.resolve_as_generator(futures, unit='source', desc='Search'):
-            app.progress += 1
-    except KeyboardInterrupt:
-        pass
-    except Exception:
-        if logger.isEnabledFor(logging.DEBUG):
-            logger.exception('Search failed!')
+    if futures:
+        try:
+            progress = 0
+            app.search_progress = 0
+            for _ in taskman.resolve_as_generator(
+                futures,
+                unit='source',
+                desc='Search',
+                signal=signal,
+            ):
+                progress += 1
+                app.search_progress = 100 * progress / len(futures)
+        except KeyboardInterrupt:
+            pass
+        except Exception:
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.exception('Search failed!')
 
     # Force stop all tasks
     signal.set()

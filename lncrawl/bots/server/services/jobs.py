@@ -8,6 +8,7 @@ from ..models.job import (Artifact, Job, JobDetail, JobInput, JobPriority,
                           JobStatus, Novel)
 from ..models.pagination import Paginated
 from ..models.user import User, UserRole
+from .tier import JOB_PRIORITY_LEVEL
 
 
 class JobService:
@@ -73,6 +74,7 @@ class JobService:
                 user_id=user.id,
                 novel_id=novel.id,
                 url=novel.url,
+                priority=JOB_PRIORITY_LEVEL[user.tier],
             )
             sess.add(job)
 

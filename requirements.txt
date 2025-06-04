@@ -1,4 +1,5 @@
 # app requirements
+typer
 ascii
 regex
 packaging
@@ -34,7 +35,7 @@ sqlmodel
 passlib[argon2]
 python-jose[cryptography]
 python-dateutil
-apscheduler
+reflex
 
 # dev requirements
 wheel

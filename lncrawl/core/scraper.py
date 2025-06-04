@@ -8,7 +8,7 @@ from typing import Any, Callable, Dict, MutableMapping, Optional, Tuple, Union
 from urllib.parse import ParseResult, urlparse
 
 from bs4 import BeautifulSoup
-from cloudscraper import CloudScraper, User_Agent
+from cloudscraper import CloudScraper, User_Agent  # type:ignore
 from PIL import Image, UnidentifiedImageError
 from requests import Response, Session
 from requests.exceptions import ProxyError
@@ -64,10 +64,10 @@ class Scraper(TaskManager, SoupMaker):
         self.init_parser(parser)
         self.init_executor(workers)
 
-    def __del__(self) -> None:
+    def close(self) -> None:
         if hasattr(self, "scraper"):
             self.scraper.close()
-        super().__del__()
+        super().close()
 
     def init_parser(self, parser: Optional[str] = None):
         self._soup_tool = SoupMaker(parser)

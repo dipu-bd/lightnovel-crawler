@@ -1,12 +1,12 @@
 import logging
 import os
-from typing import Dict, List
+from typing import Dict, Generator, List, Optional, Set
 
 from ..assets.epub import epub_chapter_xhtml, epub_cover_xhtml, epub_style_css
 from ..models.chapter import Chapter
 
 try:
-    from ebooklib import epub
+    from ebooklib import epub  # type:ignore
 except ImportError:
     logging.fatal("Failed to import ebooklib")
 
@@ -24,13 +24,13 @@ def bind_epub_book(
     book_title: str,
     novel_author: str,
     output_path: str,
-    book_cover: str,
     novel_title: str,
     novel_url: str,
     novel_synopsis: str,
     novel_tags: list,
     good_file_name: str,
     suffix: str,  # suffix to the file name
+    book_cover: Optional[str],
     no_suffix_after_filename: bool = False,
     is_rtl: bool = False,
     language: str = "en",
@@ -38,7 +38,7 @@ def bind_epub_book(
     logger.info("Binding epub for %s", book_title)
 
     logger.debug("Creating EpubBook instance")
-    book = epub.EpubBook()
+    book = epub.EpubBook()  # type:ignore
     book.set_language(language)
     book.set_title(book_title)
     book.add_author(novel_author)
@@ -51,7 +51,7 @@ def bind_epub_book(
         book.add_metadata("DC", "subject", tag)
 
     logger.debug("Adding %s", STYLE_FILE_NAME)
-    style_item = epub.EpubItem(
+    style_item = epub.EpubItem(  # type:ignore
         file_name=STYLE_FILE_NAME,
         content=epub_style_css(),
         media_type="text/css",
@@ -62,17 +62,19 @@ def bind_epub_book(
     book.set_template("cover", epub_cover_xhtml())
     book.set_template("chapter", epub_chapter_xhtml())
 
-    logger.debug("Adding cover image")
-    assert book_cover and os.path.isfile(book_cover), "No book cover"
-    with open(book_cover, "rb") as fp:
-        book.set_cover(COVER_IMAGE_NAME, fp.read(), create_page=False)
-    cover_item = epub.EpubCoverHtml(image_name=COVER_IMAGE_NAME)
-    cover_item.add_link(
-        href=style_item.file_name,
-        rel="stylesheet",
-        type="text/css",
-    )
-    book.add_item(cover_item)
+    if book_cover and os.path.isfile(book_cover):
+        logger.debug("Adding cover image")
+        with open(book_cover, "rb") as fp:
+            book.set_cover(COVER_IMAGE_NAME, fp.read(), create_page=False)
+        cover_item = epub.EpubCoverHtml(  # type:ignore
+            image_name=COVER_IMAGE_NAME
+        )
+        cover_item.add_link(
+            href=style_item.file_name,
+            rel="stylesheet",
+            type="text/css",
+        )
+        book.add_item(cover_item)
 
     logger.debug("Creating intro page")
     intro_html = f"""
@@ -90,7 +92,7 @@ def bind_epub_book(
         </div>
     </div>
     """
-    intro_item = epub.EpubHtml(
+    intro_item = epub.EpubHtml(  # type:ignore
         title="Intro Page",
         file_name="intro.xhtml",
         content=intro_html,
@@ -102,6 +104,10 @@ def bind_epub_book(
     )
     book.add_item(intro_item)
 
+    logger.debug("Creating chapter contents")
+    toc = []
+    spine = ["cover", intro_item]
+
     if novel_synopsis:
         synopsis_html = f"""
         <div class="synopsis">
@@ -109,7 +115,7 @@ def bind_epub_book(
             <p>{novel_synopsis}</p>
         </div>
         """
-        synopsis_item = epub.EpubHtml(
+        synopsis_item = epub.EpubHtml(  # type:ignore
             title="Synopsis",
             file_name="synopsis.xhtml",
             content=synopsis_html,
@@ -120,12 +126,8 @@ def bind_epub_book(
             type="text/css",
         )
         book.add_item(synopsis_item)
-
-    logger.debug("Creating chapter contents")
-    toc = []
-    spine = ["cover", intro_item]
-    if novel_synopsis:
         spine.append(synopsis_item)
+
     spine.append("nav")
 
     for chapters in chapter_groups:
@@ -137,7 +139,7 @@ def bind_epub_book(
             <h1>{volume_title}</h1>
         </div>
         """
-        volume_item = epub.EpubHtml(
+        volume_item = epub.EpubHtml(  # type:ignore
             file_name=f"volume_{volume_id}.xhtml",
             content=volume_html,
             title=volume_title,
@@ -153,7 +155,7 @@ def bind_epub_book(
         volume_contents = []
         for chapter in chapters:
             # ebooklib does pretty-print for xhtml. minify is useless :(
-            chapter_item = epub.EpubHtml(
+            chapter_item = epub.EpubHtml(  # type:ignore
                 file_name=f"chapter_{chapter.id}.xhtml",
                 content=str(chapter["body"]),
                 title=chapter["title"],
@@ -167,19 +169,22 @@ def bind_epub_book(
             spine.append(chapter_item)
             volume_contents.append(chapter_item)
 
-        volume_section = epub.Section(volume_title, href=volume_item.file_name)
+        volume_section = epub.Section(  # type:ignore
+            volume_title,
+            href=volume_item.file_name
+        )
         toc.append([volume_section, volume_contents])
 
     book.toc = toc
     book.spine = spine
-    book.add_item(epub.EpubNcx())
-    book.add_item(epub.EpubNav())
+    book.add_item(epub.EpubNcx())  # type:ignore
+    book.add_item(epub.EpubNav())  # type:ignore
 
     logger.debug("Adding images")
     for image_path in images:
         filename = os.path.basename(image_path)
         with open(image_path, "rb") as fp:
-            image_item = epub.EpubImage()
+            image_item = epub.EpubImage()  # type:ignore
             image_item.file_name = f"images/{filename}"
             image_item.media_type = "image/jpeg"
             image_item.content = fp.read()
@@ -195,18 +200,16 @@ def bind_epub_book(
 
     logger.info("Writing %s", file_path)
     os.makedirs(epub_path, exist_ok=True)
-    epub.write_epub(file_path, book, {})
+    epub.write_epub(file_path, book, {})  # type:ignore
 
-    print("Created: %s.epub" % file_name)
+    logger.info("Created: %s", file_name)
     return file_path
 
 
-def make_epubs(app, data: Dict[str, List[Chapter]]) -> List[str]:
+def make_epubs(app, data: Dict[str, List[Chapter]]) -> Generator[str, None, None]:
     from ..core.app import App
+    assert isinstance(app, App) and app.crawler
 
-    assert isinstance(app, App)
-
-    epub_files : List[str] = []
     for volume, chapters in data.items():
         if not chapters:
             continue
@@ -217,18 +220,18 @@ def make_epubs(app, data: Dict[str, List[Chapter]]) -> List[str]:
             suffix = chapter.volume or 1
             volumes.setdefault(suffix, []).append(chapter)
 
-        images = []
+        images: Set[str] = set()
         image_path = os.path.join(app.output_path, "images")
         if os.path.isdir(image_path):
-            images = {
+            images = set([
                 os.path.join(image_path, filename)
                 for filename in os.listdir(image_path)
                 if filename.endswith(".jpg")
-            }
+            ])
 
-        output = bind_epub_book(
+        yield bind_epub_book(
             chapter_groups=list(volumes.values()),
-            images=images,
+            images=list(images),
             suffix=volume,
             book_title=book_title,
             novel_title=app.crawler.novel_title,
@@ -238,9 +241,7 @@ def make_epubs(app, data: Dict[str, List[Chapter]]) -> List[str]:
             language=app.crawler.language,
             novel_tags=app.crawler.novel_tags,
             output_path=app.output_path,
-            book_cover=app.book_cover,
+            book_cover=app.book_cover or app.crawler.novel_cover,
             good_file_name=app.good_file_name,
             no_suffix_after_filename=app.no_suffix_after_filename,
         )
-        epub_files.append(output)
-    return epub_files

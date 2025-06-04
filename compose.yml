@@ -42,7 +42,7 @@ services:
     restart: unless-stopped
     ports:
       - "23457:8000"
-    command: python -m lncrawl -l --suppress --bot server --port 8000 --selenium-grid "http://chrome:4444"
+    command: python -m lncrawl -ll --suppress --bot server --port 8000 --selenium-grid "http://chrome:4444"
     environment:
       - PYTHONUNBUFFERED=1
       - OUTPUT_PATH=/home/lncrawl/output

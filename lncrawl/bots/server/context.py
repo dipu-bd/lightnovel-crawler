@@ -45,6 +45,7 @@ class ServerContext:
         return ArtifactService(self)
 
     @cached_property
-    def runner(self):
-        from .services.runner import JobRunner
-        return JobRunner(self)
+    @autoclose
+    def scheduler(self):
+        from .services.scheduler import JobScheduler
+        return JobScheduler(self)

@@ -1,4 +1,5 @@
 # app requirements
+typer
 ascii
 regex
 packaging

@@ -9,10 +9,10 @@ from .session import Session
 class MetaInfo(Box):
     def __init__(
         self,
-        novel: Optional[Novel] = None,
         session: Optional[Session] = None,
+        novel: Optional[Novel] = None,
         **kwargs,
     ) -> None:
-        self.novel = novel
         self.session = session
+        self.novel = novel
         self.update(kwargs)

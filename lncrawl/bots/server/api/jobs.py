@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, Depends, Path, Query
 
 from ..context import ServerContext
 from ..models.job import JobInput, JobPriority, JobStatus
-from ..models.user import User, UserRole
+from ..models.user import User
 from ..security import ensure_user
 
 # The root router
@@ -41,8 +41,6 @@ def create_job(
     ctx: ServerContext = Depends(),
     user: User = Depends(ensure_user),
 ):
-    if user.role != UserRole.ADMIN:
-        input.priority = JobPriority.NORMAL
     return ctx.jobs.create(input, user)
 
 

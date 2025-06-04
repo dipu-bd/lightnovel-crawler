@@ -1,3 +1,4 @@
+import logging
 from datetime import datetime, timedelta
 
 from jose import jwt
@@ -7,8 +8,10 @@ from sqlmodel import func, select
 from ..context import ServerContext
 from ..exceptions import AppErrors
 from ..models.pagination import Paginated
-from ..models.user import (LoginRequest, CreateRequest, UpdateRequest, User,
-                           UserRole)
+from ..models.user import (CreateRequest, LoginRequest, UpdateRequest, User,
+                           UserRole, UserTier)
+
+logger = logging.getLogger(__name__)
 
 
 class UserService:
@@ -19,7 +22,6 @@ class UserService:
             schemes=['argon2'],
             deprecated='auto',
         )
-        self.__prepare_admin()
 
     def _hash(self, plain_password: str) -> str:
         return self._passlib.hash(plain_password)
@@ -27,23 +29,26 @@ class UserService:
     def _check(self, plain: str, hashed: str) -> bool:
         return self._passlib.verify(plain, hashed)
 
-    def __prepare_admin(self):
+    def prepare(self):
         with self._db.session() as sess:
             email = self._ctx.config.server.admin_email
             password = self._ctx.config.server.admin_password
             q = select(User).where(User.email == email)
             user = sess.exec(q).first()
             if not user:
+                logger.info('Adding admin user')
                 user = User(
                     email=email,
-                    is_active=True,
+                    password=self._hash(password),
                     name="Server Admin",
                     role=UserRole.ADMIN,
-                    password=self._hash(password),
+                    tier=UserTier.VIP,
                 )
             else:
+                logger.info('Updating admin user')
                 user.is_active = True
                 user.role = UserRole.ADMIN
+                user.tier = UserTier.VIP
                 user.password = self._hash(password)
             sess.add(user)
             sess.commit()
@@ -102,6 +107,8 @@ class UserService:
             user = User(
                 name=body.name,
                 email=body.email,
+                role=body.role,
+                tier=body.tier,
                 password=self._hash(body.password),
             )
             sess.add(user)
@@ -124,6 +131,9 @@ class UserService:
                 updated = True
             if body.role is not None:
                 user.role = body.role
+                updated = True
+            if body.tier is not None:
+                user.tier = body.tier
                 updated = True
             if body.is_active is not None:
                 user.is_active = body.is_active

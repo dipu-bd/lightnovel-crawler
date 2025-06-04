@@ -27,7 +27,6 @@ class BaseModel(SQLModel):
     )
 
 
-@event.listens_for(SQLModel, "before_update", propagate=True)
-def auto_update_timestamp(mapper, connection, target):
-    if hasattr(target, "updated_at"):
-        setattr(target, "updated_at", current_timestamp())
+@event.listens_for(BaseModel, "before_update", propagate=True)
+def auto_update_timestamp(mapper, connection, target: BaseModel):
+    target.updated_at = current_timestamp()

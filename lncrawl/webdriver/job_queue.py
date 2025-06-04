@@ -15,17 +15,17 @@ __semaphore = Semaphore(MAX_BROWSER_INSTANCES)
 
 def __override_quit(driver: WebDriver):
     __open_browsers.append(driver)
-    original = Thread(target=driver.quit)
+    original = Thread(target=driver.quit, daemon=True)
 
     def override():
         if driver in __open_browsers:
             __semaphore.release()
             __open_browsers.remove(driver)
             logger.info("Destroyed instance: %s", driver.session_id)
-        if not original._started.is_set():
+        if not original._started.is_set():  # type:ignore
             original.start()
 
-    driver.quit = override
+    driver.quit = override  # type:ignore
 
 
 def _acquire_queue(timeout: Optional[float] = None):

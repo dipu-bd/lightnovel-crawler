@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-from typing import List
+from typing import Generator
 
 from bs4 import BeautifulSoup
 
@@ -10,12 +10,13 @@ from ..assets.chars import Chars
 logger = logging.getLogger(__name__)
 
 
-def make_texts(app, data):
-    text_files: List[str] = []
+def make_texts(app, data) -> Generator[str, None, None]:
     for vol in data:
         dir_name = os.path.join(app.output_path, "text", vol)
         os.makedirs(dir_name, exist_ok=True)
         for chap in data[vol]:
+            if not chap.get("body"):
+                continue
             file_name = "%s.txt" % str(chap["id"]).rjust(5, "0")
             file_name = os.path.join(dir_name, file_name)
             with open(file_name, "w", encoding="utf8") as file:
@@ -24,7 +25,4 @@ def make_texts(app, data):
                 text = "\n\n".join(soup.stripped_strings)
                 text = re.sub(r"[\r\n]+", Chars.EOL + Chars.EOL, text)
                 file.write(text)
-                text_files.append(file_name)
-
-    print("Created: %d text files" % len(text_files))
-    return text_files
+                yield file_name
