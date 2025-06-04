@@ -23,7 +23,7 @@ classifiers = [
 description = "Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, html, text, docx, pdf etc."
 dynamic = ["version", "dependencies"]
 keywords = ["lightnovel", "crawler", "lncrawl", "novel", "pdf", "epub", "mobi", "scraper"]
-license = "GPL-3.0-or-later"
+license = {file = "LICENSE"}
 name = "lightnovel-crawler"
 readme = "README.rst"
 requires-python = ">=3.8"
