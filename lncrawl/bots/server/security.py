@@ -1,45 +1,61 @@
-from fastapi import Depends
-from fastapi.security import APIKeyHeader
+from typing import Optional
+
+from fastapi import Depends, Security
+from fastapi.security import (HTTPAuthorizationCredentials, HTTPBasic,
+                              HTTPBasicCredentials, HTTPBearer, SecurityScopes)
 from jose import jwt
 
 from .context import ServerContext
 from .exceptions import AppErrors
-from .models.user import User, UserRole
+from .models.user import LoginRequest, User, UserRole
 
-header_scheme = APIKeyHeader(
-    name='Authorization',
-    scheme_name='Bearer Token',
-)
+basic_auth = HTTPBasic(auto_error=False)
+bearer_auth = HTTPBearer(auto_error=False)
 
 
-def ensure_login(
+def ensure_user(
+    security_scopes: SecurityScopes,
     ctx: ServerContext = Depends(),
-    token: str = Depends(header_scheme),
-) -> dict:
+    basic: Optional[HTTPBasicCredentials] = Depends(basic_auth),
+    bearer: Optional[HTTPAuthorizationCredentials] = Depends(bearer_auth),
+) -> User:
     try:
-        key = ctx.config.server.token_secret
-        algo = ctx.config.server.token_algo
-        if token.startswith('Bearer '):
-            token = token[len('Bearer '):]
-        return jwt.decode(token, key, algorithms=[algo])
+        if basic:
+            login = LoginRequest(
+                email=basic.username,
+                password=basic.password,
+            )
+            user = ctx.users.verify(login)
+        elif bearer:
+            payload = jwt.decode(
+                bearer.credentials,
+                key=ctx.config.server.token_secret,
+                algorithms=ctx.config.server.token_algo,
+            )
+
+            user_id = payload.get('uid')
+            if not user_id:
+                raise AppErrors.unauthorized
+
+            token_scopes = payload.get('scopes', [])
+            required_scopes = security_scopes.scopes
+            if any(scope not in token_scopes for scope in required_scopes):
+                raise AppErrors.forbidden
+
+            user = ctx.users.get(user_id)
+        else:
+            raise AppErrors.unauthorized
+
+        if not user.is_active:
+            raise AppErrors.inactive_user
+        return user
     except Exception as e:
         raise AppErrors.unauthorized from e
 
 
-def ensure_user(
-    ctx: ServerContext = Depends(),
-    payload: dict = Depends(ensure_login),
+def ensure_admin(
+    user: User = Security(ensure_user, scopes=[UserRole.ADMIN]),
 ) -> User:
-    user_id = payload.get('uid')
-    if not user_id:
-        raise AppErrors.unauthorized
-    user = ctx.users.get(user_id)
-    if not user.is_active:
-        raise AppErrors.inactive_user
-    return user
-
-
-def ensure_admin(user: User = Depends(ensure_user)) -> User:
     if user.role != UserRole.ADMIN:
         raise AppErrors.forbidden
     return user

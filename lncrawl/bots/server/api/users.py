@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends, Path, Query
+from fastapi import APIRouter, Body, Depends, Path, Query, Security
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
@@ -40,7 +40,7 @@ def get_user(
 @router.put('/{user_id}', summary='Update the user')
 def update_user(
     ctx: ServerContext = Depends(),
-    user: User = Depends(ensure_user),
+    user: User = Security(ensure_user),
     body: UpdateRequest = Body(
         default=...,
         description='The signup request',
@@ -55,7 +55,7 @@ def update_user(
 
 @router.delete('/{user_id}', summary='Delete the user')
 def delete_user(
-    user: User = Depends(ensure_user),
+    user: User = Security(ensure_user),
     ctx: ServerContext = Depends(),
     user_id: str = Path(),
 ):

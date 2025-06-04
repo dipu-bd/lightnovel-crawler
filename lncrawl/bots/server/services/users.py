@@ -53,14 +53,15 @@ class UserService:
             sess.add(user)
             sess.commit()
 
-    def generate_token(self, user_id: str) -> str:
+    def generate_token(self, user: User) -> str:
         key = self._ctx.config.server.token_secret
         algorithm = self._ctx.config.server.token_algo
         minutes = self._ctx.config.server.token_expiry
         expiry = datetime.now() + timedelta(minutes=minutes)
         payload = {
-            'uid': user_id,
-            'exp': expiry
+            'exp': expiry,
+            'uid': user.id,
+            'scopes': [user.role, user.tier],
         }
         return jwt.encode(payload, key, algorithm)
 

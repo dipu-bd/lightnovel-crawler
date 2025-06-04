@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import APIRouter, Body, Depends, Path, Query
+from fastapi import APIRouter, Body, Depends, Path, Query, Security
 
 from ..context import ServerContext
 from ..models.job import JobInput, JobPriority, JobStatus
@@ -39,7 +39,7 @@ def list_jobs(
 def create_job(
     input: JobInput = Body(),
     ctx: ServerContext = Depends(),
-    user: User = Depends(ensure_user),
+    user: User = Security(ensure_user),
 ):
     return ctx.jobs.create(input, user)
 
@@ -48,7 +48,7 @@ def create_job(
 def delete_job(
     job_id: str = Path(),
     ctx: ServerContext = Depends(),
-    user: User = Depends(ensure_user),
+    user: User = Security(ensure_user),
 ):
     return ctx.jobs.delete(job_id, user)
 

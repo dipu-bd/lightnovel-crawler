@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Security
 
-from ..security import ensure_admin, ensure_login
+from ..security import ensure_admin, ensure_user
 from .artifacts import router as artifact
 from .auth import router as auth
 from .jobs import router as job
@@ -27,21 +27,21 @@ router.include_router(
     job,
     prefix='/job',
     tags=['Jobs'],
-    dependencies=[Depends(ensure_login)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     novel,
     prefix='/novel',
     tags=['Novels'],
-    dependencies=[Depends(ensure_login)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     artifact,
     prefix='/artifact',
     tags=['Artifacts'],
-    dependencies=[Depends(ensure_login)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(

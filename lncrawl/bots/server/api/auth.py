@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, Security
 
 from ..context import ServerContext
 from ..models.user import (CreateRequest, LoginRequest, LoginResponse,
@@ -18,7 +18,7 @@ def login(
     ),
 ):
     user = ctx.users.verify(credentials)
-    token = ctx.users.generate_token(user.id)
+    token = ctx.users.generate_token(user)
     return LoginResponse(token=token, user=user)
 
 
@@ -36,13 +36,13 @@ def signup(
         name=body.name,
     )
     user = ctx.users.create(request)
-    token = ctx.users.generate_token(user.id)
+    token = ctx.users.generate_token(user)
     return LoginResponse(token=token, user=user)
 
 
 @router.get('/me', summary='Get current user details')
 def me(
-    user: User = Depends(ensure_user),
+    user: User = Security(ensure_user),
 ):
     return user
 
@@ -50,7 +50,7 @@ def me(
 @router.put('/me/update', summary='Update current user details')
 def self_update(
     ctx: ServerContext = Depends(),
-    user: User = Depends(ensure_user),
+    user: User = Security(ensure_user),
     body: UpdateRequest = Body(
         default=...,
         description='The signup request',
