@@ -1,8 +1,10 @@
 import traceback
+from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi.responses import FileResponse
 
 from lncrawl.assets.version import get_version
 
@@ -34,3 +36,14 @@ try:
     app.include_router(api, prefix='/api')
 except ImportError:
     traceback.print_exc()
+
+
+web_dir = (Path(__file__).parent / 'web').absolute()
+if web_dir.is_dir():
+    @app.get("/{fallback:path}", include_in_schema=False)
+    async def serve_static(request: Request):
+        fallback_path = str(request.path_params.get('fallback', ''))
+        target_file = web_dir.joinpath(fallback_path.strip('/'))
+        if target_file.is_file():
+            return FileResponse(target_file)
+        return FileResponse(web_dir / "index.html")

@@ -18,6 +18,7 @@ jobs:
       - name: 🔐 Configure SSH Key
         run: |
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
           echo "${{ secrets.SSH_SECRET }}" > ~/.ssh/bitanon.pem
           chmod 600 ~/.ssh/bitanon.pem
 
