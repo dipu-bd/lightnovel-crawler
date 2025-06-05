@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Dict, Generator, List, Optional, Set
+from typing import Dict, Generator, List, Set
 
 from ..assets.epub import epub_chapter_xhtml, epub_cover_xhtml, epub_style_css
 from ..models.chapter import Chapter
