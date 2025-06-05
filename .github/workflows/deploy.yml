@@ -26,7 +26,7 @@ jobs:
         run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: 🐳 Build Docker Image
-        run: docker build -f ./scripts/Dockerfile -t lncrawl .
+        run: docker build -t lncrawl .
 
       - name: 📦 Save and Transfer Docker Image
         run: |
