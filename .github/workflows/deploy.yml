@@ -36,7 +36,8 @@ jobs:
       - name: 📂 Upload Compose File
         run: |
           ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
-              "${{ secrets.DEPLOY_SERVER }}" "mkdir -p ~/lncrawl"
+              "${{ secrets.DEPLOY_SERVER }}" \
+              mkdir -p ~/lncrawl
 
           scp -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
               ./scripts/server-compose.yml \

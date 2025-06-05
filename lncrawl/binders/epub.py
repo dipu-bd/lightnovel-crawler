@@ -19,22 +19,27 @@ PROJECT_URL = "https://github.com/dipu-bd/lightnovel-crawler"
 
 
 def bind_epub_book(
+    app,
     chapter_groups: List[List[Chapter]],  # chapters grouped by volumes
     images: List[str],  # full path of images to add
-    book_title: str,
-    novel_author: str,
-    output_path: str,
-    novel_title: str,
-    novel_url: str,
-    novel_synopsis: str,
-    novel_tags: list,
-    good_file_name: str,
     suffix: str,  # suffix to the file name
-    book_cover: Optional[str],
-    no_suffix_after_filename: bool = False,
+    book_title: str,
     is_rtl: bool = False,
-    language: str = "en",
 ):
+    from ..core.app import App
+    assert isinstance(app, App) and app.crawler
+
+    novel_title = app.crawler.novel_title
+    novel_author = app.crawler.novel_author or app.crawler.home_url
+    novel_url = app.crawler.novel_url
+    novel_synopsis = app.crawler.novel_synopsis
+    language = app.crawler.language
+    novel_tags = app.crawler.novel_tags
+    output_path = app.output_path
+    book_cover = app.book_cover or app.crawler.novel_cover
+    good_file_name = app.good_file_name
+    no_suffix_after_filename = app.no_suffix_after_filename
+
     logger.info("Binding epub for %s", book_title)
 
     logger.debug("Creating EpubBook instance")
@@ -202,7 +207,7 @@ def bind_epub_book(
     os.makedirs(epub_path, exist_ok=True)
     epub.write_epub(file_path, book, {})  # type:ignore
 
-    logger.info("Created: %s", file_name)
+    logger.info("Created: %s", file_path)
     return file_path
 
 
@@ -230,18 +235,9 @@ def make_epubs(app, data: Dict[str, List[Chapter]]) -> Generator[str, None, None
             ])
 
         yield bind_epub_book(
+            app,
             chapter_groups=list(volumes.values()),
             images=list(images),
             suffix=volume,
             book_title=book_title,
-            novel_title=app.crawler.novel_title,
-            novel_author=app.crawler.novel_author or app.crawler.home_url,
-            novel_url=app.crawler.novel_url,
-            novel_synopsis=app.crawler.novel_synopsis,
-            language=app.crawler.language,
-            novel_tags=app.crawler.novel_tags,
-            output_path=app.output_path,
-            book_cover=app.book_cover or app.crawler.novel_cover,
-            good_file_name=app.good_file_name,
-            no_suffix_after_filename=app.no_suffix_after_filename,
         )

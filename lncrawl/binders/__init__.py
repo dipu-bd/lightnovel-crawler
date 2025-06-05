@@ -67,23 +67,22 @@ def make_format(app, data, fmt: OutputFormat):
 def create_archive(app, fmt: OutputFormat, files: List[str]):
     from ..core.app import App
     assert isinstance(app, App) and app.crawler, 'App instance'
-    if not files:
-        logger.info(f"No files for {fmt}")
-        return
 
     output_path = Path(app.output_path)
     archive_path = output_path / 'archives'
     os.makedirs(archive_path, exist_ok=True)
 
-    first_file = Path(files[0])
-    if len(files) == 1 and first_file.is_file():
+    if len(files) == 1 and Path(files[0]).is_file():
         logger.info(f"Not archiving single file for {fmt}")
-        archive_file = archive_path / first_file.name
+        archive_file = archive_path / Path(files[0]).name
         shutil.copyfile(files[0], archive_file)
-        return
+        return str(archive_file)
 
-    output_name = f"{app.good_file_name} ({fmt}).zip"
+    first_id = app.chapters[0]["id"]
+    last_id = app.chapters[-1]["id"]
+    output_name = f"{app.good_file_name} c{first_id}-{last_id} ({fmt}).zip"
     archive_file = archive_path / output_name
+
     logger.info(f"Creating archive: {output_name}")
     with zipfile.ZipFile(archive_file, "w", zipfile.ZIP_DEFLATED) as zipf:
         root_file = output_path / fmt
@@ -97,7 +96,7 @@ def create_archive(app, fmt: OutputFormat, files: List[str]):
                 continue
             zipf.write(file, arcname)
 
-    if archive_file:
+    if archive_file.is_file():
         return str(archive_file)
 
 
@@ -117,11 +116,16 @@ def generate_books(app, data) -> Generator[OutputFormat, None, None]:
     app.generated_archives = {}
     for i, fmt in enumerate(enabled_formats):
         files = list(make_format(app, data, fmt))
+        if not files:
+            logger.error(f"No output files for {fmt}")
+            continue
+
         app.generated_books[fmt] = files
-        logger.info(f"Generated {len(files)} for {fmt}")
+        logger.info(f"Generated {len(files)} files for {fmt}")
 
         archive_file = create_archive(app, fmt, files)
         if not archive_file:
+            logger.error(f"No archive file for {fmt}")
             continue
 
         app.archived_outputs.append(archive_file)
