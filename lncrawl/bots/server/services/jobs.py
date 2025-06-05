@@ -6,7 +6,7 @@ from sqlmodel import asc, desc, func, select
 from ..context import ServerContext
 from ..exceptions import AppErrors
 from ..models.job import (Artifact, Job, JobDetail, JobPriority, JobStatus,
-                          Novel)
+                          Novel, RunState)
 from ..models.pagination import Paginated
 from ..models.user import User, UserRole
 from .tier import JOB_PRIORITY_LEVEL
@@ -61,13 +61,14 @@ class JobService:
                 items=list(jobs),
             )
 
-    def create(self, url: HttpUrl, user: User) -> Job:
+    async def create(self, url: HttpUrl, user: User):
         with self._db.session() as sess:
             # get or create novel
             novel_url = url.encoded_string()
             novel = sess.exec(select(Novel).where(Novel.url == novel_url)).first()
             if not novel:
                 novel = Novel(url=novel_url)
+                novel.title = await self._ctx.fetch.website_title(novel_url)
                 sess.add(novel)
 
             # create the job
@@ -92,6 +93,21 @@ class JobService:
             if job.user_id != user.id and user.role != UserRole.ADMIN:
                 raise AppErrors.forbidden
             sess.delete(job)
+            sess.commit()
+            return True
+
+    def cancel(self, job_id: str, user: User) -> bool:
+        with self._db.session() as sess:
+            job = sess.get(Job, job_id)
+            if not job or job.status == JobStatus.COMPLETED:
+                return True
+            if job.user_id != user.id and user.role != UserRole.ADMIN:
+                raise AppErrors.forbidden
+            who = 'user' if job.user_id != user.id else 'admin'
+            job.error = f'Canceled by {who}'
+            job.status = JobStatus.COMPLETED
+            job.run_state = RunState.CANCELED
+            sess.add(job)
             sess.commit()
             return True
 

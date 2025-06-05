@@ -2,6 +2,7 @@ from fastapi import APIRouter, Body, Depends, Path, Query, Security
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
+from ..models.pagination import Paginated
 from ..models.user import CreateRequest, UpdateRequest, User
 from ..security import ensure_user
 
@@ -14,7 +15,7 @@ def all_users(
     ctx: ServerContext = Depends(),
     offset: int = Query(default=0),
     limit: int = Query(default=20, le=100),
-):
+) -> Paginated[User]:
     return ctx.users.list(offset, limit)
 
 
@@ -25,7 +26,7 @@ def create_user(
         default=...,
         description='The signup request',
     ),
-):
+) -> User:
     return ctx.users.create(body)
 
 
@@ -33,7 +34,7 @@ def create_user(
 def get_user(
     ctx: ServerContext = Depends(),
     user_id: str = Path(),
-):
+) -> User:
     return ctx.users.get(user_id)
 
 
@@ -46,7 +47,7 @@ def update_user(
         description='The signup request',
     ),
     user_id: str = Path(),
-):
+) -> bool:
     if user_id == user.id:
         body.role = None
         body.is_active = None
@@ -58,7 +59,7 @@ def delete_user(
     user: User = Security(ensure_user),
     ctx: ServerContext = Depends(),
     user_id: str = Path(),
-):
+) -> bool:
     if user.id == user_id:
         raise AppErrors.can_not_delete_self
     return ctx.users.remove(user_id)

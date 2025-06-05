@@ -1,10 +1,12 @@
-from typing import Optional
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Form, Path, Query, Security
 from pydantic import HttpUrl
 
 from ..context import ServerContext
-from ..models.job import JobPriority, JobStatus
+from ..models.job import (Artifact, Job, JobDetail, JobPriority, JobStatus,
+                          Novel)
+from ..models.pagination import Paginated
 from ..models.user import User
 from ..security import ensure_user
 
@@ -23,7 +25,7 @@ def list_jobs(
     novel_id: Optional[str] = Query(default=None),
     status: Optional[JobStatus] = Query(default=None),
     priority: Optional[JobPriority] = Query(default=None),
-):
+) -> Paginated[Job]:
     return ctx.jobs.list(
         limit=limit,
         offset=offset,
@@ -37,12 +39,13 @@ def list_jobs(
 
 
 @router.post("", summary='Creates a new job')
-def create_job(
+async def create_job(
     ctx: ServerContext = Depends(),
     user: User = Security(ensure_user),
     url: HttpUrl = Form(description='The novel page url'),
-):
-    return ctx.jobs.create(url, user)
+) -> Job:
+    job = await ctx.jobs.create(url, user)
+    return job
 
 
 @router.delete("/{job_id}", summary='Deletes a job')
@@ -50,7 +53,7 @@ def delete_job(
     job_id: str = Path(),
     ctx: ServerContext = Depends(),
     user: User = Security(ensure_user),
-):
+) -> bool:
     return ctx.jobs.delete(job_id, user)
 
 
@@ -58,15 +61,24 @@ def delete_job(
 def get_job(
     job_id: str = Path(),
     ctx: ServerContext = Depends(),
-):
+) -> JobDetail:
     return ctx.jobs.get(job_id)
+
+
+@router.post("/{job_id}/cancel", summary='Cancel a job')
+def cancel_job(
+    job_id: str = Path(),
+    ctx: ServerContext = Depends(),
+    user: User = Security(ensure_user),
+) -> bool:
+    return ctx.jobs.cancel(job_id, user)
 
 
 @router.get("/{job_id}/novel", summary='Returns a job novel')
 def get_job_novel(
     job_id: str = Path(),
     ctx: ServerContext = Depends(),
-):
+) -> Novel:
     return ctx.jobs.get_novel(job_id)
 
 
@@ -74,5 +86,5 @@ def get_job_novel(
 def get_job_artifacts(
     job_id: str = Path(),
     ctx: ServerContext = Depends(),
-):
+) -> List[Artifact]:
     return ctx.jobs.get_artifacts(job_id)

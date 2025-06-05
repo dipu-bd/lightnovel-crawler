@@ -34,14 +34,12 @@ router.include_router(
     novel,
     prefix='/novel',
     tags=['Novels'],
-    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     artifact,
     prefix='/artifact',
     tags=['Artifacts'],
-    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(

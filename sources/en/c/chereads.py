@@ -37,7 +37,8 @@ class ChereadsCrawler(Crawler):
 
         book_id = str(book_info.bookId)
         cover_base_url = 'https://book-pic.webnovel.com/1001/bookcover/'
-        self.novel_cover = f'{cover_base_url}{book_id}'
+        cover_params = '?imageMogr2/thumbnail/2000,2000/quality/95/strip'
+        self.novel_cover = f'{cover_base_url}{book_id}{cover_params}'
 
         self.novel_title = str(book_info.bookName)
         self.novel_author = str(book_info.authorName)

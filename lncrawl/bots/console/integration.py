@@ -132,7 +132,7 @@ def start(self):
             if not self.search_mode:
                 raise e
             elif not self.confirm_retry():
-                display.error_message(LNException, "Cancelled by user", e.__traceback__)
+                display.error_message(LNException, "Canceled by user", e.__traceback__)
                 sys.exit(0)
 
     self.app.start_download()

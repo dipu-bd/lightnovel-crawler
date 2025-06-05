@@ -1,3 +1,5 @@
+import moment, { type MomentInput } from 'moment';
+
 export function parseDate(value?: string | number): Date | undefined {
   try {
     if (!value) return undefined;
@@ -36,4 +38,8 @@ export function formatDifference(a: Date, b: Date): string {
   } else {
     return formatDuration(a.getTime() - b.getTime());
   }
+}
+
+export function formatDate(value?: MomentInput) {
+  return moment(value).format('lll');
 }

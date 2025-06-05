@@ -1,14 +1,16 @@
-import type { AuthUser } from '@/types';
+import type { User } from '@/types';
 import {
   BookOutlined,
   ControlOutlined,
   DeploymentUnitOutlined,
   ExperimentOutlined,
   LogoutOutlined,
+  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Button, Flex, Typography, type MenuProps } from 'antd';
+import { Avatar, Button, Flex, Typography, type MenuProps } from 'antd';
 import { Link } from 'react-router-dom';
+import { UserAvatar } from '../Tags/gravatar';
 
 export function buildMenu({
   isAdmin,
@@ -16,7 +18,7 @@ export function buildMenu({
   handleLogout,
 }: {
   isAdmin: boolean;
-  authUser: AuthUser | null;
+  authUser: User | null;
   handleLogout: () => void;
 }): MenuProps['items'] {
   const items: MenuProps['items'] = [
@@ -36,7 +38,11 @@ export function buildMenu({
             textAlign: 'center',
           }}
         >
-          <UserOutlined style={{ fontSize: '64px', paddingLeft: '5px' }} />
+          <UserAvatar
+            size={72}
+            user={authUser}
+            style={{ backgroundColor: 'blueviolet' }}
+          />
           <Typography.Text strong>{authUser?.name}</Typography.Text>
         </Flex>
       ),
@@ -93,9 +99,9 @@ export function buildMenu({
           style: { display: isAdmin ? undefined : 'none' },
           children: [
             {
-              key: '/users',
+              key: '/admin/users',
               label: 'Users',
-              icon: <UserOutlined />,
+              icon: <TeamOutlined />,
             },
           ],
         },

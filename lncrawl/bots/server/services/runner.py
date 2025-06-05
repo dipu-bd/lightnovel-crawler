@@ -2,9 +2,10 @@ import logging
 import os
 import shutil
 import time
+import uuid
 from pathlib import Path
 from threading import Event
-import uuid
+
 from sqlmodel import Session, select
 
 from lncrawl.core.app import App
@@ -18,7 +19,6 @@ from lncrawl.models import OutputFormat
 from ..context import ServerContext
 from ..models.job import Artifact, Job, JobStatus, RunState
 from .tier import ENABLED_FORMATS, SLOT_TIMEOUT_IN_SECOND
-
 
 __runner_id = uuid.uuid4()
 
@@ -53,6 +53,14 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
             sess.add(job)
             return
 
+        #
+        # State: CANCELED
+        #
+        if job.run_state == RunState.CANCELED:
+            job.status = JobStatus.COMPLETED
+            logger.error(job.error)
+            sess.add(job)
+            return
         #
         # State: PENDING
         #
@@ -235,16 +243,17 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                     artifact = Artifact(
                         format=fmt,
                         novel_id=novel.id,
-                        output_file=str(archive_file),
+                        output_file=archive_file,
+                        file_name=os.path.basename(archive_file),
                     )
                 else:
                     if (
                         artifact.output_file
-                        and artifact.output_file != str(archive_file)
+                        and artifact.output_file != archive_file
                         and os.path.isfile(artifact.output_file)
                     ):  # remove old file
                         os.remove(artifact.output_file)
-                    artifact.output_file = str(archive_file)
+                    artifact.output_file = archive_file
                 sess.add(artifact)
                 sess.commit()
 

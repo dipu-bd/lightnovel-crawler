@@ -111,7 +111,7 @@ def choose_a_novel(self):
 
         index = answer['novel']
         if index == -1:
-            raise LNException("Cancelled by user")
+            raise LNException("Canceled by user")
         selected_choice = self.app.search_results[index]
 
     # Choose the novel source

@@ -52,3 +52,8 @@ class ServerContext:
     def scheduler(self):
         from .services.scheduler import JobScheduler
         return JobScheduler(self)
+
+    @cached_property
+    def fetch(self):
+        from .services.fetch import FetchService
+        return FetchService(self)

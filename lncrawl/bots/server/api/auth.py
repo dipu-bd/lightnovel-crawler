@@ -16,7 +16,7 @@ def login(
         default=...,
         description='The login credentials',
     ),
-):
+) -> LoginResponse:
     user = ctx.users.verify(credentials)
     token = ctx.users.generate_token(user)
     return LoginResponse(token=token, user=user)
@@ -29,7 +29,7 @@ def signup(
         default=...,
         description='The signup request',
     ),
-):
+) -> LoginResponse:
     request = CreateRequest(
         password=body.password,
         email=body.email,
@@ -43,7 +43,7 @@ def signup(
 @router.get('/me', summary='Get current user details')
 def me(
     user: User = Security(ensure_user),
-):
+) -> User:
     return user
 
 
@@ -55,7 +55,7 @@ def self_update(
         default=...,
         description='The signup request',
     ),
-):
+) -> bool:
     body.role = None
     body.tier = None
     body.is_active = None

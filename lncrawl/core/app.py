@@ -207,13 +207,13 @@ class App:
 
         save_metadata(self)
         if signal.is_set():
-            return  # cancelled
+            return  # canceled
 
         fetch_chapter_body(self, signal)
 
         save_metadata(self)
         if signal.is_set():
-            return  # cancelled
+            return  # canceled
 
         fetch_chapter_images(self, signal)
         save_metadata(self, True)

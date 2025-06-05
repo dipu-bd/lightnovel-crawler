@@ -23,19 +23,21 @@ class JobPriority(IntEnum):
     HIGH = 2
 
 
-class RunState(str, Enum):
-    FETCHING_NOVEL = 'Fetching metadata'
-    FETCHING_CHAPTERS = 'Fetching chapters'
-    FETCHING_IMAGES = 'Fetching images'
-    CREATING_ARTIFACTS = 'Creating artifacts'
-    FAILED = 'Failed'
-    SUCCESS = 'Success'
+class RunState(IntEnum):
+    FETCHING_NOVEL = 0
+    FETCHING_CHAPTERS = 1
+    FETCHING_IMAGES = 2
+    CREATING_ARTIFACTS = 3
+    FAILED = 4
+    SUCCESS = 5
+    CANCELED = 6
 
 
 class Artifact(BaseModel, table=True):
     novel_id: str = Field(foreign_key="novel.id", ondelete='CASCADE')
     novel: Optional["Novel"] = Relationship(back_populates="artifacts")
 
+    file_name: str = Field(description="Output file name")
     output_file: str = Field(description="Output file path", exclude=True)
     format: OutputFormat = Field(index=True, description="The output format of the artifact")
 
@@ -45,7 +47,7 @@ class Novel(BaseModel, table=True):
     orphan: Optional[bool] = Field(default=True, exclude=True)
 
     title: Optional[str] = Field(default=None, description="The novel title")
-    cover: Optional[str] = Field(default=None, description="The novel cover image")
+    cover: Optional[str] = Field(default=None, description="The novel cover image", exclude=True)
     authors: Optional[str] = Field(default=None, description="The novel author")
     synopsis: Optional[str] = Field(default=None, description="The novel synopsis")
     tags: Optional[List[str]] = Field(default=None, sa_column=Column(JSON), description="Tags")
@@ -79,7 +81,7 @@ class Job(BaseModel, table=True):
 def auto_update_timestamp(mapper, connection, target: Job):
     if target.error:
         target.run_state = RunState.FAILED
-    if target.run_state in (RunState.SUCCESS, RunState.FAILED):
+    if target.run_state in (RunState.SUCCESS, RunState.FAILED, RunState.CANCELED):
         target.status = JobStatus.COMPLETED
     if not target.started_at and target.status != JobStatus.PENDING:
         target.started_at = current_timestamp()

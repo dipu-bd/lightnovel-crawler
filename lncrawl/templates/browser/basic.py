@@ -140,7 +140,7 @@ class BasicBrowserTemplate(Crawler):
         remaining = filter(lambda x: not x.get("success"), chapters)
         for chapter in self.progress_bar(remaining, desc="Chapters", unit="item"):
             if signal.is_set():
-                return  # cancelled
+                return  # canceled
             chapter.body = ""
             chapter.images = {}
             try:

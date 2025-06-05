@@ -1,4 +1,4 @@
-import type { AuthLoginResponse, AuthUser } from '@/types';
+import type { AuthLoginResponse, User } from '@/types';
 import { UserRole } from '@/types/enums';
 import { parseJwt } from '@/utils/jwt';
 import type { PayloadAction } from '@reduxjs/toolkit';
@@ -13,7 +13,7 @@ import type { RootState } from '.';
 //
 
 export interface AuthState {
-  user: AuthUser | null;
+  user: User | null;
   token: string | null;
   tokenExpiresAt: number;
 }

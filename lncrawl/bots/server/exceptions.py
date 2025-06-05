@@ -32,6 +32,8 @@ class AppErrors:
 
     no_novel_title = AppError(500, "Novel has no title")
     unable_to_resume_job = AppError(500, "Unable to resume Job")
+    no_novel_cover = AppError(500, "Novel cover is not available")
+    invalid_image_response = AppError(400, "Invalid image response")
 
 
 @app.exception_handler(AppError)

@@ -206,7 +206,7 @@ class TaskManager(ABC):
         try:
             for future in as_completed(futures):
                 if signal.is_set():
-                    return  # cancelled
+                    return  # canceled
                 if fail_fast:
                     yield future.result()
                     bar.update()

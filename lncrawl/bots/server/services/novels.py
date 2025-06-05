@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlmodel import asc, func, select
+from sqlmodel import asc, desc, func, select
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
@@ -28,7 +28,7 @@ class NovelService:
                 stmt = stmt.where(not Novel.orphan)
 
             # Apply sorting
-            stmt.order_by(asc(Novel.title))
+            stmt.order_by(asc(Novel.title), desc(Novel.created_at))
 
             total = sess.exec(select(func.count()).select_from(Novel)).one()
             items = sess.exec(stmt.offset(offset).limit(limit)).all()

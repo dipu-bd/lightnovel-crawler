@@ -1,0 +1,70 @@
+import { type User } from '@/types';
+import { Card, Flex, Space, Typography } from 'antd';
+
+import { UserAvatar } from '@/components/Tags/gravatar';
+import {
+  UserRoleTag,
+  UserStatusTag,
+  UserTierTag,
+} from '@/components/Tags/users';
+import { formatDate } from '@/utils/time';
+import { CalendarOutlined } from '@ant-design/icons';
+import { Col, Row } from 'antd';
+
+const { Text, Title } = Typography;
+
+export const UserDetailsView: React.FC<{ user: User }> = ({ user }) => {
+  return (
+    <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
+      <Title level={4} style={{ margin: 0, marginBottom: 16 }}>
+        Initiated By
+      </Title>
+
+      <Row align="middle" gutter={[16, 16]}>
+        <Col flex="auto">
+          <Space size="middle">
+            <UserAvatar
+              size={56}
+              user={user}
+              style={{ backgroundColor: '#1890ff' }}
+            />
+            <Flex vertical>
+              <Title level={5} style={{ margin: 0 }}>
+                {user.name || 'Unknown User'}
+              </Title>
+              <Text type="secondary">{user.email}</Text>
+            </Flex>
+          </Space>
+        </Col>
+        <Col flex="auto">
+          <Flex wrap gap="10px" justify="space-between">
+            <Flex wrap vertical gap="7px">
+              <Flex gap="5px">
+                <b style={{ width: 60, textAlign: 'right' }}>Role:</b>
+                <UserRoleTag value={user.role} />
+              </Flex>
+              <Flex gap="5px">
+                <b style={{ width: 60, textAlign: 'right' }}>Status:</b>
+                <UserStatusTag value={user.is_active} />
+              </Flex>
+            </Flex>
+            <Flex wrap vertical gap="7px">
+              <Flex gap="5px">
+                <b style={{ width: 60, textAlign: 'right' }}>Tier:</b>
+                <UserTierTag value={user.tier} />
+              </Flex>
+              <Flex gap="5px">
+                <b style={{ width: 60, textAlign: 'right' }}>Joined:</b>
+                <Text>
+                  <CalendarOutlined /> {formatDate(user.created_at)}
+                </Text>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Col>
+      </Row>
+
+      <Row gutter={[16, 16]} style={{ marginTop: 20 }}></Row>
+    </Card>
+  );
+};
