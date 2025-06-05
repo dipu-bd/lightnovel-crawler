@@ -1,0 +1,36 @@
+services:
+  chrome:
+    platform: linux/amd64
+    image: selenium/standalone-chrome:latest
+    shm_size: 6gb
+    mem_limit: 1800m
+    cpus: 1.5
+    restart: unless-stopped
+    ports:
+      - "7900:7900"
+      - "4444:4444"
+    environment:
+      SE_VNC_VIEW_ONLY: "1"
+      SE_EVENT_BUS_PUBLISH_PORT: "4442"
+      SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
+      SE_NODE_MAX_SESSIONS: "4"
+      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+      SE_NO_VNC_PORT: "7900"
+      SE_SCREEN_WIDTH: "1920"
+      SE_SCREEN_HEIGHT: "1080"
+      SE_NODE_GRID_URL: "false"
+
+  discord-bot:
+    platform: linux/amd64
+    image: lncrawl
+    build:
+      context: .
+    restart: unless-stopped
+    environment:
+      CLOUD_DRIVE: "GOFILE"
+      DISCORD_TOKEN: "${DISCORD_TOKEN}"
+      DISCORD_SIGNAL_CHAR: "${DISCORD_SIGNAL_CHAR}"
+      DISCORD_DISABLE_SEARCH: "${DISCORD_DISABLE_SEARCH}"
+    command: python -m lncrawl --suppress --bot discord --shard-id 0 --shard-count 1 --selenium-grid "http://chrome:4444"
+    depends_on:
+      - chrome

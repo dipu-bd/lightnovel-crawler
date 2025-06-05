@@ -36,15 +36,17 @@ sqlmodel
 passlib[argon2]
 python-jose[cryptography]
 python-dateutil
-reflex
 
 # dev requirements
 wheel
+build
 black
 flake8
 tk-tools
 setuptools
 pyinstaller
+
+# types
 types-tqdm
 types-colorama
 types-cachetools

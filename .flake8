@@ -1,23 +1,23 @@
 [flake8]
-exclude = [
-  ".git",
-  ".eggs",
-  "*.egg-info/",
-  "__pycache__",
-  ".vscode/",
-  ".github/",
-  "build/",
-  "dist/",
-  "res/",
-  "logs/",
-  ".venv/",
-  "venv/",
-  "venv-win/",
-  "venv36/",
-  "venv-linux/",
-  "Lightnovels/",
-  "sqlite.db",
-]
-ignore = ["E203", "E265", "W503", "E501"]
 indent-size = 4
 max-line-length = 150
+ignore = E203,E265,W503,E501
+exclude =
+    .git,
+    .eggs,
+    *.egg-info,
+    __pycache__,
+    .vscode,
+    .github,
+    build,
+    dist,
+    res,
+    logs,
+    .venv,
+    venv,
+    venv-win,
+    venv36,
+    venv-linux,
+    Lightnovels,
+    sqlite.db,
+    lncrawl-web

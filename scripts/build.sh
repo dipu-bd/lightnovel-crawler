@@ -8,11 +8,11 @@ python3 -m venv .venv
 PY=".venv/bin/python"
 PIP=".venv/bin/pip --disable-pip-version-check"
 
-$PIP install -U pip wheel setuptools
-$PIP install -r requirements-dev.txt
-$PIP install -r requirements-app.txt
+$PIP install -U pip
+$PIP install -r requirements.txt
 
-$PY setup.py clean bdist_wheel package
+$PY -m build -w
+$PY setup_pyi.py
 
 deactivate
 rm -rf .venv build *.egg-info

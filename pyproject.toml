@@ -42,7 +42,7 @@ lncrawl = "lncrawl:main"
 include-package-data = true
 
 [tool.setuptools.dynamic]
-dependencies = {file = "requirements-app.txt"}
+dependencies = {file = "requirements.txt"}
 version = {file = "lncrawl/VERSION"}
 
 [tool.setuptools.packages.find]

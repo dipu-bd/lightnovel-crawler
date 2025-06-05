@@ -5,10 +5,14 @@ on:
     tags:
       - "v*"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   validate:
     if: github.repository == 'dipu-bd/lightnovel-crawler'
-    name: Lint & Test
+    name: Validate Build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -18,28 +22,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check VERSION file
+      - name: 🔐 Validate VERSION tag
         run: |
           [ "${GITHUB_REF##*/}" == "v$(head -n 1 lncrawl/VERSION)" ] || exit 100
 
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: 🐍 Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
 
-      - name: Install dependencies
+      - name: 📦 Install Dependencies
         run: |
-          python -m pip install -U pip
-          pip install -r requirements.txt
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt flake8 build
 
-      - name: Lint with flake8
-        run: |
-          flake8 -v --count --show-source --statistics
+      - name: 🧹 Lint Code
+        run: flake8 -v --count --show-source --statistics
 
-      - name: Build wheel
-        run: python setup.py clean bdist_wheel
+      - name: 🏗️ Build Wheel
+        run: python -m build --wheel --no-isolation
 
-      - name: Install and test the wheel package
+      - name: 🧪 Test Wheel Installation
         run: |
           pip install dist/lightnovel_crawler*.whl
           lncrawl --list-sources
@@ -48,101 +52,107 @@ jobs:
   build-windows:
     if: github.repository == 'dipu-bd/lightnovel-crawler'
     needs: validate
-    name: Windows Build
+    name: Build Windows Executable
     runs-on: windows-latest
+
     steps:
-      - name: Install OpenSSL
+      - uses: actions/checkout@v4
+
+      - name: 🧰 Install OpenSSL
         run: choco install -y --no-progress openssl
 
-      - uses: actions/checkout@v4
-      - name: Set up Python 3.10
+      - name: 🐍 Set up Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Build package
+      - name: 🏗️ Build Windows Executable
         env:
           PYTHONIOENCODING: utf-8
         run: .\scripts\build.bat
 
-      - name: Test the executable package
+      - name: 🧪 Test Executable
         env:
           PYTHONIOENCODING: utf-8
         run: .\dist\lncrawl.exe --list-sources
 
-      - name: Release
+      - name: 🚀 Release Artifact
         uses: ncipollo/release-action@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with: # See available options at https://github.com/ncipollo/release-action
+        with:
+          artifacts: "dist/lncrawl*"
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "dist/lncrawl*"
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build-mac:
     if: github.repository == 'dipu-bd/lightnovel-crawler'
     needs: validate
-    name: MacOS Build
+    name: Build MacOS Executable
     runs-on: macos-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python 3.10
+
+      - name: 🐍 Set up Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
 
-      - name: Build package
+      - name: 🏗️ Build MacOS Executable
         run: |
           sh ./scripts/build.sh
           mv ./dist/lncrawl ./dist/lncrawl-mac
 
-      - name: Test the executable package
+      - name: 🧪 Test Executable
         run: ./dist/lncrawl-mac --list-sources
 
-      - name: Release
+      - name: 🚀 Release Artifact
         uses: ncipollo/release-action@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with: # See available options at https://github.com/ncipollo/release-action
+        with:
+          artifacts: "dist/lncrawl-mac"
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "dist/lncrawl-mac"
           token: ${{ secrets.GITHUB_TOKEN }}
 
   build-linux:
     if: github.repository == 'dipu-bd/lightnovel-crawler'
     needs: validate
-    name: Linux Build & Publish
+    name: Build & Publish Linux
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python 3.10
+
+      - name: 🐍 Set up Python 3.10
         uses: actions/setup-python@v5
         with:
           python-version: "3.10"
+          cache: pip
 
-      - name: Build package
+      - name: 🏗️ Build Linux Executable
         run: |
           sh ./scripts/build.sh
           mv ./dist/lncrawl ./dist/lncrawl-linux
 
-      - name: Test the executable package
+      - name: 🧪 Test Executable
         run: ./dist/lncrawl-linux --list-sources
 
-      - name: Release
+      - name: 🚀 Release Artifacts
         uses: ncipollo/release-action@v1
-        if: startsWith(github.ref, 'refs/tags/')
-        with: # See available options at https://github.com/ncipollo/release-action
+        with:
+          artifacts: |
+            dist/lncrawl-linux,
+            dist/*.whl
           allowUpdates: true
           artifactErrorsFailBuild: true
-          artifacts: "dist/lncrawl-linux,dist/*.whl"
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update download links
+      - name: 🔗 Update Download Links
         env:
           SHLINK_API_KEY: ${{ secrets.SHLINK_API_KEY }}
         run: sh ./scripts/bitanon.sh
 
-      - name: Publish
+      - name: 📦 Publish to PyPI
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
