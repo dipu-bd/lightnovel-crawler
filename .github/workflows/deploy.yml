@@ -37,7 +37,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
               "${{ secrets.DEPLOY_SERVER }}" \
-              mkdir -p ~/lncrawl
+              "mkdir -p ~/lncrawl"
 
           scp -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
               ./scripts/server-compose.yml \
@@ -47,4 +47,4 @@ jobs:
         run: |
           ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
               "${{ secrets.DEPLOY_SERVER }}" \
-              docker compose -f ~/lncrawl/compose.yml up -d
+              "docker compose -f ~/lncrawl/compose.yml up -d"
