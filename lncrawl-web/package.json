@@ -10,11 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@chakra-ui/react": "^3.19.2",
-    "@emotion/react": "^11.14.0",
+    "@ant-design/icons": "^6.0.0",
+    "@reduxjs/toolkit": "^2.8.2",
+    "@types/node": "^22.15.29",
+    "antd": "^5.25.4",
+    "axios": "^1.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router-dom": "^7.6.2"
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.6.2",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
@@ -25,8 +30,10 @@
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
+    "sass-embedded": "^1.89.1",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.30.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }

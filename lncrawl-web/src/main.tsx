@@ -1,10 +1,35 @@
+import { ConfigProvider } from 'antd';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './index.css';
-import App from './App.tsx';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { App } from './pages/index.tsx';
+import { persistor, store } from './store/index.ts';
+import { setupAxios } from './utils/setupAxios.ts';
+import { appTheme } from './utils/theme.ts';
+
+import './main.scss';
+
+async function onBeforeLift() {
+  try {
+    setupAxios();
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Provider store={store}>
+      <PersistGate
+        persistor={persistor}
+        onBeforeLift={onBeforeLift}
+        loading={<></>}
+      >
+        <ConfigProvider theme={appTheme}>
+          <App />
+        </ConfigProvider>
+      </PersistGate>
+    </Provider>
   </StrictMode>
 );

@@ -27,6 +27,9 @@ env
 geckodriver.log
 Lightnovels/
 mycreds.txt
+node_modules
+package.json
 save_pid.txt
 Test Novel
 windows/
+yarn.lock

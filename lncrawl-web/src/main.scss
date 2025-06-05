@@ -1,0 +1,110 @@
+/* ---------------------------------------------------------------- */
+/*                            Typography                            */
+/* ---------------------------------------------------------------- */
+body {
+  margin: 0;
+  overflow: hidden;
+  background-color: #1c1c1c;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Roboto Slab', serif;
+}
+
+code,
+pre,
+kbd {
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* ---------------------------------------------------------------- */
+/*                             Scrollbar                            */
+/* ---------------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #3d3d3d;
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: #141414;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------------------------------------------------------------- */
+/*                          Ant Design Fix                          */
+/* ---------------------------------------------------------------- */
+a {
+  color: #8dc5f8;
+}
+
+.ant-form-item {
+  margin-bottom: 10px;
+}
+
+.ant-form-item-explain {
+  font-size: 12px !important;
+}
+
+.ant-space-vertical {
+  width: 100%;
+}
+
+@media screen and (max-width: 767px) {
+  main.ant-layout-content {
+    padding-bottom: 50px;
+  }
+}
+
+/* ---------------------------------------------------------------- */
+/*                     Hide Autocomplete Shadow                     */
+/* ---------------------------------------------------------------- */
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+input[data-autocompleted] {
+  background-color: transparent !important;
+}
+
+/* ---------------------------------------------------------------- */
+/*                          Terminal Editor                         */
+/* ---------------------------------------------------------------- */
+#terminalEditor span.line {
+  display: block;
+  padding: 0 8px;
+  font-size: 14px;
+  line-height: 18px;
+}
+
+@keyframes blinking-caret {
+  0%,
+  28% {
+    opacity: 1;
+  }
+  32%,
+  68% {
+    opacity: 0;
+  }
+  72%,
+  100% {
+    opacity: 1;
+  }
+}
