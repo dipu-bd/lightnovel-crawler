@@ -240,7 +240,7 @@ _builder = Args(
             help="Use some free proxies from https://free-proxy-list.net/",
         ),
         Args(
-            "--bot",
+            '-b', "--bot",
             type=str,
             choices=supported_bots,
             help="Select a bot. Default: console.",

@@ -41,9 +41,8 @@ except ImportError:
 web_dir = (Path(__file__).parent / 'web').absolute()
 if web_dir.is_dir():
     @app.get("/{fallback:path}", include_in_schema=False)
-    async def serve_static(request: Request):
-        fallback_path = str(request.path_params.get('fallback', ''))
-        target_file = web_dir.joinpath(fallback_path.strip('/'))
+    async def serve_static(fallback: str):
+        target_file = web_dir.joinpath(fallback)
         if target_file.is_file():
             return FileResponse(target_file)
         return FileResponse(web_dir / "index.html")
