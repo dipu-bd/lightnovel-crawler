@@ -26,7 +26,7 @@ def list_supported_sources() -> List[SupportedSource]:
                 has_manga=crawler.has_manga,
                 has_mtl=crawler.has_mtl,
                 is_disabled=(url in rejected_sources),
-                disable_reason=rejected_sources[url],
+                disable_reason=rejected_sources.get(url) or '',
                 language=crawler.language,
                 can_login=getattr(crawler, 'can_login', False),
                 can_logout=getattr(crawler, 'can_logout', False),
