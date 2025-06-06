@@ -43,7 +43,7 @@ build
 black
 flake8
 tk-tools
-setuptools
+setuptools>=61.0
 pyinstaller
 
 # types
