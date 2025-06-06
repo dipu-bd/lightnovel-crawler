@@ -28,11 +28,7 @@ export const SupportedSourceList: React.FC<{
       sources.filter((src) => {
         if (
           filter.search &&
-          !src.url.toLowerCase().includes(filter.search.toLowerCase()) &&
-          !src.url
-            .split('/')[2]
-            .toLowerCase()
-            .includes(filter.search.toLowerCase())
+          !src.url.toLowerCase().includes(filter.search.toLowerCase())
         ) {
           return false;
         }

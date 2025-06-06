@@ -243,13 +243,21 @@ def __can_do(crawler: Type[Crawler], prop_name: str):
     return getattr(crawler, prop_name) != getattr(Crawler, prop_name)
 
 
+def __update_rejected(url: str, reason: str):
+    no_www = url.replace("://www.", "://")
+    url_host = urlparse(url).hostname
+    no_www_host = urlparse(no_www).hostname
+    rejected_sources.setdefault(url, reason)
+    rejected_sources.setdefault(no_www, reason)
+    if url_host:
+        rejected_sources.setdefault(url_host, reason)
+    if no_www_host:
+        rejected_sources.setdefault(no_www_host, reason)
+
+
 def __load_rejected_sources():
     for url, reason in __current_index["rejected"].items():
-        no_www = url.replace("://www.", "://")
-        rejected_sources[url] = reason
-        rejected_sources[no_www] = reason
-        rejected_sources[urlparse(url).hostname] = reason
-        rejected_sources[urlparse(no_www).hostname] = reason
+        __update_rejected(url, reason)
 
 
 def __import_crawlers(file_path: Path, no_cache=False) -> List[Type[Crawler]]:
@@ -302,14 +310,12 @@ def __import_crawlers(file_path: Path, no_cache=False) -> List[Type[Crawler]]:
             if not callable(getattr(crawler, method)):
                 raise LNException(f"Should be callable: {method} @{file_path}")
 
-        disable_reasons = ', '.join(set([
-            rejected_sources[url]
-            for url in urls
-            if url in rejected_sources
-        ]))
-        if disable_reasons:
-            crawler.is_disabled = True
-            crawler.disable_reason = disable_reasons
+        if crawler.is_disabled:
+            for url in urls:
+                __update_rejected(
+                    url,
+                    crawler.disable_reason or 'Crawler is disabled'
+                )
 
         setattr(crawler, "base_url", urls)
         setattr(crawler, "language", language_code)

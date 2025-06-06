@@ -94,6 +94,7 @@ export interface JobDetails {
 
 export interface SupportedSource {
   url: string;
+  domain: string;
   has_manga: boolean;
   has_mtl: boolean;
   language: string;

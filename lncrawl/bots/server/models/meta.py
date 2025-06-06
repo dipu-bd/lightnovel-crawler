@@ -5,6 +5,7 @@ from sqlmodel import Field, SQLModel
 
 class SupportedSource(SQLModel):
     url: str = Field(description='Source base url')
+    domain: str = Field(description='Domain name')
     has_manga: bool = Field(default=False)
     has_mtl: bool = Field(default=False)
     language: str = Field(default='en', description='2 letter language code')

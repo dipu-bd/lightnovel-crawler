@@ -5,14 +5,6 @@ import { SourceFeatureIcons } from './SourceFeatureIcons';
 
 const { Text, Link } = Typography;
 
-function getDomain(url: string) {
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
-
 export const SupportedSourceItem: React.FC<{
   source: SupportedSource;
   disabled?: boolean;
@@ -36,7 +28,7 @@ export const SupportedSourceItem: React.FC<{
           target="_blank"
           rel="noopener noreferrer"
         >
-          {getDomain(source.url)}
+          {source.domain}
         </Link>
         {disabled && source.disable_reason && (
           <Text type="secondary">{source.disable_reason}</Text>
