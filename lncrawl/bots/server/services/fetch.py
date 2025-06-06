@@ -27,5 +27,10 @@ class FetchService:
         if not content_type:
             raise AppErrors.invalid_image_response
 
-        content = io.BytesIO(response.content)
-        return StreamingResponse(content, media_type=content_type)
+        return StreamingResponse(
+            content=io.BytesIO(response.content),
+            media_type=content_type,
+            headers={
+                "Cache-Control": "public, max-age=31536000, immutable"
+            }
+        )

@@ -1,9 +1,11 @@
 import { JobPriority, JobStatus, RunState } from '@/types';
 import {
   CheckOutlined,
+  CloseOutlined,
   HourglassOutlined,
   LoadingOutlined,
   ThunderboltOutlined,
+  WarningOutlined,
 } from '@ant-design/icons';
 import { Tag } from 'antd';
 
@@ -26,7 +28,10 @@ export const JobPriorityTag: React.FC<{ value: JobPriority }> = ({ value }) => {
   }
 };
 
-export const JobStatusTag: React.FC<{ value: JobStatus }> = ({ value }) => {
+export const JobStatusTag: React.FC<{
+  value: JobStatus;
+  completed: RunState;
+}> = ({ value, completed }) => {
   switch (value) {
     case JobStatus.PENDING:
       return <Tag icon={<HourglassOutlined />}>Pending</Tag>;
@@ -36,12 +41,34 @@ export const JobStatusTag: React.FC<{ value: JobStatus }> = ({ value }) => {
           Running
         </Tag>
       );
-    case JobStatus.COMPLETED:
-      return (
-        <Tag icon={<CheckOutlined />} color="orange">
-          Completed
-        </Tag>
-      );
+    case JobStatus.COMPLETED: {
+      switch (completed) {
+        case RunState.SUCCESS:
+          return (
+            <Tag icon={<CheckOutlined />} color="orange">
+              Success
+            </Tag>
+          );
+        case RunState.CANCELED:
+          return (
+            <Tag icon={<CloseOutlined />} color="red">
+              Canceled
+            </Tag>
+          );
+        case RunState.FAILED:
+          return (
+            <Tag icon={<WarningOutlined />} color="orange">
+              Failed
+            </Tag>
+          );
+        default:
+          return (
+            <Tag icon={<CheckOutlined />} color="orange">
+              Completed
+            </Tag>
+          );
+      }
+    }
     default:
       return null;
   }

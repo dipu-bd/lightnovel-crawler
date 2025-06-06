@@ -1,13 +1,14 @@
 import { API_BASE_URL } from '@/config';
 import { type Artifact } from '@/types';
 import { DownloadOutlined, TagOutlined } from '@ant-design/icons';
-import { Button, Card, Empty, Flex, List, Tag, Typography } from 'antd';
+import { Button, Card, Empty, Grid, List, Tag, Typography } from 'antd';
 
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
 export const ArtifactListView: React.FC<{ artifacts?: Artifact[] }> = ({
   artifacts,
 }) => {
+  const { sm } = Grid.useBreakpoint();
   return (
     <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
       <Title level={4} style={{ margin: 0, marginBottom: 5 }}>
@@ -25,22 +26,15 @@ export const ArtifactListView: React.FC<{ artifacts?: Artifact[] }> = ({
                   icon={<DownloadOutlined />}
                   href={`${API_BASE_URL}/api/artifact/${item.id}/download`}
                   rel="noopener noreferrer"
+                  style={{ margin: 5 }}
                 >
-                  Download
+                  {sm ? 'Download' : ''}
                 </Button>,
               ]}
             >
               <List.Item.Meta
-                title={
-                  <Flex>
-                    <Flex style={{ width: '75px' }}>
-                      <Tag icon={<TagOutlined />}>{item.format}</Tag>
-                    </Flex>
-                    <Text ellipsis title={item.file_name}>
-                      {item.file_name}
-                    </Text>
-                  </Flex>
-                }
+                title={<Tag icon={<TagOutlined />}>{item.format}</Tag>}
+                description={item.file_name}
               />
             </List.Item>
           )}

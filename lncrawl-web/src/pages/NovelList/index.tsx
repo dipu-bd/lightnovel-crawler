@@ -1,108 +1,118 @@
-import { API_BASE_URL } from '@/config';
 import type { Novel, PaginatiedResponse } from '@/types';
 import {
-  Card,
+  Button,
   Col,
+  Empty,
+  Flex,
   Pagination,
+  Result,
   Row,
   Spin,
-  Tag,
   Typography,
-  message,
 } from 'antd';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { NovelListItemCard } from './NovelListItemCard';
 
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
-const NovelListPage = () => {
-  const [novels, setNovels] = useState<Novel[]>([]);
-  const [total, setTotal] = useState(0);
+const PER_PAGE = 16;
+
+export default function NovelListPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [refreshId, setRefreshId] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
+  const [error, setError] = useState<string>();
 
-  const fetchNovels = async (pageNum = 1) => {
+  const [total, setTotal] = useState(0);
+  const [novels, setNovels] = useState<Novel[]>([]);
+
+  const currentPage = useMemo(
+    () => parseInt(searchParams.get('page') || '1', 10),
+    [searchParams]
+  );
+
+  const fetchNovels = async (page: number) => {
     setLoading(true);
     try {
-      const limit = 8;
-      const offset = (pageNum - 1) * limit;
+      const offset = (page - 1) * PER_PAGE;
       const { data } = await axios.get<PaginatiedResponse<Novel>>(
         '/api/novels',
         {
-          params: { offset, limit, with_orphans: true },
+          params: { offset, limit: PER_PAGE },
         }
       );
-      setNovels(data.items);
       setTotal(data.total);
-    } catch (error) {
-      message.error('Failed to fetch novels');
+      setNovels(data.items);
+    } catch (err: any) {
+      console.error('Failed to fetch novels', err);
+      setError(err?.message || String(err));
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchNovels(page);
-  }, [page]);
+    fetchNovels(currentPage);
+  }, [currentPage, refreshId]);
 
-  if (loading) return <Spin style={{ display: 'block', marginTop: 100 }} />;
+  const handlePageChange = (page: number) => {
+    setSearchParams({ page: String(page) });
+  };
+
+  if (loading) {
+    return (
+      <Flex align="center" justify="center" style={{ height: '100%' }}>
+        <Spin tip="Loading job..." size="large" style={{ marginTop: 100 }} />
+      </Flex>
+    );
+  }
+
+  if (error) {
+    return (
+      <Flex align="center" justify="center" style={{ height: '100%' }}>
+        <Result
+          status="error"
+          title="Failed to load novel list"
+          subTitle={error}
+          extra={[
+            <Button onClick={() => setRefreshId((v) => v + 1)}>Retry</Button>,
+          ]}
+        />
+      </Flex>
+    );
+  }
 
   return (
-    <div style={{ padding: '20px 40px' }}>
+    <div style={{ padding: '0 15px', height: '100%', marginBottom: '20px' }}>
       <Title level={2}>📚 Available Novels</Title>
+
       <Row gutter={[24, 24]}>
         {novels.map((novel) => (
-          <Col key={novel.id} xs={24} lg={12} xl={8} xxl={6}>
-            <Card
-              hoverable
-              cover={
-                novel.cover ? (
-                  <img
-                    alt="cover"
-                    src={`${API_BASE_URL}/api/novel/${novel.id}/cover`}
-                    style={{ height: 240, objectFit: 'cover' }}
-                  />
-                ) : null
-              }
-              style={{ borderRadius: 12 }}
-            >
-              <Card.Meta
-                title={novel.title || 'Untitled'}
-                description={
-                  <Paragraph ellipsis={{ rows: 3 }}>
-                    {novel.synopsis || 'No synopsis available'}
-                  </Paragraph>
-                }
-              />
-              <div style={{ marginTop: 10 }}>
-                <Typography.Text>
-                  Authors: <b>{novel.authors}</b>
-                </Typography.Text>
-                {novel.tags?.slice(0, 2).map((tag) => (
-                  <Tag key={tag} style={{ textTransform: 'capitalize' }}>
-                    <Typography.Text ellipsis>
-                      {tag.toLowerCase()}
-                    </Typography.Text>
-                  </Tag>
-                ))}
-              </div>
-            </Card>
+          <Col key={novel.id} xs={24} md={12} lg={8} xl={6} xxl={4}>
+            <NovelListItemCard novel={novel} />
           </Col>
         ))}
       </Row>
 
-      {novels.length > 0 && (
+      {!novels.length && (
+        <Flex align="center" justify="center" style={{ height: '100%' }}>
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No novels" />
+        </Flex>
+      )}
+
+      {(novels.length > 0 || currentPage > 1) && total / PER_PAGE > 1 && (
         <Pagination
-          current={page}
+          current={currentPage}
           total={total}
-          pageSize={12}
-          onChange={(p) => setPage(p)}
-          style={{ marginTop: 30, textAlign: 'center' }}
+          pageSize={PER_PAGE}
           showSizeChanger={false}
+          onChange={handlePageChange}
+          style={{ textAlign: 'center', marginTop: 32 }}
         />
       )}
     </div>
   );
-};
-
-export default NovelListPage;
+}

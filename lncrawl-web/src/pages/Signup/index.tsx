@@ -38,7 +38,13 @@ export const SignupPage: React.FC<any> = () => {
   };
 
   return (
-    <Layout style={{ height: '100vh', overflow: 'auto' }}>
+    <Layout
+      style={{
+        padding: '10px',
+        overflow: 'auto',
+        height: 'calc(100vh - 40px)',
+      }}
+    >
       <Layout.Content style={{ overflow: 'auto' }}>
         <Flex
           align="center"

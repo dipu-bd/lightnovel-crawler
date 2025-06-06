@@ -9,7 +9,6 @@ import { formatDate, formatDuration } from '@/utils/time';
 import {
   ClockCircleFilled,
   ClockCircleOutlined,
-  ExportOutlined,
   HourglassFilled,
 } from '@ant-design/icons';
 import {
@@ -25,14 +24,9 @@ import {
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 
-const { Title, Text, Link } = Typography;
+const { Title, Text } = Typography;
 
-export const JobDetailsView: React.FC<{ job: Job; title?: string }> = ({
-  job,
-  title,
-}) => {
-  const [messageApi, contextHolder] = message.useMessage();
-
+export const JobDetailsView: React.FC<{ job: Job }> = ({ job }) => {
   const isAdmin = useSelector(Auth.select.isAdmin);
   const currentUser = useSelector(Auth.select.user);
 
@@ -40,7 +34,7 @@ export const JobDetailsView: React.FC<{ job: Job; title?: string }> = ({
     try {
       await axios.post(`/api/job/${job.id}/cancel`);
     } catch (err) {
-      messageApi.open({
+      message.open({
         type: 'error',
         content: 'Something went wrong!',
       });
@@ -49,21 +43,12 @@ export const JobDetailsView: React.FC<{ job: Job; title?: string }> = ({
 
   return (
     <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
-      {contextHolder}
-
-      <Title level={4} style={{ margin: 0, marginBottom: 7 }}>
-        <Link
-          href={job.url}
-          target="_blank"
-          rel="noreferrer noopener"
-          style={{ fontSize: 'inherit' }}
-        >
-          {title || job.url} <ExportOutlined />
-        </Link>
+      <Title level={3} style={{ margin: 0, marginBottom: 8 }}>
+        {job.url}
       </Title>
 
       <Flex wrap align="center">
-        <JobStatusTag value={job.status} />
+        <JobStatusTag value={job.status} completed={job.run_state} />
         <JobPriorityTag value={job.priority} />
         <Tag icon={<ClockCircleOutlined />} color="default">
           {formatDate(job.created_at)}
@@ -76,7 +61,7 @@ export const JobDetailsView: React.FC<{ job: Job; title?: string }> = ({
       </Space>
 
       <Progress
-        percent={job.progress}
+        percent={job.progress || 0}
         size={['100%', 16]}
         strokeColor={{ from: '#108ee9', to: '#87d068' }}
         status={

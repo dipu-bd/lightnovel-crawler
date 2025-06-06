@@ -1,20 +1,19 @@
 import {
   JobStatus,
   type Artifact,
-  type User,
   type Job,
   type JobDetails,
   type Novel,
+  type User,
 } from '@/types';
 import { Button, Flex, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ArtifactListView } from './ArtifactListView';
 import { JobDetailsView } from './JobDetailsView';
-import { NovelDetailsView } from './NovelDetailsView';
-import UserDetailsPage from '../UserDetails';
 import { UserDetailsView } from './UserDetailsView';
+import { NovelDetailsView } from '../NovelDetails/NovelDetailsView';
+import { ArtifactListView } from '../ArtifactDetails/ArtifactListView';
 
 export default function JobDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -49,19 +48,15 @@ export default function JobDetailsPage() {
   }, [id, refreshId]);
 
   useEffect(() => {
-    console.log(
-      job?.status,
-      JobStatus.COMPLETED,
-      job?.status !== JobStatus.COMPLETED
-    );
     if (job && job.status !== JobStatus.COMPLETED) {
       const iid = setInterval(() => {
-        console.log(refreshId);
         setRefreshId((v) => v + 1);
-      }, 100);
-      return clearInterval(iid);
+      }, 1000);
+      return () => {
+        clearInterval(iid);
+      };
     }
-  }, [job]);
+  }, [job?.status]);
 
   if (loading) {
     return (
@@ -87,8 +82,12 @@ export default function JobDetailsPage() {
   }
 
   return (
-    <Space size="large" direction="vertical" style={{ padding: 24 }}>
-      <JobDetailsView job={job} title={novel?.title || job.url} />
+    <Space
+      size="large"
+      direction="vertical"
+      style={{ padding: 15, marginBottom: 20 }}
+    >
+      <JobDetailsView job={job} />
       <UserDetailsView user={user} />
       <NovelDetailsView novel={novel} />
       <ArtifactListView artifacts={artifacts} />

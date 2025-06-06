@@ -25,7 +25,7 @@ class NovelService:
 
             # Apply filters
             if not with_orphans:
-                stmt = stmt.where(not Novel.orphan)
+                stmt = stmt.where(Novel.orphan != True)  # noqa: E712
 
             # Apply sorting
             stmt.order_by(asc(Novel.title), desc(Novel.created_at))

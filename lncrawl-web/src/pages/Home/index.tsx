@@ -37,12 +37,12 @@ export const HomePage: React.FC<any> = () => {
     <Flex
       align="center"
       justify="center"
-      style={{ width: '100%', height: '100%' }}
+      style={{ height: 'calc(100% - 20px)', padding: 10 }}
     >
       <Card
         title={
-          <Typography.Title level={3} style={{ margin: 0 }}>
-            Request Novel
+          <Typography.Title level={3} style={{ margin: '20px 0' }}>
+            📘 Request Novel
           </Typography.Title>
         }
         style={{ width: '650px' }}

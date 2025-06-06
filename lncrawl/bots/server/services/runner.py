@@ -121,7 +121,7 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
             novel.cover = crawler.novel_cover
             novel.authors = crawler.novel_author
             novel.synopsis = crawler.novel_synopsis
-            novel.tags = crawler.novel_tags
+            novel.tags = crawler.novel_tags or []
             novel.volume_count = len(crawler.volumes)
             novel.chapter_count = len(crawler.chapters)
             logger.info(f'Novel: {novel}')
