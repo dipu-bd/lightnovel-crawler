@@ -18,9 +18,10 @@ export function useSupportedSources() {
         '/api/meta/supported-sources'
       );
       setData(res.data);
-      setLoading(false);
     } catch (err) {
       setError(stringifyError(err));
+    } finally {
+      setLoading(false);
     }
   };
 
