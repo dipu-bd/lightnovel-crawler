@@ -17,7 +17,7 @@ import { useState } from 'react';
 
 const { Title, Link, Paragraph } = Typography;
 
-export const NovelDetailsView: React.FC<{ novel?: Novel }> = ({ novel }) => {
+export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
   const { lg } = Grid.useBreakpoint();
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);

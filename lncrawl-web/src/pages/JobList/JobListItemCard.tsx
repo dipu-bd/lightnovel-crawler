@@ -1,19 +1,8 @@
 import { JobPriorityTag, JobStatusTag } from '@/components/Tags/jobs';
-import { Auth } from '@/store/_auth';
-import { JobStatus, RunState, type Job } from '@/types';
-import {
-  Button,
-  Card,
-  Flex,
-  Grid,
-  message,
-  Progress,
-  Space,
-  Typography,
-} from 'antd';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { RunState, type Job } from '@/types';
+import { Card, Flex, Grid, Progress, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
+import { JobActionButtons } from './JobActionButtons';
 
 const { Paragraph, Title } = Typography;
 
@@ -22,20 +11,6 @@ export const JobListItemCard: React.FC<{
   onChange?: () => any;
 }> = ({ job, onChange }) => {
   const { lg } = Grid.useBreakpoint();
-  const isAdmin = useSelector(Auth.select.isAdmin);
-  const currentUser = useSelector(Auth.select.user);
-
-  const cancelJob = async () => {
-    try {
-      await axios.post(`/api/job/${job.id}/cancel`);
-      onChange && onChange();
-    } catch (err) {
-      message.open({
-        type: 'error',
-        content: 'Something went wrong!',
-      });
-    }
-  };
 
   return (
     <Card hoverable style={{ marginBottom: 7 }}>
@@ -44,6 +19,7 @@ export const JobListItemCard: React.FC<{
           {lg && (
             <Progress
               type="circle"
+              size="small"
               percent={job.progress || 0}
               status={
                 job.run_state === RunState.SUCCESS
@@ -52,7 +28,6 @@ export const JobListItemCard: React.FC<{
                   ? 'exception'
                   : 'active'
               }
-              size="small"
             />
           )}
 
@@ -93,32 +68,14 @@ export const JobListItemCard: React.FC<{
           </Flex>
 
           <Flex
+            wrap
             justify="end"
             align="center"
-            gap={'10px'}
-            style={{ marginTop: 15 }}
+            gap={5}
             onClick={(e) => e.preventDefault()}
           >
-            <Button danger onClick={cancelJob}>
-              Cancel
-            </Button>
+            <JobActionButtons job={job} onChange={onChange} />
           </Flex>
-
-          {isAdmin || job.user_id === currentUser?.id ? (
-            <Flex
-              justify="end"
-              align="center"
-              gap={'10px'}
-              style={{ marginTop: 15 }}
-              onClick={(e) => e.preventDefault()}
-            >
-              {job.status !== JobStatus.COMPLETED && (
-                <Button danger onClick={cancelJob}>
-                  Cancel
-                </Button>
-              )}
-            </Flex>
-          ) : null}
         </Flex>
       </Link>
     </Card>

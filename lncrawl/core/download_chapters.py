@@ -101,12 +101,12 @@ def fetch_chapter_body(app, signal=Event()):
 
     # download remaining
     current = len(app.chapters) - len(pending_chapters)
-    app.fetch_content_progress = 100 * current / len(app.chapters)
+    app.fetch_chapter_progress = 100 * current / len(app.chapters)
     for chapter in app.crawler.download_chapters(pending_chapters, signal=signal):
         file_path = file_names.get(chapter.id)
         if file_path:
             _save_chapter(file_path, chapter)
         current += 1
-        app.fetch_content_progress = 100 * current / len(app.chapters)
+        app.fetch_chapter_progress = 100 * current / len(app.chapters)
         yield chapter
     logger.info(f"Downloaded {len(pending_chapters)} chapters")

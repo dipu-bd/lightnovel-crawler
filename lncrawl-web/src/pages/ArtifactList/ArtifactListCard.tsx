@@ -10,7 +10,7 @@ import { Button, Card, Empty, Flex, Grid, List, Tag, Typography } from 'antd';
 
 const { Title, Text } = Typography;
 
-export const ArtifactListView: React.FC<{ artifacts?: Artifact[] }> = ({
+export const ArtifactListCard: React.FC<{ artifacts?: Artifact[] }> = ({
   artifacts,
 }) => {
   const { sm } = Grid.useBreakpoint();

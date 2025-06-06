@@ -61,9 +61,10 @@ export const HomePage: React.FC<any> = () => {
             />
           </Form.Item>
           <Typography.Text type="secondary">
-            A novel page URL should contain the novel details, e.g. title, cover
-            image author, synopsis etc. Note that partial URLs are not accepted.
-            The URL should start with http:// or https://
+            Enter the full URL of the novel page. The URL must begin with
+            'http://' or 'https://' and should lead to a page containing the
+            novel details such as title, cover image, author, synopsis, chapter
+            list etc. Partial or incomplete URLs will not be accepted.
           </Typography.Text>
 
           {Boolean(error) && (

@@ -13,7 +13,7 @@ import { Col, Row } from 'antd';
 
 const { Text, Title } = Typography;
 
-export const UserDetailsView: React.FC<{ user: User }> = ({ user }) => {
+export const UserDetailsCard: React.FC<{ user: User }> = ({ user }) => {
   return (
     <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
       <Title level={4} style={{ margin: 0, marginBottom: 16 }}>

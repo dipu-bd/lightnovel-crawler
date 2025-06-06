@@ -1,4 +1,5 @@
 import logging
+import os
 
 import uvicorn
 
@@ -13,6 +14,7 @@ class ServerBot:
 
     def start(self):
         args = get_args()
+        os.putenv("debug_mode", 'true')
 
         ctx = ServerContext()
         ctx.db.prepare()

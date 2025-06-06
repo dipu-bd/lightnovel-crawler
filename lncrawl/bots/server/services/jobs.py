@@ -103,7 +103,7 @@ class JobService:
                 return True
             if job.user_id != user.id and user.role != UserRole.ADMIN:
                 raise AppErrors.forbidden
-            who = 'user' if job.user_id != user.id else 'admin'
+            who = 'user' if job.user_id == user.id else 'admin'
             job.error = f'Canceled by {who}'
             job.status = JobStatus.COMPLETED
             job.run_state = RunState.CANCELED

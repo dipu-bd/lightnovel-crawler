@@ -43,7 +43,7 @@ def save_metadata(app, completed=False):
             generated_archives=dict(app.generated_archives),
             search_progress=app.search_progress,
             fetch_novel_progress=app.fetch_novel_progress,
-            fetch_content_progress=app.fetch_content_progress,
+            fetch_content_progress=app.fetch_chapter_progress,
             fetch_images_progress=app.fetch_images_progress,
             binding_progress=app.binding_progress,
             cookies={
@@ -95,7 +95,7 @@ def load_metadata(app, meta: MetaInfo):
     app.generated_archives = session.generated_archives
     app.search_progress = session.search_progress
     app.fetch_novel_progress = session.fetch_novel_progress
-    app.fetch_content_progress = session.fetch_content_progress
+    app.fetch_chapter_progress = session.fetch_content_progress
     app.fetch_images_progress = session.fetch_images_progress
     app.binding_progress = session.binding_progress
 

@@ -1,14 +1,6 @@
 import { type Job, type PaginatiedResponse } from '@/types';
-import {
-  Button,
-  Empty,
-  Flex,
-  List,
-  Pagination,
-  Result,
-  Spin,
-  Typography,
-} from 'antd';
+import { stringifyError } from '@/utils/errors';
+import { Button, Flex, List, Pagination, Result, Spin, Typography } from 'antd';
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
@@ -34,6 +26,7 @@ export default function JobListPage() {
   );
 
   const fetchJobs = async (page: number) => {
+    setError(undefined);
     try {
       const offset = (page - 1) * PER_PAGE;
       const { data } = await axios.get<PaginatiedResponse<Job>>('/api/jobs', {
@@ -42,8 +35,7 @@ export default function JobListPage() {
       setTotal(data.total);
       setJobs(data.items);
     } catch (err: any) {
-      console.error('Failed to fetch jobs', err);
-      setError(err?.message || String(err));
+      setError(stringifyError(err));
     } finally {
       setLoading(false);
     }
@@ -104,12 +96,6 @@ export default function JobListPage() {
           />
         )}
       />
-
-      {!jobs.length && (
-        <Flex align="center" justify="center" style={{ height: '100%' }}>
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No jobs" />
-        </Flex>
-      )}
 
       {(jobs.length > 0 || currentPage > 1) && total / PER_PAGE > 1 && (
         <Pagination

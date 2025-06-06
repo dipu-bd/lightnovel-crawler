@@ -10,10 +10,11 @@ import { Button, Flex, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { JobDetailsView } from './JobDetailsView';
-import { UserDetailsView } from '../UserDetails/UserDetailsView';
-import { NovelDetailsView } from '../NovelDetails/NovelDetailsView';
-import { ArtifactListView } from '../ArtifactList/ArtifactListView';
+import { JobDetailsCard } from './JobDetailsCard';
+import { UserDetailsCard } from '../UserDetails/UserDetailsCard';
+import { NovelDetailsCard } from '../NovelDetails/NovelDetailsCard';
+import { ArtifactListCard } from '../ArtifactList/ArtifactListCard';
+import { stringifyError } from '@/utils/errors';
 
 export default function JobDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +29,7 @@ export default function JobDetailsPage() {
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 
   const fetchJob = async (id: string) => {
+    setError(undefined);
     try {
       const { data } = await axios.get<JobDetails>(`/api/job/${id}`);
       setJob(data.job);
@@ -35,7 +37,7 @@ export default function JobDetailsPage() {
       setNovel(data.novel);
       setArtifacts(data.artifacts);
     } catch (err: any) {
-      setError(err.message || String(err));
+      setError(stringifyError(err));
     } finally {
       setLoading(false);
     }
@@ -66,7 +68,7 @@ export default function JobDetailsPage() {
     );
   }
 
-  if (error || !job || !user) {
+  if (!job || !user) {
     return (
       <Flex align="center" justify="center" style={{ height: '100%' }}>
         <Result
@@ -87,10 +89,10 @@ export default function JobDetailsPage() {
       direction="vertical"
       style={{ padding: 15, marginBottom: 20 }}
     >
-      <JobDetailsView job={job} />
-      <UserDetailsView user={user} />
-      <NovelDetailsView novel={novel} />
-      <ArtifactListView artifacts={artifacts} />
+      <JobDetailsCard job={job} />
+      <UserDetailsCard user={user} />
+      <NovelDetailsCard novel={novel} />
+      <ArtifactListCard artifacts={artifacts} />
     </Space>
   );
 }

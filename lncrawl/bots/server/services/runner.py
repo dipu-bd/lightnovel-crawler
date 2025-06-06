@@ -168,6 +168,12 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                 cur_time = time.time()
                 if cur_time - start_time > timeout:
                     break
+                if job.progress > round(app.progress):
+                    app.fetch_chapter_progress = 100
+                    save_metadata(app)
+                    job.run_state = RunState.FETCHING_IMAGES
+                    logger.info('Failed to fetch some chapters')
+                    break
                 if cur_time - last_report > 10:
                     last_report = cur_time
                     job.progress = round(app.progress)
@@ -175,6 +181,7 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                     sess.commit()
                     sess.refresh(job)
             else:
+                app.fetch_chapter_progress = 100
                 save_metadata(app)
                 if not signal.is_set():
                     job.run_state = RunState.FETCHING_IMAGES
@@ -202,6 +209,12 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                 cur_time = time.time()
                 if cur_time - start_time > timeout:
                     break
+                if job.progress > round(app.progress):
+                    app.fetch_images_progress = 100
+                    save_metadata(app)
+                    job.run_state = RunState.FETCHING_IMAGES
+                    logger.info('Failed to fetch some chapters')
+                    break
                 if cur_time - last_report > 10:
                     last_report = cur_time
                     job.progress = round(app.progress)
@@ -209,6 +222,7 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                     sess.commit()
                     sess.refresh(job)
             else:
+                app.fetch_images_progress = 100
                 save_metadata(app)
                 if not signal.is_set():
                     job.run_state = RunState.CREATING_ARTIFACTS

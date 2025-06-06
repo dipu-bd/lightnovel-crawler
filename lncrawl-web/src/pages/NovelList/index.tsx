@@ -14,6 +14,7 @@ import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { NovelListItemCard } from './NovelListItemCard';
+import { stringifyError } from '@/utils/errors';
 
 const { Title } = Typography;
 
@@ -36,6 +37,7 @@ export default function NovelListPage() {
 
   const fetchNovels = async (page: number) => {
     setLoading(true);
+    setError(undefined);
     try {
       const offset = (page - 1) * PER_PAGE;
       const { data } = await axios.get<PaginatiedResponse<Novel>>(
@@ -47,8 +49,7 @@ export default function NovelListPage() {
       setTotal(data.total);
       setNovels(data.items);
     } catch (err: any) {
-      console.error('Failed to fetch novels', err);
-      setError(err?.message || String(err));
+      setError(stringifyError(err));
     } finally {
       setLoading(false);
     }

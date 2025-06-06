@@ -3,8 +3,9 @@ import { Button, Flex, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ArtifactListView } from '../ArtifactList/ArtifactListView';
-import { NovelDetailsView } from '../NovelDetails/NovelDetailsView';
+import { ArtifactListCard } from '../ArtifactList/ArtifactListCard';
+import { NovelDetailsCard } from './NovelDetailsCard';
+import { stringifyError } from '@/utils/errors';
 
 export default function JobDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -17,11 +18,12 @@ export default function JobDetailsPage() {
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
 
   const fetchNovel = async (id: string) => {
+    setError(undefined);
     try {
       const { data } = await axios.get<Novel>(`/api/novel/${id}`);
       setNovel(data);
     } catch (err: any) {
-      setError(err.message || String(err));
+      setError(stringifyError(err));
     } finally {
       setLoading(false);
     }
@@ -72,8 +74,8 @@ export default function JobDetailsPage() {
       direction="vertical"
       style={{ padding: 15, marginBottom: '20px' }}
     >
-      <NovelDetailsView novel={novel} />
-      <ArtifactListView artifacts={artifacts} />
+      <NovelDetailsCard novel={novel} />
+      <ArtifactListCard artifacts={artifacts} />
     </Space>
   );
 }

@@ -49,20 +49,29 @@ class App:
         self.no_suffix_after_filename = False
         self.search_progress: float = 0
         self.fetch_novel_progress: float = 0
-        self.fetch_content_progress: float = 0
+        self.fetch_chapter_progress: float = 0
         self.fetch_images_progress: float = 0
         self.binding_progress: float = 0
         atexit.register(self.destroy)
 
     @property
     def progress(self):
-        return (
-            self.search_progress * 1
-            + self.fetch_novel_progress * 0.05
-            + self.fetch_content_progress * 0.45
-            + self.fetch_images_progress * 0.40
-            + self.binding_progress * 0.1
-        )
+        if self.search_progress:
+            return self.search_progress
+        if self.crawler and self.crawler.has_manga:
+            return (
+                + self.fetch_novel_progress * 0.05
+                + self.fetch_chapter_progress * 0.45
+                + self.fetch_images_progress * 0.40
+                + self.binding_progress * 0.1
+            )
+        else:
+            return (
+                + self.fetch_novel_progress * 0.05
+                + self.fetch_chapter_progress * 0.8
+                + self.fetch_images_progress * 0.05
+                + self.binding_progress * 0.1
+            )
 
     # ----------------------------------------------------------------------- #
 
@@ -76,7 +85,7 @@ class App:
         self.book_cover = None
         self.search_progress = 0
         self.fetch_novel_progress = 0
-        self.fetch_content_progress = 0
+        self.fetch_chapter_progress = 0
         self.fetch_images_progress = 0
         self.binding_progress = 0
         self.generated_books = {}
@@ -128,7 +137,7 @@ class App:
                     len(self.crawler_links))
 
         self.fetch_novel_progress = 0
-        self.fetch_content_progress = 0
+        self.fetch_chapter_progress = 0
         self.fetch_images_progress = 0
         self.binding_progress = 0
 

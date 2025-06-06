@@ -3,45 +3,29 @@ import {
   JobStatusTag,
   RunStateTag,
 } from '@/components/Tags/jobs';
-import { Auth } from '@/store/_auth';
-import { JobStatus, RunState, type Job } from '@/types';
-import { formatDate, formatDuration } from '@/utils/time';
+import { RunState, type Job } from '@/types';
+import { calculateRemaining, formatDate, formatDuration } from '@/utils/time';
 import {
   ClockCircleFilled,
   ClockCircleOutlined,
   HourglassFilled,
 } from '@ant-design/icons';
 import {
-  Button,
+  Alert,
   Card,
   Flex,
   Grid,
-  message,
   Progress,
   Space,
   Tag,
   Typography,
 } from 'antd';
-import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { JobActionButtons } from '../JobList/JobActionButtons';
 
 const { Title, Text } = Typography;
 
-export const JobDetailsView: React.FC<{ job: Job }> = ({ job }) => {
+export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
   const { lg } = Grid.useBreakpoint();
-  const isAdmin = useSelector(Auth.select.isAdmin);
-  const currentUser = useSelector(Auth.select.user);
-
-  const cancelJob = async () => {
-    try {
-      await axios.post(`/api/job/${job.id}/cancel`);
-    } catch (err) {
-      message.open({
-        type: 'error',
-        content: 'Something went wrong!',
-      });
-    }
-  };
 
   return (
     <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
@@ -88,7 +72,7 @@ export const JobDetailsView: React.FC<{ job: Job }> = ({ job }) => {
             <b>Started:</b> {formatDate(job.started_at)}
           </Tag>
         )}
-        {job.finished_at > 0 && (
+        {job.finished_at > 0 ? (
           <>
             <Tag icon={<ClockCircleFilled />} color="default">
               <b>Completed:</b> {formatDate(job.finished_at)}
@@ -97,23 +81,31 @@ export const JobDetailsView: React.FC<{ job: Job }> = ({ job }) => {
               <b>Runtime:</b> {formatDuration(job.finished_at - job.started_at)}
             </Tag>
           </>
+        ) : (
+          <>
+            <Tag icon={<ClockCircleOutlined spin />} color="default">
+              <b>Elapsed:</b> {formatDuration(Date.now() - job.started_at)}
+            </Tag>
+            <Tag icon={<ClockCircleOutlined spin />} color="default">
+              <b>Estimated:</b>{' '}
+              {calculateRemaining(job.started_at, job.progress)}
+            </Tag>
+          </>
         )}
       </Flex>
 
-      {isAdmin || job.user_id === currentUser?.id ? (
-        <Flex
-          justify="end"
-          align="center"
-          gap={'10px'}
-          style={{ marginTop: 15 }}
-        >
-          {job.status !== JobStatus.COMPLETED && (
-            <Button danger onClick={cancelJob}>
-              Cancel Job
-            </Button>
-          )}
-        </Flex>
-      ) : null}
+      {Boolean(job.error) && (
+        <Alert
+          showIcon
+          description={job.error}
+          type={job.run_state === RunState.FAILED ? 'error' : 'warning'}
+          style={{ marginTop: 15, padding: '10px 20px' }}
+        />
+      )}
+
+      <Flex justify="end" align="center" gap={'10px'} style={{ marginTop: 15 }}>
+        <JobActionButtons job={job} />
+      </Flex>
     </Card>
   );
 };

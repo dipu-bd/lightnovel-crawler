@@ -27,7 +27,7 @@ export function formatDuration(delta: number): string {
     result.push(`${v} minute${v > 1 ? 's' : ''}`);
     delta %= mm;
   }
-  v = delta / ss;
+  v = Math.round(delta / ss);
   result.push(`${v} second${v > 1 ? 's' : ''}`);
   return result.join(' ');
 }
@@ -42,4 +42,10 @@ export function formatDifference(a: Date, b: Date): string {
 
 export function formatDate(value?: MomentInput) {
   return moment(value).format('lll');
+}
+
+export function calculateRemaining(started: number, progress: number): string {
+  const remaining = 100 - progress;
+  const delta = Date.now() - started;
+  return formatDuration((remaining * delta) / progress);
 }

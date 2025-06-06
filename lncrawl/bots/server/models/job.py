@@ -79,10 +79,11 @@ class Job(BaseModel, table=True):
 
 @event.listens_for(Job, "before_update", propagate=True)
 def auto_update_timestamp(mapper, connection, target: Job):
-    if target.error and target.run_state not in (RunState.FAILED, RunState.CANCELED):
-        target.run_state = RunState.FAILED
-    if target.run_state in (RunState.SUCCESS, RunState.FAILED, RunState.CANCELED):
-        target.status = JobStatus.COMPLETED
+    if target.error and target.run_state:
+        if target.error.startswith('Canceled'):
+            target.run_state = RunState.CANCELED
+        else:
+            target.run_state = RunState.FAILED
     if not target.started_at and target.status != JobStatus.PENDING:
         target.started_at = current_timestamp()
     if not target.finished_at and target.status == JobStatus.COMPLETED:
