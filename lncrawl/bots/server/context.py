@@ -1,6 +1,7 @@
 from functools import cached_property
 from typing import Optional
 
+from lncrawl.core.sources import load_sources
 
 _cache: Optional['ServerContext'] = None
 
@@ -11,6 +12,12 @@ class ServerContext:
         if _cache is None:
             _cache = super().__new__(cls)
         return _cache
+
+    def prepare(self):
+        load_sources()
+        self.db.prepare()
+        self.users.prepare()
+        self.scheduler.start()
 
     def cleanup(self):
         self.db.close()

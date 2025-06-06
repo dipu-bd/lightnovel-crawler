@@ -7,6 +7,7 @@ from .jobs import router as job
 from .novels import router as novel
 from .runner import router as runner
 from .users import router as user
+from .meta import router as meta
 
 router = APIRouter()
 
@@ -14,13 +15,6 @@ router.include_router(
     auth,
     prefix='/auth',
     tags=['Auth'],
-)
-
-router.include_router(
-    user,
-    prefix='/user',
-    tags=['Users'],
-    dependencies=[Depends(ensure_admin)],
 )
 
 router.include_router(
@@ -40,6 +34,19 @@ router.include_router(
     artifact,
     prefix='/artifact',
     tags=['Artifacts'],
+)
+
+router.include_router(
+    meta,
+    prefix='/meta',
+    tags=['Metadata'],
+)
+
+router.include_router(
+    user,
+    prefix='/user',
+    tags=['Users'],
+    dependencies=[Depends(ensure_admin)],
 )
 
 router.include_router(

@@ -1,0 +1,53 @@
+import type { SupportedSource } from '@/types';
+import { FlagFilled, GlobalOutlined, StopOutlined } from '@ant-design/icons';
+import { Avatar, Card, Flex, Tag, Typography } from 'antd';
+import { SourceFeatureIcons } from './SourceFeatureIcons';
+
+const { Text, Link } = Typography;
+
+function getDomain(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return url;
+  }
+}
+
+export const SupportedSourceItem: React.FC<{
+  source: SupportedSource;
+  disabled?: boolean;
+}> = ({ source, disabled }) => (
+  <Card
+    size="small"
+    hoverable={!disabled}
+    style={{ opacity: disabled ? 0.8 : 1 }}
+  >
+    <Flex align="center" gap={15}>
+      <Avatar
+        src={`${source.url}/favicon.ico`}
+        style={{ backgroundColor: '#39f' }}
+        icon={disabled ? <StopOutlined /> : <GlobalOutlined />}
+      />
+      <Flex vertical style={{ flex: 1 }}>
+        <Link
+          strong
+          delete={disabled}
+          href={source.url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {getDomain(source.url)}
+        </Link>
+        {disabled && source.disable_reason && (
+          <Text type="secondary">{source.disable_reason}</Text>
+        )}
+      </Flex>
+      <Flex wrap align="center" gap="7px">
+        <SourceFeatureIcons source={source} />
+        <Tag icon={<FlagFilled />} style={{ margin: 0 }}>
+          {source.language.toUpperCase()}
+        </Tag>
+      </Flex>
+    </Flex>
+  </Card>
+);

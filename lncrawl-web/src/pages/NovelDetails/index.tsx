@@ -3,7 +3,7 @@ import { Button, Flex, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ArtifactListCard } from '../ArtifactList/ArtifactListCard';
+import { ArtifactListCard } from '../../components/ArtifactList/ArtifactListCard';
 import { NovelDetailsCard } from './NovelDetailsCard';
 import { stringifyError } from '@/utils/errors';
 

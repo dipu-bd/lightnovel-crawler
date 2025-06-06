@@ -13,7 +13,7 @@ import { useParams } from 'react-router-dom';
 import { JobDetailsCard } from './JobDetailsCard';
 import { UserDetailsCard } from '../UserDetails/UserDetailsCard';
 import { NovelDetailsCard } from '../NovelDetails/NovelDetailsCard';
-import { ArtifactListCard } from '../ArtifactList/ArtifactListCard';
+import { ArtifactListCard } from '../../components/ArtifactList/ArtifactListCard';
 import { stringifyError } from '@/utils/errors';
 
 export default function JobDetailsPage() {
@@ -50,7 +50,7 @@ export default function JobDetailsPage() {
   }, [id, refreshId]);
 
   useEffect(() => {
-    if (job && job.status !== JobStatus.COMPLETED) {
+    if (job?.status !== JobStatus.COMPLETED) {
       const iid = setInterval(() => {
         setRefreshId((v) => v + 1);
       }, 1000);

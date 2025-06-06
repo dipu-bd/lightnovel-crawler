@@ -1,7 +1,7 @@
-import MainLayout from '@/components/Layout';
 import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
+const MainLayout = lazy(() => import('@/components/Layout'));
 // auth
 const LoginPage = lazy(() => import('./Login'));
 const SignupPage = lazy(() => import('./Signup'));
@@ -11,6 +11,8 @@ const JobDetailsPage = lazy(() => import('./JobDetails'));
 const JobListPage = lazy(() => import('./JobList'));
 const NovelDetailsPage = lazy(() => import('./NovelDetails'));
 const NovelListPage = lazy(() => import('./NovelList'));
+// meta
+const SupportedSourcesPage = lazy(() => import('./SupportedSources'));
 // admin
 const UserDetailsPage = lazy(() => import('./UserDetails'));
 const UserListPage = lazy(() => import('./UserList'));
@@ -59,6 +61,15 @@ export const USER_ROUTES: RouteObject[] = [
       {
         path: 'job/:id',
         element: <JobDetailsPage />,
+      },
+      {
+        path: 'meta',
+        children: [
+          {
+            path: 'sources',
+            element: <SupportedSourcesPage />,
+          },
+        ],
       },
     ],
   },

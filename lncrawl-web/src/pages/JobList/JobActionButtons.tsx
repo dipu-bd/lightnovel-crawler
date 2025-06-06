@@ -18,7 +18,7 @@ export const JobActionButtons: React.FC<{
   const cancelJob = async () => {
     try {
       await axios.post(`/api/job/${job.id}/cancel`);
-      onChange && onChange();
+      if (onChange) onChange();
     } catch (err) {
       message.open({
         type: 'error',

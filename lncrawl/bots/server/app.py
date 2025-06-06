@@ -1,7 +1,7 @@
 import traceback
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse
@@ -15,6 +15,7 @@ app = FastAPI(
     title="Lightnovel Crawler",
     description="Download novels from online sources and generate e-books",
     on_shutdown=[ServerContext().cleanup],
+    on_startup=[ServerContext().prepare],
 )
 
 app.add_middleware(

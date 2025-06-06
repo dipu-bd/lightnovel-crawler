@@ -280,6 +280,12 @@ _builder = Args(
             help="Server port. Default: 8080",
         ),
         Args(
+            '--watch',
+            dest="server_watch",
+            action="store_true",
+            help="Run server in watch mode",
+        ),
+        Args(
             "--suppress",
             action="store_true",
             help="Suppress all input prompts and use defaults.",

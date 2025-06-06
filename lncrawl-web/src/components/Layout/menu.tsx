@@ -4,6 +4,7 @@ import {
   ControlOutlined,
   DeploymentUnitOutlined,
   ExperimentOutlined,
+  FileDoneOutlined,
   LogoutOutlined,
   TeamOutlined,
 } from '@ant-design/icons';
@@ -86,6 +87,14 @@ export function buildMenu({
           key: '/jobs',
           label: 'Jobs',
           icon: <DeploymentUnitOutlined />,
+        },
+        {
+          type: 'divider',
+        },
+        {
+          key: '/meta/sources',
+          label: 'Supported Sources',
+          icon: <FileDoneOutlined />,
         },
         {
           type: 'divider',

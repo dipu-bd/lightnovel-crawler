@@ -15,7 +15,7 @@ export function formatDuration(delta: number): string {
   const ss = 1000;
 
   let v;
-  let result = [];
+  const result = [];
   delta = Math.floor(delta);
   if (delta >= hh) {
     v = Math.floor(delta / hh);

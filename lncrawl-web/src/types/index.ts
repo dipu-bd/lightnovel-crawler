@@ -91,3 +91,15 @@ export interface JobDetails {
   user: User;
   artifacts: Artifact[];
 }
+
+export interface SupportedSource {
+  url: string;
+  has_manga: boolean;
+  has_mtl: boolean;
+  language: string;
+  is_disabled: boolean;
+  disable_reason?: string;
+  can_search: boolean;
+  can_login: boolean;
+  can_logout: boolean;
+}

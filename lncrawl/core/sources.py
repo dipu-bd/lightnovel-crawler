@@ -235,6 +235,14 @@ __cache_crawlers: Dict[Path, List[Type[Crawler]]] = {}
 __url_regex = re.compile(r"^^(https?|ftp)://[^\s/$.?#].[^\s]*$", re.I)
 
 
+def __can_do(crawler: Type[Crawler], prop_name: str):
+    if not hasattr(crawler, prop_name):
+        return False
+    if not hasattr(Crawler, prop_name):
+        return True
+    return getattr(crawler, prop_name) != getattr(Crawler, prop_name)
+
+
 def __load_rejected_sources():
     for url, reason in __current_index["rejected"].items():
         no_www = url.replace("://www.", "://")
@@ -294,9 +302,21 @@ def __import_crawlers(file_path: Path, no_cache=False) -> List[Type[Crawler]]:
             if not callable(getattr(crawler, method)):
                 raise LNException(f"Should be callable: {method} @{file_path}")
 
+        disable_reasons = ', '.join(set([
+            rejected_sources[url]
+            for url in urls
+            if url in rejected_sources
+        ]))
+        if disable_reasons:
+            crawler.is_disabled = True
+            crawler.disable_reason = disable_reasons
+
         setattr(crawler, "base_url", urls)
         setattr(crawler, "language", language_code)
         setattr(crawler, "file_path", str(file_path.absolute()))
+        setattr(crawler, "can_login", __can_do(crawler, 'login'))
+        setattr(crawler, "can_logout", __can_do(crawler, 'logout'))
+        setattr(crawler, "can_search", __can_do(crawler, 'search_novel'))
 
         crawlers.append(crawler)
 
