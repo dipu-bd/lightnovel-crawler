@@ -11,9 +11,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { JobDetailsView } from './JobDetailsView';
-import { UserDetailsView } from './UserDetailsView';
+import { UserDetailsView } from '../UserDetails/UserDetailsView';
 import { NovelDetailsView } from '../NovelDetails/NovelDetailsView';
-import { ArtifactListView } from '../ArtifactDetails/ArtifactListView';
+import { ArtifactListView } from '../ArtifactList/ArtifactListView';
 
 export default function JobDetailsPage() {
   const { id } = useParams<{ id: string }>();

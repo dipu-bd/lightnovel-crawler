@@ -15,6 +15,7 @@ import {
   Button,
   Card,
   Flex,
+  Grid,
   message,
   Progress,
   Space,
@@ -27,6 +28,7 @@ import { useSelector } from 'react-redux';
 const { Title, Text } = Typography;
 
 export const JobDetailsView: React.FC<{ job: Job }> = ({ job }) => {
+  const { lg } = Grid.useBreakpoint();
   const isAdmin = useSelector(Auth.select.isAdmin);
   const currentUser = useSelector(Auth.select.user);
 
@@ -47,12 +49,18 @@ export const JobDetailsView: React.FC<{ job: Job }> = ({ job }) => {
         {job.url}
       </Title>
 
-      <Flex wrap align="center">
+      <Flex wrap align="center" gap={5}>
         <JobStatusTag value={job.status} completed={job.run_state} />
         <JobPriorityTag value={job.priority} />
-        <Tag icon={<ClockCircleOutlined />} color="default">
-          {formatDate(job.created_at)}
-        </Tag>
+        {lg && (
+          <Tag
+            icon={<ClockCircleOutlined />}
+            color="default"
+            style={{ margin: 0 }}
+          >
+            {formatDate(job.created_at)}
+          </Tag>
+        )}
       </Flex>
 
       <Space wrap style={{ marginTop: 20 }}>

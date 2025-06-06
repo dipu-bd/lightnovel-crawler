@@ -1,9 +1,14 @@
 import { API_BASE_URL } from '@/config';
 import { type Artifact } from '@/types';
-import { DownloadOutlined, TagOutlined } from '@ant-design/icons';
-import { Button, Card, Empty, Grid, List, Tag, Typography } from 'antd';
+import { formatDate } from '@/utils/time';
+import {
+  ClockCircleOutlined,
+  DownloadOutlined,
+  TagOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Empty, Flex, Grid, List, Tag, Typography } from 'antd';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export const ArtifactListView: React.FC<{ artifacts?: Artifact[] }> = ({
   artifacts,
@@ -33,7 +38,19 @@ export const ArtifactListView: React.FC<{ artifacts?: Artifact[] }> = ({
               ]}
             >
               <List.Item.Meta
-                title={<Tag icon={<TagOutlined />}>{item.format}</Tag>}
+                title={
+                  <Flex gap={8} align="center">
+                    <Tag icon={<TagOutlined />} style={{ margin: 0 }}>
+                      {item.format}
+                    </Tag>
+                    <Text
+                      ellipsis
+                      style={{ fontWeight: 'normal', fontSize: 12 }}
+                    >
+                      <ClockCircleOutlined /> {formatDate(item.updated_at)}
+                    </Text>
+                  </Flex>
+                }
                 description={item.file_name}
               />
             </List.Item>

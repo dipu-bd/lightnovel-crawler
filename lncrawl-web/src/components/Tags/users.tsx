@@ -5,16 +5,25 @@ import { Tag } from 'antd';
 export const UserTierTag: React.FC<{ value?: UserTier }> = ({ value }) => {
   switch (value) {
     case UserTier.BASIC:
-      return <Tag icon={<SmileOutlined />}>Basic</Tag>;
+      return (
+        <Tag icon={<SmileOutlined />} style={{ margin: 0 }}>
+          Basic
+        </Tag>
+      );
     case UserTier.PREMIUM:
       return (
-        <Tag color="gold" icon={<StarFilled />}>
+        <Tag color="gold" icon={<StarFilled />} style={{ margin: 0 }}>
           Premium
         </Tag>
       );
     case UserTier.VIP:
       return (
-        <Tag bordered color="volcano-inverse" icon={<CrownFilled />}>
+        <Tag
+          bordered
+          color="volcano-inverse"
+          icon={<CrownFilled />}
+          style={{ margin: 0 }}
+        >
           VIP
         </Tag>
       );
@@ -26,13 +35,17 @@ export const UserTierTag: React.FC<{ value?: UserTier }> = ({ value }) => {
 export const UserStatusTag: React.FC<{ value?: boolean }> = ({ value }) => {
   if (!value) return null;
   return (
-    <Tag color={value ? 'green' : 'gray'}>{value ? 'Active' : 'Inactive'}</Tag>
+    <Tag color={value ? 'green' : 'gray'} style={{ margin: 0 }}>
+      {value ? 'Active' : 'Inactive'}
+    </Tag>
   );
 };
 
 export const UserRoleTag: React.FC<{ value?: UserRole }> = ({ value }) => {
   if (!value) return null;
   return (
-    <Tag color={value === 'admin' ? 'red' : 'blue'}>{value.toUpperCase()}</Tag>
+    <Tag color={value === 'admin' ? 'red' : 'blue'} style={{ margin: 0 }}>
+      {value.toUpperCase()}
+    </Tag>
   );
 };

@@ -51,7 +51,7 @@ export const NovelDetailsView: React.FC<{ novel?: Novel }> = ({ novel }) => {
         }
       </Title>
       <Flex gap="20px" vertical={!lg}>
-        <Flex vertical gap="5px">
+        <Flex vertical align="center" justify="center" gap="5px">
           <Image
             alt="Novel Cover"
             src={`${API_BASE_URL}/api/novel/${novel.id}/cover`}
@@ -64,20 +64,25 @@ export const NovelDetailsView: React.FC<{ novel?: Novel }> = ({ novel }) => {
             }}
           />
           {novel.tags && novel.tags.length > 0 && (
-            <div>
+            <Flex wrap gap="5px" justify={lg ? undefined : 'center'}>
               <Divider size="small" />
               {novel.tags.map((tag) => (
-                <Tag key={tag} style={{ textTransform: 'capitalize' }}>
+                <Tag
+                  key={tag}
+                  style={{ textTransform: 'capitalize', margin: 0 }}
+                >
                   {tag.toLowerCase()}
                 </Tag>
               ))}
-            </div>
+            </Flex>
           )}
         </Flex>
         <Flex vertical flex="auto" gap="5px">
           <Descriptions
+            size="small"
             layout="horizontal"
-            column={2}
+            column={lg ? 2 : 1}
+            bordered
             items={[
               {
                 label: 'Authors',
@@ -102,7 +107,6 @@ export const NovelDetailsView: React.FC<{ novel?: Novel }> = ({ novel }) => {
               },
             ]}
           />
-          <Divider size="small" />
           <Paragraph
             type="secondary"
             style={{

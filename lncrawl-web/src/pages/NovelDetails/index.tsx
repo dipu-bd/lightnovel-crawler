@@ -3,7 +3,7 @@ import { Button, Flex, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { ArtifactListView } from '../ArtifactDetails/ArtifactListView';
+import { ArtifactListView } from '../ArtifactList/ArtifactListView';
 import { NovelDetailsView } from '../NovelDetails/NovelDetailsView';
 
 export default function JobDetailsPage() {

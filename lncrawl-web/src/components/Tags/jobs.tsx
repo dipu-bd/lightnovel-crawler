@@ -12,16 +12,24 @@ import { Tag } from 'antd';
 export const JobPriorityTag: React.FC<{ value: JobPriority }> = ({ value }) => {
   switch (value) {
     case JobPriority.LOW:
-      return <Tag icon={<ThunderboltOutlined />}>Low Priority</Tag>;
+      return (
+        <Tag icon={<ThunderboltOutlined />} style={{ margin: 0 }}>
+          Low Priority
+        </Tag>
+      );
     case JobPriority.NORMAL:
       return (
-        <Tag icon={<ThunderboltOutlined />} color="gold">
+        <Tag icon={<ThunderboltOutlined />} color="gold" style={{ margin: 0 }}>
           Normal Priority
         </Tag>
       );
     case JobPriority.HIGH:
       return (
-        <Tag icon={<ThunderboltOutlined />} color="volcano">
+        <Tag
+          icon={<ThunderboltOutlined />}
+          color="volcano"
+          style={{ margin: 0 }}
+        >
           <b>High Priority</b>
         </Tag>
       );
@@ -34,10 +42,14 @@ export const JobStatusTag: React.FC<{
 }> = ({ value, completed }) => {
   switch (value) {
     case JobStatus.PENDING:
-      return <Tag icon={<HourglassOutlined />}>Pending</Tag>;
+      return (
+        <Tag icon={<HourglassOutlined />} style={{ margin: 0 }}>
+          Pending
+        </Tag>
+      );
     case JobStatus.RUNNING:
       return (
-        <Tag icon={<LoadingOutlined spin />} color="cyan">
+        <Tag icon={<LoadingOutlined spin />} color="cyan" style={{ margin: 0 }}>
           Running
         </Tag>
       );
@@ -45,25 +57,25 @@ export const JobStatusTag: React.FC<{
       switch (completed) {
         case RunState.SUCCESS:
           return (
-            <Tag icon={<CheckOutlined />} color="orange">
+            <Tag icon={<CheckOutlined />} color="orange" style={{ margin: 0 }}>
               Success
             </Tag>
           );
         case RunState.CANCELED:
           return (
-            <Tag icon={<CloseOutlined />} color="red">
+            <Tag icon={<CloseOutlined />} color="red" style={{ margin: 0 }}>
               Canceled
             </Tag>
           );
         case RunState.FAILED:
           return (
-            <Tag icon={<WarningOutlined />} color="orange">
+            <Tag icon={<WarningOutlined />} color="red" style={{ margin: 0 }}>
               Failed
             </Tag>
           );
         default:
           return (
-            <Tag icon={<CheckOutlined />} color="orange">
+            <Tag icon={<CheckOutlined />} color="orange" style={{ margin: 0 }}>
               Completed
             </Tag>
           );
