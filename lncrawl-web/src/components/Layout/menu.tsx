@@ -6,9 +6,8 @@ import {
   ExperimentOutlined,
   LogoutOutlined,
   TeamOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Flex, Typography, type MenuProps } from 'antd';
+import { Button, Flex, Typography, type MenuProps } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserAvatar } from '../Tags/gravatar';
 
