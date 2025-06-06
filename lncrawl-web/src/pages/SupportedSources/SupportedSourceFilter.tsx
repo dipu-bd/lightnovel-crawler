@@ -4,94 +4,101 @@ import {
   SearchOutlined,
   TranslationOutlined,
 } from '@ant-design/icons';
-import { Button, Checkbox, Divider, Flex, Input, Select } from 'antd';
-import React from 'react';
+import { Button, Flex, Input, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
+
+const defaultFilters = {
+  search: '',
+  language: undefined,
+  features: [],
+};
+
+type Feature = 'has_manga' | 'has_mtl' | 'can_search' | 'can_login';
+
+const featureOptions = [
+  {
+    value: 'has_manga',
+    label: (
+      <>
+        <BookOutlined /> Manga
+      </>
+    ),
+  },
+  {
+    value: 'has_mtl',
+    label: (
+      <>
+        <TranslationOutlined /> MTL
+      </>
+    ),
+  },
+  {
+    value: 'can_search',
+    label: (
+      <>
+        <SearchOutlined /> Search
+      </>
+    ),
+  },
+  {
+    value: 'can_login',
+    label: (
+      <>
+        <LoginOutlined /> Login
+      </>
+    ),
+  },
+];
 
 export type SourceFilterState = {
   search: string;
   language: string | undefined;
-  has_manga: boolean;
-  has_mtl: boolean;
-  can_search: boolean;
-  can_login: boolean;
-  can_logout: boolean;
+  features: Feature[];
 };
 
 export const SupportedSourceFilter: React.FC<{
-  filter: SourceFilterState;
+  value?: SourceFilterState;
   onChange: (f: SourceFilterState) => void;
   languages: string[];
-}> = ({ filter, onChange, languages }) => {
-  const handleChange = (key: keyof SourceFilterState, value: any) => {
-    onChange({ ...filter, [key]: value });
-  };
+}> = ({ value = defaultFilters, onChange, languages }) => {
+  const [filter, setFilter] = useState<SourceFilterState>(value);
 
-  const reset = () => {
-    onChange({
-      search: '',
-      language: undefined,
-      has_manga: false,
-      has_mtl: false,
-      can_search: false,
-      can_login: false,
-      can_logout: false,
-    });
-  };
+  useEffect(() => {
+    const tid = setTimeout(() => onChange(filter), 100);
+    return () => clearTimeout(tid);
+  }, [filter]);
 
   return (
     <Flex wrap align="center" gap={5}>
       <Input
-        prefix={<SearchOutlined />}
-        placeholder="Search by domain or URL"
-        value={filter.search}
-        onChange={(e) => handleChange('search', e.target.value)}
         allowClear
+        prefix={<SearchOutlined />}
+        placeholder="Search by URL"
+        value={filter.search}
+        onChange={(e) => setFilter({ ...filter, search: e.target.value })}
         style={{ width: 220 }}
       />
       <Select
         allowClear
         placeholder="Language"
         value={filter.language}
-        onChange={(val) => handleChange('language', val)}
-        style={{ width: 120 }}
+        onChange={(val) => setFilter({ ...filter, language: val })}
+        style={{ width: 110 }}
         options={languages.map((lang) => ({
           value: lang,
-          label: lang.toUpperCase(),
+          label: (lang || 'ALL').toUpperCase(),
         }))}
       />
-      <Divider type="vertical" size="small" />
-      <Checkbox
-        checked={filter.has_manga}
-        onChange={(e) => handleChange('has_manga', e.target.checked)}
-      >
-        <BookOutlined /> Manga
-      </Checkbox>
-      <Checkbox
-        checked={filter.has_mtl}
-        onChange={(e) => handleChange('has_mtl', e.target.checked)}
-      >
-        <TranslationOutlined /> MTL
-      </Checkbox>
-      <Checkbox
-        checked={filter.can_search}
-        onChange={(e) => handleChange('can_search', e.target.checked)}
-      >
-        <SearchOutlined /> Search
-      </Checkbox>
-      <Checkbox
-        checked={filter.can_login}
-        onChange={(e) => handleChange('can_login', e.target.checked)}
-      >
-        <LoginOutlined /> Login
-      </Checkbox>
-      {/* <Checkbox
-        checked={filter.can_logout}
-        onChange={(e) => handleChange('can_logout', e.target.checked)}
-      >
-        <LogoutOutlined /> Logout
-      </Checkbox> */}
-      <Divider type="vertical" size="small" />
-      <Button onClick={reset}>Reset</Button>
+      <Select
+        allowClear
+        mode="multiple"
+        placeholder="Features"
+        style={{ minWidth: 150 }}
+        value={filter.features}
+        onChange={(features) => setFilter({ ...filter, features })}
+        options={featureOptions}
+      />
+      <Button onClick={() => setFilter(defaultFilters)}>Clear</Button>
     </Flex>
   );
 };

@@ -20,13 +20,13 @@ def list_supported_sources() -> List[SupportedSource]:
             domain = urlparse(no_www).hostname
             if not domain:
                 continue
-            supported[url] = SupportedSource(
+            supported[domain] = SupportedSource(
                 url=url,
                 domain=domain,
                 has_manga=crawler.has_manga,
                 has_mtl=crawler.has_mtl,
-                is_disabled=(url in rejected_sources),
-                disable_reason=rejected_sources.get(url) or '',
+                is_disabled=(domain in rejected_sources),
+                disable_reason=rejected_sources.get(domain) or '',
                 language=crawler.language,
                 can_login=getattr(crawler, 'can_login', False),
                 can_logout=getattr(crawler, 'can_logout', False),
