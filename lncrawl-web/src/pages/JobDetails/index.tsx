@@ -6,17 +6,18 @@ import {
   type Novel,
   type User,
 } from '@/types';
-import { Button, Flex, Result, Space, Spin } from 'antd';
+import { stringifyError } from '@/utils/errors';
+import { Button, Flex, Grid, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { JobDetailsCard } from './JobDetailsCard';
-import { UserDetailsCard } from '../UserDetails/UserDetailsCard';
-import { NovelDetailsCard } from '../NovelDetails/NovelDetailsCard';
 import { ArtifactListCard } from '../../components/ArtifactList/ArtifactListCard';
-import { stringifyError } from '@/utils/errors';
+import { NovelDetailsCard } from '../NovelDetails/NovelDetailsCard';
+import { UserDetailsCard } from '../UserDetails/UserDetailsCard';
+import { JobDetailsCard } from './JobDetailsCard';
 
 export default function JobDetailsPage() {
+  const { lg } = Grid.useBreakpoint();
   const { id } = useParams<{ id: string }>();
 
   const [refreshId, setRefreshId] = useState(0);
@@ -84,11 +85,7 @@ export default function JobDetailsPage() {
   }
 
   return (
-    <Space
-      size="large"
-      direction="vertical"
-      style={{ padding: 15, marginBottom: 20 }}
-    >
+    <Space direction="vertical" size={lg ? 'large' : 'small'}>
       <JobDetailsCard job={job} />
       <UserDetailsCard user={user} />
       <NovelDetailsCard novel={novel} />

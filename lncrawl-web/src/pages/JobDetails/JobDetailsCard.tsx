@@ -4,7 +4,7 @@ import {
   RunStateTag,
 } from '@/components/Tags/jobs';
 import { RunState, type Job } from '@/types';
-import { calculateRemaining, formatDate, formatDuration } from '@/utils/time';
+import { formatDate, formatDuration } from '@/utils/time';
 import {
   ClockCircleFilled,
   ClockCircleOutlined,
@@ -28,8 +28,15 @@ export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
   const { lg } = Grid.useBreakpoint();
 
   return (
-    <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
-      <Title level={3} style={{ margin: 0, marginBottom: 8 }}>
+    <Card variant="outlined">
+      <Title
+        level={lg ? 2 : 3}
+        style={{
+          margin: 0,
+          marginBottom: 8,
+          fontFamily: "'Roboto Slab', serif",
+        }}
+      >
         {job.url}
       </Title>
 
@@ -85,10 +92,6 @@ export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
           <>
             <Tag icon={<ClockCircleOutlined spin />} color="default">
               <b>Elapsed:</b> {formatDuration(Date.now() - job.started_at)}
-            </Tag>
-            <Tag icon={<ClockCircleOutlined spin />} color="default">
-              <b>Estimated:</b>{' '}
-              {calculateRemaining(job.started_at, job.progress)}
             </Tag>
           </>
         )}

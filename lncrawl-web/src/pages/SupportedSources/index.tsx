@@ -1,5 +1,13 @@
-import { CheckCircleOutlined, WarningOutlined } from '@ant-design/icons';
-import { Button, Flex, Result, Space, Spin, Tabs, Typography } from 'antd';
+import {
+  Badge,
+  Button,
+  Flex,
+  Result,
+  Space,
+  Spin,
+  Tabs,
+  Typography,
+} from 'antd';
 import { SupportedSourceList } from './SupportedSourceList';
 import { useSupportedSources } from './hooks';
 
@@ -36,10 +44,9 @@ export default function SupportedSourcesPage() {
       <Tabs.TabPane
         key="active"
         tab={
-          <Space style={{ padding: '0 30px' }}>
-            <CheckCircleOutlined />
+          <Space>
             <Text strong>Active Sources</Text>
-            <Text type="secondary">{active.length}</Text>
+            <Badge color="blue" count={active.length} />
           </Space>
         }
       >
@@ -48,10 +55,9 @@ export default function SupportedSourcesPage() {
       <Tabs.TabPane
         key="disabled"
         tab={
-          <Space style={{ padding: '0 30px' }}>
-            <WarningOutlined />
+          <Space>
             <Text strong>Disabled Sources</Text>
-            <Text type="secondary">{disabled.length}</Text>
+            <Badge color="magenta" count={disabled.length} />
           </Space>
         }
       >

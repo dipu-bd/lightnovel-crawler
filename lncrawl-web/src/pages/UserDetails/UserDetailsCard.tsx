@@ -15,7 +15,7 @@ const { Text, Title } = Typography;
 
 export const UserDetailsCard: React.FC<{ user: User }> = ({ user }) => {
   return (
-    <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
+    <Card variant="outlined">
       <Title level={4} style={{ margin: 0, marginBottom: 16 }}>
         Initiated By
       </Title>
@@ -36,25 +36,34 @@ export const UserDetailsCard: React.FC<{ user: User }> = ({ user }) => {
             </Flex>
           </Space>
         </Col>
+
         <Col flex="auto">
           <Flex wrap gap="10px" justify="space-between">
-            <Flex wrap vertical gap="7px">
-              <Flex gap="5px">
-                <b style={{ width: 60, textAlign: 'right' }}>Role:</b>
+            <Flex wrap vertical gap="10px">
+              <Flex gap="10px">
+                <Text strong style={{ width: 70, textAlign: 'right' }}>
+                  Role:
+                </Text>
                 <UserRoleTag value={user.role} />
               </Flex>
-              <Flex gap="5px">
-                <b style={{ width: 60, textAlign: 'right' }}>Status:</b>
+              <Flex gap="10px">
+                <Text strong style={{ width: 70, textAlign: 'right' }}>
+                  Status:
+                </Text>
                 <UserStatusTag value={user.is_active} />
               </Flex>
             </Flex>
-            <Flex wrap vertical gap="7px">
-              <Flex gap="5px">
-                <b style={{ width: 60, textAlign: 'right' }}>Tier:</b>
+            <Flex wrap vertical gap="10px">
+              <Flex gap="10px">
+                <Text strong style={{ width: 70, textAlign: 'right' }}>
+                  Tier:
+                </Text>
                 <UserTierTag value={user.tier} />
               </Flex>
-              <Flex gap="5px">
-                <b style={{ width: 60, textAlign: 'right' }}>Joined:</b>
+              <Flex gap="10px">
+                <Text strong style={{ width: 70, textAlign: 'right' }}>
+                  Joined:
+                </Text>
                 <Text>
                   <CalendarOutlined /> {formatDate(user.created_at)}
                 </Text>
@@ -63,8 +72,6 @@ export const UserDetailsCard: React.FC<{ user: User }> = ({ user }) => {
           </Flex>
         </Col>
       </Row>
-
-      <Row gutter={[16, 16]} style={{ marginTop: 20 }}></Row>
     </Card>
   );
 };

@@ -1,96 +1,88 @@
-import type { Job } from '@/types';
-import { stringifyError } from '@/utils/errors';
-import { Alert, Button, Card, Flex, Form, Input, Typography } from 'antd';
-import FormItem from 'antd/es/form/FormItem';
-import axios from 'axios';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  Col,
+  Divider,
+  Empty,
+  Flex,
+  Pagination,
+  Result,
+  Row,
+  Spin,
+  Typography,
+} from 'antd';
+import { RequestNovelCard } from '../Home/RequestNovelCard';
+import { useNovelList } from '../Home/hooks';
+import { NovelListItemCard } from './NovelListItemCard';
 
-export const HomePage: React.FC<any> = () => {
-  const [form] = Form.useForm();
-  const navigate = useNavigate();
-  const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false);
+const { Title } = Typography;
 
-  const submitJob = async (values: any) => {
-    setLoading(true);
-    setError(undefined);
-    try {
-      const result = await axios.post<Job>(
-        `/api/job`,
-        new URLSearchParams(values).toString(),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
-      navigate({ pathname: `/job/${result.data.id}` });
-    } catch (err) {
-      setError(stringifyError(err, 'Oops! Something went wrong.'));
-    } finally {
-      setLoading(false);
-    }
-  };
+export default function HomePage() {
+  const {
+    currentPage,
+    perPage,
+    error,
+    loading,
+    total,
+    novels,
+    refresh,
+    changePage,
+  } = useNovelList();
+
+  if (loading) {
+    return (
+      <Flex align="center" justify="center" style={{ height: '100%' }}>
+        <Spin tip="Loading job..." size="large" style={{ marginTop: 100 }} />
+      </Flex>
+    );
+  }
+
+  if (error) {
+    return (
+      <Flex align="center" justify="center" style={{ height: '100%' }}>
+        <Result
+          status="error"
+          title="Failed to load novel list"
+          subTitle={error}
+          extra={[<Button onClick={refresh}>Retry</Button>]}
+        />
+      </Flex>
+    );
+  }
 
   return (
-    <Flex
-      align="center"
-      justify="center"
-      style={{ height: 'calc(100% - 20px)', padding: 10 }}
-    >
-      <Card
-        title={
-          <Typography.Title level={3} style={{ margin: '20px 0' }}>
-            📘 Request Novel
-          </Typography.Title>
-        }
-        style={{ width: '650px' }}
-      >
-        <Form
-          form={form}
-          size="large"
-          onFinish={submitJob}
-          labelCol={{ style: { padding: 0 } }}
-          encType="application/x-www-form-urlencoded"
-        >
-          <Form.Item name="url" rules={[{ required: true, type: 'url' }]}>
-            <Input
-              placeholder="Enter novel page url"
-              autoComplete="novel-page-url"
-            />
-          </Form.Item>
-          <Typography.Text type="secondary">
-            Enter the full URL of the novel page. The URL must begin with
-            'http://' or 'https://' and should lead to a page containing the
-            novel details such as title, cover image, author, synopsis, chapter
-            list etc. Partial or incomplete URLs will not be accepted.
-          </Typography.Text>
+    <>
+      <Title level={2}>📘 Request Novel</Title>
 
-          {Boolean(error) && (
-            <Alert
-              type="warning"
-              showIcon
-              message={error}
-              closable
-              onClose={() => setError('')}
-            />
-          )}
+      <RequestNovelCard />
 
-          <FormItem style={{ marginTop: '20px' }}>
-            <Button
-              block
-              type="primary"
-              htmlType="submit"
-              loading={loading}
-              disabled={loading}
-              children={'Submit'}
-            />
-          </FormItem>
-        </Form>
-      </Card>
-    </Flex>
+      <Divider />
+
+      <Title level={2}>📚 Available Novels</Title>
+
+      <Row gutter={[16, 16]}>
+        {novels.map((novel) => (
+          <Col key={novel.id} xs={12} sm={8} lg={6} xl={4}>
+            <NovelListItemCard novel={novel} />
+          </Col>
+        ))}
+      </Row>
+
+      {!novels.length && (
+        <Flex align="center" justify="center" style={{ height: '100%' }}>
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="No novels" />
+        </Flex>
+      )}
+
+      {(novels.length > 0 || currentPage > 1) && total / perPage > 1 && (
+        <Pagination
+          current={currentPage}
+          total={total}
+          pageSize={perPage}
+          showSizeChanger={false}
+          onChange={changePage}
+          style={{ textAlign: 'center', marginTop: 32 }}
+        />
+      )}
+    </>
   );
-};
-
-export default HomePage;
+}

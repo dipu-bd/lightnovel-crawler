@@ -24,7 +24,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
 
   if (!novel?.title) {
     return (
-      <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
+      <Card variant="outlined">
         <Empty
           image={Empty.PRESENTED_IMAGE_SIMPLE}
           description="Novel details is not available"
@@ -34,7 +34,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
   }
 
   return (
-    <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
+    <Card variant="outlined">
       <Title
         level={3}
         style={{ color: 'inherit', margin: 0, marginBottom: 10 }}
@@ -102,7 +102,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
                 children: formatDate(novel.created_at),
               },
               {
-                label: 'Last Updated',
+                label: 'Last Update',
                 children: formatDate(novel.updated_at),
               },
             ]}

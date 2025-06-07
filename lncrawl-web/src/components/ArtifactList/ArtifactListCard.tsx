@@ -15,7 +15,7 @@ export const ArtifactListCard: React.FC<{ artifacts?: Artifact[] }> = ({
 }) => {
   const { sm } = Grid.useBreakpoint();
   return (
-    <Card variant="outlined" style={{ margin: 'auto', maxWidth: 1000 }}>
+    <Card variant="outlined">
       <Title level={4} style={{ margin: 0, marginBottom: 5 }}>
         Artifacts
       </Title>

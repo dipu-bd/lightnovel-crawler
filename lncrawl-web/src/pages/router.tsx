@@ -10,7 +10,6 @@ const HomePage = lazy(() => import('./Home'));
 const JobDetailsPage = lazy(() => import('./JobDetails'));
 const JobListPage = lazy(() => import('./JobList'));
 const NovelDetailsPage = lazy(() => import('./NovelDetails'));
-const NovelListPage = lazy(() => import('./NovelList'));
 // meta
 const SupportedSourcesPage = lazy(() => import('./SupportedSources'));
 // admin
@@ -45,10 +44,6 @@ export const USER_ROUTES: RouteObject[] = [
       {
         path: '',
         element: <HomePage />,
-      },
-      {
-        path: 'novels',
-        element: <NovelListPage />,
       },
       {
         path: 'novel/:id',

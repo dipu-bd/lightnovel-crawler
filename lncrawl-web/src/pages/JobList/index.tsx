@@ -83,7 +83,7 @@ export default function JobListPage() {
   }
 
   return (
-    <div style={{ padding: '20px 15px', height: '100%', marginBottom: '20px' }}>
+    <>
       <Title level={2}>🛠 Job List</Title>
 
       <List
@@ -107,6 +107,6 @@ export default function JobListPage() {
           style={{ textAlign: 'center', marginTop: 32 }}
         />
       )}
-    </div>
+    </>
   );
 }

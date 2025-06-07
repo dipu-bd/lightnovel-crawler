@@ -1,13 +1,14 @@
 import { type Artifact, type Novel } from '@/types';
-import { Button, Flex, Result, Space, Spin } from 'antd';
+import { stringifyError } from '@/utils/errors';
+import { Button, Flex, Grid, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ArtifactListCard } from '../../components/ArtifactList/ArtifactListCard';
 import { NovelDetailsCard } from './NovelDetailsCard';
-import { stringifyError } from '@/utils/errors';
 
 export default function JobDetailsPage() {
+  const { lg } = Grid.useBreakpoint();
   const { id } = useParams<{ id: string }>();
 
   const [refreshId, setRefreshId] = useState(0);
@@ -69,11 +70,7 @@ export default function JobDetailsPage() {
   }
 
   return (
-    <Space
-      size="large"
-      direction="vertical"
-      style={{ padding: 15, marginBottom: '20px' }}
-    >
+    <Space direction="vertical" size={lg ? 'large' : 'small'}>
       <NovelDetailsCard novel={novel} />
       <ArtifactListCard artifacts={artifacts} />
     </Space>

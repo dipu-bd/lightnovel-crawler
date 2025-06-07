@@ -4,18 +4,23 @@ import { Card, Flex, Grid, Progress, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import { JobActionButtons } from './JobActionButtons';
 
-const { Paragraph, Title } = Typography;
+const { Paragraph } = Typography;
 
 export const JobListItemCard: React.FC<{
   job: Job;
   onChange?: () => any;
 }> = ({ job, onChange }) => {
   const { lg } = Grid.useBreakpoint();
-
   return (
-    <Card hoverable style={{ marginBottom: 7 }}>
-      <Link to={`/job/${job.id}`}>
-        <Flex wrap gap="15px" justify="end">
+    <Link to={`/job/${job.id}`}>
+      <Card
+        hoverable
+        style={{ marginBottom: 5 }}
+        styles={{
+          body: { padding: lg ? undefined : 15 },
+        }}
+      >
+        <Flex wrap align="center" justify="end" gap="15px">
           {lg && (
             <Progress
               type="circle"
@@ -31,26 +36,28 @@ export const JobListItemCard: React.FC<{
             />
           )}
 
-          <Flex
-            vertical
-            wrap
-            gap="5px"
-            style={{ flex: 1, minWidth: lg ? 0 : '100%' }}
-          >
+          <div style={{ flex: 1, minWidth: lg ? 0 : '100%' }}>
             <Paragraph
               ellipsis={{ rows: 2 }}
-              style={{ marginBottom: lg ? 7 : 2 }}
+              style={{
+                fontSize: '1.15rem',
+                fontFamily: "'Roboto Slab', serif",
+              }}
             >
-              <Title level={4} style={{ margin: 0 }}>
-                {job.url}
-              </Title>
+              {job.url}
             </Paragraph>
+
+            <Space style={{ marginTop: 5 }}>
+              <JobStatusTag value={job.status} completed={job.run_state} />
+              <JobPriorityTag value={job.priority} />
+            </Space>
 
             {!lg && (
               <Progress
                 percent={job.progress || 0}
                 size={['100%', 12]}
                 strokeColor={{ from: '#108ee9', to: '#87d068' }}
+                style={{ marginTop: 10 }}
                 status={
                   job.run_state === RunState.SUCCESS
                     ? 'success'
@@ -60,12 +67,7 @@ export const JobListItemCard: React.FC<{
                 }
               />
             )}
-
-            <Space>
-              <JobStatusTag value={job.status} completed={job.run_state} />
-              <JobPriorityTag value={job.priority} />
-            </Space>
-          </Flex>
+          </div>
 
           <Flex
             wrap
@@ -77,7 +79,7 @@ export const JobListItemCard: React.FC<{
             <JobActionButtons job={job} onChange={onChange} />
           </Flex>
         </Flex>
-      </Link>
-    </Card>
+      </Card>
+    </Link>
   );
 };

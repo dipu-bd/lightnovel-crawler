@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
+    "@fontsource/roboto-slab": "^5.2.5",
     "@reduxjs/toolkit": "^2.8.2",
     "@types/node": "^22.15.29",
     "antd": "^5.25.4",
