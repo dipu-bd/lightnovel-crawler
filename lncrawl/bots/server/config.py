@@ -40,7 +40,7 @@ class ServerConfig:
     @property
     def token_expiry(self) -> int:
         '''in minutes'''
-        return 30
+        return 7 * 24 * 60
 
     @cached_property
     def admin_email(self) -> str:
