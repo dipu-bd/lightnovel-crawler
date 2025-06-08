@@ -11,6 +11,7 @@ import { UserInfoCard } from './UserInfo';
 export const buildMenu = (isAdmin: boolean): MenuProps['items'] => [
   {
     key: '/me',
+    disabled: true,
     style: {
       height: 'fit-content',
     },

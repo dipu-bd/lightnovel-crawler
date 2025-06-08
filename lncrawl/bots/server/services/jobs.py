@@ -68,7 +68,6 @@ class JobService:
             novel = sess.exec(select(Novel).where(Novel.url == novel_url)).first()
             if not novel:
                 novel = Novel(url=novel_url)
-                novel.title = await self._ctx.fetch.website_title(novel_url)
                 sess.add(novel)
 
             # create the job
