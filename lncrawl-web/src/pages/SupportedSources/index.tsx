@@ -13,7 +13,7 @@ import { useSupportedSources } from './hooks';
 
 const { Text } = Typography;
 
-export default function SupportedSourcesPage() {
+export const SupportedSourcesPage: React.FC<any> = () => {
   const { data, loading, error, refresh } = useSupportedSources();
 
   const active = data.filter((x) => !x.is_disabled);
@@ -65,4 +65,4 @@ export default function SupportedSourcesPage() {
       </Tabs.TabPane>
     </Tabs>
   );
-}
+};

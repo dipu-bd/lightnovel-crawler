@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Body, Depends, Security
+from fastapi import APIRouter, Body, Depends, Security, Form
 
 from ..context import ServerContext
 from ..models.user import (CreateRequest, LoginRequest, LoginResponse,
-                           SignupRequest, UpdateRequest, User)
+                           SignupRequest, TokenResponse, UpdateRequest, User)
 from ..security import ensure_user
 
 # The root router
@@ -19,7 +19,12 @@ def login(
 ) -> LoginResponse:
     user = ctx.users.verify(credentials)
     token = ctx.users.generate_token(user)
-    return LoginResponse(token=token, user=user)
+    is_verified = ctx.users.is_verified(user.email)
+    return LoginResponse(
+        token=token,
+        user=user,
+        is_verified=is_verified,
+    )
 
 
 @router.post('/signup', summary='Signup as a new user')
@@ -37,7 +42,12 @@ def signup(
     )
     user = ctx.users.create(request)
     token = ctx.users.generate_token(user)
-    return LoginResponse(token=token, user=user)
+    is_verified = ctx.users.is_verified(user.email)
+    return LoginResponse(
+        token=token,
+        user=user,
+        is_verified=is_verified,
+    )
 
 
 @router.get('/me', summary='Get current user details')
@@ -60,3 +70,21 @@ def self_update(
     body.tier = None
     body.is_active = None
     return ctx.users.update(user.id, body)
+
+
+@router.post('/me/send-otp', summary='Send OTP to current user email for verification')
+def send_otp(
+    ctx: ServerContext = Depends(),
+    user: User = Security(ensure_user),
+) -> TokenResponse:
+    token = ctx.users.send_otp(user.email)
+    return TokenResponse(token=token)
+
+
+@router.post('/me/verify-otp', summary='Get if current user email is verified')
+def verify_otp(
+    otp: str = Form(),
+    token: str = Form(),
+    ctx: ServerContext = Depends(),
+) -> bool:
+    return ctx.users.verify_otp(token, otp)

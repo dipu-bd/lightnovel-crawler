@@ -27,7 +27,7 @@ export function useNovelList() {
     if (breakpoint.lg) return 12;
     if (breakpoint.sm) return 12;
     return 8;
-  }, [breakpoint]);
+  }, [breakpoint.xl, breakpoint.lg, breakpoint.sm]);
 
   const fetchNovels = async (page: number, limit: number) => {
     setLoading(true);
@@ -57,9 +57,12 @@ export function useNovelList() {
     setRefreshId((v) => v + 1);
   }, []);
 
-  const changePage = useCallback((page: number) => {
-    setSearchParams({ page: String(page) });
-  }, []);
+  const changePage = useCallback(
+    (page: number) => {
+      setSearchParams({ page: String(page) });
+    },
+    [setSearchParams]
+  );
 
   return {
     perPage,

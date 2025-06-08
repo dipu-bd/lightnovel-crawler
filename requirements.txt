@@ -54,3 +54,4 @@ types-python-dateutil
 types-passlib
 types-python-jose
 types-setuptools
+lxml-stubs

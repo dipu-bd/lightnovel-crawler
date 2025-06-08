@@ -16,11 +16,13 @@ class ServerContext:
     def prepare(self):
         load_sources()
         self.db.prepare()
+        self.mail.prepare()
         self.users.prepare()
         self.scheduler.start()
 
     def cleanup(self):
         self.db.close()
+        self.mail.close()
         self.scheduler.close()
         global _cache
         _cache = None
@@ -64,3 +66,13 @@ class ServerContext:
     def fetch(self):
         from .services.fetch import FetchService
         return FetchService(self)
+
+    @cached_property
+    def metadata(self):
+        from .services.meta import MetadataService
+        return MetadataService(self)
+
+    @cached_property
+    def mail(self):
+        from .services.mail import MailService
+        return MailService(self)

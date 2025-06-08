@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { MainLayoutSidebar } from './sidebar';
 
-export default function MainLayout() {
+export const MainLayout: React.FC<any> = () => {
   const { md } = Grid.useBreakpoint();
   const [overlay, setOverlay] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -82,4 +82,4 @@ export default function MainLayout() {
       </Layout.Content>
     </Layout>
   );
-}
+};

@@ -23,7 +23,6 @@ depends_on_epub = [
     OutputFormat.mobi,
     OutputFormat.pdf,
     OutputFormat.rtf,
-    OutputFormat.txt,
     OutputFormat.azw3,
     OutputFormat.fb2,
     OutputFormat.lit,
@@ -33,8 +32,6 @@ depends_on_epub = [
     OutputFormat.rb,
     OutputFormat.snb,
     OutputFormat.tcr,
-    # OutputFormat.pml,
-    # OutputFormat.html,
 ]
 available_formats = depends_on_none + depends_on_epub
 

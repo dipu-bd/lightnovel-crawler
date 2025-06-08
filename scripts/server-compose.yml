@@ -35,6 +35,8 @@ services:
       - output_path:/home/lncrawl/output
     depends_on:
       - chrome
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   output_path:

@@ -3,7 +3,6 @@ from typing import Optional
 from fastapi import Depends, Security
 from fastapi.security import (HTTPAuthorizationCredentials, HTTPBasic,
                               HTTPBasicCredentials, HTTPBearer, SecurityScopes)
-from jose import jwt
 
 from .context import ServerContext
 from .exceptions import AppErrors
@@ -19,38 +18,23 @@ def ensure_user(
     basic: Optional[HTTPBasicCredentials] = Depends(basic_auth),
     bearer: Optional[HTTPAuthorizationCredentials] = Depends(bearer_auth),
 ) -> User:
-    try:
-        if basic:
-            login = LoginRequest(
-                email=basic.username,
-                password=basic.password,
-            )
-            user = ctx.users.verify(login)
-        elif bearer:
-            payload = jwt.decode(
-                bearer.credentials,
-                key=ctx.config.server.token_secret,
-                algorithms=ctx.config.server.token_algo,
-            )
-
-            user_id = payload.get('uid')
-            if not user_id:
-                raise AppErrors.unauthorized
-
-            token_scopes = payload.get('scopes', [])
-            required_scopes = security_scopes.scopes
-            if any(scope not in token_scopes for scope in required_scopes):
-                raise AppErrors.forbidden
-
-            user = ctx.users.get(user_id)
-        else:
-            raise AppErrors.unauthorized
-
-        if not user.is_active:
-            raise AppErrors.inactive_user
-        return user
-    except Exception as e:
-        raise AppErrors.unauthorized from e
+    if basic:
+        login = LoginRequest(
+            email=basic.username,
+            password=basic.password,
+        )
+        user = ctx.users.verify(login)
+    elif bearer:
+        required_scopes = security_scopes.scopes
+        user = ctx.users.verify_token(
+            bearer.credentials,
+            required_scopes
+        )
+    else:
+        raise AppErrors.unauthorized
+    if not user.is_active:
+        raise AppErrors.inactive_user
+    return user
 
 
 def ensure_admin(

@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { ArtifactListCard } from '../../components/ArtifactList/ArtifactListCard';
 import { NovelDetailsCard } from './NovelDetailsCard';
 
-export default function JobDetailsPage() {
+export const NovelDetailsPage: React.FC<any> = () => {
   const { lg } = Grid.useBreakpoint();
   const { id } = useParams<{ id: string }>();
 
@@ -75,4 +75,4 @@ export default function JobDetailsPage() {
       <ArtifactListCard artifacts={artifacts} />
     </Space>
   );
-}
+};

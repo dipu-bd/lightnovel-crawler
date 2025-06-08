@@ -1,20 +1,15 @@
-import { lazy } from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 
-const MainLayout = lazy(() => import('@/components/Layout'));
-// auth
-const LoginPage = lazy(() => import('./Login'));
-const SignupPage = lazy(() => import('./Signup'));
-// user
-const HomePage = lazy(() => import('./Home'));
-const JobDetailsPage = lazy(() => import('./JobDetails'));
-const JobListPage = lazy(() => import('./JobList'));
-const NovelDetailsPage = lazy(() => import('./NovelDetails'));
-// meta
-const SupportedSourcesPage = lazy(() => import('./SupportedSources'));
-// admin
-const UserDetailsPage = lazy(() => import('./UserDetails'));
-const UserListPage = lazy(() => import('./UserList'));
+import { MainLayout } from '@/components/Layout';
+import { HomePage } from './Home';
+import { JobDetailsPage } from './JobDetails';
+import { JobListPage } from './JobList';
+import { LoginPage } from './Login';
+import { NovelDetailsPage } from './NovelDetails';
+import { SignupPage } from './Signup';
+import { SupportedSourcesPage } from './SupportedSources';
+import { UserDetailsPage } from './UserDetails';
+import { UserListPage } from './UserList';
 
 export const AUTH_ROUTES: RouteObject[] = [
   {

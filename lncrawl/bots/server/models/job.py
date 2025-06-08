@@ -36,6 +36,7 @@ class RunState(IntEnum):
 class Artifact(BaseModel, table=True):
     novel_id: str = Field(foreign_key="novel.id", ondelete='CASCADE')
     novel: Optional["Novel"] = Relationship(back_populates="artifacts")
+    # job_id: Optional[str] = Field(foreign_key="job.id", ondelete='SET NULL')
 
     file_name: str = Field(description="Output file name")
     output_file: str = Field(description="Output file path", exclude=True)

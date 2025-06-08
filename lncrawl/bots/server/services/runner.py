@@ -281,7 +281,19 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
             job.progress = round(app.progress)
             job.run_state = RunState.SUCCESS
             sess.add(job)
-            return
+            sess.commit()
+
+            # send success email
+            if ctx.users.is_verified(user.email):
+                try:
+                    ctx.mail.send_job_success(
+                        user.email,
+                        ctx.jobs.get(job.id)
+                    )
+                    logger.error('Success email was sent to the user')
+                except Exception as e:
+                    logger.error('Failed to send email', e)
+                return
 
     except Exception as e:
         logger.exception('Job failed')

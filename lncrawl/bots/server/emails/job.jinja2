@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Job Status Report</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:700|Roboto:400,600&display=swap" rel="stylesheet" />
+</head>
+
+<body style="background: #f7fafc; padding: 20px; margin: 0">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="
+              background: #fff;
+              border-radius: 14px;
+              box-shadow: 0 6px 32px rgba(0, 0, 0, 0.06);
+              padding: 30px;
+            ">
+          <tr>
+            <td style="padding-bottom: 18px">
+              <h2 style="
+                    margin: 0 0 4px 0;
+                    font-size: 20px;
+                    font-family: Roboto, sans-serif;
+                    color: #222;
+                  ">
+                {{ novel_title }}
+              </h2>
+              <div style="
+                    margin-bottom: 8px;
+                    color: #777;
+                    font-size: 15px;
+                    font-family: Roboto, sans-serif;
+                  ">
+                <b>Author(s):</b> {{ novel_authors }} <br />
+                <b>Chapters:</b> {{ chapter_count }} | <b>Volumes:</b> {{ volume_count }}
+              </div>
+              <div style="
+                    color: #666;
+                    font-size: 15px;
+                    margin-bottom: 18px;
+                    line-height: 1.5;
+                    font-family: Roboto, sans-serif;
+                    max-height: 70px;
+                    overflow: hidden;
+                  ">
+                {{ novel_synopsis }}
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h2 style="
+                    margin: 0 0 7px 0;
+                    font-family: Roboto, sans-serif;
+                    color: #555;
+                    font-size: 18px;
+                  ">
+                Artifacts
+              </h2>
+              <table width="100%" cellpadding="0" cellspacing="0" border="0"
+                style="background: #f7fafc; padding: 10px 15px; border-radius: 8px">
+                {% if artifacts %}
+                {% for artifact in artifacts %}
+                <tr style="font-size: 16px;">
+                  <td style="padding: 0 10px; padding-bottom: 10px;">
+                    <b>{{ artifact.format }}</b>
+                  </td>
+                  <td style="padding-bottom: 10px;">
+                    <a href="{{ artifact.url }}" target="_blank">
+                      {{ artifact.name }}
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                  <td style="padding: 12px; color: #aaa">
+                    No files available.
+                  </td>
+                </tr>
+                {% endif %}
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding-top: 32px">
+              <a href="{{ job_url }}" target="_blank" style="
+                    font-family: Roboto, sans-serif;
+                    font-size: 16px;
+                    background: #276ef1;
+                    color: #fff;
+                    text-decoration: none;
+                    padding: 11px 28px;
+                    border-radius: 8px;
+                    font-weight: 500;
+                    display: inline-block;
+                  ">
+                View Job Details
+              </a>
+            </td>
+          </tr>
+        </table>
+        <div style="
+              color: #888;
+              font-size: 13px;
+              margin-top: 18px;
+              font-family: Roboto, sans-serif;
+            ">
+          This is an automated message. Please do not reply.
+        </div>
+      </td>
+    </tr>
+  </table>
+</body>
+
+</html>

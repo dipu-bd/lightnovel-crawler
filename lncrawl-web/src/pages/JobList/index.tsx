@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 const PER_PAGE = 8;
 
-export default function JobListPage() {
+export const JobListPage: React.FC<any> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [refreshId, setRefreshId] = useState(0);
@@ -109,4 +109,4 @@ export default function JobListPage() {
       )}
     </>
   );
-}
+};

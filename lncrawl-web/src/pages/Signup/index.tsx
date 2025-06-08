@@ -137,5 +137,3 @@ export const SignupPage: React.FC<any> = () => {
     </Layout>
   );
 };
-
-export default SignupPage;

@@ -1,5 +1,7 @@
 import logging
+import secrets
 from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
 from jose import jwt
 from passlib.context import CryptContext
@@ -9,7 +11,7 @@ from ..context import ServerContext
 from ..exceptions import AppErrors
 from ..models.pagination import Paginated
 from ..models.user import (CreateRequest, LoginRequest, UpdateRequest, User,
-                           UserRole, UserTier)
+                           UserRole, UserTier, VerifiedEmail)
 
 logger = logging.getLogger(__name__)
 
@@ -53,17 +55,42 @@ class UserService:
             sess.add(user)
             sess.commit()
 
-    def generate_token(self, user: User) -> str:
+    def encode_token(
+        self,
+        payload: Dict[str, Any],
+        expiry_minutes: Optional[int] = None,
+    ) -> str:
         key = self._ctx.config.server.token_secret
         algorithm = self._ctx.config.server.token_algo
-        minutes = self._ctx.config.server.token_expiry
-        expiry = datetime.now() + timedelta(minutes=minutes)
+        default_expiry = self._ctx.config.server.token_expiry
+        minutes = expiry_minutes if expiry_minutes else default_expiry
+        payload['exp'] = datetime.now() + timedelta(minutes=minutes)
+        return jwt.encode(payload, key, algorithm)
+
+    def decode_token(self, token: str) -> Dict[str, Any]:
+        try:
+            key = self._ctx.config.server.token_secret
+            algorithm = self._ctx.config.server.token_algo
+            return jwt.decode(token, key, algorithm)
+        except Exception as e:
+            raise AppErrors.unauthorized from e
+
+    def generate_token(self, user: User) -> str:
         payload = {
-            'exp': expiry,
             'uid': user.id,
             'scopes': [user.role, user.tier],
         }
-        return jwt.encode(payload, key, algorithm)
+        return self.encode_token(payload)
+
+    def verify_token(self, token: str, required_scopes: List[str]) -> User:
+        payload = self.decode_token(token)
+        user_id = payload.get('uid')
+        token_scopes = payload.get('scopes', [])
+        if not user_id:
+            raise AppErrors.unauthorized
+        if any(scope not in token_scopes for scope in required_scopes):
+            raise AppErrors.forbidden
+        return self.get(user_id)
 
     def list(
         self,
@@ -101,6 +128,7 @@ class UserService:
         return user
 
     def create(self, body: CreateRequest) -> User:
+        self.send_otp(body.email)
         with self._db.session() as sess:
             q = select(func.count()).where(User.email == body.email)
             if sess.exec(q).one() != 0:
@@ -151,5 +179,39 @@ class UserService:
             if not user:
                 raise AppErrors.no_such_user
             sess.delete(user)
+            sess.commit()
+            return True
+
+    def is_verified(self, email: str) -> bool:
+        with self._db.session() as sess:
+            verified = sess.get(VerifiedEmail, email)
+            return bool(verified)
+
+    def send_otp(self, email: str):
+        with self._db.session() as sess:
+            verified = sess.get(VerifiedEmail, email)
+            if verified:
+                raise AppErrors.email_already_verified
+
+        otp = str(secrets.randbelow(1000000)).zfill(6)
+        self._ctx.mail.send_otp(email, otp)
+        return self.encode_token({
+            'otp': otp,
+            'email': email,
+        }, 5)
+
+    def verify_otp(self, token: str, input_otp: str) -> bool:
+        payload = self.decode_token(token)
+        email = payload.get('email')
+        if not email:
+            raise AppErrors.not_found
+
+        actual_otp = payload.get('otp')
+        if actual_otp != input_otp:
+            raise AppErrors.unauthorized
+
+        with self._db.session() as sess:
+            entry = VerifiedEmail(email=email)
+            sess.add(entry)
             sess.commit()
             return True

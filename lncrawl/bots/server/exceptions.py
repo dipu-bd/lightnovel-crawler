@@ -13,6 +13,7 @@ class AppError(HTTPException):
 
 class AppErrors:
     forbidden = AppError(403, 'Forbidden')
+    not_found = AppError(404, 'Not Found')
     unauthorized = AppError(401, 'Unauthorized')
     internal_error = AppError(500, 'Internal Server Error')
 
@@ -29,11 +30,14 @@ class AppErrors:
     no_such_novel = AppError(404, "No such novel")
     no_such_artifact = AppError(404, "No such artifact")
     no_artifact_file = AppError(404, "Artifact file not available")
+    email_already_verified = AppError(409, "Email is already verified")
 
     no_novel_title = AppError(500, "Novel has no title")
     unable_to_resume_job = AppError(500, "Unable to resume Job")
     no_novel_cover = AppError(500, "Novel cover is not available")
-    invalid_image_response = AppError(400, "Invalid image response")
+    invalid_image_response = AppError(500, "Invalid image response")
+    smtp_server_unavailable = AppError(500, "SMTP server is not available")
+    email_send_failure = AppError(500, "Failed to send email")
 
 
 @app.exception_handler(AppError)

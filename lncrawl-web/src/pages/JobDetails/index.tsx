@@ -16,7 +16,7 @@ import { NovelDetailsCard } from '../NovelDetails/NovelDetailsCard';
 import { UserDetailsCard } from '../UserDetails/UserDetailsCard';
 import { JobDetailsCard } from './JobDetailsCard';
 
-export default function JobDetailsPage() {
+export const JobDetailsPage: React.FC<any> = () => {
   const { lg } = Grid.useBreakpoint();
   const { id } = useParams<{ id: string }>();
 
@@ -92,4 +92,4 @@ export default function JobDetailsPage() {
       <ArtifactListCard artifacts={artifacts} />
     </Space>
   );
-}
+};

@@ -66,7 +66,7 @@ export const SupportedSourceFilter: React.FC<{
   useEffect(() => {
     const tid = setTimeout(() => onChange(filter), 100);
     return () => clearTimeout(tid);
-  }, [filter]);
+  }, [filter, onChange]);
 
   return (
     <Flex wrap align="center" gap={5}>

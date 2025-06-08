@@ -134,5 +134,3 @@ export const LoginPage: React.FC<any> = () => {
     </Layout>
   );
 };
-
-export default LoginPage;

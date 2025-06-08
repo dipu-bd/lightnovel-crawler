@@ -4,6 +4,7 @@ from typing import Optional
 from pydantic import EmailStr
 from sqlmodel import Field, SQLModel
 
+from ..utils.time_utils import current_timestamp
 from ._base import BaseModel
 
 
@@ -27,14 +28,23 @@ class User(BaseModel, table=True):
     tier: UserTier = Field(default=UserTier.BASIC, description="User tier")
 
 
+class VerifiedEmail(SQLModel, table=True):
+    email: str = Field(primary_key=True, description="User Email")
+    created_at: int = Field(default_factory=current_timestamp, description="Create timestamp (ms)")
+
+
 class LoginRequest(SQLModel):
     email: str = Field(description="User email")
     password: str = Field(description="User password")
 
 
-class LoginResponse(SQLModel):
+class TokenResponse(SQLModel):
     token: str = Field(description="The authorization token")
+
+
+class LoginResponse(TokenResponse):
     user: User = Field(description="The user")
+    is_verified: bool = Field(description="Is the email verified")
 
 
 class SignupRequest(SQLModel):

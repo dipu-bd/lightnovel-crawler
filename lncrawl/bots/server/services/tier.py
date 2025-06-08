@@ -28,7 +28,25 @@ ENABLED_FORMATS = {
         OutputFormat.web,
         OutputFormat.pdf,
     ],
-    UserTier.VIP: list(OutputFormat),
+    UserTier.VIP: [
+        OutputFormat.json,
+        OutputFormat.epub,
+        OutputFormat.mobi,
+        OutputFormat.pdf,
+        OutputFormat.web,
+        OutputFormat.text,
+        OutputFormat.docx,
+        OutputFormat.rtf,
+        OutputFormat.fb2,
+        # OutputFormat.azw3,
+        # OutputFormat.lit,
+        # OutputFormat.lrf,
+        # OutputFormat.oeb,
+        # OutputFormat.pdb,
+        # OutputFormat.rb,
+        # OutputFormat.snb,
+        # OutputFormat.tcr,
+    ],
 }
 
 SLOT_TIMEOUT_IN_SECOND = {

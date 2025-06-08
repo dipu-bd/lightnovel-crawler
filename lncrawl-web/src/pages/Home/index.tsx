@@ -16,7 +16,7 @@ import { NovelListItemCard } from './NovelListItemCard';
 
 const { Title } = Typography;
 
-export default function HomePage() {
+export const HomePage: React.FC<any> = () => {
   const {
     currentPage,
     perPage,
@@ -85,4 +85,4 @@ export default function HomePage() {
       )}
     </>
   );
-}
+};
