@@ -71,12 +71,11 @@ except Exception:
 
 session = cloudscraper.create_scraper()
 
-INDEX_DATA: Dict[Any, Any] = {
+INDEX_DATA: Dict[str, Any] = {
     "v": int(time.time()),
     "app": {
         "windows": "https://go.bitanon.dev/lncrawl-windows",
         "linux": "https://go.bitanon.dev/lncrawl-linux",
-        "mac": "https://go.bitanon.dev/lncrawl-mac",
     },
     "rejected": {},
     "supported": {},
@@ -177,8 +176,10 @@ def git_history(file_path) -> List[Dict[Any, Any]]:
                 "email": x[2],
                 "subject": x[3],
             }
-            for line in logs.splitlines(False)
-            for x in line.strip().split("||", maxsplit=4)
+            for x in [
+                line.strip().split("||", maxsplit=4)
+                for line in logs.splitlines(False)
+            ]
         ]
     except Exception:
         traceback.print_exc()
