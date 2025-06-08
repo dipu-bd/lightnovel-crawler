@@ -51,7 +51,7 @@ export const JobDetailsPage: React.FC<any> = () => {
   }, [id, refreshId]);
 
   useEffect(() => {
-    if (job?.status !== JobStatus.COMPLETED) {
+    if (job && job.status !== JobStatus.COMPLETED) {
       const iid = setInterval(() => {
         setRefreshId((v) => v + 1);
       }, 1000);
@@ -59,7 +59,7 @@ export const JobDetailsPage: React.FC<any> = () => {
         clearInterval(iid);
       };
     }
-  }, [job?.status]);
+  }, [job]);
 
   if (loading) {
     return (
@@ -77,7 +77,14 @@ export const JobDetailsPage: React.FC<any> = () => {
           title="Failed to load job data"
           subTitle={error}
           extra={[
-            <Button onClick={() => setRefreshId((v) => v + 1)}>Retry</Button>,
+            <Button
+              onClick={() => {
+                setLoading(true);
+                setRefreshId((v) => v + 1);
+              }}
+            >
+              Retry
+            </Button>,
           ]}
         />
       </Flex>

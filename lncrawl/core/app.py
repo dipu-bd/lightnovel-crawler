@@ -61,16 +61,16 @@ class App:
         if self.crawler and self.crawler.has_manga:
             return (
                 + self.fetch_novel_progress * 0.05
-                + self.fetch_chapter_progress * 0.45
-                + self.fetch_images_progress * 0.40
-                + self.binding_progress * 0.1
+                + self.fetch_chapter_progress * 0.15
+                + self.fetch_images_progress * 0.70
+                + self.binding_progress * 0.10
             )
         else:
             return (
                 + self.fetch_novel_progress * 0.05
-                + self.fetch_chapter_progress * 0.8
+                + self.fetch_chapter_progress * 0.80
                 + self.fetch_images_progress * 0.05
-                + self.binding_progress * 0.1
+                + self.binding_progress * 0.10
             )
 
     # ----------------------------------------------------------------------- #

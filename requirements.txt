@@ -26,9 +26,11 @@ pycryptodome>=3.0.0,<4.0.0
 selenium>=3.141.0
 tenacity>=9.0.0
 
-# bot requirements
+# message bot requirements
 discord.py>=2.0.0
 python-telegram-bot[job-queue]~=20.0
+
+# server requirements
 uvicorn
 fastapi[standard]
 cachetools

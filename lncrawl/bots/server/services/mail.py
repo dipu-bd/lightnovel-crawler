@@ -90,7 +90,7 @@ class MailService:
             {
                 'name': item.file_name,
                 'format': str(item.format),
-                'url': f'{base_url}/artifact/{item.id}/download',
+                'url': f'{base_url}/api/artifact/{item.id}/download',
             } for item in (detail.artifacts or [])
         ]
 

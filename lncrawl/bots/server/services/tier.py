@@ -16,6 +16,12 @@ JOB_PRIORITY_LEVEL = {
 ##
 # For JobRunner service
 ##
+SLOT_TIMEOUT_IN_SECOND = {
+    UserTier.BASIC: 60,
+    UserTier.PREMIUM: 5 * 60,
+    UserTier.VIP: 2 * 60 * 60,
+}
+
 ENABLED_FORMATS = {
     UserTier.BASIC: [
         OutputFormat.json,
@@ -25,7 +31,6 @@ ENABLED_FORMATS = {
         OutputFormat.json,
         OutputFormat.epub,
         OutputFormat.text,
-        OutputFormat.web,
         OutputFormat.pdf,
     ],
     UserTier.VIP: [
@@ -47,10 +52,4 @@ ENABLED_FORMATS = {
         # OutputFormat.snb,
         # OutputFormat.tcr,
     ],
-}
-
-SLOT_TIMEOUT_IN_SECOND = {
-    UserTier.BASIC: 60,
-    UserTier.PREMIUM: 5 * 60,
-    UserTier.VIP: 2 * 60 * 60,
 }

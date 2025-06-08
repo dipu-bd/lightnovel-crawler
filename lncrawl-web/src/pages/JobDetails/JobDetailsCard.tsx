@@ -3,7 +3,7 @@ import {
   JobStatusTag,
   RunStateTag,
 } from '@/components/Tags/jobs';
-import { RunState, type Job } from '@/types';
+import { JobStatus, RunState, type Job } from '@/types';
 import { formatDate, formatDuration } from '@/utils/time';
 import {
   ClockCircleFilled,
@@ -43,15 +43,6 @@ export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
       <Flex wrap align="center" gap={5}>
         <JobStatusTag value={job.status} completed={job.run_state} />
         <JobPriorityTag value={job.priority} />
-        {lg && (
-          <Tag
-            icon={<ClockCircleOutlined />}
-            color="default"
-            style={{ margin: 0 }}
-          >
-            {formatDate(job.created_at)}
-          </Tag>
-        )}
       </Flex>
 
       <Space wrap style={{ marginTop: 20 }}>
@@ -74,26 +65,28 @@ export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
       />
 
       <Flex wrap style={{ marginTop: 5 }}>
-        {job.started_at > 0 && (
+        <Tag icon={<ClockCircleOutlined />} color="default">
+          <b>Requested:</b> {formatDate(job.created_at)}
+        </Tag>
+        {[JobStatus.RUNNING, JobStatus.COMPLETED].includes(job.status) && (
           <Tag icon={<ClockCircleOutlined />} color="default">
             <b>Started:</b> {formatDate(job.started_at)}
           </Tag>
         )}
-        {job.finished_at > 0 ? (
-          <>
-            <Tag icon={<ClockCircleFilled />} color="default">
-              <b>Completed:</b> {formatDate(job.finished_at)}
-            </Tag>
-            <Tag icon={<HourglassFilled />} color="default">
-              <b>Runtime:</b> {formatDuration(job.finished_at - job.started_at)}
-            </Tag>
-          </>
-        ) : (
-          <>
-            <Tag icon={<ClockCircleOutlined spin />} color="default">
-              <b>Elapsed:</b> {formatDuration(Date.now() - job.started_at)}
-            </Tag>
-          </>
+        {job.status === JobStatus.RUNNING && (
+          <Tag icon={<ClockCircleOutlined spin />} color="default">
+            <b>Elapsed:</b> {formatDuration(Date.now() - job.started_at)}
+          </Tag>
+        )}
+        {job.status === JobStatus.COMPLETED && (
+          <Tag icon={<ClockCircleFilled />} color="default">
+            <b>Completed:</b> {formatDate(job.finished_at)}
+          </Tag>
+        )}
+        {job.status === JobStatus.COMPLETED && (
+          <Tag icon={<HourglassFilled />} color="default">
+            <b>Runtime:</b> {formatDuration(job.finished_at - job.started_at)}
+          </Tag>
         )}
       </Flex>
 

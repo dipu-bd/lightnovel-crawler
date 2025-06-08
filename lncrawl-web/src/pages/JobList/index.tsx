@@ -75,7 +75,14 @@ export const JobListPage: React.FC<any> = () => {
           title="Failed to load job list"
           subTitle={error}
           extra={[
-            <Button onClick={() => setRefreshId((v) => v + 1)}>Retry</Button>,
+            <Button
+              onClick={() => {
+                setLoading(true);
+                setRefreshId((v) => v + 1);
+              }}
+            >
+              Retry
+            </Button>,
           ]}
         />
       </Flex>

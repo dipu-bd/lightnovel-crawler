@@ -60,6 +60,10 @@ export const UserInfoCard: React.FC<any> = () => {
       );
       store.dispatch(Auth.action.setEmailVerified());
       setShowVerify(false);
+      messageApi.open({
+        type: 'success',
+        content: 'Awesome! Your email is now verified.',
+      });
     } catch (err) {
       messageApi.open({
         type: 'error',
