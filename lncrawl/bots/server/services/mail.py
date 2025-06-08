@@ -79,11 +79,13 @@ class MailService:
         if not self.server:
             raise AppErrors.smtp_server_unavailable
 
-        subject = 'Job Completed'
-
         base_url = self._ctx.config.server.base_url
         job_url = f'{base_url}/job/{detail.job.id}'
-
+        novel_title = detail.novel.title or "Unknown Title"
+        novel_authors = detail.novel.authors or "Unknown Author"
+        chapter_count = str(detail.novel.chapter_count or '?')
+        volume_count = str(detail.novel.volume_count or '?')
+        novel_synopsis = detail.novel.synopsis or "No synopsis available."
         artifacts = [
             {
                 'name': item.file_name,
@@ -95,11 +97,11 @@ class MailService:
         body = job_template().render(
             job_url=job_url,
             artifacts=artifacts,
-            novel_title=detail.novel.title or "Unknown Title",
-            novel_authors=detail.novel.authors or "Unknown Author",
-            chapter_count=str(detail.novel.chapter_count or '?'),
-            volume_count=str(detail.novel.volume_count or '?') ,
-            novel_synopsis=detail.novel.synopsis or "No synopsis available.",
+            novel_title=novel_title,
+            novel_authors=novel_authors,
+            chapter_count=chapter_count,
+            volume_count=volume_count,
+            novel_synopsis=novel_synopsis,
         )
 
-        self.send(email, subject, body)
+        self.send(email, novel_title, body)

@@ -16,12 +16,14 @@ export interface AuthState {
   user: User | null;
   token: string | null;
   tokenExpiresAt: number;
+  emailVerified: boolean;
 }
 
 const buildInitialState = (): AuthState => ({
   user: null,
   token: null,
   tokenExpiresAt: 0,
+  emailVerified: true,
 });
 
 //
@@ -34,6 +36,7 @@ export const AuthSlice = createSlice({
     setAuth(state, action: PayloadAction<AuthLoginResponse>) {
       state.user = action.payload.user;
       state.token = action.payload.token;
+      state.emailVerified = action.payload.is_verified;
       state.tokenExpiresAt = 1000 * parseJwt(state.token).exp;
       axios.defaults.headers.common.Authorization = `Bearer ${state.token}`;
     },
@@ -42,6 +45,9 @@ export const AuthSlice = createSlice({
       state.token = null;
       state.tokenExpiresAt = 0;
       axios.defaults.headers.common.Authorization = undefined;
+    },
+    setEmailVerified(state) {
+      state.emailVerified = true;
     },
   },
 });
@@ -67,6 +73,10 @@ const selectAuthorization = createSelector(
   selectLoggedIn, //
   (auth, loggedIn) => (loggedIn ? `Bearer ${auth.token}` : undefined)
 );
+const selectEmailVerified = createSelector(
+  selectAuth, //
+  (auth) => auth.emailVerified
+);
 
 export const Auth = {
   action: AuthSlice.actions,
@@ -74,6 +84,7 @@ export const Auth = {
     loggedIn: selectLoggedIn,
     user: selectUser,
     isAdmin: selectIsAdmin,
+    isVerified: selectEmailVerified,
     authorization: selectAuthorization,
   },
 };

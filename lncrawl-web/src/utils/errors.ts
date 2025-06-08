@@ -1,6 +1,9 @@
 import { AxiosError } from 'axios';
 
-export function stringifyError(err: any, _default?: string) {
+export function stringifyError(
+  err: any,
+  _default: string = 'Oops! Something went wrong.'
+) {
   if (err instanceof AxiosError) {
     if (err.response?.status === 403) {
       return 'Not authorized';
@@ -14,5 +17,5 @@ export function stringifyError(err: any, _default?: string) {
     }
   }
 
-  return _default ?? '' + err;
+  return _default || '' + err;
 }

@@ -128,7 +128,6 @@ class UserService:
         return user
 
     def create(self, body: CreateRequest) -> User:
-        self.send_otp(body.email)
         with self._db.session() as sess:
             q = select(func.count()).where(User.email == body.email)
             if sess.exec(q).one() != 0:

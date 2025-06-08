@@ -1,4 +1,3 @@
-import { store } from '@/store';
 import { Auth } from '@/store/_auth';
 import { Menu } from 'antd';
 import { useMemo } from 'react';
@@ -11,18 +10,9 @@ export const MainLayoutSidebar: React.FC<{
 }> = ({ onChange }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const authUser = useSelector(Auth.select.user);
   const isAdmin = useSelector(Auth.select.isAdmin);
 
-  const items = useMemo(() => {
-    return buildMenu({
-      isAdmin,
-      authUser,
-      handleLogout: () => {
-        store.dispatch(Auth.action.clearAuth());
-      },
-    });
-  }, [isAdmin, authUser]);
+  const items = useMemo(() => buildMenu(isAdmin), [isAdmin]);
 
   const handleMenuClick = (key: string) => {
     if (key && typeof key === 'string' && key.startsWith('/')) {

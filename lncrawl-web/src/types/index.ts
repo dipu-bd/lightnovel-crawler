@@ -23,6 +23,7 @@ export interface User {
 export interface AuthLoginResponse {
   token: string;
   user: User;
+  is_verified: boolean;
 }
 
 export interface PaginatiedResponse<T> {
