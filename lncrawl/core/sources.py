@@ -393,7 +393,9 @@ def load_sources():
 def prepare_crawler(url: str, crawler_file: Optional[str] = None) -> Crawler:
     parsed_url = urlparse(url)
     hostname = parsed_url.hostname
-    if not hostname:
+    no_www = url.replace("://www.", "://")
+    no_www_hostname = urlparse(no_www).hostname
+    if not hostname or not no_www_hostname:
         raise LNException("No crawler defined for empty hostname")
 
     if crawler_file:
@@ -401,10 +403,15 @@ def prepare_crawler(url: str, crawler_file: Optional[str] = None) -> Crawler:
         __load_rejected_sources()
         __add_crawlers_from_path(Path(crawler_file), True)
 
-    if hostname in rejected_sources:
-        raise LNException("Source is rejected. Reason: " + rejected_sources[hostname])
+    if url in rejected_sources:
+        raise LNException("Source is rejected. Reason: " + rejected_sources[url])
 
-    CrawlerType = crawler_list.get(hostname)
+    CrawlerType = (
+        crawler_list.get(url)
+        or crawler_list.get(hostname)
+        or crawler_list.get(no_www)
+        or crawler_list.get(no_www_hostname)
+    )
     if not CrawlerType:
         raise LNException("No crawler found for " + hostname)
 

@@ -1,23 +1,15 @@
-import {
-  Badge,
-  Button,
-  Flex,
-  Result,
-  Space,
-  Spin,
-  Tabs,
-  Typography,
-} from 'antd';
+import { Button, Flex, Result, Space, Spin, Tabs, Typography } from 'antd';
 import { SupportedSourceList } from './SupportedSourceList';
 import { useSupportedSources } from './hooks';
+import { useMemo } from 'react';
 
 const { Text } = Typography;
 
 export const SupportedSourcesPage: React.FC<any> = () => {
   const { data, loading, error, refresh } = useSupportedSources();
 
-  const active = data.filter((x) => !x.is_disabled);
-  const disabled = data.filter((x) => x.is_disabled);
+  const active = useMemo(() => data.filter((x) => !x.is_disabled), [data]);
+  const disabled = useMemo(() => data.filter((x) => x.is_disabled), [data]);
 
   if (loading) {
     return (
@@ -46,7 +38,9 @@ export const SupportedSourcesPage: React.FC<any> = () => {
         tab={
           <Space>
             <Text strong>Active Sources</Text>
-            <Badge color="blue" count={active.length} />
+            <small>
+              <code>{active.length}</code>
+            </small>
           </Space>
         }
       >
@@ -57,7 +51,9 @@ export const SupportedSourcesPage: React.FC<any> = () => {
         tab={
           <Space>
             <Text strong>Disabled Sources</Text>
-            <Badge color="magenta" count={disabled.length} />
+            <small>
+              <code>{disabled.length}</code>
+            </small>
           </Space>
         }
       >
