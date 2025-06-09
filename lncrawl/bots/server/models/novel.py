@@ -33,30 +33,15 @@ class Artifact(BaseTable, table=True):
 
     extra: Dict[str, Any] = Field(default={}, sa_column=Column(JSON), description="Extra field")
 
-    @computed_field
+    @computed_field  # type:ignore
     @property
     def file_name(self) -> str:
         '''Output file name'''
         return os.path.basename(self.output_file)
 
-    @computed_field
+    @computed_field  # type:ignore
     @property
     def file_size(self) -> int:
         '''Output file size in bytes'''
         stat = os.stat(self.output_file)
         return stat.st_size
-
-# from sqlalchemy import event, inspect
-# @event.listens_for(Artifact, "before_update", propagate=True)
-# def delete_old_output_file(mapper, connection, target: Artifact):
-#     state = inspect(target)
-#     if state is not None:
-#         hist = state.attrs.output_file.history
-#         if hist.has_changes():
-#             old_file = hist.deleted[0] if hist.deleted else None
-#             if old_file and os.path.exists(old_file):
-#                 try:
-#                     os.remove(old_file)
-#                     print(f"Deleted old file: {old_file}")
-#                 except Exception as e:
-#                     print(f"Could not delete {old_file}: {e}")

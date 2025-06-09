@@ -37,12 +37,11 @@ services:
       - OUTPUT_PATH=/home/lncrawl/output
       - DATABASE_URL=sqlite:////home/lncrawl/output/sqlite.db
     volumes:
-      - output_path:/home/lncrawl/output
+      - ./output_path:/home/lncrawl/output
+      - ./sqlite.db:/app/sqlite.db
       - ./.env:/app/.env
     depends_on:
       - chrome
     extra_hosts:
       - "host.docker.internal:host-gateway"
-
-volumes:
-  output_path:
+ 
