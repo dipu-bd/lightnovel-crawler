@@ -35,7 +35,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - OUTPUT_PATH=/home/lncrawl/output
-      - DATABASE_URL=sqlite:////home/lncrawl/output/sqlite.db
+      - DATABASE_URL=sqlite:////app/sqlite.db
     volumes:
       - ./output_path:/home/lncrawl/output
       - ./sqlite.db:/app/sqlite.db
