@@ -86,7 +86,7 @@ class NoveLightCrawler(Crawler):
         encountered_paid_chapter = False
         for page in reversed(chapters_lists):
             if encountered_paid_chapter:
-                break
+                continue
             params = {
                 "csrfmiddlewaretoken": csrfmiddlewaretoken,
                 "book_id": book_id,
@@ -100,7 +100,6 @@ class NoveLightCrawler(Crawler):
             for a in reversed(chapters_soup.select("a[href^='/book/chapter/']")):
                 if a.select_one(".chapter-info .cost"):
                     encountered_paid_chapter = True
-                    break
                 else:
                     self.chapters.append(
                         Chapter(
