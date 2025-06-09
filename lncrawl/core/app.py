@@ -58,21 +58,20 @@ class App:
     def progress(self):
         if self.search_progress > 0:
             return self.search_progress
+        info_w = 0.02
+        img_w = 0.08
+        chap_w = 1 - img_w
+        fmt_w = 0.015 * len(self.output_formats)
+        content_w = 1 - fmt_w - info_w
         if self.crawler and self.crawler.has_manga:
-            content_progress = (
-                self.fetch_chapter_progress * 0.16
-                + self.fetch_images_progress * 0.84
-            )
-        else:
-            content_progress = (
-                + self.fetch_chapter_progress * 0.92
-                + self.fetch_images_progress * 0.08
-            )
-        fmt_w = 0.01 * len(self.output_formats)
-        content_w = 1 - fmt_w - 0.02
+            img_w = 0.84
+            chap_w = 1 - img_w
+        img_w *= content_w
+        chap_w *= content_w
         return (
-            + self.fetch_novel_progress * 0.02
-            + content_progress * content_w
+            self.fetch_novel_progress * 0.02
+            + self.fetch_chapter_progress * chap_w
+            + self.fetch_images_progress * img_w
             + self.binding_progress * fmt_w
         )
 

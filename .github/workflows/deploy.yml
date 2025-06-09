@@ -58,21 +58,21 @@ jobs:
       #     ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
       #         "${{ secrets.DEPLOY_SERVER }}" docker load
 
-      - name: 📂 Upload Compose File
+      - name: 🏗️ Prepare server environment
         run: |
           ssh -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
               "${{ secrets.DEPLOY_SERVER }}" << 'EOF'
-            mkdir -p ~/lncrawl
+            mkdir -p ~/lncrawl/output_data
             cd ~/lncrawl
-            touch sqlite.db
-            mkdir -p output_data
-            chown 1000:1000 sqlite.db
-            chown 1000:1000 output_data
+            touch .env sqlite.db
+            chown 1000:1000 .env sqlite.db output_data
           EOF
 
+      - name: 📂 Upload Compose File
+        run: |
           scp -i ~/.ssh/bitanon.pem -o StrictHostKeyChecking=no \
               ./scripts/server-compose.yml \
-              "${{ secrets.DEPLOY_SERVER }}:~/lncrawl/compose.yml
+              "${{ secrets.DEPLOY_SERVER }}:~/lncrawl/compose.yml"
 
       - name: 🚀 Run Container via Docker Compose
         run: |

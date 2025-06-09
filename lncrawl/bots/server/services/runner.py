@@ -166,6 +166,7 @@ def microtask(job_id: str, signal=Event()) -> None:
 
             if done:
                 app.fetch_chapter_progress = 100
+                app.fetch_images_progress = 100
                 save_metadata(app)
                 if not signal.is_set():
                     logger.info('Fetch content completed')
@@ -200,7 +201,7 @@ def microtask(job_id: str, signal=Event()) -> None:
                     shutil.rmtree(output, ignore_errors=True)
 
             logger.info('Success!')
-            job.progress = round(app.progress)
+            job.progress = 100
             job.status = JobStatus.COMPLETED
             job.run_state = RunState.SUCCESS
             save()
