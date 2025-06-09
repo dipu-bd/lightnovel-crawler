@@ -1,5 +1,4 @@
 import logging
-import os
 import shutil
 import time
 from pathlib import Path
@@ -77,12 +76,9 @@ def microtask(job_id: str, signal=Event()) -> None:
             return save()
 
         app.user_input = job.url
-        app.output_path = ctx.config.app.output_path
-        os.makedirs(app.output_path, exist_ok=True)
         app.output_formats = {x: True for x in ENABLED_FORMATS[user.tier]}
         app.output_formats[OutputFormat.json] = True
         app.prepare_search()
-
         crawler = app.crawler
         if not crawler:
             job.error = 'No crawler available for this novel'
@@ -126,17 +122,25 @@ def microtask(job_id: str, signal=Event()) -> None:
         crawler.novel_url = novel.url
         crawler.novel_title = novel.title
         app.prepare_novel_output_path()
+
         logger.info(f'Checking metadata file: {app.output_path}')
         for meta in get_metadata_list(app.output_path):
             if meta.novel and meta.session and meta.novel.url == novel.url:
                 logger.info('Loading session from metadata')
                 load_metadata(app, meta)
-                break
+                break  # found matching metadata
         else:
+            # did not find any matching metadata
             job.error = 'Failed to restore metadata'
             job.status = JobStatus.COMPLETED
             job.run_state = RunState.FAILED
             return save()
+
+        sess.refresh(novel)
+        novel.extra = dict(novel.extra)
+        novel.extra['output_path'] = app.output_path
+        sess.add(novel)
+        sess.commit()
 
         #
         # State: FETCHING_CONTENT

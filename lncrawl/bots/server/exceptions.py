@@ -38,6 +38,8 @@ class AppErrors:
     invalid_image_response = AppError(500, "Invalid image response")
     smtp_server_unavailable = AppError(500, "SMTP server is not available")
     email_send_failure = AppError(500, "Failed to send email")
+    no_novel_output_path = AppError(500, "Novel output path was not found")
+    malformed_json_file = AppError(500, 'Malformed JSON file')
 
 
 @app.exception_handler(AppError)

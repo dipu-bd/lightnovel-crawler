@@ -95,6 +95,12 @@ class App:
         self.archived_outputs = None
         logger.debug("DONE")
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args, **kwargs):
+        self.destroy()
+
     # ----------------------------------------------------------------------- #
 
     def prepare_search(self):

@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
-from ..models.novel import Artifact, Novel
+from ..models.novel import Artifact, Novel, NovelChapterContent, NovelVolume
 from ..models.pagination import Paginated
 from ..security import ensure_user
 
@@ -54,3 +54,20 @@ async def get_novel_cover(
     if not novel.cover:
         raise AppErrors.no_novel_cover
     return await ctx.fetch.image(novel.cover)
+
+
+@router.get("/{novel_id}/toc", summary='Gets table of contents')
+async def get_novel_toc(
+    novel_id: str = Path(),
+    ctx: ServerContext = Depends(),
+) -> List[NovelVolume]:
+    return ctx.metadata.get_novel_toc(novel_id)
+
+
+@router.get("/{novel_id}/chapter/{hash}", summary='Gets chapter content')
+async def get_chapter_json(
+    novel_id: str = Path(),
+    hash: str = Path(),
+    ctx: ServerContext = Depends(),
+) -> NovelChapterContent:
+    return ctx.metadata.get_novel_chapter_content(novel_id, hash)

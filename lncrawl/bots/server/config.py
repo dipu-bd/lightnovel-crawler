@@ -60,9 +60,9 @@ class ServerConfig:
 
 
 class App:
-    @cached_property
+    @property
     def output_path(self) -> str:
-        return env('OUTPUT_PATH', C.DEFAULT_OUTPUT_PATH)
+        return C.DEFAULT_OUTPUT_PATH
 
     @cached_property
     def runner_cooldown(self) -> int:

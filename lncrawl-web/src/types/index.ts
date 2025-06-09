@@ -106,3 +106,23 @@ export interface SupportedSource {
   can_login: boolean;
   can_logout: boolean;
 }
+
+export interface Chapter {
+  id: string;
+  hash: string;
+  title: string;
+}
+
+export interface Volume {
+  id: string;
+  title: string;
+  chapters: Chapter[];
+}
+
+export interface ChapterBody {
+  id: number;
+  title: string;
+  body: string;
+  volume_id: number;
+  volume: string;
+}

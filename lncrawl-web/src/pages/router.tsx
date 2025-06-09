@@ -6,6 +6,7 @@ import { JobDetailsPage } from './JobDetails';
 import { JobListPage } from './JobList';
 import { LoginPage } from './Login';
 import { NovelDetailsPage } from './NovelDetails';
+import { NovelReaderPage } from './NovelReaderPage';
 import { SignupPage } from './Signup';
 import { SupportedSourcesPage } from './SupportedSources';
 import { UserDetailsPage } from './UserDetails';
@@ -43,6 +44,10 @@ export const USER_ROUTES: RouteObject[] = [
       {
         path: 'novel/:id',
         element: <NovelDetailsPage />,
+      },
+      {
+        path: 'novel/:id/chapter/:hash',
+        element: <NovelReaderPage />,
       },
       {
         path: 'jobs',

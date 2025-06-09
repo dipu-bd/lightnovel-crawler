@@ -14,7 +14,7 @@ from .arguments import get_args
 logger = logging.getLogger(__name__)
 
 
-def _chapter_file(
+def get_chapter_file(
     chapter: Chapter,
     output_path: str,
     pack_by_volume: bool,
@@ -60,7 +60,7 @@ def restore_chapter_body(app):
     restored = 0
     file_names: Dict[int, Path] = {}
     for chapter in app.chapters:
-        file_name = _chapter_file(
+        file_name = get_chapter_file(
             chapter,
             pack_by_volume=app.pack_by_volume,
             output_path=app.output_path,

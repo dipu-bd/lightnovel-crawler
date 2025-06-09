@@ -1,7 +1,7 @@
 import os
 from typing import Any, Dict, List, Optional
 
-from pydantic import computed_field
+from pydantic import computed_field, BaseModel
 from sqlmodel import JSON, Column, Field
 
 from ._base import BaseTable
@@ -45,3 +45,23 @@ class Artifact(BaseTable, table=True):
         '''Output file size in bytes'''
         stat = os.stat(self.output_file)
         return stat.st_size
+
+
+class NovelChapter(BaseModel):
+    id: int
+    title: str
+    hash: str
+
+
+class NovelVolume(BaseModel):
+    id: int
+    title: str
+    chapters: List[NovelChapter] = []
+
+
+class NovelChapterContent(BaseModel):
+    id: int
+    title: str
+    body: str
+    volume_id: int
+    volume: str

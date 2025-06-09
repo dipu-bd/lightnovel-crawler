@@ -10,17 +10,12 @@ import {
 } from '@ant-design/icons';
 import { Button, Card, Empty, Flex, Grid, List, Tag, Typography } from 'antd';
 
-const { Title, Text } = Typography;
-
 export const ArtifactListCard: React.FC<{ artifacts?: Artifact[] }> = ({
   artifacts,
 }) => {
   const { sm } = Grid.useBreakpoint();
   return (
-    <Card variant="outlined">
-      <Title level={4} style={{ margin: 0, marginBottom: 5 }}>
-        Artifacts
-      </Title>
+    <Card title="Artifacts" variant="outlined">
       {artifacts && artifacts.length > 0 ? (
         <List
           dataSource={artifacts}
@@ -33,37 +28,37 @@ export const ArtifactListCard: React.FC<{ artifacts?: Artifact[] }> = ({
                   icon={<DownloadOutlined />}
                   href={`${API_BASE_URL}/api/artifact/${item.id}/download`}
                   rel="noopener noreferrer"
-                  style={{ margin: 5 }}
+                  style={{ margin: 5, fontSize: sm ? '15px' : '1.2rem' }}
                 >
                   {sm ? 'Download' : ''}
                 </Button>,
               ]}
             >
               <List.Item.Meta
+                description={item.file_name}
                 title={
-                  <Flex gap={8} align="center">
+                  <Flex wrap="wrap-reverse" gap={8} align="center">
                     <Tag icon={<TagOutlined />} style={{ margin: 0 }}>
                       {item.format}
                     </Tag>
-                    <Text
-                      ellipsis
-                      style={{ fontWeight: 'normal', fontSize: 12 }}
-                    >
-                      <ClockCircleOutlined /> {formatDate(item.updated_at)}
-                    </Text>
-                    <Text
-                      ellipsis
+                    <Typography.Text
                       type="warning"
                       style={{
+                        whiteSpace: 'nowrap',
                         fontWeight: 'normal',
                         fontSize: 12,
                       }}
                     >
                       <FileZipFilled /> {formatFileSize(item.file_size)}
-                    </Text>
+                    </Typography.Text>
+                    <Typography.Text
+                      ellipsis
+                      style={{ fontWeight: 'normal', fontSize: 12 }}
+                    >
+                      <ClockCircleOutlined /> {formatDate(item.updated_at)}
+                    </Typography.Text>
                   </Flex>
                 }
-                description={item.file_name}
               />
             </List.Item>
           )}

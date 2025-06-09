@@ -1,15 +1,18 @@
-import { type Artifact, type Novel } from '@/types';
+import { type Artifact, type Novel, type Volume } from '@/types';
 import { stringifyError } from '@/utils/errors';
-import { Button, Flex, Grid, Result, Space, Spin } from 'antd';
+import { Button, Flex, Grid, message, Result, Space, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ArtifactListCard } from '../../components/ArtifactList/ArtifactListCard';
 import { NovelDetailsCard } from './NovelDetailsCard';
+import { NovelTableOfContentsCard } from './NovelTableOfContentsCard';
 
 export const NovelDetailsPage: React.FC<any> = () => {
-  const { lg } = Grid.useBreakpoint();
   const { id } = useParams<{ id: string }>();
+
+  const { lg } = Grid.useBreakpoint();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [refreshId, setRefreshId] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -17,6 +20,7 @@ export const NovelDetailsPage: React.FC<any> = () => {
 
   const [novel, setNovel] = useState<Novel>();
   const [artifacts, setArtifacts] = useState<Artifact[]>([]);
+  const [volumes, setVolumes] = useState<Volume[]>([]);
 
   const fetchNovel = async (id: string) => {
     setError(undefined);
@@ -36,13 +40,31 @@ export const NovelDetailsPage: React.FC<any> = () => {
         `/api/novel/${id}/artifacts`
       );
       setArtifacts(data);
-    } catch {}
+    } catch (err) {
+      messageApi.open({
+        type: 'error',
+        content: stringifyError(err, 'Failed to fetch artifacts'),
+      });
+    }
+  };
+
+  const fetchToc = async (id: string) => {
+    try {
+      const { data } = await axios.get<Volume[]>(`/api/novel/${id}/toc`);
+      setVolumes(data);
+    } catch (err) {
+      messageApi.open({
+        type: 'error',
+        content: stringifyError(err, 'Failed to fetch TOC'),
+      });
+    }
   };
 
   useEffect(() => {
     if (id) {
       fetchNovel(id);
       fetchArtifacts(id);
+      fetchToc(id);
     }
   }, [id, refreshId]);
 
@@ -71,8 +93,10 @@ export const NovelDetailsPage: React.FC<any> = () => {
 
   return (
     <Space direction="vertical" size={lg ? 'large' : 'small'}>
+      {contextHolder}
       <NovelDetailsCard novel={novel} />
       <ArtifactListCard artifacts={artifacts} />
+      <NovelTableOfContentsCard toc={volumes} />
     </Space>
   );
 };
