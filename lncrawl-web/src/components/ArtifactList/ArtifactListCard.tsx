@@ -1,9 +1,11 @@
 import { API_BASE_URL } from '@/config';
 import { type Artifact } from '@/types';
+import { formatFileSize } from '@/utils/size';
 import { formatDate } from '@/utils/time';
 import {
   ClockCircleOutlined,
   DownloadOutlined,
+  FileZipFilled,
   TagOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Empty, Flex, Grid, List, Tag, Typography } from 'antd';
@@ -48,6 +50,16 @@ export const ArtifactListCard: React.FC<{ artifacts?: Artifact[] }> = ({
                       style={{ fontWeight: 'normal', fontSize: 12 }}
                     >
                       <ClockCircleOutlined /> {formatDate(item.updated_at)}
+                    </Text>
+                    <Text
+                      ellipsis
+                      type="warning"
+                      style={{
+                        fontWeight: 'normal',
+                        fontSize: 12,
+                      }}
+                    >
+                      <FileZipFilled /> {formatFileSize(item.file_size)}
                     </Text>
                   </Flex>
                 }

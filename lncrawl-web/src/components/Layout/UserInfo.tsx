@@ -74,6 +74,11 @@ export const UserInfoCard: React.FC<any> = () => {
     }
   };
 
+  const stopPropagation = (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
   return (
     <Flex
       vertical
@@ -85,10 +90,8 @@ export const UserInfoCard: React.FC<any> = () => {
         paddingTop: '25px',
         paddingBottom: '10px',
       }}
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
+      onKeyDown={stopPropagation}
+      onClick={stopPropagation}
     >
       <UserAvatar
         size={72}

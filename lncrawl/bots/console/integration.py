@@ -135,8 +135,8 @@ def start(self):
                 display.error_message(LNException, "Canceled by user", e.__traceback__)
                 sys.exit(0)
 
-    self.app.start_download()
-    self.app.bind_books()
+    list(self.app.start_download())
+    list(self.app.bind_books())
 
     self.app.destroy()
     display.app_complete()

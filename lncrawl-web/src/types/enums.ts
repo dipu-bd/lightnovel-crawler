@@ -26,13 +26,12 @@ export const JobStatus = {
 export type JobStatus = (typeof JobStatus)[keyof typeof JobStatus];
 
 export const RunState = {
-  FETCHING_NOVEL: 0,
-  FETCHING_CHAPTERS: 1,
-  FETCHING_IMAGES: 2,
-  CREATING_ARTIFACTS: 3,
-  FAILED: 4,
-  SUCCESS: 5,
-  CANCELED: 6,
+  FAILED: 0,
+  SUCCESS: 1,
+  CANCELED: 2,
+  FETCHING_NOVEL: 3,
+  FETCHING_CONTENT: 4,
+  CREATING_ARTIFACTS: 5,
 };
 export type RunState = (typeof RunState)[keyof typeof RunState];
 

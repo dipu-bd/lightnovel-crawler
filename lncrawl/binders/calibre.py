@@ -21,7 +21,7 @@ def run_ebook_convert(*args) -> bool:
             subprocess.run(
                 args=[EBOOK_CONVERT] + list(args),
                 stdout=None if isdebug else dumper,
-                stderr=None if isdebug else dumper,
+                stderr=dumper,
                 check=True
             )
 
@@ -51,7 +51,7 @@ def epub_to_calibre(app, epub_file: str, fmt: OutputFormat):
     out_file = os.path.join(out_path, out_file_name)
     os.makedirs(out_path, exist_ok=True)
 
-    logger.debug('Converting "%s" to "%s"', epub_file, out_file)
+    logger.info(f'Converting "{epub_file_name}" to "{out_file_name}"', )
     args = [
         epub_file,
         out_file,

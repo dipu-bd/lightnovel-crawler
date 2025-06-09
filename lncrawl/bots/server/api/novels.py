@@ -5,7 +5,7 @@ from fastapi.responses import StreamingResponse
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
-from ..models.job import Artifact, Novel
+from ..models.novel import Artifact, Novel
 from ..models.pagination import Paginated
 from ..security import ensure_user
 

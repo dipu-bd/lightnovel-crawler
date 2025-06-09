@@ -56,22 +56,25 @@ class App:
 
     @property
     def progress(self):
-        if self.search_progress:
+        if self.search_progress > 0:
             return self.search_progress
         if self.crawler and self.crawler.has_manga:
-            return (
-                + self.fetch_novel_progress * 0.05
-                + self.fetch_chapter_progress * 0.15
-                + self.fetch_images_progress * 0.70
-                + self.binding_progress * 0.10
+            content_progress = (
+                self.fetch_chapter_progress * 0.16
+                + self.fetch_images_progress * 0.84
             )
         else:
-            return (
-                + self.fetch_novel_progress * 0.05
-                + self.fetch_chapter_progress * 0.80
-                + self.fetch_images_progress * 0.05
-                + self.binding_progress * 0.10
+            content_progress = (
+                + self.fetch_chapter_progress * 0.92
+                + self.fetch_images_progress * 0.08
             )
+        fmt_w = 0.01 * len(self.output_formats)
+        content_w = 1 - fmt_w - 0.02
+        return (
+            + self.fetch_novel_progress * 0.02
+            + content_progress * content_w
+            + self.binding_progress * fmt_w
+        )
 
     # ----------------------------------------------------------------------- #
 
@@ -198,7 +201,10 @@ class App:
                 word_boundary=True,
             )
 
-        source_name = slugify(urlparse(self.crawler.novel_url).netloc)
+        host = urlparse(self.crawler.novel_url).netloc
+        no_www = host.replace('www.', '')
+        source_name = slugify(no_www)
+
         self.output_path = str(
             Path(C.DEFAULT_OUTPUT_PATH) / source_name / self.good_file_name
         )
@@ -218,13 +224,13 @@ class App:
         if signal.is_set():
             return  # canceled
 
-        fetch_chapter_body(self, signal)
+        yield from fetch_chapter_body(self, signal)
 
         save_metadata(self)
         if signal.is_set():
             return  # canceled
 
-        fetch_chapter_images(self, signal)
+        yield from fetch_chapter_images(self, signal)
         save_metadata(self, True)
 
         if self.crawler and self.can_do("logout"):

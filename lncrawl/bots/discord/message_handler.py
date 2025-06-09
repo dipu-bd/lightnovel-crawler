@@ -516,7 +516,8 @@ class MessageHandler:
                 "Downloading %d chapters..." % len(self.app.chapters),
             )
             self.get_current_status = self.get_download_progress_status
-            self.app.start_download()
+            for _ in self.app.start_download():
+                pass
             self.get_current_status = None
             if self.closed:
                 return
@@ -525,9 +526,9 @@ class MessageHandler:
                 self.app.progress
             )
             self.send_sync("Binding books...")
-            self.app.bind_books()
-            if self.closed:
-                return
+            for _ in self.app.bind_books():
+                if self.closed:
+                    return
 
             assert isinstance(self.app.archived_outputs, list)
             for archive in self.app.archived_outputs:

@@ -4,8 +4,9 @@ from fastapi import APIRouter, Depends, Form, Path, Query, Security
 from pydantic import HttpUrl
 
 from ..context import ServerContext
-from ..models.job import (Artifact, Job, JobDetail, JobPriority, JobStatus,
-                          Novel)
+from ..models.enums import JobPriority, JobStatus
+from ..models.job import Job, JobDetail
+from ..models.novel import Artifact, Novel
 from ..models.pagination import Paginated
 from ..models.user import User
 from ..security import ensure_user

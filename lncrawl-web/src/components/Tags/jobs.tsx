@@ -90,10 +90,8 @@ export const RunStateTag: React.FC<{ value: RunState }> = ({ value }) => {
   switch (value) {
     case RunState.FETCHING_NOVEL:
       return <span>Fetching novel details</span>;
-    case RunState.FETCHING_CHAPTERS:
-      return <span>Fetching all chapter contents</span>;
-    case RunState.FETCHING_IMAGES:
-      return <span>Fetching novel cover and chapter images</span>;
+    case RunState.FETCHING_CONTENT:
+      return <span>Fetching novel contents</span>;
     case RunState.CREATING_ARTIFACTS:
       return <span>Binding books and uploading artifacts</span>;
     case RunState.SUCCESS:

@@ -4,7 +4,7 @@ from sqlmodel import asc, desc, func, select
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
-from ..models.job import Artifact, Novel
+from ..models.novel import Artifact, Novel
 from ..models.pagination import Paginated
 from ..models.user import User, UserRole
 
@@ -63,4 +63,7 @@ class NovelService:
             novel = sess.get(Novel, novel_id)
             if not novel:
                 raise AppErrors.no_such_novel
-            return novel.artifacts
+            artifacts = sess.exec(
+                select(Artifact).where(Artifact.novel_id == novel.id)
+            ).all()
+            return list(artifacts)

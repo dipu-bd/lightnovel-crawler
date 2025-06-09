@@ -5,8 +5,9 @@ from sqlmodel import asc, desc, func, select
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
-from ..models.job import (Artifact, Job, JobDetail, JobPriority, JobStatus,
-                          Novel, RunState)
+from ..models.enums import JobPriority, JobStatus, RunState
+from ..models.job import Job, JobDetail
+from ..models.novel import Artifact, Novel
 from ..models.pagination import Paginated
 from ..models.user import User, UserRole
 from .tier import JOB_PRIORITY_LEVEL
@@ -115,11 +116,16 @@ class JobService:
             job = sess.get(Job, job_id)
             if not job:
                 raise AppErrors.no_such_job
+            user = sess.get_one(User, job.user_id)
+            novel = sess.get(Novel, job.novel_id)
+            artifacts = sess.exec(
+                select(Artifact).where(Artifact.job_id == job.id)
+            ).all()
             return JobDetail(
                 job=job,
-                user=job.user,
-                novel=job.novel,
-                artifacts=job.novel.artifacts if job.novel else None,
+                user=user,
+                novel=novel,
+                artifacts=list(artifacts),
             )
 
     def get_artifacts(self, job_id: str) -> List[Artifact]:
@@ -135,6 +141,7 @@ class JobService:
             job = sess.get(Job, job_id)
             if not job:
                 raise AppErrors.no_such_job
-            if not job.novel:
+            novel = sess.get(Novel, job.novel_id)
+            if not novel:
                 raise AppErrors.no_such_novel
-            return job.novel
+            return novel

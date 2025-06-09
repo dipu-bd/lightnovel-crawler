@@ -60,8 +60,9 @@ def resume_session():
         logger.debug("Login with %s", app.login_data)
         app.crawler.login(*list(app.login_data))
 
-    app.start_download()
-    app.bind_books()
+    list(app.start_download())
+    list(app.bind_books())
+
     app.destroy()
     display.app_complete()
     display_open_folder(app.output_path)

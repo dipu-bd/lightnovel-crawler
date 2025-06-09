@@ -1,8 +1,9 @@
 import { JobPriorityTag, JobStatusTag } from '@/components/Tags/jobs';
-import { RunState, type Job } from '@/types';
-import { Card, Flex, Grid, Progress, Space, Typography } from 'antd';
+import { type Job } from '@/types';
+import { Card, Flex, Grid, Space, Typography } from 'antd';
 import { Link } from 'react-router-dom';
 import { JobActionButtons } from './JobActionButtons';
+import { JobProgressCircle, JobProgressLine } from './JobProgessBar';
 
 const { Paragraph } = Typography;
 
@@ -21,20 +22,7 @@ export const JobListItemCard: React.FC<{
         }}
       >
         <Flex wrap align="center" justify="end" gap="15px">
-          {lg && (
-            <Progress
-              type="circle"
-              size="small"
-              percent={job.progress || 0}
-              status={
-                job.run_state === RunState.SUCCESS
-                  ? 'success'
-                  : job.run_state === RunState.FAILED
-                  ? 'exception'
-                  : 'active'
-              }
-            />
-          )}
+          {lg && <JobProgressCircle job={job} />}
 
           <div style={{ flex: 1, minWidth: lg ? 0 : '100%' }}>
             <Paragraph
@@ -52,21 +40,7 @@ export const JobListItemCard: React.FC<{
               <JobPriorityTag value={job.priority} />
             </Space>
 
-            {!lg && (
-              <Progress
-                percent={job.progress || 0}
-                size={['100%', 12]}
-                strokeColor={{ from: '#108ee9', to: '#87d068' }}
-                style={{ marginTop: 10 }}
-                status={
-                  job.run_state === RunState.SUCCESS
-                    ? 'success'
-                    : job.run_state === RunState.FAILED
-                    ? 'exception'
-                    : 'active'
-                }
-              />
-            )}
+            {!lg && <JobProgressLine job={job} style={{ marginTop: 10 }} />}
           </div>
 
           <Flex

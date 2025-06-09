@@ -2,7 +2,7 @@ services:
   chrome:
     image: selenium/standalone-chrome:latest
     cpus: 1.5
-    mem_limit: 1800m
+    mem_limit: 1600m
     shm_size: 6gb
     restart: unless-stopped
     ports:
@@ -26,13 +26,19 @@ services:
     restart: unless-stopped
     ports:
       - "23457:8000"
-    command: python -m lncrawl -ll --suppress --bot server --port 8000 --selenium-grid "http://chrome:4444"
+    command: |
+      python -m lncrawl \
+        -ll --suppress \
+        --bot server \
+        --port 8000 \
+        --selenium-grid "http://chrome:4444"
     environment:
       - PYTHONUNBUFFERED=1
       - OUTPUT_PATH=/home/lncrawl/output
       - DATABASE_URL=sqlite:////home/lncrawl/output/sqlite.db
     volumes:
       - output_path:/home/lncrawl/output
+      - ./.env:/app/.env
     depends_on:
       - chrome
     extra_hosts:

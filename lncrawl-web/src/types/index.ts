@@ -69,6 +69,7 @@ export interface Artifact {
   updated_at: number;
   novel_id: string;
   file_name: string;
+  file_size: number;
   format: OutputFormat;
 }
 

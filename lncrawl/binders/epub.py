@@ -67,28 +67,41 @@ def bind_epub_book(
     book.set_template("cover", epub_cover_xhtml())
     book.set_template("chapter", epub_chapter_xhtml())
 
+    toc = []
+    spine = []
     if book_cover and os.path.isfile(book_cover):
         logger.debug("Adding cover image")
         with open(book_cover, "rb") as fp:
-            book.set_cover(COVER_IMAGE_NAME, fp.read(), create_page=False)
-        cover_item = epub.EpubCoverHtml(  # type:ignore
-            image_name=COVER_IMAGE_NAME
+            book.set_cover(COVER_IMAGE_NAME, fp.read(), create_page=True)
+        spine.append("cover")
+
+        cover_item = epub.EpubHtml(  # type:ignore
+            title="Front Page",
+            file_name="front.xhtml",
+            content=f"""
+                <div id="cover">
+                    <img src="{COVER_IMAGE_NAME}" alt="cover" />
+                </div>
+            """,
         )
         cover_item.add_link(
-            href=style_item.file_name,
+            href=STYLE_FILE_NAME,
             rel="stylesheet",
             type="text/css",
         )
         book.add_item(cover_item)
+        spine.append(cover_item)
+        toc.append(cover_item)
 
     logger.debug("Creating intro page")
+
     intro_html = f"""
     <div id="intro">
-        <div class="header">
-            <h1>{novel_title or "N/A"}</h1>
-            <h3>{novel_author}</h3>
+        <h1>{novel_title}</h1>
+        <h3>{novel_author}</h3>
+        <div class="synopsis">
+            {novel_synopsis}
         </div>
-        <img class="cover" src="{COVER_IMAGE_NAME}">
         <div class="footer">
             <b>Source:</b> <a href="{novel_url}">{novel_url}</a>
             <br>
@@ -108,33 +121,12 @@ def bind_epub_book(
         type="text/css",
     )
     book.add_item(intro_item)
-
-    logger.debug("Creating chapter contents")
-    toc = []
-    spine = ["cover", intro_item]
-
-    if novel_synopsis:
-        synopsis_html = f"""
-        <div class="synopsis">
-            <h1>Synopsis</h1>
-            <p>{novel_synopsis}</p>
-        </div>
-        """
-        synopsis_item = epub.EpubHtml(  # type:ignore
-            title="Synopsis",
-            file_name="synopsis.xhtml",
-            content=synopsis_html,
-        )
-        synopsis_item.add_link(
-            href=STYLE_FILE_NAME,
-            rel="stylesheet",
-            type="text/css",
-        )
-        book.add_item(synopsis_item)
-        spine.append(synopsis_item)
+    spine.append(intro_item)
+    toc.append(intro_item)
 
     spine.append("nav")
 
+    logger.debug("Creating chapter contents")
     for chapters in chapter_groups:
         first_chapter = chapters[0]
         volume_id = first_chapter.volume
@@ -159,7 +151,6 @@ def bind_epub_book(
 
         volume_contents = []
         for chapter in chapters:
-            # ebooklib does pretty-print for xhtml. minify is useless :(
             chapter_item = epub.EpubHtml(  # type:ignore
                 file_name=f"chapter_{chapter.id}.xhtml",
                 content=str(chapter["body"]),

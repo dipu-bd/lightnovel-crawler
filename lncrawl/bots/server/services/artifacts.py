@@ -1,12 +1,14 @@
+import os
 from typing import Optional
 
 from sqlmodel import desc, func, select
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
-from ..models.job import Artifact
+from ..models.enums import UserRole
+from ..models.novel import Artifact
 from ..models.pagination import Paginated
-from ..models.user import User, UserRole
+from ..models.user import User
 
 
 class ArtifactService:
@@ -57,3 +59,29 @@ class ArtifactService:
             sess.delete(artifact)
             sess.commit()
             return True
+
+    def upsert(self, item: Artifact):
+        old_file = None
+        new_file = item.output_file
+
+        with self._db.session() as sess:
+            artifact = sess.exec(
+                select(Artifact)
+                .where(Artifact.novel_id == item.novel_id)
+                .where(Artifact.format == item.format)
+            ).first()
+
+            if not artifact:
+                sess.add(item)
+            else:
+                # update values
+                old_file = artifact.output_file
+                artifact.job_id = item.job_id
+                artifact.output_file = item.output_file
+                sess.add(artifact)
+
+            sess.commit()
+
+        # remove old file
+        if old_file and old_file != new_file and os.path.isfile(old_file):
+            os.remove(old_file)

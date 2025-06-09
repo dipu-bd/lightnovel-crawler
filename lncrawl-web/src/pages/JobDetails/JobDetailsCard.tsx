@@ -10,17 +10,9 @@ import {
   ClockCircleOutlined,
   HourglassFilled,
 } from '@ant-design/icons';
-import {
-  Alert,
-  Card,
-  Flex,
-  Grid,
-  Progress,
-  Space,
-  Tag,
-  Typography,
-} from 'antd';
+import { Alert, Card, Flex, Grid, Space, Tag, Typography } from 'antd';
 import { JobActionButtons } from '../JobList/JobActionButtons';
+import { JobProgressLine } from '../JobList/JobProgessBar';
 
 const { Title, Text } = Typography;
 
@@ -50,19 +42,7 @@ export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
         <RunStateTag value={job.run_state} />
       </Space>
 
-      <Progress
-        percent={job.progress || 0}
-        size={['100%', 16]}
-        strokeColor={{ from: '#108ee9', to: '#87d068' }}
-        status={
-          job.run_state === RunState.SUCCESS
-            ? 'success'
-            : job.run_state === RunState.FAILED
-            ? 'exception'
-            : 'active'
-        }
-        style={{ marginTop: 8 }}
-      />
+      <JobProgressLine job={job} size={['100%', 16]} style={{ marginTop: 8 }} />
 
       <Flex wrap style={{ marginTop: 5 }}>
         <Tag icon={<ClockCircleOutlined />} color="default">

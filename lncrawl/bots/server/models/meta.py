@@ -1,9 +1,9 @@
 from typing import Optional
 
-from sqlmodel import Field, SQLModel
+from pydantic import BaseModel, Field
 
 
-class SupportedSource(SQLModel):
+class SupportedSource(BaseModel):
     url: str = Field(description='Source base url')
     domain: str = Field(description='Domain name')
     has_manga: bool = Field(default=False)

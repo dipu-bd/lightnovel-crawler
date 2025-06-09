@@ -64,6 +64,13 @@ build-exe:
 build: version install build-web build-wheel build-exe
 
 # Lint project files
+start-server:
+	$(PY) -m lncrawl -b server
+
+start-web:
+	$(YARN) dev
+
+# Lint project files
 lint-py:
 	$(FLAKE8) --config .flake8 -v --count --show-source --statistics
 

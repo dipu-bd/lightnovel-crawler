@@ -2,31 +2,35 @@ import logging
 import os
 import shutil
 import time
-import uuid
 from pathlib import Path
 from threading import Event
 
-from sqlmodel import Session, select
-
 from lncrawl.core.app import App
-from lncrawl.core.download_chapters import (fetch_chapter_body,
-                                            restore_chapter_body)
-from lncrawl.core.download_images import fetch_chapter_images
+from lncrawl.core.download_chapters import restore_chapter_body
 from lncrawl.core.metadata import (get_metadata_list, load_metadata,
                                    save_metadata)
 from lncrawl.models import OutputFormat
 
 from ..context import ServerContext
-from ..models.job import Artifact, Job, JobStatus, RunState
+from ..models.enums import JobStatus, RunState
+from ..models.job import Job
+from ..models.novel import Artifact, Novel
+from ..models.user import User
 from .tier import ENABLED_FORMATS, SLOT_TIMEOUT_IN_SECOND
 
-__runner_id = uuid.uuid4()
 
-
-def microtask(sess: Session, job: Job, signal=Event()) -> None:
+def microtask(job_id: str, signal=Event()) -> None:
     app = App()
     ctx = ServerContext()
-    logger = logging.getLogger(f'Job:{job.id}')
+    sess = ctx.db.session()
+    job = sess.get_one(Job, job_id)
+    logger = logging.getLogger(f'Job:{job_id}')
+
+    def save(refresh=False):
+        sess.add(job)
+        sess.commit()
+        if refresh:
+            sess.refresh(job)
 
     try:
         #
@@ -34,64 +38,45 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
         #
         if job.status == JobStatus.COMPLETED:
             logger.error('Job is already done')
-            return
+            return save()
 
         #
-        # State: SUCCESS
+        # State: SUCCESS, FAILED, CANCELED
         #
-        if job.run_state == RunState.SUCCESS:
+        if job.run_state in [
+            RunState.FAILED,
+            RunState.SUCCESS,
+            RunState.CANCELED
+        ]:
             job.status = JobStatus.COMPLETED
-            sess.add(job)
-            return
+            return save()
 
-        #
-        # State: FAILED
-        #
-        if job.run_state == RunState.FAILED:
-            job.status = JobStatus.COMPLETED
-            logger.error(job.error)
-            sess.add(job)
-            return
-
-        #
-        # State: CANCELED
-        #
-        if job.run_state == RunState.CANCELED:
-            job.status = JobStatus.COMPLETED
-            logger.error(job.error)
-            sess.add(job)
-            return
-        #
         # State: PENDING
         #
         if job.status == JobStatus.PENDING:
-            logger.info('Job started')
-            job.status = JobStatus.RUNNING
             job.run_state = RunState.FETCHING_NOVEL
-            sess.add(job)
-            return
+            job.status = JobStatus.RUNNING
+            logger.info('Job started')
+            return save()
 
         #
         # Prepare user, novel, app, crawler
         #
-        user = job.user
+        user = sess.get(User, job.user_id)
         if not user:
             job.error = 'User is not available'
-            logger.error(job.error)
-            sess.add(job)
-            return
+            job.status = JobStatus.COMPLETED
+            job.run_state = RunState.FAILED
+            return save()
 
-        novel = job.novel
+        novel = sess.get(Novel, job.novel_id)
         if not novel:
             job.error = 'Novel is not available'
-            logger.error(job.error)
-            sess.add(job)
-            return
+            job.status = JobStatus.COMPLETED
+            job.run_state = RunState.FAILED
+            return save()
 
-        if novel.orphan:
-            job.run_state = RunState.FETCHING_NOVEL
-
-        app.user_input = novel.url
+        app.user_input = job.url
         app.output_path = ctx.config.app.output_path
         os.makedirs(app.output_path, exist_ok=True)
         app.output_formats = {x: True for x in ENABLED_FORMATS[user.tier]}
@@ -101,20 +86,20 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
         crawler = app.crawler
         if not crawler:
             job.error = 'No crawler available for this novel'
-            logger.error(job.error)
-            sess.add(job)
-            return
+            job.status = JobStatus.COMPLETED
+            job.run_state = RunState.FAILED
+            return save()
 
         #
         # State: FETCHING_NOVEL
         #
         if job.run_state == RunState.FETCHING_NOVEL:
             logger.info('Fetching novel info')
+
             app.get_novel_info()
 
-            job.run_state = RunState.FETCHING_CHAPTERS
             job.progress = round(app.progress)
-            logger.info(f'Current progress: {job.progress}%')
+            job.run_state = RunState.FETCHING_CONTENT
 
             novel.orphan = False
             novel.title = crawler.novel_title
@@ -124,20 +109,19 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
             novel.tags = crawler.novel_tags or []
             novel.volume_count = len(crawler.volumes)
             novel.chapter_count = len(crawler.chapters)
-            logger.info(f'Novel: {novel}')
-
             sess.add(novel)
-            sess.add(job)
-            return
+
+            logger.info(f'Novel: {novel}')
+            return save()
 
         #
         # Restore session
         #
         if novel.orphan or not novel.title:
             job.error = 'Failed to fetch novel'
-            logger.error(job.error)
-            sess.add(job)
-            return
+            job.status = JobStatus.COMPLETED
+            job.run_state = RunState.FAILED
+            return save()
 
         crawler.novel_url = novel.url
         crawler.novel_title = novel.title
@@ -150,126 +134,64 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
                 break
         else:
             job.error = 'Failed to restore metadata'
-            logger.error(job.error)
-            sess.add(job)
-            return
+            job.status = JobStatus.COMPLETED
+            job.run_state = RunState.FAILED
+            return save()
 
         #
-        # State: FETCHING_CHAPTERS
+        # State: FETCHING_CONTENT
         #
-        if job.run_state == RunState.FETCHING_CHAPTERS:
+        if job.run_state == RunState.FETCHING_CONTENT:
             app.chapters = crawler.chapters
             logger.info(f'Fetching ({len(app.chapters)} chapters)')
 
+            done = False
             last_report = 0.0
             start_time = time.time()
             timeout = SLOT_TIMEOUT_IN_SECOND[user.tier]
-            for _ in fetch_chapter_body(app, signal):
+            for _ in app.start_download(signal):
                 cur_time = time.time()
                 if cur_time - start_time > timeout:
                     break
                 if job.progress > round(app.progress):
-                    app.fetch_chapter_progress = 100
-                    save_metadata(app)
-                    job.run_state = RunState.FETCHING_IMAGES
-                    logger.info('Failed to fetch some chapters')
+                    logger.info('Failed to fetch some content')
+                    done = True
                     break
-                if cur_time - last_report > 10:
-                    last_report = cur_time
+                if cur_time - last_report > 5:
                     job.progress = round(app.progress)
-                    sess.add(job)
-                    sess.commit()
-                    sess.refresh(job)
+                    last_report = cur_time
+                    save(refresh=True)
             else:
+                done = True
+
+            if done:
                 app.fetch_chapter_progress = 100
                 save_metadata(app)
                 if not signal.is_set():
-                    job.run_state = RunState.FETCHING_IMAGES
-                    logger.info('Fetch chapter completed')
+                    logger.info('Fetch content completed')
+                    job.run_state = RunState.CREATING_ARTIFACTS
 
             job.progress = round(app.progress)
-            logger.info(f'Current progress: {job.progress}%')
-
-            sess.add(job)
-            return
+            return save()
 
         app.chapters = crawler.chapters
         restore_chapter_body(app)
-
-        #
-        # State: FETCHING_IMAGES
-        #
-        if job.run_state == RunState.FETCHING_IMAGES:
-            logger.info(f'Fetching images from ({len(app.chapters)} chapters)')
-
-            last_report = 0.0
-            start_time = time.time()
-            timeout = SLOT_TIMEOUT_IN_SECOND[user.tier]
-            for _ in fetch_chapter_images(app, signal):
-                cur_time = time.time()
-                if cur_time - start_time > timeout:
-                    break
-                if job.progress > round(app.progress):
-                    app.fetch_images_progress = 100
-                    save_metadata(app)
-                    job.run_state = RunState.FETCHING_IMAGES
-                    logger.info('Failed to fetch some chapters')
-                    break
-                if cur_time - last_report > 10:
-                    last_report = cur_time
-                    job.progress = round(app.progress)
-                    sess.add(job)
-                    sess.commit()
-                    sess.refresh(job)
-            else:
-                app.fetch_images_progress = 100
-                save_metadata(app)
-                if not signal.is_set():
-                    job.run_state = RunState.CREATING_ARTIFACTS
-                    logger.info('Fetch image completed')
-
-            job.progress = round(app.progress)
-            logger.info(f'Current progress: {job.progress}%')
-
-            sess.add(job)
-            return
 
         #
         # State: CREATING_ARTIFACTS
         #
         if job.run_state == RunState.CREATING_ARTIFACTS:
             logger.info('Creating artifacts')
-
             for fmt, archive_file in app.bind_books(signal):
-                # save progress
                 job.progress = round(app.progress)
-                sess.add(job)
-                sess.commit()
-                sess.refresh(job)
-
-                # create or update artifact entry
-                artifact = sess.exec(
-                    select(Artifact)
-                    .where(Artifact.novel_id == job.novel_id)
-                    .where(Artifact.format == fmt)
-                ).first()
-                if not artifact:
-                    artifact = Artifact(
-                        format=fmt,
-                        novel_id=novel.id,
-                        output_file=archive_file,
-                        file_name=os.path.basename(archive_file),
-                    )
-                else:
-                    if (
-                        artifact.output_file
-                        and artifact.output_file != archive_file
-                        and os.path.isfile(artifact.output_file)
-                    ):  # remove old file
-                        os.remove(artifact.output_file)
-                    artifact.output_file = archive_file
-                sess.add(artifact)
-                sess.commit()
+                save(refresh=True)
+                artifact = Artifact(
+                    format=fmt,
+                    job_id=job.id,
+                    novel_id=novel.id,
+                    output_file=archive_file,
+                )
+                ctx.artifacts.upsert(artifact)
 
             # remove output folders (except json)
             for fmt in OutputFormat:
@@ -279,28 +201,24 @@ def microtask(sess: Session, job: Job, signal=Event()) -> None:
 
             logger.info('Success!')
             job.progress = round(app.progress)
+            job.status = JobStatus.COMPLETED
             job.run_state = RunState.SUCCESS
-            sess.add(job)
-            sess.commit()
+            save()
 
-            # send success email
             if ctx.users.is_verified(user.email):
                 try:
-                    ctx.mail.send_job_success(
-                        user.email,
-                        ctx.jobs.get(job.id)
-                    )
-                    logger.error('Success email was sent to the user')
+                    detail = ctx.jobs.get(job_id)
+                    ctx.mail.send_job_success(user.email, detail)
+                    logger.error(f'Success report was sent to <{user.email}>')
                 except Exception as e:
-                    logger.error('Failed to send email', e)
-                return
+                    logger.error('Failed to email success report', e)
 
     except Exception as e:
         logger.exception('Job failed')
+        job.status = JobStatus.COMPLETED
         job.run_state = RunState.FAILED
         job.error = str(e)
-        sess.add(job)
+        return save()
 
     finally:
-        sess.commit()
-        app.destroy()
+        sess.close()

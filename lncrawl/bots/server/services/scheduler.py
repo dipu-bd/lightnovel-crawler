@@ -21,7 +21,7 @@ class JobScheduler:
         self.db = ctx.db
         self.last_run_ts = 0
         self.signal: Optional[Event] = None
-        self.history: Deque[JobRunnerHistoryItem] = deque(maxlen=20)
+        self.history: Deque[JobRunnerHistoryItem] = deque(maxlen=50)
 
     def close(self):
         self.stop()
@@ -79,30 +79,29 @@ class JobScheduler:
                 .limit(CONCURRENCY)
             ).all()
 
-            # create threads
-            threads: Dict[str, Thread] = {}
-            for job in jobs:
-                if job.novel_id in threads:
-                    continue  # no concurrency for same novel
+        # create threads
+        threads: Dict[str, Thread] = {}
+        for job in jobs:
+            if job.novel_id in threads:
+                continue  # no concurrency for same novel
 
-                t = threads[job.novel_id] = Thread(
-                    target=microtask,
-                    args=(sess, job, signal),
-                    # daemon=True,
+            t = threads[job.novel_id] = Thread(
+                target=microtask,
+                args=(job.id, signal),
+                # daemon=True,
+            )
+            t.start()
+
+            self.history.append(
+                JobRunnerHistoryItem(
+                    time=current_timestamp(),
+                    job_id=job.id,
+                    user_id=job.user_id,
+                    novel_id=job.novel_id,
+                    status=job.status,
+                    run_state=job.run_state,
                 )
-                t.start()
+            )
 
-                self.history.append(
-                    JobRunnerHistoryItem(
-                        time=current_timestamp(),
-                        job_id=job.id,
-                        user_id=job.user_id,
-                        novel_id=job.novel_id,
-                        status=job.status,
-                        run_state=job.run_state,
-                    )
-                )
-
-            # wait in same session for completion
-            for t in threads.values():
-                t.join()
+        for t in threads.values():
+            t.join()
