@@ -6,7 +6,7 @@ from typing import Deque, Dict, Optional
 from sqlmodel import asc, desc, or_, select
 
 from ..context import ServerContext
-from ..models.job import Job, JobRunnerHistoryItem, JobStatus
+from ..models.job import Job, JobRunnerHistoryItem, JobStatus, RunState
 from ..utils.time_utils import current_timestamp
 from .runner import microtask
 
@@ -65,28 +65,33 @@ class JobScheduler:
             logger.info('Scheduler stoppped')
 
     def __clean(self):
+        # wait for all jobs to finish
         for k, t in self.threads.items():
             t.join()
+        # clean queue
         self.threads.clear()
 
     def __free(self):
         logger.debug('Waiting for queue to be free')
         while len(self.threads) >= CONCURRENCY:
+            # wait for any job to finish
             for k, t in self.threads.items():
-                if not t.is_alive():
+                t.join(1)  # wait 1s for this job
+                if not t.is_alive():  # if done
+                    # remove from queue and exit loop
                     del self.threads[k]
                     break
-                t.join(1)
 
     def __add(self, signal=Event()):
         logger.debug('Running new task')
         with self.db.session() as sess:
+            # fetch jobs based on priority
             jobs = sess.exec(
                 select(Job)
                 .where(
                     or_(
                         Job.status == JobStatus.PENDING,
-                        Job.status == JobStatus.RUNNING
+                        Job.status == JobStatus.RUNNING,
                     )
                 )
                 .order_by(
@@ -95,27 +100,38 @@ class JobScheduler:
                 )
             ).all()
 
-        # create threads
-        for job in jobs:
-            if job.novel_id in self.threads:
-                continue  # no concurrency for same novel
-            if len(self.threads) >= CONCURRENCY:
-                return
+            for job in jobs:
+                # cancel duplicate jobs
+                if job.novel_id in self.threads:
+                    if job.status != JobStatus.RUNNING:
+                        job.status = JobStatus.COMPLETED
+                        job.run_state = RunState.CANCELED
+                        job.error = 'Canceled as a duplicate job'
+                        sess.add(job)
+                        sess.commit()
+                    continue
 
-            t = self.threads[job.novel_id] = Thread(
-                target=microtask,
-                args=(job.id, signal),
-                # daemon=True,
-            )
-            t.start()
+                # if queue is full, wait for the next round,
+                # but continue processing pending jobs to detect duplicates
+                if len(self.threads) >= CONCURRENCY:
+                    continue
 
-            self.history.append(
-                JobRunnerHistoryItem(
-                    time=current_timestamp(),
-                    job_id=job.id,
-                    user_id=job.user_id,
-                    novel_id=job.novel_id,
-                    status=job.status,
-                    run_state=job.run_state,
+                # create and start threads
+                t = self.threads[job.novel_id] = Thread(
+                    target=microtask,
+                    args=(job.id, signal),
+                    # daemon=True,
                 )
-            )
+                t.start()
+
+                # log this to history
+                self.history.append(
+                    JobRunnerHistoryItem(
+                        time=current_timestamp(),
+                        job_id=job.id,
+                        user_id=job.user_id,
+                        novel_id=job.novel_id,
+                        status=job.status,
+                        run_state=job.run_state,
+                    )
+                )

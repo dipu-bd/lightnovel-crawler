@@ -1,4 +1,4 @@
-import { type Job, type PaginatiedResponse } from '@/types';
+import { JobStatus, type Job, type PaginatiedResponse } from '@/types';
 import { stringifyError } from '@/utils/errors';
 import { Button, Flex, List, Pagination, Result, Spin, Typography } from 'antd';
 import axios from 'axios';
@@ -25,6 +25,12 @@ export const JobListPage: React.FC<any> = () => {
     [searchParams]
   );
 
+  const shouldReload = useMemo(
+    () =>
+      Boolean(!error && jobs.find((job) => job.status != JobStatus.COMPLETED)),
+    [error, jobs]
+  );
+
   const fetchJobs = async (page: number) => {
     setError(undefined);
     try {
@@ -46,13 +52,13 @@ export const JobListPage: React.FC<any> = () => {
   }, [currentPage, refreshId]);
 
   useEffect(() => {
-    if (currentPage === 1) {
+    if (currentPage === 1 && shouldReload) {
       const iid = setInterval(() => {
         setRefreshId((v) => v + 1);
       }, 5000);
       return () => clearInterval(iid);
     }
-  }, [currentPage, refreshId]);
+  }, [currentPage, shouldReload, refreshId]);
 
   const handlePageChange = (page: number) => {
     setLoading(true);
