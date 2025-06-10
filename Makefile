@@ -80,15 +80,19 @@ lint-web:
 lint: lint-py lint-web
 
 # Push tag
-git-pull:
+pull:
 	git pull --rebase --autostash
 
-remove-current-tag:
+remove-tag:
 	git push --delete origin "v$(VERSION)"
 	git tag -d "v$(VERSION)"
 
-push-tag: git-pull
+push-tag: pull
 	git tag "v$(VERSION)"
 	git push --tags
 
-push-tag-force: git-pull remove-current-tag push-tag
+push-tag-force: pull
+	git push --delete origin "v$(VERSION)"
+	git tag -d "v$(VERSION)"
+	git tag "v$(VERSION)"
+	git push --tags

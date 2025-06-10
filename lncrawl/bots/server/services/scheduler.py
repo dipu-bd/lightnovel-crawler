@@ -21,6 +21,7 @@ class JobScheduler:
         self.db = ctx.db
         self.last_run_ts = 0
         self.signal: Optional[Event] = None
+        self.threads: Dict[str, Thread] = {}
         self.history: Deque[JobRunnerHistoryItem] = deque(maxlen=50)
 
     def close(self):
@@ -55,11 +56,27 @@ class JobScheduler:
                 signal.wait(self.ctx.config.app.runner_cooldown)
                 if signal.is_set():
                     return
+                self.__free()
                 self.__add(signal)
         except KeyboardInterrupt:
             signal.set()
         finally:
+            self.__clean()
             logger.info('Scheduler stoppped')
+
+    def __clean(self):
+        for k, t in self.threads.items():
+            t.join()
+        self.threads.clear()
+
+    def __free(self):
+        logger.debug('Waiting for queue to be free')
+        while len(self.threads) >= CONCURRENCY:
+            for k, t in self.threads.items():
+                if not t.is_alive():
+                    del self.threads[k]
+                    break
+                t.join(1)
 
     def __add(self, signal=Event()):
         logger.debug('Running new task')
@@ -76,16 +93,16 @@ class JobScheduler:
                     desc(Job.priority),
                     asc(Job.created_at),
                 )
-                .limit(CONCURRENCY)
             ).all()
 
         # create threads
-        threads: Dict[str, Thread] = {}
         for job in jobs:
-            if job.novel_id in threads:
+            if job.novel_id in self.threads:
                 continue  # no concurrency for same novel
+            if len(self.threads) >= CONCURRENCY:
+                return
 
-            t = threads[job.novel_id] = Thread(
+            t = self.threads[job.novel_id] = Thread(
                 target=microtask,
                 args=(job.id, signal),
                 # daemon=True,
@@ -102,6 +119,3 @@ class JobScheduler:
                     run_state=job.run_state,
                 )
             )
-
-        for t in threads.values():
-            t.join()
