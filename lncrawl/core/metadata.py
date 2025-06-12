@@ -39,7 +39,7 @@ def save_metadata(app, completed=False):
             no_append_after_filename=app.no_suffix_after_filename,
             chapters_to_download=[chap.id for chap in app.chapters],
             proxies=dict(app.crawler.scraper.proxies),
-            generated_books=dict(app.generated_books),
+            # generated_books=dict(app.generated_books),
             generated_archives=dict(app.generated_archives),
             search_progress=app.search_progress,
             fetch_novel_progress=app.fetch_novel_progress,
@@ -91,7 +91,7 @@ def load_metadata(app, meta: MetaInfo):
     app.output_formats = session.output_formats
     app.good_file_name = session.good_file_name
     app.no_suffix_after_filename = session.no_append_after_filename
-    app.generated_books = session.generated_books
+    # app.generated_books = session.generated_books
     app.generated_archives = session.generated_archives
     app.search_progress = session.search_progress
     app.fetch_novel_progress = session.fetch_novel_progress

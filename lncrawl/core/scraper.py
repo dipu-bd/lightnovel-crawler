@@ -1,6 +1,7 @@
 import base64
 import logging
 import os
+import re
 import random
 import ssl
 from io import BytesIO
@@ -194,16 +195,16 @@ class Scraper(TaskManager, SoupMaker):
         url = str(url or "").strip().rstrip("/")
         if not url:
             return url
-        if len(url) >= 1024 or url.startswith("data:"):
+        if url.startswith("data:"):
             return url
         if not page_url:
             page_url = str(self.last_soup_url or self.home_url)
         if url.startswith("//"):
             return self.home_url.split(":")[0] + ":" + url
-        if url.find("//") >= 0:
-            return url
         if url.startswith("/"):
             return self.home_url.strip("/") + url
+        if re.match(r'^https?://.*$', url):
+            return url
         if page_url:
             return page_url.strip("/") + "/" + url
         return self.home_url + url

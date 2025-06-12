@@ -65,7 +65,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
             }}
           />
           {novel.tags && novel.tags.length > 0 && (
-            <Flex wrap gap="5px" justify={lg ? undefined : 'center'}>
+            <Flex wrap gap="5px" justify="center" style={{ width: '100%' }}>
               <Divider size="small" />
               {novel.tags.map((tag) => (
                 <Tag
