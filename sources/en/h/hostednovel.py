@@ -23,23 +23,25 @@ class HostedNovelCom(Crawler):
         assert isinstance(possible_title, Tag)
         self.novel_title = possible_title.text.strip()
 
-        possible_image = soup.select_one('section[aria-labelledby="novel-details-heading"] img[src]')
-        if possible_image:
-            self.novel_cover = self.absolute_url(str(possible_image['src']))
+        details = soup.select_one('section[aria-labelledby="novel-details-heading"]')
+        if details:
+            possible_image = details.select_one('img[src]')
+            if possible_image:
+                self.novel_cover = self.absolute_url(str(possible_image['src']))
 
-        self.novel_tags = []
-        for div in soup.select('section[aria-labelledby="novel-details-heading"] dl.grid div'):
-            dt = div.select_one('.dt')
-            dd = div.select_one('.dd')
-            if dt and dd:
-                name = dt.get_text(strip=True).lower()
-                value = dd.get_text(strip=True)
-                if 'author' in name:
-                    self.novel_author = value
-                elif 'genres' in name:
-                    self.novel_tags.append(value)
-                elif 'status' in name:
-                    self.novel_tags.append(value)
+            self.novel_tags = []
+            for div in details.select('dl.grid div'):
+                dt = div.select_one('dt')
+                dd = div.select_one('dd')
+                if dt and dd:
+                    name = dt.get_text(strip=True).lower()
+                    value = dd.get_text(strip=True)
+                    if 'author' in name:
+                        self.novel_author = value
+                    elif 'genres' in name:
+                        self.novel_tags.append(value)
+                    elif 'status' in name:
+                        self.novel_tags.append(value)
 
         final_pg = 1
         final_pg_el = soup.select_one('#chapters nav[aria-label="Pagination"] a:nth-last-child(1)')
