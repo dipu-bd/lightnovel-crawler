@@ -5,6 +5,7 @@ import re
 from bs4 import Tag
 
 from lncrawl.core.crawler import Crawler
+from lncrawl.models import Volume, Chapter
 
 logger = logging.getLogger(__name__)
 
@@ -12,17 +13,8 @@ logger = logging.getLogger(__name__)
 class HostedNovelCom(Crawler):
     base_url = 'https://hostednovel.com/'
 
-    def extract_numbers_from_string(self, input_string):
-        # Define a regular expression pattern to match numbers (integers and decimals)
-        pattern = r"[-+]?\d*\.\d+|\d+"
-
-        # Use the findall() method to extract all matching numbers from the input string
-        numbers = re.findall(pattern, input_string)
-
-        # Convert the matched strings to actual numbers (float or int)
-        numbers = [float(number) if '.' in number else int(number) for number in numbers]
-
-        return numbers
+    def extract_number_from_string(self, input_string):
+        return int(re.findall(r"[-+]?\d*\.\d+|\d+", input_string)[0])
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
@@ -30,29 +22,32 @@ class HostedNovelCom(Crawler):
         possible_title = soup.select_one('.text-center h1.font-extrabold')
         assert isinstance(possible_title, Tag)
         self.novel_title = possible_title.text.strip()
-        logger.info('Novel title: %s', self.novel_title)
 
-        possible_image = soup.select_one('section[aria-labelledby="novel-details-heading"] img')
+        possible_image = soup.select_one('section[aria-labelledby="novel-details-heading"] img[src]')
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image['src'])
-            logger.info('Novel cover: %s', self.novel_cover)
+            self.novel_cover = self.absolute_url(str(possible_image['src']))
 
-        for div in soup.select('section[aria-labelledby="novel-details-heading"] dl div'):
+        self.novel_tags = []
+        for div in soup.select('section[aria-labelledby="novel-details-heading"] dl.grid div'):
             dt = div.select_one('.dt')
             dd = div.select_one('.dd')
-            if dt and dd and dt.text.strip().startswith('Author:'):
-                self.novel_author = dd.text.strip()
-                break
+            if dt and dd:
+                name = dt.get_text(strip=True).lower()
+                value = dd.get_text(strip=True)
+                if 'author' in name:
+                    self.novel_author = value
+                elif 'genres' in name:
+                    self.novel_tags.append(value)
+                elif 'status' in name:
+                    self.novel_tags.append(value)
 
-        logger.info('Novel author: %s', self.novel_author)
+        final_pg = 1
+        final_pg_el = soup.select_one('#chapters nav[aria-label="Pagination"] a:nth-last-child(1)')
+        final_pg_href = final_pg_el and final_pg_el.get("href")
+        if final_pg_href:
+            final_pg = self.extract_number_from_string(str(final_pg_href))
+        logger.info(f'max_page = {final_pg}')
 
-        if soup.select_one('#chapters nav[aria-label="Pagination"] a:nth-last-child(1)'):
-            final_pg = soup.select_one('#chapters nav[aria-label="Pagination"] a:nth-last-child(1)')
-            logger.info(f'max_page = {self.extract_numbers_from_string(final_pg["href"])[0]}')
-            final_pg = self.extract_numbers_from_string(final_pg["href"])[0]
-        else:
-            final_pg = 1
-            logger.info(f'max_page = {final_pg}')
         futures = []
         raw_novel_url = re.split(r'[?#]', self.novel_url)[0]
         for page in range(final_pg):
@@ -63,18 +58,17 @@ class HostedNovelCom(Crawler):
 
         for f in futures:
             soup = f.result()
-            for a in soup.select('#chapters ul[role="list"] li a'):
+            for a in soup.select('#chapters ul[role="list"] li a[href]'):
                 chap_id = len(self.chapters) + 1
                 vol_id = 1 + len(self.chapters) // 100
                 if len(self.volumes) < vol_id:
-                    self.volumes.append({'id': vol_id})
-
-                self.chapters.append({
-                    'id': chap_id,
-                    'volume': vol_id,
-                    'title': a.text.strip(),
-                    'url': self.absolute_url(a['href']),
-                })
+                    self.volumes.append(Volume(id=vol_id))
+                self.chapters.append(Chapter(
+                    id=chap_id,
+                    volume=vol_id,
+                    title=a.text.strip(),
+                    url=self.absolute_url(str(a['href'])),
+                ))
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter['url'])

@@ -54,7 +54,7 @@ export const JobDetailsPage: React.FC<any> = () => {
     if (job && job.status !== JobStatus.COMPLETED) {
       const iid = setInterval(() => {
         setRefreshId((v) => v + 1);
-      }, 1000);
+      }, 2000);
       return () => {
         clearInterval(iid);
       };

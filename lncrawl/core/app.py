@@ -230,13 +230,14 @@ class App:
             return  # canceled
 
         yield from fetch_chapter_body(self, signal)
-
         save_metadata(self)
         if signal.is_set():
             return  # canceled
 
         yield from fetch_chapter_images(self, signal)
         save_metadata(self, True)
+        if signal.is_set():
+            return  # canceled
 
         if self.crawler and self.can_do("logout"):
             self.crawler.logout()

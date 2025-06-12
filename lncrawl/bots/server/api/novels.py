@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Depends, Path, Query, Security
-from fastapi.responses import StreamingResponse
+from fastapi.responses import Response, FileResponse
 
 from ..context import ServerContext
 from ..exceptions import AppError, AppErrors
@@ -49,21 +49,20 @@ def get_novel_artifacts(
 async def get_novel_cover(
     novel_id: str = Path(),
     ctx: ServerContext = Depends(),
-) -> StreamingResponse:
+) -> Response:
     novel = ctx.novels.get(novel_id)
+    if not novel.cover or not novel.cover.startswith('http'):
+        raise AppErrors.no_novel_cover
     try:
         cover_file = ctx.metadata.get_novel_cover(novel)
-        with open(cover_file, 'rb') as content:
-            return StreamingResponse(
-                content,
-                media_type='image/jpeg',
-                headers={
-                    "Cache-Control": "public, max-age=31536000, immutable"
-                }
-            )
+        return FileResponse(
+            cover_file,
+            media_type='image/jpeg',
+            headers={
+                "Cache-Control": "public, max-age=36000, immutable"
+            }
+        )
     except AppError:
-        if not novel.cover:
-            raise AppErrors.no_novel_cover
         return await ctx.fetch.image(novel.cover)
 
 

@@ -21,7 +21,8 @@ class FetchService:
     async def image(self, image_url: str) -> StreamingResponse:
         async with httpx.AsyncClient() as client:
             response = await client.get(image_url)
-            response.raise_for_status()
+            if response.status_code >= 400:
+                raise AppErrors.invalid_image_response
 
         content_type = response.headers.get("Content-Type")
         if not content_type:

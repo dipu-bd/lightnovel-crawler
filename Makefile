@@ -65,7 +65,7 @@ build: version install build-web build-wheel build-exe
 
 # Lint project files
 start-server:
-	$(PY) -m lncrawl -b server
+	$(PY) -m lncrawl -b server -ll
 
 start-web:
 	$(YARN) dev

@@ -194,7 +194,6 @@ class TaskManager(ABC):
         """
         futures = list(futures)
         if not futures:
-            yield from ()
             return
 
         bar = self.progress_bar(

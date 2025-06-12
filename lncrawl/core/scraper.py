@@ -136,7 +136,7 @@ class Scraper(TaskManager, SoupMaker):
                         kwargs["proxies"] = self.__get_proxies(_parsed.scheme, 5)
 
         @retry(
-            stop=stop_after_attempt(max_retries or (self.workers + 3)),
+            stop=stop_after_attempt(max_retries or 2),
             wait=wait_random_exponential(multiplier=0.5, max=60),
             retry=retry_if_exception_type(RetryErrorGroup),
             after=_after_retry,
@@ -314,9 +314,17 @@ class Scraper(TaskManager, SoupMaker):
         headers = CaseInsensitiveDict(headers)
         headers.setdefault("Origin", None)
         headers.setdefault("Referer", None)
+        timeout = kwargs.pop('timeout', None) or (3, 30)
 
         try:
-            response = self.__process_request("get", url, headers=headers, **kwargs)
+            response = self.__process_request(
+                "get",
+                url,
+                headers=headers,
+                timeout=timeout,
+                max_retries=1,
+                **kwargs,
+            )
             content = response.content
             return Image.open(BytesIO(content))
         except UnidentifiedImageError:

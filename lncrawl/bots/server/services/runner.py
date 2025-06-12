@@ -31,6 +31,7 @@ def microtask(job_id: str, signal=Event()) -> None:
         if refresh:
             sess.refresh(job)
 
+    logger.info('=== Task begin ===')
     try:
         #
         # Status: COMPLETED
@@ -227,3 +228,4 @@ def microtask(job_id: str, signal=Event()) -> None:
 
     finally:
         sess.close()
+        logger.info('=== Task end ===')

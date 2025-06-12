@@ -57,30 +57,22 @@ class JobScheduler:
                 if signal.is_set():
                     return
                 self.__free()
-                self.__add(signal)
+                if len(self.threads) < CONCURRENCY:
+                    self.__add(signal)
         except KeyboardInterrupt:
             signal.set()
         finally:
-            self.__clean()
             logger.info('Scheduler stoppped')
-
-    def __clean(self):
-        # wait for all jobs to finish
-        for k, t in self.threads.items():
-            t.join()
-        # clean queue
-        self.threads.clear()
 
     def __free(self):
         logger.debug('Waiting for queue to be free')
-        while len(self.threads) >= CONCURRENCY:
-            # wait for any job to finish
-            for k, t in self.threads.items():
-                t.join(1)  # wait 1s for this job
-                if not t.is_alive():  # if done
-                    # remove from queue and exit loop
-                    del self.threads[k]
-                    break
+        # wait for any job to finish
+        for k, t in self.threads.items():
+            t.join(1)  # wait 1s for this job
+            if not t.is_alive():  # if done
+                # remove from queue and exit loop
+                del self.threads[k]
+                break
 
     def __add(self, signal=Event()):
         logger.debug('Running new task')
@@ -102,6 +94,14 @@ class JobScheduler:
 
             for job in jobs:
                 # cancel duplicate jobs
+                if not job.novel_id:
+                    job.status = JobStatus.COMPLETED
+                    job.run_state = RunState.FAILED
+                    job.error = 'Attached novel is not found'
+                    sess.add(job)
+                    sess.commit()
+                    continue
+
                 if job.novel_id in self.threads:
                     if job.status != JobStatus.RUNNING:
                         job.status = JobStatus.COMPLETED
@@ -117,12 +117,13 @@ class JobScheduler:
                     continue
 
                 # create and start threads
-                t = self.threads[job.novel_id] = Thread(
+                t = Thread(
                     target=microtask,
                     args=(job.id, signal),
                     # daemon=True,
                 )
                 t.start()
+                self.threads[job.novel_id] = t
 
                 # log this to history
                 self.history.append(
