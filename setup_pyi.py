@@ -56,13 +56,20 @@ def gather_data_files():
 
 
 def gather_hidden_imports():
-    hidden = []
+    hidden = [
+        'passlib.handlers.argon2',
+    ]
+
     for py_file in (ROOT / "sources").rglob("*.py"):
         rel_path = str(py_file.relative_to(ROOT / "sources"))
         if all(x[0].isalnum() for x in rel_path.split(os.sep)):
             module = "sources." + rel_path[:-3].replace(os.sep, ".")
-            hidden.append(f"--hidden-import={module}")
-    return hidden
+            hidden.append(module)
+
+    return [
+        f"--hidden-import={module}"
+        for module in hidden
+    ]
 
 
 def gather_excluded_modules():
