@@ -2,9 +2,18 @@ import { store } from '@/store';
 import { Auth } from '@/store/_auth';
 import { stringifyError } from '@/utils/errors';
 import { LogoutOutlined, WarningOutlined } from '@ant-design/icons';
-import { Button, Flex, Input, message, Modal, Space, Typography } from 'antd';
+import {
+  Alert,
+  Button,
+  Flex,
+  Input,
+  message,
+  Modal,
+  Space,
+  Typography,
+} from 'antd';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { UserAvatar } from '../Tags/gravatar';
 
@@ -14,10 +23,21 @@ export const UserInfoCard: React.FC<any> = () => {
 
   const [otp, setOtp] = useState<string>();
   const [token, setToken] = useState<string>();
+  const [resendTimeout, setResendTimeout] = useState<number>(0);
+
+  const [error, setError] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const authUser = useSelector(Auth.select.user);
   const isVerified = useSelector(Auth.select.isVerified);
+
+  useEffect(() => {
+    if (resendTimeout <= 0) return;
+    const tid = setTimeout(() => {
+      setResendTimeout((v) => v - 1);
+    }, 998);
+    return () => clearTimeout(tid);
+  }, [resendTimeout]);
 
   const handleLogout = () => {
     store.dispatch(Auth.action.clearAuth());
@@ -25,23 +45,23 @@ export const UserInfoCard: React.FC<any> = () => {
 
   const sendOTP = async () => {
     try {
+      setError(undefined);
       setLoading(true);
+      setResendTimeout(30);
       const { data } = await axios.post('/api/auth/me/send-otp');
       setToken(data.token);
-      return true;
     } catch (err) {
-      messageApi.open({
-        type: 'error',
-        content: stringifyError(err),
-      });
-      return false;
+      setError(stringifyError(err));
     } finally {
       setLoading(false);
     }
   };
 
   const startVerifyEmail = async () => {
-    setShowVerify(await sendOTP());
+    if (resendTimeout <= 0) {
+      sendOTP();
+    }
+    setShowVerify(true);
   };
 
   const handleVerify = async () => {
@@ -143,13 +163,23 @@ export const UserInfoCard: React.FC<any> = () => {
             A 6-digit verification code was sent to your email address. Please
             enter the code below to continue.
           </Typography.Text>
+
           <Input.OTP value={otp} onChange={setOtp} size="large" />
+
           <Space>
             <Typography.Text>Did not receive the OTP?</Typography.Text>
-            <Typography.Link onClick={sendOTP}>
-              Click here to send again.
-            </Typography.Link>
+            {resendTimeout > 0 ? (
+              <Typography.Text type="secondary">
+                You can send again in {resendTimeout} seconds.
+              </Typography.Text>
+            ) : (
+              <Typography.Link onClick={sendOTP}>
+                Click here to send again.
+              </Typography.Link>
+            )}
           </Space>
+
+          {Boolean(error) && <Alert type="error" showIcon message={error} />}
         </Flex>
       </Modal>
     </Flex>
