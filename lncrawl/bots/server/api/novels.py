@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Path, Query, Security
 from fastapi.responses import StreamingResponse
 
 from ..context import ServerContext
-from ..exceptions import AppErrors
+from ..exceptions import AppError, AppErrors
 from ..models.novel import Artifact, Novel, NovelChapterContent, NovelVolume
 from ..models.pagination import Paginated
 from ..security import ensure_user
@@ -51,9 +51,20 @@ async def get_novel_cover(
     ctx: ServerContext = Depends(),
 ) -> StreamingResponse:
     novel = ctx.novels.get(novel_id)
-    if not novel.cover:
-        raise AppErrors.no_novel_cover
-    return await ctx.fetch.image(novel.cover)
+    try:
+        cover_file = ctx.metadata.get_novel_cover(novel)
+        with open(cover_file, 'rb') as content:
+            return StreamingResponse(
+                content,
+                media_type='image/jpeg',
+                headers={
+                    "Cache-Control": "public, max-age=31536000, immutable"
+                }
+            )
+    except AppError:
+        if not novel.cover:
+            raise AppErrors.no_novel_cover
+        return await ctx.fetch.image(novel.cover)
 
 
 @router.get("/{novel_id}/toc", summary='Gets table of contents')

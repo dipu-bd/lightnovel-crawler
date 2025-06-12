@@ -1,11 +1,11 @@
 import { Navigate, type RouteObject } from 'react-router-dom';
 
 import { MainLayout } from '@/components/Layout';
-import { HomePage } from './Home';
 import { JobDetailsPage } from './JobDetails';
 import { JobListPage } from './JobList';
 import { LoginPage } from './Login';
 import { NovelDetailsPage } from './NovelDetails';
+import { NovelListPage } from './NovelList';
 import { NovelReaderPage } from './NovelReaderPage';
 import { SignupPage } from './Signup';
 import { SupportedSourcesPage } from './SupportedSources';
@@ -39,7 +39,7 @@ export const USER_ROUTES: RouteObject[] = [
     children: [
       {
         path: '',
-        element: <HomePage />,
+        element: <NovelListPage />,
       },
       {
         path: 'novel/:id',

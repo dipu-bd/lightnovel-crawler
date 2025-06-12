@@ -16,7 +16,8 @@ from lncrawl.core.sources import crawler_list, rejected_sources
 from ..context import ServerContext
 from ..exceptions import AppErrors
 from ..models.meta import SupportedSource
-from ..models.novel import Novel, NovelChapter, NovelVolume, NovelChapterContent
+from ..models.novel import (Novel, NovelChapter, NovelChapterContent,
+                            NovelVolume)
 
 logger = logging.getLogger(__name__)
 
@@ -150,3 +151,14 @@ class MetadataService:
                 volume_id=content['volume'],
                 volume=content['volume_title'],
             )
+
+    def get_novel_cover(self, novel: Novel):
+        output_path = novel.extra.get('output_path')
+        if not output_path:
+            raise AppErrors.no_novel_output_path
+
+        file_path = Path(output_path) / 'cover.jpg'
+        if not file_path.is_file():
+            raise AppErrors.not_found
+
+        return str(file_path)

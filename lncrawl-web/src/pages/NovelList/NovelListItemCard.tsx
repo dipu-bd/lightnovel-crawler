@@ -20,6 +20,7 @@ export const NovelListItemCard: React.FC<{ novel: Novel }> = ({ novel }) => {
           alt="cover"
           preview={false}
           src={`${API_BASE_URL}/api/novel/${novel.id}/cover`}
+          fallback="/no-image.svg"
           style={{
             objectFit: 'cover',
             aspectRatio: 3 / 4,

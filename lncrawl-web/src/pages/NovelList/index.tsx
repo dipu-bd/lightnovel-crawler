@@ -10,13 +10,13 @@ import {
   Spin,
   Typography,
 } from 'antd';
-import { RequestNovelCard } from '../Home/RequestNovelCard';
-import { useNovelList } from '../Home/hooks';
+import { useNovelList } from './hooks';
 import { NovelListItemCard } from './NovelListItemCard';
+import { RequestNovelCard } from './RequestNovelCard';
 
 const { Title } = Typography;
 
-export const HomePage: React.FC<any> = () => {
+export const NovelListPage: React.FC<any> = () => {
   const {
     currentPage,
     perPage,

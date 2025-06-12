@@ -55,6 +55,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
           <Image
             alt="Novel Cover"
             src={`${API_BASE_URL}/api/novel/${novel.id}/cover`}
+            fallback="/no-image.svg"
             style={{
               display: 'block',
               objectFit: 'cover',
