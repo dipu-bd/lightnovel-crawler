@@ -1,23 +1,23 @@
 services:
-  chrome:
-    image: selenium/standalone-chrome:latest
-    cpus: 1.5
-    mem_limit: 1600m
-    shm_size: 6gb
-    restart: unless-stopped
-    ports:
-      - "7900:7900"
-      - "4444:4444"
-    environment:
-      SE_VNC_VIEW_ONLY: "1"
-      SE_EVENT_BUS_PUBLISH_PORT: "4442"
-      SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
-      SE_NODE_MAX_SESSIONS: "4"
-      SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
-      SE_NO_VNC_PORT: "7900"
-      SE_SCREEN_WIDTH: "1920"
-      SE_SCREEN_HEIGHT: "1080"
-      SE_NODE_GRID_URL: "false"
+  # chrome:
+  #   image: selenium/standalone-chrome:latest
+  #   cpus: 1.5
+  #   mem_limit: 1600m
+  #   shm_size: 6gb
+  #   restart: unless-stopped
+  #   ports:
+  #     - "7900:7900"
+  #     - "4444:4444"
+  #   environment:
+  #     SE_VNC_VIEW_ONLY: "1"
+  #     SE_EVENT_BUS_PUBLISH_PORT: "4442"
+  #     SE_EVENT_BUS_SUBSCRIBE_PORT: "4443"
+  #     SE_NODE_MAX_SESSIONS: "4"
+  #     SE_NODE_OVERRIDE_MAX_SESSIONS: "true"
+  #     SE_NO_VNC_PORT: "7900"
+  #     SE_SCREEN_WIDTH: "1920"
+  #     SE_SCREEN_HEIGHT: "1080"
+  #     SE_NODE_GRID_URL: "false"
 
   server:
     image: lncrawl
@@ -40,8 +40,8 @@ services:
       - ./output_path:/home/lncrawl/output
       - ./sqlite.db:/app/sqlite.db
       - ./.env:/app/.env
-    depends_on:
-      - chrome
+    # depends_on:
+    #   - chrome
     extra_hosts:
       - "host.docker.internal:host-gateway"
  
