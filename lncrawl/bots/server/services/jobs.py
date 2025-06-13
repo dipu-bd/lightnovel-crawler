@@ -52,8 +52,8 @@ class JobService:
             else:
                 stmt = stmt.order_by(asc(sort_column))
 
-            total = sess.exec(select(func.count()).select_from(Job)).one()
             jobs = sess.exec(stmt.offset(offset).limit(limit)).all()
+            total = sess.exec(select(func.count()).select_from(Job)).one()
 
             return Paginated(
                 total=total,

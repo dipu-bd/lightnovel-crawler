@@ -1,12 +1,15 @@
+import io
 import base64
 import json
 import logging
+from PIL import Image
 from functools import lru_cache
 from pathlib import Path
 from typing import Dict
 from urllib.parse import urlparse
 
 from fastapi import APIRouter
+from fastapi.responses import FileResponse
 
 from lncrawl.core.app import App
 from lncrawl.core.download_chapters import get_chapter_file
@@ -54,11 +57,16 @@ class MetadataService:
         return list(sorted(supported.values(), key=lambda x: x.domain))
 
     @lru_cache()
-    def get_novel_toc(self, novel_id: str):
+    def resolve_output_path(self, novel_id: str):
         with self.ctx.db.session() as sess:
             novel = sess.get(Novel, novel_id)
             if not novel:
                 raise AppErrors.no_such_novel
+
+            output_path = novel.extra.get('output_path')
+            if output_path and Path(output_path).is_dir():
+                return output_path
+
             if not novel.title:
                 raise AppErrors.no_novel_title
 
@@ -75,25 +83,28 @@ class MetadataService:
                 crawler.novel_title = novel.title
                 app.prepare_novel_output_path()
 
-                for meta in get_metadata_list(app.output_path):
-                    if meta.novel and meta.session and meta.novel.url == novel.url:
-                        break
-                else:
-                    logger.error(f'No metadata for: {novel.url}')
-                    raise AppErrors.not_found
-
                 output_path = app.output_path
 
-            if not meta.novel or not meta.session:
-                logger.error(f'Invalid metadata: {novel.url}')
-                raise AppErrors.internal_error
+            if not output_path or not Path(output_path).is_dir():
+                raise AppErrors.no_novel_output_path
 
             if novel.extra.get('output_path') != output_path:
                 novel.extra = dict(novel.extra)
-                novel.extra['output_path'] = app.output_path
+                novel.extra['output_path'] = output_path
                 sess.add(novel)
                 sess.commit()
-            print(novel.extra)
+
+            return output_path
+
+    @lru_cache()
+    def get_novel_toc(self, novel_id: str):
+        output_path = self.resolve_output_path(novel_id)
+        for meta in get_metadata_list(output_path):
+            if meta.novel and meta.session:
+                break
+        else:
+            logger.error(f'No metadata for: {novel_id}')
+            raise AppErrors.not_found
 
         volumes: Dict[int, NovelVolume] = {}
         for vol in meta.novel.volumes:
@@ -112,11 +123,11 @@ class MetadataService:
 
             json_file = get_chapter_file(
                 chapter=chap,
-                output_path=app.output_path,
+                output_path=output_path,
                 pack_by_volume=meta.session.pack_by_volume,
             )
 
-            relative_path = str(json_file.relative_to(app.output_path))
+            relative_path = str(json_file.relative_to(output_path))
             hash = base64.urlsafe_b64encode(relative_path.encode()).decode()
 
             volume.chapters.append(
@@ -152,13 +163,36 @@ class MetadataService:
                 volume=content['volume_title'],
             )
 
-    def get_novel_cover(self, novel: Novel):
-        output_path = novel.extra.get('output_path')
-        if not output_path:
-            raise AppErrors.no_novel_output_path
+    async def get_novel_cover(self, novel_id: str):
+        with self.ctx.db.session() as sess:
+            novel = sess.get(Novel, novel_id)
+            if not novel:
+                raise AppErrors.no_such_novel
+            cover_url = novel.cover
 
+        output_path = self.resolve_output_path(novel_id)
         file_path = Path(output_path) / 'cover.jpg'
         if not file_path.is_file():
-            raise AppErrors.not_found
+            if not cover_url or not cover_url.startswith('http'):
+                raise AppErrors.no_novel_cover
 
-        return str(file_path)
+            response = await self.ctx.fetch.image(cover_url)
+            content_type = response.headers.get("Content-Type")
+            if not content_type:
+                raise AppErrors.invalid_image_response
+
+            with Image.open(io.BytesIO(response.content)) as img:
+                if img.mode not in ("L", "RGB", "YCbCr", "RGBX"):
+                    if img.mode == "RGBa":
+                        img.convert("RGBA").convert("RGB")
+                    else:
+                        img.convert("RGB")
+                img.save(file_path.as_posix(), "JPEG", optimized=True)
+
+        return FileResponse(
+            file_path,
+            media_type='image/jpeg',
+            headers={
+                "Cache-Control": "public, max-age=31536000, immutable"
+            }
+        )
