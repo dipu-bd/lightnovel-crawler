@@ -11,7 +11,7 @@ export const NovelTableOfContentsCard: React.FC<{
       <Collapse
         items={toc.map((volume) => ({
           key: String(volume.id),
-          label: volume.title + 'A quite a long title for the volume',
+          label: volume.title,
           children: <NovelChapterList volume={volume} />,
           extra: (
             <Typography.Text
