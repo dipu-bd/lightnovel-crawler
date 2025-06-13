@@ -32,7 +32,7 @@ export const UserDetailsCard: React.FC<{ user: User }> = ({ user }) => {
               <Title level={5} style={{ margin: 0 }}>
                 {user.name || 'Unknown User'}
               </Title>
-              <Text type="secondary">{user.email}</Text>
+              {/* <Text type="secondary">{user.email}</Text> */}
             </Flex>
           </Space>
         </Col>
