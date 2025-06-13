@@ -26,6 +26,7 @@ class MailService:
 
     def prepare(self):
         try:
+            logger.info('Preparing mail server')
             smtp_server = self._ctx.config.mail.smtp_server
             smtp_port = self._ctx.config.mail.smtp_port
             smtp_user = self._ctx.config.mail.smtp_username
@@ -34,9 +35,9 @@ class MailService:
             self.server = SMTP(smtp_server, smtp_port)
             self.server.starttls()
             self.server.login(smtp_user, smtp_pass)
-            logging.info(f'Connected with SMTP server: {smtp_server}')
+            logger.info(f'Connected with SMTP server: {smtp_server}')
         except Exception:
-            logging.exception('Failed to connect with SMTP server')
+            logger.exception('Failed to connect with SMTP server')
             self.close()
 
     def close(self):

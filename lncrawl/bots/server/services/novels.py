@@ -22,16 +22,21 @@ class NovelService:
     ) -> Paginated[Novel]:
         with self._db.session() as sess:
             stmt = select(Novel)
+            cnt = select(func.count()).select_from(Novel)
 
             # Apply filters
             if not with_orphans:
                 stmt = stmt.where(Novel.orphan != True)  # noqa: E712
+                cnt = cnt.where(Novel.orphan != True)  # noqa: E712
 
             # Apply sorting
             stmt.order_by(asc(Novel.title), desc(Novel.created_at))
 
-            total = sess.exec(select(func.count()).select_from(Novel)).one()
-            items = sess.exec(stmt.offset(offset).limit(limit)).all()
+            # Apply pagination
+            stmt = stmt.offset(offset).limit(limit)
+
+            total = sess.exec(cnt).one()
+            items = sess.exec(stmt).all()
 
             return Paginated(
                 total=total,
