@@ -1,7 +1,6 @@
 import { API_BASE_URL } from '@/config';
 import type { Novel } from '@/types';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Card, Flex, Image } from 'antd';
+import { Card, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 export const NovelListItemCard: React.FC<{ novel: Novel }> = ({ novel }) => {
