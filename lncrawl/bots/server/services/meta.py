@@ -96,7 +96,6 @@ class MetadataService:
 
             return output_path
 
-    @lru_cache()
     def get_novel_toc(self, novel_id: str):
         output_path = self.resolve_output_path(novel_id)
         for meta in get_metadata_list(output_path):
@@ -114,7 +113,7 @@ class MetadataService:
             )
 
         for chap in meta.novel.chapters:
-            if not chap.volume:
+            if not chap.volume or not chap.success:
                 continue
 
             volume = volumes.get(chap.volume)
