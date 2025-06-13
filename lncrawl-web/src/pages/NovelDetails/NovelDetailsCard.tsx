@@ -64,10 +64,10 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
               height: '300px',
             }}
           />
-          {novel.tags && novel.tags.length > 0 && (
+          {novel.tags && Array.isArray(novel.tags) && novel.tags.length > 0 && (
             <Flex wrap gap="5px" justify="center" style={{ width: '100%' }}>
               <Divider size="small" />
-              {novel.tags.map((tag) => (
+              {(novel.tags || []).map((tag) => (
                 <Tag
                   key={tag}
                   style={{ textTransform: 'capitalize', margin: 0 }}

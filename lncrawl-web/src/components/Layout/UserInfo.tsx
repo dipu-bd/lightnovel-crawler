@@ -21,7 +21,7 @@ export const UserInfoCard: React.FC<any> = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const [showVerify, setShowVerify] = useState<boolean>(false);
 
-  const [otp, setOtp] = useState<string>();
+  const [otp, setOtp] = useState<string>('');
   const [token, setToken] = useState<string>();
   const [resendTimeout, setResendTimeout] = useState<number>(0);
 
@@ -58,7 +58,7 @@ export const UserInfoCard: React.FC<any> = () => {
   };
 
   const startVerifyEmail = async () => {
-    if (resendTimeout <= 0) {
+    if (!loading && resendTimeout <= 0) {
       sendOTP();
     }
     setShowVerify(true);
@@ -94,11 +94,6 @@ export const UserInfoCard: React.FC<any> = () => {
     }
   };
 
-  const stopPropagation = (e: React.SyntheticEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-  };
-
   return (
     <Flex
       vertical
@@ -110,8 +105,6 @@ export const UserInfoCard: React.FC<any> = () => {
         paddingTop: '25px',
         paddingBottom: '10px',
       }}
-      onKeyDown={stopPropagation}
-      onClick={stopPropagation}
     >
       <UserAvatar
         size={72}
@@ -127,7 +120,6 @@ export const UserInfoCard: React.FC<any> = () => {
           block
           danger
           shape="round"
-          loading={loading}
           onClick={startVerifyEmail}
           icon={<WarningOutlined />}
           children="Verify Email"
@@ -164,7 +156,7 @@ export const UserInfoCard: React.FC<any> = () => {
             enter the code below to continue.
           </Typography.Text>
 
-          <Input.OTP value={otp} onChange={setOtp} size="large" />
+          <Input.OTP length={6} value={otp} onChange={setOtp} size="large" />
 
           <Space>
             <Typography.Text>Did not receive the OTP?</Typography.Text>
