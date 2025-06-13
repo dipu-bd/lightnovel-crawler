@@ -30,7 +30,6 @@ export function useNovelList() {
   }, [breakpoint.xl, breakpoint.lg, breakpoint.sm]);
 
   const fetchNovels = async (page: number, limit: number) => {
-    setLoading(true);
     setError(undefined);
     try {
       const offset = (page - 1) * limit;
@@ -50,10 +49,14 @@ export function useNovelList() {
   };
 
   useEffect(() => {
-    fetchNovels(currentPage, perPage);
+    const tid = setTimeout(() => {
+      fetchNovels(currentPage, perPage);
+    }, 50);
+    return () => clearTimeout(tid);
   }, [currentPage, perPage, refreshId]);
 
   const refresh = useCallback(() => {
+    setLoading(true);
     setRefreshId((v) => v + 1);
   }, []);
 

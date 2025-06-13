@@ -108,15 +108,17 @@ export interface SupportedSource {
 }
 
 export interface Chapter {
-  id: string;
+  id: number;
   hash: string;
   title: string;
+  isRead?: boolean;
 }
 
 export interface Volume {
-  id: string;
+  id: number;
   title: string;
   chapters: Chapter[];
+  isRead?: boolean;
 }
 
 export interface ChapterBody {
@@ -125,4 +127,6 @@ export interface ChapterBody {
   body: string;
   volume_id: number;
   volume: string;
+  prev?: Chapter;
+  next?: Chapter;
 }

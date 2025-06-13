@@ -65,3 +65,5 @@ class NovelChapterContent(BaseModel):
     body: str
     volume_id: int
     volume: str
+    prev: Optional[NovelChapter] = None
+    next: Optional[NovelChapter] = None

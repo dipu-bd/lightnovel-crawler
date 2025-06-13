@@ -1,9 +1,10 @@
 import { Avatar, Divider, Grid, Layout, Typography } from 'antd';
 import { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { MainLayoutSidebar } from './sidebar';
 
 export const MainLayout: React.FC<any> = () => {
+  const navigate = useNavigate();
   const { md } = Grid.useBreakpoint();
   const [overlay, setOverlay] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
@@ -65,6 +66,7 @@ export const MainLayout: React.FC<any> = () => {
               <Typography.Title
                 level={4}
                 style={{ margin: 0, textAlign: 'center' }}
+                onClick={() => navigate('/')}
               >
                 <Avatar
                   shape="square"

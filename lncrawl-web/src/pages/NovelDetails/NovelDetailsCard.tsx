@@ -15,7 +15,7 @@ import {
 } from 'antd';
 import { useState } from 'react';
 
-const { Title, Link, Paragraph } = Typography;
+const { Link, Paragraph } = Typography;
 
 export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
   const { lg } = Grid.useBreakpoint();
@@ -34,8 +34,20 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
   }
 
   return (
-    <Card variant="outlined">
-      <Title
+    <Card
+      variant="outlined"
+      title={
+        <Link
+          href={novel.url}
+          target="_blank"
+          rel="noreferrer noopener"
+          style={{ fontSize: '24px' }}
+        >
+          {novel.title} &nbsp; <ExportOutlined />
+        </Link>
+      }
+    >
+      {/* <Title
         level={3}
         style={{ color: 'inherit', margin: 0, marginBottom: 10 }}
       >
@@ -49,9 +61,10 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
             {novel.title} &nbsp; <ExportOutlined />
           </Link>
         }
-      </Title>
+      </Title> */}
+
       <Flex gap="20px" vertical={!lg}>
-        <Flex vertical align="center" justify="center" gap="5px">
+        <Flex vertical align="center" justify="flex-start" gap="5px">
           <Image
             alt="Novel Cover"
             src={`${API_BASE_URL}/api/novel/${novel.id}/cover`}
@@ -64,19 +77,6 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
               height: '300px',
             }}
           />
-          {novel.tags && Array.isArray(novel.tags) && novel.tags.length > 0 && (
-            <Flex wrap gap="5px" justify="center" style={{ width: '100%' }}>
-              <Divider size="small" />
-              {(novel.tags || []).map((tag) => (
-                <Tag
-                  key={tag}
-                  style={{ textTransform: 'capitalize', margin: 0 }}
-                >
-                  {tag.toLowerCase()}
-                </Tag>
-              ))}
-            </Flex>
-          )}
         </Flex>
         <Flex vertical flex="auto" gap="5px">
           <Descriptions
@@ -108,6 +108,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
               },
             ]}
           />
+
           <Paragraph
             type="secondary"
             style={{
@@ -126,6 +127,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
               'No synopsis available'
             )}
           </Paragraph>
+
           {(hasMore || showMore) && (
             <Link
               italic
@@ -137,6 +139,17 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
           )}
         </Flex>
       </Flex>
+
+      {novel.tags && Array.isArray(novel.tags) && novel.tags.length > 0 && (
+        <Flex wrap gap="5px" justify="center" style={{ width: '100%' }}>
+          <Divider size="small" />
+          {(novel.tags || []).map((tag) => (
+            <Tag key={tag} style={{ textTransform: 'capitalize', margin: 0 }}>
+              {tag.toLowerCase()}
+            </Tag>
+          ))}
+        </Flex>
+      )}
     </Card>
   );
 };

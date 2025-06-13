@@ -75,7 +75,7 @@ class MailService:
             and detail.novel
             and detail.job.run_state == RunState.SUCCESS
         ):
-            raise AppErrors.internal_error
+            raise AppErrors.server_error
 
         if not self.server:
             raise AppErrors.smtp_server_unavailable
