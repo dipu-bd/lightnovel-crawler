@@ -79,7 +79,7 @@ jobs:
       - name: 🚀 Release Artifact
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "dist/lncrawl*"
+          artifacts: "dist/lncrawl.exe"
           allowUpdates: true
           artifactErrorsFailBuild: true
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -140,9 +140,7 @@ jobs:
       - name: 🚀 Release Artifacts
         uses: ncipollo/release-action@v1
         with:
-          artifacts: |
-            dist/lncrawl-linux,
-            dist/*.whl
+          artifacts: "dist/lncrawl-linux,dist/*.whl"
           allowUpdates: true
           artifactErrorsFailBuild: true
           token: ${{ secrets.GITHUB_TOKEN }}
