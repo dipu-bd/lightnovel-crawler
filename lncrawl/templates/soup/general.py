@@ -32,8 +32,7 @@ class GeneralSoupTemplate(Crawler):
             logger.warning("Failed to parse novel authors | %s", e)
 
         try:
-            tags = set(list(self.parse_genres(soup)))
-            self.novel_tags = ", ".join(tags)
+            self.novel_tags = list(set(self.parse_genres(soup)))
         except Exception as e:
             logger.warning("Failed to parse novel tags | %s", e)
 
@@ -63,11 +62,11 @@ class GeneralSoupTemplate(Crawler):
 
     def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         """Parse and return the novel authors"""
-        return []
+        yield from []
 
     def parse_genres(self, soup: BeautifulSoup) -> Generator[str, None, None]:
         """Parse and return the novel categories"""
-        return []
+        yield from []
 
     def parse_summary(self, soup: BeautifulSoup) -> str:
         """Parse and return the novel summary or synopsis"""

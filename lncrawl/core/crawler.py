@@ -153,28 +153,23 @@ class Crawler(Scraper):
         fail_fast=False,
         signal=Event(),
     ) -> Generator[Chapter, None, None]:
+        def _downloader(chapter: Chapter):
+            chapter.body = ""
+            chapter.images = {}
+            chapter.body = self.download_chapter_body(chapter)
+            self.extract_chapter_images(chapter)
+            chapter.success = bool(chapter.body)
+            return chapter
+
         futures = [
-            self.executor.submit(self.download_chapter_body, chapter)
+            self.executor.submit(_downloader, chapter)
             for chapter in chapters
         ]
 
-        generator = self.resolve_as_generator(
+        yield from self.resolve_as_generator(
             futures,
             desc="Chapters",
             unit="item",
             fail_fast=fail_fast,
             signal=signal,
         )
-
-        for index, result in enumerate(generator):
-            chapter = chapters[index]
-            try:
-                chapter.body = ""
-                chapter.images = {}
-                chapter.body = result
-                self.extract_chapter_images(chapter)
-                chapter.success = bool(result)
-            except KeyboardInterrupt:
-                break
-            finally:
-                yield chapter

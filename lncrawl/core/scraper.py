@@ -1,8 +1,8 @@
 import base64
 import logging
 import os
-import re
 import random
+import re
 import ssl
 from io import BytesIO
 from typing import Any, Callable, Dict, MutableMapping, Optional, Tuple, Union
@@ -191,7 +191,7 @@ class Scraper(TaskManager, SoupMaker):
         """Set a session cookie"""
         self.scraper.cookies.set(name, value)
 
-    def absolute_url(self, url: str, page_url: Optional[str] = None) -> str:
+    def absolute_url(self, url: Any, page_url: Optional[str] = None) -> str:
         url = str(url or "").strip().rstrip("/")
         if not url:
             return url

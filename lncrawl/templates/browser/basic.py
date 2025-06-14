@@ -141,9 +141,11 @@ class BasicBrowserTemplate(Crawler):
         for chapter in self.progress_bar(remaining, desc="Chapters", unit="item"):
             if signal.is_set():
                 return  # canceled
+            assert isinstance(chapter, Chapter)
             chapter.body = ""
             chapter.images = {}
             try:
+                print(chapter.id, chapter.body[:50])
                 chapter.body = self.download_chapter_body(chapter)
                 self.extract_chapter_images(chapter)
                 chapter.success = True
