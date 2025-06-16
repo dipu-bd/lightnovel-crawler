@@ -24,6 +24,10 @@ class WtrLab(Crawler):
     base_url = ["https://wtr-lab.com"]
     has_mtl = True
 
+    def initialize(self) -> None:
+        super().initialize()
+        self.init_executor(workers=2)
+
     def search_novel(self, query: str):
         novels = requests.post(
             "https://www.wtr-lab.com/api/search",
@@ -31,6 +35,7 @@ class WtrLab(Crawler):
         ).json()
         logger.info("Search results: %s", novels)
 
+        results = []
         for novel in novels["data"]:
             data = novel["data"]
             meta = {
@@ -38,16 +43,19 @@ class WtrLab(Crawler):
                 "Author": data["author"],
                 "Status": "Ongoing" if novel["status"] else "Completed",
             }
-            yield SearchResult(
+            url = f"https://www.wtr-lab.com/en/serie-{novel['raw_id']}/f{novel['slug']}"
+            results.append(SearchResult(
+                url=url,
                 title=data["title"],
-                url=f"https://www.wtr-lab.com/en/serie-{novel['raw_id']}/f{novel['slug']}",
                 info=" | ".join(f"{k}: {v}" for k, v in meta.items()),
-            )
+            ))
+        return results
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
         metadata_json = soup.select_one("script#__NEXT_DATA__")
-        metadata = json.loads(metadata_json.text)
+        assert metadata_json, 'No next data found'
+        metadata = json.loads(metadata_json.get_text(strip=True))
 
         series = metadata["props"]["pageProps"]["serie"]
         series_data = series["serie_data"]

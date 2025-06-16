@@ -90,11 +90,10 @@ class MetadataService:
             if not output_path.is_dir():
                 raise AppErrors.no_novel_output_path
 
-            if novel.extra.get('output_path') != output_path:
-                novel.extra = dict(novel.extra)
-                novel.extra['output_path'] = output_path
-                sess.add(novel)
-                sess.commit()
+            novel.extra = dict(novel.extra)
+            novel.extra['output_path'] = str(output_path)
+            sess.add(novel)
+            sess.commit()
 
             return output_path
 
