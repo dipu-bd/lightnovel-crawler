@@ -96,7 +96,7 @@ class DiscordBot(discord.Client):
                 self.handlers[uid].process(message)
             elif (
                 len(self.handlers) > C.max_active_handles
-                or discriminator not in C.vip_users_ids
+                and discriminator not in C.vip_users_ids
             ):
                 async with message.author.typing():
                     await message.author.send(
