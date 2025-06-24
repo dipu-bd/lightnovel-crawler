@@ -29,19 +29,18 @@ class LazyGirlTranslationsCrawler(Crawler):
         assert possible_title, "No title found"
         self.novel_title = possible_title.text.strip()
 
-        cover_img = soup.select_one(".entry-content .wp-block-image img")
+        cover_img = soup.select_one(".sertothumb img")
         if cover_img:
-            src = cover_img.get("data-ezsrc") or cover_img.get("src")
+            src = cover_img.get("src")
             if src:
                 self.novel_cover = self.absolute_url(src)
 
-        first_p = soup.select_one(".inside-article .entry-content > p")
+        first_p = soup.find_all("span", class_="serval")
         if first_p:
-            t = first_p.get_text(separator="\n", strip=True)
-            author = next(filter(lambda x: "Author:" in x, t.split("\n")), "")
-            self.novel_author = author.replace("Author: ", "")
+            t = first_p[2].get_text(separator="\n", strip=True)
+            self.novel_author = t 
 
-        for a in soup.select(f'.wp-block-column a[href^="{self.home_url}"]'):
+        for a in soup.select(f'.eplister a[href^="{self.home_url}"]'):
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:
