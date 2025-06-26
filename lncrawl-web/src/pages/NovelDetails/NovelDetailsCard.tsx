@@ -3,6 +3,7 @@ import { type Novel } from '@/types';
 import { formatDate } from '@/utils/time';
 import { ExportOutlined } from '@ant-design/icons';
 import {
+  Avatar,
   Card,
   Descriptions,
   Divider,
@@ -10,15 +11,18 @@ import {
   Flex,
   Grid,
   Image,
+  Space,
   Tag,
+  Tooltip,
   Typography,
 } from 'antd';
-import { useState } from 'react';
-
-const { Link, Paragraph } = Typography;
+import { useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
+  const location = useLocation();
   const { lg } = Grid.useBreakpoint();
+
   const [hasMore, setHasMore] = useState<boolean>(false);
   const [showMore, setShowMore] = useState<boolean>(false);
 
@@ -33,36 +37,49 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
     );
   }
 
+  const novelUrl = useMemo(() => new URL(novel.url), [novel.url]);
+
+  const faviconLink = useMemo(
+    () => novelUrl.origin + '/favicon.ico',
+    [novelUrl]
+  );
+
+  const domainName = useMemo(
+    () => novelUrl.hostname.replace('www.', ''),
+    [novelUrl]
+  );
+
   return (
     <Card
       variant="outlined"
       title={
-        <Link
-          href={novel.url}
-          target="_blank"
-          rel="noreferrer noopener"
-          style={{ fontSize: '24px' }}
-        >
-          {novel.title} &nbsp; <ExportOutlined />
-        </Link>
+        <Space>
+          <Avatar src={faviconLink} />
+          <Typography.Text style={{ fontSize: '24px' }}>
+            {location.pathname === `/novel/${novel.id}` ? (
+              novel.title
+            ) : (
+              <Link to={`/novel/${novel.id}`}>{novel.title}</Link>
+            )}
+          </Typography.Text>
+          <Typography.Text type="secondary" style={{ fontSize: '20px' }}>
+            ({domainName})
+          </Typography.Text>
+        </Space>
       }
-    >
-      {/* <Title
-        level={3}
-        style={{ color: 'inherit', margin: 0, marginBottom: 10 }}
-      >
-        {
-          <Link
+      extra={[
+        <Tooltip title={'Original source'}>
+          <Typography.Link
             href={novel.url}
             target="_blank"
             rel="noreferrer noopener"
-            style={{ fontSize: 'inherit' }}
+            style={{ fontSize: '24px' }}
           >
-            {novel.title} &nbsp; <ExportOutlined />
-          </Link>
-        }
-      </Title> */}
-
+            <ExportOutlined />
+          </Typography.Link>
+        </Tooltip>,
+      ]}
+    >
       <Flex gap="20px" vertical={!lg}>
         <Flex vertical align="center" justify="flex-start" gap="5px">
           <Image
@@ -109,7 +126,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
             ]}
           />
 
-          <Paragraph
+          <Typography.Paragraph
             type="secondary"
             style={{
               textAlign: 'justify',
@@ -126,16 +143,16 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
             ) : (
               'No synopsis available'
             )}
-          </Paragraph>
+          </Typography.Paragraph>
 
           {(hasMore || showMore) && (
-            <Link
+            <Typography.Link
               italic
               onClick={() => setShowMore((v) => !v)}
               style={{ textAlign: showMore ? 'left' : 'right' }}
             >
               {showMore ? '< See less' : 'See more >'}
-            </Link>
+            </Typography.Link>
           )}
         </Flex>
       </Flex>
@@ -143,7 +160,7 @@ export const NovelDetailsCard: React.FC<{ novel?: Novel }> = ({ novel }) => {
       {novel.tags && Array.isArray(novel.tags) && novel.tags.length > 0 && (
         <Flex wrap gap="5px" justify="center" style={{ width: '100%' }}>
           <Divider size="small" />
-          {(novel.tags || []).map((tag) => (
+          {novel.tags.map((tag) => (
             <Tag key={tag} style={{ textTransform: 'capitalize', margin: 0 }}>
               {tag.toLowerCase()}
             </Tag>

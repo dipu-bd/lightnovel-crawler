@@ -16,6 +16,7 @@ router = APIRouter()
             dependencies=[Security(ensure_user)],)
 def list_novels(
     ctx: ServerContext = Depends(),
+    search: str = Query(default=''),
     offset: int = Query(default=0),
     limit: int = Query(default=20, le=100),
     with_orphans: bool = Query(default=False),
@@ -23,6 +24,7 @@ def list_novels(
     return ctx.novels.list(
         limit=limit,
         offset=offset,
+        search=search.strip(),
         with_orphans=with_orphans,
     )
 

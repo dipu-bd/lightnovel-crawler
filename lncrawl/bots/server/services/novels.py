@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Any
 
-from sqlmodel import func, select, and_
+from sqlmodel import func, select, and_, not_
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
@@ -16,6 +16,7 @@ class NovelService:
 
     def list(
         self,
+        search: str = '',
         offset: int = 0,
         limit: int = 20,
         with_orphans: bool = False
@@ -25,13 +26,20 @@ class NovelService:
             cnt = select(func.count()).select_from(Novel)
 
             # Apply filters
+            conditions: List[Any] = []
             if not with_orphans:
-                cnd = and_(
-                    Novel.orphan != True,  # noqa: E712
-                    Novel.title != ''
+                conditions.append(not_(Novel.orphan))
+                conditions.append(Novel.title != '...')
+                conditions.append(Novel.title != '')
+
+            if search:
+                conditions.append(
+                    func.lower(Novel.title).like(f"%{search.lower()}%")
                 )
-                stmt = stmt.where(cnd)
-                cnt = cnt.where(cnd)
+
+            if conditions:
+                stmt = stmt.where(and_(*conditions))
+                cnt = cnt.where(and_(*conditions))
 
             # Apply sorting
             stmt = stmt.order_by(func.lower(Novel.title).asc())

@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 import { JobActionButtons } from './JobActionButtons';
 import { JobProgressCircle, JobProgressLine } from './JobProgessBar';
 
-const { Paragraph } = Typography;
-
 export const JobListItemCard: React.FC<{
   job: Job;
   onChange?: () => any;
@@ -25,7 +23,7 @@ export const JobListItemCard: React.FC<{
           {lg && <JobProgressCircle job={job} />}
 
           <div style={{ flex: 1, minWidth: lg ? 0 : '100%' }}>
-            <Paragraph
+            <Typography.Paragraph
               ellipsis={{ rows: 2 }}
               style={{
                 fontSize: '1.15rem',
@@ -33,7 +31,7 @@ export const JobListItemCard: React.FC<{
               }}
             >
               {job.url}
-            </Paragraph>
+            </Typography.Paragraph>
 
             <Space style={{ marginTop: 5 }}>
               <JobStatusTag value={job.status} completed={job.run_state} />

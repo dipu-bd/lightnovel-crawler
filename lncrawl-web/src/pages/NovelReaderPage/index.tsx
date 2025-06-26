@@ -5,14 +5,13 @@ import './reader.scss';
 import { type ChapterBody } from '@/types';
 import { stringifyError } from '@/utils/errors';
 import { LeftOutlined, MenuOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Flex, Grid, Result, Spin } from 'antd';
+import { Button, Divider, Flex, Result, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { setChapterReadStatus } from './readStatus';
 
 export const NovelReaderPage: React.FC<any> = () => {
-  const { sm } = Grid.useBreakpoint();
   const { id, hash } = useParams<{ id: string; hash: string }>();
 
   const [refreshId, setRefreshId] = useState(0);
@@ -44,7 +43,7 @@ export const NovelReaderPage: React.FC<any> = () => {
   if (loading) {
     return (
       <Flex align="center" justify="center" style={{ height: '100%' }}>
-        <Spin tip="Loading job..." size="large" style={{ marginTop: 100 }} />
+        <Spin size="large" style={{ marginTop: 100 }} />
       </Flex>
     );
   }
@@ -65,10 +64,7 @@ export const NovelReaderPage: React.FC<any> = () => {
   }
 
   return (
-    <Card
-      size={sm ? 'default' : 'small'}
-      style={{ maxWidth: 1024, margin: '0 auto' }}
-    >
+    <>
       <Flex vertical>
         <NavigationButtons novelId={id} chapter={chapter} />
         <Divider />
@@ -79,7 +75,7 @@ export const NovelReaderPage: React.FC<any> = () => {
         <Divider />
         <NavigationButtons novelId={id} chapter={chapter} />
       </Flex>
-    </Card>
+    </>
   );
 };
 

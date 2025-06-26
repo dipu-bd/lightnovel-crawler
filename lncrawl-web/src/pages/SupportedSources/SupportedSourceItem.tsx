@@ -4,8 +4,6 @@ import { Avatar, Card, Flex, Tag, Typography } from 'antd';
 import { useInView } from 'react-intersection-observer';
 import { SourceFeatureIcons } from './SourceFeatureIcons';
 
-const { Text, Link } = Typography;
-
 export const SupportedSourceItem: React.FC<{
   source: SupportedSource;
   disabled?: boolean;
@@ -28,7 +26,7 @@ export const SupportedSourceItem: React.FC<{
           icon={disabled ? <StopOutlined /> : <GlobalOutlined />}
         />
         <Flex vertical style={{ flex: 1 }}>
-          <Link
+          <Typography.Link
             strong
             delete={disabled}
             href={source.url}
@@ -36,9 +34,11 @@ export const SupportedSourceItem: React.FC<{
             rel="noopener noreferrer"
           >
             {source.domain}
-          </Link>
+          </Typography.Link>
           {disabled && source.disable_reason && (
-            <Text type="secondary">{source.disable_reason}</Text>
+            <Typography.Text type="secondary">
+              {source.disable_reason}
+            </Typography.Text>
           )}
         </Flex>
         {source.language && (

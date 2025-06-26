@@ -39,6 +39,14 @@ export const USER_ROUTES: RouteObject[] = [
     children: [
       {
         path: '',
+        element: <JobListPage />,
+      },
+      {
+        path: 'job/:id',
+        element: <JobDetailsPage />,
+      },
+      {
+        path: 'novels',
         element: <NovelListPage />,
       },
       {
@@ -48,14 +56,6 @@ export const USER_ROUTES: RouteObject[] = [
       {
         path: 'novel/:id/chapter/:hash',
         element: <NovelReaderPage />,
-      },
-      {
-        path: 'jobs',
-        element: <JobListPage />,
-      },
-      {
-        path: 'job/:id',
-        element: <JobDetailsPage />,
       },
       {
         path: 'meta',

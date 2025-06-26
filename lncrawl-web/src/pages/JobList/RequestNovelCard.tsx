@@ -6,8 +6,6 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const { Text } = Typography;
-
 export const RequestNovelCard: React.FC<any> = () => {
   const { lg } = Grid.useBreakpoint();
 
@@ -45,6 +43,8 @@ export const RequestNovelCard: React.FC<any> = () => {
       labelCol={{ style: { padding: 0 } }}
       encType="application/x-www-form-urlencoded"
     >
+      <Typography.Title level={2}>📘 Request Novel</Typography.Title>
+
       {Boolean(error) && (
         <Alert
           type="warning"
@@ -113,12 +113,12 @@ export const RequestNovelCard: React.FC<any> = () => {
         </div>
       </Form.Item>
 
-      <Text type="secondary">
+      <Typography.Text type="secondary">
         Enter the full URL of the novel page. The URL must begin with 'http://'
         or 'https://' and should lead to a page containing the novel details
         such as title, cover image, author, synopsis, chapter list etc. Partial
         or incomplete URLs will not be accepted.
-      </Text>
+      </Typography.Text>
     </Form>
   );
 };

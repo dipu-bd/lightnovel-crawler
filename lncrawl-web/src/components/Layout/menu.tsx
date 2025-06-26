@@ -22,13 +22,13 @@ export const buildMenu = (isAdmin: boolean): MenuProps['items'] => [
   },
   {
     key: '/',
-    label: 'Novels',
-    icon: <BookOutlined />,
-  },
-  {
-    key: '/jobs',
     label: 'Jobs',
     icon: <DeploymentUnitOutlined />,
+  },
+  {
+    key: '/novels',
+    label: 'Novels',
+    icon: <BookOutlined />,
   },
   {
     type: 'divider',

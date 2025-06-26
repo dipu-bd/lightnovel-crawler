@@ -1,14 +1,22 @@
 import { JobStatus, type Job, type PaginatiedResponse } from '@/types';
 import { stringifyError } from '@/utils/errors';
-import { Button, Flex, List, Pagination, Result, Spin, Typography } from 'antd';
+import {
+  Button,
+  Divider,
+  Flex,
+  List,
+  Pagination,
+  Result,
+  Spin,
+  Typography,
+} from 'antd';
 import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { RequestNovelCard } from './RequestNovelCard';
 import { JobListItemCard } from './JobListItemCard';
 
-const { Title } = Typography;
-
-const PER_PAGE = 8;
+const PER_PAGE = 10;
 
 export const JobListPage: React.FC<any> = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,7 +33,7 @@ export const JobListPage: React.FC<any> = () => {
     [searchParams]
   );
 
-  const shouldReload = useMemo(
+  const hasIncompleteJobs = useMemo(
     () =>
       Boolean(!error && jobs.find((job) => job.status != JobStatus.COMPLETED)),
     [error, jobs]
@@ -52,13 +60,14 @@ export const JobListPage: React.FC<any> = () => {
   }, [currentPage, refreshId]);
 
   useEffect(() => {
-    if (currentPage === 1 && shouldReload) {
+    const interval = hasIncompleteJobs ? 5000 : 15000;
+    if (currentPage === 1) {
       const iid = setInterval(() => {
         setRefreshId((v) => v + 1);
-      }, 5000);
+      }, interval);
       return () => clearInterval(iid);
     }
-  }, [currentPage, shouldReload, refreshId]);
+  }, [currentPage, hasIncompleteJobs, refreshId]);
 
   const handlePageChange = (page: number) => {
     setLoading(true);
@@ -68,7 +77,7 @@ export const JobListPage: React.FC<any> = () => {
   if (loading) {
     return (
       <Flex align="center" justify="center" style={{ height: '100%' }}>
-        <Spin tip="Loading job..." size="large" style={{ marginTop: 100 }} />
+        <Spin size="large" style={{ marginTop: 100 }} />
       </Flex>
     );
   }
@@ -97,7 +106,11 @@ export const JobListPage: React.FC<any> = () => {
 
   return (
     <>
-      <Title level={2}>🛠 Job List</Title>
+      <RequestNovelCard />
+
+      <Divider />
+
+      <Typography.Title level={2}>🛠 Job List</Typography.Title>
 
       <List
         itemLayout="horizontal"

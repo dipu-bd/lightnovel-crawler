@@ -14,14 +14,12 @@ import { Alert, Card, Flex, Grid, Space, Tag, Typography } from 'antd';
 import { JobActionButtons } from '../JobList/JobActionButtons';
 import { JobProgressLine } from '../JobList/JobProgessBar';
 
-const { Title, Text } = Typography;
-
 export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
   const { lg } = Grid.useBreakpoint();
 
   return (
     <Card variant="outlined">
-      <Title
+      <Typography.Title
         level={lg ? 2 : 3}
         style={{
           margin: 0,
@@ -30,7 +28,7 @@ export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
         }}
       >
         {job.url}
-      </Title>
+      </Typography.Title>
 
       <Flex wrap align="center" gap={5}>
         <JobStatusTag value={job.status} completed={job.run_state} />
@@ -38,7 +36,7 @@ export const JobDetailsCard: React.FC<{ job: Job }> = ({ job }) => {
       </Flex>
 
       <Space wrap style={{ marginTop: 20 }}>
-        <Text strong>Status:</Text>
+        <Typography.Text strong>Status:</Typography.Text>
         <RunStateTag value={job.run_state} />
       </Space>
 

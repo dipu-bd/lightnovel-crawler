@@ -65,12 +65,13 @@ export interface Job {
 
 export interface Artifact {
   id: string;
+  format: OutputFormat;
   created_at: number;
   updated_at: number;
   novel_id: string;
   file_name: string;
-  file_size: number;
-  format: OutputFormat;
+  file_size?: number;
+  is_available: boolean;
 }
 
 export interface RunnerHistoryItem {

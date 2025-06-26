@@ -64,7 +64,7 @@ export const JobDetailsPage: React.FC<any> = () => {
   if (loading) {
     return (
       <Flex align="center" justify="center" style={{ height: '100%' }}>
-        <Spin tip="Loading job..." size="large" style={{ marginTop: 100 }} />
+        <Spin size="large" style={{ marginTop: 100 }} />
       </Flex>
     );
   }

@@ -3,8 +3,6 @@ import { SupportedSourceList } from './SupportedSourceList';
 import { useSupportedSources } from './hooks';
 import { useMemo } from 'react';
 
-const { Text } = Typography;
-
 export const SupportedSourcesPage: React.FC<any> = () => {
   const { data, loading, error, refresh } = useSupportedSources();
 
@@ -14,7 +12,7 @@ export const SupportedSourcesPage: React.FC<any> = () => {
   if (loading) {
     return (
       <Flex align="center" justify="center" style={{ height: '100%' }}>
-        <Spin tip="Loading job..." size="large" style={{ marginTop: 100 }} />
+        <Spin size="large" style={{ marginTop: 100 }} />
       </Flex>
     );
   }
@@ -37,7 +35,7 @@ export const SupportedSourcesPage: React.FC<any> = () => {
         key="active"
         tab={
           <Space>
-            <Text strong>Active Sources</Text>
+            <Typography.Text strong>Active Sources</Typography.Text>
             <small>
               <code>{active.length}</code>
             </small>
@@ -50,7 +48,7 @@ export const SupportedSourcesPage: React.FC<any> = () => {
         key="disabled"
         tab={
           <Space>
-            <Text strong>Disabled Sources</Text>
+            <Typography.Text strong>Disabled Sources</Typography.Text>
             <small>
               <code>{disabled.length}</code>
             </small>

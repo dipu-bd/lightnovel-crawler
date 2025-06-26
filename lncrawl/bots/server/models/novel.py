@@ -45,10 +45,19 @@ class Artifact(BaseTable, table=True):
 
     @computed_field  # type:ignore
     @property
-    def file_size(self) -> int:
+    def is_available(self) -> bool:
+        '''Output file is available'''
+        return os.path.isfile(self.output_file)
+
+    @computed_field  # type:ignore
+    @property
+    def file_size(self) -> Optional[int]:
         '''Output file size in bytes'''
-        stat = os.stat(self.output_file)
-        return stat.st_size
+        try:
+            stat = os.stat(self.output_file)
+            return stat.st_size
+        except Exception:
+            return None
 
 
 class NovelChapter(BaseModel):

@@ -18,7 +18,7 @@ from lncrawl.core.sources import crawler_list, rejected_sources
 from lncrawl.models import Chapter, MetaInfo
 
 from ..context import ServerContext
-from ..exceptions import AppErrors
+from ..exceptions import AppError, AppErrors
 from ..models.meta import SupportedSource
 from ..models.novel import (Novel, NovelChapter, NovelChapterContent,
                             NovelVolume)
@@ -129,8 +129,11 @@ class MetadataService:
         )
 
     def get_novel_toc(self, novel_id: str):
-        output_path = self.resolve_output_path(novel_id)
-        session, novel = self.load_novel_meta(output_path)
+        try:
+            output_path = self.resolve_output_path(novel_id)
+            session, novel = self.load_novel_meta(output_path)
+        except AppError:
+            return []
 
         volumes: Dict[int, NovelVolume] = {}
         for vol in novel.volumes:

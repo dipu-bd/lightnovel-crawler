@@ -4,6 +4,7 @@ import {
   Divider,
   Empty,
   Flex,
+  Input,
   Pagination,
   Result,
   Row,
@@ -12,12 +13,10 @@ import {
 } from 'antd';
 import { useNovelList } from './hooks';
 import { NovelListItemCard } from './NovelListItemCard';
-import { RequestNovelCard } from './RequestNovelCard';
-
-const { Title } = Typography;
 
 export const NovelListPage: React.FC<any> = () => {
   const {
+    search: initialSearch,
     currentPage,
     perPage,
     error,
@@ -25,13 +24,13 @@ export const NovelListPage: React.FC<any> = () => {
     total,
     novels,
     refresh,
-    changePage,
+    updateParams,
   } = useNovelList();
 
   if (loading) {
     return (
       <Flex align="center" justify="center" style={{ height: '100%' }}>
-        <Spin tip="Loading job..." size="large" style={{ marginTop: 100 }} />
+        <Spin size="large" style={{ marginTop: 100 }} />
       </Flex>
     );
   }
@@ -51,17 +50,25 @@ export const NovelListPage: React.FC<any> = () => {
 
   return (
     <>
-      <Title level={2}>📘 Request Novel</Title>
+      <Typography.Title level={2}>📚 Available Novels</Typography.Title>
 
-      <RequestNovelCard />
+      <Divider size="small" />
 
-      <Divider />
+      <Flex align="center">
+        <Input.Search
+          defaultValue={initialSearch}
+          onSearch={(search) => updateParams({ search })}
+          placeholder="Search novels"
+          allowClear
+          size="large"
+        />
+      </Flex>
 
-      <Title level={2}>📚 Available Novels</Title>
+      <Divider size="small" />
 
       <Row gutter={[16, 16]}>
         {novels.map((novel) => (
-          <Col key={novel.id} xs={12} sm={8} lg={6} xl={4}>
+          <Col key={novel.id} xs={8} lg={6} xl={4}>
             <NovelListItemCard novel={novel} />
           </Col>
         ))}
@@ -79,7 +86,7 @@ export const NovelListPage: React.FC<any> = () => {
           total={total}
           pageSize={perPage}
           showSizeChanger={false}
-          onChange={changePage}
+          onChange={(page) => updateParams({ page })}
           style={{ textAlign: 'center', marginTop: 32 }}
         />
       )}
