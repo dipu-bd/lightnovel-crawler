@@ -50,7 +50,7 @@ jobs:
 
       - name: 📦 Transfer Docker Image
         run: |
-          gzip < /tmp/lncrawl.tar | ssh "${{ secrets.DEPLOY_SERVER }}" 'gunzip | docker load'
+          ssh "${{ secrets.DEPLOY_SERVER }}" 'docker load' < /tmp/lncrawl.tar
 
       - name: 📤 Upload Compose File
         run: |
