@@ -30,7 +30,7 @@ class ArtifactService:
                 stmt = stmt.where(Artifact.novel_id == novel_id)
 
             # Apply sorting
-            stmt.order_by(desc(Artifact.updated_at))
+            stmt = stmt.order_by(desc(Artifact.updated_at))
 
             total = sess.exec(select(func.count()).select_from(Artifact)).one()
             items = sess.exec(stmt.offset(offset).limit(limit)).all()

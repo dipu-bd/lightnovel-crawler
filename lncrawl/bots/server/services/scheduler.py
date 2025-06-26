@@ -78,19 +78,18 @@ class JobScheduler:
         logger.debug('Running new task')
         with self.db.session() as sess:
             # fetch jobs based on priority
-            jobs = sess.exec(
-                select(Job)
-                .where(
-                    or_(
-                        Job.status == JobStatus.PENDING,
-                        Job.status == JobStatus.RUNNING,
-                    )
+            stmt = select(Job)
+            stmt = stmt.where(
+                or_(
+                    Job.status == JobStatus.PENDING,
+                    Job.status == JobStatus.RUNNING,
                 )
-                .order_by(
-                    desc(Job.priority),
-                    asc(Job.created_at),
-                )
-            ).all()
+            )
+            stmt = stmt.order_by(
+                desc(Job.priority),
+                asc(Job.created_at),
+            )
+            jobs = sess.exec(stmt).all()
 
             for job in jobs:
                 # cancel duplicate jobs

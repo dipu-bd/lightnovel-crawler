@@ -1,6 +1,6 @@
 from typing import List
 
-from sqlmodel import func, select
+from sqlmodel import func, select, and_
 
 from ..context import ServerContext
 from ..exceptions import AppErrors
@@ -26,11 +26,15 @@ class NovelService:
 
             # Apply filters
             if not with_orphans:
-                stmt = stmt.where((Novel.orphan != True) & (Novel.title != ''))  # noqa: E712
-                cnt = cnt.where((Novel.orphan != True) & (Novel.title != ''))  # noqa: E712
+                cnd = and_(
+                    Novel.orphan != True,  # noqa: E712
+                    Novel.title != ''
+                )
+                stmt = stmt.where(cnd)
+                cnt = cnt.where(cnd)
 
             # Apply sorting
-            stmt.order_by(func.lower(Novel.title))
+            stmt = stmt.order_by(func.lower(Novel.title).asc())
 
             # Apply pagination
             stmt = stmt.offset(offset).limit(limit)
