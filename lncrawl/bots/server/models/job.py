@@ -2,7 +2,7 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 from sqlalchemy import event
-from sqlmodel import JSON, Column, Field
+from sqlmodel import JSON, Column, Field, BigInteger
 
 from ..utils.time_utils import current_timestamp
 from ._base import BaseTable
@@ -23,8 +23,8 @@ class Job(BaseTable, table=True):
 
     progress: int = Field(default=0, description="Download progress percentage")
     error: Optional[str] = Field(default=None, description='Error state in case of failure')
-    started_at: Optional[int] = Field(default=None, description="Job start time (UNIX ms)")
-    finished_at: Optional[int] = Field(default=None, description="Job finish time (UNIX ms)")
+    started_at: Optional[int] = Field(default=None, sa_type=BigInteger, description="Job start time (UNIX ms)")
+    finished_at: Optional[int] = Field(default=None, sa_type=BigInteger, description="Job finish time (UNIX ms)")
 
     extra: Dict[str, Any] = Field(default={}, sa_column=Column(JSON), description="Extra field")
 

@@ -1,7 +1,7 @@
 import uuid
 
 from sqlalchemy import event
-from sqlmodel import Field, SQLModel
+from sqlmodel import Field, SQLModel, BigInteger
 
 from ..utils.time_utils import current_timestamp
 
@@ -16,8 +16,8 @@ class BaseTable(SQLModel):
         primary_key=True,
         description="ID"
     )
-    created_at: int = Field(default_factory=current_timestamp)
-    updated_at: int = Field(default_factory=current_timestamp)
+    created_at: int = Field(default_factory=current_timestamp, sa_type=BigInteger)
+    updated_at: int = Field(default_factory=current_timestamp, sa_type=BigInteger)
 
 
 @event.listens_for(BaseTable, "before_update", propagate=True)

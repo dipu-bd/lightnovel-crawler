@@ -1,7 +1,7 @@
 from typing import Any, Dict, Optional
 
 from pydantic import BaseModel, EmailStr
-from sqlmodel import JSON, Column, Field, SQLModel
+from sqlmodel import JSON, Column, Field, SQLModel, BigInteger
 
 from ..utils.time_utils import current_timestamp
 from ._base import BaseTable
@@ -22,7 +22,7 @@ class User(BaseTable, table=True):
 
 class VerifiedEmail(SQLModel, table=True):
     email: str = Field(primary_key=True, description="User Email")
-    created_at: int = Field(default_factory=current_timestamp)
+    created_at: int = Field(sa_type=BigInteger, default_factory=current_timestamp)
 
 
 class LoginRequest(BaseModel):
