@@ -50,7 +50,6 @@ COPY --chown=lncrawl:lncrawl requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy sources
-COPY .env .env
 COPY sources sources
 COPY lncrawl lncrawl
 

@@ -1,13 +1,10 @@
 services:
   chrome:
     image: selenium/standalone-chrome:latest
-    cpus: 1.5
-    mem_limit: 1600m
     shm_size: 6gb
     restart: unless-stopped
     ports:
       - "7900:7900"
-      - "4444:4444"
     environment:
       SE_VNC_VIEW_ONLY: "1"
       SE_EVENT_BUS_PUBLISH_PORT: "4442"
@@ -18,11 +15,35 @@ services:
       SE_SCREEN_WIDTH: "1920"
       SE_SCREEN_HEIGHT: "1080"
       SE_NODE_GRID_URL: "false"
+    deploy:
+      resources:
+        limits:
+          cpus: '1.50'
+          memory: 2G
+        reservations:
+          cpus: '1.00'
+          memory: 1G
+
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+      POSTGRES_DB: lncrawl
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
 
   server:
-    image: lncrawl
-    cpus: 1.8
-    mem_limit: 3200m
+    image: ghcr.io/dipu-bd/lightnovel-crawler
     restart: unless-stopped
     ports:
       - "23457:8000"
@@ -35,13 +56,23 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - OUTPUT_PATH=/home/lncrawl/output
-      - DATABASE_URL=sqlite:////app/sqlite.db
+      - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl
     volumes:
       - ./output_path:/home/lncrawl/output
-      - ./sqlite.db:/app/sqlite.db
       - ./.env:/app/.env
     depends_on:
       - chrome
+      - postgres
     extra_hosts:
       - "host.docker.internal:host-gateway"
- 
+    deploy:
+      resources:
+        limits:
+          cpus: '1.50'
+          memory: 3G
+        reservations:
+          cpus: '1.00'
+          memory: 1G
+
+volumes:
+  pgdata:

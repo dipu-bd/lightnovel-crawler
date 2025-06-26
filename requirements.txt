@@ -35,6 +35,7 @@ uvicorn
 fastapi[standard]
 cachetools
 sqlmodel
+psycopg[binary]
 passlib[argon2]
 python-jose[cryptography]
 python-dateutil
