@@ -2,7 +2,7 @@ import os
 from typing import Any, Dict, List, Optional
 
 from pydantic import computed_field, BaseModel
-from sqlmodel import JSON, Column, Field
+from sqlmodel import JSON, Column, Field, Index, func
 
 from ._base import BaseTable
 from .enums import OutputFormat
@@ -22,6 +22,10 @@ class Novel(BaseTable, table=True):
     chapter_count: Optional[int] = Field(default=None, description="Chapter count")
 
     extra: Dict[str, Any] = Field(default={}, sa_column=Column(JSON), description="Extra field")
+
+    __table_args__ = (
+        Index("idx_novel_title_lower", func.lower(title)),
+    )
 
 
 class Artifact(BaseTable, table=True):
