@@ -35,6 +35,7 @@ export const NovelListItemCard: React.FC<{ novel: Novel }> = ({ novel }) => {
           overflow: 'clip',
           position: 'relative',
           background: '#eee',
+          userSelect: 'none',
         }}
         onClick={() => navigate(`/novel/${novel.id}`)}
         styles={{
@@ -77,6 +78,7 @@ export const NovelListItemCard: React.FC<{ novel: Novel }> = ({ novel }) => {
               margin: 0,
               padding: '3px 5px',
               textAlign: 'center',
+              fontSize: '12px',
               backdropFilter: 'blur(5px)',
               background: 'rgba(0, 0, 0, 0.5)',
             }}
