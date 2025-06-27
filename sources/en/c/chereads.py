@@ -71,8 +71,8 @@ class ChereadsCrawler(Crawler):
         contents = metadata.pageProps.pageData.chapterInfo.contents
 
         paras = [str(item.content) for item in contents]
-        if re.match(r'<p>[Cc]h(ap(ter)?)?.\d+', paras[0]):
-            chapter.title = paras[0][3:-4]
+        if re.match(r'<p>[^Cc]*[Cc]h(ap(ter)?)?.\d+', paras[0]):
+            chapter.title = paras[0][3:-4].strip('*')
             paras = paras[1:]
 
         return "".join(paras)
