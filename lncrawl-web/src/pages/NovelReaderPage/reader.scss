@@ -1,9 +1,8 @@
 .novel-content-reader {
   font-family: 'Arbutus+Slab', serif;
   font-weight: 300;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: normal;
-  text-align: justify;
 
   h1 {
     margin: 0 0 25px;
@@ -13,6 +12,7 @@
 
   p {
     margin: 0 0 14px;
+    line-height: 23px;
   }
 
   p + br,
