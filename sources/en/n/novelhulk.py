@@ -8,3 +8,6 @@ logger = logging.getLogger(__name__)
 
 class NovelHulkCrawler(NovelFullTemplate):
     base_url = ["https://novelhulk.com/"]
+
+    def initialize(self):
+        self.init_executor(workers=2)
