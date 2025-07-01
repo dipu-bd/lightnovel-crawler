@@ -16,14 +16,8 @@ class RulateCrawler(Crawler):
 
     def login(self, email: str, password: str):
         login_url = "https://tl.rulate.ru/"
-        login_data = {
-            'login[login]': email,
-            'login[pass]': password
-        }
-        self.post_response(
-            login_url,
-            data=login_data
-        )
+        login_data = {"login[login]": email, "login[pass]": password}
+        self.post_response(login_url, data=login_data)
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -31,15 +25,16 @@ class RulateCrawler(Crawler):
 
         chapters = soup.select_one("#Chapters")
         if not chapters:
-            input_path = soup.find("input", {"name": "path", "type": "hidden"})
+            input_path = soup.find("input", {"name": "book_id", "type": "hidden"})
             if input_path:
-                soup = self.submit_form_for_soup(
+                self.submit_form(
                     url="https://tl.rulate.ru/mature",
                     data={
                         "path": input_path["value"],
                         "ok": "Да",
                     },
                 )
+                soup = self.get_soup(self.novel_url)
                 chapters = soup.select_one("#Chapters")
 
         possible_title = soup.find("h1")
