@@ -7,6 +7,8 @@ from pathlib import Path
 if sys.version_info[:2] < (3, 8):
     raise RuntimeError("This app only supports Python 3.8 and later.")
 
+sys.stdout.reconfigure(encoding='utf8')
+
 ROOT = Path(__file__).resolve().parent
 
 AVAILABLE_SITE_PACKAGES = list(ROOT.glob(".venv/**/site-packages"))
