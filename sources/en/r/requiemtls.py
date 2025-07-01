@@ -49,11 +49,11 @@ class RequieMtlsCrawler(Crawler):
 
     font_ranges = {
         "requiem_tnr_g1": (0x10A0, 0x10FD, 47),
-        "requiem_fs_g1":  (0x10A0, 0x10FD, 47),
+        "requiem_fs_g1": (0x10A0, 0x10FD, 47),
         "requiem_tnr_k1": (0x30A0, 0x30FD, 47),
-        "requiem_fs_k1":  (0x30A0, 0x30FD, 47),
+        "requiem_fs_k1": (0x30A0, 0x30FD, 47),
         "requiem_tnr_s1": (0x1B80, 0x1BDD, 47),
-        "requiem_fs_s1":  (0x1B80, 0x1BDD, 47),
+        "requiem_fs_s1": (0x1B80, 0x1BDD, 47),
     }
 
     def download_chapter_body(self, chapter):
