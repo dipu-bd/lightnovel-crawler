@@ -75,7 +75,7 @@ class RanobeLibMeCrawler(Crawler):
             ):
                 continue
 
-            ### Left it temporarily, to be fixed later
+            """ Left it temporarily, to be fixed later """
             # if not any(
             #     chapter_branch["branch_id"] == branch
             #     for chapter_branch in chapter["branches"]
@@ -101,7 +101,6 @@ class RanobeLibMeCrawler(Crawler):
 
     def download_chapter_body(self, chapter):
         chapter = self.get_json(chapter["url"])
-        chapter_content = ""
 
         if "content" in chapter["data"]["content"]:
             paragraphs = self._paragraph_parser(data=chapter["data"])
