@@ -21,6 +21,8 @@ jobs:
   index_gen:
     if: github.repository == 'dipu-bd/lightnovel-crawler'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: 📥 Checkout Repository
@@ -40,9 +42,16 @@ jobs:
           pip install -r requirements.txt
 
       - name: ⚙️ Generate Index
-        run: python ./scripts/index_gen.py
+        run: |
+          python ./scripts/index_gen.py
 
       - name: ✅ Commit and Push Index
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: Generate source index
+
+      - name: 📤 Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          path: sources/_index.zip
+          name: index.zip

@@ -2,6 +2,7 @@
 """
 Build lightnovel-crawler source index to use for update checking.
 """
+import gzip
 import hashlib
 import json
 import os
@@ -39,6 +40,7 @@ WORKDIR = Path(__file__).parent.parent.absolute()
 
 SOURCES_FOLDER = WORKDIR / "sources"
 INDEX_FILE = SOURCES_FOLDER / "_index.json"
+INDEX_ZIP_FILE = SOURCES_FOLDER / "_index.zip"
 REJECTED_FILE = SOURCES_FOLDER / "_rejected.json"
 CONTRIB_CACHE_FILE = WORKDIR / ".github" / "contribs.json"
 
@@ -49,7 +51,6 @@ HELP_RESULT_QUE = "<!-- auto generated command line output -->"
 
 DATE_FORMAT = "%d %B %Y %I:%M:%S %p"
 
-REPO_BRANCH = "master"
 REPO_OWNER = "dipu-bd"
 REPO_NAME = "lightnovel-crawler"
 REPO_URL = f"https://github.com/{REPO_OWNER}/{REPO_NAME}"
@@ -303,11 +304,15 @@ print(
 )
 print("-" * 50)
 
-with open(INDEX_FILE, "w", encoding="utf8") as fp:
-    json.dump(INDEX_DATA, fp)  # , indent='  ')
-
 with open(CONTRIB_CACHE_FILE, "w", encoding="utf8") as fp:
     json.dump(username_cache, fp, indent="  ")
+
+index_file_content = json.dumps(INDEX_DATA)
+with open(INDEX_FILE, "w", encoding="utf8") as fp:
+    fp.write(index_file_content)
+
+with gzip.open(INDEX_ZIP_FILE, 'wb') as f:
+    f.write(index_file_content.encode('utf-8'))
 
 # =========================================================================================== #
 # Update README.md
