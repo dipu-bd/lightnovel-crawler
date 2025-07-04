@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Security
 
 from ..security import ensure_admin, ensure_user
+from .admin import router as admin
 from .artifacts import router as artifact
 from .auth import router as auth
 from .jobs import router as job
@@ -53,5 +54,12 @@ router.include_router(
     runner,
     prefix='/runner',
     tags=['Runner'],
+    dependencies=[Depends(ensure_admin)],
+)
+
+router.include_router(
+    admin,
+    prefix='/admin',
+    tags=['Admin'],
     dependencies=[Depends(ensure_admin)],
 )
