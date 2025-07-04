@@ -153,6 +153,7 @@ def __load_latest_index():
 
 
 def __check_updates():
+    global __latest_index
     last_download = __current_index.get("v", 0)
     if time.time() - last_download < __index_fetch_internval_in_seconds:
         logger.debug("Current index was already downloaded once")
