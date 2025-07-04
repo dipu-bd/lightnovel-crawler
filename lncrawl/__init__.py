@@ -6,7 +6,6 @@ import multiprocessing
 
 def main():
     multiprocessing.freeze_support()
-    # multiprocessing.set_start_method("spawn")
 
     try:
         from dotenv import load_dotenv
