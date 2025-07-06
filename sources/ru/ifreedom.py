@@ -9,7 +9,8 @@ logger = logging.getLogger(__name__)
 class IfreedomCrawler(Crawler):
     base_url = [
         "https://ifreedom.su/",
-        "https://bookhamster.ru/"
+        "https://bookhamster.ru/",
+        "https://funbook.su/",
     ]
 
     def read_novel_info(self):
@@ -21,9 +22,7 @@ class IfreedomCrawler(Crawler):
 
         logger.info("Novel title: %s", self.novel_title)
 
-        possible_author = soup.select_one("span.dashicons-admin-users").next\
-            .next\
-            .next
+        possible_author = soup.select_one("span.dashicons-admin-users").next.next.next
         if "Не указан" not in str(possible_author):
             self.novel_author = possible_author.get_text()
             logger.info("Novel author: %s", self.novel_author)
@@ -46,7 +45,7 @@ class IfreedomCrawler(Crawler):
                 {
                     "id": chap_id,
                     "title": a.text.strip(),
-                    "url": self.absolute_url(a['href'])
+                    "url": self.absolute_url(a["href"]),
                 }
             )
 
