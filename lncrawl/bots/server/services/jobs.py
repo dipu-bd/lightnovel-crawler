@@ -70,6 +70,7 @@ class JobService:
             if not novel:
                 novel = Novel(url=novel_url)
                 sess.add(novel)
+                sess.commit()
 
             # create the job
             job = Job(
@@ -79,8 +80,6 @@ class JobService:
                 priority=JOB_PRIORITY_LEVEL[user.tier],
             )
             sess.add(job)
-
-            # commit and return
             sess.commit()
             sess.refresh(job)
             return job
