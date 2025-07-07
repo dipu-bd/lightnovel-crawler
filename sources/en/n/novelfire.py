@@ -1,6 +1,4 @@
 import logging
-from typing import List
-
 from lncrawl.core.crawler import Crawler
 
 logger = logging.getLogger(__name__)
