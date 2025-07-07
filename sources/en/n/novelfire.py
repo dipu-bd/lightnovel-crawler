@@ -41,7 +41,7 @@ class NovelFireCrawler(Crawler):
                     "url": self.absolute_url(a["href"]),
                 })
 
-            self.volumes.append({ "id": vol_id })
+            self.volumes.append({"id": vol_id})
 
             next_vol_a = soup.select_one("a.page-link[rel='next']")
             if next_vol_a:
