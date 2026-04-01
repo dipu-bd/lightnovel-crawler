@@ -2,13 +2,12 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class Miraslation(Crawler):
+class Miraslation(LegacyCrawler):
     base_url = [
         "https://miraslation.net/",
         "https://www.miraslation.net/",

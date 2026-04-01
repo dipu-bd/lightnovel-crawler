@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 search_url = "https://arnovel.me/?s=%s&post_type=wp-manga&author=&artist=&release="
 chapter_list_url = "https://arnovel.me/wp-admin/admin-ajax.php"
 
 
-class ArNovel(Crawler):
+class ArNovel(LegacyCrawler):
     base_url = "https://arnovel.me/"
 
     def search_novel(self, query):

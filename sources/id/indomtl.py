@@ -4,8 +4,7 @@ import logging
 import re
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +15,7 @@ chapter_list_url = (
 )
 
 
-class IndoMTLCrawler(Crawler):
+class IndoMTLCrawler(LegacyCrawler):
     has_mtl = True
 
     base_url = "https://indomtl.com/"

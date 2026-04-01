@@ -2,13 +2,12 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class OppaTranslationsCrawler(Crawler):
+class OppaTranslationsCrawler(LegacyCrawler):
     base_url = ["https://www.oppatranslations.com/"]
 
     def initialize(self):

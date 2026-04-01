@@ -2,8 +2,7 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +11,7 @@ novel_toc_url = "http://gravitytales.com/novel/%s"
 chapter_list_url = "http://gravitytales.com/novel/%s/chapters"
 
 
-class GravityTalesCrawler(Crawler):
+class GravityTalesCrawler(LegacyCrawler):
     base_url = "http://gravitytales.com/"
 
     def read_novel_info(self):

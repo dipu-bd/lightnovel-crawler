@@ -4,8 +4,7 @@ import logging
 
 from colorama import Fore, Style
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +12,7 @@ chapters_api = "https://api.renovels.org/api/titles/chapters/?branch_id={}\
                 &ordering=-index&user_data=1&count=100&page={}"
 
 
-class RenovelsCrawler(Crawler):
+class RenovelsCrawler(LegacyCrawler):
     base_url = ["https://renovels.org/"]
 
     def read_novel_info(self):

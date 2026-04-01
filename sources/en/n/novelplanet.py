@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://novelplanet.com/NovelList?order=mostpopular&name=%s"
 
 
-class NovelPlanetCrawler(Crawler):
+class NovelPlanetCrawler(LegacyCrawler):
     base_url = "https://novelplanet.com/"
 
     def read_novel_info(self):

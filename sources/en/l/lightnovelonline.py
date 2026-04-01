@@ -3,15 +3,14 @@ import logging
 from concurrent import futures
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://light-novel.online/search.ajax?query=%s"
 novel_page_url = "https://light-novel.online/%s?page=%d"
 
 
-class LightNovelOnline(Crawler):
+class LightNovelOnline(LegacyCrawler):
     base_url = "https://light-novel.online/"
 
     def search_novel(self, query):

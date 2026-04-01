@@ -2,14 +2,13 @@
 import logging
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter, SearchResult
 
 logger = logging.getLogger(__name__)
 
 
-class Novel35Crawler(Crawler):
+class Novel35Crawler(LegacyCrawler):
     base_url = ["https://novel35.com/"]
 
     def initialize(self) -> None:

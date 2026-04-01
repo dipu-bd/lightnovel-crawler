@@ -3,15 +3,14 @@ import logging
 from base64 import b64decode
 from urllib.parse import quote_plus
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 novel_search_url = b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8/cG9zdF90eXBlPW5vdmVsJnM9".encode()).decode()
 
 
-class Fu_kCom_ademao(Crawler):
+class Fu_kCom_ademao(LegacyCrawler):
     has_mtl = True
     base_url = b64decode("aHR0cHM6Ly9jb21yYWRlbWFvLmNvbS8=".encode()).decode()
 

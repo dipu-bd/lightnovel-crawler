@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.neosekaitranslations.com/?s=%s&post_type=wp-manga"
 chapter_list_url = "https://www.neosekaitranslations.com/wp-admin/admin-ajax.php"
 
 
-class NeoSekaiCrawler(Crawler):
+class NeoSekaiCrawler(LegacyCrawler):
     base_url = "https://www.neosekaitranslations.com/"
 
     def search_novel(self, query):

@@ -2,8 +2,7 @@
 import logging
 import urllib.parse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 headers = {
     "Cache-Control": "no-cache",
@@ -18,7 +17,7 @@ novel_search_url = "%smodules/article/search.php"
 cover_image_url = "%sfiles/article/image/%s/%s/%ss.jpg"
 
 
-class PiaoTian(Crawler):
+class PiaoTian(LegacyCrawler):
     base_url = [
         "https://www.piaotian.com",
         "https://www.ptwxz.com",

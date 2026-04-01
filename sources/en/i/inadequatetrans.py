@@ -2,13 +2,12 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class InadequateTranslations(Crawler):
+class InadequateTranslations(LegacyCrawler):
     base_url = "https://inadequatetranslations.wordpress.com/"
 
     def read_novel_info(self):

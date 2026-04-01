@@ -3,14 +3,13 @@ import logging
 import re
 from concurrent import futures
 
-from lncrawl.core import Crawler, PageSoup
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.newsnovel.net/search/%s"
 
 
-class NewsNovelCrawler(Crawler):
+class NewsNovelCrawler(LegacyCrawler):
     base_url = "https://www.newsnovel.net/"
 
     # NOTE: Disabled because search doesn't work on site.

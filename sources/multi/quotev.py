@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter
 
 logger = logging.getLogger(__name__)
 
 
-class QuotevCrawler(Crawler):
+class QuotevCrawler(LegacyCrawler):
     base_url = ["https://www.quotev.com/"]
 
     def initialize(self) -> None:

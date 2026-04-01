@@ -4,8 +4,7 @@ import re
 from typing import List
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
 logger = logging.getLogger(__name__)
 search_url = (
@@ -14,7 +13,7 @@ search_url = (
 )
 
 
-class NovelasLigerasCrawler(Crawler):
+class NovelasLigerasCrawler(LegacyCrawler):
     base_url = ["https://novelasligeras.net/"]
     has_manga = False
     has_mtl = False

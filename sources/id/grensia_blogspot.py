@@ -3,7 +3,7 @@ import json
 import logging
 import re
 
-from lncrawl.core import Crawler
+from lncrawl.core import LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ def camel_to_title(s):
     return " ".join([x.title() for x in s.split("_")])
 
 
-class GreensiaCrawler(Crawler):
+class GreensiaCrawler(LegacyCrawler):
     base_url = "https://grensia.blogspot.com/"
 
     def initialize(self) -> None:

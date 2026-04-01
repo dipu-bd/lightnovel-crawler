@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class KissNovelCrawler(Crawler):
+class KissNovelCrawler(LegacyCrawler):
     base_url = "https://kiss-novel.com/"
 
     # FIXME: Tried getting search to work, but it uses a autocomplete function and I can't figure out how to get results from it.

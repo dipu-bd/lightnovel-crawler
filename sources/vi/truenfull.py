@@ -4,15 +4,14 @@ from concurrent.futures import Future
 from typing import List, Optional
 from urllib.parse import quote, urlencode
 
-from lncrawl.core import Crawler, PageSoup
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 
 search_url = "https://truyentr.info/?s=%s"
 
 
-class TruenFull(Crawler):
+class TruenFull(LegacyCrawler):
     has_mtl = True
     base_url = ["https://truyenfull.vn/", "https://truyentr.info/"]
 

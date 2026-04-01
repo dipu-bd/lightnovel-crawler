@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 chapter_ajax_url = "https://ranobe-novels.ru/wp-content/themes/ranobe-novels/template-parts/category/chapters-query.php"
 search_url = "https://ranobe-novels.ru/wp-content/themes/ranobe-novels/template-parts/queries/get-search-results.php"
 
 
-class RanobeNovel(Crawler):
+class RanobeNovel(LegacyCrawler):
     base_url = "https://ranobe-novels.ru/"
 
     def search_novel(self, query):

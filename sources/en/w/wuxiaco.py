@@ -2,13 +2,12 @@
 import logging
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class WuxiaCoCrawler(Crawler):
+class WuxiaCoCrawler(LegacyCrawler):
     base_url = [
         "https://www.wuxiaworld.co/",
         "https://m.wuxiaworld.co/",

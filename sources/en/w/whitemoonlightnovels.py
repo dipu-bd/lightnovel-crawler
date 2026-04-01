@@ -2,14 +2,13 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 search_url = "https://whitemoonlightnovels.com/?s=%s"
 
 
-class NovelsEmperorCrawler(Crawler):
+class NovelsEmperorCrawler(LegacyCrawler):
     base_url = ["https://whitemoonlightnovels.com/"]
 
     def search_novel(self, query):

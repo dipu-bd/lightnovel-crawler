@@ -2,13 +2,12 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class TigerTranslations(Crawler):
+class TigerTranslations(LegacyCrawler):
     base_url = "https://tigertranslations.org/"
 
     # there's certain text within the .the-content which can be removed

@@ -5,14 +5,13 @@ import re
 from typing import List
 from urllib.parse import quote_plus
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter, SearchResult
 
 logger = logging.getLogger(__name__)
 
 
-class NovelFullMeCrawler(Crawler):
+class NovelFullMeCrawler(LegacyCrawler):
     base_url = "https://novelfull.me/"
 
     def search_novel(self, query) -> List[SearchResult]:

@@ -2,14 +2,14 @@
 import logging
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models.chapter import Chapter
+from lncrawl.core import LegacyCrawler
+from lncrawl.core.chapter import Chapter
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.novelupdates.cc/search/%s/1"
 
 
-class NovelUpdatesCC(Crawler):
+class NovelUpdatesCC(LegacyCrawler):
     base_url = [
         "https://www.novelupdates.cc/",
     ]

@@ -7,8 +7,7 @@ from hashlib import md5
 
 from Crypto.Cipher import AES
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 BLOCK_SIZE = 16
@@ -63,7 +62,7 @@ def decrypt(encrypted, passphrase):
     return _unpad(aes.decrypt(encrypted[16:]))
 
 
-class BatoCrawler(Crawler):
+class BatoCrawler(LegacyCrawler):
     has_manga = True
     base_url = [
         "https://bato.to/",

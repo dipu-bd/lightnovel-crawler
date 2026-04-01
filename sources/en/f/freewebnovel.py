@@ -3,8 +3,7 @@ import re
 import unicodedata
 from typing import Any, List
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, SearchResult
+from lncrawl.core import Chapter, PageSoup, SearchResult
 from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 

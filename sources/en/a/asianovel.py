@@ -1,14 +1,13 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
 # Created using AsianHobbyist as a template.
-class AsianNovelCrawler(Crawler):
+class AsianNovelCrawler(LegacyCrawler):
     base_url = "https://read.asianovel.com/"
 
     def read_novel_info(self):

@@ -2,15 +2,14 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.novelhunters.com/?s=%s&post_type=wp-manga"
 post_chapter_url = "https://www.novelhunters.com/wp-admin/admin-ajax.php"
 
 
-class NovelHunters(Crawler):
+class NovelHunters(LegacyCrawler):
     base_url = "https://www.novelhunters.com/"
 
     def initialize(self):

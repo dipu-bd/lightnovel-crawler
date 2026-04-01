@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +9,7 @@ novel_toc_url = "https://genesistls.com/series/%s"
 chapter_list_url = "http://gravitytales.com/novel/%s/chapters"
 
 
-class GenesisTlsCrawler(Crawler):
+class GenesisTlsCrawler(LegacyCrawler):
     base_url = "https://genesistls.com"
     search_url = base_url + "/?s=%s"
 

@@ -10,8 +10,7 @@ from urllib.parse import urlsplit
 
 import regex
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +19,7 @@ chapter_list_url = "https://toc.qidianunderground.org/api/v1/pages/public/%s/cha
 chapter_body_url = "/?pasteid=%s"
 
 
-class QidianComCrawler(Crawler):
+class QidianComCrawler(LegacyCrawler):
     base_url = [
         "https://toc.qidianunderground.org/",
         "https://tocqidianunderground.blogspot.com/",

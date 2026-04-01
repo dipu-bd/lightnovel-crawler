@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 from sources.zh.uukanshu_sj import UukanshuOnlineSJ
 
 logger = logging.getLogger(__name__)
@@ -10,7 +9,7 @@ logger = logging.getLogger(__name__)
 novel_search_url = "%ssearch.aspx?k=%s"
 
 
-class UukanshuOnline(Crawler):
+class UukanshuOnline(LegacyCrawler):
     # www is simplified cn, tw is traditional cn but both use same site structure
     base_url = ["https://www.uukanshu.net/", "https://tw.uukanshu.net/"]
 

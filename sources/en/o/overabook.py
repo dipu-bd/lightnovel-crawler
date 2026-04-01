@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://overabook.com/?s=%s&post_type=wp-manga&author=&artist=&release="
 chapter_list_url = "https://overabook.com/wp-admin/admin-ajax.php"
 
 
-class OverABook(Crawler):
+class OverABook(LegacyCrawler):
     base_url = "https://overabook.com/"
 
     def search_novel(self, query):

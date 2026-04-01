@@ -4,7 +4,7 @@ from typing import Generator, Optional, Union
 
 from bs4 import BeautifulSoup, Tag
 
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, Volume
 from lncrawl.templates.soup.general import GeneralSoupTemplate
 
 logger = logging.getLogger(__name__)

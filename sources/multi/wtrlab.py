@@ -5,13 +5,12 @@ from urllib.parse import urlparse
 
 import requests
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class WtrLab(Crawler):
+class WtrLab(LegacyCrawler):
     """
     This site has multilingual novels, basically all MTL, supposedly through translators like Google
     but the output seems pretty decent for that

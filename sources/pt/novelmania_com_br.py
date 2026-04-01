@@ -1,8 +1,7 @@
 import logging
 from typing import Generator
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, PageSoup, Volume
 from lncrawl.templates.soup.with_volume import ChapterWithVolumeSoupTemplate
 
 logger = logging.getLogger(__name__)

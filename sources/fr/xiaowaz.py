@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter
 
 logger = logging.getLogger(__name__)
 
 
-class XiaowazCrawler(Crawler):
+class XiaowazCrawler(LegacyCrawler):
     base_url = ["https://xiaowaz.fr/"]
 
     def initialize(self) -> None:

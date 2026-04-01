@@ -4,12 +4,12 @@ import re
 
 import requests
 
-from lncrawl.core.crawler import Chapter, Crawler, SearchResult
+from lncrawl.core.crawler import Chapter, LegacyCrawler, SearchResult
 
 logger = logging.getLogger(__name__)
 
 
-class FenrirScans(Crawler):
+class FenrirScans(LegacyCrawler):
     base_url = ["https://fenrirscans.com/"]
     search_url = "https://fenrirscans.com/wp-admin/admin-ajax.php"
     has_manga = False

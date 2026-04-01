@@ -3,13 +3,12 @@
 import logging
 import urllib.parse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class NovelGoCrawler(Crawler):
+class NovelGoCrawler(LegacyCrawler):
     base_url = "https://novelgo.id/"
 
     def initialize(self):

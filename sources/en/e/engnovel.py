@@ -2,13 +2,12 @@
 import logging
 import urllib.parse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class EngNovel(Crawler):
+class EngNovel(LegacyCrawler):
     base_url = "https://engnovel.com/"
 
     def search_novel(self, query):

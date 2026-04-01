@@ -2,13 +2,12 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class HostedNovelCom(Crawler):
+class HostedNovelCom(LegacyCrawler):
     base_url = "https://hostednovel.com/"
 
     def extract_number_from_string(self, input_string):

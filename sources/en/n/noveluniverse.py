@@ -3,8 +3,7 @@ import logging
 import re
 from concurrent import futures
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +11,7 @@ novel_info_url = "https://www.noveluniverse.com/index/novel/info/id/%s.html"
 chapter_page_url = "%s?id=%s&page_c=%d"
 
 
-class NovelUniverseCrawler(Crawler):
+class NovelUniverseCrawler(LegacyCrawler):
     base_url = "https://www.noveluniverse.com/"
 
     def read_novel_info(self):

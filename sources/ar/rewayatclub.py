@@ -4,8 +4,7 @@ import math
 
 import execjs  # type: ignore
 
-from lncrawl.core import Crawler, PageSoup
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +12,7 @@ chapter_list_url = "https://api.rewayat.club/api/chapters/%s/?ordering=number&pa
 chapter_body_url = "https://rewayat.club/novel/%s/%d"
 
 
-class RewayatClubCrawler(Crawler):
+class RewayatClubCrawler(LegacyCrawler):
     base_url = "https://rewayat.club/"
 
     def initialize(self) -> None:

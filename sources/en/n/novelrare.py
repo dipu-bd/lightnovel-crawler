@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class NovelrareCrawler(Crawler):
+class NovelrareCrawler(LegacyCrawler):
     base_url = "https://novelrare.com/"
 
     def read_novel_info(self):

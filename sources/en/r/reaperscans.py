@@ -7,8 +7,7 @@ from urllib.parse import urlparse
 
 from lxml import etree
 
-from lncrawl.core import Crawler, PageSoup
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +21,7 @@ HEX_PREFIX_PATTERN = re.compile(r"^([0-9a-fA-F]+),\n")
 ID_MARKER_PATTERN = re.compile(r"\n(?=[a-fA-F0-9]+:)")
 
 
-class Reaperscans(Crawler):
+class Reaperscans(LegacyCrawler):
     base_url = "https://reaperscans.com/"
 
     def initialize(self):

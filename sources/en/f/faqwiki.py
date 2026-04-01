@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class FaqWiki(Crawler):
+class FaqWiki(LegacyCrawler):
     base_url = [
         "https://faqwiki.us/",
         "https://www.faqwiki.us/",

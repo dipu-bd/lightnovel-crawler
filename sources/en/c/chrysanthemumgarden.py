@@ -2,13 +2,12 @@
 import logging
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class ChrysanthemumGarden(Crawler):
+class ChrysanthemumGarden(LegacyCrawler):
     base_url = "https://chrysanthemumgarden.com/"
 
     def read_novel_info(self):
@@ -69,14 +68,19 @@ class ChrysanthemumGarden(Crawler):
         soup = self.get_soup(chapter_url, encoding="utf8")
 
         if soup.select_one("#site-pass"):
-            soup = self.submit_form_for_soup(
-                url=self.absolute_url(chapter_url),
-                headers={"Content-Encoding": "utf8"},
-                data={
-                    "site-pass": self.password,
-                    "nonce-site-pass": soup.select_one("#nonce-site-pass")["value"],
-                    "_wp_http_referer": urlparse(chapter_url).path,
-                },
+            soup = self.make_soup(
+                self.submit_form(
+                    url=self.absolute_url(chapter_url),
+                    headers={
+                        "Content-Encoding": "utf8",
+                        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9",
+                    },
+                    data={
+                        "site-pass": self.password,
+                        "nonce-site-pass": soup.select_one("#nonce-site-pass")["value"],
+                        "_wp_http_referer": urlparse(chapter_url).path,
+                    },
+                ),
                 encoding="utf8",
             )
 

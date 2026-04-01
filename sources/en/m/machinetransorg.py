@@ -2,15 +2,14 @@
 import logging
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 search_url = "https://www.machine-translation.org/novel/search/?keywords=%s"
 
 
-class MachineTransOrg(Crawler):
+class MachineTransOrg(LegacyCrawler):
     has_mtl = True
     base_url = "https://www.machine-translation.org/"
 

@@ -2,13 +2,12 @@
 import logging
 from urllib.parse import urlencode
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class RaeiTranslationsCrawler(Crawler):
+class RaeiTranslationsCrawler(LegacyCrawler):
     base_url = ["https://raeitranslations.com/"]
     novel_json_url_prefix = "https://api.raeitranslations.com/api/novels/"
     novel_cover_url_prefix = "https://raeitranslations.com/assets/"

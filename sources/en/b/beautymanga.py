@@ -2,13 +2,12 @@
 import logging
 from urllib.parse import quote_plus
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class BeautymangaCrawler(Crawler):
+class BeautymangaCrawler(LegacyCrawler):
     has_manga = True
     base_url = [
         "https://beautymanga.com/",

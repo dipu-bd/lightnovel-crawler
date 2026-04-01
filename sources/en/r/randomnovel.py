@@ -2,13 +2,12 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class RandomNovelCrawler(Crawler):
+class RandomNovelCrawler(LegacyCrawler):
     has_manga = False
     has_mtl = False
 

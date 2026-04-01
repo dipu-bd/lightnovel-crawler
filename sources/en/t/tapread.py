@@ -2,8 +2,7 @@
 import logging
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +10,7 @@ chapter_list_url = "https://www.tapread.com/book/contents?bookId=%s"
 chapter_url = "https://www.tapread.com/book/chapter?bookId=%s&chapterId=%s"
 
 
-class TapreadCrawler(Crawler):
+class TapreadCrawler(LegacyCrawler):
     base_url = "https://www.tapread.com/"
 
     def read_novel_info(self):

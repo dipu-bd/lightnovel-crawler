@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://wuxiaworld.site/?s=%s&post_type=wp-manga"
 
 
-class WuxiaSiteCrawler(Crawler):
+class WuxiaSiteCrawler(LegacyCrawler):
     base_url = "https://wuxiaworld.site/"
 
     # NOTE: Disabled due to Cloudflare issue.

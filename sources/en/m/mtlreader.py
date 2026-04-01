@@ -3,8 +3,7 @@ import logging
 import re
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +11,7 @@ SEARCH_URL = "https://mtlreader.com/search"
 CHAPTER_DETAIL_API = "https://www.mtlreader.com/api/chapter-content/%s"
 
 
-class MtlReaderCrawler(Crawler):
+class MtlReaderCrawler(LegacyCrawler):
     has_mtl = True
     base_url = [
         "https://mtlreader.com/",

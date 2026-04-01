@@ -43,7 +43,8 @@ class SoupTemplate(CrawlerTemplate):
         return (self.parse_search_item(tag) for tag in self.select_search_item_list(query))
 
     def read_novel(self, novel: Novel) -> None:
-        soup = self.scraper.get_soup(novel.url)
+        url = self.build_novel_url(novel)
+        soup = self.scraper.get_soup(url)
 
         try:
             self.parse_title(soup, novel)
@@ -76,7 +77,8 @@ class SoupTemplate(CrawlerTemplate):
             raise LNException("Failed to parse chapter list") from e
 
     def download_chapter(self, chapter: Chapter) -> None:
-        soup = self.scraper.get_soup(chapter.url)
+        url = self.build_chapter_url(chapter)
+        soup = self.scraper.get_soup(url)
         body = soup.select_one(self.chapter_body_selector)
         self.parse_chapter_body(body, chapter)
 
@@ -121,6 +123,10 @@ class SoupTemplate(CrawlerTemplate):
     # ------------------------------------------------------------------------- #
     # Parser methods for Novel information
     # ------------------------------------------------------------------------- #
+    
+    def build_novel_url(self, novel: Novel) -> str:
+        """Build the novel url"""
+        return self.absolute_url(novel.url)
 
     def parse_title(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel title"""
@@ -217,6 +223,10 @@ class SoupTemplate(CrawlerTemplate):
     # ------------------------------------------------------------------------- #
     # Parser methods for Chapter body
     # ------------------------------------------------------------------------- #
+    
+    def build_chapter_url(self, chapter: Chapter) -> str:
+        """Build the chapter url"""
+        return self.absolute_url(chapter.url)
 
     def parse_chapter_body(self, soup: PageSoup, chapter: Chapter) -> None:
         """Extract the clean HTML content from the tag containing the chapter text"""

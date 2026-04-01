@@ -2,8 +2,7 @@
 import logging
 import urllib.parse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:101.0) Gecko/20100101 Firefox/101.0",
@@ -30,7 +29,7 @@ logger = logging.getLogger(__name__)
 search_url = "%s/modules/article/search.php"
 
 
-class sixnineshu(Crawler):
+class sixnineshu(LegacyCrawler):
     base_url = [
         "https://69shuba.cx",
         "https://69shu.me",

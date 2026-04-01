@@ -2,15 +2,14 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.novels.pl/?search=%s"
 chapter_list_url = "https://www.novels.pl/ajax/ajaxGetChapters.php"
 
 
-class NovelsPlCrawler(Crawler):
+class NovelsPlCrawler(LegacyCrawler):
     base_url = ["https://novels.pl/", "https://www.novels.pl/"]
 
     def initialize(self):

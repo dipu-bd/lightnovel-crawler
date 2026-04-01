@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://dragontea.ink/?s=%s&post_type=wp-manga"
@@ -10,7 +9,7 @@ search_url = "https://dragontea.ink/?s=%s&post_type=wp-manga"
 chapter_list_url = "https://dragontea.ink/novel/%s/ajax/chapters/"
 
 
-class DragonTeaCrawler(Crawler):
+class DragonTeaCrawler(LegacyCrawler):
     base_url = "https://dragontea.ink/"
 
     def search_novel(self, query):

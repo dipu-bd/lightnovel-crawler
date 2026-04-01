@@ -5,14 +5,13 @@ from urllib.parse import quote_plus
 
 from bs4 import element
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://yomou.syosetu.com/search.php?word=%s"
 
 
-class SyosetuCrawler(Crawler):
+class SyosetuCrawler(LegacyCrawler):
     has_mtl = True
     base_url = "https://ncode.syosetu.com/"
 

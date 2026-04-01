@@ -1,14 +1,14 @@
 import logging
 
-from lncrawl.core import Crawler
+from lncrawl.core import LegacyCrawler
+from lncrawl.core.chapter import Chapter
+from lncrawl.core.volume import Volume
 from lncrawl.exceptions import LNException
-from lncrawl.models.chapter import Chapter
-from lncrawl.models.volume import Volume
 
 logger = logging.getLogger(__name__)
 
 
-class NovelDeGlace(Crawler):
+class NovelDeGlace(LegacyCrawler):
     base_url = "https://noveldeglace.com/"
     last_updated = "2024-02-22"
     has_mtl = False

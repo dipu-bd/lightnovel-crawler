@@ -3,14 +3,13 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter
 
 logger = logging.getLogger(__name__)
 
 
-class PureTL(Crawler):
+class PureTL(LegacyCrawler):
     base_url = ["https://puretl.com/"]
 
     def initialize(self) -> None:

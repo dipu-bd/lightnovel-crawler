@@ -5,9 +5,8 @@ import re
 from typing import Generator, Union
 from urllib.parse import urljoin
 
-from lncrawl.core import PageSoup
+from lncrawl.core import Chapter, PageSoup, SearchResult, Volume
 from lncrawl.exceptions import FallbackToBrowser, LNException
-from lncrawl.models import Chapter, SearchResult, Volume
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
 
 logger = logging.getLogger(__name__)

@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +11,7 @@ headers = {
 }
 
 
-class AuthorTodayCrawler(Crawler):
+class AuthorTodayCrawler(LegacyCrawler):
     base_url = ["https://author.today/"]
 
     def initialize(self):

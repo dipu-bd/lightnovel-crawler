@@ -4,10 +4,9 @@ import re
 from time import time
 from urllib.parse import urlencode, urlparse
 
-from lncrawl.core import PageSoup
+from lncrawl.core import Chapter, PageSoup, SearchResult
+from lncrawl.core.volume import Volume
 from lncrawl.exceptions import FallbackToBrowser
-from lncrawl.models import Chapter, SearchResult
-from lncrawl.models.volume import Volume
 from lncrawl.templates.browser.basic import BasicBrowserTemplate
 from lncrawl.webdriver.elements import By
 
@@ -97,8 +96,8 @@ class WebnovelCrawler(BasicBrowserTemplate):
         assert "bookName" in book_info, "Book name not found"
         self.novel_title = book_info["bookName"]
 
-        self.novel_cover = (
-            f"{self.origin.scheme}://book-pic.webnovel.com/bookcover/{self.novel_id}"
+        self.novel_cover = self.absolute_url(
+            f"//book-pic.webnovel.com/bookcover/{self.novel_id}"
             + f"?coverUpdateTime{int(1000 * time())}&imageMogr2/thumbnail/600x"
         )
 

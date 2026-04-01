@@ -2,8 +2,7 @@
 import logging
 from urllib.parse import quote_plus
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, PageSoup, Volume
 from lncrawl.templates.browser.basic import BasicBrowserTemplate
 
 logger = logging.getLogger(__name__)

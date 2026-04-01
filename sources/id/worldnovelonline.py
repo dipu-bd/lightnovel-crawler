@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +9,7 @@ search_url = "https://www.worldnovel.online/wp-json/writerist/v1/novel/search?ke
 chapter_list_url = "https://www.worldnovel.online/wp-json/novel-id/v1/dapatkan_chapter_dengan_novel?category=%s&perpage=100&order=ASC&paged=%s"
 
 
-class WorldnovelonlineCrawler(Crawler):
+class WorldnovelonlineCrawler(LegacyCrawler):
     base_url = "https://www.worldnovel.online/"
 
     # Disabled because it takes too long to respond

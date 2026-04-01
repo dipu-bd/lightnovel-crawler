@@ -2,14 +2,13 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 search_url = "%ssearch/%s"
 
 
-class NovelGate(Crawler):
+class NovelGate(LegacyCrawler):
     base_url = [
         "https://novelgate.net/",
         "https://home.novel-gate.com/",

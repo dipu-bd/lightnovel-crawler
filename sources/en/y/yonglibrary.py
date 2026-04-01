@@ -2,8 +2,7 @@
 import logging
 from typing import Generator, List, Union
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, PageSoup, SearchResult, Volume
 from lncrawl.templates.browser.general import GeneralBrowserTemplate
 
 logger = logging.getLogger(__name__)

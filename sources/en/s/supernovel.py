@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://supernovel.net/?s=%s&post_type=wp-manga&author=&artist=&release="
 chapter_list_url = "https://supernovel.net/wp-admin/admin-ajax.php"
 
 
-class SuperNovelCrawler(Crawler):
+class SuperNovelCrawler(LegacyCrawler):
     base_url = "https://supernovel.net/"
 
     def search_novel(self, query):

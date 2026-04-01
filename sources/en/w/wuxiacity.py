@@ -4,15 +4,14 @@ import logging
 from typing import List
 from urllib.parse import quote_plus
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 
 logger = logging.getLogger(__name__)
 
 search_url = "https://www.wuxia.city/search?q=%s"
 
 
-class WuxiaCityCrawler(Crawler):
+class WuxiaCityCrawler(LegacyCrawler):
     base_url = [
         "https://wuxia.city",
     ]

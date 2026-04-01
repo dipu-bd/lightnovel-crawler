@@ -5,8 +5,8 @@ import re
 
 from pyease_grpc import RpcSession
 
+from lncrawl.core import Chapter, Volume
 from lncrawl.exceptions import FallbackToBrowser
-from lncrawl.models import Chapter, Volume
 from lncrawl.templates.browser.basic import BasicBrowserTemplate
 from lncrawl.webdriver.elements import By
 

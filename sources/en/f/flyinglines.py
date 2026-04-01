@@ -4,13 +4,12 @@ from datetime import datetime
 from hashlib import md5
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class FlyingLinesCrawler(Crawler):
+class FlyingLinesCrawler(LegacyCrawler):
     base_url = "https://www.flying-lines.com/"
 
     def read_novel_info(self):

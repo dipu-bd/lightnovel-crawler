@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://fanstranslations.com/?post_type=wp-manga&s=%s"
@@ -34,7 +33,7 @@ def initialize(self) -> None:
     self.cleaner.bad_tags.update(["a"])
 
 
-class FansTranslations(Crawler):
+class FansTranslations(LegacyCrawler):
     base_url = "https://fanstranslations.com/"
 
     def initialize(self) -> None:

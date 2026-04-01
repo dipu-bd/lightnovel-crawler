@@ -1,12 +1,11 @@
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class NovelFireCrawler(Crawler):
+class NovelFireCrawler(LegacyCrawler):
     base_url = [
         "https://novelfire.net/",
     ]

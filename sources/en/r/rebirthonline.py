@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler, PageSoup
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup
 
 logger = logging.getLogger(__name__)
 
 book_url = "https://www.rebirth.online/novel/%s"
 
 
-class RebirthOnlineCrawler(Crawler):
+class RebirthOnlineCrawler(LegacyCrawler):
     base_url = "https://www.rebirth.online/"
 
     def read_novel_info(self):

@@ -3,15 +3,14 @@ import logging
 import re
 from urllib.parse import quote_plus
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "%s/tim-kiem-nang-cao?title=%s"
 chapter_list_url = "https://listnovel.com/wp-admin/admin-ajax.php"
 
 
-class ListNovelCrawler(Crawler):
+class ListNovelCrawler(LegacyCrawler):
     has_mtl = True
     base_url = [
         "https://ln.hako.vn/",

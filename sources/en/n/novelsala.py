@@ -2,8 +2,7 @@
 import json
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 data_url = "https://novelsala.com/_next/data/%s/en%s"
@@ -13,7 +12,7 @@ graphql_url = "https://novelsala.com/graphql"
 graphql_body = """{"id":"chapters_NovelRefetchQuery","query":"query chapters_NovelRefetchQuery(\\n  $slug: String!\\n  $startChapNum: Int\\n) {\\n  ...chapters_list_items\\n}\\n\\nfragment chapters_list_items on Query {\\n  chapterListChunks(bookSlug: $slug, chunkSize: 100, startChapNum: $startChapNum) {\\n    items {\\n      title\\n      chapNum\\n      url\\n      refId\\n      id\\n    }\\n    title\\n    startChapNum\\n  }\\n}\\n","variables":{"slug":"%s","startChapNum":%d}}"""  # noqa: E501
 
 
-class NovelSalaCrawler(Crawler):
+class NovelSalaCrawler(LegacyCrawler):
     base_url = ["https://novelsala.com/"]
 
     def search_novel(self, query):

@@ -6,7 +6,7 @@ from concurrent import futures
 import execjs
 
 from lncrawl.core import PageSoup
-from lncrawl.core.crawler import Chapter, Crawler
+from lncrawl.core.crawler import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +14,7 @@ login_url = "https://lnmtl.com/auth/login"
 logout_url = "https://lnmtl.com/auth/logout"
 
 
-class LNMTLCrawler(Crawler):
+class LNMTLCrawler(LegacyCrawler):
     has_mtl = True
     base_url = "https://lnmtl.com/"
 

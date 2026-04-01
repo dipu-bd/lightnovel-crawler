@@ -2,13 +2,12 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class SteambunCrawler(Crawler):
+class SteambunCrawler(LegacyCrawler):
     base_url = "https://steambunlightnovel.com/"
 
     def read_novel_info(self):

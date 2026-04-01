@@ -5,8 +5,7 @@ from typing import Generator, List, Optional, Tuple
 
 from bs4 import Comment
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, PageSoup
 from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 
 logger = logging.getLogger(__name__)

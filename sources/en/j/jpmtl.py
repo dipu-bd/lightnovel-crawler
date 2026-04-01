@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -10,7 +9,7 @@ book_url = "https://jpmtl.com/books/%s"
 chapters_url = "https://jpmtl.com/v2/chapter/%s/list?state=published&structured=true&direction=false"
 
 
-class JpmtlCrawler(Crawler):
+class JpmtlCrawler(LegacyCrawler):
     has_mtl = True
     base_url = "https://jpmtl.com/"
 

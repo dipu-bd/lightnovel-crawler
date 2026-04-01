@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://wuxiaworld.online/search.ajax?type=&query=%s"
 
 
-class WuxiaOnlineCrawler(Crawler):
+class WuxiaOnlineCrawler(LegacyCrawler):
     base_url = "https://wuxiaworld.online/"
 
     # NOTE: DISABLING DUE TO CLOUDEFLARE CAPTCHA CHALLENGE

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core.crawler import Chapter, Crawler
+from lncrawl.core.crawler import Chapter, LegacyCrawler
 from lncrawl.exceptions import LNException
 
 logger = logging.getLogger(__name__)
 
 
-class ChickenGegeCrawler(Crawler):
+class ChickenGegeCrawler(LegacyCrawler):
     base_url = ["https://www.chickengege.org/"]
 
     def initialize(self) -> None:

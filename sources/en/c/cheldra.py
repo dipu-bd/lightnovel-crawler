@@ -3,8 +3,7 @@ import logging
 import re
 from typing import Generator, Union
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, PageSoup, SearchResult, Volume
 from lncrawl.templates.soup.searchable import SearchableSoupTemplate
 
 logger = logging.getLogger(__name__)

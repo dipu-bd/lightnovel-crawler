@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://latestnovel.net/?s=%s&post_type=wp-manga"
 chapter_list_url = "https://latestnovel.net/wp-admin/admin-ajax.php"
 
 
-class LatestNovelCrawler(Crawler):
+class LatestNovelCrawler(LegacyCrawler):
     base_url = "https://latestnovel.net/"
 
     def initialize(self) -> None:

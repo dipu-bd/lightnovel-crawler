@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
+from lncrawl.core import LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -9,7 +9,7 @@ book_url = "https://www.volarenovels.com/novel/%s"
 search_url = "https://www.volarenovels.com/api/novels/search?query=%s&count=5"
 
 
-class VolareNovelsCrawler(Crawler):
+class VolareNovelsCrawler(LegacyCrawler):
     base_url = "https://www.volarenovels.com/"
 
     def __parse_toc(self, soup):

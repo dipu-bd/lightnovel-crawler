@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.webnovelover.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult="
 post_chapter_url = "https://www.webnovelover.com/wp-admin/admin-ajax.php"
 
 
-class WebNoveLover(Crawler):
+class WebNoveLover(LegacyCrawler):
     base_url = "https://www.webnovelover.com/"
 
     # NOTE: Site search doesn't work. So this won't work.

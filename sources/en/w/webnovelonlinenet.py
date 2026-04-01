@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 search_url = "https://webnovelonline.net/?s=%s&post_type=wp-manga&author=&artist=&release="
 chapter_list_url = "https://webnovelonline.net/wp-admin/admin-ajax.php"
 
 
-class WebNovelOnlineNet(Crawler):
+class WebNovelOnlineNet(LegacyCrawler):
     base_url = "https://webnovelonline.net/"
 
     def search_novel(self, query):

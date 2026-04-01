@@ -2,14 +2,13 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.royalroad.com/fictions/search?keyword=%s"
 
 
-class RoyalRoadCrawler(Crawler):
+class RoyalRoadCrawler(LegacyCrawler):
     base_url = "https://www.royalroad.com/"
 
     def initialize(self):

@@ -2,13 +2,12 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class AmericanFaux(Crawler):
+class AmericanFaux(LegacyCrawler):
     base_url = "https://americanfaux.com/"
 
     def read_novel_info(self):

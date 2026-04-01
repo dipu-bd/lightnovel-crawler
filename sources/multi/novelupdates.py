@@ -6,9 +6,8 @@ from urllib.parse import urlencode, urlparse
 
 from readability import Document
 
-from lncrawl.core import Crawler, PageSoup
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup, SearchResult
 from lncrawl.core.browser import EC
-from lncrawl.models import Chapter, SearchResult
 from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
 from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
 
@@ -25,7 +24,7 @@ automation_warning = """
 class NovelupdatesCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
     base_url = ["https://www.novelupdates.com/"]
 
-    _cached_crawlers: Mapping[str, Crawler] = {}
+    _cached_crawlers: Mapping[str, LegacyCrawler] = {}
     _title_matcher = re.compile(r"^(c|ch|chap|chapter)?[^\w\d]*(\d+)$", flags=re.I)
 
     def initialize(self):

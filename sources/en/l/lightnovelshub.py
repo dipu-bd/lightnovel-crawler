@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://lightnovelshub.com/?s=%s&post_type=wp-manga&author=&artist=&release="
 chapter_list_url = "https://lightnovelshub.com/wp-admin/admin-ajax.php"
 
 
-class LightNovelsHubCrawler(Crawler):
+class LightNovelsHubCrawler(LegacyCrawler):
     base_url = "https://lightnovelshub.com/"
 
     def search_novel(self, query):

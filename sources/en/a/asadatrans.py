@@ -2,15 +2,14 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 search_url = "https://asadatranslations.com/?s=%s&post_type=wp-manga&author=&artist=&release="
 
 
-class AsadaTranslations(Crawler):
+class AsadaTranslations(LegacyCrawler):
     base_url = "https://asadatranslations.com/"
 
     def initialize(self) -> None:

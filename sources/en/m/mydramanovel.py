@@ -2,13 +2,12 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class MyDramaNovel(Crawler):
+class MyDramaNovel(LegacyCrawler):
     base_url = ["https://mydramanovel.com/"]
     has_manga = False
     has_mtl = True

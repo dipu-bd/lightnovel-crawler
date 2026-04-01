@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://manhuaplus.online/?s=%s&post_type=wp-manga&author=&artist=&release="
 post_chapter_url = "https://manhuaplus.online/wp-admin/admin-ajax.php"
 
 
-class ManhuaPlus(Crawler):
+class ManhuaPlus(LegacyCrawler):
     has_manga = True
     base_url = "https://manhuaplus.online/"
 

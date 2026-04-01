@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://manhwachill.com/?s=%s&post_type=wp-manga"
 chapter_list_url = "https://manhwachill.com/wp-admin/admin-ajax.php"
 
 
-class Manhwachill(Crawler):
+class Manhwachill(LegacyCrawler):
     has_manga = True
     base_url = "https://manhwachill.com/"
 

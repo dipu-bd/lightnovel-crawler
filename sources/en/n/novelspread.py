@@ -2,8 +2,7 @@
 import hashlib
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +11,7 @@ chapter_list_url = "https://api.novelspread.com/api/novel/%s/chapter/menu"
 chapter_body_url = "https://api.novelspread.com/api/novel/%s/chapter/%d/content?fingerprint="
 
 
-class NovelSpreadCrawler(Crawler):
+class NovelSpreadCrawler(LegacyCrawler):
     base_url = "https://www.novelspread.com/"
 
     def make_cover_url(self, image):

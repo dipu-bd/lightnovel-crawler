@@ -2,13 +2,12 @@
 import logging
 from urllib.parse import quote_plus
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class MixedNovelNet(Crawler):
+class MixedNovelNet(LegacyCrawler):
     has_mtl = True
     base_url = [
         "https://mixednovel.net/",

@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 full_chapter_list_url = "https://wuxiaworldsite.co/get-full-list.ajax?id=%s"
 
 
-class WuxiaSiteCo(Crawler):
+class WuxiaSiteCo(LegacyCrawler):
     base_url = "https://wuxiaworldsite.co/"
 
     def read_novel_info(self):

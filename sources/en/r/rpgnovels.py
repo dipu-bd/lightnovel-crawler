@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class RPGNovels(Crawler):
+class RPGNovels(LegacyCrawler):
     base_url = ["https://rpgnovels.com/", "https://rpgnoob.wordpress.com/"]
 
     def initialize(self) -> None:

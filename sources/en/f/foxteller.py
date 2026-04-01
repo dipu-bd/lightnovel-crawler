@@ -4,15 +4,14 @@ import json
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.foxteller.com/search"
 chapter_aux_url = "https://www.foxteller.com/aux_dem"
 
 
-class FoxtellerCrawler(Crawler):
+class FoxtellerCrawler(LegacyCrawler):
     base_url = "https://www.foxteller.com/"
 
     # NOTE: Disabled because it takes too long

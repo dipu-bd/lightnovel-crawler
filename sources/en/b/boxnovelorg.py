@@ -3,14 +3,13 @@ import logging
 import re
 from concurrent import futures
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "http://boxnovel.org/search?keyword=%s"
 
 
-class BoxNovelOrgCrawler(Crawler):
+class BoxNovelOrgCrawler(LegacyCrawler):
     is_disabled = True
     disable_reason = "No longer operational"
 

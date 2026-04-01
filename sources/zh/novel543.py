@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 # import urllib.parse
 
 logger = logging.getLogger(__name__)
 
 
-class Novel543(Crawler):
+class Novel543(LegacyCrawler):
     base_url = ["https://www.novel543.com/"]
     has_manga = False
     has_mtl = False

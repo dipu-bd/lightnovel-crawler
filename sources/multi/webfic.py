@@ -3,13 +3,12 @@ import json
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class Webfic(Crawler):
+class Webfic(LegacyCrawler):
     """
     This site has multilingual novels, though just about all of them are paywalled unfortunately.
 

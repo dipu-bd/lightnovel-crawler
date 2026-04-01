@@ -2,8 +2,7 @@
 import logging
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +10,7 @@ novel_search_url = "/search/autocomplete?query=%s"
 chapter_load_url = "/novel/load-chapters"
 
 
-class LightnovelReader(Crawler):
+class LightnovelReader(LegacyCrawler):
     base_url = [
         "https://lightnovelreader.me/",
         "https://www.lightnovelreader.me/",

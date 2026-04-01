@@ -2,13 +2,12 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class DSRealmTranslationsCrawler(Crawler):
+class DSRealmTranslationsCrawler(LegacyCrawler):
     base_url = "https://dsrealmtranslations.com/"
 
     def read_novel_info(self):

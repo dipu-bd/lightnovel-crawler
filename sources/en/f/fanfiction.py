@@ -4,15 +4,14 @@ import logging
 import re
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 chapter_url = "https://www.fanfiction.net/s/%s/%s"
 search_url = "https://www.fanfiction.net/search/?keywords=%s&type=story&match=title&ready=1&categoryid=202"
 
 
-class FanFictionCrawler(Crawler):
+class FanFictionCrawler(LegacyCrawler):
     base_url = "https://www.fanfiction.net/"
 
     def search_novel(self, query):

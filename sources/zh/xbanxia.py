@@ -2,8 +2,7 @@ import logging
 import re
 from typing import List
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +16,7 @@ headers = {
 }
 
 
-class Xbanxia(Crawler):
+class Xbanxia(LegacyCrawler):
     base_url = ["https://www.xbanxia.com/", "https://www.banxia.cc/"]
     has_manga = False
     has_mtl = False

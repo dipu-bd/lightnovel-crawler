@@ -2,14 +2,13 @@
 import logging
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://meownovel.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult="
 
 
-class MeowNovel(Crawler):
+class MeowNovel(LegacyCrawler):
     base_url = "https://meownovel.com/"
 
     def initialize(self) -> None:

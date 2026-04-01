@@ -2,8 +2,7 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +10,7 @@ logger = logging.getLogger(__name__)
 # chapter_list_url = "https://www.worldnovel.online/wp-json/writerist/v1/chapters?category=%s&perpage=4000&order=ASC&paged=1"
 
 
-class TranslateIndoCrawler(Crawler):
+class TranslateIndoCrawler(LegacyCrawler):
     base_url = "https://www.translateindo.com/"
 
     # def search_novel(self, query):

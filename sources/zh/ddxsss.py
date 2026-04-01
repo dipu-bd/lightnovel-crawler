@@ -2,14 +2,13 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter, SearchResult
 
 logger = logging.getLogger(__name__)
 
 
-class DdxSss(Crawler):
+class DdxSss(LegacyCrawler):
     base_url = [
         "https://www.ddxss.cc/",
         "https://www.ddtxt8.cc/",

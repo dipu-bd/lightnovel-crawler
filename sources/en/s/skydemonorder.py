@@ -1,13 +1,12 @@
 import json
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class SkyDemonOrder(Crawler):
+class SkyDemonOrder(LegacyCrawler):
     base_url = "https://skydemonorder.com"
 
     def read_novel_info(self) -> None:

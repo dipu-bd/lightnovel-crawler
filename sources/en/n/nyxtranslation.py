@@ -2,15 +2,14 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 volume_aliases = {"volume", "arc", "series", "saga", "chronicle", "tome", "storyline"}
 
 
-class NYXTranslation(Crawler):
+class NYXTranslation(LegacyCrawler):
     base_url = ["https://nyx-translation.com/", "https://nyxtranslation.home.blog/"]
     has_manga = False
     has_mtl = False

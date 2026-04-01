@@ -5,14 +5,13 @@ import re
 
 from box import Box
 
-from lncrawl.core import Crawler, PageSoup
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup, Volume
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class ChereadsCrawler(Crawler):
+class ChereadsCrawler(LegacyCrawler):
     base_url = ["https://www.chereads.com/"]
 
     def initialize(self):

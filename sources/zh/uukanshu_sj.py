@@ -2,8 +2,7 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +10,7 @@ novel_search_url = "%ssearch.aspx?k=%s"
 chapter_list_url = "%s&page=%d"
 
 
-class UukanshuOnlineSJ(Crawler):
+class UukanshuOnlineSJ(LegacyCrawler):
     base_url = ["https://sj.uukanshu.net/"]  # previously .com, redirects .com to .net though
 
     def search_novel(self, query):

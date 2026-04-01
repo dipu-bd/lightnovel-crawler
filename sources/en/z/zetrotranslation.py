@@ -2,14 +2,13 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 ajax_url = "%s/wp-admin/admin-ajax.php"
 
 
-class ZetroTranslationCrawler(Crawler):
+class ZetroTranslationCrawler(LegacyCrawler):
     base_url = ["https://zetrotranslation.com/"]
 
     search_url = "%s?s=%s&post_type=wp-manga&author=&artist=&release="

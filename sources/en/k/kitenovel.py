@@ -3,13 +3,12 @@ import logging
 
 from bs4 import NavigableString
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class KiteNovel(Crawler):
+class KiteNovel(LegacyCrawler):
     base_url = "https://www.kitenovel.com/"
 
     def read_novel_info(self):

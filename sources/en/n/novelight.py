@@ -6,8 +6,8 @@ import re
 from typing import Callable, Generator, Optional
 from urllib.parse import quote_plus, urlencode
 
+from lncrawl.core import Chapter, SearchResult
 from lncrawl.exceptions import FallbackToBrowser, LNException
-from lncrawl.models import Chapter, SearchResult
 from lncrawl.templates.browser.basic import BasicBrowserTemplate
 
 logger = logging.getLogger(__name__)

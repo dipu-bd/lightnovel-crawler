@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://bronovel.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult="
 
 
-class BroNovel(Crawler):
+class BroNovel(LegacyCrawler):
     base_url = "https://bronovel.com/"
 
     def search_novel(self, query):

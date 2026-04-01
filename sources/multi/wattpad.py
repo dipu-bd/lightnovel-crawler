@@ -4,14 +4,13 @@ import re
 from time import time
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter
 
 logger = logging.getLogger(__name__)
 
 
-class WattpadCrawler(Crawler):
+class WattpadCrawler(LegacyCrawler):
     base_url = [
         "https://www.wattpad.com/",
         "https://my.w.tt/",

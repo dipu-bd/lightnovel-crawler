@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://wordrain69.com/?s=%s"
 post_chapter_suffix = "/ajax/chapters/"
 
 
-class WordRain(Crawler):
+class WordRain(LegacyCrawler):
     base_url = "https://wordrain69.com"
 
     def initialize(self):

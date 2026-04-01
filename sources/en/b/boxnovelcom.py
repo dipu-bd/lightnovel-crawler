@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.box-novel.com/?s=%s&post_type=wp-manga&author=&artist=&release="
 chapter_list_url = "https://www.box-novel.com/wp-admin/admin-ajax.php"
 
 
-class BoxNovelComCrawler(Crawler):
+class BoxNovelComCrawler(LegacyCrawler):
     base_url = "https://www.box-novel.com/"
 
     # NOTE: Disabled because it is taking too long

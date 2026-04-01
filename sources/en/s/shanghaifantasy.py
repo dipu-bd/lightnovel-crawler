@@ -2,13 +2,12 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class Shanghaifantasy(Crawler):
+class Shanghaifantasy(LegacyCrawler):
     base_url = ["https://shanghaifantasy.com/"]
     wp_json_novel = "https://shanghaifantasy.com/wp-json/wp/v2/novel/%s"
     wp_json_chapters = "https://shanghaifantasy.com/wp-json/fiction/v1/chapters?category=%s&order=asc&per_page=%%s"

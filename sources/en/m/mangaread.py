@@ -2,13 +2,12 @@
 
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class MangaReadCrawler(Crawler):
+class MangaReadCrawler(LegacyCrawler):
     has_manga = True
     base_url = ["https://www.mangaread.org/"]
 

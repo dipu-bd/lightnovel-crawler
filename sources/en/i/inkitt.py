@@ -4,14 +4,13 @@ import logging
 from typing import List
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter, SearchResult
 
 logger = logging.getLogger(__name__)
 
 
-class InkittCrawler(Crawler):
+class InkittCrawler(LegacyCrawler):
     base_url = ["https://www.inkitt.com/"]
 
     def search_novel(self, query) -> List[SearchResult]:

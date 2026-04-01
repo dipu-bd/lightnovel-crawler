@@ -2,14 +2,13 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 search_url = "%s/wp-admin/admin-ajax.php?action=autosuggest&q=%s"
 
 
-class MtlnovelCrawler(Crawler):
+class MtlnovelCrawler(LegacyCrawler):
     has_mtl = True
     base_url = [
         "https://www.mtlnovel.com/",

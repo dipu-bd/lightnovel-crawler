@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class Wujizun(Crawler):
+class Wujizun(LegacyCrawler):
     base_url = "https://wujizun.com/"
 
     def initialize(self) -> None:

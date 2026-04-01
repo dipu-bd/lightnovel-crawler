@@ -2,13 +2,12 @@
 import logging
 from typing import List
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, SearchResult
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 
 logger = logging.getLogger(__name__)
 
 
-class LiteroticaCrawler(Crawler):
+class LiteroticaCrawler(LegacyCrawler):
     base_url = ["https://www.literotica.com/"]
 
     def initialize(self) -> None:

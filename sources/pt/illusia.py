@@ -11,14 +11,13 @@ import logging
 import re
 from urllib.parse import urljoin
 
-from lncrawl.core import Crawler, PageSoup
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 SEARCH_URL = "https://illusia.com.br/?s=%s&post_type=wp-manga"
 
 
-class Illusia(Crawler):
+class Illusia(LegacyCrawler):
     base_url = "https://illusia.com.br/"
 
     # ----------------------- BUSCA -----------------------

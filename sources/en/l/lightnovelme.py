@@ -4,8 +4,7 @@ import logging
 import re
 from urllib.parse import quote
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +12,7 @@ search_url = "/api/search?keyword=%s&index=0&limit=20"
 chapter_list_url = "/api/chapters?id=%d&index=1&limit=15000"
 
 
-class LightNovelsLive(Crawler):
+class LightNovelsLive(LegacyCrawler):
     base_url = [
         "http://lightnovels.me/",
         "https://lightnovels.me/",

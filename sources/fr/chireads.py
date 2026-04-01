@@ -4,13 +4,12 @@ import logging
 
 import requests
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter
+from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
 
 
-class Chireads(Crawler):
+class Chireads(LegacyCrawler):
     base_url = ["https://chireads.com/"]
     has_manga = False
     has_mtl = False

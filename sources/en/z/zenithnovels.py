@@ -3,15 +3,14 @@
 import logging
 import re
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
 novel_url = "http://zenithnovels.com/%s/"
 
 
-class ZenithNovelsCrawler(Crawler):
+class ZenithNovelsCrawler(LegacyCrawler):
     base_url = "http://zenithnovels.com/"
 
     def read_novel_info(self):

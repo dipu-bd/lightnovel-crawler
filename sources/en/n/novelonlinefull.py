@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Crawler, PageSoup
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://novelonlinefull.com/getsearchstory"
 novel_page_url = "https://novelonlinefull.com/novel/%s"
 
 
-class NovelOnlineFullCrawler(Crawler):
+class NovelOnlineFullCrawler(LegacyCrawler):
     base_url = "https://novelonlinefull.com/"
 
     def search_novel(self, query):

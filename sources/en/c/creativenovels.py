@@ -5,8 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 from bs4 import Tag
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +13,7 @@ chapter_list_url = "https://creativenovels.com/wp-admin/admin-ajax.php"
 chapter_s_regex = r'var chapter_list_summon = {"ajaxurl":"https:\/\/creativenovels.com\/wp-admin\/admin-ajax.php","security":"([^"]+)"}'
 
 
-class CreativeNovelsCrawler(Crawler):
+class CreativeNovelsCrawler(LegacyCrawler):
     base_url = "https://creativenovels.com/"
 
     def initialize(self) -> None:

@@ -3,14 +3,13 @@ import logging
 import re
 from urllib.parse import urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 novel_page = "https://myoniyonitranslations.com/%s"
 
 
-class MyOniyOniTranslation(Crawler):
+class MyOniyOniTranslation(LegacyCrawler):
     base_url = "https://myoniyonitranslations.com/"
 
     def read_novel_info(self):

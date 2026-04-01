@@ -3,8 +3,7 @@ import logging
 from concurrent import futures
 from urllib.parse import quote, urlparse
 
-from lncrawl.core import Crawler
-from lncrawl.models import Chapter, Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +21,7 @@ chapter_json_url = babelnovel_api + "/v1/books/%s/chapters/%s/content"
 chapter_page_url = "https://babelnovel.com/books/%s/chapters/%s"
 
 
-class BabelNovelCrawler(Crawler):
+class BabelNovelCrawler(LegacyCrawler):
     base_url = ["https://babelnovel.com/", "https://api.babelnovel.com"]
 
     def initialize(self):

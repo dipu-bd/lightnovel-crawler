@@ -1,70 +1,56 @@
 # -*- coding: utf-8 -*-
 import logging
-from typing import Generator
+from typing import Iterable
 from urllib.parse import urlencode
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate
+from lncrawl.core import Novel, PageSoup, SoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class AsiaNovelNetCrawler(SearchableSoupTemplate, ChapterOnlySoupTemplate):
-    base_url = ["https://www.asianovel.net/", "https://www.wuxiasky.net/"]
+class AsiaNovelNetCrawler(SoupTemplate):
+    base_url = [
+        "https://www.asianovel.net/",
+        "https://www.wuxiasky.net/",
+    ]
+
+    search_item_list_selector = "ul#search-result-list > li"
+    search_item_title_selector = "h3.card__title a"
+    search_item_url_selector = "h3.card__title a"
+    search_item_info_selector = "span.card__footer-chapters"
+    search_item_tags_selector = "div.card__tag-list"
+
+    novel_title_selector = "div.story__identity h1.story__identity-title"
+    novel_cover_selector = ".story__thumbnail a"
+    novel_author_selector = "div.story__identity div.story__identity-meta a.author"
+    novel_genres_selector = "div.novel-container div#edit-genre a[href*='/genre/']"
+    novel_summary_selector = "section.story__summary"
+    novel_chapters_selector = "section.story__chapters li > a"
+    novel_chapter_body_selector = "section#chapter-content"
+
+    chapter_list_selector = "section.story__chapters li > a"
+    chapter_body_selector = "section#chapter-content"
 
     def initialize(self) -> None:
-        self.init_executor(ratelimit=1)
+        self.taskman.init_executor(ratelimit=1)
         self.cleaner.bad_css.update(["div.asian-ads-top-content", "div.asian-ads-bottom-content"])
 
-    def select_search_items(self, query: str) -> Generator[PageSoup, None, None]:
+    def select_search_item_list(self, query: str) -> Iterable[PageSoup]:
         params = {"s": query, "post_type": "fcn_story"}
-        soup = self.post_soup(f"{self.home_url}?{urlencode(params)}")
-        yield from soup.select("ul#search-result-list > li")
+        soup = self.scraper.post_soup(f"{self.scraper.origin}?{urlencode(params)}")
+        return soup.select(self.search_item_list_selector)
 
-    def parse_search_item(self, tag: PageSoup) -> SearchResult:
-        link = tag.select_one("h3.card__title a")
-        chapters = tag.select_one("span.card__footer-chapters")
-        tags = tag.select_one("div.card__tag-list")
+    def parse_search_item_info(self, soup: PageSoup) -> str:
+        chapters = soup.select_one(self.search_item_info_selector)
+        tags = soup.select_one(self.search_item_tags_selector)
         info = ""
         if chapters:
             info += f"{chapters.text.strip()} chapters | "
         if tags:
             info += f"Tags: {tags.text.strip()}"
-        return SearchResult(title=link.text.strip(), url=self.absolute_url(link["href"]), info=info)
+        return info
 
-    def parse_title(self, soup: PageSoup) -> str:
-        tag = soup.select_one("div.story__identity h1.story__identity-title")
-        return tag.text.strip()
-
-    def parse_cover(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".story__thumbnail a")
-        href = tag.get("href")
-        return self.absolute_url(href)
-
-    def parse_authors(self, soup: PageSoup) -> Generator[str, None, None]:
-        for a in soup.select("div.story__identity div.story__identity-meta a.author"):
-            yield a.text.strip()
-
-    def parse_genres(self, soup: PageSoup) -> Generator[str, None, None]:
-        for a in soup.select("div.novel-container div#edit-genre a[href*='/genre/']"):
-            yield a.text.strip()
-
-    def parse_summary(self, soup: PageSoup) -> str:
-        tag = soup.select_one("section.story__summary")
+    def parse_summary(self, soup: PageSoup, novel: Novel) -> None:
+        tag = soup.select_one(self.search_item_tags_selector)
         tag.decompose("div.yarpp-related")
-        return tag.text
-
-    def select_chapter_tags(self, soup: PageSoup) -> Generator[PageSoup, None, None]:
-        yield from soup.select("section.story__chapters li > a")
-
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        return Chapter(
-            id=id,
-            title=tag.text.strip(),
-            url=self.absolute_url(tag["href"]),
-        )
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        return soup.select_one("section#chapter-content")
+        novel.synopsis = tag.text
