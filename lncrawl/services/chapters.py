@@ -3,9 +3,10 @@ from typing import Any, Dict, List, Optional
 import sqlmodel as sq
 
 from ..context import ctx
+from ..core import Chapter as CrawlerChapter
+from ..core.models import get_extras
 from ..dao import Chapter, User, Volume
 from ..exceptions import ServerErrors
-from ..models import Chapter as ModelChapter
 from ..server.models import Paginated, ReadChapterResponse
 
 
@@ -163,14 +164,18 @@ class ChapterService:
             previous_id=previous_id,
         )
 
-    def sync(self, novel_id: str, chapters: List[ModelChapter]):
+    def sync(self, novel_id: str, chapters: List[CrawlerChapter]):
         with ctx.db.session() as sess:
             vol_id_map: Dict[Optional[int], str] = {
-                v.serial: v.id for v in sess.exec(sq.select(Volume).where(Volume.novel_id == novel_id)).all()
+                v.serial: v.id
+                for v in sess.exec(sq.select(Volume).where(Volume.novel_id == novel_id)).all()
             }
 
             wanted = {c.id: c for c in chapters}
-            existing = {c.serial: c for c in sess.exec(sq.select(Chapter).where(Chapter.novel_id == novel_id)).all()}
+            existing = {
+                c.serial: c
+                for c in sess.exec(sq.select(Chapter).where(Chapter.novel_id == novel_id)).all()
+            }
 
             wk = set(wanted.keys())
             ek = set(existing.keys())
@@ -187,7 +192,7 @@ class ChapterService:
                             novel_id=novel_id,
                             url=wanted[s].url,
                             title=wanted[s].title,
-                            extra=dict(wanted[s].extra),
+                            extra=get_extras(wanted[s]),
                             volume_id=vol_id_map.get(wanted[s].volume),
                         ).model_dump()
                         for s in to_insert
@@ -204,7 +209,7 @@ class ChapterService:
                             novel_id=novel_id,
                             url=wanted[s].url,
                             title=wanted[s].title,
-                            extra=dict(wanted[s].extra),
+                            extra=get_extras(wanted[s]),
                             volume_id=vol_id_map.get(wanted[s].volume),
                         ).model_dump()
                         for s in to_update

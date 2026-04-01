@@ -1,12 +1,9 @@
-import logging
 from functools import cached_property
 from typing import Any, Dict, List, Optional, Union
 
 from bs4 import BeautifulSoup, Tag
 from lxml import etree
 from requests import Response
-
-logger = logging.getLogger(__name__)
 
 
 class PageSoup:

@@ -3,9 +3,10 @@ from typing import List
 import sqlmodel as sq
 
 from ..context import ctx
+from ..core import Volume as CrawlerVolume
+from ..core.models import get_extras
 from ..dao import User, UserRole, Volume
 from ..exceptions import ServerErrors
-from ..models.volume import Volume as ModelVolume
 
 
 class VolumeService:
@@ -61,10 +62,13 @@ class VolumeService:
                 raise ServerErrors.no_such_volume
             return volume
 
-    def sync(self, novel_id: str, volumes: List[ModelVolume]):
+    def sync(self, novel_id: str, volumes: List[CrawlerVolume]):
         with ctx.db.session() as sess:
             wanted = {v.id: v for v in volumes}
-            existing = {v.serial: v for v in sess.exec(sq.select(Volume).where(Volume.novel_id == novel_id)).all()}
+            existing = {
+                v.serial: v
+                for v in sess.exec(sq.select(Volume).where(Volume.novel_id == novel_id)).all()
+            }
 
             wk = set(wanted.keys())
             ek = set(existing.keys())
@@ -80,8 +84,8 @@ class VolumeService:
                             serial=s,
                             novel_id=novel_id,
                             title=wanted[s].title,
-                            extra=dict(wanted[s].extra),
-                            chapter_count=wanted[s].chapter_count,
+                            extra=get_extras(wanted[s]),
+                            chapter_count=wanted[s].chapters,
                         ).model_dump()
                         for s in to_insert
                     ],
@@ -96,8 +100,8 @@ class VolumeService:
                             serial=s,
                             novel_id=novel_id,
                             title=wanted[s].title,
-                            extra=dict(wanted[s].extra),
-                            chapter_count=wanted[s].chapter_count,
+                            extra=get_extras(wanted[s]),
+                            chapter_count=wanted[s].chapters,
                         ).model_dump()
                         for s in to_update
                     ],

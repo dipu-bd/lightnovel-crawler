@@ -10,7 +10,7 @@ from ...exceptions import ServerErrors
 from ...server.models import CrawlerIndex, CrawlerInfo, SourceItem
 from ...utils.fts_store import FTSStore
 from ...utils.text_tools import normalize
-from ...utils.url_tools import extract_base, extract_host, normalize_url
+from ...utils.url_tools import extract_host, normalize_url
 from . import utils
 
 logger = logging.getLogger(__name__)
@@ -275,12 +275,15 @@ class Sources:
         if disable_logger:
             module = getattr(constructor, "__module_obj__")
             setattr(module, "print", lambda *a, **k: None)
-            setattr(module, "logger", type("", (), {"__getattr__": lambda *n: lambda *a, **k: None})())
+            setattr(
+                module, "logger", type("", (), {"__getattr__": lambda *n: lambda *a, **k: None})()
+            )
 
         # create instance
-        crawler = constructor(workers, parser)
-        crawler.home_url = extract_base(url)
-        crawler.novel_url = url
-
+        crawler = constructor(
+            origin=url,
+            workers=workers,
+            parser=parser,
+        )
         crawler.initialize()
         return crawler

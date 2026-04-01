@@ -11,7 +11,14 @@ from sqlalchemy.exc import IntegrityError
 from ..context import ctx
 from ..dao import NotificationItem, User, UserRole, UserTier, UserToken
 from ..exceptions import ServerErrors
-from ..server.models import CreateRequest, LoginRequest, Paginated, PasswordUpdateRequest, SignupRequest, UpdateRequest
+from ..server.models import (
+    CreateRequest,
+    LoginRequest,
+    Paginated,
+    PasswordUpdateRequest,
+    SignupRequest,
+    UpdateRequest,
+)
 from ..utils.time_utils import current_timestamp
 
 logger = logging.getLogger(__name__)
@@ -307,7 +314,9 @@ class UserService:
         with ctx.db.session() as sess:
             # check for existing token
             latest_token = sess.exec(
-                sa.select(UserToken).where(UserToken.user_id == user.id).order_by(sa.desc(UserToken.expires_at))
+                sa.select(UserToken)
+                .where(UserToken.user_id == user.id)
+                .order_by(sa.desc(UserToken.expires_at))
             ).first()
             if latest_token and latest_token.expires_at > now + 3 * day:
                 return latest_token.token
@@ -344,7 +353,9 @@ class UserService:
     def list_user_tokens(self, user_id: str) -> List[UserToken]:
         with ctx.db.session() as sess:
             tokens = sess.exec(
-                sa.select(UserToken).where(UserToken.user_id == user_id).order_by(sa.desc(UserToken.expires_at))
+                sa.select(UserToken)
+                .where(UserToken.user_id == user_id)
+                .order_by(sa.desc(UserToken.expires_at))
             ).all()
             return list(tokens)
 

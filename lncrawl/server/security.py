@@ -1,7 +1,13 @@
 from typing import Optional
 
 from fastapi import Depends, Security
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBasic, HTTPBasicCredentials, HTTPBearer, SecurityScopes
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBasic,
+    HTTPBasicCredentials,
+    HTTPBearer,
+    SecurityScopes,
+)
 
 from ..context import ctx
 from ..dao.user import User, UserRole

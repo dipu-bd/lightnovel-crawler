@@ -113,7 +113,9 @@ def _prompt_query() -> str:
     return questionary.text(
         qmark="🔍",
         message="Search query:",
-        validate=lambda x: True if x and len(x.strip()) >= 2 else "Search query must be at least 2 characters long",
+        validate=lambda x: (
+            True if x and len(x.strip()) >= 2 else "Search query must be at least 2 characters long"
+        ),
     ).unsafe_ask()
 
 
@@ -171,13 +173,12 @@ def _perform_search(
     results: List[CombinedSearchResult] = []
     for key, value in combined.items():
         value.sort(key=lambda x: x.url)
-        results.append(
-            CombinedSearchResult(
-                id=key,
-                novels=value,
-                title=value[0].title,
-            )
+        combined = CombinedSearchResult(
+            id=key,
+            novels=value,
+            title=value[0].title,
         )
+        results.append(combined)
 
     # Sort by relevance (number of sources, then similarity to query)
     results.sort(
@@ -197,7 +198,7 @@ def _search_job(source: SourceItem, query: str, signal: Event) -> List[SearchRes
         setattr(source.crawler, "url", url)
         crawler = ctx.sources.init_crawler(source.crawler)
         crawler.scraper.signal = signal
-        results = crawler.search_novel(query)
+        results = crawler.search(query)
         results = [SearchResult(**item) for item in results]
         logger.info(f"[green]{url}[/green] Found {len(results)} results")
         crawler.close()

@@ -2,7 +2,12 @@ from fastapi import APIRouter, Body, Path, Query, Security
 
 from ...context import ctx
 from ...dao import Feedback, FeedbackStatus, FeedbackType, User
-from ...server.models import FeedbackCreateRequest, FeedbackRespondRequest, FeedbackUpdateRequest, Paginated
+from ...server.models import (
+    FeedbackCreateRequest,
+    FeedbackRespondRequest,
+    FeedbackUpdateRequest,
+    Paginated,
+)
 from ..security import ensure_user
 
 # The root router

@@ -1,12 +1,22 @@
 import hashlib
+import html
+import re
 import unicodedata
 import uuid
 
 import zstd
 
+_RE_SPACES = re.compile(r"\s+")
+
 
 def normalize(text: str) -> str:
     return unicodedata.normalize("NFKD", text).casefold()
+
+
+def format_title(text: str) -> str:
+    name = html.unescape(str(text or ""))
+    name = unicodedata.normalize("NFKC", name)
+    return _RE_SPACES.sub(" ", name).strip().title()
 
 
 def is_compressed(data: bytes) -> bool:

@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import atexit
-import logging
-from abc import ABC
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event, Semaphore, Thread
 from typing import Callable, Generator, Iterable, List, Optional, Set, TypeVar
@@ -16,10 +14,9 @@ from ..utils.ratelimit import RateLimiter
 T = TypeVar("T")
 
 _resolver = Semaphore(1)
-logger = logging.getLogger(__name__)
 
 
-class TaskManager(ABC):
+class TaskManager:
     def __init__(
         self,
         workers: Optional[int] = None,
@@ -218,7 +215,7 @@ class TaskManager(ABC):
                 except Exception as e:
                     yield None
                     if bar.disable:
-                        logger.info(f"Failure to resolve future. {repr(e)}")
+                        ctx.logger.info(f"Failure to resolve future. {repr(e)}")
                 finally:
                     bar.update()
         except KeyboardInterrupt:

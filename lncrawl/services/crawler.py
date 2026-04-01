@@ -2,16 +2,16 @@ import logging
 from threading import Event
 from typing import Optional, Union
 
-from box import Box
 from pydantic import HttpUrl
 from sqlmodel import select
 
-from ...context import ctx
-from ...core.crawler import Crawler
-from ...dao import Chapter, ChapterImage, Novel
-from ...exceptions import ServerErrors
-from ...models import Chapter as ChapterModel
-from .utils import download_cover, download_image, format_novel, format_title
+from ..context import ctx
+from ..core import Chapter as CrawlerChapter
+from ..core import Crawler
+from ..core import Novel as CrawlerNovel
+from ..core.models import get_extras
+from ..dao import Chapter, ChapterImage, Novel
+from ..exceptions import ServerErrors
 
 logger = logging.getLogger(__name__)
 
@@ -52,12 +52,16 @@ class CrawlerService:
         if crawler is None:
             crawler = self.get_crawler(user_id, novel_url)
             can_close = True
-        crawler_version = getattr(crawler, "version")
         crawler.scraper.signal = signal
 
         # fetch novel metadata
-        crawler.read_novel_info()
-        format_novel(crawler)
+        model = CrawlerNovel(url=novel_url)
+        crawler.read_novel(model)
+        if not model.title:
+            raise ServerErrors.no_novel_title
+        crawler.format_novel(model)
+        assert model.volumes is not None
+        assert model.chapters is not None
 
         # save to database
         with ctx.db.session() as sess:
@@ -67,22 +71,22 @@ class CrawlerService:
                 novel = Novel(
                     url=novel_url,
                     domain=url.host,
-                    title=crawler.novel_title,
+                    title=model.title,
                 )
 
             # update novel
-            novel.title = crawler.novel_title
-            novel.authors = crawler.novel_author
-            novel.cover_url = crawler.novel_cover
-            novel.manga = crawler.has_manga
-            novel.mtl = crawler.has_mtl
-            novel.synopsis = crawler.novel_synopsis
-            novel.tags = crawler.novel_tags
-            novel.rtl = crawler.is_rtl
-            novel.language = crawler.language
-            novel.volume_count = len(crawler.volumes)
-            novel.chapter_count = len(crawler.chapters)
-            novel.extra["crawler_version"] = crawler_version
+            novel.title = model.title
+            novel.authors = model.author
+            novel.cover_url = model.cover_url
+            novel.manga = model.is_manga or crawler.has_manga
+            novel.mtl = model.is_mtl or crawler.has_mtl
+            novel.synopsis = model.synopsis
+            novel.tags = model.tags or []
+            novel.rtl = model.is_rtl or False
+            novel.language = model.language
+            novel.volume_count = len(model.volumes)
+            novel.chapter_count = len(model.chapters)
+            novel.extra.update(get_extras(model))
             sess.add(novel)
             sess.commit()
 
@@ -90,13 +94,16 @@ class CrawlerService:
         ctx.tags.insert(novel.tags)
 
         # add or update volumes
-        ctx.volumes.sync(novel.id, crawler.volumes)
+        ctx.volumes.sync(novel.id, model.volumes)
 
         # add or update chapters
-        ctx.chapters.sync(novel.id, crawler.chapters)
+        ctx.chapters.sync(novel.id, model.chapters)
 
         # download cover
-        download_cover(crawler, ctx.files.resolve(novel.cover_file))
+        crawler.download_cover(
+            novel.cover_url or "",
+            ctx.files.resolve(novel.cover_file),
+        )
 
         # update output path time
         ctx.files.utime(f"novels/{novel.id}")
@@ -130,18 +137,23 @@ class CrawlerService:
         crawler.scraper.signal = signal
 
         # check if download is necessary
-        if not refresh and chapter.is_available and chapter.extra.get("crawler_version") == crawler_version:
+        if (
+            not refresh
+            and chapter.is_available
+            and chapter.extra.get("crawler_version") == crawler_version
+        ):
             return chapter
 
         # get chapter content
-        model = ChapterModel(
-            id=chapter.serial,
-            title=format_title(chapter.title),
+        model = CrawlerChapter(
             url=str(url),
-            extras=Box(chapter.extra),
+            id=chapter.serial,
+            title=chapter.title,
+            extras=chapter.extra,
         )
-        model.body = crawler.download_chapter_body(model).strip()
-        crawler.extract_chapter_images(model)
+        crawler.download_chapter(model)
+        crawler.format_chapter(model)
+        assert model.body is not None
 
         # save chapter content
         ctx.files.save_text(chapter.content_file, model.body)
@@ -153,7 +165,7 @@ class CrawlerService:
         with ctx.db.session() as sess:
             chapter.is_done = True
             chapter.title = model.title
-            chapter.extra["crawler_version"] = crawler_version
+            chapter.extra.update(get_extras(model))
             sess.add(chapter)
             sess.commit()
 
@@ -186,12 +198,16 @@ class CrawlerService:
         crawler.scraper.signal = signal
 
         # check if download is necessary
-        if not refresh and image.is_available and image.extra.get("crawler_version") == crawler_version:
+        if (
+            not refresh
+            and image.is_available
+            and image.extra.get("crawler_version") == crawler_version
+        ):
             return image
 
         # download image
         file = ctx.files.resolve(image.image_file)
-        download_image(crawler, str(url), file)
+        crawler.download_image(str(url), file)
 
         # update db
         with ctx.db.session() as sess:

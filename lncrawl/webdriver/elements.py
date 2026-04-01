@@ -74,7 +74,10 @@ class WebElement(_WebElement):
 
 def _add_virtual_authenticator(chrome: WebDriver):
     try:
-        from selenium.webdriver.common.virtual_authenticator import Transport, VirtualAuthenticatorOptions
+        from selenium.webdriver.common.virtual_authenticator import (
+            Transport,
+            VirtualAuthenticatorOptions,
+        )
 
         auth_options = VirtualAuthenticatorOptions()
         auth_options.transport = Transport.INTERNAL

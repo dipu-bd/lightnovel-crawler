@@ -125,7 +125,7 @@ extend-exclude = [
   "lncrawl-web",
   "lncrawl/cloudscraper",
 ]
-line-length = 120
+line-length = 100
 target-version = "py39"
 
 [tool.ruff.lint]
