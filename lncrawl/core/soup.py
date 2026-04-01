@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from functools import cached_property
 from typing import Any, Dict, List, Optional, Union
 
@@ -110,7 +112,9 @@ class PageSoup:
         if not self._tag:
             return []
         try:
-            return [PageSoup(t) for t in self._tag.select(selector, limit=limit) if isinstance(t, Tag)]
+            return [
+                PageSoup(t) for t in self._tag.select(selector, limit=limit) if isinstance(t, Tag)
+            ]
         except Exception:
             return []
 
@@ -384,7 +388,7 @@ class PageSoup:
     # ------------------------------------------------------------------ #
 
     @cached_property
-    def soup(self) -> Optional[BeautifulSoup]:
+    def root(self) -> Optional[BeautifulSoup]:
         """Access the underlying BeautifulSoup directly."""
         if not self._tag:
             return None
@@ -401,8 +405,8 @@ class PageSoup:
     @property
     def body(self) -> "PageSoup":
         """Get the body tag."""
-        if self.soup:
-            return PageSoup(self.soup.find("body"))
+        if self.root:
+            return PageSoup(self.root.find("body"))
         return PageSoup()
 
     def decompose(self, selector: Optional[str] = None) -> "PageSoup":
@@ -435,9 +439,9 @@ class PageSoup:
         string: Optional[str] = None,
         **kwargs: Any,
     ) -> "PageSoup":
-        if not self.soup:
+        if not self.root:
             raise ValueError("Cannot create a new tag on an empty soup")
-        tag = self.soup.new_tag(
+        tag = self.root.new_tag(
             name,
             namespace,
             nsprefix,

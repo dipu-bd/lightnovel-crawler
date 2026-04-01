@@ -1,22 +1,32 @@
-# -*- coding: utf-8 -*-
-
-import logging
 import re
-from typing import Generator
+from typing import Iterable, List, Optional
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
-from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
-
-logger = logging.getLogger(__name__)
+from ..core import BrowserTemplate, Chapter, Novel, PageSoup, SearchResult, Volume
+from ..exceptions import LNException
 
 digit_regex = re.compile(r"page[-,=](\d+)")
 
 
-class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
+class NovelPubTemplate(BrowserTemplate):
+    is_template = True
+
+    search_item_list_selector = ".novel-list .novel-item a"
+    search_item_title_selector = ".novel-title"
+    search_item_info_selector = ".novel-stats"
+
+    novel_title_selector = "article#novel .novel-title"
+    novel_cover_selector = "article#novel figure.cover > img"
+    novel_author_selector = "article#novel span[itemprop='author']"
+    novel_tags_selector = "article#novel .categories a"
+    novel_synopsis_selector = "article#novel .summary .content"
+
+    chapter_list_pagination_selector = ".pagination-container li a[href]"
+    chapter_list_selector = "ul.chapter-list li a"
+    chapter_title_selector = ".chapter-title"
+    chapter_body_selector = ".chapter-content"
+
     def initialize(self) -> None:
-        self.init_executor(3)
+        self.taskman.init_executor(workers=3)
         self.cleaner.bad_tags.update(["div"])
         self.cleaner.bad_css.update(
             [
@@ -32,121 +42,92 @@ class NovelPubTemplate(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
             ]
         )
 
-    def select_search_items_in_browser(self, query: str) -> Generator[PageSoup, None, None]:
-        self.visit(f"{self.home_url}search")
-        self.browser.wait("#inputContent")
-        inp = self.browser.find("#inputContent")
-        if not inp:
-            return
-        inp.send_keys(query)
-        self.browser.wait("#novelListBase ul, #novelListBase center")
-        base = self.browser.find("#novelListBase")
-        if not base:
-            return
-        yield from base.as_tag().select(".novel-list .novel-item a")
-
-    def select_search_items(self, query: str) -> Generator[PageSoup, None, None]:
-        soup = self.get_soup(f"{self.home_url}search")
+    def select_search_item_list(self, query: str) -> Iterable[PageSoup]:
+        soup = self.scraper.get_soup(f"{self.scraper.origin}search")
         token_tag = soup.select_one('#novelSearchForm input[name="__LNRequestVerifyToken"]')
-        assert token_tag, "No request verify token found"
+        if not token_tag:
+            raise LNException("No request verify token found")
         token = token_tag["value"]
 
-        response = self.submit_form(
-            f"{self.home_url}lnsearchlive",
-            data={"inputContent": query},
+        response = self.scraper.submit_form(
+            f"{self.scraper.origin}lnsearchlive",
+            data={
+                "inputContent": query,
+            },
             headers={
                 "lnrequestverifytoken": token,
-                "referer": f"{self.home_url}search",
+                "referer": f"{self.scraper.origin}search",
             },
         )
 
-        soup = self.make_soup(response.json()["resultview"])
-        yield from soup.select(".novel-list .novel-item a")
+        result_view = response.json()["resultview"]
+        soup = self.scraper.make_soup(result_view)
+        return soup.select(self.search_item_list_selector)
 
-    def parse_search_item(self, tag: PageSoup) -> SearchResult:
-        return SearchResult(
-            url=self.absolute_url(tag["href"]),
-            title=tag.select_one(".novel-title").text,
-            info=" | ".join([s.text for s in tag.select(".novel-stats")]),
-        )
+    # def select_search_items_in_browser(self, query: str) -> Generator[PageSoup, None, None]:
+    #     self.visit(f"{self.home_url}search")
+    #     self.browser.wait("#inputContent")
+    #     inp = self.browser.find("#inputContent")
+    #     if not inp:
+    #         return
+    #     inp.send_keys(query)
+    #     self.browser.wait("#novelListBase ul, #novelListBase center")
+    #     base = self.browser.find("#novelListBase")
+    #     if not base:
+    #         return
+    #     yield from base.as_tag().select(".novel-list .novel-item a")
 
-    def parse_title(self, soup: PageSoup) -> str:
-        return soup.select_one("article#novel .novel-title").text
+    def parse_search_item_info(self, soup: PageSoup) -> str:
+        info_tags = soup.select(self.search_item_info_selector)
+        return " | ".join([x.text.strip() for x in info_tags])
 
-    def parse_title_in_browser(self) -> str:
-        self.browser.wait("article#novel")
-        return self.parse_title(self.browser.soup)
+    def select_chapter_tags(
+        self,
+        soup: PageSoup,
+        novel: Novel,
+        volume: Optional[Volume] = None,
+    ) -> Iterable[PageSoup]:
+        chapter_list_url = f"{novel.url.strip('/')}/chapters"
+        soup = self.scraper.get_soup(chapter_list_url)
 
-    def parse_cover(self, soup: PageSoup) -> str:
-        tag = soup.select_one("article#novel figure.cover > img")
-        if tag.has_attr("data-src"):
-            return self.absolute_url(tag["data-src"])
-        if tag.has_attr("src"):
-            return self.absolute_url(tag["src"])
-        return ""
+        # get the results from first page
+        yield from soup.select(self.chapter_list_selector)
 
-    def parse_authors(self, soup: PageSoup) -> Generator[str, None, None]:
-        for a in soup.find_all("span", {"itemprop": "author"}):
-            yield a.text.strip()
-
-    def parse_genres(self, soup):
-        for a in soup.select(".categories a"):
-            yield a.text.strip()
-        for a in soup.select(".tags a"):
-            yield a.text.strip()
-
-    def parse_summary(self, soup: PageSoup) -> str:
-        return self.cleaner.extract_contents(soup.select_one(".summary .content"))
-
-    def select_chapter_tags(self, soup: PageSoup) -> Generator[PageSoup, None, None]:
-        chapter_page = f"{self.novel_url.strip('/')}/chapters"
-        soup = self.get_soup(chapter_page)
-
+        # get the total number of pages
         page_count = 1
-        for a in soup.select(".pagination-container li a[href]"):
+        for a in soup.select(self.chapter_list_pagination_selector):
             match = digit_regex.search(str(a["href"]))
-            if match:
-                v = int(match.group(1))
-                if v > page_count:
-                    page_count = v
+            v = int(match.group(1)) if match else 0
+            page_count = max(page_count, v)
 
-        futures = [self.executor.submit(lambda x: x, soup)]
-        futures += [self.executor.submit(self.get_soup, f"{chapter_page}/page-{p}") for p in range(2, page_count + 1)]
-        self.resolve_futures(futures, desc="TOC", unit="page")
+        # get the results from 2nd page to last page
+        futures = [
+            self.taskman.submit_task(
+                self.scraper.get_soup,
+                f"{chapter_list_url}/page-{p}",
+            )
+            for p in range(2, page_count + 1)
+        ]
+        for page in self.taskman.resolve_as_generator(futures, desc="TOC", unit="page"):
+            if page is not None:
+                yield from page.select(self.chapter_list_selector)
 
-        for f in futures:
-            soup = f.result()
-            yield from soup.select("ul.chapter-list li a")
+    # def select_chapter_tags_in_browser(self):
+    #     next_link = f"{self.novel_url}chapters"
+    #     while next_link:
+    #         self.browser.visit(next_link)
+    #         self.browser.wait("ul.chapter-list li")
+    #         chapter_list = self.browser.find("ul.chapter-list")
+    #         if not chapter_list:
+    #             return
+    #         yield from chapter_list.as_tag().select("li a")
+    #         try:
+    #             next = self.browser.find('.PagedList-skipToNext a[href][rel="next"]')
+    #             if not next:
+    #                 break
+    #             next_link = str(next.get_attribute("href"))
+    #         except Exception:
+    #             break
 
-    def select_chapter_tags_in_browser(self):
-        next_link = f"{self.novel_url}chapters"
-        while next_link:
-            self.browser.visit(next_link)
-            self.browser.wait("ul.chapter-list li")
-            chapter_list = self.browser.find("ul.chapter-list")
-            if not chapter_list:
-                return
-            yield from chapter_list.as_tag().select("li a")
-            try:
-                next = self.browser.find('.PagedList-skipToNext a[href][rel="next"]')
-                if not next:
-                    break
-                next_link = str(next.get_attribute("href"))
-            except Exception:
-                break
-
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        return Chapter(
-            id=id,
-            url=self.absolute_url(tag["href"]),
-            title=tag.get_attr("title") or tag.text,
-        )
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        self.browser.wait(".chapter-content")
-        return soup.select_one(".chapter-content")
-
-    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
-        """Open the Chapter URL in the browser"""
-        self.visit(chapter.url)
-        self.browser.wait(".chapter-content", timeout=6)
+    def parse_chapter_title(self, soup: PageSoup, chapter: Chapter) -> None:
+        chapter.title = soup.get("title") or soup.text

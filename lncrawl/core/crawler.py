@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import hashlib
 import math
 import os
 import tempfile
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
@@ -16,18 +18,22 @@ from .scraper import Scraper
 from .taskman import TaskManager
 
 
-class Crawler:
+class Crawler(ABC):
     base_url: Union[str, List[str]]
 
     language = ""
     has_mtl = False
     has_manga = False
+
+    can_login = False
+    can_search = False
+
     chapters_per_volume = 100
     auto_create_volumes = True
-    auto_create_cover = True
+    auto_generate_cover = True
 
     is_disabled = False
-    disable_reason: Optional[str] = None
+    disable_reason = ""
 
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
@@ -136,7 +142,7 @@ class Crawler:
             ctx.logger.debug(f"Cover saved: {cover_url} -> {cover_file}")
             return
         except Exception as e:
-            if not self.auto_create_cover:
+            if not self.auto_generate_cover:
                 raise LNException("Failed to download cover") from e
 
         if cover_file.is_file():
@@ -158,7 +164,7 @@ class Crawler:
         novel.crawler_version = crawler_version
 
         novel.title = format_title(novel.title)
-        novel.author = format_title(novel.author or "")
+        novel.author = ", ".join(filter(None, map(format_title, novel.author.split(","))))
         novel.tags = list(filter(None, map(normalize, set(novel.tags or []))))
 
         if novel.chapters:

@@ -1,14 +1,20 @@
 import logging
+from functools import cached_property
+from io import BytesIO
 from typing import Any, Callable, Dict, Iterable, List, Optional, Type
 
+from PIL import Image
 from requests.cookies import RequestsCookieJar
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 
+from ..context import ctx
+from ..exceptions import ScraperErrorGroup
 from ..webdriver import ChromeOptions, WebDriver, create_new
 from ..webdriver.elements import EC, By, WebElement
 from ..webdriver.job_queue import check_active
 from .soup import PageSoup
+from .template import SoupTemplate
 
 logger = logging.getLogger(__name__)
 
@@ -41,22 +47,23 @@ class Browser:
         self._driver: Optional[WebDriver] = None
 
     def __del__(self):
-        if not self._driver:
-            return
-        self._driver.quit()
+        self.close()
 
     def __enter__(self):
-        self._init_browser()
-        self._apply_cookies()
+        self.open_browser()
+        self.apply_cookies()
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        self.restore_cookies()
+        self.close()
+
+    def close(self):
         if not self._driver:
             return
-        self._restore_cookies()
         self._driver.quit()
 
-    def _init_browser(self):
+    def open_browser(self):
         if self._driver:
             return
         self._driver = create_new(
@@ -68,7 +75,7 @@ class Browser:
         self._driver.set_page_load_timeout(30)
         self._action_chain = ActionChains(self._driver)
 
-    def _apply_cookies(self):
+    def apply_cookies(self):
         if not self._driver:
             return
         if isinstance(self.cookie_store, RequestsCookieJar):
@@ -94,7 +101,7 @@ class Browser:
                 )
             logger.debug("Storage applied: %s", self.browser_storage)
 
-    def _restore_cookies(self):
+    def restore_cookies(self):
         if not self._driver:
             return
         if isinstance(self.cookie_store, RequestsCookieJar):
@@ -172,14 +179,16 @@ class Browser:
 
     def visit(self, url: str) -> None:
         """Visit an URL. Create new session if it does not exist"""
-        self._init_browser()
+        self.open_browser()
         if self._driver:
             return self._driver.get(url)
 
     def find_all(self, selector: str, by: By = By.CSS_SELECTOR) -> List[WebElement]:
         if not self._driver:
             return []
-        return [WebElement(self._driver, el) for el in self._driver.find_elements(str(by), selector)]
+        return [
+            WebElement(self._driver, el) for el in self._driver.find_elements(str(by), selector)
+        ]
 
     def find(self, selector: str, by: By = By.CSS_SELECTOR) -> Optional[WebElement]:
         if not self._driver:
@@ -278,3 +287,105 @@ class Browser:
                 waiter.until(condition)  # type: ignore
         except Exception as e:
             logger.info("Waiting could not be finished | %s", e)
+
+
+class BrowserTemplate(SoupTemplate):
+    """Attempts to crawl using scraper first, on failure use the browser."""
+
+    def __init__(
+        self,
+        origin: str,
+        workers: Optional[int] = None,
+        parser: Optional[str] = None,
+        headless: bool = False,
+        timeout: Optional[int] = 120,
+    ) -> None:
+        super().__init__(
+            origin=origin,
+            workers=workers,
+            parser=parser,
+        )
+        self.timeout = timeout
+        self.headless = headless
+        self._override_scraper_get_soup()
+        self._override_scraper_get_image()
+
+    def _override_scraper_get_soup(self) -> None:
+        origin_method = self.scraper.get_soup
+
+        def get_soup(url, *args, **kwargs):
+            try:
+                return origin_method(url, *args, **kwargs)
+            except ScraperErrorGroup:
+                if ctx.logger.is_debug:
+                    ctx.logger.error("Failed to get soup", exc_info=True)
+                self.browser.visit(url)
+                self.browser.wait("body", By.TAG_NAME)
+                return self.browser.soup
+
+        setattr(self.scraper, "get_soup", get_soup)
+
+    def _override_scraper_get_image(self) -> None:
+        origin_method = self.scraper.get_image
+
+        def get_image(url, *args, **kwargs):
+            try:
+                return origin_method(url, *args, **kwargs)
+            except ScraperErrorGroup:
+                if ctx.logger.is_debug:
+                    ctx.logger.error("Failed to get image", exc_info=True)
+                self.browser.visit(url)
+                self.browser.wait("img", By.TAG_NAME)
+                img = self.browser.find("img", By.TAG_NAME)
+                assert img, "No img element"
+                png = img.screenshot_as_png
+                return Image.open(BytesIO(png))
+
+        setattr(self.scraper, "get_image", get_image)
+
+    @property
+    def using_browser(self) -> bool:
+        return "browser" in self.__dict__ and self.browser.active
+
+    @cached_property
+    def browser(self) -> Browser:
+        """
+        A webdriver based browser.
+        Requires Google Chrome to be installed.
+        """
+        if not ctx.config.crawler.can_use_browser:
+            raise RuntimeError("Browser is disabled in the configuration")
+
+        _max_workers = self.taskman.workers
+        self.taskman.init_executor(1)
+
+        browser = Browser(
+            headless=self.headless,
+            timeout=self.timeout,
+            cookie_store=self.scraper.cookies,
+        )
+
+        _visit = browser.visit
+        _close = browser.close
+
+        def override_visit(url: str) -> None:
+            _visit(url)
+            browser.restore_cookies()
+
+        def override_close() -> None:
+            _close()
+            self.__dict__.pop("browser", None)
+            self.taskman.init_executor(_max_workers)
+
+        setattr(browser, "visit", override_visit)
+        setattr(browser, "close", override_close)
+
+        return browser
+
+    def close(self) -> None:
+        super().close()
+        if self.using_browser:
+            self.browser.close()
+
+    def visit(self, url: str) -> None:
+        self.browser.visit(url)

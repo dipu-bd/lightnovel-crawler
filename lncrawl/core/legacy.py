@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from typing import Any, Dict, Iterable, List, Optional, Union
 
 from ..utils.event_lock import EventLock
@@ -6,11 +6,12 @@ from .models import Chapter, Novel, SearchResult, Volume
 from .template import CrawlerTemplate
 
 
-class LegacyCrawler(CrawlerTemplate, metaclass=ABCMeta):
+class LegacyCrawler(CrawlerTemplate):
     def __init__(
         self,
         workers: Optional[int] = None,
         parser: Optional[str] = None,
+        origin: Optional[str] = None,
     ) -> None:
         if isinstance(self.base_url, str):
             self.base_url = [self.base_url]
@@ -119,11 +120,10 @@ class LegacyCrawler(CrawlerTemplate, metaclass=ABCMeta):
     # ------------------------------------------------------------------------- #
 
     def search(self, query: str) -> Iterable[SearchResult]:
-        for result in self.search_novel(query):
-            if isinstance(result, SearchResult):
-                yield result
-            else:
-                yield SearchResult(**result)
+        return (
+            SearchResult(**result) if isinstance(result, dict) else result
+            for result in self.search_novel(query)
+        )
 
     def read_novel(self, novel: Novel) -> None:
         with self._lock:
@@ -148,11 +148,11 @@ class LegacyCrawler(CrawlerTemplate, metaclass=ABCMeta):
             novel.is_manga = self.has_manga
             novel.title = self.novel_title
             novel.cover_url = self.novel_cover or ""
-            novel.author = self.novel_author or None
-            novel.synopsis = self.novel_synopsis or None
-            novel.tags = list(self.novel_tags) if self.novel_tags else []
-            novel.volumes = list(self.volumes)
-            novel.chapters = list(self.chapters)
+            novel.author = self.novel_author
+            novel.synopsis = self.novel_synopsis
+            novel.tags = self.novel_tags
+            novel.volumes = self.volumes
+            novel.chapters = self.chapters
 
     def download_chapter(self, chapter: Chapter) -> None:
         chapter.body = self.download_chapter_body(chapter)
@@ -161,7 +161,6 @@ class LegacyCrawler(CrawlerTemplate, metaclass=ABCMeta):
     # Methods to implement in legacy crawler
     # ------------------------------------------------------------------------- #
 
-    @abstractmethod
     def search_novel(self, query: str) -> List[Union[SearchResult, Dict[str, Any]]]:
         raise NotImplementedError()
 

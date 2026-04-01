@@ -1,88 +1,67 @@
 import re
-from typing import Generator
+from typing import Iterable, Optional
 from urllib.parse import urlencode
 
-from lncrawl.core import PageSoup
-from lncrawl.exceptions import LNException
-from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate
+from ..core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from ..exceptions import LNException
 
 
-class NovelFullTemplate(SearchableSoupTemplate, ChapterOnlySoupTemplate):
+class NovelFullTemplate(BrowserTemplate):
     is_template = True
 
-    def select_search_items(self, query: str) -> Generator[PageSoup, None, None]:
-        params = {"keyword": query}
-        soup = self.get_soup(f"{self.home_url}search?{urlencode(params)}")
-        yield from soup.select("#list-page .row h3[class*='title'] > a")
+    search_item_list_selector = "#list-page .row h3[class*='title'] > a"
+    search_item_title_selector = "h3.title"
+    search_item_info_selector = "span.chapter"
 
-    def parse_search_item(self, tag: PageSoup) -> SearchResult:
-        return SearchResult(
-            url=self.absolute_url(tag["href"]),
-            title=tag.get_attr("title") or tag.text,
-        )
+    novel_title_selector = "h3.title"
+    novel_cover_selector = ".book img"
+    novel_author_selector = ".info a[href*='/a/'], .info a[href*='/au/'], .info a[href*='author']"
+    novel_tags_selector = ".info a[href*='/au/']"
+    novel_synopsis_selector = ".desc-text"
 
-    def parse_title(self, soup: PageSoup) -> str:
-        return soup.select_one("h3.title").text
+    chapter_list_selector = "ul.list-chapter > li > a[href], select > option[value]"
+    chapter_body_selector = "#chr-content, #chapter-content"
 
-    def parse_cover(self, soup: PageSoup):
-        tag = soup.select_one(".book img")
-        if not tag:
-            return None
-        if tag.has_attr("data-src"):
-            return self.absolute_url(tag["data-src"])
-        if tag.has_attr("src"):
-            return self.absolute_url(tag["src"])
+    def build_search_url(self, query: str) -> str:
+        return f"{self.scraper.origin}search?{urlencode({'keyword': query})}"
 
-    def parse_authors(self, soup: PageSoup):
-        selectors = [
-            ".info a[href*='/a/']",
-            ".info a[href*='/au/']",
-            ".info a[href*='author']",
-        ]
-        for a in soup.select(",".join(selectors)):
-            yield a.text.strip()
+    def parse_search_item_title(self, soup: PageSoup) -> str:
+        return soup.get_attr("title") or soup.text
 
-    def parse_genres(self, soup: PageSoup):
+    def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
+        novel.tags = []
         info_section = soup.select_one(".info, .info-meta")
-        if not info_section:
-            return
         for li in info_section.select("li"):
             header = li.select_one("h3")
             if not header or ("Genre" not in header.text and "Tag" not in header.text):
                 continue
-
             for a in li.select("a"):
                 if a and a.text.strip():
-                    yield a.text.strip()
+                    novel.tags.append(a.text.strip())
 
-    def parse_summary(self, soup: PageSoup) -> str:
-        return self.cleaner.extract_contents(soup.select_one(".desc-text"))
-
-    def select_chapter_tags(self, soup: PageSoup):
+    def select_chapter_tags(
+        self,
+        soup: PageSoup,
+        novel: Novel,
+        volume: Optional[Volume] = None,
+    ) -> Iterable[PageSoup]:
         nl_id = soup.select_one("#rating[data-novel-id]")["data-novel-id"]
         if not nl_id:
             raise LNException("No novel_id found")
 
         script = soup.find("script", string=re.compile(r"ajaxChapterOptionUrl\s+="))
         if script:
-            url = f"{self.home_url}ajax-chapter-option?novelId={nl_id}"
+            url = f"{self.scraper.origin}ajax-chapter-option?novelId={nl_id}"
         else:
-            url = f"{self.home_url}ajax/chapter-archive?novelId={nl_id}"
+            url = f"{self.scraper.origin}ajax/chapter-archive?novelId={nl_id}"
 
-        soup = self.get_soup(url)
-        yield from soup.select("ul.list-chapter > li > a[href], select > option[value]")
+        soup = self.scraper.get_soup(url)
+        return soup.select("ul.list-chapter > li > a[href], select > option[value]")
 
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        return Chapter(
-            id=id,
-            title=tag.text,
-            url=self.absolute_url(tag["href"] or tag["value"]),
-        )
+    def parse_chapter_url(self, soup: PageSoup, chapter: Chapter) -> None:
+        chapter.url = self.absolute_url(soup["href"] or soup["value"])
 
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
+    def parse_chapter_body(self, soup: PageSoup, chapter: Chapter) -> None:
         contents = soup.select_one("#chr-content, #chapter-content")
-        for ads in contents.select("div"):
-            ads.decompose()
-        return contents
+        contents.decompose("div")
+        chapter.body = contents.inner_html

@@ -11,7 +11,13 @@ from ...server.models import CrawlerIndex, CrawlerInfo, SourceItem
 from ...utils.fts_store import FTSStore
 from ...utils.text_tools import normalize
 from ...utils.url_tools import extract_host, normalize_url
-from . import utils
+from .helper import (
+    create_crawler_info,
+    fetch_online_source,
+    import_crawlers,
+    load_offline_source,
+    save_source,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +59,7 @@ class Sources:
         self._taskman = TaskManager(10)
 
         # load offline sources first
-        self.load_index(utils.load_offline_source(sync_remote))
+        self.load_index(load_offline_source(sync_remote))
 
         # dynamically import all crawlers
         self._taskman.submit_task(
@@ -82,7 +88,7 @@ class Sources:
             self.rejected[host] = reason
 
     def load_crawlers(self, *files: Path) -> List[CrawlerInfo]:
-        futures = [self._taskman.submit_task(utils.import_crawlers, file) for file in files]
+        futures = [self._taskman.submit_task(import_crawlers, file) for file in files]
         return [
             self.add_crawler(crawler)
             for crawlers in self._taskman.resolve_as_generator(
@@ -106,7 +112,7 @@ class Sources:
             info = self._index.crawlers[sid]
         else:
             logger.info(f"Found non-indexed crawler: {crawler.__name__}")
-            info = utils.create_crawler_info(crawler)
+            info = create_crawler_info(crawler)
             self._index.crawlers[sid] = info
 
         # update crawlers list with the latest crawler
@@ -131,14 +137,14 @@ class Sources:
     def update(self) -> None:
         assert self._index
         logger.info("Sync online sources")
-        online_index = utils.fetch_online_source()
+        online_index = fetch_online_source()
         if online_index.v <= self._index.v:
             logger.info("No latest updates found")
             return
 
         # save the latest index
         user_file = ctx.config.crawler.user_index_file
-        utils.save_source(user_file, self._index)
+        save_source(user_file, self._index)
 
         # load the online index
         self.load_index(online_index)

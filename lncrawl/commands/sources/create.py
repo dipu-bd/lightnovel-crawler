@@ -84,7 +84,11 @@ def create_one(
 
     # check file path
     file_path = _build_path(locale, file_name)
-    if file_path.is_file() and not overwrite and (non_interactive or not _prompt_replace(str(file_path))):
+    if (
+        file_path.is_file()
+        and not overwrite
+        and (non_interactive or not _prompt_replace(str(file_path)))
+    ):
         print(f"[red]A file already exists for [b]{host}[/b]:[/red] [cyan]{file_path}[/cyan]")
         return
 
@@ -148,7 +152,9 @@ def _prompt_locale() -> str:
 
     print("[i]Leave empty if locale is unknown or content is in multiple language:[/i]")
     language = questionary.autocomplete(
-        "Enter language (ISO 639-1 code)", choices=choices, validate=lambda s: (s in choices) or (s in language_codes)
+        "Enter language (ISO 639-1 code)",
+        choices=choices,
+        validate=lambda s: (s in choices) or (s in language_codes),
     ).ask()
 
     if len(language) > 2:
@@ -166,11 +172,17 @@ def _prompt_features() -> List[Feature]:
 
 def _prompt_replace(file: str) -> bool:
     print(f"[i][cyan]{file}[/cyan][/i]")
-    return questionary.confirm("Crawler file already exists. Do you want to replace it?", default=False).ask()
+    return questionary.confirm(
+        "Crawler file already exists. Do you want to replace it?",
+        default=False,
+    ).ask()
 
 
 def _prompt_use_openai() -> bool:
-    return questionary.confirm("Use OpenAI to auto-generate crawler?", default=bool(ctx.config.app.openai_key)).ask()
+    return questionary.confirm(
+        "Use OpenAI to auto-generate crawler?",
+        default=bool(ctx.config.app.openai_key),
+    ).ask()
 
 
 def _prompt_openai_key() -> str:
@@ -180,226 +192,256 @@ def _prompt_openai_key() -> str:
 def _generate_stub(name: str, base_url: str, features: List[Feature]):
     content = """# -*- coding: utf-8 -*-
 import logging
-from typing import Generator, Optional
+from typing import Iterable, Optional
 
-from bs4 import BeautifulSoup, Tag
-"""
-
-    models = "Chapter"
-    if Feature.can_search in features:
-        models += ", SearchResult"
-    if Feature.has_volumes in features:
-        models += ", Volume"
-
-    content += f"""
-from lncrawl.models import {models}"""
-
-    main_class_name = "ChapterOnlySoupTemplate"
-    if Feature.has_volumes not in features:
-        content += """
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate"""
-
-    if Feature.can_search in features:
-        content += """
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate"""
-
-    if Feature.has_volumes in features:
-        main_class_name = "ChapterWithVolumeSoupTemplate"
-        content += """
-from lncrawl.templates.soup.with_volume import ChapterWithVolumeSoupTemplate"""
-
-    content += """
+from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 
+"""
 
+    content += f"""
+class {name}(BrowserTemplate):
+    \"\"\"Scraper first; falls back to a real browser when requests fail.\"\"\"
+
+    base_url = ["{base_url}"]
+    has_manga = {Feature.has_manga in features}
+    has_mtl = {Feature.has_mtl in features}
+    can_login = {Feature.can_login in features}
+    can_search = {Feature.can_search in features}
 """
 
     if Feature.can_search in features:
-        content += f"""class {name}(SearchableSoupTemplate, {main_class_name}):"""
-    else:
-        content += f"""class {name}({main_class_name}):"""
+        content += """
+    search_item_list_selector = ""
+    search_item_title_selector = ""
+    search_item_url_selector = ""
+    search_item_info_selector = ""
+"""
 
-    content += f"""
-    base_url = ["{base_url}"]
-    has_manga = {Feature.has_manga in features}
-    has_mtl = {Feature.has_manga in features}
+    content += """
+    novel_title_selector = ""
+    novel_cover_selector = ""
+    novel_author_selector = ""
+    novel_tags_selector = ""
+    novel_synopsis_selector = ""
+"""
 
+    if Feature.has_volumes in features:
+        content += """
+    auto_create_volumes = False
+    volume_list_selector = ""
+    volume_title_selector = ""
+"""
+
+    content += """
+    chapter_list_selector = ""
+    chapter_title_selector = ""
+    chapter_url_selector = ""
+    chapter_body_selector = ""
+"""
+
+    content += """
     def initialize(self) -> None:
         # You can customize `TextCleaner` and other necessary things.
         super().initialize()
-        self.init_executor(1)
+        self.taskman.init_executor(1)
 """
 
     if Feature.can_login in features:
         content += """
     def login(self, username_or_email: str, password_or_token: str) -> None:
-        # Add logic to login. For example: sources/en/l/lnmtl.py
+        # Add logic to login when can_login is used.
         pass
 """
 
     if Feature.can_search in features:
         content += """
-    def select_search_items(self, query: str) -> Generator[Tag, None, None]:
-        # Select novel items found in search page from the query
-        #
+    def build_search_url(self, query: str) -> str:
+        # URL of the search results page for the given query.
         # Example:
-        #   params = {"searchkey": query}
-        #   soup = self.post_soup(f"{self.home_url}search?{urlencode(params)}")
-        #   yield from soup.select(".col-content .con .txt h3 a")
-        yield from []
-
-    def parse_search_item(self, tag: Tag) -> SearchResult:
-        # Parse a tag and return single search result
-        # The tag here comes from self.select_search_items
-        return SearchResult(
-            title=tag.get_text(strip=True),
-            url=self.absolute_url(tag["href"]),
-        )
-"""
-
-    content += """
-    def parse_title(self, soup: BeautifulSoup) -> str:
-        # Parse and return the novel title
-        #
-        # Example:
-        # tag = soup.select_one("h1")
-        # assert tag, 'No novel title tag'
-        # return tag.get_text(strip=True)
+        # return f"{self.scraper.origin}search?q={query}"
         raise NotImplementedError()
 
-    def parse_cover(self, soup: BeautifulSoup) -> str:
-        # Parse and return the novel cover
-        #
-        # Example:
-        # tag = soup.select_one("img[src]")
-        # if not tag:
-        #     return ""
-        # return self.absolute_url(tag["src"])
-        raise NotImplementedError()
-
-    def parse_authors(self, soup: BeautifulSoup) -> Generator[str, None, None]:
-        # Parse and return the novel authors
-        #
-        # Example 1: <single author>
-        #   tag = soup.find(string="Author:")
-        #   if tag:
-        #       yield tag.get_text(strip=True)
-        #
-        # Example 2: <multiple authors>
-        #   for a in soup.select("a[href*='/author/']"):
-        #       yield a.get_text(strip=True)
-        yield from []
-
-    def parse_genres(self, soup: BeautifulSoup) -> Generator[str, None, None]:
-        # Parse and return the novel categories or tags
-        yield from []
-
-    def parse_summary(self, soup: BeautifulSoup) -> str:
-        # Parse and return the novel summary or synopsis
-        return ''
+    # Optional: set search_item_*_selector on the class, or override select_search_item_list().
 """
 
     if Feature.has_volumes in features:
         content += """
-    def select_volume_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        # Select volume list item tags from the page soup
-        #
-        # Example:
-        # yield from soup.select("#toc .vol-item")
-        yield from []
-
-    def parse_volume_item(self, tag: Tag, id: int) -> Volume:
-        # Parse a single volume from `select_volume_tags` result
-        #
-        # Example:
-        return Volume(
-            id=id,
-            title=tag.get_text(strip=True),
-        )
-
-    def select_chapter_tags(self, tag: Tag, vol: Volume, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        # Select chapter list item tags from volume tag and page soup
-        #
-        # Example:
-        # yield from tag.select("a[href]")
-        yield from []
-
-    def parse_chapter_item(self, tag: Tag, id: int, vol: Volume) -> Chapter:
-        # Parse a single chapter from `select_chapter_tags` result
-        #
-        # Example:
-        return Chapter(
-            id=id,
-            volume=vol.id,
-            title=tag.get_text(strip=True),
-            url=self.absolute_url(tag["href"]),
-        )
-"""
-    else:
-        content += """
-    def select_chapter_tags(self, soup: BeautifulSoup) -> Generator[Tag, None, None]:
-        # Select chapter list item tags from page soup
-        #
-        # Example:
-        # yield from soup.select("table > li > a")
-        yield from []
-
-    def parse_chapter_item(self, tag: Tag, id: int) -> Chapter:
-        # Parse a single chapter from `select_chapter_tags` result
-        #
-        # Example:
-        return Chapter(
-            id=id,
-            title=tag.get_text(strip=True),
-            url=self.absolute_url(tag["href"]),
-        )
+    def select_volume_tags(self, soup: PageSoup, novel: Novel) -> Iterable[PageSoup]:
+        # Example: return soup.select("#toc .vol-item")
+        return super().select_volume_tags(soup, novel)
 """
 
     content += """
-    def select_chapter_body(self, soup: BeautifulSoup) -> Optional[Tag]:
-        # Select the tag containing the chapter content text
-        #
-        # Example:
-        # return soup.select_one(".chapter-content")
-        raise NotImplementedError()
+    def select_chapter_tags(
+        self,
+        soup: PageSoup,
+        novel: Novel,
+        volume: Optional[Volume] = None,
+    ) -> Iterable[PageSoup]:
+        # When volume is set, soup is usually the volume block; otherwise the novel page.
+        # Example: return soup.select("ul.chapter-list li a")
+        return super().select_chapter_tags(soup, novel, volume)
 """
 
     return content
 
 
+# Context for OpenAI: how Crawler / SoupTemplate / BrowserTemplate fit together (keep in sync with lncrawl.core).
+_OPENAI_LNCRAWL_REFERENCE = """
+### Class hierarchy
+`Crawler` → `CrawlerTemplate` → `SoupTemplate` → `BrowserTemplate` (the generated class extends BrowserTemplate).
+
+### Crawler (lncrawl.core.crawler) — excerpt
+```python
+class Crawler(ABC):
+    base_url: Union[str, List[str]]
+    has_mtl = False
+    has_manga = False
+    can_login = False
+    can_search = False
+    chapters_per_volume = 100
+    auto_create_volumes = True  # False when the site has real volume sections; then use volume_* selectors
+
+    def __init__(self, origin: str, workers: Optional[int] = None, parser: Optional[str] = None) -> None:
+        # origin must match a normalized entry in base_url; creates self.scraper, self.taskman, self.cleaner
+
+    def initialize(self) -> None: ...
+    def login(self, username_or_email: str, password_or_token: str) -> None: ...
+
+    @abstractmethod
+    def read_novel(self, novel: Novel) -> None: ...
+
+    @abstractmethod
+    def download_chapter(self, chapter: Chapter) -> None: ...
+
+    def absolute_url(self, url: Any, page_url: Optional[str] = None) -> str: ...
+```
+
+### SoupTemplate (lncrawl.core.template) — selectors drive defaults
+Set class attributes; default `read_novel` / `download_chapter` / `search` call `parse_*` and `select_*` that use these selectors.
+
+```python
+class SoupTemplate(CrawlerTemplate):
+    search_item_list_selector = ""
+    search_item_title_selector = ""
+    search_item_url_selector = ""
+    search_item_info_selector = ""
+
+    novel_title_selector = ""
+    novel_cover_selector = ""
+    novel_author_selector = ""
+    novel_tags_selector = ""
+    novel_synopsis_selector = ""
+
+    volume_list_selector = ""
+    volume_title_selector = ""
+
+    chapter_list_selector = ""
+    chapter_title_selector = ""
+    chapter_url_selector = ""
+    chapter_body_selector = ""
+
+    def read_novel(self, novel: Novel) -> None:
+        soup = self.scraper.get_soup(novel.url)
+        self.parse_title(soup, novel)       # novel_title_selector → novel.title
+        self.parse_cover(soup, novel)       # novel.cover_url
+        self.parse_authors(soup, novel)     # novel.author (joined string)
+        self.parse_tags(soup, novel)        # novel.tags (list)
+        self.parse_summary(soup, novel)     # default sets novel.summary via cleaner.extract_contents
+        self.parse_volume_list(soup, novel) # auto_create_volumes True: flat chapter list from novel page
+
+    def download_chapter(self, chapter: Chapter) -> None:
+        soup = self.scraper.get_soup(chapter.url)
+        body = soup.select_one(self.chapter_body_selector)
+        self.parse_chapter_body(body, chapter)  # chapter.body = cleaner.extract_contents(soup)
+
+    def build_search_url(self, query: str) -> str:
+        raise NotImplementedError()
+
+    def select_search_item_list(self, query: str) -> Iterable[PageSoup]:
+        soup = self.scraper.get_soup(self.build_search_url(query))
+        return soup.select(self.search_item_list_selector)
+
+    def select_chapter_tags(self, soup, novel, volume=None) -> Iterable[PageSoup]:
+        return soup.select(self.chapter_list_selector)
+```
+
+Override any `parse_*`, `select_*`, `build_search_url`, or `download_chapter` when selectors alone are insufficient.
+
+### BrowserTemplate (lncrawl.core.browser) — excerpt
+Extends SoupTemplate. Replaces `scraper.get_soup` (and `get_image`) so HTTP is tried first; on scrape failure it launches Chrome, visits the URL, and parses `browser.soup`. Requires browser support in config when fallback runs.
+
+```python
+class BrowserTemplate(SoupTemplate):
+    def __init__(
+        self,
+        origin: str,
+        workers: Optional[int] = None,
+        parser: Optional[str] = None,
+        headless: bool = False,
+        timeout: Optional[int] = 120,
+    ) -> None:
+        super().__init__(origin=origin, workers=workers, parser=parser)
+        # patches get_soup / get_image for browser fallback
+```
+
+### Models & types (lncrawl.core)
+- `Novel`: url, title, cover_url, author, tags, synopsis/summary, volumes, chapters, ...
+- `Chapter`: id, url, title, volume (optional id), body
+- `Volume`: id, title
+- `SearchResult`: title, url, info
+- `PageSoup`: soup nodes; use `.select` / `.select_one`, `.text`, `.get("href")`, etc.
+"""
+
+
 def _fill_with_openai(url: str, stub: str) -> str:
     client = OpenAI(api_key=ctx.config.app.openai_key)
 
-    print(f"[i]Complete the stub functions from [cyan]{url}[/cyan][/i]")
-    content_prompt = f"""
-You are given the URL of a novel-hosting website: `{url}`.
-
-Fetch the site content. Identify any novel available on the site, and generate Python code that completes the functions in the class below:
-
-```
-{stub}
-```
-
-Tasks:
-- Fetch page content from the given URL.
-- Locate and retrieve any novel detail page.
-- If a volume list cannot be determined, return a placeholder value.
-- If a chapter list cannot be determined, return a placeholder value.
-- Identify and fetch a chapter content page to supply data for `select_chapter_body`.
-
-Requirements:
-- Output valid Python code only.
-- Do not include explanations, comments, or markdown fences.
-- Implement a function only if sufficient data is available; otherwise leave it unimplemented.
-- Do not leave any unused imports
-"""
+    print(f"[i]Complete the stub from [cyan]{url}[/cyan][/i]")
+    content_prompt = (
+        f"You are given the URL of a novel-hosting website: `{url}`.\n\n"
+        "Fetch the site content, find a representative novel page and a chapter page, then return a "
+        "completed version of the class below.\n\n"
+        "The crawler subclasses `BrowserTemplate` (lncrawl.core): HTTP first, browser fallback on failure. "
+        "Under that is `SoupTemplate`, which already implements `read_novel`, `download_chapter`, and `search` "
+        "using **class-level CSS selector strings** when those are set correctly.\n\n"
+        "**Priority 1 — selectors (do these first):** Fill every selector attribute that appears in the stub "
+        "with real CSS selectors so the default `SoupTemplate` behavior works. Use empty string only if the "
+        "field truly does not exist on the site.\n\n"
+        "- Search (if present): `search_item_list_selector`, `search_item_title_selector`, "
+        "`search_item_url_selector`, `search_item_info_selector` (optional).\n"
+        "- Novel page: `novel_title_selector`, `novel_cover_selector`, `novel_author_selector`, "
+        "`novel_tags_selector`, `novel_synopsis_selector`.\n"
+        "- Volumes (if present): `volume_list_selector`, `volume_title_selector`.\n"
+        "- Chapters / body: `chapter_list_selector`, `chapter_title_selector`, `chapter_url_selector`, "
+        "`chapter_body_selector`.\n\n"
+        "**Priority 2 — overrides (only if selectors are not enough):** If the DOM needs logic that selectors "
+        "cannot express (pagination, nested volumes, odd links, dynamic TOC, etc.), override the relevant "
+        "`SoupTemplate` methods — for example `parse_title`, `parse_cover`, `parse_authors`, `parse_tags`, "
+        "`parse_summary`, `select_volume_tags`, `parse_volume_title`, `select_chapter_tags`, "
+        "`parse_chapter_title`, `parse_chapter_url`, `parse_chapter_body`, `build_search_url`, "
+        "`select_search_item_list`, or `parse_search_item`. Keep using `super()` where the default "
+        "implementation still applies.\n\n"
+        + _OPENAI_LNCRAWL_REFERENCE
+        + "\n### Stub to complete\n```\n"
+        + stub
+        + "\n```\n\nRequirements:\n"
+        "- Output valid Python code only.\n"
+        "- Do not include explanations, comments, or markdown fences.\n"
+        "- Prefer filled selectors and minimal method bodies; override methods only when necessary.\n"
+        "- Do not leave any unused imports.\n"
+    )
 
     try:
         response = client.chat.completions.create(
             model="gpt-5.1",
             messages=[
-                {"role": "system", "content": "Output Python code only."},
+                {
+                    "role": "system",
+                    "content": "Output Python code only. Prefer SoupTemplate CSS selector class attributes; override methods only when selectors are insufficient.",
+                },
                 {"role": "user", "content": content_prompt},
             ],
         )

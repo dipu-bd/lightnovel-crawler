@@ -1,3 +1,4 @@
+from .browser import Browser, BrowserTemplate
 from .cleaner import TextCleaner
 from .crawler import Crawler
 from .legacy import LegacyCrawler
@@ -21,4 +22,6 @@ __all__ = [
     "CrawlerTemplate",
     "LegacyCrawler",
     "SoupTemplate",
+    "Browser",
+    "BrowserTemplate",
 ]

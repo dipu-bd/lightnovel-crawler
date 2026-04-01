@@ -1,22 +1,30 @@
-import logging
+from typing import Iterable, Optional
 from urllib.parse import urlencode
 
-from lncrawl.core import PageSoup
-from lncrawl.models import Chapter, SearchResult
-from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate
-
-logger = logging.getLogger(__name__)
+from ..context import ctx
+from ..core import BrowserTemplate, Novel, PageSoup, Volume
+from ..exceptions import LNException
 
 
-class MadaraTemplate(SearchableSoupTemplate, ChapterOnlyBrowserTemplate):
+class MadaraTemplate(BrowserTemplate):
     is_template = True
+
+    search_item_selector = ".post-title h3 a"
+
+    novel_title_selector = ".post-title h1"
+    novel_cover_selector = ".summary_image a img"
+    novel_author_selector = '.author-content a[href*="manga-author"]'
+    novel_tags_selector = '.genres-content a[rel="tag"]'
+    novel_synopsis_selector = ".description-summary a"
+
+    chapter_list_selector = "ul.main .wp-manga-chapter a"
+    chapter_body_selector = "div.reading-content"
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3"])
         self.cleaner.bad_css.update(['a[href="javascript:void(0)"]'])
 
-    def select_search_items(self, query: str):
+    def build_search_url(self, query: str):
         params = dict(
             s=query,
             post_type="wp-manga",
@@ -26,83 +34,47 @@ class MadaraTemplate(SearchableSoupTemplate, ChapterOnlyBrowserTemplate):
             release="",
             adult="",
         )
-        soup = self.get_soup(f"{self.home_url}?{urlencode(params)}")
-        yield from soup.select(".c-tabs-item__content")
+        return f"{self.scraper.origin}?{urlencode(params)}"
 
-    def parse_search_item(self, tag: PageSoup) -> SearchResult:
-        a = tag.select_one(".post-title h3 a")
-        latest = tag.select_one(".latest-chap .chapter a")
-        votes = tag.select_one(".rating .total_votes")
-        return SearchResult(
-            title=a.text,
-            url=self.absolute_url(a["href"]),
-            info="%s | Rating: %s" % (latest.text, votes.text),
-        )
+    def parse_search_item_info(self, soup: PageSoup) -> str:
+        latest = soup.select_one(".latest-chap .chapter a")
+        votes = soup.select_one(".rating .total_votes")
+        return "%s | Rating: %s" % (latest.text, votes.text)
 
-    def parse_title(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".post-title h1")
-        assert tag
-        for span in tag.select("span"):
-            span.extract()
-        return tag.text
+    def parse_title(self, soup: PageSoup, novel: Novel) -> None:
+        tag = soup.select_one(self.novel_title_selector)
+        tag.decompose("span")
+        novel.title = tag.text
 
-    def parse_cover(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".summary_image a img")
-        if tag.has_attr("data-src"):
-            return self.absolute_url(tag["data-src"])
-        if tag.has_attr("src"):
-            return self.absolute_url(tag["src"])
-        return ""
-
-    def parse_authors(self, soup: PageSoup):
-        for a in soup.select('.author-content a[href*="manga-author"]'):
-            yield a.text.strip()
-
-    def parse_genres(self, soup):
-        for a in soup.select('.genres-content a[rel="tag"]'):
-            yield a.text.strip()
-
-    def parse_summary(self, soup):
-        possible_summary = soup.select_one(".description-summary a")
-        return self.cleaner.extract_contents(possible_summary)
-
-    def select_chapter_tags(self, soup: PageSoup):
+    def select_chapter_tags(
+        self,
+        soup: PageSoup,
+        novel: Novel,
+        volume: Optional[Volume] = None,
+    ) -> Iterable[PageSoup]:
         try:
-            clean_novel_url = self.novel_url.split("?")[0].strip("/")
-            response = self.submit_form(f"{clean_novel_url}/ajax/chapters/")
-            soup = self.make_soup(response)
-            chapters = soup.select("ul.main .wp-manga-chapter a")
-            yield from reversed(list(chapters))
-            use_alternate = True
+            clean_novel_url = novel.url.split("?")[0].strip("/")
+            response = self.scraper.submit_form(f"{clean_novel_url}/ajax/chapters/")
+            soup = self.scraper.make_soup(response)
+            chapters = soup.select(self.chapter_list_selector)
+            return reversed(list(chapters))
+        except Exception:
+            ctx.logger.debug("Failed to fetch chapters using ajax", exc_info=True)
+
+        nl_id = soup.select_one("#manga-chapters-holder[data-id]")
+        if not nl_id:
+            raise LNException("No chapter id tag found for alternate method")
+
+        try:
+            response = self.scraper.submit_form(
+                f"{self.scraper.origin}wp-admin/admin-ajax.php",
+                data={
+                    "action": "manga_get_chapters",
+                    "manga": nl_id["data-id"],
+                },
+            )
+            soup = self.scraper.make_soup(response)
+            chapters = soup.select(self.chapter_list_selector)
+            return reversed(list(chapters))
         except Exception as e:
-            use_alternate = True
-            logger.debug("Failed to fetch chapters using ajax", e)
-
-        if use_alternate:
-            nl_id = soup.select_one("#manga-chapters-holder[data-id]")
-            if not nl_id:
-                logger.debug("No chapter id tag found for alternate method")
-                return
-            try:
-                response = self.submit_form(
-                    f"{self.home_url}wp-admin/admin-ajax.php",
-                    data={
-                        "action": "manga_get_chapters",
-                        "manga": nl_id["data-id"],
-                    },
-                )
-                soup = self.make_soup(response)
-                chapters = soup.select("ul.main .wp-manga-chapter a")
-                yield from reversed(list(chapters))
-            except Exception as e:
-                logger.debug("Failed to fetch chapters using alternate method", e)
-
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        return Chapter(
-            id=id,
-            title=tag.text,
-            url=self.absolute_url(tag["href"]),
-        )
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        return soup.select_one("div.reading-content")
+            raise LNException("Failed to fetch chapters using alternate method") from e

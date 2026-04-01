@@ -1,6 +1,7 @@
 import gzip
 import hashlib
 import importlib.util
+import inspect
 import io
 import json
 import logging
@@ -64,15 +65,6 @@ def load_offline_source(check_user=True) -> CrawlerIndex:
     return user_index
 
 
-def can_do(crawler: Type[Crawler], prop_name: str):
-    """Checks if crawler has implemented the given property name"""
-    if not hasattr(crawler, prop_name):
-        return False
-    if not hasattr(Crawler, prop_name):
-        return True
-    return getattr(crawler, prop_name) != getattr(Crawler, prop_name)
-
-
 def has_method(crawler: Type[Crawler], method: str):
     """Checks if crawler has a callable method"""
     return hasattr(crawler, method) and callable(getattr(crawler, method))
@@ -117,12 +109,8 @@ def import_crawlers(file: Path) -> Generator[Type[Crawler], None, None]:
         ):
             continue
 
-        # required method checks
-        if not has_method(crawler, "read_novel_info"):
-            logger.info(f"\\[{file}] Missing required method 'read_novel_info'")
-            continue
-        if not has_method(crawler, "download_chapter_body"):
-            logger.info(f"\\[{file}] Missing required method 'download_chapter_body'")
+        if inspect.isabstract(crawler):
+            logger.info(f"\\[{file}] Incomplete or abstract crawler: {crawler}")
             continue
 
         # base url checks
@@ -133,11 +121,7 @@ def import_crawlers(file: Path) -> Generator[Type[Crawler], None, None]:
         if not urls:
             logger.info(f"\\[{file}] No base url: {crawler}")
             continue
-
-        # static values
-        setattr(crawler, "base_url", urls)
-        setattr(crawler, "can_login", can_do(crawler, "login"))
-        setattr(crawler, "can_search", can_do(crawler, "search_novel"))
+        crawler.base_url = urls
 
         # other metdata
         stat = file.stat()
@@ -160,11 +144,11 @@ def create_crawler_info(crawler: Type[Crawler]):
         file_path=file_path,
         id=getattr(crawler, "__id__"),
         md5=getattr(crawler, "__module__"),
-        version=int(getattr(crawler, "version")),
         base_urls=getattr(crawler, "base_url"),
-        has_mtl=getattr(crawler, "has_mtl"),
-        has_manga=getattr(crawler, "has_manga"),
-        can_login=getattr(crawler, "can_login"),
-        can_search=getattr(crawler, "can_search"),
+        version=int(getattr(crawler, "version")),
+        has_mtl=crawler.has_mtl,
+        has_manga=crawler.has_manga,
+        can_login=crawler.can_login,
+        can_search=crawler.can_search,
         url=f"file:///{Path(file).resolve().as_posix()}",
     )

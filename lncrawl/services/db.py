@@ -162,8 +162,12 @@ class DB:
         # Create a connection URL without the database name
         if "mysql" in scheme:
             server_url = db_url.replace(f"/{database}", "")
-            check_query = sa.text("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :db_name")
-            create_query = sa.text(f"CREATE DATABASE `{database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci")
+            check_query = sa.text(
+                "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :db_name"
+            )
+            create_query = sa.text(
+                f"CREATE DATABASE `{database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+            )
         elif "postgres" in scheme:
             server_url = db_url.replace(f"/{database}", "/postgres")
             check_query = sa.text("SELECT 1 FROM pg_database WHERE datname = :db_name")
