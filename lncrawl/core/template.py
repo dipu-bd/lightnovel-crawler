@@ -123,7 +123,7 @@ class SoupTemplate(CrawlerTemplate):
     # ------------------------------------------------------------------------- #
     # Parser methods for Novel information
     # ------------------------------------------------------------------------- #
-    
+
     def build_novel_url(self, novel: Novel) -> str:
         """Build the novel url"""
         return self.absolute_url(novel.url)
@@ -161,15 +161,23 @@ class SoupTemplate(CrawlerTemplate):
     def parse_volume_list(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the volumes and chapters"""
         novel.volumes = []
-        if self.auto_create_volumes:
+
+        volume_tags = self.select_volume_tags(soup, novel)
+        if not volume_tags:
             self.parse_chapter_list(soup, novel)
-        else:
-            volume_tags = self.select_volume_tags(soup, novel)
-            for volume_index, volume_tag in enumerate(volume_tags):
-                volume = Volume(id=volume_index + 1)
-                self.parse_volume_title(volume_tag, volume)
-                self.parse_chapter_list(volume_tag, novel, volume)
-                novel.volumes.append(volume)
+            return
+
+        for tag in volume_tags:
+            volume_id = len(novel.volumes) + 1
+            volume = self.parse_volume_item(tag, volume_id)
+            self.parse_chapter_list(tag, novel, volume)
+            novel.volumes.append(volume)
+
+    def parse_volume_item(self, soup: PageSoup, volume_id: int) -> Volume:
+        """Parse a single volume from volume list item tag"""
+        volume = Volume(id=volume_id)
+        self.parse_volume_title(soup, volume)
+        return volume
 
     def select_volume_tags(self, soup: PageSoup, novel: Novel) -> Iterable[PageSoup]:
         """Select volume tags from the novel page"""
@@ -192,11 +200,9 @@ class SoupTemplate(CrawlerTemplate):
     ) -> None:
         """Parse and set the volumes and chapters"""
         novel.chapters = []
-        chapter_tags = self.select_chapter_tags(soup, novel, volume)
-        for chapter_index, chapter_tag in enumerate(chapter_tags):
-            chapter = Chapter(id=chapter_index + 1)
-            self.parse_chapter_title(chapter_tag, chapter)
-            self.parse_chapter_url(chapter_tag, chapter)
+        for tag in self.select_chapter_tags(soup, novel, volume):
+            chapter_id = len(novel.chapters) + 1
+            chapter = self.parse_chapter_item(tag, chapter_id)
             if volume:
                 chapter.volume = volume.id
             novel.chapters.append(chapter)
@@ -209,6 +215,13 @@ class SoupTemplate(CrawlerTemplate):
     ) -> Iterable[PageSoup]:
         """Select chapter tags from the novel page"""
         return soup.select(self.chapter_list_selector)
+
+    def parse_chapter_item(self, soup: PageSoup, chapter_id: int) -> Chapter:
+        """Parse a single chapter from chapter list item tag"""
+        chapter = Chapter(id=chapter_id)
+        self.parse_chapter_title(soup, chapter)
+        self.parse_chapter_url(soup, chapter)
+        return chapter
 
     def parse_chapter_title(self, soup: PageSoup, chapter: Chapter) -> None:
         """Parse and set the chapter title"""
@@ -223,7 +236,7 @@ class SoupTemplate(CrawlerTemplate):
     # ------------------------------------------------------------------------- #
     # Parser methods for Chapter body
     # ------------------------------------------------------------------------- #
-    
+
     def build_chapter_url(self, chapter: Chapter) -> str:
         """Build the chapter url"""
         return self.absolute_url(chapter.url)

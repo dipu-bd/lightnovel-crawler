@@ -135,9 +135,12 @@ def make_epub(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     # add novel metadata
     book.set_identifier(novel.id)
     book.set_title(novel.title)
-    book.add_author(novel.authors)
-    book.set_language(novel.language)
-    book.add_metadata("DC", "description", novel.synopsis)
+    if novel.authors:
+        book.add_author(novel.authors)
+    if novel.language:
+        book.set_language(novel.language)
+    if novel.synopsis:
+        book.add_metadata("DC", "description", novel.synopsis)
     if novel.rtl:
         book.set_direction("rtl")
     for tag in novel.tags:

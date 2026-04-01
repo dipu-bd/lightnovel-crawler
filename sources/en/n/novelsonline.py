@@ -1,20 +1,18 @@
 # -*- coding: utf-8 -*-
-
-import logging
-from typing import Generator, Union
-
-from lncrawl.core import Chapter, PageSoup, Volume
-from lncrawl.templates.browser.general import GeneralBrowserTemplate
-
-logger = logging.getLogger(__name__)
+from lncrawl.core import BrowserTemplate
 
 
-class NovelsOnline(GeneralBrowserTemplate):
+class NovelsOnline(BrowserTemplate):
     base_url = ["https://novelsonline.net/"]
     has_manga = False
     has_mtl = False
 
-    # TODO: [OPTIONAL] This is called before all other methods.
+    novel_title_selector = ".block-title h1"
+    novel_cover_selector = "img[alt*='Cover']"
+    novel_author_selector = "a[href*=author]"
+    chapter_list_selector = ".chapters .chapter-chs li a[href]"
+    chapter_body_selector = "#contentall"
+
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["div"])
         self.cleaner.bad_css.update(
@@ -35,38 +33,3 @@ class NovelsOnline(GeneralBrowserTemplate):
                 ".ad1",
             ]
         )
-
-    # TODO: [OPTIONAL] Open the Novel URL in the browser
-    def visit_novel_page_in_browser(self) -> PageSoup:
-        self.visit(self.novel_url)
-        self.browser.wait(".container--content")
-
-    def parse_title(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".block-title h1")
-        assert tag
-        return tag.text.strip()
-
-    def parse_cover(self, soup: PageSoup) -> str:
-        tag = soup.find("img", {"alt": self.novel_title})
-        assert tag
-        if tag.has_attr("data-src"):
-            return self.absolute_url(tag["data-src"])
-        elif tag.has_attr("src"):
-            return self.absolute_url(tag["src"])
-
-    def parse_authors(self, soup: PageSoup) -> Generator[str, None, None]:
-        for a in soup.select("a[href*=author]"):
-            yield a.text.strip()
-
-    def parse_chapter_list(self, soup: PageSoup) -> Generator[Union[Chapter, Volume], None, None]:
-        _id = 0
-        for a in soup.select(".chapters .chapter-chs li a"):
-            _id += 1
-            yield Chapter(id=_id, url=self.absolute_url(a["href"]), title=a.text.strip())
-
-    def visit_chapter_page_in_browser(self, chapter: Chapter) -> None:
-        self.visit(chapter.url)
-        self.browser.wait(".container--content")
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        return soup.select_one("#contentall")

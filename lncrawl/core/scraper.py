@@ -10,6 +10,8 @@ from PIL import Image, UnidentifiedImageError
 from requests import Response
 from requests.structures import CaseInsensitiveDict
 
+from lncrawl.utils.url_tools import extract_base
+
 from ..cloudscraper import CloudScraper
 from ..context import ctx
 from .soup import PageSoup
@@ -27,7 +29,6 @@ class Scraper(CloudScraper):
         """Initialize the Scraper
 
         Args:
-            origin (Optional[str], default=None): The base URL from which the scraper will operate.
             parser (Optional[str], default=None): The desired parser or markup type.
                 - Acceptable values include parser names ("lxml", "lxml-xml", "html.parser", "html5lib")
                 - or, markup types ("html", "html5", "xml").
@@ -63,6 +64,13 @@ class Scraper(CloudScraper):
 
         self.origin = origin or ""
         self.parser = parser or "lxml"
+        self.last_soup_url = self.origin
+
+    def reset(self):
+        """Reset the scraper to its initial state"""
+        self.cookies.clear()
+        self.headers.clear()
+        self.last_soup_url = ""
 
     def set_header(self, key: str, value: Union[str, bytes]) -> None:
         """Set default headers for next requests"""
@@ -73,9 +81,11 @@ class Scraper(CloudScraper):
         self.cookies.set(name, value)
 
     def request(self, method, url, *args, **kwargs):
+        origin_url = extract_base(self.last_soup_url or self.origin or url)
+
         headers = CaseInsensitiveDict(kwargs.pop("headers", {}) or {})
-        headers.setdefault("Origin", self.origin.strip("/"))
-        headers.setdefault("Referer", self.origin)
+        headers.setdefault("Origin", origin_url.strip("/"))
+        headers.setdefault("Referer", origin_url)
         kwargs["headers"] = headers
 
         kwargs.setdefault("allow_redirects", True)
@@ -203,6 +213,7 @@ class Scraper(CloudScraper):
         headers.setdefault("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9")
         kwargs["headers"] = headers
         response = self.get(url, **kwargs)
+        self.last_soup_url = url
         return self.make_soup(response, encoding)
 
     def post_soup(
@@ -218,4 +229,5 @@ class Scraper(CloudScraper):
         headers.setdefault("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9")
         kwargs["headers"] = headers
         response = self.post(url, data=data, **kwargs)
+        self.last_soup_url = url
         return self.make_soup(response, encoding)

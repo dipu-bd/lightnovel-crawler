@@ -1,75 +1,83 @@
 import logging
 import re
-import time
-from typing import Mapping
-from urllib.parse import urlencode, urlparse
+from typing import Iterable, Mapping, Optional
+from urllib.parse import urlencode
 
-from readability import Document
-
-from lncrawl.core import Chapter, LegacyCrawler, PageSoup, SearchResult
-from lncrawl.core.browser import EC
-from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
-from lncrawl.templates.browser.searchable import SearchableBrowserTemplate
+from lncrawl.context import ctx
+from lncrawl.core import BrowserTemplate, Chapter, Crawler, Novel, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 
 
-automation_warning = """
+_automation_warning = """
 <div style="opacity: 0.5; padding: 14px; text-align: center; border: 1px solid #000; font-style: italic; font-size: 0.825rem">
     Parsed with an automated reader. The content accuracy is not guaranteed.
 </div>
 """.strip()
 
+_title_matcher = re.compile(r"^(c|ch|chap|chapter)?[^\w\d]*(\d+)$", flags=re.I)
 
-class NovelupdatesCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate):
+
+class NovelupdatesCrawler(BrowserTemplate):
     base_url = ["https://www.novelupdates.com/"]
 
-    _cached_crawlers: Mapping[str, LegacyCrawler] = {}
-    _title_matcher = re.compile(r"^(c|ch|chap|chapter)?[^\w\d]*(\d+)$", flags=re.I)
+    _cached_crawlers: Mapping[str, Crawler] = {}
+    search_item_list_selector = ".l-main .search_main_box_nu"
+    search_item_title_selector = ".search_title a[href]"
+    search_item_url_selector = ".search_title a[href]"
+    search_item_info_selector = ".genre_rank"
+    search_item_rating_selector = ".search_ratings"
+    search_item_chapter_count_selector = '.ss_desk i[title="Chapter Count"]'
+    search_item_last_updated_selector = '.ss_desk i[title="Last Updated"]'
+    search_item_reviewers_selector = '.ss_desk i[title="Reviews"]'
+
+    novel_title_selector = ".seriestitlenu"
+    novel_cover_selector = ".seriesimg img[src]"
+    novel_author_selector = "#showauthors a#authtag"
+    novel_synopsis_selector = "#editdescription"
+    novel_tags_selector = "#showtags a.genre"
 
     def initialize(self):
-        self.init_executor(
-            workers=4,
-        )
+        self.taskman.init_executor(workers=4)
 
-    def wait_for_cloudflare(self):
-        if "cf_clearance" in self.cookies:
-            return
-        try:
-            self.browser.wait(
-                "#challenge-running",
-                expected_conditon=EC.invisibility_of_element,
-                timeout=20,
-            )
-        except Exception:
-            pass
+    # def wait_for_cloudflare(self):
+    #     if "cf_clearance" in self.scraper.cookies:
+    #         return
+    #     try:
+    #         self.browser.wait(
+    #             "#challenge-running",
+    #             expected_conditon=EC.invisibility_of_element,
+    #             timeout=20,
+    #         )
+    #     except Exception:
+    #         pass
 
     def cleanup_prompts(self):
         try:
-            self.browser.find("#uniccmp").remove()
+            elem = self.browser.find("#uniccmp")
+            if elem:
+                elem.remove()
         except Exception:
             pass
 
-    def select_search_items(self, query: str):
-        query = dict(sf=1, sh=query, sort="srank", order="asc", rl=1, mrl="min")
-        soup = self.get_soup(f"https://www.novelupdates.com/series-finder/?{urlencode(query)}")
-        yield from soup.select(".l-main .search_main_box_nu")
+    def build_search_url(self, query: str) -> str:
+        params = dict(
+            sf=1,
+            sh=query,
+            sort="srank",
+            order="asc",
+            rl=1,
+            mrl="min",
+        )
+        return f"https://www.novelupdates.com/series-finder/?{urlencode(params)}"
 
-    def select_search_items_in_browser(self, query: str):
-        query = dict(sf=1, sh=query, sort="srank", order="asc", rl=1, mrl="min")
-        self.visit(f"https://www.novelupdates.com/series-finder/?{urlencode(query)}")
-        self.browser.wait(".l-main .search_main_box_nu")
-        yield from self.browser.soup.select(".l-main .search_main_box_nu")
-
-    def parse_search_item(self, tag: PageSoup) -> SearchResult:
-        a = tag.select_one(".search_title a[href]")
-
+    def parse_search_item_info(self, soup: PageSoup) -> str:
         info = []
-        rank = tag.select_one(".genre_rank")
-        rating = tag.select_one(".search_ratings")
-        chapter_count = tag.select_one('.ss_desk i[title="Chapter Count"]')
-        last_updated = tag.select_one('.ss_desk i[title="Last Updated"]')
-        reviewers = tag.select_one('.ss_desk i[title="Reviews"]')
+        rank = soup.select_one(self.search_item_info_selector)
+        rating = soup.select_one(self.search_item_rating_selector)
+        chapter_count = soup.select_one(self.search_item_chapter_count_selector)
+        last_updated = soup.select_one(self.search_item_last_updated_selector)
+        reviewers = soup.select_one(self.search_item_reviewers_selector)
         if rating:
             info.append(rating.text.strip())
         if rank:
@@ -80,124 +88,71 @@ class NovelupdatesCrawler(SearchableBrowserTemplate, ChapterOnlyBrowserTemplate)
             info.append(chapter_count.parent.text.strip())
         if last_updated:
             info.append(last_updated.parent.text.strip())
+        return " | ".join(info)
 
-        return SearchResult(
-            title=a.text.strip(),
-            info=" | ".join(info),
-            url=self.absolute_url(a["href"]),
-        )
-
-    def parse_title(self, soup: PageSoup) -> str:
-        return soup.select_one(".seriestitlenu").text
-
-    def parse_title_in_browser(self) -> str:
-        self.browser.wait(".seriestitlenu")
-        return self.parse_title(self.browser.soup)
-
-    def parse_cover(self, soup: PageSoup) -> str:
-        img_tag = soup.select_one(".seriesimg img[src]")
-        if img_tag:
-            return img_tag["src"]
-
-    def parse_authors(self, soup: PageSoup):
-        for a in soup.select("#showauthors a#authtag"):
-            yield a.text.strip()
-
-    def select_chapter_tags(self, soup: PageSoup):
+    def select_chapter_tags(
+        self,
+        soup: PageSoup,
+        novel: Novel,
+        volume: Optional[Volume] = None,
+    ) -> Iterable[PageSoup]:
         postid = soup.select_one("input#mypostid")["value"]
-        response = self.submit_form(
-            "https://www.novelupdates.com/wp-admin/admin-ajax.php",
+        response = self.scraper.submit_form(
+            f"{self.scraper.origin}wp-admin/admin-ajax.php",
             data=dict(
                 action="nd_getchapters",
                 mygrr="1",
                 mypostid=postid,
             ),
         )
-        soup = self.make_soup(response)
-        yield from reversed(soup.select(".sp_li_chp a[data-id]"))
+        soup = self.scraper.make_soup(response)
+        return reversed(soup.select(".sp_li_chp a[data-id]"))
 
-    def select_chapter_tags_in_browser(self):
-        self.cleanup_prompts()
-        el = self.browser.find(".my_popupreading_open")
-        el.scroll_into_view()
-        el.click()
+    # def select_chapter_tags_in_browser(self):
+    #     self.cleanup_prompts()
+    #     el = self.browser.find(".my_popupreading_open")
+    #     el.scroll_into_view()
+    #     el.click()
 
-        self.browser.wait("#my_popupreading li.sp_li_chp a[data-id]")
-        tag = self.browser.find("#my_popupreading").as_tag()
-        yield from reversed(tag.select("li.sp_li_chp a[data-id]"))
+    #     self.browser.wait("#my_popupreading li.sp_li_chp a[data-id]")
+    #     tag = self.browser.find("#my_popupreading").as_tag()
+    #     yield from reversed(tag.select("li.sp_li_chp a[data-id]"))
 
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        title = tag.text.strip().title()
-        title_match = self._title_matcher.match(title)
+    def parse_chapter_item(self, soup: PageSoup, chapter_id: int) -> Chapter:
+        title = soup.text.strip().title()
+        title_match = _title_matcher.match(title)
         if title_match:  # skip simple titles
             title = f"Chapter {title_match.group(2)}"
         return Chapter(
-            id=id,
             title=title,
-            url=self.absolute_url(tag["href"]),
+            id=chapter_id,
+            url=self.absolute_url(soup["href"]),
         )
 
-    def download_chapter_body_in_soup(self, chapter: Chapter) -> None:
-        response = self.get_response(chapter.url, allow_redirects=True)
-        logger.info("%s => %s", chapter.url, response.url)
+    def download_chapter(self, chapter: Chapter) -> None:
+        response = self.scraper.get(chapter.url)
         chapter.url = response.url
-        return self.parse_chapter_body(chapter, response.text)
+        try:
+            constructor = ctx.sources.get_crawler(chapter.url)
+            crawler = ctx.sources.init_crawler(constructor)
+            crawler.scraper.signal = self.scraper.signal
+            crawler.download_chapter(chapter)
+        except Exception:
+            logger.info("Failed to download chapter using original crawler.", exc_info=True)
+            from readability import Document  # type: ignore
 
-    def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
-        self.visit(chapter.url)
-        for i in range(30):
-            if not self.browser.current_url.startswith(chapter.url):
-                break
-            time.sleep(1)
-
-        logger.info("%s => %s", chapter.url, self.browser.current_url)
-        chapter.url = self.browser.current_url
-        return self.parse_chapter_body(chapter, self.browser.html)
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        return super().select_chapter_body(soup)
-
-    def parse_chapter_body(self, chapter: Chapter, text: str) -> str:
-        if "re-library" in chapter.url and "translations" not in chapter.url:
-            self._custom_fix_for_relibrary(chapter)
-
-        crawler = self._find_original_crawler(chapter)
-        if hasattr(crawler, "download_chapter_body_in_soup"):
-            return crawler.download_chapter_body_in_soup(chapter)
-        elif hasattr(crawler, "download_chapter_body"):
-            return crawler.download_chapter_body(chapter)
-        else:
-            reader = Document(text)
+            reader = Document(response.text)
             chapter.title = reader.short_title()
             summary = reader.summary(html_partial=True)
-            return automation_warning + summary
+            return _automation_warning + summary
 
-    def _find_original_crawler(self, chapter: Chapter):
-        from lncrawl.core.sources import crawler_list, prepare_crawler
+    # def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
+    #     self.visit(chapter.url)
+    #     for i in range(30):
+    #         if not self.browser.current_url.startswith(chapter.url):
+    #             break
+    #         time.sleep(1)
 
-        parsed_url = urlparse(chapter.url)
-        base_url = "%s://%s/" % (parsed_url.scheme, parsed_url.hostname)
-
-        if base_url in crawler_list:
-            try:
-                crawler = self._cached_crawlers.get(base_url)
-                if not crawler:
-                    crawler = prepare_crawler(chapter.url)
-                    self._cached_crawlers[base_url] = crawler
-                return crawler
-            except Exception as e:
-                logger.info("Failed with original crawler.", e)
-
-        return None
-
-    def _custom_fix_for_relibrary(self, chapter: Chapter):
-        soup = self.get_soup(chapter.url)
-        page_el = soup.select_one(".entry-content > p[style*='center'] a")
-        post_url = self.absolute_url(page_el["href"])
-        novel_url = f"https://re-library.com/translations/{post_url.split('/')[4:5][0]}"
-        if "page_id" in post_url:
-            chapter.url = post_url
-        else:
-            response = self.get_soup(novel_url)
-            chapters = response.select(".page_item > a")
-            chapter.url = chapters[chapter.id - 1]["href"]
+    #     logger.info("%s => %s", chapter.url, self.browser.current_url)
+    #     chapter.url = self.browser.current_url
+    #     return self.parse_chapter_body(chapter, self.browser.html)

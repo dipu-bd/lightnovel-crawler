@@ -1,15 +1,17 @@
+import json
 import logging
 from functools import cached_property
 from io import BytesIO
-from typing import Any, Callable, Dict, Iterable, List, Optional, Type
+from typing import Any, Callable, Dict, Iterable, List, MutableMapping, Optional, Type
 
 from PIL import Image
 from requests.cookies import RequestsCookieJar
+from requests.utils import CaseInsensitiveDict
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.wait import WebDriverWait
 
 from ..context import ctx
-from ..exceptions import ScraperErrorGroup
+from ..exceptions import LNException, ScraperErrorGroup
 from ..webdriver import ChromeOptions, WebDriver, create_new
 from ..webdriver.elements import EC, By, WebElement
 from ..webdriver.job_queue import check_active
@@ -292,23 +294,15 @@ class Browser:
 class BrowserTemplate(SoupTemplate):
     """Attempts to crawl using scraper first, on failure use the browser."""
 
-    def __init__(
-        self,
-        origin: str,
-        workers: Optional[int] = None,
-        parser: Optional[str] = None,
-        headless: bool = False,
-        timeout: Optional[int] = 120,
-    ) -> None:
-        super().__init__(
-            origin=origin,
-            workers=workers,
-            parser=parser,
-        )
-        self.timeout = timeout
-        self.headless = headless
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
         self._override_scraper_get_soup()
         self._override_scraper_get_image()
+        self._override_scraper_get_json()
+
+    # ------------------------------------------------------------------------- #
+    # Override scraper methods
+    # ------------------------------------------------------------------------- #
 
     def _override_scraper_get_soup(self) -> None:
         origin_method = self.scraper.get_soup
@@ -343,6 +337,45 @@ class BrowserTemplate(SoupTemplate):
 
         setattr(self.scraper, "get_image", get_image)
 
+    def _override_scraper_get_json(self) -> None:
+        origin_method = self.scraper.get_json
+
+        def get_json(url: str, headers: MutableMapping = {}, **kwargs):
+            try:
+                return origin_method(url, headers, **kwargs)
+            except ScraperErrorGroup:
+                if ctx.logger.is_debug:
+                    ctx.logger.error("Failed to get image", exc_info=True)
+
+                script = """
+                    const url = arguments[0];
+                    const headers = arguments[1] || {};
+                    const callback = arguments[arguments.length - 1];
+                    fetch(url, {credentials: 'include', headers})
+                    .then(r => r.text())
+                    .then(t => callback(t))
+                    .catch(e => callback(JSON.stringify({__error__: String(e)})));
+                """
+                headers = CaseInsensitiveDict(headers or {})
+                text = self.browser.execute_js(script, url, headers, is_async=True)
+                if not text:
+                    raise LNException(f"Empty response from {url}")
+
+                try:
+                    data = json.loads(text)
+                except Exception as e:
+                    raise LNException(f"Invalid JSON from {url}") from e
+
+                if isinstance(data, dict) and data.get("__error__"):
+                    raise LNException(f"Browser fetch error for {url}: {data['__error__']}")
+                return data
+
+        setattr(self.scraper, "get_json", get_json)
+
+    # ------------------------------------------------------------------------- #
+    # Browser properties
+    # ------------------------------------------------------------------------- #
+
     @property
     def using_browser(self) -> bool:
         return "browser" in self.__dict__ and self.browser.active
@@ -359,11 +392,7 @@ class BrowserTemplate(SoupTemplate):
         _max_workers = self.taskman.workers
         self.taskman.init_executor(1)
 
-        browser = Browser(
-            headless=self.headless,
-            timeout=self.timeout,
-            cookie_store=self.scraper.cookies,
-        )
+        browser = Browser(cookie_store=self.scraper.cookies)
 
         _visit = browser.visit
         _close = browser.close

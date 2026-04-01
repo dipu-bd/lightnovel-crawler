@@ -1,7 +1,7 @@
 import re
-from typing import Iterable, List, Optional
+from typing import Iterable, Optional
 
-from ..core import BrowserTemplate, Chapter, Novel, PageSoup, SearchResult, Volume
+from ..core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
 from ..exceptions import LNException
 
 digit_regex = re.compile(r"page[-,=](\d+)")

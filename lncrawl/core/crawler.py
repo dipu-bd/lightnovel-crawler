@@ -12,6 +12,7 @@ from ..context import ctx
 from ..exceptions import LNException
 from ..utils.imgen import generate_cover_image
 from ..utils.text_tools import format_title, normalize
+from ..utils.url_tools import extract_base
 from .cleaner import TextCleaner
 from .models import Chapter, Novel, SearchResult, Volume
 from .scraper import Scraper
@@ -29,7 +30,6 @@ class Crawler(ABC):
     can_search = False
 
     chapters_per_volume = 100
-    auto_create_volumes = True
     auto_generate_cover = True
 
     is_disabled = False
@@ -40,9 +40,9 @@ class Crawler(ABC):
     # ------------------------------------------------------------------------- #
     def __init__(
         self,
-        origin: str,
         workers: Optional[int] = None,
         parser: Optional[str] = None,
+        origin: Optional[str] = None,
     ) -> None:
         """
         Creates a standalone Crawler instance.
@@ -55,8 +55,8 @@ class Crawler(ABC):
         """
         if isinstance(self.base_url, str):
             self.base_url = [self.base_url]
-        if origin not in self.base_url:
-            raise ValueError(f"Origin {origin} is not in base url {self.base_url}")
+        if not origin or origin not in self.base_url:
+            origin = self.base_url[0]
 
         self.cleaner = TextCleaner()
         self.taskman = TaskManager(workers=workers)
@@ -100,20 +100,21 @@ class Crawler(ABC):
             return url
 
         scheme = url.split(":")[0]
-        if scheme:
+        if scheme in ("http", "https"):
             return url
 
-        origin = self.scraper.origin.rstrip("/")
+        base_url = extract_base(self.scraper.last_soup_url).strip("/")
         if url.startswith("//"):
-            scheme = origin.split(":")[0]
+            scheme = base_url.split(":")[0]
             return f"{scheme}:{url}"
+
         if url.startswith("/"):
-            return origin + url
+            return base_url + url
 
-        if page_url:
-            return f"{page_url.rstrip('/')}/{url}"
+        if not page_url:
+            page_url = self.scraper.last_soup_url.rstrip("/")
 
-        return url
+        return f"{page_url.rstrip('/')}/{url}"
 
     def download_image(self, url: str, output_file: Path) -> None:
         """Download an image from the source and save it to the target file."""
@@ -167,23 +168,15 @@ class Crawler(ABC):
         novel.author = ", ".join(filter(None, map(format_title, novel.author.split(","))))
         novel.tags = list(filter(None, map(normalize, set(novel.tags or []))))
 
-        if novel.chapters:
-            novel.chapters.sort(key=lambda x: x.id)
-        else:
-            novel.chapters = []
+        total_volumes = len(novel.volumes)
+        total_chapters = len(novel.chapters)
 
-        if novel.volumes:
-            novel.volumes.sort(key=lambda x: x.id)
-            last_id = novel.volumes[-1].id
-            novel.volumes.append(Volume(id=last_id + 1, title="Extras"))
-        elif self.auto_create_volumes:
-            total_chapters = len(novel.chapters)
+        novel.volumes.sort(key=lambda x: x.id)
+        novel.chapters.sort(key=lambda x: x.id)
+
+        if total_volumes == 0 and total_chapters > 0:
             total_volumes = math.ceil(total_chapters / self.chapters_per_volume)
             novel.volumes = [Volume(id=i + 1) for i in range(total_volumes)]
-        elif novel.chapters:
-            novel.volumes = [Volume(id=1, title="All")]
-        else:
-            novel.volumes = []
 
         vol_id_map: Dict[int, int] = {}
         for index, volume in enumerate(novel.volumes):
@@ -193,17 +186,24 @@ class Crawler(ABC):
             volume.chapters = 0
             volume.title = format_title(volume.title) or f"Volume {volume.id}"
 
+        unknown_volume = Volume(
+            id=total_volumes + 1,
+            title="Unknown",
+            crawler_version=crawler_version,
+            chapters=0,
+        )
+
         for index, chapter in enumerate(novel.chapters):
             chapter.crawler_version = crawler_version
             chapter.id = index + 1
             chapter.title = format_title(chapter.title) or f"Chapter {chapter.id}"
 
-            if self.auto_create_volumes:
+            if chapter.volume not in vol_id_map:
                 chapter.volume = 1 + (index // self.chapters_per_volume)
-            if chapter.volume:
-                vol_index = vol_id_map.get(chapter.volume) or -1
-            else:
-                vol_index = -1
+
+            vol_index = vol_id_map.get(chapter.volume, -1)
+            if vol_index == -1 and novel.volumes[-1] != unknown_volume:
+                novel.volumes.append(unknown_volume)
 
             volume = novel.volumes[vol_index]
             chapter.volume = volume.id

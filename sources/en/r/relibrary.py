@@ -1,19 +1,23 @@
 import logging
-from typing import Generator
 
-from lncrawl.core import Chapter, PageSoup
-from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
+from lncrawl.core import BrowserTemplate, Chapter, PageSoup
 
 logger = logging.getLogger(__name__)
 
 
-class ReLibraryCrawler(ChapterOnlyBrowserTemplate):
+class ReLibraryCrawler(BrowserTemplate):
     base_url = [
         "https://re-library.com/",
     ]
 
+    novel_title_selector = ".entry-title"
+    novel_cover_selector = ".entry-content table img"
+    novel_author_selector = ".entry-content a[href*='/nauthor/']"
+    chapter_list_selector = ".page_item > a"
+    chapter_body_selector = ".entry-content"
+
     def initialize(self) -> None:
-        self.init_executor(1)
+        self.taskman.init_executor(1)
         self.cleaner.bad_css.update(
             [
                 "tr",
@@ -29,42 +33,16 @@ class ReLibraryCrawler(ChapterOnlyBrowserTemplate):
             }
         )
 
-    def parse_title(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".entry-title")
-        return tag.text.strip()
-
-    def parse_cover(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".entry-content table img")
-        src = tag.get("data-src") or tag.get("src")
-        return self.absolute_url(src)
-
-    def parse_authors(self, soup: PageSoup) -> Generator[str, None, None]:
-        for a in soup.select_one(".entry-content").select("a[href*='/nauthor/']"):
-            yield a.text.strip()
-
-    def select_chapter_tags(self, soup: PageSoup) -> Generator[PageSoup, None, None]:
-        yield from soup.select(".page_item > a")
-
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        return Chapter(
-            id=id,
-            title=tag.text.strip(),
-            url=self.absolute_url(tag["href"]),
-        )
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        return soup.select_one(".entry-content")
-
-    def parse_chapter_body(self, chapter: Chapter, text: str) -> str:
+    def parse_chapter_body(self, soup: PageSoup, chapter: Chapter) -> None:
         if "translations" not in chapter.url:
-            soup = self.get_soup(chapter.url)
+            soup = self.scraper.get_soup(chapter.url)
             page_el = soup.select_one(".entry-content > p[style*='center'] a")
             post_url = self.absolute_url(page_el["href"])
             if "page_id" in post_url:
                 chapter.url = post_url
             else:
                 novel_url = f"https://re-library.com/translations/{post_url.split('/')[4:5][0]}"
-                response = self.get_soup(novel_url)
+                response = self.scraper.get_soup(novel_url)
                 chapters = response.select(".page_item > a")
                 chapter.url = chapters[chapter.id - 1]["href"]
-        return super().parse_chapter_body(chapter, text)
+        return super().parse_chapter_body(soup, chapter)

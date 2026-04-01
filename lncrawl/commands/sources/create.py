@@ -194,14 +194,14 @@ def _generate_stub(name: str, base_url: str, features: List[Feature]):
 import logging
 from typing import Iterable, Optional
 
-from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate Volume
 
 logger = logging.getLogger(__name__)
 
 """
 
     content += f"""
-class {name}(BrowserTemplate):
+class {name}(SoupTemplate):
     \"\"\"Scraper first; falls back to a real browser when requests fail.\"\"\"
 
     base_url = ["{base_url}"]
@@ -229,7 +229,6 @@ class {name}(BrowserTemplate):
 
     if Feature.has_volumes in features:
         content += """
-    auto_create_volumes = False
     volume_list_selector = ""
     volume_title_selector = ""
 """
@@ -288,10 +287,10 @@ class {name}(BrowserTemplate):
     return content
 
 
-# Context for OpenAI: how Crawler / SoupTemplate / BrowserTemplate fit together (keep in sync with lncrawl.core).
+# Context for OpenAI: how Crawler / SoupTemplate fit together (keep in sync with lncrawl.core).
 _OPENAI_LNCRAWL_REFERENCE = """
 ### Class hierarchy
-`Crawler` → `CrawlerTemplate` → `SoupTemplate` → `BrowserTemplate` (the generated class extends BrowserTemplate).
+`Crawler` → `CrawlerTemplate` → `SoupTemplate` (the generated class extends SoupTemplate).
 
 ### Crawler (lncrawl.core.crawler) — excerpt
 ```python
@@ -370,23 +369,6 @@ class SoupTemplate(CrawlerTemplate):
 
 Override any `parse_*`, `select_*`, `build_search_url`, or `download_chapter` when selectors alone are insufficient.
 
-### BrowserTemplate (lncrawl.core.browser) — excerpt
-Extends SoupTemplate. Replaces `scraper.get_soup` (and `get_image`) so HTTP is tried first; on scrape failure it launches Chrome, visits the URL, and parses `browser.soup`. Requires browser support in config when fallback runs.
-
-```python
-class BrowserTemplate(SoupTemplate):
-    def __init__(
-        self,
-        origin: str,
-        workers: Optional[int] = None,
-        parser: Optional[str] = None,
-        headless: bool = False,
-        timeout: Optional[int] = 120,
-    ) -> None:
-        super().__init__(origin=origin, workers=workers, parser=parser)
-        # patches get_soup / get_image for browser fallback
-```
-
 ### Models & types (lncrawl.core)
 - `Novel`: url, title, cover_url, author, tags, synopsis/summary, volumes, chapters, ...
 - `Chapter`: id, url, title, volume (optional id), body
@@ -404,7 +386,7 @@ def _fill_with_openai(url: str, stub: str) -> str:
         f"You are given the URL of a novel-hosting website: `{url}`.\n\n"
         "Fetch the site content, find a representative novel page and a chapter page, then return a "
         "completed version of the class below.\n\n"
-        "The crawler subclasses `BrowserTemplate` (lncrawl.core): HTTP first, browser fallback on failure. "
+        "The crawler subclasses `SoupTemplate` (lncrawl.core): HTTP first, browser fallback on failure. "
         "Under that is `SoupTemplate`, which already implements `read_novel`, `download_chapter`, and `search` "
         "using **class-level CSS selector strings** when those are set correctly.\n\n"
         "**Priority 1 — selectors (do these first):** Fill every selector attribute that appears in the stub "

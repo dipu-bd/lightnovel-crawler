@@ -20,7 +20,7 @@ class NovelMTLTemplate(BrowserTemplate):
     novel_tags_selector = ".categories a"
     novel_synopsis_selector = ".summary .content"
 
-    chapter_list_pagination_selector = "#chapters .pagination li a"
+    pagination_selector = "#chapters .pagination a[href]"
     chapter_list_selector = "ul.chapter-list li a"
     chapter_title_selector = ".chapter-title"
     chapter_body_selector = ".chapter-content"
@@ -51,33 +51,28 @@ class NovelMTLTemplate(BrowserTemplate):
         novel: Novel,
         volume: Optional[Volume] = None,
     ) -> Iterable[PageSoup]:
-        paginations = list(soup.select(self.chapter_list_pagination_selector))
+        yield from soup.select(self.chapter_list_selector)
+
+        paginations = soup.select(self.pagination_selector)
         if not paginations:
-            yield from soup.select(self.chapter_list_selector)
             return
 
-        last_page = str(paginations[-1]["href"])
-        last_page_qs = parse_qs(urlparse(last_page).query)
-        max_page = int(last_page_qs["page"][0])
-        wjm = last_page_qs["wjm"][0]
+        last_page_url = self.absolute_url(paginations[-1]["href"])
+        common_page_url = last_page_url.split("?")[0]
+        params = parse_qs(urlparse(last_page_url).query)
+        page_count = int(params["page"][0])
 
-        futures: List[Future] = []
-        for i in range(max_page + 1):
-            payload = {
-                "page": i,
-                "wjm": wjm,
-                "_": self.cur_time,
-                "X-Requested-With": "XMLHttpRequest",
-            }
-            url = f"{self.scraper.origin}e/extend/fy.php?{urlencode(payload)}"
-            f = self.taskman.submit_task(self.scraper.get_soup, url)
-            futures.append(f)
+        futures: List[Future[PageSoup]] = []
+        for p in range(1, page_count + 1):
+            params["page"] = [str(p)]
+            url = f"{common_page_url}?{urlencode(params, doseq=True)}"
+            task = self.taskman.submit_task(self.scraper.get_soup, url)
+            futures.append(task)
 
         for page in self.taskman.resolve_as_generator(
             futures,
             desc="TOC",
             unit="page",
         ):
-            if page is None:
-                raise LNException("Failed to get page")
-            yield from page.select(self.chapter_list_selector)
+            if page:
+                yield from page.select(self.chapter_list_selector)

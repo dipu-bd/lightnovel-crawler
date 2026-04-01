@@ -28,8 +28,12 @@ def crawl(
         "--noin",
         help="Disable interactive mode",
     ),
-    range_all: Optional[bool] = typer.Option(None, "--all", is_flag=True, help="Download all chapters"),
-    range_first: Optional[int] = typer.Option(None, "--first", min=1, metavar="N", help="Download first few chapters"),
+    range_all: Optional[bool] = typer.Option(
+        None, "--all", is_flag=True, help="Download all chapters"
+    ),
+    range_first: Optional[int] = typer.Option(
+        None, "--first", min=1, metavar="N", help="Download first few chapters"
+    ),
     range_last: Optional[int] = typer.Option(
         None,
         "--last",
@@ -139,21 +143,37 @@ def crawl(
 
     # download chapters
     chapter_futures = [
-        crawler.submit_task(ctx.crawler.fetch_chapter, user.id, chapter_id, crawler=crawler)
+        crawler.taskman.submit_task(
+            ctx.crawler.fetch_chapter,
+            user.id,
+            chapter_id,
+            crawler=crawler,
+        )
         for chapter_id in sorted(set(chapters))
     ]
     chapter_image_ids = []
-    for chapter in crawler.resolve_as_generator(chapter_futures, desc="Chapters", unit=" c"):
+    for chapter in crawler.taskman.resolve_as_generator(
+        chapter_futures, desc="Chapters", unit=" c"
+    ):
         if not chapter:
             continue
         chapter_image_ids += ctx.images.list_ids(chapter_id=chapter.id)
 
     # download chapter images
     image_futures = [
-        crawler.submit_task(ctx.crawler.fetch_image, user.id, image_id, crawler=crawler)
+        crawler.taskman.submit_task(
+            ctx.crawler.fetch_image,
+            user.id,
+            image_id,
+            crawler=crawler,
+        )
         for image_id in sorted(set(chapter_image_ids))
     ]
-    crawler.resolve_futures(image_futures, desc="Images", unit=" img")
+    crawler.taskman.resolve_futures(
+        image_futures,
+        desc="Images",
+        unit=" img",
+    )
 
     # create artifacts
     format_set = set(formats)
@@ -181,7 +201,7 @@ def crawl(
         else:
             print(f"[red]Failed to generate [b]{fmt.value}[/b][/red]")
 
-    if not non_interactive:
+    if not non_interactive and _prompt_open_artifact_folder():
         cover_file = ctx.files.resolve(novel.cover_file)
         open_folder(cover_file.parent / "artifacts")
 
@@ -252,7 +272,11 @@ def _prompt_range_selection(novel: Novel, attempt=0) -> List[str]:
         volumes = ctx.volumes.list(novel.id)
         voluem_ids = _prompt_select_volumes(volumes)
         if voluem_ids:
-            return [chapter_id for volume_id in voluem_ids for chapter_id in ctx.chapters.list_ids(volume_id=volume_id)]
+            return [
+                chapter_id
+                for volume_id in voluem_ids
+                for chapter_id in ctx.chapters.list_ids(volume_id=volume_id)
+            ]
 
     if choice == "chapters":
         chapters = ctx.chapters.list(novel_id=novel.id)
@@ -409,8 +433,8 @@ def _prompt_format_selection() -> List[OutputFormat]:
     return result
 
 
-# def _prompt_open_artifact_folder() -> bool:
-#     return questionary.confirm(
-#         "Open the artifact folder?",
-#         default=True,
-#     ).ask(kbi_msg='')
+def _prompt_open_artifact_folder() -> bool:
+    return questionary.confirm(
+        "Open the artifact folder?",
+        default=True,
+    ).ask(kbi_msg="")
