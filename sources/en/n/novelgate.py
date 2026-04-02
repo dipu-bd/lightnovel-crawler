@@ -16,7 +16,7 @@ class NovelGate(LegacyCrawler):
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "%20")
-        soup = self.get_soup(search_url % (self.home_url, query))
+        soup = self.get_soup(search_url % (self.scraper.origin, query))
 
         results = []
         for tab in soup.select(".film-item"):
@@ -66,7 +66,11 @@ class NovelGate(LegacyCrawler):
                 ch_title = a.text
                 ch_id = [int(x) for x in re.findall(r"\d+", ch_title)]
                 ch_id = ch_id[0] if len(ch_id) else len(self.chapters) + 1
-                self.chapters.append(Chapter(id=ch_id, volume=vol_id, title=ch_title, url=self.absolute_url(a["href"])))
+                self.chapters.append(
+                    Chapter(
+                        id=ch_id, volume=vol_id, title=ch_title, url=self.absolute_url(a["href"])
+                    )
+                )
 
         logger.debug("%d chapters and %d volumes found", len(self.chapters), len(self.volumes))
 

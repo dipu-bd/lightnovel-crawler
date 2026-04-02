@@ -14,7 +14,7 @@ class WuxiaCoCrawler(LegacyCrawler):
     ]
 
     def initialize(self):
-        self.home_url = "https://m.wuxiaworld.co/"
+        self.scraper.origin = "https://m.wuxiaworld.co/"
         self.init_executor(1)
         self.cleaner.bad_text_regex.update(
             [
@@ -24,7 +24,7 @@ class WuxiaCoCrawler(LegacyCrawler):
         )
 
     def search_novel(self, query):
-        soup = self.get_soup(f"{self.home_url}search/{quote(query)}/1")
+        soup = self.get_soup(f"{self.scraper.origin}search/{quote(query)}/1")
         results = []
         for li in soup.select("ul.result-list li.list-item"):
             a = li.select_one("a.book-name")["href"]
@@ -59,7 +59,11 @@ class WuxiaCoCrawler(LegacyCrawler):
             chap_id = len(self.chapters) + 1
             possible_name = a.select_one(".chapter-name")
             self.chapters.append(
-                Chapter(id=chap_id, url=self.absolute_url(a["href"]), title=possible_name.text if possible_name else "")
+                Chapter(
+                    id=chap_id,
+                    url=self.absolute_url(a["href"]),
+                    title=possible_name.text if possible_name else "",
+                )
             )
 
     def download_chapter_body(self, chapter):

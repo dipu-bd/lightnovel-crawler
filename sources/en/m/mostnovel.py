@@ -1,72 +1,52 @@
 # -*- coding: utf-8 -*-
-import logging
+from typing import Iterable, Optional
 
-from lncrawl.core import Chapter, LegacyCrawler, Volume
-
-logger = logging.getLogger(__name__)
-search_url = "https://mostnovel.com/?s=%s&post_type=wp-manga"
+from lncrawl.core import Novel, PageSoup, Volume
+from lncrawl.templates.wordpress import WordpressTemplate
 
 
-class MostNovel(LegacyCrawler):
+class MostNovel(WordpressTemplate):
     base_url = "https://mostnovel.com/"
+    chapter_body_selector = ".text-left"
 
-    def initialize(self):
+    def initialize(self) -> None:
         self.cleaner.bad_css.update(
             [
                 "div.skiptranslate",
             ]
         )
 
-    def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
+    def parse_search_item_title(self, soup: PageSoup) -> str:
+        tag = soup.select_one(self.search_item_title_selector)
+        return tag.text.rsplit(" ", 1)[0].strip()
 
-        results = []
-        for tab in soup.select(".c-tabs-item__content"):
-            a = tab.select_one(".post-title h3 a")
-            latest = tab.select_one(".latest-chap .chapter a").text
-            votes = tab.select_one(".rating .total_votes").text
-            results.append(
-                {
-                    "title": a.text.rsplit(" ", 1)[0].strip(),
-                    "url": self.absolute_url(a["href"]),
-                    "info": "%s | Rating: %s" % (latest, votes),
-                }
-            )
-
-        return results
-
-    def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
-
+    def parse_title(self, soup: PageSoup, novel: Novel) -> None:
         image = soup.select_one(".summary_image a img")
+        if image and image.get("alt"):
+            novel.title = image["alt"].strip()
+        else:
+            super().parse_title(soup, novel)
 
-        self.novel_title = image["alt"]
-        logger.info("Novel title: %s", self.novel_title)
+    def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
+        image = soup.select_one(".summary_image a img")
+        if image:
+            src = image.get("data-src") or image.get("src")
+            if src:
+                novel.cover_url = self.absolute_url(src)
+                return
+        super().parse_cover(soup, novel)
 
-        self.novel_cover = self.absolute_url(image["data-src"])
-        logger.info("Novel cover: %s", self.novel_cover)
-
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.author-content a[href*="manga-author"]')])
-        logger.info("%s", self.novel_author)
-
-        chapter_list_url = self.absolute_url("ajax/chapters", self.novel_url)
-        soup = self.post_soup(chapter_list_url, headers={"accept": "*/*"})
-        for a in reversed(
-            soup.select('.wp-manga-chapter a[href*="/manga"]')
-        ):  # This stops it from trying to download locked premium chapters.
-            for span in a.findAll("span"):  # Removes time and date from chapter title.
+    def select_chapter_tags(
+        self,
+        soup: PageSoup,
+        novel: Novel,
+        volume: Optional[Volume] = None,
+    ) -> Iterable[PageSoup]:
+        chapter_list_url = self.absolute_url("ajax/chapters", novel.url)
+        ch_soup = self.scraper.post_soup(chapter_list_url, headers={"accept": "*/*"})
+        tags = []
+        for a in reversed(ch_soup.select('.wp-manga-chapter a[href*="/manga"]')):
+            for span in a.find_all("span"):
                 span.extract()
-            chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append(Volume(id=vol_id))
-            self.chapters.append(
-                Chapter(id=chap_id, volume=vol_id, title=a.text.strip(), url=self.absolute_url(a["href"]))
-            )
-
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        contents = soup.select_one(".text-left")
-        return self.cleaner.extract_contents(contents)
+            tags.append(a)
+        return tags

@@ -16,7 +16,7 @@ class FoxtellerCrawler(LegacyCrawler):
 
     # NOTE: Disabled because it takes too long
     # def search_novel(self, query):
-    #     self.get_response(self.home_url)    # for cookies
+    #     self.get_response(self.scraper.origin)    # for cookies
 
     #     query = query.lower().replace(' ', '+')
     #     soup = self.post_soup(search_url, data=dict(query=query))
@@ -84,7 +84,7 @@ class FoxtellerCrawler(LegacyCrawler):
             }
         )
         headers = {
-            "Origin": self.home_url.strip("/"),
+            "Origin": self.scraper.origin.strip("/"),
             "Referer": chapter["url"].strip("/"),
             "X-XSRF-TOKEN": self.cookies["XSRF-TOKEN"],
             "X-CSRF-TOKEN": soup.select_one('meta[name="csrf-token"]')["content"],

@@ -10,7 +10,7 @@ class NovelkuCrawler(LegacyCrawler):
     base_url = "https://novelku.id/"
 
     def initialize(self):
-        self.home_url = "https://novelku.id/"
+        self.scraper.origin = "https://novelku.id/"
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

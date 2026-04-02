@@ -42,11 +42,11 @@ class sixnineshu(LegacyCrawler):
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))
         data = f"searchkey={query}&searchtype=all"
-        headers["Origin"] = self.home_url
-        headers["Referer"] = search_url % self.home_url
+        headers["Origin"] = self.scraper.origin
+        headers["Referer"] = search_url % self.scraper.origin
 
         soup = self.post_soup(
-            search_url % self.home_url,
+            search_url % self.scraper.origin,
             headers=headers,
             data=data,
             encoding="gbk",
@@ -58,7 +58,8 @@ class sixnineshu(LegacyCrawler):
                 {
                     "title": novel.select_one("h3 a:not([imgbox])").text.title(),
                     "url": self.absolute_url(novel.select_one("h3 a")["href"]),
-                    "info": "Latest: %s" % novel.select_one("div.zxzj p").text.replace("最近章节", ""),
+                    "info": "Latest: %s"
+                    % novel.select_one("div.zxzj p").text.replace("最近章节", ""),
                 }
             )
 

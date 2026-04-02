@@ -4,7 +4,7 @@ import re
 
 import requests
 
-from lncrawl.core.crawler import Chapter, LegacyCrawler, SearchResult
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 
 logger = logging.getLogger(__name__)
 

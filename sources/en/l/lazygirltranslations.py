@@ -42,7 +42,7 @@ class LazyGirlTranslationsCrawler(LegacyCrawler):
             author = next(filter(lambda x: "Author:" in x, t.split("\n")), "")
             self.novel_author = author.replace("Author: ", "")
 
-        for a in soup.select(f'.wp-block-column a[href^="{self.home_url}"]'):
+        for a in soup.select(f'.wp-block-column a[href^="{self.scraper.origin}"]'):
             chap_id = 1 + len(self.chapters)
             vol_id = 1 + len(self.chapters) // 100
             if chap_id % 100 == 1:

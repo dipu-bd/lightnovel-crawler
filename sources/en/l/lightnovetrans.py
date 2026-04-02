@@ -1,46 +1,25 @@
 # -*- coding: utf-8 -*-
-
-import logging
-from typing import Generator, Union
-
-from lncrawl.core import Chapter, PageSoup, Volume
-from lncrawl.templates.soup.general import GeneralSoupTemplate
-
-logger = logging.getLogger(__name__)
+from lncrawl.core import BrowserTemplate, Novel, PageSoup
 
 
-class LNTCrawler(GeneralSoupTemplate):
+class LNTCrawler(BrowserTemplate):
     base_url = ["https://lightnovelstranslations.com/"]
 
     has_manga = False
     has_mtl = False
 
-    def get_novel_soup(self) -> PageSoup:
-        return self.get_soup(f"{self.novel_url}/?tab=table_contents")
+    chapter_title_selector = ".novel_title"
+    novel_cover_selector = ".novel-image img"
+    novel_author_selector = ".entry-content > p"
+    chapter_list_selector = ".novel_list_chapter_content li.unlock a"
+    chapter_body_selector = ".text_story"
 
-    def parse_title(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".novel_title")
-        assert tag
-        return tag.text.strip()
+    def build_novel_url(self, novel: Novel) -> str:
+        return f"{self.scraper.origin}{novel.url}/?tab=table_contents"
 
-    def parse_cover(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".novel-image img")
-        assert tag
-        if tag.has_attr("data-src"):
-            return self.absolute_url(tag["data-src"])
-        if tag.has_attr("src"):
-            return self.absolute_url(tag["src"])
-
-    def parse_authors(self, soup: PageSoup) -> Generator[str, None, None]:
-        for p in soup.select(".entry-content > p"):
+    def parse_author(self, soup: PageSoup, novel: Novel) -> None:
+        authors = []
+        for p in soup.select(self.novel_author_selector):
             if "Author" in p.text:
-                yield p.text.replace("Author:", "").strip()
-
-    def parse_chapter_list(self, soup: PageSoup) -> Generator[Union[Chapter, Volume], None, None]:
-        _id = 0
-        for a in soup.select(".novel_list_chapter_content li.unlock a"):
-            _id += 1
-            yield Chapter(id=_id, url=self.absolute_url(a["href"]), title=a.text.strip())
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        return soup.select_one(".text_story")
+                authors.append(p.text.replace("Author:", "").strip())
+        novel.author = ", ".join(authors)

@@ -15,7 +15,7 @@ class BeautymangaCrawler(LegacyCrawler):
     ]
 
     def search_novel(self, query):
-        search_url = f"{self.home_url}search-autocomplete?action=wp-manga-search-manga&title={quote_plus(query)}"
+        search_url = f"{self.scraper.origin}search-autocomplete?action=wp-manga-search-manga&title={quote_plus(query)}"
         data = self.get_json(search_url)
         results = []
         for item in data["data"]:
@@ -40,10 +40,12 @@ class BeautymangaCrawler(LegacyCrawler):
             self.novel_cover = self.absolute_url(possible_image["data-src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = ", ".join([a.text for a in soup.select('.author-content a[href="/author/"]')])
+        self.novel_author = ", ".join(
+            [a.text for a in soup.select('.author-content a[href="/author/"]')]
+        )
         logger.info("Novel author: %s", self.novel_author)
 
-        soup = self.get_soup(f"{self.home_url}ajax-list-chapter?mangaID={self.novel_id}")
+        soup = self.get_soup(f"{self.scraper.origin}ajax-list-chapter?mangaID={self.novel_id}")
         for a in reversed(soup.select(".wp-manga-chapter a")):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1

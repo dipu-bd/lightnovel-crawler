@@ -15,7 +15,7 @@ class Novel35Crawler(LegacyCrawler):
         self.cleaner.bad_css.update(['div[align="left"]', 'img[src*="proxy?container=focus"]'])
 
     def search_novel(self, query):
-        soup = self.get_soup(f"{self.home_url}search?keyword={quote(query)}")
+        soup = self.get_soup(f"{self.scraper.origin}search?keyword={quote(query)}")
         results = []
         for div in soup.select("#list-page .archive .list-truyen > .row"):
             a = div.select_one(".truyen-title a")

@@ -5,8 +5,7 @@ from concurrent import futures
 
 import execjs
 
-from lncrawl.core import PageSoup
-from lncrawl.core.crawler import Chapter, LegacyCrawler
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup
 
 logger = logging.getLogger(__name__)
 
@@ -55,7 +54,9 @@ class LNMTLCrawler(LegacyCrawler):
         logger.debug("Novel title = %s", self.novel_title)
 
         try:
-            self.novel_cover = self.absolute_url(soup.find("img", {"title": self.novel_title})["src"])
+            self.novel_cover = self.absolute_url(
+                soup.find("img", {"title": self.novel_title})["src"]
+            )
         except Exception:
             pass  # novel cover is not so important to raise errors
         logger.info("Novel cover = %s", self.novel_cover)
@@ -95,7 +96,10 @@ class LNMTLCrawler(LegacyCrawler):
             raise Exception("Failed parsing volume list")
 
     def download_chapter_list(self):
-        futures_to_wait = [self.executor.submit(self.download_chapters_per_volume, volume) for volume in self.volumes]
+        futures_to_wait = [
+            self.executor.submit(self.download_chapters_per_volume, volume)
+            for volume in self.volumes
+        ]
 
         possible_chapters = {}
         for future in futures.as_completed(futures_to_wait):

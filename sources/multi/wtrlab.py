@@ -68,7 +68,9 @@ class WtrLab(LegacyCrawler):
 
         # Check if "tags" exists; if not, use the "genres" field as a fallback.
         if "tags" in metadata["props"]["pageProps"]:
-            self.novel_tags = [tag["title"] for tag in metadata["props"]["pageProps"]["tags"] if tag.get("title")]
+            self.novel_tags = [
+                tag["title"] for tag in metadata["props"]["pageProps"]["tags"] if tag.get("title")
+            ]
         else:
             # Convert numeric genre IDs to strings (or use a mapping if available)
             self.novel_tags = list(map(str, series_data.get("genres", [])))
@@ -97,7 +99,7 @@ class WtrLab(LegacyCrawler):
             )
 
     def download_chapter_body(self, chapter):
-        url = f"{self.home_url}/api/reader/get"
+        url = f"{self.scraper.origin}/api/reader/get"
         payload = json.dumps(
             {
                 "language": "en",

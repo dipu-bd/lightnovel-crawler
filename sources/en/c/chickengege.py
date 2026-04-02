@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core.crawler import Chapter, LegacyCrawler
+from lncrawl.core import Chapter, LegacyCrawler
 from lncrawl.exceptions import LNException
 
 logger = logging.getLogger(__name__)

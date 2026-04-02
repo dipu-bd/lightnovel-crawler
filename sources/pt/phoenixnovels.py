@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-import logging
+from typing import Optional
 
-from lncrawl.core import Chapter, LegacyCrawler, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, Volume
+from lncrawl.exceptions import LNException
+from lncrawl.templates.wordpress import WordpressTemplate
 
-logger = logging.getLogger(__name__)
-search_url = "https://phoenixnovels.com.br/?s=%s&post_type=wp-manga"
 
-
-class PhoenixNovels(LegacyCrawler):
+class PhoenixNovels(WordpressTemplate):
     base_url = "https://phoenixnovels.com.br/"
+    novel_author_selector = '.author-content a[href*="novel-author"]'
+    auto_create_volumes = False
 
-    def initialize(self):
+    def initialize(self) -> None:
         self.cleaner.bad_css.update(
             [
                 "div.padSection",
@@ -18,69 +19,47 @@ class PhoenixNovels(LegacyCrawler):
             ]
         )
 
-    def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
-
-        results = []
-        for tab in soup.select(".c-tabs-item__content"):
-            a = tab.select_one(".post-title h3 a")
-            if not a:
-                continue
-            latest = tab.select_one(".latest-chap .chapter a")
-            votes = tab.select_one(".rating .total_votes")
-            results.append(
-                {
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                    "info": "%s | Rating: %s"
-                    % (latest.text.strip() if latest else "N/A", votes.text.strip() if votes else "0"),
-                }
-            )
-
-        return results
-
-    def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
-
-        possible_title = soup.select_one("#manga-title h1")
-        if not possible_title:
-            raise Exception("Título da novel não encontrado com o seletor '#manga-title h1'.")
-        for span in possible_title.select("span"):
+    def parse_title(self, soup: PageSoup, novel: Novel) -> None:
+        tag = soup.select_one("#manga-title h1")
+        if not tag:
+            raise LNException("Título da novel não encontrado com o seletor '#manga-title h1'.")
+        for span in tag.select("span"):
             span.extract()
-        self.novel_title = possible_title.text.strip()
-        logger.info("Novel title: %s", self.novel_title)
+        novel.title = tag.text.strip()
 
-        # CORRIGIR CAPA
+    def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
         image = soup.select_one(".summary_image img")
         if image:
             cover_url = image.get("data-src") or image.get("src")
-            self.novel_cover = self.absolute_url(cover_url)
-        logger.info("Novel cover: %s", self.novel_cover)
+            if cover_url:
+                novel.cover_url = self.absolute_url(cover_url)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
-        logger.info("Author(s): %s", self.novel_author)
+    def parse_search_item_info(self, soup: PageSoup) -> str:
+        latest = soup.select_one(".latest-chap .chapter a")
+        votes = soup.select_one(".rating .total_votes")
+        return "%s | Rating: %s" % (
+            latest.text.strip() if latest else "N/A",
+            votes.text.strip() if votes else "0",
+        )
 
-        chapter_list_url = self.absolute_url("ajax/chapters", self.novel_url)
-        soup = self.post_soup(chapter_list_url, headers={"accept": "*/*"})
-
+    def parse_volume_list(self, soup: PageSoup, novel: Novel) -> None:
+        novel.volumes = []
+        novel.chapters = []
+        chapter_list_url = self.absolute_url("ajax/chapters", novel.url)
+        ch_soup = self.scraper.post_soup(chapter_list_url, headers={"accept": "*/*"})
         chap_id = 0
         volume_id = 0
-
-        for li in reversed(soup.select("li.parent.has-child")):
+        for li in reversed(ch_soup.select("li.parent.has-child")):
             volume_id += 1
             volume_title = li.select_one("a.has-child")
             if not volume_title:
                 continue
-            self.volumes.append(Volume(id=volume_id, title=volume_title.text.strip()))
-
-            chapter_links = li.select(".wp-manga-chapter a[href]")
-            for a in reversed(chapter_links):
+            novel.volumes.append(Volume(id=volume_id, title=volume_title.text.strip()))
+            for a in reversed(li.select(".wp-manga-chapter a[href]")):
                 for span in a.find_all("span"):
                     span.extract()
                 chap_id += 1
-                self.chapters.append(
+                novel.chapters.append(
                     Chapter(
                         id=chap_id,
                         volume=volume_id,
@@ -89,7 +68,12 @@ class PhoenixNovels(LegacyCrawler):
                     )
                 )
 
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        contents = soup.select_one(".reading-content") or soup.select_one(".text-left")
-        return self.cleaner.extract_contents(contents)
+    def download_chapter(self, chapter: Chapter) -> None:
+        soup = self.scraper.get_soup(self.build_chapter_url(chapter))
+        contents: Optional[PageSoup] = soup.select_one(".reading-content") or soup.select_one(
+            ".text-left"
+        )
+        if contents:
+            self.parse_chapter_body(contents, chapter)
+        else:
+            chapter.body = ""

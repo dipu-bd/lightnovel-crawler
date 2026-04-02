@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
-import logging
-from urllib.parse import quote
-
-from lncrawl.core import Chapter, LegacyCrawler, Volume
-
-logger = logging.getLogger(__name__)
-search_url = "https://meownovel.com/?s=%s&post_type=wp-manga&op=&author=&artist=&release=&adult="
+from lncrawl.core import Novel, PageSoup
+from lncrawl.templates.wordpress import WordpressTemplate
 
 
-class MeowNovel(LegacyCrawler):
+class MeowNovel(WordpressTemplate):
     base_url = "https://meownovel.com/"
+    chapter_body_selector = "div.text-left"
+    novel_author_selector = '.author-content a[href*="novel-author"]'
+    madara_search_quote_mode = "quote"
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update(
@@ -30,58 +28,13 @@ class MeowNovel(LegacyCrawler):
             ]
         )
 
-    def search_novel(self, query):
-        soup = self.get_soup(search_url % quote(query.lower()))
+    def parse_title(self, soup: PageSoup, novel: Novel) -> None:
+        tag = soup.select_one('meta[property="og:title"]')
+        novel.title = tag["content"].rsplit(" | ", 1)[0].strip()
 
-        results = []
-        for tab in soup.select(".c-tabs-item__content"):
-            a = tab.select_one(".post-title h3 a")
-            latest = tab.select_one(".latest-chap .chapter a").text
-            votes = tab.select_one(".rating .total_votes").text
-            results.append(
-                {
-                    "title": a.text.rsplit(" | ", 1)[0].strip(),
-                    "url": self.absolute_url(a["href"]),
-                    "info": "%s | Rating: %s" % (latest, votes),
-                }
-            )
-
-        return results
-
-    def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
-
-        possible_title = soup.select_one('meta[property="og:title"]')
-        self.novel_title = possible_title["content"]
-        self.novel_title = self.novel_title.rsplit(" | ", 1)[0].strip()
-        logger.info("Novel title: %s", self.novel_title)
-
-        possible_image = soup.select_one('meta[property="og:image"]')
-        if possible_image:
-            self.novel_cover = possible_image["content"]
-        logger.info("Novel cover: %s", self.novel_cover)
-
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
-        logger.info("%s", self.novel_author)
-
-        self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]
-        logger.info("Novel id: %s", self.novel_id)
-
-        response = self.submit_form(self.novel_url.strip("/") + "/ajax/chapters")
-        soup = self.make_soup(response)
-        for a in reversed(soup.select(".wp-manga-chapter a")):
-            chap_id = 1 + len(self.chapters)
-            vol_id = 1 + len(self.chapters) // 100
-            if chap_id % 100 == 1:
-                self.volumes.append(Volume(id=vol_id))
-
-            self.chapters.append(
-                Chapter(id=chap_id, volume=vol_id, title=a.text.strip(), url=self.absolute_url(a["href"]))
-            )
-
-    def download_chapter_body(self, chapter):
-        logger.info("Visiting %s", chapter["url"])
-        soup = self.get_soup(chapter["url"])
-        contents = soup.select_one("div.text-left")
-        return self.cleaner.extract_contents(contents)
+    def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
+        tag = soup.select_one('meta[property="og:image"]')
+        if tag and tag.get("content"):
+            novel.cover_url = self.absolute_url(tag["content"])
+        else:
+            super().parse_cover(soup, novel)

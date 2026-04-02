@@ -1,8 +1,6 @@
 import logging
 
-from lncrawl.core import LegacyCrawler
-from lncrawl.core.chapter import Chapter
-from lncrawl.core.volume import Volume
+from lncrawl.core import Chapter, LegacyCrawler, Volume
 from lncrawl.exceptions import LNException
 
 logger = logging.getLogger(__name__)

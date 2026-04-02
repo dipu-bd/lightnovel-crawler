@@ -26,7 +26,7 @@ class NovelSalaCrawler(LegacyCrawler):
             results.append(
                 {
                     "title": title,
-                    "url": self.home_url.rstrip("/") + a["href"],
+                    "url": self.scraper.origin.rstrip("/") + a["href"],
                     "info": info,
                 }
             )
@@ -40,7 +40,9 @@ class NovelSalaCrawler(LegacyCrawler):
         json_data = json.loads(script_data)
 
         buildId = json_data["buildId"]
-        book_data = json_data["props"]["pageProps"]["relayData"][0][1]["data"]["book"]["edges"][0]["node"]
+        book_data = json_data["props"]["pageProps"]["relayData"][0][1]["data"]["book"]["edges"][0][
+            "node"
+        ]
 
         self.novel_title = book_data["title"]
         self.novel_cover = book_data["coverLg"]
@@ -50,14 +52,16 @@ class NovelSalaCrawler(LegacyCrawler):
 
         slug = book_data["slug"]
 
-        volume_chapters = self.post_json(graphql_url, data=graphql_body % (slug, 1))["data"]["chapterListChunks"]
+        volume_chapters = self.post_json(graphql_url, data=graphql_body % (slug, 1))["data"][
+            "chapterListChunks"
+        ]
 
         for vol_id, volume in enumerate(volume_chapters, 1):
             if vol_id != 1:
                 volume = (
-                    self.post_json(graphql_url, data=graphql_body % (slug, volume["startChapNum"]))["data"][
-                        "chapterListChunks"
-                    ]
+                    self.post_json(graphql_url, data=graphql_body % (slug, volume["startChapNum"]))[
+                        "data"
+                    ]["chapterListChunks"]
                 )[vol_id - 1]
 
             self.volumes.append(Volume(id=vol_id))
@@ -68,8 +72,11 @@ class NovelSalaCrawler(LegacyCrawler):
                         id=chapter["chapNum"],
                         volume=vol_id,
                         title=f"Chapter {chapter['chapNum']}: " + chapter["title"],
-                        url=self.home_url.rstrip("/") + chapter["url"],
-                        json_url=(data_url % (buildId, book_data["url"]) + f"chapter-{chapter['chapNum']}.json"),
+                        url=self.scraper.origin.rstrip("/") + chapter["url"],
+                        json_url=(
+                            data_url % (buildId, book_data["url"])
+                            + f"chapter-{chapter['chapNum']}.json"
+                        ),
                     )
                 )
 

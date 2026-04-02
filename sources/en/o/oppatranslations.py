@@ -11,7 +11,7 @@ class OppaTranslationsCrawler(LegacyCrawler):
     base_url = ["https://www.oppatranslations.com/"]
 
     def initialize(self):
-        self.home_url = "https://www.oppatranslations.com/"
+        self.scraper.origin = "https://www.oppatranslations.com/"
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -47,7 +47,12 @@ class OppaTranslationsCrawler(LegacyCrawler):
                         }
                     )
                 self.chapters.append(
-                    Chapter(id=chap_id, volume=vol_id, title=a.text.strip(), url=self.absolute_url(a["href"]))
+                    Chapter(
+                        id=chap_id,
+                        volume=vol_id,
+                        title=a.text.strip(),
+                        url=self.absolute_url(a["href"]),
+                    )
                 )
 
     def download_chapter_body(self, chapter):
@@ -60,4 +65,9 @@ class OppaTranslationsCrawler(LegacyCrawler):
 
         contents.select_one("div center").extract()
 
-        return re.sub("[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]", "", str(contents), flags=re.UNICODE)
+        return re.sub(
+            "[⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〺〻㐀-䶵一-鿃豈-鶴侮-頻並-龎]",
+            "",
+            str(contents),
+            flags=re.UNICODE,
+        )

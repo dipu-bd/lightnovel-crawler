@@ -16,8 +16,8 @@ class MtledNovelsCrawler(LegacyCrawler):
     def login(self, username, password):
         """login to LNMTL"""
         # Get the login page
-        logger.info("Visiting %s", self.home_url)
-        self.get_response(self.home_url)
+        logger.info("Visiting %s", self.scraper.origin)
+        self.get_response(self.scraper.origin)
 
         # Send post request to login
         logger.info("Logging in...")

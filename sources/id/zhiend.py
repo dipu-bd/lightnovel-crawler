@@ -10,7 +10,7 @@ class ZhiEnd(LegacyCrawler):
     base_url = ["http://zhi-end.blogspot.com/", "http://zhi-end.blogspot.co.id/"]
 
     def initialize(self):
-        self.home_url = "http://zhi-end.blogspot.com/"
+        self.scraper.origin = "http://zhi-end.blogspot.com/"
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

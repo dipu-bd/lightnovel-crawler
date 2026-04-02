@@ -15,10 +15,10 @@ class YukiNovelCrawler(LegacyCrawler):
     ]
 
     def initialize(self):
-        self.home_url = "https://yukinovel.id/"
+        self.scraper.origin = "https://yukinovel.id/"
 
     def read_novel_info(self):
-        self.novel_url = self.novel_url.replace("https://yukinovel.me/", self.home_url)
+        self.novel_url = self.novel_url.replace("https://yukinovel.me/", self.scraper.origin)
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 

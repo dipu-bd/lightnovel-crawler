@@ -15,13 +15,13 @@ class UukanshuOnlineSJ(LegacyCrawler):
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
-        soup = self.get_soup(novel_search_url % (self.home_url, query))
+        soup = self.get_soup(novel_search_url % (self.scraper.origin, query))
         results = []
 
         for data in soup.select("#bookList li"):
             title = data.select_one(".book-title a.name")["title"]
             author = data.select_one(".book-title .aut").get_text()
-            url = self.home_url + data.select_one(".book-title a.name")["href"]
+            url = self.scraper.origin + data.select_one(".book-title a.name")["href"]
 
             results.append(
                 {
@@ -73,7 +73,7 @@ class UukanshuOnlineSJ(LegacyCrawler):
                         id=chap_id,
                         volume=vol_id,
                         title=a.text,
-                        url=self.home_url + a["href"],
+                        url=self.scraper.origin + a["href"],
                     )
                 )
 

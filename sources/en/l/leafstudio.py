@@ -14,7 +14,9 @@ class LiteroticaCrawler(LegacyCrawler):
         self.init_executor(ratelimit=2)
 
     def search_novel(self, query) -> List[SearchResult]:
-        soup = self.get_soup(f"{self.home_url}novels?search={query}&type=&language=&status=&sort=")
+        soup = self.get_soup(
+            f"{self.scraper.origin}novels?search={query}&type=&language=&status=&sort="
+        )
         results = []
         for item in soup.select("a.novel-item"):
             results.append(

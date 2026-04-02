@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
-
 import logging
-from typing import Generator
 
-from lncrawl.core import Chapter, PageSoup
-from lncrawl.templates.browser.chapter_only import ChapterOnlyBrowserTemplate
+from lncrawl.core import Novel, PageSoup, SoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class SnowyCodexCrawler(ChapterOnlyBrowserTemplate):
+class SnowyCodexCrawler(SoupTemplate):
     base_url = "https://snowycodex.com/"
+
+    novel_title_selector = ".entry-content h2"
+    novel_cover_selector = ".entry-content img"
+    novel_synopsis_selector = ".entry-content p"
+    chapter_list_selector = ".entry-content a[href*='/chapter']"
+    chapter_body_selector = ".entry-content"
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update(
@@ -27,34 +30,6 @@ class SnowyCodexCrawler(ChapterOnlyBrowserTemplate):
             }
         )
 
-    def parse_title(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".entry-content h2")
-        return tag.text.strip()
-
-    def parse_cover(self, soup: PageSoup) -> str:
-        tag = soup.select_one(".entry-content img")
-        if tag.has_attr("data-src"):
-            return self.absolute_url(tag["data-src"])
-        elif tag.has_attr("src"):
-            return self.absolute_url(tag["src"])
-        return ""
-
-    def parse_authors(self, soup: PageSoup) -> Generator[str, None, None]:
-        tag = soup.find("strong", string="Author:")  # type: ignore
-        if tag:
-            next = tag.find_next_sibling()
-            if next:
-                yield next.get_text(strip=True)
-
-    def select_chapter_tags(self, soup: PageSoup):
-        yield from soup.select(".entry-content a[href*='/chapter']")
-
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        return Chapter(
-            id=id,
-            title=tag.text.strip(),
-            url=self.absolute_url(tag["href"]),
-        )
-
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        return soup.select_one(".entry-content")
+    def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
+        tag = soup.find("strong", string="Author:")
+        novel.author = tag.next_sibling.text

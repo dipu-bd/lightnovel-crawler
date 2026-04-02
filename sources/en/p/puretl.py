@@ -23,14 +23,16 @@ class PureTL(LegacyCrawler):
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
-        slug = re.search(rf"{self.home_url}(.*?)(/|\?|$)", self.novel_url).group(1)
+        slug = re.search(rf"{self.scraper.origin}(.*?)(/|\?|$)", self.novel_url).group(1)
 
         title_tag = soup.select_one("meta[property='og:title']")
         if not title_tag:
             raise LNException("No title found")
 
         self.novel_title = (
-            title_tag["content"].replace("— Pure Love Translations English Translated Novels", "").strip()
+            title_tag["content"]
+            .replace("— Pure Love Translations English Translated Novels", "")
+            .strip()
         )
 
         possible_image = soup.select_one("meta[property='og:image']")
@@ -52,7 +54,11 @@ class PureTL(LegacyCrawler):
         content = chapter_div.find_parent("section")
         for a in content.select(f"a[href*='{slug}/']"):
             self.chapters.append(
-                Chapter(id=len(self.chapters) + 1, url=self.absolute_url(a["href"]), title=a.text.strip())
+                Chapter(
+                    id=len(self.chapters) + 1,
+                    url=self.absolute_url(a["href"]),
+                    title=a.text.strip(),
+                )
             )
 
     def download_chapter_body(self, chapter):

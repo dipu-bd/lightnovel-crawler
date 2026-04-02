@@ -17,7 +17,7 @@ class MangatoonMobiCrawler(LegacyCrawler):
     ]
 
     def initialize(self):
-        self.home_url = "https://mangatoon.mobi"
+        self.scraper.origin = "https://mangatoon.mobi"
 
     def read_novel_info(self):
         novel_id = self.novel_url.split("/")[5]

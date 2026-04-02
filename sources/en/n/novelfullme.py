@@ -15,7 +15,7 @@ class NovelFullMeCrawler(LegacyCrawler):
     base_url = "https://novelfull.me/"
 
     def search_novel(self, query) -> List[SearchResult]:
-        soup = self.get_soup(f"{self.home_url}search?q={quote_plus(query.lower())}")
+        soup = self.get_soup(f"{self.scraper.origin}search?q={quote_plus(query.lower())}")
 
         return [
             SearchResult(title=a.text.strip(), url=self.absolute_url(a["href"]))
@@ -25,7 +25,7 @@ class NovelFullMeCrawler(LegacyCrawler):
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
-        slug = re.search(rf"{self.home_url}(.*?)(/|\?|#|$)", self.novel_url).group(1)
+        slug = re.search(rf"{self.scraper.origin}(.*?)(/|\?|#|$)", self.novel_url).group(1)
 
         title_tag = soup.select_one(".book-info .name h1")
         if not title_tag:
@@ -41,10 +41,12 @@ class NovelFullMeCrawler(LegacyCrawler):
 
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = ", ".join([a.text.strip() for a in soup.select(".detail a[href*='/authors/'] span")])
+        self.novel_author = ", ".join(
+            [a.text.strip() for a in soup.select(".detail a[href*='/authors/'] span")]
+        )
         logger.info("Novel author: %s", self.novel_author)
 
-        soup = self.get_soup(f"{self.home_url}api/novels/{slug}/chapters?source=detail")
+        soup = self.get_soup(f"{self.scraper.origin}api/novels/{slug}/chapters?source=detail")
 
         for a in reversed(soup.select("#chapter-list > li > a")):
             self.chapters.append(

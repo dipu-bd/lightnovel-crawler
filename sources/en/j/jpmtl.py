@@ -6,7 +6,9 @@ from lncrawl.core import Chapter, LegacyCrawler
 logger = logging.getLogger(__name__)
 
 book_url = "https://jpmtl.com/books/%s"
-chapters_url = "https://jpmtl.com/v2/chapter/%s/list?state=published&structured=true&direction=false"
+chapters_url = (
+    "https://jpmtl.com/v2/chapter/%s/list?state=published&structured=true&direction=false"
+)
 
 
 class JpmtlCrawler(LegacyCrawler):
@@ -14,7 +16,7 @@ class JpmtlCrawler(LegacyCrawler):
     base_url = "https://jpmtl.com/"
 
     def initialize(self):
-        self.home_url = "https://jpmtl.com"
+        self.scraper.origin = "https://jpmtl.com"
 
     def read_novel_info(self):
         self.novel_id = self.novel_url.split("/")[-1]
@@ -34,7 +36,9 @@ class JpmtlCrawler(LegacyCrawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = soup.select_one(".book-sidebar__author .book-sidebar__info").text.strip()
+        self.novel_author = soup.select_one(
+            ".book-sidebar__author .book-sidebar__info"
+        ).text.strip()
         logger.info("Novel author: %s", self.novel_author)
 
         toc_url = chapters_url % self.novel_id

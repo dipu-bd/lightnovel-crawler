@@ -12,7 +12,7 @@ class NovelGoCrawler(LegacyCrawler):
     base_url = "https://novelgo.id/"
 
     def initialize(self):
-        self.home_url = "https://novelgo.id/"
+        self.scraper.origin = "https://novelgo.id/"
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
@@ -69,7 +69,8 @@ class NovelGoCrawler(LegacyCrawler):
         #    })
 
         data = self.get_json(
-            "https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s" % book_id
+            "https://novelgo.id/wp-json/noveils/v1/chapters?paged=1&perpage=10000&category=%s"
+            % book_id
         )
 
         for chapter in data:

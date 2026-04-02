@@ -1,95 +1,61 @@
 # -*- coding: utf-8 -*-
-"""
-
-This is a sample using the SearchableSoupTemplate and ChapterOnlySoupTemplate as the template.
-It should be able to do searching and generating only chapter list excluding volumes list.
-
-Put your source file inside the language folder. The `en` folder has too many
-files, therefore it is grouped using the first letter of the domain name.
-"""
-
 import logging
 import re
-from typing import Generator, List
+from typing import Iterable, Optional
 from urllib.parse import urlencode
 
-from lncrawl.core import Chapter, PageSoup, SearchResult
-from lncrawl.templates.soup.chapter_only import ChapterOnlySoupTemplate
-from lncrawl.templates.soup.searchable import SearchableSoupTemplate
+from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class MyCrawlerName(SearchableSoupTemplate, ChapterOnlySoupTemplate):
+class NovelbuddyCrawler(BrowserTemplate):
     base_url = ["https://novelbuddy.io/"]
 
     has_mtl = True
 
-    def initialize(self) -> None:
-        # You can customize `TextCleaner` and other necessary things.
-        pass
+    search_item_list_selector = "div.book-item"
+    search_item_title_selector = "div.title h3 a[href]"
+    search_item_url_selector = search_item_title_selector
 
-    def select_search_items(self, query: str) -> Generator[PageSoup, None, None]:
-        # The query here is the input from user.
-        params = {"q": query}
-        soup = self.get_soup(f"{self.home_url}search?{urlencode(params)}")
-        yield from soup.select("div.book-item")
-        pass
+    novel_title_selector = "div.name.box h1"
+    novel_cover_selector = "div.img-cover img[data-src]"
+    novel_summary_selector = "div.section-body.summary span"
+    chapter_body_selector = "div.chapter__content div.content-inner"
 
-    def parse_search_item(self, tag: PageSoup) -> SearchResult:
-        # The tag here comes from self.select_search_items
-        return SearchResult(
-            title=tag.select_one("div.title h3 a").text.strip(),
-            url=f"{self.home_url}{tag.select_one('div.title h3 a')['href']}",
-        )
+    def build_search_url(self, query: str) -> str:
+        return f"{self.scraper.origin}search?{urlencode({'q': query})}"
 
-    def get_novel_soup(self) -> PageSoup:
-        return self.get_soup(self.novel_url)
+    def parse_author(self, soup: PageSoup, novel: Novel) -> None:
+        for p in soup.select("div.meta.box.mt-1.p-10"):
+            if p.select_one("strong").text.strip("Author"):
+                authors = [a.text for a in p.select("a")]
+                novel.author = ", ".join(authors)
 
-    def parse_title(self, soup: PageSoup) -> str:
-        return soup.select_one("div.name.box h1").text.strip()
-
-    def parse_cover(self, soup: PageSoup) -> str:
-        return f"https:{soup.select_one('div.img-cover img')['data-src']}"
-
-    def parse_authors(self, soup: PageSoup) -> List[str]:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
-        if soup.select("div.meta.box.mt-1.p-10")[0].select_one("strong") != "Authors":
-            return ["Unknown"]
-        authors = soup.select("div.meta.box.mt-1.p-10")[0].select("a")
-        return [author.text.strip() for author in authors]
-
-    def parse_genres(self, soup: PageSoup) -> List[str]:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
+    def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
         for p in soup.select("div.meta.box.mt-1.p-10 p"):
-            if p.select_one("strong") == "Genre":
-                return [a.text.strip() for a in p.select("a")]
-        return ["Unknown"]
+            if p.select_one("strong").text.strip("Genre"):
+                novel.tags = [a.text.strip() for a in p.select("a")]
 
-    def parse_summary(self, soup: PageSoup) -> str:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
-        return soup.select_one("div.section-body.summary span").text.strip()
-
-    def select_chapter_tags(self, soup: PageSoup) -> Generator[PageSoup, None, None]:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
-        script = soup.select_one("div.layout script").text
+    def select_chapter_tags(
+        self, tag: PageSoup, novel: Novel, volume: Optional[Volume] = None
+    ) -> Iterable[PageSoup]:
+        script = tag.select_one("div.layout script").text
         pattern = r"(var|let|const)\s+(\w+)\s*=\s*(.*?);"
         matches = re.findall(pattern, script)
+
         variables = {}
         for _, name, value in matches:
             variables[name] = value.strip()
-        chapters_soup = self.get_soup(f"https://novelbuddy.io/api/manga/{variables['bookId']}/chapters?source=detail")
-        yield from chapters_soup.select("ul li")[::-1]
-        pass
 
-    def parse_chapter_item(self, tag: PageSoup, id: int) -> Chapter:
-        # The soup here is the result of `self.get_soup(self.novel_url)`
-        return Chapter(
-            id=id,
-            title=tag.select_one("strong").text.strip(),
-            url=f"{self.home_url}{tag.select_one('a')['href']}",
+        soup = self.scraper.get_soup(
+            f"https://novelbuddy.io/api/manga/{variables['bookId']}/chapters?source=detail"
         )
+        return soup.select("ul li")[::-1]
 
-    def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        # The soup here is the result of `self.get_soup(chapter.url)`
-        return soup.select_one("div.chapter__content div.content-inner")
+    def parse_chapter_item(self, soup: PageSoup, chapter_id: int) -> Chapter:
+        return Chapter(
+            id=chapter_id,
+            title=soup.select_one("strong").text,
+            url=f"{self.scraper.origin}{soup.select_one('a')['href']}",
+        )

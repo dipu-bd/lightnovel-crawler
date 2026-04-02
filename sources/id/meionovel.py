@@ -11,7 +11,7 @@ class MeionovelCrawler(LegacyCrawler):
     base_url = ["https://meionovel.id/", "https://meionovels.com/"]
 
     def initialize(self):
-        self.home_url = "https://meionovels.com/"
+        self.scraper.origin = "https://meionovels.com/"
 
     def search_novel(self, query):
         data = self.submit_form(

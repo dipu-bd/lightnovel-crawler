@@ -28,11 +28,11 @@ class PiaoTian(LegacyCrawler):
         query = urllib.parse.quote(query.encode("gbk"))
         search = urllib.parse.quote(" 搜 索 ".encode("gbk"))
         data = f"searchtype=articlename&searchkey={query}&Submit={search}"
-        headers["Origin"] = self.home_url
-        headers["Referer"] = novel_search_url % self.home_url
+        headers["Origin"] = self.scraper.origin
+        headers["Referer"] = novel_search_url % self.scraper.origin
 
         response = self.post_response(
-            novel_search_url % self.home_url,
+            novel_search_url % self.scraper.origin,
             headers=headers,
             data=data,
         )
@@ -41,7 +41,7 @@ class PiaoTian(LegacyCrawler):
         results = []
 
         # if there is only one result, the search page redirects to bookinfo page of that result
-        if response.url.startswith("%sbookinfo/" % self.home_url):
+        if response.url.startswith("%sbookinfo/" % self.scraper.origin):
             author = soup.select("div#content table tr td[width]")[2].get_text()
             author = author.replace("\xa0", "").replace("作 者：", "")
             results.append(
@@ -70,7 +70,7 @@ class PiaoTian(LegacyCrawler):
     def read_novel_info(self):
         # Transform bookinfo page into chapter list page
         # https://www.piaotia.com/bookinfo/8/8866.html -> https://www.piaotia.com/html/8/8866/
-        if self.novel_url.startswith("%sbookinfo/" % self.home_url):
+        if self.novel_url.startswith("%sbookinfo/" % self.scraper.origin):
             self.novel_url = self.novel_url.replace("/bookinfo/", "/html/").replace(".html", "/")
 
         if self.novel_url.endswith("index.html"):
@@ -86,9 +86,9 @@ class PiaoTian(LegacyCrawler):
         self.novel_author = author.text.replace("作者：", "").strip()
         logger.info("Novel author: %s", self.novel_author)
 
-        ids = self.novel_url.replace("%shtml/" % self.home_url, "").split("/")
-        logger.debug(self.home_url)
-        self.novel_cover = cover_image_url % (self.home_url, ids[0], ids[1], ids[1])
+        ids = self.novel_url.replace("%shtml/" % self.scraper.origin, "").split("/")
+        logger.debug(self.scraper.origin)
+        self.novel_cover = cover_image_url % (self.scraper.origin, ids[0], ids[1], ids[1])
         logger.info("Novel cover: %s", self.novel_cover)
 
         for a in soup.select("div.centent ul li a"):
@@ -109,7 +109,9 @@ class PiaoTian(LegacyCrawler):
         headers = {"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9"}
         raw_html = self.get_response(chapter.url, headers=headers)
         raw_html.encoding = "gbk"
-        raw_text = raw_html.text.replace('<script language="javascript">GetFont();</script>', '<div id="content">')
+        raw_text = raw_html.text.replace(
+            '<script language="javascript">GetFont();</script>', '<div id="content">'
+        )
         self.last_soup_url = chapter.url
         soup = self.make_soup(raw_text)
 

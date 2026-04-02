@@ -19,7 +19,7 @@ class MtlReaderCrawler(LegacyCrawler):
     ]
 
     def search_novel(self, query):
-        soup = self.get_soup(self.home_url)
+        soup = self.get_soup(self.scraper.origin)
 
         form_data = {}
         for input in soup.select('form[action$="/search"] input'):
@@ -69,7 +69,11 @@ class MtlReaderCrawler(LegacyCrawler):
             if len(self.chapters) % 100 == 0:
                 self.volumes.append(Volume(id=vol_id))
             chap_title = re.sub(r"^(\d+[\s:\-]+)", "", a.text.strip())
-            self.chapters.append(Chapter(id=chap_id, volume=vol_id, title=chap_title, url=self.absolute_url(a["href"])))
+            self.chapters.append(
+                Chapter(
+                    id=chap_id, volume=vol_id, title=chap_title, url=self.absolute_url(a["href"])
+                )
+            )
 
     def download_chapter_body(self, chapter):
         self.get_response(chapter["url"])

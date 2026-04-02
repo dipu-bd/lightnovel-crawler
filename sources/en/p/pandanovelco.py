@@ -14,10 +14,10 @@ class PandaNovelCo(NovelPubTemplate):
     # (without that wrong error is raised and browser search isn't triggered)
     def select_search_items(self, query: str) -> Generator[PageSoup, None, None]:
         self.submit_form(
-            f"{self.home_url}lnsearchlive",
+            f"{self.scraper.origin}lnsearchlive",
             data={"inputContent": query},
             headers={
-                "referer": f"{self.home_url}search",
+                "referer": f"{self.scraper.origin}search",
             },
         )
 

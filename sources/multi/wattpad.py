@@ -17,11 +17,11 @@ class WattpadCrawler(LegacyCrawler):
     ]
 
     def initialize(self):
-        self.home_url = "https://www.wattpad.com/"
+        self.scraper.origin = "https://www.wattpad.com/"
 
     def login(self, username_or_email: str, password_or_token: str) -> None:
         resp = self.submit_form(
-            f"{self.home_url}login?nextUrl=/home",
+            f"{self.scraper.origin}login?nextUrl=/home",
             data={
                 "username": username_or_email,
                 "password": password_or_token,
@@ -34,7 +34,7 @@ class WattpadCrawler(LegacyCrawler):
         self.set_header("authorization", apiAuthKey[0])
 
         data = self.get_json(
-            f"{self.home_url}api/v3/internal/current_user?fields=email,username,name",
+            f"{self.scraper.origin}api/v3/internal/current_user?fields=email,username,name",
         )
         logger.debug("current user", data)
         if username_or_email.lower() != data["username"].lower():
@@ -46,7 +46,7 @@ class WattpadCrawler(LegacyCrawler):
         id_no = search_id.search(self.novel_url)
         if not id_no:
             raise LNException("No story ID found")
-        response = self.get_response(f"{self.home_url}api/v3/stories/{id_no.group()}")
+        response = self.get_response(f"{self.scraper.origin}api/v3/stories/{id_no.group()}")
         story_info = response.json()
 
         self.novel_title = story_info["title"]
@@ -69,7 +69,7 @@ class WattpadCrawler(LegacyCrawler):
 
     def download_chapter_body(self, chapter):
         chapter_id = urlparse(chapter["url"]).path.split("-")[0].strip("/")
-        info_url = f"{self.home_url}v4/parts/{chapter_id}?fields=id,title,pages,text_url&_={int(time() * 1000)}"
+        info_url = f"{self.scraper.origin}v4/parts/{chapter_id}?fields=id,title,pages,text_url&_={int(time() * 1000)}"
 
         logger.info("Getting info %s", info_url)
         response = self.get_response(info_url)

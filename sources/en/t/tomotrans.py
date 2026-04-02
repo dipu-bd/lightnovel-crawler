@@ -19,14 +19,16 @@ class TomoTransCrawler(LegacyCrawler):
         self.novel_title = possible_title.text
         logger.info("Novel title: %s", self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one("article figure.wp-block-image img")["data-orig-file"])
+        self.novel_cover = self.absolute_url(
+            soup.select_one("article figure.wp-block-image img")["data-orig-file"]
+        )
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = "Tomo Translations"
         logger.info("Novel author: %s", self.novel_author)
 
         volumes = set()
-        for a in soup.select('article section.entry a[href^="%s"]' % self.home_url):
+        for a in soup.select('article section.entry a[href^="%s"]' % self.scraper.origin):
             chap_id = len(self.chapters) + 1
             chap_url = self.absolute_url(a["href"])
             possible_vol = re.findall(r"-volume-(\d+)-", chap_url)
@@ -34,7 +36,9 @@ class TomoTransCrawler(LegacyCrawler):
                 continue
             vol_id = int(possible_vol[0])
             volumes.add(vol_id)
-            self.chapters.append(Chapter(id=chap_id, volume=vol_id, url=chap_url, title=a.text.strip()))
+            self.chapters.append(
+                Chapter(id=chap_id, volume=vol_id, url=chap_url, title=a.text.strip())
+            )
 
         self.volumes = [Volume(id=x) for x in volumes]
 

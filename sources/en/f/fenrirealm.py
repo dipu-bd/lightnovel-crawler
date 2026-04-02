@@ -14,7 +14,9 @@ class FenriRealm(LegacyCrawler):
     ]
 
     def search_novel(self, query):
-        search_url = f"{self.home_url.rstrip('/')}/api/novels/filter?page=1&per_page=10&search={query}"
+        search_url = (
+            f"{self.scraper.origin.rstrip('/')}/api/novels/filter?page=1&per_page=10&search={query}"
+        )
         response = self.get_response(search_url).text
         data = json.loads(response)
 
@@ -24,7 +26,7 @@ class FenriRealm(LegacyCrawler):
                 results.append(
                     {
                         "title": novel["title"],
-                        "url": f"{self.home_url.rstrip('/')}/series/{novel['slug']}",
+                        "url": f"{self.scraper.origin.rstrip('/')}/series/{novel['slug']}",
                         "info": f"Author: {novel['user']['name']}, Status: {novel['status']}",
                     }
                 )
@@ -51,7 +53,7 @@ class FenriRealm(LegacyCrawler):
         # Extract novel cover
         cover_match = re.search(r'cover:"([^"]+)"', js_dict)
         if cover_match:
-            self.novel_cover = self.home_url.rstrip("/") + "/" + cover_match.group(1)
+            self.novel_cover = self.scraper.origin.rstrip("/") + "/" + cover_match.group(1)
 
         # Extract novel synopsis
         synopsis_match = re.search(r'description:"([^"]+)"', js_dict)
@@ -92,7 +94,7 @@ class FenriRealm(LegacyCrawler):
 
             # Create chapter URL
             novel_slug = self.novel_url.split("/")[-1]
-            chapter_url = f"{self.home_url.rstrip('/')}/series/{novel_slug}/{slug}"
+            chapter_url = f"{self.scraper.origin.rstrip('/')}/series/{novel_slug}/{slug}"
 
             self.chapters.append(
                 Chapter(
@@ -104,4 +106,6 @@ class FenriRealm(LegacyCrawler):
             )
 
     def download_chapter_body(self, chapter):
-        return self.cleaner.extract_contents(self.get_soup(chapter.url).select_one("div#reader-area"))
+        return self.cleaner.extract_contents(
+            self.get_soup(chapter.url).select_one("div#reader-area")
+        )

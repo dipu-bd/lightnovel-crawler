@@ -52,12 +52,13 @@ class WuxiaCityCrawler(LegacyCrawler):
         vol_id = 0
         soup = self.get_soup(f"{self.novel_url}/table-of-contents")
         for a in reversed(soup.select(".book-chapters a[href]")):
-            a.decompose(".chapter-num")
+            p = a.select_one(".chapter-name")
+            p.decompose(".chapter-num")
             self.chapters.append(
                 Chapter(
                     id=len(self.chapters) + 1,
                     volume=vol_id,
-                    title=a.find("p").text,
+                    title=p.text,
                     url=self.absolute_url(a["href"]),
                 )
             )

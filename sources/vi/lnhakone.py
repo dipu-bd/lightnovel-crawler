@@ -22,7 +22,7 @@ class ListNovelCrawler(LegacyCrawler):
 
     def search_novel(self, query):
         query = quote_plus(query.lower())
-        soup = self.get_soup(search_url % (self.home_url.strip("/"), query))
+        soup = self.get_soup(search_url % (self.scraper.origin.strip("/"), query))
 
         results = []
         for tab in soup.select(".sect-body .thumb-item-flow"):
@@ -47,7 +47,9 @@ class ListNovelCrawler(LegacyCrawler):
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.info-value a[href*="/tac-gia/"]')])
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.info-value a[href*="/tac-gia/"]')]
+        )
         logger.info("%s", self.novel_author)
 
         possible_image = soup.select_one(".series-cover .img-in-ratio")

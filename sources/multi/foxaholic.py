@@ -2,8 +2,6 @@
 import logging
 from urllib.parse import urlparse
 
-import requests
-
 from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)

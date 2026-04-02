@@ -39,7 +39,7 @@ class LightnovelReader(LegacyCrawler):
         )
 
     def search_novel(self, query):
-        self.get_response(self.home_url)
+        self.get_response(self.scraper.origin)
 
         url = self.absolute_url(novel_search_url % quote(query))
         data = self.get_json(url)
@@ -86,7 +86,10 @@ class LightnovelReader(LegacyCrawler):
         logger.info("Novel genre: %s", self.novel_tags)
 
         self.novel_author = ", ".join(
-            [a.text.strip() for a in soup.select('.container .novels-detail-right-in-right a[href*="/author/"]')]
+            [
+                a.text.strip()
+                for a in soup.select('.container .novels-detail-right-in-right a[href*="/author/"]')
+            ]
         )
         logger.info("Novel author: %s", self.novel_author)
 
@@ -101,7 +104,7 @@ class LightnovelReader(LegacyCrawler):
         #     headers={
         #         'accept': '*/*',
         #         'x-requested-with': 'XMLHttpRequest',
-        #         'origin': self.home_url.strip('/'),
+        #         'origin': self.scraper.origin.strip('/'),
         #         'referer': self.novel_url.strip('/'),
         #     },
         # )
@@ -128,7 +131,12 @@ class LightnovelReader(LegacyCrawler):
             for a in reversed(soup.select(".novels-detail-chapters#%s a" % tab["data-tab"])):
                 chap_id = len(self.chapters) + 1
                 self.chapters.append(
-                    Chapter(id=chap_id, volume=vol_id, title=a.text.strip(), url=self.absolute_url(a["href"]))
+                    Chapter(
+                        id=chap_id,
+                        volume=vol_id,
+                        title=a.text.strip(),
+                        url=self.absolute_url(a["href"]),
+                    )
                 )
 
     def download_chapter_body(self, chapter):

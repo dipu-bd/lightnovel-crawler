@@ -10,7 +10,7 @@ class IndowebnovelCrawler(LegacyCrawler):
     base_url = "https://indowebnovel.id/"
 
     def initialize(self):
-        self.home_url = "https://indowebnovel.id/"
+        self.scraper.origin = "https://indowebnovel.id/"
 
     def read_novel_info(self):
         # url = self.novel_url.replace('https://yukinovel.me', 'https://yukinovel.id')

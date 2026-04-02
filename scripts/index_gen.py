@@ -218,7 +218,7 @@ def process_contributors(history):
             continue
         username_cache[author] = None
         username_cache[email] = None
-    return list(filter(None, contribs))
+    return list(sorted(filter(None, contribs)))
 
 
 def process_info(info: CrawlerInfo):
@@ -335,10 +335,16 @@ for ln_code, links in sorted(grouped_supported.items(), key=lambda x: x[0]):
         supported += "<tr>"
 
         supported += "<td>"
-        supported += '<span title="Contains machine translations">%s</span>' % ("🤖" if info["has_mtl"] else "")
-        supported += '<span title="Supports searching">%s</span>' % ("🔍" if info["can_search"] else "")
+        supported += '<span title="Contains machine translations">%s</span>' % (
+            "🤖" if info["has_mtl"] else ""
+        )
+        supported += '<span title="Supports searching">%s</span>' % (
+            "🔍" if info["can_search"] else ""
+        )
         supported += '<span title="Supports login">%s</span>' % ("🔑" if info["can_login"] else "")
-        supported += '<span title="Contains manga/manhua/manhwa">%s</span>' % ("🖼️" if info["has_manga"] else "")
+        supported += '<span title="Contains manga/manhua/manhwa">%s</span>' % (
+            "🖼️" if info["has_manga"] else ""
+        )
         supported += "</td>\n"
 
         supported += '<td><a href="%s" target="_blank">%s</a></td>\n' % (url, url)

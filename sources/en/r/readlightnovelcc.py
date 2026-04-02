@@ -14,7 +14,7 @@ class ReadlightnovelCcCrawler(LegacyCrawler):
     ]
 
     def initialize(self):
-        self.home_url = "https://www.readlightnovel.cc"
+        self.scraper.origin = "https://www.readlightnovel.cc"
 
     def search_novel(self, query):
         """Gets a list of {title, url} matching the given query"""

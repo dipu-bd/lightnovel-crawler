@@ -26,7 +26,7 @@ class Luminarynovels(MadaraTemplate):
         except Exception:
             nl_id = soup.select_one("#manga-chapters-holder[data-id]")
             response = self.submit_form(
-                f"{self.home_url}wp-admin/admin-ajax.php",
+                f"{self.scraper.origin}wp-admin/admin-ajax.php",
                 data={
                     "action": "manga_get_chapters",
                     "manga": nl_id["data-id"],

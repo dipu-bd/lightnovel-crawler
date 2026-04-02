@@ -15,7 +15,7 @@ class LitnetCrawler(LegacyCrawler):
     ]
 
     def initialize(self):
-        self.home_url = "https://booknet.com/"
+        self.scraper.origin = "https://booknet.com/"
         self.init_executor(1)
 
     def search_novel(self, query):
