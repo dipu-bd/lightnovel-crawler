@@ -1,4 +1,4 @@
-from typing import Iterable, Optional
+from typing import Iterable, Optional, overload
 
 from ..context import ctx
 from ..exceptions import LNException
@@ -27,12 +27,15 @@ class SoupTemplate(CrawlerTemplate):
     novel_tags_selector = ""
     novel_synopsis_selector = ""
 
+    volume_list_reverse = False
     volume_list_selector = ""
     volume_title_selector = ""
 
+    chapter_list_reverse = False
     chapter_list_selector = ""
     chapter_title_selector = ""
     chapter_url_selector = ""
+
     chapter_body_selector = ""
 
     # ------------------------------------------------------------------------- #
@@ -43,8 +46,7 @@ class SoupTemplate(CrawlerTemplate):
         return (self.parse_search_item(tag) for tag in self.select_search_item_list(query))
 
     def read_novel(self, novel: Novel) -> None:
-        url = self.build_novel_url(novel)
-        soup = self.scraper.get_soup(url)
+        soup = self.get_novel_soup(novel)
 
         try:
             self.parse_title(soup, novel)
@@ -72,7 +74,9 @@ class SoupTemplate(CrawlerTemplate):
             ctx.logger.warn("Failed to parse novel synopsis", exc_info=True)
 
         try:
-            self.parse_volume_list(soup, novel)
+            novel.volumes = []
+            novel.chapters = []
+            self.parse_toc(soup, novel)
         except Exception as e:
             raise LNException("Failed to parse chapter list") from e
 
@@ -124,6 +128,10 @@ class SoupTemplate(CrawlerTemplate):
     # Parser methods for Novel information
     # ------------------------------------------------------------------------- #
 
+    def get_novel_soup(self, novel: Novel) -> PageSoup:
+        url = self.build_novel_url(novel)
+        return self.scraper.get_soup(url)
+
     def build_novel_url(self, novel: Novel) -> str:
         """Build the novel url"""
         return self.absolute_url(novel.url)
@@ -136,8 +144,11 @@ class SoupTemplate(CrawlerTemplate):
     def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel cover image"""
         cover_tag = soup.select_one(self.novel_cover_selector)
-        src_url = cover_tag.get("data-src") or cover_tag.get("src") or cover_tag.get("content")
-        novel.cover_url = self.absolute_url(src_url)
+        for attr in ["data-lazy-src", "data-src", "src", "content"]:
+            src_url = cover_tag.get(attr)
+            if src_url:
+                novel.cover_url = self.absolute_url(src_url)
+                break
 
     def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel authors"""
@@ -158,15 +169,15 @@ class SoupTemplate(CrawlerTemplate):
     # Parser methods for Volume list
     # ------------------------------------------------------------------------- #
 
+    def parse_toc(self, soup: PageSoup, novel: Novel) -> None:
+        """Parse and set the table of contents (volumes and chapters)"""
+        self.parse_volume_list(soup, novel)
+        if not novel.volumes:
+            self.parse_chapter_list(soup, novel)
+
     def parse_volume_list(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the volumes and chapters"""
-        novel.volumes = []
-
         volume_tags = self.select_volume_tags(soup, novel)
-        if not volume_tags:
-            self.parse_chapter_list(soup, novel)
-            return
-
         for tag in volume_tags:
             volume_id = len(novel.volumes) + 1
             volume = self.parse_volume_item(tag, volume_id)
@@ -181,7 +192,10 @@ class SoupTemplate(CrawlerTemplate):
 
     def select_volume_tags(self, soup: PageSoup, novel: Novel) -> Iterable[PageSoup]:
         """Select volume tags from the novel page"""
-        return soup.select(self.volume_list_selector)
+        volume_tags = soup.select(self.volume_list_selector)
+        if self.volume_list_reverse:
+            return reversed(volume_tags)
+        return volume_tags
 
     def parse_volume_title(self, soup: PageSoup, volume: Volume) -> None:
         """Parse a single volume from volume list item tag"""
@@ -192,29 +206,44 @@ class SoupTemplate(CrawlerTemplate):
     # Parser methods for Chapter list
     # ------------------------------------------------------------------------- #
 
+    @overload
+    def parse_chapter_list(self, tag: PageSoup, novel: Novel) -> None: ...
+
+    @overload
+    def parse_chapter_list(self, tag: PageSoup, novel: Novel, volume: Volume) -> None: ...
+
     def parse_chapter_list(
-        self,
-        soup: PageSoup,
-        novel: Novel,
-        volume: Optional[Volume] = None,
+        self, tag: PageSoup, novel: Novel, volume: Optional[Volume] = None
     ) -> None:
-        """Parse and set the volumes and chapters"""
-        novel.chapters = []
-        for tag in self.select_chapter_tags(soup, novel, volume):
+        """Parse and set the chapters for the novel (optionally scoped to a volume)."""
+        if volume is None:
+            chapter_tags = self.select_chapter_tags(tag, novel)
+        else:
+            chapter_tags = self.select_chapter_tags(tag, novel, volume)
+
+        for chapter_tag in chapter_tags:
             chapter_id = len(novel.chapters) + 1
-            chapter = self.parse_chapter_item(tag, chapter_id)
-            if volume:
+            chapter = self.parse_chapter_item(chapter_tag, chapter_id)
+            if volume is not None:
                 chapter.volume = volume.id
             novel.chapters.append(chapter)
 
+    @overload
+    def select_chapter_tags(self, tag: PageSoup, novel: Novel) -> Iterable[PageSoup]: ...
+
+    @overload
     def select_chapter_tags(
-        self,
-        soup: PageSoup,
-        novel: Novel,
-        volume: Optional[Volume] = None,
+        self, tag: PageSoup, novel: Novel, volume: Volume
+    ) -> Iterable[PageSoup]: ...
+
+    def select_chapter_tags(
+        self, tag: PageSoup, novel: Novel, volume: Optional[Volume] = None
     ) -> Iterable[PageSoup]:
-        """Select chapter tags from the novel page"""
-        return soup.select(self.chapter_list_selector)
+        """Select chapter tags from the novel page (optionally scoped to a volume)."""
+        chapter_tags = tag.select(self.chapter_list_selector)
+        if self.chapter_list_reverse:
+            return reversed(chapter_tags)
+        return chapter_tags
 
     def parse_chapter_item(self, soup: PageSoup, chapter_id: int) -> Chapter:
         """Parse a single chapter from chapter list item tag"""

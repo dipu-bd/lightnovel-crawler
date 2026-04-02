@@ -20,6 +20,7 @@ from .helper import (
 )
 
 logger = logging.getLogger(__name__)
+_crawlers_cache: Dict[Type[Crawler], Crawler] = {}
 
 
 class Sources:
@@ -273,7 +274,14 @@ class Sources:
         disable_logger=not ctx.logger.is_debug,
         workers: Optional[int] = None,
         parser: Optional[str] = None,
+        renew: bool = False,
     ) -> Crawler:
+        if constructor in _crawlers_cache:
+            if renew:
+                _crawlers_cache.pop(constructor).close()
+            else:
+                return _crawlers_cache[constructor]
+
         url = getattr(constructor, "url")
         logger.debug(f"Creating crawler instance for {url}")
 
@@ -291,5 +299,7 @@ class Sources:
             workers=workers,
             parser=parser,
         )
+        _crawlers_cache[constructor] = crawler
+
         crawler.initialize()
         return crawler

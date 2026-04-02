@@ -48,10 +48,8 @@ class CrawlerService:
         novel_url = str(url)
 
         # get crawler
-        can_close = False
         if crawler is None:
             crawler = self.get_crawler(user_id, novel_url)
-            can_close = True
         crawler.scraper.signal = signal
 
         # fetch novel metadata
@@ -108,10 +106,6 @@ class CrawlerService:
         # update output path time
         ctx.files.utime(f"novels/{novel.id}")
 
-        # close crawler
-        if can_close:
-            crawler.close()
-
         logger.debug(
             f"Fetched novel: {novel.title}] - {novel.chapter_count} chapters | {novel.volume_count} volumes | {novel.url}"
         )
@@ -132,18 +126,15 @@ class CrawlerService:
             raise ServerErrors.invalid_url
 
         # get crawler
-        can_close = False
         if crawler is None:
             crawler = self.get_crawler(user_id, novel.url)
-            can_close = True
-        crawler_version = getattr(crawler, "version")
         crawler.scraper.signal = signal
 
         # check if download is necessary
         if (
             not refresh
             and chapter.is_available
-            and chapter.extra.get("crawler_version") == crawler_version
+            and chapter.extra.get("crawler_version") == crawler.version
         ):
             logger.debug(f"Skipped: {novel.title}] - Chapter {chapter.serial}")
             return chapter
@@ -153,8 +144,8 @@ class CrawlerService:
             url=str(url),
             id=chapter.serial,
             title=chapter.title,
-            extras=chapter.extra,
         )
+        model.update(chapter.extra)
         crawler.download_chapter(model)
         crawler.format_chapter(model)
         assert model.body is not None
@@ -172,10 +163,6 @@ class CrawlerService:
             chapter.extra.update(get_extras(model))
             sess.add(chapter)
             sess.commit()
-
-        # close crawler
-        if can_close:
-            crawler.close()
 
         logger.debug(f"Downloaded chapter: {novel.title}] - Chapter {chapter.serial}")
         return chapter
@@ -195,18 +182,15 @@ class CrawlerService:
             raise ServerErrors.invalid_url
 
         # get crawler
-        can_close = False
         if crawler is None:
             crawler = self.get_crawler(user_id, novel.url)
-            can_close = True
-        crawler_version = getattr(crawler, "version")
         crawler.scraper.signal = signal
 
         # check if download is necessary
         if (
             not refresh
             and image.is_available
-            and image.extra.get("crawler_version") == crawler_version
+            and image.extra.get("crawler_version") == crawler.version
         ):
             logger.debug(f"Skipped: {novel.title}] - Image {image.id}")
             return image
@@ -218,13 +202,9 @@ class CrawlerService:
         # update db
         with ctx.db.session() as sess:
             image.is_done = file.is_file()
-            image.extra["crawler_version"] = crawler_version
+            image.extra["crawler_version"] = crawler.version
             sess.add(image)
             sess.commit()
-
-        # close crawler
-        if can_close:
-            crawler.close()
 
         logger.debug(f"Downloaded image: {novel.title}] - Image {image.id}")
         return image

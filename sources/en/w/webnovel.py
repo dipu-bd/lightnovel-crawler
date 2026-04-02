@@ -1,184 +1,204 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
+from functools import cached_property
 from time import time
+from typing import Iterable
 from urllib.parse import urlencode, urlparse
 
-from lncrawl.core import Chapter, PageSoup, SearchResult
-from lncrawl.core.volume import Volume
-from lncrawl.exceptions import FallbackToBrowser
-from lncrawl.templates.browser.basic import BasicBrowserTemplate
+from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, SearchResult, Volume
+from lncrawl.exceptions import FallbackToBrowser, LNException
 from lncrawl.webdriver.elements import By
 
 logger = logging.getLogger(__name__)
 
 
-class WebnovelCrawler(BasicBrowserTemplate):
+class WebnovelCrawler(BrowserTemplate):
     base_url = [
         "https://m.webnovel.com/",
         "https://www.webnovel.com/",
     ]
 
     def initialize(self) -> None:
-        self.csrf = ""
-        self.headless = True
-        self.home_url = "https://www.webnovel.com/"
+        self.scraper.origin = "https://www.webnovel.com/"
         bad_text = [
-            r"(\<pirate\>(.*?)\<\/pirate\>)" r"(Find authorized novels in Webnovel(.*)for visiting\.)",
+            r"(\<pirate\>(.*?)\<\/pirate\>)"
+            r"(Find authorized novels in Webnovel(.*)for visiting\.)",
         ]
         self.re_cleaner = re.compile("|".join(bad_text), re.M)
+        self.__dict__.pop("csrf", None)
 
-    def ensure_csrf(self):
-        if self.csrf:
-            return
-        logger.info("Getting CSRF Token")
-        self.get_response(f"{self.home_url}stories/novel")
-        self.csrf = self.cookies.get("_csrfToken") or ""
-        logger.debug("CSRF Token = %s", self.csrf)
+    @cached_property
+    def csrf(self):
+        self.scraper.get(f"{self.scraper.origin}stories/novel")
+        return self.scraper.cookies.get("_csrfToken") or ""
 
-    def search_novel_in_soup(self, query: str):
-        self.ensure_csrf()
-        params = {
-            "_csrfToken": self.csrf,
-            "pageIndex": 1,
-            "encryptType": 3,
-            "_fsae": 0,
-            "keywords": query,
-        }
-        data = self.get_json(f"{self.home_url}go/pcm/search/result?{urlencode(params)}")
-        for book in data["data"]["bookInfo"]["bookItems"]:
-            yield SearchResult(
-                title=book["bookName"],
-                url=f"{self.home_url}book/{book['bookId']}",
-                info="%(categoryName)s | Score: %(totalScore)s" % book,
+    def search(self, query: str) -> Iterable[SearchResult]:
+        try:
+            params = {
+                "_csrfToken": self.csrf,
+                "pageIndex": 1,
+                "encryptType": 3,
+                "_fsae": 0,
+                "keywords": query,
+            }
+            data = self.scraper.get_json(
+                f"{self.scraper.origin}go/pcm/search/result?{urlencode(params)}"
             )
+            for book in data["data"]["bookInfo"]["bookItems"]:
+                yield SearchResult(
+                    title=book["bookName"],
+                    url=f"{self.scraper.origin}book/{book['bookId']}",
+                    info="%(categoryName)s | Score: %(totalScore)s" % book,
+                )
+        except Exception:
+            params = {"keywords": query}
+            self.visit(f"{self.scraper.origin}search?{urlencode(params)}")
+            for li in self.browser.soup.select(".search-result-container li"):
+                a = li.find("a[href]")
+                info = li.find(".g_star_num small")
+                if a:
+                    yield SearchResult(
+                        url=self.absolute_url(a.get("href")),
+                        title=str(a.get("data-bookname") or ""),
+                        info=info.get_text(strip=True) if info else "",
+                    )
 
-    def search_novel_in_browser(self, query: str):
-        params = {"keywords": query}
-        self.visit(f"{self.home_url}search?{urlencode(params)}")
-        self.last_soup_url = self.browser.current_url
-        for li in self.browser.soup.select(".search-result-container li"):
-            a = li.find("a")
-            info = li.find(".g_star_num small")
-            if not a:
-                continue
-            yield SearchResult(
-                title=str(a.get("data-bookname") or ""),
-                url=self.absolute_url(a.get("href")),
-                info=info.get_text(strip=True) if info else "",
-            )
-
-    def read_novel_info_in_soup(self):
-        self.ensure_csrf()
-        url = self.novel_url
-        if "_" not in url:
-            ids = re.findall(r"/book/(\d+)", url)
-            assert ids, "Please enter a correct novel URL"
-            self.novel_id = ids[0]
+    def read_novel(self, novel: Novel) -> None:
+        if "_" not in novel.url:
+            ids = re.findall(r"/book/(\d+)", novel.url)
+            if not ids:
+                raise LNException("Invalid novel URL")
+            novel.novel_id = ids[0]
         else:
-            self.novel_id = url.split("_")[1]
-        logger.info("Novel Id: %s", self.novel_id)
+            novel.novel_id = novel.url.split("_")[1]
 
-        response = self.get_response(
-            f"{self.home_url}go/pcm/chapter/getContent"
-            + f"?_csrfToken={self.csrf}&bookId={self.novel_id}&chapterId=0"
+        data = self.scraper.get_json(
+            f"{self.scraper.origin}go/pcm/chapter/getContent"
+            + f"?_csrfToken={self.csrf}&bookId={novel.novel_id}&chapterId=0"
             + "&encryptType=3&_fsae=0"
         )
-        data = response.json()
-        logger.debug("Book Response:\n%s", data)
 
-        assert "data" in data, "Data not found"
+        if "data" not in data:
+            raise LNException("Get content failed")
         data = data["data"]
 
-        assert "bookInfo" in data, "Book info not found"
+        if "bookInfo" not in data:
+            raise LNException("Get book info failed")
         book_info = data["bookInfo"]
 
-        assert "bookName" in book_info, "Book name not found"
-        self.novel_title = book_info["bookName"]
+        if "bookName" not in book_info:
+            raise LNException("Get book title failed")
+        novel.title = book_info["bookName"]
 
-        self.novel_cover = self.absolute_url(
-            f"//book-pic.webnovel.com/bookcover/{self.novel_id}"
+        novel.cover_url = self.absolute_url(
+            f"//book-pic.webnovel.com/bookcover/{novel.novel_id}"
             + f"?coverUpdateTime{int(1000 * time())}&imageMogr2/thumbnail/600x"
         )
 
         if "authorName" in book_info:
-            self.novel_author = book_info["authorName"]
+            novel.author = book_info["authorName"]
         elif "authorItems" in book_info:
-            self.novel_author = ", ".join([x.get("name") for x in book_info["authorItems"] if x.get("name")])
+            novel.author = ", ".join(
+                [x.get("name") for x in book_info["authorItems"] if x.get("name")]
+            )
 
         # To get the chapter list catalog
-        soup = self.get_soup(f"{self.novel_url.strip('/')}/catalog")
-        self.parse_chapter_catalog(soup)
-        if not self.chapters:
-            raise FallbackToBrowser()
+        soup = self.scraper.get_soup(f"{novel.url.strip('/')}/catalog")
+        self.parse_chapter_catalog(soup, novel)
 
-    def read_novel_info_in_browser(self) -> None:
-        path = urlparse(self.novel_url).path.strip("/")
-        self.visit(f"{self.home_url}{path}/catalog")
-        self.last_soup_url = self.browser.current_url
-        self.browser.wait(".j_catalog_list")
-        self.parse_chapter_catalog(self.browser.soup)
-
-    def parse_chapter_catalog(self, soup: PageSoup) -> None:
+    def parse_chapter_catalog(self, soup: PageSoup, novel: Novel) -> None:
+        novel.volumes = []
+        novel.chapters = []
         for div in soup.select(".j_catalog_list .volume-item"):
-            possible_title = div.find("h4")
             vol = Volume(
-                id=len(self.volumes) + 1,
-                title=possible_title.get_text(strip=True) if possible_title else "",
+                id=len(novel.volumes) + 1,
+                title=div.find("h4").text,
             )
-            self.volumes.append(vol)
+            novel.volumes.append(vol)
+
+            for a in div.select("ol > li > a[href]"):
+                cid = a.parent.get("data-report-cid")
+                if not cid:
+                    continue  # skip chapter without id
+                if a.select_one("svg._icon"):
+                    continue  # skiplocked chapter
+                chapter = Chapter(
+                    id=len(novel.chapters) + 1,
+                    title=str(a.get("title") or ""),
+                    url=self.absolute_url(a.get("href")),
+                    volume=vol.id,
+                    novel_id=novel.novel_id,
+                    chapter_id=cid,
+                )
+                novel.chapters.append(chapter)
+
+    def parse_chapter_catalog_in_browser(self, soup: PageSoup, novel: Novel) -> None:
+        novel.volumes = []
+        novel.chapters = []
+        for div in soup.select(".j_catalog_list .volume-item"):
+            vol = Volume(
+                id=len(novel.volumes) + 1,
+                title=div.find("h4").text,
+            )
+            novel.volumes.append(vol)
+
             for li in div.select("li"):
-                a = li.find("a")
+                a = li.find("a[href]")
                 cid = li.get("data-report-cid")
                 if not a or not cid:
                     continue
                 chap = Chapter(
-                    id=len(self.chapters) + 1,
-                    volume=vol.id,
+                    id=len(novel.chapters) + 1,
                     title=str(a.get("title") or ""),
                     url=self.absolute_url(a.get("href")),
-                    book=self.novel_id,
-                    cid=cid,
+                    volume=vol.id,
+                    novel_id=novel.novel_id,
+                    chapter_id=cid,
                 )
-                self.chapters.append(chap)
+                novel.chapters.append(chap)
 
-    def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
-        path = urlparse(chapter.url).path.strip("/")
-        self.visit(f"{self.home_url}{path}")
-        self.browser.wait(f"j_chapter_{chapter.cid}", By.CLASS_NAME)
+    def download_chapter(self, chapter: Chapter) -> None:
+        try:
+            params = {
+                "encryptType": 3,
+                "_fsae": 0,
+                "_csrfToken": self.csrf,
+                "bookId": chapter.novel_id,
+                "chapterId": chapter.chapter_id,
+            }
+            data = self.scraper.get_json(
+                f"{self.scraper.origin}go/pcm/chapter/getContent?{urlencode(params)}"
+            )
 
-        body = ""
-        for p in self.browser.soup.select(f".j_chapter_{chapter.cid} .cha-paragraph p"):
-            body += str(p)
-        return body
+            if "data" not in data:
+                raise FallbackToBrowser()
+            data = data["data"]
 
-    def download_chapter_body_in_soup(self, chapter: Chapter) -> str:
-        self.ensure_csrf()
-        logger.info("Chapter Id: %s", chapter.cid)
+            if "chapterInfo" not in data:
+                raise FallbackToBrowser()
+            chapter_info = data["chapterInfo"]
 
-        response = self.get_response(
-            f"{self.home_url}go/pcm/chapter/getContent?encryptType=3&_fsae=0"
-            + f"&_csrfToken={self.csrf}&bookId={chapter.book}&chapterId={chapter.cid}"
-        )
-        data = response.json()
+            chapter.title = chapter_info["chapterName"]
+            if "content" in chapter_info:
+                chapter.body = self._format_content(chapter_info["content"])
+            elif "contents" in chapter_info:
+                body = [
+                    self._format_content(x["content"])
+                    for x in chapter_info["contents"]
+                    if "content" in x
+                ]
+                chapter.body = "".join([x for x in body if x.strip()])
 
-        if "data" not in data:
-            return ""
-        data = data["data"]
-        if "chapterInfo" not in data:
-            return ""
-        chapter_info = data["chapterInfo"]
+            if not chapter.body:
+                raise FallbackToBrowser()
 
-        chapter.title = chapter_info["chapterName"] or f"Chapter #{chapter.id}"
-
-        if "content" in chapter_info:
-            return self._format_content(chapter_info["content"])
-
-        if "contents" in chapter_info:
-            body = [self._format_content(x["content"]) for x in chapter_info["contents"] if "content" in x]
-            return "".join([x for x in body if x.strip()])
-
-        return ""
+        except Exception:
+            path = urlparse(chapter.url).path.strip("/")
+            soup = self.scraper.get_soup(f"{self.scraper.origin}{path}")
+            contents = soup.select(f".j_chapter_{chapter.chapter_id} .cha-paragraph p")
+            body = [self._format_content(p.text) for p in contents]
+            chapter.body = "".join(filter(None, body))
 
     def _format_content(self, text: str):
         if ("<p>" not in text) or ("</p>" not in text):

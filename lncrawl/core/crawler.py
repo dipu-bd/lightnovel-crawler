@@ -34,6 +34,7 @@ class Crawler(ABC):
 
     is_disabled = False
     disable_reason = ""
+    version = 0
 
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
@@ -94,8 +95,8 @@ class Crawler(ABC):
     # Utility methods that can be overriden
     # ------------------------------------------------------------------------- #
 
-    def absolute_url(self, url: Any, page_url: Optional[str] = None) -> str:
-        url = str(url or "").strip().rstrip("/")
+    def absolute_url(self, any_url: Any, page_url: Optional[str] = None) -> str:
+        url = str(any_url or "").strip().rstrip("/")
         if not url:
             return url
 
@@ -112,9 +113,20 @@ class Crawler(ABC):
             return base_url + url
 
         if not page_url:
-            page_url = self.scraper.last_soup_url.rstrip("/")
+            page_url = self.scraper.last_soup_url
 
-        return f"{page_url.rstrip('/')}/{url}"
+        page_url = page_url.rstrip("/")
+
+        if url.startswith("."):
+            paths = page_url.split("/")
+            parts = url.split("/")
+            while parts and (parts[0] == ".." or parts[0] == "."):
+                parts = parts[1:]
+                if parts[0] == "..":
+                    paths = paths[:-1]
+            return "/".join(paths + parts)
+
+        return f"{page_url}/{url}"
 
     def download_image(self, url: str, output_file: Path) -> None:
         """Download an image from the source and save it to the target file."""

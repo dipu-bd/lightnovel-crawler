@@ -71,6 +71,7 @@ requires-python = ">=3.9.0"
 [project.optional-dependencies]
 dev = [
   "build>=1.2.0",
+  "grpcio-tools<=1.78.0",
   "lxml-stubs>=0.5.0",
   "pre-commit>=4.3.0",
   "pyinstaller>=6.0.0",

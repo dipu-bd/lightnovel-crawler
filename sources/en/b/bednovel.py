@@ -2,7 +2,7 @@
 from lncrawl.templates.freewebnovel import FreewebnovelTemplate
 
 
-class FreewebnovelCrawler(FreewebnovelTemplate):
+class BednovelCrawler(FreewebnovelTemplate):
     base_url = [
-        "https://freewebnovel.com/",
+        "https://bednovel.com/",
     ]

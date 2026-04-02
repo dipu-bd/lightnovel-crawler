@@ -65,7 +65,7 @@ class NovelPubTemplate(BrowserTemplate):
         return soup.select(self.search_item_list_selector)
 
     # def select_search_items_in_browser(self, query: str) -> Generator[PageSoup, None, None]:
-    #     self.visit(f"{self.home_url}search")
+    #     self.visit(f"{self.scraper.origin}search")
     #     self.browser.wait("#inputContent")
     #     inp = self.browser.find("#inputContent")
     #     if not inp:

@@ -8,7 +8,6 @@ from typing import Callable, Generator, Iterable, List, Optional, Set, TypeVar
 from tqdm import tqdm
 
 from ..context import ctx
-from ..exceptions import LNException
 from ..utils.ratelimit import RateLimiter
 
 T = TypeVar("T")
@@ -50,6 +49,7 @@ class TaskManager:
         self.shutdown()
 
     def shutdown(self, wait=False):
+        ctx.logger.debug("Shutting down taskmanager")
         self.cancel_futures(self._futures)
         if hasattr(self, "_executor"):
             self._submit = None
@@ -120,7 +120,7 @@ class TaskManager:
         desc: Optional[str] = None,
         total: Optional[float] = None,
         disable: bool = False,
-    ) -> tqdm:
+    ):
         if ctx.logger.is_info:
             disable = True
 
@@ -130,13 +130,10 @@ class TaskManager:
             if not _resolver.acquire(True, 30):
                 pass
 
-        bar = tqdm(
-            iterable=iterable,
-            desc=desc or "",
-            unit=unit or "item",
-            total=total,
-            disable=disable,
-        )
+        bar = tqdm(iterable=iterable) if iterable else tqdm(total=total or 0)
+        bar.desc = desc or ""
+        bar.unit = unit or "item"
+        bar.disable = disable
 
         original_close = bar.close
         atexit.register(original_close)
@@ -209,13 +206,9 @@ class TaskManager:
                 except KeyboardInterrupt:
                     signal.set()
                     raise
-                except LNException as e:
-                    bar.clear()
-                    print(str(e))
                 except Exception as e:
+                    bar.write(repr(e))
                     yield None
-                    if bar.disable:
-                        ctx.logger.info(f"Failure to resolve future. {repr(e)}")
                 finally:
                     bar.update()
         except KeyboardInterrupt:

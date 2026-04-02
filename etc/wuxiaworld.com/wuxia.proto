@@ -79,7 +79,7 @@ message NovelItem {
     int32 id  = 1;
     string name = 2;
     // google.protobuf.StringValue description = 8;
-    // google.protobuf.StringValue synopsis = 9;
+    google.protobuf.StringValue synopsis = 9;
     google.protobuf.StringValue coverUrl = 10;
     google.protobuf.StringValue translatorName = 11;
     google.protobuf.StringValue authorName = 13;

@@ -2,18 +2,22 @@ import itertools
 import re
 import sys
 import unicodedata
-from typing import Any, Dict, List, Set, Union
+from typing import Any, Dict, List, Set, TypeVar, Union
 
 from bs4 import Comment, Tag
 
 from .soup import PageSoup
+
+T = TypeVar("T")
 
 
 class TextCleaner:
     def __init__(self) -> None:
         self.line_separator = "<br>"
         self.invisible_chars = [
-            code for code in range(sys.maxunicode) if unicodedata.category(chr(code)) in {"Cf", "Cc"}
+            code
+            for code in range(sys.maxunicode)
+            if unicodedata.category(chr(code)) in {"Cf", "Cc"}
         ]
         self.unprintable_chars = itertools.chain(
             range(0x00, 0x20),
@@ -147,7 +151,7 @@ class TextCleaner:
             "src",
         }
 
-    def extract_contents(self, tag) -> str:
+    def extract_contents(self, tag: Union[Tag, PageSoup, None]) -> str:
         if isinstance(tag, PageSoup):
             tag = tag.tag
         if not isinstance(tag, Tag):
@@ -155,9 +159,15 @@ class TextCleaner:
         self.clean_contents(tag)
         body = self.extract_paragraphs(tag)
         paragraphs = " ".join(body).split(self.line_separator)
-        return "".join([f"<p>{p.strip()}</p>" for p in paragraphs if not self.contains_bad_texts(p)])
+        return "".join(
+            [f"<p>{p.strip()}</p>" for p in paragraphs if not self.contains_bad_texts(p)]
+        )
 
-    def clean_contents(self, div):
+    def clean_contents(self, div: T) -> T:
+        if isinstance(div, PageSoup):
+            tag = self.clean_contents(div.tag)
+            return PageSoup(tag)  # type: ignore[return-value]
+
         if not isinstance(div, Tag):
             return div
 

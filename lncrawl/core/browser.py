@@ -1,8 +1,19 @@
 import json
-import logging
 from functools import cached_property
 from io import BytesIO
-from typing import Any, Callable, Dict, Iterable, List, MutableMapping, Optional, Type
+from typing import (
+    Any,
+    Callable,
+    ItemsView,
+    Iterable,
+    Iterator,
+    KeysView,
+    List,
+    Literal,
+    MutableMapping,
+    Optional,
+    Type,
+)
 
 from PIL import Image
 from requests.cookies import RequestsCookieJar
@@ -12,29 +23,27 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from ..context import ctx
 from ..exceptions import LNException, ScraperErrorGroup
+from ..utils.event_lock import EventLock
 from ..webdriver import ChromeOptions, WebDriver, create_new
 from ..webdriver.elements import EC, By, WebElement
 from ..webdriver.job_queue import check_active
 from .soup import PageSoup
 from .template import SoupTemplate
 
-logger = logging.getLogger(__name__)
-
 
 class Browser:
     def __init__(
         self,
-        headless: bool = True,
+        headless: bool = False,
         timeout: Optional[int] = 120,
         options: Optional[ChromeOptions] = None,
         cookie_store: Optional[RequestsCookieJar] = None,
-        browser_storage: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Interface to interact with chrome webdriver.
 
         Args:
-        - headless (bool, optional): True to hide the UI, False to show the UI. Default: True.
+        - headless (bool, optional): True to hide the UI, False to show the UI. Default: False.
         - timeout (Optional[int], optional): Maximum wait duration in seconds for an element to be available. Default: 120.
         - options (Optional[&quot;ChromeOptions&quot;], optional): Webdriver options. Default: None.
         - cookie_store (Optional[RequestsCookieJar], optional): A cookie store to synchronize cookies. Default: None.
@@ -45,8 +54,9 @@ class Browser:
         self.timeout = timeout
         self.headless = headless
         self.cookie_store = cookie_store
-        self.browser_storage = browser_storage
         self._driver: Optional[WebDriver] = None
+        self.local_storage = BrowserStorage(self, "localStorage")
+        self.session_storage = BrowserStorage(self, "sessionStorage")
 
     def __del__(self):
         self.close()
@@ -63,11 +73,14 @@ class Browser:
     def close(self):
         if not self._driver:
             return
+        ctx.logger.info("Closing browser")
         self._driver.quit()
+        self._driver = None
 
     def open_browser(self):
         if self._driver:
             return
+        ctx.logger.info("Opening browser")
         self._driver = create_new(
             options=self.options,
             timeout=self.timeout,
@@ -92,16 +105,7 @@ class Browser:
                         "expiry": cookie.expires,
                     }
                 )
-            logger.debug("Cookies applied: %s", self._driver.get_cookies())
-        if isinstance(self.browser_storage, dict):
-            for name, raw_store in self.browser_storage.items():
-                if not isinstance(raw_store, dict):
-                    continue
-                self._driver.execute_script(
-                    f"arguments.forEach(function(item) {{  window.{name}.setItem(item[0], item[1]);}});",
-                    *raw_store.items(),
-                )
-            logger.debug("Storage applied: %s", self.browser_storage)
+            ctx.logger.debug("Cookies applied: %s", self._driver.get_cookies())
 
     def restore_cookies(self):
         if not self._driver:
@@ -119,18 +123,7 @@ class Browser:
                         secure=cookie.get("secure"),
                         expires=cookie.get("expiry"),
                     )
-            logger.debug("Cookies retrieved: %s", self.cookie_store)
-        if isinstance(self.browser_storage, dict):
-            for name in ["localStorage", "sessionStorage"]:
-                self.browser_storage[name] = self._driver.execute_script(
-                    "var items = {};"
-                    f"var ls = window.{name};"
-                    "Object.keys(ls).forEach(function(key) {"
-                    "  items[key] = ls[key];"
-                    "});"
-                    "return items;"
-                )
-            logger.debug("Storage retrieved: %s", self.browser_storage)
+            ctx.logger.debug("Cookies retrieved: %s", self.cookie_store)
 
     @property
     def active(self):
@@ -274,7 +267,9 @@ class Browser:
             return
         if not selector or not callable(expected_conditon):
             return
-        logger.info(f"Wait {timeout} seconds for {expected_conditon.__name__} by {by}:{selector}")
+        ctx.logger.info(
+            f"Wait {timeout} seconds for {expected_conditon.__name__} by {by}:{selector}"
+        )
         try:
             waiter = WebDriverWait(
                 self._driver,
@@ -288,7 +283,7 @@ class Browser:
             else:
                 waiter.until(condition)  # type: ignore
         except Exception as e:
-            logger.info("Waiting could not be finished | %s", e)
+            ctx.logger.info("Waiting could not be finished | %s", e)
 
 
 class BrowserTemplate(SoupTemplate):
@@ -296,6 +291,7 @@ class BrowserTemplate(SoupTemplate):
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+        self._lock = EventLock()
         self._override_scraper_get_soup()
         self._override_scraper_get_image()
         self._override_scraper_get_json()
@@ -313,9 +309,10 @@ class BrowserTemplate(SoupTemplate):
             except ScraperErrorGroup:
                 if ctx.logger.is_debug:
                     ctx.logger.error("Failed to get soup", exc_info=True)
-                self.browser.visit(url)
-                self.browser.wait("body", By.TAG_NAME)
-                return self.browser.soup
+                with self._lock:
+                    self.browser.visit(url)
+                    self.browser.wait("body", By.TAG_NAME)
+                    return self.browser.soup
 
         setattr(self.scraper, "get_soup", get_soup)
 
@@ -328,12 +325,13 @@ class BrowserTemplate(SoupTemplate):
             except ScraperErrorGroup:
                 if ctx.logger.is_debug:
                     ctx.logger.error("Failed to get image", exc_info=True)
-                self.browser.visit(url)
-                self.browser.wait("img", By.TAG_NAME)
-                img = self.browser.find("img", By.TAG_NAME)
-                assert img, "No img element"
-                png = img.screenshot_as_png
-                return Image.open(BytesIO(png))
+                with self._lock:
+                    self.browser.visit(url)
+                    self.browser.wait("img", By.TAG_NAME)
+                    img = self.browser.find("img", By.TAG_NAME)
+                    if img:
+                        png = img.screenshot_as_png
+                        return Image.open(BytesIO(png))
 
         setattr(self.scraper, "get_image", get_image)
 
@@ -357,9 +355,10 @@ class BrowserTemplate(SoupTemplate):
                     .catch(e => callback(JSON.stringify({__error__: String(e)})));
                 """
                 headers = CaseInsensitiveDict(headers or {})
-                text = self.browser.execute_js(script, url, headers, is_async=True)
-                if not text:
-                    raise LNException(f"Empty response from {url}")
+                with self._lock:
+                    text = self.browser.execute_js(script, url, headers, is_async=True)
+                    if not text:
+                        raise LNException(f"Empty response from {url}")
 
                 try:
                     data = json.loads(text)
@@ -376,10 +375,6 @@ class BrowserTemplate(SoupTemplate):
     # Browser properties
     # ------------------------------------------------------------------------- #
 
-    @property
-    def using_browser(self) -> bool:
-        return "browser" in self.__dict__ and self.browser.active
-
     @cached_property
     def browser(self) -> Browser:
         """
@@ -389,32 +384,104 @@ class BrowserTemplate(SoupTemplate):
         if not ctx.config.crawler.can_use_browser:
             raise RuntimeError("Browser is disabled in the configuration")
 
-        _max_workers = self.taskman.workers
-        self.taskman.init_executor(1)
-
         browser = Browser(cookie_store=self.scraper.cookies)
 
-        _visit = browser.visit
         _close = browser.close
-
-        def override_visit(url: str) -> None:
-            _visit(url)
-            browser.restore_cookies()
+        _visit = browser.visit
 
         def override_close() -> None:
             _close()
             self.__dict__.pop("browser", None)
-            self.taskman.init_executor(_max_workers)
 
-        setattr(browser, "visit", override_visit)
+        def override_visit(url: str) -> None:
+            _visit(url)
+            browser.restore_cookies()
+            if browser.current_url:
+                self.scraper.last_soup_url = browser.current_url
+
         setattr(browser, "close", override_close)
+        setattr(browser, "visit", override_visit)
 
         return browser
 
     def close(self) -> None:
         super().close()
-        if self.using_browser:
+        self._lock.abort()
+        if "browser" in self.__dict__:
             self.browser.close()
 
     def visit(self, url: str) -> None:
         self.browser.visit(url)
+
+
+class BrowserStorage(MutableMapping[str, Optional[str]]):
+    def __init__(
+        self,
+        browser: Browser,
+        source: Literal["localStorage", "sessionStorage"] = "localStorage",
+    ):
+        self._source = source
+        self._browser = browser
+
+    def __repr__(self):
+        return f"BrowserStorage({self._source})"
+
+    def __len__(self):
+        return self.length
+
+    def __contains__(self, key) -> bool:
+        return self.has(key)
+
+    def __getitem__(self, key: str) -> Optional[str]:
+        return self.get(key)
+
+    def __setitem__(self, key: str, value: Optional[str]) -> None:
+        self.set(key, value)
+
+    def __delitem__(self, key: str) -> None:
+        self.remove(key)
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self.keys())
+
+    @property
+    def raw(self) -> MutableMapping[str, Optional[str]]:
+        js = "return {...window." + self._source + "}"
+        return self._browser.execute_js(js) or {}
+
+    @property
+    def length(self) -> int:
+        js = "return window." + self._source + ".length;"
+        return self._browser.execute_js(js) or 0
+
+    def items(self) -> ItemsView[str, Optional[str]]:
+        return self.raw.items()
+
+    def keys(self) -> KeysView[str]:
+        js = "return Object.keys(window." + self._source + ");"
+        result = self._browser.execute_js(js) or []
+        return set(result)  # type: ignore[return-value]
+
+    def get(self, key: str, default: Optional[Any] = None) -> Optional[Any]:
+        js = "return window." + self._source + ".getItem(arguments[0]);"
+        value = self._browser.execute_js(js, key)
+        return str(value) if value is not None else default
+
+    def set(self, key: str, value: Any) -> None:
+        js = "window." + self._source + ".setItem(arguments[0], arguments[1]); return true;"
+        if not self._browser.execute_js(js, key, str(value)):
+            raise RuntimeError(f"Failed to set {key} in {self._source}")
+
+    def has(self, key: str) -> bool:
+        js = "return window." + self._source + ".hasOwnProperty(arguments[0]);"
+        return self._browser.execute_js(js, str(key)) or False
+
+    def remove(self, key: str) -> None:
+        js = "window." + self._source + ".removeItem(arguments[0]); return true;"
+        if not self._browser.execute_js(js, key):
+            raise RuntimeError(f"Failed to remove {key} from {self._source}")
+
+    def clear(self) -> None:
+        js = "window." + self._source + ".clear(); return true;"
+        if not self._browser.execute_js(js):
+            raise RuntimeError(f"Failed to clear {self._source}")
