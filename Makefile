@@ -5,7 +5,7 @@
 .PHONY: all \
 	version submodule clean ensure-uv setup sync install upgrade \
 	major minor patch \
-	lint lint-fixstart watch add-source \
+	lint lint-fixstart watch add-source index-gen \
 	build-wheel build-exe build \
 	docker-base docker-build docker-up docker-down docker-logs \
 	remove-tag push-tag push-tag-force \
@@ -13,8 +13,11 @@
 
 # --- uv executable (PATH, else default install location) ---------------------
 ifeq ($(OS),Windows_NT)
-  UV := $(shell powershell -NoProfile -Command "if (Get-Command uv -ErrorAction SilentlyContinue) { (Get-Command uv).Source } else { Join-Path $$env:USERPROFILE '.local\bin\uv.exe' }")
+  PS := powershell -NoProfile -Command
+  VERSION := $(shell $(PS) "(Get-Content lncrawl/VERSION).Trim()")
+  UV := $(shell $(PS) "if (Get-Command uv -ErrorAction SilentlyContinue) { (Get-Command uv).Source } else { Join-Path $$env:USERPROFILE '.local\bin\uv.exe' }")
 else
+  VERSION := $(shell cat lncrawl/VERSION | tr -d '\n')
   UV := $(shell command -v uv 2>/dev/null || echo "$(HOME)/.local/bin/uv")
 endif
 
@@ -25,9 +28,6 @@ UV_SYNC_FLAGS := --all-extras --all-groups
 ifneq ($(filter add-dep add-dev rm-dep rm-dev,$(MAKECMDGOALS)),)
   PKG := $(word 2,$(MAKECMDGOALS))
 endif
-
-# current project version
-VERSION       := $(shell cat lncrawl/VERSION)
 
 # =============================================================================
 # Default
@@ -122,6 +122,12 @@ watch:
 
 add-source:
 	$(UV) run python -m lncrawl -ll sources create
+
+index-gen:
+	$(UV) run python scripts/index_gen.py
+	
+check-sources:
+	$(UV) run python scripts/check_sources.py
 
 # =============================================================================
 # Build — wheel, PyInstaller

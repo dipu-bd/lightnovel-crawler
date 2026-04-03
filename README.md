@@ -129,26 +129,32 @@ Just run the executable or type `lncrawl` in your terminal and you're ready to g
 Check the available options in the terminal:
 
 <!-- auto generated command line output -->
+
 ```text
 $ lncrawl -h
-Usage: lncrawl [OPTIONS] COMMAND [ARGS]...                                                                                                                                                 
-                                                                                                                                                                                            
-┌─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ --verbose             -l            Log levels: -l = warn, -ll = info, -lll = debug                                                                                                      │
-│ --config              -c      PATH  Config file                                                                                                                                          │
-│ --install-completion                Install completion for the current shell.                                                                                                            │
-│ --show-completion                   Show completion for the current shell, to copy it or customize the installation.                                                                     │
-│ --help                -h            Show this message and exit.                                                                                                                          │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-┌─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ version  Show current version.                                                                                                                                                           │
-│ config   View and modify configuration settings.                                                                                                                                         │
-│ sources  Manage sources.                                                                                                                                                                 │
-│ crawl    Crawl from novel page URL.                                                                                                                                                      │
-│ search   Search for novels by query string.                                                                                                                                              │
-│ server   Run web server.                                                                                                                                                                 │
-└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+Usage: lncrawl [OPTIONS] COMMAND [ARGS]...
+
+╭─ Options ────────────────────────────────────────────────────────────────────╮
+│ --verbose             -l            Log levels: -l = warn, -ll = info, -lll  │
+│                                     = debug                                  │
+│ --config              -c      PATH  Config file                              │
+│ --install-completion                Install completion for the current       │
+│                                     shell.                                   │
+│ --show-completion                   Show completion for the current shell,   │
+│                                     to copy it or customize the              │
+│                                     installation.                            │
+│ --help                -h            Show this message and exit.              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────╮
+│ version  Show current version.                                               │
+│ config   View and modify configuration settings.                             │
+│ sources  Manage sources.                                                     │
+│ crawl    Crawl from novel page URL.                                          │
+│ search   Search for novels by query string.                                  │
+│ server   Run web server.                                                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
 ```
+
 <!-- auto generated command line output -->
 
 Download a few chapters from a novel's **main info page** URL:
@@ -283,7 +289,7 @@ To request for a new source not included in the following list, please [create a
 
 <!-- auto generated supported sources list -->
 
-We are supporting 358 sources and 393 crawlers.
+We are supporting 361 sources and 391 crawlers.
 
 ### `~` Unknown
 
@@ -392,7 +398,6 @@ We are supporting 358 sources and 393 crawlers.
 </tbody>
 </table>
 
-
 ### `ar` Arabic
 
 <table>
@@ -419,7 +424,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -535,7 +539,7 @@ We are supporting 358 sources and 393 crawlers.
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/b/bato.py" title="22 March 2026 09:34:05 AM (UTC+0)">11</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/CryZFix"><img src="https://avatars.githubusercontent.com/u/13964422?v=4&s=24" alt="CryZFix" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://bednovel.com/" target="_blank">https://bednovel.com/</a></td>
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/f/freewebnovel.py" title="22 March 2026 09:34:05 AM (UTC+0)">34</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/CryZFix"><img src="https://avatars.githubusercontent.com/u/13964422?v=4&s=24" alt="CryZFix" height="24"/></a></td>
@@ -695,7 +699,7 @@ We are supporting 358 sources and 393 crawlers.
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/f/freemanga.py" title="22 March 2026 09:34:05 AM (UTC+0)">77</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://freewebnovel.com/" target="_blank">https://freewebnovel.com/</a></td>
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/f/freewebnovel.py" title="22 March 2026 09:34:05 AM (UTC+0)">34</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/CryZFix"><img src="https://avatars.githubusercontent.com/u/13964422?v=4&s=24" alt="CryZFix" height="24"/></a></td>
@@ -735,7 +739,7 @@ We are supporting 358 sources and 393 crawlers.
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/i/infinitetrans.py" title="22 March 2026 09:34:05 AM (UTC+0)">69</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://innread.com/" target="_blank">https://innread.com/</a></td>
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/f/freewebnovel.py" title="22 March 2026 09:34:05 AM (UTC+0)">34</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/CryZFix"><img src="https://avatars.githubusercontent.com/u/13964422?v=4&s=24" alt="CryZFix" height="24"/></a></td>
@@ -800,12 +804,12 @@ We are supporting 358 sources and 393 crawlers.
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/l/librarynovel.py" title="22 March 2026 09:34:05 AM (UTC+0)">9</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://libread.com/" target="_blank">https://libread.com/</a></td>
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/f/freewebnovel.py" title="22 March 2026 09:34:05 AM (UTC+0)">34</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/CryZFix"><img src="https://avatars.githubusercontent.com/u/13964422?v=4&s=24" alt="CryZFix" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://libread.org/" target="_blank">https://libread.org/</a></td>
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/f/freewebnovel.py" title="22 March 2026 09:34:05 AM (UTC+0)">34</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a> <a href="https://github.com/CryZFix"><img src="https://avatars.githubusercontent.com/u/13964422?v=4&s=24" alt="CryZFix" height="24"/></a></td>
@@ -1005,7 +1009,7 @@ We are supporting 358 sources and 393 crawlers.
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/n/novelbin.net.py" title="29 November 2022 03:01:01 PM (UTC+0)">1</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<tr><td><span title="Contains machine translations">🤖</span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://novelbuddy.io/" target="_blank">https://novelbuddy.io/</a></td>
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/n/novelbuddy.py" title="22 March 2026 09:34:05 AM (UTC+0)">4</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
@@ -1730,7 +1734,7 @@ We are supporting 358 sources and 393 crawlers.
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/w/wuxiaspot.py" title="06 January 2025 04:08:51 PM (UTC+0)">1</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login">🔑</span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://www.wuxiaworld.com/" target="_blank">https://www.wuxiaworld.com/</a></td>
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/4d958c8d3619286a4b8db17b856a53cb6e2b5f46/sources/en/w/wuxiacom.py" title="22 March 2026 09:34:05 AM (UTC+0)">109</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/yudilee"><img src="https://avatars.githubusercontent.com/u/7065691?v=4&s=24" alt="yudilee" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/kuwoyuki"><img src="https://avatars.githubusercontent.com/u/51709703?v=4&s=24" alt="kuwoyuki" height="24"/></a> <a href="https://github.com/alzamer2"><img src="https://avatars.githubusercontent.com/u/4492974?v=4&s=24" alt="alzamer2" height="24"/></a></td>
@@ -1757,7 +1761,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `es` Spanish; Castilian
 
@@ -1790,7 +1793,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `fr` French
 
@@ -1828,7 +1830,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -1927,7 +1928,6 @@ We are supporting 358 sources and 393 crawlers.
 </tbody>
 </table>
 
-
 ### `ja` Japanese
 
 <table>
@@ -1949,7 +1949,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `pt` Portuguese
 
@@ -1982,7 +1981,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `ru` Russian
 
@@ -2056,7 +2054,6 @@ We are supporting 358 sources and 393 crawlers.
 </tbody>
 </table>
 
-
 ### `tr` Turkish
 
 <table>
@@ -2073,7 +2070,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -2101,7 +2097,6 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 
@@ -2483,9 +2478,6 @@ We are supporting 358 sources and 393 crawlers.
 <tr><td><a href="https://novel35.com/" target="_blank">https://novel35.com/</a></td>
 <td>Site is down</td>
 </tr>
-<tr><td><a href="https://novelasligera.com/" target="_blank">https://novelasligera.com/</a></td>
-<td>Account Suspended</td>
-</tr>
 <tr><td><a href="https://novelcake.com/" target="_blank">https://novelcake.com/</a></td>
 <td>Site is down</td>
 </tr>
@@ -2530,6 +2522,9 @@ We are supporting 358 sources and 393 crawlers.
 </tr>
 <tr><td><a href="https://read.asianovel.com/" target="_blank">https://read.asianovel.com/</a></td>
 <td>Connection timed out</td>
+</tr>
+<tr><td><a href="https://readlightnovels.net/" target="_blank">https://readlightnovels.net/</a></td>
+<td>Site is down</td>
 </tr>
 <tr><td><a href="https://readlitenovel.com/" target="_blank">https://readlitenovel.com/</a></td>
 <td>Site is down</td>
