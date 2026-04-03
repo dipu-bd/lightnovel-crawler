@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-
 import logging
 import re
 
-from lncrawl.core import Chapter, LegacyCrawler
-from lncrawl.exceptions import LNException
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class PureTL(LegacyCrawler):
+class PureTL(SoupTemplate):
     base_url = ["https://puretl.com/"]
+
+    chapter_body_selector = ".blog-item-content"
 
     def initialize(self) -> None:
         self.cleaner.bad_text_regex.update(
@@ -21,53 +21,44 @@ class PureTL(LegacyCrawler):
             ],
         )
 
-    def read_novel_info(self):
-        soup = self.get_soup(self.novel_url)
-        slug = re.search(rf"{self.scraper.origin}(.*?)(/|\?|$)", self.novel_url).group(1)
-
+    def parse_title(self, soup: PageSoup, novel: Novel) -> None:
         title_tag = soup.select_one("meta[property='og:title']")
-        if not title_tag:
-            raise LNException("No title found")
-
-        self.novel_title = (
-            title_tag["content"]
-            .replace("— Pure Love Translations English Translated Novels", "")
-            .strip()
+        novel.title = title_tag.get("content").replace(
+            "— Pure Love Translations English Translated Novels", ""
         )
 
+    def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
         possible_image = soup.select_one("meta[property='og:image']")
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["content"])
+        if possible_image and possible_image.get("content"):
+            novel.cover_url = self.absolute_url(possible_image["content"])
 
-        logger.info("Novel cover: %s", self.novel_cover)
-
+    def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
         novel_author = soup.find("h4", string=re.compile(r"^By:"))
         if novel_author:
-            self.novel_author = novel_author.text.split(":")[1].strip()
+            novel.author = novel_author.text.split(":")[1].strip()
+        logger.info("Novel author: %s", novel.author)
 
-        logger.info("Novel author: %s", self.novel_author)
-
-        chapter_div = soup.find("div", class_="accordion-block")
-        if not chapter_div:
+    def parse_toc(self, soup: PageSoup, novel: Novel) -> None:
+        match = re.search(rf"{self.scraper.origin}(.*?)(/|\?|$)", novel.url)
+        if not match:
             return
+        slug = match.group(1)
 
-        content = chapter_div.find_parent("section")
+        chapter_div = soup.select_one("div.accordion-block")
+        content = next(chapter_div.parents("section"))
         for a in content.select(f"a[href*='{slug}/']"):
-            self.chapters.append(
-                Chapter(
-                    id=len(self.chapters) + 1,
-                    url=self.absolute_url(a["href"]),
-                    title=a.text.strip(),
-                )
+            novel.add_chapter(
+                url=self.absolute_url(a["href"]),
+                title=a.text.strip(),
             )
 
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        chapter["title"] = soup.select_one(".entry-title").text.strip()
-
-        contents = soup.select_one(".blog-item-content")
-        nav = contents.find("a", string=re.compile("Index"))
-        if nav:
-            nav.parent.extract()
-
-        return self.cleaner.extract_contents(contents)
+    def select_chapter_body(self, chapter: Chapter) -> PageSoup:
+        soup = self.scraper.get_soup(chapter.url)
+        title_el = soup.select_one(".entry-title")
+        if title_el:
+            chapter.title = title_el.text
+        body = soup.select_one(self.chapter_body_selector)
+        nav = body.find("a", string=re.compile("Index"))
+        if nav and nav.parent:
+            nav.parent.decompose()
+        return body

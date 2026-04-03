@@ -141,7 +141,8 @@ class SoupTemplate(CrawlerTemplate):
         tag = soup.select_one(self.novel_title_selector)
         novel.title = tag.text
         if not novel.title:
-            novel.title = soup.select_one(SoupTemplate.novel_title_selector).text
+            meta_tag = soup.select_one(SoupTemplate.novel_title_selector)
+            novel.title = meta_tag.get("content")
 
     def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel cover image"""
@@ -152,7 +153,8 @@ class SoupTemplate(CrawlerTemplate):
                 novel.cover_url = self.absolute_url(src_url)
                 break
         if not novel.title:
-            novel.cover_url = soup.select_one(SoupTemplate.novel_cover_selector).get("content")
+            meta_tag = soup.select_one(SoupTemplate.novel_cover_selector)
+            novel.cover_url = meta_tag.get("content")
 
     def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel authors"""
@@ -160,22 +162,24 @@ class SoupTemplate(CrawlerTemplate):
             [author.text for author in soup.select(self.novel_author_selector)]
         )
         if not novel.author:
-            novel.author = soup.select_one(SoupTemplate.novel_author_selector).text
+            meta_tag = soup.select_one(SoupTemplate.novel_author_selector)
+            novel.author = meta_tag.get("content")
 
     def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel categories/genres/tags"""
         novel.tags = [tag.text for tag in soup.select(self.novel_tags_selector)]
         if not novel.tags:
-            default_tags = soup.select_one(SoupTemplate.novel_tags_selector)
-            novel.tags = [t.strip() for t in default_tags.text.split(",")]
+            meta_tag = soup.select_one(SoupTemplate.novel_tags_selector)
+            novel.tags = [t.strip() for t in meta_tag.get("content").split(",")]
 
     def parse_summary(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel summary or synopsis"""
         tag = soup.select_one(self.novel_synopsis_selector)
         novel.summary = self.cleaner.extract_contents(tag)
         if not novel.summary:
-            default_summary = soup.select_one(SoupTemplate.novel_synopsis_selector)
-            novel.summary = self.cleaner.extract_contents(default_summary)
+            meta_tag = soup.select_one(SoupTemplate.novel_synopsis_selector)
+            content = PageSoup.create(meta_tag.get("content"))
+            novel.summary = self.cleaner.extract_contents(content)
 
     # ------------------------------------------------------------------------- #
     # Parser methods for Volume list

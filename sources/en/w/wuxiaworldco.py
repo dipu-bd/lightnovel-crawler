@@ -2,20 +2,28 @@
 import logging
 from urllib.parse import quote
 
-from lncrawl.core import Chapter, LegacyCrawler
+from lncrawl.core import Chapter, Novel, PageSoup, SearchResult, SoupTemplate
 
 logger = logging.getLogger(__name__)
 
 
-class WuxiaCoCrawler(LegacyCrawler):
+class WuxiaCoCrawler(SoupTemplate):
+    can_search = True
     base_url = [
         "https://www.wuxiaworld.co/",
         "https://m.wuxiaworld.co/",
     ]
 
-    def initialize(self):
+    novel_title_selector = "div.book-name"
+    novel_author_selector = "div.author span.name"
+    novel_cover_selector = "div.book-img img"
+    chapter_list_selector = "ul.chapter-list a.chapter-item"
+    chapter_title_selector = "div.chapter-name"
+    chapter_body_selector = "div.chapter-entity"
+
+    def initialize(self) -> None:
         self.scraper.origin = "https://m.wuxiaworld.co/"
-        self.init_executor(1)
+        self.taskman.init_executor(1)
         self.cleaner.bad_text_regex.update(
             [
                 r"^translat(ed by|or)",
@@ -23,55 +31,28 @@ class WuxiaCoCrawler(LegacyCrawler):
             ]
         )
 
-    def search_novel(self, query):
-        soup = self.get_soup(f"{self.scraper.origin}search/{quote(query)}/1")
-        results = []
+    def search(self, query: str):
+        soup = self.scraper.get_soup(f"{self.scraper.origin}search/{quote(query)}/1")
         for li in soup.select("ul.result-list li.list-item"):
-            a = li.select_one("a.book-name")["href"]
-            author = li.select_one("a.book-name font").text
-            title = li.select_one("a.book-name").text.replace(author, "")
-            results.append(
-                {
-                    "title": title,
-                    "url": self.absolute_url(a),
-                    "info": f"Author: {author}",
-                }
-            )
-        return results
-
-    def read_novel_info(self):
-        url = self.novel_url.replace("https://www", "https://m")
-        soup = self.get_soup(url)
-
-        possible_title = soup.select_one("div.book-name")
-        assert possible_title, "No novel title"
-        self.novel_title = possible_title.text.strip()
-
-        possible_author = soup.select_one("div.author span.name")
-        if possible_author:
-            self.novel_author = possible_author.text.strip()
-
-        possible_image = soup.select_one("div.book-img img")
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
-
-        for a in soup.select("ul.chapter-list a.chapter-item"):
-            chap_id = len(self.chapters) + 1
-            possible_name = a.select_one(".chapter-name")
-            self.chapters.append(
-                Chapter(
-                    id=chap_id,
-                    url=self.absolute_url(a["href"]),
-                    title=possible_name.text if possible_name else "",
-                )
+            name_a = li.select_one("a.book-name")
+            if not name_a:
+                continue
+            href = name_a.get("href")
+            author_el = name_a.select_one("font")
+            author = author_el.text if author_el else ""
+            title = name_a.text.replace(author, "")
+            yield SearchResult(
+                title=title,
+                url=self.absolute_url(href),
+                info=f"Author: {author}",
             )
 
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
+    def build_novel_url(self, novel: Novel) -> str:
+        return novel.url.replace("https://www", "https://m")
 
-        possible_title = soup.select_one("h1.chapter-title")
-        if possible_title:
-            chapter["title"] = possible_title.text.strip()
-
-        body_parts = soup.select_one("div.chapter-entity")
-        return self.cleaner.extract_contents(body_parts)
+    def select_chapter_body(self, chapter: Chapter) -> PageSoup:
+        soup = self.scraper.get_soup(chapter.url)
+        title_text = soup.select_one("h1.chapter-title").text
+        if title_text:
+            chapter.title = title_text
+        return soup.select_one(self.chapter_body_selector)

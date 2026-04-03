@@ -25,7 +25,6 @@ class Chapter(Box):
         images: Dict[str, str] = dict(),
         success: bool = False,
         crawler_version: Optional[int] = None,
-        extras: Dict[str, Any] = dict(),
         **kwargs,
     ) -> None:
         self.id = id
@@ -47,7 +46,6 @@ class Volume(Box):
         title: str = "",
         chapters: int = 0,
         crawler_version: Optional[int] = None,
-        extras: Dict[str, Any] = dict(),
         **kwargs,
     ) -> None:
         self.id = id
@@ -92,6 +90,44 @@ class Novel(Box):
         self[_keys_] = set(self.keys())
         self.update(kwargs)
 
+    def add_volume(
+        self,
+        id: Optional[int] = None,
+        title: str = "",
+        **kwargs,
+    ) -> Volume:
+        if id is None:
+            id = len(self.volumes) + 1
+        volume = Volume(
+            id=id,
+            title=title,
+            crawler_version=self.crawler_version,
+            **kwargs,
+        )
+        self.volumes.append(volume)
+        return volume
+
+    def add_chapter(
+        self,
+        id: Optional[int] = None,
+        url: str = "",
+        title: str = "",
+        volume: Optional[int] = None,
+        **kwargs,
+    ) -> Chapter:
+        if id is None:
+            id = len(self.chapters) + 1
+        chapter = Chapter(
+            id=id,
+            url=url,
+            title=title,
+            volume=volume,
+            crawler_version=self.crawler_version,
+            **kwargs,
+        )
+        self.chapters.append(chapter)
+        return chapter
+
 
 class SearchResult(Box):
     def __init__(
@@ -99,7 +135,6 @@ class SearchResult(Box):
         title: str,
         url: str,
         info: str = "",
-        extras: Dict[str, Any] = dict(),
         **kwargs,
     ) -> None:
         self.title = str(title)
@@ -115,7 +150,6 @@ class CombinedSearchResult(Box):
         id: str,
         title: str,
         novels: List[SearchResult] = [],
-        extras: Dict[str, Any] = dict(),
         **kwargs,
     ) -> None:
         self.id = id

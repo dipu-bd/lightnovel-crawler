@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Generator, List, Optional, Union
 
 import lxml.etree as etree
 from bs4 import BeautifulSoup, Tag
@@ -113,7 +113,9 @@ class PageSoup:
             return []
         try:
             return [
-                PageSoup(t) for t in self._tag.select(selector, limit=limit) if isinstance(t, Tag)
+                PageSoup(t)  # return PageSoup instances
+                for t in self._tag.select(selector, limit=limit)
+                if isinstance(t, Tag)
             ]
         except Exception:
             return []
@@ -133,24 +135,22 @@ class PageSoup:
             pass
         return PageSoup()
 
-    def parents(self, selector: str = "") -> List["PageSoup"]:
+    def parents(self, selector: str = "") -> Generator[PageSoup, None, None]:
         """Yield ancestor elements, optionally filtered by a CSS selector.
 
         Walks up the tree from the parent (excludes self).
         Without a selector, yields all ancestors.
         """
         if not self._tag:
-            return []
-        parents = []
+            return
         try:
             node = self._tag.parent
             while isinstance(node, Tag):
                 if not selector or node.css.match(selector):
-                    parents.append(PageSoup(node))
+                    yield PageSoup(node)
                 node = node.parent
         except Exception:
             pass
-        return parents
 
     def closest(self, selector: str) -> "PageSoup":
         """Find the nearest ancestor (or self) matching a CSS selector.
