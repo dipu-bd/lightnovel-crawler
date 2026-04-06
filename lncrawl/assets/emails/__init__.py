@@ -8,7 +8,9 @@ ROOT = Path(__file__).parent
 
 @lru_cache(1)
 def get_jinja2_env():
-    return Environment(loader=FileSystemLoader(str(ROOT)), autoescape=select_autoescape(["html", "xml"]))
+    return Environment(
+        loader=FileSystemLoader(str(ROOT)), autoescape=select_autoescape(["html", "xml"])
+    )
 
 
 @lru_cache(1)

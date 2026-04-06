@@ -25,7 +25,9 @@ class FujiTranslation(LegacyCrawler):
         self.novel_title = possible_title.text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one("div.entry-content p strong img")["data-orig-file"])
+        self.novel_cover = self.absolute_url(
+            soup.select_one("div.entry-content p strong img")["data-orig-file"]
+        )
         logger.info("Novel cover: %s", self.novel_cover)
 
         # Extract volume-wise chapter entries

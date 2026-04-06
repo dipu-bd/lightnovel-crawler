@@ -24,7 +24,10 @@ class AnnouncementService:
     ) -> List[Announcement]:
         with ctx.db.session() as sess:
             result = sess.exec(
-                sa.select(Announcement).order_by(sa.desc(Announcement.created_at)).offset(offset).limit(limit)
+                sa.select(Announcement)
+                .order_by(sa.desc(Announcement.created_at))
+                .offset(offset)
+                .limit(limit)
             )
             return list(result)
 

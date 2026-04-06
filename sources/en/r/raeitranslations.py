@@ -17,7 +17,9 @@ class RaeiTranslationsCrawler(LegacyCrawler):
 
     def read_novel_info(self) -> None:
         title = self.novel_url.rstrip("/").split("/")[-1]
-        novel_json = self.get_json(f"{self.novel_json_url_prefix}{title}", headers=self.json_request_headers)
+        novel_json = self.get_json(
+            f"{self.novel_json_url_prefix}{title}", headers=self.json_request_headers
+        )
         self.novel_title = novel_json["novTitle"]
         self.novel_author = novel_json["novAuthor"]
         self.novel_synopsis = novel_json["sum"]
@@ -25,7 +27,8 @@ class RaeiTranslationsCrawler(LegacyCrawler):
 
         params_chapters = {"novTitleId": title}
         chapters_json = self.get_json(
-            f"{self.novel_chapters_list_url_prefix}{urlencode(params_chapters)}", headers=self.json_request_headers
+            f"{self.novel_chapters_list_url_prefix}{urlencode(params_chapters)}",
+            headers=self.json_request_headers,
         )
 
         for index, json in enumerate(chapters_json):

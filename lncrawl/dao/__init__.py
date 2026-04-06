@@ -36,4 +36,6 @@ models: List[Type[SQLModel]] = [
     Announcement,
 ]
 
-tables: List[Table] = [getattr(model, "__table__") for model in models if hasattr(model, "__table__")]
+tables: List[Table] = [
+    getattr(model, "__table__") for model in models if hasattr(model, "__table__")
+]

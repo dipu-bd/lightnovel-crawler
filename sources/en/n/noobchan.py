@@ -3,7 +3,7 @@ from lncrawl.templates.wordpress import WordpressMangaTemplate
 
 
 class NoobChanCrawler(WordpressMangaTemplate):
-    base_url = ['https://noobchan.xyz/']
+    base_url = ["https://noobchan.xyz/"]
     chapter_body_selector = "div.text-left"
 
     def initialize(self) -> None:

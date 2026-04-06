@@ -14,7 +14,9 @@ logger = logging.getLogger(__name__)
 CHAPTER_LIST_URL = "https://api.reaperscans.com/chapters/{}?page={}&perPage=100&order=asc"
 NOVEL_URL = "https://api.reaperscans.com/series/{}"
 
-INIT_PATTERN = re.compile(r"\(self\.__next_f\s?=\s?self\.__next_f\s?\|\|\s?\[\]\)\.push\((\[.+?\])\)")
+INIT_PATTERN = re.compile(
+    r"\(self\.__next_f\s?=\s?self\.__next_f\s?\|\|\s?\[\]\)\.push\((\[.+?\])\)"
+)
 PAYLOAD_PATTERN = re.compile(r"self\.__next_f\.push\((\[.+)\)$")
 TEXT_PATTERN = re.compile(r"^[a-fA-F0-9]+:T(.*)", re.DOTALL)
 HEX_PREFIX_PATTERN = re.compile(r"^([0-9a-fA-F]+),\n")

@@ -40,7 +40,9 @@ class LiteroticaCrawler(LegacyCrawler):
             )
             self.novel_tags = [item.text for item in soup.select("a.av_as")]
             for item in soup.select("a.br_rj"):
-                self.chapters.append(dict(id=len(self.chapters) + 1, title=item.text, url=item["href"]))
+                self.chapters.append(
+                    dict(id=len(self.chapters) + 1, title=item.text, url=item["href"])
+                )
         else:
             self.novel_title = soup.select_one("h1.headline").text
             self.novel_author = soup.select_one("a.y_eU").text
@@ -54,7 +56,9 @@ class LiteroticaCrawler(LegacyCrawler):
         while 1:
             chapterText += self.cleaner.extract_contents(soup.select_one("div.aa_ht"))
             try:
-                nextUrl = "https://speedy.literotica.com" + soup.select_one("a.l_bJ.l_bL").attrs["href"]
+                nextUrl = (
+                    "https://speedy.literotica.com" + soup.select_one("a.l_bJ.l_bL").attrs["href"]
+                )
                 soup = self.get_soup(nextUrl, timeout=100)
             except Exception:
                 break

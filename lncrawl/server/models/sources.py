@@ -23,7 +23,9 @@ class CrawlerInfo(BaseModel):
     version: int = Field(..., description="Version number")
     file_path: str = Field(..., description="File path of the crawler module")
     base_urls: List[str] = Field(..., description="List of base URLs")
-    has_mtl: bool = Field(default=False, description="True if the crawler supports machine translation")
+    has_mtl: bool = Field(
+        default=False, description="True if the crawler supports machine translation"
+    )
     has_manga: bool = Field(default=False, description="True if the crawler supports manga")
     can_search: bool = Field(default=False, description="True if the crawler supports search")
     can_login: bool = Field(default=False, description="True if the crawler supports login")
@@ -45,9 +47,15 @@ class CrawlerInfo(BaseModel):
 class CrawlerIndex(BaseModel):
     v: int = Field(..., description="Version or build number")
     app: AppInfo = Field(..., description="Application information")
-    rejected: Dict[str, str] = Field(default_factory=dict, description="Dictionary of rejected sources")
-    supported: Dict[str, str] = Field(default_factory=dict, description="Dictionary of supported sources")
-    crawlers: Dict[str, CrawlerInfo] = Field(default_factory=dict, description="Dictionary of crawlers")
+    rejected: Dict[str, str] = Field(
+        default_factory=dict, description="Dictionary of rejected sources"
+    )
+    supported: Dict[str, str] = Field(
+        default_factory=dict, description="Dictionary of supported sources"
+    )
+    crawlers: Dict[str, CrawlerInfo] = Field(
+        default_factory=dict, description="Dictionary of crawlers"
+    )
 
 
 class SourceItem(BaseModel):
@@ -55,10 +63,14 @@ class SourceItem(BaseModel):
     domain: str = Field(description="Domain name")
     version: int = Field(description="Version number")
     has_manga: bool = Field(default=False, description="True if the source supports manga")
-    has_mtl: bool = Field(default=False, description="True if the source supports machine translation")
+    has_mtl: bool = Field(
+        default=False, description="True if the source supports machine translation"
+    )
     language: str = Field(default="en", description="2 letter language code")
     is_disabled: bool = Field(default=False, description="True if the source is disabled")
-    disable_reason: Optional[str] = Field(default=None, description="Reason for disabling the source")
+    disable_reason: Optional[str] = Field(
+        default=None, description="Reason for disabling the source"
+    )
     can_search: bool = Field(default=False, description="True if the source supports search")
     can_login: bool = Field(default=False, description="True if the source supports login")
     total_commits: int = Field(default=0, description="Total number of commits")

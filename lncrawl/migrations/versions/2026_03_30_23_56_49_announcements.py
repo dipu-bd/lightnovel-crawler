@@ -40,8 +40,12 @@ def upgrade() -> None:
     )
     op.create_index(op.f("ix_announcement_is_active"), "announcements", ["is_active"], unique=False)
     op.create_index(op.f("ix_announcement_version"), "announcements", ["version"], unique=False)
-    op.create_index(op.f("ix_announcements_created_at"), "announcements", ["created_at"], unique=False)
-    op.create_index(op.f("ix_announcements_updated_at"), "announcements", ["updated_at"], unique=False)
+    op.create_index(
+        op.f("ix_announcements_created_at"), "announcements", ["created_at"], unique=False
+    )
+    op.create_index(
+        op.f("ix_announcements_updated_at"), "announcements", ["updated_at"], unique=False
+    )
 
 
 def downgrade() -> None:

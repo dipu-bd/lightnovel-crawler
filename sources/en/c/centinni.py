@@ -3,7 +3,7 @@ from lncrawl.templates.wordpress import WordpressTemplate
 
 
 class Centinni(WordpressTemplate):
-    base_url = 'https://www.centinni.com/'
+    base_url = "https://www.centinni.com/"
     chapter_body_selector = "div.text-left"
     novel_author_selector = '.author-content a[href*="novel-author"]'
 

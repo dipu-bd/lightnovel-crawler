@@ -39,7 +39,12 @@ class ZenithNovelsCrawler(LegacyCrawler):
                 if len(self.volumes) < vol_id:
                     self.volumes.append(Volume(id=vol_id))
                 self.chapters.append(
-                    Chapter(id=chap_id, volume=vol_id, title=a["title"], url=self.absolute_url(a["href"]))
+                    Chapter(
+                        id=chap_id,
+                        volume=vol_id,
+                        title=a["title"],
+                        url=self.absolute_url(a["href"]),
+                    )
                 )
 
             next_link = soup.select_one("ul.lcp_paginator a.lcp_nextlink")

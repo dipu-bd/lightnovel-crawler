@@ -3,7 +3,7 @@ from lncrawl.templates.wordpress import WordpressTemplate
 
 
 class HanyuNovels(WordpressTemplate):
-    base_url = 'http://www.hanyunovels.site/'
+    base_url = "http://www.hanyunovels.site/"
     chapter_body_selector = "div.text-left"
 
     def initialize(self) -> None:

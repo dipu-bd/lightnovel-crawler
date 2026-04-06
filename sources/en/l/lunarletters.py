@@ -23,7 +23,9 @@ class LunarLetters(LegacyCrawler):
             self.novel_cover = self.absolute_url(possible_novel_cover["content"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.author-content a[href*="series-author"]')])
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.author-content a[href*="series-author"]')]
+        )
         logger.info("%s", self.novel_author)
 
         volumes = set()

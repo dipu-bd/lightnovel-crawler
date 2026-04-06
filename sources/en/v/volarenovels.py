@@ -70,7 +70,9 @@ class VolareNovelsCrawler(LegacyCrawler):
         logger.info("Novel author: %s", self.novel_author)
 
         try:
-            self.novel_cover = self.absolute_url(soup.select_one("#content-container .md-d-table img")["src"])
+            self.novel_cover = self.absolute_url(
+                soup.select_one("#content-container .md-d-table img")["src"]
+            )
         except Exception:
             pass  # not so important to raise errors
         logger.info("Novel cover: %s", self.novel_cover)

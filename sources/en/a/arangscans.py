@@ -3,7 +3,7 @@ from lncrawl.templates.wordpress import WordpressTemplate
 
 
 class ArangScans(WordpressTemplate):
-    base_url = 'https://arangscans.com/'
+    base_url = "https://arangscans.com/"
     chapter_body_selector = "div.text-left"
 
     def initialize(self) -> None:

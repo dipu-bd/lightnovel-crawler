@@ -20,12 +20,16 @@ class Eight88NovelCrawler(LegacyCrawler):
 
         try:
             rows = soup.find("table").find_all("tr")
-            self.novel_author = ", ".join([e.text.strip() for e in rows[(1 if len(rows) == 3 else 0)].find_all("a")])
+            self.novel_author = ", ".join(
+                [e.text.strip() for e in rows[(1 if len(rows) == 3 else 0)].find_all("a")]
+            )
         except Exception:
             pass
 
         try:
-            self.novel_cover = self.absolute_url(soup.find("div", {"class": "book3d"}).find("img").get("data-src"))
+            self.novel_cover = self.absolute_url(
+                soup.find("div", {"class": "book3d"}).find("img").get("data-src")
+            )
         except Exception:
             pass
 

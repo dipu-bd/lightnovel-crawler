@@ -32,7 +32,9 @@ class Dobelyuwai(LegacyCrawler):
         # Removes none TOC links from bottom of page.
         toc_parts = soup.select_one("div.entry-content")
 
-        for notoc in toc_parts.select(".sharedaddy, .inline-ad-slot, .code-block, script, .adsbygoogle"):
+        for notoc in toc_parts.select(
+            ".sharedaddy, .inline-ad-slot, .code-block, script, .adsbygoogle"
+        ):
             notoc.extract()
 
         # Extract volume-wise chapter entries

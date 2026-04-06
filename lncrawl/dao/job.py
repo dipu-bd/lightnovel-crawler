@@ -36,10 +36,16 @@ class Job(BaseTable, table=True):
     )
     priority: JobPriority = sa.Field(default=JobPriority.LOW, description="The job priority")
     status: JobStatus = sa.Field(default=JobStatus.PENDING, description="Current status")
-    is_done: bool = sa.Field(default=False, sa_type=sa.Boolean, description="Whether the job has completed")
+    is_done: bool = sa.Field(
+        default=False, sa_type=sa.Boolean, description="Whether the job has completed"
+    )
     error: Optional[str] = sa.Field(default=None, description="Error state in case of failure")
-    started_at: Optional[int] = sa.Field(default=None, sa_type=sa.BigInteger, description="Job start time (UNIX ms)")
-    finished_at: Optional[int] = sa.Field(default=None, sa_type=sa.BigInteger, description="Job finish time (UNIX ms)")
+    started_at: Optional[int] = sa.Field(
+        default=None, sa_type=sa.BigInteger, description="Job start time (UNIX ms)"
+    )
+    finished_at: Optional[int] = sa.Field(
+        default=None, sa_type=sa.BigInteger, description="Job finish time (UNIX ms)"
+    )
 
     done: int = sa.Field(default=0, description="Total completed items")
     failed: int = sa.Field(default=0, description="Total failed items")

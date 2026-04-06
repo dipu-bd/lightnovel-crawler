@@ -33,7 +33,9 @@ class RPGNovels(LegacyCrawler):
             self.novel_cover = self.absolute_url(possible_novel_cover["content"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.post-entry a[href*="mypage.syosetu.com"]')])
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.post-entry a[href*="mypage.syosetu.com"]')]
+        )
         logger.info("%s", self.novel_author)
 
         # Removes none TOC links from bottom of page.

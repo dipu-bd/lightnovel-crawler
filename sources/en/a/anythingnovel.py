@@ -43,7 +43,9 @@ class AnythingNovelCrawler(LegacyCrawler):
         soup = self.get_soup(chapter["url"])
         content = soup.select_one("div#content")
         self.cleaner.clean_contents(content)
-        paragraphs = [str(p) for p in content.select("p") if p.text and p.text.lower() != "advertisement"]
+        paragraphs = [
+            str(p) for p in content.select("p") if p.text and p.text.lower() != "advertisement"
+        ]
         return "<p>" + "</p><p>".join(paragraphs) + "</p>"
 
     def should_take(self, p):

@@ -15,7 +15,9 @@ class InstadosesCrawler(LegacyCrawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = " ".join([str(x) for x in soup.select_one(".post-title h1").contents if not x.name]).strip()
+        self.novel_title = " ".join(
+            [str(x) for x in soup.select_one(".post-title h1").contents if not x.name]
+        ).strip()
         logger.info("Novel title: %s", self.novel_title)
 
         try:
@@ -31,7 +33,9 @@ class InstadosesCrawler(LegacyCrawler):
             self.novel_author = author[0].text
         logger.info("Novel author: %s", self.novel_author)
 
-        self.novel_id = soup.select_one(".wp-manga-action-button[data-action=bookmark]")["data-post"]
+        self.novel_id = soup.select_one(".wp-manga-action-button[data-action=bookmark]")[
+            "data-post"
+        ]
         logger.info("Novel id: %s", self.novel_id)
 
         for span in soup.select(".page-content-listing span"):

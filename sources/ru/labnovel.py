@@ -29,7 +29,9 @@ class LabnovelCrawler(LegacyCrawler):
         for chapter in reversed(soup.select("div.chapter-list a")):
             chap_id = 1 + (len(self.chapters))
 
-            self.chapters.append(Chapter(id=chap_id, title=chapter["title"], url=self.absolute_url(chapter["href"])))
+            self.chapters.append(
+                Chapter(id=chap_id, title=chapter["title"], url=self.absolute_url(chapter["href"]))
+            )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])

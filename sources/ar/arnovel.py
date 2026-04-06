@@ -49,7 +49,9 @@ class ArNovel(LegacyCrawler):
         #     soup.select_one('.summary_image a img')['data-src'])
         # logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')]
+        )
         logger.info("%s", self.novel_author)
 
         self.novel_id = soup.select_one("#manga-chapters-holder")["data-id"]

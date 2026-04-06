@@ -23,7 +23,8 @@ class ShinsoriCrawler(LegacyCrawler):
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = (
-            "Author : %s, Translator: Shinsori" % soup.select("div.entry.clearfix p strong")[1].next_sibling.strip()
+            "Author : %s, Translator: Shinsori"
+            % soup.select("div.entry.clearfix p strong")[1].next_sibling.strip()
         )
         logger.info("Novel author: %s", self.novel_author)
 

@@ -52,7 +52,9 @@ class BlNovels(LegacyCrawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')])
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.author-content a[href*="novel-author"]')]
+        )
         logger.info("%s", self.novel_author)
 
         chapter_list_url = self.absolute_url("ajax/chapters", self.novel_url)

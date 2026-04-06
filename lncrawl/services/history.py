@@ -41,7 +41,9 @@ class ReadHistoryService:
     def check(self, user_id: str, chapter_id: str) -> bool:
         with ctx.db.session() as sess:
             item = sess.exec(
-                select(ReadHistory.id).where(ReadHistory.user_id == user_id).where(ReadHistory.chapter_id == chapter_id)
+                select(ReadHistory.id)
+                .where(ReadHistory.user_id == user_id)
+                .where(ReadHistory.chapter_id == chapter_id)
             ).first()
             return bool(item)
 

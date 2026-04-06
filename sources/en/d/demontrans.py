@@ -16,7 +16,9 @@ class DemonTranslations(LegacyCrawler):
         self.novel_title = soup.find("h1", {"class": "entry-title"}).text.strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        self.novel_cover = self.absolute_url(soup.select_one("div.entry-content p img")["data-orig-file"])
+        self.novel_cover = self.absolute_url(
+            soup.select_one("div.entry-content p img")["data-orig-file"]
+        )
         logger.info("Novel cover: %s", self.novel_cover)
 
         self.novel_author = "Demon Translations"

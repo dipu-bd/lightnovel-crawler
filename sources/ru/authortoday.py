@@ -65,6 +65,8 @@ class AuthorTodayCrawler(LegacyCrawler):
             chapter_d_bytes.append(chapter_e_bytes[i] ^ ord(cipher[i % len(cipher)]))
 
         # split by bytes, concatenate sequences and decode
-        chapter_content = bytes([b for a in chapter_d_bytes for b in [a >> 8, a & 0xFF]]).decode("utf-16")
+        chapter_content = bytes([b for a in chapter_d_bytes for b in [a >> 8, a & 0xFF]]).decode(
+            "utf-16"
+        )
 
         return chapter_content

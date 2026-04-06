@@ -30,7 +30,11 @@ class XiaowazCrawler(LegacyCrawler):
 
         for a in soup.select(".entry-content a[href*='/articles/']"):
             self.chapters.append(
-                Chapter(id=len(self.chapters) + 1, title=a.text.strip(), url=self.absolute_url(a["href"]))
+                Chapter(
+                    id=len(self.chapters) + 1,
+                    title=a.text.strip(),
+                    url=self.absolute_url(a["href"]),
+                )
             )
 
     def download_chapter_body(self, chapter):

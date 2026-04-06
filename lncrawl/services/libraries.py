@@ -175,7 +175,11 @@ class LibraryService:
             library = self._get_library(sess, library_id)
             self._ensure_visible(library, user)
 
-            cnt = sa.select(sa.func.count()).select_from(LibraryNovel).where(LibraryNovel.library_id == library_id)
+            cnt = (
+                sa.select(sa.func.count())
+                .select_from(LibraryNovel)
+                .where(LibraryNovel.library_id == library_id)
+            )
             stmt = (
                 sa.select(Novel)
                 .join(LibraryNovel, sa.col(LibraryNovel.novel_id) == sa.col(Novel.id))

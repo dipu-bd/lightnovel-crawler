@@ -23,7 +23,9 @@ class NovelRinganCrawler(LegacyCrawler):
             self.novel_cover = self.absolute_url(possible_image["src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.entry-author a[href*="/author/"]')])
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.entry-author a[href*="/author/"]')]
+        )
         logger.info("%s", self.novel_author)
 
         for a in reversed(soup.select(".bxcl ul li a")):

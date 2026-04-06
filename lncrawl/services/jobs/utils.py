@@ -34,7 +34,9 @@ def select_descendends(job_id: str, inclusive: bool = False):
     ) SELECT descendends.id FROM descendends
     """
     des = select(col(Job.id).label("id")).where(Job.id == job_id).cte("descendends", recursive=True)
-    des = des.union_all(select(col(Job.id).label("id")).join(des, col(Job.parent_job_id) == des.c.id))
+    des = des.union_all(
+        select(col(Job.id).label("id")).join(des, col(Job.parent_job_id) == des.c.id)
+    )
     stmt = select(des.c.id)
     if not inclusive:
         stmt = stmt.where(des.c.id != job_id)

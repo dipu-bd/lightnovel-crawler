@@ -23,7 +23,10 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
-    op.add_column("artifacts", sa.Column("file_size", sa.BigInteger(), server_default=sa.literal(0), nullable=False))
+    op.add_column(
+        "artifacts",
+        sa.Column("file_size", sa.BigInteger(), server_default=sa.literal(0), nullable=False),
+    )
 
     conn = op.get_bind()
     executor = TaskManager(15)

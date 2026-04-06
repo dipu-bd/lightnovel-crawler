@@ -81,8 +81,13 @@ def view_one(
         print("[green]:right_arrow: Contributors:[/green]", contribs)
 
     # Display source file
-    print("[green]:right_arrow: Source file:[/green]", Text(str(current_file), style="cyan", no_wrap=True))
+    print(
+        "[green]:right_arrow: Source file:[/green]",
+        Text(str(current_file), style="cyan", no_wrap=True),
+    )
 
     # Display download link
     if item.url:
-        print("[green]:right_arrow: Download URL:[/green]", Text(item.url, style="cyan", no_wrap=True))
+        print(
+            "[green]:right_arrow: Download URL:[/green]", Text(item.url, style="cyan", no_wrap=True)
+        )

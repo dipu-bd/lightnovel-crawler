@@ -15,15 +15,21 @@ class Novel(BaseTable, table=True):
 
     title: str = sa.Field(description="Title of the novel")
     authors: Optional[str] = sa.Field(default=None, description="Comma-separated list of authors")
-    synopsis: Optional[str] = sa.Field(default=None, description="Brief synopsis or novel description")
-    tags: List[str] = sa.Field(default=[], sa_type=sa.JSON, description="List of genre or thematic tags")
+    synopsis: Optional[str] = sa.Field(
+        default=None, description="Brief synopsis or novel description"
+    )
+    tags: List[str] = sa.Field(
+        default=[], sa_type=sa.JSON, description="List of genre or thematic tags"
+    )
     cover_url: Optional[str] = sa.Field(
         default=None,
         description="Cover image URL",
     )
 
     mtl: bool = sa.Field(default=False, description="True if content is machine-translated")
-    rtl: bool = sa.Field(default=False, description="True if text reads right-to-left (e.g. Arabic, Hebrew)")
+    rtl: bool = sa.Field(
+        default=False, description="True if text reads right-to-left (e.g. Arabic, Hebrew)"
+    )
     manga: bool = sa.Field(default=False, description="True if this entry is a manga/manhua/comic")
     language: Optional[str] = sa.Field(
         default=None,

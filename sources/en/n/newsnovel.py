@@ -58,7 +58,8 @@ class NewsNovelCrawler(LegacyCrawler):
 
         logger.info("Getting chapters...")
         futures_to_check = {
-            self.executor.submit(self.download_chapter_list, i + 1, novel_id): str(i) for i in range(page_count + 1)
+            self.executor.submit(self.download_chapter_list, i + 1, novel_id): str(i)
+            for i in range(page_count + 1)
         }
         [x.result() for x in futures.as_completed(futures_to_check)]
 

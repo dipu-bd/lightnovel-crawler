@@ -13,7 +13,9 @@ class OrNovel(LegacyCrawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = " ".join([str(x) for x in soup.select_one(".title h1").contents if not x.name]).strip()
+        self.novel_title = " ".join(
+            [str(x) for x in soup.select_one(".title h1").contents if not x.name]
+        ).strip()
         logger.info("Novel title: %s", self.novel_title)
 
         probable_img = soup.select_one(".intro-left img.book-image")

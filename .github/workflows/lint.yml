@@ -59,8 +59,8 @@ jobs:
 
       - name: 🧹 Lint Code
         run: |
-          uv run ruff check .
-          uv run ruff format --check .
+          uv run ruff check
+          uv run ruff format --check
 
       - name: 🏗️ Build Wheel
         run: uv run python -m build --wheel --no-isolation

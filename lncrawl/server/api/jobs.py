@@ -109,7 +109,9 @@ def fetch_novels(
     return ctx.jobs.fetch_many_novels(user, *urls, full=body.full)
 
 
-@router.post("/create/fetch-volumes", summary="Create a job to fetch all chapter contents for the volumes")
+@router.post(
+    "/create/fetch-volumes", summary="Create a job to fetch all chapter contents for the volumes"
+)
 def fetch_volumes(
     user: User = Security(ensure_user),
     body: FetchVolumesRequest = Body(),

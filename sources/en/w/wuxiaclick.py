@@ -21,7 +21,9 @@ class WuxiaClick(LegacyCrawler):
         script = soup.find("script", {"id": "__NEXT_DATA__"})
         data = json.loads(script.contents[0])
 
-        data = data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["results"]
+        data = data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"][
+            "results"
+        ]
 
         results = []
         for novel in data:
@@ -38,7 +40,9 @@ class WuxiaClick(LegacyCrawler):
         soup = self.get_soup(self.novel_url)
         script = soup.find("script", {"id": "__NEXT_DATA__"})
         novel_data = json.loads(script.contents[0])
-        novel_data = novel_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]
+        novel_data = novel_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"][
+            "data"
+        ]
 
         possible_title = novel_data["name"]
         assert possible_title, "No novel title"
@@ -54,7 +58,9 @@ class WuxiaClick(LegacyCrawler):
         self.novel_synopsis = novel_data["description"]
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
-        self.novel_tags = [x["name"] for x in novel_data["categories"]] + [x["name"] for x in novel_data["tags"]]
+        self.novel_tags = [x["name"] for x in novel_data["categories"]] + [
+            x["name"] for x in novel_data["tags"]
+        ]
         logger.info("Novel tags: %s", self.novel_tags)
 
         slug = novel_data["slug"]
@@ -77,7 +83,9 @@ class WuxiaClick(LegacyCrawler):
         soup = self.get_soup(chapter["url"])
         script = soup.find("script", {"id": "__NEXT_DATA__"})
         chapter_data = json.loads(script.contents[0])
-        contents = chapter_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"]["text"]
+        contents = chapter_data["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"][
+            "data"
+        ]["text"]
 
         contents = "<p>" + contents.replace("\n", "</p><p>") + "</p>"
         return contents

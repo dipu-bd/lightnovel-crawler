@@ -23,7 +23,9 @@ class SyosetuCrawler(LegacyCrawler):
         results = []
         for tab in soup.select(".searchkekka_box"):
             a = tab.select_one(".novel_h a")
-            latest = tab.select_one(".left").get_text(separator=" ").strip()  # e.g.: 連載中 (全604部分)
+            latest = (
+                tab.select_one(".left").get_text(separator=" ").strip()
+            )  # e.g.: 連載中 (全604部分)
             votes = tab.select_one(".attention").text.strip()  # e.g.: "総合ポイント： 625,717 pt"
             results.append(
                 {
@@ -52,7 +54,10 @@ class SyosetuCrawler(LegacyCrawler):
         if pager_last and "href" in pager_last.attrs:
             page_num = int(pager_last["href"].split("=")[-1])
             with ThreadPoolExecutor() as executor:
-                futures = [executor.submit(self.get_soup, f"{self.novel_url}?p={x}") for x in range(1, page_num + 1)]
+                futures = [
+                    executor.submit(self.get_soup, f"{self.novel_url}?p={x}")
+                    for x in range(1, page_num + 1)
+                ]
                 for future in futures:
                     soups.append(future.result())
         else:

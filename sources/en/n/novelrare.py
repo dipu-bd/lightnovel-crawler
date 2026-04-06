@@ -30,7 +30,9 @@ class NovelrareCrawler(LegacyCrawler):
         for a in reversed(chapters_table.find_all("a", class_=lambda x: x != "c-new-tag")):
             chap_id = 1 + (len(self.chapters))
 
-            self.chapters.append(Chapter(id=chap_id, title=a.text.strip(), url=self.absolute_url(a["href"])))
+            self.chapters.append(
+                Chapter(id=chap_id, title=a.text.strip(), url=self.absolute_url(a["href"]))
+            )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])

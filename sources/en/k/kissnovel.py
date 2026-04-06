@@ -14,7 +14,9 @@ class KissNovelCrawler(LegacyCrawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        self.novel_title = " ".join([str(x) for x in soup.select_one(".post-title h1").contents if not x.name]).strip()
+        self.novel_title = " ".join(
+            [str(x) for x in soup.select_one(".post-title h1").contents if not x.name]
+        ).strip()
         logger.info("Novel title: %s", self.novel_title)
 
         possible_image = soup.select_one(".summary_image img")

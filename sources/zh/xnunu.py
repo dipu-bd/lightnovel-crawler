@@ -64,7 +64,9 @@ class Xnunu(LegacyCrawler):
         try:
             int(novel_id)
         except ValueError:
-            logger.error("Couldn't get novel_id from URL, URL should look like https://www.xnunu.com/book/9223")
+            logger.error(
+                "Couldn't get novel_id from URL, URL should look like https://www.xnunu.com/book/9223"
+            )
             return
 
         container = soup.select_one(".book-bookinfo")

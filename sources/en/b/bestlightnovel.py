@@ -53,7 +53,8 @@ class BestLightNovel(LegacyCrawler):
         self.novel_synopsis = self.cleaner.extract_contents(synopsis)
 
         self.novel_tags = [
-            a.text.strip() for a in soup.select('.truyen_info_right a[href*="novel_list?type=latest&category="]')
+            a.text.strip()
+            for a in soup.select('.truyen_info_right a[href*="novel_list?type=latest&category="]')
         ]
 
         for a in reversed(soup.select("#list_chapter .chapter-list a")):

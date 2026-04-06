@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate
 
 logger = logging.getLogger(__name__)
 

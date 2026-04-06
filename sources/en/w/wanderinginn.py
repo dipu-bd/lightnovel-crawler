@@ -10,7 +10,9 @@ class WanderingInnCrawler(LegacyCrawler):
     base_url = ["https://wanderinginn.com/"]
 
     def initialize(self) -> None:
-        self.cleaner.bad_text_regex.update(["Previous Chapter", "Table of Contents", "Next Chapter"])
+        self.cleaner.bad_text_regex.update(
+            ["Previous Chapter", "Table of Contents", "Next Chapter"]
+        )
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

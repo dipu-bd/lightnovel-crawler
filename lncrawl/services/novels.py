@@ -57,7 +57,9 @@ class NovelService:
     def list_sources(self) -> List[SourceItem]:
         with ctx.db.session() as sess:
             domains = sess.exec(
-                sa.select(Novel.domain, sa.func.count(sa.col(Novel.id)).label("total_novels")).group_by(Novel.domain)
+                sa.select(
+                    Novel.domain, sa.func.count(sa.col(Novel.id)).label("total_novels")
+                ).group_by(Novel.domain)
             ).all()
 
         results = []

@@ -30,7 +30,8 @@ class UserToken(sa.SQLModel, table=True):
     __tablename__ = "user_tokens"  # type: ignore
 
     token: str = sa.Field(
-        default_factory=generate_token, sa_column=sa.Column(sa.CHAR(10), primary_key=True, nullable=False)
+        default_factory=generate_token,
+        sa_column=sa.Column(sa.CHAR(10), primary_key=True, nullable=False),
     )
     user_id: str = sa.Field(foreign_key="users.id", ondelete="CASCADE")
     expires_at: int = sa.Field(sa_type=sa.BigInteger, nullable=False)

@@ -42,7 +42,9 @@ class lazybirdtranslations(LegacyCrawler):
         logger.info("Novel author: %s", self.novel_author)
 
         # Stops external links being selected as chapters
-        chapters = soup.select('.wp-block-table tr td a[href*="lazybirdtranslations.wordpress.com/2"]')
+        chapters = soup.select(
+            '.wp-block-table tr td a[href*="lazybirdtranslations.wordpress.com/2"]'
+        )
 
         for a in chapters:
             chap_id = len(self.chapters) + 1

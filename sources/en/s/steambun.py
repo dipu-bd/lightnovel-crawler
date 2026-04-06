@@ -30,7 +30,9 @@ class SteambunCrawler(LegacyCrawler):
             chapter_id = len(self.chapters) + 1
             volume_id = 1 + (chapter_id - 1) // 100
             volumes.add(volume_id)
-            self.chapters.append(Chapter(id=chapter_id, volume=volume_id, title=title, url=a["href"]))
+            self.chapters.append(
+                Chapter(id=chapter_id, volume=volume_id, title=title, url=a["href"])
+            )
 
         self.chapters.sort(key=lambda x: x["id"])
         self.volumes = [Volume(id=x, title="") for x in volumes]

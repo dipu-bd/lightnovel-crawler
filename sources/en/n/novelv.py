@@ -41,7 +41,9 @@ class NovelvCrawler(LegacyCrawler):
             volume_id = (chapter_id - 1) // 100 + 1
             volumes.add(volume_id)
 
-            self.chapters.append(Chapter(id=chapter_id, title=a.text.strip(), url=possible_url, volume=volume_id))
+            self.chapters.append(
+                Chapter(id=chapter_id, title=a.text.strip(), url=possible_url, volume=volume_id)
+            )
 
         self.volumes = [Volume(id=x, title="") for x in list(volumes)]
 

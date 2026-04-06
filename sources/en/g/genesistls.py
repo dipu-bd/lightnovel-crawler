@@ -39,7 +39,9 @@ class GenesisTlsCrawler(LegacyCrawler):
         self.novel_author = potential_author.text
         logger.info("Novel author: %s", self.novel_author)
 
-        potential_cover = self.absolute_url(soup.select_one(".bigcontent img[itemprop=image]")["src"]).split("?")[0]
+        potential_cover = self.absolute_url(
+            soup.select_one(".bigcontent img[itemprop=image]")["src"]
+        ).split("?")[0]
         assert potential_cover, "No cover"
         self.novel_cover = potential_cover
         logger.info("Novel cover: %s", self.novel_cover)
@@ -55,7 +57,9 @@ class GenesisTlsCrawler(LegacyCrawler):
 
             potential_chapter_title = ep_list_item.select_one("div.epl-title").text
             chapter_title = (
-                potential_chapter_title if len(potential_chapter_title) else f"Chapter {len(self.chapters) + 1}"
+                potential_chapter_title
+                if len(potential_chapter_title)
+                else f"Chapter {len(self.chapters) + 1}"
             )
 
             chapter_url = ep_list_item.select_one("a")["href"]

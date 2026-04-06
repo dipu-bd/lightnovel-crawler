@@ -33,7 +33,13 @@ class NovelsRockCrawler(LegacyCrawler):
                 {
                     "url": self.absolute_url(a["href"]),
                     "title": a.select_one(".search-item-title").text.strip(),
-                    "info": ", ".join([e.text.strip() for e in a.select(".search-label-text") if e and e.text.strip()]),
+                    "info": ", ".join(
+                        [
+                            e.text.strip()
+                            for e in a.select(".search-label-text")
+                            if e and e.text.strip()
+                        ]
+                    ),
                 }
             )
 

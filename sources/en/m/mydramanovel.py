@@ -15,9 +15,13 @@ class MyDramaNovel(LegacyCrawler):
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
-        self.novel_synopsis = self.cleaner.extract_contents(soup.find("div", {"class": "tagdiv-type"}))
+        self.novel_synopsis = self.cleaner.extract_contents(
+            soup.find("div", {"class": "tagdiv-type"})
+        )
 
-        self.novel_cover = self.absolute_url(soup.find("span", {"class": "entry-thumb"}).get("data-img-url"))
+        self.novel_cover = self.absolute_url(
+            soup.find("span", {"class": "entry-thumb"}).get("data-img-url")
+        )
 
         self.novel_title = soup.find("h1", {"class": "tdb-title-text"}).text
 
@@ -53,7 +57,9 @@ class MyDramaNovel(LegacyCrawler):
                 )
             )
 
-        for chapter in soup.select("div.tdb_module_loop.td_module_wrap.td-animation-stack.td-cpt-post"):
+        for chapter in soup.select(
+            "div.tdb_module_loop.td_module_wrap.td-animation-stack.td-cpt-post"
+        ):
             chapter_title = chapter.select_one("h3.entry-title a")
             if not chapter_title:
                 continue

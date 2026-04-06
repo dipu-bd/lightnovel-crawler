@@ -41,7 +41,9 @@ class IfreedomCrawler(LegacyCrawler):
         for a in reversed(soup.select(".menu-ranobe a")):
             chap_id = 1 + (len(self.chapters))
 
-            self.chapters.append(Chapter(id=chap_id, title=a.text.strip(), url=self.absolute_url(a["href"])))
+            self.chapters.append(
+                Chapter(id=chap_id, title=a.text.strip(), url=self.absolute_url(a["href"]))
+            )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])

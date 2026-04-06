@@ -44,10 +44,14 @@ class EngNovel(LegacyCrawler):
         # >
         possible_image = soup.select_one("div.wallpaper")
         if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["style"].split("url(")[-1].split(")")[0])
+            self.novel_cover = self.absolute_url(
+                possible_image["style"].split("url(")[-1].split(")")[0]
+            )
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = ", ".join([a.text.strip() for a in soup.select('div.info-chitiet a[href*="novel-author"]')])
+        self.novel_author = ", ".join(
+            [a.text.strip() for a in soup.select('div.info-chitiet a[href*="novel-author"]')]
+        )
         logger.info("%s", self.novel_author)
 
         # <div class="desc-text" itemprop="description">
@@ -72,7 +76,9 @@ class EngNovel(LegacyCrawler):
         logger.info("%s", self.novel_synopsis)
 
         # <a href="https://engnovel.com/action-novels" title="Action Novels" itemprop="genre">Action</a>
-        self.novel_tags = [a.text.strip() for a in soup.select('div.info-chitiet a[itemprop="genre"]')]
+        self.novel_tags = [
+            a.text.strip() for a in soup.select('div.info-chitiet a[itemprop="genre"]')
+        ]
         logger.info("Tags: %s", self.novel_tags)
 
         novel_id = soup.select_one("#id_post")["value"]
@@ -86,7 +92,9 @@ class EngNovel(LegacyCrawler):
                 "page": page,
             }
             chapter_list = self.make_soup(
-                self.post_response("https://engnovel.com/wp-admin/admin-ajax.php", data).json()["list_chap"]
+                self.post_response("https://engnovel.com/wp-admin/admin-ajax.php", data).json()[
+                    "list_chap"
+                ]
             )
 
             for a in chapter_list.select("ul.list-chapter li a"):
@@ -95,7 +103,12 @@ class EngNovel(LegacyCrawler):
                 if len(self.chapters) % 100 == 0:
                     self.volumes.append(Volume(id=vol_id))
                 self.chapters.append(
-                    Chapter(id=chap_id, volume=vol_id, title=a["title"], url=self.absolute_url(a["href"]))
+                    Chapter(
+                        id=chap_id,
+                        volume=vol_id,
+                        title=a["title"],
+                        url=self.absolute_url(a["href"]),
+                    )
                 )
 
     def download_chapter_body(self, chapter):

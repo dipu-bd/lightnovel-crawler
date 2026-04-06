@@ -69,7 +69,9 @@ class ChapterImageService:
         with ctx.db.session() as sess:
             existing = {
                 img.id: img
-                for img in sess.exec(sq.select(ChapterImage).where(ChapterImage.chapter_id == chapter.id)).all()
+                for img in sess.exec(
+                    sq.select(ChapterImage).where(ChapterImage.chapter_id == chapter.id)
+                ).all()
             }
 
             wk = set(images.keys())

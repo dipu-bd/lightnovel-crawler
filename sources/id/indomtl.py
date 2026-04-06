@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 
 short_page_url = "https://indomtl.com/?p=%s"
 search_url = "https://indomtl.com/wp-admin/admin-ajax.php?action=mtl_auto_suggest&q=%s"
-chapter_list_url = (
-    "https://indomtl.com/wp-admin/admin-ajax.php?action=mtl_chapter_json&id_novel=%s&view_all=yes&moreItemsPageIndex=%d"
-)
+chapter_list_url = "https://indomtl.com/wp-admin/admin-ajax.php?action=mtl_chapter_json&id_novel=%s&view_all=yes&moreItemsPageIndex=%d"
 
 
 class IndoMTLCrawler(LegacyCrawler):

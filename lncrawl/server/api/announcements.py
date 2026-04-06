@@ -36,7 +36,9 @@ def create_announcement(
     )
 
 
-@router.patch("/{announcement_id}", summary="Update announcement", dependencies=[Depends(ensure_admin)])
+@router.patch(
+    "/{announcement_id}", summary="Update announcement", dependencies=[Depends(ensure_admin)]
+)
 def update_announcement(
     announcement_id: str = Path(),
     body: AnnouncementUpdateRequest = Body(...),
@@ -51,7 +53,9 @@ def update_announcement(
     )
 
 
-@router.delete("/{announcement_id}", summary="Delete announcement", dependencies=[Depends(ensure_admin)])
+@router.delete(
+    "/{announcement_id}", summary="Delete announcement", dependencies=[Depends(ensure_admin)]
+)
 def delete_announcement(
     announcement_id: str = Path(),
 ) -> bool:

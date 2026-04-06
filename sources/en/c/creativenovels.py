@@ -61,7 +61,10 @@ class CreativeNovelsCrawler(LegacyCrawler):
                 continue
 
             p = re.findall(r'"([^"]+)"', text)
-            if p[0] == "ajaxurl" and p[1] == "https:\\/\\/creativenovels.com\\/wp-admin\\/admin-ajax.php":
+            if (
+                p[0] == "ajaxurl"
+                and p[1] == "https:\\/\\/creativenovels.com\\/wp-admin\\/admin-ajax.php"
+            ):
                 if p[2] == "security":
                     list_security_key = p[3]
         logger.debug("Chapter list security = %s", list_security_key)
@@ -115,7 +118,9 @@ class CreativeNovelsCrawler(LegacyCrawler):
 
         for span in body.tag.find_all("span"):
             if span.parent and len(span.parent.contents) <= 3:
-                if (span.parent.name in FORMATTING_TAGS) or (span.next_sibling or span.previous_sibling):
+                if (span.parent.name in FORMATTING_TAGS) or (
+                    span.next_sibling or span.previous_sibling
+                ):
                     if isinstance(span.next_sibling, Tag):
                         if span.next_sibling.name == FORMATTING_TAGS:
                             span.replace_with(span.text)

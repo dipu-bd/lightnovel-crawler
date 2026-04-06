@@ -75,6 +75,8 @@ class RenovelsCrawler(LegacyCrawler):
         soup = self.get_soup(chapter["url"])
         content = soup.select_one("script#__NEXT_DATA__").get_text()
         content = self.make_soup(
-            json.loads(content)["props"]["pageProps"]["fallbackData"]["chapter"]["content"]["content"]
+            json.loads(content)["props"]["pageProps"]["fallbackData"]["chapter"]["content"][
+                "content"
+            ]
         )
         return self.cleaner.extract_contents(content)

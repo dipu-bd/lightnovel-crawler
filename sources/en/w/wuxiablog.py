@@ -11,7 +11,9 @@ class WuxiaBlogCrawler(LegacyCrawler):
     base_url = ["https://www.wuxia.blog/"]
 
     def initialize(self) -> None:
-        self.cleaner.bad_css.update([".recently-nav", ".pager", ".fa", "span[itemprop='datePublished']"])
+        self.cleaner.bad_css.update(
+            [".recently-nav", ".pager", ".fa", "span[itemprop='datePublished']"]
+        )
         self.cleaner.bad_tags.update(["h4"])
 
     def read_novel_info(self):
@@ -38,13 +40,19 @@ class WuxiaBlogCrawler(LegacyCrawler):
         more_tag = soup.select_one("#more")
         if more_tag:
             nid = more_tag["data-nid"]
-            more_soup = self.post_soup(self.absolute_url(f"/temphtml/_tempChapterList_all_{nid}.html"))
+            more_soup = self.post_soup(
+                self.absolute_url(f"/temphtml/_tempChapterList_all_{nid}.html")
+            )
             more_chapters = more_soup.select("a")
             chapters.extend(more_chapters)
 
         for a in reversed(chapters):
             self.chapters.append(
-                Chapter(id=len(self.chapters) + 1, title=a.text.strip(), url=self.absolute_url(a["href"]))
+                Chapter(
+                    id=len(self.chapters) + 1,
+                    title=a.text.strip(),
+                    url=self.absolute_url(a["href"]),
+                )
             )
 
     def download_chapter_body(self, chapter):

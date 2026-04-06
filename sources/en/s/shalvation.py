@@ -27,7 +27,9 @@ class ShalvationTranslations(LegacyCrawler):
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
-        chapters = soup.select('div.entry-content p [href*="shalvationtranslations.wordpress.com/"]')
+        chapters = soup.select(
+            'div.entry-content p [href*="shalvationtranslations.wordpress.com/"]'
+        )
 
         for a in chapters:
             chap_id = len(self.chapters) + 1

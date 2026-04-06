@@ -33,7 +33,11 @@ class TigerTranslations(LegacyCrawler):
         logger.info("Novel author: %s", self.novel_author)
 
         # image may or may not be wrapped (in a p) in a span element
-        image_locations = ["div.the-content > img", "div.the-content > span > img", "div.the-content > p > span > img"]
+        image_locations = [
+            "div.the-content > img",
+            "div.the-content > span > img",
+            "div.the-content > p > span > img",
+        ]
 
         for location in image_locations:
             possible_cover = soup.select_one(location)
@@ -71,7 +75,9 @@ class TigerTranslations(LegacyCrawler):
 
         # try to figure out if there is a 2nd page or not, try different possible links
         # example: https://tigertranslations.org/2018/09/16/jack-of-all-trades-7/
-        info = re.fullmatch("(https://tigertranslations\\.org)/(\\d+/\\d+/\\d+)/(.+)/?", chapter.url)
+        info = re.fullmatch(
+            "(https://tigertranslations\\.org)/(\\d+/\\d+/\\d+)/(.+)/?", chapter.url
+        )
         domain, publish_date, chap_uri = info.groups()
         page2 = f"{domain}/{publish_date}/{chap_uri}-2"
         page2_alt = f"{domain}/{chap_uri}"

@@ -8,7 +8,6 @@ from urllib.parse import urlencode, urlparse
 
 from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, SearchResult, Volume
 from lncrawl.exceptions import FallbackToBrowser, LNException
-from lncrawl.webdriver.elements import By
 
 logger = logging.getLogger(__name__)
 

@@ -42,7 +42,11 @@ class ShuhaigeCrawler(LegacyCrawler):
             clean_synopsis = []
             for line in synopsis_lines:
                 line = line.strip()
-                if line and not line.startswith("是一名出色的小说作者") and not line.startswith("最新章节"):
+                if (
+                    line
+                    and not line.startswith("是一名出色的小说作者")
+                    and not line.startswith("最新章节")
+                ):
                     clean_synopsis.append(line)
             self.novel_synopsis = "\n".join(clean_synopsis)
         logger.info("Novel synopsis: %s", self.novel_synopsis)
@@ -82,7 +86,11 @@ class ShuhaigeCrawler(LegacyCrawler):
                     clean_synopsis = []
                     for line in synopsis_lines:
                         line = line.strip()
-                        if line and not line.startswith("是一名出色的小说作者") and not line.startswith("最新章节"):
+                        if (
+                            line
+                            and not line.startswith("是一名出色的小说作者")
+                            and not line.startswith("最新章节")
+                        ):
                             clean_synopsis.append(line)
                     self.novel_synopsis = "\n".join(clean_synopsis)
                 logger.info("Novel synopsis: %s", self.novel_synopsis)
@@ -140,7 +148,9 @@ class ShuhaigeCrawler(LegacyCrawler):
             chapter_title = a.get_text(strip=True)
             chapter_url = self.absolute_url(a["href"])
 
-            self.chapters.append(Chapter(id=ch_id, volume=vol_id, title=chapter_title, url=chapter_url))
+            self.chapters.append(
+                Chapter(id=ch_id, volume=vol_id, title=chapter_title, url=chapter_url)
+            )
 
         self.volumes = [Volume(id=x, title=f"Volume {x}") for x in sorted(volumes)]
         logger.info("Found %d chapters in %d volumes", len(self.chapters), len(self.volumes))

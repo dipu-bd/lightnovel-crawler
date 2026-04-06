@@ -50,12 +50,16 @@ class LightNovelsLive(LegacyCrawler):
 
         self.novel_title = novel_info["novel_name"]
         self.novel_cover = self.absolute_url(novel_info["novel_image"])
-        self.novel_author = ", ".join([author["name"] for author in data["props"]["pageProps"]["authors"]])
+        self.novel_author = ", ".join(
+            [author["name"] for author in data["props"]["pageProps"]["authors"]]
+        )
 
         # Adds proper spacing in the synopsis. (lossy)
         #
         # Regex101 link: https://regex101.com/r/lajsXs/3
-        for paragraph in re.split(r"[.!?](?=\w+)(?!\S+[.!?()]+(\s|\w))", novel_info["novel_description"]):
+        for paragraph in re.split(
+            r"[.!?](?=\w+)(?!\S+[.!?()]+(\s|\w))", novel_info["novel_description"]
+        ):
             if paragraph is None:
                 self.novel_synopsis += "<br/><br/>"
                 continue
@@ -67,7 +71,9 @@ class LightNovelsLive(LegacyCrawler):
             else:
                 self.novel_synopsis += "."
 
-        self.novel_tags = ", ".join([genre["name"] for genre in data["props"]["pageProps"]["genres"]])
+        self.novel_tags = ", ".join(
+            [genre["name"] for genre in data["props"]["pageProps"]["genres"]]
+        )
 
         url = self.absolute_url(chapter_list_url % novel_id)
         data = self.get_json(url)
@@ -78,7 +84,12 @@ class LightNovelsLive(LegacyCrawler):
             if index % 100 == 0:
                 self.volumes.append(Volume(id=vol_id))
             self.chapters.append(
-                Chapter(id=chap_id, volume=vol_id, title=item["chapter_name"], url=self.absolute_url(item["slug"]))
+                Chapter(
+                    id=chap_id,
+                    volume=vol_id,
+                    title=item["chapter_name"],
+                    url=self.absolute_url(item["slug"]),
+                )
             )
 
     def download_chapter_body(self, chapter):

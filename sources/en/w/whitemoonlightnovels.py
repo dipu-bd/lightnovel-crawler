@@ -46,14 +46,18 @@ class NovelsEmperorCrawler(LegacyCrawler):
             self.novel_author = author[0].text
         logger.info("Novel author: %s", self.novel_author)
 
-        self.novel_cover = self.absolute_url(soup.select_one("img.size-post-thumbnail")["src"]).split("?")[0]
+        self.novel_cover = self.absolute_url(
+            soup.select_one("img.size-post-thumbnail")["src"]
+        ).split("?")[0]
         logger.info("Novel cover: %s", self.novel_cover)
 
         for a in soup.select("div.eplister ul li a"):
             ch_title = a.select_one("div.epl-title").text
             ch_id = [int(x) for x in re.findall(r"\d+", ch_title)]
             ch_id = ch_id[0] if len(ch_id) else len(self.chapters) + 1
-            self.chapters.append(Chapter(id=ch_id, title=ch_title, url=self.absolute_url(a["href"])))
+            self.chapters.append(
+                Chapter(id=ch_id, title=ch_title, url=self.absolute_url(a["href"]))
+            )
 
         logger.debug("%d chapters and %d volumes found", len(self.chapters), len(self.volumes))
 

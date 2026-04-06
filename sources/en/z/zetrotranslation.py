@@ -3,7 +3,7 @@ from lncrawl.templates.wordpress import WordpressTemplate
 
 
 class ZetroTranslationCrawler(WordpressTemplate):
-    base_url = ['https://zetrotranslation.com/']
+    base_url = ["https://zetrotranslation.com/"]
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3", "script"])

@@ -21,7 +21,9 @@ class VisTranslations(LegacyCrawler):
         #     'meta[property="og:image"]')['content']
         # logger.info('Novel cover: %s', self.novel_cover)
 
-        self.novel_author = soup.select_one("div.wp-block-media-text__content > p:nth-child(4)").text
+        self.novel_author = soup.select_one(
+            "div.wp-block-media-text__content > p:nth-child(4)"
+        ).text
         logger.info("%s", self.novel_author)
 
         # Removes none TOC links from bottom of page.

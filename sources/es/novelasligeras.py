@@ -80,7 +80,9 @@ class NovelasLigerasCrawler(LegacyCrawler):
         assert possible_title, "Sin título"
         self.novel_title = possible_title.text.strip()
 
-        possible_author = soup.select_one('tr.woocommerce-product-attributes-item--attribute_pa_escritor a[rel="tag"]')
+        possible_author = soup.select_one(
+            'tr.woocommerce-product-attributes-item--attribute_pa_escritor a[rel="tag"]'
+        )
         if possible_author:
             self.novel_author = possible_author.text.strip()
 

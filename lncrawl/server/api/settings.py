@@ -13,7 +13,9 @@ router = APIRouter()
     "/notifications",
     summary="Save user notification settings",
 )
-def put_notification_settings(user: User = Security(ensure_user), body: PutNotificationRequest = Body()) -> bool:
+def put_notification_settings(
+    user: User = Security(ensure_user), body: PutNotificationRequest = Body()
+) -> bool:
     request = UpdateRequest(
         extra=dict(
             email_alerts={

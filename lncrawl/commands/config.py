@@ -23,7 +23,9 @@ def config():
 
 @app.command("view", help="View configuration sections.")
 def view_config(
-    format: Optional[str] = typer.Option(None, "--format", "-f", help="Format to view the configuration"),
+    format: Optional[str] = typer.Option(
+        None, "--format", "-f", help="Format to view the configuration"
+    ),
 ):
     data = ctx.config._data.copy()
     data.pop("__deprecated__", None)

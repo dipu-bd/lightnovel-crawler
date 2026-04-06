@@ -29,7 +29,9 @@ class AutoMTL(LegacyCrawler):
 
         # Extract volume-wise chapter entries
         # Stops external links being selected as chapters
-        chapters = soup.select('div.wp-block-group__inner-container [href*="automtl.wordpress.com/"]')
+        chapters = soup.select(
+            'div.wp-block-group__inner-container [href*="automtl.wordpress.com/"]'
+        )
 
         for a in chapters:
             chap_id = 1 + len(self.chapters)

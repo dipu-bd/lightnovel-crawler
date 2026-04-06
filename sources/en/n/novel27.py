@@ -42,7 +42,9 @@ class Novel27(LegacyCrawler):
         self.novel_cover = self.absolute_url(soup.select_one(".summary_image a img")["data-src"])
         logger.info("Novel cover: %s", self.novel_cover)
 
-        self.novel_author = " ".join([a.text.strip() for a in soup.select('.author-content a[href*="authors"]')])
+        self.novel_author = " ".join(
+            [a.text.strip() for a in soup.select('.author-content a[href*="authors"]')]
+        )
         logger.info("%s", self.novel_author)
 
         volumes = set()

@@ -25,7 +25,11 @@ class WhatsAWhizzerCrawler(LegacyCrawler):
 
         for a in soup.select(".entry > p > a"):
             self.chapters.append(
-                Chapter(id=len(self.chapters) + 1, url=self.absolute_url(a["href"]), title=a.text.strip())
+                Chapter(
+                    id=len(self.chapters) + 1,
+                    url=self.absolute_url(a["href"]),
+                    title=a.text.strip(),
+                )
             )
 
     def download_chapter_body(self, chapter):

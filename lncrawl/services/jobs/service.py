@@ -131,7 +131,10 @@ class JobService:
         with ctx.db.session() as sess:
             sa_pars = select_ancestors(job_id)
             return sess.exec(
-                sq.select(Job).where(sq.col(Job.id).in_(sa_pars)).where(sq.col(Job.parent_job_id).is_(None)).limit(1)
+                sq.select(Job)
+                .where(sq.col(Job.id).in_(sa_pars))
+                .where(sq.col(Job.parent_job_id).is_(None))
+                .limit(1)
             ).first()
 
     # -------------------------------------------------------------------------
@@ -395,7 +398,9 @@ class JobService:
     # -------------------------------------------------------------------------
     def delete(self, job_id: str) -> None:
         with ctx.db.session() as sess:
-            result = sess.exec(sq.select(Job.done, Job.total, Job.failed).where(Job.id == job_id)).first()
+            result = sess.exec(
+                sq.select(Job.done, Job.total, Job.failed).where(Job.id == job_id)
+            ).first()
             if not result:
                 return
             done, total, failed = result
@@ -466,14 +471,19 @@ class JobService:
             return job
 
     def _pending(
-        self, artifact: Optional[bool] = None, skip_job_ids: Iterable[str] = [], skip_user_ids: Iterable[str] = []
+        self,
+        artifact: Optional[bool] = None,
+        skip_job_ids: Iterable[str] = [],
+        skip_user_ids: Iterable[str] = [],
     ) -> Optional[Job]:
         with ctx.db.session() as sess:
             stmt = sq.select(Job)
 
             job_alias = aliased(Job)
             dep_is_done = (
-                sq.exists(1).where(sq.col(job_alias.id) == Job.depends_on).where(sq.col(job_alias.is_done).is_(True))
+                sq.exists(1)
+                .where(sq.col(job_alias.id) == Job.depends_on)
+                .where(sq.col(job_alias.is_done).is_(True))
             )
             stmt = stmt.where(sq.or_(sq.col(Job.depends_on).is_(None), dep_is_done))
 
@@ -492,7 +502,11 @@ class JobService:
                 stmt = stmt.where(sq.col(Job.id).not_in(skip_job_ids))
 
             if skip_user_ids:
-                stmt = stmt.where(sq.or_(Job.priority != JobPriority.LOW, sq.col(Job.user_id).not_in(skip_user_ids)))
+                stmt = stmt.where(
+                    sq.or_(
+                        Job.priority != JobPriority.LOW, sq.col(Job.user_id).not_in(skip_user_ids)
+                    )
+                )
 
             if artifact is not None:
                 if artifact:
@@ -526,8 +540,12 @@ class JobService:
         sa_is_done = sa_done == sa_total
 
         sa_status = sq.case((sa_is_done, job_success_literal), else_=Job.status)
-        sa_started_at = sq.case((sq.and_(sa_is_done, sq.col(Job.started_at).is_(None)), now), else_=Job.started_at)
-        sa_finished_at = sq.case((sq.and_(sa_is_done, sq.col(Job.finished_at).is_(None)), now), else_=Job.finished_at)
+        sa_started_at = sq.case(
+            (sq.and_(sa_is_done, sq.col(Job.started_at).is_(None)), now), else_=Job.started_at
+        )
+        sa_finished_at = sq.case(
+            (sq.and_(sa_is_done, sq.col(Job.finished_at).is_(None)), now), else_=Job.finished_at
+        )
 
         sa_pars = select_ancestors(job_id, inclusive)
         sess.exec(

@@ -513,7 +513,9 @@ class JobRunner:
 
             format_job_map = {}
             if self.job.is_running:
-                format_job_map = {OutputFormat(job.extra["format"]): job.id for job in self.children}
+                format_job_map = {
+                    OutputFormat(job.extra["format"]): job.id for job in self.children
+                }
             else:
                 self.__set_running()
 

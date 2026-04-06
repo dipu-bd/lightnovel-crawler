@@ -8,7 +8,9 @@ from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
 chapter_url = "https://www.fanfiction.net/s/%s/%s"
-search_url = "https://www.fanfiction.net/search/?keywords=%s&type=story&match=title&ready=1&categoryid=202"
+search_url = (
+    "https://www.fanfiction.net/search/?keywords=%s&type=story&match=title&ready=1&categoryid=202"
+)
 
 
 class FanFictionCrawler(LegacyCrawler):

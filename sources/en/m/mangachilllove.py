@@ -3,4 +3,4 @@ from lncrawl.templates.wordpress import WordpressMangaTemplate
 
 
 class ManhwachillLove(WordpressMangaTemplate):
-    base_url = ['https://mangachill.love/', 'https://mangachill.io/']
+    base_url = ["https://mangachill.love/", "https://mangachill.io/"]

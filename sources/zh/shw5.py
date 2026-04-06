@@ -43,7 +43,9 @@ class Shw5Crawler(LegacyCrawler):
             ch_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             volumes.add(vol_id)
-            self.chapters.append(Chapter(id=ch_id, volume=vol_id, title=a.text, url=self.absolute_url(a["href"])))
+            self.chapters.append(
+                Chapter(id=ch_id, volume=vol_id, title=a.text, url=self.absolute_url(a["href"]))
+            )
 
         self.volumes = [Volume(id=x, title="") for x in volumes]
 
