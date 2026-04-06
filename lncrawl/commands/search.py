@@ -10,8 +10,7 @@ from rich import print
 from slugify import slugify
 
 from ..context import ctx
-from ..core.taskman import TaskManager
-from ..models import CombinedSearchResult, SearchResult
+from ..core import CombinedSearchResult, SearchResult, TaskManager
 from ..server.models import SourceItem
 
 app = typer.Typer(
