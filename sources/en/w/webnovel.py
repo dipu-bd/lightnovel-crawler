@@ -120,6 +120,14 @@ class WebnovelCrawler(BasicBrowserTemplate):
         self.browser.wait(".j_catalog_list")
         self.parse_chapter_catalog(self.browser.soup)
 
+    def _chapter_id_from_url(self, url: str) -> str:
+        match = re.search(r"_(\d+)$", url)
+        return match.group(1) if match else ""
+
+    def _book_id_from_url(self, url: str) -> str:
+        match = re.search(r"/book/[^/_]+_(\d+)", url)
+        return match.group(1) if match else ""
+
     def parse_chapter_catalog(self, soup: PageSoup) -> None:
         for div in soup.select(".j_catalog_list .volume-item"):
             possible_title = div.find("h4")
@@ -130,20 +138,27 @@ class WebnovelCrawler(BasicBrowserTemplate):
             self.volumes.append(vol)
             for li in div.select("li"):
                 a = li.find("a")
-                cid = li.get("data-report-cid")
-                if not a or not cid:
+                if not a:
+                    continue
+                url = self.absolute_url(a.get("href"))
+                cid = self._chapter_id_from_url(url) or str(li.get("data-report-cid") or "")
+                if not cid:
                     continue
                 chap = Chapter(
                     id=len(self.chapters) + 1,
                     volume=vol.id,
                     title=str(a.get("title") or ""),
-                    url=self.absolute_url(a.get("href")),
+                    url=url,
                     book=self.novel_id,
                     cid=cid,
                 )
                 self.chapters.append(chap)
 
     def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
+        if not chapter.get("cid"):
+            chapter.cid = self._chapter_id_from_url(chapter.url)
+        if not chapter.get("book"):
+            chapter.book = self._book_id_from_url(chapter.url)
         path = urlparse(chapter.url).path.strip("/")
         self.visit(f"{self.home_url}{path}")
         self.browser.wait(f"j_chapter_{chapter.cid}", By.CLASS_NAME)
@@ -154,6 +169,10 @@ class WebnovelCrawler(BasicBrowserTemplate):
         return body
 
     def download_chapter_body_in_soup(self, chapter: Chapter) -> str:
+        if not chapter.get("cid"):
+            chapter.cid = self._chapter_id_from_url(chapter.url)
+        if not chapter.get("book"):
+            chapter.book = self._book_id_from_url(chapter.url)
         self.ensure_csrf()
         logger.info("Chapter Id: %s", chapter.cid)
 
