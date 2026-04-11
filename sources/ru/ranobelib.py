@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
-import operator
+from collections import Counter
 from urllib.parse import urlencode
 
 from lncrawl.core import Crawler
@@ -16,6 +16,7 @@ class RanobeLibMeCrawler(Crawler):
 
     def initialize(self):
         self.init_executor(ratelimit=0.99)
+        self.scraper.headers["Site-Id"] = "3"
         clean_url = self.novel_url.split("?")[0].strip("/")
         self.api_url = f"https://api.cdnlibs.org/api/manga/{clean_url.split('/')[-1]}"
 
@@ -57,29 +58,77 @@ class RanobeLibMeCrawler(Crawler):
         logger.info("Novel tags: %s", self.novel_tags)
 
         chapters = self.get_json(f"{self.api_url}/chapters")["data"]
+
+        # Count chapters per branch and collect all team names
+        branch_counts = Counter()
+        branch_teams = {}
+        for chapter in chapters:
+            for b in chapter["branches"]:
+                bid = b["branch_id"]
+                branch_counts[bid] += 1
+                if bid not in branch_teams:
+                    branch_teams[bid] = set()
+                for t in b.get("teams", []):
+                    name = t.get("name", "").strip()
+                    if name:
+                        branch_teams[bid].add(name)
+
+        # Let the user set branch priorities by sequential selection
+        if len(branch_counts) > 1:
+            remaining = [
+                (bid, count) for bid, count in branch_counts.most_common()
+            ]
+            priority = []
+
+            while remaining:
+                print()
+                if not priority:
+                    print("Select primary translation:")
+                else:
+                    print(f"Next priority ({len(priority)} selected):")
+                for i, (bid, count) in enumerate(remaining, 1):
+                    teams = ", ".join(sorted(branch_teams.get(bid, set()))) or f"Branch {bid}"
+                    print(f"  {i}) {teams} ({count} chapters)")
+                if priority:
+                    print(f"  0) Done")
+
+                try:
+                    raw = input("Choice: ").strip()
+                except (EOFError, KeyboardInterrupt):
+                    break
+
+                if raw == "0" and priority:
+                    break
+
+                try:
+                    idx = int(raw) - 1
+                    if 0 <= idx < len(remaining):
+                        pick = remaining.pop(idx)
+                        priority.append(pick[0])
+                    else:
+                        print("Invalid number")
+                except ValueError:
+                    print("Enter a number")
+
+            if not priority:
+                raise SystemExit("Cancelled by user")
+        elif branch_counts:
+            priority = [next(iter(branch_counts))]
+        else:
+            priority = []
+
         chap_id = 0
-
-        branches = dict()
         for chapter in chapters:
-            for branch in chapter["branches"]:
-                key = branch["branch_id"]
-            branches[key] = branches.setdefault(key, 0) + 1
-        branch = max(branches.items(), key=operator.itemgetter(1))[0]
-        if not isinstance(branch, int):
-            branch = 0
-
-        for chapter in chapters:
-            if any("moderation" in chapter_branch for chapter_branch in chapter["branches"]):
+            if any("moderation" in cb for cb in chapter["branches"]):
                 continue
 
-            """ Left it temporarily, to be fixed later """
-            # if not any(
-            #     chapter_branch["branch_id"] == branch
-            #     for chapter_branch in chapter["branches"]
-            # ):
-            #     continue
+            # Pick the highest-priority branch available for this chapter
+            available = {cb["branch_id"] for cb in chapter["branches"]}
+            branch = next((bid for bid in priority if bid in available), None)
+            if branch is None:
+                continue
 
-            chap_id = chap_id + 1
+            chap_id += 1
             chap_num = chapter["number"]
 
             params = {
@@ -92,7 +141,7 @@ class RanobeLibMeCrawler(Crawler):
                 Chapter(
                     id=chap_id,
                     url=f"{self.api_url}/chapter?{urlencode(params, doseq=True)}",
-                    title=chapter["name"] or f"Глава {chap_num}",
+                    title=chapter["name"] or f"Chapter {chap_num}",
                 )
             )
 

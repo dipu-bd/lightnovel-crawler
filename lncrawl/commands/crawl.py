@@ -89,9 +89,8 @@ def crawl(
             crawler.login(username, password)
 
     # fetch novel details
-    with console.status("Fetching novel details..."):
-        user = ctx.users.get_admin()
-        novel = ctx.crawler.fetch_novel(user.id, url, crawler=crawler)
+    user = ctx.users.get_admin()
+    novel = ctx.crawler.fetch_novel(user.id, url, crawler=crawler)
     print(
         Panel(
             "\n".join(

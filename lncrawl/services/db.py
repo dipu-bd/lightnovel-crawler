@@ -82,7 +82,18 @@ class DB:
         self._ensure_database()
         base = self.base_revision()
         if base and self.has_any_tables() and not self.current_revision():
-            command.stamp(self.alembic_config, base)
+            # Only stamp base if all tables from the initial migration exist.
+            # Otherwise, drop the incomplete schema and let migrations recreate it.
+            from ..dao import SQLModel
+
+            expected = set(SQLModel.metadata.tables.keys())
+            with self.engine.connect() as conn:
+                actual = set(sa.inspect(conn).get_table_names())
+            if expected - {"alembic_version"} <= actual:
+                command.stamp(self.alembic_config, base)
+            else:
+                logger.warning("Incomplete schema detected, recreating database tables.")
+                SQLModel.metadata.drop_all(self.engine)
         command.upgrade(self.alembic_config, "head")
 
     @cached_property
