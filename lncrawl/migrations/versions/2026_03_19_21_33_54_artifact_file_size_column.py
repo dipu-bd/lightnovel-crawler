@@ -25,16 +25,26 @@ def upgrade() -> None:
     """Upgrade schema."""
     conn = op.get_bind()
     inspector = sa.inspect(conn)
-    columns = [col["name"] for col in inspector.get_columns("artifacts")]
+    columns = {col["name"]: col for col in inspector.get_columns("artifacts")}
+    column_exists = "file_size" in columns
 
-    if "file_size" in columns:
-        ctx.logger.info("Column file_size already exists, skipping migration")
-        return
-
-    op.add_column(
-        "artifacts",
-        sa.Column("file_size", sa.BigInteger(), server_default=sa.literal(0), nullable=False),
-    )
+    if column_exists:
+        col_type = str(columns["file_size"]["type"]).upper()
+        is_bigint = "BIGINT" in col_type
+        if not is_bigint:
+            ctx.logger.info("Altering file_size column type to BigInteger")
+            op.alter_column(
+                "artifacts",
+                "file_size",
+                type_=sa.BigInteger(),
+                server_default=sa.literal(0),
+                nullable=False,
+            )
+    else:
+        op.add_column(
+            "artifacts",
+            sa.Column("file_size", sa.BigInteger(), server_default=sa.literal(0), nullable=False),
+        )
 
     executor = TaskManager(15)
 
