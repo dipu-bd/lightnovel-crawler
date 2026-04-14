@@ -23,12 +23,19 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Upgrade schema."""
+    conn = op.get_bind()
+    inspector = sa.inspect(conn)
+    columns = [col["name"] for col in inspector.get_columns("artifacts")]
+
+    if "file_size" in columns:
+        ctx.logger.info("Column file_size already exists, skipping migration")
+        return
+
     op.add_column(
         "artifacts",
         sa.Column("file_size", sa.BigInteger(), server_default=sa.literal(0), nullable=False),
     )
 
-    conn = op.get_bind()
     executor = TaskManager(15)
 
     def get_size(artifact: Artifact) -> Tuple[str, int]:
