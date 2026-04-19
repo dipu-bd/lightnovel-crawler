@@ -73,9 +73,7 @@ class FenriRealm(LegacyCrawler):
         if novel_slug.isdigit():
             novel_slug = url_parts[-2]
 
-        chapter_list_url = (
-            f"{self.scraper.origin.rstrip('/')}/api/novels/chapter-list/{novel_slug}"
-        )
+        chapter_list_url = f"{self.scraper.origin.rstrip('/')}/api/novels/chapter-list/{novel_slug}"
         response = self.get_response(chapter_list_url).text
         chapters_data = json.loads(response)
 
