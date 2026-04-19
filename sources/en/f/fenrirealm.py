@@ -36,46 +36,51 @@ class FenriRealm(LegacyCrawler):
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
-        regex = re.compile(r"const data = (.*;.*);")
-        match = regex.search(str(soup))
-        js_dict = match.group(1)
+        # fenrirealm.com migrated to SvelteKit; novel data is now embedded as a
+        # JS object literal inside a <script> tag rather than `const data = ...`
+        script_text = ""
+        for script in soup.find_all("script"):
+            if script.string and "seriesData" in script.string:
+                script_text = script.string
+                break
 
-        # Extract novel title
-        title_match = re.search(r'title:"([^"]+)"', js_dict)
+        if not script_text:
+            raise Exception("Could not find seriesData in page scripts")
+
+        title_match = re.search(r'seriesData:\{.*?title:"([^"]+)"', script_text)
         if title_match:
             self.novel_title = title_match.group(1)
 
-        # Extract novel author (assuming it's in the user field)
-        author_match = re.search(r'user:{username:"([^"]+)"', js_dict)
+        author_match = re.search(r'user:\{username:"[^"]+",name:"([^"]+)"\}', script_text)
         if author_match:
             self.novel_author = author_match.group(1)
 
-        # Extract novel cover
-        cover_match = re.search(r'cover:"([^"]+)"', js_dict)
+        cover_match = re.search(r'cover:"(storage/[^"]+)"', script_text)
         if cover_match:
             self.novel_cover = self.scraper.origin.rstrip("/") + "/" + cover_match.group(1)
 
-        # Extract novel synopsis
-        synopsis_match = re.search(r'description:"([^"]+)"', js_dict)
+        synopsis_match = re.search(r'description:"((?:[^"\\]|\\.)*)"', script_text)
         if synopsis_match:
-            self.novel_synopsis = synopsis_match.group(1)
+            self.novel_synopsis = synopsis_match.group(1).encode().decode("unicode_escape")
 
-        # Extract novel tags
-        tags_match = re.search(r"tags:\[(.*?)\]", js_dict)
+        tags_match = re.search(r"tags:\[([^\]]+)\]", script_text)
         if tags_match:
-            tags_text = tags_match.group(1)
-            tag_names = re.findall(r'name:"([^"]+)"', tags_text)
-            self.novel_tags = tag_names
+            self.novel_tags = re.findall(r'name:"([^"]+)"', tags_match.group(1))
 
-        # Get chapter list from API
-        chapter_list_url = self.novel_url.replace("series", "api/novels/chapter-list")
+        # Extract slug from URL; guard against URLs that include a chapter number
+        url_parts = self.novel_url.rstrip("/").split("/")
+        novel_slug = url_parts[-1]
+        if novel_slug.isdigit():
+            novel_slug = url_parts[-2]
+
+        chapter_list_url = (
+            f"{self.scraper.origin.rstrip('/')}/api/novels/chapter-list/{novel_slug}"
+        )
         response = self.get_response(chapter_list_url).text
         chapters_data = json.loads(response)
 
-        # Reverse the order of chapters (API returns newest first)
         chapters_data.sort(key=lambda x: x["number"])
 
-        # Add volumes and chapters
         for chapter in chapters_data:
             chap_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
@@ -87,13 +92,10 @@ class FenriRealm(LegacyCrawler):
             name = chapter.get("name", "")
             title = chapter.get("title", "")
 
-            # Format chapter title
             chapter_title = name
             if title and title.strip():
                 chapter_title += f" - {title}"
 
-            # Create chapter URL
-            novel_slug = self.novel_url.split("/")[-1]
             chapter_url = f"{self.scraper.origin.rstrip('/')}/series/{novel_slug}/{slug}"
 
             self.chapters.append(
