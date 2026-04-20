@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  lncrawl:
+    image: ghcr.io/dipu-bd/lightnovel-crawler:latest
+    container_name: lncrawl
+    ports:
+      - "8002:8080"
+    volumes:
+      - Folder-to-data-base:/data
+    command: ["server"]
+    restart: unless-stopped
