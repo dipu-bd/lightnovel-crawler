@@ -16,7 +16,7 @@
 ifeq ($(OS),Windows_NT)
   PS := powershell -NoProfile -Command
   VERSION := $(shell $(PS) "(Get-Content lncrawl/VERSION).Trim()")
-  UV := $(shell $(PS) "if (Get-Command uv -ErrorAction SilentlyContinue) { (Get-Command uv).Source } else { Join-Path $$env:USERPROFILE '.local\bin\uv.exe' }")
+  UV := $(shell where.exe uv 2>NUL || echo %USERPROFILE%\.local\bin\uv.exe)
 else
   VERSION := $(shell cat lncrawl/VERSION | tr -d '\n')
   UV := $(shell command -v uv 2>/dev/null || echo "$(HOME)/.local/bin/uv")

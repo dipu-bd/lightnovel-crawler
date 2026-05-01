@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 def start() -> None:
     host = "127.0.0.1"
+    
+    ctx.setup()
 
     # Find an available port
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
