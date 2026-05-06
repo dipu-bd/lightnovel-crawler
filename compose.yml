@@ -17,8 +17,8 @@ services:
     image: lncrawl
     restart: unless-stopped
     ports:
-      - "8080:8080"
-    command: -ll server -p 8080
+      - "8181:8181"
+    command: -ll server -p 8181
     environment:
       - LNCRAWL_DATA_PATH=/data
       - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl

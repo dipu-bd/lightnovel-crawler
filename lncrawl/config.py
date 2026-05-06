@@ -525,9 +525,9 @@ class ServerConfig(_Section):
 
         The address users and other services should use to reach the app (no trailing slash).
         Important for correct links and sign-in redirects. Local default is
-        `http://localhost:8080`.
+        `http://localhost:8181`.
         """
-        return self._get("base_url", "http://localhost:8080").strip("/")
+        return self._get("base_url", "http://localhost:8181").strip("/")
 
     @base_url.setter
     def base_url(self, v: str) -> None:

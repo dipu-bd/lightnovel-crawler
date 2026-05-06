@@ -17,7 +17,10 @@ class Artifact(BaseTable, table=True):
     format: OutputFormat = sa.Field(index=True, description="The output format of the artifact")
     file_name: str = sa.Field(description="Artifact output file name")
     file_size: int = sa.Field(
-        default=0, sa_type=sa.BigInteger, description="Artifact output file size in bytes"
+        default=0,
+        sa_type=sa.BigInteger,
+        sa_column_kwargs={"server_default": sa.literal(0)},
+        description="Artifact output file size in bytes",
     )
 
     @computed_field  # type: ignore[misc]

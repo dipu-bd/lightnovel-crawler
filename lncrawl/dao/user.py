@@ -23,7 +23,11 @@ class User(BaseTable, table=True):
     role: UserRole = sa.Field(default=UserRole.USER, description="User role")
     tier: UserTier = sa.Field(default=UserTier.BASIC, description="User tier")
     is_active: bool = sa.Field(default=True, description="Active status")
-    is_verified: bool = sa.Field(default=False, description="Email verification status")
+    is_verified: bool = sa.Field(
+        default=False,
+        sa_column_kwargs={"server_default": sa.false()},
+        description="Email verification status",
+    )
 
 
 class UserToken(sa.SQLModel, table=True):

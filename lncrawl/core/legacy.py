@@ -68,7 +68,7 @@ class LegacyCrawler(CrawlerTemplate):
         return self.taskman.cancel_futures(*args, **kwargs)
 
     def resolve_as_generator(self, *args: Any, **kwargs: Any):
-        return self.taskman.resolve_as_generator(*args, **kwargs)
+        return self.taskman.resolve(*args, **kwargs)
 
     def resolve_futures(self, *args: Any, **kwargs: Any):
         return self.taskman.resolve_futures(*args, **kwargs)

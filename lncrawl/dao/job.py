@@ -48,7 +48,11 @@ class Job(BaseTable, table=True):
     )
 
     done: int = sa.Field(default=0, description="Total completed items")
-    failed: int = sa.Field(default=0, description="Total failed items")
+    failed: int = sa.Field(
+        default=0,
+        sa_column_kwargs={"server_default": sa.literal(0)},
+        description="Total failed items",
+    )
     total: int = sa.Field(default=1, description="Total items to complete")
 
     @computed_field  # type: ignore[misc]

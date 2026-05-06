@@ -152,9 +152,7 @@ def crawl(
         for chapter_id in sorted(set(chapters))
     ]
     chapter_image_ids = []
-    for chapter in crawler.taskman.resolve_as_generator(
-        chapter_futures, desc="Chapters", unit=" c"
-    ):
+    for chapter in crawler.taskman.resolve(chapter_futures, desc="Chapters", unit=" c"):
         if not chapter:
             continue
         chapter_image_ids += ctx.images.list_ids(chapter_id=chapter.id)

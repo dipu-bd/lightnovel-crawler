@@ -25,6 +25,7 @@ class TextCleaner:
             self.invisible_chars,
         )
         self.nonprintable_mapping = {character: None for character in self.unprintable_chars}
+        self.bad_text_replacement = "\u2423"
 
         self.bad_text_regex: Set[Union[str, re.Pattern[str]]] = set(
             [
@@ -159,9 +160,8 @@ class TextCleaner:
         self.clean_contents(tag)
         body = self.extract_paragraphs(tag)
         paragraphs = " ".join(body).split(self.line_separator)
-        return "".join(
-            [f"<p>{p.strip()}</p>" for p in paragraphs if not self.contains_bad_texts(p)]
-        )
+        combined = "".join([f"<p>{p.strip()}</p>" for p in paragraphs if p.strip()])
+        return self.remove_bad_texts(combined)
 
     def clean_contents(self, div: T) -> T:
         if isinstance(div, PageSoup):
@@ -310,12 +310,11 @@ class TextCleaner:
 
         return [x.strip() for x in body if x.strip()]
 
-    def contains_bad_texts(self, text: str) -> bool:
-        if not text.strip():
-            return True
-        if not self.bad_text_regex:
-            return False
+    def remove_bad_texts(self, text: str) -> str:
+        text = str(text or "").strip()
+        if not (text and self.bad_text_regex):
+            return text
         if not hasattr(self, "__blacklist__"):
-            pattern = re.compile("|".join(["(%s)" % p for p in self.bad_text_regex]))
+            pattern = re.compile("|".join([f"({r})" for r in self.bad_text_regex]))
             self.__blacklist__ = pattern
-        return bool(self.__blacklist__.search(text))
+        return self.__blacklist__.sub(self.bad_text_replacement, text)

@@ -1,7 +1,5 @@
 import base64
 import logging
-import os
-import tempfile
 from io import BytesIO
 from pathlib import Path
 from typing import Any, MutableMapping, Optional, Tuple, Union
@@ -10,10 +8,10 @@ from PIL import Image, UnidentifiedImageError
 from requests import Response
 from requests.structures import CaseInsensitiveDict
 
-from lncrawl.utils.url_tools import extract_base
-
 from ..cloudscraper import CloudScraper
 from ..context import ctx
+from ..utils.file_tools import atomic_write
+from ..utils.url_tools import extract_base
 from .soup import PageSoup
 
 logger = logging.getLogger(__name__)
@@ -136,13 +134,9 @@ class Scraper(CloudScraper):
         kwargs["headers"] = headers
         kwargs.setdefault("stream", True)
         response = self.get(url, **kwargs)
-
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile("ab") as tmp:
+        with atomic_write(output_file) as tmp:
             for chunk in response.iter_content(chunk_size=10240):
                 tmp.write(chunk)
-            tmp.flush()
-            os.rename(tmp.name, output_file)
 
     def get_image(
         self,

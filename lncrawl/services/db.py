@@ -1,16 +1,18 @@
 import logging
 from functools import cached_property
 from pathlib import Path
-from typing import Mapping, Optional, Sequence
+from typing import Any, Mapping, Optional, Sequence
 from urllib.parse import urlparse
 
 import sqlmodel as sa
 from alembic import command
+from alembic.autogenerate import compare_metadata
 from alembic.config import Config
 from alembic.runtime.migration import MigrationContext
 from alembic.script import ScriptDirectory
 
 from ..context import ctx
+from ..dao import SQLModel
 
 logger = logging.getLogger(__name__)
 
@@ -26,6 +28,7 @@ class DB:
     def close(self):
         if "engine" in self.__dict__:
             self.engine.dispose()
+            self.__dict__.pop("engine")
 
     def session(
         self,
@@ -71,19 +74,27 @@ class DB:
              )
 
         """
-        with self.engine.connect() as conn:
+        with self.engine.begin() as conn:
             return conn.exec_driver_sql(raw_sql, parameters, execution_options)
 
     # ------------------------------------------------------------------ #
     #                          Prepare Database                          #
     # ------------------------------------------------------------------ #
 
-    def bootstrap(self):
+    def bootstrap(self, reset_on_failure: bool = False):
         self._ensure_database()
-        base = self.base_revision()
-        if base and self.has_any_tables() and not self.current_revision():
-            command.stamp(self.alembic_config, base)
-        command.upgrade(self.alembic_config, "head")
+        try:
+            base = self.base_revision()
+            if base and self.has_any_tables() and not self.current_revision():
+                command.stamp(self.alembic_config, base)
+            command.upgrade(self.alembic_config, "head")
+            logger.info("Database bootstrap successful.")
+            self._verify_schema()
+        except Exception:
+            if not reset_on_failure:
+                raise
+            self._reset_database()
+            self.bootstrap()
 
     @cached_property
     def alembic_config(self) -> Config:
@@ -147,6 +158,15 @@ class DB:
 
         return engine
 
+    def _reset_database(self):
+        logger.debug("Resetting database...")
+        with self.engine.begin() as conn:
+            metadata = sa.MetaData()
+            metadata.reflect(bind=conn)
+            metadata.drop_all(bind=conn)
+        self.close()
+        logger.info("Database reset.")
+
     def _ensure_database(self, max_retries=10) -> None:
         """Create the database if it doesn't exist (MySQL and PostgreSQL only)."""
         db_url = ctx.config.db.url
@@ -178,14 +198,11 @@ class DB:
             raise ValueError("Unsupported database")
 
         # Try to connect to the server and check/create database
-        engine = self._create_engine(
-            server_url,
-            isolation_level="AUTOCOMMIT",
-        )
+        engine = self._create_engine(server_url)
         for attempt in range(1, max_retries + 1):
             try:
-                with engine.connect() as conn:
-                    logger.info(f"Ensuring database '{database}' exists...")
+                with engine.begin() as conn:
+                    logger.debug(f"Ensuring database '{database}' exists...")
                     result = conn.execute(check_query, {"db_name": database})
                     exists = result.fetchone() is not None
                     if not exists:
@@ -196,6 +213,48 @@ class DB:
                 return
             except Exception as e:
                 if attempt == max_retries:
-                    logger.warning(f"Failed to ensure database exists. {e}")
+                    engine.dispose()
+                    raise RuntimeError("Could not create database") from e
                 else:
-                    logger.info(f"Failed to ensure database. Retrying... {attempt}/{max_retries}")
+                    logger.info(f"Could not create database. Retrying... {attempt}/{max_retries}")
+
+    def _verify_schema(self):
+        logger.debug("Verifying database schema...")
+        with self.engine.connect() as conn:
+            mc = MigrationContext.configure(
+                conn,
+                opts={
+                    "compare_type": True,
+                    # "compare_server_default": True,
+                },
+            )
+            drift = list(compare_metadata(mc, SQLModel.metadata))
+            if drift:
+                logger.warning(f"Detected {len(drift)} schema drift(s) against models:")
+                for op in drift:
+                    logger.warning(f"  - {self._format_drift(op)}")
+                logger.warning("Either drop the database, or manually fix these drifts.")
+                raise ValueError("Database schema is not valid.")
+            else:
+                logger.info("Database schema is valid.")
+
+    @staticmethod
+    def _format_drift(op: Any) -> str:
+        # alembic groups index/fk diffs inside a single-element list
+        if isinstance(op, list):
+            return ", ".join(DB._format_drift(x) for x in op)
+        if not isinstance(op, tuple) or len(op) < 2:
+            return repr(op)
+
+        name, payload = op[0], op[1]
+        if name in ("add_table", "remove_table"):
+            return f"{name}: {getattr(payload, 'name', payload)}"
+        if name in ("add_column", "remove_column") and len(op) >= 4:
+            col = op[3]
+            return f"{name}: {op[2]}.{col.name} ({col.type})"
+        if name.startswith("modify_") and len(op) >= 7:
+            _, _schema, table, column, _kwargs, old, new = op[:7]
+            return f"{name}: {table}.{column}: {old!r} -> {new!r}"
+        if name in ("add_index", "remove_index", "add_fk", "remove_fk"):
+            return f"{name}: {getattr(payload, 'name', payload)}"
+        return repr(op)

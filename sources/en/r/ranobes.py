@@ -81,7 +81,7 @@ class RanobeLibCrawler(BrowserTemplate):
 
         page_soups = [soup] + [
             page
-            for page in self.taskman.resolve_as_generator(
+            for page in self.taskman.resolve(
                 futures,
                 desc="Chapters",
                 unit="page",

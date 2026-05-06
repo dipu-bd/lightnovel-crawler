@@ -21,30 +21,89 @@ class Webfic(LegacyCrawler):
     has_manga = False
     has_mtl = False
 
+    def search_novel(self, query: str):
+        query_simple_encoded = query.replace(" ", "+")
+        soup = self.get_soup(f"https://www.webfic.com/search?searchValue={query_simple_encoded}")
+        results = []
+
+        metadata_json = soup.select_one("script#__NEXT_DATA__")
+        metadata = json.loads(metadata_json.text)
+        assert metadata  # this is where we get everything so it's kinda required
+        logger.info("search results metadata: %s", metadata)
+
+        data = metadata["props"]["pageProps"]
+        novels = data["total"]
+        pages = data["pages"]
+
+        # 0 novels -> nothing found
+        if not novels:
+            return []
+
+        for page_idx in range(pages):
+            page = 1 + page_idx
+            soup_page = self.get_soup(
+                f"https://www.webfic.com/search/{page}?searchValue={query_simple_encoded}"
+            )
+            m_page_json = soup_page.select_one("script#__NEXT_DATA__")
+            m_page = json.loads(m_page_json.text)
+            data_page = m_page["props"]["pageProps"]
+
+            for novel in data_page["bookList"]:
+                novel_id = novel["bookId"]
+                novel_title = novel["bookName"]
+                novel_uri_name = novel["replacedBookName"]
+                novel_info = {
+                    "Ratings": novel["ratings"],
+                    "Chapters": novel["chapterCount"],
+                    "Status": novel["writeStatus"],
+                    "Premium": "Partial Paywall" if novel["free"] == 2 else "Unknown",
+                    "Audience": novel["targetAudience"],
+                }
+                results.append(
+                    SearchResult(
+                        title=novel_title,
+                        url=f"https://www.webfic.com/book_info/{novel_id}/all/{novel_uri_name}",
+                        info=" | ".join([f"{key}: {value}" for key, value in novel_info.items()]),
+                    )
+                )
+            pass
+        return results
+
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 
         metadata_json = soup.select_one("script#__NEXT_DATA__")
         metadata = json.loads(metadata_json.text)
-        assert metadata  # this is where we get everything so it's kinda required
+        if not metadata:
+            raise ValueError(f"Invalid novel metadata: {metadata_json}")
 
         self.novel_title = metadata["props"]["pageProps"]["bookInfo"]["bookName"]
-        self.novel_cover = metadata["props"]["pageProps"]["bookInfo"]["cover"]
+
+        try:
+            self.novel_cover = metadata["props"]["pageProps"]["bookInfo"]["cover"]
+        except KeyError:
+            pass
+
         try:
             self.novel_tags = metadata["props"]["pageProps"]["bookInfo"]["tags"]
         except KeyError:
-            # the only one that has so far had an error, ever.
             pass
-        self.novel_synopsis = metadata["props"]["pageProps"]["bookInfo"]["introduction"]
-        self.novel_author = metadata["props"]["pageProps"]["bookInfo"]["author"]
-        # available_langs = metadata['props']['pageProps']['languages']
-        # true_chapter_count = metadata['props']['pageProps']['bookInfo']['chapterCount']
 
-        logger.info("book metadata %s", metadata)
+        try:
+            self.novel_synopsis = metadata["props"]["pageProps"]["bookInfo"]["introduction"]
+        except KeyError:
+            pass
 
-        lang, book_id = re.match(
-            "https://www.webfic.com(/?.*)/book_info/(\\d+)/.*", self.novel_url
-        ).groups()
+        try:
+            self.novel_author = metadata["props"]["pageProps"]["bookInfo"]["author"]
+        except KeyError:
+            pass
+
+        match = re.match("https://www.webfic.com(/?.*)/book_info/(\\d+)/.*", self.novel_url)
+        if not match:
+            raise ValueError(f"Invalid novel URL: {self.novel_url}")
+        lang, book_id = match.groups()
+
         self.language = "en"
         if lang:
             logger.info("Novel is not english, instead is: %s", lang)
@@ -59,11 +118,12 @@ class Webfic(LegacyCrawler):
             cinfo_link = f"{cinfo_template}{cinfo_idx}"
             cinfo_soup = self.get_soup(cinfo_link)
             cinfo_meta = cinfo_soup.select_one("script#__NEXT_DATA__")
-            assert cinfo_meta
+            if not cinfo_meta:
+                raise ValueError(f"Invalid chapter metadata: {cinfo_soup}")
+
             cinfo_info = json.loads(cinfo_meta.text)
             cinfo_pages = cinfo_info["props"]["pageProps"]["totalPage"]
             cinfo_idx += 1
-            # in theory if all chapters are free it should reach here and break out
             if cinfo_idx > cinfo_pages:
                 break
 
@@ -104,69 +164,7 @@ class Webfic(LegacyCrawler):
         chapter = json.loads(chapter_metadata.text)
         assert chapter
 
-        logger.info("chapeter %s", chapter)
-
         text_lines = chapter["props"]["pageProps"]["chapterInfo"]["content"].split("\n")
-
-        # copied straight outta self.cleaner.extract_contents because we lack a TAG...
-        # otherwise the output looks very mushed together cause it ignores all the newlines otherwise
-        text = "".join(
-            [f"<p>{t.strip()}</p>" for t in text_lines if not self.cleaner.contains_bad_texts(t)]
-        )
-
+        text = "".join([f"<p>{t.strip()}</p>" for t in text_lines if t.strip()])
+        text = self.cleaner.remove_bad_texts(text)
         return text
-
-    def search_novel(self, query: str):
-        query_simple_encoded = query.replace(" ", "+")
-        soup = self.get_soup(f"https://www.webfic.com/search?searchValue={query_simple_encoded}")
-        results = []
-
-        metadata_json = soup.select_one("script#__NEXT_DATA__")
-        metadata = json.loads(metadata_json.text)
-        assert metadata  # this is where we get everything so it's kinda required
-        logger.info("search results metadata: %s", metadata)
-
-        data = metadata["props"]["pageProps"]
-        novels = data["total"]
-        pages = data["pages"]
-
-        # 0 novels -> nothing found
-        if not novels:
-            return []
-
-        for page_idx in range(pages):
-            page = 1 + page_idx
-            soup_page = self.get_soup(
-                f"https://www.webfic.com/search/{page}?searchValue={query_simple_encoded}"
-            )
-            m_page_json = soup_page.select_one("script#__NEXT_DATA__")
-            m_page = json.loads(m_page_json.text)
-            data_page = m_page["props"]["pageProps"]
-
-            for novel in data_page["bookList"]:
-                novel_id = novel["bookId"]
-                novel_title = novel["bookName"]
-                novel_uri_name = novel["replacedBookName"]
-                novel_info = {
-                    "Ratings": novel["ratings"],
-                    "Chapters": novel["chapterCount"],
-                    "Status": novel["writeStatus"],
-                    "Premium": self.premium_idx_to_text(novel["free"]),
-                    "Audience": novel["targetAudience"],
-                }
-                results.append(
-                    SearchResult(
-                        title=novel_title,
-                        url=f"https://www.webfic.com/book_info/{novel_id}/all/{novel_uri_name}",
-                        info=" | ".join([f"{key}: {value}" for key, value in novel_info.items()]),
-                    )
-                )
-            pass
-        return results
-
-    @staticmethod
-    def premium_idx_to_text(idx):
-        if idx == 2:
-            return "Partial Paywall"
-        else:
-            return "Unknown"

@@ -9,6 +9,7 @@ from rich.logging import RichHandler
 class Logger:
     def __init__(self) -> None:
         self._level = logging.NOTSET
+        self.progress_bar: bool = False
 
     @property
     def level(self) -> int:
@@ -49,6 +50,7 @@ class Logger:
                 datefmt="[%X]",
                 force=True,
             )
+        self.progress_bar = not self.is_info
 
     def log(self, level: int, *args, **kwargs) -> None:
         stacklevel = kwargs.pop("stacklevel", 0) + 2

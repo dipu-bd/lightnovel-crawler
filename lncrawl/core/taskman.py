@@ -6,9 +6,17 @@ from threading import Event, Semaphore, Thread
 from typing import Callable, Generator, Iterable, List, Optional, Set, TypeVar
 
 from tqdm import tqdm
+from tqdm.std import TqdmDefaultWriteLock
 
 from ..context import ctx
 from ..utils.ratelimit import RateLimiter
+
+# lncrawl is purely thread-based; we never run tqdm bars across processes.
+# tqdm's default write lock lazily creates a `multiprocessing.RLock()` (a
+# POSIX named semaphore on macOS), which Python 3.14's resource_tracker then
+# reports as "leaked" at shutdown. Pre-assigning `mp_lock = None` makes
+# tqdm's `create_mp_lock()` a no-op and avoids the warning.
+TqdmDefaultWriteLock.mp_lock = None  # type: ignore[attr-defined]
 
 T = TypeVar("T")
 
@@ -119,10 +127,12 @@ class TaskManager:
         unit: Optional[str] = None,
         desc: Optional[str] = None,
         total: Optional[float] = None,
-        disable: bool = False,
+        disable: Optional[bool] = None,
     ):
-        if ctx.logger.is_info:
+        if not ctx.logger.progress_bar:
             disable = True
+        elif disable is None:
+            disable = False
 
         if not disable:
             # Since we are showing progress bar, it is not good to
@@ -130,10 +140,21 @@ class TaskManager:
             if not _resolver.acquire(True, 30):
                 pass
 
-        bar = tqdm(iterable=iterable) if iterable else tqdm(total=total or 0)
-        bar.desc = desc or ""
-        bar.unit = unit or "item"
-        bar.disable = disable
+        bar = (
+            tqdm(
+                iterable=iterable,
+                disable=disable,
+                desc=desc or "",
+                unit=unit or "item",
+            )
+            if iterable
+            else tqdm(
+                total=total or 0,
+                disable=disable,
+                desc=desc or "",
+                unit=unit or "item",
+            )
+        )
 
         original_close = bar.close
         atexit.register(original_close)
@@ -159,10 +180,10 @@ class TaskManager:
             if not future.done():
                 future.cancel()
 
-    def resolve_as_generator(
+    def resolve(
         self,
         futures: Iterable[Future[T]],
-        disable_bar: bool = False,
+        disable_bar: Optional[bool] = None,
         desc: Optional[str] = None,
         unit: Optional[str] = None,
         fail_fast: bool = False,
@@ -225,7 +246,7 @@ class TaskManager:
     def resolve_futures(
         self,
         futures: Iterable[Future[T]],
-        disable_bar: bool = False,
+        disable_bar: Optional[bool] = None,
         desc: Optional[str] = None,
         unit: Optional[str] = None,
         fail_fast: bool = False,
@@ -244,7 +265,7 @@ class TaskManager:
         """
 
         return list(
-            self.resolve_as_generator(
+            self.resolve(
                 futures=futures,
                 disable_bar=disable_bar,
                 desc=desc,
@@ -257,7 +278,7 @@ class TaskManager:
 
     def as_completed(
         self,
-        disable_bar: bool = False,
+        disable_bar: Optional[bool] = None,
         desc: Optional[str] = None,
         unit: Optional[str] = None,
         fail_fast: bool = False,
@@ -274,7 +295,7 @@ class TaskManager:
             signal: The abort signal
         """
         return list(
-            self.resolve_as_generator(
+            self.resolve(
                 futures=self._futures,
                 disable_bar=disable_bar,
                 desc=desc,

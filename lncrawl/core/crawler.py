@@ -3,13 +3,13 @@ from __future__ import annotations
 import hashlib
 import math
 import os
-import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
 from ..context import ctx
 from ..exceptions import LNException
+from ..utils.file_tools import atomic_write
 from ..utils.imgen import generate_cover_image
 from ..utils.text_tools import format_title, normalize
 from ..utils.url_tools import extract_base
@@ -144,10 +144,8 @@ class Crawler(ABC):
             else:
                 img = img.convert("RGB")
 
-        output_file.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile("wb") as tmp:
+        with atomic_write(output_file) as tmp:
             img.save(tmp, "JPEG", optimized=True)
-            os.rename(tmp.name, output_file)
 
     def download_cover(self, cover_url: str, cover_file: Path) -> None:
         try:
@@ -155,6 +153,7 @@ class Crawler(ABC):
             ctx.logger.debug(f"Cover saved: {cover_url} -> {cover_file}")
             return
         except Exception as e:
+            ctx.logger.warn(f"Cover download failed: {cover_url} -> {cover_file}", exc_info=True)
             if not self.auto_generate_cover:
                 raise LNException("Failed to download cover") from e
 
@@ -163,10 +162,8 @@ class Crawler(ABC):
             return
 
         img = generate_cover_image()
-        cover_file.parent.mkdir(parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile("wb") as tmp:
+        with atomic_write(cover_file) as tmp:
             img.save(tmp, "JPEG", optimized=True)
-            os.rename(tmp.name, cover_file)
         ctx.logger.debug(f"Cover generated: {cover_file}")
 
     def format_novel(self, novel: Novel) -> None:

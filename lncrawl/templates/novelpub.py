@@ -108,7 +108,7 @@ class NovelPubTemplate(BrowserTemplate):
             )
             for p in range(2, page_count + 1)
         ]
-        for page in self.taskman.resolve_as_generator(futures, desc="TOC", unit="page"):
+        for page in self.taskman.resolve(futures, desc="TOC", unit="page"):
             if page is not None:
                 yield from page.select(self.chapter_list_selector)
 

@@ -139,7 +139,7 @@ def _perform_search(
     # Wait for all tasks to finish with progress
     records: List[SearchResult] = []
     try:
-        for result_list in taskman.resolve_as_generator(
+        for result_list in taskman.resolve(
             futures,
             unit="source",
             desc="Searching",

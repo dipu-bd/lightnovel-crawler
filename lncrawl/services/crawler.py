@@ -23,7 +23,6 @@ class CrawlerService:
     def get_crawler(self, user_id: str, novel_url: str):
         constructor = ctx.sources.get_crawler(novel_url)
         crawler = ctx.sources.init_crawler(constructor)
-        crawler.novel_url = novel_url
         can_login = getattr(crawler, "can_login", False)
         logged_in = getattr(crawler, "__logged_in__", False)
         if can_login and not logged_in:
@@ -70,6 +69,7 @@ class CrawlerService:
                     url=novel_url,
                     domain=url.host,
                     title=model.title,
+                    cover_url=model.cover_url,
                 )
 
             # update novel
@@ -107,7 +107,7 @@ class CrawlerService:
         ctx.files.utime(f"novels/{novel.id}")
 
         logger.debug(
-            f"Fetched novel: {novel.title}] - {novel.chapter_count} chapters | {novel.volume_count} volumes | {novel.url}"
+            f"Fetched novel: {novel.title} - {novel.chapter_count} chapters | {novel.volume_count} volumes | {novel.url}"
         )
         return novel
 

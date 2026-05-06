@@ -160,15 +160,16 @@ class __AppContext__:
 
     def destroy(self):
         self.__ready = False
-        self.db.close()
-        self.mail.close()
-        self.sources.close()
         self.scheduler.stop()
+        self.sources.close()
+        self.mail.close()
+        self.db.close()
 
     def setup(
         self,
         log_level: Union[int, str, None] = None,
         config_file: Optional[Path] = None,
+        reset_db_on_failure: bool = False,
         sync_remote_index=True,
     ):
         if self.__ready:
@@ -176,7 +177,7 @@ class __AppContext__:
         self.__ready = True
         self.logger.setup(log_level)
         self.config.load(config_file)
-        self.db.bootstrap()
+        self.db.bootstrap(reset_db_on_failure)
         self.users.setup_admin()
         self.secrets.setup_secret()
         self.sources.load(sync_remote_index)

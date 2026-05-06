@@ -69,7 +69,7 @@ class NovelMTLTemplate(BrowserTemplate):
             task = self.taskman.submit_task(self.scraper.get_soup, url)
             futures.append(task)
 
-        for page in self.taskman.resolve_as_generator(
+        for page in self.taskman.resolve(
             futures,
             desc="TOC",
             unit="page",

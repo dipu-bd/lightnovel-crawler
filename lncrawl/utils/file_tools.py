@@ -2,14 +2,46 @@ import logging
 import os
 import shlex
 import subprocess
+import tempfile
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Union
+from typing import Iterator, Union
 
 from slugify import slugify
 
 from .platforms import Platform
 
 logger = logging.getLogger(__name__)
+
+
+@contextmanager
+def atomic_write(path: Union[str, Path], mode: str = "wb") -> Iterator:
+    """Atomically write to `path` via a sibling temp file in the same directory.
+
+    On context exit the temp file is renamed onto the target with `os.replace`,
+    which is atomic on POSIX and Windows. On exception the temp file is removed
+    and the original (if any) is left untouched.
+
+    Avoids the Windows "[Errno 13] Permission denied" issue you get when
+    reopening a `tempfile.NamedTemporaryFile` by path while it is still open.
+    """
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+        dir=path.parent,
+    )
+    try:
+        with os.fdopen(fd, mode) as f:
+            yield f
+        os.replace(tmp_name, path)
+    except BaseException:
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
+        raise
 
 
 def format_size(num_bytes: int, decimals: int = 1, suffix: str = "B") -> str:

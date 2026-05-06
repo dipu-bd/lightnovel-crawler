@@ -92,7 +92,7 @@ class Sources:
         futures = [self._taskman.submit_task(import_crawlers, file) for file in files]
         return [
             self.add_crawler(crawler)
-            for crawlers in self._taskman.resolve_as_generator(
+            for crawlers in self._taskman.resolve(
                 futures,
                 disable_bar=True,
                 signal=self._signal,
@@ -162,7 +162,7 @@ class Sources:
             futures.append(f)
 
         # wait for completion
-        for dst_file in self._taskman.resolve_as_generator(
+        for dst_file in self._taskman.resolve(
             futures,
             desc="Downloading",
             unit="source",
