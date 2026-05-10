@@ -17,6 +17,8 @@ class ChereadsCrawler(LegacyCrawler):
     def initialize(self):
         self.init_executor(workers=4)
 
+    
+
     def parse_metadata(self, soup: PageSoup) -> Box:
         metadata_json = soup.select_one("script#__NEXT_DATA__, script#vite-plugin-ssr_pageContext")
         if not metadata_json:
