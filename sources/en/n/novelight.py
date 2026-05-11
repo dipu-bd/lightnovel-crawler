@@ -47,7 +47,7 @@ class NoveLightCrawler(BrowserTemplate):
 
         return book_id, csrf
 
-    def parse_chapter_tags(self, soup: PageSoup, novel: Novel) -> Iterable[PageSoup]:
+    def select_chapter_tags(self, soup: PageSoup, novel: Novel) -> Iterable[PageSoup]:
         book_id, csrf = self._extract_book_tokens(soup)
         novel.book_id = book_id
         novel.csrf = csrf
@@ -90,7 +90,7 @@ class NoveLightCrawler(BrowserTemplate):
         }
         url = chapter.url.replace("chapter", "ajax/read-chapter")
         data = self.scraper.get_json(url, headers=headers)
-        soup = data["content"]
+        soup = self.scraper.make_soup(data["content"])
         contents = soup.select_one(".chapter-text")
         self.cleaner.clean_contents(contents)
         chapter.body = contents.inner_html
