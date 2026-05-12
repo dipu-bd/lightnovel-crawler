@@ -11,7 +11,7 @@ class NovelNextCrawler(NovelFullTemplate):
     base_url = ["https://novelnext.com/", "https://novelnext.dramanovels.io/"]
 
     def initialize(self) -> None:
-        self.init_executor(ratelimit=0.2)
+        self.taskman.init_executor(ratelimit=0.2)
         self.cleaner.bad_tag_text_pairs.update(
             {
                 "h4": [
