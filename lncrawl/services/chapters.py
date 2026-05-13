@@ -208,7 +208,8 @@ class ChapterService:
                             novel_id=novel_id,
                             url=wanted[s].url,
                             title=wanted[s].title,
-                            extra=wanted[s].get_extras(),
+                            is_done=existing[s].is_done,
+                            extra={**existing[s].extra, **wanted[s].get_extras()},
                             volume_id=vol_id_map.get(wanted[s].volume),
                         ).model_dump()
                         for s in to_update
