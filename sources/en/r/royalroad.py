@@ -2,7 +2,7 @@
 import logging
 import re
 
-from lncrawl.core import Chapter, LegacyCrawler
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 
 logger = logging.getLogger(__name__)
 search_url = "https://www.royalroad.com/fictions/search?keyword=%s"
@@ -20,10 +20,10 @@ class RoyalRoadCrawler(LegacyCrawler):
         results = []
         for a in soup.select("h2.fiction-title a[href]")[:5]:
             results.append(
-                {
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                }
+                SearchResult(
+                    title=a.text.strip(),
+                    url=self.absolute_url(a["href"]),
+                )
             )
         return results
 
@@ -49,14 +49,19 @@ class RoyalRoadCrawler(LegacyCrawler):
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
         self.novel_tags = [
-            a.text.strip() for a in soup.select('.fiction-info .tags a[href^="/fictions/search"]')
+            a.text.strip()
+            for a in soup.select('.fiction-info .tags a[href^="/fictions/search"]')
         ]
         logger.info("Novel tags: %s", self.novel_tags)
 
         for a in soup.select("#chapters .chapter-row td:first-child a[href]"):
             chap_id = len(self.chapters) + 1
             self.chapters.append(
-                Chapter(id=chap_id, title=a.text.strip(), url=self.absolute_url(a["href"]))
+                Chapter(
+                    id=chap_id,
+                    title=a.text.strip(),
+                    url=self.absolute_url(a["href"]),
+                )
             )
 
     def download_chapter_body(self, chapter):
