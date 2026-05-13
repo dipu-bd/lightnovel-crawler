@@ -55,16 +55,12 @@ def load_offline_source(check_user=True) -> CrawlerIndex:
     # get user index. use local index if not available
     user_file = ctx.config.crawler.user_index_file
     if not user_file.is_file():
-        user_file.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(local_file, user_file)
         return local_index
     user_index = load_source(user_file)
 
     # check latest index. use local index if it is latest
     if user_index.v < local_index.v:
-        shutil.copy2(local_file, user_file)
         return local_index
-
     return user_index
 
 
