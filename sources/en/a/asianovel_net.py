@@ -33,7 +33,12 @@ class AsiaNovelNetCrawler(SoupTemplate):
 
     def initialize(self) -> None:
         self.taskman.init_executor(ratelimit=1)
-        self.cleaner.bad_css.update(["div.asian-ads-top-content", "div.asian-ads-bottom-content"])
+        self.cleaner.bad_css.update(
+            [
+                "div.asian-ads-top-content",
+                "div.asian-ads-bottom-content",
+            ]
+        )
 
     def select_search_item_list(self, query: str) -> Iterable[PageSoup]:
         params = {"s": query, "post_type": "fcn_story"}
