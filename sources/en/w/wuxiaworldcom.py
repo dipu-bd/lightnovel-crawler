@@ -64,8 +64,11 @@ class WuxiaworldComCrawler(BrowserTemplate):
                 )
                 self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
                 if self.browser.local_storage.has(self.localstorageuser):
+                    user = self.browser.local_storage.get(self.localstorageuser)
+                    if not user:
+                        raise Exception("No localstorageuser in localstorage")
                     self.bearer_token = "{token_type} {access_token}".format(
-                        **json.loads(self.browser.local_storage[self.localstorageuser])
+                        **json.loads(user)
                     )
             except Exception as e:
                 logger.info("login Email: Failed", e)
