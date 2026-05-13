@@ -30,7 +30,7 @@ def select_descendants(job_id: str, inclusive: bool = False):
             WHERE jobs.id = %(job_id)s::VARCHAR
         UNION ALL
             SELECT jobs.id AS id FROM jobs
-            JOIN descendends ON jobs.parent_job_id = descendends.id
+            JOIN descendants ON jobs.parent_job_id = descendants.id
     ) SELECT descendants.id FROM descendants
     """
     des = select(col(Job.id).label("id")).where(Job.id == job_id).cte("descendants", recursive=True)
