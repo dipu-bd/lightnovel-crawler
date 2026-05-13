@@ -49,8 +49,7 @@ class RoyalRoadCrawler(LegacyCrawler):
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
         self.novel_tags = [
-            a.text.strip()
-            for a in soup.select('.fiction-info .tags a[href^="/fictions/search"]')
+            a.text.strip() for a in soup.select('.fiction-info .tags a[href^="/fictions/search"]')
         ]
         logger.info("Novel tags: %s", self.novel_tags)
 
