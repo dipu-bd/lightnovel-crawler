@@ -27,7 +27,9 @@ class WuxiaworldComCrawler(BrowserTemplate):
         self.bearer_token = None
         self.bearer_token_in_browser = False
         self.cleaner.unchanged_tags.update(["span"])
-        self.localstorageuser = "oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa"
+        self.localstorageuser = (
+            "oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa"
+        )
 
     def login(self, username_or_email: str, password_or_token: str) -> None:
         # Login now will use Bearer Token if supplied as main login method,
@@ -57,13 +59,17 @@ class WuxiaworldComCrawler(BrowserTemplate):
             button.click()
 
             try:
-                self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
+                self.browser.wait(
+                    "//h2[normalize-space()='Your Profile']", By.XPATH, 10
+                )
                 self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
                 if self.browser.local_storage.has(self.localstorageuser):
                     user = self.browser.local_storage.get(self.localstorageuser)
                     if not user:
                         raise Exception("No localstorageuser in localstorage")
-                    self.bearer_token = "{token_type} {access_token}".format(**json.loads(user))
+                    self.bearer_token = "{token_type} {access_token}".format(
+                        **json.loads(user)
+                    )
             except Exception as e:
                 logger.info("login Email: Failed", e)
 
@@ -80,8 +86,12 @@ class WuxiaworldComCrawler(BrowserTemplate):
                 )
                 self.visit("https://www.wuxiaworld.com/manage/profile/")
                 try:
-                    self.browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                    self.browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
+                    self.browser.wait(
+                        "//h2[normalize-space()='Your Profile']", By.XPATH, 10
+                    )
+                    self.browser.find(
+                        "//h2[normalize-space()='Your Profile']", By.XPATH
+                    )
                 except Exception as e:
                     logger.debug("login Email: Failed", e)
 
@@ -141,7 +151,9 @@ class WuxiaworldComCrawler(BrowserTemplate):
             logger.debug(f"User subscriptions: {subscriptions}")
             for subscription in subscriptions:
                 if "sponsor" in subscription["plan"]:
-                    advance_chapter_allowed = subscription["plan"]["sponsor"]["advanceChapterCount"]
+                    advance_chapter_allowed = subscription["plan"]["sponsor"][
+                        "advanceChapterCount"
+                    ]
         except Exception as e:
             logger.debug(f"Failed to acquire subscription details. {e}")
 
@@ -230,7 +242,14 @@ class WuxiaworldComCrawler(BrowserTemplate):
 
         # Open chapters menu (note: the order of tabs in novel info
         # change whether if you are logged in or not)
-        if len(self.browser.find_all('//*[starts-with(@id, "full-width-tab-")]', By.XPATH)) == 3:
+        if (
+            len(
+                self.browser.find_all(
+                    '//*[starts-with(@id, "full-width-tab-")]', By.XPATH
+                )
+            )
+            == 3
+        ):
             self.browser.click("#novel-tabs #full-width-tab-0")
             self.browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
         else:
@@ -312,7 +331,9 @@ class WuxiaworldComCrawler(BrowserTemplate):
 
         try:
             if self.bearer_token:
-                self.browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
+                self.browser.wait(
+                    "//button[normalize-space()='Favorite']", By.XPATH, 10
+                )
                 self.browser.find("//button[normalize-space()='Favorite']", By.XPATH)
         except Exception as e:
             logger.debug("error loading (%s)", str(chapter.url), e)
