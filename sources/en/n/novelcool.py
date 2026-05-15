@@ -1,64 +1,30 @@
-# -*- coding: utf-8 -*-
-import logging
-
-from lncrawl.core import Chapter, LegacyCrawler, Volume
-
-logger = logging.getLogger(__name__)
+from lncrawl.core import BrowserTemplate, Chapter, Volume
 
 
-class NovelCool(LegacyCrawler):
+class NovelCool(BrowserTemplate):
     has_manga = True
     base_url = "https://www.novelcool.com/"
 
-    def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
+    novel_title_selector = "h1.bookinfo-title"
+    novel_author_selector = ".bookinfo-author a"
+    novel_cover_selector = ".bookinfo-pic img"
+    novel_synopsis_selector = ".bk-summary-txt"
+    novel_tags_selector = ".bookinfo-category-list a"
+    chapter_list_selector = ".chapter-item-list a"
+    chapter_title_selector = ".chapter-item-title"
+    chapter_list_reverse = True
 
-        possible_title = soup.select_one("h1.bookinfo-title")
-        assert possible_title, "No novel title"
-        self.novel_title = possible_title.text.strip()
-        logger.info("Novel title: %s", self.novel_title)
+    def initialize(self):
+        self.cleaner.bad_css.update(
+            {
+                ".chapter-title",
+                ".chapter-start-mark",
+                ".chapter-end-mark",
+                'div[model_target_name="report"]',
+            }
+        )
 
-        self.novel_author = soup.select_one("span", {"itemprop": "creator"}).text.strip()
-        logger.info("Novel author: %s", self.novel_author)
-
-        possible_image = soup.select_one("div.bookinfo-pic img")
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
-
-        chapters = soup.select(".chapter-item-list a")
-        chapters.reverse()
-
-        for x in chapters:
-            chap_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            if len(self.volumes) < vol_id:
-                self.volumes.append(Volume(id=vol_id))
-            self.chapters.append(
-                Chapter(
-                    id=chap_id,
-                    volume=vol_id,
-                    url=self.absolute_url(x["href"]),
-                    title=x.select_one(".chapter-item-title").text.strip(),
-                )
-            )
-
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-
-        chapter_title = soup.select_one(".chapter-title")
-        chapter_start = soup.select_one(".chapter-start-mark")
-        body_parts = chapter_start.parent
-
-        if chapter_title:
-            chapter_title.extract()
-
-        chapter_start.extract()
-
-        for report in body_parts.find("div", {"model_target_name": "report"}):
-            report.extract()
-
-        for junk in body_parts.find("p", {"class": "chapter-end-mark"}):
-            junk.extract()
-
-        return self.cleaner.extract_contents(body_parts)
+    def download_chapter(self, chapter: Chapter):
+        soup = self.scraper.get_soup(chapter["url"])
+        content = soup.select_one(".chapter-start-mark").parent
+        chapter.body = self.cleaner.extract_contents(content)
