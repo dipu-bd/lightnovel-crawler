@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
+from urllib.parse import urljoin
 
 from lncrawl.core import Chapter, LegacyCrawler, Volume
 
@@ -13,30 +14,72 @@ class SMNovelsCrawler(LegacyCrawler):
         logger.debug("Visiting %s", self.novel_url)
         soup = self.get_soup(self.novel_url)
 
-        # Site has no author name or novel covers.
-        possible_title = soup.select_one("h1.entry-title")
-        assert possible_title, "No novel title"
-        self.novel_title = possible_title.text.strip()
+        title = soup.select_one("h1.entry-title, h1.page-title")
+        assert title, "No novel title"
+        self.novel_title = title.get_text(strip=True).replace("Category:", "").strip()
         logger.info("Novel title: %s", self.novel_title)
 
-        for a in soup.select(".all-chapters-list a"):
-            chap_id = len(self.chapters) + 1
-            vol_id = len(self.chapters) // 100 + 1
-            if len(self.chapters) % 100 == 0:
-                self.volumes.append(Volume(id=vol_id))
-            self.chapters.append(
-                Chapter(
-                    id=chap_id,
-                    volume=vol_id,
-                    title=a.text.strip(),
-                    url=self.absolute_url(a["href"]),
+        seen = set()
+        page_url = self.novel_url.rstrip("/")
+        page_no = 1
+
+        while page_url:
+            logger.info("Reading chapter list page %s: %s", page_no, page_url)
+            soup = self.get_soup(page_url)
+
+            links = soup.select(".all-chapters-list a")
+            if not links:
+                links = soup.select("article a[href*='/chapter']")
+
+            for a in links:
+                href = a.get("href")
+                if not href:
+                    continue
+
+                url = self.absolute_url(href)
+                if url in seen:
+                    continue
+
+                seen.add(url)
+
+                chap_id = len(self.chapters) + 1
+                vol_id = (chap_id - 1) // 100 + 1
+
+                if len(self.volumes) < vol_id:
+                    self.volumes.append(Volume(id=vol_id))
+
+                self.chapters.append(
+                    Chapter(
+                        id=chap_id,
+                        volume=vol_id,
+                        title=a.get_text(" ", strip=True),
+                        url=url,
+                    )
                 )
-            )
+
+            next_link = soup.select_one("a.next.page-numbers, .nav-previous a")
+            if next_link and next_link.get("href"):
+                next_url = self.absolute_url(next_link["href"])
+                if next_url == page_url:
+                    break
+                page_url = next_url
+                page_no += 1
+            else:
+                break
+
+        assert self.chapters, "No chapters found"
+        logger.info("Chapters found: %s", len(self.chapters))
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
 
         contents = soup.select_one(".entry-content")
-        for bad in contents.select("br"):
+        assert contents, "No chapter content"
+
+        for bad in contents.select(
+            "script, style, ins, iframe, .sharedaddy, .jp-relatedposts, "
+            ".code-block, .adsbygoogle"
+        ):
             bad.extract()
+
         return self.cleaner.extract_contents(contents)
