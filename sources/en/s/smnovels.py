@@ -12,7 +12,7 @@ class SMNovelsCrawler(LegacyCrawler):
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
 
-        page_url = self.novel_url.rstrip("/")
+        page_url = self.novel_url.rstrip("/") + "/"
         page_no = 1
         seen = set()
 
@@ -24,7 +24,12 @@ class SMNovelsCrawler(LegacyCrawler):
                 title = soup.select_one("h1.entry-title, h1.page-title")
                 if not title:
                     raise RuntimeError("No novel title")
-                self.novel_title = title.get_text(" ", strip=True).replace("Category:", "").strip()
+
+                self.novel_title = (
+                    title.get_text(" ", strip=True)
+                    .replace("Category:", "")
+                    .strip()
+                )
                 logger.info("Novel title: %s", self.novel_title)
 
             links = soup.select(".all-chapters-list a")
@@ -61,7 +66,7 @@ class SMNovelsCrawler(LegacyCrawler):
             if not next_link or not next_link.get("href"):
                 break
 
-            next_url = self.absolute_url(next_link["href"]).rstrip("/")
+            next_url = self.absolute_url(next_link["href"]).rstrip("/") + "/"
             if next_url == page_url:
                 break
 
