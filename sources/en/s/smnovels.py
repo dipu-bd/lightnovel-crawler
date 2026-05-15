@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-from urllib.parse import urljoin
 
 from lncrawl.core import Chapter, LegacyCrawler, Volume
 
@@ -12,20 +11,21 @@ class SMNovelsCrawler(LegacyCrawler):
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
 
-        title = soup.select_one("h1.entry-title, h1.page-title")
-        assert title, "No novel title"
-        self.novel_title = title.get_text(strip=True).replace("Category:", "").strip()
-        logger.info("Novel title: %s", self.novel_title)
-
-        seen = set()
         page_url = self.novel_url.rstrip("/")
         page_no = 1
+        seen = set()
 
         while page_url:
             logger.info("Reading chapter list page %s: %s", page_no, page_url)
             soup = self.get_soup(page_url)
+
+            if not self.novel_title:
+                title = soup.select_one("h1.entry-title, h1.page-title")
+                if not title:
+                    raise RuntimeError("No novel title")
+                self.novel_title = title.get_text(" ", strip=True).replace("Category:", "").strip()
+                logger.info("Novel title: %s", self.novel_title)
 
             links = soup.select(".all-chapters-list a")
             if not links:
@@ -58,23 +58,27 @@ class SMNovelsCrawler(LegacyCrawler):
                 )
 
             next_link = soup.select_one("a.next.page-numbers, .nav-previous a")
-            if next_link and next_link.get("href"):
-                next_url = self.absolute_url(next_link["href"])
-                if next_url == page_url:
-                    break
-                page_url = next_url
-                page_no += 1
-            else:
+            if not next_link or not next_link.get("href"):
                 break
 
-        assert self.chapters, "No chapters found"
+            next_url = self.absolute_url(next_link["href"]).rstrip("/")
+            if next_url == page_url:
+                break
+
+            page_url = next_url
+            page_no += 1
+
+        if not self.chapters:
+            raise RuntimeError("No chapters found")
+
         logger.info("Chapters found: %s", len(self.chapters))
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
 
         contents = soup.select_one(".entry-content")
-        assert contents, "No chapter content"
+        if not contents:
+            raise RuntimeError("No chapter content")
 
         for bad in contents.select(
             "script, style, ins, iframe, .sharedaddy, .jp-relatedposts, "
