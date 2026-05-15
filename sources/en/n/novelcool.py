@@ -1,4 +1,4 @@
-from lncrawl.core import BrowserTemplate, Chapter, Volume
+from lncrawl.core import BrowserTemplate, Chapter
 
 
 class NovelCool(BrowserTemplate):
