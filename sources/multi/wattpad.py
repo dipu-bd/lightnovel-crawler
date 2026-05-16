@@ -4,7 +4,6 @@ import re
 from time import time
 from urllib.parse import urlparse
 
-
 from lncrawl.core import Chapter, LegacyCrawler
 from lncrawl.exceptions import LNException
 
@@ -47,9 +46,7 @@ class WattpadCrawler(LegacyCrawler):
         id_no = search_id.search(self.novel_url)
         if not id_no:
             raise LNException("No story ID found")
-        response = self.get_response(
-            f"{self.scraper.origin}api/v3/stories/{id_no.group()}"
-        )
+        response = self.get_response(f"{self.scraper.origin}api/v3/stories/{id_no.group()}")
         story_info = response.json()
 
         self.novel_title = story_info["title"]
