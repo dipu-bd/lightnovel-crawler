@@ -80,5 +80,5 @@ class WattpadCrawler(LegacyCrawler):
         logger.info("Getting text %s", text_url)
         response = self.get_response(text_url)
         text = response.content.decode("utf8")
-        text = re.sub(r'<p data-p-id="[a-f0-9]+>"', "<p>", text)
+        text = re.sub(r'data-p-id="[a-f0-9]+"', "", text)
         return text
