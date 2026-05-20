@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 def find_executables(
     windows_path: Iterable[str],
     mac_app_path: Iterable[str],
+    linux_app_path: Iterable[str],
     posix_app_name: Iterable[str],
     windows_exe_name: Iterable[str],
 ) -> List[str]:
@@ -18,6 +19,8 @@ def find_executables(
         for item in os.environ["PATH"].split(os.pathsep):
             for subitem in posix_app_name:
                 candidates.append(os.path.join(item, subitem))
+        if Platform.linux:
+            candidates += list(linux_app_path)
         if Platform.mac:
             candidates += list(mac_app_path)
 
@@ -45,29 +48,6 @@ def find_executables(
     return valids
 
 
-def find_edge_executables() -> List[str]:
-    """
-    Scans standard cross-platform operating system installations
-    to auto-detect the Microsoft Edge executable path.
-    """
-    return find_executables(
-        posix_app_name=(
-            "microsoft-edge",
-            "microsoft-edge-stable",
-            "microsoft-edge-beta",
-        ),
-        mac_app_path=[
-            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
-        ],
-        windows_path=[
-            "Microsoft/Edge/Application",
-        ],
-        windows_exe_name=[
-            "msedge.exe",
-        ],
-    )
-
-
 def find_chrome_executables() -> List[str]:
     """
     Scans standard cross-platform operating system installations
@@ -80,7 +60,11 @@ def find_chrome_executables() -> List[str]:
             "chromium-browser",
             "chrome",
             "google-chrome-stable",
+            "com.google.Chrome",
         ),
+        linux_app_path=[
+            "/var/lib/flatpak/exports/bin/com.google.Chrome",
+        ],
         mac_app_path=[
             "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
             "/Applications/Chromium.app/Contents/MacOS/Chromium",
@@ -92,6 +76,30 @@ def find_chrome_executables() -> List[str]:
         ],
         windows_exe_name=[
             "chrome.exe",
+        ],
+    )
+
+
+def find_edge_executables() -> List[str]:
+    """
+    Scans standard cross-platform operating system installations
+    to auto-detect the Microsoft Edge executable path.
+    """
+    return find_executables(
+        posix_app_name=(
+            "microsoft-edge",
+            "microsoft-edge-stable",
+            "microsoft-edge-beta",
+        ),
+        linux_app_path=[],
+        mac_app_path=[
+            "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+        ],
+        windows_path=[
+            "Microsoft/Edge/Application",
+        ],
+        windows_exe_name=[
+            "msedge.exe",
         ],
     )
 
