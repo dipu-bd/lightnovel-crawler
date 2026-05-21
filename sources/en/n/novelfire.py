@@ -56,12 +56,12 @@ class NovelFireCrawler(LegacyCrawler):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#content")
 
-        # Remove the "#1" chapter number heading at the top
-        first = contents.find(["h1", "h2", "h3", "p"])
-        if first:
-            text = first.get_text(strip=True)
-            if text.startswith("#") or text.isdigit():
-                first.decompose()
+    # Remove the "#1" chapter number heading at the top
+for tag in contents.select("h1, h2, h3, p")[:3]:
+    text = tag.get_text(strip=True)
+    if text.startswith("#") or text.isdigit():
+        tag.decompose()
+        break
 
         # Remove the duplicate "Chapter 1 Title" title at the bottom
         paragraphs = contents.select("p")
