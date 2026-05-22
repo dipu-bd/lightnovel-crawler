@@ -52,16 +52,20 @@ class NovelFireCrawler(LegacyCrawler):
                 vol_url = False
                 break
 
-    def download_chapter_body(self, chapter) -> str:
-        soup = self.get_soup(chapter["url"])
-        contents = soup.select_one("div#content")
+   def download_chapter_body(self, chapter) -> str:
+    soup = self.get_soup(chapter["url"])
+    contents = soup.select_one("div#content")
 
-        # Remove duplicate chapter title at the top (h3 or h4 tag)
-        for tag in contents.find_all(["h3", "h4"]):
-            text = tag.get_text(strip=True).lower()
-            title = chapter["title"].lower()
-            if text in title or title in text:
-                tag.decompose()
-                break
+    # Remove leading h3/h4 titles
+    while contents.contents:
+        first = next(
+            (x for x in contents.contents if getattr(x, "name", None)),
+            None
+        )
 
-        return self.cleaner.extract_contents(contents)
+        if first and first.name in ["h3", "h4"]:
+            first.decompose()
+        else:
+            break
+
+    return self.cleaner.extract_contents(contents)
