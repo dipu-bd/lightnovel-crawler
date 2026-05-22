@@ -104,7 +104,6 @@ def build_chapter(chapter: Chapter) -> epub.EpubHtml:
         "",
         f"""
     <div id="chapter">
-        <h4 style="opacity: 0.8">#{chapter.serial}</h4>
         <h1>{chapter.title}</h1>
         {text}
     </div>
