@@ -56,13 +56,9 @@ class NovelFireCrawler(LegacyCrawler):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#content")
 
-        # Remove the duplicate Chapter title at the bottom
-        paragraphs = contents.select("p")
-        if paragraphs:
-            last_p = paragraphs[-1]
-            text = last_p.get_text(strip=True).lower()
-            title = chapter["title"].lower()
-            if text in title or title in text:
-                last_p.decompose()
+        # Remove the duplicate chapter title at the top (a <p> containing a <strong> tag)
+        first_p = contents.find("p")
+        if first_p and first_p.find("strong"):
+            first_p.decompose()
 
         return self.cleaner.extract_contents(contents)
