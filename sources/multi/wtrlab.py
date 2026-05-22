@@ -8,7 +8,7 @@ from typing import List, Union
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 import requests
 
-from lncrawl.core import Chapter, LegacyCrawler, SearchResult
+from lncrawl.core import Chapter, LegacyCrawler, PageSoup, SearchResult
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +20,12 @@ class WtrLab(LegacyCrawler):
     def initialize(self) -> None:
         super().initialize()
         self.init_executor(workers=2)
+
+    def _parse_next_data(self, soup: PageSoup):
+        metadata_json = soup.select_one("script#__NEXT_DATA__")
+        if not metadata_json:
+            raise Exception("No __NEXT_DATA__ script found")
+        return json.loads(metadata_json.get_text(strip=True))
 
     def search_novel(self, query: str):
         novels = requests.post(
@@ -48,9 +54,7 @@ class WtrLab(LegacyCrawler):
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
-        metadata_json = soup.select_one("script#__NEXT_DATA__")
-        assert metadata_json, "No next data found"
-        metadata = json.loads(metadata_json.get_text(strip=True))
+        metadata = self._parse_next_data(soup)
 
         query = metadata["query"]
         page_props = metadata["props"]["pageProps"]
@@ -112,7 +116,7 @@ class WtrLab(LegacyCrawler):
         url = f"{self.scraper.origin}/api/reader/get"
         payload = json.dumps(
             {
-                # "translate": "ai", # note: disabled as it requires login
+                "translate": "web",  # note: "ai" requires login
                 "language": chapter.language,
                 "raw_id": chapter.serie_id,
                 "chapter_no": chapter.order,
@@ -124,7 +128,7 @@ class WtrLab(LegacyCrawler):
         headers = {"Content-Type": "application/json"}
         jsonData = self.get_json(url, data=payload, headers=headers)
         if not jsonData["success"]:
-            raise Exception(jsonData["error"])
+            raise Exception(jsonData["message"])
         body = jsonData["data"]["data"]["body"]
 
         content = ""
