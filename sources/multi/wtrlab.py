@@ -57,13 +57,14 @@ class WtrLab(LegacyCrawler):
         series_data = page_props["serie"]["serie_data"]
         clean_url = self.novel_url.split("?")[0].strip("/")
 
-        self.language = query["locale"]
         self.novel_cover = series_data["data"]["image"]
         self.novel_title = series_data["data"]["raw"]["title"]
         self.novel_author = series_data["data"]["raw"]["author"]
         self.novel_synopsis = series_data["data"]["raw"]["description"]
         if "tags" in page_props:
             self.novel_tags = [tag["title"] for tag in page_props["tags"] if tag.get("title")]
+
+        # self.language = query["locale"] # reports wrong language for raws
 
         raw_id = query["raw_id"]
         chapter_count = series_data["chapter_count"]
