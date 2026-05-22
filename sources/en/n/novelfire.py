@@ -1,14 +1,8 @@
 import logging
-import re
 
 from lncrawl.core import Chapter, LegacyCrawler, Volume
 
 logger = logging.getLogger(__name__)
-
-
-def _normalize(text: str) -> str:
-    """Strip punctuation and lowercase for fuzzy matching"""
-    return re.sub(r"[^a-z0-9\s]", "", text.lower()).strip()
 
 
 class NovelFireCrawler(LegacyCrawler):
@@ -62,13 +56,9 @@ class NovelFireCrawler(LegacyCrawler):
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#content")
 
-        title_normalized = _normalize(chapter["title"])
-
-        # Remove duplicate chapter title at the top (h3 or h4 tag)
-        for tag in contents.find_all(["h3", "h4"]):
-            text_normalized = _normalize(tag.get_text(strip=True))
-            if text_normalized in title_normalized or title_normalized in text_normalized:
-                tag.decompose()
-                break
+        # Always remove the first h3 or h4 inside content — it's always the duplicate title
+        first_heading = contents.find(["h3", "h4"])
+        if first_heading:
+            first_heading.decompose()
 
         return self.cleaner.extract_contents(contents)
