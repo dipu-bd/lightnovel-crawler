@@ -53,19 +53,12 @@ class NovelFireCrawler(LegacyCrawler):
                 break
 
    def download_chapter_body(self, chapter) -> str:
+
     soup = self.get_soup(chapter["url"])
     contents = soup.select_one("div#content")
 
-    # Remove leading h3/h4 titles
-    while contents.contents:
-        first = next(
-            (x for x in contents.contents if getattr(x, "name", None)),
-            None
-        )
+    h = contents.find(["h3", "h4"])
+    if h:
+        h.decompose()
 
-        if first and first.name in ["h3", "h4"]:
-            first.decompose()
-        else:
-            break
-
-    return self.cleaner.extract_contents(contents)
+    return str(contents)
