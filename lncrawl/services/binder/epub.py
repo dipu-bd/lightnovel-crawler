@@ -1,6 +1,6 @@
 import logging
-from pathlib import Path
 import re
+from pathlib import Path
 from threading import Event
 
 from ebooklib import epub  # type: ignore
@@ -100,10 +100,19 @@ def build_chapter(chapter: Chapter) -> epub.EpubHtml:
         text = ctx.files.load_text(chapter.content_file)
     else:
         text = "<p><em>No content available</em></p>"
+
+    # Only show #serial if the title doesn't already contain a number
+    serial_heading = (
+        ""
+        if re.search(r"\d", chapter.title)
+        else f'<h4 style="opacity: 0.8">#{chapter.serial}</h4>'
+    )
+
     content = RE_WHITESPACE.sub(
         "",
         f"""
     <div id="chapter">
+        {serial_heading}
         <h1>{chapter.title}</h1>
         {text}
     </div>
