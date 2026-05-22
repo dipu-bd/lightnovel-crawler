@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
+import base64
 import json
 import logging
 from urllib.parse import urlparse
 
 import requests
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 
 from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
@@ -11,15 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 class WtrLab(LegacyCrawler):
-    """
-    This site has multilingual novels, basically all MTL, supposedly through translators like Google
-    but the output seems pretty decent for that
-    The whole site obfuscates classes via Angular or some type of minifier
-    so the only constant HTML comes from display text & HTML IDs
-    But luckily all necessary data is stored in a consistent JSON that's always in the same script tag
-    Essentially the same framework as webfic though with some other keys, urls, etc.
-    """
-
     base_url = ["https://wtr-lab.com"]
     has_mtl = True
 
@@ -111,8 +104,38 @@ class WtrLab(LegacyCrawler):
         jsonData = self.get_json(url, data=payload, headers=headers)
         title = jsonData["chapter"]["title"]
         chapter.title = f"Chapter {chapter.id}: {str(title[0]).upper() + title[1:]}"
-        body = jsonData["data"]["data"]["body"]
+        encrypted = jsonData["data"]["data"]["body"]
+        body = self.decrypt_body(encrypted)
+
         chapterText = ""
         for line in body:
             chapterText += f"<p>{line}</p>"
         return chapterText
+
+    def decrypt_body(self, encrypted: str):
+        # search for "Invalid encrypted data format" or "AES-GCM"
+        KEY = b"IJAFUUxjM25hyzL2AZrn0wl7cESED6Ru"
+        is_array = False
+
+        if encrypted.startswith("arr:"):
+            is_array = True
+            encrypted = encrypted[4:]
+        elif encrypted.startswith("str:"):
+            encrypted = encrypted[4:]
+
+        parts = encrypted.split(":")
+        if len(parts) != 3:
+            raise ValueError("Invalid encrypted data format")
+
+        s, n, a = parts
+        iv = base64.b64decode(s)
+        n_bytes = base64.b64decode(n)
+        a_bytes = base64.b64decode(a)
+
+        # JS builds: d = [...a_bytes, ...n_bytes]  (ciphertext then auth tag)
+        ciphertext_and_tag = a_bytes + n_bytes
+
+        plaintext = AESGCM(KEY).decrypt(iv, ciphertext_and_tag, None)
+        decoded = plaintext.decode("utf-8")
+
+        return json.loads(decoded) if is_array else decoded
