@@ -4,8 +4,8 @@ import json
 import logging
 from urllib.parse import urlparse
 
-import requests
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+import requests
 
 from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
 
