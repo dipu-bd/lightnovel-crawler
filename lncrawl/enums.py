@@ -26,6 +26,8 @@ class JobType(IntEnum):
     IMAGE_BATCH = 31
     ARTIFACT = 40
     ARTIFACT_BATCH = 41
+    TRANSLATION = 50
+    TRANSLATION_BATCH = 51
 
 
 class JobStatus(IntEnum):

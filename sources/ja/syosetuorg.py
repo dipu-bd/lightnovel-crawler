@@ -36,13 +36,14 @@ class SyosetuOrgCrawler(BrowserTemplate):
     def parse_title(self, soup: PageSoup, novel: Novel) -> None:
         title_tag = soup.select_one(self.novel_title_selector)
         if not title_tag:
-            novel.title = soup.select_one("title").text.split(" - ")[0]
+            title_el = soup.select_one("title")
+            novel.title = title_el.text.split(" - ")[0] if title_el else ""
+            return
         novel.title = title_tag.text
 
     def parse_toc(self, soup: PageSoup, novel: Novel) -> None:
         volume_id = 0
         for tr in soup.select("#maind table tr"):
-            print(tr)
             tds = tr.select("td")
             if len(tds) == 1 and tds[0].get("colspan") == "2":
                 # volume header

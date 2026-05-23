@@ -39,12 +39,7 @@ _PYLSP_SETTINGS = {
             "select": ["I", "E", "W", "F"],
             "ignore": ["E203", "E265", "E501"],
             "lineLength": 100,
-            "line-ending": "lf",
-            "indent-style": "space",
             "targetVersion": "py39",
-            "quote-style": "double",
-            "docstring-code-format": True,
-            "docstring-code-line-length": 88,
         },
         "pyflakes": {
             "enabled": False,

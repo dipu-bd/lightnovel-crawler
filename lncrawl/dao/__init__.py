@@ -6,7 +6,7 @@ from sqlmodel import SQLModel
 from ..enums import *  # noqa: F401,F403
 from .announcement import Announcement
 from .artifact import Artifact
-from .chapter import Chapter
+from .chapter import Chapter, ChapterTranslation
 from .chapter_image import ChapterImage
 from .feedback import Feedback
 from .job import Job
@@ -27,6 +27,7 @@ models: List[Type[SQLModel]] = [
     Novel,
     Volume,
     Chapter,
+    ChapterTranslation,
     ChapterImage,
     ReadHistory,
     Artifact,

@@ -1,37 +1,42 @@
 from contextlib import suppress
+import json
 import logging
 from pathlib import Path
 import socket
 import subprocess
-import threading
+from threading import Thread
 import time
+from urllib.request import urlopen
 
+from websockets.sync.client import connect as ws_connect
+
+from ..assets.htmls import loading_path
 from ..assets.images import lncrawl_icon
 from ..context import ctx
 from ..enums import UserRole
 from ..utils.browser_detect import pick_executable
+from ..utils.platforms import Screen
 from ..utils.sockets import free_port
 
 logger = logging.getLogger(__name__)
 
 
-def _start_server(host: str, port: int) -> threading.Thread:
+class FallbackException(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__(*args)
+
+
+def _start_server(host: str, port: int):
     from ..commands.server import server
 
-    t = threading.Thread(
-        daemon=True,
-        name="server",
-        target=server,
-        kwargs=dict(
-            host=host,
-            port=port,
-        ),
+    ctx.setup(
+        log_level="INFO",
+        reset_db_on_failure=True,
     )
-    t.start()
-    return t
+    server(host=host, port=port)
 
 
-def _wait_for_server(host: str, port: int, timeout: float = 60) -> bool:
+def _wait_to_connect(host: str, port: int, timeout: float = 60) -> bool:
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         try:
@@ -39,50 +44,86 @@ def _wait_for_server(host: str, port: int, timeout: float = 60) -> bool:
                 return True
         except OSError:
             pass
-    return False
+    raise Exception("Failed to connect with server")
 
 
-def _build_url(host: str, port: int, storage_path: Path):
-    saved_url_path = storage_path / "app.url"
-
-    if saved_url_path.is_file():
-        return saved_url_path.read_text().strip()
-
-    ctx.setup(
-        log_level="INFO",
-        reset_db_on_failure=True,
-    )
-    ctx.logger.progress_bar = False
-
+def _build_url(host: str, port: int) -> str:
+    _wait_to_connect(host, port)
     token = ctx.users.generate_token(
         user=ctx.users.get_admin(),
         expiry_minutes=100 * 365 * 24 * 60,  # 100 years
         scopes=[UserRole.LOCAL],
     )
-    url = f"http://{host}:{port}/?authToken={token}"
-
-    saved_url_path.parent.mkdir(parents=True, exist_ok=True)
-    saved_url_path.write_text(url)
-    return url
+    return f"http://{host}:{port}/?authToken={token}"
 
 
-def _start_app_in_browser(url: str, storage_path: Path):
+def _start_app_in_browser(
+    host: str,
+    port: int,
+    cdp_port: int,
+    storage_path: Path,
+):
+    # get chrome-like browser binary
     binary = pick_executable()
     if not binary:
-        return None
+        raise FallbackException("No chrome-like binary found")
 
+    # start process
     logger.info(f"Opening app-mode browser: {binary}")
+    width = min(1400, Screen.view_width - 20)
+    height = min(1000, Screen.view_height - 80)
     args = [
         str(binary),
-        f"--app={url}",
+        f"--app={loading_path().as_uri()}",
         "--new-window",
-        "--window-size=1280,720",
+        f"--window-size={width},{height}",
         f"--user-data-dir={storage_path}",
+        f"--remote-debugging-port={cdp_port}",
     ]
-    return subprocess.Popen(args)
+    proc = subprocess.Popen(args)
+    logger.info(f"Started app (pid=${proc.pid})")
+
+    try:
+        #  wait for CDP to be ready
+        if not _wait_to_connect(host, cdp_port):
+            raise Exception("Failed to connect with CDP")
+
+        # get CDP url
+        with urlopen(f"http://{host}:{cdp_port}/json") as resp:
+            targets = json.loads(resp.read())
+            ws_url = targets[0]["webSocketDebuggerUrl"]
+            logger.info(f"CDP URL={ws_url}")
+
+        # wait for the server
+        url = _build_url(host, port)
+        logger.info(f"Launching URL: {url}")
+
+        # send URL via CDP
+        with ws_connect(ws_url) as ws:
+            ws.send(
+                json.dumps(
+                    {
+                        "id": 1,
+                        "method": "Page.navigate",
+                        "params": {"url": url},
+                    }
+                )
+            )
+
+        # wait for exit
+        proc.wait()
+    finally:
+        # terminate forcefully
+        if proc.poll() is None:
+            proc.terminate()
+            try:
+                proc.wait(2)
+            except BaseException:
+                proc.kill()
+        logger.info(f"Closed app (pid=${proc.pid}): {proc.poll()}")
 
 
-def _start_fallback_window(url: str, host: str, port: int) -> None:
+def _start_fallback_window(host: str, port: int) -> None:
     import tkinter as tk
     import webbrowser
 
@@ -115,7 +156,7 @@ def _start_fallback_window(url: str, host: str, port: int) -> None:
     url_frame.pack(fill="x", padx=20, pady=12)
     url_lbl = tk.Label(
         url_frame,
-        text=url.split("?")[0],
+        text=f"http://{host}:{port}",
         bg="#1e1e1e",
         fg="#888888",
         font=("Courier New", 10),
@@ -138,7 +179,7 @@ def _start_fallback_window(url: str, host: str, port: int) -> None:
         cursor="hand2",
     ).pack(side="left")
 
-    def _on_server_ready():
+    def _on_server_ready(url: str):
         webbrowser.open(url)
         with suppress(Exception):
             status_lbl.configure(
@@ -152,35 +193,30 @@ def _start_fallback_window(url: str, host: str, port: int) -> None:
             url_lbl.bind("<Button-1>", lambda *_: webbrowser.open(url))
 
     def _wait_and_open():
-        if _wait_for_server(host, port):
-            root.after(0, _on_server_ready)
+        url = _build_url(host, port)
+        root.after(0, _on_server_ready, url)
 
-    threading.Thread(target=_wait_and_open, daemon=True).start()
+    Thread(target=_wait_and_open, daemon=True).start()
 
+    # wait for exit
     root.mainloop()
 
 
 def start() -> None:
     host = "localhost"
     port = free_port(host, 31580)
-    storage_path = ctx.config.app.app_dir / "app-browser"
+    cdp_port = free_port(host, 31590)
 
-    url = _build_url(host, port, storage_path)
-
-    server_thread = _start_server(host, port)
-    proc = _start_app_in_browser(url, storage_path)
-
-    if not proc:
-        return _start_fallback_window(url, host, port)
+    Thread(
+        daemon=True,
+        name="server",
+        target=_start_server,
+        args=(host, port),
+    ).start()
 
     try:
-        with suppress(KeyboardInterrupt):
-            while proc.poll() is None:
-                with suppress(TimeoutError):
-                    server_thread.join(0.1)
-    finally:
-        proc.terminate()
-        try:
-            proc.wait(2)
-        except BaseException:
-            proc.kill()
+        ctx.config.load()
+        storage_path = ctx.config.app.app_dir / "app-browser"
+        _start_app_in_browser(host, port, cdp_port, storage_path)
+    except FallbackException:
+        _start_fallback_window(host, port)

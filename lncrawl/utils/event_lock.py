@@ -1,4 +1,5 @@
 from threading import Event, Semaphore
+from typing import Optional
 
 from ..exceptions import AbortedException
 
@@ -12,8 +13,9 @@ class EventLock:
     def abort(self):
         self._default_signal.set()
 
-    def using(self, signal: Event):
-        self._signal = signal
+    def using(self, signal: Optional[Event] = None):
+        if signal:
+            self._signal = signal
         return self
 
     def acquire(self):

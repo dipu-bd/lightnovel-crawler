@@ -80,6 +80,8 @@ async def serve_web(fallback: str):
     mime_type, _ = mimetypes.guess_type(target_file)
     if not mime_type:
         mime_type = "application/octet-stream"
+    if mime_type == "text/javascript":
+        mime_type = "application/javascript"
     if target_file.name in {"index.html", "sw.js", "registerSW.js"}:
         return FileResponse(
             target_file,

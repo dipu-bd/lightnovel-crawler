@@ -1,34 +1,251 @@
-from functools import cached_property
-from io import BytesIO
-import json
-from typing import (
-    Any,
-    Callable,
-    ItemsView,
-    Iterable,
-    Iterator,
-    KeysView,
-    List,
-    Literal,
-    MutableMapping,
-    Optional,
-    Type,
-)
+import asyncio
+import base64
+from enum import Enum
+import logging
+from typing import TYPE_CHECKING, Any, List, Optional
 
-from PIL import Image
 from requests.cookies import RequestsCookieJar
-from requests.utils import CaseInsensitiveDict
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.wait import WebDriverWait
 
 from ..context import ctx
-from ..exceptions import LNException, ScraperErrorGroup
-from ..utils.event_lock import EventLock
-from ..webdriver import ChromeOptions, WebDriver, create_new
-from ..webdriver.elements import EC, By, WebElement
-from ..webdriver.job_queue import check_active
+from ..utils.async_loop import run_async
+from ..webdriver import create_new
+from ..webdriver.storage import BrowserStorage
 from .soup import PageSoup
-from .template import SoupTemplate
+
+if TYPE_CHECKING:
+    from nodriver import Browser as UCBrowser, Element, Tab
+
+logger = logging.getLogger(__name__)
+
+# ----------------------------------------------------------------------------- #
+# Selector helpers
+# ----------------------------------------------------------------------------- #
+
+_xpath_seq = 0
+
+
+class By(str, Enum):
+    ID = "id"
+    XPATH = "xpath"
+    LINK_TEXT = "link text"
+    PARTIAL_LINK_TEXT = "partial link text"
+    NAME = "name"
+    TAG_NAME = "tag name"
+    CLASS_NAME = "class name"
+    CSS_SELECTOR = "css selector"
+
+    def __str__(self) -> str:
+        return self.value
+
+
+def _to_css(selector: str, by: By) -> str:
+    if by == By.CSS_SELECTOR:
+        return selector
+    elif by == By.ID:
+        return f"#{selector}"
+    elif by == By.CLASS_NAME:
+        return f".{selector}"
+    elif by == By.TAG_NAME:
+        return selector
+    elif by == By.NAME:
+        return f"[name='{selector}']"
+    else:
+        raise ValueError(f"Cannot convert {by} to CSS selector")
+
+
+async def _tab_find(
+    tab: "Tab",
+    selector: str,
+    by: By,
+    timeout: float = 0,
+) -> Optional["Element"]:
+    try:
+        if by == By.XPATH:
+            results = await tab.xpath(selector)
+            return results[0] if results else None
+        elif by == By.LINK_TEXT:
+            return await tab.find(selector, best_match=True, timeout=timeout)
+        elif by == By.PARTIAL_LINK_TEXT:
+            return await tab.find(selector, best_match=False, timeout=timeout)
+        else:
+            return await tab.select(_to_css(selector, by), timeout=timeout)
+    except Exception:
+        return None
+
+
+async def _tab_find_all(
+    tab: "Tab",
+    selector: str,
+    by: By,
+) -> List["Element"]:
+    try:
+        if by == By.XPATH:
+            results = await tab.xpath(selector)
+            return [e for e in results if e]
+        elif by in (By.LINK_TEXT, By.PARTIAL_LINK_TEXT):
+            result = await tab.find(selector, best_match=(by == By.LINK_TEXT), timeout=0)
+            return [result] if result else []
+        else:
+            return await tab.select_all(_to_css(selector, by))
+    except Exception:
+        return []
+
+
+async def _elem_find_xpath(
+    tab: "Tab",
+    nd_elem: "Element",
+    xpath: str,
+) -> Optional["Element"]:
+    global _xpath_seq
+    _xpath_seq += 1
+    attr = f"data-nd-xp-{_xpath_seq}"
+    escaped = xpath.replace("\\", "\\\\").replace("'", "\\'")
+
+    await nd_elem.apply(
+        f"""function() {{
+            var r = document.evaluate('{escaped}', this, null,
+                XPathResult.FIRST_ORDERED_NODE_TYPE, null);
+            if (r.singleNodeValue) r.singleNodeValue.setAttribute('{attr}', '');
+        }}"""
+    )
+    found = await tab.select(f"[{attr}]")
+    if found:
+        await found.apply(f"function() {{ this.removeAttribute('{attr}'); }}")
+    return found
+
+
+async def _elem_find_xpath_all(
+    tab: "Tab",
+    nd_elem: "Element",
+    xpath: str,
+) -> List["Element"]:
+    global _xpath_seq
+    _xpath_seq += 1
+    attr = f"data-nd-xpa-{_xpath_seq}"
+    escaped = xpath.replace("\\", "\\\\").replace("'", "\\'")
+
+    await nd_elem.apply(
+        f"""function() {{
+            var r = document.evaluate('{escaped}', this, null,
+                XPathResult.ORDERED_NODE_ITERATOR_TYPE, null);
+            var node;
+            while ((node = r.iterateNext())) {{
+                node.setAttribute('{attr}', '');
+            }}
+        }}"""
+    )
+    results = await tab.select_all(f"[{attr}]")
+    for el in results:
+        await el.apply(f"function() {{ this.removeAttribute('{attr}'); }}")
+    return results
+
+
+# ----------------------------------------------------------------------------- #
+# WebElement
+# ----------------------------------------------------------------------------- #
+
+
+class WebElement:
+    def __init__(self, tab: "Tab", elem: "Element") -> None:
+        self._tab = tab
+        self._elem = elem
+
+    @property
+    def text(self) -> str:
+        return self._elem.text or ""
+
+    @property
+    def tag_name(self) -> str:
+        return self._elem.tag_name or ""
+
+    def get_attribute(self, name: str) -> Optional[str]:
+        return self._elem[name]
+
+    @property
+    def outer_html(self) -> str:
+        return run_async(self._elem.get_html()) or ""
+
+    def as_tag(self) -> PageSoup:
+        html = self.outer_html
+        if not hasattr(self, "_cached_html") or self._cached_html != html:
+            self._cached_html = html
+            self._cached_tag = PageSoup.create(html)
+        return self._cached_tag  # type: ignore[return-value]
+
+    def find_all(self, selector: str, by: By = By.CSS_SELECTOR) -> List["WebElement"]:
+        if by == By.XPATH:
+            elements = run_async(_elem_find_xpath_all(self._tab, self._elem, selector))
+        else:
+            elements = run_async(self._elem.query_selector_all(_to_css(selector, by))) or []
+        return [WebElement(self._tab, e) for e in elements]
+
+    def find(self, selector: str, by: By = By.CSS_SELECTOR) -> Optional["WebElement"]:
+        from nodriver import Element
+
+        if by == By.XPATH:
+            nd_elem = run_async(_elem_find_xpath(self._tab, self._elem, selector))
+        else:
+            result = run_async(self._elem.query_selector(_to_css(selector, by)))
+            nd_elem = result if isinstance(result, Element) else None
+        return WebElement(self._tab, nd_elem) if nd_elem else None
+
+    def click(self) -> None:
+        run_async(self._elem.click())
+
+    def send_keys(self, text: str) -> None:
+        run_async(self._elem.send_keys(text))
+
+    def clear(self) -> None:
+        run_async(self._elem.clear_input())
+
+    def submit(self) -> None:
+        run_async(
+            self._elem.apply(
+                "function() { var f = this.form || this.closest('form'); if (f) f.submit(); }"
+            )
+        )
+
+    def remove(self) -> None:
+        run_async(self._elem.apply("function() { this.remove(); }"))
+
+    def scroll_into_view(self) -> None:
+        run_async(self._elem.apply("function() { this.scrollIntoViewIfNeeded(); }"))
+
+    @property
+    def screenshot_as_png(self) -> bytes:
+        from nodriver.cdp import page as cdp_page
+
+        _box = run_async(
+            self._elem.apply(
+                """function() {
+                    var r = this.getBoundingClientRect();
+                    return {x: r.left, y: r.top, width: r.width, height: r.height};
+                }"""
+            )
+        )
+        box: dict = _box if isinstance(_box, dict) else {}
+        try:
+            if box.get("width") and box.get("height"):
+                clip = cdp_page.Viewport(
+                    x=box["x"],
+                    y=box["y"],
+                    width=box["width"],
+                    height=box["height"],
+                    scale=1,
+                )
+                data = run_async(
+                    self._tab.send(cdp_page.capture_screenshot(format_="png", clip=clip))
+                )
+                return base64.b64decode(data)
+        except Exception:
+            pass
+        data = run_async(self._tab.send(cdp_page.capture_screenshot(format_="png")))
+        return base64.b64decode(data)
+
+
+# ----------------------------------------------------------------------------- #
+# Browser
+# ----------------------------------------------------------------------------- #
 
 
 class Browser:
@@ -36,176 +253,114 @@ class Browser:
         self,
         headless: bool = False,
         timeout: Optional[int] = 120,
-        options: Optional[ChromeOptions] = None,
+        extra_args: Optional[List[str]] = None,
         cookie_store: Optional[RequestsCookieJar] = None,
     ) -> None:
-        """
-        Interface to interact with chrome webdriver.
-
-        Args:
-        - headless (bool, optional): True to hide the UI, False to show the UI. Default: False.
-        - timeout (Optional[int], optional): Maximum wait duration in seconds for an element to be available. Default: 120.
-        - options (Optional[&quot;ChromeOptions&quot;], optional): Webdriver options. Default: None.
-        - cookie_store (Optional[RequestsCookieJar], optional): A cookie store to synchronize cookies. Default: None.
-        - browser_storage (Optional[Dict[str, Any]], optional): A Storage to save some user info that is saved in your Browser storage. Default: None.
-        - soup_parser (Optional[str], optional): Parser for page content. Default: None.
-        """
-        self.options = options
+        self.extra_args = extra_args
         self.timeout = timeout
         self.headless = headless
         self.cookie_store = cookie_store
-        self._driver: Optional[WebDriver] = None
+        self._tab: Optional["Tab"] = None
+        self._browser: Optional["UCBrowser"] = None
         self.local_storage = BrowserStorage(self, "localStorage")
         self.session_storage = BrowserStorage(self, "sessionStorage")
 
-    def __del__(self):
+    def __del__(self) -> None:
         self.close()
 
-    def __enter__(self):
+    def __enter__(self) -> "Browser":
         self.open_browser()
-        self.apply_cookies()
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.restore_cookies()
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.close()
 
-    def close(self):
-        if not self._driver:
+    def close(self) -> None:
+        if not self._browser:
             return
-        ctx.logger.info("Closing browser")
-        self._driver.quit()
-        self._driver = None
+        ctx.logger.debug("Closing browser")
+        try:
+            self._browser.stop()
+        except Exception:
+            pass
+        self._browser = None
+        self._tab = None
 
-    def open_browser(self):
-        if self._driver:
+    def open_browser(self) -> None:
+        if self._browser:
             return
-        ctx.logger.info("Opening browser")
-        self._driver = create_new(
-            options=self.options,
+        ctx.logger.debug("Opening browser")
+
+        self._browser = create_new(
+            extra_args=self.extra_args,
             timeout=self.timeout,
             headless=self.headless,
         )
-        self._driver.implicitly_wait(30)
-        self._driver.set_page_load_timeout(30)
-        self._action_chain = ActionChains(self._driver)
-
-    def apply_cookies(self):
-        if not self._driver:
-            return
-        if isinstance(self.cookie_store, RequestsCookieJar):
-            for cookie in self.cookie_store:
-                self._driver.add_cookie(
-                    {
-                        "name": cookie.name,
-                        "value": cookie.value,
-                        "path": cookie.path,
-                        "domain": cookie.domain,
-                        "secure": cookie.secure,
-                        "expiry": cookie.expires,
-                    }
-                )
-            ctx.logger.debug("Cookies applied: %s", self._driver.get_cookies())
-
-    def restore_cookies(self):
-        if not self._driver:
-            return
-        if isinstance(self.cookie_store, RequestsCookieJar):
-            for cookie in self._driver.get_cookies():
-                name = cookie.get("name")
-                value = cookie.get("value")
-                if name and value:
-                    self.cookie_store.set(
-                        name=name,
-                        value=value,
-                        path=cookie.get("path"),
-                        domain=cookie.get("domain"),
-                        secure=cookie.get("secure"),
-                        expires=cookie.get("expiry"),
-                    )
-            ctx.logger.debug("Cookies retrieved: %s", self.cookie_store)
+        # Navigate to blank page so we have an active tab for cookie and JS ops
+        self._tab = run_async(self._browser.get("about:blank"), timeout=self.timeout)
 
     @property
-    def active(self):
-        return check_active(self._driver)
+    def active(self) -> bool:
+        from ..webdriver.job_queue import check_active
+
+        return check_active(self._browser)
 
     @property
-    def current_url(self):
-        """Get the current url if available, otherwise None"""
-        if not self._driver:
+    def current_url(self) -> Optional[str]:
+        if not self._tab:
             return None
-        return self._driver.current_url
+        return self._tab.url
 
     @property
     def session_id(self) -> Optional[str]:
-        """Get the current session id if available, otherwise None"""
-        if not self._driver:
+        if not self._tab:
             return None
-        return self._driver.session_id
-
-    @property
-    def action_chain(self) -> ActionChains:
-        """
-        ActionChains are a way to automate low level interactions such as mouse movements,
-        mouse button actions, key press, and context menu interactions. This is useful
-        for doing more complex actions like hover over and drag and drop.
-        """
-        return self._action_chain
+        return getattr(self._tab, "target_id", None)
 
     @property
     def html(self) -> str:
-        """Get the current page html"""
-        if not self._driver:
+        if not self._tab:
             return ""
-        return str(self._driver.page_source)
+        try:
+            return run_async(self._tab.get_content(), timeout=self.timeout) or ""
+        except Exception:
+            return ""
 
     @property
     def soup(self) -> PageSoup:
-        """Get the current page soup"""
-        # Return from cache if available
         old_html = getattr(self, "_html_", None)
-        if old_html == self.html:
-            return getattr(self, "_soup_")
-        # Create new soup and save to cache
-        soup = PageSoup.create(self.html)
-        setattr(self, "_html_", self.html)
+        current = self.html
+        if old_html == current:
+            return getattr(self, "_soup_")  # type: ignore[return-value]
+        soup = PageSoup.create(current)
+        setattr(self, "_html_", current)
         setattr(self, "_soup_", soup)
         return soup
 
     def visit(self, url: str) -> None:
-        """Visit an URL. Create new session if it does not exist"""
         self.open_browser()
-        if self._driver:
-            return self._driver.get(url)
+        if self._browser:
+            self._tab = run_async(self._browser.get(url), timeout=self.timeout)
 
     def find_all(self, selector: str, by: By = By.CSS_SELECTOR) -> List[WebElement]:
-        if not self._driver:
+        if not self._tab:
             return []
-        return [
-            WebElement(self._driver, el) for el in self._driver.find_elements(str(by), selector)
-        ]
+        elements = run_async(_tab_find_all(self._tab, selector, by), timeout=self.timeout)
+        return [WebElement(self._tab, e) for e in elements]
 
     def find(self, selector: str, by: By = By.CSS_SELECTOR) -> Optional[WebElement]:
-        if not self._driver:
+        if not self._tab:
             return None
-        return WebElement(
-            self._driver,
-            self._driver.find_element(str(by), selector),
-        )
+        nd_elem = run_async(_tab_find(self._tab, selector, by, timeout=0), timeout=self.timeout)
+        return WebElement(self._tab, nd_elem) if nd_elem else None
 
     def click(self, selector: str, by: By = By.CSS_SELECTOR) -> None:
-        "Select and click on an element."
-        if not self._driver:
-            return None
         elem = self.find(selector, by)
         if elem:
             elem.scroll_into_view()
             elem.click()
 
     def submit(self, selector: str, by: By = By.CSS_SELECTOR) -> None:
-        """Select a form and submit it."""
-        if not self._driver:
-            return None
         elem = self.find(selector, by)
         if elem:
             elem.scroll_into_view()
@@ -218,9 +373,6 @@ class Browser:
         text: str = "",
         clear: bool = True,
     ) -> None:
-        """Select a form and submit it."""
-        if not self._driver:
-            return None
         elem = self.find(selector, by)
         if elem:
             elem.scroll_into_view()
@@ -228,260 +380,69 @@ class Browser:
                 elem.clear()
             elem.send_keys(text)
 
-    def execute_js(self, script: str, *args, is_async: bool = False) -> Any:
-        """
-        Executes JavaScript in the current browser window.
-
-        :Args:
-         - script: The JavaScript to execute.
-         - \\*args: Any applicable arguments for your JavaScript.
-         - is_async: Whether to run as async script
-        """
-        if not self._driver:
+    def execute_js(self, script: str, is_async: bool = False) -> Any:
+        """Execute JavaScript in the current page. Use await_promise for async scripts."""
+        if not self._tab:
             return None
-        if is_async:
-            return self._driver.execute_async_script(script, *args)
-        else:
-            return self._driver.execute_script(script, *args)
+        try:
+            return run_async(
+                self._tab.evaluate(script, await_promise=is_async),
+                timeout=self.timeout,
+            )
+        except Exception as e:
+            ctx.logger.debug("execute_js error | %s", e)
+            return None
 
     def wait(
         self,
         selector: str,
         by: By = By.CSS_SELECTOR,
-        timeout: Optional[float] = 30,
+        timeout: Optional[float] = None,
         poll_frequency: Optional[float] = 0.25,
-        ignored_exceptions: Optional[Iterable[Type[Exception]]] = None,
-        expected_conditon: Callable[..., Any] = EC.presence_of_element_located,
         inverse: bool = False,
-    ):
-        """Waits for a element to be visible on the current page by CSS selector.
+    ) -> None:
+        """Wait until an element matching selector appears (or disappears if inverse=True)."""
+        if not self._tab or not selector:
+            return
+        wait_secs = float(timeout or 60)
+        ctx.logger.debug("Wait %.1fs for %s:%s (inverse=%s)", wait_secs, by, selector, inverse)
 
-        Args:
-        - chrome: Instance of WebDriver / Browser
-        - timeout: Number of seconds before timing out
-        - poll_frequency: Sleep interval between calls. Default: 0.5
-        - ignored_exceptions: List of exception classes to ignore. Default: [NoSuchElementException]
-        - inverse: Wait until the condition is not matched
-        """
-        if not self._driver:
-            return
-        if not selector or not callable(expected_conditon):
-            return
-        ctx.logger.info(
-            f"Wait {timeout} seconds for {expected_conditon.__name__} by {by}:{selector}"
-        )
         try:
-            waiter = WebDriverWait(
-                self._driver,
-                timeout or 30,
-                poll_frequency or 0.25,
-                ignored_exceptions=ignored_exceptions,
-            )
-            condition = expected_conditon((str(by), selector))
-            if inverse:
-                waiter.until_not(condition)  # type: ignore
+            if by == By.XPATH:
+                run_async(
+                    self._wait_xpath(
+                        selector, wait_secs, bool(inverse), float(poll_frequency or 0.25)
+                    ),
+                    timeout=wait_secs + 5,
+                )
             else:
-                waiter.until(condition)  # type: ignore
+                if inverse:
+                    run_async(
+                        self._wait_css_gone(selector, by, wait_secs, float(poll_frequency or 0.25)),
+                        timeout=wait_secs + 5,
+                    )
+                else:
+                    run_async(
+                        _tab_find(self._tab, selector, by, timeout=wait_secs),
+                        timeout=wait_secs + 5,
+                    )
         except Exception as e:
-            ctx.logger.info("Waiting could not be finished | %s", e)
+            ctx.logger.info("wait() did not finish cleanly | %s", e)
 
+    async def _wait_xpath(self, selector: str, timeout: float, inverse: bool, poll: float) -> None:
+        assert self._tab is not None
+        deadline = asyncio.get_event_loop().time() + timeout
+        while asyncio.get_event_loop().time() < deadline:
+            results = await self._tab.xpath(selector)
+            if (not inverse and results) or (inverse and not results):
+                return
+            await asyncio.sleep(poll)
 
-class BrowserTemplate(SoupTemplate):
-    """Attempts to crawl using scraper first, on failure use the browser."""
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self._lock = EventLock()
-        self._override_scraper_get_soup()
-        self._override_scraper_get_image()
-        self._override_scraper_get_json()
-
-    # ------------------------------------------------------------------------- #
-    # Override scraper methods
-    # ------------------------------------------------------------------------- #
-
-    def _override_scraper_get_soup(self) -> None:
-        origin_method = self.scraper.get_soup
-
-        def get_soup(url, *args, **kwargs):
-            try:
-                return origin_method(url, *args, **kwargs)
-            except ScraperErrorGroup:
-                if ctx.logger.is_debug:
-                    ctx.logger.error("Failed to get soup", exc_info=True)
-                with self._lock:
-                    self.browser.visit(url)
-                    self.browser.wait("body", By.TAG_NAME)
-                    return self.browser.soup
-
-        setattr(self.scraper, "get_soup", get_soup)
-
-    def _override_scraper_get_image(self) -> None:
-        origin_method = self.scraper.get_image
-
-        def get_image(url, *args, **kwargs):
-            try:
-                return origin_method(url, *args, **kwargs)
-            except ScraperErrorGroup:
-                if ctx.logger.is_debug:
-                    ctx.logger.error("Failed to get image", exc_info=True)
-                with self._lock:
-                    self.browser.visit(url)
-                    self.browser.wait("img", By.TAG_NAME)
-                    img = self.browser.find("img", By.TAG_NAME)
-                    if img:
-                        png = img.screenshot_as_png
-                        return Image.open(BytesIO(png))
-
-        setattr(self.scraper, "get_image", get_image)
-
-    def _override_scraper_get_json(self) -> None:
-        origin_method = self.scraper.get_json
-
-        def get_json(url: str, headers: MutableMapping = {}, **kwargs):
-            try:
-                return origin_method(url, headers, **kwargs)
-            except ScraperErrorGroup:
-                if ctx.logger.is_debug:
-                    ctx.logger.error("Failed to get image", exc_info=True)
-
-                script = """
-                    const url = arguments[0];
-                    const headers = arguments[1] || {};
-                    const callback = arguments[arguments.length - 1];
-                    fetch(url, {credentials: 'include', headers})
-                    .then(r => r.text())
-                    .then(t => callback(t))
-                    .catch(e => callback(JSON.stringify({__error__: String(e)})));
-                """
-                headers = CaseInsensitiveDict(headers or {})
-                with self._lock:
-                    text = self.browser.execute_js(script, url, headers, is_async=True)
-                    if not text:
-                        raise LNException(f"Empty response from {url}")
-
-                try:
-                    data = json.loads(text)
-                except Exception as e:
-                    raise LNException(f"Invalid JSON from {url}") from e
-
-                if isinstance(data, dict) and data.get("__error__"):
-                    raise LNException(f"Browser fetch error for {url}: {data['__error__']}")
-                return data
-
-        setattr(self.scraper, "get_json", get_json)
-
-    # ------------------------------------------------------------------------- #
-    # Browser properties
-    # ------------------------------------------------------------------------- #
-
-    @cached_property
-    def browser(self) -> Browser:
-        """
-        A webdriver based browser.
-        Requires Google Chrome to be installed.
-        """
-        if not ctx.config.crawler.can_use_browser:
-            raise RuntimeError("Browser is disabled in the configuration")
-
-        browser = Browser(cookie_store=self.scraper.cookies, headless=True)
-
-        _close = browser.close
-        _visit = browser.visit
-
-        def override_close() -> None:
-            _close()
-            self.__dict__.pop("browser", None)  # type:ignore
-
-        def override_visit(url: str) -> None:
-            _visit(url)
-            browser.restore_cookies()
-            if browser.current_url:
-                self.scraper.last_soup_url = browser.current_url
-
-        setattr(browser, "close", override_close)
-        setattr(browser, "visit", override_visit)
-
-        return browser
-
-    def close(self) -> None:
-        super().close()
-        self._lock.abort()
-        if "browser" in self.__dict__:
-            self.browser.close()
-
-    def visit(self, url: str) -> None:
-        self.browser.visit(url)
-
-
-class BrowserStorage(MutableMapping[str, Optional[str]]):
-    def __init__(
-        self,
-        browser: Browser,
-        source: Literal["localStorage", "sessionStorage"] = "localStorage",
-    ):
-        self._source = source
-        self._browser = browser
-
-    def __repr__(self):
-        return f"BrowserStorage({self._source})"
-
-    def __len__(self):
-        return self.length
-
-    def __contains__(self, key) -> bool:
-        return self.has(key)
-
-    def __getitem__(self, key: str) -> Optional[str]:
-        return self.get(key)
-
-    def __setitem__(self, key: str, value: Optional[str]) -> None:
-        self.set(key, value)
-
-    def __delitem__(self, key: str) -> None:
-        self.remove(key)
-
-    def __iter__(self) -> Iterator[str]:
-        return iter(self.keys())
-
-    @property
-    def raw(self) -> MutableMapping[str, Optional[str]]:
-        js = "return {...window." + self._source + "}"
-        return self._browser.execute_js(js) or {}
-
-    @property
-    def length(self) -> int:
-        js = "return window." + self._source + ".length;"
-        return self._browser.execute_js(js) or 0
-
-    def items(self) -> ItemsView[str, Optional[str]]:
-        return self.raw.items()
-
-    def keys(self) -> KeysView[str]:
-        js = "return Object.keys(window." + self._source + ");"
-        result = self._browser.execute_js(js) or []
-        return set(result)  # type: ignore[return-value]
-
-    def get(self, key: str, default: Optional[Any] = None) -> Optional[Any]:
-        js = "return window." + self._source + ".getItem(arguments[0]);"
-        value = self._browser.execute_js(js, key)
-        return str(value) if value is not None else default
-
-    def set(self, key: str, value: Any) -> None:
-        js = "window." + self._source + ".setItem(arguments[0], arguments[1]); return true;"
-        if not self._browser.execute_js(js, key, str(value)):
-            raise RuntimeError(f"Failed to set {key} in {self._source}")
-
-    def has(self, key: str) -> bool:
-        js = "return window." + self._source + ".hasOwnProperty(arguments[0]);"
-        return self._browser.execute_js(js, str(key)) or False
-
-    def remove(self, key: str) -> None:
-        js = "window." + self._source + ".removeItem(arguments[0]); return true;"
-        if not self._browser.execute_js(js, key):
-            raise RuntimeError(f"Failed to remove {key} from {self._source}")
-
-    def clear(self) -> None:
-        js = "window." + self._source + ".clear(); return true;"
-        if not self._browser.execute_js(js):
-            raise RuntimeError(f"Failed to clear {self._source}")
+    async def _wait_css_gone(self, selector: str, by: By, timeout: float, poll: float) -> None:
+        assert self._tab is not None
+        deadline = asyncio.get_event_loop().time() + timeout
+        while asyncio.get_event_loop().time() < deadline:
+            elem = await _tab_find(self._tab, selector, by, timeout=0)
+            if not elem:
+                return
+            await asyncio.sleep(poll)

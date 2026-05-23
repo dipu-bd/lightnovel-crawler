@@ -4,7 +4,6 @@ import logging
 from pathlib import Path
 from typing import Any, MutableMapping, Optional, Tuple, Union
 
-from PIL import Image, UnidentifiedImageError
 from requests import Response
 from requests.structures import CaseInsensitiveDict
 
@@ -144,8 +143,10 @@ class Scraper(CloudScraper):
         headers: MutableMapping = {},
         timeout: Tuple[float, float] = (3, 30),
         **kwargs,
-    ) -> Image.Image:
+    ):
         """Download image from url and return a PIL Image object"""
+        from PIL import Image, UnidentifiedImageError
+
         if url.startswith("data:"):
             content = base64.b64decode(url.split("base64,")[-1])
             return Image.open(BytesIO(content))

@@ -140,6 +140,12 @@ class __AppContext__:
         return AnnouncementService()
 
     @cached_property
+    def translator(self):
+        from .services.translators import TranslationService
+
+        return TranslationService()
+
+    @cached_property
     def crawler(self):
         from .services.crawler import CrawlerService
 
@@ -182,6 +188,8 @@ class __AppContext__:
             self.db.close()
         if "lsp" in self.__dict__:
             self.lsp.stop()
+        if "translations" in self.__dict__:
+            self.translator.close()
 
     def setup(
         self,

@@ -250,4 +250,7 @@ def pick_executable() -> Optional[str]:
     Chrome, Edge, Brave, Vivaldi, Yandex, and Whale sequentially.
     Returns the first executable with the shorted path, or None if not found.
     """
-    return min(find_all_chromium_executables(), key=len, default=None)
+    available = find_all_chromium_executables()
+    if not available:
+        return None
+    return min(available, key=len)

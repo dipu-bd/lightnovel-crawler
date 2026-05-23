@@ -7,8 +7,8 @@ from pyease_grpc import RpcSession
 from requests.utils import CaseInsensitiveDict
 
 from lncrawl.core import BrowserTemplate, Chapter, Novel, Volume
+from lncrawl.core.browser import By
 from lncrawl.exceptions import FallbackToBrowser, ScraperErrorGroup
-from lncrawl.webdriver.elements import By
 
 logger = logging.getLogger(__name__)
 

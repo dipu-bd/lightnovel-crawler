@@ -131,4 +131,16 @@ class Job(BaseTable, table=True):
             else:
                 return f"{novel_title}{', '.join(formats[:2])} & {len(formats) - 2} more"
 
+        if self.type == JobType.TRANSLATION:
+            chapter_serial = self.extra.get("chapter_serial")
+            language = self.extra.get("language") or "?"
+            if chapter_serial:
+                return f"{novel_title}Chapter {chapter_serial} → {language}"
+            return f"{novel_title}Translate → {language}"
+
+        if self.type == JobType.TRANSLATION_BATCH:
+            ids = self.extra.get("chapter_ids") or []
+            language = self.extra.get("language") or "?"
+            return f"{novel_title}{len(ids)} Chapters → {language}"
+
         return f"Job {self.id}"

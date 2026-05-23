@@ -112,6 +112,10 @@ class JobRunner:
             return self._artifact_batch()
         if self.job.type == JobType.ARTIFACT:
             return self._artifact()
+        if self.job.type == JobType.TRANSLATION_BATCH:
+            return self._translation_batch()
+        if self.job.type == JobType.TRANSLATION:
+            return self._translation()
 
         return self.__set_done(f"Job type is not supported: [b]{self.job.type}[/b]")
 
@@ -561,6 +565,69 @@ class JobRunner:
             return False  # ignore error
         except Exception as e:
             return self.__set_done("Failed to create requests", e)
+
+    def _translation_batch(self) -> bool:
+        try:
+            chapter_ids = self.job.extra.get("chapter_ids")
+            if not chapter_ids:
+                return self.__set_done()
+
+            language = self.job.extra.get("language")
+            if not language:
+                return self.__set_done("No target language")
+
+            chapter_ids = set(chapter_ids)
+            if self.job.is_running:
+                chapter_ids -= set([job.extra.get("chapter_id") for job in self.children])
+            else:
+                self.__set_running()
+
+            for chapter_id in chapter_ids:
+                if self.signal.is_set():
+                    raise AbortedException()
+                ctx.jobs.translate_chapter(
+                    self.user,
+                    chapter_id,
+                    language,
+                    parent_id=self.job.id,
+                    novel_title=self.job.extra.get("novel_title"),
+                )
+
+            return self.__increment()
+        except AbortedException:
+            return False
+        except Exception as e:
+            return self.__set_done("Failed to create translation requests", e)
+
+    def _translation(self) -> bool:
+        try:
+            chapter_id = self.job.extra.get("chapter_id")
+            if not chapter_id:
+                return self.__set_done("No chapter id")
+
+            language = self.job.extra.get("language")
+            if not language:
+                return self.__set_done("No target language")
+
+            if not self.job.is_running:
+                self.__set_running()
+
+            for done, total in ctx.translator.translate_chapter(
+                chapter_id,
+                language,
+                signal=self.signal,
+            ):
+                with ctx.db.session() as sess:
+                    ctx.jobs._update(sess, self.job.id, done=done, total=total)
+                    sess.commit()
+                self.job.done = done
+                self.job.total = total
+
+            return self.__set_done()
+        except AbortedException:
+            return False
+        except Exception as e:
+            return self.__set_done("Failed to translate chapter", e)
 
     def _artifact(self) -> bool:
         try:

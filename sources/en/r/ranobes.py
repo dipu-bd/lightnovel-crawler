@@ -35,31 +35,9 @@ class RanobeLibCrawler(BrowserTemplate):
     def build_search_url(self, query: str) -> str:
         return urljoin(self.scraper.origin, "/search/{}/".format(quote_plus(query)))
 
-    # def parse_chapter_list_in_browser(self) -> Generator[Chapter, None, None]:
-    #     self.browser._driver.implicitly_wait(1)
-    #     self.browser.click('a[href^="/chapters/"][title="Go to table of contents"]')
-
-    #     index = 0
-    #     while True:
-    #         self.browser.wait(".cat_line a")
-    #         for tag in self.browser.find_all(".cat_line a"):
-    #             index += 1
-    #             yield Chapter(
-    #                 id=index,
-    #                 title=tag.get_attribute("title"),
-    #                 url=self.absolute_url(tag.get_attribute("href")),
-    #             )
-
-    #         next_page = self.browser.find(".page_next a")
-    #         if not next_page:
-    #             break
-    #         self.browser._driver.implicitly_wait(1)
-    #         next_page.scroll_into_view()
-    #         next_page.click()
-
     def parse_chapter_list(
         self,
-        soup: PageSoup,
+        tag: PageSoup,
         novel: Novel,
         volume: Optional[Volume] = None,
     ) -> None:
@@ -69,9 +47,9 @@ class RanobeLibCrawler(BrowserTemplate):
 
         novel.id = id_match.group(1)
         chapter_list_url = urljoin(self.scraper.origin, f"/chapters/{novel.id}/")
-        soup = self.scraper.get_soup(chapter_list_url)
+        tag = self.scraper.get_soup(chapter_list_url)
 
-        data = self._extract_page_data(soup)
+        data = self._extract_page_data(tag)
         pages_count = data["pages_count"]
         futures: List[Future[PageSoup]] = []
         for i in reversed(range(2, pages_count + 1)):
@@ -79,7 +57,7 @@ class RanobeLibCrawler(BrowserTemplate):
             task = self.taskman.submit_task(self.scraper.get_soup, chapter_page_url)
             futures.append(task)
 
-        page_soups = [soup] + [
+        page_soups = [tag] + [
             page
             for page in self.taskman.resolve(
                 futures,

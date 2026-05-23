@@ -3,8 +3,9 @@ from typing import Any, Dict, List, Optional
 import sqlmodel as sq
 
 from ..context import ctx
-from ..core import Chapter as CrawlerChapter
-from ..dao import Chapter, User, Volume
+from ..core import Chapter as CrawlerChapter, PageSoup
+from ..dao import Chapter, Job, User, UserTier, Volume
+from ..dao.chapter import ChapterTranslation
 from ..exceptions import ServerErrors
 from ..server.models import Paginated, ReadChapterResponse
 
@@ -131,13 +132,29 @@ class ChapterService:
             sess.delete(chapter)
             sess.commit()
 
-    def read(self, user: User, chapter_id: str) -> ReadChapterResponse:
+    def get_chapter_translation(self, chapter: Chapter, language: str):
+        with ctx.db.session() as sess:
+            return sess.exec(
+                sq.select(ChapterTranslation)
+                .where(
+                    ChapterTranslation.novel_id == chapter.novel_id,
+                    ChapterTranslation.chapter_serial == chapter.serial,
+                    ChapterTranslation.language == language,
+                )
+                .limit(1)
+            ).first()
+
+    def read(
+        self,
+        user: User,
+        chapter_id: str,
+        language: Optional[str] = None,
+        auto_fetch: Optional[bool] = None,
+    ) -> ReadChapterResponse:
         chapter = self.get(chapter_id)
         novel = ctx.novels.get(chapter.novel_id)
-
-        content = None
-        if chapter.is_available:
-            content = ctx.files.load_text(chapter.content_file)
+        if auto_fetch is None:
+            auto_fetch = user.tier != UserTier.BASIC
 
         with ctx.db.session() as sess:
             previous_id = sess.exec(
@@ -155,10 +172,35 @@ class ChapterService:
 
         ctx.history.add(user.id, chapter.id)
 
+        job: Optional[Job] = None
+        content: Optional[str] = None
+        word_count: Optional[int] = None
+        if chapter.is_available:
+            if language:
+                translation = self.get_chapter_translation(chapter, language)
+                if translation and translation.is_available:
+                    content = ctx.files.load_text(translation.translation_file)
+                elif auto_fetch:
+                    job = ctx.jobs.get_translation_job(user.id, chapter_id, language)
+                    if not job:
+                        job = ctx.jobs.translate_chapter(user, chapter_id, language)
+            else:
+                content = ctx.files.load_text(chapter.content_file)
+        elif auto_fetch:
+            job = ctx.jobs.get_chapter_job(user.id, chapter_id)
+            if not job:
+                job = ctx.jobs.fetch_chapter(user, chapter_id)
+
+        if content:
+            word_count = PageSoup.create(content).word_count()
+
         return ReadChapterResponse(
+            job=job,
             novel=novel,
             chapter=chapter,
             content=content,
+            language=language,
+            word_count=word_count,
             next_id=next_id,
             previous_id=previous_id,
         )

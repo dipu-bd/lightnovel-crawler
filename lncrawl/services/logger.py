@@ -3,8 +3,6 @@ import logging
 import os
 from typing import Union
 
-from rich.logging import RichHandler
-
 
 class Logger:
     def __init__(self) -> None:
@@ -37,6 +35,8 @@ class Logger:
             self._level = getattr(logging, level, logging.NOTSET)
 
         if self._level > 0:
+            from rich.logging import RichHandler
+
             handler = RichHandler(
                 level=self._level,
                 tracebacks_show_locals=False,

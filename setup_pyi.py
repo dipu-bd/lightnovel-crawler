@@ -52,6 +52,7 @@ def build_command():
 
 def gather_data_files():
     file_map = {
+        ROOT / "pyproject.toml": ".",
         ROOT / "lncrawl": "lncrawl",
         ROOT / "sources": "sources",
         SITE_PACKAGES / "wcwidth" / "version.json": "wcwidth",
@@ -68,7 +69,6 @@ def gather_data_files():
 def gather_hidden_imports():
     hidden = [
         "passlib.handlers.argon2",
-        "selenium.webdriver.chrome.options",
     ]
 
     for py_file in (ROOT / "sources").rglob("*.py"):
@@ -118,12 +118,9 @@ def package():
 
     # Final output confirmation
     OUTPUT_WIN = DIST_DIR / "lncrawl" / "lncrawl.exe"  # onedir (Windows)
-    OUTPUT_EXE = DIST_DIR / "lncrawl.exe"  # onefile fallback
     OUTPUT_POSIX = DIST_DIR / "lncrawl"  # onefile (Mac/Linux)
     if OUTPUT_WIN.is_file():
         print(f"✅ Executable created: {OUTPUT_WIN}")
-    elif OUTPUT_EXE.is_file():
-        print(f"✅ Executable created: {OUTPUT_EXE}")
     elif OUTPUT_POSIX.is_file():
         print(f"✅ Executable created: {OUTPUT_POSIX}")
     else:

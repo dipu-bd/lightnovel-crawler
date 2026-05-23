@@ -93,7 +93,9 @@ class ServerErrors:
     forbidden = ServerError(status.HTTP_403_FORBIDDEN, "Forbidden")
     not_found = ServerError(status.HTTP_404_NOT_FOUND, "Not Found")
     unauthorized = ServerError(status.HTTP_401_UNAUTHORIZED, "Unauthorized")
+    rate_limit = ServerError(status.HTTP_429_TOO_MANY_REQUESTS, "Too Many Requests")
     server_error = ServerError(status.HTTP_500_INTERNAL_SERVER_ERROR, "Internal Server Error")
+    service_unavailable = ServerError(status.HTTP_503_SERVICE_UNAVAILABLE, "Service Unavailable")
 
     wrong_otp = ServerError(status.HTTP_403_FORBIDDEN, "Wrong OTP")
     token_invalid = ServerError(status.HTTP_403_FORBIDDEN, "Invalid token")
@@ -151,6 +153,7 @@ class ServerErrors:
         status.HTTP_422_UNPROCESSABLE_CONTENT, "Invalid image response"
     )
 
+    translation_failure = ServerError(status.HTTP_503_SERVICE_UNAVAILABLE, "Translation Failure")
     unable_to_resume_job = ServerError(
         status.HTTP_500_INTERNAL_SERVER_ERROR, "Unable to resume Job"
     )

@@ -119,7 +119,10 @@ class CrawlerService:
     ) -> Chapter:
         chapter = ctx.chapters.get(chapter_id)
         novel = ctx.novels.get(chapter.novel_id)
-        url = HttpUrl(chapter.url)
+        try:
+            url = HttpUrl(chapter.url)
+        except Exception:
+            raise ServerErrors.invalid_url
         if not url.host:
             raise ServerErrors.invalid_url
 
@@ -175,7 +178,10 @@ class CrawlerService:
     ) -> ChapterImage:
         image = ctx.images.get(image_id)
         novel = ctx.novels.get(image.novel_id)
-        url = HttpUrl(image.url)
+        try:
+            url = HttpUrl(image.url)
+        except Exception:
+            raise ServerErrors.invalid_url
         if not url.host:
             raise ServerErrors.invalid_url
 

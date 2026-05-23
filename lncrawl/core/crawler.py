@@ -7,6 +7,8 @@ import os
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Union
 
+from pydantic.networks import HttpUrl
+
 from ..context import ctx
 from ..exceptions import LNException
 from ..utils.file_tools import atomic_write
@@ -207,6 +209,7 @@ class Crawler(ABC):
         for index, chapter in enumerate(novel.chapters):
             chapter.crawler_version = crawler_version
             chapter.id = index + 1
+            chapter.url = HttpUrl(chapter.url).encoded_string()
             chapter.title = format_title(chapter.title) or f"Chapter {chapter.id}"
 
             if chapter.volume not in vol_id_map:

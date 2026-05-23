@@ -23,6 +23,7 @@ FROM ${BASE_IMAGE}
 WORKDIR /app
 
 COPY --from=builder /app/.venv /app/.venv
+COPY pyproject.toml uv.lock ./
 COPY lncrawl ./lncrawl
 COPY sources ./sources
 

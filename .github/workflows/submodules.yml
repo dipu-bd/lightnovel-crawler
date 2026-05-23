@@ -16,6 +16,7 @@ jobs:
           ref: dev
           fetch-depth: 0
           submodules: recursive
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🔄 Update submodules
         run: git submodule update --force --init --recursive --remote

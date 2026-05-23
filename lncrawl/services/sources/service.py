@@ -24,7 +24,6 @@ from .helper import (
 from .tester import run_crawler_test
 
 logger = logging.getLogger(__name__)
-_crawlers_cache: Dict[Type[Crawler], Crawler] = {}
 
 
 class Sources:
@@ -35,9 +34,10 @@ class Sources:
         self._sync_thread: Thread
         self._sync_lock = EventLock()
         self.rejected: Dict[str, str] = {}  # Map of host -> rejection reason
-        self.crawlers: Dict[str, Type[Crawler]] = {}  # Map of host -> crawler
-        self.info: Dict[str, CrawlerInfo] = {}  # Map of host -> crawler-info
-        self.sources: Dict[str, SourceItem] = {}  # Map of host -> source
+        self.crawlers: Dict[str, Type[Crawler]] = {}  # Map of cid -> crawler
+        self.info: Dict[str, CrawlerInfo] = {}  # Map of cid -> crawler info
+        self.sources: Dict[str, SourceItem] = {}  # Map of host -> source item
+        self._cache: Dict[str, Crawler] = {}  # Map of cid -> crawler instance
 
     @property
     def version(self) -> int:
@@ -61,8 +61,9 @@ class Sources:
         self.sources.clear()
 
     def ensure_load(self):
-        if hasattr(self, "_sync_thread"):
+        if hasattr(self, "_sync_thread") and self._sync_thread:
             self._sync_thread.join()
+            del self._sync_thread
 
     def load(self, sync_remote=True):
         with self._sync_lock:
@@ -106,7 +107,6 @@ class Sources:
             # load the online index
             self.load_index(online_index)
             logger.info("Source synced.")
-        del self._sync_thread
 
     def load_index(self, index: CrawlerIndex) -> None:
         self._index = index
@@ -121,6 +121,7 @@ class Sources:
         self.info.clear()
         self.crawlers.clear()
         self.sources.clear()
+        self._cache.clear()
         self.load_crawlers(
             *ctx.config.crawler.local_sources.glob("**/*.py"),
             *ctx.config.crawler.user_sources.glob("**/*.py"),
@@ -228,12 +229,13 @@ class Sources:
     ) -> Crawler:
         domain = self.get_domain(url)
         source = self.get_source(domain)
-        constructor = self.crawlers[source.crawler_id]
-        if constructor in _crawlers_cache:
+        cid = source.crawler_id
+        constructor = self.crawlers[cid]
+        if constructor in self._cache:
             if renew:
-                _crawlers_cache.pop(constructor).close()
+                self._cache.pop(cid).close()
             else:
-                return _crawlers_cache[constructor]
+                return self._cache[cid]
 
         # create instance
         ctx.logger.debug(f"Creating crawler instance for {url}")
@@ -242,9 +244,9 @@ class Sources:
             workers=workers,
             parser=parser,
         )
-        _crawlers_cache[constructor] = crawler
-
         crawler.initialize()
+
+        self._cache[cid] = crawler
         return crawler
 
     async def test_source(self, url: str, content: str):
