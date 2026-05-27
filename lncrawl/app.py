@@ -9,6 +9,7 @@ from typing_extensions import Annotated
 from .commands.config import app as config
 from .commands.crawl import app as crawl
 from .commands.dev import app as dev
+from .commands.discord import app as discord_cmd
 from .commands.search import app as search
 from .commands.server import app as server
 from .commands.sources import app as sources
@@ -36,6 +37,7 @@ app.add_typer(sources, name="sources")
 app.add_typer(crawl)
 app.add_typer(search)
 app.add_typer(server)
+app.add_typer(discord_cmd)
 
 
 # Define main command

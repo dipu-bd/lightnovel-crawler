@@ -113,6 +113,7 @@ Usage: lncrawl [OPTIONS] COMMAND [ARGS]...
 │ crawl    Crawl from novel page URL.                                          │
 │ search   Search for novels by query string.                                  │
 │ server   Run web server.                                                     │
+│ discord  Start Discord bot.                                                  │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ```
 <!-- auto generated command line output -->
@@ -182,6 +183,9 @@ lncrawl crawl "https://example.com/novel/page" -f epub --all
 
 # Search by title
 lncrawl search "The Beginning After The End"
+
+# Start Discord bot (requires DISCORD_TOKEN env var)
+lncrawl discord
 ```
 
 _Use a URL from any [supported source](#supported-sources)._
