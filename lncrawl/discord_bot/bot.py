@@ -22,10 +22,7 @@ STATUS_EMOJI = {
 }
 
 
-def _run_crawl_sync(url: str, range_spec: str, fmt: str, max_size_mb: float) -> dict:
-    from ..enums import OutputFormat
-    from .file_upload import get_file_delivery
-
+def _init_crawl_sync(url: str) -> dict:
     ctx.setup()
     ctx.sources.ensure_load()
     user = ctx.users.get_admin()
@@ -39,6 +36,17 @@ def _run_crawl_sync(url: str, range_spec: str, fmt: str, max_size_mb: float) -> 
     if novel.chapter_count == 0:
         return {"error": "No chapters to download"}
 
+    return {
+        "novel_id": novel.id,
+        "title": novel.title,
+        "authors": novel.authors,
+        "chapter_count": novel.chapter_count,
+        "user_id": user.id,
+        "_crawler": crawler,
+    }
+
+
+def _resolve_chapters_sync(novel_id: str, range_spec: str) -> dict:
     range_lower = range_spec.lower().strip()
     range_last = None
     range_first = None
@@ -56,21 +64,25 @@ def _run_crawl_sync(url: str, range_spec: str, fmt: str, max_size_mb: float) -> 
             return {"error": "Invalid range: expected a number after 'first'"}
 
     chapters = ctx.chapters.list_ids(
-        novel_id=novel.id,
+        novel_id=novel_id,
         descending=bool(range_last),
         limit=range_last or range_first,
     )
     if not chapters:
         return {"error": "No chapters found for the given range"}
 
+    return {"chapters": sorted(set(chapters))}
+
+
+def _download_chapters_sync(user_id: str, crawler, chapters: list) -> dict:
     chapter_futures = [
         crawler.taskman.submit_task(
             ctx.crawler.fetch_chapter,
-            user.id,
+            user_id,
             chapter_id,
             crawler=crawler,
         )
-        for chapter_id in sorted(set(chapters))
+        for chapter_id in chapters
     ]
     chapter_image_ids = []
     for chapter in crawler.taskman.resolve(chapter_futures, desc="Chapters", unit=" c"):
@@ -78,16 +90,31 @@ def _run_crawl_sync(url: str, range_spec: str, fmt: str, max_size_mb: float) -> 
             continue
         chapter_image_ids += ctx.images.list_ids(chapter_id=chapter.id)
 
+    return {"chapter_count": len(chapters), "image_ids": list(sorted(set(chapter_image_ids)))}
+
+
+def _download_images_sync(user_id: str, crawler, image_ids: list) -> dict:
+    if not image_ids:
+        return {"image_count": 0}
+
     image_futures = [
         crawler.taskman.submit_task(
             ctx.crawler.fetch_image,
-            user.id,
+            user_id,
             image_id,
             crawler=crawler,
         )
-        for image_id in sorted(set(chapter_image_ids))
+        for image_id in image_ids
     ]
     crawler.taskman.resolve_futures(image_futures, desc="Images", unit=" img")
+    return {"image_count": len(image_ids)}
+
+
+def _build_artifact_sync(
+    novel_id: str, title: str, user_id: str, fmt: str, max_size_mb: float
+) -> dict:
+    from ..enums import OutputFormat
+    from .file_upload import get_file_delivery
 
     try:
         output_format = OutputFormat(fmt)
@@ -104,10 +131,10 @@ def _run_crawl_sync(url: str, range_spec: str, fmt: str, max_size_mb: float) -> 
     artifacts = {}
     for f in formats:
         artifact = ctx.binder.make_artifact(
-            novel.id,
-            novel.title,
+            novel_id,
+            title,
             format=f,
-            user_id=user.id,
+            user_id=user_id,
             epub=artifacts.get(OutputFormat.epub),
         )
         if artifact.is_available:
@@ -121,8 +148,7 @@ def _run_crawl_sync(url: str, range_spec: str, fmt: str, max_size_mb: float) -> 
     delivery = get_file_delivery(file_path, max_size_mb)
 
     result = {
-        "title": novel.title,
-        "chapters": len(chapters),
+        "title": title,
         "format": str(output_format),
         "file_size": artifact.file_size,
     }
@@ -225,11 +251,74 @@ class LightnovelBot(commands.Bot):
             await interaction.response.defer(ephemeral=False)
 
             max_size_mb = float(os.getenv("DISCORD_MAX_FILE_SIZE_MB", "25"))
+
+            await interaction.followup.send("🔍 Initializing crawler...")
             try:
-                result = await asyncio.to_thread(_run_crawl_sync, url, range, format, max_size_mb)
+                novel_info = await asyncio.to_thread(_init_crawl_sync, url)
             except Exception as e:
-                logger.error("Crawl failed", exc_info=True)
-                await interaction.followup.send(f"❌ Crawl failed: {e}")
+                logger.error("Crawl init failed", exc_info=True)
+                await interaction.followup.send(f"❌ Failed to initialize: {e}")
+                return
+
+            if "error" in novel_info:
+                await interaction.followup.send(f"❌ {novel_info['error']}")
+                return
+
+            crawler = novel_info["_crawler"]
+            user_id = novel_info["user_id"]
+            authors = novel_info.get("authors") or "Unknown"
+            await interaction.followup.send(
+                f"📖 **{novel_info['title']}**\n"
+                f"👤 {authors}\n"
+                f"📄 {novel_info['chapter_count']} chapters total"
+            )
+
+            await interaction.followup.send("🔢 Resolving chapter range...")
+            try:
+                chapters_info = await asyncio.to_thread(
+                    _resolve_chapters_sync, novel_info["novel_id"], range
+                )
+            except Exception as e:
+                logger.error("Chapter resolution failed", exc_info=True)
+                await interaction.followup.send(f"❌ {e}")
+                return
+
+            if "error" in chapters_info:
+                await interaction.followup.send(f"❌ {chapters_info['error']}")
+                return
+
+            chapter_ids = chapters_info["chapters"]
+            await interaction.followup.send(f"📥 Downloading {len(chapter_ids)} chapters...")
+            try:
+                download_info = await asyncio.to_thread(
+                    _download_chapters_sync, user_id, crawler, chapter_ids
+                )
+            except Exception as e:
+                logger.error("Chapter download failed", exc_info=True)
+                await interaction.followup.send(f"❌ Chapter download failed: {e}")
+                return
+
+            image_ids = download_info.get("image_ids", [])
+            if image_ids:
+                await interaction.followup.send(f"🖼️ Downloading {len(image_ids)} images...")
+                try:
+                    await asyncio.to_thread(_download_images_sync, user_id, crawler, image_ids)
+                except Exception:
+                    logger.error("Image download failed", exc_info=True)
+
+            await interaction.followup.send("📚 Generating ebook...")
+            try:
+                result = await asyncio.to_thread(
+                    _build_artifact_sync,
+                    novel_info["novel_id"],
+                    novel_info["title"],
+                    user_id,
+                    format,
+                    max_size_mb,
+                )
+            except Exception as e:
+                logger.error("Artifact generation failed", exc_info=True)
+                await interaction.followup.send(f"❌ Failed to generate ebook: {e}")
                 return
 
             if "error" in result:
@@ -241,7 +330,7 @@ class LightnovelBot(commands.Bot):
             size_str = format_size(result["file_size"] or 0)
             msg = (
                 f"**{result['title']}**\n"
-                f"📖 {result['chapters']} chapters · {result['format']} ({size_str})"
+                f"📖 {len(chapter_ids)} chapters · {result['format']} ({size_str})"
             )
 
             if "discord_file" in result:
