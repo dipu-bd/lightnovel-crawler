@@ -188,6 +188,16 @@ lncrawl search "The Beginning After The End"
 lncrawl discord
 ```
 
+**Discord bot environment variables:**
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `DISCORD_TOKEN` | Yes | — | Bot token from Discord Developer Portal |
+| `DISCORD_GUILD_ID` | No | — | Guild ID for instant command sync (dev only; global sync can take ~1 hour) |
+| `DISCORD_MAX_FILE_SIZE_MB` | No | `25` | Max file size (MB) for direct Discord upload; larger files are uploaded to file.io |
+
+The bot sends progress updates during `/crawl` — novel info, chapter count, download progress, and artifact generation — so you see each stage complete rather than waiting silently.
+
 _Use a URL from any [supported source](#supported-sources)._
 
 ---
