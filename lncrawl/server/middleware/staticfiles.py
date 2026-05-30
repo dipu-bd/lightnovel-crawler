@@ -9,6 +9,8 @@ from ...context import ctx
 from ...dao import ActivityType
 from ...exceptions import ServerErrors
 
+_WHITELIST = frozenset(["novels", "images"])
+
 
 class StaticFilesGuard(BaseHTTPMiddleware):
     def __init__(self, app, prefix: str = "/static") -> None:
@@ -24,8 +26,9 @@ class StaticFilesGuard(BaseHTTPMiddleware):
         if not path.startswith(self.prefix):
             return await call_next(request)
 
-        file_path = path[self.prefix_len :]
-        if not ctx.files.exists(file_path):
+        file_path = path[self.prefix_len:]
+        first_part = file_path.split("/")[0]
+        if first_part not in _WHITELIST or not ctx.files.exists(file_path):
             return ServerErrors.no_such_file.to_response()
 
         # Propagate decoded path so StaticFiles finds the file (handles Unicode filenames)
