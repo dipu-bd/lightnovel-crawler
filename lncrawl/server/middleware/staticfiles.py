@@ -26,7 +26,7 @@ class StaticFilesGuard(BaseHTTPMiddleware):
         if not path.startswith(self.prefix):
             return await call_next(request)
 
-        file_path = path[self.prefix_len:]
+        file_path = path[self.prefix_len :]
         first_part = file_path.split("/")[0]
         if first_part not in _WHITELIST or not ctx.files.exists(file_path):
             return ServerErrors.no_such_file.to_response()
