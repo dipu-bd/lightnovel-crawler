@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse
 
 from ..assets.version import get_version
 from ..context import ctx
-from ..exceptions import get_exception_handlers, ServerErrors
+from ..exceptions import ServerErrors, get_exception_handlers
 from .api import router as api
 from .middleware.staticfiles import CustomStaticFiles, StaticFilesGuard
 
