@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse
 
 from ..assets.version import get_version
 from ..context import ctx
-from ..exceptions import get_exception_handlers
+from ..exceptions import get_exception_handlers, ServerErrors
 from .api import router as api
 from .middleware.staticfiles import CustomStaticFiles, StaticFilesGuard
 
@@ -76,6 +76,8 @@ app.mount("/static", CustomStaticFiles(), name="static")
 @app.get("/{fallback:path}", include_in_schema=False)
 async def serve_web(fallback: str):
     target_file = web_dir.joinpath(fallback)
+    if not target_file.is_relative_to(web_dir):
+        raise ServerErrors.not_found
     if not target_file.is_file():
         target_file = web_dir / "index.html"
     mime_type, _ = mimetypes.guess_type(target_file)
