@@ -60,7 +60,7 @@ class WebnovelCrawler(BrowserTemplate):
                     yield SearchResult(
                         url=self.absolute_url(a.get("href")),
                         title=str(a.get("data-bookname") or ""),
-                        info=info.get_text(strip=True) if info else "",
+                        info=info.get_text(strip=True) if info else "", 
                     )
 
     def read_novel(self, novel: Novel) -> None:
