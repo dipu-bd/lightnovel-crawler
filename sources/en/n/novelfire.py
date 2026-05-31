@@ -53,7 +53,7 @@ class NovelFireCrawler(LegacyCrawler):
                 vol_url = False
                 break
 
-def download_chapter_body(self, chapter) -> str:
+    def download_chapter_body(self, chapter) -> str:
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#content")
         if not contents:
