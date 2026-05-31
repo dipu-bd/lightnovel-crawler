@@ -60,8 +60,7 @@ class NovelFireCrawler(LegacyCrawler):
             return ""
 
         # 1. Look through the very top elements inside the content container
-        # We use a standard slice of the first 5 elements 
-        # to completely isolate the headers
+        # We use a standard slice of the first 5 elements to completely isolate the headers
         elements_to_check = contents.find_all(True)[:5]
 
         for element in elements_to_check:
