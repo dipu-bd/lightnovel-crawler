@@ -4,10 +4,7 @@ import sys
 from typing import Optional
 
 from rich import print
-from rich.table import Table
-from rich.text import Text
 import typer
-import yaml
 
 from ...assets.icons import Icons
 from ...context import ctx
@@ -62,6 +59,10 @@ def list_all(
     Display a list of supported crawler sources.
     Filters can be combined to narrow down the results.
     """
+    from rich.table import Table
+    from rich.text import Text
+    import yaml
+
     sources = ctx.sources.list(
         query=query,
         include_rejected=include_rejected,

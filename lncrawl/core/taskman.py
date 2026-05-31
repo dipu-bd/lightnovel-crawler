@@ -19,7 +19,7 @@ class TaskManager:
         self,
         workers: Optional[int] = None,
         ratelimit: Optional[float] = None,
-        signal=Event(),
+        signal: Optional[Event] = None,
     ) -> None:
         """A helper class for task queueing and parallel task execution.
         It is being used as a superclass of the Crawler.
@@ -28,7 +28,7 @@ class TaskManager:
         - workers (int, optional): Number of concurrent workers to expect. Default: 5.
         - ratelimit (float, optional): Number of requests per second.
         """
-        self.signal = signal
+        self.signal = signal or Event()
         self._bars: Set[tqdm] = set()
         self._futures: Set[Future] = set()
         self.init_executor(workers, ratelimit)
@@ -73,8 +73,6 @@ class TaskManager:
         - workers (int, optional): Number of concurrent workers to expect. Default: 5.
         - ratelimit (float, optional): Number of requests per second.
         """
-        if not self.signal:
-            self.signal = Event()
         if not self._futures:
             self._futures = set()
 
@@ -170,7 +168,7 @@ class TaskManager:
         """
         if not futures:
             return
-        for future in futures:
+        for future in list(futures):
             if not future.done():
                 future.cancel()
 

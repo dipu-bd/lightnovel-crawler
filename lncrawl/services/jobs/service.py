@@ -5,12 +5,21 @@ import sqlmodel as sq
 from sqlmodel import Session
 
 from ...context import ctx
-from ...dao import Job, JobPriority, JobStatus, JobType, OutputFormat, User, UserRole
+from ...dao import (
+    ActivityType,
+    Job,
+    JobPriority,
+    JobStatus,
+    JobType,
+    LanguageCode,
+    OutputFormat,
+    User,
+    UserRole,
+)
 from ...exceptions import ServerErrors
 from ...server.models import Paginated
-from ...server.tier import JOB_PRIORITY_LEVEL
 from ...utils.time_utils import current_timestamp
-from .utils import select_ancestors, select_descendends
+from .utils import select_ancestors, select_descendants
 
 T = TypeVar("T")
 
@@ -114,15 +123,31 @@ class JobService:
             stmt = sq.select(Job).where(Job.parent_job_id == parent_job_id)
             return sess.exec(stmt).all()
 
-    def get_chapter_job(self, user: User, chapter_id: str) -> Optional[Job]:
+    def get_chapter_job(self, user_id: str, chapter_id: str) -> Optional[Job]:
         with ctx.db.session() as sess:
             return sess.exec(
                 sq.select(Job)
                 .where(
-                    Job.user_id == user.id,
+                    Job.user_id == user_id,
                     Job.type == JobType.CHAPTER,
                     sq.col(Job.parent_job_id).is_(None),
                     Job.extra["chapter_id"].as_string() == chapter_id,
+                )
+                .limit(1)
+            ).first()
+
+    def get_chapter_translation_job(
+        self, user_id: str, chapter_id: str, language: LanguageCode
+    ) -> Optional[Job]:
+        with ctx.db.session() as sess:
+            return sess.exec(
+                sq.select(Job)
+                .where(
+                    Job.user_id == user_id,
+                    Job.type == JobType.CHAPTER_TRANSLATION,
+                    sq.col(Job.parent_job_id).is_(None),
+                    Job.extra["chapter_id"].as_string() == chapter_id,
+                    Job.extra["language"].as_string() == language,
                 )
                 .limit(1)
             ).first()
@@ -288,6 +313,171 @@ class JobService:
             type=JobType.CHAPTER_BATCH,
         )
 
+    def translate_chapter(
+        self,
+        user: User,
+        chapter_id: str,
+        language: LanguageCode,
+        *,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        chapter = ctx.chapters.get(chapter_id)
+        data.update(
+            {
+                "chapter_id": chapter_id,
+                "chapter_serial": chapter.serial,
+                "language": language,
+            }
+        )
+        if not data.get("novel_title"):
+            novel = ctx.novels.get(chapter.novel_id)
+            data.update(
+                {
+                    "novel_id": novel.id,
+                    "novel_title": novel.title,
+                }
+            )
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.CHAPTER_TRANSLATION,
+        )
+
+    def translate_many_chapters(
+        self,
+        user: User,
+        *chapter_ids: str,
+        language: LanguageCode,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        data.update(
+            {
+                "chapter_ids": list(chapter_ids),
+                "language": language,
+            }
+        )
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.CHAPTER_TRANSLATION_BATCH,
+        )
+
+    def translate_novel(
+        self,
+        user: User,
+        novel_id: str,
+        language: LanguageCode,
+        *,
+        full: bool = False,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        novel = ctx.novels.get(novel_id)
+        data.update(
+            {
+                "novel_id": novel_id,
+                "novel_title": novel.title,
+                "language": language,
+            }
+        )
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.FULL_NOVEL_TRANSLATION if full else JobType.NOVEL_TRANSLATION,
+        )
+
+    def translate_many_novels(
+        self,
+        user: User,
+        *novel_ids: str,
+        language: LanguageCode,
+        full: bool = False,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        data.update(
+            {
+                "novel_ids": list(novel_ids),
+                "language": language,
+            }
+        )
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.FULL_NOVEL_TRANSLATION_BATCH if full else JobType.NOVEL_TRANSLATION_BATCH,
+        )
+
+    def translate_volume(
+        self,
+        user: User,
+        volume_id: str,
+        language: LanguageCode,
+        *,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        volume = ctx.volumes.get(volume_id)
+        data.update(
+            {
+                "volume_id": volume_id,
+                "volume_serial": volume.serial,
+                "language": language,
+            }
+        )
+        if not data.get("novel_title"):
+            novel = ctx.novels.get(volume.novel_id)
+            data.update(
+                {
+                    "novel_id": novel.id,
+                    "novel_title": novel.title,
+                }
+            )
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.VOLUME_TRANSLATION,
+        )
+
+    def translate_many_volumes(
+        self,
+        user: User,
+        *volume_ids: str,
+        language: LanguageCode,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        data.update(
+            {
+                "volume_ids": list(volume_ids),
+                "language": language,
+            }
+        )
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.VOLUME_TRANSLATION_BATCH,
+        )
+
     def fetch_image(
         self,
         user: User,
@@ -341,12 +531,14 @@ class JobService:
         *,
         parent_id: Optional[str] = None,
         depends_on: Optional[str] = None,
+        language: Optional[LanguageCode] = None,
         **data: Any,
     ) -> Job:
         data.update(
             {
                 "novel_id": novel_id,
                 "format": format,
+                "language": language,
             }
         )
         if not data.get("novel_title"):
@@ -371,12 +563,14 @@ class JobService:
         *formats: OutputFormat,
         parent_id: Optional[str] = None,
         depends_on: Optional[str] = None,
+        language: Optional[LanguageCode] = None,
         **data: Any,
     ) -> Job:
         data.update(
             {
                 "novel_id": novel_id,
                 "formats": formats,
+                "language": language,
             }
         )
         if not data.get("novel_title"):
@@ -414,7 +608,7 @@ class JobService:
                 failed=Job.failed - failed,
             )
 
-            sa_deps = select_descendends(job_id, True)
+            sa_deps = select_descendants(job_id, True)
             sess.exec(sq.delete(Job).where(sq.col(Job.id).in_(sa_deps)))
 
             sess.commit()
@@ -450,14 +644,31 @@ class JobService:
         parent_id: Optional[str] = None,
         depends_on: Optional[str] = None,
     ) -> Job:
+        limit = ctx.tier.max_active_jobs(user)
         with ctx.db.session() as sess:
+            if parent_id is None and limit is not None:
+                active = (
+                    sess.scalar(
+                        sq.select(sq.func.count())
+                        .select_from(Job)
+                        .where(
+                            Job.user_id == user.id,
+                            sq.col(Job.parent_job_id).is_(None),
+                            sq.col(Job.is_done).is_(False),
+                        )
+                    )
+                    or 0
+                )
+                if active >= limit:
+                    raise ServerErrors.job_limit_reached
+
             job = Job(
                 type=type,
                 extra=data,
                 user_id=user.id,
                 depends_on=depends_on,
                 parent_job_id=parent_id,
-                priority=JOB_PRIORITY_LEVEL[user.tier],
+                priority=ctx.tier.job_priority(user),
             )
             sess.add(job)
 
@@ -469,7 +680,11 @@ class JobService:
 
             sess.commit()
             sess.refresh(job)
-            return job
+
+        if parent_id is None:
+            ctx.activity.record(user.id, ActivityType.REQUEST, job.id)
+
+        return job
 
     def _pending(
         self,
@@ -566,7 +781,7 @@ class JobService:
 
     def _cancel_down(self, sess: Session, job_id: str, inclusive=False) -> None:
         now = current_timestamp()
-        sa_deps = select_descendends(job_id, inclusive)
+        sa_deps = select_descendants(job_id, inclusive)
         sess.exec(
             sq.update(Job)
             .where(

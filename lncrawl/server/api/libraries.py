@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Path, Query, Security
 
 from ...context import ctx
-from ...dao import Library, Novel, User
+from ...dao import ActivityType, Library, Novel, User
 from ...server.models import LibraryCreateRequest, LibraryItem, LibraryUpdateRequest, Paginated
 from ..security import ensure_admin, ensure_user
 
@@ -53,7 +53,9 @@ def list_my_libraries(
     "/my/list",
     summary="Get library name suggestions",
 )
-def all_my_libraries(user: User = Security(ensure_user)) -> List[LibraryItem]:
+def all_my_libraries(
+    user: User = Security(ensure_user),
+) -> List[LibraryItem]:
     return ctx.libraries.list_all(user.id)
 
 
@@ -81,6 +83,7 @@ def get_library(
     library_id: str = Path(),
     user: User = Security(ensure_user),
 ) -> Library:
+    ctx.activity.record(user.id, ActivityType.LIBRARY, library_id)
     return ctx.libraries.get(library_id, user)
 
 

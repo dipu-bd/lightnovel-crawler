@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Security
+from fastapi import APIRouter, Security
 
 from ..security import ensure_admin, ensure_user
 from .admin import router as admin
@@ -34,7 +34,7 @@ router.include_router(
     user,
     prefix="/user",
     tags=["Users"],
-    dependencies=[Depends(ensure_admin)],
+    dependencies=[Security(ensure_admin)],
 )
 
 router.include_router(
@@ -55,49 +55,49 @@ router.include_router(
     novel,
     prefix="/novel",
     tags=["Novels"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     library,
     prefix="/library",
     tags=["Libraries"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     volume,
     prefix="/volume",
     tags=["Volumes"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     chapter,
     prefix="/chapter",
     tags=["Chapters"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     artifact,
     prefix="/artifact",
     tags=["Artifacts"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     history,
     prefix="/read-history",
     tags=["Read History"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     feedback,
     prefix="/feedback",
     tags=["Feedback"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
@@ -117,14 +117,14 @@ router.include_router(
     sources,
     prefix="/source",
     tags=["Sources"],
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
 )
 
 router.include_router(
     admin,
     prefix="/admin",
     tags=["Admin"],
-    dependencies=[Depends(ensure_admin)],
+    dependencies=[Security(ensure_admin)],
 )
 
 

@@ -3,7 +3,7 @@ from typing import List, Optional
 from sqlmodel import and_, asc, desc, func, select
 
 from ..context import ctx
-from ..dao import Artifact, OutputFormat, User, UserRole
+from ..dao import Artifact, LanguageCode, OutputFormat, User, UserRole
 from ..exceptions import ServerErrors
 from ..server.models import Paginated
 
@@ -20,6 +20,7 @@ class ArtifactService:
         user_id: Optional[str] = None,
         novel_id: Optional[str] = None,
         format: Optional[OutputFormat] = None,
+        language: Optional[LanguageCode] = None,
     ) -> Paginated[Artifact]:
         with ctx.db.session() as sess:
             stmt = select(Artifact)
@@ -33,6 +34,8 @@ class ArtifactService:
                 stmt = stmt.where(Artifact.job_id == job_id)
             if format:
                 stmt = stmt.where(Artifact.format == format)
+            if language:
+                stmt = stmt.where(Artifact.language == language)
 
             # Apply sorting
             stmt = stmt.order_by(desc(Artifact.updated_at))
@@ -75,11 +78,14 @@ class ArtifactService:
                 raise ServerErrors.no_epub_file
             return artifact
 
-    def list_latest(self, novel_id: str) -> List[Artifact]:
+    def list_latest(self, novel_id: str, language: Optional[LanguageCode] = None) -> List[Artifact]:
         with ctx.db.session() as sess:
             subq = (
                 select(Artifact.format, func.max(Artifact.updated_at).label("max_updated_at"))
-                .where(Artifact.novel_id == novel_id)
+                .where(
+                    Artifact.novel_id == novel_id,
+                    Artifact.language == language,
+                )
                 .group_by(Artifact.format)
                 .subquery()
             )

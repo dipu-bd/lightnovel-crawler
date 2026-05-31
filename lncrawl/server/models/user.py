@@ -62,3 +62,7 @@ class ResetPasswordRequest(BaseModel):
 
 class PutNotificationRequest(BaseModel):
     email_alerts: Dict[Union[int, str], Union[int, bool]] = Field(description="Notification config")
+
+
+class SendInviteRequest(BaseModel):
+    email: EmailStr = Field(description="Recipient email")

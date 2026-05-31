@@ -40,18 +40,6 @@ class NovelupdatesCrawler(BrowserTemplate):
     def initialize(self):
         self.taskman.init_executor(workers=4)
 
-    # def wait_for_cloudflare(self):
-    #     if "cf_clearance" in self.scraper.cookies:
-    #         return
-    #     try:
-    #         self.browser.wait(
-    #             "#challenge-running",
-    #             expected_conditon=EC.invisibility_of_element,
-    #             timeout=20,
-    #         )
-    #     except Exception:
-    #         pass
-
     def cleanup_prompts(self):
         try:
             elem = self.browser.find("#uniccmp")
@@ -92,11 +80,11 @@ class NovelupdatesCrawler(BrowserTemplate):
 
     def select_chapter_tags(
         self,
-        soup: PageSoup,
+        tag: PageSoup,
         novel: Novel,
         volume: Optional[Volume] = None,
     ) -> Iterable[PageSoup]:
-        postid = soup.select_one("input#mypostid")["value"]
+        postid = tag.select_one("input#mypostid")["value"]
         response = self.scraper.submit_form(
             f"{self.scraper.origin}wp-admin/admin-ajax.php",
             data=dict(
@@ -105,18 +93,8 @@ class NovelupdatesCrawler(BrowserTemplate):
                 mypostid=postid,
             ),
         )
-        soup = self.scraper.make_soup(response)
-        return reversed(soup.select(".sp_li_chp a[data-id]"))
-
-    # def select_chapter_tags_in_browser(self):
-    #     self.cleanup_prompts()
-    #     el = self.browser.find(".my_popupreading_open")
-    #     el.scroll_into_view()
-    #     el.click()
-
-    #     self.browser.wait("#my_popupreading li.sp_li_chp a[data-id]")
-    #     tag = self.browser.find("#my_popupreading").as_tag()
-    #     yield from reversed(tag.select("li.sp_li_chp a[data-id]"))
+        tag = self.scraper.make_soup(response)
+        return reversed(tag.select(".sp_li_chp a[data-id]"))
 
     def parse_chapter_item(self, soup: PageSoup, chapter_id: int) -> Chapter:
         title = soup.text.strip().title()
@@ -144,14 +122,3 @@ class NovelupdatesCrawler(BrowserTemplate):
             chapter.title = reader.short_title()
             summary = reader.summary(html_partial=True)
             return _automation_warning + summary
-
-    # def download_chapter_body_in_browser(self, chapter: Chapter) -> str:
-    #     self.visit(chapter.url)
-    #     for i in range(30):
-    #         if not self.browser.current_url.startswith(chapter.url):
-    #             break
-    #         time.sleep(1)
-
-    #     logger.info("%s => %s", chapter.url, self.browser.current_url)
-    #     chapter.url = self.browser.current_url
-    #     return self.parse_chapter_body(chapter, self.browser.html)

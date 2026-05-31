@@ -3,11 +3,11 @@
 # =============================================================================
 
 .PHONY: all \
-	version submodule clean ensure-uv setup sync install upgrade \
+	version clean ensure-uv setup sync install upgrade \
 	major minor patch \
-	lint lint-fix start dev watch add-source \
+	lint lint-fix start dev watch \
 	index-gen check-sources \
-	build-wheel build-exe build \
+	build-wheel build-exe build-installer build \
 	docker-base docker-build docker-up docker-down docker-logs \
 	remove-tag push-tag push-tag-force \
 	add-dep add-dev rm-dep rm-dev
@@ -37,25 +37,20 @@ endif
 all: install
 
 # =============================================================================
-# Git — info, submodules, release tags
+# Git — info, release tags
 # =============================================================================
 
 version:
 	@echo Lightnovel Crawler: $(VERSION)
 
-submodule:
-	@git submodule sync
-	@git submodule update --force --init --recursive --remote
-
 remove-tag:
 	git diff --exit-code HEAD
-	git push --delete origin "v$(VERSION)"
 	git tag -d "v$(VERSION)"
 
 push-tag:
 	git diff --exit-code HEAD
 	git tag "v$(VERSION)"
-	@git push --tags
+	@git push -f --tags
 
 push-tag-force: remove-tag push-tag
 
@@ -94,7 +89,7 @@ minor: ensure-uv
 patch: ensure-uv
 	@$(UV) run python ./scripts/bump.py patch
 
-setup: submodule ensure-uv
+setup: ensure-uv
 
 sync:
 	$(UV) sync $(UV_SYNC_FLAGS)
@@ -109,14 +104,14 @@ upgrade: setup
 # =============================================================================
 
 lint:
-	$(UV) run ruff check
-	$(UV) run ruff format --check
-	$(UV) run pyright lncrawl
-# 	$(UV) run pyright sources
+	@$(UV) run pyright lncrawl
+	@$(UV) run ruff format --diff --check
+	@$(UV) run ruff check
+# 	@$(UV) run pyright sources
 
 lint-fix:
-	$(UV) run ruff check --fix
-	$(UV) run ruff format
+	@$(UV) run ruff check --fix
+	@$(UV) run ruff format
 
 start:
 	$(UV) run python -m lncrawl -ll server
@@ -125,9 +120,6 @@ dev:
 	$(UV) run python -m lncrawl -ll server --watch
 
 watch: dev
-
-add-source:
-	$(UV) run python -m lncrawl -ll sources create
 
 index-gen:
 	$(UV) run python scripts/index_gen.py
@@ -145,7 +137,14 @@ build-wheel:
 build-exe:
 	$(UV) run python setup_pyi.py
 
-build: version install build-wheel build-exe
+build-installer:
+ifeq ($(OS),Windows_NT)
+	$(PS) "& 'C:\Program Files (x86)\Inno Setup 6\ISCC.exe' 'installer\installer.iss' '/DMyAppVersion=$(VERSION)'"
+else
+	@echo "Skipping installer build (Windows only)"
+endif
+
+build: version install build-wheel build-exe build-installer
 
 # =============================================================================
 # Docker

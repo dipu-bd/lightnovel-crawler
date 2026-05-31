@@ -1,4 +1,5 @@
 from contextlib import asynccontextmanager
+import mimetypes
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -8,7 +9,7 @@ from fastapi.responses import FileResponse
 
 from ..assets.version import get_version
 from ..context import ctx
-from ..exceptions import get_exception_handlers
+from ..exceptions import ServerErrors, get_exception_handlers
 from .api import router as api
 from .middleware.staticfiles import CustomStaticFiles, StaticFilesGuard
 
@@ -19,8 +20,8 @@ web_dir = (Path(__file__).parent / "web").absolute()
 async def lifespan(_app: FastAPI):
     try:
         ctx.setup()
-        ctx.lsp.start()
         ctx.scheduler.start()
+        ctx.recommendations.warmup()
         yield
     finally:
         ctx.destroy()
@@ -75,11 +76,19 @@ app.mount("/static", CustomStaticFiles(), name="static")
 @app.get("/{fallback:path}", include_in_schema=False)
 async def serve_web(fallback: str):
     target_file = web_dir.joinpath(fallback)
+    if not target_file.is_relative_to(web_dir):
+        raise ServerErrors.not_found
     if not target_file.is_file():
         target_file = web_dir / "index.html"
+    mime_type, _ = mimetypes.guess_type(target_file)
+    if not mime_type:
+        mime_type = "application/octet-stream"
+    if mime_type == "text/javascript":
+        mime_type = "application/javascript"
     if target_file.name in {"index.html", "sw.js", "registerSW.js"}:
         return FileResponse(
             target_file,
+            media_type=mime_type,
             headers={"Cache-Control": "no-cache, no-store, must-revalidate"},
         )
-    return FileResponse(target_file)
+    return FileResponse(target_file, media_type=mime_type)

@@ -2,9 +2,9 @@ from typing import Optional
 
 import sqlmodel as sa
 
+from ..enums import UserRole, UserTier
 from ..utils.crypto_tools import generate_token
 from ._base import BaseTable
-from .enums import UserRole, UserTier
 
 
 class User(BaseTable, table=True):

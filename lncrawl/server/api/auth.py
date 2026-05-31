@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Body, Form, Query, Security
 
 from ...context import ctx
-from ...dao import User, UserToken
+from ...dao import ActivityType, User, UserToken
 from ..models import (
     ForgotPasswordRequest,
     LoginRequest,
@@ -11,6 +11,7 @@ from ..models import (
     NameUpdateRequest,
     PasswordUpdateRequest,
     ResetPasswordRequest,
+    SendInviteRequest,
     SignupRequest,
     TokenResponse,
     UpdateRequest,
@@ -55,6 +56,7 @@ def signup(
 def me(
     user: User = Security(ensure_user),
 ) -> User:
+    ctx.activity.record(user.id, ActivityType.ACCOUNT, user.id)
     return user
 
 
@@ -140,3 +142,12 @@ def list_my_tokens(
     user: User = Security(ensure_user),
 ) -> List[UserToken]:
     return ctx.users.list_user_tokens(user.id)
+
+
+@router.post("/me/send-invite", summary="Send a signup invitation email with referral token")
+def send_invite(
+    user: User = Security(ensure_user),
+    body: SendInviteRequest = Body(description="The invite request"),
+) -> bool:
+    ctx.users.send_invite_email(user, body.email)
+    return True

@@ -65,6 +65,11 @@ class Platform:
 
     @static_cached_property
     @staticmethod
+    def frozen():
+        return bool(__package__ and getattr(sys, "frozen", False))
+
+    @static_cached_property
+    @staticmethod
     def docker():
         if os.path.isfile("/.dockerenv"):
             return True

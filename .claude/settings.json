@@ -1,17 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
-    "allow": [
-      "PowerShell(cd *)",
-      "PowerShell(Get-*)",
-      "PowerShell(Select-*)",
-      "PowerShell(git status)",
-      "PowerShell(git diff *)",
-      "PowerShell(git log *)",
-      "PowerShell(git fetch *)",
-      "PowerShell(git stash *)",
-      "PowerShell(uv run ruff *)"
-    ]
+    "allow": ["WebSearch", "WebFetch(domain:github.com)"]
   },
   "skillOverrides": {
     "frontend-design:frontend-design": "on",
@@ -25,19 +15,5 @@
     "loop": "user-invocable-only",
     "skill-creator:skill-creator": "user-invocable-only",
     "keybindings-help": "user-invocable-only"
-  },
-  "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "shell": "powershell",
-            "command": "$changed = @(git diff --name-only; git diff --cached --name-only) | Where-Object { $_ -match '\\.(ts|tsx)$' } | Select-Object -Unique; if ($changed.Count -gt 0) { @{systemMessage=\"$($changed.Count) modified TypeScript/TSX file(s) — consider /simplify to review code quality, or /security-review if you changed auth/API code.\"} | ConvertTo-Json -Compress } else { '{}' }",
-            "statusMessage": "Checking changed files..."
-          }
-        ]
-      }
-    ]
   }
 }

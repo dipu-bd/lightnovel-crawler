@@ -33,7 +33,7 @@ class Novel(BaseTable, table=True):
     manga: bool = sa.Field(default=False, description="True if this entry is a manga/manhua/comic")
     language: Optional[str] = sa.Field(
         default=None,
-        sa_column=sa.Column(sa.CHAR(2)),
+        sa_column=sa.Column(sa.CHAR(2), index=True),
         description="ISO 639-1 two-letter language code (e.g. 'en', 'ja', 'zh')",
     )
 
@@ -57,3 +57,18 @@ class Novel(BaseTable, table=True):
     def cover_available(self) -> bool:
         """Whether the cover image file is available"""
         return ctx.files.exists(self.cover_file)
+
+
+class NovelTranslation(BaseTable, table=True):
+    __tablename__ = "novel_translations"  # type: ignore
+    __table_args__ = (
+        sa.UniqueConstraint("novel_id", "language"),
+        sa.Index("ix_novel_translation_lookup", "novel_id", "language"),
+    )
+
+    novel_id: str = sa.Field(foreign_key="novels.id", ondelete="CASCADE")
+    language: str = sa.Field(description="Target language code, e.g. 'fr'")
+
+    title: str = sa.Field(description="Translated title of the novel")
+    authors: Optional[str] = sa.Field(default=None, description="Translated list of authors")
+    synopsis: Optional[str] = sa.Field(default=None, description="Translated synopsis or novel")

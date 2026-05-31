@@ -5,8 +5,9 @@ from pydantic import BaseModel
 
 class AnnouncementCreateRequest(BaseModel):
     type: str = "info"
-    title: str
+    title: str = ""
     message: Optional[str] = None
+    is_active: bool = False
 
 
 class AnnouncementUpdateRequest(BaseModel):

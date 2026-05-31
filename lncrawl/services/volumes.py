@@ -1,10 +1,10 @@
-from typing import List
+from typing import List, Optional
 
 import sqlmodel as sq
 
 from ..context import ctx
 from ..core import Volume as CrawlerVolume
-from ..dao import User, UserRole, Volume
+from ..dao import LanguageCode, User, UserRole, Volume, VolumeTranslation
 from ..exceptions import ServerErrors
 
 
@@ -18,13 +18,32 @@ class VolumeService:
             stmt = stmt.where(Volume.novel_id == novel_id)
             return sess.exec(stmt).one()
 
-    def list(self, novel_id: str) -> List[Volume]:
+    def list(self, novel_id: str, language: Optional[LanguageCode] = None) -> List[Volume]:
         with ctx.db.session() as sess:
             stmt = sq.select(Volume)
             stmt = stmt.where(Volume.novel_id == novel_id)
             stmt = stmt.order_by(sq.col(Volume.serial).asc())
-            items = sess.exec(stmt).all()
-            return list(items)
+            items = list(sess.exec(stmt).all())
+        self._put_translations(items, language)
+        return items
+
+    def _put_translations(
+        self,
+        items: List[Volume],
+        language: Optional[LanguageCode],
+    ):
+        if language and items:
+            novel_id = items[0].novel_id
+            with ctx.db.session() as sess:
+                translations = sess.exec(
+                    sq.select(VolumeTranslation).where(
+                        VolumeTranslation.novel_id == novel_id,
+                        VolumeTranslation.language == language,
+                    )
+                ).all()
+                serial_title_map = {t.volume_serial: t.volume_title for t in translations}
+            for item in items:
+                item.title = serial_title_map.get(item.serial) or item.title
 
     def get(self, volume_id: str) -> Volume:
         with ctx.db.session() as sess:
@@ -60,6 +79,27 @@ class VolumeService:
             if not volume:
                 raise ServerErrors.no_such_volume
             return volume
+
+    def get_volume_translation(self, volume: Volume, language: LanguageCode):
+        with ctx.db.session() as sess:
+            return sess.exec(
+                sq.select(VolumeTranslation)
+                .where(
+                    VolumeTranslation.novel_id == volume.novel_id,
+                    VolumeTranslation.volume_serial == volume.serial,
+                    VolumeTranslation.language == language,
+                )
+                .limit(1)
+            ).first()
+
+    def get_translated(self, volume_id: str, language: Optional[LanguageCode] = None) -> Volume:
+        volume = self.get(volume_id)
+        if language:
+            translation = self.get_volume_translation(volume, language)
+            if not translation:
+                raise ServerErrors.no_such_volume.with_extra(language)
+            volume.title = translation.volume_title
+        return volume
 
     def sync(self, novel_id: str, volumes: List[CrawlerVolume]):
         with ctx.db.session() as sess:

@@ -45,8 +45,6 @@ jobs:
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v6
-        with:
-          submodules: recursive
 
       - name: 🐍 Install uv & Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v7
@@ -59,9 +57,9 @@ jobs:
 
       - name: 🧹 Lint Code
         run: |
-          uv run ruff check
-          uv run ruff format --check
           uv run pyright lncrawl
+          uv run ruff format --diff --check
+          uv run ruff check
           git diff --name-only -- "*.py" | xargs -r pyright
 
       - name: 🏗️ Build Wheel

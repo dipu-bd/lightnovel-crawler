@@ -1,4 +1,5 @@
 import logging
+import re
 
 from lncrawl.core import Chapter, LegacyCrawler, Volume
 
@@ -55,4 +56,21 @@ class NovelFireCrawler(LegacyCrawler):
     def download_chapter_body(self, chapter) -> str:
         soup = self.get_soup(chapter["url"])
         contents = soup.select_one("div#content")
+        if not contents:
+            return ""
+
+        # 1. Look through the very top elements inside the content container
+        # We use a standard slice of the first 5 elements to completely isolate the headers
+        elements_to_check = contents.find_all(True)[:5]
+
+        for element in elements_to_check:
+            element_text = element.get_text(" ", strip=True)
+            if not element_text:
+                continue
+
+            # 2. checking for ANY title layout starting with "Chapter X"
+            # This matches "Chapter 1:", "Chapter 1 –", "Chapter 1: Chapter 1:" etc.
+            if re.match(r"(?i)^\s*chapter\s+\d+", element_text):
+                element.decompose()
+
         return self.cleaner.extract_contents(contents)

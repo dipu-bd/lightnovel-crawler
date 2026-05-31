@@ -10,7 +10,6 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "Natural Language :: English",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Topic :: Games/Entertainment",
   "Environment :: Console",
   "Programming Language :: Python :: 3 :: Only",
@@ -25,12 +24,14 @@ dependencies = [
   "alembic>=1.14.0",
   "base58~=2.1.1",
   "beautifulsoup4>=4.0.0,<5.0.0",
+  "brotli>=1.2.0",
   "colorama>=0.4.0,<0.5.0",
   "ebooklib>=0.18.0,<1.0.0",
   "fastapi[standard]>=0.115.0",
   "html5lib~=1.1",
   "httpx[brotli,http2]>=0.27.0",
   "humanize>=4.0.0",
+  "js2py>=0.74",
   "lxml>=5.4.0,<7.0.0",
   "openai>=1.0.0",
   "passlib[argon2]>=1.7.0",
@@ -45,25 +46,23 @@ dependencies = [
   "python-dotenv>=1.0.0,<2.0.0",
   "python-jose[cryptography]>=3.4.0",
   "python-slugify>=8.0.0,<9.0.0",
+  "pyyaml>=6.0.3",
   "questionary>=2.0.0,<3.0.0",
   "readability-lxml>=0.8.0,<1.0.0",
   "regex>=2024.0.0",
   "requests_toolbelt>=1.0.0",
   "requests>=2.32.0",
-  "selenium>=4.27.0,<5.0.0",
+  "nodriver>=0.50",
   "sqlmodel>=0.0.22",
   "tqdm>=4.66.0,<5.0.0",
   "typer>=0.12.0",
   "uvicorn>=0.32.0",
   "zstd>=1.5.7.0",
-  "pyyaml>=6.0.3",
-  "pywebview>=6.1",
-  "brotli>=1.2.0",
-  "js2py>=0.74",
 ]
 description = "Download lightnovels from various online sources and generate output in different formats, e.g. epub, mobi, json, text, docx, pdf, html etc."
 dynamic = ["version"]
 keywords = ["lightnovel", "crawler", "lncrawl", "novel", "pdf", "epub", "mobi", "scraper"]
+license = "GPL-3.0-or-later"
 name = "lightnovel-crawler"
 readme = "README.rst"
 requires-python = ">=3.9.0"
@@ -90,8 +89,10 @@ dev = [
   "wheel>=0.40.0",
 ]
 lsp = [
-  "python-lsp-server[websockets]>=1.14.0",
+  "pylsp-rope>=0.1.17",
   "python-lsp-ruff>=2.3.1",
+  "python-lsp-server[websockets]>=1.14.0",
+  "ruff>=0.9.0",
 ]
 
 [project.urls]
@@ -146,7 +147,8 @@ line-ending = "lf"
 quote-style = "double"
 
 [tool.ruff.lint]
-extend-select = [
+# https://docs.astral.sh/ruff/rules
+select = [
   "I", # isort
   "E", # pycodestyle
   "W", # pycodestyle
@@ -164,54 +166,6 @@ ignore = ["E203", "E265", "E501"]
 combine-as-imports = true
 force-sort-within-sections = true
 known-first-party = ["lncrawl"]
-
-[tool.pylsp.signature]
-formatter = "ruff"
-
-[tool.pylsp.plugins.ruff]
-docstring-code-format = true
-docstring-code-line-length = 80
-enabled = true
-format = ["I", "E", "W", "F"]
-formatEnabled = true
-ignore = ["E203", "E265", "E501"]
-indent-style = "space"
-line-ending = "lf"
-line-length = 100
-quote-style = "double"
-
-[tool.pylsp.plugins.pyflakes]
-enabled = false
-
-[tool.pylsp.plugins.pycodestyle]
-enabled = false
-
-[tool.pylsp.plugins.autopep8]
-enabled = false
-
-[tool.pylsp.plugins.yapf]
-enabled = false
-
-[tool.pylsp.plugins.black]
-enabled = false
-
-[tool.pylsp.plugins.mccabe]
-enabled = false
-
-[tool.pylsp.plugins.pylsp_mypy]
-enabled = false
-
-[tool.pylsp.plugins.jedi_completion]
-enabled = true
-include_params = true
-
-[tool.pylsp.plugins.jedi_definition]
-enabled = true
-follow_builtin_imports = true
-follow_imports = true
-
-[tool.black]
-target-version = ["py39"]
 
 [tool.pyright]
 # Completely suppress all errors from these paths

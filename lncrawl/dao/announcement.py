@@ -18,7 +18,15 @@ class Announcement(BaseTable, table=True):
     message: Optional[str] = sa.Field(
         nullable=True,
         sa_type=sa.Text,
-        description="Announcement body (supports markdown)",
+        description="Announcement body (raw HTML)",
+    )
+    click_count: int = sa.Field(
+        default=0,
+        description="Number of times users have clicked on this announcement",
+    )
+    close_count: int = sa.Field(
+        default=0,
+        description="Number of times users have dismissed this announcement",
     )
     type: str = sa.Field(
         default="info",

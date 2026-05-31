@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import Depends, Security
+from fastapi import Security
 from fastapi.security import (
     HTTPAuthorizationCredentials,
     HTTPBasic,
@@ -20,8 +20,8 @@ bearer_auth = HTTPBearer(auto_error=False)
 
 def ensure_user(
     security_scopes: SecurityScopes,
-    basic: Optional[HTTPBasicCredentials] = Depends(basic_auth),
-    bearer: Optional[HTTPAuthorizationCredentials] = Depends(bearer_auth),
+    basic: Optional[HTTPBasicCredentials] = Security(basic_auth),
+    bearer: Optional[HTTPAuthorizationCredentials] = Security(bearer_auth),
 ) -> User:
     if basic:
         login = LoginRequest(
@@ -50,6 +50,8 @@ def ensure_admin(
 def ensure_local(
     user: User = Security(ensure_user, scopes=[UserRole.LOCAL]),
 ) -> User:
+    # LOCAL scope is granted during token creation for local requests, but the
+    # underlying user must have ADMIN role to access local-only endpoints.
     if user.role != UserRole.ADMIN:
         raise ServerErrors.forbidden
     return user

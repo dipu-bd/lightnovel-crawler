@@ -1,53 +1,55 @@
 import atexit
 import logging
-from threading import Semaphore, Thread
-from typing import List, Optional
+from threading import Semaphore
+from typing import TYPE_CHECKING, List, Optional
 
-from selenium.webdriver.remote.webdriver import WebDriver
+if TYPE_CHECKING:
+    from nodriver import Browser
 
 logger = logging.getLogger(__name__)
 
 MAX_BROWSER_INSTANCES = 8
 
-__open_browsers: List[WebDriver] = []
+__open_browsers: List["Browser"] = []
 __semaphore = Semaphore(MAX_BROWSER_INSTANCES)
 
 
-def __override_quit(driver: WebDriver):
-    __open_browsers.append(driver)
-    original = Thread(target=driver.quit, daemon=True)
+def __override_stop(browser: "Browser") -> None:
+    __open_browsers.append(browser)
+    original_stop = browser.stop
 
-    def override():
-        if driver in __open_browsers:
+    def override() -> None:
+        if browser in __open_browsers:
             __semaphore.release()
-            __open_browsers.remove(driver)
-            logger.info("Destroyed instance: %s", driver.session_id)
-        if not original._started.is_set():  # type: ignore
-            original.start()
+            __open_browsers.remove(browser)
+            logger.info("Destroyed browser instance")
+        original_stop()
 
-    driver.quit = override  # type: ignore
+    browser.stop = override  # type: ignore[method-assign]
 
 
-def _acquire_queue(timeout: Optional[float] = None):
+def acquire_queue(timeout: Optional[float] = None) -> None:
     acquired = __semaphore.acquire(True, timeout)
     if not acquired:
-        raise TimeoutError("Failed to acquire semaphore")
+        raise TimeoutError("Failed to acquire browser semaphore")
 
 
-def _release_queue(driver: WebDriver):
-    __override_quit(driver)
+def release_queue(browser: "Browser") -> None:
+    __override_stop(browser)
 
 
-def check_active(driver: Optional[WebDriver]) -> bool:
-    if not isinstance(driver, WebDriver):
+def check_active(browser: Optional["Browser"]) -> bool:
+    if not isinstance(browser, Browser):
         return False
-    return driver in __open_browsers
+    return browser in __open_browsers
 
 
-def cleanup_drivers():
-    for driver in __open_browsers:
-        driver.close()
-        driver.quit()
+def cleanup_drivers() -> None:
+    for browser in list(__open_browsers):
+        try:
+            browser.stop()
+        except Exception:
+            pass
 
 
 atexit.register(cleanup_drivers)

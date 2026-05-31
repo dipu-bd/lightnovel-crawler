@@ -33,6 +33,16 @@ To check available commands and options:
 
 If ``lncrawl`` is not on your PATH, use ``python -m lncrawl`` or ``python3 -m lncrawl``.
 
+To start the App:
+
+.. code-block:: bash
+
+   lncrawl -ll app
+
+.. image:: https://github.com/lncrawl/lightnovel-crawler/blob/dev/res/screenshots/tutorial.png?raw=true
+   :target: https://github.com/lncrawl/lightnovel-crawler/blob/dev/res/screenshots/tutorial.png
+   :alt: App Tutorial page
+
 Documentation and help
 ----------------------
 

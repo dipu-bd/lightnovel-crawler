@@ -45,13 +45,14 @@ class AnnouncementService:
         title: str,
         type: str = "info",
         message: Optional[str] = None,
+        is_active: bool = False,
     ) -> Announcement:
         with ctx.db.session() as sess:
             item = Announcement(
                 title=title,
                 message=message,
                 type=type,
-                is_active=True,
+                is_active=is_active,
                 version=1,
                 created_by=user.id,
             )
@@ -89,6 +90,18 @@ class AnnouncementService:
             sess.commit()
             sess.refresh(item)
             return item
+
+    def track_interaction(self, announcement_id: str, interaction_type: str) -> bool:
+        with ctx.db.session() as sess:
+            item = sess.get(Announcement, announcement_id)
+            if not item:
+                return False
+            if interaction_type == "click":
+                item.click_count += 1
+            elif interaction_type == "close":
+                item.close_count += 1
+            sess.commit()
+            return True
 
     def delete(self, announcement_id: str) -> bool:
         with ctx.db.session() as sess:

@@ -6,7 +6,7 @@ from threading import Event
 from typing import Optional
 
 from ...context import ctx
-from ...dao import Artifact, OutputFormat
+from ...dao import Artifact, LanguageCode, OutputFormat
 from ...exceptions import AbortedException, ServerErrors
 from ...utils.event_lock import EventLock
 
@@ -63,11 +63,12 @@ def convert_epub(
     epub: Optional[Artifact] = None,
 ) -> None:
     out_file = ctx.files.resolve(artifact.output_file)
+    tmp_file = working_dir / out_file.name
     if not epub:
         raise ServerErrors.no_epub_file
 
-    tmp_file = working_dir / out_file.name
-    novel = ctx.novels.get(artifact.novel_id)
+    language = LanguageCode(artifact.language) if artifact.language else None
+    novel = ctx.novels.get(artifact.novel_id, language)
     epub_file = ctx.files.resolve(epub.output_file)
 
     if not is_calibre_available():
@@ -88,7 +89,7 @@ def convert_epub(
         # "--comments",
         # novel.synopsis,
         "--language",
-        novel.language,
+        artifact.language or novel.language,
         "--tags",
         ",".join(novel.tags),
         "--series",

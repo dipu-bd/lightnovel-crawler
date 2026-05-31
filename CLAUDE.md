@@ -8,9 +8,9 @@ The [Makefile](Makefile) wraps [uv](https://docs.astral.sh/uv/); `make install` 
 
 ```bash
 # Setup and install
-make setup            # Sync git submodules and ensure uv is installed
+make setup            # Ensure uv is installed
 make install          # setup + uv sync (default target: `make` or `make all`)
-make sync             # uv sync only (no submodule update)
+make sync             # uv sync only
 make upgrade          # setup + uv sync --upgrade
 
 # Development servers and tooling
@@ -26,9 +26,10 @@ make check-sources    # Validate source crawlers (scripts/check_sources.py)
 make patch | minor | major
 
 # Build
-make build            # version + install + wheel + exe
+make build            # version + install + wheel + exe + installer (Windows)
 make build-wheel      # python -m build -w
-make build-exe        # PyInstaller (setup_pyi.py)
+make build-exe        # PyInstaller (setup_pyi.py) — onedir on Windows, onefile on Mac/Linux
+make build-installer  # Inno Setup → dist/lncrawl.exe installer (Windows only, no-op elsewhere)
 
 # Dependencies (PKG is the second word; uses uv add/remove)
 make add-dep <pkg>    # main dep
@@ -44,7 +45,6 @@ make docker-up | docker-down | docker-logs
 # Misc
 make version          # Print lncrawl/VERSION
 make clean            # Remove .venv, logs, build, dist, *.egg-info, __pycache__
-make submodule        # git submodule sync + update --init --recursive --remote
 ```
 
 Run from source without make: `uv run python -m lncrawl [args]`.
@@ -62,14 +62,15 @@ Both share a single in-process `AppContext` (`ctx`) singleton; nothing is meant 
 
 ### Entry points
 
-- [lncrawl/__main__.py](lncrawl/__main__.py) → [lncrawl/app.py](lncrawl/app.py): Typer CLI. Subcommands `version`, `config`, `sources`, `crawl`, `search`, `server`, plus hidden `dev`. With no subcommand, falls back to launching the server.
-- [lncrawl/server/app.py](lncrawl/server/app.py): FastAPI app. `lifespan` calls `ctx.setup()` then `ctx.scheduler.start()`. API mounted at `/api`, web SPA (the [lncrawl/server/web](lncrawl/server/web) git submodule, built artifacts) served from `/`. OpenAPI at `/docs`, `/redoc`, `/openapi.json`.
+- [lncrawl/__main__.py](lncrawl/__main__.py) → [lncrawl/app.py](lncrawl/app.py): Typer CLI. Subcommands `version`, `config`, `sources`, `crawl`, `search`, `server`, `app`, plus hidden `dev`. `app` subcommand launches the desktop webview (`lncrawl/server/webview.py`). When running as a **frozen executable** (PyInstaller), `__main__.py` calls `webview.start()` directly, bypassing the CLI.
+- [lncrawl/server/webview.py](lncrawl/server/webview.py): Desktop launcher. Opens the app in Chrome/Edge app-mode; falls back to system browser + a small tkinter status window (shows URL, Copy URL, Stop Server) when no app-mode browser is found.
+- [lncrawl/server/app.py](lncrawl/server/app.py): FastAPI app. `lifespan` calls `ctx.setup()` then `ctx.scheduler.start()`. API mounted at `/api`, web SPA served from `/`. OpenAPI at `/docs`, `/redoc`, `/openapi.json`.
 
 ### AppContext singleton
 
 [lncrawl/context.py](lncrawl/context.py) defines `__AppContext__` and exports `ctx`. Every service is a `@cached_property`, so imports are deferred and a service is only constructed on first access. `ctx.setup()` boots the logger, config, DB (with Alembic migrations), creates the admin user, and loads sources. `ctx.destroy()` is registered with Typer's `call_on_close`. **Always reach shared state via `ctx.<service>`** — do not instantiate service classes directly.
 
-Important services (from `ctx`): `config`, `logger`, `db`, `mail`, `http`, `files`, `sources`, `users`, `novels`, `tags`, `secrets`, `volumes`, `chapters`, `images`, `artifacts`, `jobs`, `history`, `libraries`, `feedback`, `announcements`, `crawler`, `binder`, `scheduler`, `admin`.
+Important services (from `ctx`): `config`, `logger`, `db`, `mail`, `http`, `files`, `sources`, `users`, `novels`, `tags`, `secrets`, `volumes`, `chapters`, `images`, `artifacts`, `jobs`, `history`, `libraries`, `feedback`, `announcements`, `translator`, `crawler`, `binder`, `lsp`, `scheduler`, `admin`, `github`.
 
 ### Source crawlers (the scraping layer)
 
@@ -81,29 +82,49 @@ Important services (from `ctx`): `config`, `logger`, `db`, `mail`, `http`, `file
 
 ### Persistence layer
 
-- ORM: SQLModel/SQLAlchemy. Models in [lncrawl/dao/](lncrawl/dao/) (`Job`, `Novel`, `Chapter`, `Volume`, `User`, `Library`, `Artifact`, `ReadHistory`, `Tag`, `Feedback`, `Announcement`, `Secret`, `ChapterImage`, `enums.py`).
+- ORM: SQLModel/SQLAlchemy. Models in [lncrawl/dao/](lncrawl/dao/): `User`, `UserToken`, `Novel`, `NovelTranslation`, `Volume`, `VolumeTranslation`, `Chapter`, `ChapterTranslation`, `ChapterImage`, `Library`, `LibraryNovel`, `Artifact`, `Job`, `ReadHistory`, `Tag`, `Feedback`, `Announcement`, `Secret`. Enums live in [lncrawl/enums.py](lncrawl/enums.py) and are re-exported via `dao/__init__.py`.
 - DB engine: [lncrawl/services/db.py](lncrawl/services/db.py). URL comes from `ctx.config.db.url`; defaults to local SQLite, supports PostgreSQL via `DATABASE_URL`.
 - Migrations: [lncrawl/migrations/](lncrawl/migrations/) (Alembic). `ctx.db.bootstrap()` runs migrations on startup.
 
 ### Background work: jobs + scheduler
 
-- [lncrawl/services/jobs/](lncrawl/services/jobs/) — `JobService` is the persistence/query API for `Job` rows; `events.py` is a tiny in-process pub/sub bridging worker threads to FastAPI's asyncio loop via `loop.call_soon_threadsafe`.
+- [lncrawl/services/jobs/](lncrawl/services/jobs/) — `JobService` is the persistence/query API for `Job` rows.
 - [lncrawl/services/scheduler/](lncrawl/services/scheduler/) — `JobScheduler` (started in FastAPI `lifespan`) spawns worker threads: `JobRunner` runs novel-fetching/downloading jobs, `Scrubber` performs cleanup. Concurrency comes from `ctx.config.crawler.runner_concurrency`.
-- Live job updates flow over WebSocket via [lncrawl/server/api/ws.py](lncrawl/server/api/ws.py).
+- Job status is polled via the REST API; there is no dedicated job WebSocket. The only WebSocket endpoint (`/api/lsp`) is the Language Server Protocol proxy (`ctx.lsp`) — it spawns a per-session `pylsp` subprocess and relays JSON-RPC over TCP.
 
 ### Output / binding
 
 [lncrawl/services/binder/](lncrawl/services/binder/) generates artifacts. EPUB is the native format (`epub.py`); other formats (MOBI, PDF, AZW3, DOCX, FB2, …) are produced by shelling out to Calibre's `ebook-convert` (`calibre.py`); `json.py` and `text.py` are dependency-free outputs.
 
+[lncrawl/services/translators/](lncrawl/services/translators/) (`ctx.translator`) machine-translates novel content (chapters, volumes, titles) into a target language. Wraps multiple backends — Bing, Google (three variants), Lingva, Baidu — with automatic failover when a backend fails. Translation results are stored as `*Translation` DAO rows alongside the originals.
+
+[lncrawl/services/github.py](lncrawl/services/github.py) (`ctx.github`) fetches and caches the remote source index from GitHub (throttled to one fetch per 60 s) and supports downloading individual source files into `user_sources` or submitting new crawlers as GitHub PRs.
+
 ### Server API
 
-Routers live in [lncrawl/server/api/](lncrawl/server/api/) and are aggregated in [lncrawl/server/api/__init__.py](lncrawl/server/api/__init__.py). Auth is enforced per-router via `Depends(ensure_user)` / `Depends(ensure_admin)` from [lncrawl/server/security.py](lncrawl/server/security.py); WebSocket routers handle their own auth and are mounted **before** the HTTP routers so they don't inherit HTTP security deps. Tier/quota logic in [lncrawl/server/tier.py](lncrawl/server/tier.py).
+Routers live in [lncrawl/server/api/](lncrawl/server/api/) and are aggregated in [lncrawl/server/api/__init__.py](lncrawl/server/api/__init__.py). Auth is enforced per-router via `Security(ensure_user)` / `Security(ensure_admin)` / `Security(ensure_local)` from [lncrawl/server/security.py](lncrawl/server/security.py). `ensure_admin` requires `UserRole.ADMIN`; `ensure_local` requires the `LOCAL` scope token but still checks `role == ADMIN` at runtime (it is scoped for local-process callers that skip normal auth). The `lsp` WebSocket router handles its own auth (token query param) and is mounted **before** the HTTP routers so it doesn't inherit HTTP security deps. The `/settings` router carries per-user notification preferences. Tier/quota logic in [lncrawl/server/tier.py](lncrawl/server/tier.py).
 
 Pydantic request/response models live in [lncrawl/server/models/](lncrawl/server/models/), distinct from the SQLModel persistence models in `dao/`.
 
 ### Configuration
 
 [lncrawl/config.py](lncrawl/config.py): typed config with cached properties. Data dir resolves from env `LNCRAWL_DATA_PATH` first, otherwise `typer.get_app_dir("LNCrawl", force_posix=True, roaming=True)` — on Windows this is `%APPDATA%\LNCrawl`. Config file defaults to `<data>/config.json`. Properties annotated with `Sensitive` are flagged in the admin API.
+
+## Windows Packaging
+
+`setup_pyi.py` drives PyInstaller. Platform behaviour differs deliberately:
+
+| Platform | Mode | Output |
+|----------|------|--------|
+| Windows | `--onedir` | `dist/lncrawl/` directory (fast startup — no extraction step) |
+| Mac / Linux | `--onefile` | `dist/lncrawl` single binary |
+
+After `build-exe` on Windows, `make build-installer` (or the CI step) compiles [installer/installer.iss](installer/installer.iss) with Inno Setup 6 into `dist/lncrawl.exe` — a self-contained installer that handles install, upgrade, uninstall, optional desktop shortcut, and optional PATH entry. Inno Setup 6 is pre-installed on GitHub Actions `windows-latest` runners.
+
+Key installer design decisions:
+- **Per-user install by default** (`PrivilegesRequired=lowest`) — no UAC prompt. Users can opt into a machine-wide install via the dialog.
+- **Stable `AppId` GUID** in `installer.iss` — never change it; Inno Setup uses it to identify upgrades and the uninstaller entry.
+- The installed `lncrawl.exe` inside Program Files won't carry the "downloaded from internet" zone marker, so Windows won't flag it as dangerous at launch. The installer itself requires a code-signing certificate to suppress SmartScreen (see comment at the top of `installer.iss`).
 
 ## Adding a New Source Crawler
 
@@ -122,6 +143,5 @@ uv run python -m lncrawl sources list   # confirm registration
 
 - **Lazy imports inside `ctx` properties** are intentional — keeps CLI startup fast and avoids importing the FastAPI/DB stack for `lncrawl crawl`. Don't move imports to module top in `context.py`.
 - **`ruff` config** ([pyproject.toml](pyproject.toml)): line-length 100, double quotes, target py39. Excludes `lncrawl/cloudscraper` (vendored), `lncrawl-web`, `res`, `logs`, `Lightnovels`, `.github`.
-- The web frontend is a **git submodule** ([lncrawl/server/web](lncrawl/server/web) → [lncrawl-web](https://github.com/lncrawl/lncrawl-web)). It has its own CI; backend changes shouldn't touch built assets.
 - README.md is **partially auto-generated** (the source list and CLI help blocks). Don't hand-edit those regions; regenerate via the appropriate script.
 - The vendored [lncrawl/cloudscraper/](lncrawl/cloudscraper/) is a fork — apply upstream-style patches there rather than refactoring.

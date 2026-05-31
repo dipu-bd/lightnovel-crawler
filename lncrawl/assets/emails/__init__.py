@@ -31,3 +31,8 @@ def job_full_novel_template():
 @lru_cache(1)
 def job_status_template():
     return get_jinja2_env().get_template("job_status.html.j2")
+
+
+@lru_cache(1)
+def invite_template():
+    return get_jinja2_env().get_template("invite.html.j2")

@@ -2,6 +2,7 @@ from datetime import datetime, timedelta, timezone
 import logging
 import secrets
 from typing import Any, Dict, List, Optional
+from urllib.parse import urlencode
 
 from jose import jwt
 from passlib.context import CryptContext
@@ -307,6 +308,19 @@ class UserService:
         base_url = ctx.config.server.base_url
         link = f"{base_url}/reset-password?token={token}"
         ctx.mail.send_reset_password_link(email, link)
+
+    def send_invite_email(self, inviter: User, recipient_email: str) -> None:
+        with ctx.db.session() as sess:
+            q = sa.select(sa.func.count()).where(User.email == recipient_email)
+            if sess.exec(q).one() != 0:
+                raise ServerErrors.user_exists
+
+        token = self.get_signup_token(inviter)
+        base_url = ctx.config.server.base_url
+        search = urlencode({"referrer": token, "email": recipient_email})
+        link = f"{base_url}/signup?{search}"
+        inviter_name = inviter.name or inviter.email
+        ctx.mail.send_invite(recipient_email, inviter_name, link)
 
     def get_signup_token(self, user: User) -> str:
         day = 24 * 3600 * 1000

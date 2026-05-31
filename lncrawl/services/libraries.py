@@ -96,6 +96,16 @@ class LibraryService:
         is_public: bool = False,
     ) -> Library:
         with ctx.db.session() as sess:
+            limit = ctx.tier.max_libraries(user)
+            if limit is not None:
+                count = sess.scalar(
+                    sa.select(sa.func.count())
+                    .select_from(Library)
+                    .where(Library.user_id == user.id)
+                )
+                if count and count >= limit:
+                    raise ServerErrors.library_limit_reached
+
             library = Library(
                 user_id=user.id,
                 name=name.strip(),
@@ -213,6 +223,10 @@ class LibraryService:
             novel = sess.get(Novel, novel_id)
             if not novel:
                 raise ServerErrors.no_such_novel
+
+            limit = ctx.tier.max_novels_per_library(user)
+            if limit is not None and library.extra.get("novel_count", 0) >= limit:
+                raise ServerErrors.novel_limit_reached
 
             existing = sess.scalar(
                 sa.select(LibraryNovel).where(

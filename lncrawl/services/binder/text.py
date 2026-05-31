@@ -4,7 +4,7 @@ from threading import Event
 import zipfile
 
 from ...context import ctx
-from ...dao import Artifact
+from ...dao import Artifact, LanguageCode
 from ...exceptions import AbortedException
 from ...utils.html_tools import extract_text
 
@@ -15,16 +15,24 @@ def make_text(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     out_file = ctx.files.resolve(artifact.output_file)
     tmp_file = working_dir / out_file.name
 
-    novel = ctx.novels.get(artifact.novel_id)
+    language = LanguageCode(artifact.language) if artifact.language else None
+    novel = ctx.novels.get(artifact.novel_id, language)
     with zipfile.ZipFile(tmp_file, "w", zipfile.ZIP_DEFLATED) as zipf:
         if signal.is_set():
             raise AbortedException()
-        for volume in ctx.volumes.list(artifact.novel_id):
+        for volume in ctx.volumes.list(artifact.novel_id, language=language):
             if signal.is_set():
                 raise AbortedException()
-            for chapter in ctx.chapters.list(volume_id=volume.id):
-                if chapter.is_available:
+            for chapter in ctx.chapters.list(volume_id=volume.id, language=language):
+                content: str = ""
+                if language:
+                    translation = ctx.chapters.get_chapter_translation(chapter, language)
+                    if translation and translation.is_available:
+                        content = ctx.files.load_text(translation.content_file)
+                elif chapter.is_available:
                     content = ctx.files.load_text(chapter.content_file)
+
+                if content:
                     content = chapter.title + "\n\n" + extract_text(content)
                     chapter_file = f"{volume.serial:03}/{chapter.serial:05}.txt"
                     zipf.writestr(chapter_file, content.encode())
@@ -33,14 +41,14 @@ def make_text(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
             raise AbortedException()
         for image in ctx.images.list(novel_id=artifact.novel_id):
             if image.is_available:
-                content = ctx.files.load(image.image_file)
-                zipf.writestr(f"images/{image.id}.jpg", content)
+                img_data = ctx.files.load(image.image_file)
+                zipf.writestr(f"images/{image.id}.jpg", img_data)
 
         if signal.is_set():
             raise AbortedException()
         if novel.cover_available:
-            content = ctx.files.load(novel.cover_file)
-            zipf.writestr("cover.jpg", content)
+            img_data = ctx.files.load(novel.cover_file)
+            zipf.writestr("cover.jpg", img_data)
 
         if signal.is_set():
             raise AbortedException()

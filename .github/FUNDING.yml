@@ -2,12 +2,8 @@
 
 # Cryptocurrency donations: Bitcoin (BTC), Ethereum (ETH), Tether USD (USDT),
 # USD Coin (USDC), Solana (SOL), and Litecoin (LTC)
-custom:
-  [
-    "https://paypal.me/bitan0n",
-    "https://github.com/lncrawl/lightnovel-crawler/blob/dev/DONATIONS.md",
-  ]
-github: # Replace with up to 4 GitHub Sponsors-enabled usernames e.g., [user1, user2]
+github: [dipu-bd]
+custom: ["https://paypal.me/bitan0n"]
 patreon: # Replace with a single Patreon username
 open_collective: # Replace with a single Open Collective username
 ko_fi: # Replace with a single KoFi username

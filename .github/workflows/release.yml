@@ -18,8 +18,14 @@ jobs:
     permissions:
       contents: read
 
+  sync-web:
+    uses: ./.github/workflows/web.yml
+    permissions:
+      contents: write
+    secrets: inherit
+
   build-docker:
-    needs: validate
+    needs: [validate, sync-web]
     uses: ./.github/workflows/build-docker.yml
     permissions:
       contents: read
@@ -27,15 +33,13 @@ jobs:
 
   build-windows:
     name: Build & Publish (Windows)
-    needs: validate
+    needs: [validate, sync-web]
     runs-on: windows-latest
     permissions:
       contents: write
 
     steps:
       - uses: actions/checkout@v6
-        with:
-          submodules: recursive
 
       - name: 🧰 Install OpenSSL
         run: choco install -y --no-progress openssl
@@ -43,10 +47,10 @@ jobs:
       - name: 🐍 Install uv & Python
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
           enable-cache: true
 
-      - name: 🏗️ Build Executable
+      - name: 🏗️ Build Executable (onedir)
         env:
           PYTHONIOENCODING: utf-8
           UV_PROJECT_ENVIRONMENT: .venv
@@ -54,7 +58,14 @@ jobs:
           uv sync --all-extras --all-groups
           uv run python -m build -w
           uv run python setup_pyi.py
-          .\dist\lncrawl.exe -ll sources list
+          .\dist\lncrawl\lncrawl.exe -ll sources list
+
+      - name: 📦 Build Installer
+        run: |
+          $version = (Get-Content "lncrawl/VERSION").Trim()
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
+            "installer\installer.iss" `
+            "/DMyAppVersion=$version"
 
       - name: 📦 Upload Artifact
         uses: actions/upload-artifact@v7
@@ -73,20 +84,18 @@ jobs:
 
   build-mac:
     name: Build & Publish (MacOS)
-    needs: validate
+    needs: [validate, sync-web]
     runs-on: macos-latest
     permissions:
       contents: write
 
     steps:
       - uses: actions/checkout@v6
-        with:
-          submodules: recursive
 
       - name: 🐍 Install uv & Python
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
           enable-cache: true
 
       - name: 🏗️ Build Executable
@@ -117,20 +126,18 @@ jobs:
 
   build-linux:
     name: Build & Publish (Linux)
-    needs: validate
+    needs: [validate, sync-web]
     runs-on: ubuntu-latest
     permissions:
       contents: write
 
     steps:
       - uses: actions/checkout@v6
-        with:
-          submodules: recursive
 
       - name: 🐍 Install uv & Python
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
           enable-cache: true
 
       - name: 🏗️ Build Executable
@@ -171,13 +178,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v6
-        with:
-          submodules: recursive
 
       - name: 🐍 Install uv & Python
         uses: astral-sh/setup-uv@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
           enable-cache: true
 
       - name: 🏗️ Build Executable

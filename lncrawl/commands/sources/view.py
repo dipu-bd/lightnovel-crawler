@@ -1,8 +1,5 @@
 from datetime import datetime
 
-import questionary
-from rich import print
-from rich.text import Text
 import typer
 
 from ...context import ctx
@@ -15,6 +12,10 @@ def view_one(
         help="The source name, url, or file path to find exact source.",
     ),
 ):
+    import questionary
+    from rich import print
+    from rich.text import Text
+
     # Find unique source
     sources = ctx.sources.list(query, include_rejected=True)
     if not sources:

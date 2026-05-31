@@ -5,7 +5,7 @@ from threading import Event
 from typing import Callable, Dict, Optional, Set
 
 from ...context import ctx
-from ...dao import Artifact, OutputFormat
+from ...dao import Artifact, LanguageCode, OutputFormat
 from ...exceptions import ServerErrors
 from ...utils.file_tools import safe_filename
 from .calibre import convert_epub, is_calibre_available
@@ -62,6 +62,7 @@ class BinderService:
         job_id: Optional[str] = None,
         user_id: Optional[str] = None,
         epub: Optional[Artifact] = None,
+        language: Optional[LanguageCode] = None,
         signal=Event(),
     ) -> Artifact:
         make = archive_maker[format]
@@ -69,6 +70,8 @@ class BinderService:
             raise ServerErrors.format_not_available
 
         file_name = safe_filename(novel_title).title()
+        if language:
+            file_name += f".{language}"
         file_name += f".{format}"
         if format in requires_zip:
             file_name += ".zip"
@@ -78,10 +81,11 @@ class BinderService:
             user_id=user_id,
             job_id=job_id,
             format=format,
+            language=language,
             file_name=file_name,
         )
 
-        working_dir = ctx.config.app.output_path / "tmp" / artifact.id
+        working_dir = ctx.config.app.app_dir / "tmp" / artifact.id
         try:
             shutil.rmtree(working_dir, True)
             working_dir.mkdir(parents=True)

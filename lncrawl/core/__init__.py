@@ -1,4 +1,4 @@
-from .browser import Browser, BrowserTemplate
+from .browser import Browser
 from .cleaner import TextCleaner
 from .crawler import Crawler
 from .legacy import LegacyCrawler
@@ -6,7 +6,7 @@ from .models import Chapter, CombinedSearchResult, Novel, SearchResult, Volume
 from .scraper import Scraper
 from .soup import PageSoup
 from .taskman import TaskManager
-from .template import CrawlerTemplate, SoupTemplate
+from .template import BrowserTemplate, CrawlerTemplate, SoupTemplate
 
 __all__ = [
     "Crawler",

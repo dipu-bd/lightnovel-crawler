@@ -1,7 +1,9 @@
+from typing import Optional
+
 from fastapi import APIRouter, Path, Query, Security
 
 from ...context import ctx
-from ...dao import Chapter, Job, User, Volume
+from ...dao import ActivityType, Chapter, Job, LanguageCode, User, Volume
 from ..models import Paginated
 from ..security import ensure_user
 
@@ -12,7 +14,9 @@ router = APIRouter()
 @router.get("/{volume_id}", summary="Returns a volume details")
 def get_volume(
     volume_id: str = Path(),
+    user: User = Security(ensure_user),
 ) -> Volume:
+    ctx.activity.record(user.id, ActivityType.VOLUME, volume_id)
     return ctx.volumes.get(volume_id)
 
 
@@ -29,5 +33,11 @@ async def get_volume_chapters(
     volume_id: str = Path(),
     offset: int = Query(default=0),
     limit: int = Query(default=20, le=100),
+    language: Optional[LanguageCode] = Query(default=None),
 ) -> Paginated[Chapter]:
-    return ctx.chapters.list_page(limit=limit, offset=offset, volume_id=volume_id)
+    return ctx.chapters.list_page(
+        limit=limit,
+        offset=offset,
+        volume_id=volume_id,
+        language=language,
+    )

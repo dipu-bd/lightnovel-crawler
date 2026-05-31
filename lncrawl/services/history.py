@@ -65,12 +65,16 @@ class ReadHistoryService:
                 return
 
     def prune(self, user_id: str) -> None:
+        user = ctx.users.get(user_id)
+        limit = ctx.tier.max_read_history(user)
+        if limit is None:
+            return
         with ctx.db.session() as sess:
             tbd = (
                 select(ReadHistory.id)
                 .where(ReadHistory.user_id == user_id)
                 .order_by(desc(ReadHistory.created_at))
-                .offset(ctx.config.app.history_limit_per_user)
+                .offset(limit)
                 .scalar_subquery()
             )
             stmt = sa_delete(ReadHistory).where(col(ReadHistory.id).in_(tbd))

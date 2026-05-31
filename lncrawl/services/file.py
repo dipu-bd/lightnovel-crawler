@@ -18,7 +18,7 @@ class FileService:
 
     @property
     def root(self):
-        return ctx.config.app.output_path
+        return ctx.config.app.app_dir
 
     def resolve(self, file: StrPath) -> Path:
         if isinstance(file, str):

@@ -1,9 +1,13 @@
+# --------------------------------------------------------------------------------------
+# NOTE: This module is no longer in use.
+# the source creation method needs to be refactored before it can be reactivated.
+# --------------------------------------------------------------------------------------
+
 from enum import Enum
 import logging
 import re
 from typing import List, Optional
 
-from openai import OpenAI
 import questionary
 from rich import print
 import typer
@@ -379,6 +383,8 @@ Override any `parse_*`, `select_*`, `build_search_url`, or `download_chapter` wh
 
 
 def _fill_with_openai(url: str, stub: str) -> str:
+    from openai import OpenAI
+
     client = OpenAI(api_key=ctx.config.app.openai_key)
 
     print(f"[i]Complete the stub from [cyan]{url}[/cyan][/i]")

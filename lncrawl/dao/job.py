@@ -3,8 +3,10 @@ from typing import Optional
 from pydantic import computed_field
 import sqlmodel as sa
 
+from ..enums import JobPriority, JobStatus, JobType, LanguageCode
 from ._base import BaseTable
-from .enums import JobPriority, JobStatus, JobType
+
+_LANGUAGE_CODES = frozenset(LanguageCode)
 
 
 class Job(BaseTable, table=True):
@@ -76,6 +78,7 @@ class Job(BaseTable, table=True):
     @computed_field  # type: ignore[misc]
     @property
     def job_title(self) -> str:
+        # Require the URL only
         if self.type == JobType.NOVEL or self.type == JobType.FULL_NOVEL:
             return self.extra["url"]
 
@@ -86,11 +89,10 @@ class Job(BaseTable, table=True):
             else:
                 return f"{urls[0]} & {len(urls) - 1} more"
 
-        novel_title = self.extra.get("novel_title")
+        # Require the Novel Title
+        novel_title = self.extra.get("novel_title") or ""
         if novel_title:
-            novel_title += " · "
-        else:
-            novel_title = "Fetch "
+            novel_title = f'"{novel_title}" · '
 
         if self.type == JobType.VOLUME:
             volume_serial = self.extra.get("volume_serial") or ""
@@ -109,6 +111,7 @@ class Job(BaseTable, table=True):
                 return f"{novel_title}Chapter {chapter_serial}"
             else:
                 return f"{novel_title}Chapter"
+
         if self.type == JobType.CHAPTER_BATCH:
             ids = self.extra.get("chapter_ids") or []
             return f"{novel_title}{len(ids)} Chapters"
@@ -130,5 +133,42 @@ class Job(BaseTable, table=True):
                 return f"{novel_title}{', '.join(formats)}"
             else:
                 return f"{novel_title}{', '.join(formats[:2])} & {len(formats) - 2} more"
+
+        # Require Language for translation
+        language = self.extra.get("language") or ""
+        if language in _LANGUAGE_CODES:
+            language = f" → {LanguageCode(language).name.title()}"
+
+        if self.type == JobType.NOVEL_TRANSLATION or self.type == JobType.FULL_NOVEL_TRANSLATION:
+            return f"Translate {novel_title[:-3]}{language}"
+
+        if (
+            self.type == JobType.NOVEL_TRANSLATION_BATCH
+            or self.type == JobType.FULL_NOVEL_TRANSLATION_BATCH
+        ):
+            novel_ids = self.extra.get("novel_ids") or []
+            return f"Translate {len(novel_ids)} novels{language}"
+
+        if self.type == JobType.VOLUME_TRANSLATION:
+            volume_serial = self.extra.get("volume_serial") or ""
+            if volume_serial:
+                return f"Translate {novel_title}Volume {volume_serial}{language}"
+            else:
+                return f"Translate {novel_title}Volume{language}"
+
+        if self.type == JobType.VOLUME_TRANSLATION_BATCH:
+            ids = self.extra.get("volume_ids") or []
+            return f"Translate {novel_title}{len(ids)} Volumes{language}"
+
+        if self.type == JobType.CHAPTER_TRANSLATION:
+            chapter_serial = self.extra.get("chapter_serial")
+            if chapter_serial:
+                return f"Translate {novel_title}Chapter {chapter_serial}{language}"
+            else:
+                return f"Translate {novel_title}Chapter{language}"
+
+        if self.type == JobType.CHAPTER_TRANSLATION_BATCH:
+            ids = self.extra.get("chapter_ids") or []
+            return f"Translate {novel_title}{len(ids)} Chapters{language}"
 
         return f"Job {self.id}"

@@ -1,14 +1,10 @@
 from functools import cached_property
 import logging
 from pathlib import Path
+import time
 from typing import Any, Mapping, Optional, Sequence
-from urllib.parse import urlparse
 
-from alembic import command
-from alembic.autogenerate import compare_metadata
-from alembic.config import Config
-from alembic.runtime.migration import MigrationContext
-from alembic.script import ScriptDirectory
+from sqlalchemy.engine import make_url
 import sqlmodel as sa
 
 from ..context import ctx
@@ -82,6 +78,8 @@ class DB:
     def bootstrap(self, reset_on_failure: bool = False):
         self._ensure_database()
         try:
+            from alembic import command
+
             base = self.base_revision()
             if base and self.has_any_tables() and not self.current_revision():
                 command.stamp(self.alembic_config, base)
@@ -95,7 +93,9 @@ class DB:
             self.bootstrap()
 
     @cached_property
-    def alembic_config(self) -> Config:
+    def alembic_config(self):
+        from alembic.config import Config
+
         cfg = Config()
         migration_path = Path(__file__).parent.parent / "migrations"
         cfg.set_main_option("sqlalchemy.url", ctx.config.db.url)
@@ -113,6 +113,8 @@ class DB:
 
     @cached_property
     def alembic_script(self):
+        from alembic.script import ScriptDirectory
+
         return ScriptDirectory.from_config(self.alembic_config)
 
     def base_revision(self):
@@ -126,6 +128,8 @@ class DB:
             return bool(sa.inspect(conn).get_table_names())
 
     def current_revision(self):
+        from alembic.runtime.migration import MigrationContext
+
         with self.engine.connect() as conn:
             context = MigrationContext.configure(conn)
             return context.get_current_revision()
@@ -167,19 +171,20 @@ class DB:
 
     def _ensure_database(self, max_retries=10) -> None:
         """Create the database if it doesn't exist (MySQL and PostgreSQL only)."""
-        db_url = ctx.config.db.url
-        logger.info(f'Database URL: "{db_url}"')
+        url = make_url(ctx.config.db.url)
+        logger.info(f"Database: '{url}'")
 
-        # Parse the database URL
-        parsed = urlparse(db_url)
-        scheme = parsed.scheme
-        database = parsed.path.lstrip("/")
+        scheme = url.drivername
+        database = url.database
+
+        if "sqlite" in scheme:
+            return
+
         if not database:
             raise ValueError("No database name found in the URL")
 
-        # Create a connection URL without the database name
         if "mysql" in scheme:
-            server_url = db_url.replace(f"/{database}", "")
+            server_url = url.set(database=None)
             check_query = sa.text(
                 "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = :db_name"
             )
@@ -187,45 +192,59 @@ class DB:
                 f"CREATE DATABASE `{database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
             )
         elif "postgres" in scheme:
-            server_url = db_url.replace(f"/{database}", "/postgres")
+            server_url = url.set(database="postgres")
             check_query = sa.text("SELECT 1 FROM pg_database WHERE datname = :db_name")
             create_query = sa.text(f'CREATE DATABASE "{database}"')
-        elif "sqlite" in scheme:
-            return  # sqlite doesn't need database creation
         else:
-            raise ValueError("Unsupported database")
+            raise ValueError(f"Unsupported database scheme: {scheme}")
 
-        # Try to connect to the server and check/create database
-        engine = self._create_engine(server_url)
+        engine = self._create_engine(server_url.render_as_string(hide_password=False))
         for attempt in range(1, max_retries + 1):
             try:
-                with engine.begin() as conn:
-                    logger.debug(f"Ensuring database '{database}' exists...")
+                logger.debug(f"Ensuring database '{database}' exists...")
+                # AUTOCOMMIT is required for PostgreSQL; it is harmless for MySQL.
+                with engine.connect().execution_options(isolation_level="AUTOCOMMIT") as conn:
                     result = conn.execute(check_query, {"db_name": database})
-                    exists = result.fetchone() is not None
-                    if not exists:
+                    if result.fetchone() is None:
                         logger.info(f"Creating database '{database}'.")
                         conn.execute(create_query)
                         logger.info(f"Database '{database}' created.")
                 engine.dispose()
                 return
-            except Exception as e:
+            except BaseException as e:
                 if attempt == max_retries:
                     engine.dispose()
                     raise RuntimeError("Could not create database") from e
-                else:
-                    logger.info(f"Could not create database. Retrying... {attempt}/{max_retries}")
+                logger.critical(
+                    f"Could not connect to database. Retrying... ({attempt}/{max_retries})",
+                    exc_info=ctx.logger.is_debug,
+                )
+                time.sleep(1)
 
     def _verify_schema(self):
         logger.debug("Verifying database schema...")
+        from alembic.autogenerate import compare_metadata
+        from alembic.runtime.migration import MigrationContext
+        from sqlalchemy import Enum as SAEnum
+
+        dialect = self.engine.dialect.name
+
+        def _compare_type(*args):
+            # SQLite has no native enum type — enums are stored as VARCHAR
+            metadata_type = args[4]
+            if dialect == "sqlite" and isinstance(metadata_type, SAEnum):
+                return False
+            return None
+
         with self.engine.connect() as conn:
             mc = MigrationContext.configure(
                 conn,
                 opts={
-                    "compare_type": True,
+                    "compare_type": _compare_type,
                     # "compare_server_default": True,
                 },
             )
+
             drift = list(compare_metadata(mc, SQLModel.metadata))
             if drift:
                 logger.warning(f"Detected {len(drift)} schema drift(s) against models:")

@@ -1,8 +1,6 @@
-import gzip
 import hashlib
 import importlib.util
 import inspect
-import io
 import json
 import logging
 from pathlib import Path
@@ -28,13 +26,6 @@ def save_source(file: Path, content: CrawlerIndex):
     file.parent.mkdir(parents=True, exist_ok=True)
     json_str = content.model_dump_json(indent=2)
     file.write_text(json_str, encoding="utf-8")
-
-
-def fetch_online_source() -> CrawlerIndex:
-    compressed = ctx.http.get(ctx.config.crawler.index_file_download_url)
-    with gzip.GzipFile(fileobj=io.BytesIO(compressed), mode="rb") as fp:
-        json_str = fp.read().decode()
-        return CrawlerIndex.model_validate_json(json_str)
 
 
 def load_offline_source(check_user=True) -> CrawlerIndex:

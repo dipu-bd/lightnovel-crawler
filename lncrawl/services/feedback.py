@@ -4,7 +4,7 @@ import sqlmodel as sa
 
 from ..context import ctx
 from ..dao import Feedback, FeedbackStatus, FeedbackType, User
-from ..dao.enums import UserRole
+from ..enums import UserRole
 from ..exceptions import ServerErrors
 from ..server.models import Paginated
 

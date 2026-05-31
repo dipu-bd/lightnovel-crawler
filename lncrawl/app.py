@@ -22,6 +22,7 @@ app = typer.Typer(
     context_settings={
         "help_option_names": ["-h", "--help"],
     },
+    no_args_is_help=True,
     pretty_exceptions_short=True,
     pretty_exceptions_enable=True,
     pretty_exceptions_show_locals=False,
@@ -38,7 +39,7 @@ app.add_typer(server)
 
 
 # Define main command
-@app.callback(invoke_without_command=True)
+@app.callback()
 def main(
     context: typer.Context,
     log_level: Annotated[
@@ -76,8 +77,9 @@ def main(
         os.environ["LNCRAWL_CONFIG"] = str(config)
     ctx.config.load()
 
-    # start server if no subcommand is invoked
-    if not context.invoked_subcommand:
-        from .server.webview import start
 
-        start()
+@app.command("app", help="Launches the web application.")
+def start_app():
+    from .server.webview import start
+
+    start()

@@ -5,7 +5,7 @@ from fastapi import APIRouter, Body, Path, Query, Security
 from ...context import ctx
 from ...dao import User
 from ...exceptions import ServerErrors
-from ..models import CreateRequest, Paginated, UpdateRequest
+from ..models import CreateRequest, Paginated, UpdateRequest, UserActivityStats
 from ..security import ensure_user
 
 # The root router
@@ -62,6 +62,13 @@ def update_user(
         body.is_active = None
     ctx.users.update(user_id, body)
     return True
+
+
+@router.get("/{user_id}/activity-stats", summary="Get activity stats for a user")
+def get_user_activity_stats(
+    user_id: str = Path(),
+) -> UserActivityStats:
+    return ctx.activity.get_user_stats(user_id)
 
 
 @router.delete("/{user_id}", summary="Delete the user")

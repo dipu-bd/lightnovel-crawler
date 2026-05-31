@@ -58,10 +58,12 @@ def random_color(
     weights=set(ColorWeight),
 ) -> Tuple[int, int, int]:
     available_names = set(material_colors.keys())
-    name = random.choice(list(available_names.intersection(names)) or list(available_names))
+    selected_names = available_names.intersection(names)
+    name = random.choice(list(selected_names or available_names))
 
     available_weights = set(material_colors[name].keys())
-    weight = random.choice(list(available_weights.intersection(weights)) or list(available_weights))
+    selected_weights = available_names.intersection(weights)
+    weight = random.choice(list(selected_weights or available_weights))
 
     r, g, b = material_colors[name][weight]
     return (r, g, b)

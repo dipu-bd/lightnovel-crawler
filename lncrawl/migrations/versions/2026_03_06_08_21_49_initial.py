@@ -12,7 +12,16 @@ from sqlalchemy.dialects import postgresql
 import sqlmodel as sa
 from sqlmodel.sql.sqltypes import AutoString
 
-from lncrawl.dao import enums
+from lncrawl.enums import (
+    FeedbackStatus,
+    FeedbackType,
+    JobPriority,
+    JobStatus,
+    JobType,
+    OutputFormat,
+    UserRole,
+    UserTier,
+)
 
 # revision identifiers, used by Alembic.
 revision: str = "4d43af0bd879"
@@ -39,8 +48,8 @@ def upgrade() -> None:
         sa.Column("password", AutoString(), nullable=False),
         sa.Column("email", AutoString(), nullable=False),
         sa.Column("name", AutoString(), nullable=True),
-        sa.Column("role", sa.Enum(enums.UserRole, name="userrole"), nullable=False),
-        sa.Column("tier", sa.Enum(enums.UserTier, name="usertier"), nullable=False),
+        sa.Column("role", sa.Enum(UserRole, name="userrole"), nullable=False),
+        sa.Column("tier", sa.Enum(UserTier, name="usertier"), nullable=False),
         sa.Column("is_active", sa.Boolean(), nullable=False),
         sa.ForeignKeyConstraint(
             ["referrer_id"], ["users.id"], ondelete="SET NULL", name=op.f("users_referrer_id_fkey")
@@ -95,9 +104,9 @@ def upgrade() -> None:
         sa.Column("user_id", AutoString(), nullable=False),
         sa.Column("parent_job_id", AutoString(), nullable=True),
         sa.Column("depends_on", AutoString(), nullable=True),
-        sa.Column("type", sa.Enum(enums.JobType, name="jobtype"), nullable=False),
-        sa.Column("priority", sa.Enum(enums.JobPriority, name="jobpriority"), nullable=False),
-        sa.Column("status", sa.Enum(enums.JobStatus, name="jobstatus"), nullable=False),
+        sa.Column("type", sa.Enum(JobType, name="jobtype"), nullable=False),
+        sa.Column("priority", sa.Enum(JobPriority, name="jobpriority"), nullable=False),
+        sa.Column("status", sa.Enum(JobStatus, name="jobstatus"), nullable=False),
         sa.Column("is_done", sa.Boolean(), nullable=False),
         sa.Column("error", AutoString(), nullable=True),
         sa.Column("started_at", sa.BigInteger(), nullable=True),
@@ -305,7 +314,7 @@ def upgrade() -> None:
         sa.Column("novel_id", AutoString(), nullable=False),
         sa.Column("job_id", AutoString(), nullable=True),
         sa.Column("user_id", AutoString(), nullable=True),
-        sa.Column("format", sa.Enum(enums.OutputFormat, name="outputformat"), nullable=False),
+        sa.Column("format", sa.Enum(OutputFormat, name="outputformat"), nullable=False),
         sa.Column("file_name", AutoString(), nullable=False),
         sa.ForeignKeyConstraint(
             ["job_id"], ["jobs.id"], ondelete="SET NULL", name=op.f("artifacts_job_id_fkey")
@@ -368,8 +377,8 @@ def upgrade() -> None:
         sa.Column("updated_at", sa.BigInteger(), nullable=False),
         sa.Column("extra", sa.JSON(), nullable=False),
         sa.Column("user_id", AutoString(), nullable=False),
-        sa.Column("type", sa.Enum(enums.FeedbackType, name="feedbacktype"), nullable=False),
-        sa.Column("status", sa.Enum(enums.FeedbackStatus, name="feedbackstatus"), nullable=False),
+        sa.Column("type", sa.Enum(FeedbackType, name="feedbacktype"), nullable=False),
+        sa.Column("status", sa.Enum(FeedbackStatus, name="feedbackstatus"), nullable=False),
         sa.Column("subject", AutoString(), nullable=False),
         sa.Column("message", sa.Text(), nullable=False),
         sa.Column("admin_notes", sa.Text(), nullable=True),

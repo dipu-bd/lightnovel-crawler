@@ -27,13 +27,10 @@ These workflows run automatically on pushes and pull requests:
 | -------------------- | ------------- | --------------------------------------------- |
 | Lint & Test (Python) | `lint.yml` | Runs ruff, builds wheel, tests installation |
 
-The web frontend lives in the `lncrawl/server/web` submodule ([lncrawl-web](https://github.com/lncrawl/lncrawl-web)); its CI is in that repository.
-
 ### Other Workflows
 
 - **`build-server.yml`** – Builds and pushes the server Docker image (main repo only).
 - **`docker-base.yml`** – Builds the Calibre base image for multi-arch.
-- **`submodules.yml`** – Updates the `lncrawl/server/web` submodule (triggered by `repository_dispatch`).
 - **`index-gen.yml`** – Generates source search index (main repo).
 
 ### Build and Publish (`release.yml`)

@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Query, Security
 from fastapi.responses import JSONResponse
 from pydantic import HttpUrl
 from starlette.responses import FileResponse
@@ -16,7 +16,7 @@ router = APIRouter()
 @router.get(
     "/supported-sources",
     summary="Returns a list of supported sources",
-    dependencies=[Depends(ensure_user)],
+    dependencies=[Security(ensure_user)],
     response_model=List[SourceItem],
 )
 def list_supported_sources():

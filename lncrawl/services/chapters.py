@@ -3,8 +3,9 @@ from typing import Any, Dict, List, Optional
 import sqlmodel as sq
 
 from ..context import ctx
-from ..core import Chapter as CrawlerChapter
-from ..dao import Chapter, User, Volume
+from ..core import Chapter as CrawlerChapter, PageSoup
+from ..dao import Chapter, Job, LanguageCode, User, Volume
+from ..dao.chapter import ChapterTranslation
 from ..exceptions import ServerErrors
 from ..server.models import Paginated, ReadChapterResponse
 
@@ -19,6 +20,7 @@ class ChapterService:
         novel_id: Optional[str] = None,
         volume_id: Optional[str] = None,
         is_crawled: Optional[bool] = None,
+        language: Optional[LanguageCode] = None,
     ) -> List[Chapter]:
         with ctx.db.session() as sess:
             stmt = sq.select(Chapter)
@@ -29,8 +31,9 @@ class ChapterService:
             if is_crawled is not None:
                 stmt = stmt.where(sq.col(Chapter.is_done).is_(is_crawled))
             stmt = stmt.order_by(sq.col(Chapter.serial).asc())
-            items = sess.exec(stmt).all()
-            return list(items)
+            items = list(sess.exec(stmt).all())
+        self._put_translation(items, language)
+        return items
 
     def list_page(
         self,
@@ -40,6 +43,7 @@ class ChapterService:
         novel_id: Optional[str] = None,
         volume_id: Optional[str] = None,
         is_crawled: Optional[bool] = None,
+        language: Optional[LanguageCode] = None,
     ) -> Paginated[Chapter]:
         with ctx.db.session() as sess:
             stmt = sq.select(Chapter)
@@ -65,7 +69,10 @@ class ChapterService:
             stmt = stmt.offset(offset).limit(limit)
 
             total = sess.exec(cnt).one()
-            items = sess.exec(stmt).all()
+            items = list(sess.exec(stmt).all())
+
+            # get translations
+            self._put_translation(items, language)
 
             return Paginated(
                 total=total,
@@ -131,14 +138,82 @@ class ChapterService:
             sess.delete(chapter)
             sess.commit()
 
-    def read(self, user: User, chapter_id: str) -> ReadChapterResponse:
-        chapter = self.get(chapter_id)
-        novel = ctx.novels.get(chapter.novel_id)
+    def _put_translation(
+        self,
+        items: List[Chapter],
+        language: Optional[LanguageCode],
+    ):
+        if language and items:
+            novel_id = items[0].novel_id
+            serials = [item.serial for item in items]
+            with ctx.db.session() as sess:
+                translations = sess.exec(
+                    sq.select(ChapterTranslation).where(
+                        ChapterTranslation.novel_id == novel_id,
+                        ChapterTranslation.language == language,
+                        sq.col(ChapterTranslation.chapter_serial).in_(serials),
+                    )
+                ).all()
+                serial_title_map = {t.chapter_serial: t.chapter_title for t in translations}
+            for item in items:
+                item.title = serial_title_map.get(item.serial) or item.title
 
-        content = None
+    def get_chapter_translation(self, chapter: Chapter, language: LanguageCode):
+        with ctx.db.session() as sess:
+            return sess.exec(
+                sq.select(ChapterTranslation)
+                .where(
+                    ChapterTranslation.novel_id == chapter.novel_id,
+                    ChapterTranslation.chapter_serial == chapter.serial,
+                    ChapterTranslation.language == language,
+                )
+                .limit(1)
+            ).first()
+
+    def read(
+        self,
+        user: User,
+        chapter_id: str,
+        *,
+        auto_fetch: Optional[bool] = None,
+        language: Optional[LanguageCode] = None,
+    ) -> ReadChapterResponse:
+        if auto_fetch is None:
+            auto_fetch = ctx.tier.auto_fetch_enabled(user)
+
+        chapter = self.get(chapter_id)
+        ctx.history.add(user.id, chapter.id)
+
+        job: Optional[Job] = None
+        content: Optional[str] = None
         if chapter.is_available:
             content = ctx.files.load_text(chapter.content_file)
+        elif auto_fetch:
+            job = ctx.jobs.get_chapter_job(user.id, chapter_id)
+            if not job:
+                job = ctx.jobs.fetch_chapter(user, chapter_id)
 
+        if language:
+            content = None
+            chapter_translation = self.get_chapter_translation(chapter, language)
+            if chapter_translation and chapter_translation.is_available:
+                chapter.title = chapter_translation.chapter_title or chapter.title
+                content = ctx.files.load_text(chapter_translation.content_file)
+            elif auto_fetch:
+                fetch_job_id = job.id if job else None
+                translate_job = ctx.jobs.get_chapter_translation_job(user.id, chapter_id, language)
+                if not translate_job:
+                    translate_job = ctx.jobs.translate_chapter(
+                        user, chapter_id, language, depends_on=fetch_job_id
+                    )
+                if not job or job.is_done:
+                    job = translate_job
+
+        word_count: Optional[int] = None
+        if content:
+            word_count = PageSoup.create(content).word_count()
+
+        novel = ctx.novels.get(chapter.novel_id, language)
         with ctx.db.session() as sess:
             previous_id = sess.exec(
                 sq.select(Chapter.id)
@@ -153,12 +228,13 @@ class ChapterService:
                 .limit(1)
             ).first()
 
-        ctx.history.add(user.id, chapter.id)
-
         return ReadChapterResponse(
+            job=job,
             novel=novel,
             chapter=chapter,
             content=content,
+            language=language,
+            word_count=word_count,
             next_id=next_id,
             previous_id=previous_id,
         )

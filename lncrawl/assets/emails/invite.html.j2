@@ -1,0 +1,49 @@
+{% extends "layout.html.j2" %}
+
+{% block content %}
+<div style="
+    max-width: 425px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 2rem;
+    text-align: center;
+    letter-spacing: 0.02rem;
+">
+    <div class="title" style="
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 1.5rem;
+    ">
+        You've been invited!
+    </div>
+    <div class="subtitle" style="color: #666; margin-bottom: 0.5rem;">
+        <strong>{{ inviter_name }}</strong> has invited you to join Lightnovel Crawler.
+    </div>
+    <div style="color: #666; margin-bottom: 1.5rem;">
+        Click the button below to create your account.
+    </div>
+    <a href="{{ link }}" target="_blank" style="
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        background: #1d6a3c;
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+    ">
+        Accept Invitation
+    </a>
+    <div style="
+        color: #888;
+        font-size: 0.825rem;
+        margin-top: 0.75rem;
+    ">
+        This invitation link will expire in <strong>7 days</strong>.
+    </div>
+</div>
+{% endblock %}

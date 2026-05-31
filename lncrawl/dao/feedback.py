@@ -2,8 +2,8 @@ from typing import Optional
 
 import sqlmodel as sa
 
+from ..enums import FeedbackStatus, FeedbackType
 from ._base import BaseTable
-from .enums import FeedbackStatus, FeedbackType
 
 
 class Feedback(BaseTable, table=True):

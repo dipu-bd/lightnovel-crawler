@@ -1,0 +1,36 @@
+name: Sync Web
+
+on:
+  workflow_call: {}
+  workflow_dispatch: {}
+  repository_dispatch:
+    types: [web-build-updated]
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
+jobs:
+  sync-web:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: dev
+          fetch-depth: 1
+
+      - name: Fetch web build from lncrawl-web artifacts branch
+        uses: actions/checkout@v6
+        with:
+          repository: lncrawl/lncrawl-web
+          ref: artifacts
+          path: lncrawl/server/web
+          token: ${{ secrets.LNCRAWL_PAT }}
+
+      - name: Commit and Push
+        uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          branch: dev
+          commit_message: Update web build from lncrawl-web artifacts

@@ -1,4 +1,3 @@
-from alembic import command
 from rich import print
 import typer
 
@@ -28,6 +27,8 @@ def app_add(
         help="Migration message.",
     ),
 ):
+    from alembic import command
+
     command.revision(
         config=ctx.db.alembic_config,
         autogenerate=not disable_auto,
@@ -42,6 +43,8 @@ def app_upgrade(
         help='Revision target. "head" to target the most recent',
     ),
 ):
+    from alembic import command
+
     command.upgrade(
         config=ctx.db.alembic_config,
         revision=revision,
@@ -56,6 +59,8 @@ def app_downgrade(
         help='Revision target. "base" to target the first revision.',
     ),
 ):
+    from alembic import command
+
     current = ctx.db.current_revision()
     if not current:
         print("[red]No revisions to downgrade.[/red]")

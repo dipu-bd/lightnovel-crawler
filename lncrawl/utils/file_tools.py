@@ -107,7 +107,10 @@ def safe_filename(name: str) -> str:
             name,
             max_length=255,
             separator=" ",
-            regex_pattern=r'[#<>:"/\\|?*\x00-\x1F]',
+            # Windows forbidden: < > : " / \ | ? *
+            # URL reserved/special: # % & ; = @ ^ ` { } !
+            # Control chars: \x00-\x1F (C0) and \x7F (DEL)
+            regex_pattern=r'[<>:"/\\|?*#%&+;=@^`{}!\x00-\x1F\x7F]',
         ).strip(" .")
         or "untitled"
     )

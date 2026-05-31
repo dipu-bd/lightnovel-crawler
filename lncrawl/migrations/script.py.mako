@@ -6,8 +6,8 @@ Create Date: ${create_date}
 """
 from typing import Sequence, Union
 
-import sqlmodel as sa
 from alembic import op
+import sqlmodel as sa
 ${imports if imports else ""}
 
 # revision identifiers, used by Alembic.

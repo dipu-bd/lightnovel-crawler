@@ -40,12 +40,16 @@ class GithubClient:
         return self._gh
 
     @staticmethod
-    def get_remote_link(file_path: str, branch: str = _DEFAULT_BRANCH):
+    def get_remote_view_link(file_path: str, branch: str = _DEFAULT_BRANCH):
         return f"https://github.com/{_GITHUB_REPO}/blob/{branch}/{file_path.strip('/')}"
 
     @staticmethod
     def get_remote_edit_link(file_path: str, branch: str = _DEFAULT_BRANCH):
         return f"https://github.com/{_GITHUB_REPO}/edit/{branch}/{file_path.strip('/')}"
+
+    @staticmethod
+    def get_remote_raw_link(file_path: str, branch: str = _DEFAULT_BRANCH) -> str:
+        return f"https://raw.githubusercontent.com/{_GITHUB_REPO}/{branch}/{file_path.strip('/')}"
 
     def get_sha(self, branch: str):
         resp = self._gh.get(f"/repos/{_GITHUB_REPO}/git/ref/heads/{branch}")

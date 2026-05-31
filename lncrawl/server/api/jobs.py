@@ -3,27 +3,31 @@ from typing import Optional
 from fastapi import APIRouter, Body, Path, Query, Security
 
 from ...context import ctx
-from ...dao import Job, JobPriority, JobStatus, JobType, User, UserTier
+from ...dao import Job, JobPriority, JobStatus, JobType, User
 from ...exceptions import ServerErrors
 from ..models import (
     FetchChaptersRequest,
     FetchImagesRequest,
-    FetchNovelRequest,
     FetchNovelsRequest,
     FetchVolumesRequest,
     MakeArtifactsRequest,
     Paginated,
+    TranslateChaptersRequest,
+    TranslateNovelsRequest,
+    TranslateVolumesRequest,
 )
 from ..security import ensure_user
-from ..tier import ENABLED_FORMATS
 
 # The root router
 router = APIRouter()
 
 
-@router.get("s", summary="Returns a list of jobs")
+@router.get(
+    "s",
+    summary="Returns a list of jobs",
+    dependencies=[Security(ensure_user)],
+)
 def list_jobs(
-    user: User = Security(ensure_user),
     offset: int = Query(default=0),
     limit: int = Query(default=20, le=100),
     type: Optional[JobType] = Query(default=None),
@@ -89,22 +93,17 @@ def replay_job(
     )
 
 
-@router.post("/create/fetch-novel", summary="Create a job to fetch entire novel")
-def fetch_novel(
-    user: User = Security(ensure_user),
-    body: FetchNovelRequest = Body(),
-) -> Job:
-    url = str(body.url)
-    return ctx.jobs.fetch_novel(user, url, full=body.full)
-
-
 @router.post("/create/fetch-novels", summary="Create a job to fetch multiple novels")
 def fetch_novels(
     user: User = Security(ensure_user),
     body: FetchNovelsRequest = Body(),
 ) -> Job:
     urls = [str(url) for url in body.urls]
-    if body.full and user.tier == UserTier.BASIC:
+    if not urls:
+        raise ServerErrors.no_novels_to_download
+    if len(urls) == 1:
+        return ctx.jobs.fetch_novel(user, urls[0], full=body.full)
+    if body.full and not ctx.tier.full_novel_batch_allowed(user):
         raise ServerErrors.full_novel_not_allowed
     return ctx.jobs.fetch_many_novels(user, *urls, full=body.full)
 
@@ -151,8 +150,61 @@ def fetch_images(
 
 
 @router.post("/create/make-artifacts", summary="Create a job to make novel artifacts")
-def make_artifacts(user: User = Security(ensure_user), body: MakeArtifactsRequest = Body()) -> Job:
-    formats = set(body.formats) & ENABLED_FORMATS[user.tier]
+def make_artifacts(
+    user: User = Security(ensure_user),
+    body: MakeArtifactsRequest = Body(),
+) -> Job:
+    formats = list(set(body.formats) & ctx.tier.enabled_formats(user))
     if len(formats) == 0:
         raise ServerErrors.no_artifacts_to_create
-    return ctx.jobs.make_many_artifacts(user, body.novel_id, *formats)
+    return ctx.jobs.make_many_artifacts(
+        user,
+        body.novel_id,
+        *formats,
+        language=body.language,
+    )
+
+
+@router.post("/create/translate-novels", summary="Create a job to translate novels")
+def translate_novels(
+    user: User = Security(ensure_user),
+    body: TranslateNovelsRequest = Body(),
+) -> Job:
+    if not ctx.tier.translation_enabled(user):
+        raise ServerErrors.tier_not_allowed
+    novel_ids = list(set(body.novel_ids))
+    if not novel_ids:
+        raise ServerErrors.no_novels_to_download
+    if len(novel_ids) == 1:
+        return ctx.jobs.translate_novel(user, novel_ids[0], body.language, full=body.full)
+    return ctx.jobs.translate_many_novels(user, *novel_ids, language=body.language, full=body.full)
+
+
+@router.post("/create/translate-volumes", summary="Create a job to translate volumes")
+def translate_volumes(
+    user: User = Security(ensure_user),
+    body: TranslateVolumesRequest = Body(),
+) -> Job:
+    if not ctx.tier.translation_enabled(user):
+        raise ServerErrors.tier_not_allowed
+    volume_ids = list(set(body.volumes))
+    if not volume_ids:
+        raise ServerErrors.no_volumes_to_download
+    if len(volume_ids) == 1:
+        return ctx.jobs.translate_volume(user, volume_ids[0], body.language)
+    return ctx.jobs.translate_many_volumes(user, *volume_ids, language=body.language)
+
+
+@router.post("/create/translate-chapters", summary="Create a job to translate chapter contents")
+def translate_chapters(
+    user: User = Security(ensure_user),
+    body: TranslateChaptersRequest = Body(),
+) -> Job:
+    if not ctx.tier.translation_enabled(user):
+        raise ServerErrors.tier_not_allowed
+    chapters = list(set(body.chapters))
+    if not chapters:
+        raise ServerErrors.no_chapters_to_download
+    if len(chapters) == 1:
+        return ctx.jobs.translate_chapter(user, chapters[0], body.language)
+    return ctx.jobs.translate_many_chapters(user, *chapters, language=body.language)

@@ -153,6 +153,11 @@ class Config(object):
         """LSP Server Settings."""
         return PythonLanguageServerConfig(self)
 
+    @cached_property
+    def translator(self):
+        """Translator Settings."""
+        return TranslatorConfig(self)
+
     # -------------------------------------------------------------- #
 
     def load(self, file: Optional[Path] = None) -> None:
@@ -254,7 +259,7 @@ class AppConfig(_Section):
         return (ROOT_DIR / "VERSION").read_text(encoding="utf8").strip()
 
     @cached_property
-    def output_path(self) -> Path:
+    def app_dir(self) -> Path:
         return APP_DIR
 
     @property
@@ -308,18 +313,63 @@ class AppConfig(_Section):
     def admin_password(self, v: str) -> None:
         self._set("admin_password", v)
 
+
+# ------------------------------------------------------------------ #
+#                         Translator Section                         #
+# ------------------------------------------------------------------ #
+class TranslatorConfig(_Section):
+    section = "translator"
+
     @property
-    def history_limit_per_user(self) -> int:
-        """Read History Limit Per User.
+    def microsoft_translator_key(self) -> Annotated[str, Sensitive]:
+        """Microsoft Translator API Key.
 
-        Maximum number of read-history entries kept per user. Oldest entries are dropped when the
-        limit is reached. Default is `5000`.
+        Azure Cognitive Services key for the Translator resource. Free tier allows
+        2,000,000 characters per month. Get one from: https://portal.azure.com
         """
-        return self._get("history_limit_per_user", 5000)
+        return self._get("microsoft_translator_key", "")
 
-    @history_limit_per_user.setter
-    def history_limit_per_user(self, v: int) -> None:
-        self._set("history_limit_per_user", v)
+    @microsoft_translator_key.setter
+    def microsoft_translator_key(self, v: str) -> None:
+        self._set("microsoft_translator_key", v)
+
+    @property
+    def microsoft_translator_region(self) -> str:
+        """Microsoft Translator Region.
+
+        Azure region of your Translator resource, e.g. `eastus`. Required when using a
+        multi-service or regional key; leave empty for global keys.
+        """
+        return self._get("microsoft_translator_region", "")
+
+    @microsoft_translator_region.setter
+    def microsoft_translator_region(self, v: str) -> None:
+        self._set("microsoft_translator_region", v)
+
+    @property
+    def baidu_app_id(self) -> Annotated[str, Sensitive]:
+        """Baidu Translate App ID.
+
+        App ID for the Baidu Fanyi (translation) API. Particularly strong for Chinese,
+        Japanese, and Korean. Register at: https://fanyi-api.baidu.com
+        """
+        return self._get("baidu_app_id", "")
+
+    @baidu_app_id.setter
+    def baidu_app_id(self, v: str) -> None:
+        self._set("baidu_app_id", v)
+
+    @property
+    def baidu_secret_key(self) -> Annotated[str, Sensitive]:
+        """Baidu Translate Secret Key.
+
+        Secret key that pairs with your Baidu Translate App ID.
+        """
+        return self._get("baidu_secret_key", "")
+
+    @baidu_secret_key.setter
+    def baidu_secret_key(self, v: str) -> None:
+        self._set("baidu_secret_key", v)
 
 
 # ------------------------------------------------------------------ #
@@ -724,3 +774,31 @@ class PythonLanguageServerConfig(_Section):
     @port.setter
     def port(self, v: int) -> None:
         self._set("port", v)
+
+    @property
+    def max_sessions(self) -> int:
+        """LSP Max Simultaneous Sessions.
+
+        Maximum number of pylsp processes that may run at the same time.
+        Each WebSocket connection spawns one process, so this is effectively
+        the concurrent-user cap for the language server. Default is `3`.
+        """
+        return self._get("max_sessions", 3)
+
+    @max_sessions.setter
+    def max_sessions(self, v: int) -> None:
+        self._set("max_sessions", v)
+
+    @property
+    def idle_timeout(self) -> int:
+        """LSP Idle Timeout (seconds).
+
+        Seconds of inactivity after which an LSP session is automatically
+        closed. Activity is defined as any message in either direction.
+        Default is `1800` (30 minutes).
+        """
+        return self._get("idle_timeout", 1800)
+
+    @idle_timeout.setter
+    def idle_timeout(self, v: int) -> None:
+        self._set("idle_timeout", v)

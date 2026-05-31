@@ -23,17 +23,17 @@ def select_ancestors(job_id: str, inclusive: bool = False):
     return select(par.c.id)
 
 
-def select_descendends(job_id: str, inclusive: bool = False):
+def select_descendants(job_id: str, inclusive: bool = False):
     """
-    WITH RECURSIVE descendends(id) AS (
+    WITH RECURSIVE descendants(id) AS (
         SELECT jobs.id AS id FROM jobs
             WHERE jobs.id = %(job_id)s::VARCHAR
         UNION ALL
             SELECT jobs.id AS id FROM jobs
-            JOIN descendends ON jobs.parent_job_id = descendends.id
-    ) SELECT descendends.id FROM descendends
+            JOIN descendants ON jobs.parent_job_id = descendants.id
+    ) SELECT descendants.id FROM descendants
     """
-    des = select(col(Job.id).label("id")).where(Job.id == job_id).cte("descendends", recursive=True)
+    des = select(col(Job.id).label("id")).where(Job.id == job_id).cte("descendants", recursive=True)
     des = des.union_all(
         select(col(Job.id).label("id")).join(des, col(Job.parent_job_id) == des.c.id)
     )

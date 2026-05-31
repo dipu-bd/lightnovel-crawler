@@ -12,10 +12,10 @@ services:
       resources:
         limits:
           cpus: "2.00"
-          memory: 3G
+          memory: 2G
         reservations:
           cpus: "1.00"
-          memory: 2G
+          memory: 1G
 
   server:
     image: ghcr.io/lncrawl/lightnovel-crawler:latest
@@ -31,8 +31,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "3.50"
+          cpus: "3.00"
           memory: 5G
         reservations:
           cpus: "2.00"
-          memory: 3G
+          memory: 2G

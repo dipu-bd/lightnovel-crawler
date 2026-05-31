@@ -30,7 +30,7 @@ class _CommonSourceInfo(BaseModel):
     @computed_field  # type: ignore[misc]
     @property
     def github_url(self) -> str:
-        return GithubClient.get_remote_link(self.file_path)
+        return GithubClient.get_remote_view_link(self.file_path)
 
 
 class CrawlerInfo(_CommonSourceInfo):

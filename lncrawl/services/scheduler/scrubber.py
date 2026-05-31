@@ -37,7 +37,7 @@ class Scrubber:
             return
 
         # Check current folder size
-        current_size = folder_size(ctx.config.app.output_path)
+        current_size = folder_size(ctx.config.app.app_dir)
         logger.info(f"Current folder size: {format_size(current_size)}")
         if current_size < size_limit:
             return
@@ -47,7 +47,7 @@ class Scrubber:
         self.delete_artifacts(current_size, size_limit)
 
         # Check current folder size
-        current_size = folder_size(ctx.config.app.output_path)
+        current_size = folder_size(ctx.config.app.app_dir)
         logger.info(f"Current folder size: {format_size(current_size)}")
         if current_size < size_limit:
             return
@@ -57,7 +57,7 @@ class Scrubber:
         self.delete_novel_data(current_size, size_limit)
 
         # Check current folder size
-        current_size = folder_size(ctx.config.app.output_path)
+        current_size = folder_size(ctx.config.app.app_dir)
         logger.info(f"Current folder size: {format_size(current_size)}")
 
     def delete_artifacts(self, current_size: int, size_limit: int) -> None:

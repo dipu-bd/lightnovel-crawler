@@ -3,8 +3,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Path, Query, Security
 
 from ...context import ctx
-from ...dao import Artifact, OutputFormat, User
-from ...server.tier import ENABLED_FORMATS
+from ...dao import Artifact, LanguageCode, OutputFormat, User
 from ..models import Paginated
 from ..security import ensure_user
 
@@ -24,6 +23,7 @@ def list_artifacts(
     user_id: Optional[str] = Query(default=None),
     novel_id: Optional[str] = Query(default=None),
     format: Optional[OutputFormat] = Query(default=None),
+    language: Optional[LanguageCode] = Query(default=None),
 ) -> Paginated[Artifact]:
     return ctx.artifacts.list(
         limit=limit,
@@ -32,6 +32,7 @@ def list_artifacts(
         job_id=job_id,
         format=format,
         novel_id=novel_id,
+        language=language,
     )
 
 
@@ -39,7 +40,7 @@ def list_artifacts(
 def get_enabled_formats(
     user: User = Security(ensure_user),
 ) -> List[OutputFormat]:
-    return list(sorted(ENABLED_FORMATS[user.tier]))
+    return list(sorted(ctx.tier.enabled_formats(user)))
 
 
 @router.get(
