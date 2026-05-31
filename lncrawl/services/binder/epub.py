@@ -101,18 +101,11 @@ def build_chapter(chapter: Chapter) -> epub.EpubHtml:
     else:
         text = "<p><em>No content available</em></p>"
 
-    # Only show serial if the title doesn't already contain a number
-    serial_heading = (
-        ""
-        if re.search(r"\d", chapter.title)
-        else f'<h4 aria-hidden="true">#{chapter.serial}</h4>'
-    )
-
     content = RE_WHITESPACE.sub(
         "",
         f"""
     <div id="chapter">
-        {serial_heading}
+        <h4 aria-hidden="true">#{chapter.serial}</h4>
         <h1>{chapter.title}</h1>
         {text}
     </div>
