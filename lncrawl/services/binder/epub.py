@@ -1,6 +1,6 @@
 import logging
-import re
 from pathlib import Path
+import re
 from threading import Event
 
 from ebooklib import epub  # type: ignore
