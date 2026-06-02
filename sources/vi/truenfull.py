@@ -13,7 +13,11 @@ search_url = "https://truyenfull.today/tim-kiem/?tukhoa=%s"
 
 class TruenFull(LegacyCrawler):
     has_mtl = True
-    base_url = "https://truyenfull.today/"
+    base_url = [
+        "https://truyenfull.vn/",
+        "https://truyentr.info/",
+        "https://truyenfull.today/",
+    ]
 
     @staticmethod
     def __select_value(tag: PageSoup, css: str, attr: Optional[str] = None):
