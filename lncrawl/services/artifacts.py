@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlmodel import and_, asc, desc, func, select
+from sqlmodel import and_, asc, col, delete, desc, func, select
 
 from ..context import ctx
 from ..dao import Artifact, LanguageCode, OutputFormat, User, UserRole
@@ -101,6 +101,76 @@ class ArtifactService:
                 .order_by(asc(Artifact.format))
             ).all()
             return list(rows)
+
+    def list_for_novel(
+        self,
+        novel_id: str,
+        language: Optional[LanguageCode] = None,
+    ) -> List[Artifact]:
+        volume_modes = {"by_volume", "volume_ids", "volume_range"}
+        with ctx.db.session() as sess:
+            stmt = select(Artifact).where(Artifact.novel_id == novel_id)
+            if language:
+                stmt = stmt.where(Artifact.language == language)
+            else:
+                stmt = stmt.where(Artifact.language.is_(None))
+            stmt = stmt.order_by(desc(Artifact.updated_at))
+            artifacts = [artifact for artifact in sess.exec(stmt).all() if artifact.is_available]
+
+        whole_novel: dict[tuple[Optional[str], OutputFormat], Artifact] = {}
+        by_volume: dict[
+            tuple[Optional[str], Optional[int], Optional[int], Optional[int], Optional[int]],
+            Artifact,
+        ] = {}
+        by_chapter: List[Artifact] = []
+
+        for artifact in artifacts:
+            if artifact.scope_mode == "chapter_range":
+                by_chapter.append(artifact)
+                continue
+
+            if artifact.scope_mode in volume_modes:
+                key = (
+                    artifact.language,
+                    artifact.start_volume_serial,
+                    artifact.end_volume_serial,
+                    artifact.start_chapter_serial,
+                    artifact.end_chapter_serial,
+                )
+                by_volume.setdefault(key, artifact)
+                continue
+
+            key = (artifact.language, artifact.format)
+            whole_novel.setdefault(key, artifact)
+
+        items = list(whole_novel.values()) + list(by_volume.values()) + by_chapter[:3]
+        return sorted(
+            items,
+            key=lambda artifact: (
+                artifact.start_volume_serial or 10**12,
+                artifact.start_chapter_serial or 10**12,
+                -artifact.updated_at,
+            ),
+        )
+
+    def delete_expired_chapter_range_artifacts(self, before: int) -> int:
+        to_delete = []
+        with ctx.db.session() as sess:
+            artifacts = sess.exec(
+                select(Artifact)
+                .where(Artifact.scope_mode == "chapter_range")
+                .where(Artifact.updated_at < before)
+            ).all()
+
+            for artifact in artifacts:
+                file_path = ctx.files.resolve(artifact.output_file)
+                file_path.unlink(True)
+                to_delete.append(artifact.id)
+
+            if to_delete:
+                sess.exec(delete(Artifact).where(col(Artifact.id).in_(to_delete)))
+                sess.commit()
+        return len(to_delete)
 
     def get_latest(self, novel_id: str, format: OutputFormat) -> Optional[Artifact]:
         with ctx.db.session() as sess:

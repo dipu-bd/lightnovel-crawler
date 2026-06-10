@@ -547,6 +547,17 @@ class JobService:
                 "language": language,
             }
         )
+        scope_keys = (
+            "scope_mode",
+            "scope_label",
+            "start_volume_serial",
+            "end_volume_serial",
+            "start_chapter_serial",
+            "end_chapter_serial",
+        )
+        for key in scope_keys:
+            if key in data and data[key] is None:
+                data.pop(key)
         if not data.get("novel_title"):
             novel = ctx.novels.get(novel_id)
             data.update(
@@ -579,6 +590,17 @@ class JobService:
                 "language": language,
             }
         )
+        scope_keys = (
+            "scope_mode",
+            "volume_ids",
+            "from_volume",
+            "to_volume",
+            "from_chapter",
+            "to_chapter",
+        )
+        for key in scope_keys:
+            if key in data and data[key] is None:
+                data.pop(key)
         if not data.get("novel_title"):
             novel = ctx.novels.get(novel_id)
             data.update(

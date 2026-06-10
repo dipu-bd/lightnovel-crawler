@@ -9,6 +9,7 @@ from ...dao import Artifact, Job, JobStatus, JobType, NotificationItem, OutputFo
 from ...exceptions import AbortedException
 from ...utils.event_lock import EventLock
 from ...utils.time_utils import current_timestamp
+from ..binder.scope import resolve_artifact_scopes
 
 logger = logging.getLogger(__name__)
 
@@ -743,16 +744,23 @@ class JobRunner:
                 return self.__set_done()
 
             language = self.job.extra.get("language")
+            scopes = resolve_artifact_scopes(novel_id, self.job.extra)
+            if not scopes:
+                return self.__set_done("No artifacts to create")
 
             format_job_map = {}
             if self.job.is_running:
                 format_job_map = {
-                    OutputFormat(job.extra["format"]): job.id for job in self.children
+                    (
+                        OutputFormat(job.extra["format"]),
+                        job.extra.get("start_chapter_serial"),
+                        job.extra.get("end_chapter_serial"),
+                    ): job.id
+                    for job in self.children
                 }
             else:
                 self.__set_running()
 
-            added_format = set(format_job_map.keys())
             formats = set(map(OutputFormat, formats))
             need_epub = formats & ctx.binder.depends_on_epub
             if need_epub:
@@ -761,35 +769,51 @@ class JobRunner:
             if not formats:
                 return self.__set_done()
 
-            for format in sorted(formats - need_epub - added_format):
-                if self.signal.is_set():
-                    raise AbortedException()
-                job = ctx.jobs.make_artifact(
-                    self.user,
-                    novel_id,
-                    format,
-                    language=language,
-                    parent_id=self.job.id,
-                    novel_title=self.job.extra.get("novel_title"),
+            for scope in scopes:
+                scope_data = scope.extra()
+                scope_key = (
+                    scope.start_chapter_serial,
+                    scope.end_chapter_serial,
                 )
-                format_job_map[format] = job.id
-
-            if need_epub:
-                epub_job_id = format_job_map.get(OutputFormat.epub)
-                if not epub_job_id:
-                    return self.__set_done("Failed to create epub request")
-
-                for format in sorted(need_epub - added_format):
+                for format in sorted(formats - need_epub):
                     if self.signal.is_set():
                         raise AbortedException()
+                    job_key = (format, *scope_key)
+                    if job_key in format_job_map:
+                        continue
                     job = ctx.jobs.make_artifact(
                         self.user,
                         novel_id,
                         format,
                         language=language,
                         parent_id=self.job.id,
-                        depends_on=epub_job_id,
+                        novel_title=self.job.extra.get("novel_title"),
+                        **scope_data,
                     )
+                    format_job_map[job_key] = job.id
+
+                if need_epub:
+                    epub_job_id = format_job_map.get((OutputFormat.epub, *scope_key))
+                    if not epub_job_id:
+                        return self.__set_done("Failed to create epub request")
+
+                    for format in sorted(need_epub):
+                        if self.signal.is_set():
+                            raise AbortedException()
+                        job_key = (format, *scope_key)
+                        if job_key in format_job_map:
+                            continue
+                        job = ctx.jobs.make_artifact(
+                            self.user,
+                            novel_id,
+                            format,
+                            language=language,
+                            parent_id=self.job.id,
+                            depends_on=epub_job_id,
+                            novel_title=self.job.extra.get("novel_title"),
+                            **scope_data,
+                        )
+                        format_job_map[job_key] = job.id
 
             return self.__increment()
         except AbortedException:
@@ -836,6 +860,12 @@ class JobRunner:
                 epub=epub,
                 language=language,
                 signal=self.signal,
+                scope_mode=self.job.extra.get("scope_mode"),
+                scope_label=self.job.extra.get("scope_label"),
+                start_volume_serial=self.job.extra.get("start_volume_serial"),
+                end_volume_serial=self.job.extra.get("end_volume_serial"),
+                start_chapter_serial=self.job.extra.get("start_chapter_serial"),
+                end_chapter_serial=self.job.extra.get("end_chapter_serial"),
             )
             if not artifact.is_available:
                 return self.__set_done("Failed to make artifact")

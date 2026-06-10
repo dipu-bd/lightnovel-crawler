@@ -10,6 +10,7 @@ from ...assets.epub import epub_chapter_xhtml, epub_cover_xhtml, epub_style_css
 from ...context import ctx
 from ...dao import Artifact, Chapter, LanguageCode, Novel, Volume
 from ...exceptions import AbortedException
+from .scope import get_artifact_scope, iter_artifact_chapters
 
 logger = logging.getLogger(__name__)
 
@@ -139,6 +140,7 @@ def make_epub(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     book = epub.EpubBook()
 
     language = LanguageCode(artifact.language) if artifact.language else None
+    scope = get_artifact_scope(artifact)
     novel = ctx.novels.get(artifact.novel_id, language)
 
     # add novel metadata
@@ -201,14 +203,16 @@ def make_epub(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     # add volumes and chapters pages
     if signal.is_set():
         raise AbortedException()
-    for volume in ctx.volumes.list(artifact.novel_id, language):
+    chapter_ids = set()
+    for volume, chapters in iter_artifact_chapters(artifact.novel_id, language, scope):
         if signal.is_set():
             raise AbortedException()
 
         volume_contents = []
-        for chapter in ctx.chapters.list(volume_id=volume.id, language=language):
+        for chapter in chapters:
             if not chapter.is_available:
                 continue
+            chapter_ids.add(chapter.id)
             chapter_item = build_chapter(chapter, language)
             volume_contents.append(chapter_item)
 
@@ -235,6 +239,8 @@ def make_epub(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     if signal.is_set():
         raise AbortedException()
     for image in ctx.images.list(novel_id=artifact.novel_id):
+        if image.chapter_id not in chapter_ids:
+            continue
         if not image.is_available:
             continue
         image_item = epub.EpubImage(

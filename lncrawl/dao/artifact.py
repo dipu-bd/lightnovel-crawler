@@ -17,6 +17,35 @@ class Artifact(BaseTable, table=True):
     language: Optional[str] = sa.Field(default=None, description="Target language code, e.g. 'en'")
     format: OutputFormat = sa.Field(index=True, description="The output format of the artifact")
     file_name: str = sa.Field(description="Artifact output file name")
+    scope_mode: Optional[str] = sa.Field(
+        default=None,
+        index=True,
+        description="Artifact scope mode, e.g. volume_ids or chapter_range",
+    )
+    scope_label: Optional[str] = sa.Field(
+        default=None,
+        description="Human-readable scope label",
+    )
+    start_volume_serial: Optional[int] = sa.Field(
+        default=None,
+        index=True,
+        description="First volume serial included in this artifact",
+    )
+    end_volume_serial: Optional[int] = sa.Field(
+        default=None,
+        index=True,
+        description="Last volume serial included in this artifact",
+    )
+    start_chapter_serial: Optional[int] = sa.Field(
+        default=None,
+        index=True,
+        description="First chapter serial included in this artifact",
+    )
+    end_chapter_serial: Optional[int] = sa.Field(
+        default=None,
+        index=True,
+        description="Last chapter serial included in this artifact",
+    )
     file_size: int = sa.Field(
         default=0,
         sa_type=sa.BigInteger,

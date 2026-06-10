@@ -25,6 +25,7 @@ class Scrubber:
     def run(signal: Event):
         scrubber = Scrubber(signal)
         scrubber.free_disk_space()
+        scrubber.delete_expired_chapter_range_artifacts()
         scrubber.delete_old_jobs()
         scrubber.cancel_long_jobs()
         scrubber.delete_expired_tokens()
@@ -147,6 +148,13 @@ class Scrubber:
                 if self.signal.is_set():
                     return
                 ctx.jobs.delete(job_id)
+
+    def delete_expired_chapter_range_artifacts(self):
+        deleted = ctx.artifacts.delete_expired_chapter_range_artifacts(
+            before=current_timestamp() - _day * 15
+        )
+        if deleted:
+            logger.info(f"Deleted {deleted} expired chapter-range artifacts")
 
     def cancel_long_jobs(self):
         now = current_timestamp()

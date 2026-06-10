@@ -162,6 +162,12 @@ def make_artifacts(
         body.novel_id,
         *formats,
         language=body.language,
+        scope_mode=body.scope_mode,
+        volume_ids=body.volume_ids,
+        from_volume=body.from_volume,
+        to_volume=body.to_volume,
+        from_chapter=body.from_chapter,
+        to_chapter=body.to_chapter,
     )
 
 

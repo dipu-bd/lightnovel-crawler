@@ -63,6 +63,12 @@ class BinderService:
         user_id: Optional[str] = None,
         epub: Optional[Artifact] = None,
         language: Optional[LanguageCode] = None,
+        scope_mode: Optional[str] = None,
+        scope_label: Optional[str] = None,
+        start_volume_serial: Optional[int] = None,
+        end_volume_serial: Optional[int] = None,
+        start_chapter_serial: Optional[int] = None,
+        end_chapter_serial: Optional[int] = None,
         signal=Event(),
     ) -> Artifact:
         make = archive_maker[format]
@@ -70,6 +76,8 @@ class BinderService:
             raise ServerErrors.format_not_available
 
         file_name = safe_filename(novel_title).title()
+        if scope_label:
+            file_name += f" - {safe_filename(str(scope_label)).title()}"
         if language:
             file_name += f".{language}"
         file_name += f".{format}"
@@ -83,6 +91,12 @@ class BinderService:
             format=format,
             language=language,
             file_name=file_name,
+            scope_mode=scope_mode,
+            scope_label=scope_label,
+            start_volume_serial=start_volume_serial,
+            end_volume_serial=end_volume_serial,
+            start_chapter_serial=start_chapter_serial,
+            end_chapter_serial=end_chapter_serial,
         )
 
         working_dir = ctx.config.app.app_dir / "tmp" / artifact.id
