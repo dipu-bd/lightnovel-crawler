@@ -74,10 +74,7 @@ def iter_artifact_chapters(
 def resolve_artifact_scopes(novel_id: str, data: Dict[str, Any]) -> List[ArtifactScope]:
     mode = data.get("scope_mode") or "by_volume"
     volumes = ctx.volumes.list(novel_id)
-    chapters_by_volume = {
-        volume.id: ctx.chapters.list(volume_id=volume.id)
-        for volume in volumes
-    }
+    chapters_by_volume = {volume.id: ctx.chapters.list(volume_id=volume.id) for volume in volumes}
 
     if mode == "volume_ids":
         volume_ids = set(data.get("volume_ids") or [])

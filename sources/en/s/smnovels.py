@@ -25,11 +25,7 @@ class SMNovelsCrawler(LegacyCrawler):
                 if not title:
                     raise RuntimeError("No novel title")
 
-                self.novel_title = (
-                    title.get_text(" ", strip=True)
-                    .replace("Category:", "")
-                    .strip()
-                )
+                self.novel_title = title.get_text(" ", strip=True).replace("Category:", "").strip()
                 logger.info("Novel title: %s", self.novel_title)
 
             links = soup.select(".all-chapters-list a")
@@ -86,8 +82,7 @@ class SMNovelsCrawler(LegacyCrawler):
             raise RuntimeError("No chapter content")
 
         for bad in contents.select(
-            "script, style, ins, iframe, .sharedaddy, .jp-relatedposts, "
-            ".code-block, .adsbygoogle"
+            "script, style, ins, iframe, .sharedaddy, .jp-relatedposts, .code-block, .adsbygoogle"
         ):
             bad.extract()
 
