@@ -42,6 +42,7 @@ class JobStatus(IntEnum):
     SUCCESS = 2
     FAILED = 3
     CANCELED = 4
+    PAUSED = 5
 
 
 class JobPriority(IntEnum):

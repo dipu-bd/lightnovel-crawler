@@ -493,6 +493,21 @@ class CrawlerConfig(_Section):
         self._set("can_use_browser", v)
 
     @property
+    def use_headless_mode(self) -> bool:
+        """Browser Headless Mode.
+
+        Run the browser in headless mode (no visible window) when doing browser-based crawling.
+        Off by default — a visible window is less likely to be detected as a bot and can handle
+        interactive challenges. Enable this on servers or in any environment where a display is
+        not available.
+        """
+        return self._get("use_headless_mode", False)
+
+    @use_headless_mode.setter
+    def use_headless_mode(self, v: bool) -> None:
+        self._set("use_headless_mode", v)
+
+    @property
     def selenium_grid(self) -> str:
         """Selenium Grid URL.
 
@@ -592,6 +607,67 @@ class CrawlerConfig(_Section):
     @runner_reset_interval.setter
     def runner_reset_interval(self, v: int) -> None:
         self._set("runner_reset_interval", v)
+
+    @property
+    def proxy_url(self) -> str:
+        """Proxy URL for Crawler HTTP Requests.
+
+        Routes all crawler requests through a proxy. Works with Docker containers
+        such as `peterdavehello/tor-socks-proxy`:
+
+          docker run -d -p 9150:9150 peterdavehello/tor-socks-proxy
+
+        Set this to `socks5://127.0.0.1:9150`, or any standard HTTP/SOCKS proxy
+        URL. Multiple comma-separated URLs are cycled in round-robin order.
+        Leave blank to disable. Default is `""`.
+        """
+        return self._get("proxy_url", os.getenv("TOR_PROXY_URL") or "")
+
+    @proxy_url.setter
+    def proxy_url(self, v: str) -> None:
+        self._set("proxy_url", v)
+
+    @property
+    def tor_control_host(self) -> str:
+        """Tor Control Host.
+
+        Hostname or IP of the Tor control port. Default is `"127.0.0.1"`
+        for a local `peterdavehello/tor-socks-proxy` container.
+        """
+        return self._get("tor_control_host", os.getenv("TOR_CONTROL_HOST") or "127.0.0.1")
+
+    @tor_control_host.setter
+    def tor_control_host(self, v: str) -> None:
+        self._set("tor_control_host", v)
+
+    @property
+    def tor_control_port(self) -> int:
+        """Tor Control Port.
+
+        Port for sending `SIGNAL NEWNYM` to rotate the Tor exit IP.
+        Matches the control port exposed by `peterdavehello/tor-socks-proxy`
+        (default 9151). Set to `0` to disable identity rotation.
+        """
+        _default = int(os.getenv("TOR_CONTROL_PORT") or "9151")
+        return self._get("tor_control_port", _default)
+
+    @tor_control_port.setter
+    def tor_control_port(self, v: str) -> None:
+        self._set("tor_control_port", v)
+
+    @property
+    def tor_control_password(self) -> str:
+        """Tor Control Password.
+
+        Authentication password for the Tor control port. Leave blank
+        when `CookieAuthentication` or no auth is used (the default for
+        `peterdavehello/tor-socks-proxy`).
+        """
+        return self._get("tor_control_password", "")
+
+    @tor_control_password.setter
+    def tor_control_password(self, v: str) -> None:
+        self._set("tor_control_password", v)
 
 
 # ------------------------------------------------------------------ #

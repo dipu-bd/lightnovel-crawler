@@ -3,10 +3,10 @@ from typing import Any, Dict, Iterable, List, Optional, Union
 
 from ..utils.event_lock import EventLock
 from .models import Chapter, Novel, SearchResult, Volume
-from .template import CrawlerTemplate
+from .template import BrowserTemplate
 
 
-class LegacyCrawler(CrawlerTemplate):
+class LegacyCrawler(BrowserTemplate):
     def __init__(
         self,
         workers: Optional[int] = None,

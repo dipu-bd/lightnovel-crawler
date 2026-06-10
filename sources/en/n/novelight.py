@@ -4,13 +4,13 @@ import re
 from typing import Iterable, Optional, Tuple
 from urllib.parse import quote_plus, urlencode
 
-from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume
 from lncrawl.exceptions import LNException
 
 logger = logging.getLogger(__name__)
 
 
-class NoveLightCrawler(BrowserTemplate):
+class NoveLightCrawler(SoupTemplate):
     base_url = "https://novelight.net/"
 
     search_item_list_selector = ".manga-grid-list a.item"

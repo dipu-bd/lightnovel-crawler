@@ -1,18 +1,6 @@
 name: lncrawl
 
 services:
-  postgres:
-    image: postgres:alpine
-    restart: unless-stopped
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: pguser
-      POSTGRES_PASSWORD: pgpass
-      POSTGRES_DB: lncrawl
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
   server:
     image: lncrawl
     restart: unless-stopped
@@ -29,6 +17,30 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  postgres:
+    image: postgres:alpine
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: pgpass
+      POSTGRES_DB: lncrawl
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  torproxy:
+    image: peterdavehello/tor-socks-proxy
+    restart: unless-stopped
+    ports:
+      - "9150:9150" # socks5 port
+      - "9151:9151" # control port
+    volumes:
+      - tor_data:/var/lib/tor
+    security_opt:
+      - no-new-privileges:true
+
 volumes:
   pgdata:
   appdata:
+  tor_data:

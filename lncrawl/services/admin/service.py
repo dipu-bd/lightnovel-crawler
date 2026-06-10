@@ -9,6 +9,7 @@ class AdminService:
     def soft_restart(self):
         ctx.destroy()
         ctx.setup()
+        ctx.sources.ensure_load()
         ctx.scheduler.start()
 
     def config_sections(self):

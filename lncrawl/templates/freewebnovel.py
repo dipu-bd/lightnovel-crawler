@@ -3,10 +3,10 @@ import re
 from typing import Any, Iterable, List
 import unicodedata
 
-from lncrawl.core import BrowserTemplate, Chapter, PageSoup
+from lncrawl.core import Chapter, PageSoup, SoupTemplate
 
 
-class FreewebnovelTemplate(BrowserTemplate):
+class FreewebnovelTemplate(SoupTemplate):
     is_template = True
 
     search_item_list_selector = ".col-content .con .txt h3 a"

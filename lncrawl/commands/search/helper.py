@@ -1,7 +1,7 @@
 from difflib import SequenceMatcher
 import logging
 from threading import Event
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Dict, List
 
 import questionary
 from slugify import slugify
@@ -61,7 +61,7 @@ def perform_search(
         taskman.shutdown()
 
     # Combine the search results
-    combined: dict[str, List[SearchResult]] = {}
+    combined: Dict[str, List[SearchResult]] = {}
     for item in records:
         if not (item and isinstance(item.title, str)):
             continue

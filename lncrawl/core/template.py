@@ -1,4 +1,4 @@
-from functools import cached_property
+from contextlib import contextmanager
 from io import BytesIO
 import json
 import logging
@@ -8,7 +8,6 @@ from requests.utils import CaseInsensitiveDict
 
 from ..context import ctx
 from ..exceptions import LNException, ScraperErrorGroup
-from ..utils.event_lock import EventLock
 from .crawler import Crawler
 from .models import Chapter, Novel, SearchResult, Volume
 from .soup import PageSoup
@@ -19,13 +18,146 @@ logger = logging.getLogger(__name__)
 class CrawlerTemplate(Crawler):
     """Class extended by all templates"""
 
-    pass
+
+# ----------------------------------------------------------------------------- #
+
+
+class BrowserTemplate(CrawlerTemplate):
+    """Attempts to crawl using scraper first, on failure use the browser."""
+
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self._override_scraper_get_soup()
+        self._override_scraper_get_image()
+        self._override_scraper_get_json()
+
+    # ------------------------------------------------------------------------- #
+    # Method overrides to fallback to browser if scraper fails
+    # ------------------------------------------------------------------------- #
+
+    def _override_scraper_get_soup(self) -> None:
+        from .browser import By
+
+        origin_method = self.scraper.get_soup
+
+        def get_soup(url, *args, **kwargs):
+            try:
+                return origin_method(url, *args, **kwargs)
+            except ScraperErrorGroup:
+                with self.create_browser() as browser:
+                    browser.visit(url)
+                    browser.wait("body", By.TAG_NAME, timeout=60)
+                    return browser.soup
+
+        setattr(self.scraper, "get_soup", get_soup)
+
+    def _override_scraper_get_image(self) -> None:
+        from PIL import Image
+
+        from .browser import By
+
+        origin_method = self.scraper.get_image
+
+        def get_image(url, *args, **kwargs):
+            try:
+                return origin_method(url, *args, **kwargs)
+            except ScraperErrorGroup:
+                with self.create_browser() as browser:
+                    browser.visit(url)
+                    browser.wait("img", By.TAG_NAME, timeout=60)
+                    img = browser.find("img", By.TAG_NAME)
+                    if img:
+                        png = img.screenshot_as_png
+                        return Image.open(BytesIO(png))
+
+        setattr(self.scraper, "get_image", get_image)
+
+    def _override_scraper_get_json(self) -> None:
+        origin_method = self.scraper.get_json
+
+        def get_json(url: str, headers: MutableMapping = {}, **kwargs):
+            try:
+                return origin_method(url, headers, **kwargs)
+            except ScraperErrorGroup:
+                headers = CaseInsensitiveDict(headers or {})
+                url_js = json.dumps(url)
+                headers_js = json.dumps(dict(headers))
+
+                script = f"""
+                    (async () => {{
+                        const url = {url_js};
+                        const headers = {headers_js};
+                        try {{
+                            const r = await fetch(url, {{credentials: 'include', headers}});
+                            return await r.text();
+                        }} catch(e) {{
+                            return JSON.stringify({{__error__: String(e)}});
+                        }}
+                    }})()
+                """
+                with self.create_browser() as browser:
+                    text = browser.execute_js(script, is_async=True)
+                    if not text:
+                        raise LNException(f"Empty response from {url}")
+
+                try:
+                    data = json.loads(text)
+                except Exception as e:
+                    raise LNException(f"Invalid JSON from {url}") from e
+
+                if isinstance(data, dict) and data.get("__error__"):
+                    raise LNException(f"Browser fetch error for {url}: {data['__error__']}")
+                return data
+
+        setattr(self.scraper, "get_json", get_json)
+
+    # ------------------------------------------------------------------------- #
+    # Browser interface
+    # ------------------------------------------------------------------------- #
+
+    @contextmanager
+    def create_browser(self):
+        from .browser import Browser
+
+        browser: Optional[Browser] = None
+        try:
+            if not ctx.config.crawler.can_use_browser:
+                if ctx.logger.has_exception:
+                    raise
+                raise RuntimeError("Browser is disabled in the configuration")
+
+            ctx.logger.info(
+                f"Initializing browser. Headless={ctx.config.crawler.use_headless_mode}"
+            )
+            browser = Browser(
+                cookie_store=self.scraper.cookies,
+                headless=ctx.config.crawler.use_headless_mode,
+            )
+
+            _close = browser.close
+            _visit = browser.visit
+
+            def override_close() -> None:
+                _close()
+
+            def override_visit(url: str) -> None:
+                _visit(url)
+                if browser.current_url:
+                    self.scraper.last_soup_url = browser.current_url
+
+            setattr(browser, "close", override_close)
+            setattr(browser, "visit", override_visit)
+
+            yield browser
+        finally:
+            if browser:
+                browser.close()
 
 
 # ----------------------------------------------------------------------------- #
 
 
-class SoupTemplate(CrawlerTemplate):
+class SoupTemplate(BrowserTemplate):
     """General template for all soup-based crawlers"""
 
     search_item_list_selector = ""
@@ -289,143 +421,3 @@ class SoupTemplate(CrawlerTemplate):
     def parse_chapter_body(self, soup: PageSoup, chapter: Chapter) -> None:
         """Extract the clean HTML content from the tag containing the chapter text"""
         chapter.body = self.cleaner.extract_contents(soup)
-
-
-# ----------------------------------------------------------------------------- #
-
-
-class BrowserTemplate(SoupTemplate):
-    """Attempts to crawl using scraper first, on failure use the browser."""
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self._lock = EventLock()
-        self._override_scraper_get_soup()
-        self._override_scraper_get_image()
-        self._override_scraper_get_json()
-
-    # ------------------------------------------------------------------------- #
-    # Method overrides to fallback to browser if scraper fails
-    # ------------------------------------------------------------------------- #
-
-    def _override_scraper_get_soup(self) -> None:
-        from .browser import By
-
-        origin_method = self.scraper.get_soup
-
-        def get_soup(url, *args, **kwargs):
-            try:
-                return origin_method(url, *args, **kwargs)
-            except ScraperErrorGroup:
-                if ctx.logger.is_debug:
-                    ctx.logger.error("Failed to get soup", exc_info=True)
-                with self._lock:
-                    self.browser.visit(url)
-                    self.browser.wait("body", By.TAG_NAME, timeout=60)
-                    return self.browser.soup
-
-        setattr(self.scraper, "get_soup", get_soup)
-
-    def _override_scraper_get_image(self) -> None:
-        from PIL import Image
-
-        from .browser import By
-
-        origin_method = self.scraper.get_image
-
-        def get_image(url, *args, **kwargs):
-            try:
-                return origin_method(url, *args, **kwargs)
-            except ScraperErrorGroup:
-                if ctx.logger.is_debug:
-                    ctx.logger.error("Failed to get image", exc_info=True)
-                with self._lock:
-                    self.browser.visit(url)
-                    self.browser.wait("img", By.TAG_NAME, timeout=60)
-                    img = self.browser.find("img", By.TAG_NAME)
-                    if img:
-                        png = img.screenshot_as_png
-                        return Image.open(BytesIO(png))
-
-        setattr(self.scraper, "get_image", get_image)
-
-    def _override_scraper_get_json(self) -> None:
-        origin_method = self.scraper.get_json
-
-        def get_json(url: str, headers: MutableMapping = {}, **kwargs):
-            try:
-                return origin_method(url, headers, **kwargs)
-            except ScraperErrorGroup:
-                if ctx.logger.is_debug:
-                    ctx.logger.error("Failed to get json", exc_info=True)
-
-                headers = CaseInsensitiveDict(headers or {})
-                url_js = json.dumps(url)
-                headers_js = json.dumps(dict(headers))
-
-                script = f"""
-                    (async () => {{
-                        const url = {url_js};
-                        const headers = {headers_js};
-                        try {{
-                            const r = await fetch(url, {{credentials: 'include', headers}});
-                            return await r.text();
-                        }} catch(e) {{
-                            return JSON.stringify({{__error__: String(e)}});
-                        }}
-                    }})()
-                """
-                with self._lock:
-                    text = self.browser.execute_js(script, is_async=True)
-                    if not text:
-                        raise LNException(f"Empty response from {url}")
-
-                try:
-                    data = json.loads(text)
-                except Exception as e:
-                    raise LNException(f"Invalid JSON from {url}") from e
-
-                if isinstance(data, dict) and data.get("__error__"):
-                    raise LNException(f"Browser fetch error for {url}: {data['__error__']}")
-                return data
-
-        setattr(self.scraper, "get_json", get_json)
-
-    # ------------------------------------------------------------------------- #
-    # Browser interface
-    # ------------------------------------------------------------------------- #
-
-    @cached_property
-    def browser(self):
-        from .browser import Browser
-
-        if not ctx.config.crawler.can_use_browser:
-            raise RuntimeError("Browser is disabled in the configuration")
-
-        browser = Browser(cookie_store=self.scraper.cookies, headless=True)
-
-        _close = browser.close
-        _visit = browser.visit
-
-        def override_close() -> None:
-            _close()
-            self.__dict__.pop("browser", None)  # type: ignore
-
-        def override_visit(url: str) -> None:
-            _visit(url)
-            if browser.current_url:
-                self.scraper.last_soup_url = browser.current_url
-
-        setattr(browser, "close", override_close)
-        setattr(browser, "visit", override_visit)
-
-        return browser
-
-    def close(self) -> None:
-        super().close()
-        self._lock.abort()
-        if "browser" in self.__dict__:
-            self.browser.close()
-
-    def visit(self, url: str) -> None:
-        self.browser.visit(url)

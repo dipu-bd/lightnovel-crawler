@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 from concurrent import futures
+import json
 import logging
 import re
 
-import execjs
+import quickjs
 
 from lncrawl.core import Chapter, LegacyCrawler, PageSoup
 
@@ -72,11 +73,13 @@ class LNMTLCrawler(LegacyCrawler):
         script = soup.find(name="main").find_next_sibling(name="script").string
 
         try:
-            data = execjs.eval(
+            _ctx = quickjs.Context()
+            js_code = (
                 "(function() {var window = { lnmtl: {} }; var lnmtl = window.lnmtl;"
                 + script
                 + "return window.lnmtl;})()"
             )
+            data = json.loads(_ctx.eval(f"JSON.stringify({js_code})"))
             assert isinstance(data, dict)
             for i, vol in enumerate(data["volumes"]):
                 title = vol.get("title", "") or ""

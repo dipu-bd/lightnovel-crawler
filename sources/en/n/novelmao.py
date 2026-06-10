@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 from urllib.parse import urlencode
-
-import execjs
 
 from lncrawl.core import Chapter, LegacyCrawler, Volume
 
@@ -24,7 +23,7 @@ class NovelMaoCrawler(LegacyCrawler):
             possible_script = soup.select_one('script[type="application/ld+json"]')
             script_text = possible_script.get_text()
 
-            data = execjs.eval(script_text)
+            data = json.loads(script_text)
             self.novel_title = data[2]["name"]
             self.novel_cover = data[2]["image"]
             self.novel_author = data[2]["author"]["name"]

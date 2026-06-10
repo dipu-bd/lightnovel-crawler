@@ -3,12 +3,12 @@ import logging
 import re
 from typing import Iterable, Optional
 
-from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class KatReadingCafeCrawler(BrowserTemplate):
+class KatReadingCafeCrawler(SoupTemplate):
     has_mtl = False
     base_url = "https://katreadingcafe.com/"
 
@@ -124,20 +124,20 @@ class KatReadingCafeCrawler(BrowserTemplate):
 
     def select_chapter_tags(
         self,
-        soup: PageSoup,
+        tag: PageSoup,
         novel: Novel,
         volume: Optional[Volume] = None,
     ) -> Iterable[PageSoup]:
         if volume:
-            soup = soup.next_sibling
+            tag = tag.next_sibling
 
-        chapters = list(soup.select(".eplister ul li a[href]"))
+        chapters = list(tag.select(".eplister ul li a[href]"))
         for a in reversed(chapters):
             if self._valid_chapter_link(a):
                 yield a
 
         if not volume and not chapters:
-            links = soup.select(".entry-content a[href]")
+            links = tag.select(".entry-content a[href]")
             for a in reversed(list(links)):
                 if not self._valid_chapter_link(a):
                     continue

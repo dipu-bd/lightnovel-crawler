@@ -18,6 +18,7 @@ from ...dao import (
 )
 from ...exceptions import ServerErrors
 from ...server.models import Paginated
+from ...utils.event_lock import EventLock
 from ...utils.time_utils import current_timestamp
 from .utils import select_ancestors, select_descendants
 
@@ -32,7 +33,7 @@ job_canceled_literal = sq.cast(sq.literal(JobStatus.CANCELED.name), job_status_t
 
 class JobService:
     def __init__(self) -> None:
-        pass
+        self._update_lock = EventLock()
 
     # -------------------------------------------------------------------------
     #                               GET Jobs
@@ -57,10 +58,6 @@ class JobService:
             conditions: List[Any] = []
             if user_id is not None:
                 conditions.append(Job.user_id == user_id)
-            if parent_job_id is not None:
-                conditions.append(Job.parent_job_id == parent_job_id)
-            else:
-                conditions.append(sq.col(Job.parent_job_id).is_(None))
             if job_type is not None:
                 conditions.append(Job.type == job_type)
             if status is not None:
@@ -69,6 +66,15 @@ class JobService:
                 conditions.append(sq.col(Job.is_done).is_(True))
             if priority is not None:
                 conditions.append(Job.priority == priority)
+            if parent_job_id is not None:
+                conditions.append(Job.parent_job_id == parent_job_id)
+            else:
+                conditions.append(
+                    sq.or_(
+                        Job.status == JobStatus.PAUSED,
+                        sq.col(Job.parent_job_id).is_(None),
+                    )
+                )
 
             if conditions:
                 stmt = stmt.where(*conditions)
@@ -683,7 +689,6 @@ class JobService:
 
         if parent_id is None:
             ctx.activity.record(user.id, ActivityType.REQUEST, job.id)
-
         return job
 
     def _pending(
@@ -737,7 +742,8 @@ class JobService:
             return sess.exec(stmt.limit(1)).first()
 
     def _update(self, sess: Session, job_id: str, **values) -> None:
-        sess.exec(sq.update(Job).where(sq.col(Job.id) == job_id).values(**values))
+        with self._update_lock:
+            sess.exec(sq.update(Job).where(sq.col(Job.id) == job_id).values(**values))
 
     def _update_up(
         self,
@@ -764,38 +770,40 @@ class JobService:
         )
 
         sa_pars = select_ancestors(job_id, inclusive)
-        sess.exec(
-            sq.update(Job)
-            .where(sq.col(Job.id).in_(sa_pars))
-            .where(sq.col(Job.is_done).is_(False))
-            .values(
-                done=sa_done,
-                total=sa_total,
-                failed=sa_failed,
-                status=sa_status,
-                is_done=sa_is_done,
-                started_at=sa_started_at,
-                finished_at=sa_finished_at,
+        with self._update_lock:
+            sess.exec(
+                sq.update(Job)
+                .where(sq.col(Job.id).in_(sa_pars))
+                .where(sq.col(Job.is_done).is_(False))
+                .values(
+                    done=sa_done,
+                    total=sa_total,
+                    failed=sa_failed,
+                    status=sa_status,
+                    is_done=sa_is_done,
+                    started_at=sa_started_at,
+                    finished_at=sa_finished_at,
+                )
             )
-        )
 
     def _cancel_down(self, sess: Session, job_id: str, inclusive=False) -> None:
         now = current_timestamp()
         sa_deps = select_descendants(job_id, inclusive)
-        sess.exec(
-            sq.update(Job)
-            .where(
-                sq.col(Job.id).in_(sa_deps),
-                sq.col(Job.is_done).is_(False),
+        with self._update_lock:
+            sess.exec(
+                sq.update(Job)
+                .where(
+                    sq.col(Job.id).in_(sa_deps),
+                    sq.col(Job.is_done).is_(False),
+                )
+                .values(
+                    is_done=True,
+                    status=job_canceled_literal,
+                    error="Canceled by one of the parent",
+                    started_at=sq.func.coalesce(Job.started_at, now),
+                    finished_at=sq.func.coalesce(Job.finished_at, now),
+                )
             )
-            .values(
-                is_done=True,
-                status=job_canceled_literal,
-                error="Canceled by one of the parent",
-                started_at=sq.func.coalesce(Job.started_at, now),
-                finished_at=sq.func.coalesce(Job.finished_at, now),
-            )
-        )
 
     def _increment_up(self, sess: Session, job_id: str, step: int = 1) -> None:
         self._update_up(

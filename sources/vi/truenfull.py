@@ -8,12 +8,16 @@ from lncrawl.core import Chapter, LegacyCrawler, PageSoup, Volume
 
 logger = logging.getLogger(__name__)
 
-search_url = "https://truyentr.info/?s=%s"
+search_url = "https://truyenfull.today/tim-kiem/?tukhoa=%s"
 
 
 class TruenFull(LegacyCrawler):
     has_mtl = True
-    base_url = ["https://truyenfull.vn/", "https://truyentr.info/"]
+    base_url = [
+        "https://truyenfull.vn/",
+        "https://truyentr.info/",
+        "https://truyenfull.today/",
+    ]
 
     @staticmethod
     def __select_value(tag: PageSoup, css: str, attr: Optional[str] = None):
@@ -112,7 +116,7 @@ class TruenFull(LegacyCrawler):
                     "totalp": total_page,
                 }
             )
-            url = "https://truyenfull.vn/ajax.php?" + params
+            url = "https://truyenfull.today/ajax.php?" + params
             logger.info("Getting chapters: %s", url)
             f = self.executor.submit(self.get_json, url)
             futures.append(f)

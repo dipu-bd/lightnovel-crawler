@@ -4,7 +4,7 @@ from typing import Iterable, Mapping, Optional
 from urllib.parse import urlencode
 
 from lncrawl.context import ctx
-from lncrawl.core import BrowserTemplate, Chapter, Crawler, Novel, PageSoup, Volume
+from lncrawl.core import Chapter, Crawler, Novel, PageSoup, SoupTemplate, Volume
 
 logger = logging.getLogger(__name__)
 
@@ -18,7 +18,7 @@ _automation_warning = """
 _title_matcher = re.compile(r"^(c|ch|chap|chapter)?[^\w\d]*(\d+)$", flags=re.I)
 
 
-class NovelupdatesCrawler(BrowserTemplate):
+class NovelupdatesCrawler(SoupTemplate):
     base_url = ["https://www.novelupdates.com/"]
 
     _cached_crawlers: Mapping[str, Crawler] = {}
@@ -39,14 +39,6 @@ class NovelupdatesCrawler(BrowserTemplate):
 
     def initialize(self):
         self.taskman.init_executor(workers=4)
-
-    def cleanup_prompts(self):
-        try:
-            elem = self.browser.find("#uniccmp")
-            if elem:
-                elem.remove()
-        except Exception:
-            pass
 
     def build_search_url(self, query: str) -> str:
         params = dict(

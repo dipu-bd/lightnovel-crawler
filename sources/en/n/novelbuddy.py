@@ -4,12 +4,12 @@ import re
 from typing import Iterable, Optional
 from urllib.parse import urlencode
 
-from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class NovelbuddyCrawler(BrowserTemplate):
+class NovelbuddyCrawler(SoupTemplate):
     base_url = ["https://novelbuddy.io/"]
 
     has_mtl = True

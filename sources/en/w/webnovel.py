@@ -6,13 +6,20 @@ from time import time
 from typing import Iterable
 from urllib.parse import urlencode, urlparse
 
-from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, SearchResult, Volume
+from lncrawl.core import (
+    Chapter,
+    Novel,
+    PageSoup,
+    SearchResult,
+    SoupTemplate,
+    Volume,
+)
 from lncrawl.exceptions import FallbackToBrowser, LNException
 
 logger = logging.getLogger(__name__)
 
 
-class WebnovelCrawler(BrowserTemplate):
+class WebnovelCrawler(SoupTemplate):
     base_url = [
         "https://m.webnovel.com/",
         "https://www.webnovel.com/",
@@ -25,7 +32,6 @@ class WebnovelCrawler(BrowserTemplate):
             r"(Find authorized novels in Webnovel(.*)for visiting\.)",
         ]
         self.re_cleaner = re.compile("|".join(bad_text), re.M)
-        self.__dict__.pop("csrf", None)
 
     @cached_property
     def csrf(self):
@@ -51,17 +57,18 @@ class WebnovelCrawler(BrowserTemplate):
                     info="%(categoryName)s | Score: %(totalScore)s" % book,
                 )
         except Exception:
-            params = {"keywords": query}
-            self.visit(f"{self.scraper.origin}search?{urlencode(params)}")
-            for li in self.browser.soup.select(".search-result-container li"):
-                a = li.find("a[href]")
-                info = li.find(".g_star_num small")
-                if a:
-                    yield SearchResult(
-                        url=self.absolute_url(a.get("href")),
-                        title=str(a.get("data-bookname") or ""),
-                        info=info.get_text(strip=True) if info else "",
-                    )
+            with self.create_browser() as browser:
+                params = {"keywords": query}
+                browser.visit(f"{self.scraper.origin}search?{urlencode(params)}")
+                for li in browser.soup.select(".search-result-container li"):
+                    a = li.find("a[href]")
+                    info = li.find(".g_star_num small")
+                    if a:
+                        yield SearchResult(
+                            url=self.absolute_url(a.get("href")),
+                            title=str(a.get("data-bookname") or ""),
+                            info=info.get_text(strip=True) if info else "",
+                        )
 
     def read_novel(self, novel: Novel) -> None:
         if "_" not in novel.url:

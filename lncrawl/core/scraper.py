@@ -8,6 +8,8 @@ from requests import Response
 from requests.structures import CaseInsensitiveDict
 
 from ..cloudscraper import CloudScraper
+from ..cloudscraper.config import CloudScraperConfig, ProxyConfig, StealthConfig
+from ..cloudscraper.exceptions import AbortedException
 from ..context import ctx
 from ..utils.file_tools import atomic_write
 from ..utils.url_tools import extract_base
@@ -23,58 +25,59 @@ class Scraper(CloudScraper):
         parser: Optional[str] = None,
         **kwargs,
     ) -> None:
-        """Initialize the Scraper
-
-        Args:
-            parser (Optional[str], default=None): The desired parser or markup type.
-                - Acceptable values include parser names ("lxml", "lxml-xml", "html.parser", "html5lib")
-                - or, markup types ("html", "html5", "xml").
-        """
-        super().__init__(
-            debug=ctx.logger.is_debug,  # Enable for monitoring
-            # KEY SETTINGS to prevent 403 errors
-            min_request_interval=2.0,  # Prevents TLS blocking
-            max_concurrent_requests=1,  # Prevents concurrent conflicts
-            rotate_tls_ciphers=True,  # Avoids cipher detection
-            # Enhanced protection
-            auto_refresh_on_403=False,  # Auto-recover from 403 errors
-            max_403_retries=2,  # Max retry attempts
-            session_refresh_interval=900,  # Session refresh time in seconds
-            # Optimized stealth mode
-            enable_stealth=True,
-            stealth_options={
-                "min_delay": 1.0,  # Minimum delay between requests
-                "max_delay": 3.0,  # Maximum delay between requests
-                "human_like_delays": True,  # Human-like delays
-                "randomize_headers": True,
-                "browser_quirks": True,  # Simulate browser like behavior
-            },
-            # User agent filtering
+        proxy_urls = (ctx.config.crawler.proxy_url or "").split(",")
+        cfg = CloudScraperConfig(
+            debug=ctx.logger.is_debug,
+            min_request_interval=2.0,
+            min_request_interval_fast=0.1,
+            max_concurrent_requests=1,
+            rotate_tls_ciphers=True,
+            auto_refresh_on_403=False,
+            max_403_retries=3,
+            session_refresh_interval=300,
+            stealth=StealthConfig(
+                enabled=True,
+                min_delay=1.0,
+                max_delay=3.0,
+                min_delay_fast=0.0,
+                max_delay_fast=0.1,
+                human_like_delays=True,
+                randomize_headers=True,
+                browser_quirks=True,
+            ),
             browser={
-                "browser": "firefox",  # Firefox browser
-                "platform": "windows",  # Windows platform
-                "desktop": True,  # Desktop environment
-                "mobile": False,  # Mobile environment
+                "browser": "firefox",
+                "platform": "windows",
+                "desktop": True,
+                "mobile": False,
             },
-            **kwargs,
+            proxy=ProxyConfig(
+                proxy_urls=proxy_urls,
+                fallback_to_direct=True,
+                tor_control_host=ctx.config.crawler.tor_control_host,
+                tor_control_port=ctx.config.crawler.tor_control_port,
+                tor_control_password=ctx.config.crawler.tor_control_password,
+            ),
         )
+
+        super().__init__(config=cfg)
 
         self.origin = origin or ""
         self.parser = parser or "lxml"
         self.last_soup_url = self.origin
 
-    def reset(self):
-        """Reset the scraper to its initial state"""
+    def reset(self) -> None:
+        """Reset the scraper to its initial state."""
         self.cookies.clear()
         self.headers.clear()
         self.last_soup_url = ""
 
     def set_header(self, key: str, value: Union[str, bytes]) -> None:
-        """Set default headers for next requests"""
+        """Set a default header for subsequent requests."""
         self.headers[key] = value
 
     def set_cookie(self, name: str, value: str) -> None:
-        """Set a session cookie"""
+        """Set a session cookie."""
         self.cookies.set(name, value)
 
     def request(self, method, url, *args, **kwargs):
@@ -95,9 +98,13 @@ class Scraper(CloudScraper):
     def ping(self, url: str, timeout=5, **kwargs):
         return self.request("head", url, **kwargs, timeout=timeout)
 
-    def get(self, url, **kwargs):
-        kwargs.setdefault("timeout", (7, 301))
+    def get(self, url, **kwargs) -> Response:  # type: ignore[override]
+        kwargs.setdefault("timeout", (15, 301))
         return super().get(url, **kwargs)
+
+    def post(self, url, **kwargs) -> Response:  # type: ignore[override]
+        kwargs.setdefault("timeout", (15, 301))
+        return super().post(url, **kwargs)
 
     def submit_form(
         self,
@@ -126,7 +133,11 @@ class Scraper(CloudScraper):
         headers: MutableMapping = {},
         **kwargs,
     ) -> None:
-        """Download content of the url to a file"""
+        """Download content of the url to a file.
+
+        Checks the abort signal between chunks so downloads can be cancelled
+        via :meth:`abort`.
+        """
         if isinstance(output_file, str):
             output_file = Path(output_file)
 
@@ -135,6 +146,9 @@ class Scraper(CloudScraper):
         response = self.get(url, **kwargs)
         with atomic_write(output_file) as tmp:
             for chunk in response.iter_content(chunk_size=10240):
+                if self.signal.is_set():
+                    response.close()
+                    raise AbortedException("Download aborted.")
                 tmp.write(chunk)
 
     def get_image(
@@ -144,7 +158,7 @@ class Scraper(CloudScraper):
         timeout: Tuple[float, float] = (3, 30),
         **kwargs,
     ):
-        """Download image from url and return a PIL Image object"""
+        """Download image from url and return a PIL Image object."""
         from PIL import Image, UnidentifiedImageError
 
         if url.startswith("data:"):
@@ -169,7 +183,7 @@ class Scraper(CloudScraper):
             return Image.open(BytesIO(response.content))
 
     def get_json(self, url: str, headers: MutableMapping = {}, **kwargs) -> Any:
-        """Fetch the content and return the content as a JSON object"""
+        """Fetch content and return it as a JSON object."""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault("Accept", "application/json,text/plain,*/*")
         kwargs["headers"] = headers
@@ -182,7 +196,7 @@ class Scraper(CloudScraper):
         headers: MutableMapping = {},
         **kwargs,
     ) -> Any:
-        """Make a POST request and return the content as JSON object"""
+        """Make a POST request and return the content as a JSON object."""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault("Content-Type", "application/json")
         headers.setdefault("Accept", "application/json,text/plain,*/*")
@@ -203,7 +217,7 @@ class Scraper(CloudScraper):
         encoding: Optional[str] = None,
         **kwargs,
     ) -> PageSoup:
-        """Fetch the content and return a PageSoup instance of the page"""
+        """Fetch content and return a PageSoup instance."""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9")
         kwargs["headers"] = headers
@@ -219,7 +233,7 @@ class Scraper(CloudScraper):
         encoding: Optional[str] = None,
         **kwargs,
     ) -> PageSoup:
-        """Make a POST request and return PageSoup instance of the response"""
+        """Make a POST request and return a PageSoup instance."""
         headers = CaseInsensitiveDict(headers)
         headers.setdefault("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9")
         kwargs["headers"] = headers

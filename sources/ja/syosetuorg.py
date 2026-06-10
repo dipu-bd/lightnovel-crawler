@@ -2,13 +2,13 @@
 import logging
 from urllib.parse import quote_plus
 
-from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume
 
 logger = logging.getLogger(__name__)
 search_url = "https://syosetu.org/search/?mode=search&word=%s"
 
 
-class SyosetuOrgCrawler(BrowserTemplate):
+class SyosetuOrgCrawler(SoupTemplate):
     base_url = "https://syosetu.org/"
 
     search_item_list_selector = ".searchkekka_box"

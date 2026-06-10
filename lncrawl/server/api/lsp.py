@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import time
+from typing import Dict
 
 from fastapi import APIRouter, Query, WebSocket, status
 
@@ -139,7 +140,7 @@ async def _relay_tcp(client: WebSocket, host: str, port: int) -> None:
         nonlocal last_activity
         try:
             while True:
-                headers: dict[str, str] = {}
+                headers: Dict[str, str] = {}
                 while True:
                     line = (await reader.readline()).decode("ascii").strip()
                     if not line:

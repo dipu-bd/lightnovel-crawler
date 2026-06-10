@@ -1,6 +1,7 @@
 import inspect
 import logging
 import os
+import sys
 from typing import Union
 
 
@@ -24,6 +25,13 @@ class Logger:
     @property
     def is_warn(self) -> bool:
         return self.is_info or self.level == logging.WARN
+
+    @property
+    def has_exception(self) -> bool:
+        try:
+            return sys.exc_info()[1] is not None
+        except Exception:
+            return False
 
     def setup(self, level: Union[int, str, None] = None) -> None:
         if level is None:

@@ -1,4 +1,26 @@
 services:
+  server:
+    image: ghcr.io/lncrawl/lightnovel-crawler:latest
+    ports:
+      - "23457:8080"
+    command: -ll server -p 8080
+    environment:
+      - LNCRAWL_DATA_PATH=/data
+      - TOR_CONTROL_HOST=torproxy
+      - TOR_PROXY_URL=socks5://torproxy:9150
+      - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl
+    volumes:
+      - ./appdata:/data
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "3.00"
+          memory: "5G"
+        reservations:
+          cpus: "2.00"
+          memory: "512M"
+
   postgres:
     image: postgres:alpine
     environment:
@@ -12,27 +34,24 @@ services:
       resources:
         limits:
           cpus: "2.00"
-          memory: 2G
+          memory: "2G"
         reservations:
-          cpus: "1.00"
-          memory: 1G
+          memory: "512M"
 
-  server:
-    image: ghcr.io/lncrawl/lightnovel-crawler:latest
-    ports:
-      - "23457:8080"
-    command: -ll server -p 8080
-    environment:
-      - LNCRAWL_DATA_PATH=/data
-      - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl
-    volumes:
-      - ./appdata:/data
+  torproxy:
+    image: peterdavehello/tor-socks-proxy
     restart: unless-stopped
+    volumes:
+      - tor_data:/var/lib/tor
+    security_opt:
+      - no-new-privileges:true
     deploy:
       resources:
         limits:
-          cpus: "3.00"
-          memory: 5G
+          cpus: "0.50"
+          memory: "256M"
         reservations:
-          cpus: "2.00"
-          memory: 2G
+          memory: "64M"
+
+volumes:
+  tor_data:

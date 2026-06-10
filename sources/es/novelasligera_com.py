@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from lncrawl.core import BrowserTemplate, Chapter, Novel
+from lncrawl.core import Chapter, Novel, SoupTemplate
 
 
-class NovelasLigeraCrawler(BrowserTemplate):
+class NovelasLigeraCrawler(SoupTemplate):
     base_url = ["https://novelasligera.com/"]
     has_manga = False
     has_mtl = False

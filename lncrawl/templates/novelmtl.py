@@ -3,11 +3,11 @@ import time
 from typing import Iterable, List, Optional
 from urllib.parse import parse_qs, urlencode, urlparse
 
-from ..core import BrowserTemplate, Novel, PageSoup, Volume
+from ..core import Novel, PageSoup, SoupTemplate, Volume
 from ..exceptions import LNException
 
 
-class NovelMTLTemplate(BrowserTemplate):
+class NovelMTLTemplate(SoupTemplate):
     is_template = True
 
     search_item_list_selector = "ul.novel-list .novel-item a"

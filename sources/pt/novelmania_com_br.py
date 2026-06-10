@@ -1,12 +1,12 @@
 import logging
 from typing import Iterable, Optional
 
-from lncrawl.core import BrowserTemplate, Novel, PageSoup, Volume
+from lncrawl.core import Novel, PageSoup, SoupTemplate, Volume
 
 logger = logging.getLogger(__name__)
 
 
-class NovelmaniaComBrCrawler(BrowserTemplate):
+class NovelmaniaComBrCrawler(SoupTemplate):
     base_url = ["https://novelmania.com.br/"]
     has_manga = False
     has_mtl = False

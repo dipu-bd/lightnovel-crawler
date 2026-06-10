@@ -2,13 +2,13 @@ import logging
 from typing import Iterable, Optional
 from urllib.parse import urlencode
 
-from ..core import BrowserTemplate, Novel, PageSoup, Volume
+from ..core import Novel, PageSoup, SoupTemplate, Volume
 from ..exceptions import LNException
 
 logger = logging.getLogger(__name__)
 
 
-class MadaraTemplate(BrowserTemplate):
+class MadaraTemplate(SoupTemplate):
     is_template = True
 
     search_item_selector = ".post-title h3 a"

@@ -6,7 +6,7 @@ import re
 from typing import List, Optional
 from urllib.parse import quote_plus, urljoin
 
-from lncrawl.core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume
 from lncrawl.exceptions import LNException
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 digit_regex = re.compile(r"\/(\d+)-")
 
 
-class RanobeLibCrawler(BrowserTemplate):
+class RanobeLibCrawler(SoupTemplate):
     base_url = [
         "https://ranobes.top/",
         "https://ranobes.net/",

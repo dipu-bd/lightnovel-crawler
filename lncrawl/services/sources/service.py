@@ -8,7 +8,7 @@ from typing import Dict, List, Optional, Type
 
 from ...context import ctx
 from ...core import Crawler
-from ...exceptions import ServerErrors
+from ...exceptions import AbortedException, ServerErrors
 from ...server.models import CrawlerIndex, CrawlerInfo, SourceItem
 from ...utils.event_lock import EventLock
 from ...utils.fts_store import FTSStore
@@ -29,10 +29,10 @@ logger = logging.getLogger(__name__)
 class Sources:
     def __init__(self) -> None:
         self._signal: Event
+        self._loader: Thread
         self._store: FTSStore
         self._index: CrawlerIndex
-        self._sync_thread: Thread
-        self._sync_lock = EventLock()
+        self._sync_lock: EventLock
         self.rejected: Dict[str, str] = {}  # Map of host -> rejection reason
         self.crawlers: Dict[str, Type[Crawler]] = {}  # Map of cid -> crawler
         self.info: Dict[str, CrawlerInfo] = {}  # Map of cid -> crawler info
@@ -50,7 +50,6 @@ class Sources:
         return self.rejected.get(host)
 
     def close(self):
-        self._sync_lock.abort()
         if hasattr(self, "_signal"):
             self._signal.set()
         if hasattr(self, "_store"):
@@ -59,76 +58,105 @@ class Sources:
             del self._index
         self.rejected.clear()
         self.sources.clear()
+        self._sync_lock.abort()
 
     def ensure_load(self):
-        if hasattr(self, "_sync_thread") and self._sync_thread:
-            self._sync_thread.join()
-            del self._sync_thread
+        try:
+            if hasattr(self, "_loader") and isinstance(self._loader, Thread):
+                self._loader.join()
+        except AbortedException:
+            pass
+        finally:
+            if hasattr(self, "_loader"):
+                delattr(self, "_loader")
 
     def load(self, sync_remote=True):
-        with self._sync_lock:
-            self._signal = Event()
-            self._store = FTSStore()
+        self._signal = Event()
+        self._store = FTSStore()
+        self._sync_lock = EventLock()
 
+        def loader():
             # load offline sources first
             self.load_index(load_offline_source(sync_remote))
 
             # check online sources update
             if sync_remote:
-                t = Thread(target=self.update)
-                t.start()
-                self._sync_thread = t
+                self.update()
+
+        self._loader = Thread(target=loader, daemon=True)
+        self._loader.start()
 
     def update(self) -> None:
-        with self._sync_lock:
-            logger.info(f"Sync online sources (current={self.version})")
-            online_index = ctx.github.fetch_online_source()
-            if not hasattr(self, "_index"):
-                return
-            if online_index.v <= self._index.v:
-                logger.info("Sources are up to date")
-                return
+        try:
+            with self._sync_lock:
+                if self._signal.is_set():
+                    return
 
-            # save the latest index
-            user_file = ctx.config.crawler.user_index_file
-            save_source(user_file, online_index)
+                logger.info(f"Sync online sources (current={self.version})")
+                online_index = ctx.github.fetch_online_source()
+                if not hasattr(self, "_index"):
+                    return
+                if online_index.v <= self._index.v:
+                    logger.info("Sources are up to date")
+                    return
 
-            # download latest source files
-            for id, source in online_index.crawlers.items():
-                current = self._index.crawlers.get(id)
-                if current and current.version >= source.version:
-                    continue
-                try:
-                    ctx.github.download_online_source(source.file_path)
-                    logger.debug(f"Downloaded source: {source.file_path}")
-                except Exception:
-                    logger.warning(f"Failed to download source: {source.file_path}", exc_info=True)
+                # save the latest index
+                user_file = ctx.config.crawler.user_index_file
+                save_source(user_file, online_index)
+
+                # download latest source files
+                for id, source in online_index.crawlers.items():
+                    if self._signal.is_set():
+                        return
+                    current = self._index.crawlers.get(id)
+                    if current and current.version >= source.version:
+                        continue
+                    try:
+                        ctx.github.download_online_source(source.file_path)
+                        logger.debug(f"Downloaded source: {source.file_path}")
+                    except Exception:
+                        logger.warning(
+                            f"Failed to download source: {source.file_path}",
+                            exc_info=ctx.logger.is_info,
+                        )
 
             # load the online index
             self.load_index(online_index)
             logger.info("Source synced.")
+        except AbortedException:
+            pass
 
     def load_index(self, index: CrawlerIndex) -> None:
-        self._index = index
+        try:
+            with self._sync_lock:
+                if self._signal.is_set():
+                    return
 
-        # update rejected list
-        self.rejected.clear()
-        for url, reason in index.rejected.items():
-            host = extract_host(url)
-            self.rejected[host] = reason
+                # set the index
+                self._index = index
 
-        # dynamically import all crawlers
-        self.info.clear()
-        self.crawlers.clear()
-        self.sources.clear()
-        self._cache.clear()
-        self.load_crawlers(
-            *ctx.config.crawler.local_sources.glob("**/*.py"),
-            *ctx.config.crawler.user_sources.glob("**/*.py"),
-        )
+                # update rejected list
+                self.rejected.clear()
+                for url, reason in index.rejected.items():
+                    host = extract_host(url)
+                    self.rejected[host] = reason
+
+                # dynamically import all crawlers
+                self.info.clear()
+                self.crawlers.clear()
+                self.sources.clear()
+                self._cache.clear()
+                self.load_crawlers(
+                    *ctx.config.crawler.local_sources.glob("**/*.py"),
+                    *ctx.config.crawler.user_sources.glob("**/*.py"),
+                )
+        except AbortedException:
+            pass
 
     def load_crawlers(self, *files: Path):
         for crawler in batch_import(*files):
+            if self._signal.is_set():
+                return
             self.add_crawler(crawler)
 
     def add_crawler(self, crawler: Type[Crawler]):
@@ -150,6 +178,8 @@ class Sources:
 
         # load source items
         for url in info.base_urls:
+            if self._signal.is_set():
+                return
             self.add_source(url, info)
 
     def add_source(self, url: str, info: CrawlerInfo):

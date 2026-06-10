@@ -2,11 +2,11 @@ import re
 from typing import Iterable, Optional
 from urllib.parse import urlencode
 
-from ..core import BrowserTemplate, Chapter, Novel, PageSoup, Volume
+from ..core import Chapter, Novel, PageSoup, SoupTemplate, Volume
 from ..exceptions import LNException
 
 
-class NovelFullTemplate(BrowserTemplate):
+class NovelFullTemplate(SoupTemplate):
     is_template = True
 
     search_item_list_selector = "#list-page .row h3[class*='title'] > a"

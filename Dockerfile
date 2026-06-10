@@ -6,8 +6,10 @@ ARG BASE_IMAGE=ghcr.io/lncrawl/lncrawl-base:latest
 FROM ${BASE_IMAGE} AS builder
 
 RUN apt-get update -yq && \
-    apt-get install -yq --no-install-recommends git && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -yq --no-install-recommends \
+    build-essential \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 

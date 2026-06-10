@@ -3,14 +3,14 @@ import logging
 import re
 from typing import Iterable, Optional
 
-from lncrawl.core import BrowserTemplate, Novel, PageSoup, Volume
+from lncrawl.core import Novel, PageSoup, SoupTemplate, Volume
 
 logger = logging.getLogger(__name__)
 
 digit_regex = re.compile(r"\?toc=(\d+)#content1$")
 
 
-class ScribbleHubCrawler(BrowserTemplate):
+class ScribbleHubCrawler(SoupTemplate):
     base_url = "https://www.scribblehub.com/"
     has_manga = False
     has_mtl = False

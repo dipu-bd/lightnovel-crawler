@@ -10,7 +10,7 @@ import logging
 from mimetypes import guess_type
 import ntpath
 import os
-from typing import Any
+from typing import Any, Dict
 import zlib
 
 from base58 import b58decode, b58encode
@@ -121,7 +121,7 @@ class PasteV2:
     def getJSON(self):
         return json_encode(self._data).decode()
 
-    def loadJSON(self, data: dict[str, Any]):
+    def loadJSON(self, data: Dict[str, Any]):
         self._data = data
 
     def getHash(self):

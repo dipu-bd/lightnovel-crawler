@@ -2,16 +2,19 @@ import logging
 import re
 
 from lncrawl.core import Chapter, LegacyCrawler, Volume
+from lncrawl.core.models import SearchResult
 
 logger = logging.getLogger(__name__)
 
 
 class NovelFireCrawler(LegacyCrawler):
+    search_url = "https://novelfire.net/search?keyword={}&type=title"
     base_url = [
         "https://novelfire.net/",
     ]
     has_mtl = False
-    has_mange = False
+    has_manga = False
+    can_search = True
 
     def initialize(self) -> None:
         self.init_executor(ratelimit=3)
@@ -74,3 +77,26 @@ class NovelFireCrawler(LegacyCrawler):
                 element.decompose()
 
         return self.cleaner.extract_contents(contents)
+
+    def search_novel(self, query):
+        query = query.lower().replace(" ", "+")
+        soup = self.get_soup(self.search_url.format(query))
+
+        results = []
+        for item in soup.select("ul.novel-list li.novel-item"):
+            a = item.select_one("a")
+
+            title = a.get("title")
+            url = self.absolute_url(a.get("href"))
+
+            chapters = a.select_one(".icon-book-open").text
+            rank = a.select_one(".icon-crown").text
+            results.append(
+                SearchResult(
+                    title=title,
+                    url=url,
+                    info=f"{chapters} | {rank}",
+                )
+            )
+
+        return results
