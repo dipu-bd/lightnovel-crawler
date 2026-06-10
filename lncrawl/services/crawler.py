@@ -131,12 +131,17 @@ class CrawlerService:
         crawler.scraper.signal = signal
 
         # check if download is necessary
-        if (
-            not refresh
-            and chapter.is_available
-            and chapter.extra.get("crawler_version") == crawler.version
-        ):
-            logger.debug(f"Skipped: {novel.title}] - Chapter {chapter.serial}")
+        # if (
+        #     not refresh
+        #     and chapter.is_available
+        #     and chapter.extra.get("crawler_version") == crawler.version
+        # ):
+        #     logger.debug(f"Skipped: {novel.title}] - Chapter {chapter.serial}")
+        #     return chapter
+        if not refresh and chapter.is_available:
+            logger.debug(
+                f"Skipped existing chapter cache: {novel.title} - Chapter {chapter.serial}"
+            )
             return chapter
 
         # get chapter content
