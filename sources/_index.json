@@ -364,7 +364,7 @@
     "https://novelww.com/": "62774b17e3ec70d4dfbe9882ee9df1d7",
     "https://novelzec.com/": "1d78beb13d701b6310bc6152034c596e",
     "https://novgo.net/": "98febb53ce66264b8a06f4f372c71d40",
-    "https://novlove.com/": "5d23959dc1b4b41d75e4ad11cc057341",
+    "https://novelnice.com/": "6d9635cb7523c70a5b85e73d65a4ea00",
     "https://nyx-translation.com/": "d4dc7d0c2307a840f5092791e22069ad",
     "https://nyxtranslation.home.blog/": "d4dc7d0c2307a840f5092791e22069ad",
     "https://pandanovel.co/": "c98577fef91275679f4c42584c906d4a",
@@ -3758,25 +3758,22 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/id/morenovel.py"
     },
-    "5d23959dc1b4b41d75e4ad11cc057341": {
-      "version": 1748576569,
-      "md5": "e2101bff3a28da0cb2253126a2c8cd62",
-      "file_path": "sources/en/n/novlove.py",
+    "6d9635cb7523c70a5b85e73d65a4ea00": {
+      "version": 1781124443,
+      "md5": "83e41f621c165925185fcb3e5b8d60d9",
+      "file_path": "sources/en/n/novelnice.py",
       "language": "",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
-      "total_commits": 2,
-      "contributors": [
-        "dipu-bd",
-        "jere344"
-      ],
-      "id": "5d23959dc1b4b41d75e4ad11cc057341",
+      "total_commits": 1,
+      "contributors": [],
+      "id": "6d9635cb7523c70a5b85e73d65a4ea00",
       "base_urls": [
-        "https://novlove.com/"
+        "https://novelnice.com/"
       ],
-      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novlove.py"
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelnice.py"
     },
     "5d2837e1dfeaeb287163d4b4de9f752e": {
       "version": 1775063705,

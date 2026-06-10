@@ -1087,10 +1087,10 @@ We are supporting 338 sources and 394 crawlers.
 <td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/eef256b9520f5c1f820c580b312ed9cf311708b7/sources/en/a/allnovelfull.py" title="02 September 2025 06:36:20 PM (UTC+0)">9</a></td>
 <td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/idMysteries"><img src="https://avatars.githubusercontent.com/u/11484976?v=4&s=24" alt="idMysteries" height="24"/></a> <a href="https://github.com/SirGryphin"><img src="https://avatars.githubusercontent.com/u/36343615?v=4&s=24" alt="SirGryphin" height="24"/></a></td>
 </tr>
-<tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
-<td><a href="https://novlove.com/" target="_blank">https://novlove.com/</a></td>
-<td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/eef256b9520f5c1f820c580b312ed9cf311708b7/sources/en/n/novlove.py" title="30 May 2025 03:42:49 AM (UTC+0)">2</a></td>
-<td><a href="https://github.com/dipu-bd"><img src="https://avatars.githubusercontent.com/u/5158124?v=4&s=24" alt="dipu-bd" height="24"/></a> <a href="https://github.com/jere344"><img src="https://avatars.githubusercontent.com/u/86294972?v=4&s=24" alt="jere344" height="24"/></a></td>
+<tr><td><span title="Contains machine translations"></span><span title="Supports searching">🔍</span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
+<td><a href="https://novelnice.com/" target="_blank">https://novelnice.com/</a></td>
+<td><a href="https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelnice.py" title="10 June 2026 08:47:23 PM (UTC+0)">1</a></td>
+<td></td>
 </tr>
 <tr><td><span title="Contains machine translations"></span><span title="Supports searching"></span><span title="Supports login"></span><span title="Contains manga/manhua/manhwa"></span></td>
 <td><a href="https://nyx-translation.com/" target="_blank">https://nyx-translation.com/</a></td>
