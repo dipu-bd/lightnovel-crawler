@@ -113,7 +113,7 @@ class ArtifactService:
             if language:
                 stmt = stmt.where(Artifact.language == language)
             else:
-                stmt = stmt.where(Artifact.language.is_(None))
+                stmt = stmt.where(col(Artifact.language).is_(None))
             stmt = stmt.order_by(desc(Artifact.updated_at))
             artifacts = [artifact for artifact in sess.exec(stmt).all() if artifact.is_available]
 
