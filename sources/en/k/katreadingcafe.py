@@ -146,7 +146,8 @@ class KatReadingCafeCrawler(SoupTemplate):
 
     def _valid_chapter_link(self, link: PageSoup) -> bool:
         href = link.get("href")
-        if href not in self.base_url:
+        stripped_base_url = str(self.base_url).strip("[]'")
+        if stripped_base_url not in href:
             return False
         if "🔒" in link.text:  # locked chapter
             return False
