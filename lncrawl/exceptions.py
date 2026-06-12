@@ -195,6 +195,9 @@ class ServerErrors:
     source_not_loaded = ServerError(status.HTTP_501_NOT_IMPLEMENTED, "Sources are not loaded")
     no_crawler = ServerError(status.HTTP_501_NOT_IMPLEMENTED, "No crawler found for the domain")
     crawler_test_failure = ServerError(status.HTTP_417_EXPECTATION_FAILED, "Crawler test failed")
+    search_not_supported = ServerError(
+        status.HTTP_501_NOT_IMPLEMENTED, "Search is not implemented for the source"
+    )
 
 
 class WebSocketError(LNException):

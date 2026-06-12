@@ -83,10 +83,10 @@ class Job(BaseTable, table=True):
             return self.extra["url"]
 
         if self.type == JobType.NOVEL_BATCH or self.type == JobType.FULL_NOVEL_BATCH:
-            urls = self.extra["urls"]
+            urls = self.extra.get("urls") or []
             if len(urls) == 1:
                 return urls[0]
-            else:
+            elif len(urls) > 1:
                 return f"{urls[0]} & {len(urls) - 1} more"
 
         # Require the Novel Title
@@ -133,6 +133,15 @@ class Job(BaseTable, table=True):
                 return f"{novel_title}{', '.join(formats)}"
             else:
                 return f"{novel_title}{', '.join(formats[:2])} & {len(formats) - 2} more"
+
+        if self.type == JobType.SEARCH_ALL_SOURCES:
+            query = self.extra.get("query")
+            return f"Search '{query}' → in all sources"
+
+        if self.type == JobType.SEARCH_SOURCE:
+            query = self.extra.get("query")
+            domain = self.extra.get("domain")
+            return f"Search '{query}' → {domain}"
 
         # Require Language for translation
         language = self.extra.get("language") or ""

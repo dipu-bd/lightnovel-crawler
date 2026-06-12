@@ -12,6 +12,7 @@ from ..models import (
     FetchVolumesRequest,
     MakeArtifactsRequest,
     Paginated,
+    SearchSourceRequest,
     TranslateChaptersRequest,
     TranslateNovelsRequest,
     TranslateVolumesRequest,
@@ -208,3 +209,14 @@ def translate_chapters(
     if len(chapters) == 1:
         return ctx.jobs.translate_chapter(user, chapters[0], body.language)
     return ctx.jobs.translate_many_chapters(user, *chapters, language=body.language)
+
+
+@router.post("/create/search-sources", summary="Create a job to search novels in available sources")
+def search_sources(
+    user: User = Security(ensure_user),
+    body: SearchSourceRequest = Body(),
+) -> Job:
+    if body.domain:
+        return ctx.jobs.search_single_source(user, body.query, body.domain)
+    else:
+        return ctx.jobs.search_all_sources(user, body.query)

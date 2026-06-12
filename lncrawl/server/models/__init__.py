@@ -13,6 +13,7 @@ from .job import (
     FetchNovelsRequest,
     FetchVolumesRequest,
     MakeArtifactsRequest,
+    SearchSourceRequest,
     TranslateChaptersRequest,
     TranslateNovelsRequest,
     TranslateVolumesRequest,
@@ -73,6 +74,7 @@ __all__ = [
     "TranslateNovelsRequest",
     "TranslateVolumesRequest",
     "TranslateChaptersRequest",
+    "SearchSourceRequest",
     # library
     "LibraryCreateRequest",
     "LibraryUpdateRequest",

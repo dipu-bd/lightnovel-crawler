@@ -130,6 +130,10 @@ class JobRunner:
             return self._chapter_translation_batch()
         if self.job.type == JobType.CHAPTER_TRANSLATION:
             return self._chapter_translation()
+        if self.job.type == JobType.SEARCH_ALL_SOURCES:
+            return self._search_all_sources()
+        if self.job.type == JobType.SEARCH_SOURCE:
+            return self._search_source()
 
         return self.__set_done(f"Job type is not supported: [b]{self.job.type}[/b]")
 
@@ -267,14 +271,16 @@ class JobRunner:
             if not urls:
                 return self.__set_done()
 
-            urls = set(urls)
+            added_urls = set()
             if self.job.is_running:
-                urls -= set([job.extra.get("url") for job in self.children])
+                added_urls = set([job.extra.get("url") for job in self.children])
             else:
                 self.__set_running()
 
             full = self.job.type == JobType.FULL_NOVEL_BATCH
-            for url in sorted(urls):
+            for url in urls:
+                if url in added_urls:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.fetch_novel(self.user, url, full=full, parent_id=self.job.id)
@@ -296,13 +302,16 @@ class JobRunner:
                 return self.__set_done("No target language")
 
             full = self.job.type == JobType.FULL_NOVEL_TRANSLATION_BATCH
-            novel_ids = set(novel_ids)
+
+            added_novel_ids = set()
             if self.job.is_running:
-                novel_ids -= set([job.extra.get("novel_id") for job in self.children])
+                added_novel_ids = set([job.extra.get("novel_id") for job in self.children])
             else:
                 self.__set_running()
 
             for novel_id in novel_ids:
+                if novel_id in added_novel_ids:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.translate_novel(
@@ -431,13 +440,15 @@ class JobRunner:
             if not volume_ids:
                 return self.__set_done()
 
-            volume_ids = set(volume_ids)
+            added_volumes = set()
             if self.job.is_running:
-                volume_ids -= set([job.extra.get("volume_id") for job in self.children])
+                added_volumes = set([job.extra.get("volume_id") for job in self.children])
             else:
                 self.__set_running()
 
             for volume_id in volume_ids:
+                if volume_id in added_volumes:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.fetch_volume(
@@ -463,13 +474,15 @@ class JobRunner:
             if not language:
                 return self.__set_done("No target language")
 
-            volume_ids = set(volume_ids)
+            added_volumes = set()
             if self.job.is_running:
-                volume_ids -= set([job.extra.get("volume_id") for job in self.children])
+                added_volumes = set([job.extra.get("volume_id") for job in self.children])
             else:
                 self.__set_running()
 
             for volume_id in volume_ids:
+                if volume_id in added_volumes:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.translate_volume(
@@ -492,13 +505,16 @@ class JobRunner:
             if not volume_id:
                 return self.__set_done("No volume id")
 
-            chapter_ids = set(ctx.chapters.list_ids(volume_id=volume_id))
+            added_chapters = set()
             if self.job.is_running:
-                chapter_ids -= set([job.extra.get("chapter_id") for job in self.children])
+                added_chapters = set([job.extra.get("chapter_id") for job in self.children])
             else:
                 self.__set_running()
 
+            chapter_ids = ctx.chapters.list_ids(volume_id=volume_id)
             for chapter_id in chapter_ids:
+                if chapter_id in added_chapters:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.fetch_chapter(
@@ -524,13 +540,16 @@ class JobRunner:
             if not language:
                 return self.__set_done("No target language")
 
-            chapter_ids = set(ctx.chapters.list_ids(volume_id=volume_id))
+            added_chapters = set()
             if self.job.is_running:
-                chapter_ids -= set([job.extra.get("chapter_id") for job in self.children])
+                added_chapters = set([job.extra.get("chapter_id") for job in self.children])
             else:
                 self.__set_running()
 
+            chapter_ids = ctx.chapters.list_ids(volume_id=volume_id)
             for chapter_id in chapter_ids:
+                if chapter_id in added_chapters:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.translate_chapter(
@@ -556,13 +575,15 @@ class JobRunner:
             if not chapter_ids:
                 return self.__set_done()
 
-            chapter_ids = set(chapter_ids)
+            added_chapters = set()
             if self.job.is_running:
-                chapter_ids -= set([job.extra.get("chapter_id") for job in self.children])
+                added_chapters = set([job.extra.get("chapter_id") for job in self.children])
             else:
                 self.__set_running()
 
             for chapter_id in chapter_ids:
+                if chapter_id in added_chapters:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.fetch_chapter(
@@ -588,13 +609,15 @@ class JobRunner:
             if not language:
                 return self.__set_done("No target language")
 
-            chapter_ids = set(chapter_ids)
+            added_chapters = set()
             if self.job.is_running:
-                chapter_ids -= set([job.extra.get("chapter_id") for job in self.children])
+                added_chapters = set([job.extra.get("chapter_id") for job in self.children])
             else:
                 self.__set_running()
 
             for chapter_id in chapter_ids:
+                if chapter_id in added_chapters:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.translate_chapter(
@@ -683,13 +706,15 @@ class JobRunner:
             if not image_ids:
                 return self.__set_done()
 
-            image_ids = set(image_ids)
+            added_images = set()
             if self.job.is_running:
-                image_ids -= set([job.extra.get("image_id") for job in self.children])
+                added_images = set([job.extra.get("image_id") for job in self.children])
             else:
                 self.__set_running()
 
             for image_id in image_ids:
+                if image_id in added_images:
+                    continue
                 if self.signal.is_set():
                     raise AbortedException()
                 ctx.jobs.fetch_image(
@@ -747,7 +772,7 @@ class JobRunner:
             format_job_map = {}
             if self.job.is_running:
                 format_job_map = {
-                    OutputFormat(job.extra["format"]): job.id for job in self.children
+                    OutputFormat(job.extra.get("format")): job.id for job in self.children
                 }
             else:
                 self.__set_running()
@@ -846,3 +871,85 @@ class JobRunner:
             return False  # ignore error
         except Exception as e:
             return self.__set_done("Failed to make artifact", e)
+
+    def _search_all_sources(self) -> bool:
+        try:
+            query = self.job.extra.get("query") or ""
+            if not query or len(query) < 2:
+                return self.__set_done("Search query must be at least 2 characters long")
+
+            domain_id_map = {}
+            if self.job.is_running:
+                domain_id_map = {job.extra.get("domain"): job.id for job in self.children}
+            else:
+                self.__set_running()
+
+            sources = ctx.sources.list(
+                include_rejected=False,
+                can_search=True,
+            )
+            for source in sources:
+                if source.domain in domain_id_map:
+                    continue
+                if self.signal.is_set():
+                    raise AbortedException()
+                job = ctx.jobs.search_single_source(
+                    self.user,
+                    query,
+                    source.domain,
+                    parent_id=self.job.id,
+                )
+                domain_id_map[source.domain] = job.id
+
+            return self.__increment()
+        except AbortedException:
+            return False  # ignore error
+        except Exception as e:
+            return self.__set_done("Failed to create requests", e)
+
+    def _search_source(self) -> bool:
+        try:
+            domain = self.job.extra.get("domain")
+            if not domain:
+                return self.__set_done("Source domain is not specified")
+
+            query = self.job.extra.get("query") or ""
+            if not query or len(query) < 2:
+                return self.__set_done("Search query must be at least 2 characters long")
+
+            if not self.job.is_running:
+                self.__set_running()
+
+            from ...core import SearchResult
+
+            results = [SearchResult(**item) for item in self.job.extra.get("search_results") or []]
+            if not results:
+                results = ctx.crawler.search_novel(
+                    user_id=self.user.id,
+                    query=query,
+                    domain=domain,
+                    signal=self.signal,
+                )
+                self.__set_extra(
+                    search_results=[result.to_dict() for result in results],
+                )
+
+            if not results:
+                return self.__set_done()
+
+            for job in self.children:
+                if job.type == JobType.NOVEL_BATCH:
+                    break
+            else:
+                ctx.jobs.fetch_many_novels(
+                    self.user,
+                    *(item.url for item in results),
+                    full=False,
+                    parent_id=self.job.id,
+                )
+
+            return self.__increment()
+        except AbortedException:
+            return False  # ignore error
+        except Exception as e:
+            return self.__set_done("Failed to create requests", e)
