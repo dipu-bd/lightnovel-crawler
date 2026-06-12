@@ -2242,7 +2242,7 @@ dependencies = [
     { name = "httpx", extra = ["brotli", "http2"] },
     { name = "humanize", version = "4.13.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "humanize", version = "4.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-    { name = "lncrawl-scraper", extra = ["image", "impersonate"] },
+    { name = "lncrawl-scraper", extra = ["all"] },
     { name = "lxml" },
     { name = "nodriver" },
     { name = "openai" },
@@ -2332,7 +2332,7 @@ requires-dist = [
     { name = "html5lib", specifier = "~=1.1" },
     { name = "httpx", extras = ["brotli", "http2"], specifier = ">=0.27.0" },
     { name = "humanize", specifier = ">=4.0.0" },
-    { name = "lncrawl-scraper", extras = ["image", "impersonate"], specifier = "==0.1.0" },
+    { name = "lncrawl-scraper", extras = ["all"], specifier = "==0.1.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "lxml-stubs", marker = "extra == 'dev'", specifier = ">=0.5.0" },
     { name = "nodriver", specifier = ">=0.50" },
@@ -2384,7 +2384,7 @@ provides-extras = ["dev", "lsp"]
 
 [[package]]
 name = "lncrawl-scraper"
-version = "0.1.0"
+version = "0.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -2394,19 +2394,17 @@ dependencies = [
     { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version < '3.10'" },
     { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/23/81/2efeb4a3f74aa7d2b7d3e55cbd9c87792fc67dc7d58bcd011269df413415/lncrawl_scraper-0.1.0.tar.gz", hash = "sha256:4ca0440abfde49e7b071b8572340e1799fdd99ab19d2a5a30928b794f9ff751e", size = 167639, upload-time = "2026-06-04T20:26:50.63Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/75/dc/167b00d7f1b89bbb052096fca7a11aa1dd7e57fc1d9d501e3f0a04702a4e/lncrawl_scraper-0.1.1.tar.gz", hash = "sha256:2004ab104f798467a350b690bb95f94aef71908e9a097413b2b9940a7e11b72b", size = 171495, upload-time = "2026-06-12T11:05:06.872Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/79/c0/f1b8b47cfe5aa4e7f1e466702b0d2490e93287282d95593746cc91010263/lncrawl_scraper-0.1.0-py3-none-any.whl", hash = "sha256:6d52b089d8924a232d4494fbb929fdbec3d04d9ab3c14c491e976f8d47c8127f", size = 52036, upload-time = "2026-06-04T20:26:52.251Z" },
+    { url = "https://files.pythonhosted.org/packages/2d/d1/c0cbc52b99bddcb98802be23a2df2eb1de792af171d95f1cedbcd055b485/lncrawl_scraper-0.1.1-py3-none-any.whl", hash = "sha256:cd394a0ca11ccf9f74a42362056cfb649eeeacb75b58654b376d2e32d078fda2", size = 52222, upload-time = "2026-06-12T11:05:05.503Z" },
 ]
 
 [package.optional-dependencies]
-image = [
-    { name = "pillow", version = "11.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "pillow", version = "12.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
-]
-impersonate = [
+all = [
     { name = "curl-cffi", version = "0.13.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "curl-cffi", version = "0.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "pillow", version = "11.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "pillow", version = "12.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
 ]
 
 [[package]]

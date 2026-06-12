@@ -204,7 +204,7 @@ class JobService:
         depends_on: Optional[str] = None,
         **data: Any,
     ) -> Job:
-        data.update({"urls": urls})
+        data.update({"urls": list(set(urls))})
         return self._create(
             user=user,
             data=data,
@@ -592,6 +592,48 @@ class JobService:
             parent_id=parent_id,
             depends_on=depends_on,
             type=JobType.ARTIFACT_BATCH,
+        )
+
+    def search_all_sources(
+        self,
+        user: User,
+        query: str,
+        *,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        data["query"] = str(query).strip().casefold()
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.SEARCH_ALL_SOURCES,
+        )
+
+    def search_single_source(
+        self,
+        user: User,
+        query: str,
+        domain: str,
+        *,
+        parent_id: Optional[str] = None,
+        depends_on: Optional[str] = None,
+        **data: Any,
+    ) -> Job:
+        data["domain"] = domain
+        data["query"] = str(query).strip().casefold()
+        source = ctx.sources.get_source(domain)
+        if not source.can_search:
+            raise ServerErrors.search_not_supported.with_extra(domain)
+        data["url"] = source.url
+        return self._create(
+            user=user,
+            data=data,
+            parent_id=parent_id,
+            depends_on=depends_on,
+            type=JobType.SEARCH_SOURCE,
         )
 
     # -------------------------------------------------------------------------

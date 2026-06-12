@@ -42,3 +42,8 @@ class TranslateVolumesRequest(BaseModel):
 class TranslateChaptersRequest(BaseModel):
     chapters: List[str] = Field(description="List of chapter ids to translate")
     language: LanguageCode = Field(description="Target language code")
+
+
+class SearchSourceRequest(BaseModel):
+    query: str = Field(description="Search query")
+    domain: Optional[str] = Field(default=None, description="Search in a specific source only")

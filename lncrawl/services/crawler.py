@@ -1,12 +1,12 @@
 import logging
 from threading import Event
-from typing import Optional, Union
+from typing import List, Optional, Union
 
 from pydantic import HttpUrl
 from sqlmodel import select
 
 from ..context import ctx
-from ..core import Chapter as CrawlerChapter, Crawler, Novel as CrawlerNovel
+from ..core import Chapter as CrawlerChapter, Crawler, Novel as CrawlerNovel, SearchResult
 from ..dao import Chapter, ChapterImage, Novel
 from ..exceptions import ServerErrors
 from ..utils.url_tools import extract_host
@@ -33,7 +33,7 @@ class CrawlerService:
         self,
         user_id: str,
         url: Union[str, HttpUrl],
-        signal=Event(),
+        signal: Optional[Event] = None,
         crawler: Optional[Crawler] = None,
     ) -> Novel:
         # validate url
@@ -46,7 +46,8 @@ class CrawlerService:
         # get crawler
         if crawler is None:
             crawler = self.get_crawler(user_id, novel_url)
-        crawler.scraper.signal = signal
+        if signal:
+            crawler.scraper.signal = signal
 
         # fetch novel metadata
         model = CrawlerNovel(url=novel_url)
@@ -113,7 +114,7 @@ class CrawlerService:
         self,
         user_id: str,
         chapter_id: str,
-        signal=Event(),
+        signal: Optional[Event] = None,
         crawler: Optional[Crawler] = None,
         refresh: bool = False,
     ) -> Chapter:
@@ -129,7 +130,8 @@ class CrawlerService:
         # get crawler
         if crawler is None:
             crawler = self.get_crawler(user_id, novel.url)
-        crawler.scraper.signal = signal
+        if signal:
+            crawler.scraper.signal = signal
 
         # check if download is necessary
         if (
@@ -172,7 +174,7 @@ class CrawlerService:
         self,
         user_id: str,
         image_id: str,
-        signal=Event(),
+        signal: Optional[Event] = None,
         crawler: Optional[Crawler] = None,
         refresh: bool = False,
     ) -> ChapterImage:
@@ -188,7 +190,8 @@ class CrawlerService:
         # get crawler
         if crawler is None:
             crawler = self.get_crawler(user_id, novel.url)
-        crawler.scraper.signal = signal
+        if signal:
+            crawler.scraper.signal = signal
 
         # check if download is necessary
         if (
@@ -212,3 +215,21 @@ class CrawlerService:
 
         logger.debug(f"Downloaded image: {novel.title}] - Image {image.id}")
         return image
+
+    def search_novel(
+        self,
+        user_id: str,
+        query: str,
+        domain: str,
+        signal: Optional[Event] = None,
+        crawler: Optional[Crawler] = None,
+    ) -> List[SearchResult]:
+        # get crawler
+        source = ctx.sources.get_source(domain)
+        if crawler is None:
+            crawler = self.get_crawler(user_id, source.url)
+        if signal:
+            crawler.scraper.signal = signal
+
+        results = crawler.search(query)
+        return list(results)

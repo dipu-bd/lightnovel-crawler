@@ -34,6 +34,8 @@ class JobType(IntEnum):
     IMAGE_BATCH = 31
     ARTIFACT = 40
     ARTIFACT_BATCH = 41
+    SEARCH_SOURCE = 50
+    SEARCH_ALL_SOURCES = 51
 
 
 class JobStatus(IntEnum):
