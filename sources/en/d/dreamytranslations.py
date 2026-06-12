@@ -8,20 +8,22 @@ from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume, Browser
 logger = logging.getLogger(__name__)
 
 
-class BotiTranslationCrawler(SoupTemplate):
-    base_url = ["https://www.botitranslation.com/"]
+class DreamyTranslationsCrawler(SoupTemplate):
+    base_url = ["https://dreamy-translations.com/"]
 
-    novel_title_selector = ".info-section .book-name span"
-    novel_author_selector = ".info-section .author-name"
-    novel_cover_selector = ".cover-img"
+    novel_title_selector = ".text-2xl"
+    novel_author_selector = ".mt-1 > span:nth-child(1)"
+    novel_cover_selector = ".object-cover"
+    novel_tags_selector = "div.flex-wrap:nth-child(2) span, div.flex-wrap:nth-child(3) span"
 
     novel_toc_selector = "#tocItems"
-    novel_synopsis_selector = "div#about-panel .content"
+    novel_synopsis_selector = "div.min-h-0:nth-child(5) > div:nth-child(1)"
 
-    chapter_list_selector = "tr td a[href]"
-    chapter_title_selector = "#chapterContentTitle, .chapter-title"
+    chapter_list_selector = ".space-y-0\.5 a"
+    chapter_title_selector = "a.group > div:nth-child(1) > p"
 
-    chapter_body_selector = "#chapterContent, .chapter-content"
+    chapter_body_selector = "main article div"
+    chapter_elem_selector = ".paragraph .line"
 
     auto_create_volumes = False
 
@@ -29,11 +31,27 @@ class BotiTranslationCrawler(SoupTemplate):
         self.taskman.init_executor(workers=2) 
         # The browser doesn't handle concurrency very well, likely due to networking limitations
 
+    def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
+        """Parse and set the novel categories/genres/tags"""
+        #novel.tags = [tag.text for tag in soup.select(self.novel_tags_selector)]
+        for tag in soup.select(self.novel_tags_selector):
+            tag_text = tag.text
+            if "#" in tag_text:
+                tag_text = tag_text.strip("#") # Remove octothorpe from tags if applicable
+            novel.tags.append(tag_text)
+
     def parse_chapter_item(self, soup: PageSoup, chapter_id: int) -> Chapter:
         chapter = Chapter(id=chapter_id)
         self.parse_chapter_title(soup, chapter)
         self.parse_chapter_url(soup, chapter)
         return chapter
+
+    def parse_chapter_title(self, soup: PageSoup, chapter: Chapter) -> None:
+        """Parse and set the chapter title"""
+        title_tag = soup.select_one(self.chapter_title_selector) or soup
+        #print("Chapter title tag: " + str(title_tag))
+        print("Chapter title: " + title_tag.text)
+        chapter.title = title_tag.text
 
     def select_chapter_tags(
         self, soup: PageSoup, novel: Novel, volume: Optional[Volume] = None
@@ -41,13 +59,7 @@ class BotiTranslationCrawler(SoupTemplate):
         chapters = list(soup.select(self.chapter_list_selector))
 
         for a in chapters:
-            if self._valid_chapter_link(a):
-                yield a
-
-    def _valid_chapter_link(self, link: PageSoup) -> bool:
-        if link.select("i.iconfont"): # Paywalled chapters have an icon within the link text
-            return False
-        return True
+            yield a
 
     def download_chapter(self, chapter: Chapter) -> None:
         soup = self.get_chapter_soup(chapter, True)
@@ -63,21 +75,6 @@ class BotiTranslationCrawler(SoupTemplate):
             if extra_timeout: # For JS-heavy pages, call with extra_timeout=True
                 import time
                 time.sleep(2)
-            browser.click(".border-color > li:nth-child(2)") # click TOC for next section
-
-            # Since the TOC loads 100 chapters at a time, with more being loaded upon scrolling,
-            # the browser needs to scroll through all chapter items
-            previous_count = 0  
-            current_elements = browser.find_all("#tocItems tr td")
-            while True:  
-                for index, root in enumerate(current_elements):
-                    root.scroll_into_view() # Scroll to every TOC item
-                browser.wait("#loadingMask", inverse=True, timeout=2)
-                current_elements = browser.find_all("#tocItems tr td")
-                current_count = len(current_elements) 
-                if current_count == previous_count:  
-                    break  
-                previous_count = current_count
             
             soup = browser.soup
             return soup
