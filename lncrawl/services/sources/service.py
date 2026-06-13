@@ -85,14 +85,14 @@ class Sources:
         self._loader = Thread(target=loader, daemon=True)
         self._loader.start()
 
-    def update(self) -> None:
+    def update(self, ignore_cache=False) -> None:
         try:
             with self._sync_lock:
                 if self._signal.is_set():
                     return
 
                 logger.info(f"Sync online sources (current={self.version})")
-                online_index = ctx.github.fetch_online_source()
+                online_index = ctx.github.fetch_online_source(ignore_cache)
                 if not hasattr(self, "_index"):
                     return
                 if online_index.v <= self._index.v:
