@@ -2,13 +2,14 @@
 import logging
 from urllib.parse import quote_plus
 
-from lncrawl.core import Chapter, LegacyCrawler, SearchResult, Volume
+from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 
 logger = logging.getLogger(__name__)
 
 
-class LightNovelPub(LegacyCrawler):
+class LightNovelPubOrg(LegacyCrawler):
     base_url = [
+        "https://lightnovelpub.org/",
         "https://www.lightnovelpub.org/",
     ]
 
@@ -61,28 +62,19 @@ class LightNovelPub(LegacyCrawler):
             self.novel_synopsis = self.cleaner.extract_contents(synopsis)
 
         possible_chapter_stat = soup.select_one("div.novel-stats-grid span.stat-value")
-        assert possible_chapter_stat, "Can novel stat to determine total chapters"
         total_chapters = int(possible_chapter_stat.get_text(strip=True))
         for i in range(1, total_chapters + 1):
             chapter_url = f"{self.novel_url}chapter/{i}"
-            chapter_title = f"Chapter {i}"
-            chap_id = len(self.chapters) + 1
-            vol_id = len(self.chapters) // 100 + 1
-            if len(self.volumes) < vol_id:
-                self.volumes.append(Volume(id=vol_id))
             self.chapters.append(
                 Chapter(
-                    id=chap_id,
-                    volume=vol_id,
+                    id=len(self.chapters),
                     url=chapter_url,
-                    title=chapter_title,
                 )
             )
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
         possible_title = soup.select_one(".chapter-title")
-        assert possible_title, "No title"
-        self.chapters[chapter.id - 1].title = possible_title.get_text(strip=True)
+        chapter.title = possible_title.get_text(strip=True)
         contents = soup.select_one("div.chapter-content")
         return self.cleaner.extract_contents(contents)
