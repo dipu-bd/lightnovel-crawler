@@ -175,7 +175,7 @@ class Sources:
         self.crawlers[cid] = crawler
 
         # load source items
-        for url in info.base_urls:
+        for url in crawler.base_url:
             if self._signal.is_set():
                 return
             self.add_source(url, info)
