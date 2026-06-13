@@ -24,9 +24,9 @@ class GitHubService:
     def close(self):
         self._lock.abort()
 
-    def fetch_online_source(self) -> CrawlerIndex:
+    def fetch_online_source(self, ignore_cache=False) -> CrawlerIndex:
         with self._lock:
-            if time.monotonic() - self._last_index_fetch > 60:
+            if ignore_cache or time.monotonic() - self._last_index_fetch > 60:
                 index_url = GithubClient.get_remote_raw_link("sources/_index.zip")
                 compressed = ctx.http.get(index_url)
                 with gzip.GzipFile(fileobj=io.BytesIO(compressed), mode="rb") as fp:
