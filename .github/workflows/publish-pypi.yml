@@ -1,0 +1,44 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    name: PyPI Publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # PyPI Trusted Publishing (OIDC) via gh-action-pypi-publish
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: 🐍 Install uv & Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - name: 🏗️ Build wheel
+        env:
+          PYTHONIOENCODING: utf-8
+          UV_PROJECT_ENVIRONMENT: .venv
+        run: |
+          uv sync --all-extras --all-groups
+          uv run python -m build -w
+
+      - name: 📤 PyPI Publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        env:
+          verbose: true
+          print-hash: true
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: 🔗 Update Download Links
+        env:
+          SHLINK_API_KEY: ${{ secrets.SHLINK_API_KEY }}
+        run: sh ./scripts/bitanon.sh

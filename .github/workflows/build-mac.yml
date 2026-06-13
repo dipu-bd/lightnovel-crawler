@@ -1,0 +1,48 @@
+name: Build (macOS)
+
+on:
+  workflow_call: {}
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    name: Build & Publish (macOS)
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: 🐍 Install uv & Python
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.14"
+          enable-cache: true
+
+      - name: 🏗️ Build Executable
+        env:
+          PYTHONIOENCODING: utf-8
+          UV_PROJECT_ENVIRONMENT: .venv
+        run: |
+          uv sync --all-extras --all-groups
+          uv run python -m build -w
+          uv run python setup_pyi.py
+          mv ./dist/lncrawl ./dist/lncrawl-mac
+          ./dist/lncrawl-mac -ll sources list
+
+      - name: 📦 Upload Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: lncrawl-mac
+          path: dist/lncrawl-mac
+          retention-days: 7
+
+      - name: 🚀 Release Artifact
+        if: ${{ github.event_name == 'workflow_call' }}
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist/lncrawl-mac"
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          token: ${{ secrets.GITHUB_TOKEN }}
