@@ -102,7 +102,7 @@ def crawl(
     # fetch novel details
     with console.status("Fetching novel details..."):
         user = ctx.users.get_admin()
-        novel = ctx.crawler.fetch_novel(user.id, url, crawler=crawler)
+        novel = ctx.crawler.fetch_novel(user.id, url, custom=crawler)
     print(
         Panel(
             "\n".join(
@@ -154,7 +154,7 @@ def crawl(
             ctx.crawler.fetch_chapter,
             user.id,
             chapter_id,
-            crawler=crawler,
+            custom=crawler,
         )
         for chapter_id in sorted(set(chapters))
     ]
@@ -170,7 +170,7 @@ def crawl(
             ctx.crawler.fetch_image,
             user.id,
             image_id,
-            crawler=crawler,
+            custom=crawler,
         )
         for image_id in sorted(set(chapter_image_ids))
     ]
