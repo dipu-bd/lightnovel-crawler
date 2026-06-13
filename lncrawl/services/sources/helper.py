@@ -151,7 +151,7 @@ def create_crawler_info(crawler: Type[Crawler]):
         file_path = file.relative_to(user_root).as_posix()
     else:
         file_path = file.as_posix()
-        
+
     language = file_path.split("/")[1]
     language = getattr(crawler, "language", language)
     return CrawlerInfo(
