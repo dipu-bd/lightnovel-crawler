@@ -24,5 +24,5 @@ class AdminService:
 
     def update_sources(self) -> int:
         ctx.sources.load(False)
-        ctx.sources.update()
+        ctx.sources.update(True)
         return ctx.sources.version
