@@ -141,9 +141,17 @@ def extract_crawlers(module: types.ModuleType) -> Generator[Type[Crawler], None,
 
 
 def create_crawler_info(crawler: Type[Crawler]):
-    root = ctx.config.crawler.local_sources.parent
     file = Path(getattr(crawler, "__file__"))
-    file_path = file.relative_to(root).as_posix()
+
+    local_root = ctx.config.crawler.local_sources.parent
+    user_root = ctx.config.crawler.user_sources.parent
+    if file.is_relative_to(local_root):
+        file_path = file.relative_to(local_root).as_posix()
+    elif file.is_relative_to(user_root):
+        file_path = file.relative_to(user_root).as_posix()
+    else:
+        file_path = file.as_posix()
+        
     language = file_path.split("/")[1]
     language = getattr(crawler, "language", language)
     return CrawlerInfo(
