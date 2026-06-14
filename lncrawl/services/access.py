@@ -27,8 +27,8 @@ class AccessManager:
     }
     # None = unlimited
     _MAX_ACTIVE_JOBS = {
-        UserTier.BASIC: 5,
-        UserTier.PREMIUM: 50,
+        UserTier.BASIC: 10,
+        UserTier.PREMIUM: 100,
         UserTier.VIP: None,
     }
     _MAX_ACTIVE_SEARCH_JOBS = {
@@ -37,13 +37,13 @@ class AccessManager:
         UserTier.VIP: None,
     }
     _MAX_LIBRARIES = {
-        UserTier.BASIC: 10,
-        UserTier.PREMIUM: 100,
+        UserTier.BASIC: 25,
+        UserTier.PREMIUM: 250,
         UserTier.VIP: None,
     }
     _MAX_NOVELS_PER_LIBRARY = {
-        UserTier.BASIC: 25,
-        UserTier.PREMIUM: 250,
+        UserTier.BASIC: 100,
+        UserTier.PREMIUM: 500,
         UserTier.VIP: None,
     }
     _MAX_READ_HISTORY = {
