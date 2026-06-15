@@ -230,11 +230,14 @@ class CrawlerService:
             file = ctx.files.resolve(image.image_file)
             crawler.download_image(str(url), file)
 
+            image.is_done = file.is_file()
+            extra = dict(**image.extra)
+            extra["crawler_version"] = crawler.version
+            image.extra = extra
+
             # update db
             with ctx.db.session() as sess:
-                image.is_done = file.is_file()
-                image.extra["crawler_version"] = crawler.version
-                sess.add(image)
+                sess.merge(image)
                 sess.commit()
 
             logger.debug(f"Downloaded image: {novel.title}] - Image {image.id}")
