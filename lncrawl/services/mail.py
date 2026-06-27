@@ -228,10 +228,9 @@ class MailService:
             logger.debug(f"Email from known user {sender}, skipping invite")
             return
         try:
-            mb.flag([msg.uid], [MailMessageFlags.SEEN], True)
             admin = ctx.users.get_admin()
             ctx.users.send_invite_email(admin, sender)
-            mb.flag([msg.uid], [MailMessageFlags.ANSWERED], True)
+            mb.flag([msg.uid], [MailMessageFlags.SEEN, MailMessageFlags.ANSWERED], True)
             logger.info(f"Sent invite to {sender}")
         except Exception as e:
             logger.error(

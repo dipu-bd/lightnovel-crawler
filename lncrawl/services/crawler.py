@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 from difflib import SequenceMatcher
+import gc
 import logging
 from threading import Event
 from typing import List, Optional, Union
@@ -51,6 +52,8 @@ class CrawlerService:
             crawler.scraper.signal = prev_signal
             if custom_crawler is None:
                 crawler.close()
+                del crawler
+            gc.collect()
 
     def fetch_novel(
         self,

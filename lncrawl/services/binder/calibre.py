@@ -71,7 +71,6 @@ def __build_options(artifact: Artifact, novel: Novel) -> List[Option]:
     """Build the ordered conversion options shared by both backends."""
     options: List[Option] = []
     options += [
-        ("dehyphenate", None),
         ("enable-heuristics", None),
         ("no-chapters-in-toc", None),
         ("unsmarten-punctuation", None),
@@ -126,9 +125,8 @@ def __ebook_convert(
     if not exe_path:
         raise ServerErrors.calibre_exe_not_found.with_extra(exe_path)
 
-    cmd = [exe_path.as_posix()]
-    cmd += [epub_file, tmp_file]
-    cmd += list(map(str, cli_args))
+    cmd = [exe_path.as_posix(), epub_file, tmp_file] + cli_args
+    cmd = list(map(str, cmd))
     logger.info(shlex.join(cmd))  # type: ignore
     with subprocess.Popen(
         cmd,

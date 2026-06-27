@@ -280,3 +280,4 @@ class Crawler(ABC):
 
         if chapter.images:
             chapter.body = soup.body.inner_html
+        soup.decompose()

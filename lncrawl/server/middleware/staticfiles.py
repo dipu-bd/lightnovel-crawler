@@ -76,7 +76,5 @@ class CustomStaticFiles(StaticFiles):
             if path.endswith(".epub"):
                 resp.media_type = "application/epub+zip"
                 resp.headers["content-type"] = "application/epub+zip"
-        else:
-            ctx.activity.record(user.id, ActivityType.DOWNLOAD, path)
 
         return resp
