@@ -1,3 +1,4 @@
+import gc
 import logging
 from threading import Event, Thread
 from typing import Callable, List, Set
@@ -63,6 +64,8 @@ class JobScheduler:
             t.join()
         self._threads.clear()
         logger.info("Scheduler stoppped")
+        n_report = gc.collect()
+        logger.info(f"GC report: {n_report}")
 
     def stop_job(self, job_id: str):
         JobRunner.cancel(job_id)
