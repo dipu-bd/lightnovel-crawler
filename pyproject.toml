@@ -37,7 +37,7 @@ dependencies = [
   "httpx[brotli,http2]>=0.27.0",
   "humanize>=4.0.0",
   "imap-tools>=1.10.0",
-  "lncrawl-scraper[all]>=0.2.3",
+  "lncrawl-scraper[all]>=0.2.4",
   "lxml>=5.4.0,<7.0.0",
   "nodriver>=0.50",
   "passlib[argon2]>=1.7.0",
@@ -73,19 +73,19 @@ readme = "README.rst"
 requires-python = ">=3.9.0"
 
 [project.optional-dependencies]
-lsp = [
-  "pylsp-rope>=0.1.17",
-  "pyright>=1.1.409",
-  "python-lsp-ruff>=2.3.1",
-  "python-lsp-server[websockets]>=1.14.0",
-  "ruff>=0.9.0",
-]
 build = [
   "build>=1.2.0",
   "pyinstaller>=6.0.0",
   "setuptools>=75.3.0",
   "tk-tools>=0.16.0",
   "wheel>=0.40.0",
+]
+lsp = [
+  "pylsp-rope>=0.1.17",
+  "pyright>=1.1.409",
+  "python-lsp-ruff>=2.3.1",
+  "python-lsp-server[websockets]>=1.14.0",
+  "ruff>=0.9.0",
 ]
 
 [dependency-groups]
