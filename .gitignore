@@ -8,7 +8,8 @@ _novel
 .pyi/
 .telegram_bot_output/
 .venv*/
-.vscode
+.vscode/**
+!.vscode/settings.json
 *.egg-info
 *.log
 *.pyc

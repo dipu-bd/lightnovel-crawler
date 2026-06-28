@@ -1,0 +1,6 @@
+{
+  "editor.formatOnSave": true,
+  "files.readonlyInclude": {
+    "lncrawl/server/web/**/*": true
+  }
+}
