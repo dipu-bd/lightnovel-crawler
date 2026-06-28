@@ -50,6 +50,9 @@ class JobRunner:
                 with _lock:
                     _release(job.id)
 
+            # take a rest before continuing
+            signal.wait(ctx.config.crawler.runner_cooldown)
+
     @staticmethod
     def _claim_next(signal: Event, artifact: bool) -> Optional[Tuple[Job, Event]]:
         with _lock.using(signal):
@@ -76,6 +79,7 @@ class JobRunner:
                 # if it is an internal job, cancel it if it is part of a finished job
                 if job.parent_job_id and ctx.jobs.cancel_if_dangling(job):
                     logger.debug(f"Dangling job [b]{job.id}[/b] | {job.job_title}")
+                    signal.wait(ctx.config.crawler.runner_cooldown)  # take a rest
                     continue  # dangling job is cancelled; try the next one
 
                 # add the job to queue
