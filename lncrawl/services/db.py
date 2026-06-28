@@ -312,8 +312,7 @@ class DB:
                 if strict:
                     raise ValueError("Database schema is not valid.")
                 logger.warning(
-                    "Continuing despite schema drift. "
-                    "Run 'lncrawl dev migrate verify' to inspect."
+                    "Continuing despite schema drift. Run 'lncrawl dev migrate verify' to inspect."
                 )
             else:
                 logger.info("Database schema is valid.")
