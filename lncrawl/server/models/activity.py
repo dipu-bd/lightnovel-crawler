@@ -29,6 +29,10 @@ class GlobalActivitySummary(BaseModel):
     active_users: int
     total_events: int
     by_type: Dict[ActivityType, int]
+    mau: int = Field(default=0, description="Distinct users active in the trailing 30 days")
+    new_users: int = Field(
+        default=0, description="Users whose first-ever activity falls within the window"
+    )
 
 
 class TopUserActivity(BaseModel):
@@ -37,6 +41,18 @@ class TopUserActivity(BaseModel):
     email: str
     total: int
     by_type: Dict[ActivityType, int]
+
+
+class TopNovelActivity(BaseModel):
+    novel_id: str
+    title: str
+    visits: int = Field(description="Total visit count across all users")
+    readers: int = Field(description="Distinct users who visited this novel")
+
+
+class EngagementBucket(BaseModel):
+    bucket: str = Field(description="Events-per-user range label, e.g. '2-5'")
+    users: int = Field(description="Number of active users falling in this range")
 
 
 class HourlyActivityCell(BaseModel):

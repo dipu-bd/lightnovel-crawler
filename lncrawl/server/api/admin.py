@@ -10,8 +10,10 @@ from ..models import (
 from ..models.activity import (
     DailyActiveUsers,
     DailyTypeCount,
+    EngagementBucket,
     GlobalActivitySummary,
     HourlyActivityCell,
+    TopNovelActivity,
     TopUserActivity,
 )
 
@@ -64,7 +66,15 @@ def patch_configs(
     ctx.admin.update_config(body)
 
 
-ActivityDataType = Literal["summary", "dau", "type-trend", "top-users", "hourly-heatmap"]
+ActivityDataType = Literal[
+    "summary",
+    "dau",
+    "type-trend",
+    "top-users",
+    "top-novels",
+    "engagement",
+    "hourly-heatmap",
+]
 
 
 @router.get("/activity", summary="Get admin activity dashboard data", response_model=None)
@@ -83,6 +93,8 @@ def get_activity_data(
     List[DailyActiveUsers],
     List[DailyTypeCount],
     List[TopUserActivity],
+    List[TopNovelActivity],
+    List[EngagementBucket],
     List[HourlyActivityCell],
 ]:
     if type == "summary":
@@ -91,6 +103,10 @@ def get_activity_data(
         return ctx.activity.get_admin_dau(days)
     elif type == "type-trend":
         return ctx.activity.get_admin_type_trend(days)
+    elif type == "top-novels":
+        return ctx.activity.get_admin_top_novels(days, limit)
+    elif type == "engagement":
+        return ctx.activity.get_admin_engagement(days)
     elif type == "hourly-heatmap":
         return ctx.activity.get_admin_hourly_heatmap(days, tz_offset)
     else:
