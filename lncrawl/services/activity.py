@@ -192,10 +192,10 @@ class UserActivityService:
         """
         cutoff = self._cutoff(days)
         # seconds since epoch, shifted into the requested timezone
-        secs = sq.col(UserActivity.updated_at) / sq.literal(1000) + sq.literal(
+        secs = sq.col(UserActivity.updated_at) // sq.literal(1000) + sq.literal(
             tz_offset_minutes * 60
         )
-        hour = ((secs / sq.literal(3600)) % sq.literal(24)).label("hour")
+        hour = ((secs // sq.literal(3600)) % sq.literal(24)).label("hour")
         with ctx.db.session() as sess:
             rows = sess.exec(
                 sq.select(hour, sq.func.count())
