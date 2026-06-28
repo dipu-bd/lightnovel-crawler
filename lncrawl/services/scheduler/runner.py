@@ -6,6 +6,7 @@ from typing import Dict, Optional, Tuple
 from ...context import ctx
 from ...dao import Job
 from ...utils.event_lock import EventLock
+from ...utils.time_utils import current_timestamp
 from .handlers import run_job
 
 logger = logging.getLogger(__name__)
@@ -16,6 +17,7 @@ class _Claim:
     signal: Event
     user_id: str
     domain: Optional[str]
+    started_at: int
 
 
 _lock = EventLock()
@@ -84,7 +86,7 @@ class JobRunner:
 
                 # add the job to queue
                 job_signal = Event()
-                _queue[job.id] = _Claim(job_signal, job.user_id, job.domain)
+                _queue[job.id] = _Claim(job_signal, job.user_id, job.domain, current_timestamp())
                 return job, job_signal
         return None
 
@@ -116,3 +118,16 @@ class JobRunner:
             for claim in _queue.values():
                 claim.signal.set()
             _queue.clear()
+
+    @staticmethod
+    def reset_stale(max_age: int) -> None:
+        """Cancel only jobs whose claim has been held longer than max_age seconds.
+
+        Recovers genuinely stuck jobs without aborting healthy in-flight ones.
+        """
+        cutoff = current_timestamp() - max_age * 1000
+        with _lock:
+            stale = [job_id for job_id, c in _queue.items() if c.started_at < cutoff]
+        for job_id in stale:
+            logger.warning(f"Resetting stale job [b]{job_id}[/b]")
+            JobRunner.cancel(job_id)
