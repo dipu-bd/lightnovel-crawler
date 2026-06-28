@@ -12,7 +12,7 @@ from ..models.activity import (
     DailyTypeCount,
     EngagementBucket,
     GlobalActivitySummary,
-    HourlyActivityTotal,
+    HourlyActivityCell,
     TopNovelActivity,
     TopUserActivity,
 )
@@ -95,7 +95,7 @@ def get_activity_data(
     List[TopUserActivity],
     List[TopNovelActivity],
     List[EngagementBucket],
-    List[HourlyActivityTotal],
+    List[HourlyActivityCell],
 ]:
     if type == "summary":
         return ctx.activity.get_admin_summary(days)
@@ -108,6 +108,6 @@ def get_activity_data(
     elif type == "engagement":
         return ctx.activity.get_admin_engagement(days)
     elif type == "hourly-heatmap":
-        return ctx.activity.get_admin_hourly_totals(days, tz_offset)
+        return ctx.activity.get_admin_hourly_heatmap(days, tz_offset)
     else:
         return ctx.activity.get_admin_top_users(days, limit)

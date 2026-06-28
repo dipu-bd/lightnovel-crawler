@@ -55,6 +55,7 @@ class EngagementBucket(BaseModel):
     users: int = Field(description="Number of active users falling in this range")
 
 
-class HourlyActivityTotal(BaseModel):
+class HourlyActivityCell(BaseModel):
+    dow: int = Field(description="Day of week, 0=Sunday .. 6=Saturday")
     hour: int = Field(description="Hour of day, 0..23, in the requested timezone")
-    events: int = Field(description="Activity records last touched in this hour")
+    events: int = Field(description="Number of activity records last touched in this window")
