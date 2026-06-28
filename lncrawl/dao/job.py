@@ -17,6 +17,7 @@ class Job(BaseTable, table=True):
         sa.Index("ix_jobs_depends_on", "depends_on", "is_done"),
         sa.Index("ix_jobs_scheduler", "status", "done", "type"),
         sa.Index("ix_jobs_ordering", "priority", "user_id", "updated_at"),
+        sa.Index("ix_jobs_domain", "domain"),
     )
 
     user_id: str = sa.Field(foreign_key="users.id", ondelete="CASCADE")
@@ -35,6 +36,11 @@ class Job(BaseTable, table=True):
 
     type: JobType = sa.Field(
         description="The job type",
+    )
+    domain: Optional[str] = sa.Field(
+        default=None,
+        nullable=True,
+        description="Source domain for single-source crawl jobs; NULL = not throttled",
     )
     priority: JobPriority = sa.Field(default=JobPriority.LOW, description="The job priority")
     status: JobStatus = sa.Field(default=JobStatus.PENDING, description="Current status")

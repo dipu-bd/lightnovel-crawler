@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-from typing import Any, Iterable, List
+from typing import Iterable
 import unicodedata
 
 from lncrawl.core import Chapter, PageSoup, SoupTemplate
@@ -45,14 +45,12 @@ class FreewebnovelTemplate(SoupTemplate):
         style_content = has_promo.get_text(strip=True)
         rules = re.findall(r"([^{]+)\{[^}]*\}", style_content)
 
-        selectors: List[Any] = []
+        selectors = set(["img"])
         for rule in rules:
-            selectors.extend(
-                selector
-                for selector in rule.split(",")
-                if not re.search(r"p:nth-last-child\(\d+\)", selector.strip())
-            )
-        selectors = list(filter(None, set(selectors)))
+            for r in rule.split(","):
+                selector = r.strip()
+                if selector and not re.search(r"p:nth-last-child\(\d+\)", selector):
+                    selectors.add(selector)
 
         body_tag = soup.select_one(self.chapter_body_selector)
         normalized_body = self.normalize_text(body_tag.outer_html)

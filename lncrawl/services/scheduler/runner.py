@@ -11,23 +11,30 @@ logger = logging.getLogger(__name__)
 _lock = EventLock()
 _queue: Dict[str, Event] = {}
 _users: Dict[str, str] = {}
+_domains: Dict[str, str] = {}
 
 
 class JobRunner:
     @staticmethod
     def run(signal: Event, artifact: bool):
         with _lock.using(signal):
+            # users currently active by a running job (one job per user)
+            active_users = set(_users.values())
+            # domains currently being crawled by a running job (one job per domain)
+            active_domains = set(_domains.values())
             # get next pending job for a user that doesn't have any running job
             job = ctx.jobs._pending(
                 artifact,
                 skip_job_ids=_queue.keys(),
-                skip_user_ids=_users.values(),
+                skip_user_ids=active_users,
+                skip_domains=active_domains,
             )
-            # if no such job, get next pending job for any existing users
+            # if no job for unique users, get pending job for active users
             if not job:
                 job = ctx.jobs._pending(
                     artifact,
                     skip_job_ids=_queue.keys(),
+                    skip_domains=active_domains,
                 )
             if not job:
                 return  # no pending job
@@ -42,6 +49,8 @@ class JobRunner:
             job_signal = Event()
             _queue[job.id] = job_signal
             _users[job.id] = job.user_id
+            if job.domain:
+                _domains[job.id] = job.domain
 
         # process the current job
         try:
@@ -51,7 +60,8 @@ class JobRunner:
             with _lock:
                 if job.id in _queue:
                     _queue.pop(job.id).set()
-                    _users.pop(job.id)
+                    _users.pop(job.id, None)
+                    _domains.pop(job.id, None)
 
     @staticmethod
     def cancel(job_id: str, cancel_children: bool = True):
@@ -59,7 +69,8 @@ class JobRunner:
         with _lock:
             if job_id in _queue:
                 _queue.pop(job_id).set()
-                _users.pop(job_id)
+                _users.pop(job_id, None)
+                _domains.pop(job_id, None)
 
         # recursively cancel all children as well
         if cancel_children:
@@ -74,3 +85,4 @@ class JobRunner:
                 signal.set()
             _queue.clear()
             _users.clear()
+            _domains.clear()
