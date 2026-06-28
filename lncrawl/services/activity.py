@@ -9,6 +9,7 @@ from ..server.models.activity import (
     DailyActiveUsers,
     DailyTypeCount,
     GlobalActivitySummary,
+    HourlyActivityCell,
     TopUserActivity,
     UserActivityStats,
 )
@@ -152,6 +153,43 @@ class UserActivityService:
             ).all()
         return [
             DailyTypeCount(date=r[0], activity_type=ActivityType(int(r[1])), events=int(r[2]))
+            for r in rows
+        ]
+
+    def get_admin_hourly_heatmap(
+        self, days: int, tz_offset_minutes: int = 0
+    ) -> List[HourlyActivityCell]:
+        """Activity volume bucketed by day-of-week x hour-of-day.
+
+        Buckets are derived from each record's ``updated_at`` (the last-touched
+        time), so this is a proxy for *when* users are active rather than a true
+        event log. Useful for spotting low-traffic windows for deployments.
+
+        The day/hour split is computed with portable integer epoch arithmetic so
+        it behaves identically on SQLite and PostgreSQL. ``tz_offset_minutes`` is
+        added to UTC before bucketing so the grid reflects the viewer's local time
+        (matching JS ``-Date.getTimezoneOffset()``).
+        """
+        cutoff = self._cutoff(days)
+        # seconds since epoch, shifted into the requested timezone
+        secs = sq.col(UserActivity.updated_at) / sq.literal(1000) + sq.literal(
+            tz_offset_minutes * 60
+        )
+        hour = ((secs / sq.literal(3600)) % sq.literal(24)).label("hour")
+        # epoch day 0 (1970-01-01) was a Thursday; +4 aligns 0 to Sunday
+        dow = (((secs / sq.literal(86400)) + sq.literal(4)) % sq.literal(7)).label("dow")
+        with ctx.db.session() as sess:
+            rows = sess.exec(
+                sq.select(dow, hour, sq.func.count())
+                .where(UserActivity.updated_at >= cutoff)
+                .group_by(dow, hour)
+            ).all()
+        return [
+            HourlyActivityCell(
+                dow=int(r[0]),
+                hour=int(r[1]),
+                events=int(r[2]),
+            )
             for r in rows
         ]
 

@@ -37,3 +37,9 @@ class TopUserActivity(BaseModel):
     email: str
     total: int
     by_type: Dict[ActivityType, int]
+
+
+class HourlyActivityCell(BaseModel):
+    dow: int = Field(description="Day of week, 0=Sunday .. 6=Saturday")
+    hour: int = Field(description="Hour of day, 0..23, in the requested timezone")
+    events: int = Field(description="Number of activity records last touched in this window")
