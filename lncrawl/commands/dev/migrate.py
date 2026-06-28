@@ -72,6 +72,15 @@ def app_downgrade(
     app_status()
 
 
+@app.command("verify", help="Strictly verify the schema matches the models (for CI).")
+def app_verify():
+    from alembic import command
+
+    command.upgrade(config=ctx.db.alembic_config, revision="head")
+    ctx.db._verify_schema(strict=True)
+    print("[green]Schema is valid.[/green]")
+
+
 @app.command("status", help="Display the current revision.")
 def app_status():
     latest = ctx.db.latest_revision()

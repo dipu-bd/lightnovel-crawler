@@ -71,6 +71,9 @@ jobs:
       - name: 🧪 Check lncrawl
         run: lncrawl -ll sources list
 
+      - name: Detect Database Drift
+        run: lncrawl -ll dev migrate verify
+
       - name: 🧪 Test Crawl
         if: ${{ github.event_name == 'workflow_dispatch' || inputs.run_crawl_test == true }}
         run: lncrawl -ll crawl 'https://novelfull.com/dungeon-defense.html' --first 2 --format epub --noin

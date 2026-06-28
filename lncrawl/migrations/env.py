@@ -11,6 +11,10 @@ with ctx.db.engine.connect() as connection:
         connection=connection,
         target_metadata=SQLModel.metadata,
         compare_type=True,
+        # SQLite cannot ALTER/DROP columns in place on older versions.
+        # Batch mode rebuilds the table, making migrations portable across
+        # every bundled SQLite version that desktop self-hosters may have.
+        render_as_batch=connection.dialect.name == "sqlite",
     )
 
     with context.begin_transaction():

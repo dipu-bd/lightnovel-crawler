@@ -77,20 +77,34 @@ class DB:
 
     def bootstrap(self, reset_on_failure: bool = False):
         self._ensure_database()
-        try:
-            from alembic import command
+        from alembic import command
 
-            base = self.base_revision()
-            if base and self.has_any_tables() and not self.current_revision():
-                command.stamp(self.alembic_config, base)
+        base = self.base_revision()
+        if base and self.has_any_tables() and not self.current_revision():
+            command.stamp(self.alembic_config, base)
+
+        # Back up the database before running pending migrations so a buggy
+        # migration can never destroy a self-hoster's library. Only SQLite is
+        # backed up (single file, near-free); skipped when already at head.
+        backup = None
+        if self.current_revision() != self.latest_revision():
+            backup = self._backup_database()
+
+        try:
             command.upgrade(self.alembic_config, "head")
             logger.info("Database bootstrap successful.")
             self._verify_schema()
         except Exception:
+            logger.exception("Database bootstrap failed.")
+            # Prefer restoring the pre-migration backup over dropping data.
+            if self._restore_database(backup):
+                raise
             if not reset_on_failure:
                 raise
             self._reset_database()
             self.bootstrap()
+        else:
+            self._discard_backup(backup)
 
     @cached_property
     def alembic_config(self):
@@ -160,6 +174,48 @@ class DB:
 
         return engine
 
+    def _sqlite_path(self) -> Optional[Path]:
+        url = make_url(ctx.config.db.url)
+        if "sqlite" not in url.drivername:
+            return None
+        if not url.database or url.database == ":memory:":
+            return None
+        return Path(url.database)
+
+    def _backup_database(self) -> Optional[Path]:
+        db_path = self._sqlite_path()
+        if not db_path or not db_path.exists():
+            return None
+        import shutil
+
+        backup_path = db_path.with_name(db_path.name + ".bak")
+        self.close()  # flush and release the file handle before copying
+        shutil.copy2(db_path, backup_path)
+        logger.info(f"Database backed up to '{backup_path}'.")
+        return backup_path
+
+    def _restore_database(self, backup_path: Optional[Path]) -> bool:
+        db_path = self._sqlite_path()
+        if not db_path or not backup_path or not backup_path.exists():
+            return False
+        import shutil
+
+        self.close()  # release the half-migrated database before overwriting
+        shutil.copy2(backup_path, db_path)
+        logger.warning(
+            f"Restored database from '{backup_path}' after a failed migration. "
+            "Your data is intact; please report this so the migration can be fixed."
+        )
+        return True
+
+    def _discard_backup(self, backup_path: Optional[Path]) -> None:
+        if not backup_path or not backup_path.exists():
+            return
+        try:
+            backup_path.unlink()
+        except OSError:
+            logger.debug(f"Could not remove backup '{backup_path}'.")
+
     def _reset_database(self):
         logger.debug("Resetting database...")
         with self.engine.begin() as conn:
@@ -221,7 +277,7 @@ class DB:
                 )
                 time.sleep(1)
 
-    def _verify_schema(self):
+    def _verify_schema(self, strict: bool = False):
         logger.debug("Verifying database schema...")
         from alembic.autogenerate import compare_metadata
         from alembic.runtime.migration import MigrationContext
@@ -250,8 +306,15 @@ class DB:
                 logger.warning(f"Detected {len(drift)} schema drift(s) against models:")
                 for op in drift:
                     logger.warning(f"  - {self._format_drift(op)}")
-                logger.warning("Either drop the database, or manually fix these drifts.")
-                raise ValueError("Database schema is not valid.")
+                # In production (startup), drift is non-fatal: the migration ran,
+                # and benign SQLite reflection differences must not block the app.
+                # Drift is caught in CI via `lncrawl dev migrate verify` (strict).
+                if strict:
+                    raise ValueError("Database schema is not valid.")
+                logger.warning(
+                    "Continuing despite schema drift. "
+                    "Run 'lncrawl dev migrate verify' to inspect."
+                )
             else:
                 logger.info("Database schema is valid.")
 
