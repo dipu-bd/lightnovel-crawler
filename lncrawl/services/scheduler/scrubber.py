@@ -5,7 +5,7 @@ from threading import Event
 import sqlmodel as sq
 
 from ...context import ctx
-from ...dao import Artifact, Job, JobStatus, User, UserToken
+from ...dao import Artifact, Job, JobStatus, User, UserActivity, UserToken
 from ...exceptions import AbortedException
 from ...utils.file_tools import folder_size, format_size
 from ...utils.time_utils import current_timestamp
@@ -26,6 +26,7 @@ class Scrubber:
         scrubber.cancel_long_jobs()
         scrubber.delete_expired_tokens()
         scrubber.delete_inactive_users()
+        scrubber.delete_old_activities()
 
     def __init__(self, signal=Event()) -> None:
         self.signal = signal
@@ -181,3 +182,13 @@ class Scrubber:
                     sq.col(User.updated_at) < now - _month,
                 )
             )
+
+    def delete_old_activities(self):
+        now = current_timestamp()
+        with ctx.db.session() as sess:
+            sess.exec(
+                sq.delete(UserActivity).where(
+                    sq.col(UserActivity.updated_at) < now - _day * 90,
+                )
+            )
+            sess.commit()
