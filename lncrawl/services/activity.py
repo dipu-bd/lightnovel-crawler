@@ -119,6 +119,11 @@ class UserActivityService:
                     UserActivity.updated_at >= cutoff
                 )
             ).one()
+            dau = sess.exec(
+                sq.select(sq.func.count(sq.distinct(UserActivity.user_id))).where(
+                    UserActivity.updated_at >= self._cutoff(1)
+                )
+            ).one()
             mau = sess.exec(
                 sq.select(sq.func.count(sq.distinct(UserActivity.user_id))).where(
                     UserActivity.updated_at >= self._cutoff(30)
@@ -143,6 +148,7 @@ class UserActivityService:
             active_users=active_users,
             total_events=total_events,
             by_type=by_type,
+            dau=int(dau),
             mau=int(mau),
             new_users=int(new_users),
         )

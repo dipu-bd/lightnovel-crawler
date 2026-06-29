@@ -29,6 +29,7 @@ class GlobalActivitySummary(BaseModel):
     active_users: int
     total_events: int
     by_type: Dict[ActivityType, int]
+    dau: int = Field(default=0, description="Distinct users active in the trailing 1 day")
     mau: int = Field(default=0, description="Distinct users active in the trailing 30 days")
     new_users: int = Field(
         default=0, description="Users whose first-ever activity falls within the window"
