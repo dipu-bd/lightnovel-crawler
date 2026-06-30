@@ -15,7 +15,7 @@ class LNTCrawler(SoupTemplate):
     chapter_body_selector = ".text_story"
 
     def build_novel_url(self, novel: Novel) -> str:
-        return f"{self.scraper.origin}{novel.url}/?tab=table_contents"
+        return f"{novel.url.rstrip('/')}/?tab=table_contents"
 
     def parse_author(self, soup: PageSoup, novel: Novel) -> None:
         authors = []
