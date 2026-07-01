@@ -16,6 +16,10 @@ fetch_chapter_list_url = "%s/book/queryIndexList?bookId=%s&curr=1&limit=50000"
 max_retries = 5
 retry_delays = [15, 30, 60, 120, 180]
 chapter_content_delay = 2
+browser_wait_timeout = 90
+browser_max_retries = 4
+browser_retry_delays = [15, 30, 60]
+browser_failure_marker = "__NOVELHI_FAILED__"
 
 genre_slugs = {
     "1": "action",
@@ -57,6 +61,47 @@ class NovelHiCrawler(LegacyCrawler):
 
     def initialize(self):
         self.init_executor(ratelimit=0.25)
+        self._chapter_browser = None
+        self._chapter_browser_context = None
+        self._browser_download_disabled = False
+
+    def close(self):
+        self._close_chapter_browser()
+        super().close()
+
+    def _close_chapter_browser(self):
+        context = getattr(self, "_chapter_browser_context", None)
+        browser = getattr(self, "_chapter_browser", None)
+
+        if context:
+            try:
+                context.__exit__(None, None, None)
+            except Exception:
+                pass
+        elif browser:
+            try:
+                browser.close()
+            except Exception:
+                pass
+
+        self._chapter_browser_context = None
+        self._chapter_browser = None
+
+    def _get_chapter_browser(self):
+        browser = getattr(self, "_chapter_browser", None)
+        if browser:
+            try:
+                if browser.active:
+                    return browser
+            except Exception:
+                pass
+            self._close_chapter_browser()
+
+        context = self.create_browser()
+        browser = context.__enter__()
+        self._chapter_browser_context = context
+        self._chapter_browser = browser
+        return browser
 
     @staticmethod
     def _normalize_slug(value):
@@ -89,7 +134,7 @@ class NovelHiCrawler(LegacyCrawler):
 
     def _get_response_with_retry(self, url, **kwargs):
         last_error = None
-        for attempt in range(max_retries):
+        for attempt in range(browser_max_retries):
             try:
                 return self.get_response(url, **kwargs)
             except Exception as e:
@@ -225,7 +270,86 @@ class NovelHiCrawler(LegacyCrawler):
 
         return self.cleaner.extract_contents(tag)
 
-    def download_chapter_body(self, chapter):
+    def _get_browser_chapter_html(self, browser):
+        script = """
+            (async () => {
+                const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                const collect = () => {
+                    const root = document.querySelector("#showReading");
+                    if (!root) return "";
+
+                    const nodes = Array.from(root.querySelectorAll("sent"));
+                    const rootText = (root.textContent || "").trim();
+                    if (rootText.includes("Chapter loading failed")) {
+                        return "%s" + rootText;
+                    }
+                    if (!nodes.length) return "";
+
+                    const text = nodes
+                        .map((node) => node.textContent || "")
+                        .join("\\n")
+                        .trim();
+
+                    if (text.length < 100) return "";
+                    return nodes.map((node) => node.outerHTML).join("");
+                };
+
+                const deadline = Date.now() + %d;
+                while (Date.now() < deadline) {
+                    const html = collect();
+                    if (html) return html;
+                    await sleep(500);
+                }
+
+                return collect();
+            })()
+        """ % (browser_failure_marker, browser_wait_timeout * 1000)
+        return browser.execute_js(script, is_async=True) or ""
+
+    def _has_browser_font_obfuscation(self, browser, html):
+        script = """
+            (() => {
+                const root = document.querySelector("#showReading");
+                return Boolean(
+                    document.querySelector(".novelhi-chapter-obf") ||
+                    (root && root.classList.contains("novelhi-chapter-obf"))
+                );
+            })()
+        """
+        return bool(browser.execute_js(script)) or "novelhi-chapter-obf" in html
+
+    def _download_chapter_body_with_browser(self, chapter):
+        browser = self._get_chapter_browser()
+        last_error = ""
+
+        for attempt in range(max_retries):
+            browser.visit(chapter["url"])
+            browser.wait("#showReading", timeout=browser_wait_timeout)
+            time.sleep(chapter_content_delay)
+
+            html = self._get_browser_chapter_html(browser)
+            if html.startswith(browser_failure_marker):
+                last_error = html.replace(browser_failure_marker, "", 1)
+            elif html:
+                font_obfuscation = self._has_browser_font_obfuscation(browser, html)
+                return self._extract_chapter_content(html, font_obfuscation=font_obfuscation)
+            else:
+                last_error = "empty chapter content"
+
+            if attempt >= browser_max_retries - 1:
+                break
+
+            delay = browser_retry_delays[min(attempt, len(browser_retry_delays) - 1)]
+            logger.warning(
+                "NovelHi browser did not render chapter content. Waiting %ss before retrying: %s",
+                delay,
+                chapter["url"],
+            )
+            time.sleep(delay)
+
+        raise LNException("NovelHi browser did not render chapter content: %s" % last_error)
+
+    def _download_chapter_body_with_api(self, chapter):
         soup = self._get_soup_with_retry(chapter["url"])
         content_path = soup.select_one("input#chapterContentPath")
         content_token = soup.select_one("input#chapterContentToken")
@@ -260,4 +384,21 @@ class NovelHiCrawler(LegacyCrawler):
             )
 
         paras = soup.select("#showReading sent")
+        if not paras:
+            raise LNException("NovelHi chapter content not found")
         return self._extract_chapter_content("".join(str(p) for p in paras))
+
+    def download_chapter_body(self, chapter):
+        if not getattr(self, "_browser_download_disabled", False):
+            try:
+                return self._download_chapter_body_with_browser(chapter)
+            except Exception as e:
+                self._browser_download_disabled = True
+                self._close_chapter_browser()
+                logger.warning(
+                    "NovelHi browser download failed. "
+                    "Disabling browser downloads for this run and falling back to API: %s",
+                    e,
+                )
+
+        return self._download_chapter_body_with_api(chapter)
