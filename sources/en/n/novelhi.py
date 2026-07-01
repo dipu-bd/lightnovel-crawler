@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import codecs
 import logging
-import re
 import time
 from urllib.parse import quote
 
@@ -20,38 +19,6 @@ browser_wait_timeout = 90
 browser_max_retries = 4
 browser_retry_delays = [15, 30, 60]
 browser_failure_marker = "__NOVELHI_FAILED__"
-
-genre_slugs = {
-    "1": "action",
-    "3": "adventure",
-    "4": "comedy",
-    "7": "light-novel",
-    "9": "fantasy",
-    "10": "game",
-    "11": "gender-bender",
-    "12": "harem",
-    "13": "historical",
-    "14": "horror",
-    "16": "martial-arts",
-    "17": "mature",
-    "18": "mecha",
-    "19": "military",
-    "20": "mystery",
-    "22": "romance",
-    "23": "school-life",
-    "24": "sci-fi",
-    "30": "slice-of-life",
-    "32": "sports",
-    "33": "supernatural",
-    "34": "tragedy",
-    "35": "urban-life",
-    "36": "wuxia",
-    "37": "xianxia",
-    "38": "xuanhuan",
-    "39": "yaoi",
-    "40": "yuri",
-    "41": "fanfiction",
-}
 
 
 class NovelHiCrawler(LegacyCrawler):
@@ -103,16 +70,30 @@ class NovelHiCrawler(LegacyCrawler):
         self._chapter_browser = browser
         return browser
 
-    @staticmethod
-    def _normalize_slug(value):
-        value = str(value or "").strip().lower().replace("'", "").replace("\u2019", "")
-        value = re.sub(r"[^a-z0-9]+", "-", value)
-        return re.sub(r"-+", "-", value).strip("-")
+    def _origin_url(self, path):
+        path = str(path or "").strip()
+        if path.startswith(("http://", "https://")):
+            return path
+        if path.startswith("//"):
+            scheme = self.scraper.origin.split(":", 1)[0]
+            return "%s:%s" % (scheme, path)
+        if path.startswith("/"):
+            return "%s%s" % (self.scraper.origin.rstrip("/"), path)
+        return "%s/%s" % (self.scraper.origin.rstrip("/"), path)
 
     def _build_novel_url(self, item):
-        genre = genre_slugs.get(str(item.get("primaryGenreId")), "other")
-        slug = item.get("novelSlug") or item.get("simpleName") or item.get("bookName")
-        return self.absolute_url("/novel/%s/%s" % (genre, self._normalize_slug(slug)))
+        simple_name = str(item.get("simpleName") or "").strip()
+        if simple_name:
+            if simple_name.startswith("/") or "/" in simple_name:
+                return self._origin_url(simple_name)
+            return self._origin_url("/s/%s" % simple_name)
+
+        for key in ["url", "bookUrl", "novelUrl"]:
+            value = str(item.get(key) or "").strip()
+            if value:
+                return self._origin_url(value)
+
+        raise LNException("NovelHi search result missing novel URL")
 
     def _is_rate_limited(self, error):
         response = getattr(error, "response", None)
@@ -134,7 +115,7 @@ class NovelHiCrawler(LegacyCrawler):
 
     def _get_response_with_retry(self, url, **kwargs):
         last_error = None
-        for attempt in range(browser_max_retries):
+        for attempt in range(max_retries):
             try:
                 return self.get_response(url, **kwargs)
             except Exception as e:
@@ -184,7 +165,7 @@ class NovelHiCrawler(LegacyCrawler):
         time.sleep(delay)
 
     def search_novel(self, query):
-        data = self.get_json(search_url % (self.scraper.origin, quote(query)))
+        data = self._get_json_with_retry(search_url % (self.scraper.origin, quote(query)))
 
         results = []
         for item in data["data"]["list"]:
@@ -201,7 +182,7 @@ class NovelHiCrawler(LegacyCrawler):
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
+        soup = self._get_soup_with_retry(self.novel_url)
 
         possible_book_id = soup.select_one("input#bookId")
         if not possible_book_id:
@@ -236,7 +217,9 @@ class NovelHiCrawler(LegacyCrawler):
             self.novel_synopsis = self.cleaner.extract_contents(possible_synopsis)
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
-        data = self.get_json(fetch_chapter_list_url % (self.scraper.origin, self.novel_id))
+        data = self._get_json_with_retry(
+            fetch_chapter_list_url % (self.scraper.origin, self.novel_id)
+        )
         for item in reversed(data["data"]["list"]):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
@@ -318,11 +301,18 @@ class NovelHiCrawler(LegacyCrawler):
         """
         return bool(browser.execute_js(script)) or "novelhi-chapter-obf" in html
 
+    def _has_soup_font_obfuscation(self, soup):
+        root = soup.select_one("#showReading")
+        classes = root.get("class", []) if root else []
+        if isinstance(classes, str):
+            classes = classes.split()
+        return bool(soup.select_one(".novelhi-chapter-obf")) or "novelhi-chapter-obf" in classes
+
     def _download_chapter_body_with_browser(self, chapter):
         browser = self._get_chapter_browser()
         last_error = ""
 
-        for attempt in range(max_retries):
+        for attempt in range(browser_max_retries):
             browser.visit(chapter["url"])
             browser.wait("#showReading", timeout=browser_wait_timeout)
             time.sleep(chapter_content_delay)
@@ -374,19 +364,27 @@ class NovelHiCrawler(LegacyCrawler):
 
             payload = data["data"]
             if isinstance(payload, str):
-                return self._extract_chapter_content(payload)
+                return self._extract_chapter_content(
+                    payload,
+                    font_obfuscation="novelhi-chapter-obf" in payload,
+                )
 
             font_obfuscation = str(payload.get("fontObfuscation")).lower() == "true"
             font_obfuscation = font_obfuscation or payload.get("fontClass") == "novelhi-chapter-obf"
+            content = payload.get("content") or ""
+            font_obfuscation = font_obfuscation or "novelhi-chapter-obf" in content
             return self._extract_chapter_content(
-                payload.get("content") or "",
+                content,
                 font_obfuscation=font_obfuscation,
             )
 
         paras = soup.select("#showReading sent")
         if not paras:
             raise LNException("NovelHi chapter content not found")
-        return self._extract_chapter_content("".join(str(p) for p in paras))
+        return self._extract_chapter_content(
+            "".join(str(p) for p in paras),
+            font_obfuscation=self._has_soup_font_obfuscation(soup),
+        )
 
     def download_chapter_body(self, chapter):
         if not getattr(self, "_browser_download_disabled", False):
