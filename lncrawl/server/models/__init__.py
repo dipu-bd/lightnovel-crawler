@@ -8,6 +8,7 @@ from .feedback import (
     FeedbackRespondRequest,
     FeedbackUpdateRequest,
 )
+from .history import ContinueReadingResponse
 from .job import (
     FetchChaptersRequest,
     FetchImagesRequest,
@@ -106,4 +107,6 @@ __all__ = [
     "FeedbackCreateRequest",
     "FeedbackUpdateRequest",
     "FeedbackRespondRequest",
+    # history
+    "ContinueReadingResponse",
 ]

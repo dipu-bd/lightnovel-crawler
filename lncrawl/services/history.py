@@ -6,7 +6,8 @@ from sqlmodel import col, desc, select
 
 from ..context import ctx
 from ..core.taskman import TaskManager
-from ..dao import ReadHistory
+from ..dao import Chapter, ReadHistory
+from ..server.models import ContinueReadingResponse
 
 
 class ReadHistoryService:
@@ -37,6 +38,50 @@ class ReadHistoryService:
 
             items = sess.exec(stmt).all()
             return {item.chapter_id: True for item in items}
+
+    def continue_reading(self, user_id: str, novel_id: str) -> ContinueReadingResponse:
+        """Resolve where the user should (re)start reading a novel.
+
+        Returns the first unread chapter (by serial). If nothing has been read,
+        or every chapter has been read, this falls back to the first chapter.
+        """
+        with ctx.db.session() as sess:
+            read_subq = (
+                select(ReadHistory.chapter_id)
+                .where(ReadHistory.user_id == user_id)
+                .where(ReadHistory.novel_id == novel_id)
+                .scalar_subquery()
+            )
+            has_history = bool(
+                sess.exec(
+                    select(ReadHistory.id)
+                    .where(ReadHistory.user_id == user_id)
+                    .where(ReadHistory.novel_id == novel_id)
+                    .limit(1)
+                ).first()
+            )
+
+            chapter_id = sess.exec(
+                select(Chapter.id)
+                .where(Chapter.novel_id == novel_id)
+                .where(col(Chapter.id).not_in(read_subq))
+                .order_by(col(Chapter.serial).asc())
+                .limit(1)
+            ).first()
+
+            if not chapter_id:
+                # no unread chapter left; fall back to the first chapter
+                chapter_id = sess.exec(
+                    select(Chapter.id)
+                    .where(Chapter.novel_id == novel_id)
+                    .order_by(col(Chapter.serial).asc())
+                    .limit(1)
+                ).first()
+
+            return ContinueReadingResponse(
+                chapter_id=chapter_id,
+                has_history=has_history,
+            )
 
     def check(self, user_id: str, chapter_id: str) -> bool:
         with ctx.db.session() as sess:

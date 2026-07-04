@@ -2,5 +2,10 @@
   "editor.formatOnSave": true,
   "files.readonlyInclude": {
     "lncrawl/server/web/**/*": true
-  }
+  },
+  "python-envs.pythonProjects": [
+    {
+      "path": "."
+    }
+  ]
 }

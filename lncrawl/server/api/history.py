@@ -4,10 +4,19 @@ from fastapi import APIRouter, Path, Query, Security
 
 from ...context import ctx
 from ...dao import User
+from ..models import ContinueReadingResponse
 from ..security import ensure_user
 
 # The root router
 router = APIRouter()
+
+
+@router.get("/continue", summary="Resolve the chapter to continue reading from")
+def continue_reading(
+    user: User = Security(ensure_user),
+    novel_id: str = Query(description="Novel id"),
+) -> ContinueReadingResponse:
+    return ctx.history.continue_reading(user.id, novel_id)
 
 
 @router.post("/add/{chapter_id}", summary="Mark a chapter as read")
