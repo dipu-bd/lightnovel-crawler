@@ -117,6 +117,9 @@ class CrawlerService:
                 sess.merge(novel)
                 sess.commit()
 
+            # keep the recommendation title index in sync
+            ctx.recommendations.index_add(novel.id, novel.title)
+
             # add or update tags
             ctx.tags.insert(novel.tags)
 

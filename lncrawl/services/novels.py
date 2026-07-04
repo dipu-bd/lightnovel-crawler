@@ -105,11 +105,10 @@ class NovelService:
             novel = sess.get(Novel, novel_id)
             if not novel:
                 return True
-            novel_title = novel.title
             sess.delete(novel)
             sess.commit()
         ctx.recommendations.invalidate(novel_id)
-        ctx.recommendations.index_remove(novel_id, novel_title)
+        ctx.recommendations.index_remove(novel_id)
         return True
 
     def find_by_url(self, novel_url: str) -> Optional[Novel]:

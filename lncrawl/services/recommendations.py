@@ -1,4 +1,4 @@
-from collections import Counter, OrderedDict
+from collections import OrderedDict
 import heapq
 import logging
 import math
@@ -28,7 +28,9 @@ WEIGHT_DOMAIN = 20  # flat bonus when candidate shares the same source domain
 # Candidate pool limits per phase
 TITLE_CANDIDATE_LIMIT = 400  # max title-similar candidates from the inverted index
 PHASE2_DOMAIN_LIMIT = 100  # max same-domain candidates fetched
-MIN_WORD_LENGTH = 3  # title words shorter than this are skipped in index lookups
+MIN_WORD_LENGTH = 2  # title words shorter than this are skipped in index lookups
+MAX_DF_RATIO = 0.3  # words present in more titles than this fraction are near stop-words
+MIN_DF_CAP = 100  # never treat a word as a stop-word below this document frequency
 
 # Cache settings
 CACHE_MAX_ENTRIES = 10000  # max novels cached simultaneously (LRU eviction after this)
@@ -66,15 +68,9 @@ def _jaccard(a: Set[str], b: Set[str]) -> float:
     return len(a & b) / len(union) if union else 0.0
 
 
-def _idf_jaccard(a: Set[str], b: Set[str], idf: Dict[str, float]) -> float:
-    """IDF-weighted Jaccard: rare words contribute more than common words."""
-    union = a | b
-    if not union:
-        return 0.0
-    intersection = a & b
-    w_intersection = sum(idf.get(w, 1.0) for w in intersection)
-    w_union = sum(idf.get(w, 1.0) for w in union)
-    return w_intersection / w_union
+def _idf(total: int, df: int) -> float:
+    """Smoothed IDF = log((N+1) / (df+1))."""
+    return math.log((total + 1) / (df + 1)) if total > 0 else 1.0
 
 
 # ---------------------------------------------------------------------------
@@ -151,57 +147,78 @@ class _InvertedIndex:
     Replaces ILIKE queries for candidate selection, giving uniform performance
     across SQLite, PostgreSQL, and MySQL. Also provides IDF weights so that
     rare title words contribute more to the similarity score.
+
+    Tracks the indexed words per novel, so `add` is an upsert (a title change
+    cleans up the old words) and `remove` needs only the novel ID.
     """
 
     def __init__(self) -> None:
         self._word_ids: Dict[str, Set[str]] = {}  # word → set of novel IDs
-        self._total: int = 0
-        self._lock = threading.Lock()  # guards write operations only
+        self._novel_words: Dict[str, Set[str]] = {}  # novel ID → indexed title words
+        self._lock = threading.Lock()  # guards reads and writes of both maps
 
     def build(self) -> None:
         """Load all (id, title) pairs from the DB and build the index."""
         with ctx.db.session() as sess:
             rows = sess.exec(sq.select(Novel.id, Novel.title)).all()
         word_ids: Dict[str, Set[str]] = {}
+        novel_words: Dict[str, Set[str]] = {}
         for nid, title in rows:
-            for w in _words(title):
+            words = _words(title)
+            novel_words[nid] = words
+            for w in words:
                 word_ids.setdefault(w, set()).add(nid)
         with self._lock:
             self._word_ids = word_ids
-            self._total = len(rows)
+            self._novel_words = novel_words
+
+    def _unlink(self, novel_id: str, words: Set[str]) -> None:
+        for w in words:
+            ids = self._word_ids.get(w)
+            if ids:
+                ids.discard(novel_id)
+                if not ids:
+                    del self._word_ids[w]
 
     def add(self, novel_id: str, title: str) -> None:
+        """Insert a novel, or update its indexed words if the title changed."""
+        new_words = _words(title)
         with self._lock:
-            for w in _words(title):
+            old_words = self._novel_words.get(novel_id, set())
+            self._unlink(novel_id, old_words - new_words)
+            for w in new_words - old_words:
                 self._word_ids.setdefault(w, set()).add(novel_id)
-            self._total += 1
+            self._novel_words[novel_id] = new_words
 
-    def remove(self, novel_id: str, title: str) -> None:
+    def remove(self, novel_id: str) -> None:
         with self._lock:
-            for w in _words(title):
-                ids = self._word_ids.get(w)
-                if ids:
-                    ids.discard(novel_id)
-                    if not ids:
-                        del self._word_ids[w]
-            self._total = max(0, self._total - 1)
+            old_words = self._novel_words.pop(novel_id, None)
+            if old_words:
+                self._unlink(novel_id, old_words)
 
     def idf(self, word: str) -> float:
-        """Smoothed IDF = log((N+1) / (df+1))."""
-        df = len(self._word_ids.get(word, set()))
-        return math.log((self._total + 1) / (df + 1)) if self._total > 0 else 1.0
+        ids = self._word_ids.get(word)
+        return _idf(len(self._novel_words), len(ids) if ids else 0)
 
     def candidates(self, words: Set[str], exclude_id: str, limit: int) -> List[str]:
         """
-        Return up to `limit` candidate IDs sorted by number of matching title words
-        (most overlapping words first, so the most relevant candidates are in the DB query).
+        Return up to `limit` candidate IDs ranked by IDF-weighted title-word overlap,
+        so preselection mirrors the final title score. Near stop-words (present in
+        more than MAX_DF_RATIO of all titles) are skipped — they carry almost no
+        signal but match huge ID sets — unless every matched word is that common.
         """
-        counts: Counter = Counter()
-        for w in words:
-            for nid in self._word_ids.get(w, set()):
-                counts[nid] += 1
-        counts.pop(exclude_id, None)
-        return [nid for nid, _ in counts.most_common(limit)]
+        with self._lock:
+            total = len(self._novel_words)
+            df_cap = max(MIN_DF_CAP, MAX_DF_RATIO * total)
+            matched = [ids for w in words if (ids := self._word_ids.get(w))]
+            informative = [ids for ids in matched if len(ids) <= df_cap]
+            scores: Dict[str, float] = {}
+            for ids in informative or matched:
+                weight = _idf(total, len(ids))
+                for nid in ids:
+                    scores[nid] = scores.get(nid, 0.0) + weight
+        scores.pop(exclude_id, None)
+        return heapq.nlargest(limit, scores, key=scores.__getitem__)
 
 
 # ---------------------------------------------------------------------------
@@ -237,10 +254,10 @@ class RecommendationService:
         if self._index_ready:
             self._index.add(novel_id, title)
 
-    def index_remove(self, novel_id: str, title: str) -> None:
+    def index_remove(self, novel_id: str) -> None:
         """Call when a novel is deleted to keep the inverted index consistent."""
         if self._index_ready:
-            self._index.remove(novel_id, title)
+            self._index.remove(novel_id)
 
     # ------------------------------------------------------------------
     # Core computation
@@ -315,23 +332,36 @@ class RecommendationService:
         return all_rows
 
     def _score_candidates(self, src: _SourceFeatures, candidates: List[_CandidateRow]) -> List[str]:
-        """Score candidates against the source novel. Pure CPU — no DB or index access."""
+        """Score candidates against the source novel. Pure CPU — no DB access."""
+        # IDF lookups are memoized across all candidates — titles share many words.
+        idf_cache: Dict[str, float] = dict(src.idf)
+        src_idf_sum = sum(src.idf.values())
+
         scored: List[Tuple[float, str]] = []
         for row in candidates:
-            cand_words = _words(row.title)
-            cand_tags = {t.lower() for t in (row.tags or [])}
-            cand_authors = _author_set(row.authors)
+            # IDF-weighted Jaccard: intersection weight / union weight, in one pass.
+            w_inter = 0.0
+            w_extra = 0.0
+            for w in _words(row.title):
+                weight = idf_cache.get(w)
+                if weight is None:
+                    weight = self._index.idf(w)
+                    idf_cache[w] = weight
+                if w in src.words:
+                    w_inter += weight
+                else:
+                    w_extra += weight
+            w_union = src_idf_sum + w_extra
+            title_sim = w_inter / w_union if w_union else 0.0
 
-            # Extend the precomputed IDF dict with words exclusive to the candidate title.
-            idf = {**src.idf, **{w: self._index.idf(w) for w in cand_words - src.words}}
-
-            title_score = _idf_jaccard(src.words, cand_words, idf) ** 2 * WEIGHT_TITLE
-            tag_score = _jaccard(src.tags, cand_tags) * WEIGHT_TAGS
-            domain_score = float(WEIGHT_DOMAIN) if row.domain == src.domain else 0.0
-            author_score = float(WEIGHT_AUTHOR) if src.authors & cand_authors else 0.0
-            match_pct = title_score + tag_score + domain_score + author_score
-            if match_pct > 0:
-                scored.append((match_pct, row.id))
+            score = title_sim**2 * WEIGHT_TITLE
+            score += _jaccard(src.tags, {t.lower() for t in (row.tags or [])}) * WEIGHT_TAGS
+            if row.domain == src.domain:
+                score += WEIGHT_DOMAIN
+            if src.authors and src.authors & _author_set(row.authors):
+                score += WEIGHT_AUTHOR
+            if score > 0:
+                scored.append((score, row.id))
 
         return [rid for _, rid in heapq.nlargest(CACHE_RESULTS, scored, key=lambda x: x[0])]
 
