@@ -42,6 +42,7 @@ class FetchLatestHandler(BatchHandler):
                 novel_id=novel_id,
                 novel_title=novel_title,
                 parent_id=self.job.id,
+                depends_on=added_types[JobType.NOVEL],
             )
             added_types[job.type] = job.id
 
