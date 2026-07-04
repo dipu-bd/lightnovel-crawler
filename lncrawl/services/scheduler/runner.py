@@ -73,7 +73,6 @@ class JobRunner:
                     job = ctx.jobs._pending(
                         artifact,
                         skip_job_ids=_queue.keys(),
-                        skip_domains=active_domains,
                     )
                 if not job:
                     return None  # no pending job
