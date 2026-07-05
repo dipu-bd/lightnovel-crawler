@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-import sqlmodel as sa
+import sqlmodel as sq
 
 from ..context import ctx
 from ..dao import Library, LibraryNovel, Novel, User, UserRole
@@ -12,12 +12,6 @@ class LibraryService:
     def __init__(self) -> None:
         pass
 
-    def _get_library(self, sess, library_id: str) -> Library:
-        library = sess.get(Library, library_id)
-        if not library:
-            raise ServerErrors.no_such_library
-        return library
-
     def _ensure_owner(self, library: Library, user: User):
         if library.user_id != user.id and user.role != UserRole.ADMIN:
             raise ServerErrors.forbidden
@@ -26,6 +20,23 @@ class LibraryService:
         if library.is_public or library.user_id == user.id or user.role == UserRole.ADMIN:
             return
         raise ServerErrors.forbidden
+
+    def _get_library(self, sess: sq.Session, library_id: str) -> Library:
+        library = sess.get(Library, library_id)
+        if not library:
+            raise ServerErrors.no_such_library
+        return library
+
+    def _get_library_cover(self, sess: sq.Session, library_id: str) -> Optional[str]:
+        novels = sess.exec(
+            sq.select(Novel)
+            .join(LibraryNovel, sq.col(LibraryNovel.novel_id) == sq.col(Novel.id))
+            .where(LibraryNovel.library_id == library_id)
+            .order_by(sq.desc(Novel.updated_at))
+        )
+        for novel in novels:
+            if novel.cover_available:
+                return novel.cover_file
 
     def list_page(
         self,
@@ -37,23 +48,23 @@ class LibraryService:
         user_id: Optional[str] = None,
     ) -> Paginated[Library]:
         with ctx.db.session() as sess:
-            stmt = sa.select(Library)
-            cnt = sa.select(sa.func.count()).select_from(Library)
+            stmt = sq.select(Library)
+            cnt = sq.select(sq.func.count()).select_from(Library)
 
             if user_id:
                 stmt = stmt.where(Library.user_id == user_id)
                 cnt = cnt.where(Library.user_id == user_id)
 
             if public_only:
-                stmt = stmt.where(sa.col(Library.is_public).is_(True))
-                cnt = cnt.where(sa.col(Library.is_public).is_(True))
+                stmt = stmt.where(sq.col(Library.is_public).is_(True))
+                cnt = cnt.where(sq.col(Library.is_public).is_(True))
 
             if query:
                 q = f"%{query.lower()}%"
-                stmt = stmt.where(sa.col(Library.name).ilike(q))
-                cnt = cnt.where(sa.col(Library.name).ilike(q))
+                stmt = stmt.where(sq.col(Library.name).ilike(q))
+                cnt = cnt.where(sq.col(Library.name).ilike(q))
 
-            stmt = stmt.order_by(sa.desc(Library.updated_at))
+            stmt = stmt.order_by(sq.desc(Library.updated_at))
 
             stmt = stmt.offset(offset)
             stmt = stmt.limit(limit)
@@ -73,16 +84,18 @@ class LibraryService:
         user_id: Optional[str] = None,
     ) -> List[LibraryItem]:
         with ctx.db.session() as sess:
-            stmt = sa.select(Library)
+            stmt = sq.select(Library)
             if user_id:
                 stmt = stmt.where(Library.user_id == user_id)
-            stmt = stmt.order_by(sa.desc(Library.updated_at))
+            stmt = stmt.order_by(sq.desc(Library.updated_at))
             libraries = sess.exec(stmt).all()
+
             return [
                 LibraryItem(
                     id=library.id,
                     name=library.name,
                     is_public=library.is_public,
+                    cover_file=library.cover_file,
                     description=library.description,
                 )
                 for library in libraries
@@ -99,7 +112,7 @@ class LibraryService:
             limit = ctx.tier.max_libraries(user)
             if limit is not None:
                 count = sess.scalar(
-                    sa.select(sa.func.count())
+                    sq.select(sq.func.count())
                     .select_from(Library)
                     .where(Library.user_id == user.id)
                 )
@@ -164,10 +177,19 @@ class LibraryService:
             library = self._get_library(sess, library_id)
             self._ensure_visible(library, user)
 
+            modified = False
+            extra = library.extra.copy()
+
             owner = sess.get_one(User, library.user_id)
             if library.extra.get("owner_name") != owner.name:
-                extra = library.extra.copy()
                 extra["owner_name"] = owner.name
+                modified = True
+
+            if "novel_cover" not in library.extra:
+                extra["novel_cover"] = self._get_library_cover(sess, library_id)
+                modified = True
+
+            if modified:
                 library.extra = extra
                 sess.commit()
 
@@ -186,15 +208,15 @@ class LibraryService:
             self._ensure_visible(library, user)
 
             cnt = (
-                sa.select(sa.func.count())
+                sq.select(sq.func.count())
                 .select_from(LibraryNovel)
                 .where(LibraryNovel.library_id == library_id)
             )
             stmt = (
-                sa.select(Novel)
-                .join(LibraryNovel, sa.col(LibraryNovel.novel_id) == sa.col(Novel.id))
+                sq.select(Novel)
+                .join(LibraryNovel, sq.col(LibraryNovel.novel_id) == sq.col(Novel.id))
                 .where(LibraryNovel.library_id == library_id)
-                .order_by(sa.desc(Novel.updated_at))
+                .order_by(sq.desc(Novel.updated_at))
                 .offset(offset)
                 .limit(limit)
             )
@@ -202,9 +224,22 @@ class LibraryService:
             total = sess.exec(cnt).one()
             items = sess.exec(stmt).all()
 
+            modified = False
+            extra = library.extra.copy()
+
             if library.extra.get("novel_count") != total:
                 extra = library.extra.copy()
                 extra["novel_count"] = total
+                modified = True
+
+            if "novel_cover" not in library.extra:
+                for novel in items:
+                    if novel.cover_available:
+                        extra["novel_cover"] = novel.cover_file
+                        modified = True
+                        break
+
+            if modified:
                 library.extra = extra
                 sess.commit()
 
@@ -229,7 +264,7 @@ class LibraryService:
                 raise ServerErrors.novel_limit_reached
 
             existing = sess.scalar(
-                sa.select(LibraryNovel).where(
+                sq.select(LibraryNovel).where(
                     LibraryNovel.library_id == library_id,
                     LibraryNovel.novel_id == novel_id,
                 )
@@ -241,11 +276,14 @@ class LibraryService:
             sess.add(link)
 
             extra = library.extra.copy()
-            extra["novel_count"] = library.extra.get("novel_count", 0) + 1
 
             owner = sess.get_one(User, library.user_id)
             if extra.get("owner_name") != owner.name:
                 extra["owner_name"] = owner.name
+
+            extra["novel_count"] = library.extra.get("novel_count", 0) + 1
+            if not library.cover_available and novel.cover_available:
+                extra["novel_cover"] = novel.cover_file
 
             library.extra = extra
 
@@ -258,9 +296,9 @@ class LibraryService:
             self._ensure_owner(library, user)
 
             row = sess.exec(
-                sa.delete(LibraryNovel).where(
-                    sa.col(LibraryNovel.library_id) == library_id,
-                    sa.col(LibraryNovel.novel_id) == novel_id,
+                sq.delete(LibraryNovel).where(
+                    sq.col(LibraryNovel.library_id) == library_id,
+                    sq.col(LibraryNovel.novel_id) == novel_id,
                 )
             )
             if row.rowcount == 0:
@@ -268,6 +306,9 @@ class LibraryService:
 
             extra = library.extra.copy()
             extra["novel_count"] = library.extra.get("novel_count", 0) - 1
+
+            if not library.cover_file or novel_id in library.cover_file:
+                extra["novel_cover"] = self._get_library_cover(sess, library_id)
 
             owner = sess.get_one(User, library.user_id)
             if extra.get("owner_name") != owner.name:
