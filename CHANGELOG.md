@@ -27,7 +27,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.10.0] - 2026-06-28
 
-<!-- TBD -->
+### Added
+
+- **Activity heatmap** — hourly usage heatmap bucketing events by day-of-week × hour-of-day using portable integer epoch math (identical on SQLite and PostgreSQL) and shifted by a `tz_offset` query param to reflect the viewer's local time, plus additional activity-dashboard metrics — useful for spotting low-traffic deploy/maintenance windows
+- **One runner per domain** — the job scheduler now guarantees a single runner processes a given domain at a time; new `job_domain` migration with supporting DAO/service logic
+- **GitHub feedback** — feedback is submitted directly as GitHub issues via `utils/github.py`; the local `feedback` table is dropped (new migration)
+
+### Changed
+
+- **DB schema validation reworked** — schema validation now runs through `services/db.py` on startup, with a dev `migrate` command and a lint-workflow hook
+- **Job runner hardening** — added a drain loop and failure safety net, consolidated queue claims, only cancels stuck jobs on runner reset, rests between iterations, and runs `gc` during scheduler reset
+- **`openai` moved to a dev dependency**; CI workflows optimized
+- **Updated `lncrawl-scraper`**
+
+### Fixed
+
+- **`freewebnovel`** (#3060) — source corrected
+- Assorted cleanup and minor fixes across the crawler, binder, mail, and static-file middleware
 
 ## [4.9.0] - 2026-06-20
 
