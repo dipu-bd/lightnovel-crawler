@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.11.0] - 2026-07-09
+
+### Added
+
+- **Continue reading** — a new history endpoint and supporting `HistoryService` logic surface the most recent in-progress chapter so readers can resume where they left off; new response models under `server/models/history.py`
+- **Library covers** — a library now displays the first available novel cover as its cover image; `LibraryService` and the library DAO/response models updated accordingly
+- **Daily active users** — `GlobalActivitySummary` gains a `dau` field alongside `mau`, and admin usage is aggregated by hour with day-of-week bucketing
+
+### Changed
+
+- **Recommendation service** — improved recommendation logic and wiring across `recommendations.py`, `novels.py`, and `crawler.py`
+- **Job dependency handling** — `FETCH_LATEST` jobs now respect dependencies; pending-job retrieval refactored (dropped the `skip_domains` parameter)
+- **Activity retention** — `Scrubber` deletes `UserActivity` records older than 90 days
+
+### Fixed
+
+- **`lightnovelstranslations.com`** (#3067) — stop prepending the scraper origin to an already-absolute novel URL, which produced a malformed 404ing URL
+- **Chapter history** — corrected chapter history addition
+- **SQLAlchemy 2.0** — fixed usage list compatibility
+
 ## [4.10.0] - 2026-06-28
 
 <!-- TBD -->
