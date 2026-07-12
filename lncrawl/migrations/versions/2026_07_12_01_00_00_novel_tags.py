@@ -51,7 +51,7 @@ def upgrade() -> None:
         conn.execute(
             sa.text(
                 "INSERT INTO novel_tags (novel_id, tag_name) "
-                "VALUES (:novel_id, :tag_name)",
+                + "VALUES (:novel_id, :tag_name)",
             ),
             params,
         )
