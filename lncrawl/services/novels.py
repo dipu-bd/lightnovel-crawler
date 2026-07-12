@@ -1,24 +1,15 @@
-from collections import Counter
 import shutil
 from typing import Any, Dict, List, Optional
 
 import sqlmodel as sq
 
 from ..context import ctx
-from ..dao import LanguageCode, Novel, NovelSort, NovelTranslation
+from ..dao import LanguageCode, Novel, NovelSort, NovelTag, NovelTranslation
 from ..exceptions import ServerErrors
 from ..server.models import Paginated
-from ..utils.time_utils import current_timestamp
-
-# Tag vocabulary is derived by scanning all novels, so cache it briefly.
-_TAGS_CACHE_TTL = 5 * 60 * 1000
 
 
 class NovelService:
-    def __init__(self) -> None:
-        self._tags_cache: Optional[Dict[str, int]] = None
-        self._tags_cache_at: int = 0
-
     def list(
         self,
         search: str = "",
@@ -63,12 +54,15 @@ class NovelService:
                 conditions.append(sq.col(Novel.chapter_count) >= min_chapters)
 
             if tags:
-                # Match all selected tags. Tags are a JSON array of strings;
-                # cast to text and match the quoted token for SQLite/Postgres
-                # portability (the quotes keep "Action" from hitting "Action X").
-                tags_text = sq.cast(sq.col(Novel.tags), sq.String)
-                for tag in tags:
-                    conditions.append(tags_text.ilike(f'%"{tag}"%'))
+                # Match all selected tags via the indexed association table.
+                wanted = sorted(set(tags))
+                tag_match = (
+                    sq.select(NovelTag.novel_id)
+                    .where(sq.col(NovelTag.tag_name).in_(wanted))
+                    .group_by(NovelTag.novel_id)
+                    .having(sq.func.count(sq.col(NovelTag.tag_name)) == len(wanted))
+                )
+                conditions.append(sq.col(Novel.id).in_(tag_match))
 
             if conditions:
                 cnd = sq.and_(*conditions)
@@ -106,19 +100,16 @@ class NovelService:
             )
 
     def list_tags(self) -> Dict[str, int]:
-        now = current_timestamp()
-        if self._tags_cache is not None and now - self._tags_cache_at < _TAGS_CACHE_TTL:
-            return self._tags_cache
-        counter: Counter[str] = Counter()
         with ctx.db.session() as sess:
-            for tags in sess.exec(sq.select(Novel.tags)).all():
-                for tag in tags or []:
-                    if tag:
-                        counter[tag] += 1
-        result = dict(counter.most_common())
-        self._tags_cache = result
-        self._tags_cache_at = now
-        return result
+            rows = sess.exec(
+                sq.select(NovelTag.tag_name, sq.func.count())
+                .group_by(NovelTag.tag_name)
+                .order_by(
+                    sq.desc(sq.func.count()),
+                    sq.asc(NovelTag.tag_name),
+                )
+            ).all()
+        return {name: count for name, count in rows}
 
     def list_domains(self) -> Dict[str, int]:
         with ctx.db.session() as sess:
@@ -171,6 +162,11 @@ class NovelService:
             novel = sess.get(Novel, novel_id)
             if not novel:
                 return True
+            sess.exec(
+                sq.delete(NovelTag).where(
+                    sq.col(NovelTag.novel_id) == novel_id,
+                )
+            )
             sess.delete(novel)
             sess.commit()
         ctx.recommendations.invalidate(novel_id)

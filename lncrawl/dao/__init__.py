@@ -14,7 +14,7 @@ from .library import Library, LibraryNovel
 from .novel import Novel, NovelTranslation
 from .read_history import ReadHistory
 from .secrets import Secret
-from .tag import Tag
+from .tag import NovelTag, Tag
 from .user import User, UserToken
 from .volume import Volume, VolumeTranslation
 
@@ -23,6 +23,7 @@ models: List[Type[SQLModel]] = [
     User,
     UserToken,
     Tag,
+    NovelTag,
     Library,
     LibraryNovel,
     Novel,

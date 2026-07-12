@@ -1,9 +1,9 @@
 from typing import Any, List, Optional
 
-from sqlmodel import and_, asc, col, func, insert as sa_insert, select
+from sqlmodel import and_, asc, col, delete, func, insert as sa_insert, select
 
 from ..context import ctx
-from ..dao import Tag
+from ..dao import NovelTag, Tag
 from ..exceptions import ServerErrors
 from ..server.models import Paginated
 
@@ -82,3 +82,26 @@ class TagService:
             if missing:
                 sess.exec(sa_insert(Tag), params=[Tag(name=name).model_dump() for name in missing])
                 sess.commit()
+
+    def set_novel_tags(self, novel_id: str, tags: List[str]) -> None:
+        """Update the tag vocabulary and replace a novel's tag associations."""
+        cleaned = sorted({t.strip() for t in tags if t and t.strip()})
+        self.insert(cleaned)
+        with ctx.db.session() as sess:
+            sess.exec(
+                delete(NovelTag).where(
+                    col(NovelTag.novel_id) == novel_id,
+                )
+            )
+            if cleaned:
+                sess.exec(
+                    sa_insert(NovelTag),
+                    params=[
+                        NovelTag(
+                            novel_id=novel_id,
+                            tag_name=name,
+                        ).model_dump()
+                        for name in cleaned
+                    ],
+                )
+            sess.commit()
