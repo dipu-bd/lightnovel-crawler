@@ -101,6 +101,15 @@ class FeedbackStatus(IntEnum):
     RESOLVED = 2
 
 
+class NovelSort(str, Enum):
+    popular = "popular"
+    updated = "updated"
+    created = "created"
+    chapters = "chapters"
+    title_asc = "title_asc"
+    title_desc = "title_desc"
+
+
 class ActivityType(IntEnum):
     LIBRARY = 1
     NOVEL = 2

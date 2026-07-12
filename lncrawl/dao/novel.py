@@ -46,6 +46,13 @@ class Novel(BaseTable, table=True):
         description="Number of available chapters",
     )
 
+    popularity: int = sa.Field(
+        default=0,
+        index=True,
+        sa_type=sa.BigInteger,
+        description="Accumulated all-time reader visits folded in from scrubbed activity",
+    )
+
     @computed_field  # type: ignore[misc]
     @property
     def cover_file(self) -> str:

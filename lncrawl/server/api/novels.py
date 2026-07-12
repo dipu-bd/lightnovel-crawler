@@ -3,7 +3,16 @@ from typing import Dict, List, Optional
 from fastapi import APIRouter, Path, Query, Security
 
 from ...context import ctx
-from ...dao import ActivityType, Artifact, Chapter, LanguageCode, Novel, User, Volume
+from ...dao import (
+    ActivityType,
+    Artifact,
+    Chapter,
+    LanguageCode,
+    Novel,
+    NovelSort,
+    User,
+    Volume,
+)
 from ..models import Paginated
 from ..security import ensure_admin, ensure_user
 
@@ -20,12 +29,24 @@ def list_novels(
     offset: int = Query(default=0, help="Offset"),
     limit: int = Query(default=20, le=100, help="Limit"),
     domain: str = Query(default="", help="Domain name"),
+    language: Optional[LanguageCode] = Query(default=None, help="Language code"),
+    tags: List[str] = Query(default=[], help="Match novels having all of these tags"),
+    manga: Optional[bool] = Query(default=None, help="Filter manga/comic entries"),
+    mtl: Optional[bool] = Query(default=None, help="Filter machine-translated entries"),
+    min_chapters: int = Query(default=0, ge=0, help="Minimum chapter count"),
+    sort: NovelSort = Query(default=NovelSort.updated, help="Sort order"),
 ) -> Paginated[Novel]:
     return ctx.novels.list(
         limit=limit,
         offset=offset,
         search=search.strip(),
         domain=domain.strip(),
+        language=language.value if language else None,
+        tags=[t.strip() for t in tags if t.strip()],
+        manga=manga,
+        mtl=mtl,
+        min_chapters=min_chapters,
+        sort=sort,
     )
 
 
@@ -35,6 +56,14 @@ def list_novels(
 )
 def list_sources() -> Dict[str, int]:
     return ctx.novels.list_domains()
+
+
+@router.get(
+    "/tags",
+    summary="Returns tags used across available novels with their counts",
+)
+def list_tags() -> Dict[str, int]:
+    return ctx.novels.list_tags()
 
 
 @router.get("/{novel_id}", summary="Returns a novel")

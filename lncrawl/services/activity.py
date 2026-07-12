@@ -40,6 +40,18 @@ class UserActivityService:
             else:
                 activity.visit_count += 1
                 activity.updated_at = ts
+
+            # Keep a live, retention-independent popularity counter on the novel
+            # so the novel list can sort by it without touching this table.
+            # A Core UPDATE avoids the BaseTable before_update hook (so it does
+            # not bump updated_at) and increments atomically.
+            if activity_type in (ActivityType.NOVEL, ActivityType.NOVEL_TRANSLATION):
+                sess.exec(
+                    sq.update(Novel)
+                    .where(sq.col(Novel.id) == target_id)
+                    .values(popularity=sq.col(Novel.popularity) + 1)
+                )
+
             sess.commit()
 
     def get_visit_count(self, target_id: str, activity_type: ActivityType) -> int:
