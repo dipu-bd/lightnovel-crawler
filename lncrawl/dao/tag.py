@@ -12,9 +12,7 @@ class Tag(sa.SQLModel, table=True):
 
 class NovelTag(sa.SQLModel, table=True):
     __tablename__ = "novel_tags"  # type: ignore
-    __table_args__ = (
-        sa.Index("ix_novel_tag_name", "tag_name"),
-    )
+    __table_args__ = (sa.Index("ix_novel_tag_name", "tag_name"),)
 
     novel_id: str = sa.Field(foreign_key="novels.id", ondelete="CASCADE", primary_key=True)
     tag_name: str = sa.Field(primary_key=True, description="Tag name")
