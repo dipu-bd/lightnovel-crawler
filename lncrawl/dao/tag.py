@@ -11,7 +11,6 @@ class Tag(sa.SQLModel, table=True):
 
 
 class NovelTag(sa.SQLModel, table=True):
-    """Normalized novel↔tag association for indexed tag filtering and counts."""
     __tablename__ = "novel_tags"  # type: ignore
     __table_args__ = (
         sa.Index("ix_novel_tag_name", "tag_name"),
