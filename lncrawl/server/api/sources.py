@@ -1,7 +1,7 @@
 from typing import List
 
 from fastapi import APIRouter, Body, Path, Query, Security
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 
 from ...context import ctx
 from ...dao import ActivityType, User
@@ -20,12 +20,11 @@ router = APIRouter()
 @router.get(
     "s",
     summary="Returns a list of supported sources",
-    response_model=List[SourceItem],
 )
 def list_sources(
     skip_rejected: bool = Query(default=False, help="Send true to skip rejected sources"),
     user: User = Security(ensure_user),
-):
+) -> List[SourceItem]:
     ctx.activity.record(user.id, ActivityType.SOURCES, "sources")
     count = ctx.novels.list_domains()
     result = ctx.sources.list(
@@ -33,13 +32,7 @@ def list_sources(
     )
     for item in result:
         item.total_novels = count.get(item.domain, 0)
-    return JSONResponse(
-        content=[item.model_dump() for item in result],
-        headers={
-            "ETag": str(ctx.sources.version),
-            "Cache-Control": "public, max-age=14400",
-        },
-    )
+    return result
 
 
 @router.get(
