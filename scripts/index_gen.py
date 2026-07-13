@@ -256,6 +256,7 @@ taskman.close()
 INDEX_DATA["crawlers"] = dict(sorted(INDEX_DATA["crawlers"].items()))
 INDEX_DATA["rejected"] = dict(sorted(INDEX_DATA["rejected"].items()))
 INDEX_DATA["supported"] = dict(sorted(INDEX_DATA["supported"].items()))
+INDEX_DATA["contributors"] = dict(sorted(repo_contribs.items()))
 
 logger.info(
     f"{len(INDEX_DATA['crawlers'])} crawlers. "
