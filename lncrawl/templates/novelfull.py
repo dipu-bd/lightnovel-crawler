@@ -65,5 +65,4 @@ class NovelFullTemplate(SoupTemplate):
         for div in soup.find_all("div"):
             if not div.find("p"):
                 div.decompose()
-        # soup.decompose("div")
         chapter.body = soup.inner_html
