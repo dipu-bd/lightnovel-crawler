@@ -62,5 +62,7 @@ class NovelFullTemplate(SoupTemplate):
         chapter.url = self.absolute_url(soup["href"] or soup["value"])
 
     def parse_chapter_body(self, soup: PageSoup, chapter: Chapter) -> None:
-        soup.decompose("div")
+        for div in soup.find_all("div"):
+            if not div.find("p"):
+                div.decompose()
         chapter.body = soup.inner_html
