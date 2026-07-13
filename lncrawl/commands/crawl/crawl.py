@@ -33,6 +33,24 @@ def crawl(
         metavar="N",
         help="Download latest few chapters",
     ),
+    resume: bool = typer.Option(
+        False,
+        "--resume",
+        "--missing",
+        help="Download only chapters that have not been downloaded yet",
+    ),
+    refresh: bool = typer.Option(
+        False,
+        "--refresh",
+        help="Re-download selected chapters even if they are already available",
+    ),
+    rate_limit: Optional[float] = typer.Option(
+        None,
+        "--rate-limit",
+        min=0.01,
+        metavar="N",
+        help="Limit crawler tasks to N requests per second for this run",
+    ),
     formats: List[OutputFormat] = typer.Option(
         [],
         "-f",
@@ -71,6 +89,10 @@ def crawl(
 
     console = Console()
 
+    if resume and refresh:
+        print("[red]Cannot use --resume and --refresh together[/red]")
+        raise typer.Exit(1)
+
     # setup context
     ctx.setup()
 
@@ -86,6 +108,11 @@ def crawl(
     # init crawler
     try:
         crawler = ctx.sources.init_crawler(url)
+        if rate_limit:
+            crawler.taskman.init_executor(
+                workers=crawler.taskman.workers,
+                ratelimit=rate_limit,
+            )
         can_login = getattr(crawler, "can_login", False)
     except ServerError as e:
         print(f"[red]{e.format(True)}[/red]")
@@ -135,10 +162,16 @@ def crawl(
         chapters = prompt_range_selection(novel)
     else:
         chapters = ctx.chapters.list_ids(
-            novel_id=novel.id, descending=bool(range_last), limit=range_last or range_first
+            novel_id=novel.id,
+            is_crawled=False if resume else None,
+            descending=bool(range_last),
+            limit=range_last or range_first,
         )
     if not chapters:
-        print("[red]No chapters to download[/red]")
+        if resume:
+            print("[green]All selected chapters are already downloaded[/green]")
+        else:
+            print("[red]No chapters to download[/red]")
         return
 
     # select formats to bind
@@ -148,37 +181,55 @@ def crawl(
         else:
             formats = prompt_format_selection()
 
+    def has_failed(future) -> bool:
+        return future.done() and not future.cancelled() and future.exception() is not None
+
     # download chapters
-    chapter_futures = [
+    chapter_futures = {
         crawler.taskman.submit_task(
             ctx.crawler.fetch_chapter,
             user.id,
             chapter_id,
             custom=crawler,
-        )
+            refresh=refresh,
+        ): chapter_id
         for chapter_id in sorted(set(chapters))
-    ]
+    }
     chapter_image_ids = []
     for chapter in crawler.taskman.resolve(chapter_futures, desc="Chapters", unit=" c"):
         if not chapter:
             continue
         chapter_image_ids += ctx.images.list_ids(chapter_id=chapter.id)
 
+    failed_chapters = [
+        chapter_id for future, chapter_id in chapter_futures.items() if has_failed(future)
+    ]
+    if failed_chapters:
+        print(f"[red]{len(failed_chapters)} chapter(s) failed to download[/red]")
+        for chapter in ctx.chapters.get_many(failed_chapters[:10]):
+            print(f"[red]- Chapter {chapter.serial}: {chapter.title}[/red]")
+        if len(failed_chapters) > 10:
+            print(f"[red]... and {len(failed_chapters) - 10} more[/red]")
+
     # download chapter images
-    image_futures = [
+    image_futures = {
         crawler.taskman.submit_task(
             ctx.crawler.fetch_image,
             user.id,
             image_id,
             custom=crawler,
-        )
+            refresh=refresh,
+        ): image_id
         for image_id in sorted(set(chapter_image_ids))
-    ]
+    }
     crawler.taskman.resolve_futures(
         image_futures,
         desc="Images",
         unit=" img",
     )
+    failed_images = [image_id for future, image_id in image_futures.items() if has_failed(future)]
+    if failed_images:
+        print(f"[red]{len(failed_images)} image(s) failed to download[/red]")
 
     # create artifacts
     format_set = set(formats)
