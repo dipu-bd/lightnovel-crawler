@@ -135,7 +135,10 @@ class UserService:
                         sq.col(User.name).ilike(q),
                         sq.col(User.email).ilike(q),
                         sq.cast(User.role, sq.String).ilike(q),
-                        sq.cast(User.tier, sq.String).ilike(q),
+                        sq.case(
+                            {t.value: t.name for t in UserTier},
+                            value=sq.col(User.tier),
+                        ).ilike(q),
                     )
                 )
             if referrer:

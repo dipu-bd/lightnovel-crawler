@@ -5,6 +5,7 @@ import sqlmodel as sa
 
 from ..enums import JobPriority, JobStatus, JobType, LanguageCode
 from ._base import BaseTable
+from ._enum import IntEnumType
 
 _LANGUAGE_CODES = frozenset(LanguageCode)
 
@@ -35,6 +36,7 @@ class Job(BaseTable, table=True):
     )
 
     type: JobType = sa.Field(
+        sa_column=sa.Column(IntEnumType(JobType), nullable=False),
         description="The job type",
     )
     domain: Optional[str] = sa.Field(
@@ -42,8 +44,16 @@ class Job(BaseTable, table=True):
         nullable=True,
         description="Source domain for single-source crawl jobs; NULL = not throttled",
     )
-    priority: JobPriority = sa.Field(default=JobPriority.LOW, description="The job priority")
-    status: JobStatus = sa.Field(default=JobStatus.PENDING, description="Current status")
+    priority: JobPriority = sa.Field(
+        default=JobPriority.LOW,
+        sa_column=sa.Column(IntEnumType(JobPriority), nullable=False),
+        description="The job priority",
+    )
+    status: JobStatus = sa.Field(
+        default=JobStatus.PENDING,
+        sa_column=sa.Column(IntEnumType(JobStatus), nullable=False),
+        description="Current status",
+    )
     is_done: bool = sa.Field(
         default=False, sa_type=sa.Boolean, description="Whether the job has completed"
     )

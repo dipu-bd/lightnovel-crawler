@@ -38,9 +38,14 @@ verbatim), backing up and restoring on failure. SQLite only; the server uses mig
 - Every table extends `BaseTable` (`dao/_base.py`): UUID string `id` PK, `created_at`/
   `updated_at` as UNIX-ms `BigInteger` (auto-touched by a `before_update` event), and a JSON
   `extra` dict. Set `table=True` + `__tablename__`; composite indexes via `__table_args__`.
-- Enum columns store the **member name** (native `ENUM` types on Postgres, VARCHAR on
-  SQLite). Enums live in `lncrawl/enums.py` and are re-exported from `dao/__init__.py`, which
-  also maintains the `models`/`tables` lists Alembic metadata uses.
+- Enum columns are stored as **plain scalars, never native DB enums**. IntEnum columns use
+  `sa_type=IntEnumType(SomeEnum)` (`dao/_enum.py`) → `SMALLINT` holding the member **value**
+  (correct numeric ordering on every dialect; reads return the enum member and tolerate legacy
+  name strings). String-enum columns use `sa_type=sa.Enum(SomeEnum, native_enum=False)` →
+  `VARCHAR` holding the member **name**. Because there is no native `ENUM` type, adding an enum
+  member needs **no migration at all** — no more `sync_*` revisions. Enums live in
+  `lncrawl/enums.py` and are re-exported from `dao/__init__.py`, which also maintains the
+  `models`/`tables` lists Alembic metadata uses.
 - Use `sa_type=sa.BigInteger` for large ints, `index=True` for queried fields, and a
   `server_default` when adding a NOT NULL column to an existing table.
 
@@ -55,9 +60,10 @@ verbatim), backing up and restoring on failure. SQLite only; the server uses mig
    (`add_column`+`create_index` ↔ `drop_index`+`drop_column`). House style: module docstring
    with Revision ID/Revises/Create Date, `revision`/`down_revision` constants, and a
    `dialect = op.get_context().dialect.name` guard when behavior differs per dialect.
-4. **If you changed a Python enum used as a column type** (e.g. `JobType`, `OutputFormat`):
-   add a Postgres enum-sync migration modeled on an existing `sync_*` revision — raw
-   `op.execute` DDL for `postgresql`, no-op elsewhere. **Autogenerate will not detect this.**
+4. **Adding a member to an existing enum needs no migration** — enum columns are plain
+   `SMALLINT`/`VARCHAR` (see the enum bullet above), so new members just work. The legacy
+   `sync_*` revisions and `2026_07_14_*_drop_native_enums` are the historical record of
+   removing the native types; don't add new enum-sync migrations.
 5. Verify: `uv run python -m lncrawl dev migrate verify` (upgrades to head + strict schema
    check — this is also the CI gate). Local apply/rollback/status:
    `dev migrate up` / `dev migrate down` / `dev migrate status`.

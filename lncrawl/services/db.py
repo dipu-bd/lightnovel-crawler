@@ -114,6 +114,7 @@ class DB:
         backup = self._backup_database()
         try:
             self._sync_sqlite_schema()
+            self._normalize_enum_values()
         except Exception:
             logger.exception("Schema reconciliation failed.")
             self._restore_database(backup)
@@ -121,6 +122,32 @@ class DB:
         else:
             self._set_sqlite_user_version(fingerprint)
             self._discard_backup(backup)
+
+    def _normalize_enum_values(self) -> None:
+        """Rewrite legacy enum rows that stored the member name as an integer.
+
+        IntEnum columns used to be persisted by name (e.g. ``status='SUCCESS'``);
+        they are now stored by value. Migration scripts handle this on the server,
+        but SQLite reconciles at runtime, so convert any lingering name strings
+        here. Idempotent: once converted, the WHERE clauses match nothing.
+        """
+        from ..dao._enum import IntEnumType
+
+        columns = [
+            (table.name, col.name, col.type.enum_class)
+            for table in SQLModel.metadata.sorted_tables
+            for col in table.columns
+            if isinstance(col.type, IntEnumType)
+        ]
+        if not columns:
+            return
+        with self.engine.begin() as conn:
+            for table, column, enum_class in columns:
+                for member in enum_class:
+                    conn.exec_driver_sql(
+                        f'UPDATE "{table}" SET "{column}" = ? WHERE "{column}" = ?',
+                        (int(member.value), member.name),
+                    )
 
     def _bootstrap_server(self, reset_on_failure: bool = False):
         """Run real Alembic migrations for Postgres/MySQL deployments."""

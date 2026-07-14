@@ -15,7 +15,10 @@ class Artifact(BaseTable, table=True):
     job_id: Optional[str] = sa.Field(foreign_key="jobs.id", ondelete="SET NULL")
     user_id: Optional[str] = sa.Field(foreign_key="users.id", ondelete="SET NULL")
     language: Optional[str] = sa.Field(default=None, description="Target language code, e.g. 'en'")
-    format: OutputFormat = sa.Field(index=True, description="The output format of the artifact")
+    format: OutputFormat = sa.Field(
+        sa_column=sa.Column(sa.Enum(OutputFormat, native_enum=False), nullable=False, index=True),
+        description="The output format of the artifact",
+    )
     file_name: str = sa.Field(description="Artifact output file name")
     file_size: int = sa.Field(
         default=0,
