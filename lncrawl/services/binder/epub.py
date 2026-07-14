@@ -1,6 +1,7 @@
 import logging
 from pathlib import Path
 import re
+import shutil
 from threading import Event
 from typing import Optional
 
@@ -248,5 +249,5 @@ def make_epub(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     epub.write_epub(str(tmp_file), book, {})
     out_file.parent.mkdir(parents=True, exist_ok=True)
     out_file.unlink(True)
-    tmp_file.rename(out_file)
+    shutil.move(str(tmp_file), str(out_file))
     logger.info(f"Created: {out_file}")
