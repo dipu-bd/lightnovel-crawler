@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.12.0] - 2026-07-14
+
+### Added
+
+- **Novel list filtering** — `GET /api/novels` gains sort modes (`popular`, `updated`, `created`, `chapters`, `title_asc`, `title_desc`) via a new `NovelSort` enum, backed by a `novel_popularity` migration and activity-derived popularity scoring
+- **Per-novel tags** — tag attachments now live in a dedicated `NovelTag` table (new `novel_tags` migration) instead of being embedded, with supporting DAO/service changes across `tags.py`, `novels.py`, and `crawler.py`
+- **CLI resume & rate limit** (#3105) — `lncrawl crawl` gains `--resume`/`--missing` to download only not-yet-crawled chapters and `--rate-limit` to throttle requests; `--resume` and `--refresh` are mutually exclusive
+- **`novelarrow.com`** — new source crawler
+
+### Changed
+
+- **Enums stored as plain scalars** — DAO models no longer use native DB enum types; enum columns are stored as plain scalars, removing the need for Postgres enum-sync migrations (new `drop_native_enums` migration)
+- **Dialect-split schema evolution** — `services/db.py` schema evolution is now split by dialect, and the SQLite DB is rebuilt from the current models while preserving data
+- **Sources list not cached** — `GET /api/sources` no longer caches its response
+
+### Fixed
+
+- **`novelfull`** — stop downloading duplicate "half" chapters, and drop an unnecessary `soup.decompose` call in chapter-body parsing
+- **Source language generation** — corrected language derivation in the sources helper
+
 ## [4.11.0] - 2026-07-09
 
 ### Added
