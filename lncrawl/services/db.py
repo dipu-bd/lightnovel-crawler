@@ -236,6 +236,61 @@ class DB:
         with self.engine.begin() as conn:
             conn.exec_driver_sql(ddl)
 
+    def rebuild(self) -> None:
+        """Rebuild the SQLite database from the current models, preserving data.
+
+        The escape hatch for a *destructive* schema change (rename, type change,
+        column split) that additive sync cannot apply. Every table is dropped and
+        recreated from the models; rows are copied back column-by-column, keeping
+        only columns that still exist. Columns that were dropped/renamed are left
+        behind; new columns take their default. The copy is done at the raw driver
+        level so stored values (including JSON `extra`) are preserved verbatim
+        rather than re-serialized. A backup is taken and restored on any failure.
+        """
+        if self.engine.dialect.name != "sqlite":
+            raise RuntimeError("rebuild is only supported for SQLite databases")
+
+        from sqlalchemy import MetaData
+
+        backup = self._backup_database()
+        try:
+            # Snapshot every existing row at the driver level (no type coercion).
+            reflected = MetaData()
+            reflected.reflect(bind=self.engine)
+            snapshot: dict[str, tuple[list[str], list]] = {}
+            with self.engine.connect() as conn:
+                for name in reflected.tables:
+                    cur = conn.exec_driver_sql(f'SELECT * FROM "{name}"')
+                    snapshot[name] = ([str(k) for k in cur.keys()], list(cur.fetchall()))
+
+            # Rebuild the schema from the models.
+            reflected.drop_all(self.engine)
+            SQLModel.metadata.create_all(self.engine)
+
+            # Copy rows back, keeping only columns that still exist.
+            restored = 0
+            with self.engine.begin() as conn:
+                for table in SQLModel.metadata.sorted_tables:
+                    old_keys, rows = snapshot.get(table.name, ([], []))
+                    if not rows:
+                        continue
+                    keep = [k for k in old_keys if k in table.columns]
+                    idx = [old_keys.index(k) for k in keep]
+                    columns = ", ".join(f'"{k}"' for k in keep)
+                    placeholders = ", ".join("?" for _ in keep)
+                    sql = f'INSERT INTO "{table.name}" ({columns}) VALUES ({placeholders})'
+                    conn.exec_driver_sql(sql, [tuple(row[i] for i in idx) for row in rows])
+                    restored += len(rows)
+
+            self._set_sqlite_user_version(self._schema_fingerprint())
+            logger.info(f"Database rebuilt from models; {restored} row(s) preserved.")
+        except Exception:
+            logger.exception("Database rebuild failed.")
+            self._restore_database(backup)
+            raise
+        else:
+            self._discard_backup(backup)
+
     @cached_property
     def alembic_config(self):
         from alembic.config import Config

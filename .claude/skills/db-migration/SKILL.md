@@ -28,8 +28,10 @@ change; CI fails otherwise.
 model changes — new columns must be **nullable or have a `server_default`** (SQLite adds them
 NULLable regardless). Renames, type narrowing, splits, and backfills are *non-additive*: they
 apply on the server via the script, but on SQLite degrade to additive (the old column lingers,
-data is not migrated). For a genuinely destructive change on the single-user path, the story is
-rebuild-from-source (drop + `create_all` + re-crawl), not an in-place ALTER.
+data is not migrated). For a genuinely destructive change on the single-user path, use
+`dev migrate rebuild`: it drops and recreates every table from the models and copies rows back
+at the raw driver level (keeping only columns that still exist, preserving JSON `extra`
+verbatim), backing up and restoring on failure. SQLite only; the server uses migration scripts.
 
 ## DAO model conventions
 

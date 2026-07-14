@@ -72,6 +72,15 @@ def app_downgrade(
     app_status()
 
 
+@app.command(
+    "rebuild",
+    help="Rebuild a SQLite database from the models, preserving data (single-user escape hatch).",
+)
+def app_rebuild():
+    ctx.db.rebuild()
+    print("[green]Database rebuilt from models.[/green]")
+
+
 @app.command("verify", help="Strictly verify the schema matches the models (for CI).")
 def app_verify():
     from alembic import command
