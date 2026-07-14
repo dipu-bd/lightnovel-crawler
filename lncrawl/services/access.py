@@ -106,4 +106,4 @@ class AccessManager:
         return self._MAX_READ_HISTORY[user.tier]
 
     def search_can_fetch_novel_metadata(self, user: User) -> bool:
-        return user.tier == UserTier.VIP
+        return True
