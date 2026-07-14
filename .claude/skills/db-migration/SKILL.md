@@ -6,9 +6,30 @@ description: Schema changes in lncrawl — SQLModel DAO models, Alembic migratio
 # Schema changes
 
 ORM: SQLModel/SQLAlchemy. Models in `lncrawl/dao/`, migrations in
-`lncrawl/migrations/versions/`. Migrations run **automatically on startup**
-(`ctx.db.bootstrap()`: ensures the DB exists, backs up SQLite to `<db>.bak` before pending
-migrations, upgrades to head, verifies the schema, restores the backup on failure).
+`lncrawl/migrations/versions/`. `ctx.db.bootstrap()` runs on startup and **evolves the schema
+differently per dialect** (`services/db.py`):
+
+- **Fresh DB (any dialect):** built directly from the models with `create_all()` + `stamp head`
+  — the migration history is never replayed on a new install.
+- **Existing SQLite (single-user CLI/desktop):** **migration scripts are never executed at
+  runtime.** A fingerprint of the models is cached in `PRAGMA user_version`; a matching
+  fingerprint makes startup a single PRAGMA read (no Alembic import). On a mismatch the schema
+  is reconciled *additively* — create missing tables/columns/indexes, skip drops and type
+  changes — so an older app runs safely against a newer DB and no migration can corrupt data.
+- **Existing Postgres/MySQL (server):** real Alembic migrations (`upgrade head`); never
+  auto-downgrades when the DB is ahead of the code.
+
+**Migration scripts still matter** — they are the mechanism for the server and the correctness
+gate in CI (`dev migrate verify` replays every script from base and strict-checks against the
+models). SQLite just doesn't consume them at runtime. Always generate a script for a model
+change; CI fails otherwise.
+
+**Additive-first discipline (what keeps SQLite self-healing):** prefer backward-compatible
+model changes — new columns must be **nullable or have a `server_default`** (SQLite adds them
+NULLable regardless). Renames, type narrowing, splits, and backfills are *non-additive*: they
+apply on the server via the script, but on SQLite degrade to additive (the old column lingers,
+data is not migrated). For a genuinely destructive change on the single-user path, the story is
+rebuild-from-source (drop + `create_all` + re-crawl), not an in-place ALTER.
 
 ## DAO model conventions
 
