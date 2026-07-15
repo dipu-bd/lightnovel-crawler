@@ -203,6 +203,9 @@ def translate_novels(
     novel_ids = list(set(body.novel_ids))
     if not novel_ids:
         raise ServerErrors.no_novels_to_download
+    # Full-novel translation and multi-novel batches fan out into many chapters.
+    if (body.full or len(novel_ids) > 1) and not ctx.tier.batch_translation_enabled(user):
+        raise ServerErrors.tier_not_allowed
     if len(novel_ids) == 1:
         return ctx.jobs.translate_novel(user, novel_ids[0], body.language, full=body.full)
     return ctx.jobs.translate_many_novels(user, *novel_ids, language=body.language, full=body.full)
@@ -218,6 +221,9 @@ def translate_volumes(
     volume_ids = list(set(body.volumes))
     if not volume_ids:
         raise ServerErrors.no_volumes_to_download
+    # Any volume translation fans out into every chapter it contains.
+    if not ctx.tier.batch_translation_enabled(user):
+        raise ServerErrors.tier_not_allowed
     if len(volume_ids) == 1:
         return ctx.jobs.translate_volume(user, volume_ids[0], body.language)
     return ctx.jobs.translate_many_volumes(user, *volume_ids, language=body.language)
@@ -233,6 +239,8 @@ def translate_chapters(
     chapters = list(set(body.chapters))
     if not chapters:
         raise ServerErrors.no_chapters_to_download
+    if len(chapters) > 1 and not ctx.tier.batch_translation_enabled(user):
+        raise ServerErrors.tier_not_allowed
     if len(chapters) == 1:
         return ctx.jobs.translate_chapter(user, chapters[0], body.language)
     return ctx.jobs.translate_many_chapters(user, *chapters, language=body.language)
