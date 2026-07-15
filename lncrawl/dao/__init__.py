@@ -10,7 +10,7 @@ from .artifact import Artifact
 from .chapter import Chapter, ChapterTranslation
 from .chapter_image import ChapterImage
 from .job import Job
-from .library import Library, LibraryNovel
+from .library import Library, LibraryFavorite, LibraryNovel
 from .novel import Novel, NovelTranslation
 from .read_history import ReadHistory
 from .secrets import Secret
@@ -26,6 +26,7 @@ models: List[Type[SQLModel]] = [
     NovelTag,
     Library,
     LibraryNovel,
+    LibraryFavorite,
     Novel,
     NovelTranslation,
     Volume,

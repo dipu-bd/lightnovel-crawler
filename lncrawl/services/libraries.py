@@ -3,7 +3,7 @@ from typing import List, Optional
 import sqlmodel as sq
 
 from ..context import ctx
-from ..dao import Library, LibraryNovel, Novel, User, UserRole
+from ..dao import Library, LibraryFavorite, LibraryNovel, Novel, User, UserRole
 from ..exceptions import ServerErrors
 from ..server.models import LibraryItem, Paginated
 
@@ -78,6 +78,57 @@ class LibraryService:
                 limit=limit,
                 items=list(items),
             )
+
+    def list_favorites(
+        self,
+        user_id: str,
+        offset: int = 0,
+        limit: int = 20,
+        *,
+        query: str = "",
+    ) -> Paginated[Library]:
+        """List libraries the user has favorited (only ones still public)."""
+        with ctx.db.session() as sess:
+            join_on = sq.col(LibraryFavorite.library_id) == sq.col(Library.id)
+            where = [
+                LibraryFavorite.user_id == user_id,
+                sq.col(Library.is_public).is_(True),
+            ]
+            if query:
+                where.append(sq.col(Library.name).ilike(f"%{query.lower()}%"))
+
+            stmt = (
+                sq.select(Library)
+                .join(LibraryFavorite, join_on)
+                .where(*where)
+                .order_by(sq.desc(LibraryFavorite.created_at))
+                .offset(offset)
+                .limit(limit)
+            )
+            cnt = (
+                sq.select(sq.func.count())
+                .select_from(LibraryFavorite)
+                .join(Library, join_on)
+                .where(*where)
+            )
+
+            items = sess.exec(stmt).all()
+            total = sess.exec(cnt).one()
+
+            return Paginated(
+                total=total,
+                offset=offset,
+                limit=limit,
+                items=list(items),
+            )
+
+    def list_favorite_ids(self, user_id: str) -> List[str]:
+        """Return the ids of all libraries the user has favorited."""
+        with ctx.db.session() as sess:
+            rows = sess.exec(
+                sq.select(LibraryFavorite.library_id).where(LibraryFavorite.user_id == user_id)
+            ).all()
+            return list(rows)
 
     def list_all(
         self,
@@ -194,6 +245,30 @@ class LibraryService:
                 sess.commit()
 
             return library
+
+    def add_favorite(self, user: User, library_id: str) -> bool:
+        with ctx.db.session() as sess:
+            library = self._get_library(sess, library_id)
+            self._ensure_visible(library, user)
+
+            existing = sess.get(LibraryFavorite, (user.id, library_id))
+            if existing:
+                return True
+
+            sess.add(LibraryFavorite(user_id=user.id, library_id=library_id))
+            sess.commit()
+            return True
+
+    def remove_favorite(self, user: User, library_id: str) -> bool:
+        with ctx.db.session() as sess:
+            row = sess.exec(
+                sq.delete(LibraryFavorite).where(
+                    sq.col(LibraryFavorite.user_id) == user.id,
+                    sq.col(LibraryFavorite.library_id) == library_id,
+                )
+            )
+            sess.commit()
+            return row.rowcount > 0
 
     def list_novels(
         self,

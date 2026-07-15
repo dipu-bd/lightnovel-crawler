@@ -4,6 +4,7 @@ from pydantic import computed_field
 import sqlmodel as sa
 
 from ..context import ctx
+from ..utils.time_utils import current_timestamp
 from ._base import BaseTable
 
 
@@ -51,4 +52,25 @@ class LibraryNovel(sa.SQLModel, table=True):
         primary_key=True,
         ondelete="CASCADE",
         description="Novel id",
+    )
+
+
+class LibraryFavorite(sa.SQLModel, table=True):
+    __tablename__ = "library_favorites"  # type: ignore
+
+    user_id: str = sa.Field(
+        foreign_key="users.id",
+        primary_key=True,
+        ondelete="CASCADE",
+        description="User who favorited the library",
+    )
+    library_id: str = sa.Field(
+        foreign_key="libraries.id",
+        primary_key=True,
+        ondelete="CASCADE",
+        description="Favorited library id",
+    )
+    created_at: int = sa.Field(
+        default_factory=current_timestamp,
+        sa_type=sa.BigInteger,
     )
