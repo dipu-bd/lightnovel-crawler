@@ -4,11 +4,20 @@ from fastapi import APIRouter, Path, Query, Security
 
 from ...context import ctx
 from ...dao import User
-from ..models import ContinueReadingResponse
+from ..models import ContinueReadingResponse, Paginated, ReadHistoryNovel
 from ..security import ensure_user
 
 # The root router
 router = APIRouter()
+
+
+@router.get("", summary="List recently read novels for the current user")
+def list_read_history(
+    user: User = Security(ensure_user),
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=20, le=100),
+) -> Paginated[ReadHistoryNovel]:
+    return ctx.history.list_recent_novels(user.id, offset, limit)
 
 
 @router.get("/continue", summary="Resolve the chapter to continue reading from")

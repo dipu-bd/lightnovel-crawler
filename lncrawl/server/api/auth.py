@@ -16,6 +16,7 @@ from ..models import (
     SignupRequest,
     TokenResponse,
     UpdateRequest,
+    UserActivityStats,
 )
 from ..security import ensure_user
 
@@ -59,6 +60,13 @@ def me(
 ) -> User:
     ctx.activity.record(user.id, ActivityType.ACCOUNT, user.id)
     return user
+
+
+@router.get("/me/stats", summary="Get current user's activity stats")
+def my_stats(
+    user: User = Security(ensure_user),
+) -> UserActivityStats:
+    return ctx.activity.get_user_stats(user.id)
 
 
 @router.delete("/me", summary="Deactivate current user")
