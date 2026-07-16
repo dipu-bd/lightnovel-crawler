@@ -81,14 +81,19 @@ class ArtifactService:
                 raise ServerErrors.no_epub_file
             return artifact
 
-    def list_latest(self, novel_id: str, language: Optional[LanguageCode] = None) -> List[Artifact]:
+    def list_latest(
+        self,
+        novel_id: str,
+        language: Optional[LanguageCode] = None,
+        volume: Optional[int] = None,
+    ) -> List[Artifact]:
         with ctx.db.session() as sess:
             subq = (
                 sq.select(Artifact.format, sq.func.max(Artifact.updated_at).label("max_updated_at"))
                 .where(
                     Artifact.novel_id == novel_id,
                     Artifact.language == language,
-                    sq.col(Artifact.volume).is_(None),  # whole-novel artifacts only
+                    self._volume_filter(volume),
                 )
                 .group_by(Artifact.format)
                 .subquery()
@@ -106,14 +111,26 @@ class ArtifactService:
             ).all()
             return list(rows)
 
-    def get_latest(self, novel_id: str, format: OutputFormat) -> Optional[Artifact]:
+    def get_latest(
+        self,
+        novel_id: str,
+        format: OutputFormat,
+        volume: Optional[int] = None,
+    ) -> Optional[Artifact]:
         with ctx.db.session() as sess:
             artifact = sess.exec(
                 sq.select(Artifact)
                 .where(Artifact.novel_id == novel_id)
                 .where(Artifact.format == format)
-                .where(sq.col(Artifact.volume).is_(None))  # whole-novel artifacts only
+                .where(self._volume_filter(volume))
                 .order_by(sq.desc(Artifact.updated_at))
                 .limit(1)
             ).first()
             return artifact
+
+    @staticmethod
+    def _volume_filter(volume: Optional[int]):
+        """Match a specific volume when given, else whole-novel artifacts only."""
+        if volume is not None:
+            return Artifact.volume == volume
+        return sq.col(Artifact.volume).is_(None)
