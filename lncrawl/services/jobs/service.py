@@ -547,6 +547,7 @@ class JobService:
         parent_id: Optional[str] = None,
         depends_on: Optional[str] = None,
         language: Optional[LanguageCode] = None,
+        volume: Optional[int] = None,
         **data: Any,
     ) -> Job:
         data.update(
@@ -554,6 +555,7 @@ class JobService:
                 "novel_id": novel_id,
                 "format": format,
                 "language": language,
+                "volume": volume,
             }
         )
         if not data.get("novel_title"):
@@ -579,6 +581,7 @@ class JobService:
         parent_id: Optional[str] = None,
         depends_on: Optional[str] = None,
         language: Optional[LanguageCode] = None,
+        volume: Optional[int] = None,
         **data: Any,
     ) -> Job:
         data.update(
@@ -586,6 +589,7 @@ class JobService:
                 "novel_id": novel_id,
                 "formats": formats,
                 "language": language,
+                "volume": volume,
             }
         )
         if not data.get("novel_title"):

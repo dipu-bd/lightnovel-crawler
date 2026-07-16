@@ -21,6 +21,7 @@ class ArtifactService:
         novel_id: Optional[str] = None,
         format: Optional[OutputFormat] = None,
         language: Optional[LanguageCode] = None,
+        volume: Optional[int] = None,
     ) -> Paginated[Artifact]:
         with ctx.db.session() as sess:
             stmt = select(Artifact)
@@ -36,6 +37,8 @@ class ArtifactService:
                 stmt = stmt.where(Artifact.format == format)
             if language:
                 stmt = stmt.where(Artifact.language == language)
+            if volume is not None:
+                stmt = stmt.where(Artifact.volume == volume)
 
             # Apply sorting
             stmt = stmt.order_by(desc(Artifact.updated_at))
@@ -85,6 +88,7 @@ class ArtifactService:
                 .where(
                     Artifact.novel_id == novel_id,
                     Artifact.language == language,
+                    Artifact.volume == None,  # noqa: E711 -- whole-novel artifacts only
                 )
                 .group_by(Artifact.format)
                 .subquery()
@@ -108,6 +112,7 @@ class ArtifactService:
                 select(Artifact)
                 .where(Artifact.novel_id == novel_id)
                 .where(Artifact.format == format)
+                .where(Artifact.volume == None)  # noqa: E711 -- whole-novel artifacts only
                 .order_by(desc(Artifact.updated_at))
                 .limit(1)
             ).first()

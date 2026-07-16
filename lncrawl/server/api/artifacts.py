@@ -24,6 +24,7 @@ def list_artifacts(
     novel_id: Optional[str] = Query(default=None),
     format: Optional[OutputFormat] = Query(default=None),
     language: Optional[LanguageCode] = Query(default=None),
+    volume: Optional[int] = Query(default=None),
 ) -> Paginated[Artifact]:
     return ctx.artifacts.list(
         limit=limit,
@@ -33,6 +34,7 @@ def list_artifacts(
         format=format,
         novel_id=novel_id,
         language=language,
+        volume=volume,
     )
 
 

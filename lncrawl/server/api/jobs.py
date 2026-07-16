@@ -163,11 +163,15 @@ def make_artifacts(
     formats = list(set(body.formats) & ctx.tier.enabled_formats(user))
     if len(formats) == 0:
         raise ServerErrors.no_artifacts_to_create
+    if body.volume is not None:
+        # validate the volume exists for this novel (raises if not found)
+        ctx.volumes.find(body.novel_id, body.volume)
     return ctx.jobs.make_many_artifacts(
         user,
         body.novel_id,
         *formats,
         language=body.language,
+        volume=body.volume,
     )
 
 

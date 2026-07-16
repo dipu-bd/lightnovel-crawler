@@ -15,6 +15,12 @@ class Artifact(BaseTable, table=True):
     job_id: Optional[str] = sa.Field(foreign_key="jobs.id", ondelete="SET NULL")
     user_id: Optional[str] = sa.Field(foreign_key="users.id", ondelete="SET NULL")
     language: Optional[str] = sa.Field(default=None, description="Target language code, e.g. 'en'")
+    volume: Optional[int] = sa.Field(
+        default=None,
+        index=True,
+        description="Volume serial number when the artifact covers a single volume; "
+        "None means the artifact covers the whole novel",
+    )
     format: OutputFormat = sa.Field(
         sa_column=sa.Column(sa.Enum(OutputFormat, native_enum=False), nullable=False, index=True),
         description="The output format of the artifact",
