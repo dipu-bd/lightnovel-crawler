@@ -107,6 +107,13 @@ class ArtifactService:
                         Artifact.updated_at == subq.c.max_updated_at,
                     ),
                 )
+                # re-apply the same filters on the outer row so a different
+                # novel/language/volume sharing (format, updated_at) can't leak in
+                .where(
+                    Artifact.novel_id == novel_id,
+                    Artifact.language == language,
+                    self._volume_filter(volume),
+                )
                 .order_by(sq.asc(Artifact.format))
             ).all()
             return list(rows)
