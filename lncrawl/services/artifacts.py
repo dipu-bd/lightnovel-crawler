@@ -112,7 +112,7 @@ class ArtifactService:
                 select(Artifact)
                 .where(Artifact.novel_id == novel_id)
                 .where(Artifact.format == format)
-                .where(Artifact.volume == None)  # noqa: E711 -- whole-novel artifacts only
+                .where(Artifact.volume.is_(None))  # whole-novel artifacts only
                 .order_by(desc(Artifact.updated_at))
                 .limit(1)
             ).first()
