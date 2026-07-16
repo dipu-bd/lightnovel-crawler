@@ -112,8 +112,9 @@ async def get_novel_chapters(
 async def get_novel_artifacts(
     novel_id: str = Path(),
     language: Optional[LanguageCode] = Query(default=None),
+    volume: Optional[int] = Query(default=None),
 ) -> List[Artifact]:
-    return ctx.artifacts.list_latest(novel_id, language)
+    return ctx.artifacts.list_latest(novel_id, language, volume)
 
 
 @router.get("/{novel_id}/recommended", summary="Gets recommended novels based on similarity")
