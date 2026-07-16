@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlmodel import and_, asc, desc, func, select
+from sqlmodel import and_, asc, desc, func, select, col
 
 from ..context import ctx
 from ..dao import Artifact, LanguageCode, OutputFormat, User, UserRole
@@ -88,7 +88,7 @@ class ArtifactService:
                 .where(
                     Artifact.novel_id == novel_id,
                     Artifact.language == language,
-                    Artifact.volume == None,  # noqa: E711 -- whole-novel artifacts only
+                    col(Artifact.volume).is_(None),  # whole-novel artifacts only
                 )
                 .group_by(Artifact.format)
                 .subquery()
