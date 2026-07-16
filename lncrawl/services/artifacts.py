@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from sqlmodel import and_, asc, desc, func, select, col
+from sqlmodel import and_, asc, col, desc, func, select
 
 from ..context import ctx
 from ..dao import Artifact, LanguageCode, OutputFormat, User, UserRole
@@ -112,7 +112,7 @@ class ArtifactService:
                 select(Artifact)
                 .where(Artifact.novel_id == novel_id)
                 .where(Artifact.format == format)
-                .where(Artifact.volume.is_(None))  # whole-novel artifacts only
+                .where(col(Artifact.volume).is_(None))  # whole-novel artifacts only
                 .order_by(desc(Artifact.updated_at))
                 .limit(1)
             ).first()
