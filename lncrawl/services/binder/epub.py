@@ -202,7 +202,10 @@ def make_epub(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     # add volumes and chapters pages
     if signal.is_set():
         raise AbortedException()
-    for volume in ctx.volumes.list(artifact.novel_id, language):
+    volumes = ctx.volumes.list(artifact.novel_id, language)
+    if artifact.volume is not None:
+        volumes = [v for v in volumes if v.serial == artifact.volume]
+    for volume in volumes:
         if signal.is_set():
             raise AbortedException()
 

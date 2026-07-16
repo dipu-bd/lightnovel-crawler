@@ -21,7 +21,10 @@ def make_text(working_dir: Path, artifact: Artifact, signal=Event(), **kwargs) -
     with zipfile.ZipFile(tmp_file, "w", zipfile.ZIP_DEFLATED) as zipf:
         if signal.is_set():
             raise AbortedException()
-        for volume in ctx.volumes.list(artifact.novel_id, language=language):
+        volumes = ctx.volumes.list(artifact.novel_id, language=language)
+        if artifact.volume is not None:
+            volumes = [v for v in volumes if v.serial == artifact.volume]
+        for volume in volumes:
             if signal.is_set():
                 raise AbortedException()
             for chapter in ctx.chapters.list(volume_id=volume.id, language=language):

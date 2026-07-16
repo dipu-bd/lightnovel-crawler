@@ -57,5 +57,6 @@ class ArtifactBatchHandler(BatchHandler):
             parent_id=self.job.id,
             depends_on=epub_job_id,
             language=self.job.extra.get("language"),
+            volume=self.job.extra.get("volume"),
             novel_title=self.job.extra.get("novel_title"),
         )

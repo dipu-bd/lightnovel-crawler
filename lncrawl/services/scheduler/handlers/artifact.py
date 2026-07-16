@@ -20,6 +20,7 @@ class ArtifactHandler(BaseHandler):
             raise HandlerException("No output format")
 
         language = self.job.extra.get("language")
+        volume = self.job.extra.get("volume")
 
         if format not in _ALL_OUTPUT_FORMATS:
             raise HandlerException(f"Invalid format: {format}")
@@ -48,6 +49,7 @@ class ArtifactHandler(BaseHandler):
             user_id=self.user.id,
             epub=epub,
             language=language,
+            volume=volume,
             signal=self.signal,
         )
         if not artifact.is_available:

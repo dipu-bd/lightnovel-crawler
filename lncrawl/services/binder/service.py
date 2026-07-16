@@ -67,6 +67,7 @@ class BinderService:
         user_id: Optional[str] = None,
         epub: Optional[Artifact] = None,
         language: Optional[LanguageCode] = None,
+        volume: Optional[int] = None,
         signal=Event(),
     ) -> Artifact:
         make = archive_maker[format]
@@ -74,6 +75,8 @@ class BinderService:
             raise ServerErrors.format_not_available
 
         file_name = safe_filename(novel_title).title()
+        if volume is not None:
+            file_name += f".Vol_{volume:03}"
         if language:
             file_name += f".{language}"
         file_name += f".{format}"
@@ -86,6 +89,7 @@ class BinderService:
             job_id=job_id,
             format=format,
             language=language,
+            volume=volume,
             file_name=file_name,
         )
 

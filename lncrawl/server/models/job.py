@@ -26,6 +26,11 @@ class MakeArtifactsRequest(BaseModel):
     novel_id: str = Field(description="The novel id")
     formats: List[OutputFormat] = Field(description="List of formats")
     language: Optional[LanguageCode] = Field(default=None, description="Target language code")
+    volume: Optional[int] = Field(
+        default=None,
+        description="Volume serial number to build a single-volume artifact; "
+        "omit to build the whole novel",
+    )
 
 
 class TranslateNovelsRequest(BaseModel):
