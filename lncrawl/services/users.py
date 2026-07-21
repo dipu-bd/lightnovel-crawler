@@ -332,13 +332,28 @@ class UserService:
             stmt = sq.select(sq.func.count()).where(User.email == email)
             return sess.exec(stmt).one() != 0
 
-    def send_invite_email(self, inviter: User, recipient_email: str) -> None:
+    def send_invite_email(
+        self,
+        inviter: User,
+        recipient_email: str,
+        *,
+        reply_subject: str | None = None,
+        in_reply_to: str | None = None,
+        references: str | None = None,
+    ) -> None:
         token = self.get_signup_token(inviter)
         base_url = ctx.config.server.base_url
         search = urlencode({"referrer": token, "email": recipient_email})
         link = f"{base_url}/signup?{search}"
         inviter_name = inviter.name or inviter.email
-        ctx.mail.send_invite(recipient_email, inviter_name, link)
+        ctx.mail.send_invite(
+            recipient_email,
+            inviter_name,
+            link,
+            reply_subject=reply_subject,
+            in_reply_to=in_reply_to,
+            references=references,
+        )
 
     def get_signup_token(self, user: User) -> str:
         day = 24 * 3600 * 1000

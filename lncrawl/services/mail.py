@@ -76,7 +76,15 @@ class MailService:
             server.close()
             raise ServerErrors.smtp_server_login_fail from e
 
-    def send(self, email: str, subject: str, html_body: str):
+    def send(
+        self,
+        email: str,
+        subject: str,
+        html_body: str,
+        *,
+        in_reply_to: str | None = None,
+        references: str | None = None,
+    ):
         if not ctx.config.mail.smtp_enabled:
             logger.debug(f"SMTP disabled, skipping email to {email!r}")
             return
@@ -91,6 +99,11 @@ class MailService:
         msg["From"] = self.sender
         msg["To"] = email
 
+        if in_reply_to:
+            msg["In-Reply-To"] = in_reply_to
+            chain = f"{references} {in_reply_to}".strip() if references else in_reply_to
+            msg["References"] = chain
+
         try:
             with self._smtp_lock:
                 self.server.sendmail(msg["From"], [msg["To"]], msg.as_string())
@@ -99,10 +112,30 @@ class MailService:
         except Exception as e:
             raise ServerErrors.email_send_failure from e
 
-    def send_invite(self, email: str, inviter_name: str, link: str):
-        subject = "Lightnovel Crawler Invitation"
+    def send_invite(
+        self,
+        email: str,
+        inviter_name: str,
+        link: str,
+        *,
+        reply_subject: str | None = None,
+        in_reply_to: str | None = None,
+        references: str | None = None,
+    ):
+        if reply_subject:
+            subject = reply_subject.strip()
+            if not subject.lower().startswith("re:"):
+                subject = f"Re: {subject}"
+        else:
+            subject = "Lightnovel Crawler Invitation"
         body = emails.invite_template().render(inviter_name=inviter_name, link=link)
-        self.send(email, subject, body)
+        self.send(
+            email,
+            subject,
+            body,
+            in_reply_to=in_reply_to,
+            references=references,
+        )
 
     def send_otp(self, email: str, otp: str):
         subject = f"OTP ({otp})"
@@ -229,7 +262,15 @@ class MailService:
             return
         try:
             admin = ctx.users.get_admin()
-            ctx.users.send_invite_email(admin, sender)
+            message_id = (msg.obj.get("Message-ID") or "").strip() or None
+            references = (msg.obj.get("References") or "").strip() or None
+            ctx.users.send_invite_email(
+                admin,
+                sender,
+                reply_subject=msg.subject or None,
+                in_reply_to=message_id,
+                references=references,
+            )
             mb.flag([msg.uid], [MailMessageFlags.SEEN, MailMessageFlags.ANSWERED], True)
             logger.info(f"Sent invite to {sender}")
         except Exception as e:
