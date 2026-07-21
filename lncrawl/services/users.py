@@ -337,9 +337,9 @@ class UserService:
         inviter: User,
         recipient_email: str,
         *,
-        reply_subject: str | None = None,
-        in_reply_to: str | None = None,
-        references: str | None = None,
+        reply_subject: Optional[str] = None,
+        in_reply_to: Optional[str] = None,
+        references: Optional[str] = None,
     ) -> None:
         token = self.get_signup_token(inviter)
         base_url = ctx.config.server.base_url
