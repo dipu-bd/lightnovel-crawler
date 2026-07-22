@@ -27,28 +27,6 @@ _IMAP_MAX_RETRIES = 10
 # It leaves the message unread (no \Seen) but lets us skip it on later fetches.
 _INVITE_SKIP_KEYWORD = "InviteSkipped"
 
-# Substrings that count as "asking for a token" — the word itself, common
-# misspellings, and synonyms people use when requesting sign-up access.
-_TOKEN_KEYWORDS = (
-    "token",
-    "tokon",
-    "tokan",
-    "tokin",
-    "toekn",
-    "tokken",
-    "tocken",
-    "invite",
-    "invitation",
-    "access code",
-    "access key",
-    "signup code",
-    "sign up code",
-    "signup link",
-    "sign up link",
-    "referral",
-    "referrer",
-)
-
 
 class MailService:
     def __init__(self) -> None:
@@ -283,9 +261,16 @@ class MailService:
 
     @staticmethod
     def _requests_token(msg: MailMessage) -> bool:
-        """Only invite senders who ask for a token (or a synonym) in the subject or body."""
+        """Only invite senders whose subject or body contains a configured invite keyword.
+
+        Keywords (synonyms, phrasings, misspellings of "token") are admin-tunable via
+        ``mail.invite_keywords``; an empty list invites every unknown sender.
+        """
+        keywords = [kw.lower() for kw in ctx.config.mail.invite_keywords if kw.strip()]
+        if not keywords:
+            return True
         haystack = f"{msg.subject or ''}\n{msg.text or ''}\n{msg.html or ''}".lower()
-        return any(keyword in haystack for keyword in _TOKEN_KEYWORDS)
+        return any(keyword in haystack for keyword in keywords)
 
     def _handle_incoming(self, mb: MailBox | MailBoxUnencrypted, msg: MailMessage):
         sender = msg.from_

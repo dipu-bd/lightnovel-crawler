@@ -987,6 +987,42 @@ class MailConfig(_Section):
     def imap_starttls(self, v: bool) -> None:
         self._set("imap_starttls", v)
 
+    @property
+    def invite_keywords(self) -> list[str]:
+        """Invite Request Keywords.
+
+        Incoming mail only triggers an invite reply when its subject or body contains one
+        of these (case-insensitive) substrings. Add synonyms, phrasings, common
+        misspellings, or translations of "token" as needed. Leave empty to invite every
+        unknown sender.
+        """
+        return self._get(
+            "invite_keywords",
+            lambda: [
+                "token",
+                "tokon",
+                "tokan",
+                "tokin",
+                "toekn",
+                "tokken",
+                "tocken",
+                "invite",
+                "invitation",
+                "access code",
+                "access key",
+                "signup code",
+                "sign up code",
+                "signup link",
+                "sign up link",
+                "referral",
+                "referrer",
+            ],
+        )
+
+    @invite_keywords.setter
+    def invite_keywords(self, v: list[str]) -> None:
+        self._set("invite_keywords", v)
+
 
 # ------------------------------------------------------------------ #
 #                   PythonLanguageServer Section                             #
