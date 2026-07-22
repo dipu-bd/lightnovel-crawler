@@ -268,7 +268,6 @@ class MailService:
             return
         if not self._requests_token(msg):
             logger.debug(f"Email from {sender} does not request a token, skipping invite")
-            mb.flag([msg.uid], [MailMessageFlags.SEEN], True)
             return
         try:
             admin = ctx.users.get_admin()
