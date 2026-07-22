@@ -23,6 +23,10 @@ _IMAP_BACKOFF_BASE = 5
 _IMAP_BACKOFF_MAX = 300
 _IMAP_MAX_RETRIES = 10
 
+# Custom IMAP keyword tagged on incoming mail that did not request an invite.
+# It leaves the message unread (no \Seen) but lets us skip it on later fetches.
+_INVITE_SKIP_KEYWORD = "LnInviteSkipped"
+
 
 class MailService:
     def __init__(self) -> None:
@@ -249,7 +253,10 @@ class MailService:
             responses = mb.idle.wait(timeout=3)
             if not responses:
                 continue
-            for msg in mb.fetch(AND(seen=False), mark_seen=False):
+            for msg in mb.fetch(
+                AND(seen=False, no_keyword=_INVITE_SKIP_KEYWORD),
+                mark_seen=False,
+            ):
                 self._handle_incoming(mb, msg)
 
     @staticmethod
@@ -268,6 +275,8 @@ class MailService:
             return
         if not self._requests_token(msg):
             logger.debug(f"Email from {sender} does not request a token, skipping invite")
+            # Tag (but don't mark seen) so the mail stays unread yet isn't rescanned.
+            mb.flag([msg.uid], [_INVITE_SKIP_KEYWORD], True)
             return
         try:
             admin = ctx.users.get_admin()
