@@ -252,6 +252,12 @@ class MailService:
             for msg in mb.fetch(AND(seen=False), mark_seen=False):
                 self._handle_incoming(mb, msg)
 
+    @staticmethod
+    def _requests_token(msg: MailMessage) -> bool:
+        """Only invite senders who explicitly ask for a token in the subject or body."""
+        haystack = f"{msg.subject or ''}\n{msg.text or ''}\n{msg.html or ''}".lower()
+        return "token" in haystack
+
     def _handle_incoming(self, mb: MailBox | MailBoxUnencrypted, msg: MailMessage):
         sender = msg.from_
         if not sender or not msg.uid:
@@ -259,6 +265,10 @@ class MailService:
             return
         if ctx.users.get_user_exists(sender):
             logger.debug(f"Email from known user {sender}, skipping invite")
+            return
+        if not self._requests_token(msg):
+            logger.debug(f"Email from {sender} does not request a token, skipping invite")
+            mb.flag([msg.uid], [MailMessageFlags.SEEN], True)
             return
         try:
             admin = ctx.users.get_admin()
