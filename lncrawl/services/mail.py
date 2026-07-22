@@ -25,7 +25,29 @@ _IMAP_MAX_RETRIES = 10
 
 # Custom IMAP keyword tagged on incoming mail that did not request an invite.
 # It leaves the message unread (no \Seen) but lets us skip it on later fetches.
-_INVITE_SKIP_KEYWORD = "LnCrawlNoInvite"
+_INVITE_SKIP_KEYWORD = "InviteSkipped"
+
+# Substrings that count as "asking for a token" — the word itself, common
+# misspellings, and synonyms people use when requesting sign-up access.
+_TOKEN_KEYWORDS = (
+    "token",
+    "tokon",
+    "tokan",
+    "tokin",
+    "toekn",
+    "tokken",
+    "tocken",
+    "invite",
+    "invitation",
+    "access code",
+    "access key",
+    "signup code",
+    "sign up code",
+    "signup link",
+    "sign up link",
+    "referral",
+    "referrer",
+)
 
 
 class MailService:
@@ -261,9 +283,9 @@ class MailService:
 
     @staticmethod
     def _requests_token(msg: MailMessage) -> bool:
-        """Only invite senders who explicitly ask for a token in the subject or body."""
+        """Only invite senders who ask for a token (or a synonym) in the subject or body."""
         haystack = f"{msg.subject or ''}\n{msg.text or ''}\n{msg.html or ''}".lower()
-        return "token" in haystack
+        return any(keyword in haystack for keyword in _TOKEN_KEYWORDS)
 
     def _handle_incoming(self, mb: MailBox | MailBoxUnencrypted, msg: MailMessage):
         sender = msg.from_
