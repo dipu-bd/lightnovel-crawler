@@ -212,7 +212,7 @@ class __AppContext__:
             self.db.close()
         if "lsp" in self.__dict__:
             self.lsp.stop()
-        if "translations" in self.__dict__:
+        if "translator" in self.__dict__:
             self.translator.close()
         if "http" in self.__dict__:
             self.http.close()

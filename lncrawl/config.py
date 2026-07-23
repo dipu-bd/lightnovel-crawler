@@ -326,55 +326,32 @@ class TranslatorConfig(_Section):
     section = "translator"
 
     @property
-    def microsoft_translator_key(self) -> Annotated[str, Sensitive]:
-        """Microsoft Translator API Key.
+    def api_url(self) -> str:
+        """Translator API URL.
 
-        Azure Cognitive Services key for the Translator resource. Free tier allows
-        2,000,000 characters per month. Get one from: https://portal.azure.com
+        Base URL of the `translator` service (no trailing slash). When running the full
+        docker compose stack use `http://translator:8184`; for a host-mapped service the
+        default is `http://localhost:8184`. Providers, API keys, engines, and routing are
+        configured in the translator's own dashboard, not here.
         """
-        return self._get("microsoft_translator_key", "")
+        return self._get("api_url", "http://localhost:8184").rstrip("/")
 
-    @microsoft_translator_key.setter
-    def microsoft_translator_key(self, v: str) -> None:
-        self._set("microsoft_translator_key", v)
+    @api_url.setter
+    def api_url(self, v: str) -> None:
+        self._set("api_url", v.rstrip("/"))
 
     @property
-    def microsoft_translator_region(self) -> str:
-        """Microsoft Translator Region.
+    def request_timeout(self) -> int:
+        """Translator Request Timeout (seconds).
 
-        Azure region of your Translator resource, e.g. `eastus`. Required when using a
-        multi-service or regional key; leave empty for global keys.
+        Maximum time to wait for a single translate request. Chapter translation can take
+        minutes on slow/local engines, so keep this high. Default is 900 (15 minutes).
         """
-        return self._get("microsoft_translator_region", "")
+        return int(self._get("request_timeout", 900))
 
-    @microsoft_translator_region.setter
-    def microsoft_translator_region(self, v: str) -> None:
-        self._set("microsoft_translator_region", v)
-
-    @property
-    def baidu_app_id(self) -> Annotated[str, Sensitive]:
-        """Baidu Translate App ID.
-
-        App ID for the Baidu Fanyi (translation) API. Particularly strong for Chinese,
-        Japanese, and Korean. Register at: https://fanyi-api.baidu.com
-        """
-        return self._get("baidu_app_id", "")
-
-    @baidu_app_id.setter
-    def baidu_app_id(self, v: str) -> None:
-        self._set("baidu_app_id", v)
-
-    @property
-    def baidu_secret_key(self) -> Annotated[str, Sensitive]:
-        """Baidu Translate Secret Key.
-
-        Secret key that pairs with your Baidu Translate App ID.
-        """
-        return self._get("baidu_secret_key", "")
-
-    @baidu_secret_key.setter
-    def baidu_secret_key(self, v: str) -> None:
-        self._set("baidu_secret_key", v)
+    @request_timeout.setter
+    def request_timeout(self, v: int) -> None:
+        self._set("request_timeout", int(v))
 
 
 # ------------------------------------------------------------------ #

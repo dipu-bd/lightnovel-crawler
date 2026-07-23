@@ -15,6 +15,7 @@ services:
     depends_on:
       - postgres
       - calibre-api
+      - translator
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -42,6 +43,18 @@ services:
       MAX_CONCURRENT_JOBS: "4"
       CONVERSION_TIMEOUT_SECONDS: "300"
 
+  # Reached by the server at http://translator:8184 (set translator.api_url in
+  # admin settings). Port is intentionally NOT published: the service is
+  # unauthenticated, so it stays on the internal network and the dashboard is
+  # reached only through the server's admin-only /api/translator proxy.
+  translator:
+    image: ghcr.io/lncrawl/translator:latest
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: "INFO"
+    volumes:
+      - translator_data:/data
+
   torproxy:
     image: sdipu/tor-proxy:latest
     restart: unless-stopped
@@ -60,3 +73,4 @@ volumes:
   pgdata:
   appdata:
   tor_data:
+  translator_data:

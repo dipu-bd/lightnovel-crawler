@@ -11,7 +11,7 @@ from .chapter import Chapter, ChapterTranslation
 from .chapter_image import ChapterImage
 from .job import Job
 from .library import Library, LibraryFavorite, LibraryNovel
-from .novel import Novel, NovelTranslation
+from .novel import Novel, NovelGlossary, NovelTranslation
 from .read_history import ReadHistory
 from .secrets import Secret
 from .tag import NovelTag, Tag
@@ -29,6 +29,7 @@ models: List[Type[SQLModel]] = [
     LibraryFavorite,
     Novel,
     NovelTranslation,
+    NovelGlossary,
     Volume,
     VolumeTranslation,
     Chapter,

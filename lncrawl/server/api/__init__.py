@@ -15,6 +15,7 @@ from .meta import router as metadata
 from .novels import router as novel
 from .settings import router as settings
 from .sources import router as sources
+from .translator import router as translator
 from .users import router as user
 from .volumes import router as volume
 
@@ -125,6 +126,12 @@ router.include_router(
     prefix="/admin",
     tags=["Admin"],
     dependencies=[Security(ensure_admin)],
+)
+
+router.include_router(
+    translator,
+    prefix="/translator",
+    tags=["Translator"],
 )
 
 

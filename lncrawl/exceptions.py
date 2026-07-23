@@ -171,6 +171,12 @@ class ServerErrors:
     )
 
     translation_failure = ServerError(status.HTTP_503_SERVICE_UNAVAILABLE, "Translation Failure")
+    translation_service_unavailable = ServerError(
+        status.HTTP_503_SERVICE_UNAVAILABLE, "Translator service is not reachable"
+    )
+    translation_quota_exhausted = ServerError(
+        status.HTTP_503_SERVICE_UNAVAILABLE, "All translation engines are quota-exhausted"
+    )
     unable_to_resume_job = ServerError(
         status.HTTP_500_INTERNAL_SERVER_ERROR, "Unable to resume Job"
     )

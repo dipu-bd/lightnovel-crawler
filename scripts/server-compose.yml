@@ -26,6 +26,10 @@ services:
       - PROXY_URLS=tor;torproxy-1;9150;9151;secret,tor;torproxy-2;9150;9151;secret,tor;torproxy-3;9150;9151;secret
     volumes:
       - ./appdata:/data
+    depends_on:
+      - postgres
+      - calibre-api
+      - translator
     labels:
       - autoheal=true
     healthcheck:
@@ -74,6 +78,38 @@ services:
           import sys, urllib.request;
           r = urllib.request.urlopen('http://localhost:8000/health', timeout=10);
           sys.exit(0 if r.status==200 else 1)
+
+  # Reached by the server at http://translator:8184 (set translator.api_url in
+  # admin settings). Port is intentionally NOT published: the service is
+  # unauthenticated, so it stays on the internal network and the dashboard is
+  # reached only through the server's admin-only /api/translator proxy.
+  translator:
+    image: ghcr.io/lncrawl/translator:latest
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: "INFO"
+    volumes:
+      - ./translator-data:/data
+    labels:
+      - autoheal=true
+    healthcheck:
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+      test:
+        - CMD
+        - python
+        - -c
+        - |
+          import sys, urllib.request;
+          r = urllib.request.urlopen('http://localhost:8184/health', timeout=10);
+          sys.exit(0 if r.status==200 else 1)
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 3g
 
   postgres:
     image: postgres:alpine
