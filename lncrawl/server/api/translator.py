@@ -5,8 +5,10 @@ authorizes every request as admin. Auth is a Bearer header, a `?token=` query pa
 path-scoped cookie — the query/cookie forms let the dashboard work under plain browser
 navigation, where fetches can't set headers.
 
-Responses are rewritten from the SPA's root-absolute URLs to the proxy prefix, coupling us
-to the service's URL layout until it grows a base-path option.
+The dashboard's assets and API calls are all relative URLs, so a single injected
+`<base href>` (mirroring the browse middleware) resolves them under the proxy prefix — no
+per-route URL rewriting. `X-Forwarded-Prefix` lets the service prefix its own docs/OpenAPI
+links too.
 """
 
 import logging
@@ -28,24 +30,6 @@ router = APIRouter()
 
 _PREFIX = "/api/translator"
 _COOKIE = "lncrawl_translator"
-
-# Service-owned root paths, rewritten to the proxy prefix in text responses.
-_ROOT_TOKENS = (
-    "/static",
-    "/config",
-    "/engines",
-    "/providers",
-    "/routing",
-    "/detect",
-    "/translate",
-    "/health",
-    "/docs",
-    "/redoc",
-    "/openapi.json",
-)
-
-# Text only; JSON (e.g. /config) passes through untouched.
-_REWRITE_TYPES = ("text/html", "javascript", "text/css")
 
 # Not relayed in either direction.
 _HOP_BY_HOP = {
@@ -84,11 +68,12 @@ def _authorize(request: Request) -> Tuple[str, bool]:
     return token, from_query
 
 
-def _rewrite(text: str) -> str:
-    for token in _ROOT_TOKENS:
-        text = text.replace(f'"{token}', f'"{_PREFIX}{token}')
-        text = text.replace(f"'{token}", f"'{_PREFIX}{token}")
-    return text
+def _inject_base(html: str) -> str:
+    """Anchor the page's relative URLs at the proxy prefix. Skipped if the service
+    already sets its own base."""
+    if "<base" in html:
+        return html
+    return html.replace("<head>", f'<head><base href="{_PREFIX}/">', 1)
 
 
 # Registered before the catch-all so it clears the cookie instead of being proxied.
@@ -121,13 +106,16 @@ async def proxy(request: Request, path: str = "") -> Response:
         redirect.set_cookie(_COOKIE, token, httponly=True, samesite="strict", path=_PREFIX)
         return redirect
 
-    target = f"{ctx.config.translator.api_url}/{path}"
+    # Forward the full prefixed path so the service can strip it via root_path
+    # (set from the X-Forwarded-Prefix below); keeps its static mount and docs working.
+    target = f"{ctx.config.translator.api_url}{_PREFIX}/{path}"
     body = await request.body()
     fwd_headers: Dict[str, str] = {
         k: v
         for k, v in request.headers.items()
         if k.lower() not in _HOP_BY_HOP and k.lower() not in ("authorization", "cookie")
     }
+    fwd_headers["X-Forwarded-Prefix"] = _PREFIX
 
     try:
         resp = await run_in_threadpool(
@@ -146,8 +134,8 @@ async def proxy(request: Request, path: str = "") -> Response:
 
     content = resp.content
     ctype = resp.headers.get("Content-Type", "")
-    if any(t in ctype for t in _REWRITE_TYPES):
-        content = _rewrite(content.decode(resp.encoding or "utf-8", errors="replace")).encode()
+    if "text/html" in ctype:
+        content = _inject_base(content.decode(resp.encoding or "utf-8", errors="replace")).encode()
 
     out_headers = {k: v for k, v in resp.headers.items() if k.lower() not in _HOP_BY_HOP}
     out = Response(content, resp.status_code, out_headers, media_type=ctype or None)
