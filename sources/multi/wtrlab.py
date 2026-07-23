@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class WtrLab(LegacyCrawler):
     base_url = ["https://wtr-lab.com"]
     has_mtl = True
-    request_concurrency = 2
+    request_rate_limit = 2
 
     def _parse_next_data(self, soup: PageSoup):
         metadata_json = soup.select_one("script#__NEXT_DATA__")

@@ -40,9 +40,6 @@ class Sources:
         self.crawlers: Dict[str, Type[Crawler]] = {}  # Map of cid -> crawler
         self.info: Dict[str, CrawlerInfo] = {}  # Map of cid -> crawler info
         self.sources: Dict[str, SourceItem] = {}  # Map of host -> source item
-        # Map of domain -> limiter shared by every crawler instance for that
-        # domain, so request_concurrency/request_rate_limit hold across all
-        # concurrent jobs instead of per instance.
         self._limiters: Dict[str, "SharedLimiter"] = {}
         self._limiter_lock = threading.Lock()
 
@@ -264,14 +261,13 @@ class Sources:
         with self._limiter_lock:
             limiter = self._limiters.get(domain)
             if limiter is None:
-                limiter = SharedLimiter.create(constructor.request_concurrency)
+                limiter = SharedLimiter.create(constructor.max_concurrency())
                 self._limiters[domain] = limiter
             return limiter
 
     def init_crawler(
         self,
         url: str,
-        workers: Optional[int] = None,
         parser: Optional[str] = None,
     ) -> Crawler:
         domain = self.get_domain(url)
@@ -283,17 +279,13 @@ class Sources:
         ctx.logger.debug(f"Creating crawler instance for {url}")
         crawler = constructor(
             origin=source.url,
-            workers=workers,
             parser=parser,
         )
 
         # The instance keeps its own cookies and abort signal, but shares the
-        # domain's limiter so request_concurrency/request_rate_limit hold
-        # across every concurrent job hitting this source.
+        # domain's limiter (throttle clock + slots) so request_rate_limit
+        # holds across every concurrent job hitting this source.
         crawler.scraper.adopt_limiter(self._domain_limiter(domain, constructor))
-        if constructor.request_rate_limit:
-            interval = 1.0 / constructor.request_rate_limit
-            crawler.scraper.config.min_request_interval_fast = interval
 
         crawler.initialize()
         return crawler

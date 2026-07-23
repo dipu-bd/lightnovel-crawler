@@ -62,13 +62,12 @@ loop pages inside `select_chapter_tags` (see existing sources that do this).
   `lncrawl/core/cleaner.py`). Tune it in `initialize()`: `self.cleaner.bad_css.update({...})`
   for ad/nav selectors, `bad_tag_text_pairs` to drop tags whose text matches a pattern,
   `whitelist_attributes`/`whitelist_css_property` to keep extras.
-- **Concurrency/rate limits**: declare static class fields — `request_concurrency = N`
-  (max requests in flight to this source; default 1) and/or `request_rate_limit = R` (max
-  requests/sec; implies serial requests). These are enforced **globally per source domain**
-  across all concurrent server jobs via a shared limiter (`init_crawler` in
-  `services/sources/service.py`), and drive the CLI's worker pool. Do **not** call
-  `init_executor` in `initialize()` — that's the legacy pattern and is dead in server mode.
-  Many sites ban parallel scrapers — when in doubt, keep the default.
+- **Rate limit**: declare the static class field `request_rate_limit = R` (max requests/sec
+  to this source; default 3). It is enforced **globally per source domain** across all
+  concurrent server jobs via a shared limiter (`init_crawler` in `services/sources/service.py`);
+  the parallel-request cap and CLI worker pool are derived from it (`Crawler.max_concurrency()`).
+  Do **not** call `init_executor` in `initialize()` — that's the legacy pattern and is dead in
+  server mode. Many sites ban parallel scrapers — when in doubt, keep the default.
 - **Headers/cookies/login**: `self.scraper.set_header/set_cookie`; implement `login()` and set
   `can_login = True`. `Origin`/`Referer` are auto-injected — leave them unless the site
   objects.

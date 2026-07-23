@@ -59,24 +59,24 @@ class JobRunner:
     def _claim_next(signal: Event, artifact: bool) -> Optional[Tuple[Job, Event]]:
         with _lock.using(signal):
             while not signal.is_set():
+                saturated_domains = JobRunner._saturated_domains()
                 active_users = {c.user_id for c in _queue.values()}
-                active_domains = {c.domain for c in _queue.values() if c.domain}
                 # get next pending job for a user that doesn't have any running job
                 job = ctx.jobs._pending(
                     artifact,
                     skip_job_ids=_queue.keys(),
                     skip_user_ids=active_users,
-                    skip_domains=active_domains,
+                    skip_domains=saturated_domains,
                 )
                 # if no job for unique users, get pending job for active users.
-                # The domain cap stays hard at the source's request_concurrency:
+                # The domain cap stays hard at the source's derived concurrency:
                 # one more same-domain job would only block on that source's
                 # shared request limiter, wasting a worker.
                 if not job:
                     job = ctx.jobs._pending(
                         artifact,
                         skip_job_ids=_queue.keys(),
-                        skip_domains=JobRunner._saturated_domains(),
+                        skip_domains=saturated_domains,
                     )
                 if not job:
                     return None  # no pending job
@@ -104,7 +104,7 @@ class JobRunner:
         saturated = set()
         for domain, count in counts.items():
             try:
-                limit = ctx.sources.get_crawler(domain).request_concurrency
+                limit = ctx.sources.get_crawler(domain).max_concurrency()
             except Exception:
                 limit = 1
             if count >= max(1, limit):

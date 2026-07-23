@@ -6,7 +6,7 @@ class FansTranslations(WordpressTemplate):
     base_url = "https://fanstranslations.com/"
     chapter_body_selector = "div.text-left"
     novel_author_selector = '.author-content a[href*="novel-author"]'
-    request_concurrency = 4
+    request_rate_limit = 4
 
     def initialize(self) -> None:
         self.cleaner.bad_tags.update(["h3"])

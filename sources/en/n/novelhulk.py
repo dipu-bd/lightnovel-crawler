@@ -8,4 +8,4 @@ logger = logging.getLogger(__name__)
 
 class NovelHulkCrawler(NovelFullTemplate):
     base_url = ["https://novelhulk.com/"]
-    request_concurrency = 2
+    request_rate_limit = 2

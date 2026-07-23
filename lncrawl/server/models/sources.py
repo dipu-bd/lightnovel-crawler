@@ -24,11 +24,8 @@ class _CommonSourceInfo(BaseModel):
     can_search: bool = Field(default=False, description="True if crawler supports search")
     has_mtl: bool = Field(default=False, description="True if source has machine translation")
 
-    request_concurrency: int = Field(
-        default=1, description="Max concurrent requests to this source"
-    )
-    request_rate_limit: Optional[float] = Field(
-        default=None, description="Max requests per second to this source"
+    request_rate_limit: float = Field(
+        default=3, description="Max requests per second to this source"
     )
 
     total_commits: int = Field(default=1, description="Total number of commits")

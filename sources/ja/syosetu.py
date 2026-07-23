@@ -14,7 +14,7 @@ search_url = "https://yomou.syosetu.com/search.php?word=%s"
 class SyosetuCrawler(LegacyCrawler):
     has_mtl = True
     base_url = "https://ncode.syosetu.com/"
-    request_concurrency = 2
+    request_rate_limit = 2
 
     def search_novel(self, query):
         soup = self.get_soup(search_url % quote_plus(query))

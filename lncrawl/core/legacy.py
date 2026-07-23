@@ -9,7 +9,6 @@ from .template import BrowserTemplate
 class LegacyCrawler(BrowserTemplate):
     def __init__(
         self,
-        workers: Optional[int] = None,
         parser: Optional[str] = None,
         origin: Optional[str] = None,
     ) -> None:
@@ -17,12 +16,7 @@ class LegacyCrawler(BrowserTemplate):
             self.base_url = [self.base_url]
 
         self.home_url = self.base_url[0]
-
-        super().__init__(
-            origin=origin,
-            workers=workers,
-            parser=parser,
-        )
+        super().__init__(parser, origin)
 
         self._lock = EventLock()
         self.novel_url: str = ""

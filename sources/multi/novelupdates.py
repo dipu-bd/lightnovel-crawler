@@ -36,7 +36,7 @@ class NovelupdatesCrawler(SoupTemplate):
     novel_author_selector = "#showauthors a#authtag"
     novel_synopsis_selector = "#editdescription"
     novel_tags_selector = "#showtags a.genre"
-    request_concurrency = 4
+    request_rate_limit = 1
 
     def build_search_url(self, query: str) -> str:
         params = dict(

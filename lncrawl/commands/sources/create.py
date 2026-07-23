@@ -215,8 +215,7 @@ class {name}(SoupTemplate):
     can_search = {Feature.can_search in features}
 
     # Enforced per source domain across all concurrent jobs.
-    # request_concurrency = 2  # max requests in flight to this source
-    # request_rate_limit = 1.0  # max requests per second (implies serial)
+    # request_rate_limit = 3.0  # max requests per second
 """
 
     if Feature.can_search in features:
@@ -310,7 +309,7 @@ class Crawler(ABC):
     chapters_per_volume = 100
     auto_create_volumes = True  # False when the site has real volume sections; then use volume_* selectors
 
-    def __init__(self, origin: str, workers: Optional[int] = None, parser: Optional[str] = None) -> None:
+    def __init__(self, origin: str, parser: Optional[str] = None) -> None:
         # origin must match a normalized entry in base_url; creates self.scraper, self.taskman, self.cleaner
 
     def initialize(self) -> None: ...

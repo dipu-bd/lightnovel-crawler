@@ -1,5 +1,5 @@
 {
-  "v": 1784829437,
+  "v": 1784832817,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -482,7 +482,7 @@
     "https://www.novels.pl/": "5e962751f7928b75a7bbfd7a777fd629",
     "https://www.novelupdates.cc/": "ab5e6692cab4784c74023daa7036bc79",
     "https://www.novelupdates.com/": "2c529108c1fd6d790a05e51c02f9bb9c",
-    "https://www.oppatranslations.com/": "f57d2a47e8dbf9ad7d1cf03daf0c0947",
+    "https://www.oppatranslations.com/": "e3dde6b1f9d156edfc0239db6215d05b",
     "https://www.pandamanga.xyz/": "930238810d342d233fb3e2fcfb33088d",
     "https://www.piaotia.com/": "e2a0a1f66eec221866f52e14af342c50",
     "https://www.piaotian.com/": "e2a0a1f66eec221866f52e14af342c50",
@@ -537,8 +537,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd"
@@ -558,8 +557,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "dipu-bd",
@@ -581,7 +579,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 0.99,
       "total_commits": 5,
       "contributors": [
@@ -602,8 +599,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 50,
       "contributors": [
         "Galunid",
@@ -616,9 +612,9 @@
       ],
       "id": "0280d2ad55af148cebbcc23b01f76501",
       "base_urls": [
-        "https://novelfull.net/",
+        "https://novelfull.com/",
         "http://novelfull.com/",
-        "https://novelfull.com/"
+        "https://novelfull.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelfull.py"
     },
@@ -631,8 +627,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "Seven0492",
@@ -655,8 +650,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd",
@@ -677,8 +671,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 67,
       "contributors": [
         "SirGryphin",
@@ -688,8 +681,8 @@
       ],
       "id": "03c5adf369bf077bc498608b92ffe914",
       "base_urls": [
-        "https://fsapk.com/",
-        "https://bestoflightnovels.com/"
+        "https://bestoflightnovels.com/",
+        "https://fsapk.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/f/fsapk.py"
     },
@@ -702,8 +695,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd",
@@ -724,8 +716,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 38,
       "contributors": [
         "CryZFix",
@@ -748,8 +739,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 2,
       "contributors": [
         "Dark6ness"
@@ -769,8 +759,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 80,
       "contributors": [
         "SirGryphin",
@@ -795,8 +784,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 63,
       "contributors": [
         "SirGryphin",
@@ -818,8 +806,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 81,
       "contributors": [
         "SirGryphin",
@@ -845,8 +832,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -868,8 +854,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "SirGryphin",
@@ -890,8 +875,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd",
@@ -912,8 +896,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 61,
       "contributors": [
         "SirGryphin",
@@ -935,8 +918,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -944,8 +926,8 @@
       ],
       "id": "0aac14d9790d3133284ad47865b626b6",
       "base_urls": [
-        "https://lightnovelpub.org/",
-        "https://www.lightnovelpub.org/"
+        "https://www.lightnovelpub.org/",
+        "https://lightnovelpub.org/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/lightnovelpuborg.py"
     },
@@ -958,7 +940,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 8,
       "contributors": [
@@ -981,8 +962,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 3,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 26,
       "contributors": [
         "Galunid",
@@ -1007,8 +987,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 102,
       "contributors": [
         "dipu-bd",
@@ -1031,7 +1010,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 4,
       "contributors": [
@@ -1053,8 +1031,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd"
@@ -1074,8 +1051,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd",
@@ -1097,8 +1073,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -1122,8 +1097,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 83,
       "contributors": [
         "SirGryphin",
@@ -1148,8 +1122,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 81,
       "contributors": [
         "SirGryphin",
@@ -1174,8 +1147,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 28,
       "contributors": [
         "SirGryphin",
@@ -1199,8 +1171,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 81,
       "contributors": [
         "SirGryphin",
@@ -1226,8 +1197,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 19,
       "contributors": [
         "SirGryphin",
@@ -1248,7 +1218,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 2.99,
       "total_commits": 15,
       "contributors": [
@@ -1271,8 +1240,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 79,
       "contributors": [
         "SirGryphin",
@@ -1296,8 +1264,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 3,
       "contributors": [
         "SirGryphin",
@@ -1318,8 +1285,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd"
@@ -1339,8 +1305,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 1,
       "contributors": [
         "Dark6ness"
@@ -1360,8 +1325,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 80,
       "contributors": [
         "dipu-bd",
@@ -1370,10 +1334,10 @@
       ],
       "id": "13731ad27f3abb8a72932375df633b1f",
       "base_urls": [
-        "https://readlightnovel.me/",
         "https://readlightnovel.today/",
-        "https://www.readlightnovel.me/",
-        "https://www.readlightnovel.today/"
+        "https://www.readlightnovel.today/",
+        "https://readlightnovel.me/",
+        "https://www.readlightnovel.me/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/readlightnovelorg.py"
     },
@@ -1386,8 +1350,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 60,
       "contributors": [
         "dipu-bd",
@@ -1409,8 +1372,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 27,
       "contributors": [
         "SirGryphin",
@@ -1433,8 +1395,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 36,
       "contributors": [
         "SirGryphin",
@@ -1443,8 +1404,8 @@
       ],
       "id": "1445a8bbcadd9b5f2d411db78a72fcc3",
       "base_urls": [
-        "https://boxnovel.org/",
-        "http://boxnovel.org/"
+        "http://boxnovel.org/",
+        "https://boxnovel.org/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/b/boxnovelorg.py"
     },
@@ -1457,8 +1418,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -1479,8 +1439,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 19,
       "contributors": [
         "dipu-bd"
@@ -1500,8 +1459,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "CryZFix",
@@ -1522,8 +1480,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 67,
       "contributors": [
         "AncientCatz",
@@ -1546,8 +1503,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -1568,8 +1524,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 82,
       "contributors": [
         "SirGryphin",
@@ -1594,8 +1549,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 76,
       "contributors": [
         "AncientCatz",
@@ -1618,8 +1572,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 83,
       "contributors": [
         "SirGryphin",
@@ -1644,16 +1597,15 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd"
       ],
       "id": "1923c3044c9bf0f77e7535bf2709bbab",
       "base_urls": [
-        "https://www.sonicmtl.com/",
-        "https://sonicmtl.com/"
+        "https://sonicmtl.com/",
+        "https://www.sonicmtl.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/s/sonicmtl.py"
     },
@@ -1666,7 +1618,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 8,
       "contributors": [
@@ -1690,8 +1641,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd",
@@ -1712,8 +1662,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -1735,8 +1684,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 67,
       "contributors": [
         "SirGryphin",
@@ -1758,8 +1706,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 74,
       "contributors": [
         "AncientCatz",
@@ -1783,8 +1730,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 4,
-      "request_rate_limit": null,
+      "request_rate_limit": 4.0,
       "total_commits": 13,
       "contributors": [
         "dipu-bd"
@@ -1804,8 +1750,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "SirGryphin",
@@ -1826,8 +1771,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 3,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -1847,8 +1791,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd",
@@ -1869,8 +1812,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 24,
       "contributors": [
         "SirGryphin",
@@ -1893,8 +1835,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -1915,8 +1856,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "SirGryphin",
@@ -1938,8 +1878,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 80,
       "contributors": [
         "BorgSquared",
@@ -1964,8 +1903,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 50,
       "contributors": [
         "dipu-bd",
@@ -1986,8 +1924,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 67,
       "contributors": [
         "AncientCatz",
@@ -1997,8 +1934,8 @@
       ],
       "id": "237ab5f56e40e5e27d38b6c776064362",
       "base_urls": [
-        "http://zhi-end.blogspot.co.id/",
-        "http://zhi-end.blogspot.com/"
+        "http://zhi-end.blogspot.com/",
+        "http://zhi-end.blogspot.co.id/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/id/zhiend.py"
     },
@@ -2011,8 +1948,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 36,
       "contributors": [
         "dipu-bd",
@@ -2020,8 +1956,8 @@
       ],
       "id": "258340a1925835bbd2033a38fb658d32",
       "base_urls": [
-        "https://ranobes.net/",
-        "https://ranobes.top/"
+        "https://ranobes.top/",
+        "https://ranobes.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/ranobes.py"
     },
@@ -2034,8 +1970,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "SirGryphin",
@@ -2056,8 +1991,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -2078,8 +2012,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -2100,8 +2033,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "CryZFix",
@@ -2110,8 +2042,8 @@
       ],
       "id": "27bafdcbb20e290b49b512af4fa56ed8",
       "base_urls": [
-        "https://www.mtlnation.com/",
-        "https://mtlnation.com/"
+        "https://mtlnation.com/",
+        "https://www.mtlnation.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/mtlnation.py"
     },
@@ -2124,8 +2056,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "SirGryphin",
@@ -2146,8 +2077,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd"
@@ -2167,8 +2097,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "AncientCatz",
@@ -2191,7 +2120,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 4,
       "contributors": [
@@ -2213,8 +2141,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "SirGryphin",
@@ -2235,8 +2162,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd",
@@ -2257,8 +2183,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -2281,8 +2206,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "SirGryphin",
@@ -2303,8 +2227,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 4,
-      "request_rate_limit": null,
+      "request_rate_limit": 1.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd"
@@ -2324,8 +2247,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 73,
       "contributors": [
         "AncientCatz",
@@ -2348,8 +2270,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd",
@@ -2372,7 +2293,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 0.99,
       "total_commits": 78,
       "contributors": [
@@ -2399,8 +2319,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "Joacchim",
@@ -2421,8 +2340,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "SirGryphin",
@@ -2443,8 +2361,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -2465,8 +2382,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 60,
       "contributors": [
         "dipu-bd",
@@ -2487,8 +2403,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -2511,8 +2426,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "AncientCatz",
@@ -2535,8 +2449,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -2557,8 +2470,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "CryZFix",
@@ -2580,8 +2492,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd",
@@ -2602,8 +2513,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -2625,8 +2535,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd",
@@ -2647,8 +2556,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 73,
       "contributors": [
         "SirGryphin",
@@ -2671,8 +2579,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 70,
       "contributors": [
         "AncientCatz",
@@ -2696,8 +2603,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "SirGryphin",
@@ -2718,8 +2624,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -2740,8 +2645,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 27,
       "contributors": [
         "SirGryphin",
@@ -2762,8 +2666,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 22,
       "contributors": [
         "dipu-bd",
@@ -2784,8 +2687,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 3,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "Galunid",
@@ -2808,8 +2710,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd"
@@ -2829,8 +2730,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 19,
       "contributors": [
         "AncientCatz",
@@ -2853,8 +2753,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd",
@@ -2875,8 +2774,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 66,
       "contributors": [
         "AncientCatz",
@@ -2899,8 +2797,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -2922,7 +2819,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 20.0,
       "total_commits": 28,
       "contributors": [
@@ -2933,11 +2829,11 @@
       ],
       "id": "3d2d575996fc57d75742cfc78a8c4ae3",
       "base_urls": [
-        "https://www.69shu.pro/",
         "https://www.69shu.com/",
-        "https://www.69shuba.com/",
+        "https://www.69shuba.pro/",
         "https://www.69xinshu.com/",
-        "https://www.69shuba.pro/"
+        "https://www.69shu.pro/",
+        "https://www.69shuba.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/69shuba.py"
     },
@@ -2950,8 +2846,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "dipu-bd",
@@ -2972,8 +2867,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "dipu-bd",
@@ -2994,8 +2888,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 3,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 2,
       "contributors": [
         "dipu-bd"
@@ -3016,8 +2909,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "dipu-bd",
@@ -3038,8 +2930,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd"
@@ -3059,8 +2950,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd"
@@ -3080,8 +2970,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -3101,8 +2990,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 2,
       "contributors": [
         "Dark6ness",
@@ -3123,8 +3011,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -3144,8 +3031,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 79,
       "contributors": [
         "SirGryphin",
@@ -3170,8 +3056,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -3191,7 +3076,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.0,
       "total_commits": 3,
       "contributors": [
@@ -3213,8 +3097,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 1,
       "contributors": [
         "biscotteman"
@@ -3234,8 +3117,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd"
@@ -3255,8 +3137,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "augustanational",
@@ -3264,9 +3145,9 @@
       ],
       "id": "46a23563b949f9502525b7f95383882d",
       "base_urls": [
-        "https://truyenfull.vn/",
+        "https://truyenfull.today/",
         "https://truyentr.info/",
-        "https://truyenfull.today/"
+        "https://truyenfull.vn/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/vi/truenfull.py"
     },
@@ -3279,8 +3160,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "CryZFix",
@@ -3302,8 +3182,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -3325,8 +3204,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 27,
       "contributors": [
         "SirGryphin",
@@ -3350,8 +3228,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 74,
       "contributors": [
         "AncientCatz",
@@ -3375,8 +3252,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 22,
       "contributors": [
         "dipu-bd",
@@ -3397,8 +3273,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "SirGryphin",
@@ -3422,8 +3297,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 85,
       "contributors": [
         "SirGryphin",
@@ -3435,8 +3309,8 @@
       ],
       "id": "4a7f2dd3ebdb72eb35b9aa50cdebe390",
       "base_urls": [
-        "https://www.foxaholic.com/",
         "https://foxaholic.com/",
+        "https://www.foxaholic.com/",
         "https://global.foxaholic.com/",
         "https://18.foxaholic.com/"
       ],
@@ -3451,7 +3325,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 0.99,
       "total_commits": 13,
       "contributors": [
@@ -3474,8 +3347,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 81,
       "contributors": [
         "AncientCatz",
@@ -3498,8 +3370,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "dipu-bd",
@@ -3520,8 +3391,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "CryZFix",
@@ -3542,8 +3412,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "CryZFix",
@@ -3564,8 +3433,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 62,
       "contributors": [
         "dipu-bd",
@@ -3586,8 +3454,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 29,
       "contributors": [
         "SirGryphin",
@@ -3611,8 +3478,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "dipu-bd"
@@ -3632,8 +3498,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 82,
       "contributors": [
         "SirGryphin",
@@ -3656,8 +3521,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd",
@@ -3678,8 +3542,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "dipu-bd"
@@ -3699,8 +3562,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -3721,8 +3583,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "dipu-bd",
@@ -3743,8 +3604,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 4,
       "contributors": [
         "dipu-bd"
@@ -3764,8 +3624,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd",
@@ -3786,8 +3645,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 73,
       "contributors": [
         "SirGryphin",
@@ -3811,8 +3669,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 31,
       "contributors": [
         "CryZFix",
@@ -3823,22 +3680,22 @@
       ],
       "id": "560dfc4e6b4f4026553927f23eb1a9dd",
       "base_urls": [
-        "http://es.mtlnovel.com/",
         "http://www.mtlnovels.com/",
+        "https://id.mtlnovel.com/",
+        "http://fr.mtlnovel.com/",
         "https://fr.mtlnovels.com/",
-        "http://id.mtlnovels.com/",
-        "https://es.mtlnovel.com/",
+        "https://fr.mtlnovel.com/",
+        "https://es.mtlnovels.com/",
         "https://id.mtlnovels.com/",
         "https://www.mtlnovels.com/",
         "http://es.mtlnovels.com/",
-        "https://es.mtlnovels.com/",
-        "http://id.mtlnovel.com/",
-        "https://www.mtlnovel.com/",
         "http://www.mtlnovel.com/",
-        "http://fr.mtlnovel.com/",
+        "http://id.mtlnovels.com/",
         "http://fr.mtlnovels.com/",
-        "https://id.mtlnovel.com/",
-        "https://fr.mtlnovel.com/"
+        "https://www.mtlnovel.com/",
+        "http://es.mtlnovel.com/",
+        "http://id.mtlnovel.com/",
+        "https://es.mtlnovel.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/multi/mtlnovel.py"
     },
@@ -3851,7 +3708,6 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
@@ -3874,8 +3730,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "CryZFix",
@@ -3883,9 +3738,9 @@
       ],
       "id": "56cf47825b16189855ee706f2762d59a",
       "base_urls": [
-        "https://ifreedom.su/",
         "https://bookhamster.ru/",
-        "https://funbook.su/"
+        "https://funbook.su/",
+        "https://ifreedom.su/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/ru/ifreedom.py"
     },
@@ -3898,8 +3753,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "SirGryphin",
@@ -3921,8 +3775,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "SirGryphin",
@@ -3945,8 +3798,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "CryZFix",
@@ -3955,19 +3807,19 @@
       ],
       "id": "5955ede148817d13e8ef04255da4237d",
       "base_urls": [
-        "https://batotwo.com/",
-        "https://hto.to/",
-        "https://bato.to/",
-        "https://mto.to/",
-        "https://dto.to/",
-        "https://mangatoto.org/",
         "https://wto.to/",
-        "https://comiko.net/",
         "https://batocc.com/",
+        "https://mangatoto.net/",
+        "https://batotwo.com/",
         "https://mangatoto.com/",
+        "https://mto.to/",
         "https://battwo.com/",
-        "https://batotoo.com/",
-        "https://mangatoto.net/"
+        "https://mangatoto.org/",
+        "https://hto.to/",
+        "https://comiko.net/",
+        "https://bato.to/",
+        "https://dto.to/",
+        "https://batotoo.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/b/bato.py"
     },
@@ -3980,8 +3832,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "dipu-bd",
@@ -4003,8 +3854,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 37,
       "contributors": [
         "dipu-bd",
@@ -4027,8 +3877,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 70,
       "contributors": [
         "SirGryphin",
@@ -4050,8 +3899,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 50,
       "contributors": [
         "Epicpkmn11",
@@ -4076,8 +3924,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 14,
       "contributors": [
         "SirGryphin",
@@ -4098,8 +3945,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 2,
       "contributors": [
         "dipu-bd",
@@ -4120,8 +3966,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd",
@@ -4142,8 +3987,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "CryZFix",
@@ -4166,8 +4010,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -4189,8 +4032,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "SirGryphin",
@@ -4212,8 +4054,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -4237,8 +4078,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 67,
       "contributors": [
         "SirGryphin",
@@ -4260,8 +4100,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd"
@@ -4282,8 +4121,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -4303,8 +4141,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "dipu-bd",
@@ -4326,8 +4163,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "SirGryphin",
@@ -4348,8 +4184,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "SirGryphin",
@@ -4370,8 +4205,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "dipu-bd"
@@ -4391,7 +4225,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 4,
       "contributors": [
@@ -4413,8 +4246,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 74,
       "contributors": [
         "AncientCatz",
@@ -4437,8 +4269,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 81,
       "contributors": [
         "SirGryphin",
@@ -4463,8 +4294,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 66,
       "contributors": [
         "dipu-bd",
@@ -4486,8 +4316,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 27,
       "contributors": [
         "SirGryphin",
@@ -4510,8 +4339,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 75,
       "contributors": [
         "AncientCatz",
@@ -4535,8 +4363,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 86,
       "contributors": [
         "SirGryphin",
@@ -4562,8 +4389,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 22,
       "contributors": [
         "CryZFix",
@@ -4585,8 +4411,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "dipu-bd",
@@ -4607,8 +4432,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd"
@@ -4628,8 +4452,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 4,
-      "request_rate_limit": null,
+      "request_rate_limit": 4.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -4651,8 +4474,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 75,
       "contributors": [
         "AncientCatz",
@@ -4675,8 +4497,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd"
@@ -4696,8 +4517,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "AncientCatz",
@@ -4720,8 +4540,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 77,
       "contributors": [
         "CryZFix",
@@ -4747,8 +4566,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "dipu-bd"
@@ -4768,8 +4586,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 67,
       "contributors": [
         "dipu-bd",
@@ -4790,8 +4607,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd"
@@ -4811,8 +4627,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 60,
       "contributors": [
         "SirGryphin",
@@ -4834,7 +4649,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 3,
       "contributors": [
@@ -4856,8 +4670,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 76,
       "contributors": [
         "AncientCatz",
@@ -4880,7 +4693,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 2.0,
       "total_commits": 5,
       "contributors": [
@@ -4901,8 +4713,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "CryZFix",
@@ -4923,8 +4734,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 33,
       "contributors": [
         "SirGryphin",
@@ -4946,7 +4756,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 0.99,
       "total_commits": 6,
       "contributors": [
@@ -4967,8 +4776,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd"
@@ -4988,8 +4796,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "SirGryphin",
@@ -5010,8 +4817,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "AncientCatz",
@@ -5035,8 +4841,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 63,
       "contributors": [
         "SirGryphin",
@@ -5058,8 +4863,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd",
@@ -5080,8 +4884,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -5102,8 +4905,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd"
@@ -5123,8 +4925,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 85,
       "contributors": [
         "SirGryphin",
@@ -5149,8 +4950,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 86,
       "contributors": [
         "SirGryphin",
@@ -5175,7 +4975,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 20.0,
       "total_commits": 12,
       "contributors": [
@@ -5185,8 +4984,8 @@
       ],
       "id": "78b48929359c98fcc390c70e1df40718",
       "base_urls": [
-        "https://www.ddtxt8.cc/",
-        "https://www.ddxss.cc/"
+        "https://www.ddxss.cc/",
+        "https://www.ddtxt8.cc/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/ddxsss.py"
     },
@@ -5199,8 +4998,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -5221,7 +5019,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 1.1,
       "total_commits": 24,
       "contributors": [
@@ -5233,8 +5030,8 @@
       ],
       "id": "798d96c887453defdb9709c78ba8ece0",
       "base_urls": [
-        "https://daotranslate.us/",
-        "https://daotranslate.com/"
+        "https://daotranslate.com/",
+        "https://daotranslate.us/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/d/daotranslate.py"
     },
@@ -5247,8 +5044,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "AncientCatz",
@@ -5271,8 +5067,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 64,
       "contributors": [
         "SirGryphin",
@@ -5281,8 +5076,8 @@
       ],
       "id": "7ab1621ed587050135b8fa1ab8f59e9d",
       "base_urls": [
-        "https://chapmanganato.com/",
-        "https://readmanganato.com/"
+        "https://readmanganato.com/",
+        "https://chapmanganato.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/readmanganato.py"
     },
@@ -5295,8 +5090,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "CryZFix",
@@ -5317,8 +5111,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "AncientCatz",
@@ -5342,8 +5135,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd"
@@ -5363,8 +5155,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -5385,8 +5176,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -5407,8 +5197,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd"
@@ -5428,8 +5217,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd",
@@ -5450,8 +5238,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 4,
       "contributors": [
         "dipu-bd"
@@ -5471,8 +5258,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -5492,7 +5278,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 3,
       "contributors": [
@@ -5515,8 +5300,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 66,
       "contributors": [
         "AncientCatz",
@@ -5540,8 +5324,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 31,
       "contributors": [
         "SirGryphin",
@@ -5563,8 +5346,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "SirGryphin",
@@ -5586,8 +5368,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "SirGryphin",
@@ -5608,8 +5389,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "SirGryphin",
@@ -5632,8 +5412,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 75,
       "contributors": [
         "Galunid",
@@ -5657,8 +5436,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 68,
       "contributors": [
         "AncientCatz",
@@ -5681,8 +5459,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -5702,8 +5479,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd",
@@ -5724,8 +5500,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 25,
       "contributors": [
         "SirGryphin",
@@ -5733,10 +5508,10 @@
       ],
       "id": "9110b676d1c560cd4517d3028a05f01b",
       "base_urls": [
-        "https://wnmtl.org/",
         "https://www.wnmtl.org/",
-        "http://wnmtl.org/",
-        "http://www.wnmtl.org/"
+        "http://www.wnmtl.org/",
+        "https://wnmtl.org/",
+        "http://wnmtl.org/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/w/wnmtl.py"
     },
@@ -5749,8 +5524,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 84,
       "contributors": [
         "dipu-bd",
@@ -5771,8 +5545,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "Seven0492",
@@ -5781,10 +5554,10 @@
       ],
       "id": "91c5206fdb455e0ef8ccfc47afc9e342",
       "base_urls": [
-        "http://lightnovels.me/",
         "https://lightnovels.live/",
+        "https://lightnovels.me/",
         "http://lightnovels.live/",
-        "https://lightnovels.me/"
+        "http://lightnovels.me/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/lightnovelme.py"
     },
@@ -5797,8 +5570,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd",
@@ -5819,8 +5591,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 65,
       "contributors": [
         "AncientCatz",
@@ -5843,8 +5614,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 25,
       "contributors": [
         "SirGryphin",
@@ -5854,8 +5624,8 @@
       ],
       "id": "93bff9ed386d79b0bd94389087c7d838",
       "base_urls": [
-        "https://www.xbanxia.com/",
-        "https://www.banxia.cc/"
+        "https://www.banxia.cc/",
+        "https://www.xbanxia.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/xbanxia.py"
     },
@@ -5868,8 +5638,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 75,
       "contributors": [
         "SirGryphin",
@@ -5894,8 +5663,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 73,
       "contributors": [
         "SirGryphin",
@@ -5918,8 +5686,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 83,
       "contributors": [
         "SirGryphin",
@@ -5944,7 +5711,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 1,
       "contributors": [
@@ -5965,8 +5731,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "SirGryphin",
@@ -5987,8 +5752,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "BorgSquared",
@@ -6012,8 +5776,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 82,
       "contributors": [
         "SirGryphin",
@@ -6026,10 +5789,10 @@
       ],
       "id": "960d88753fe3337dd74a1c4299a7956f",
       "base_urls": [
-        "https://aquamanga.com/",
-        "https://aquamanga.org/",
         "https://aquareader.net/",
-        "https://aquareader.org/"
+        "https://aquareader.org/",
+        "https://aquamanga.com/",
+        "https://aquamanga.org/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/a/aquamanga.py"
     },
@@ -6042,8 +5805,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 4,
       "contributors": [
         "dipu-bd",
@@ -6064,8 +5826,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "Vuizur",
@@ -6086,8 +5847,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 14,
       "contributors": [
         "dipu-bd"
@@ -6107,8 +5867,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "SirGryphin",
@@ -6117,8 +5876,8 @@
       ],
       "id": "96b9a9c6b35c6960eb5c06ff20918555",
       "base_urls": [
-        "https://www.readlightnovel.cc/",
-        "https://m.readlightnovel.cc/"
+        "https://m.readlightnovel.cc/",
+        "https://www.readlightnovel.cc/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/readlightnovelcc.py"
     },
@@ -6131,8 +5890,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 87,
       "contributors": [
         "Anuj2976",
@@ -6147,8 +5905,8 @@
       ],
       "id": "96f6e4c0d415af13fe37473231d90cb6",
       "base_urls": [
-        "https://1stkissnovel.love/",
-        "https://1stkissnovel.org/"
+        "https://1stkissnovel.org/",
+        "https://1stkissnovel.love/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/1/1stkissnovel.py"
     },
@@ -6161,8 +5919,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "dipu-bd"
@@ -6182,8 +5939,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "SirGryphin",
@@ -6206,8 +5962,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 66,
       "contributors": [
         "SirGryphin",
@@ -6229,8 +5984,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "SirGryphin",
@@ -6252,8 +6006,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "SirGryphin",
@@ -6262,8 +6015,8 @@
       ],
       "id": "981189e81806e656b847f0fede91e76a",
       "base_urls": [
-        "https://wordexcerpt.org/",
-        "https://wordexcerpt.com/"
+        "https://wordexcerpt.com/",
+        "https://wordexcerpt.org/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/w/wordexcerpt.py"
     },
@@ -6276,8 +6029,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "SirGryphin",
@@ -6286,8 +6038,8 @@
       ],
       "id": "98febb53ce66264b8a06f4f372c71d40",
       "base_urls": [
-        "https://allnovelfull.net/",
         "https://allnovelfull.com/",
+        "https://allnovelfull.net/",
         "https://novgo.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/a/allnovelfull.py"
@@ -6301,8 +6053,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 65,
       "contributors": [
         "SirGryphin",
@@ -6324,8 +6075,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 79,
       "contributors": [
         "SirGryphin",
@@ -6349,8 +6099,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "SirGryphin",
@@ -6373,8 +6122,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "AncientCatz",
@@ -6398,8 +6146,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd"
@@ -6419,8 +6166,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 76,
       "contributors": [
         "SirGryphin",
@@ -6445,8 +6191,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 40,
       "contributors": [
         "SirGryphin",
@@ -6469,8 +6214,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd",
@@ -6491,8 +6235,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 66,
       "contributors": [
         "AncientCatz",
@@ -6517,8 +6260,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "dipu-bd",
@@ -6540,8 +6282,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -6563,8 +6304,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 35,
       "contributors": [
         "SirGryphin",
@@ -6586,8 +6326,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 15,
       "contributors": [
         "dipu-bd"
@@ -6595,8 +6334,8 @@
       "id": "a36f44760b527424ecb888af646cad51",
       "base_urls": [
         "https://faqwiki.xyz/",
-        "https://faqwiki.us/",
-        "https://www.faqwiki.us/"
+        "https://www.faqwiki.us/",
+        "https://faqwiki.us/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/f/faqwiki.py"
     },
@@ -6609,8 +6348,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "SirGryphin",
@@ -6631,8 +6369,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 4,
-      "request_rate_limit": null,
+      "request_rate_limit": 4.0,
       "total_commits": 9,
       "contributors": [
         "CryZFix",
@@ -6654,8 +6391,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd"
@@ -6675,8 +6411,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "SirGryphin",
@@ -6697,8 +6432,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 19,
       "contributors": [
         "SirGryphin",
@@ -6719,7 +6453,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 3,
       "contributors": [
@@ -6741,8 +6474,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "dipu-bd",
@@ -6763,8 +6495,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "SirGryphin",
@@ -6787,8 +6518,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "SirGryphin",
@@ -6810,8 +6540,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd",
@@ -6832,8 +6561,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd",
@@ -6854,8 +6582,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -6876,7 +6603,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 8,
       "contributors": [
@@ -6898,8 +6624,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 23,
       "contributors": [
         "CryZFix",
@@ -6907,9 +6632,9 @@
       ],
       "id": "ac753793428bb51739b9cdda4ca200d6",
       "base_urls": [
-        "https://www.bq99.cc/",
         "https://www.shw5.cc/",
-        "https://www.p2wt.com/"
+        "https://www.p2wt.com/",
+        "https://www.bq99.cc/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/shw5.py"
     },
@@ -6922,8 +6647,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd",
@@ -6944,7 +6668,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.0,
       "total_commits": 10,
       "contributors": [
@@ -6953,8 +6676,8 @@
       ],
       "id": "ac87e43e23ae0349c3cdaf47608a0523",
       "base_urls": [
-        "https://www.wuxiasky.net/",
-        "https://www.asianovel.net/"
+        "https://www.asianovel.net/",
+        "https://www.wuxiasky.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/a/asianovel_net.py"
     },
@@ -6967,8 +6690,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -6991,8 +6713,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "dipu-bd",
@@ -7013,8 +6734,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 33,
       "contributors": [
         "SirGryphin",
@@ -7036,8 +6756,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 19,
       "contributors": [
         "SirGryphin",
@@ -7058,8 +6777,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 73,
       "contributors": [
         "Galunid",
@@ -7084,8 +6802,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd",
@@ -7107,8 +6824,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 81,
       "contributors": [
         "SirGryphin",
@@ -7134,8 +6850,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 74,
       "contributors": [
         "SirGryphin",
@@ -7158,8 +6873,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -7182,8 +6896,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -7205,8 +6918,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "SirGryphin",
@@ -7227,8 +6939,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "dipu-bd",
@@ -7249,8 +6960,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "dipu-bd",
@@ -7271,8 +6981,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 65,
       "contributors": [
         "SirGryphin",
@@ -7294,8 +7003,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 1,
       "contributors": [
         "dipu-bd"
@@ -7315,8 +7023,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "dipu-bd"
@@ -7336,8 +7043,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "dipu-bd"
@@ -7357,8 +7063,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 77,
       "contributors": [
         "AncientCatz",
@@ -7369,8 +7074,8 @@
       ],
       "id": "bb4e1f8840fccb0e267e8071d7746ffc",
       "base_urls": [
-        "https://ancientheartloss.wordpress.com/",
-        "https://ancientheartloss.com/"
+        "https://ancientheartloss.com/",
+        "https://ancientheartloss.wordpress.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/a/ancientheartloss.py"
     },
@@ -7383,7 +7088,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 0.2,
       "total_commits": 15,
       "contributors": [
@@ -7407,8 +7111,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 70,
       "contributors": [
         "SirGryphin",
@@ -7431,8 +7134,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 82,
       "contributors": [
         "SirGryphin",
@@ -7457,8 +7159,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd"
@@ -7478,8 +7179,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 49,
       "contributors": [
         "Galunid",
@@ -7507,8 +7207,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 82,
       "contributors": [
         "SirGryphin",
@@ -7521,8 +7220,8 @@
       ],
       "id": "c041d339e40c0ddbb55b7247b67650d8",
       "base_urls": [
-        "https://toon69.com/",
         "https://mangarosie.me/",
+        "https://toon69.com/",
         "https://mangarosie.love/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/mangarosie.py"
@@ -7536,8 +7235,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "RlmUwU",
@@ -7558,8 +7256,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "dipu-bd",
@@ -7580,8 +7277,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 65,
       "contributors": [
         "AncientCatz",
@@ -7604,8 +7300,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "dipu-bd",
@@ -7626,8 +7321,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "SirGryphin",
@@ -7650,8 +7344,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd"
@@ -7671,8 +7364,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 23,
       "contributors": [
         "dipu-bd",
@@ -7694,8 +7386,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 75,
       "contributors": [
         "SirGryphin",
@@ -7705,8 +7396,8 @@
       ],
       "id": "c7a362a3c314755965c90d3399f62daa",
       "base_urls": [
-        "https://www.wattpad.com/",
-        "https://my.w.tt/"
+        "https://my.w.tt/",
+        "https://www.wattpad.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/multi/wattpad.py"
     },
@@ -7719,7 +7410,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 20.0,
       "total_commits": 32,
       "contributors": [
@@ -7731,8 +7421,8 @@
       ],
       "id": "c8b7924e2e4050f50b681ba557d8e6a1",
       "base_urls": [
-        "https://69shu.me/",
-        "https://69shuba.cx/"
+        "https://69shuba.cx/",
+        "https://69shu.me/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/69shuba.cx.py"
     },
@@ -7745,8 +7435,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 73,
       "contributors": [
         "SirGryphin",
@@ -7770,8 +7459,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 3,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "dipu-bd",
@@ -7792,8 +7480,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd"
@@ -7813,8 +7500,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -7835,8 +7521,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd",
@@ -7844,8 +7529,8 @@
       ],
       "id": "cae098f1ccac37a75d27a51478fce26d",
       "base_urls": [
-        "https://myreadingmanga.fit/",
-        "https://beautymanga.com/"
+        "https://beautymanga.com/",
+        "https://myreadingmanga.fit/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/b/beautymanga.py"
     },
@@ -7858,8 +7543,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 2,
       "contributors": [
         "Dark6ness"
@@ -7879,8 +7563,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd",
@@ -7888,10 +7571,10 @@
       ],
       "id": "cbb7a70d622bdffa28b6c9c7fd6275f5",
       "base_urls": [
-        "https://ixdzs8.com/",
+        "https://tw.m.ixdzs.com/",
         "https://ixdzs8.tw/",
-        "https://www.aixdzs.com/",
-        "https://tw.m.ixdzs.com/"
+        "https://ixdzs8.com/",
+        "https://www.aixdzs.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/ixdzs.py"
     },
@@ -7904,8 +7587,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "SirGryphin",
@@ -7927,8 +7609,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "dipu-bd",
@@ -7949,8 +7630,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 7,
       "contributors": [
         "dipu-bd",
@@ -7971,8 +7651,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -7996,8 +7675,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "dipu-bd",
@@ -8018,8 +7696,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 66,
       "contributors": [
         "SirGryphin",
@@ -8043,8 +7720,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 9,
       "contributors": [
         "dipu-bd"
@@ -8064,7 +7740,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.0,
       "total_commits": 5,
       "contributors": [
@@ -8088,8 +7763,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "SirGryphin",
@@ -8110,8 +7784,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 79,
       "contributors": [
         "AncientCatz",
@@ -8134,8 +7807,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 76,
       "contributors": [
         "AncientCatz",
@@ -8145,8 +7817,8 @@
       ],
       "id": "d37ecb5158dd9515c7150ee270ae2807",
       "base_urls": [
-        "https://rpgnoob.wordpress.com/",
-        "https://rpgnovels.com/"
+        "https://rpgnovels.com/",
+        "https://rpgnoob.wordpress.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/rpgnovels.py"
     },
@@ -8159,8 +7831,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "CxRxExO",
@@ -8181,8 +7852,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "SirGryphin",
@@ -8205,8 +7875,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd"
@@ -8227,8 +7896,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "Camfurbush",
@@ -8239,12 +7907,12 @@
       ],
       "id": "d62869404e4b5dd6b19addc645f7fd81",
       "base_urls": [
-        "https://lightnovelreader.me/",
         "https://www.lnreader.org/",
-        "https://readlitenovel.com/",
         "https://www.lightnovelreader.me/",
+        "https://lnreader.org/",
+        "https://readlitenovel.com/",
         "http://readlightnovel.online/",
-        "https://lnreader.org/"
+        "https://lightnovelreader.me/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/lightnovelreader.py"
     },
@@ -8257,7 +7925,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 12,
       "contributors": [
@@ -8269,8 +7936,8 @@
       ],
       "id": "d640938bfa63f359f714ebe430ea1d22",
       "base_urls": [
-        "https://www.wuxiap.com/",
-        "https://www.readwn.com/"
+        "https://www.readwn.com/",
+        "https://www.wuxiap.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/readwn.py"
     },
@@ -8283,8 +7950,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd",
@@ -8305,8 +7971,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 10,
       "contributors": [
         "dipu-bd"
@@ -8326,8 +7991,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "SirGryphin",
@@ -8348,8 +8012,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "CryZFix",
@@ -8370,8 +8033,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd",
@@ -8392,8 +8054,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "CryZFix",
@@ -8414,8 +8075,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 80,
       "contributors": [
         "SirGryphin",
@@ -8440,8 +8100,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd"
@@ -8461,7 +8120,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 2.0,
       "total_commits": 6,
       "contributors": [
@@ -8482,8 +8140,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 2,
-      "request_rate_limit": null,
+      "request_rate_limit": 2.0,
       "total_commits": 26,
       "contributors": [
         "TuxSH",
@@ -8505,7 +8162,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 20.0,
       "total_commits": 31,
       "contributors": [
@@ -8517,11 +8173,11 @@
       ],
       "id": "dd8df57f35925084fa5a41d345c4db7a",
       "base_urls": [
-        "https://tw.27k.net/",
-        "https://www.27k.net/",
         "https://so.27k.net/",
+        "https://www.27k.net/",
+        "https://www.lreads.com/",
         "https://m.27k.net/",
-        "https://www.lreads.com/"
+        "https://tw.27k.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/27k.py"
     },
@@ -8534,8 +8190,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 18,
       "contributors": [
         "SirGryphin",
@@ -8556,8 +8211,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 64,
       "contributors": [
         "dipu-bd",
@@ -8578,8 +8232,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd"
@@ -8599,7 +8252,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 4,
       "contributors": [
@@ -8621,7 +8273,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 4,
       "contributors": [
@@ -8643,8 +8294,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 19,
       "contributors": [
         "SirGryphin",
@@ -8665,8 +8315,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "Zokhoi",
@@ -8674,9 +8323,9 @@
       ],
       "id": "e2a0a1f66eec221866f52e14af342c50",
       "base_urls": [
-        "https://www.piaotia.com/",
+        "https://www.ptwxz.com/",
         "https://www.piaotian.com/",
-        "https://www.ptwxz.com/"
+        "https://www.piaotia.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/piaotian.py"
     },
@@ -8689,7 +8338,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 4.0,
       "total_commits": 2,
       "contributors": [
@@ -8711,8 +8359,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 13,
       "contributors": [
         "amritoo",
@@ -8733,8 +8380,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 24,
       "contributors": [
         "SirGryphin",
@@ -8755,7 +8401,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 3,
       "contributors": [
@@ -8777,8 +8422,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd"
@@ -8798,8 +8442,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 80,
       "contributors": [
         "SirGryphin",
@@ -8825,8 +8468,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 8,
       "contributors": [
         "dipu-bd",
@@ -8847,8 +8489,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 35,
       "contributors": [
         "Galunid",
@@ -8873,8 +8514,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 14,
       "contributors": [
         "SirGryphin",
@@ -8895,8 +8535,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 70,
       "contributors": [
         "SirGryphin",
@@ -8922,8 +8561,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 20,
       "contributors": [
         "dipu-bd",
@@ -8944,8 +8582,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 70,
       "contributors": [
         "AncientCatz",
@@ -8968,8 +8605,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 70,
       "contributors": [
         "SirGryphin",
@@ -8993,8 +8629,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 60,
       "contributors": [
         "dipu-bd",
@@ -9015,8 +8650,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 5,
       "contributors": [
         "dipu-bd",
@@ -9037,7 +8671,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 4,
       "contributors": [
@@ -9060,7 +8693,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 8,
       "contributors": [
@@ -9084,8 +8716,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 22,
       "contributors": [
         "SirGryphin",
@@ -9106,8 +8737,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 4,
       "contributors": [
         "dipu-bd",
@@ -9128,8 +8758,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 94,
       "contributors": [
         "Dimi1010",
@@ -9157,8 +8786,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 106,
       "contributors": [
         "dipu-bd",
@@ -9180,8 +8808,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 73,
       "contributors": [
         "SirGryphin",
@@ -9204,8 +8831,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 6,
       "contributors": [
         "dipu-bd",
@@ -9227,8 +8853,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 22,
       "contributors": [
         "SirGryphin",
@@ -9249,8 +8874,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "AncientCatz",
@@ -9274,8 +8898,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd"
@@ -9295,8 +8918,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 70,
       "contributors": [
         "AncientCatz",
@@ -9319,8 +8941,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 68,
       "contributors": [
         "AncientCatz",
@@ -9343,8 +8964,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 11,
       "contributors": [
         "dipu-bd"
@@ -9364,8 +8984,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 72,
       "contributors": [
         "SirGryphin",
@@ -9388,8 +9007,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 81,
       "contributors": [
         "SirGryphin",
@@ -9414,7 +9032,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
       "request_rate_limit": 1.4,
       "total_commits": 8,
       "contributors": [
@@ -9437,8 +9054,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 68,
       "contributors": [
         "SirGryphin",
@@ -9461,8 +9077,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 19,
       "contributors": [
         "SirGryphin",
@@ -9483,8 +9098,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 80,
       "contributors": [
         "SirGryphin",
@@ -9509,8 +9123,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 17,
       "contributors": [
         "SirGryphin",
@@ -9531,7 +9144,6 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
       "request_rate_limit": 0.9,
       "total_commits": 27,
       "contributors": [
@@ -9555,8 +9167,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 77,
       "contributors": [
         "Galunid",
@@ -9581,8 +9192,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 71,
       "contributors": [
         "SirGryphin",
@@ -9605,8 +9215,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 69,
       "contributors": [
         "SirGryphin",
@@ -9629,8 +9238,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 12,
       "contributors": [
         "dipu-bd",
@@ -9653,8 +9261,7 @@
       "can_login": false,
       "can_search": true,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 21,
       "contributors": [
         "SirGryphin",
@@ -9675,8 +9282,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": true,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 16,
       "contributors": [
         "dipu-bd",
@@ -9684,8 +9290,8 @@
       ],
       "id": "fbce7b836b1292fc48340c46292969f7",
       "base_urls": [
-        "https://ln.hako.vn/",
-        "https://docln.net/"
+        "https://docln.net/",
+        "https://ln.hako.vn/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/vi/lnhakone.py"
     },
@@ -9698,8 +9304,7 @@
       "can_login": false,
       "can_search": false,
       "has_mtl": false,
-      "request_concurrency": 1,
-      "request_rate_limit": null,
+      "request_rate_limit": 3.0,
       "total_commits": 67,
       "contributors": [
         "SirGryphin",
