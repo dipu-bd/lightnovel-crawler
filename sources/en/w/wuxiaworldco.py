@@ -23,7 +23,6 @@ class WuxiaCoCrawler(SoupTemplate):
 
     def initialize(self) -> None:
         self.scraper.origin = "https://m.wuxiaworld.co/"
-        self.taskman.init_executor(1)
         self.cleaner.bad_text_regex.update(
             [
                 r"^translat(ed by|or)",

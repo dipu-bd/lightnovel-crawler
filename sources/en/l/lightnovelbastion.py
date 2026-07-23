@@ -12,7 +12,6 @@ class LightNovelBastion(LegacyCrawler):
     base_url = "https://lightnovelbastion.com/"
 
     def initialize(self) -> None:
-        self.init_executor(1)
         self.cleaner.bad_tags.update(
             [
                 "h3",

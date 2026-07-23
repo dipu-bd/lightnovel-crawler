@@ -15,9 +15,7 @@ class NovelFireCrawler(LegacyCrawler):
     has_mtl = False
     has_manga = False
     can_search = True
-
-    def initialize(self) -> None:
-        self.init_executor(ratelimit=3)
+    request_rate_limit = 3
 
     def read_novel_info(self) -> None:
         soup = self.get_soup(self.novel_url)

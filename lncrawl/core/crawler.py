@@ -27,6 +27,12 @@ class Crawler(ABC):
     can_login = False
     can_search = False
 
+    # Per-source request limits, enforced globally per domain across all
+    # concurrent jobs on the server (shared limiter), and used as the default
+    # worker count for CLI downloads. A rate limit implies serial requests.
+    request_concurrency: int = 1
+    request_rate_limit: Optional[float] = None  # max requests per second
+
     chapters_per_volume = 100
     auto_generate_cover = True
 
@@ -63,7 +69,10 @@ class Crawler(ABC):
         from .taskman import TaskManager
 
         self.cleaner = TextCleaner()
-        self.taskman = TaskManager(workers=workers)
+        self.taskman = TaskManager(
+            workers=workers if workers is not None else self.request_concurrency,
+            ratelimit=self.request_rate_limit,
+        )
 
         config = default_config()
         if ctx.config.crawler.enable_proxy:

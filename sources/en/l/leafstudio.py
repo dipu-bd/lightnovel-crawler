@@ -9,9 +9,7 @@ logger = logging.getLogger(__name__)
 
 class LiteroticaCrawler(LegacyCrawler):
     base_url = ["https://leafstudio.site/"]
-
-    def initialize(self) -> None:
-        self.init_executor(ratelimit=2)
+    request_rate_limit = 2
 
     def search_novel(self, query) -> List[SearchResult]:
         soup = self.get_soup(

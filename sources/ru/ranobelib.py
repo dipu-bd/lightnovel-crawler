@@ -12,9 +12,9 @@ class RanobeLibMeCrawler(LegacyCrawler):
     base_url = [
         "https://ranobelib.me/",
     ]
+    request_rate_limit = 0.99
 
     def initialize(self):
-        self.init_executor(ratelimit=0.99)
         clean_url = self.novel_url.split("?")[0].strip("/")
         self.api_url = f"https://api.cdnlibs.org/api/manga/{clean_url.split('/')[-1]}"
 

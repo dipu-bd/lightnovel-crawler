@@ -4,7 +4,10 @@ from pathlib import Path
 import threading
 from threading import Event, Thread
 import traceback
-from typing import Dict, List, Optional, Type
+from typing import TYPE_CHECKING, Dict, List, Optional, Type
+
+if TYPE_CHECKING:
+    from scraper import SharedLimiter
 
 from ...context import ctx
 from ...core import Crawler
@@ -37,6 +40,11 @@ class Sources:
         self.crawlers: Dict[str, Type[Crawler]] = {}  # Map of cid -> crawler
         self.info: Dict[str, CrawlerInfo] = {}  # Map of cid -> crawler info
         self.sources: Dict[str, SourceItem] = {}  # Map of host -> source item
+        # Map of domain -> limiter shared by every crawler instance for that
+        # domain, so request_concurrency/request_rate_limit hold across all
+        # concurrent jobs instead of per instance.
+        self._limiters: Dict[str, "SharedLimiter"] = {}
+        self._limiter_lock = threading.Lock()
 
     @property
     def version(self) -> int:
@@ -57,6 +65,8 @@ class Sources:
             del self._index
         self.rejected.clear()
         self.sources.clear()
+        with self._limiter_lock:
+            self._limiters.clear()
         self._sync_lock.abort()
 
     def ensure_load(self):
@@ -248,6 +258,16 @@ class Sources:
         self.ensure_load()
         return self.get_crawler(self.get_domain(url))
 
+    def _domain_limiter(self, domain: str, constructor: Type[Crawler]) -> "SharedLimiter":
+        from scraper import SharedLimiter
+
+        with self._limiter_lock:
+            limiter = self._limiters.get(domain)
+            if limiter is None:
+                limiter = SharedLimiter.create(constructor.request_concurrency)
+                self._limiters[domain] = limiter
+            return limiter
+
     def init_crawler(
         self,
         url: str,
@@ -266,6 +286,15 @@ class Sources:
             workers=workers,
             parser=parser,
         )
+
+        # The instance keeps its own cookies and abort signal, but shares the
+        # domain's limiter so request_concurrency/request_rate_limit hold
+        # across every concurrent job hitting this source.
+        crawler.scraper.adopt_limiter(self._domain_limiter(domain, constructor))
+        if constructor.request_rate_limit:
+            interval = 1.0 / constructor.request_rate_limit
+            crawler.scraper.config.min_request_interval_fast = interval
+
         crawler.initialize()
         return crawler
 

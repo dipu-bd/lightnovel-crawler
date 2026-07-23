@@ -21,9 +21,7 @@ class SyosetuOrgCrawler(SoupTemplate):
     novel_synopsis_selector = "#maind .ss:nth-of-type(2)"
 
     novel_chapter_body_selector = "#honbun"
-
-    def initialize(self) -> None:
-        self.taskman.init_executor(workers=2)
+    request_concurrency = 2
 
     def build_search_url(self, query: str) -> str:
         return search_url % quote_plus(query)

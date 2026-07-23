@@ -165,6 +165,8 @@ def create_crawler_info(crawler: Type[Crawler]):
         has_manga=crawler.has_manga,
         can_login=crawler.can_login,
         can_search=crawler.can_search,
+        request_concurrency=crawler.request_concurrency,
+        request_rate_limit=crawler.request_rate_limit,
     )
 
 
@@ -186,6 +188,8 @@ def create_source_item(url: str, info: CrawlerInfo, rejected: Dict[str, str]):
         has_mtl=info.has_mtl,
         can_search=info.can_search,
         can_login=info.can_login,
+        request_concurrency=info.request_concurrency,
+        request_rate_limit=info.request_rate_limit,
         total_commits=info.total_commits,
         contributors=info.contributors,
     )

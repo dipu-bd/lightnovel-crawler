@@ -11,9 +11,7 @@ logger = logging.getLogger(__name__)
 
 class NovelbinCrawler(NovelFullTemplate):
     base_url = ["https://novelbin.com/"]
-
-    def initialize(self) -> None:
-        self.taskman.init_executor(ratelimit=0.99)
+    request_rate_limit = 0.99
 
     def select_chapter_tags(
         self,

@@ -15,9 +15,9 @@ class FreewebnovelTemplate(SoupTemplate):
     novel_author_selector = ".m-imgtxt a[href*='/authors/']"
     chapter_list_selector = "#idData li > a"
     chapter_body_selector = ".m-read"
+    request_concurrency = 2
 
     def initialize(self) -> None:
-        self.taskman.init_executor(workers=2)
         self.cleaner.bad_tags.update(["h4", "sub"])
         self.cleaner.bad_text_regex.update(
             [

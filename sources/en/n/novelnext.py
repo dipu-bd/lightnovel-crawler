@@ -9,9 +9,9 @@ logger = logging.getLogger(__name__)
 
 class NovelNextCrawler(NovelFullTemplate):
     base_url = ["https://novelnext.com/", "https://novelnext.dramanovels.io/"]
+    request_rate_limit = 0.2
 
     def initialize(self) -> None:
-        self.taskman.init_executor(ratelimit=0.2)
         self.cleaner.bad_tag_text_pairs.update(
             {
                 "h4": [

@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 class RequieMtlsCrawler(LegacyCrawler):
     base_url = ["https://requiemtls.com/"]
     has_mtl = True
-
-    def initialize(self):
-        self.init_executor(ratelimit=0.99)
+    request_rate_limit = 0.99
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

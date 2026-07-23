@@ -17,9 +17,6 @@ class ListNovelCrawler(LegacyCrawler):
         "https://docln.net/",
     ]
 
-    def initialize(self):
-        self.init_executor(1)
-
     def search_novel(self, query):
         query = quote_plus(query.lower())
         soup = self.get_soup(search_url % (self.scraper.origin.strip("/"), query))

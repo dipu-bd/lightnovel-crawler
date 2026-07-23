@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 
 class TeaNovelCrawler(LegacyCrawler):
     base_url = "https://www.teanovel.com"
-
-    def initialize(self):
-        self.init_executor(workers=4)
+    request_concurrency = 4
 
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)

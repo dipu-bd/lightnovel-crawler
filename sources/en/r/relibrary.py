@@ -17,7 +17,6 @@ class ReLibraryCrawler(SoupTemplate):
     chapter_body_selector = ".entry-content"
 
     def initialize(self) -> None:
-        self.taskman.init_executor(1)
         self.cleaner.bad_css.update(
             [
                 "tr",

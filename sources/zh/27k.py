@@ -37,10 +37,10 @@ class LeYueDu(LegacyCrawler):
         "https://tw.27k.net",
         "https://www.lreads.com",
     ]
+    request_rate_limit = 20
 
     def initialize(self):
         self.parser = "html.parser"
-        self.init_executor(ratelimit=20)
 
     def search_novel(self, query):
         query = urllib.parse.quote(query)

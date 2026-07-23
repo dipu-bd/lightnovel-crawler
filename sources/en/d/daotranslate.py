@@ -10,9 +10,7 @@ search_url = "https://daotranslate.us/?s=%s"
 class DaoTranslateCrawler(LegacyCrawler):
     base_url = ["https://daotranslate.com/", "https://daotranslate.us/"]
     has_mtl = True
-
-    def initialize(self):
-        self.init_executor(ratelimit=1.1)
+    request_rate_limit = 1.1
 
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")

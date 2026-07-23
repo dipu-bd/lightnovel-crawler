@@ -22,9 +22,9 @@ class NovelArrowCrawler(NovelFullTemplate):
         "x-site-host": "novelarrow.com",
         "x-version-app": "web-desktop",
     }
+    request_rate_limit = 4
 
     def initialize(self) -> None:
-        self.taskman.init_executor(ratelimit=4)
         self.cleaner.bad_tags.update(["script", "style", "nav", "button", "iframe"])
         self.cleaner.bad_css.update(
             [

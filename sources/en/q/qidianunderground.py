@@ -26,7 +26,6 @@ class QidianComCrawler(LegacyCrawler):
     ]
 
     def initialize(self):
-        self.init_executor(1)
         self.chapter_cache = {}
         self.set_header("Accept", "application/json")
 

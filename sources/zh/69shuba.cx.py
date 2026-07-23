@@ -34,10 +34,10 @@ class sixnineshu(LegacyCrawler):
         "https://69shuba.cx",
         "https://69shu.me",
     ]
+    request_rate_limit = 20
 
     def initialize(self):
         self.parser = "html.parser"
-        self.init_executor(ratelimit=20)
 
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))

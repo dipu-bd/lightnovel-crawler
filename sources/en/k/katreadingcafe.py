@@ -32,7 +32,6 @@ class KatReadingCafeCrawler(SoupTemplate):
     )
 
     def initialize(self):
-        self.taskman.init_executor(1)
         self.cleaner.bad_tag_text_pairs["a"] = [
             "next chapter",
             "previous chapter",

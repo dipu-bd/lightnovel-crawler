@@ -24,9 +24,9 @@ class NovelPubTemplate(SoupTemplate):
     chapter_list_selector = "ul.chapter-list li a"
     chapter_title_selector = ".chapter-title"
     chapter_body_selector = ".chapter-content"
+    request_concurrency = 3
 
     def initialize(self) -> None:
-        self.taskman.init_executor(workers=3)
         self.cleaner.bad_tags.update(["div"])
         self.cleaner.bad_css.update(
             [

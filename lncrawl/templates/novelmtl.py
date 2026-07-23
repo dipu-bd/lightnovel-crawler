@@ -24,10 +24,10 @@ class NovelMTLTemplate(SoupTemplate):
     chapter_list_selector = "ul.chapter-list li a"
     chapter_title_selector = ".chapter-title"
     chapter_body_selector = ".chapter-content"
+    request_rate_limit = 1.4
 
     def initialize(self) -> None:
         self.cur_time = int(1000 * time.time())
-        self.taskman.init_executor(ratelimit=1.4)
 
     def select_search_item_list(self, query: str) -> Iterable[PageSoup]:
         soup = self.scraper.get_soup(f"{self.scraper.origin}search.html")

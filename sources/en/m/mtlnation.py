@@ -14,9 +14,6 @@ class MTLNation(LegacyCrawler):
     ]
     has_mtl = True
 
-    def initialize(self):
-        self.init_executor(1)
-
     def login(self, email: str, password: str) -> None:
         self.set_header("Authorization", f"{email} {password}")
         response = self.get_json("https://api.mtlnation.com/api/v2/users/me")

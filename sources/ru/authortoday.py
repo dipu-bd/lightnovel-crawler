@@ -14,9 +14,6 @@ headers = {
 class AuthorTodayCrawler(LegacyCrawler):
     base_url = ["https://author.today/"]
 
-    def initialize(self):
-        self.init_executor(workers=1)
-
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)
         book_info = self.get_json(

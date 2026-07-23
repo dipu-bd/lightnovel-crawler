@@ -68,11 +68,15 @@ class JobRunner:
                     skip_user_ids=active_users,
                     skip_domains=active_domains,
                 )
-                # if no job for unique users, get pending job for active users
+                # if no job for unique users, get pending job for active users.
+                # The domain cap stays hard at the source's request_concurrency:
+                # one more same-domain job would only block on that source's
+                # shared request limiter, wasting a worker.
                 if not job:
                     job = ctx.jobs._pending(
                         artifact,
                         skip_job_ids=_queue.keys(),
+                        skip_domains=JobRunner._saturated_domains(),
                     )
                 if not job:
                     return None  # no pending job
@@ -88,6 +92,24 @@ class JobRunner:
                 _queue[job.id] = _Claim(job_signal, job.user_id, job.domain, current_timestamp())
                 return job, job_signal
         return None
+
+    @staticmethod
+    def _saturated_domains() -> set:
+        """Domains that already run as many jobs as their source allows
+        concurrent requests. Caller must hold _lock."""
+        counts: Dict[str, int] = {}
+        for claim in _queue.values():
+            if claim.domain:
+                counts[claim.domain] = counts.get(claim.domain, 0) + 1
+        saturated = set()
+        for domain, count in counts.items():
+            try:
+                limit = ctx.sources.get_crawler(domain).request_concurrency
+            except Exception:
+                limit = 1
+            if count >= max(1, limit):
+                saturated.add(domain)
+        return saturated
 
     @staticmethod
     def _fail_safe(job_id: str) -> None:

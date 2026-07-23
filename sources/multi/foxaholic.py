@@ -17,9 +17,6 @@ class FoxaholicCrawler(LegacyCrawler):
         "https://global.foxaholic.com/",
     ]
 
-    def initialize(self) -> None:
-        self.init_executor(1)
-
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)

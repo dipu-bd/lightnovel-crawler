@@ -13,9 +13,7 @@ logger = logging.getLogger(__name__)
 
 class ChereadsCrawler(LegacyCrawler):
     base_url = ["https://www.chereads.com/"]
-
-    def initialize(self):
-        self.init_executor(workers=4)
+    request_concurrency = 4
 
     def parse_metadata(self, soup: PageSoup) -> Box:
         metadata_json = soup.select_one("script#__NEXT_DATA__, script#vite-plugin-ssr_pageContext")

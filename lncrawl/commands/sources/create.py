@@ -213,6 +213,10 @@ class {name}(SoupTemplate):
     has_mtl = {Feature.has_mtl in features}
     can_login = {Feature.can_login in features}
     can_search = {Feature.can_search in features}
+
+    # Enforced per source domain across all concurrent jobs.
+    # request_concurrency = 2  # max requests in flight to this source
+    # request_rate_limit = 1.0  # max requests per second (implies serial)
 """
 
     if Feature.can_search in features:
@@ -248,7 +252,6 @@ class {name}(SoupTemplate):
     def initialize(self) -> None:
         # You can customize `TextCleaner` and other necessary things.
         super().initialize()
-        self.taskman.init_executor(1)
 """
 
     if Feature.can_login in features:

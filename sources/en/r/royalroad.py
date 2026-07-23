@@ -11,9 +11,6 @@ search_url = "https://www.royalroad.com/fictions/search?keyword=%s"
 class RoyalRoadCrawler(LegacyCrawler):
     base_url = "https://www.royalroad.com/"
 
-    def initialize(self):
-        self.init_executor(1)
-
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
         soup = self.get_soup(search_url % query)

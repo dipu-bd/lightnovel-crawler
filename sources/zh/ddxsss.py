@@ -13,9 +13,9 @@ class DdxSss(LegacyCrawler):
         "https://www.ddxss.cc/",
         "https://www.ddtxt8.cc/",
     ]
+    request_rate_limit = 20
 
     def initialize(self):
-        self.init_executor(ratelimit=20)
 
         # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
         self.parser = "html.parser"

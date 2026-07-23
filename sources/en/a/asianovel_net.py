@@ -30,9 +30,9 @@ class AsiaNovelNetCrawler(SoupTemplate):
 
     chapter_list_selector = "section.story__chapters li > a"
     chapter_body_selector = "section#chapter-content"
+    request_rate_limit = 1
 
     def initialize(self) -> None:
-        self.taskman.init_executor(ratelimit=1)
         self.cleaner.bad_css.update(
             [
                 "div.asian-ads-top-content",

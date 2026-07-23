@@ -12,9 +12,6 @@ class JaomixCrawler(LegacyCrawler):
         "https://jaomix.ru/",
     ]
 
-    def initialize(self):
-        self.init_executor(workers=1)
-
     def read_novel_info(self):
         soup = self.get_soup(self.novel_url)
 

@@ -38,11 +38,11 @@ class sixnineshu(LegacyCrawler):
         "https://www.69shu.pro/",
         "https://www.69shuba.pro/",
     ]
+    request_rate_limit = 20
 
     def initialize(self):
         # the default lxml parser cannot handle the huge gbk encoded sites (fails after 4.3k chapters)
         self.parser = "html.parser"
-        self.init_executor(ratelimit=20)
 
     def search_novel(self, query):
         query = urllib.parse.quote(query.encode("gbk"))

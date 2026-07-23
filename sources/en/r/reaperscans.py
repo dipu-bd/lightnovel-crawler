@@ -25,6 +25,7 @@ ID_MARKER_PATTERN = re.compile(r"\n(?=[a-fA-F0-9]+:)")
 
 class Reaperscans(LegacyCrawler):
     base_url = "https://reaperscans.com/"
+    request_rate_limit = 0.9
 
     def initialize(self):
         self.cleaner.bad_text_regex = set(
@@ -42,7 +43,6 @@ class Reaperscans(LegacyCrawler):
                 "Join our Discord",
             ]
         )
-        self.init_executor(ratelimit=0.9)
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

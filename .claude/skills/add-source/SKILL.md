@@ -23,8 +23,8 @@ the same way from `ctx.config.crawler.user_sources` (a dir under the app data di
   sources and usually ~10 lines.
 - **`LegacyCrawler`** (`lncrawl/core/legacy.py`) — the classic imperative API
   (`read_novel_info`, `download_chapter_body`, optional `search_novel`, instance attrs
-  `novel_title`/`chapters`/`volumes`, helpers `self.get_soup`/`init_executor`). Most existing
-  sources use it; fine to match when fixing one, but prefer `SoupTemplate` for new work.
+  `novel_title`/`chapters`/`volumes`, helper `self.get_soup`). Most existing sources use it;
+  fine to match when fixing one, but prefer `SoupTemplate` for new work.
 - **`Crawler`** (`lncrawl/core/crawler.py`) — the raw abstract base. Its modern abstract
   methods are `read_novel(novel)` / `download_chapter(chapter)` — **not** the legacy names;
   the two APIs must not be mixed in one class.
@@ -62,9 +62,13 @@ loop pages inside `select_chapter_tags` (see existing sources that do this).
   `lncrawl/core/cleaner.py`). Tune it in `initialize()`: `self.cleaner.bad_css.update({...})`
   for ad/nav selectors, `bad_tag_text_pairs` to drop tags whose text matches a pattern,
   `whitelist_attributes`/`whitelist_css_property` to keep extras.
-- **Concurrency/rate limits**: cap workers in `initialize()` with
-  `self.taskman.init_executor(1)` (LegacyCrawler: `self.init_executor(1)`); a `ratelimit`
-  argument forces single-worker. Many sites ban parallel scrapers — when in doubt, 1 worker.
+- **Concurrency/rate limits**: declare static class fields — `request_concurrency = N`
+  (max requests in flight to this source; default 1) and/or `request_rate_limit = R` (max
+  requests/sec; implies serial requests). These are enforced **globally per source domain**
+  across all concurrent server jobs via a shared limiter (`init_crawler` in
+  `services/sources/service.py`), and drive the CLI's worker pool. Do **not** call
+  `init_executor` in `initialize()` — that's the legacy pattern and is dead in server mode.
+  Many sites ban parallel scrapers — when in doubt, keep the default.
 - **Headers/cookies/login**: `self.scraper.set_header/set_cookie`; implement `login()` and set
   `can_login = True`. `Origin`/`Referer` are auto-injected — leave them unless the site
   objects.
