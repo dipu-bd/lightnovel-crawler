@@ -150,11 +150,12 @@ def get_novel_recommended(
 
 @router.delete(
     "/{novel_id}",
-    summary="Removes a novel",
+    summary="Removes a novel, or only one translation of it when a language is given",
     dependencies=[Security(ensure_admin)],
 )
 def delete_novel(
     novel_id: str = Path(),
+    language: Optional[LanguageCode] = Query(default=None),
 ) -> bool:
-    ctx.novels.delete(novel_id)
+    ctx.novels.delete(novel_id, language)
     return True
