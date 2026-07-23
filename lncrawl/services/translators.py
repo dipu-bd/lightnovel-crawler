@@ -113,7 +113,7 @@ class TranslationService:
         glossary: Optional[Dict[str, str]] = None,
         context: Optional[str] = None,
         signal: Optional[Event] = None,
-    ) -> Tuple[List[str], Optional[str], Dict[str, str]]:
+    ) -> Tuple[List[str], Optional[str], Dict[str, str], Optional[str]]:
         payload: Dict[str, Any] = {
             "texts": texts,
             "target_lang": _code(target),
@@ -128,6 +128,7 @@ class TranslationService:
             data.get("translations") or [],
             data.get("detected_source_lang"),
             data.get("new_terms") or {},
+            data.get("engine"),
         )
 
     def _translate_html(
@@ -140,7 +141,7 @@ class TranslationService:
         context: Optional[Dict[str, str]] = None,
         extract_terms: bool = True,
         signal: Optional[Event] = None,
-    ) -> Tuple[str, Optional[str], Dict[str, str], List[str]]:
+    ) -> Tuple[str, Optional[str], Dict[str, str], List[str], Optional[str]]:
         payload: Dict[str, Any] = {
             "html": html,
             "target_lang": _code(target),
@@ -157,6 +158,7 @@ class TranslationService:
             data.get("detected_source_lang"),
             data.get("new_terms") or {},
             data.get("warnings") or [],
+            data.get("engine"),
         )
 
     # ---------------------------------------------------------------------------------------------
@@ -234,7 +236,7 @@ class TranslationService:
         source = _source_code(novel)
         glossary = self._load_glossary(novel.id, target)
 
-        translations, _, terms = self._translate_texts(
+        translations, _, terms, engine = self._translate_texts(
             [novel.title, novel.authors or ""],
             target,
             source=source,
@@ -247,7 +249,7 @@ class TranslationService:
 
         synopsis = ""
         if novel.synopsis:
-            synopsis, _, syn_terms, _ = self._translate_html(
+            synopsis, _, syn_terms, _, _ = self._translate_html(
                 novel.synopsis,
                 target,
                 source=source,
@@ -265,6 +267,7 @@ class TranslationService:
                     title=title,
                     authors=authors or None,
                     synopsis=synopsis or None,
+                    extra={"engine": engine} if engine else {},
                 )
             )
             sess.commit()
@@ -281,7 +284,7 @@ class TranslationService:
             return
 
         glossary = self._load_glossary(volume.novel_id, target)
-        translations, _, terms = self._translate_texts(
+        translations, _, terms, engine = self._translate_texts(
             [volume.title],
             target,
             glossary=glossary,
@@ -297,6 +300,7 @@ class TranslationService:
                     volume_serial=volume.serial,
                     language=_code(target),
                     volume_title=title,
+                    extra={"engine": engine} if engine else {},
                 )
             )
             sess.commit()
@@ -329,7 +333,7 @@ class TranslationService:
         if tail:
             context["previous_chapter_tail"] = tail
 
-        translated, _, terms, warnings = self._translate_html(
+        translated, _, terms, warnings, engine = self._translate_html(
             content,
             target,
             source=source,
@@ -340,7 +344,7 @@ class TranslationService:
         if warnings:
             logger.info(f"translate/html warnings (chapter {chapter.serial}): {warnings}")
 
-        titles, _, title_terms = self._translate_texts(
+        titles, _, title_terms, _ = self._translate_texts(
             [chapter.title],
             target,
             source=source,
@@ -358,15 +362,20 @@ class TranslationService:
                     language=_code(target),
                     chapter_title=title,
                     content_hash=content_hash,
+                    extra={"engine": engine} if engine else {},
                 )
                 sess.add(translation)
             else:
+                extra = dict(**translation.extra)
+                if engine:
+                    extra["engine"] = engine
                 sess.exec(
                     sq.update(ChapterTranslation)
                     .where(sq.col(ChapterTranslation.id) == translation.id)
                     .values(
                         chapter_title=title,
                         content_hash=content_hash,
+                        extra=extra,
                     )
                 )
             sess.commit()

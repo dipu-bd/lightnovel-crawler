@@ -14,3 +14,7 @@ class ReadChapterResponse(BaseModel):
     previous_id: Optional[str] = Field(description="Previous chapter id")
     language: Optional[str] = Field(description="Current content language code (None if original)")
     word_count: Optional[int] = Field(description="Word count of the current content")
+    translation_engine: Optional[str] = Field(
+        default=None,
+        description="Translator engine that produced the current translation (None if original)",
+    )

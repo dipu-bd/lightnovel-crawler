@@ -192,12 +192,14 @@ class ChapterService:
             if not job:
                 job = ctx.jobs.fetch_chapter(user, chapter_id)
 
+        translation_engine: Optional[str] = None
         if language:
             content = None
             chapter_translation = self.get_chapter_translation(chapter, language)
             if chapter_translation and chapter_translation.is_available:
                 chapter.title = chapter_translation.chapter_title or chapter.title
                 content = ctx.files.load_text(chapter_translation.content_file)
+                translation_engine = chapter_translation.extra.get("engine")
             elif auto_fetch:
                 fetch_job_id = job.id if job else None
                 translate_job = ctx.jobs.get_chapter_translation_job(user.id, chapter_id, language)
@@ -234,6 +236,7 @@ class ChapterService:
             content=content,
             language=language,
             word_count=word_count,
+            translation_engine=translation_engine,
             next_id=next_id,
             previous_id=previous_id,
         )
