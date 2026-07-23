@@ -259,7 +259,7 @@ class NovelService:
                 ctx.files.resolve(artifact.output_file).unlink(True)
                 sess.delete(artifact)
 
-            for model in (ChapterTranslation, VolumeTranslation, NovelTranslation, NovelGlossary):
+            for model in (ChapterTranslation, VolumeTranslation, NovelTranslation):
                 sess.exec(
                     sq.delete(model).where(
                         sq.col(model.novel_id) == novel_id,
