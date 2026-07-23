@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional
 import sqlmodel as sq
 
 from ..context import ctx
-from ..dao import LanguageCode, Novel, NovelSort, NovelTag, NovelTranslation
+from ..dao import LanguageCode, Novel, NovelGlossary, NovelSort, NovelTag, NovelTranslation
 from ..exceptions import ServerErrors
 from ..server.models import Paginated
 
@@ -154,6 +154,54 @@ class NovelService:
                 )
                 .limit(1)
             ).first()
+
+    def list_glossaries(self, novel_id: str, language: LanguageCode) -> Dict[str, Dict[str, str]]:
+        """Map of glossary terms for a novel."""
+        with ctx.db.session() as sess:
+            rows = sess.exec(
+                sq.select(NovelGlossary).where(
+                    sq.col(NovelGlossary.novel_id) == novel_id,
+                    sq.col(NovelGlossary.language) == language.value,
+                )
+            ).all()
+            return {row.language: dict(row.terms) for row in rows}
+
+    def update_glossary(
+        self,
+        novel_id: str,
+        language: LanguageCode,
+        terms: Dict[str, str],
+    ) -> Dict[str, str]:
+        """Replace the glossary terms of a novel for one target language."""
+        cleaned = {
+            key.strip(): value.strip()
+            for key, value in terms.items()
+            if key.strip() and value.strip()
+        }
+        with ctx.db.session() as sess:
+            if not sess.get(Novel, novel_id):
+                raise ServerErrors.no_such_novel
+            row = sess.exec(
+                sq.select(NovelGlossary)
+                .where(
+                    sq.col(NovelGlossary.novel_id) == novel_id,
+                    sq.col(NovelGlossary.language) == language.value,
+                )
+                .limit(1)
+            ).first()
+            if row:
+                row.terms = cleaned
+                sess.add(row)
+            elif cleaned:
+                sess.add(
+                    NovelGlossary(
+                        novel_id=novel_id,
+                        language=language.value,
+                        terms=cleaned,
+                    )
+                )
+            sess.commit()
+        return cleaned
 
     def delete(self, novel_id: str) -> bool:
         novel_dir = ctx.files.resolve(f"novels/{novel_id}")
