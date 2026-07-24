@@ -15,6 +15,10 @@ router = APIRouter()
 def get_volume(
     volume_id: str = Path(),
     user: User = Security(ensure_user),
+    language: Optional[LanguageCode] = Query(
+        default=None,
+        description="Target language code, e.g. 'fr', 'zh-CN'",
+    ),
 ) -> Volume:
     ctx.activity.record(user.id, ActivityType.VOLUME, volume_id)
     return ctx.volumes.get(volume_id)
@@ -33,7 +37,10 @@ async def get_volume_chapters(
     volume_id: str = Path(),
     offset: int = Query(default=0),
     limit: int = Query(default=20, le=100),
-    language: Optional[LanguageCode] = Query(default=None),
+    language: Optional[LanguageCode] = Query(
+        default=None,
+        description="Target language code, e.g. 'fr', 'zh-CN'",
+    ),
 ) -> Paginated[Chapter]:
     return ctx.chapters.list_page(
         limit=limit,

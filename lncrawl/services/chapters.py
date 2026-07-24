@@ -170,6 +170,19 @@ class ChapterService:
                 .limit(1)
             ).first()
 
+    def get_translated(
+        self,
+        chapter_id: str,
+        language: Optional[LanguageCode] = None,
+    ) -> Chapter:
+        chapter = self.get(chapter_id)
+        if language:
+            translation = self.get_chapter_translation(chapter, language)
+            if not translation:
+                raise ServerErrors.no_such_chapter.with_extra(language)
+            chapter.title = translation.chapter_title
+        return chapter
+
     def read(
         self,
         user: User,

@@ -14,8 +14,12 @@ router = APIRouter()
 @router.get("/{chapter_id}", summary="Returns a chapter details")
 def get_chapter(
     chapter_id: str = Path(),
+    language: Optional[LanguageCode] = Query(
+        default=None,
+        description="Target language code, e.g. 'fr', 'zh-CN'",
+    ),
 ) -> Chapter:
-    return ctx.chapters.get(chapter_id)
+    return ctx.chapters.get_translated(chapter_id, language)
 
 
 @router.get("/{chapter_id}/images", summary="Gets list of chapter images")

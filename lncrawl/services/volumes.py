@@ -102,7 +102,11 @@ class VolumeService:
                 .limit(1)
             ).first()
 
-    def get_translated(self, volume_id: str, language: Optional[LanguageCode] = None) -> Volume:
+    def get_translated(
+        self,
+        volume_id: str,
+        language: Optional[LanguageCode] = None,
+    ) -> Volume:
         volume = self.get(volume_id)
         if language:
             translation = self.get_volume_translation(volume, language)
