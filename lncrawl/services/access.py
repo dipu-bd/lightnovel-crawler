@@ -1,5 +1,6 @@
 from typing import FrozenSet, Optional
 
+from ..context import ctx
 from ..dao import User
 from ..enums import JobPriority, OutputFormat, UserTier
 
@@ -93,7 +94,7 @@ class AccessManager:
         return self._AUTO_FETCH_ENABLED[user.tier]
 
     def translation_enabled(self, user: User) -> bool:
-        return self._TRANSLATION_ENABLED[user.tier]
+        return ctx.config.translator.enabled and self._TRANSLATION_ENABLED[user.tier]
 
     def batch_translation_enabled(self, user: User) -> bool:
         return self.translation_enabled(user) and self._BATCH_TRANSLATION_ENABLED[user.tier]

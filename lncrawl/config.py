@@ -336,6 +336,20 @@ class TranslatorConfig(_Section):
         return str(APP_DIR / "translator.yml")
 
     @property
+    def enabled(self) -> bool:
+        """Enable Translation.
+
+        Master switch for the whole translation feature. When off, translation jobs cannot be
+        started and the reader serves original content only; the translator admin dashboard stays
+        available so engines can still be configured. Enabled by default.
+        """
+        return self._get("enabled", True)
+
+    @enabled.setter
+    def enabled(self, v: bool) -> None:
+        self._set("enabled", bool(v))
+
+    @property
     def request_timeout(self) -> int:
         """Translator Request Timeout (seconds).
 

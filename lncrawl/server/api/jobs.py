@@ -202,6 +202,8 @@ def translate_novels(
     user: User = Security(ensure_user),
     body: TranslateNovelsRequest = Body(),
 ) -> Job:
+    if not ctx.config.translator.enabled:
+        raise ServerErrors.translation_disabled
     if not ctx.tier.translation_enabled(user):
         raise ServerErrors.tier_not_allowed
     novel_ids = list(set(body.novel_ids))
@@ -220,6 +222,8 @@ def translate_volumes(
     user: User = Security(ensure_user),
     body: TranslateVolumesRequest = Body(),
 ) -> Job:
+    if not ctx.config.translator.enabled:
+        raise ServerErrors.translation_disabled
     if not ctx.tier.translation_enabled(user):
         raise ServerErrors.tier_not_allowed
     volume_ids = list(set(body.volumes))
@@ -238,6 +242,8 @@ def translate_chapters(
     user: User = Security(ensure_user),
     body: TranslateChaptersRequest = Body(),
 ) -> Job:
+    if not ctx.config.translator.enabled:
+        raise ServerErrors.translation_disabled
     if not ctx.tier.translation_enabled(user):
         raise ServerErrors.tier_not_allowed
     chapters = list(set(body.chapters))

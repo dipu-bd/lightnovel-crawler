@@ -213,6 +213,10 @@ class ChapterService:
                 chapter.title = chapter_translation.chapter_title or chapter.title
                 content = ctx.files.load_text(chapter_translation.content_file)
                 translation_engine = chapter_translation.extra.get("engine")
+            elif not ctx.config.translator.enabled:
+                raise ServerErrors.translation_disabled
+            elif not ctx.tier.translation_enabled(user):
+                raise ServerErrors.tier_not_allowed
             elif auto_fetch:
                 fetch_job_id = job.id if job else None
                 translate_job = ctx.jobs.get_chapter_translation_job(user.id, chapter_id, language)

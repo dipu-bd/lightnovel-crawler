@@ -4,6 +4,7 @@ from fastapi import APIRouter, Path, Query, Security
 
 from ...context import ctx
 from ...dao import ActivityType, Chapter, ChapterImage, Job, LanguageCode, User
+from ...exceptions import ServerErrors
 from ..models import ReadChapterResponse
 from ..security import ensure_user
 
@@ -74,6 +75,10 @@ def translate_chapter(
     chapter_id: str = Path(),
     language: LanguageCode = Query(description="Target language code, e.g. 'fr', 'zh-CN'"),
 ) -> Job:
+    if not ctx.config.translator.enabled:
+        raise ServerErrors.translation_disabled
+    if not ctx.tier.translation_enabled(user):
+        raise ServerErrors.tier_not_allowed
     job = ctx.jobs.get_chapter_translation_job(user.id, chapter_id, language)
     if not job:
         job = ctx.jobs.translate_chapter(user, chapter_id, language)

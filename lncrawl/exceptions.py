@@ -112,6 +112,9 @@ class ServerErrors:
     tier_not_allowed = ServerError(
         status.HTTP_403_FORBIDDEN, "This feature is not available for your tier"
     )
+    translation_disabled = ServerError(
+        status.HTTP_403_FORBIDDEN, "Translation is currently disabled"
+    )
     job_limit_reached = ServerError(
         status.HTTP_429_TOO_MANY_REQUESTS, "Active job limit reached for your tier"
     )
