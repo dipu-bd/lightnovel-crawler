@@ -191,6 +191,9 @@ class SoupTemplate(BrowserTemplate):
     def read_novel(self, novel: Novel) -> None:
         soup = self.get_novel_soup(novel)
 
+        if not novel.language:
+            novel.language = self.language
+
         try:
             self.parse_title(soup, novel)
         except Exception as e:

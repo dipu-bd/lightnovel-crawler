@@ -282,6 +282,9 @@ class Sources:
             parser=parser,
         )
 
+        if not crawler.language:
+            crawler.language = source.language
+
         # The instance keeps its own cookies and abort signal, but shares the
         # domain's limiter (throttle clock + slots) so request_rate_limit
         # holds across every concurrent job hitting this source.
