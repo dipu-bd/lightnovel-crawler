@@ -34,17 +34,10 @@ def main():
 
         _pylsp_main.main()
     elif is_frozen and len(sys.argv) <= 1:
-        # No CLI args: double-click launch — hide the console window then start the GUI.
-        # The exe is built as a console subsystem app (so CLI works properly),
-        # so we hide the console window here before opening the webview.
-        if sys.platform == "win32":
-            import ctypes
-
-            ctypes.windll.kernel32.FreeConsole()
-
+        # No CLI args: double-click launch — start the GUI
         from .server.webview import start
 
-        start()
+        start(manage_console=True)
     else:
         # Start main app
         from .app import app
