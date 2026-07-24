@@ -3,7 +3,7 @@ from __future__ import annotations
 from email.mime.text import MIMEText
 from functools import cached_property
 import logging
-from smtplib import SMTP
+from smtplib import SMTP, SMTPServerDisconnected
 from threading import Event, Thread
 
 from imap_tools import AND, MailBox, MailBoxUnencrypted, MailMessage, MailMessageFlags
@@ -29,7 +29,10 @@ class MailService:
         self._imap_lock: Event
         self._imap_listener: Thread
         self._smtp_lock = EventLock()
-        self.sender = ctx.config.mail.smtp_sender or ctx.config.mail.smtp_username
+
+    @property
+    def sender(self) -> str:
+        return ctx.config.mail.smtp_sender or ctx.config.mail.smtp_username
 
     def start(self):
         if ctx.config.mail.imap_enabled:
@@ -46,10 +49,8 @@ class MailService:
         self._smtp_lock.abort()
         if hasattr(self, "_imap_lock"):
             self._imap_lock.set()
-        if "server" in self.__dict__:
-            self.server.close()
-            self.__dict__.pop("server")
-        if hasattr(self, "_listener"):
+        self._drop_connection()
+        if hasattr(self, "_imap_listener"):
             self._imap_listener.join(timeout=5)
 
     @cached_property
@@ -65,7 +66,7 @@ class MailService:
             raise ServerErrors.smtp_server_unavailable.with_extra("missing config")
 
         logger.info("Preparing mail server...")
-        server = SMTP(smtp_server, smtp_port)
+        server = SMTP(smtp_server, smtp_port, timeout=30)
         try:
             if ctx.config.mail.smtp_starttls:
                 server.starttls()
@@ -75,6 +76,28 @@ class MailService:
         except Exception as e:
             server.close()
             raise ServerErrors.smtp_server_login_fail from e
+
+    def _drop_connection(self) -> None:
+        server = self.__dict__.pop("server", None)
+        if server is not None:
+            try:
+                server.close()
+            except Exception:
+                pass
+
+    def _ensure_connection(self) -> SMTP:
+        # SMTP servers drop idle connections; probe the cached one and
+        # reconnect if it went stale
+        server = self.server
+        try:
+            status, _ = server.noop()
+        except Exception:
+            status = -1
+        if status != 250:
+            logger.info("SMTP connection lost, reconnecting...")
+            self._drop_connection()
+            server = self.server
+        return server
 
     def send(
         self,
@@ -106,7 +129,12 @@ class MailService:
 
         try:
             with self._smtp_lock:
-                self.server.sendmail(msg["From"], [msg["To"]], msg.as_string())
+                server = self._ensure_connection()
+                try:
+                    server.sendmail(msg["From"], [msg["To"]], msg.as_string())
+                except SMTPServerDisconnected:
+                    self._drop_connection()
+                    self.server.sendmail(msg["From"], [msg["To"]], msg.as_string())
         except ServerError:
             raise
         except Exception as e:
