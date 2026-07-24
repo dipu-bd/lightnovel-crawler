@@ -12,7 +12,7 @@ from functools import cached_property
 from hashlib import sha256
 import logging
 from threading import Event
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, TypeVar
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, TypeVar
 
 import sqlmodel as sq
 
@@ -30,7 +30,11 @@ from ..enums import LanguageCode
 from ..exceptions import AbortedException, ServerErrors
 
 if TYPE_CHECKING:
-    from translator import TranslatorService
+    from translator import (
+        TranslateHtmlResponse,
+        TranslateTextResponse,
+        TranslatorService,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -77,16 +81,13 @@ class TranslationService:
     def detect_language(self, text: str) -> Optional[str]:
         """Locally detected ISO 639-1 code for `text`, or None when unknown.
         No engine quota and no event loop involved."""
-        from translator.detect import detect_language
+        from translator import detect_code
 
-        detection = detect_language(text)
-        return None if detection.language == "und" else detection.language
+        return detect_code(text)
 
     def _invoke(self, call: Callable[[], T]) -> T:
-        """Run an engine call, mapping package errors to ServerErrors."""
-        from pydantic import ValidationError
-        from translator.errors import ApiError
-        from translator.service import AbortedError
+        """Run an engine call, mapping the package's error taxonomy to ServerErrors."""
+        from translator import AbortedError, ApiError, InvalidRequestError
 
         try:
             return call()
@@ -100,11 +101,8 @@ class TranslationService:
             raise ServerErrors.translation_failure.with_extra(
                 f"{e.status_code}: {e.message}".strip()
             ) from e
-        except ValidationError as e:
-            first = e.errors()[0]
-            raise ServerErrors.translation_failure.with_extra(
-                f"{first.get('loc')}: {first.get('msg')}"
-            ) from e
+        except InvalidRequestError as e:
+            raise ServerErrors.translation_failure.with_extra(e.message) from e
 
     # ---------------------------------------------------------------------------------------------
     # Endpoint wrappers
@@ -119,7 +117,7 @@ class TranslationService:
         glossary: Optional[Dict[str, str]] = None,
         context: Optional[str] = None,
         signal: Optional[Event] = None,
-    ) -> Tuple[List[str], Optional[str], Dict[str, str], Optional[str]]:
+    ) -> "TranslateTextResponse":
         payload: Dict[str, Any] = {
             "texts": texts,
             "target_lang": _code(target),
@@ -129,18 +127,12 @@ class TranslationService:
             payload["source_lang"] = source
         if context:
             payload["context"] = context
-        data = self._invoke(
+        return self._invoke(
             lambda: self.engine.translate_text(
                 payload,
                 signal=signal,
                 timeout=ctx.config.translator.request_timeout,
             )
-        )
-        return (
-            data.translations,
-            data.detected_source_lang,
-            data.new_terms,
-            data.engine,
         )
 
     def _translate_html(
@@ -153,7 +145,7 @@ class TranslationService:
         context: Optional[Dict[str, str]] = None,
         extract_terms: bool = True,
         signal: Optional[Event] = None,
-    ) -> Tuple[str, Optional[str], Dict[str, str], List[str], Optional[str]]:
+    ) -> "TranslateHtmlResponse":
         payload: Dict[str, Any] = {
             "html": html,
             "target_lang": _code(target),
@@ -164,19 +156,12 @@ class TranslationService:
             payload["source_lang"] = source
         if context:
             payload["context"] = context
-        data = self._invoke(
+        return self._invoke(
             lambda: self.engine.translate_html(
                 payload,
                 signal=signal,
                 timeout=ctx.config.translator.request_timeout,
             )
-        )
-        return (
-            data.html,
-            data.detected_source_lang,
-            data.new_terms,
-            data.warnings,
-            data.engine,
         )
 
     # ---------------------------------------------------------------------------------------------
@@ -254,7 +239,7 @@ class TranslationService:
         source = _source_code(novel)
         glossary = self._load_glossary(novel.id, target)
 
-        translations, _, terms, engine = self._translate_texts(
+        result = self._translate_texts(
             [novel.title, novel.authors or ""],
             target,
             source=source,
@@ -262,12 +247,15 @@ class TranslationService:
             context="Web novel title and author names",
             signal=signal,
         )
+        translations = result.translations
+        terms = result.new_terms
+        engine = result.engine
         title = translations[0] if translations else novel.title
         authors = translations[1] if len(translations) > 1 else (novel.authors or "")
 
         synopsis = ""
         if novel.synopsis:
-            synopsis, _, syn_terms, _, _ = self._translate_html(
+            syn = self._translate_html(
                 novel.synopsis,
                 target,
                 source=source,
@@ -275,7 +263,8 @@ class TranslationService:
                 context={"novel_title": title},
                 signal=signal,
             )
-            terms = {**terms, **syn_terms}
+            synopsis = syn.html
+            terms = {**terms, **syn.new_terms}
 
         with ctx.db.session() as sess:
             sess.add(
@@ -302,14 +291,16 @@ class TranslationService:
             return
 
         glossary = self._load_glossary(volume.novel_id, target)
-        translations, _, terms, engine = self._translate_texts(
+        result = self._translate_texts(
             [volume.title],
             target,
             glossary=glossary,
             context="Web novel volume title",
             signal=signal,
         )
-        title = translations[0] if translations else volume.title
+        terms = result.new_terms
+        engine = result.engine
+        title = result.translations[0] if result.translations else volume.title
 
         with ctx.db.session() as sess:
             sess.add(
@@ -351,7 +342,7 @@ class TranslationService:
         if tail:
             context["previous_chapter_tail"] = tail
 
-        translated, _, terms, warnings, engine = self._translate_html(
+        body = self._translate_html(
             content,
             target,
             source=source,
@@ -359,10 +350,13 @@ class TranslationService:
             context=context,
             signal=signal,
         )
-        if warnings:
-            logger.info(f"translate/html warnings (chapter {chapter.serial}): {warnings}")
+        translated = body.html
+        terms = body.new_terms
+        engine = body.engine
+        if body.warnings:
+            logger.info(f"translate/html warnings (chapter {chapter.serial}): {body.warnings}")
 
-        titles, _, title_terms, _ = self._translate_texts(
+        title_result = self._translate_texts(
             [chapter.title],
             target,
             source=source,
@@ -370,7 +364,8 @@ class TranslationService:
             context="Web novel chapter title",
             signal=signal,
         )
-        title = titles[0] if titles else chapter.title
+        title_terms = title_result.new_terms
+        title = title_result.translations[0] if title_result.translations else chapter.title
 
         with ctx.db.session() as sess:
             if not translation:
