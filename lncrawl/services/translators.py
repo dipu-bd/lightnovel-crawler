@@ -1,18 +1,19 @@
-"""Client for the external `translator` HTTP service.
+"""Novel translation on top of the embedded `lncrawl-translator` package.
 
-Replaces the former in-process scraper backends. All translation now happens in the
-Dockerized translator service (stateless, multi-engine, glossary-aware). This service owns
-the glossary loop: it loads a novel's stored glossary, sends it with every request, and
-merges the `new_terms` the service returns back into storage so names stay consistent
-across chapters.
+Translation runs in-process: the package's `TranslatorService` (stateless,
+multi-engine, glossary-aware) is owned lazily by this service, and its
+dashboard is mounted into the server API. This service owns the glossary
+loop: it loads a novel's stored glossary, sends it with every request, and
+merges the `new_terms` the engine returns back into storage so names stay
+consistent across chapters.
 """
 
+from functools import cached_property
 from hashlib import sha256
 import logging
 from threading import Event
-from typing import Any, Dict, List, NoReturn, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple, TypeVar
 
-import requests
 import sqlmodel as sq
 
 from ..context import ctx
@@ -28,7 +29,12 @@ from ..dao import (
 from ..enums import LanguageCode
 from ..exceptions import AbortedException, ServerErrors
 
+if TYPE_CHECKING:
+    from translator import TranslatorService
+
 logger = logging.getLogger(__name__)
+
+T = TypeVar("T")
 
 # How many characters of the previous translated chapter to pass as continuity context.
 _PREV_TAIL_CHARS = 500
@@ -51,54 +57,54 @@ def _source_code(novel: Novel) -> Optional[str]:
 
 
 class TranslationService:
+    @cached_property
+    def engine(self) -> "TranslatorService":
+        """The embedded translator: engines, routing, and rate limits run
+        in-process on the package's own event-loop thread. Its config file
+        lives in the app data dir and is edited via the mounted dashboard."""
+        from translator import TranslatorService
+
+        return TranslatorService(config_path=ctx.config.translator.config_file)
+
     def close(self) -> None:
-        # Stateless HTTP client; nothing to close. Kept for the service interface.
-        pass
+        if "engine" in self.__dict__:
+            self.engine.close()
 
     # ---------------------------------------------------------------------------------------------
-    # HTTP plumbing
+    # Engine plumbing
     # ---------------------------------------------------------------------------------------------
 
-    def _request(
-        self,
-        path: str,
-        payload: Dict[str, Any],
-        signal: Optional[Event],
-    ) -> Dict[str, Any]:
-        url = f"{ctx.config.translator.api_url}{path}"
-        timeout = (15, ctx.config.translator.request_timeout)
-        headers = {"Accept": "application/json"}
-        try:
-            with ctx.http.session(signal) as sess:
-                resp = sess.post(url, json=payload, headers=headers, timeout=timeout)
-                return resp.json()
-        except AbortedException:
-            raise
-        except requests.HTTPError as e:
-            self._raise_for_response(e)
-        except requests.RequestException as e:
-            raise ServerErrors.translation_service_unavailable.with_extra(str(e)) from e
+    def detect_language(self, text: str) -> Optional[str]:
+        """Locally detected ISO 639-1 code for `text`, or None when unknown.
+        No engine quota and no event loop involved."""
+        from translator.detect import detect_language
 
-    def _raise_for_response(self, e: requests.HTTPError) -> NoReturn:
-        resp = e.response
-        if resp is None:
-            raise ServerErrors.translation_failure.with_extra(str(e)) from e
-        detail: str = ""
-        retry: Any = None
+        detection = detect_language(text)
+        return None if detection.language == "und" else detection.language
+
+    def _invoke(self, call: Callable[[], T]) -> T:
+        """Run an engine call, mapping package errors to ServerErrors."""
+        from pydantic import ValidationError
+        from translator.errors import ApiError
+        from translator.service import AbortedError
+
         try:
-            body = resp.json() or {}
-            err = body.get("error") or {}
-            detail = err.get("message") or err.get("code") or str(body.get("detail") or "")
-            retry = err.get("retry_after_seconds")
-        except Exception:
-            detail = resp.text[:200]
-        if resp.status_code == 503:
-            retry = retry or resp.headers.get("Retry-After")
-            extra = f"retry after {retry}s" if retry else (detail or "all engines busy")
-            raise ServerErrors.translation_quota_exhausted.with_extra(extra) from e
-        raise ServerErrors.translation_failure.with_extra(
-            f"{resp.status_code}: {detail}".strip()
-        ) from e
+            return call()
+        except AbortedError as e:
+            raise AbortedException(str(e)) from e
+        except ApiError as e:
+            if e.status_code == 503:
+                retry = e.retry_after_seconds
+                extra = f"retry after {retry}s" if retry else (e.message or "all engines busy")
+                raise ServerErrors.translation_quota_exhausted.with_extra(extra) from e
+            raise ServerErrors.translation_failure.with_extra(
+                f"{e.status_code}: {e.message}".strip()
+            ) from e
+        except ValidationError as e:
+            first = e.errors()[0]
+            raise ServerErrors.translation_failure.with_extra(
+                f"{first.get('loc')}: {first.get('msg')}"
+            ) from e
 
     # ---------------------------------------------------------------------------------------------
     # Endpoint wrappers
@@ -123,12 +129,18 @@ class TranslationService:
             payload["source_lang"] = source
         if context:
             payload["context"] = context
-        data = self._request("/translate/text", payload, signal)
+        data = self._invoke(
+            lambda: self.engine.translate_text(
+                payload,
+                signal=signal,
+                timeout=ctx.config.translator.request_timeout,
+            )
+        )
         return (
-            data.get("translations") or [],
-            data.get("detected_source_lang"),
-            data.get("new_terms") or {},
-            data.get("engine"),
+            data.translations,
+            data.detected_source_lang,
+            data.new_terms,
+            data.engine,
         )
 
     def _translate_html(
@@ -152,13 +164,19 @@ class TranslationService:
             payload["source_lang"] = source
         if context:
             payload["context"] = context
-        data = self._request("/translate/html", payload, signal)
+        data = self._invoke(
+            lambda: self.engine.translate_html(
+                payload,
+                signal=signal,
+                timeout=ctx.config.translator.request_timeout,
+            )
+        )
         return (
-            data.get("html") or "",
-            data.get("detected_source_lang"),
-            data.get("new_terms") or {},
-            data.get("warnings") or [],
-            data.get("engine"),
+            data.html,
+            data.detected_source_lang,
+            data.new_terms,
+            data.warnings,
+            data.engine,
         )
 
     # ---------------------------------------------------------------------------------------------

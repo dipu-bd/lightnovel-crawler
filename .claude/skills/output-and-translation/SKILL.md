@@ -1,6 +1,6 @@
 ---
 name: output-and-translation
-description: Binder (e-book output formats) and Translator services — architecture and recipes for adding an output format or a translation backend. Use when working in services/binder/ or services/translators/.
+description: Binder (e-book output formats) and the Translation service — architecture and recipes for adding an output format or changing how novels are translated. Use when working in services/binder/ or services/translators.py.
 ---
 
 # Binder (`lncrawl/services/binder/`)
@@ -36,24 +36,33 @@ fallback. Options are built backend-agnostic as `(flag, value)` tuples and rende
 data dir, writes atomically, and transparently gzip-compresses text — chapter content on disk
 is compressed; always read it via `ctx.files.load_text(...)`.
 
-# Translator (`lncrawl/services/translators/`)
+# Translation (`lncrawl/services/translators.py`)
 
-`TranslationService` holds an **ordered** backend list — the order is the failover priority.
-`translate_*` methods try each available backend and return the first success; a backend that
-rate-limits (429) is temporarily benched. Chapter translation dedupes via a content hash and
-stores results through `ctx.files.save_text`.
+Translation runs **in-process** via the external `lncrawl-translator` package (imported as
+`translator`; sibling repo). `ctx.translator` (`TranslationService`) owns the glossary loop
+and persistence; the package owns engines, routing lanes, rate limits, retries, and failover.
 
-**Base classes** (`_base.py`): `BackendBase` (abstract `is_enabled(language)` +
-`translate_batch`; provides `translate_html` which splits body-level nodes) and
-`ChunkedBackendBase` (packs texts into chunks with a separator, fans out through a
-`TaskManager`; subclasses implement single-`translate`). Most real backends extend the
-chunked base.
+- **`ctx.translator.engine`** — a lazily constructed `translator.TranslatorService`: a sync
+  facade running the async engine router on its own event-loop thread. Its YAML config path
+  comes from `ctx.config.translator.config_file` (app data dir); engines/keys/routing are
+  edited through the mounted dashboard, not lncrawl settings. `close()` is guarded in
+  `ctx.destroy()`.
+- **Dashboard** — the package's web UI is mounted at `/api/translator` by an admin-gated
+  ASGI wrapper (`server/api/translator.py`, `TranslatorDashboard`): Bearer/`?token=`/cookie
+  auth, token→cookie redirect dance, trailing-slash enforcement. It is a raw ASGI mount —
+  app-level exception handlers and router security do NOT apply inside it.
+- **Calls** — `_translate_texts`/`_translate_html` build request dicts and go through
+  `_invoke`, which maps package errors to `ServerErrors`: `ApiError` 503 →
+  `translation_quota_exhausted`, other `ApiError`/`ValidationError` → `translation_failure`,
+  facade `AbortedError` → `AbortedException`. The job `signal` and
+  `ctx.config.translator.request_timeout` are passed to every engine call.
+- **Glossary loop** — `translate_novel/volume/chapter` load the stored `NovelGlossary`,
+  send it with each request, and merge returned `new_terms` back. Chapter translation
+  dedupes via a content hash and stores results through `ctx.files.save_text`.
+- **Detection** — `ctx.translator.detect_language(text)` (local, no quota, no event loop)
+  returns an ISO 639-1 code or None. `fetch_novel`/`fetch_chapter` use it to fill
+  `Novel.language` when the source doesn't provide one; values are normalized via
+  `_normalize_language` in `services/crawler.py` (drops `multi`/unknown, maps `zh-cn`→`zh`).
 
-**Recipe — new backend**:
-1. Create `backend_<name>.py` subclassing `ChunkedBackendBase`.
-2. Implement `is_enabled(language)` (usually a language-map membership test) and
-   `translate(text, target, signal=None)` doing HTTP via `with ctx.http.session(signal) as
-   sess:` — all backends share the single `FetchService` scraper behind its `EventLock`, and
-   the signal participates in cancellation.
-3. Insert it into the `_backends` list in `service.py` at the desired failover position.
-   Chunking, task management, failover, and `close()` come free.
+**Changing engines/prompts/chunking** happens in the `lncrawl-translator` package (sibling
+repo), not here — bump the dependency version in `pyproject.toml` to pick up a release.

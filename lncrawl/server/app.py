@@ -3,15 +3,16 @@ from contextlib import asynccontextmanager
 import mimetypes
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 
 from ..assets.version import get_version
 from ..context import ctx
 from ..exceptions import ServerErrors, get_exception_handlers
 from .api import router as api
+from .api.translator import TranslatorDashboard
 from .middleware.staticfiles import CustomStaticFiles, StaticFilesGuard
 
 web_dir = (Path(__file__).parent / "web").absolute()
@@ -78,6 +79,18 @@ if ctx.config.server.enable_browse_route:
 # Add APIs
 app.include_router(api, prefix="/api")
 
+# Mount the embedded translator dashboard (admin-gated ASGI wrapper)
+app.mount("/api/translator", TranslatorDashboard(), name="translator-dashboard")
+
+
+# The dashboard's relative asset URLs only resolve under the prefix with a
+# trailing slash; the SPA catch-all would otherwise swallow the bare path.
+@app.get("/api/translator", include_in_schema=False)
+async def translator_dashboard_root(request: Request) -> RedirectResponse:
+    query = str(request.url.query)
+    return RedirectResponse("/api/translator/" + (f"?{query}" if query else ""))
+
+
 # Mount static files
 app.mount("/static", CustomStaticFiles(), name="static")
 
@@ -98,6 +111,9 @@ async def health():
 # Mount frontend
 @app.get("/{fallback:path}", include_in_schema=False)
 async def serve_web(fallback: str):
+    # Unknown API paths must fail fast, not silently serve the SPA shell.
+    if fallback == "api" or fallback.startswith("api/"):
+        raise ServerErrors.not_found
     target_file = web_dir.joinpath(fallback)
     if not target_file.is_relative_to(web_dir):
         raise ServerErrors.not_found

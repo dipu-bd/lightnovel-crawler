@@ -116,9 +116,15 @@ class CrawlerService:
             novel.synopsis = model.synopsis
             novel.tags = model.tags or []
             novel.rtl = model.is_rtl or False
-            novel.language = _normalize_language(model.language or crawler.language)
             novel.volume_count = len(model.volumes)
             novel.chapter_count = len(model.chapters)
+
+            # detect novel language
+            sample = f"{model.title}\n{model.synopsis or ''}".strip()
+            language = ctx.translator.detect_language(sample)
+            if not language:
+                language = model.language or crawler.language
+            novel.language = _normalize_language(language)
 
             # update novel extra
             extra = dict(**novel.extra)
@@ -197,6 +203,15 @@ class CrawlerService:
 
             # save chapter content
             ctx.files.save_text(chapter.content_file, model.body)
+
+            # detect language from chapter (strong signal)
+            language = ctx.translator.detect_language(model.body)
+            language = _normalize_language(language)
+            if language and novel.language != language:
+                novel.language = language
+                with ctx.db.session() as sess:
+                    sess.merge(novel)
+                    sess.commit()
 
             # save chapter images
             ctx.images.sync(chapter, model.images)

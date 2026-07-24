@@ -19,7 +19,7 @@ starting work in its area** — they hold the recipes and invariants this file o
 | `add-api-endpoint` | Server routes, security, DTOs, pagination, errors (`server/`) |
 | `add-job-type` | Job kinds, handlers, scheduler behavior (`services/scheduler/`, `services/jobs/`) |
 | `db-migration` | DAO model changes and Alembic migrations (`dao/`, `migrations/`) |
-| `output-and-translation` | Output formats (binder) and translator backends |
+| `output-and-translation` | Output formats (binder) and the translation service |
 | `releasing` | Version bumps, the tag-triggered release pipeline, CI workflows |
 
 ## Build & development commands
@@ -130,10 +130,11 @@ output synced from lncrawl-web — never hand-edit. Recipes: **`add-api-endpoint
 ### Output & translation
 
 **Binder** ([services/binder/](lncrawl/services/binder/)): EPUB/JSON/text native; every other
-format converts from EPUB via Calibre (local exe or remote API). **Translator**
-([services/translators/](lncrawl/services/translators/)): ordered backend list = failover
-priority; all backends share `ctx.http.session(signal)`. Recipes:
-**`output-and-translation` skill**.
+format converts from EPUB via Calibre (local exe or remote API). **Translation**
+([services/translators.py](lncrawl/services/translators.py)): in-process via the external
+`lncrawl-translator` package — lncrawl owns the glossary loop and persistence, the package
+owns engines/routing/failover; its dashboard is mounted admin-gated at `/api/translator`.
+Recipes: **`output-and-translation` skill**.
 
 ### Configuration
 

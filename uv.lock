@@ -1217,6 +1217,15 @@ wheels = [
 ]
 
 [[package]]
+name = "eval-type-backport"
+version = "0.4.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/1c/15/273a4baf8248d6d76220723c3caf039d283774b31a7c46ba686120145b76/eval_type_backport-0.4.0.tar.gz", hash = "sha256:8397d25e6524c2e67b9576bb0636be27dea2192017711220c534ec2de921e9b0", size = 10260, upload-time = "2026-06-02T13:22:06.059Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/50/a7/bb99bf5e6f78736ddb53480f2c3ff3702ffe2196a7c5e1661c03081d398e/eval_type_backport-0.4.0-py3-none-any.whl", hash = "sha256:ad5e2a8db71b6696a56eafb938b0f5a337d3217f256b8e158b469422b4772b20", size = 6432, upload-time = "2026-06-02T13:22:04.827Z" },
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.3.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2262,6 +2271,15 @@ wheels = [
 ]
 
 [[package]]
+name = "langdetect"
+version = "1.0.9"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0e/72/a3add0e4eec4eb9e2569554f7c70f4a3c27712f40e3284d483e88094cc0e/langdetect-1.0.9.tar.gz", hash = "sha256:cbc1fef89f8d062739774bd51eda3da3274006b3661d199c2655f6b3f6d605a0", size = 981474, upload-time = "2021-05-07T07:54:13.562Z" }
+
+[[package]]
 name = "lightnovel-crawler"
 source = { editable = "." }
 dependencies = [
@@ -2281,6 +2299,7 @@ dependencies = [
     { name = "humanize", version = "4.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "imap-tools" },
     { name = "lncrawl-scraper", extra = ["all"] },
+    { name = "lncrawl-translator" },
     { name = "lxml" },
     { name = "nodriver" },
     { name = "passlib", extra = ["argon2"] },
@@ -2375,6 +2394,7 @@ requires-dist = [
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
     { name = "lncrawl-scraper", extras = ["all"], specifier = ">=0.2.5" },
+    { name = "lncrawl-translator", specifier = ">=0.1.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "nodriver", specifier = ">=0.50" },
     { name = "passlib", extras = ["argon2"], specifier = ">=1.7.0" },
@@ -2451,6 +2471,25 @@ all = [
     { name = "curl-cffi", version = "0.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "pillow", version = "11.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "pillow", version = "12.2.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+]
+
+[[package]]
+name = "lncrawl-translator"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "eval-type-backport", marker = "python_full_version < '3.10'" },
+    { name = "fastapi", version = "0.128.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "fastapi", version = "0.138.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "httpx" },
+    { name = "langdetect" },
+    { name = "pydantic" },
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5f/4a/f682ea0ac7b9af1e618c3102d5e4919680d55afa9044290f1d80b1b2f37f/lncrawl_translator-0.1.1.tar.gz", hash = "sha256:754db3b27616532a443af8a27414bb84ae394f0cf82e6811097721e286cbf418", size = 131321, upload-time = "2026-07-24T12:06:38.639Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c7/b1/706b771625b8330614539f6ea93d36cc246070157b8a614d2ef0b12c9c42/lncrawl_translator-0.1.1-py3-none-any.whl", hash = "sha256:a06d458d791d1654cf0699334f29a3595374109cda73cf25f5a3041ce8e4b459", size = 153776, upload-time = "2026-07-24T12:06:36.97Z" },
 ]
 
 [[package]]

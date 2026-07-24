@@ -325,20 +325,15 @@ class AppConfig(_Section):
 class TranslatorConfig(_Section):
     section = "translator"
 
-    @property
-    def api_url(self) -> str:
-        """Translator API URL.
+    @cached_property
+    def config_file(self) -> str:
+        """Translator Config File.
 
-        Base URL of the `translator` service (no trailing slash). When running the full
-        docker compose stack use `http://translator:8184`; for a host-mapped service the
-        default is `http://localhost:8184`. Providers, API keys, engines, and routing are
-        configured in the translator's own dashboard, not here.
+        Path of the embedded translator's YAML config (providers, API keys, engines,
+        routing). Managed through the translator dashboard; the file is created on
+        first change. Default lives in the app data directory.
         """
-        return self._get("api_url", "http://localhost:8184").rstrip("/")
-
-    @api_url.setter
-    def api_url(self, v: str) -> None:
-        self._set("api_url", v.rstrip("/"))
+        return str(APP_DIR / "translator.yml")
 
     @property
     def request_timeout(self) -> int:
