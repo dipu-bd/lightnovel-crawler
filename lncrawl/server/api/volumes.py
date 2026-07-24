@@ -21,7 +21,7 @@ def get_volume(
     ),
 ) -> Volume:
     ctx.activity.record(user.id, ActivityType.VOLUME, volume_id)
-    return ctx.volumes.get(volume_id)
+    return ctx.volumes.get_translated(volume_id, language)
 
 
 @router.get("/{volume_id}/fetch", summary="Create a job to fetch volume")

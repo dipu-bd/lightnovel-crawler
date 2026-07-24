@@ -770,6 +770,20 @@ class ServerConfig(_Section):
         self._set("token_expiry_minutes", v)
 
     @property
+    def session_max_lifetime(self) -> int:
+        """Maximum Session Lifetime.
+
+        Absolute cap on how long a single sign-in can be kept alive by refreshing,
+        in minutes, regardless of activity. Once passed the client must sign in again.
+        Set to `0` to disable the cap. Default is 30 days (`43200` minutes).
+        """
+        return self._get("session_max_lifetime_minutes", lambda: 30 * 24 * 60)
+
+    @session_max_lifetime.setter
+    def session_max_lifetime(self, v: int) -> None:
+        self._set("session_max_lifetime_minutes", v)
+
+    @property
     def enable_browse_route(self) -> bool:
         """Enable Browse.
 

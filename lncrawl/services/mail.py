@@ -19,6 +19,18 @@ from ..utils.file_tools import format_size
 
 logger = logging.getLogger(__name__)
 
+
+def _header_safe(value: str, *, max_length: int = 998) -> str:
+    """Strip CR/LF and other control characters from a header value.
+
+    Reply threading reuses the incoming Subject / Message-ID verbatim; an RFC2047
+    encoded-word can decode to bytes with embedded newlines, which makes
+    `msg.as_string()` raise and (since the message is only flagged on success) wedges
+    the invite handler into an endless reprocess loop. Sanitizing keeps assembly safe.
+    """
+    cleaned = "".join(c for c in value if c == "\t" or (c >= " " and c != "\x7f"))
+    return cleaned.strip()[:max_length]
+
 _IMAP_BACKOFF_BASE = 5
 _IMAP_BACKOFF_MAX = 300
 _IMAP_MAX_RETRIES = 10
@@ -118,10 +130,12 @@ class MailService:
 
         # Create mail body
         msg = MIMEText(minified, "html")
-        msg["Subject"] = subject
+        msg["Subject"] = _header_safe(subject, max_length=200)
         msg["From"] = self.sender
         msg["To"] = email
 
+        in_reply_to = _header_safe(in_reply_to) if in_reply_to else None
+        references = _header_safe(references) if references else None
         if in_reply_to:
             msg["In-Reply-To"] = in_reply_to
             chain = f"{references} {in_reply_to}".strip() if references else in_reply_to

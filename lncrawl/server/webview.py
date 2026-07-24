@@ -130,7 +130,12 @@ def _start_server(host: str, port: int) -> None:
     server(host=host, port=port)
 
 
-def _wait_for_ready(host: str, port: int, server_error: dict) -> None:
+def _wait_for_ready(
+    host: str,
+    port: int,
+    server_error: dict,
+    server_thread: Thread,
+) -> None:
     """Block until the server answers /health, or raise with a clear reason.
 
     A /health 200 is only served after the lifespan's ctx.setup() completes, so
@@ -156,6 +161,15 @@ def _wait_for_ready(host: str, port: int, server_error: dict) -> None:
         except Exception as e:
             last_error = e
 
+        # uvicorn swallows a lifespan-startup failure and returns without raising, so the
+        # thread ends with no error set. Fail fast instead of polling a dead port for the
+        # full timeout.
+        if not server_thread.is_alive():
+            _line()
+            raise RuntimeError(
+                "The server stopped before becoming ready; check the log above for the cause."
+            ) from last_error
+
         print(f"\r  Starting the server {_SPINNER[frame % len(_SPINNER)]} ", end="", flush=True)
         frame += 1
         time.sleep(0.2)
@@ -169,7 +183,7 @@ def _wait_for_ready(host: str, port: int, server_error: dict) -> None:
 def _build_url(host: str, port: int) -> str:
     token = ctx.users.generate_token(
         user=ctx.users.get_admin(),
-        expiry_minutes=100 * 365 * 24 * 60,  # 100 years
+        expiry_minutes=1 * 365 * 24 * 60,  # 1 year
         scopes=[UserRole.LOCAL],
     )
     return f"http://{host}:{port}/?authToken={token}"
@@ -289,10 +303,11 @@ def start(manage_console: bool = False) -> None:
             server_error["error"] = e
             logger.exception("Server thread crashed")
 
-    Thread(daemon=True, name="server", target=_run_server).start()
+    server_thread = Thread(daemon=True, name="server", target=_run_server)
+    server_thread.start()
 
     try:
-        _wait_for_ready(host, port, server_error)
+        _wait_for_ready(host, port, server_error, server_thread)
         url = _build_url(host, port)
     except Exception as e:
         _fatal("The server failed to start.", e)

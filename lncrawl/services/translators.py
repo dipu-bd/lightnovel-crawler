@@ -11,7 +11,7 @@ consistent across chapters.
 from functools import cached_property
 from hashlib import sha256
 import logging
-from threading import Event
+from threading import Event, Lock
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, TypeVar
 
 import sqlmodel as sq
@@ -42,6 +42,22 @@ T = TypeVar("T")
 
 # How many characters of the previous translated chapter to pass as continuity context.
 _PREV_TAIL_CHARS = 500
+
+# Serializes read-modify-write of a glossary row per (novel_id, language). Concurrent
+# chapter/volume translation jobs of the same novel+language would otherwise both insert
+# the first row (IntegrityError on the UniqueConstraint) or clobber each other's terms.
+_glossary_locks: Dict[str, Lock] = {}
+_glossary_locks_guard = Lock()
+
+
+def _glossary_lock(novel_id: str, language: str) -> Lock:
+    key = f"{novel_id}:{language}"
+    with _glossary_locks_guard:
+        lock = _glossary_locks.get(key)
+        if lock is None:
+            lock = Lock()
+            _glossary_locks[key] = lock
+        return lock
 
 
 def _code(lang: Any) -> str:
@@ -182,7 +198,7 @@ class TranslationService:
         if not new_terms:
             return
         language = _code(target)
-        with ctx.db.session() as sess:
+        with _glossary_lock(novel_id, language), ctx.db.session() as sess:
             row = sess.exec(
                 sq.select(NovelGlossary).where(
                     sq.col(NovelGlossary.novel_id) == novel_id,

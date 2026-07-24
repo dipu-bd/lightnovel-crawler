@@ -25,26 +25,41 @@ class ArtifactService:
     ) -> Paginated[Artifact]:
         with ctx.db.session() as sess:
             stmt = sq.select(Artifact)
+            cnt = sq.select(sq.func.count()).select_from(Artifact)
 
             # Apply filters
             if novel_id:
                 stmt = stmt.where(Artifact.novel_id == novel_id)
+                cnt = cnt.where(Artifact.novel_id == novel_id)
+
             if user_id:
                 stmt = stmt.where(Artifact.user_id == user_id)
+                cnt = cnt.where(Artifact.user_id == user_id)
+
             if job_id:
                 stmt = stmt.where(Artifact.job_id == job_id)
+                cnt = cnt.where(Artifact.job_id == job_id)
+
             if format:
                 stmt = stmt.where(Artifact.format == format)
+                cnt = cnt.where(Artifact.format == format)
+
             if language:
                 stmt = stmt.where(Artifact.language == language)
+                cnt = cnt.where(Artifact.language == language)
+
             if volume is not None:
                 stmt = stmt.where(Artifact.volume == volume)
+                cnt = cnt.where(Artifact.volume == volume)
 
             # Apply sorting
             stmt = stmt.order_by(sq.desc(Artifact.updated_at))
 
-            total = sess.exec(sq.select(sq.func.count()).select_from(Artifact)).one()
-            items = sess.exec(stmt.offset(offset).limit(limit)).all()
+            stmt = stmt.offset(offset)
+            stmt = stmt.limit(limit)
+
+            items = sess.exec(stmt).all()
+            total = sess.exec(cnt).one()
 
             return Paginated(
                 total=total,

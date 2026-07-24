@@ -11,7 +11,7 @@ import sqlmodel as sq
 
 from ..context import ctx
 from ..dao import NotificationItem, User, UserRole, UserTier, UserToken
-from ..exceptions import ServerErrors
+from ..exceptions import ServerError, ServerErrors
 from ..server.models import (
     CreateRequest,
     LoginRequest,
@@ -96,6 +96,7 @@ class UserService:
         payload = {
             "sub": user.id,
             "scopes": list(token_scopes),
+            "auth_time": int(datetime.now(timezone.utc).timestamp()),
         }
         return self.encode_token(payload, expiry_minutes)
 
@@ -104,11 +105,35 @@ class UserService:
         user_id = payload.get("sub")
         if not user_id:
             return None
-        payload = {
+
+        # Absolute session cap: stop sliding once the original sign-in is too old, so a
+        # leaked token cannot be kept alive forever by periodically calling /me.
+        auth_time = payload.get("auth_time")
+        max_lifetime = ctx.config.server.session_max_lifetime
+        if auth_time and max_lifetime:
+            age_minutes = (datetime.now(timezone.utc).timestamp() - auth_time) / 60
+            if age_minutes > max_lifetime:
+                return None
+
+        # Re-derive role/tier from the live user so a demotion or deactivation takes
+        # effect on the next refresh instead of being frozen at sign-in time. Non-DB
+        # scopes granted at token creation (e.g. LOCAL) are preserved.
+        try:
+            user = self.get(user_id)
+        except ServerError:
+            return None
+        if not user.is_active:
+            return None
+        prior_scopes = set(payload.get("scopes", []))
+        token_scopes: set[Any] = {s for s in prior_scopes if s == UserRole.LOCAL}
+        token_scopes.add(user.role)
+        token_scopes.add(user.tier)
+        new_payload = {
             "sub": user_id,
-            "scopes": payload.get("scopes", []),
+            "scopes": list(token_scopes),
+            "auth_time": auth_time,
         }
-        return self.encode_token(payload)
+        return self.encode_token(new_payload)
 
     def verify_token(self, token: str, required_scopes: List[str] = []) -> User:
         payload = self.decode_token(token)
