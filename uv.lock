@@ -2394,7 +2394,7 @@ requires-dist = [
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
     { name = "lncrawl-scraper", extras = ["all"], specifier = ">=0.2.5" },
-    { name = "lncrawl-translator", specifier = ">=0.1.1" },
+    { name = "lncrawl-translator", specifier = ">=0.1.3" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "nodriver", specifier = ">=0.50" },
     { name = "passlib", extras = ["argon2"], specifier = ">=1.7.0" },
@@ -2475,7 +2475,7 @@ all = [
 
 [[package]]
 name = "lncrawl-translator"
-version = "0.1.1"
+version = "0.1.3"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -2487,9 +2487,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5f/4a/f682ea0ac7b9af1e618c3102d5e4919680d55afa9044290f1d80b1b2f37f/lncrawl_translator-0.1.1.tar.gz", hash = "sha256:754db3b27616532a443af8a27414bb84ae394f0cf82e6811097721e286cbf418", size = 131321, upload-time = "2026-07-24T12:06:38.639Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cf/3c/c58da493ef94a2dc6bf22fb72d8a38905d518c67764e9b0beec3d895412e/lncrawl_translator-0.1.3.tar.gz", hash = "sha256:4af84973eee6fef44716b53ae698aeacd26e86024160e0a42f441aaf8620076d", size = 132089, upload-time = "2026-07-24T16:15:36.011Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c7/b1/706b771625b8330614539f6ea93d36cc246070157b8a614d2ef0b12c9c42/lncrawl_translator-0.1.1-py3-none-any.whl", hash = "sha256:a06d458d791d1654cf0699334f29a3595374109cda73cf25f5a3041ce8e4b459", size = 153776, upload-time = "2026-07-24T12:06:36.97Z" },
+    { url = "https://files.pythonhosted.org/packages/61/b9/992b0a4d0feeefcd3e061cd0bbf70ee63789ab041151b47ed21b96dfc883/lncrawl_translator-0.1.3-py3-none-any.whl", hash = "sha256:2215c1b9235ceb7b28528ff715450726ae0db03c006ec8b7ee6254b4a09653a7", size = 154578, upload-time = "2026-07-24T16:15:34.503Z" },
 ]
 
 [[package]]

@@ -18,11 +18,13 @@ basic_auth = HTTPBasic(auto_error=False)
 bearer_auth = HTTPBearer(auto_error=False)
 
 
-def ensure_user(
-    security_scopes: SecurityScopes,
-    basic: Optional[HTTPBasicCredentials] = Security(basic_auth),
-    bearer: Optional[HTTPAuthorizationCredentials] = Security(bearer_auth),
+def authenticate(
+    basic: Optional[HTTPBasicCredentials],
+    bearer: Optional[HTTPAuthorizationCredentials],
+    scopes: list[str],
 ) -> User:
+    """Resolve a user from parsed Basic/Bearer credentials. Raises ServerErrors
+    on missing credentials or an inactive user; usable outside FastAPI's DI."""
     if basic:
         login = LoginRequest(
             email=basic.username,
@@ -30,13 +32,20 @@ def ensure_user(
         )
         user = ctx.users.verify(login)
     elif bearer:
-        required_scopes = security_scopes.scopes
-        user = ctx.users.verify_token(bearer.credentials, required_scopes)
+        user = ctx.users.verify_token(bearer.credentials, scopes)
     else:
         raise ServerErrors.unauthorized
     if not user.is_active:
         raise ServerErrors.inactive_user
     return user
+
+
+def ensure_user(
+    security_scopes: SecurityScopes,
+    basic: Optional[HTTPBasicCredentials] = Security(basic_auth),
+    bearer: Optional[HTTPAuthorizationCredentials] = Security(bearer_auth),
+) -> User:
+    return authenticate(basic, bearer, security_scopes.scopes)
 
 
 def ensure_admin(
