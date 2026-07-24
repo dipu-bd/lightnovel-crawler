@@ -7,9 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [4.13.0] - 2026-07-25
+
 ### Added
 
+- **In-process translation engine** — the built-in translator backends (Google/Bing/Baidu/Microsoft/Lingva) are replaced by the external `lncrawl-translator` package run in-process, giving multi-engine routing and failover managed from an admin-gated dashboard mounted at `/api/translator`. New config: a `translator.enabled` master switch to turn the feature off, plus `translator.request_timeout` and `translator.config_file`
+- **Novel glossary** — a per-novel, per-language translation glossary (new `add_novel_glossary_table` migration) is sent with every request and merged back from the engine so names stay consistent across chapters; manageable via the API and kept when a translation is deleted
 - **Single-volume artifacts** — `POST /api/jobs/create/make-artifacts` accepts an optional `volume` (volume serial number) to build an e-book covering just that volume; artifacts record the volume in a new `volume` column (new `artifact_volume_column` migration) and can be filtered by it via `GET /api/artifacts`. Whole-novel listings (`list_latest`/novel page/download emails) still show only full-novel artifacts
+- **Per-translation delete** — remove a single language's translation of a novel without touching the others (the glossary is preserved)
+- **Translated titles & volume filtering** — `list_latest`/`get_latest` support a volume filter, and the chapter/volume detail endpoints accept a `language` query param to return translated titles
+- **Library favorites** — favorite a library and list favorites (new `library_favorites` migration)
+- **Reading history page** — new endpoints and response models surface reading stats and continue-reading
+- **Basic-tier translation** — single-novel translation jobs are available to the basic tier
+- **Automatic novel language** — a novel's language is detected and set while crawling
+
+### Changed
+
+- **Per-source request rate limiting** — `request_concurrency` and the rate knob are merged into a single per-source `request_rate_limit`, now enforced across every concurrent job hitting a source; `FetchService` uses one scraper instance per thread
+- **Resilient desktop webview startup** — startup is reworked for a smoother experience: readiness is gated on `/health`, with a fail-fast path when the server exits early and a system-browser fallback
+- **Faster CLI startup** — the FastAPI import is deferred off the crawler/source import path
+- **Sliding sessions** — the current session is kept alive via a refresh token on `/me`, now with an absolute cap (new `server.session_max_lifetime`, default 30 days) and role/tier re-derived from the live user on each refresh
+- **Translator dashboard proxying** — proxied via base-href injection instead of URL rewriting; only the translator API is admin-gated
+
+### Fixed
+
+- **SMTP** — reconnect stale connections before sending mail
+- **Glossary merge race** — concurrent translation jobs of the same novel no longer collide on the glossary unique constraint or drop each other's terms
+- **Invite reply loop** — the incoming Subject/Message-ID reused for threaded invite replies are sanitized, so a crafted email can no longer wedge the invite handler into an endless reprocess loop
+- **Artifact listing count** — the paginated total now applies the same filters as the results, fixing page counts
+- **Source crawlers** — migrated many sources to the declarative `request_rate_limit` attribute
 
 ## [4.12.0] - 2026-07-14
 
