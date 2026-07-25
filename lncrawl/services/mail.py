@@ -31,6 +31,7 @@ def _header_safe(value: str, *, max_length: int = 998) -> str:
     cleaned = "".join(c for c in value if c == "\t" or (c >= " " and c != "\x7f"))
     return cleaned.strip()[:max_length]
 
+
 _IMAP_BACKOFF_BASE = 5
 _IMAP_BACKOFF_MAX = 300
 _IMAP_MAX_RETRIES = 10
