@@ -53,6 +53,7 @@ def build_command():
 def gather_packages():
     packages = [
         "pylsp",
+        "translator",
     ]
     return [f"--collect-all={pkg}" for pkg in packages]
 
