@@ -77,7 +77,7 @@ class LitnetCrawler(LegacyCrawler):
             vol_id = len(self.chapters) // 100 + 1
             volumes.add(vol_id)
 
-            abs_url = self.last_soup_url.replace("/en/book/", "/en/reader/")
+            abs_url = self.last_url.replace("/en/book/", "/en/reader/")
             chap_url = abs_url + ("?c=%s" % a.attrs["value"])
             self.chapters.append(
                 Chapter(id=chap_id, volume=1, url=chap_url, chapter_id=a.attrs["value"])

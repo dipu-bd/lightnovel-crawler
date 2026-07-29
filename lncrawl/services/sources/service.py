@@ -7,7 +7,7 @@ import traceback
 from typing import TYPE_CHECKING, Dict, List, Optional, Type
 
 if TYPE_CHECKING:
-    from scraper import SharedLimiter
+    from scraper import SharedState
 
 from ...context import ctx
 from ...core import Crawler
@@ -40,7 +40,7 @@ class Sources:
         self.crawlers: Dict[str, Type[Crawler]] = {}  # Map of cid -> crawler
         self.info: Dict[str, CrawlerInfo] = {}  # Map of cid -> crawler info
         self.sources: Dict[str, SourceItem] = {}  # Map of host -> source item
-        self._limiters: Dict[str, "SharedLimiter"] = {}
+        self._limiters: Dict[str, "SharedState"] = {}
         self._limiter_lock = threading.Lock()
 
     @property
@@ -255,15 +255,25 @@ class Sources:
         self.ensure_load()
         return self.get_crawler(self.get_domain(url))
 
-    def _domain_limiter(self, domain: str, constructor: Type[Crawler]) -> "SharedLimiter":
-        from scraper import SharedLimiter
+    def _domain_state(self, domain: str, constructor: Type[Crawler]) -> "SharedState":
+        """The scraper state every crawler on *domain* shares.
+
+        Broader than the limiter it replaces. Alongside the pacing clock it carries the
+        held address, the identity built on it, the referrer chain and what has been
+        learned about the origin — all of which describe the *site* rather than any one
+        crawler object. Two crawlers with separate state do not look like one visitor
+        going faster; they look like two who contradict each other.
+        """
+        from scraper import SharedState
+
+        from ...core.crawler import scraper_config
 
         with self._limiter_lock:
-            limiter = self._limiters.get(domain)
-            if limiter is None:
-                limiter = SharedLimiter.create(constructor.max_concurrency())
-                self._limiters[domain] = limiter
-            return limiter
+            state = self._limiters.get(domain)
+            if state is None:
+                state = SharedState.create(scraper_config(constructor.request_rate_limit))
+                self._limiters[domain] = state
+            return state
 
     def init_crawler(
         self,
@@ -277,18 +287,18 @@ class Sources:
 
         # create instance
         ctx.logger.debug(f"Creating crawler instance for {url}")
+        # The state is shared per domain, not per crawler: it is what keeps
+        # request_rate_limit holding across every concurrent job on this source. It
+        # has to be handed to the constructor, because the scraper builds its pacer
+        # and address lease from it.
         crawler = constructor(
             origin=source.url,
             parser=parser,
+            state=self._domain_state(domain, constructor),
         )
 
         if not crawler.language:
             crawler.language = source.language
-
-        # The instance keeps its own cookies and abort signal, but shares the
-        # domain's limiter (throttle clock + slots) so request_rate_limit
-        # holds across every concurrent job hitting this source.
-        crawler.scraper.adopt_limiter(self._domain_limiter(domain, constructor))
 
         crawler.initialize()
         return crawler

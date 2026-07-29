@@ -6,7 +6,10 @@ produces e-books and a **FastAPI server + web UI** that turns the same engine in
 multi-user job/library service, in one package. Both share a single in-process `AppContext`
 (`ctx`) singleton — concurrency is threads + asyncio inside one Python process. The web UI
 source lives in the sibling `lncrawl-web` repo; the HTTP `Scraper` lives in the external
-`lncrawl-scraper` package (imported as `scraper`).
+`lncrawl-scraper` package (imported as `scraper`) — **1.0+**, which is organised around a
+model of bot detection rather than a request pipeline. Two consequences show up here:
+the profile owns the header set and the User-Agent (never set one), and per-origin state
+is shared via a `SharedState` built per domain in `services/sources/service.py`.
 
 ## Skills
 

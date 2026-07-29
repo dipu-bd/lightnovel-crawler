@@ -76,7 +76,7 @@ class NoveLightCrawler(SoupTemplate):
             }
             query = urlencode(params, True)
             url = f"{self.scraper.origin}book/ajax/chapter-pagination?{query}"
-            data = self.scraper.get_json(url, headers)
+            data = self.scraper.get_json(url, headers=headers)
 
             chapters_soup = self.scraper.make_soup(data["html"])
             for a in reversed(chapters_soup.select("a[href^='/book/chapter/']")):

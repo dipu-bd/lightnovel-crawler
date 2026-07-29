@@ -11,12 +11,17 @@ class LegacyCrawler(BrowserTemplate):
         self,
         parser: Optional[str] = None,
         origin: Optional[str] = None,
+        **kwargs: Any,
     ) -> None:
         if isinstance(self.base_url, str):
             self.base_url = [self.base_url]
 
         self.home_url = self.base_url[0]
-        super().__init__(parser, origin)
+        # **kwargs rather than naming `state`: this class sits between ~200 legacy
+        # sources and `Crawler`, so anything the base constructor grows has to reach
+        # it, and a signature that lists them goes stale silently — the failure is a
+        # TypeError at crawler construction for every source below here.
+        super().__init__(parser, origin, **kwargs)
 
         self._lock = EventLock()
         self.novel_url: str = ""

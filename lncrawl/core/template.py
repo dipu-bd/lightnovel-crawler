@@ -77,7 +77,10 @@ class BrowserTemplate(CrawlerTemplate):
 
         def get_json(url: str, headers: MutableMapping = {}, **kwargs):
             try:
-                return origin_method(url, headers, **kwargs)
+                # `headers` is keyword-only on the scraper now. Passing it positionally
+                # landed it in **kwargs as a stray argument the transport ignored, so
+                # every override here silently dropped its headers.
+                return origin_method(url, headers=headers, **kwargs)
             except ScraperErrorGroup:
                 headers = CaseInsensitiveDict(headers or {})
                 url_js = json.dumps(url)
@@ -142,7 +145,7 @@ class BrowserTemplate(CrawlerTemplate):
             def override_visit(url: str) -> None:
                 _visit(url)
                 if browser.current_url:
-                    self.scraper.last_soup_url = browser.current_url
+                    self.scraper.last_url = browser.current_url
 
             setattr(browser, "close", override_close)
             setattr(browser, "visit", override_visit)

@@ -669,11 +669,20 @@ class CrawlerConfig(_Section):
         Comma-separated list of proxy URLs. Can also be set via the PROXY_URLS
         environment variable. Each entry is one of:
 
-        - A plain proxy URL (e.g. http://host:port or socks5://host:port/).
-        - A Tor entry in the form tor;<host>;<port>;<control_port>;<control_password>
-          which is expanded to a SOCKS5 Tor proxy with control-port support.
+        - A plain proxy URL (e.g. http://host:port or socks5://host:port/). Treated as
+          a datacenter address, which is the conservative reading: a datacenter range
+          is published, so it is never credited with reach it may not have.
+        - A tor-pool entry, torpool;<api_url>;<socks_url>;<token> — many Tor instances
+          behind one sticky port, reassigned on demand. This is the form that can
+          actually rotate. <socks_url> may be blank for socks5h://127.0.0.1:9250, and
+          <token> is a proxy-scoped token from the pool.
+        - A Tor entry, tor;<host>;<port>;<control_port>;<control_password>. The control
+          port is accepted and ignored: rotating by NEWNYM has a ~10s cooldown and no
+          say in which exit comes next, so it could land on the same relay. Use the
+          torpool form if you need rotation.
 
-        Blank entries are ignored.
+        Blank entries are ignored. With more than one entry, an address is leased per
+        origin and held — rotation happens on evidence, never on a timer.
         """
         return self._get("proxy_urls", os.getenv("PROXY_URLS") or "")
 

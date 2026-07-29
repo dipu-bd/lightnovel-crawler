@@ -3,7 +3,11 @@ from urllib.error import URLError
 
 from PIL import UnidentifiedImageError
 from requests.exceptions import RequestException
-from scraper.exceptions import AbortedException, CloudflareException
+
+# `AbortedException` is lncrawl's own exported name and stays as it is: the scraper
+# renamed the class to `Aborted` in 1.0, and chasing that through ~45 raise/except
+# sites would churn every job handler for no behavioural change.
+from scraper.exceptions import Aborted as AbortedException, Blocked, Poisoned
 from urllib3.exceptions import HTTPError
 
 if TYPE_CHECKING:
@@ -40,19 +44,26 @@ class FallbackToBrowser(Exception):
     pass
 
 
+# `Blocked` is the scraper's base for an attributed retrieval failure, so it covers
+# `Impassable` and `Exhausted` too. `Poisoned` means the page came back but is believed
+# to be decoy filler — a failure a caller must not treat as content.
 ScraperErrorGroup = (
     URLError,
     HTTPError,
-    CloudflareException,
+    Blocked,
+    Poisoned,
     RequestException,
     FallbackToBrowser,
     UnidentifiedImageError,
 )
 
+# Deliberately without `Poisoned`: the scraper raises it for a URL it has already
+# recorded as decoy, so asking again returns the same filler. Retrying is the one
+# response guaranteed not to help.
 RetryErrorGroup = (
     URLError,
     HTTPError,
-    CloudflareException,
+    Blocked,
     RequestException,
     UnidentifiedImageError,
 )

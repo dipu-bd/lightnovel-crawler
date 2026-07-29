@@ -2501,7 +2501,7 @@ requires-dist = [
     { name = "httpx", extras = ["brotli", "http2"], specifier = ">=0.27.0" },
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
-    { name = "lncrawl-scraper", extras = ["all"], specifier = ">=0.2.5" },
+    { name = "lncrawl-scraper", extras = ["all"], specifier = ">=1.0.0" },
     { name = "lncrawl-translator", specifier = ">=0.2.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "nodriver", specifier = ">=0.50" },
@@ -2558,25 +2558,26 @@ dev = [
 
 [[package]]
 name = "lncrawl-scraper"
-version = "0.2.5"
+version = "1.0.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
-    { name = "brotli" },
-    { name = "exejs" },
+    { name = "curl-cffi", version = "0.13.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "curl-cffi", version = "0.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "lxml" },
     { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version < '3.10'" },
     { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/78/71/9a13c278c6eff964ec5f3cf7dc1498f364c4bc3ad436d4c15cbcadd87e79/lncrawl_scraper-0.2.5.tar.gz", hash = "sha256:71b8b6843c1f27fefed111911008801813016117a8170947088cb64d963e9ed7", size = 178624, upload-time = "2026-07-23T15:36:21.934Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/4b/ba/07dfe637d1f686c8a68491e7a4c5dfab0f231540b91001934fe67527aec3/lncrawl_scraper-1.0.0.tar.gz", hash = "sha256:f07cdada9c2388766c7dc80874d200601c13fe09853b2c9d4026e2389e728edd", size = 938902, upload-time = "2026-07-29T19:04:02.566Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a0/89/ebcbfd00fa6d0199b3cd05500437bb91c0151d94a5a4585ca9a9a6b50484/lncrawl_scraper-0.2.5-py3-none-any.whl", hash = "sha256:09a4bd7b2108162123ec406cf2711414c077cbd36643c37ec0a4b577a1573218", size = 53701, upload-time = "2026-07-23T15:36:20.674Z" },
+    { url = "https://files.pythonhosted.org/packages/2e/ce/d44b7ffecc9cbe9877e2b5609768b10e6594f259324854802a0a695cf5c1/lncrawl_scraper-1.0.0-py3-none-any.whl", hash = "sha256:abd0e5870e2603cbe3a145eefc349be57006c001b081ca1ed196c9bc8b13b629", size = 107435, upload-time = "2026-07-29T19:04:01.127Z" },
 ]
 
 [package.optional-dependencies]
 all = [
-    { name = "curl-cffi", version = "0.13.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "curl-cffi", version = "0.15.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "cryptography", version = "47.0.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version <= '3.9'" },
+    { name = "cryptography", version = "49.0.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version > '3.9'" },
+    { name = "nodriver", marker = "python_full_version >= '3.10'" },
     { name = "pillow", version = "11.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "pillow", version = "12.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
 ]

@@ -6,8 +6,8 @@ import pickle
 from urllib.parse import urljoin, urlparse
 
 from requests.structures import CaseInsensitiveDict
-from scraper import ScraperEngine, default_config
-from scraper.exceptions import CloudflareException
+from scraper import Scraper, ScraperConfig
+from scraper.exceptions import Blocked
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
 
@@ -56,8 +56,19 @@ class BrowserNavigation:
         await response(scope, receive, send)
 
     async def generate(self, path: str, request: Request) -> Response:
-        engine = ScraperEngine(default_config())
+        # `raise_for_status=False`: this middleware proxies whatever the origin says,
+        # including a 4xx, and turning that into an exception would hide the status the
+        # browser needs to see.
+        scraper = Scraper(config=ScraperConfig(raise_for_status=False))
+        try:
+            return await self._proxy(scraper, path, request)
+        finally:
+            # One scraper per proxied request, so it has to be closed: it owns a curl
+            # session and, with a pool configured, a leased exit that the pool holds
+            # until it is told otherwise.
+            scraper.close()
 
+    async def _proxy(self, scraper: Scraper, path: str, request: Request) -> Response:
         parsed = urlparse(path)
         apex_domain = parsed.hostname or ""
         target_origin = f"{parsed.scheme}://{parsed.netloc}"
@@ -80,17 +91,16 @@ class BrowserNavigation:
             cookies = pickle.loads(base64.decodebytes(domain_cookie.encode()))
 
         try:
-            resp = engine.request(
-                method=request.method,
-                url=path,
-                data=body or None,
-            )
-        except CloudflareException as e:
+            resp = scraper.fetch(request.method, path, data=body or None)
+        except Blocked as e:
+            # The escalating path is out of options. Re-send once with the visitor's
+            # own headers and cookies and no redirect following — their session may
+            # carry a clearance this process has no way to earn.
             logger.warning(f"{path}: {e!r}")
-            resp = engine.perform_request(
-                method=request.method,
-                url=path,
-                headers=headers,
+            resp = scraper.transport.send(
+                request.method,
+                path,
+                headers=dict(headers),
                 data=body or None,
                 cookies=cookies,
                 allow_redirects=False,
@@ -99,13 +109,11 @@ class BrowserNavigation:
         if resp.status_code >= 400:
             return RedirectResponse(path)
 
-        content_type = resp.raw.headers.get("content-type", "")
+        content_type = resp.headers.get("content-type", "")
         response = Response(
             media_type=content_type,
             status_code=resp.status_code,
-            headers=dict(
-                (k, v) for k, v in resp.raw.headers.items() if k.lower() not in _HOP_BY_HOP
-            ),
+            headers=dict((k, v) for k, v in resp.headers.items() if k.lower() not in _HOP_BY_HOP),
         )
         response.set_cookie(
             key=apex_domain,

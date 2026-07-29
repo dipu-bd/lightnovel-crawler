@@ -112,7 +112,7 @@ class PiaoTian(LegacyCrawler):
         raw_text = raw_html.text.replace(
             '<script language="javascript">GetFont();</script>', '<div id="content">'
         )
-        self.last_soup_url = chapter.url
+        self.last_url = chapter.url
         soup = self.make_soup(raw_text)
 
         body = soup.select_one("div#content")

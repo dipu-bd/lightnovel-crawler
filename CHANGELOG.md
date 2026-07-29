@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **Upgraded to `lncrawl-scraper` 1.0**, a rewrite of the HTTP layer around a model of
+  bot detection. Measured on 150 real source hosts it retrieves more of them than the
+  version it replaces, with no fallback to a cached copy. What changed here:
+
+  - Proxy configuration keeps the same `crawler.proxy_urls` format, but each entry now
+    becomes a typed *exit*: the new scraper describes an address by kind, because what a
+    detector reads is the reputation of the range it belongs to. Plain URLs are treated
+    as datacenter addresses, which is the conservative reading — it never claims reach
+    the address does not have.
+  - A new `torpool;<api_url>;<socks_url>;<token>` entry form for
+    [tor-pool](https://github.com/lncrawl/tor-pool), which fronts many Tor instances
+    behind one sticky SOCKS port and reassigns on demand.
+  - The legacy `tor;<host>;<port>;<control_port>;<password>` form still works, and the
+    control port is now accepted and ignored. Rotation by `NEWNYM` is gone: it has a
+    ~10s cooldown and no say in which exit comes next, so a rotation could land on the
+    same relay. Use `torpool;` for real rotation.
+  - `allow_fallback_on_proxy_miss` still does what it says, by adding a direct entry to
+    the exit list. The scraper dropped its own fallback-to-direct switch, because
+    silently leaving the proxy mid-session is how a scrape leaks the host's real
+    address — but naming direct as *one of* the available exits is a different thing,
+    and that is now how it is expressed.
+  - `request_rate_limit` is a **mean** rather than a floor. Each gap is drawn from a
+    distribution around it, because a constant interval is itself something a
+    behavioural model reads. It is still enforced per source domain across concurrent
+    jobs, now through one shared `SharedState` per domain rather than a limiter object —
+    which also shares the held address, the identity and the referrer chain, so two
+    jobs on one source look like one visitor instead of two contradicting each other.
+  - A source must not set a `User-Agent` or reorder headers. The impersonation profile
+    owns the header set and its order is read as a fingerprint.
+
+### Fixed
+
+- A challenge interstitial served with a `200` is no longer parsed as chapter content.
+  This is the failure mode with no error to catch: the download reports success and
+  stores an empty page. Sites that answer a first request with a JavaScript-only
+  redirect are now followed to the real page rather than saved as a stub.
+
 ## [4.13.1] - 2026-07-25
 
 ### Fixed

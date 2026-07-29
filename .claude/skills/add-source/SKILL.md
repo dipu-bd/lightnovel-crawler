@@ -56,7 +56,7 @@ loop pages inside `select_chapter_tags` (see existing sources that do this).
 ## Idioms that matter
 
 - **URLs**: route every href/src through `self.absolute_url(x)`. It resolves against
-  `scraper.last_soup_url`, which only `get_soup`/`post_soup` set — after raw `get()`/
+  `scraper.last_url`, which only `get_soup`/`post_soup` set — after raw `get()`/
   `get_json()`, pass `page_url=` explicitly.
 - **Cleaner**: chapter HTML goes through `self.cleaner` (`TextCleaner`,
   `lncrawl/core/cleaner.py`). Tune it in `initialize()`: `self.cleaner.bad_css.update({...})`
@@ -64,13 +64,20 @@ loop pages inside `select_chapter_tags` (see existing sources that do this).
   `whitelist_attributes`/`whitelist_css_property` to keep extras.
 - **Rate limit**: declare the static class field `request_rate_limit = R` (max requests/sec
   to this source; default 3). It is enforced **globally per source domain** across all
-  concurrent server jobs via a shared limiter (`init_crawler` in `services/sources/service.py`);
-  the parallel-request cap and CLI worker pool are derived from it (`Crawler.max_concurrency()`).
+  concurrent server jobs: `init_crawler` (`services/sources/service.py`) builds one
+  `scraper.SharedState` per domain and hands it to every crawler for that domain, so the
+  pacing clock, the held exit address and the identity are one visitor rather than
+  several contradicting each other. The rate is a *mean* — each gap is drawn from a
+  distribution around it, because a constant interval is itself a signal. The
+  parallel-request cap and CLI worker pool derive from it (`Crawler.max_concurrency()`).
   Do **not** call `init_executor` in `initialize()` — that's the legacy pattern and is dead in
   server mode. Many sites ban parallel scrapers — when in doubt, keep the default.
-- **Headers/cookies/login**: `self.scraper.set_header/set_cookie`; implement `login()` and set
-  `can_login = True`. `Origin`/`Referer` are auto-injected — leave them unless the site
-  objects.
+- **Headers/cookies/login**: `self.scraper.headers` is a plain dict you can write to, and
+  `self.scraper.set_cookie(name, value)` sets a cookie; implement `login()` and set
+  `can_login = True`. Do **not** try to set a `User-Agent` or reorder headers — the
+  impersonation profile owns the header set, and header *order* is read as a
+  fingerprint. `Referer` and the `Sec-Fetch-*` set are supplied per request by the
+  scraper's navigation chain; leave them alone.
 - **`format_novel` renumbers everything** (sorts, re-ids, buckets orphan chapters) — don't
   rely on your assigned ids; set correct `chapter.volume` grouping instead.
 - Data models (`lncrawl/core/models.py`): `Novel`/`Volume`/`Chapter`/`SearchResult` are
