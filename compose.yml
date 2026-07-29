@@ -10,12 +10,18 @@ services:
     environment:
       - LNCRAWL_DATA_PATH=/data
       - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl
+      # torpool;<api_url>;<socks_url>;<token>. The pool runs with AUTH_DISABLED, so the
+      # token is ignored — but it must stay non-empty: it becomes the password on
+      # socks5h://<session>:<token>@tor-pool:9250, and urllib3 drops userinfo with no
+      # colon in it, which would drop the session key the pool pins the exit by.
+      - PROXY_URLS=torpool;http://tor-pool:8080;socks5h://tor-pool:9250;tp_auth_disabled
     volumes:
       - appdata:/data
     depends_on:
       - postgres
       - calibre-api
       - translator
+      - tor-pool
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -55,19 +61,21 @@ services:
     volumes:
       - translator_data:/data
 
-  torproxy:
-    image: sdipu/tor-proxy:latest
+  # Many tor instances behind one sticky SOCKS port. Ports stay on loopback: there is
+  # no TLS, so the token and the dashboard password would travel in cleartext.
+  tor-pool:
+    image: ghcr.io/lncrawl/tor-pool:latest
     restart: unless-stopped
     ports:
-      - "9150:9150" # socks5 port
-      - "9151:9151" # control port
+      - "127.0.0.1:9250:9250" # socks5 proxy — user is the session key, password the token
+      - "127.0.0.1:9251:9251" # http CONNECT proxy
+      - "127.0.0.1:8183:8080" # dashboard + REST API
     volumes:
       - tor_data:/var/lib/tor
     environment:
-      SOCKS_HOST: 0.0.0.0
-      CONTROL_HOST: 0.0.0.0
-      CONTROL_PASSWORD: "secret"
-      SOCKS_POLICY: accept 127.0.0.1,accept 10.0.0.0/8,accept 172.16.0.0/12,accept 192.168.0.0/16
+      POOL_SIZE: "3"
+      MIN_READY: "1"
+      AUTH_DISABLED: "true"
 
 volumes:
   pgdata:
