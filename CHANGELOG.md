@@ -50,6 +50,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   which meant a warm-up request to the target's homepage and a pacing wait before each
   one. They now use a session that neither waits, warms up nor remembers.
 
+- **17 source domains are flagged as rejected**, each confirmed on a deep page rather than
+  a homepage: parked domains for sale, redirects into an ad network or an affiliate link,
+  one closed site, and one zone whose DNS no longer resolves anywhere valid. None of them
+  reported an error — a page full of adverts answers `200`, so a crawl of them succeeded
+  and produced an empty book.
+
 - A scheduled *fetch latest* job asks whether the table of contents has moved before
   re-reading it, and skips the read when the site answers that it has not. Reading a
   paginated table of contents costs a request per page before a single chapter can be
