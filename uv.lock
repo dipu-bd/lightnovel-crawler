@@ -2501,7 +2501,7 @@ requires-dist = [
     { name = "httpx", extras = ["brotli", "http2"], specifier = ">=0.27.0" },
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
-    { name = "lncrawl-scraper", extras = ["all"], specifier = ">=1.0.0" },
+    { name = "lncrawl-scraper", extras = ["all"], specifier = "~=1.1.0" },
     { name = "lncrawl-translator", specifier = ">=0.2.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "nodriver", specifier = ">=0.50" },
@@ -2558,7 +2558,7 @@ dev = [
 
 [[package]]
 name = "lncrawl-scraper"
-version = "1.0.0"
+version = "1.1.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -2568,16 +2568,16 @@ dependencies = [
     { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version < '3.10'" },
     { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4b/ba/07dfe637d1f686c8a68491e7a4c5dfab0f231540b91001934fe67527aec3/lncrawl_scraper-1.0.0.tar.gz", hash = "sha256:f07cdada9c2388766c7dc80874d200601c13fe09853b2c9d4026e2389e728edd", size = 938902, upload-time = "2026-07-29T19:04:02.566Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ea/fb/dc8834668eec0c5c458b3088d7eafec3fabaea73599d4f0b2c9b8b63f6d1/lncrawl_scraper-1.1.0.tar.gz", hash = "sha256:1484aa5c9dfdf6c94cffe129afe6030b810252dbd1045fa17667ee433901def0", size = 1568523, upload-time = "2026-07-30T09:16:51.417Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2e/ce/d44b7ffecc9cbe9877e2b5609768b10e6594f259324854802a0a695cf5c1/lncrawl_scraper-1.0.0-py3-none-any.whl", hash = "sha256:abd0e5870e2603cbe3a145eefc349be57006c001b081ca1ed196c9bc8b13b629", size = 107435, upload-time = "2026-07-29T19:04:01.127Z" },
+    { url = "https://files.pythonhosted.org/packages/0c/e7/93e599787c3ab35be9866559108561fd87d27397ccf915157f689616f766/lncrawl_scraper-1.1.0-py3-none-any.whl", hash = "sha256:97c0fe1709edcf5ee37a65244da8e4bcc848a762e5249d4c19f61d01c8c09c9a", size = 111236, upload-time = "2026-07-30T09:16:49.65Z" },
 ]
 
 [package.optional-dependencies]
 all = [
     { name = "cryptography", version = "47.0.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version <= '3.9'" },
     { name = "cryptography", version = "49.0.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version > '3.9'" },
-    { name = "nodriver", marker = "python_full_version >= '3.10'" },
+    { name = "nodriver", marker = "python_full_version >= '3.10' and python_full_version < '3.14'" },
     { name = "pillow", version = "11.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "pillow", version = "12.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
 ]
