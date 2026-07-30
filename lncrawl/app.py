@@ -30,7 +30,7 @@ app = typer.Typer(
 
 # Register subcommands
 app.add_typer(version)
-app.add_typer(dev, name="dev", hidden=True)
+app.add_typer(dev, name="dev")
 app.add_typer(config, name="config")
 app.add_typer(sources, name="sources")
 app.add_typer(crawl)

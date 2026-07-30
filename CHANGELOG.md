@@ -94,6 +94,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **An empty chapter is no longer saved and marked finished.** When a site changed its
+  markup the body came back empty, and nothing checked: the empty file was written, the
+  chapter was marked done, and a later run skipped it because it looked complete. This is
+  the most common way a source breaks and there was no signal for it anywhere. An empty
+  body is now a failure — nothing is written, it is fetched again on the next pass, and
+  after a few attempts it is left alone so a chapter that is genuinely empty upstream is
+  not asked for forever. Each occurrence is counted against the source. A chapter that
+  already had content keeps it, since an empty answer now is no reason to destroy a body
+  that worked before, and image-only chapters are unaffected.
+
+- **`lncrawl dev recover-empty-chapters`** finds chapters an earlier version stored empty
+  and lets them be downloaded again. Without it the fix above changes nothing for a
+  library that already has them: they are marked done, so every later run skips them. It
+  reports by default and only changes anything with `--apply`.
+
 - **What a crawl learned is no longer lost when the command exits.** State was written
   on a timer and nothing flushed it at the end, so anything learned after the first
   write — including the validators the check above depends on — was discarded.

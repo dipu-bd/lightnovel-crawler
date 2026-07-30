@@ -16,6 +16,9 @@ from ..utils.url_tools import extract_host
 
 logger = logging.getLogger(__name__)
 
+# How often a chapter that came back empty is fetched again before it is left alone
+MAX_EMPTY_ATTEMPTS = 3
+
 
 def _normalize_language(lang: Optional[str]) -> Optional[str]:
     """A known base language code or None. Source-derived values include
@@ -199,13 +202,16 @@ class CrawlerService:
             model.update(chapter.extra)
             crawler.download_chapter(model)
             crawler.format_chapter(model)
-            assert model.body is not None
+
+            body = model.body or ""
+            if not model.success or not body:
+                return self._chapter_came_back_empty(chapter, novel, crawler)
 
             # save chapter content
-            ctx.files.save_text(chapter.content_file, model.body)
+            ctx.files.save_text(chapter.content_file, body)
 
             # detect language from chapter (strong signal)
-            language = ctx.translator.detect_language(model.body)
+            language = ctx.translator.detect_language(body)
             language = _normalize_language(language)
             if language and novel.language != language:
                 novel.language = language
@@ -233,6 +239,38 @@ class CrawlerService:
 
             logger.debug(f"Downloaded chapter: {novel.title}] - Chapter {chapter.serial}")
             return chapter
+
+    def _chapter_came_back_empty(
+        self,
+        chapter: Chapter,
+        novel: Novel,
+        crawler: Crawler,
+    ) -> Chapter:
+        attempts = int(chapter.extra.get("empty_attempts") or 0) + 1
+        ctx.health.record(
+            extract_host(novel.url),
+            "empty_body",
+            f"chapter {chapter.serial} ({chapter.url})",
+        )
+
+        extra = dict(**chapter.extra)
+        extra["empty_attempts"] = attempts
+        extra["crawler_version"] = crawler.version
+        chapter.extra = extra
+        chapter.is_done = attempts >= MAX_EMPTY_ATTEMPTS
+
+        with ctx.db.session() as sess:
+            sess.merge(chapter)
+            sess.commit()
+
+        logger.warning(
+            "Empty chapter body: %s - Chapter %s (attempt %d of %d)",
+            novel.title,
+            chapter.serial,
+            attempts,
+            MAX_EMPTY_ATTEMPTS,
+        )
+        return chapter
 
     def fetch_image(
         self,
