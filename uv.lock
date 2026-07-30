@@ -2500,7 +2500,7 @@ requires-dist = [
     { name = "httpx", extras = ["brotli", "http2"], specifier = ">=0.27.0" },
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
-    { name = "lncrawl-scraper", extras = ["all"], specifier = "~=1.1.0" },
+    { name = "lncrawl-scraper", extras = ["all"], specifier = "~=1.2.0" },
     { name = "lncrawl-translator", specifier = ">=0.2.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "nodriver", specifier = ">=0.50" },
@@ -2556,7 +2556,7 @@ dev = [
 
 [[package]]
 name = "lncrawl-scraper"
-version = "1.1.0"
+version = "1.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -2566,9 +2566,9 @@ dependencies = [
     { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version < '3.10'" },
     { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ea/fb/dc8834668eec0c5c458b3088d7eafec3fabaea73599d4f0b2c9b8b63f6d1/lncrawl_scraper-1.1.0.tar.gz", hash = "sha256:1484aa5c9dfdf6c94cffe129afe6030b810252dbd1045fa17667ee433901def0", size = 1568523, upload-time = "2026-07-30T09:16:51.417Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/83/b3/685702fb9c6f1ca29974cc4b745d874b1a391ac7a6232537f17be8aa4969/lncrawl_scraper-1.2.0.tar.gz", hash = "sha256:2c9e7c61107d46021e7ef9bbc1c480fd5c85922dbad8491fff2af97e45251cbf", size = 1606442, upload-time = "2026-07-30T12:52:27.269Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0c/e7/93e599787c3ab35be9866559108561fd87d27397ccf915157f689616f766/lncrawl_scraper-1.1.0-py3-none-any.whl", hash = "sha256:97c0fe1709edcf5ee37a65244da8e4bcc848a762e5249d4c19f61d01c8c09c9a", size = 111236, upload-time = "2026-07-30T09:16:49.65Z" },
+    { url = "https://files.pythonhosted.org/packages/b8/7f/b670f0039ae9d8d9384c0c72d0029c684e25c9f9574276b21203e2f28eb9/lncrawl_scraper-1.2.0-py3-none-any.whl", hash = "sha256:aec5595d7d939c62d9c17cb388e3b956bcf912b3229aa333921df619cd69d937", size = 123782, upload-time = "2026-07-30T12:52:25.913Z" },
 ]
 
 [package.optional-dependencies]
