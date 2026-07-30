@@ -32,6 +32,12 @@ class __AppContext__:
         return GitHubService()
 
     @cached_property
+    def health(self):
+        from .services.health import SourceHealth
+
+        return SourceHealth()
+
+    @cached_property
     def logger(self):
         from .services.logger import Logger
 

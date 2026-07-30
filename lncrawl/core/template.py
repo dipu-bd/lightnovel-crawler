@@ -9,6 +9,7 @@ from scraper import PageSoup
 
 from ..context import ctx
 from ..exceptions import LNException, ScraperErrorGroup
+from ..utils.url_tools import extract_host
 from .crawler import Crawler
 from .models import Chapter, Novel, SearchResult, Volume
 
@@ -35,6 +36,13 @@ class BrowserTemplate(CrawlerTemplate):
     # Method overrides to fallback to browser if scraper fails
     # ------------------------------------------------------------------------- #
 
+    def _record_fallback(self, method: str, url: str, error: BaseException) -> None:
+        ctx.health.record(
+            extract_host(url),
+            f"browser:{method}",
+            f"{type(error).__name__} {url}",
+        )
+
     def _override_scraper_get_soup(self) -> None:
         from .browser import By
 
@@ -43,7 +51,8 @@ class BrowserTemplate(CrawlerTemplate):
         def get_soup(url, *args, **kwargs):
             try:
                 return origin_method(url, *args, **kwargs)
-            except ScraperErrorGroup:
+            except ScraperErrorGroup as e:
+                self._record_fallback("get_soup", url, e)
                 with self.create_browser() as browser:
                     browser.visit(url)
                     browser.wait("body", By.TAG_NAME, timeout=60)
@@ -61,7 +70,8 @@ class BrowserTemplate(CrawlerTemplate):
         def get_image(url, *args, **kwargs):
             try:
                 return origin_method(url, *args, **kwargs)
-            except ScraperErrorGroup:
+            except ScraperErrorGroup as e:
+                self._record_fallback("get_image", url, e)
                 with self.create_browser() as browser:
                     browser.visit(url)
                     browser.wait("img", By.TAG_NAME, timeout=60)
@@ -81,7 +91,8 @@ class BrowserTemplate(CrawlerTemplate):
                 # landed it in **kwargs as a stray argument the transport ignored, so
                 # every override here silently dropped its headers.
                 return origin_method(url, headers=headers, **kwargs)
-            except ScraperErrorGroup:
+            except ScraperErrorGroup as e:
+                self._record_fallback("get_json", url, e)
                 headers = CaseInsensitiveDict(headers or {})
                 url_js = json.dumps(url)
                 headers_js = json.dumps(dict(headers))
