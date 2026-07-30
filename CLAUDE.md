@@ -41,6 +41,11 @@ make check-sources # HTTP reachability probe of source base URLs (NOT a code val
 
 Run without make: `uv run python -m lncrawl [args]`.
 
+`uv run python -m lncrawl dev check-sources` is the code validator: it imports and instantiates
+every crawler offline, asserts the delegation surface each base class promises, and fails if a
+crawler in `sources/_index.json` no longer loads. Run it after anything that touches `core/`,
+`lncrawl/templates/` or a batch of sources.
+
 **No automated test suite** — `test.py` is a scratchpad. Validate with lint, then exercise the
 real thing, e.g.:
 

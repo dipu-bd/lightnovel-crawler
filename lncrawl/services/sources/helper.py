@@ -64,7 +64,7 @@ def batch_import(*files: Path):
         yield from import_crawlers(file)
 
 
-def import_crawlers(file: Path) -> Generator[Type[Crawler], None, None]:
+def import_crawlers(file: Path, strict: bool = False) -> Generator[Type[Crawler], None, None]:
     # validate the file
     if not file.is_file():
         return
@@ -77,21 +77,24 @@ def import_crawlers(file: Path) -> Generator[Type[Crawler], None, None]:
         mod_name = hashlib.md5(file.name.encode()).hexdigest()
         spec = importlib.util.spec_from_file_location(mod_name, file)
         if not (spec and spec.loader):
-            logger.info(f"\\[{file}] Unexpected spec")
-            return
+            raise ImportError("Unexpected spec")
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         module.__name__ = mod_name
         module.__file__ = str(file)
     except Exception as e:
-        logger.info(f"\\[{file}] Failed to load: {repr(e)}")
+        if strict:
+            raise
+        logger.warning(f"\\[{file}] Failed to load: {repr(e)}")
         return
 
     # extract all valid crawlers
     try:
         yield from extract_crawlers(module)
     except Exception as e:
-        logger.info(f"\\[{file}] Failed to extract crawlers: {repr(e)}")
+        if strict:
+            raise
+        logger.warning(f"\\[{file}] Failed to extract crawlers: {repr(e)}")
         return
 
 
