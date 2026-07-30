@@ -33,13 +33,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `request_rate_limit` is a **mean** rather than a floor. Each gap is drawn from a
     distribution around it, because a constant interval is itself something a
     behavioural model reads. It is still enforced per source domain across concurrent
-    jobs, now through one shared `SharedState` per domain rather than a limiter object —
-    which also shares the held address, the identity and the referrer chain, so two
-    jobs on one source look like one visitor instead of two contradicting each other.
+    jobs, now through shared per-origin state rather than a limiter object — which also
+    shares the held address, the identity and the referrer chain, so two jobs on one
+    source look like one visitor instead of two contradicting each other.
   - A source must not set a `User-Agent` or reorder headers. The impersonation profile
     owns the header set and its order is read as a fingerprint.
 
+- **One scraper state for the process.** What is learned about a site — the pacing
+  clock, the held address, the identity, the referrer chain, the tier that worked — is
+  now shared process-wide instead of per domain, so it accumulates across every job
+  rather than being rebuilt and partly overwritten. Per-source rate limits and the
+  per-address concurrency bound are unaffected: both are keyed per origin.
+
+- **Non-crawl HTTP no longer pretends to be a visitor.** Requests to our own Calibre and
+  translator APIs, the source index and favicons went through a crawl-shaped session,
+  which meant a warm-up request to the target's homepage and a pacing wait before each
+  one. They now use a session that neither waits, warms up nor remembers.
+
+- A scheduled *fetch latest* job asks whether the table of contents has moved before
+  re-reading it, and skips the read when the site answers that it has not. Reading a
+  paginated table of contents costs a request per page before a single chapter can be
+  skipped. The missing-chapter pass still runs either way, so chapters absent from an
+  earlier failure are still recovered.
+
 ### Fixed
+
+- **What a crawl learned is no longer lost when the command exits.** State was written
+  on a timer and nothing flushed it at the end, so anything learned after the first
+  write — including the validators the check above depends on — was discarded.
+
+- **A source that chooses its own HTML parser is finally obeyed.** Six sources set one
+  because the default cannot handle their markup; the value was stored on the crawler
+  and never reached the session that builds the soup.
 
 - A challenge interstitial served with a `200` is no longer parsed as chapter content.
   This is the failure mode with no error to catch: the download reports success and

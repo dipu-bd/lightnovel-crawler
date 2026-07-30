@@ -68,6 +68,12 @@ class __AppContext__:
         return FileService()
 
     @cached_property
+    def scraper(self):
+        from .services.scraper import ScraperService
+
+        return ScraperService()
+
+    @cached_property
     def sources(self):
         from .services.sources import Sources
 
@@ -220,8 +226,8 @@ class __AppContext__:
             self.lsp.stop()
         if "translator" in self.__dict__:
             self.translator.close()
-        if "http" in self.__dict__:
-            self.http.close()
+        if "scraper" in self.__dict__:
+            self.scraper.close()
 
     def setup(
         self,

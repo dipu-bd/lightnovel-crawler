@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Union
 
 from pydantic.networks import HttpUrl
 
-from ..config import APP_DIR
 from ..context import ctx
 from ..exceptions import LNException
 from ..utils.file_tools import atomic_write
@@ -18,81 +17,7 @@ from ..utils.url_tools import extract_base
 from .models import Chapter, Novel, SearchResult, Volume
 
 if TYPE_CHECKING:
-    from scraper import ExitSpec, ScraperConfig, SharedState
-
-
-def configured_exits() -> List["ExitSpec"]:
-    """Translate `crawler.proxy_urls` into the scraper's exit list.
-
-    The scraper describes an address by *kind* rather than by URL, because what a
-    detector reads is the reputation of the range it belongs to — a datacenter proxy
-    and a residential one are not interchangeable however similar the URL looks. Kinds
-    are inferred here from the only thing the config carries, so a datacenter guess is
-    the conservative default: it never claims reach the address does not have.
-
-    `allow_fallback_on_proxy_miss` becomes a direct entry in the list. The scraper
-    dropped its own fallback-to-direct switch — silently leaving the proxy is how a
-    scrape leaks the host's real address mid-session — but an operator who asked for
-    that behaviour is asking for direct to be *an option*, and an exit list is exactly
-    how you say so.
-    """
-    from scraper import ExitKind, ExitSpec, TorPoolSpec
-
-    if not ctx.config.crawler.enable_proxy:
-        return []
-
-    exits: List[ExitSpec] = []
-    for entry in ctx.config.crawler.proxy_urls.split(","):
-        entry = entry.strip()
-        if not entry:
-            continue
-        if entry.startswith("torpool;"):
-            # torpool;<api_url>;<socks_url>;<token>
-            parts = entry.split(";")
-            socks = parts[2] if len(parts) > 2 and parts[2] else "socks5h://127.0.0.1:9250"
-            exits.append(
-                TorPoolSpec(
-                    url=socks,
-                    api_url=parts[1],
-                    token=parts[3] if len(parts) > 3 else "",
-                )
-            )
-        elif entry.startswith("tor;"):
-            # Legacy form: tor;<host>;<port>;<control_port>;<control_password>.
-            # The control port is accepted and ignored. Rotation by NEWNYM is gone —
-            # it has a ~10s cooldown and gives no say in which exit comes next, so a
-            # rotation could land on the same relay. tor-pool reassigns instead, which
-            # is what `torpool;` is for.
-            parts = entry.split(";")
-            host = parts[1] if len(parts) > 1 else "127.0.0.1"
-            port = parts[2] if len(parts) > 2 else "9050"
-            exits.append(ExitSpec(url=f"socks5h://{host}:{port}", kind=ExitKind.TOR))
-        else:
-            exits.append(ExitSpec(url=entry, kind=ExitKind.DATACENTER))
-
-    if exits and ctx.config.crawler.allow_fallback_on_proxy_miss:
-        exits.append(ExitSpec(url="", kind=ExitKind.DIRECT, label="direct"))
-    return exits
-
-
-def scraper_config(request_rate_limit: float) -> "ScraperConfig":
-    """The scraper configuration for a source with this rate limit.
-
-    Module level because `SourceService` needs to build the same one: shared per-origin
-    state is passed to the constructor in scraper 1.0, and constructing that state
-    requires the config it will be used with.
-    """
-    from scraper import PacingPolicy, ScraperConfig
-
-    settings: Dict[str, Any] = {
-        "exits": configured_exits(),
-        "data_dir": APP_DIR / "scraper",
-    }
-    if request_rate_limit:
-        # Each gap is drawn from a distribution around this, so the rate is a mean
-        # rather than a floor — which is the point. A constant interval is a signal.
-        settings["pacing"] = PacingPolicy(interval=1.0 / request_rate_limit)
-    return ScraperConfig(**settings)
+    from scraper import Scraper
 
 
 class Crawler(ABC):
@@ -129,7 +54,8 @@ class Crawler(ABC):
         self,
         parser: Optional[str] = None,
         origin: Optional[str] = None,
-        state: Optional["SharedState"] = None,
+        *,
+        scraper: Optional["Scraper"] = None,
     ) -> None:
         """
         Creates a standalone Crawler instance.
@@ -138,18 +64,15 @@ class Crawler(ABC):
         - origin (str): The origin URL of the source.
         - parser (Optional[str], optional): Desirable features of the parser. This can be the name of a specific parser
             ("lxml", "lxml-xml", "html.parser", or "html5lib") or it may be the type of markup to be used ("html", "html5", "xml").
-        - state (Optional[SharedState]): Per-origin scraper state to share with other
-            crawlers on the same domain — the pacing clock, the held address, the
-            identity and what has been learned. Supplied by `SourceService` so that
-            `request_rate_limit` holds across every concurrent job hitting one source;
-            omitted, this crawler gets state of its own.
+        - scraper (Optional[Scraper]): The session to crawl with. Supplied by
+            `SourceService`; omitted, one is opened here. Either way it shares the
+            process-wide state, so the pacing clock, the held address, the identity and
+            what has been learned describe the site rather than this object.
         """
         if isinstance(self.base_url, str):
             self.base_url = [self.base_url]
         if not origin or origin not in self.base_url:
             origin = self.base_url[0]
-
-        from scraper import Scraper
 
         from .cleaner import TextCleaner
         from .taskman import TaskManager
@@ -157,12 +80,24 @@ class Crawler(ABC):
         self.cleaner = TextCleaner()
         self.taskman = TaskManager(workers=self.max_concurrency())
 
-        self.scraper = Scraper(
-            origin=origin,
+        self.scraper = scraper or ctx.scraper.open(
+            origin,
             parser=parser,
-            config=scraper_config(self.request_rate_limit),
-            state=state,
+            rate_limit=self.request_rate_limit,
         )
+
+    @property
+    def parser(self) -> str:
+        """Which parser this crawler's soups are built with.
+
+        A property so a source assigning `self.parser` in `initialize()` reaches the
+        session that builds the soup, which is where the choice is read.
+        """
+        return self.scraper.parser
+
+    @parser.setter
+    def parser(self, value: str) -> None:
+        self.scraper.parser = value
 
     def close(self) -> None:
         self.scraper.close()

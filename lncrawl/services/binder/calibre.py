@@ -170,12 +170,12 @@ def __convert_via_api(
     """Convert the EPUB using the remote ebook-convert-api service."""
     url = f"{ctx.config.calibre.api_url}/convert"
     with (
-        ctx.http.session(signal) as sess,
         open(epub_file, "rb") as fp,
         open(cover_file, "rb") as cp,
     ):
-        resp = sess.post(
+        resp = ctx.http.post(
             url,
+            signal=signal,
             data=fields,
             files={
                 "file": (epub_file.name, fp),

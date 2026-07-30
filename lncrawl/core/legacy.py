@@ -1,9 +1,12 @@
 from abc import abstractmethod
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Union
 
 from ..utils.event_lock import EventLock
 from .models import Chapter, Novel, SearchResult, Volume
 from .template import BrowserTemplate
+
+if TYPE_CHECKING:
+    from scraper import Scraper
 
 
 class LegacyCrawler(BrowserTemplate):
@@ -11,17 +14,14 @@ class LegacyCrawler(BrowserTemplate):
         self,
         parser: Optional[str] = None,
         origin: Optional[str] = None,
-        **kwargs: Any,
+        *,
+        scraper: Optional["Scraper"] = None,
     ) -> None:
         if isinstance(self.base_url, str):
             self.base_url = [self.base_url]
 
         self.home_url = self.base_url[0]
-        # **kwargs rather than naming `state`: this class sits between ~200 legacy
-        # sources and `Crawler`, so anything the base constructor grows has to reach
-        # it, and a signature that lists them goes stale silently — the failure is a
-        # TypeError at crawler construction for every source below here.
-        super().__init__(parser, origin, **kwargs)
+        super().__init__(parser, origin, scraper=scraper)
 
         self._lock = EventLock()
         self.novel_url: str = ""

@@ -23,14 +23,23 @@ class FetchLatestHandler(BatchHandler):
         # Step 1: Refresh metadata to pick up any new chapters
         if JobType.NOVEL not in added_types:
             novel = ctx.novels.get(novel_id)
-            job = ctx.jobs.fetch_novel(
-                user=self.user,
-                url=novel.url,
-                novel_id=novel_id,
-                novel_title=novel.title,
-                parent_id=self.job.id,
-            )
-            added_types[job.type] = job.id
+            if ctx.scraper.unchanged(novel.url, self.signal):
+                # Reading the table of contents is the expensive half of this job — a
+                # paginated one costs a request per page before a single chapter can be
+                # skipped — and a 304 says those bytes have not moved, so there is
+                # nothing new to list. The missing-chapter pass below still runs:
+                # chapters absent from an earlier failure are not new chapters, and
+                # skipping the whole job would strand them until the site next changed.
+                ctx.logger.debug(f"Contents unchanged, not re-reading: {novel.url}")
+            else:
+                job = ctx.jobs.fetch_novel(
+                    user=self.user,
+                    url=novel.url,
+                    novel_id=novel_id,
+                    novel_title=novel.title,
+                    parent_id=self.job.id,
+                )
+                added_types[job.type] = job.id
 
         if self.signal.is_set():
             raise AbortedException()
@@ -42,7 +51,7 @@ class FetchLatestHandler(BatchHandler):
                 novel_id=novel_id,
                 novel_title=novel_title,
                 parent_id=self.job.id,
-                depends_on=added_types[JobType.NOVEL],
+                depends_on=added_types.get(JobType.NOVEL),
             )
             added_types[job.type] = job.id
 

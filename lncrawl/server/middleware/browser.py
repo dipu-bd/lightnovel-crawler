@@ -6,12 +6,13 @@ import pickle
 from urllib.parse import urljoin, urlparse
 
 from requests.structures import CaseInsensitiveDict
-from scraper import Scraper, ScraperConfig
+from scraper import Scraper
 from scraper.exceptions import Blocked
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
 
 from ...assets.scripts import browser_intercept_script
+from ...context import ctx
 from ...utils import browse_helper as helper
 
 logger = logging.getLogger(__name__)
@@ -59,7 +60,7 @@ class BrowserNavigation:
         # `raise_for_status=False`: this middleware proxies whatever the origin says,
         # including a 4xx, and turning that into an exception would hide the status the
         # browser needs to see.
-        scraper = Scraper(config=ScraperConfig(raise_for_status=False))
+        scraper = ctx.scraper.open(raise_for_status=False)
         try:
             return await self._proxy(scraper, path, request)
         finally:
