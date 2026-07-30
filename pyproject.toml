@@ -57,7 +57,6 @@ dependencies = [
   "exejs>=0.0.7",
   "readability-lxml>=0.8.0,<1.0.0",
   "regex>=2024.0.0",
-  "requests-toolbelt>=1.0.0",
   "requests[socks]>=2.32.0",
   "sqlmodel>=0.0.22",
   "tqdm>=4.66.0,<5.0.0",

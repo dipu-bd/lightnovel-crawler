@@ -76,6 +76,7 @@ services:
       POOL_SIZE: "3"
       MIN_READY: "1"
       AUTH_DISABLED: "true"
+      PIN_EXIT_RELAY: "true"
 
 volumes:
   pgdata:

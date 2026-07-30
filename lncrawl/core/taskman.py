@@ -2,12 +2,11 @@ from __future__ import annotations
 
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event, Semaphore, Thread
-from typing import Callable, Generator, Iterable, List, Optional, Set, TypeVar
+from typing import Any, Callable, Generator, Iterable, List, Optional, Set, TypeVar
 
 from tqdm import tqdm
 
 from ..context import ctx
-from ..utils.ratelimit import RateLimiter
 
 T = TypeVar("T")
 
@@ -18,7 +17,6 @@ class TaskManager:
     def __init__(
         self,
         workers: Optional[int] = None,
-        ratelimit: Optional[float] = None,
         signal: Optional[Event] = None,
     ) -> None:
         """A helper class for task queueing and parallel task execution.
@@ -26,12 +24,11 @@ class TaskManager:
 
         Args:
         - workers (int, optional): Number of concurrent workers to expect. Default: 5.
-        - ratelimit (float, optional): Number of requests per second.
         """
         self.signal = signal or Event()
         self._bars: Set[tqdm] = set()
         self._futures: Set[Future] = set()
-        self.init_executor(workers, ratelimit)
+        self.init_executor(workers)
 
     @property
     def executor(self) -> ThreadPoolExecutor:
@@ -56,14 +53,8 @@ class TaskManager:
         if hasattr(self, "_executor"):
             self._submit = None
             self._executor.shutdown(wait)
-        if hasattr(self, "_limiter"):
-            self._limiter.shutdown()
 
-    def init_executor(
-        self,
-        workers: Optional[int] = None,
-        ratelimit: Optional[float] = None,
-    ):
+    def init_executor(self, workers: Optional[int] = None, *args: Any, **kwargs: Any):
         """Initializes a new executor.
 
         If the number of workers are not the same as the current executor,
@@ -71,18 +62,15 @@ class TaskManager:
 
         Args:
         - workers (int, optional): Number of concurrent workers to expect. Default: 5.
-        - ratelimit (float, optional): Number of requests per second.
+
+        Extra arguments are accepted and ignored: a downloaded user source may still
+        pass the rate limit this used to take, and a TypeError here makes that source
+        vanish from the index rather than fail loudly.
         """
         if not self._futures:
             self._futures = set()
 
         self.close()  # cleanup previous initialization
-
-        if ratelimit and ratelimit > 0:
-            workers = 1  # use single worker if ratelimit is being applied
-            self._limiter = RateLimiter(ratelimit)
-        elif hasattr(self, "_limiter"):
-            del self._limiter
 
         self._executor = ThreadPoolExecutor(
             max_workers=workers or 1,
@@ -103,9 +91,6 @@ class TaskManager:
         """
         if not self._submit:
             raise Exception("No executor is available")
-
-        if hasattr(self, "_limiter"):
-            fn = self._limiter.wrap(fn)
 
         f = self._submit(fn, *args, **kwargs)
         self._futures.add(f)

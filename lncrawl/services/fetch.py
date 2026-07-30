@@ -1,11 +1,9 @@
 from contextlib import contextmanager
 import hashlib
 import logging
-import os
 from pathlib import Path
 import shutil
 from threading import Event, Lock, Thread, current_thread
-import time
 from typing import Dict, Optional
 
 from scraper import Scraper
@@ -85,15 +83,8 @@ class FetchService:
         file: Path,
         signal: Optional[Event] = None,
     ) -> None:
-        content = self.get(url, signal)
-        file.parent.mkdir(parents=True, exist_ok=True)
-        tid = time.thread_time_ns() % 1000
-        tmp = file.with_suffix(f"{file.suffix}.tmp{tid}")
-        try:
-            tmp.write_bytes(content)
-            os.replace(tmp, file)
-        finally:
-            tmp.unlink(missing_ok=True)
+        with self.session(signal) as sess:
+            sess.get_file(url, output_file=file)
         logger.debug(f"Downloaded: {file}")
 
     def favicon(

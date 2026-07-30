@@ -100,10 +100,13 @@ def search_job(source: "SourceItem", query: str, signal: Event):
 
     url = source.url
     crawler = ctx.sources.init_crawler(url)
+    original_signal = crawler.scraper.signal
     crawler.scraper.signal = signal
-    results = crawler.search(query)
-    results = [SearchResult(**item) for item in results]
-    crawler.close()
+    try:
+        results = [SearchResult(**item) for item in crawler.search(query)]
+    finally:
+        crawler.scraper.signal = original_signal
+        crawler.close()
 
     logger.info(f"[green]{url}[/green] Found {len(results)} results")
     return results

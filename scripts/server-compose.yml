@@ -98,6 +98,7 @@ services:
       POOL_SIZE: "6"
       MIN_READY: "1"
       AUTH_DISABLED: "true"
+      PIN_EXIT_RELAY: "true"
     ports:
       - "127.0.0.1:23458:8080"
     volumes:
