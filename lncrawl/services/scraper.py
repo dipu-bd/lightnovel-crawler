@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from importlib import util
 import logging
 import threading
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
@@ -9,7 +10,7 @@ from ..context import ctx
 from ..utils.url_tools import extract_base
 
 if TYPE_CHECKING:
-    from scraper import ExitSpec, Memory, Scraper, ScraperConfig, SharedState
+    from scraper import BrowserSolver, ExitSpec, Memory, Scraper, ScraperConfig, SharedState
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,8 @@ class ScraperService:
         self._memory: Optional["Memory"] = None
         self._state: Optional["SharedState"] = None
         self._plain: Optional["Scraper"] = None
+        self._solver: Optional["BrowserSolver"] = None
+        self._solver_ready = False
 
     # ------------------------------------------------------------------------- #
     # Configuration
@@ -93,16 +96,65 @@ class ScraperService:
             exits.append(ExitSpec(url="", kind=ExitKind.DIRECT, label="direct"))
         return exits
 
+    @property
+    def solver(self) -> Optional["BrowserSolver"]:
+        """The one browser this process will drive, or None.
+
+        One instance because solving serialises on the solver's own lock: two headed
+        browsers sharing a profile directory corrupt it, and that profile is what carries
+        the accumulated history a solve depends on.
+
+        Gated on a browser actually being installed as well as on the setting. The
+        setting defaults to on and an image need not ship a browser, and a solver that
+        cannot launch spends the whole solve timeout per challenged origin before
+        reporting the timeout as though the site had blocked us.
+        """
+        with self._lock:
+            # A resolved `None` means "no browser here", which is not the same as "not
+            # asked yet" — so the answer is cached with a flag rather than by its value.
+            if not self._solver_ready:
+                self._solver = self._build_solver()
+                self._solver_ready = True
+            return self._solver
+
+    def _build_solver(self) -> Optional["BrowserSolver"]:
+        if not ctx.config.crawler.can_use_browser:
+            logger.info("Browser crawling is disabled in the configuration")
+            return None
+
+        from ..utils.browser_detect import pick_executable
+
+        if not pick_executable():
+            logger.info("No browser executable found; challenges will not be solved")
+            return None
+
+        # The solver's driver does not import on every Python this package supports, so
+        # the extra is marked and simply absent there — including on the version the
+        # server image runs. The solver class itself imports fine and only reaches for
+        # the driver when asked to solve, so offering one without checking would put a
+        # rung on the ladder that fails every time it is climbed.
+        if not util.find_spec("nodriver"):
+            logger.info("The browser driver is not installed; challenges will not be solved")
+            return None
+
+        from scraper.browser import NoDriverSolver
+
+        return NoDriverSolver(headless=ctx.config.crawler.use_headless_mode)
+
     def _crawl_settings(self) -> Dict[str, Any]:
         """The settings that describe crawl traffic, shared state included."""
-        return {
+        settings: Dict[str, Any] = {
             "exits": self._exits(),
             "data_dir": APP_DIR / "scraper",
+            "browser": self.solver,
             # lncrawl crawls a curated list of novel sites, not an open frontier, so
             # AI-labyrinth decoys are not its threat model and a false positive costs a
             # job for no corresponding gain.
             "guard_topic": False,
         }
+        if ctx.config.crawler.impersonate:
+            settings["impersonate"] = ctx.config.crawler.impersonate
+        return settings
 
     def _crawl_config(
         self,
@@ -169,10 +221,14 @@ class ScraperService:
         with self._lock:
             state, self._state = self._state, None
             plain, self._plain = self._plain, None
+            solver, self._solver = self._solver, None
+            self._solver_ready = False
         if state is not None:
             state.exits.release_all()
         if plain is not None:
             self._close(plain)
+        if solver is not None:
+            self._close_solver(solver)
 
     # ------------------------------------------------------------------------- #
     # Sessions
@@ -275,14 +331,25 @@ class ScraperService:
         except Exception:
             logger.debug("Error closing scraper", exc_info=True)
 
+    @staticmethod
+    def _close_solver(solver: "BrowserSolver") -> None:
+        try:
+            solver.close()
+        except Exception:
+            logger.debug("Error closing browser solver", exc_info=True)
+
     def close(self) -> None:
         with self._lock:
             plain, self._plain = self._plain, None
             state, self._state = self._state, None
             memory, self._memory = self._memory, None
+            solver, self._solver = self._solver, None
+            self._solver_ready = False
         if plain is not None:
             self._close(plain)
         if state is not None:
             state.exits.release_all()
         if memory is not None:
             memory.close()
+        if solver is not None:
+            self._close_solver(solver)

@@ -49,6 +49,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   replacement instead of failing as a missing attribute, since sources are downloaded to disk
   and a user's copy may still refer to them.
 
+- **Challenges are solved through one browser for the whole process**, and only when a
+  browser is actually installed. The setting that allows browser crawling defaults to on
+  while an installation need not have a browser, so it is checked as well as the setting:
+  a solver that cannot launch would otherwise spend its whole timeout per site and report
+  that as though the site had blocked us. A clearance earned in the browser is reused by
+  the requests that follow it.
+
+- **New `impersonate` setting.** Solving a challenge forces every request to present itself
+  as Chrome, because a clearance is only valid for a client that still looks like the one
+  that earned it. Set this to keep a different fingerprint instead. Removed
+  `selenium_grid`, which nothing has read since browsers stopped being driven here.
+
 - **One scraper state for the process.** What is learned about a site — the pacing
   clock, the held address, the identity, the referrer chain, the tier that worked — is
   now shared process-wide instead of per domain, so it accumulates across every job

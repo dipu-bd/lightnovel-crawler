@@ -561,17 +561,19 @@ class CrawlerConfig(_Section):
         self._set("use_headless_mode", v)
 
     @property
-    def selenium_grid(self) -> str:
-        """Selenium Grid URL.
+    def impersonate(self) -> str:
+        """Browser Fingerprint.
 
-        Address of your Selenium Grid or remote browser hub, if you run browsers on another machine.
-        You can set this here or leave it blank and define it in the environment instead.
+        Which browser every request should present itself as, for example `chrome` or `firefox`.
+        Leave blank to let the scraper choose. Enabling browser crawling forces `chrome`, because
+        a challenge solved in Chrome is only valid for requests that still look like Chrome —
+        set this if you would rather keep a different fingerprint everywhere.
         """
-        return self._get("selenium_grid", os.getenv("SELENIUM_GRID", ""))
+        return self._get("impersonate", "")
 
-    @selenium_grid.setter
-    def selenium_grid(self, url: str) -> None:
-        self._set("selenium_grid", url)
+    @impersonate.setter
+    def impersonate(self, name: str) -> None:
+        self._set("impersonate", name)
 
     @property
     def index_file_download_url(self) -> str:
