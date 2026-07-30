@@ -50,11 +50,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   which meant a warm-up request to the target's homepage and a pacing wait before each
   one. They now use a session that neither waits, warms up nor remembers.
 
-- **17 source domains are flagged as rejected**, each confirmed on a deep page rather than
+- **18 source domains are flagged as rejected**, each confirmed on a deep page rather than
   a homepage: parked domains for sale, redirects into an ad network or an affiliate link,
-  one closed site, and one zone whose DNS no longer resolves anywhere valid. None of them
-  reported an error — a page full of adverts answers `200`, so a crawl of them succeeded
-  and produced an empty book.
+  one closed site, one zone whose DNS no longer resolves anywhere valid, and one whose
+  domain was resold and now hosts an unrelated service. None of them reported an error — a
+  page full of adverts answers `200`, so a crawl of them succeeded and produced an empty
+  book.
+
+- **`wordexcerpt` and `webnovelonline` rebuilt against the APIs their sites now use.** Both
+  were rewritten as single-page apps, so the HTML their old selectors read is an empty
+  shell and both had been returning nothing. Each now reads the same backend the site's
+  own front-end reads, which needs no browser. `webnovelonline`'s chapter listing is
+  paginated, and the whole listing is walked: the novel checked reports **1305 chapters**,
+  where the page itself only ever shows the first 50.
 
 - A scheduled *fetch latest* job asks whether the table of contents has moved before
   re-reading it, and skips the read when the site answers that it has not. Reading a
