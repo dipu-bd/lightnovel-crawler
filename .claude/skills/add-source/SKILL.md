@@ -15,8 +15,8 @@ the same way from `ctx.config.crawler.user_sources` (a dir under the app data di
 ## Class hierarchy — pick your base
 
 - **`SoupTemplate`** (`lncrawl/core/template.py`) — the default for new sources. Declarative
-  CSS selectors; extends `BrowserTemplate`, so failed fetches transparently retry through a
-  real browser (`nodriver`), which covers most JS/Cloudflare sites for free.
+  CSS selectors over `self.scraper.get_soup`. Challenges are the scraper's problem, not the
+  source's: it escalates to a browser on its own evidence.
 - **A shared template in `lncrawl/templates/`** — if the site runs a known engine
   (WordPress/Madara, NovelFull, NovelMTL, MangaStream, FreeWebNovel, NovelPub, …), subclass
   the matching template and override only what differs. This is the most common shape for new
@@ -103,9 +103,15 @@ loop pages inside `select_chapter_tags` (see existing sources that do this).
    HTTP reachability probe of base URLs that feeds `sources/_rejected.json` — it does not
    validate crawler code.)
 
-## Browser fallback
+## When plain HTTP is not enough
 
-`BrowserTemplate` retries failed `get_soup`/`get_image`/`get_json` through a real Chrome via
-`nodriver`; direct `Browser` usage (`lncrawl/core/browser.py`: `visit`, `soup`, `find`,
-`execute_js`, `wait`) is rarely needed. Gated by `ctx.config.crawler.can_use_browser`;
-headless mode is off by default because a visible window evades bot detection.
+**A source never drives a browser.** A challenge is a detection layer, and the scraper
+escalates to its own solver when its diagnosis says one is binding — reusing the clearance
+for the requests that follow, which a browser a source opened itself cannot do.
+
+The one case a source decides is different: a page that answers `200` with a shell that
+JavaScript fills in. Nothing is blocking, so no diagnosis leads there and the scraper cannot
+infer it — the source must say so with `self.scraper.render_soup(url, wait_for="…")`. Give it
+a `wait_for` that **cannot exist before the data does**; a selector matching an empty
+skeleton returns a page that parses to nothing. Prefer an API the site's own front-end calls
+over rendering when one exists: it is faster, and it does not depend on a selector.

@@ -206,7 +206,7 @@ logger = logging.getLogger(__name__)
 
     content += f"""
 class {name}(SoupTemplate):
-    \"\"\"Scraper first; falls back to a real browser when requests fail.\"\"\"
+    \"\"\"Declarative selectors over the shared scraper session.\"\"\"
 
     base_url = ["{base_url}"]
     has_manga = {Feature.has_manga in features}
@@ -394,7 +394,8 @@ def _fill_with_openai(url: str, stub: str) -> str:
         f"You are given the URL of a novel-hosting website: `{url}`.\n\n"
         "Fetch the site content, find a representative novel page and a chapter page, then return a "
         "completed version of the class below.\n\n"
-        "The crawler subclasses `SoupTemplate` (lncrawl.core): HTTP first, browser fallback on failure. "
+        "The crawler subclasses `SoupTemplate` (lncrawl.core). Never drive a browser from a source: "
+        "the scraper escalates to one itself when a challenge is binding. "
         "Under that is `SoupTemplate`, which already implements `read_novel`, `download_chapter`, and `search` "
         "using **class-level CSS selector strings** when those are set correctly.\n\n"
         "**Priority 1 — selectors (do these first):** Fill every selector attribute that appears in the stub "

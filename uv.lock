@@ -2408,7 +2408,6 @@ dependencies = [
     { name = "lncrawl-scraper", extra = ["all"] },
     { name = "lncrawl-translator" },
     { name = "lxml" },
-    { name = "nodriver" },
     { name = "passlib", extra = ["argon2"] },
     { name = "pillow", version = "11.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "pillow", version = "12.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
@@ -2503,7 +2502,6 @@ requires-dist = [
     { name = "lncrawl-scraper", extras = ["all"], specifier = "~=1.2.0" },
     { name = "lncrawl-translator", specifier = ">=0.2.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
-    { name = "nodriver", specifier = ">=0.50" },
     { name = "passlib", extras = ["argon2"], specifier = ">=1.7.0" },
     { name = "pillow", specifier = ">=10.0.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2.0" },
@@ -2970,8 +2968,7 @@ source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "deprecated" },
     { name = "mss" },
-    { name = "websockets", version = "15.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
-    { name = "websockets", version = "16.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "websockets", version = "16.1.1", source = { registry = "https://pypi.org/simple" } },
 ]
 sdist = { url = "https://files.pythonhosted.org/packages/1a/ad/b8b7472ddbf8c28e4ae37ef46d863400ea2688569f3178a083dda8531f3f/nodriver-0.50.3.tar.gz", hash = "sha256:24ca688d8646ef8ffad5c8ce65804e5e7671a779ad26a24d76f6465d5666c631", size = 354439, upload-time = "2026-05-13T13:57:55.27Z" }
 wheels = [

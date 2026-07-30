@@ -39,6 +39,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - A source must not set a `User-Agent` or reorder headers. The impersonation profile
     owns the header set and its order is read as a fingerprint.
 
+- **lncrawl no longer drives a browser.** The webdriver stack it used to open Chrome with is
+  gone, along with the fallback that re-fetched any failed page through it. That fallback
+  fired on anything the transport raised — including a plain `404`, which cost a browser
+  launch and returned a rendered error page instead of an error. Deciding when a real browser
+  is needed now belongs to the scraper, which does it from its own diagnosis and reuses the
+  clearance for the requests that follow. A source that needs a rendered page asks for one
+  explicitly. `BrowserTemplate` and `Browser` are removed; importing either names the
+  replacement instead of failing as a missing attribute, since sources are downloaded to disk
+  and a user's copy may still refer to them.
+
 - **One scraper state for the process.** What is learned about a site — the pacing
   clock, the held address, the identity, the referrer chain, the tier that worked — is
   now shared process-wide instead of per domain, so it accumulates across every job

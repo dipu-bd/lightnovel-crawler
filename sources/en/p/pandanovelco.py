@@ -19,6 +19,4 @@ class PandaNovelCo(NovelPubTemplate):
 
     # .chapter-content -> #content
     def select_chapter_body(self, soup: PageSoup) -> PageSoup:
-        with self.create_browser() as browser:
-            browser.wait("#content")
-            return soup.select_one("#content")
+        return soup.select_one("#content")

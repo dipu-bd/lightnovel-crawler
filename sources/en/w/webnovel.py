@@ -14,7 +14,7 @@ from lncrawl.core import (
     SoupTemplate,
     Volume,
 )
-from lncrawl.exceptions import FallbackToBrowser, LNException
+from lncrawl.exceptions import LNException
 
 logger = logging.getLogger(__name__)
 
@@ -57,18 +57,7 @@ class WebnovelCrawler(SoupTemplate):
                     info="%(categoryName)s | Score: %(totalScore)s" % book,
                 )
         except Exception:
-            with self.create_browser() as browser:
-                params = {"keywords": query}
-                browser.visit(f"{self.scraper.origin}search?{urlencode(params)}")
-                for li in browser.soup.select(".search-result-container li"):
-                    a = li.find("a[href]")
-                    info = li.find(".g_star_num small")
-                    if a:
-                        yield SearchResult(
-                            url=self.absolute_url(a.get("href")),
-                            title=str(a.get("data-bookname") or ""),
-                            info=info.get_text(strip=True) if info else "",
-                        )
+            logger.warning("Failed to search %s", self.scraper.origin, exc_info=True)
 
     def read_novel(self, novel: Novel) -> None:
         if "_" not in novel.url:
@@ -86,15 +75,15 @@ class WebnovelCrawler(SoupTemplate):
         )
 
         if "data" not in data:
-            raise LNException("Get content failed")
+            raise LNException("Invalid JSON: no data")
         data = data["data"]
 
         if "bookInfo" not in data:
-            raise LNException("Get book info failed")
+            raise LNException("Invalid JSON: no bookInfo")
         book_info = data["bookInfo"]
 
         if "bookName" not in book_info:
-            raise LNException("Get book title failed")
+            raise LNException("Invalid JSON: no bookName")
         novel.title = book_info["bookName"]
 
         novel.cover_url = self.absolute_url(
@@ -139,31 +128,6 @@ class WebnovelCrawler(SoupTemplate):
                 )
                 novel.chapters.append(chapter)
 
-    def parse_chapter_catalog_in_browser(self, soup: PageSoup, novel: Novel) -> None:
-        novel.volumes = []
-        novel.chapters = []
-        for div in soup.select(".j_catalog_list .volume-item"):
-            vol = Volume(
-                id=len(novel.volumes) + 1,
-                title=div.find("h4").text,
-            )
-            novel.volumes.append(vol)
-
-            for li in div.select("li"):
-                a = li.find("a[href]")
-                cid = li.get("data-report-cid")
-                if not a or not cid:
-                    continue
-                chap = Chapter(
-                    id=len(novel.chapters) + 1,
-                    title=str(a.get("title") or ""),
-                    url=self.absolute_url(a.get("href")),
-                    volume=vol.id,
-                    novel_id=novel.novel_id,
-                    chapter_id=cid,
-                )
-                novel.chapters.append(chap)
-
     def download_chapter(self, chapter: Chapter) -> None:
         try:
             params = {
@@ -178,11 +142,11 @@ class WebnovelCrawler(SoupTemplate):
             )
 
             if "data" not in data:
-                raise FallbackToBrowser()
+                raise LNException("Invalid JSON: no data")
             data = data["data"]
 
             if "chapterInfo" not in data:
-                raise FallbackToBrowser()
+                raise LNException("Invalid JSON: no chapterInfo")
             chapter_info = data["chapterInfo"]
 
             chapter.title = chapter_info["chapterName"]
@@ -197,7 +161,7 @@ class WebnovelCrawler(SoupTemplate):
                 chapter.body = "".join([x for x in body if x.strip()])
 
             if not chapter.body:
-                raise FallbackToBrowser()
+                raise LNException("Invalid JSON: no chapter.body")
 
         except Exception:
             path = urlparse(chapter.url).path.strip("/")

@@ -40,7 +40,6 @@ dependencies = [
   "lncrawl-scraper[all]~=1.2.0",
   "lncrawl-translator>=0.2.1",
   "lxml>=5.4.0,<7.0.0",
-  "nodriver>=0.50",
   "passlib[argon2]>=1.7.0",
   "pillow>=10.0.0",
   "psycopg[binary]>=3.2.0",

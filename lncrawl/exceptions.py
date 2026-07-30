@@ -31,16 +31,11 @@ __all__ = [
     "AbortedException",
     "RetryErrorGroup",
     "ScraperErrorGroup",
-    "FallbackToBrowser",
     "get_exception_handlers",
 ]
 
 
 class LNException(Exception):
-    pass
-
-
-class FallbackToBrowser(Exception):
     pass
 
 
@@ -53,7 +48,6 @@ ScraperErrorGroup = (
     Blocked,
     Poisoned,
     RequestException,
-    FallbackToBrowser,
     UnidentifiedImageError,
 )
 

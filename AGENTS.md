@@ -113,13 +113,14 @@ Full contracts and the add-a-job-type recipe: **`add-job-type` skill**.
 
 Sources live in [sources/](sources/) grouped by language; user sources load from
 `ctx.config.crawler.user_sources`. Base classes in [lncrawl/core/](lncrawl/core/):
-`Crawler` (abstract) → `BrowserTemplate` (auto real-browser fallback) → `SoupTemplate`
-(declarative selectors — preferred for new sources) and `LegacyCrawler` (the classic
-`read_novel_info`/`download_chapter_body` API most existing sources use). Shared site-engine
-templates (WordPress/Madara, NovelFull, …) live in [lncrawl/templates/](lncrawl/templates/) —
-subclassing one is usually a ~10-line source. There is no scaffold command; copy a similar
-source. After adding/renaming a source: `make index-gen`. Everything else:
-**`add-source` skill**.
+`Crawler` (abstract) → `CrawlerTemplate` → `SoupTemplate` (declarative selectors — preferred
+for new sources) and `LegacyCrawler` (the classic `read_novel_info`/`download_chapter_body`
+API most existing sources use). **A source never drives a browser**: the scraper escalates
+to one on its own evidence, and a page whose HTML is not its content is fetched with
+`self.scraper.render_soup(url, wait_for=…)`. Shared site-engine templates (WordPress/Madara,
+NovelFull, …) live in [lncrawl/templates/](lncrawl/templates/) — subclassing one is usually a
+~10-line source. There is no scaffold command; copy a similar source. After adding/renaming a
+source: `make index-gen`. Everything else: **`add-source` skill**.
 
 ### Persistence
 

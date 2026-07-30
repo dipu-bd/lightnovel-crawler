@@ -3,13 +3,13 @@ from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Union
 
 from ..utils.event_lock import EventLock
 from .models import Chapter, Novel, SearchResult, Volume
-from .template import BrowserTemplate
+from .template import CrawlerTemplate
 
 if TYPE_CHECKING:
     from scraper import Scraper
 
 
-class LegacyCrawler(BrowserTemplate):
+class LegacyCrawler(CrawlerTemplate):
     def __init__(
         self,
         parser: Optional[str] = None,

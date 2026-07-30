@@ -7,8 +7,7 @@ from pyease_grpc import RpcSession
 from requests.utils import CaseInsensitiveDict
 
 from lncrawl.core import Chapter, Novel, SoupTemplate, Volume
-from lncrawl.core.browser import Browser, By
-from lncrawl.exceptions import FallbackToBrowser, ScraperErrorGroup
+from lncrawl.exceptions import LNException
 
 logger = logging.getLogger(__name__)
 
@@ -25,73 +24,22 @@ class WuxiaworldComCrawler(SoupTemplate):
         self.cleaner.bad_css.clear()
         self.cleaner.bad_tags.add("hr")
         self.bearer_token = None
-        self.bearer_token_in_browser = False
         self.cleaner.unchanged_tags.update(["span"])
-        self.localstorageuser = "oidc.user:https://identity.wuxiaworld.com:wuxiaworld_spa"
 
     def login(self, username_or_email: str, password_or_token: str) -> None:
-        # Login now will use Bearer Token if supplied as main login method,
-        # and if username used it will exctract Bearer Token
-        # and use it for further login process
-        if username_or_email == "Bearer":
-            logger.info("login type: %s", username_or_email)
-            self.bearer_token = username_or_email + " " + password_or_token
-            return
-        with self.create_browser() as browser:
-            logger.info("login type: Email(%s)", username_or_email)
-
-            browser.visit("https://www.wuxiaworld.com/manage/profile/")
-            browser.wait("h6 button")
-            button = browser.find("h6 button")
-            if not button:
-                return
-            button.click()
-
-            browser.wait("input#Username")
-            username = browser.find("input#Username")
-            password = browser.find("input#Password")
-            button = browser.find("button")
-            if not username or not password or not button:
-                return
-            username.send_keys(username_or_email)
-            password.send_keys(password_or_token)
-            button.click()
-
-            try:
-                browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
-                if browser.local_storage.has(self.localstorageuser):
-                    user = browser.local_storage.get(self.localstorageuser)
-                    if not user:
-                        raise Exception("No localstorageuser in localstorage")
-                    self.bearer_token = "{token_type} {access_token}".format(**json.loads(user))
-            except Exception as e:
-                logger.info("login Email: Failed", e)
-
-    def put_bearer_token_in_browser(self, browser: Browser) -> None:
-        if not self.bearer_token or self.bearer_token_in_browser:
-            return
-        browser.visit("https://www.wuxiaworld.com/manage/profile/")
-        if not browser.local_storage.has(self.localstorageuser):
-            token_type, token = self.bearer_token.split(" ", 1)
-            browser.local_storage[self.localstorageuser] = json.dumps(
-                {
-                    "access_token": token,
-                    "token_type": token_type,
-                }
+        # Email and password went through the site's own login form in a browser, which
+        # this source no longer drives. The token it used to extract can be supplied
+        # directly: it is in local storage under the identity server's key.
+        if username_or_email != "Bearer":
+            raise LNException(
+                "This source signs in with a token. "
+                "Use 'Bearer' as the username and the access token as the password."
             )
-            browser.visit("https://www.wuxiaworld.com/manage/profile/")
-            try:
-                browser.wait("//h2[normalize-space()='Your Profile']", By.XPATH, 10)
-                browser.find("//h2[normalize-space()='Your Profile']", By.XPATH)
-            except Exception as e:
-                logger.debug("login Email: Failed", e)
+        logger.info("login type: %s", username_or_email)
+        self.bearer_token = username_or_email + " " + password_or_token
 
     def read_novel(self, novel: Novel) -> None:
-        try:
-            self.read_novel_in_soup(novel)
-        except ScraperErrorGroup:
-            self.read_novel_in_browser(novel)
+        self.read_novel_in_soup(novel)
 
     def read_novel_in_soup(self, novel: Novel) -> None:
         slug = re.findall(r"/novel/([^/]+)", novel.url)[0]
@@ -119,7 +67,7 @@ class WuxiaworldComCrawler(SoupTemplate):
         )
 
         if not response.single:
-            raise FallbackToBrowser()
+            raise LNException("No novel details in the API response")
         item = response.single["item"]
 
         novel.title = item["name"]
@@ -137,7 +85,7 @@ class WuxiaworldComCrawler(SoupTemplate):
             )
 
             if not response.single:
-                raise FallbackToBrowser()
+                raise LNException("No subscription details in the API response")
             subscriptions = response.single["items"]
 
             logger.debug(f"User subscriptions: {subscriptions}")
@@ -158,7 +106,7 @@ class WuxiaworldComCrawler(SoupTemplate):
         )
 
         if not response.single:
-            raise FallbackToBrowser()
+            raise LNException("No chapter list in the API response")
         volumes = response.single["items"]
 
         for group in sorted(volumes, key=lambda x: x.get("order", 0)):
@@ -197,88 +145,10 @@ class WuxiaworldComCrawler(SoupTemplate):
                 )
 
         if not novel.chapters:
-            raise FallbackToBrowser()
-
-    def read_novel_in_browser(self, novel: Novel) -> None:
-        with self.create_browser() as browser:
-            self.put_bearer_token_in_browser(browser)
-
-            browser.visit(novel.url)
-            browser.wait(".items-start h1, img.drop-shadow-ww-novel-cover-image")
-
-            # Clear the annoying top menubar
-            header = browser.find("header#header")
-            if header:
-                header.remove()
-
-            # Parse cover image and title
-            img = browser.find("img.drop-shadow-ww-novel-cover-image")
-            if img:
-                novel.title = img.get_attribute("alt") or ""
-                novel.cover_url = self.absolute_url(img.get_attribute("src"))
-
-            # Parse title from h1 if not available
-            if not novel.title:
-                h1 = browser.find(".items-start h1")
-                if h1:
-                    novel.title = h1.text.strip()
-
-            # Parse author
-            author_tag = browser.find("//*[text()='Author:']", By.XPATH)
-            if author_tag:
-                author_tag = author_tag.find("following-sibling::*", By.XPATH)
-            if author_tag:
-                novel.author = author_tag.text.strip()
-
-            # Open chapters menu (note: the order of tabs in novel info
-            # change whether if you are logged in or not)
-            if len(browser.find_all('//*[starts-with(@id, "full-width-tab-")]', By.XPATH)) == 3:
-                browser.click("#novel-tabs #full-width-tab-0")
-                browser.wait("#full-width-tabpanel-0 .MuiAccordion-root")
-            else:
-                browser.click("#novel-tabs #full-width-tab-1")
-                browser.wait("#full-width-tabpanel-1 .MuiAccordion-root")
-
-            # Get volume list and a progress bar
-            volumes = browser.find_all("#app .MuiAccordion-root")
-            for index, root in enumerate(
-                self.taskman.progress_bar(
-                    reversed(volumes),
-                    desc="Volumes",
-                    unit="vol",
-                )
-            ):
-                root.scroll_into_view()
-                root.click()
-
-                nth = len(volumes) - index
-                browser.wait(f"#app .MuiAccordion-root:nth-of-type({nth}) a[href]")
-
-                tag = root.as_tag()
-                head = tag.select_one(".MuiAccordionSummary-content")
-                title = head.select_one("section span.font-set-sb18").text.strip()
-                vol = Volume(
-                    id=len(novel.volumes) + 1,
-                    title=title,
-                )
-                novel.volumes.append(vol)
-
-                for a in reversed(tag.select("a[href]")):
-                    data = json.loads(a["data-amplitude-params"])
-                    chap = Chapter(
-                        volume=vol.id,
-                        id=len(novel.chapters) + 1,
-                        url=self.absolute_url(a["href"]),
-                        title=data["chapterTitle"],
-                        chapterId=data["chapterId"],
-                    )
-                    novel.chapters.append(chap)
+            raise LNException("No chapters found")
 
     def download_chapter(self, chapter: Chapter) -> None:
-        try:
-            self.download_chapter_in_soup(chapter)
-        except ScraperErrorGroup:
-            self.download_chapter_in_browser(chapter)
+        self.download_chapter_in_soup(chapter)
 
     def download_chapter_in_soup(self, chapter: Chapter) -> None:
         response = self.grpc.request(
@@ -294,7 +164,7 @@ class WuxiaworldComCrawler(SoupTemplate):
         )
 
         if not response.single:
-            raise FallbackToBrowser()
+            raise LNException("No chapter content in the API response")
         content = response.single["item"]["content"]
 
         if "translatorThoughts" in response.single["item"]:
@@ -304,25 +174,6 @@ class WuxiaworldComCrawler(SoupTemplate):
             content += "</blockquote>"
 
         chapter.body = re.sub(r'(background-)?color: [^\\";]+', "", content)
-
-    def download_chapter_in_browser(self, chapter: Chapter) -> None:
-        with self.create_browser() as browser:
-            self.put_bearer_token_in_browser(browser)
-
-            browser.visit(chapter.url)
-            browser.wait("chapter-content", By.CLASS_NAME)
-
-            try:
-                if self.bearer_token:
-                    browser.wait("//button[normalize-space()='Favorite']", By.XPATH, 10)
-                    browser.find("//button[normalize-space()='Favorite']", By.XPATH)
-            except Exception as e:
-                logger.debug("error loading (%s)", str(chapter.url), e)
-
-            content = browser.find("chapter-content", By.CLASS_NAME)
-            if content:
-                tag = self.cleaner.clean_contents(content.as_tag())
-                chapter.body = tag.outer_html
 
 
 """
