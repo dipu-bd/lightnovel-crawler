@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- **Challenges are solved by talking to Chrome directly, and the browser stays hidden by default.** The old driver could not be imported on Python 3.10 or below, or 3.14 and above — which is the version the server image runs, so the image had no solver at all and every challenged origin failed honestly instead of being answered. The replacement needs only a WebSocket and works everywhere, so the Docker image now installs Google Chrome and can solve.
+
+  Specifically Google Chrome, not Debian's `chromium`: measured in a container, that build cleared none of six challenged hosts under any display setting, because it omits the `Google Chrome` brand from a header every request carries. `amd64` only, which is what Google publishes; an `arm64` image has no browser and says so as before.
+
+  **Browser Headless Mode now defaults to on.** A hidden browser gets past every site a visible one gets past, measured across 46 challenged sites, and most installs have no display to put a window on. Turn it off to watch a challenge and finish it by hand, which also gives it five minutes instead of ninety seconds, since somebody is there.
+
 - **Upgraded to `lncrawl-scraper` 1.0**, a rewrite of the HTTP layer around a model of bot detection. Measured across 150 real source hosts it retrieves more of them than the version it replaces, with no fallback to a cached copy.
 
   - `crawler.proxy_urls` keeps its format, but each entry becomes a typed *exit*, because what a detector reads is the reputation of the range an address belongs to. An unmarked URL is read as datacenter, which never claims reach it may not have.

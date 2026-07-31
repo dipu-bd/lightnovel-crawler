@@ -116,22 +116,24 @@ class ScraperService:
 
         from ..utils.browser_detect import pick_executable
 
-        if not pick_executable():
+        executable = pick_executable()
+        if not executable:
             logger.info("No browser executable found; challenges will not be solved")
             return None
 
-        # The solver's driver does not import on every Python this package supports, so
-        # the extra is marked and simply absent there — including on the version the
-        # server image runs. The solver class itself imports fine and only reaches for
-        # the driver when asked to solve, so offering one without checking would put a
-        # rung on the ladder that fails every time it is climbed.
-        if not util.find_spec("nodriver"):
-            logger.info("The browser driver is not installed; challenges will not be solved")
+        # The solver talks CDP over a WebSocket and reaches for it only when asked to
+        # solve, so it imports fine with nothing installed. Offering one anyway would
+        # put a rung on the ladder that fails every time it is climbed.
+        if not util.find_spec("websockets"):
+            logger.info("The websockets package is missing; challenges will not be solved")
             return None
 
-        from scraper.browser import NoDriverSolver
+        from scraper import CdpSolver
 
-        return NoDriverSolver(headless=ctx.config.crawler.use_headless_mode)
+        return CdpSolver(
+            executable=executable,
+            headless=ctx.config.crawler.use_headless_mode,
+        )
 
     def _crawl_settings(self) -> Dict[str, Any]:
         """The settings that describe crawl traffic, shared state included."""
