@@ -106,7 +106,11 @@ _REMEDY = {
         " enabled and a browser is installed"
     ),
     Stance.AVOID: "there is nothing to defeat here; the source should not be asking for what tripped it",
-    Stance.DELEGATE: "this is past what lncrawl will attempt on its own",
+    Stance.DELEGATE: (
+        "the only tier above this one is a paid per-request service, which lncrawl does"
+        " not integrate — so there is nothing here to configure and this source is past"
+        " what the stack reaches"
+    ),
     Stance.REFUSE: "there is no bypass; this content needs credentials or a registered agent",
 }
 
@@ -192,7 +196,7 @@ def describe(error: BaseException, *, url: str = "") -> str:
     if not detail and not hasattr(error, "detail"):
         detail = str(error)
     if detail:
-        parts.append(f"{detail}.")
+        parts.append(detail)
 
     hint = _STATUS_HINT.get(code) if code is not None else None
     if hint:

@@ -128,6 +128,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **A diagnosis no longer tells you to configure something lncrawl does not have.** The
+  scraper's ladder ends in a paid per-request provider, and its advice for the layer that
+  needs one says to configure it — reasonable for a library, but lncrawl exposes no such
+  setting, so the sentence arrived immediately before lncrawl's own "this is past what it
+  will attempt" and the two contradicted each other. The remedy now answers it outright:
+  there is nothing to configure and the source is out of reach.
+
+  Recorded rather than wired, deliberately. The scraper bundles no provider client
+  because their formats differ and change, and one that guesses wrong fails looking
+  exactly like the site blocking you; the credentials want a secret store that does not
+  exist here yet; and this layer is as often inferred as detected, since the planner
+  attributes any layer that keeps failing to it — so a wired provider would spend real
+  money on a guess.
+
+- **A diagnosis with a detail ending in a full stop no longer gets a second one.**
+
 - **An empty chapter is no longer saved and marked finished.** When a site changed its
   markup the body came back empty, and nothing checked: the empty file was written, the
   chapter was marked done, and a later run skipped it because it looked complete. This is
