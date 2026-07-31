@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from requests.sessions import Session
-
 from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
@@ -10,9 +8,6 @@ logger = logging.getLogger(__name__)
 
 class TotallyTranslations(LegacyCrawler):
     base_url = "https://totallytranslations.com/"
-
-    def initialize(self):
-        self.scraper = Session()
 
     def read_novel_info(self):
         logger.debug("Visiting %s", self.novel_url)

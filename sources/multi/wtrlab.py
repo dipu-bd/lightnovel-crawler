@@ -6,7 +6,6 @@ import math
 from typing import List, Union
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
-import requests
 
 from lncrawl.core import Chapter, LegacyCrawler, PageSoup, SearchResult
 
@@ -25,10 +24,10 @@ class WtrLab(LegacyCrawler):
         return json.loads(metadata_json.get_text(strip=True))
 
     def search_novel(self, query: str):
-        novels = requests.post(
+        novels = self.post_json(
             "https://www.wtr-lab.com/api/search",
             json={"text": query},
-        ).json()
+        )
         logger.info("Search results: %s", novels)
 
         results = []

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Iterable, List, Optional, TypeVar, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, TypeVar, Union
 
 from sqlalchemy.orm import aliased
 import sqlmodel as sq
@@ -1002,12 +1002,12 @@ class JobService:
             done=Job.done + pending,
             failed=Job.failed + pending,
         )
-        extra = self._get_extra(sess, job_id, extra)
         self._update(
             sess,
             job_id,
             error=reason,
             status=JobStatus.FAILED,
+            extra=self._get_extra(sess, job_id, extra),
         )
 
     def _get_extra(
@@ -1015,7 +1015,7 @@ class JobService:
         sess: Session,
         job_id: str,
         updates: Union[dict, Callable[[dict], None]],
-    ) -> None:
+    ) -> Dict[str, Any]:
         current = sess.scalar(sq.select(Job.extra).where(Job.id == job_id))
 
         extra = dict(current or {})

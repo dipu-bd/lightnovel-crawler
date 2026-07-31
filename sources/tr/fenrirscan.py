@@ -2,8 +2,6 @@
 import logging
 import re
 
-import requests
-
 from lncrawl.core import Chapter, LegacyCrawler, SearchResult
 
 logger = logging.getLogger(__name__)
@@ -16,16 +14,17 @@ class FenrirScans(LegacyCrawler):
     has_mtl = False
 
     def search_novel(self, query):
-        """
-        Uses the site's AJAX search endpoint to find novels.
-        """
-        # Prepare payload for AJAX search
+        # The site no longer answers this: its theme registers only next/prev/tepki, and
+        # `ts_ac_do_search` returns `400`. Its `?s=` page is no better — the grid it
+        # renders is byte-identical for every query, including one that matches nothing.
+        # Left in place because a restored endpoint would work again as written, and
+        # returning nothing is what this did before the request began raising.
         data = {
             "action": "ts_ac_do_search",
             "ts_ac_query": query,
         }
-        response = requests.post(self.search_url, data=data)
         try:
+            response = self.post_response(self.search_url, data=data)
             return [
                 SearchResult(
                     title=item["post_title"],
@@ -37,9 +36,6 @@ class FenrirScans(LegacyCrawler):
             return []
 
     def read_novel_info(self):
-        """
-        Parses novel metadata and chapter list from the novel page.
-        """
         soup = self.get_soup(self.novel_url)
         # Metadata
         title = soup.find("h1")
@@ -66,8 +62,10 @@ class FenrirScans(LegacyCrawler):
 
         # Chapters
         chapter_links = soup.find_all("a", href=re.compile(r"-bolum-\d+"))
+
         # Reverse so earliest chapters first
         chapter_links = list(reversed(chapter_links))
+
         for idx, a in enumerate(chapter_links, 1):
             chap_url = self.absolute_url(a["href"])
             chap_title = (a.find("span", {"class": "chapternum"}) or a).text

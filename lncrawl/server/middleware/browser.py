@@ -5,9 +5,9 @@ import logging
 import pickle
 from urllib.parse import urljoin, urlparse
 
-from requests.structures import CaseInsensitiveDict
 from scraper import Scraper
 from scraper.exceptions import Blocked
+from starlette.datastructures import MutableHeaders
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
 
@@ -78,7 +78,7 @@ class BrowserNavigation:
 
         body = await request.body()
 
-        headers = CaseInsensitiveDict(request.headers)
+        headers = MutableHeaders(headers=dict(request.headers))
         if headers.get("host"):
             headers["host"] = apex_domain
         if headers.get("origin"):

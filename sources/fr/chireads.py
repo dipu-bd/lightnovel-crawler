@@ -2,8 +2,6 @@
 
 import logging
 
-import requests
-
 from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
@@ -17,19 +15,17 @@ class Chireads(LegacyCrawler):
     def search_novel(self, query):
         query = query.lower().replace(" ", "+")
 
-        # NOTE: Using self.get_soup() here throw an error, I don't know why.
-        response = requests.get("https://chireads.com/search?x=0&y=0&name=" + query)
-        soup = self.make_soup(response)
+        soup = self.get_soup("https://chireads.com/search?x=0&y=0&name=" + query)
 
         result = []
         content = soup.find("div", {"id": "content"})
 
         for novel in content.find_all("li"):
-            content = novel.find("a")
+            link = novel.find("a")
             result.append(
                 {
-                    "title": content.get("title"),
-                    "url": self.absolute_url(content.get("href")),
+                    "title": link.get("aria-label"),
+                    "url": self.absolute_url(link.get("href")),
                 }
             )
 

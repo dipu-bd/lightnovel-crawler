@@ -151,6 +151,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   because the default cannot handle their markup; the value was stored on the crawler
   and never reached the session that builds the soup.
 
+- **A source's primary address no longer changes between runs.** Where a source lists
+  several addresses, the one treated as its home was picked from an unordered set, so it
+  varied from one run to the next for the same unchanged code — and a source listing both
+  `http` and `https` for the same site could end up pinned to the plaintext one. Secure
+  addresses now come first, the source's own order is kept within that, and three sources
+  stop defaulting to `http`. This also makes the generated source index reproducible: it
+  was rewriting a hundred lines on every build with nothing behind it.
+
+- **`chireads` search results had no titles.** The site moved the title out of the
+  attribute the source read; it now reads the one the site actually emits.
+  `totallytranslations` replaced its own HTTP session on startup, which broke every
+  request it then made — that domain has since lapsed and was already flagged as
+  unavailable, so this only removes the broken code.
+
 - **Asking what is known about a site no longer records that it was asked.** Reading a
   site's diagnosis stored a profile for it, so browsing the sources list wrote one entry
   per site looked at — and with the store bounded, that could push out what a running
