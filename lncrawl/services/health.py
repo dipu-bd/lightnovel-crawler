@@ -30,11 +30,11 @@ class SourceHealth:
 
     def count(self, domain: str, reason: str) -> int:
         with self._lock:
-            return self._counts[domain][reason]
+            return self._counts.get(domain, {}).get(reason, 0)
 
     def reasons(self, domain: str) -> Dict[str, int]:
         with self._lock:
-            return dict(self._counts[domain])
+            return dict(self._counts.get(domain, {}))
 
     def tally(self) -> Dict[str, Dict[str, int]]:
         with self._lock:
@@ -42,7 +42,7 @@ class SourceHealth:
 
     def samples(self, domain: str, reason: str) -> List[str]:
         with self._lock:
-            return list(self._samples[(domain, reason)])
+            return list(self._samples.get((domain, reason), ()))
 
     def reset(self) -> None:
         with self._lock:

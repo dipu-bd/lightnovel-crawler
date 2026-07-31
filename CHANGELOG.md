@@ -199,6 +199,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   it. A search that ends early also says how many sources did not answer, instead of
   reporting a total failure over the results it did collect.
 
+- **The server no longer leaks memory on every failed request.** Each API error was one
+  shared exception object, created when the module loaded and raised over and over.
+  Raising an exception *appends* to the traceback already on it, and a shared object is
+  never collected, so every frame of every failed request stayed reachable — along with
+  everything those frames' local variables pointed at. Measured: after 900 requests one
+  error object held 9,000 traceback frames, and memory rose 66 MB per 800 requests with
+  no ceiling. Errors are now built fresh at the point they are raised, and memory is flat
+  over 6,400 requests. This also fixes a bug that was never only about memory: two
+  requests failing at once shared one object, so one could be answered with the other's
+  error detail.
+
 - **Chapters stored empty before this release are recovered on their own.** Refusing to
   store an empty chapter only helps from here on; a library that already had them kept
   them forever, because nothing re-downloads a chapter already marked finished. The
