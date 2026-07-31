@@ -122,7 +122,8 @@ def extract_crawlers(module: types.ModuleType) -> Generator[Type[Crawler], None,
         base_url = getattr(crawler, "base_url", [])
         urls = [base_url] if isinstance(base_url, str) else base_url
         urls = [str(url).lower().strip("/") + "/" for url in urls]
-        urls = [url for url in set(urls) if validate_url(url)]
+        urls = list(dict.fromkeys(url for url in urls if validate_url(url)))
+        urls.sort(key=lambda url: not url.startswith("https://"))
         if not urls:
             logger.info(f"\\[{file}] No base url: {crawler}")
             continue

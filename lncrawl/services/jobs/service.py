@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Dict, Iterable, List, Optional, TypeVar, Union
+from typing import Any, Callable, Iterable, List, Optional, TypeVar, Union
 
 from sqlalchemy.orm import aliased
 import sqlmodel as sq
@@ -1014,14 +1014,14 @@ class JobService:
         self,
         sess: Session,
         job_id: str,
-        updates: Union[dict, Callable[[dict], None]],
-    ) -> Dict[str, Any]:
+        updates: Union[dict, Callable[[dict], None], None],
+    ) -> dict:
         current = sess.scalar(sq.select(Job.extra).where(Job.id == job_id))
 
         extra = dict(current or {})
         if callable(updates):
             updates(extra)
-        else:
+        elif updates:
             extra.update(updates)
 
         return extra
