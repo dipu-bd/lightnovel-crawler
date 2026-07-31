@@ -54,7 +54,10 @@ def gather_packages():
     packages = [
         "pylsp",
         "translator",
+        "curl_cffi",
     ]
+    if (SITE_PACKAGES / "nodriver").is_dir():
+        packages.append("nodriver")
     return [f"--collect-all={pkg}" for pkg in packages]
 
 

@@ -159,6 +159,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   stop defaulting to `http`. This also makes the generated source index reproducible: it
   was rewriting a hundred lines on every build with nothing behind it.
 
+- **`urllib3` is no longer held on the 1.26 line.** It was pinned below 2.0 in the same
+  change that removed Selenium, which had required 2.x — so the pin outlived the conflict
+  it settled and kept a 2024 release in place. Nothing here imports it, and requests is
+  not the transport, so it only ever sat under the fallback path. Removed; 2.x resolves
+  cleanly with no other package moving.
+
 - **`chireads` search results had no titles.** The site moved the title out of the
   attribute the source read; it now reads the one the site actually emits.
   `totallytranslations` replaced its own HTTP session on startup, which broke every
