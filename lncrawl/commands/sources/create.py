@@ -10,11 +10,11 @@ from typing import List, Optional
 
 import questionary
 from rich import print
+from scraper import extract_base, extract_host, validate_url
 import typer
 
 from ...assets.languages import language_codes
 from ...context import ctx
-from ...utils.url_tools import extract_base, extract_host, validate_url
 from .app import app
 
 logger = logging.getLogger(__name__)

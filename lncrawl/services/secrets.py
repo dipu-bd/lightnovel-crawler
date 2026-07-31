@@ -2,13 +2,13 @@ import logging
 from typing import Any, List, Optional
 
 from cryptography.fernet import Fernet
+from scraper import extract_host
 from sqlmodel import and_, col, func, select
 
 from ..context import ctx
 from ..dao import Secret
 from ..exceptions import ServerErrors
 from ..server.models import LoginData, Paginated
-from ..utils.url_tools import extract_host
 
 SECRET_KEY_ID = "--server-secret-key--"
 logger = logging.getLogger(__name__)

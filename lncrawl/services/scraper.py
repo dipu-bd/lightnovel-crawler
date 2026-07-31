@@ -5,11 +5,12 @@ import logging
 import threading
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
+from scraper import extract_base
+
 from ..config import APP_DIR
 from ..context import ctx
 from ..utils import proxy_tools
 from ..utils.proxy_tools import ProxyExit, ProxyKind
-from ..utils.url_tools import extract_base
 
 if TYPE_CHECKING:
     from scraper import (

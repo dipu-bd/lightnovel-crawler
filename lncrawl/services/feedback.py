@@ -5,13 +5,13 @@ import re
 from typing import Any, Dict, List, Optional, Tuple
 
 import httpx
+from scraper import extract_host
 
 from ..dao import User
 from ..enums import FeedbackStatus, FeedbackType, UserRole
 from ..exceptions import ServerErrors
 from ..server.models import Feedback, Paginated
 from ..utils.github import GithubClient
-from ..utils.url_tools import extract_host
 
 # Marks issues created through the app, so the feedback page only shows these.
 _APP_LABEL = "app-feedback"

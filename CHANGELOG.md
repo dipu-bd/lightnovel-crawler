@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- **The URL helpers come from the scraper now.** `extract_base`, `extract_host` and `validate_url` existed in both projects. Diffed over all 515 URLs in the source index the two agreed on every one, and disagreed only on input this copy crashed on or turned into `:///` — so nothing stored was ever keyed by the difference, and there is no migration. `extract_base` feeds every relative link a source resolves, and it now handles a scheme-less or malformed URL instead of producing an origin that collides with every other broken one.
+
 - **Challenges are solved by talking to Chrome directly, and the browser stays hidden by default.** The old driver could not be imported on Python 3.10 or below, or 3.14 and above — which is the version the server image runs, so the image had no solver at all and every challenged origin failed honestly instead of being answered. The replacement needs only a WebSocket and works everywhere, so the Docker image now installs Google Chrome and can solve.
 
   Specifically Google Chrome, not Debian's `chromium`: measured in a container, that build cleared none of six challenged hosts under any display setting, because it omits the `Google Chrome` brand from a header every request carries. `amd64` only, which is what Google publishes; an `arm64` image has no browser and says so as before.

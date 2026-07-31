@@ -6,13 +6,13 @@ from threading import Event
 from typing import List, Optional, Union
 
 from pydantic import HttpUrl
+from scraper import extract_host
 
 from ..context import ctx
 from ..core import Chapter as CrawlerChapter, Crawler, Novel as CrawlerNovel, SearchResult
 from ..dao import Chapter, ChapterImage, Novel
 from ..enums import LanguageCode
 from ..exceptions import ServerErrors
-from ..utils.url_tools import extract_host
 
 logger = logging.getLogger(__name__)
 

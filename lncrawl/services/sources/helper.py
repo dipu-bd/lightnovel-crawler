@@ -7,12 +7,13 @@ from pathlib import Path
 import types
 from typing import Dict, Generator, Type
 
+from scraper import extract_host, validate_url
+
 from ...context import ctx
 from ...core import Crawler
 from ...server.models import CrawlerIndex, CrawlerInfo, SourceItem
 from ...utils.log_sink import replace_logger
 from ...utils.time_utils import current_timestamp
-from ...utils.url_tools import extract_host, validate_url
 
 logger = logging.getLogger(__name__)
 

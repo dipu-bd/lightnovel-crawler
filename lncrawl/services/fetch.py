@@ -6,10 +6,10 @@ from threading import Event
 from typing import Any, Optional
 
 import requests
+from scraper import extract_base
 
 from ..assets.images import favicon_icon
 from ..context import ctx
-from ..utils.url_tools import extract_base
 
 logger = logging.getLogger(__name__)
 

@@ -8,12 +8,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Union
 
 from pydantic.networks import HttpUrl
+from scraper import extract_base
 
 from ..context import ctx
 from ..exceptions import LNException
 from ..utils.file_tools import atomic_write
 from ..utils.text_tools import format_title, normalize
-from ..utils.url_tools import extract_base
 from .models import Chapter, Novel, SearchResult, Volume
 
 if TYPE_CHECKING:

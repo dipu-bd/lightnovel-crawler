@@ -2,11 +2,12 @@ import hashlib
 import types
 from typing import Any, Callable, List, Type
 
+from scraper import extract_base
+
 from lncrawl.context import ctx
 from lncrawl.core import Chapter, Crawler, Novel, PageSoup
 from lncrawl.services.sources.helper import extract_crawlers
 from lncrawl.utils.log_sink import LogSink
-from lncrawl.utils.url_tools import extract_base
 
 
 def parse_content(host: str, content: str):

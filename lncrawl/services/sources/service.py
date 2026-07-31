@@ -5,7 +5,7 @@ from threading import Event, Thread
 import traceback
 from typing import Dict, List, Optional, Type
 
-from scraper import LAYERS
+from scraper import LAYERS, extract_host
 
 from ...context import ctx
 from ...core import Crawler
@@ -14,7 +14,7 @@ from ...server.models import CrawlerIndex, CrawlerInfo, SourceDiagnosis, SourceI
 from ...utils.event_lock import EventLock
 from ...utils.fts_store import FTSStore
 from ...utils.text_tools import normalize
-from ...utils.url_tools import extract_host, normalize_url
+from ...utils.url_tools import normalize_url
 from .helper import (
     batch_import,
     create_crawler_info,

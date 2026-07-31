@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING, List, Optional, Sequence, Set, Tuple, Union
 
 import questionary
 from rich import print
+from scraper import validate_url
 
 from ...context import ctx
 from ...dao import Novel, Volume
 from ...enums import OutputFormat
-from ...utils.url_tools import validate_url
 
 if TYPE_CHECKING:
     from ...dao import Chapter
