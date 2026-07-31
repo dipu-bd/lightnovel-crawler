@@ -186,6 +186,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   per site looked at — and with the store bounded, that could push out what a running
   crawl was relying on.
 
+- **`lncrawl search` now ends when it says it will.** `--timeout` bounded how long
+  results were collected but nothing about the requests themselves, so the command sat
+  there long after the results were on screen — measured at 74 seconds for a 10 second
+  timeout. A search is now treated as what it is: one throwaway question asked of many
+  sites at once. It gets one attempt instead of five, no rotation, no warm-up request, no
+  browser launched to solve a challenge for a session that is about to be discarded, and
+  no web-archive lookup, which could never answer a search query anyway and was the
+  single largest cost when archive reading was switched on. Each request is also bounded
+  by the timeout the command was given. The same run now finishes in 16 seconds and
+  returns *more*, because sources that used to fall outside the window now answer inside
+  it. A search that ends early also says how many sources did not answer, instead of
+  reporting a total failure over the results it did collect.
+
+- **Chapters stored empty before this release are recovered on their own.** Refusing to
+  store an empty chapter only helps from here on; a library that already had them kept
+  them forever, because nothing re-downloads a chapter already marked finished. The
+  background cleanup pass now reopens them. It leaves alone the ones that were tried and
+  given up on deliberately, so nothing re-enters a retry loop. `lncrawl dev
+  recover-empty-chapters` still reports before it acts and can reach those too, for a
+  source that has since been fixed.
+
 - A challenge interstitial served with a `200` is no longer parsed as chapter content.
   This is the failure mode with no error to catch: the download reports success and
   stores an empty page. Sites that answer a first request with a JavaScript-only

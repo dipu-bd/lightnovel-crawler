@@ -27,6 +27,7 @@ class Scrubber:
         scrubber.delete_expired_tokens()
         scrubber.delete_inactive_users()
         scrubber.delete_old_activities()
+        scrubber.recover_empty_chapters()
 
     def __init__(self, signal=Event()) -> None:
         self.signal = signal
@@ -192,3 +193,17 @@ class Scrubber:
                 )
             )
             sess.commit()
+
+    def recover_empty_chapters(self):
+        """Let chapters stored with an empty body be downloaded again.
+
+        Refusing to store an empty chapter only stops new ones. A library that already
+        has them keeps them forever, because the refetch gate skips anything marked done
+        — so the fix delivers nothing to the people it was written for without a pass
+        that reopens what earlier versions stored.
+        """
+        found = ctx.chapters.find_stored_empty(untried_only=True)
+        if not found:
+            return
+        logger.info(f"Reopening {len(found)} chapter(s) stored with an empty body")
+        ctx.chapters.reopen_empty([item.id for item in found])

@@ -1,3 +1,4 @@
+from concurrent.futures import TimeoutError as FutureTimeout
 from difflib import SequenceMatcher
 import logging
 from threading import Event
@@ -39,9 +40,12 @@ def perform_search(
     taskman = TaskManager(concurrency, signal=signal)
 
     logger.info(f'Searching {len(sources)} sources for "{query}"')
-    futures = [taskman.submit_task(search_job, source, query, signal) for source in sources]
+    futures = [
+        taskman.submit_task(search_job, source, query, signal, timeout) for source in sources
+    ]
 
     # Wait for all tasks to finish with progress
+    answered = 0
     records: List[SearchResult] = []
     try:
         for result in taskman.resolve(
@@ -51,9 +55,15 @@ def perform_search(
             signal=signal,
             timeout=timeout,
         ):
+            answered += 1
             records += result or []
     except KeyboardInterrupt:
         signal.set()
+    except FutureTimeout:
+        logger.warning(
+            f"{len(sources) - answered} of {len(sources)} sources did not answer "
+            f"within {timeout:.0f}s; raise --timeout to wait longer"
+        )
     except Exception:
         logger.error("Failed to perform search!", exc_info=ctx.logger.is_info)
     finally:
@@ -95,11 +105,11 @@ def perform_search(
     return results[:limit]
 
 
-def search_job(source: "SourceItem", query: str, signal: Event):
+def search_job(source: "SourceItem", query: str, signal: Event, timeout: float):
     from ...core import SearchResult
 
     url = source.url
-    crawler = ctx.sources.init_crawler(url)
+    crawler = ctx.sources.init_crawler(url, timeout=timeout, probe=True)
     original_signal = crawler.scraper.signal
     crawler.scraper.signal = signal
     try:

@@ -33,10 +33,12 @@ class ScraperService:
     like two who contradict each other, and each flush of a second `Memory` over the
     same file erases what the first learned.
 
-    Two traffic shapes, and they genuinely differ. Crawl traffic is paced, remembered
-    and routed through the configured exits. Non-crawl traffic — our own Calibre and
-    translator APIs, the GitHub source index, favicons — is none of those things, so it
-    gets a scraper that neither waits nor remembers.
+    Three traffic shapes, and they genuinely differ. Crawl traffic is paced, remembered
+    and routed through the configured exits, and it is worth being patient with because
+    the session goes on to fetch a book. A probe — the search fan-out — asks one question
+    of many sites at once and throws every session away, so patience there buys nothing
+    and costs the caller its deadline. Non-crawl traffic — our own Calibre and translator
+    APIs, the GitHub source index, favicons — neither waits nor remembers.
     """
 
     def __init__(self) -> None:
@@ -177,14 +179,24 @@ class ScraperService:
         parser: Optional[str] = None,
         warmup: bool = True,
         raise_for_status: bool = True,
+        timeout: Optional[float] = None,
+        probe: bool = False,
     ) -> "ScraperConfig":
         from scraper import PacingPolicy, ScraperConfig
 
         settings = self._crawl_settings()
         settings["raise_for_status"] = raise_for_status
-        settings["pacing"] = PacingPolicy(warmup=warmup)
         if parser:
             settings["parser"] = parser
+        if timeout:
+            settings["timeout"] = (timeout, timeout)
+        if probe:
+            settings["browser"] = None
+            settings["archive"] = False
+            settings["max_attempts"] = 1
+            settings["max_rotations"] = 0
+            warmup = False
+        settings["pacing"] = PacingPolicy(warmup=warmup)
         return ScraperConfig(**settings)
 
     def _plain_config(self) -> "ScraperConfig":
@@ -257,24 +269,76 @@ class ScraperService:
         rate_limit: float = 0.0,
         warmup: bool = True,
         raise_for_status: bool = True,
+        timeout: Optional[float] = None,
     ) -> "Scraper":
         """A scraper for crawl traffic against *origin*, sharing the process state.
 
         *rate_limit* is the source's declared requests per second. It seeds this
         origin's clock and is superseded by anything already learned about the site: a
         throttle observed on a previous run is a measurement, and this is a guess.
+
+        *timeout* bounds a single request, connect and read alike. Worth choosing rather
+        than inheriting wherever a caller has a deadline of its own: the default read
+        budget is minutes, an abort signal cannot interrupt a blocking socket read, and
+        the pool's threads are joined at interpreter exit — so one stalled host holds a
+        command open long after its results are on screen.
         """
+        return self._session(
+            origin,
+            rate_limit,
+            self._crawl_config(
+                parser=parser,
+                warmup=warmup,
+                raise_for_status=raise_for_status,
+                timeout=timeout,
+            ),
+        )
+
+    def probe(
+        self,
+        origin: Optional[str] = None,
+        *,
+        parser: Optional[str] = None,
+        rate_limit: float = 0.0,
+        timeout: Optional[float] = None,
+    ) -> "Scraper":
+        """A scraper for one throwaway question against *origin*.
+
+        Everything the crawl config spends to see a request through is worth nothing
+        here, because the answer is a list of titles and the session is discarded the
+        moment it arrives. So: one attempt rather than five, no rotation, and no
+        challenge solving at all — a clearance earned in the browser is thrown away with
+        the session holding it, and solving serialises on one lock, so a fan-out across
+        many sites queues behind whichever of them is challenged. No warm-up either: it
+        doubles the requests to build a session nothing reuses.
+
+        The web archive is off here even where it is on for crawling. It exists to rescue
+        a page that a site will not give up, and no snapshot answers a query string the
+        archive has never been asked for — so every lookup is a slow index query that
+        cannot succeed.
+
+        Shares the process state regardless, so a probe still paces itself against what
+        a crawl has already learned about the same site.
+        """
+        return self._session(
+            origin,
+            rate_limit,
+            self._crawl_config(parser=parser, timeout=timeout, probe=True),
+        )
+
+    def _session(
+        self,
+        origin: Optional[str],
+        rate_limit: float,
+        config: "ScraperConfig",
+    ) -> "Scraper":
         from scraper import Scraper
 
         state = self.state
         scraper = Scraper(
             origin=origin or "",
-            parser=parser,
-            config=self._crawl_config(
-                parser=parser,
-                warmup=warmup,
-                raise_for_status=raise_for_status,
-            ),
+            parser=config.parser,
+            config=config,
             state=state,
         )
         if origin and rate_limit > 0:

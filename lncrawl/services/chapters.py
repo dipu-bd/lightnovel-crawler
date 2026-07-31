@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, List, NamedTuple, Optional, Sequence
 
 import sqlmodel as sq
 
@@ -8,6 +8,21 @@ from ..dao import Chapter, Job, LanguageCode, User, Volume
 from ..dao.chapter import ChapterTranslation
 from ..exceptions import ServerErrors
 from ..server.models import Paginated, ReadChapterResponse
+
+# An empty body still compresses to a frame of a few bytes, so size cannot decide
+# emptiness on its own — but it rules a file out without opening it, which is what keeps
+# a sweep across every finished chapter in the library cheap.
+EMPTY_CANDIDATE_BYTES = 512
+
+# SQLite binds each member of an IN clause as its own variable, and older builds stop at
+# 999 of them.
+_ID_CHUNK = 500
+
+
+class EmptyChapter(NamedTuple):
+    id: str
+    novel_id: str
+    serial: int
 
 
 class ChapterService:
@@ -32,7 +47,7 @@ class ChapterService:
                 stmt = stmt.where(sq.col(Chapter.is_done).is_(is_crawled))
             stmt = stmt.order_by(sq.col(Chapter.serial).asc())
             items = list(sess.exec(stmt).all())
-        self._put_translation(items, language)
+        self._put_translations(items, language)
         return items
 
     def list_page(
@@ -72,7 +87,7 @@ class ChapterService:
             items = list(sess.exec(stmt).all())
 
             # get translations
-            self._put_translation(items, language)
+            self._put_translations(items, language)
 
             return Paginated(
                 total=total,
@@ -138,11 +153,72 @@ class ChapterService:
             sess.delete(chapter)
             sess.commit()
 
-    def _put_translation(
-        self,
-        items: List[Chapter],
-        language: Optional[LanguageCode],
-    ):
+    def find_stored_empty(self, *, untried_only: bool = False) -> List[EmptyChapter]:
+        """Chapters marked finished over stored content that holds no text.
+
+        A chapter saved this way is done over an empty file, and the refetch gate skips
+        anything already done, so nothing reaches it again on its own.
+
+        *untried_only* keeps the ones the empty-body path has never counted an attempt
+        for — everything stored before that path existed. The rest were given up on
+        deliberately after `MAX_EMPTY_ATTEMPTS`, and reopening those would restart a
+        retry loop the cap is there to end.
+
+        Columns rather than rows: this walks every finished chapter in the library, and
+        an ORM object per row would hold the whole table in memory to read three fields.
+        """
+        found: List[EmptyChapter] = []
+        with ctx.db.session() as sess:
+            rows = sess.exec(
+                sq.select(Chapter.id, Chapter.novel_id, Chapter.serial, Chapter.extra).where(
+                    sq.col(Chapter.is_done).is_(True)
+                )
+            )
+            for chapter_id, novel_id, serial, extra in rows:
+                if untried_only and (extra or {}).get("empty_attempts"):
+                    continue
+                if self._is_stored_empty(novel_id, serial):
+                    found.append(EmptyChapter(chapter_id, novel_id, serial))
+        return found
+
+    def reopen_empty(self, chapter_ids: Sequence[str], *, reset_attempts: bool = False) -> int:
+        """Clear `is_done` so these chapters are downloaded again.
+
+        *reset_attempts* also drops the empty-body counter, which starts the chapter over
+        with a full budget of retries rather than whatever is left of one.
+        """
+        total = 0
+        with ctx.db.session() as sess:
+            for batch in self._chunked(chapter_ids, _ID_CHUNK):
+                stmt = sq.select(Chapter).where(sq.col(Chapter.id).in_(batch))
+                for chapter in sess.exec(stmt).all():
+                    chapter.is_done = False
+                    if reset_attempts and "empty_attempts" in chapter.extra:
+                        extra = dict(**chapter.extra)
+                        extra.pop("empty_attempts", None)
+                        chapter.extra = extra
+                    sess.add(chapter)
+                    total += 1
+            sess.commit()
+        return total
+
+    @staticmethod
+    def _chunked(items: Sequence[str], size: int) -> Iterable[Sequence[str]]:
+        for start in range(0, len(items), size):
+            yield items[start : start + size]
+
+    @staticmethod
+    def _is_stored_empty(novel_id: str, serial: int) -> bool:
+        content_file = Chapter.content_path(novel_id, serial)
+        try:
+            if ctx.files.resolve(content_file).stat().st_size > EMPTY_CANDIDATE_BYTES:
+                return False
+            return not ctx.files.load_text(content_file).strip()
+        except Exception:
+            return False
+
+    @staticmethod
+    def _put_translations(items: List[Chapter], language: Optional[LanguageCode]) -> None:
         if language and items:
             novel_id = items[0].novel_id
             serials = [item.serial for item in items]

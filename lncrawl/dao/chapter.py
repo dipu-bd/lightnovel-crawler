@@ -31,11 +31,16 @@ class Chapter(BaseTable, table=True):
     title: str = sa.Field(description="Title of the chapter")
     is_done: bool = sa.Field(default=False, description="Whether the content has been crawled")
 
+    @staticmethod
+    def content_path(novel_id: str, serial: int) -> str:
+        """Content file path, addressable without loading the row."""
+        return f"novels/{novel_id}/chapters/{serial:06}.zst"
+
     @computed_field  # type: ignore[misc]
     @property
     def content_file(self) -> str:
         """Content file path"""
-        return f"novels/{self.novel_id}/chapters/{self.serial:06}.zst"
+        return Chapter.content_path(self.novel_id, self.serial)
 
     @computed_field  # type: ignore[misc]
     @property

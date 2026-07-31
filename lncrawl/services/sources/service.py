@@ -303,6 +303,8 @@ class Sources:
         self,
         url: str,
         parser: Optional[str] = None,
+        timeout: Optional[float] = None,
+        probe: bool = False,
     ) -> Crawler:
         domain = self.get_domain(url)
         source = self.get_source(domain)
@@ -311,13 +313,15 @@ class Sources:
 
         # create instance
         ctx.logger.debug(f"Creating crawler instance for {url}")
+        open_session = ctx.scraper.probe if probe else ctx.scraper.open
         crawler = constructor(
             origin=source.url,
             parser=parser,
-            scraper=ctx.scraper.open(
+            scraper=open_session(
                 source.url,
                 parser=parser,
                 rate_limit=constructor.request_rate_limit,
+                timeout=timeout,
             ),
         )
 
