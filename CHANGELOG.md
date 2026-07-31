@@ -92,6 +92,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   skipped. The missing-chapter pass still runs either way, so chapters absent from an
   earlier failure are still recovered.
 
+- **A failed job says why, instead of showing a stack trace.** When a site refuses a
+  request, blames a proxy, answers `404`, or serves something that is not the image it
+  claimed, the job now carries the conclusion in plain words: which detection layer is
+  binding, what that layer reads, and therefore whether any setting could help — a
+  layer that reads a credential cannot be talked around, while one that reads an address
+  is answered by configuring a proxy. The same facts are stored as separate fields, so
+  none of it has to be recovered by reading the sentence.
+
+- **A job's error is the message; the stack is kept beside it.** Every failure used to
+  store its traceback and its message in one string, so each reader had to guess which
+  line of it to show and all of them guessed the last one — which is why a failure email
+  reported a Python exception rather than what went wrong. The message now stands alone
+  and the full traceback moves to the job's `traceback` field, unchanged and untruncated.
+  Nothing is discarded; the same content is simply no longer in one blob. A failure
+  nothing anticipated also now says so in as many words, rather than reporting itself as
+  "Failed to create requests" whatever it was doing.
+
+- **New admin endpoint, `GET /api/source/{domain}/diagnosis`.** Answers "why is this
+  source failing" for one site: what the scraper concluded about its defences, the
+  pacing and success counters it learned, whether a browser clearance is held, and a
+  count of what this run needed beyond a plain fetch — including chapters that came back
+  empty. That last part is the distinction nothing surfaced before: a site blocking us
+  and our own selectors having gone stale look identical from the outside. A rejected
+  domain is explained rather than refused, which is also now true of `lncrawl dev
+  explain`; a rejected domain is the one whose diagnosis is most worth reading.
+
+- **Six crawler settings exposed**: how many requests may be in flight to one site, how
+  many attempts and how many proxy addresses one page may cost, how long the browser may
+  spend on one challenge, and whether pages may be read from the Web Archive along with
+  how old a snapshot may be. Archive reading is what can still recover a novel from a
+  site that has gone down for good, and it is off by default because with it on the first
+  visit to *every* site goes to a snapshot. Each is range-checked where it is set, and a
+  crawler setting now takes effect without a restart.
+
 ### Fixed
 
 - **An empty chapter is no longer saved and marked finished.** When a site changed its
@@ -116,6 +150,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **A source that chooses its own HTML parser is finally obeyed.** Six sources set one
   because the default cannot handle their markup; the value was stored on the crawler
   and never reached the session that builds the soup.
+
+- **Asking what is known about a site no longer records that it was asked.** Reading a
+  site's diagnosis stored a profile for it, so browsing the sources list wrote one entry
+  per site looked at — and with the store bounded, that could push out what a running
+  crawl was relying on.
 
 - A challenge interstitial served with a `200` is no longer parsed as chapter content.
   This is the failure mode with no error to catch: the download reports success and

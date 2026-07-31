@@ -987,7 +987,13 @@ class JobService:
         pending = self._count_pending(sess, job_id)
         self._increment_up(sess, job_id, pending)
 
-    def _fail(self, sess: Session, job_id: str, reason: str) -> None:
+    def _fail(
+        self,
+        sess: Session,
+        job_id: str,
+        reason: str,
+        extra: Optional[dict] = None,
+    ) -> None:
         pending = self._count_pending(sess, job_id)
         self._update_up(
             sess,
@@ -996,12 +1002,29 @@ class JobService:
             done=Job.done + pending,
             failed=Job.failed + pending,
         )
+        extra = self._get_extra(sess, job_id, extra)
         self._update(
             sess,
             job_id,
             error=reason,
             status=JobStatus.FAILED,
         )
+
+    def _get_extra(
+        self,
+        sess: Session,
+        job_id: str,
+        updates: Union[dict, Callable[[dict], None]],
+    ) -> None:
+        current = sess.scalar(sq.select(Job.extra).where(Job.id == job_id))
+
+        extra = dict(current or {})
+        if callable(updates):
+            updates(extra)
+        else:
+            extra.update(updates)
+
+        return extra
 
     def cancel_if_dangling(self, job: Job) -> bool:
         root = self.get_root(job.id)
@@ -1026,16 +1049,8 @@ class JobService:
     ) -> None:
         with ctx.db.session() as sess:
             job_id = job.id if isinstance(job, Job) else job
-            current = sess.scalar(sq.select(Job.extra).where(Job.id == job_id))
-
-            extra = dict(current or {})
-            if callable(updates):
-                updates(extra)
-            else:
-                extra.update(updates)
-
+            extra = self._get_extra(sess, job_id, updates)
             sess.exec(sq.update(Job).where(sq.col(Job.id) == job_id).values(extra=extra))
             sess.commit()
-
             if isinstance(job, Job):
                 job.extra = extra

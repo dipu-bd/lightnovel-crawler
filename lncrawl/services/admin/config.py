@@ -19,6 +19,7 @@ from typing import (
 
 from ...config import Sensitive, _deserialize, _Section, _serialize
 from ...context import ctx
+from ...exceptions import ServerErrors
 from ...server.models import ConfigProperty, ConfigSection
 
 
@@ -156,4 +157,10 @@ def update_config(section_key: str, property_key: str, value: Any, dry_run: bool
     if current_value == new_value:
         return
     if not dry_run:
-        setattr(section, property_key, new_value)
+        try:
+            setattr(section, property_key, new_value)
+        except ValueError as e:
+            # A setter that validates its range is the only thing standing between the
+            # settings page and a value that breaks every crawler at once, so the
+            # rejection has to read as a rejection rather than as a server fault.
+            raise ServerErrors.invalid_input.with_extra(str(e))

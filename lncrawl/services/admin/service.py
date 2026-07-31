@@ -23,6 +23,12 @@ class AdminService:
             update_config(change.section, change.key, change.value)
         list_config_sections.cache_clear()
 
+        # The exits, the solver and the patience settings are read once, when the shared
+        # scraper state is built, so without this a crawler setting applies only after a
+        # restart while the settings page reports it as live.
+        if any(change.section == "crawler" for change in body):
+            ctx.scraper.invalidate()
+
     def update_sources(self) -> int:
         ctx.sources.load(False)
         ctx.sources.update(True)

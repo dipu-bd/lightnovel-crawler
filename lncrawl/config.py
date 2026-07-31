@@ -94,6 +94,22 @@ def _merge(target: dict, source: dict) -> None:
             target[key] = value
 
 
+_N = TypeVar("_N", int, float)
+
+
+def _at_least(name: str, value: _N, minimum: _N) -> _N:
+    """Reject a number below *minimum* at the setter.
+
+    The admin UI renders a plain number field from the return annotation, so nothing
+    upstream stops a zero or a negative arriving. These values reach the scraper's own
+    validation, which raises while a crawler is being constructed — after the setting
+    is already saved, and for every source at once.
+    """
+    if value is None or value < minimum:
+        raise ValueError(f"{name} must be at least {minimum}")
+    return value
+
+
 def _update(target: dict, source: dict) -> dict:
     """Update target with source, returning deprecated values."""
     deprecated = {}
@@ -574,6 +590,89 @@ class CrawlerConfig(_Section):
     @impersonate.setter
     def impersonate(self, name: str) -> None:
         self._set("impersonate", name)
+
+    @property
+    def max_sessions_per_exit(self) -> int:
+        """Concurrent Requests Per Site.
+
+        How many requests may be in flight to one site from one address at a time. Raising this
+        makes a crawl faster and also makes it look less like a person, which is what the sites
+        that block us are measuring. Default is `2`.
+        """
+        return self._get("max_sessions_per_exit", 2)
+
+    @max_sessions_per_exit.setter
+    def max_sessions_per_exit(self, v: int) -> None:
+        self._set("max_sessions_per_exit", _at_least("max_sessions_per_exit", v, 1))
+
+    @property
+    def max_attempts(self) -> int:
+        """Attempts Per Request.
+
+        How many times one page is tried before the crawl gives up on it, counted across every
+        method available. Default is `5`.
+        """
+        return self._get("max_attempts", 5)
+
+    @max_attempts.setter
+    def max_attempts(self, v: int) -> None:
+        self._set("max_attempts", _at_least("max_attempts", v, 1))
+
+    @property
+    def max_rotations(self) -> int:
+        """Addresses Per Request.
+
+        How many different proxy addresses one page may be retried from. Kept small on purpose:
+        when a site is refusing a page for a reason other than the address, changing address
+        repeatedly just spends the whole proxy pool on one page. Default is `2`.
+        """
+        return self._get("max_rotations", 2)
+
+    @max_rotations.setter
+    def max_rotations(self, v: int) -> None:
+        self._set("max_rotations", _at_least("max_rotations", v, 0))
+
+    @property
+    def solve_timeout(self) -> float:
+        """Challenge Solve Timeout.
+
+        How long, in seconds, the browser may spend clearing a single site's challenge before it
+        is treated as a failure. Default is `90`.
+        """
+        return self._get("solve_timeout", 90.0)
+
+    @solve_timeout.setter
+    def solve_timeout(self, v: float) -> None:
+        self._set("solve_timeout", _at_least("solve_timeout", v, 1.0))
+
+    @property
+    def use_archive(self) -> bool:
+        """Read From The Web Archive.
+
+        Allow pages to be served from the Wayback Machine when the site itself will not give them
+        up. This is what can rescue a novel from a site that has gone down for good, and it trades
+        freshness for reach: with this on, the *first* visit to every site goes to a snapshot
+        rather than to the site. Off by default.
+        """
+        return self._get("use_archive", False)
+
+    @use_archive.setter
+    def use_archive(self, v: bool) -> None:
+        self._set("use_archive", v)
+
+    @property
+    def archive_max_age(self) -> float:
+        """Web Archive Maximum Age.
+
+        How old, in seconds, an archived snapshot may be and still be used. `0` accepts a snapshot
+        of any age, which is the right answer for a site that no longer exists. Only has an effect
+        when reading from the web archive is on. Default is `0`.
+        """
+        return self._get("archive_max_age", 0.0)
+
+    @archive_max_age.setter
+    def archive_max_age(self, v: float) -> None:
+        self._set("archive_max_age", _at_least("archive_max_age", v, 0.0))
 
     @property
     def index_file_download_url(self) -> str:

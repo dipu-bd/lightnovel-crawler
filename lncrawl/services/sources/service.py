@@ -5,10 +5,12 @@ from threading import Event, Thread
 import traceback
 from typing import Dict, List, Optional, Type
 
+from scraper import LAYERS
+
 from ...context import ctx
 from ...core import Crawler
 from ...exceptions import AbortedException, ServerErrors
-from ...server.models import CrawlerIndex, CrawlerInfo, SourceItem
+from ...server.models import CrawlerIndex, CrawlerInfo, SourceDiagnosis, SourceItem
 from ...utils.event_lock import EventLock
 from ...utils.fts_store import FTSStore
 from ...utils.text_tools import normalize
@@ -238,6 +240,56 @@ class Sources:
     def get_info(self, domain: str) -> CrawlerInfo:
         source = self.get_source(domain)
         return self.info[source.crawler_id]
+
+    def diagnose(self, domain: str) -> SourceDiagnosis:
+        """Why *domain* is or is not working.
+
+        Reports a rejection rather than refusing on one, unlike every crawl path — a
+        rejected host is the one whose diagnosis is most worth reading — and answers
+        for a rejected host that has no crawler at all, which is most of them.
+        """
+        self.ensure_load()
+        if domain.startswith("www."):
+            domain = domain[4:]
+        rejected = self.rejected.get(domain)
+        source = self.sources.get(domain)
+        if source is None and rejected is None:
+            raise ServerErrors.no_crawler.with_extra(domain)
+
+        url = source.url if source else f"https://{domain}/"
+        health = ctx.health.reasons(domain)
+        result = SourceDiagnosis(
+            domain=domain,
+            url=url,
+            rejected=rejected,
+            is_disabled=source.is_disabled if source else True,
+            disable_reason=source.disable_reason if source else rejected,
+            health=health,
+            samples={reason: ctx.health.samples(domain, reason) for reason in health},
+            explain=ctx.scraper.explain(url),
+        )
+
+        profile = ctx.scraper.knows(url)
+        if profile is None:
+            return result
+
+        result.known = True
+        result.tier = profile.tier
+        result.interval = profile.interval
+        result.successes = profile.successes
+        result.failures = profile.failures
+        result.consecutive_failures = profile.consecutive_failures
+        result.has_clearance = profile.clearance_for(url) is not None
+
+        layer = profile.binding
+        if layer is not None:
+            facts = LAYERS[layer]
+            result.binding_layer = int(layer)
+            result.binding_layer_name = str(layer)
+            result.reads = facts.trait.value
+            result.stance = facts.stance.value
+            result.summary = facts.summary
+        return result
 
     def get_crawler(self, domain: str) -> Type[Crawler]:
         source = self.get_source(domain)

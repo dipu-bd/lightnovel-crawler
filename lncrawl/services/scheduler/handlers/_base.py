@@ -1,15 +1,19 @@
 from abc import ABC, abstractmethod
 from functools import cached_property
 from threading import Event
-import traceback
-from typing import Any, List, Optional
+from typing import Any, Callable, List, Optional
 
 from ....context import ctx
+from ....core.diagnosis import describe, diagnosis_extra, kind
 from ....dao import Job, JobStatus
-from ....exceptions import AbortedException
+from ....exceptions import AbortedException, ScraperErrorGroup
+from ....utils.error_tools import full_traceback, unexpected_message
 from ....utils.time_utils import current_timestamp
 
 
+# ------------------------------------------------------------------ #
+#                           Request Handler                          #
+# ------------------------------------------------------------------ #
 class HandlerException(Exception):
     def __init__(self, message: str) -> None:
         self.message = message
@@ -36,15 +40,7 @@ class BaseHandler(ABC):
 
     def process(self) -> bool:
         self._log_entry()
-        try:
-            self.run()
-            return self._set_success()
-        except AbortedException:
-            return False  # ignore error
-        except HandlerException as e:
-            return self._set_failure(e.message, e)
-        except Exception as e:
-            return self._set_failure("Failed to create requests", e)
+        return self._guarded(self._set_success)
 
     # ------------------------------------------------------------------ #
     #                               Helpers                              #
@@ -97,26 +93,62 @@ class BaseHandler(ABC):
         ctx.job_notifier.notify(self.user, self.job)
         return True
 
-    def _set_failure(self, error: str = "", err_source: Optional[Exception] = None) -> bool:
-        if error and err_source:
-            lines = traceback.format_exception(
-                type(err_source),
-                value=err_source,
-                tb=err_source.__traceback__,
-                chain=True,
-            )
-            lines += ["", error]
-            error = "".join(lines)
+    def _set_failure(
+        self,
+        error: str = "",
+        err_source: Optional[Exception] = None,
+        **extra: Any,
+    ) -> bool:
+        if err_source is not None:
+            extra["traceback"] = full_traceback(err_source)
 
         with ctx.db.session() as sess:
-            ctx.jobs._fail(sess, self.job.id, error.strip())
+            ctx.jobs._fail(sess, self.job.id, error.strip(), extra)
             sess.commit()
             self.job = sess.get_one(Job, self.job.id)
 
         ctx.job_notifier.notify(self.user, self.job)
         return False
 
+    def _guarded(self, on_success: Callable[[], bool]) -> bool:
+        try:
+            self.run()
+            return on_success()
+        except AbortedException:
+            return False  # ignore error
+        except HandlerException as e:
+            return self._set_failure(e.message, e)
+        except ScraperErrorGroup as e:
+            return self._set_diagnosed(e)
+        except Exception as e:
+            action = self.job.type.name.lower().replace("_", " ")
+            return self._set_failure(unexpected_message(e, action), e)
 
+    def _set_diagnosed(self, error: Exception) -> bool:
+        """Fail the job with what the retrieval concluded, not with a stack.
+
+        Every member of the group is the site's answer being unusable rather than our
+        code breaking, so what the reader needs is the conclusion rather than the frames
+        that reached it. The stack is still kept, in `extra` like every other failure —
+        it is only the message it is no longer part of.
+        """
+        reason = kind(error)
+        ctx.logger.warn(
+            f"[yellow]{reason}[/yellow] [b]{self.job.id}[/b] | {self.job.job_title}",
+            exc_info=ctx.logger.is_debug,
+        )
+        if self.job.domain:
+            ctx.health.record(self.job.domain, reason, str(error))
+        return self._set_failure(
+            describe(error),
+            error,
+            **diagnosis_extra(error),
+        )
+
+
+# ------------------------------------------------------------------ #
+#                           Batch Requests                           #
+# ------------------------------------------------------------------ #
 class BatchHandler(BaseHandler):
     def __init__(
         self,
@@ -137,17 +169,12 @@ class BatchHandler(BaseHandler):
             else:
                 return self._set_success()
 
-        try:
-            self.run()
-            return self._increment()
-        except AbortedException:
-            return False  # ignore error
-        except HandlerException as e:
-            return self._set_failure(e.message, e)
-        except Exception as e:
-            return self._set_failure("Failed to create requests", e)
+        return self._guarded(self._increment)
 
 
+# ------------------------------------------------------------------ #
+#                               Fallback                             #
+# ------------------------------------------------------------------ #
 class FallbackHandler(BaseHandler):
     @staticmethod
     def can_activate(job) -> bool:

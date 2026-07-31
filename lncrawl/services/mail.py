@@ -235,7 +235,7 @@ class MailService:
     def send_job_report(self, user: User, job: Job):
         base_url = ctx.config.server.base_url
         job_url = f"{base_url}/job/{job.id}"
-        error = (job.error or "").strip().split("\n")[-1]
+        error = (job.error or "").strip()
         job_type = job.type.name.lower().replace("_", " ").title()
         job_status = job.status.name.lower().replace("_", " ").title()
         subject = f"{job_status}: {job_type}"

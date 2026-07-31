@@ -42,6 +42,7 @@ if TYPE_CHECKING:
         CrawlerTestRequest,
         PRCreateRequest,
         PRResponse,
+        SourceDiagnosis,
         SourceItem,
     )
     from .user import (
@@ -74,6 +75,7 @@ __all__ = [
     "CrawlerInfo",
     "CrawlerIndex",
     "CrawlerTestRequest",
+    "SourceDiagnosis",
     "SourceItem",
     "PRCreateRequest",
     "PRResponse",
@@ -159,6 +161,7 @@ _LAZY: dict[str, str] = {
     "CrawlerTestRequest": ".sources",
     "PRCreateRequest": ".sources",
     "PRResponse": ".sources",
+    "SourceDiagnosis": ".sources",
     "SourceItem": ".sources",
     "CreateRequest": ".user",
     "ForgotPasswordRequest": ".user",

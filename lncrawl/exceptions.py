@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, Any
-from urllib.error import URLError
 
 from PIL import UnidentifiedImageError
 from requests.exceptions import RequestException
@@ -8,7 +7,6 @@ from requests.exceptions import RequestException
 # renamed the class to `Aborted` in 1.0, and chasing that through ~45 raise/except
 # sites would churn every job handler for no behavioural change.
 from scraper.exceptions import Aborted as AbortedException, Blocked, Poisoned
-from urllib3.exceptions import HTTPError
 
 if TYPE_CHECKING:
     # Server-only, FastAPI-dependent names. Kept out of the runtime import graph
@@ -29,7 +27,6 @@ __all__ = [
     "WebSocketError",
     "WebSocketErros",
     "AbortedException",
-    "RetryErrorGroup",
     "ScraperErrorGroup",
     "get_exception_handlers",
 ]
@@ -39,25 +36,15 @@ class LNException(Exception):
     pass
 
 
-# `Blocked` is the scraper's base for an attributed retrieval failure, so it covers
-# `Impassable` and `Exhausted` too. `Poisoned` means the page came back but is believed
-# to be decoy filler — a failure a caller must not treat as content.
+# Kept with no consumer in this repository: sources are downloaded to disk at runtime,
+# so a user's copy may still catch this. `Blocked` is the scraper's base for an
+# attributed retrieval failure, so it covers `Impassable` and `Exhausted` too, and
+# `Poisoned` means the page came back but is believed to be decoy filler. The last two
+# are not scraper classes and still escape it: `raise_for_status` runs after the planner
+# accepted the response, and an image is decoded after that.
 ScraperErrorGroup = (
-    URLError,
-    HTTPError,
     Blocked,
     Poisoned,
-    RequestException,
-    UnidentifiedImageError,
-)
-
-# Deliberately without `Poisoned`: the scraper raises it for a URL it has already
-# recorded as decoy, so asking again returns the same filler. Retrying is the one
-# response guaranteed not to help.
-RetryErrorGroup = (
-    URLError,
-    HTTPError,
-    Blocked,
     RequestException,
     UnidentifiedImageError,
 )

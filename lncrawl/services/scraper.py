@@ -10,7 +10,15 @@ from ..context import ctx
 from ..utils.url_tools import extract_base
 
 if TYPE_CHECKING:
-    from scraper import BrowserSolver, ExitSpec, Memory, Scraper, ScraperConfig, SharedState
+    from scraper import (
+        BrowserSolver,
+        ExitSpec,
+        Memory,
+        OriginProfile,
+        Scraper,
+        ScraperConfig,
+        SharedState,
+    )
 
 logger = logging.getLogger(__name__)
 
@@ -143,6 +151,7 @@ class ScraperService:
 
     def _crawl_settings(self) -> Dict[str, Any]:
         """The settings that describe crawl traffic, shared state included."""
+        crawler = ctx.config.crawler
         settings: Dict[str, Any] = {
             "exits": self._exits(),
             "data_dir": APP_DIR / "scraper",
@@ -151,9 +160,15 @@ class ScraperService:
             # AI-labyrinth decoys are not its threat model and a false positive costs a
             # job for no corresponding gain.
             "guard_topic": False,
+            "max_sessions_per_exit": crawler.max_sessions_per_exit,
+            "max_attempts": crawler.max_attempts,
+            "max_rotations": crawler.max_rotations,
+            "solve_timeout": crawler.solve_timeout,
+            "archive": crawler.use_archive,
+            "archive_max_age": crawler.archive_max_age,
         }
-        if ctx.config.crawler.impersonate:
-            settings["impersonate"] = ctx.config.crawler.impersonate
+        if crawler.impersonate:
+            settings["impersonate"] = crawler.impersonate
         return settings
 
     def _crawl_config(
@@ -314,11 +329,36 @@ class ScraperService:
             self._close(scraper)
 
     def explain(self, url: str) -> str:
+        """The scraper's own account of *url*'s origin, without recording one.
+
+        `Scraper.explain` reads the origin through `Memory.profile`, which mints a
+        profile on a miss — so asking about an origin is enough to store one. That
+        turns a status page into a writer, and with the store bounded it can evict a
+        profile a crawl is relying on, so an origin nothing was known about is left
+        that way.
+        """
+        known = self.knows(url) is not None
         scraper = self.open(extract_base(url))
         try:
             return scraper.explain(url)
         finally:
+            if not known:
+                self.memory.forget(url)
             self._close(scraper)
+
+    def knows(self, url: str) -> Optional["OriginProfile"]:
+        """What has been learned about *url*'s origin, or None if nothing has.
+
+        Deliberately not `Memory.profile`, which mints a profile on a miss and marks
+        the store dirty: a read-only status view must not be able to write one origin
+        per domain an operator happens to look at.
+        """
+        memory = self.memory
+        key = memory.key(url)
+        for profile in memory.profiles():
+            if profile.origin == key:
+                return profile
+        return None
 
     # ------------------------------------------------------------------------- #
     # Teardown

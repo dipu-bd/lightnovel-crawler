@@ -86,3 +86,52 @@ class PRResponse(BaseModel):
     url: str = Field(description="PR URL")
     number: int = Field(description="PR number")
     branch: str = Field(description="PR branch name")
+
+
+class SourceDiagnosis(BaseModel):
+    """Why a source is or is not working, as far as anything here knows.
+
+    Two independent halves, because the two failures they describe are told apart
+    nowhere else: what the scraper concluded about the site's defences, and what the
+    crawl itself observed. A source can be perfectly reachable and still return
+    nothing, which is what `health` is for.
+    """
+
+    domain: str = Field(..., description="Source domain")
+    url: str = Field(default="", description="Source base URL")
+    rejected: Optional[str] = Field(
+        default=None, description="Why the domain is rejected, if it is"
+    )
+    is_disabled: bool = Field(default=False, description="True if the source is disabled")
+    disable_reason: Optional[str] = Field(default=None, description="Reason for disabling")
+
+    known: bool = Field(
+        default=False, description="False when nothing has been learned about this origin yet"
+    )
+    binding_layer: Optional[int] = Field(
+        default=None, description="Detection layer last found to be binding"
+    )
+    binding_layer_name: Optional[str] = Field(default=None, description="Name of that layer")
+    reads: Optional[str] = Field(
+        default=None,
+        description="What the binding layer reads: emit, possess, hybrid or outside",
+    )
+    stance: Optional[str] = Field(
+        default=None, description="What the scraper does about that layer"
+    )
+    summary: Optional[str] = Field(default=None, description="What the binding layer is")
+    tier: str = Field(default="", description="Capability set that last succeeded")
+    interval: float = Field(default=0.0, description="Learned seconds between requests")
+    successes: int = Field(default=0, description="Successful requests recorded")
+    failures: int = Field(default=0, description="Failed requests recorded")
+    consecutive_failures: int = Field(default=0, description="Failures since the last success")
+    has_clearance: bool = Field(default=False, description="True if a browser clearance is held")
+
+    health: Dict[str, int] = Field(
+        default_factory=dict,
+        description="Count per reason a crawl needed more than a plain fetch, this run",
+    )
+    samples: Dict[str, List[str]] = Field(
+        default_factory=dict, description="A few examples per health reason"
+    )
+    explain: str = Field(default="", description="The scraper's own account of this origin")

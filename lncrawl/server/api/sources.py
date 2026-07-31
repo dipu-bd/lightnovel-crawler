@@ -10,9 +10,10 @@ from ..models import (
     CrawlerTestRequest,
     PRCreateRequest,
     PRResponse,
+    SourceDiagnosis,
     SourceItem,
 )
-from ..security import ensure_user
+from ..security import ensure_admin, ensure_user
 
 router = APIRouter()
 
@@ -44,6 +45,15 @@ def get_source(domain: str) -> SourceItem:
     if source is None:
         raise ServerErrors.no_crawler.with_extra(domain)
     return source
+
+
+@router.get(
+    "/{domain}/diagnosis",
+    summary="Explain why a source is failing (Admin only)",
+    dependencies=[Security(ensure_admin)],
+)
+def get_source_diagnosis(domain: str = Path()) -> SourceDiagnosis:
+    return ctx.sources.diagnose(domain)
 
 
 @router.get(
