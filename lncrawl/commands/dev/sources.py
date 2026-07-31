@@ -12,6 +12,7 @@ from ...services.sources.helper import import_crawlers, load_source
 
 CRAWLER_SURFACE: Tuple[str, ...] = (
     "absolute_url",
+    "check_response",
     "cleaner",
     "close",
     "download_chapter",

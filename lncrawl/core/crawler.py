@@ -17,7 +17,8 @@ from ..utils.url_tools import extract_base
 from .models import Chapter, Novel, SearchResult, Volume
 
 if TYPE_CHECKING:
-    from scraper import Scraper
+    from requests import Response
+    from scraper import Diagnosis, Scraper
 
 
 class Crawler(ABC):
@@ -116,6 +117,9 @@ class Crawler(ABC):
             parser=parser,
             rate_limit=self.request_rate_limit,
         )
+        # Attached here rather than passed to `open`, because the session is often
+        # opened by `SourceService` and handed in already built.
+        self.scraper.check_response = self.check_response
 
     @property
     def parser(self) -> str:
@@ -140,6 +144,26 @@ class Crawler(ABC):
 
     def initialize(self) -> None:
         pass
+
+    def check_response(self, response: "Response", body: str) -> Optional["Diagnosis"]:
+        """Read a response the scraper accepted, and overrule it if it is a refusal.
+
+        Override where a source answers `200` to something it is actually refusing —
+        a JSON API returning `{"success": false, "message": ...}`, a page that renders
+        an apology at the right status. Nothing can detect that generically: on the
+        wire it is indistinguishable from content, and the difference lives in a schema
+        only this source knows.
+
+        Worth overriding even though the source could simply raise, because raising
+        happens after the retrieval is over. Returning a `Diagnosis` puts the refusal
+        *inside* the loop, where the layer is attributed, the address is blamed, and
+        the scraper rotates or escalates on its own — so a per-address quota moves to
+        the next exit instead of spending every one of them unrecorded.
+
+        Return `None` to accept the response. Called only for responses the scraper
+        found nothing wrong with, so there is no need to re-check for a block.
+        """
+        return None
 
     def login(self, username_or_email: str, password_or_token: str) -> None:
         pass

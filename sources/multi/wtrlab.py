@@ -6,6 +6,7 @@ import math
 from typing import List, Union
 
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from scraper import Action, Blocked, Diagnosis
 
 from lncrawl.core import Chapter, LegacyCrawler, PageSoup, SearchResult
 
@@ -15,7 +16,21 @@ logger = logging.getLogger(__name__)
 class WtrLab(LegacyCrawler):
     base_url = ["https://wtr-lab.com"]
     has_mtl = True
-    request_rate_limit = 2
+    request_rate_limit = 1
+
+    def check_response(self, response, body: str):
+        if '"requireTurnstile"' not in body:
+            return None
+        try:
+            data = json.loads(body)
+        except ValueError:
+            return None
+        if data.get("success") or not data.get("requireTurnstile"):
+            return None
+        detail = "this address is past the chapters it is allowed"
+        if data.get("count") and data.get("threshold"):
+            detail = f"{detail} ({data['count']} of {data['threshold']})"
+        return Diagnosis(Action.ROTATE, None, detail)
 
     def _parse_next_data(self, soup: PageSoup):
         metadata_json = soup.select_one("script#__NEXT_DATA__")
@@ -124,7 +139,10 @@ class WtrLab(LegacyCrawler):
         headers = {"Content-Type": "application/json"}
         jsonData = self.get_json(url, data=payload, headers=headers)
         if not jsonData["success"]:
-            raise Exception(jsonData["message"])
+            # Reached only once the scraper has run out of addresses to try, since
+            # `check_response` turns the refusal into a rotation first. Raised as a
+            # block so it reads as the site refusing us rather than as a crash.
+            raise Blocked(None, jsonData["message"], url)
         body = jsonData["data"]["data"]["body"]
 
         content = ""

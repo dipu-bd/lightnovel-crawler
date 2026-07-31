@@ -810,11 +810,17 @@ class CrawlerConfig(_Section):
 
     @property
     def allow_fallback_on_proxy_miss(self) -> bool:
-        """Fallback to Direct on Proxy Miss.
+        """Use a Direct Connection Alongside the Proxies.
 
-        When proxy URLs are configured but none can be reached, allow the scraper
-        to fall back to a direct (localhost) connection instead of failing outright.
-        Enabled by default - disable if you want to hide your IP behind proxy.
+        Adds this machine's own address to the list of ways out, so a crawl still
+        works when a proxy will not carry it. It is not kept back for emergencies,
+        despite the name it used to have: the scraper leaves by the best kind of
+        address it has, and a direct connection outranks Tor and datacenter proxies.
+        With only those configured, requests leave from this machine until something
+        refuses one, and the proxy is what the retry moves to. Residential, ISP and
+        mobile exits outrank a direct connection and are used ahead of it.
+
+        Turn this off to keep every request on the proxies.
         """
         return self._get("allow_fallback_on_proxy_miss", True)
 

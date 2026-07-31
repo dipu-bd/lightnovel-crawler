@@ -2,269 +2,88 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
 ### Changed
 
-- **Upgraded to `lncrawl-scraper` 1.0**, a rewrite of the HTTP layer around a model of
-  bot detection. Measured on 150 real source hosts it retrieves more of them than the
-  version it replaces, with no fallback to a cached copy. What changed here:
+- **Upgraded to `lncrawl-scraper` 1.0**, a rewrite of the HTTP layer around a model of bot detection. Measured across 150 real source hosts it retrieves more of them than the version it replaces, with no fallback to a cached copy.
 
-  - Proxy configuration keeps the same `crawler.proxy_urls` format, but each entry now
-    becomes a typed *exit*: the new scraper describes an address by kind, because what a
-    detector reads is the reputation of the range it belongs to. Plain URLs are treated
-    as datacenter addresses, which is the conservative reading — it never claims reach
-    the address does not have.
-  - A new `torpool;<api_url>;<socks_url>;<token>` entry form for
-    [tor-pool](https://github.com/lncrawl/tor-pool), which fronts many Tor instances
-    behind one sticky SOCKS port and reassigns on demand.
-  - The legacy `tor;<host>;<port>;<control_port>;<password>` form still works, and the
-    control port is now accepted and ignored. Rotation by `NEWNYM` is gone: it has a
-    ~10s cooldown and no say in which exit comes next, so a rotation could land on the
-    same relay. Use `torpool;` for real rotation.
-  - `allow_fallback_on_proxy_miss` still does what it says, by adding a direct entry to
-    the exit list. The scraper dropped its own fallback-to-direct switch, because
-    silently leaving the proxy mid-session is how a scrape leaks the host's real
-    address — but naming direct as *one of* the available exits is a different thing,
-    and that is now how it is expressed.
-  - `request_rate_limit` is a **mean** rather than a floor. Each gap is drawn from a
-    distribution around it, because a constant interval is itself something a
-    behavioural model reads. It is still enforced per source domain across concurrent
-    jobs, now through shared per-origin state rather than a limiter object — which also
-    shares the held address, the identity and the referrer chain, so two jobs on one
-    source look like one visitor instead of two contradicting each other.
-  - A source must not set a `User-Agent` or reorder headers. The impersonation profile
-    owns the header set and its order is read as a fingerprint.
+  - `crawler.proxy_urls` keeps its format, but each entry becomes a typed *exit*, because what a detector reads is the reputation of the range an address belongs to. An unmarked URL is read as datacenter, which never claims reach it may not have.
+  - A `torpool;<api_url>;<socks_url>;<token>` form for [tor-pool](https://github.com/lncrawl/tor-pool), which fronts many Tor instances behind one sticky SOCKS port and reassigns on demand.
+  - The legacy `tor;<host>;<port>;<control_port>;<password>` form still works, with the control port accepted and ignored. `NEWNYM` rotation is gone — a ~10s cooldown and no say in which exit comes next, so it could land on the same relay. Use `torpool;` for real rotation.
+  - `allow_fallback_on_proxy_miss` adds a direct entry to the exit list. The scraper dropped its own fallback-to-direct switch, because leaving the proxy mid-session is how a scrape leaks the host's real address; naming direct as *one of* the exits is a different thing.
+  - `request_rate_limit` is a **mean** rather than a floor, since a constant interval is itself something a behavioural model reads. Still enforced per domain across concurrent jobs, now through shared per-origin state — which also shares the address, identity and referrer chain, so two jobs on one source look like one visitor.
+  - A source must not set a `User-Agent` or reorder headers; the impersonation profile owns the header set and its order is read as a fingerprint.
 
-- **lncrawl no longer drives a browser.** The webdriver stack it used to open Chrome with is
-  gone, along with the fallback that re-fetched any failed page through it. That fallback
-  fired on anything the transport raised — including a plain `404`, which cost a browser
-  launch and returned a rendered error page instead of an error. Deciding when a real browser
-  is needed now belongs to the scraper, which does it from its own diagnosis and reuses the
-  clearance for the requests that follow. A source that needs a rendered page asks for one
-  explicitly. `BrowserTemplate` and `Browser` are removed; importing either names the
-  replacement instead of failing as a missing attribute, since sources are downloaded to disk
-  and a user's copy may still refer to them.
+- **lncrawl no longer drives a browser.** The webdriver stack is gone, along with the fallback that re-fetched any failed page through it — it fired on anything the transport raised, including a plain `404`, costing a browser launch to return a rendered error page instead of an error. The scraper now decides when a browser is needed, from its own diagnosis, and reuses the clearance. `BrowserTemplate` and `Browser` are removed; importing either names the replacement, since a user's on-disk sources may still refer to them.
 
-- **Challenges are solved through one browser for the whole process**, and only when a
-  browser is actually installed. The setting that allows browser crawling defaults to on
-  while an installation need not have a browser, so it is checked as well as the setting:
-  a solver that cannot launch would otherwise spend its whole timeout per site and report
-  that as though the site had blocked us. A clearance earned in the browser is reused by
-  the requests that follow it.
+- **Challenges are solved through one browser for the whole process**, and only when a browser is installed. The setting defaults to on while an installation need not have one, and a solver that cannot launch would otherwise spend its whole timeout per site and report that as a block.
 
-- **New `impersonate` setting.** Solving a challenge forces every request to present itself
-  as Chrome, because a clearance is only valid for a client that still looks like the one
-  that earned it. Set this to keep a different fingerprint instead. Removed
-  `selenium_grid`, which nothing has read since browsers stopped being driven here.
+- **New `impersonate` setting.** Solving forces every request to present as Chrome, because a clearance is only valid for a client that still looks like the one that earned it; set this to keep a different fingerprint. Removed `selenium_grid`.
 
-- **One scraper state for the process.** What is learned about a site — the pacing
-  clock, the held address, the identity, the referrer chain, the tier that worked — is
-  now shared process-wide instead of per domain, so it accumulates across every job
-  rather than being rebuilt and partly overwritten. Per-source rate limits and the
-  per-address concurrency bound are unaffected: both are keyed per origin.
+- **One scraper state for the process.** The pacing clock, held address, identity, referrer chain and working tier are shared process-wide rather than per domain, so they accumulate across jobs instead of being rebuilt and partly overwritten. Per-source rate limits and the per-address concurrency bound are keyed per origin and unaffected.
 
-- **Non-crawl HTTP no longer pretends to be a visitor.** Requests to our own Calibre and
-  translator APIs, the source index and favicons went through a crawl-shaped session,
-  which meant a warm-up request to the target's homepage and a pacing wait before each
-  one. They now use a session that neither waits, warms up nor remembers.
+- **Non-crawl HTTP no longer pretends to be a visitor.** Our own Calibre and translator APIs, the source index and favicons went through a crawl-shaped session — a warm-up request to the target's homepage and a pacing wait before each. They now neither wait, warm up nor remember.
 
-- **18 source domains are flagged as rejected**, each confirmed on a deep page rather than
-  a homepage: parked domains for sale, redirects into an ad network or an affiliate link,
-  one closed site, one zone whose DNS no longer resolves anywhere valid, and one whose
-  domain was resold and now hosts an unrelated service. None of them reported an error — a
-  page full of adverts answers `200`, so a crawl of them succeeded and produced an empty
-  book.
+- **18 source domains are flagged as rejected**, each confirmed on a deep page rather than a homepage: parked domains for sale, redirects into an ad network or affiliate link, one closed site, one zone whose DNS no longer resolves, one resold. None reported an error — a page full of adverts answers `200`, so a crawl succeeded and produced an empty book.
 
-- **`wordexcerpt` and `webnovelonline` rebuilt against the APIs their sites now use.** Both
-  were rewritten as single-page apps, so the HTML their old selectors read is an empty
-  shell and both had been returning nothing. Each now reads the same backend the site's
-  own front-end reads, which needs no browser. `webnovelonline`'s chapter listing is
-  paginated, and the whole listing is walked: the novel checked reports **1305 chapters**,
-  where the page itself only ever shows the first 50.
+- **`wordexcerpt` and `webnovelonline` rebuilt against the APIs their sites now use.** Both became single-page apps, so the HTML their old selectors read is an empty shell and both returned nothing. Each now reads the same backend the site's own front-end reads, needing no browser. `webnovelonline`'s listing is paginated and is now walked in full — the novel checked reports **1305 chapters** where the page shows 50.
 
-- A scheduled *fetch latest* job asks whether the table of contents has moved before
-  re-reading it, and skips the read when the site answers that it has not. Reading a
-  paginated table of contents costs a request per page before a single chapter can be
-  skipped. The missing-chapter pass still runs either way, so chapters absent from an
-  earlier failure are still recovered.
+- A scheduled *fetch latest* asks whether the table of contents has moved before re-reading it, because a paginated listing costs a request per page before a single chapter can be skipped. The missing-chapter pass still runs either way.
 
-- **A failed job says why, instead of showing a stack trace.** When a site refuses a
-  request, blames a proxy, answers `404`, or serves something that is not the image it
-  claimed, the job now carries the conclusion in plain words: which detection layer is
-  binding, what that layer reads, and therefore whether any setting could help — a
-  layer that reads a credential cannot be talked around, while one that reads an address
-  is answered by configuring a proxy. The same facts are stored as separate fields, so
-  none of it has to be recovered by reading the sentence.
+- **A failed job says why, instead of showing a stack trace.** It now carries which detection layer is binding, what that layer reads, and therefore whether any setting could help — a layer that reads a credential cannot be talked around, one that reads an address is answered by configuring a proxy. The same facts are stored as separate fields, so none of it has to be parsed back out of the sentence.
 
-- **A job's error is the message; the stack is kept beside it.** Every failure used to
-  store its traceback and its message in one string, so each reader had to guess which
-  line of it to show and all of them guessed the last one — which is why a failure email
-  reported a Python exception rather than what went wrong. The message now stands alone
-  and the full traceback moves to the job's `traceback` field, unchanged and untruncated.
-  Nothing is discarded; the same content is simply no longer in one blob. A failure
-  nothing anticipated also now says so in as many words, rather than reporting itself as
-  "Failed to create requests" whatever it was doing.
+- **A job's error is the message; the stack is kept beside it.** The two used to share one string, so every reader guessed which line to show and all guessed the last — which is why a failure email reported a Python exception. The traceback moves to the job's `traceback` field, untruncated. A failure nothing anticipated now says so, rather than reporting itself as "Failed to create requests".
 
-- **New admin endpoint, `GET /api/source/{domain}/diagnosis`.** Answers "why is this
-  source failing" for one site: what the scraper concluded about its defences, the
-  pacing and success counters it learned, whether a browser clearance is held, and a
-  count of what this run needed beyond a plain fetch — including chapters that came back
-  empty. That last part is the distinction nothing surfaced before: a site blocking us
-  and our own selectors having gone stale look identical from the outside. A rejected
-  domain is explained rather than refused, which is also now true of `lncrawl dev
-  explain`; a rejected domain is the one whose diagnosis is most worth reading.
+- **New admin endpoint, `GET /api/source/{domain}/diagnosis`.** Why one source is failing: what the scraper concluded about its defences, the counters it learned, whether a clearance is held, and what this run needed beyond a plain fetch — including chapters that came back empty. That last part separates a site blocking us from our own selectors going stale, which look identical from outside. A rejected domain is explained rather than refused, as it now is in `lncrawl dev explain`.
 
-- **Six crawler settings exposed**: how many requests may be in flight to one site, how
-  many attempts and how many proxy addresses one page may cost, how long the browser may
-  spend on one challenge, and whether pages may be read from the Web Archive along with
-  how old a snapshot may be. Archive reading is what can still recover a novel from a
-  site that has gone down for good, and it is off by default because with it on the first
-  visit to *every* site goes to a snapshot. Each is range-checked where it is set, and a
-  crawler setting now takes effect without a restart.
+- **Six crawler settings exposed**: requests in flight per site, attempts and proxy addresses per page, browser time per challenge, and whether pages may be read from the Web Archive with how old a snapshot may be. Archive reading can still recover a novel from a site that is gone for good, and is off by default because with it on the first visit to *every* site goes to a snapshot. Each is range-checked, and takes effect without a restart.
+
+### Added
+
+- **A source can declare a refusal that arrives as a `200`.** `Crawler.check_response` may return a `Diagnosis` for a response the scraper accepted, which puts the refusal inside the retry loop — so the address is blamed and the next exit tried, rather than raising after retrieval is over. `wtr-lab.com` is the first user: it allows a few chapters per address, then answers `200` with `requireTurnstile`, indistinguishable from a chapter on the wire, so every request counted as a success while the download failed and the configured proxies were never reached for. Over 20 chapters: none before, all after.
 
 ### Fixed
 
-- **A diagnosis no longer tells you to configure something lncrawl does not have.** The
-  scraper's ladder ends in a paid per-request provider, and its advice for the layer that
-  needs one says to configure it — reasonable for a library, but lncrawl exposes no such
-  setting, so the sentence arrived immediately before lncrawl's own "this is past what it
-  will attempt" and the two contradicted each other. The remedy now answers it outright:
-  there is nothing to configure and the source is out of reach.
-
-  Recorded rather than wired, deliberately. The scraper bundles no provider client
-  because their formats differ and change, and one that guesses wrong fails looking
-  exactly like the site blocking you; the credentials want a secret store that does not
-  exist here yet; and this layer is as often inferred as detected, since the planner
-  attributes any layer that keeps failing to it — so a wired provider would spend real
-  money on a guess.
+- **A diagnosis no longer tells you to configure something lncrawl does not have.** The scraper's advice for the delegated layer is to configure a paid per-request provider, and lncrawl exposes no such setting — so it arrived immediately before lncrawl's own "past what it will attempt" and contradicted it. Not wired, deliberately: the layer is as often inferred as detected, so a provider would spend real money on a guess, and the credentials want a secret store that does not exist here yet.
 
 - **A diagnosis with a detail ending in a full stop no longer gets a second one.**
 
-- **An empty chapter is no longer saved and marked finished.** When a site changed its
-  markup the body came back empty, and nothing checked: the empty file was written, the
-  chapter was marked done, and a later run skipped it because it looked complete. This is
-  the most common way a source breaks and there was no signal for it anywhere. An empty
-  body is now a failure — nothing is written, it is fetched again on the next pass, and
-  after a few attempts it is left alone so a chapter that is genuinely empty upstream is
-  not asked for forever. Each occurrence is counted against the source. A chapter that
-  already had content keeps it, since an empty answer now is no reason to destroy a body
-  that worked before, and image-only chapters are unaffected.
+- **`allow_fallback_on_proxy_miss` said the opposite of what it does.** It described a direct connection used only when no proxy could be reached, and advised turning it off "to hide your IP behind proxy". In fact the direct address joins the exit list as a peer ranked by kind — ahead of Tor and datacenter proxies, behind residential, ISP and mobile — so with a tor-pool or datacenter proxy at the default, requests were leaving from the machine's own address. The text now says what it does; the behaviour is unchanged.
 
-- **`lncrawl dev recover-empty-chapters`** finds chapters an earlier version stored empty
-  and lets them be downloaded again. Without it the fix above changes nothing for a
-  library that already has them: they are marked done, so every later run skips them. It
-  reports by default and only changes anything with `--apply`.
+- **An empty chapter is no longer saved and marked finished.** The empty file was written and the chapter marked done, so a later run skipped it — the most common way a source breaks, and there was no signal for it anywhere. An empty body is now a failure: nothing is written, it is fetched again next pass, and after a few attempts left alone so a genuinely empty chapter is not asked for forever. Each occurrence counts against the source. A chapter that already had content keeps it, and image-only chapters are unaffected.
 
-- **What a crawl learned is no longer lost when the command exits.** State was written
-  on a timer and nothing flushed it at the end, so anything learned after the first
-  write — including the validators the check above depends on — was discarded.
+- **`lncrawl dev recover-empty-chapters`** finds chapters an earlier version stored empty and lets them be downloaded again. Without it the fix above changes nothing for a library that already has them, since they are marked done. It reports by default and only acts with `--apply`.
 
-- **A source that chooses its own HTML parser is finally obeyed.** Six sources set one
-  because the default cannot handle their markup; the value was stored on the crawler
-  and never reached the session that builds the soup.
+- **What a crawl learned is no longer lost when the command exits.** State was written on a timer with nothing flushing it at the end, so anything learned after the first write — including the validators the check above depends on — was discarded.
 
-- **A source's primary address no longer changes between runs.** Where a source lists
-  several addresses, the one treated as its home was picked from an unordered set, so it
-  varied from one run to the next for the same unchanged code — and a source listing both
-  `http` and `https` for the same site could end up pinned to the plaintext one. Secure
-  addresses now come first, the source's own order is kept within that, and three sources
-  stop defaulting to `http`. This also makes the generated source index reproducible: it
-  was rewriting a hundred lines on every build with nothing behind it.
+- **A source that chooses its own HTML parser is finally obeyed.** Six sources set one because the default cannot handle their markup; the value was stored on the crawler and never reached the session that builds the soup.
 
-- **`urllib3` is no longer held on the 1.26 line.** It was pinned below 2.0 in the same
-  change that removed Selenium, which had required 2.x — so the pin outlived the conflict
-  it settled and kept a 2024 release in place. Nothing here imports it, and requests is
-  not the transport, so it only ever sat under the fallback path. Removed; 2.x resolves
-  cleanly with no other package moving.
+- **A source's primary address no longer changes between runs.** Where a source lists several, the one treated as home was picked from an unordered set, so it varied run to run for unchanged code — and a source listing both `http` and `https` could end up pinned to the plaintext one. Secure addresses come first, the source's own order kept within that, and three sources stop defaulting to `http`. This also makes the generated source index reproducible, where it had been rewriting a hundred lines per build with nothing behind it.
 
-- **Ten sources downloaded one chapter at a time for no reason.** How many threads a
-  crawler runs was derived from its requests-per-second, which is an interval and says
-  nothing about how many things can be in flight — so a source that declared no rate
-  limit was read as "no parallelism" and ran single-file. Thread count now comes from
-  the per-site request limit instead, measured to be fastest at one thread above it:
-  the spare thread stores a finished chapter while the others are fetching. Ten sources
-  go from one worker to three, thirty from two, and eight drop from four or five to
-  three, which measured no slower. How many jobs may run against one source at a time
-  is untouched.
+- **`urllib3` is no longer held on the 1.26 line.** It was pinned below 2.0 in the same change that removed Selenium, which had required 2.x, so the pin outlived the conflict it settled. Nothing here imports it and requests is not the transport; 2.x resolves cleanly with no other package moving.
 
-- **`chireads` search results had no titles.** The site moved the title out of the
-  attribute the source read; it now reads the one the site actually emits.
-  `totallytranslations` replaced its own HTTP session on startup, which broke every
-  request it then made — that domain has since lapsed and was already flagged as
-  unavailable, so this only removes the broken code.
+- **Ten sources downloaded one chapter at a time for no reason.** Thread count was derived from requests-per-second, which is an interval and says nothing about how many things can be in flight, so a source declaring no rate limit was read as no parallelism. It now comes from the per-site request limit, measured fastest at one thread above it — the spare thread stores a finished chapter while the others fetch. Ten sources go from one worker to three, thirty from two, and eight drop to three, which measured no slower. Jobs per source is untouched.
 
-- **Asking what is known about a site no longer records that it was asked.** Reading a
-  site's diagnosis stored a profile for it, so browsing the sources list wrote one entry
-  per site looked at — and with the store bounded, that could push out what a running
-  crawl was relying on.
+- **`chireads` search results had no titles.** The site moved the title out of the attribute the source read. `totallytranslations` replaced its own HTTP session on startup, breaking every request it then made — that domain has since lapsed and was already flagged, so this only removes the broken code.
 
-- **`lncrawl search` now ends when it says it will.** `--timeout` bounded how long
-  results were collected but nothing about the requests themselves, so the command sat
-  there long after the results were on screen — measured at 74 seconds for a 10 second
-  timeout. A search is now treated as what it is: one throwaway question asked of many
-  sites at once. It gets one attempt instead of five, no rotation, no warm-up request, no
-  browser launched to solve a challenge for a session that is about to be discarded, and
-  no web-archive lookup, which could never answer a search query anyway and was the
-  single largest cost when archive reading was switched on. Each request is also bounded
-  by the timeout the command was given. The same run now finishes in 16 seconds and
-  returns *more*, because sources that used to fall outside the window now answer inside
-  it. A search that ends early also says how many sources did not answer, instead of
-  reporting a total failure over the results it did collect.
+- **Asking what is known about a site no longer records that it was asked.** Reading a site's diagnosis stored a profile for it, so browsing the sources list wrote one entry per site looked at — and with the store bounded, that could evict what a running crawl was relying on.
 
-- **Proxies have their own screen, and each one can say what kind of address it is.**
-  Reputation databases score the range an address belongs to, and only ISP, residential
-  and mobile addresses get past a site that blocks on reputation — but every proxy was
-  read as a datacenter address, so a residential proxy bought for exactly that purpose was
-  never used for it. The crawler would give up on a block it could have cleared, then
-  advise configuring a proxy that was already configured.
+- **`lncrawl search` now ends when it says it will.** `--timeout` bounded how long results were collected but nothing about the requests, so a 10 second timeout measured 74 seconds. A search is now treated as one throwaway question asked of many sites at once: one attempt instead of five, no rotation, no warm-up, no browser launched for a session about to be discarded, and no web-archive lookup — which could never answer a search query and was the largest single cost when archive reading was on. Each request is also bounded by the timeout given. The same run finishes in 16 seconds and returns *more*, because sources that fell outside the window now answer inside it. A search that ends early also says how many sources did not answer.
 
-  Proxies were also a single line of comma-separated text holding four different
-  semicolon-delimited formats, one of which nobody could be expected to remember. They are
-  now a list of records — kind, address, label, on/off, and the tor-pool fields where they
-  apply — edited on a Proxies screen under Settings that shows, beside each entry, whether
-  it is in use, resting after a failure and for how long, and whether its kind can get past
-  a reputation block at all.
+- **Proxies have their own screen, and each one can say what kind of address it is.** Reputation databases score the range an address belongs to, and only ISP, residential and mobile addresses get past a site that blocks on reputation — but every proxy was read as datacenter, so a residential proxy bought for exactly that was never used for it, and the crawler would give up on a block it could have cleared while advising a proxy that was already configured.
 
-  Existing configuration is imported automatically, including `PROXY_URLS` from the
-  environment, and nothing needs rewriting by hand. Credentials no longer come back out of
-  the API: a proxy URL's password and a tor-pool token are withheld, and leaving them
-  untouched keeps what is stored.
+  They were also one line of comma-separated text holding four semicolon-delimited formats. Now a list of records — kind, address, label, on/off, and the tor-pool fields — on a Proxies screen showing whether each is in use, resting after a failure and for how long, and whether its kind clears a reputation block. Existing configuration imports automatically, including `PROXY_URLS` from the environment. Credentials no longer come back out of the API: a URL's password and a tor-pool token are withheld, and leaving them untouched keeps what is stored.
 
-- **A page that would not finish rendering is no longer reported as a crash.** A source
-  can ask for a page to be rendered in a browser and wait for a specific element; when
-  that element never appeared, the job said an unexpected error had occurred and showed a
-  stack trace, which reads as a bug in the app. It is not — it means the selector does not
-  match the finished page, or the page needs longer. Both that and a browser that runs a
-  challenge without earning a clearance now come back as ordinary diagnoses with a remedy,
-  and both count toward source health.
+- **A page that would not finish rendering is no longer reported as a crash.** When the element a source waits for never appeared, the job showed a stack trace, which reads as a bug in the app. It means the selector does not match the finished page, or the page needs longer. That, and a browser that runs a challenge without earning a clearance, now come back as ordinary diagnoses with a remedy, and both count toward source health.
 
-- **The server no longer leaks memory on every failed request.** Each API error was one
-  shared exception object, created when the module loaded and raised over and over.
-  Raising an exception *appends* to the traceback already on it, and a shared object is
-  never collected, so every frame of every failed request stayed reachable — along with
-  everything those frames' local variables pointed at. Measured: after 900 requests one
-  error object held 9,000 traceback frames, and memory rose 66 MB per 800 requests with
-  no ceiling. Errors are now built fresh at the point they are raised, and memory is flat
-  over 6,400 requests. This also fixes a bug that was never only about memory: two
-  requests failing at once shared one object, so one could be answered with the other's
-  error detail.
+- **The server no longer leaks memory on every failed request.** Each API error was one shared object created when the module loaded and raised over and over. Raising *appends* to the traceback already on it, and a shared object is never collected, so every frame of every failed request stayed reachable along with everything its locals pointed at. Measured: after 900 requests one error held 9,000 frames, and memory rose 66 MB per 800 requests with no ceiling. Errors are now built where they are raised, and memory is flat over 6,400 requests. This also fixes two requests failing at once sharing one object, so one could be answered with the other's detail.
 
-- **Chapters stored empty before this release are recovered on their own.** Refusing to
-  store an empty chapter only helps from here on; a library that already had them kept
-  them forever, because nothing re-downloads a chapter already marked finished. The
-  background cleanup pass now reopens them. It leaves alone the ones that were tried and
-  given up on deliberately, so nothing re-enters a retry loop. `lncrawl dev
-  recover-empty-chapters` still reports before it acts and can reach those too, for a
-  source that has since been fixed.
+- **Chapters stored empty before this release are recovered on their own.** Refusing to store an empty chapter only helps from here on, since nothing re-downloads a chapter already marked finished. The background cleanup pass now reopens them, leaving alone the ones deliberately given up on so nothing re-enters a retry loop. `lncrawl dev recover-empty-chapters` can still reach those, for a source that has since been fixed.
 
-- A challenge interstitial served with a `200` is no longer parsed as chapter content.
-  This is the failure mode with no error to catch: the download reports success and
-  stores an empty page. Sites that answer a first request with a JavaScript-only
-  redirect are now followed to the real page rather than saved as a stub.
+- A challenge interstitial served with a `200` is no longer parsed as chapter content — the failure mode with no error to catch, where the download reports success and stores an empty page. A first request answered with a JavaScript-only redirect is now followed to the real page rather than saved as a stub.
 
 ## [4.13.1] - 2026-07-25
 
@@ -1046,8 +865,7 @@ Major changes in this release:
 ## [2.24.3] - 2021-02-12
 
 - Adds new source
-- Fixes bug
-  #733
+- Fixes bug #733
 
 ## [2.24.1] - 2020-12-14
 

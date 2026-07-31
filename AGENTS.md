@@ -166,6 +166,14 @@ and `LNCRAWL_CONFIG` override DB and config file; `.env` is auto-loaded.
 - **README.md** source tables and CLI help blocks between `<!-- auto generated -->` markers
   are rewritten by `make index-gen` — don't hand-edit those regions. `CHANGELOG.md` sections
   are curated by hand and become release notes.
+- **`CHANGELOG.md`: one line per paragraph, and keep entries short.** The release workflow
+  lifts a version's section out verbatim, and the renderer on the other side turns a single
+  newline into a line break — so never hard-wrap, or the paragraph arrives as a ragged
+  column with its indentation showing. (Blank lines still separate paragraphs, and a
+  continuation paragraph inside a bullet still needs its indent.) An entry is a bold lead
+  sentence plus the shortest *why* that would stop someone undoing it — not the
+  investigation that produced it. Reasoning at length belongs in the code comment or the
+  docstring, where the reader is already looking at the thing it explains.
 - Prefer patching over refactoring in vendored/generated areas; `lncrawl/server/web/` and
   `sources/_index.*` are generated.
 

@@ -209,10 +209,10 @@ def describe(error: BaseException, *, url: str = "") -> str:
         parts.append(f"It reads {_READS[facts.trait]}, so {_REMEDY[facts.stance]}.")
     elif isinstance(error, Blocked):
         parts.append(
-            "Nothing identified this as bot mitigation, so no layer was attributed and"
-            " there is no remedy to recommend: either the site's own server failed to"
-            " answer, or the fault is at this end — a proxy that refused its credentials,"
-            " an address with no route."
+            "No detection layer was attributed, so the reason above is all there is to go"
+            " on: the site may have refused for something only this source recognises, its"
+            " own server may not have answered, or the fault is at this end — a proxy that"
+            " refused its credentials, an address with no route."
         )
 
     advice = _ADVICE.get(reason)
