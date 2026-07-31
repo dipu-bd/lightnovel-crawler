@@ -16,6 +16,7 @@ from typing import Any, Dict, Optional
 from PIL import UnidentifiedImageError
 from requests import HTTPError, RequestException
 from scraper import LAYERS, Layer, Stance, Trait
+from scraper.browser import RenderError, SolveError
 from scraper.exceptions import (
     Aborted,
     Blocked,
@@ -33,6 +34,8 @@ IMPASSABLE = "impassable"
 POISONED = "poisoned"
 TIER_UNAVAILABLE = "tier_unavailable"
 MISSING_DEPENDENCY = "missing_dependency"
+RENDER_FAILED = "render_failed"
+SOLVE_FAILED = "solve_failed"
 HTTP_ERROR = "http_error"
 BAD_IMAGE = "bad_image"
 ABORTED = "aborted"
@@ -46,6 +49,8 @@ _HEADLINE = {
     POISONED: "A page came back, but its content looks like decoy filler",
     TIER_UNAVAILABLE: "No configured capability can serve this request",
     MISSING_DEPENDENCY: "An optional dependency is needed and is not installed",
+    RENDER_FAILED: "A browser rendered the page but the content this source needs never appeared",
+    SOLVE_FAILED: "A browser ran the challenge and came back without a clearance",
     HTTP_ERROR: "The site answered with an error",
     BAD_IMAGE: "What the site served in place of an image could not be decoded",
     ABORTED: "The request was aborted",
@@ -66,6 +71,22 @@ _READS = {
     Trait.POSSESS: "something the client must genuinely hold, which cannot be forged",
     Trait.HYBRID: "an artifact bound to something held, so sending the right bytes is not enough",
     Trait.OUTSIDE: "behaviour over time rather than the request itself",
+}
+
+# What to do about a failure the layer model has nothing to say about, because the site
+# did not cause it. Keyed by kind rather than by stance for exactly that reason: our own
+# browser came back empty-handed, and no amount of knowing what the site reads helps.
+_ADVICE = {
+    RENDER_FAILED: (
+        "Either the element this source waits for never appears, or the page needs longer"
+        " than the render timeout allows. A selector that matches the page shell rather"
+        " than its content is the usual cause."
+    ),
+    SOLVE_FAILED: (
+        "Check that a browser is installed and able to open a window, and that the solve"
+        " timeout leaves it enough time. This is a local capability failing, not the site"
+        " refusing us."
+    ),
 }
 
 _REMEDY = {
@@ -106,6 +127,10 @@ def kind(error: BaseException) -> str:
         return POISONED
     if isinstance(error, MissingDependency):
         return MISSING_DEPENDENCY
+    if isinstance(error, RenderError):
+        return RENDER_FAILED
+    if isinstance(error, SolveError):
+        return SOLVE_FAILED
     if isinstance(error, TierUnavailable):
         return TIER_UNAVAILABLE
     if isinstance(error, Aborted):
@@ -152,7 +177,8 @@ def is_permanent(error: BaseException) -> bool:
 def describe(error: BaseException, *, url: str = "") -> str:
     """One legible paragraph: what happened, what caused it, what would help."""
     where = url or getattr(error, "url", "") or ""
-    parts = [_HEADLINE.get(kind(error), _HEADLINE[FAILED])]
+    reason = kind(error)
+    parts = [_HEADLINE.get(reason, _HEADLINE[FAILED])]
     code = status_code(error)
     if code is not None:
         parts[0] += f" (HTTP {code})"
@@ -184,6 +210,10 @@ def describe(error: BaseException, *, url: str = "") -> str:
             " answer, or the fault is at this end — a proxy that refused its credentials,"
             " an address with no route."
         )
+
+    advice = _ADVICE.get(reason)
+    if advice:
+        parts.append(advice)
 
     return "\n".join(parts)
 

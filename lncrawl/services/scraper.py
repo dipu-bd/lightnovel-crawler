@@ -5,7 +5,7 @@ import logging
 import threading
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from ..config import APP_DIR
+from ..config import APP_DIR, PROXY_EXIT_KINDS
 from ..context import ctx
 from ..utils.url_tools import extract_base
 
@@ -58,9 +58,11 @@ class ScraperService:
 
         The scraper describes an address by *kind* rather than by URL, because what a
         detector reads is the reputation of the range it belongs to — a datacenter proxy
-        and a residential one are not interchangeable however similar the URL looks. Kinds
-        are inferred here from the only thing the config carries, so a datacenter guess is
-        the conservative default: it never claims reach the address does not have.
+        and a residential one are not interchangeable however similar the URL looks. Only
+        an operator knows which they bought, so an entry may say, and an unprefixed URL
+        stays a datacenter address: that is the reading that never claims reach the
+        address does not have, and it is what every configuration written before the
+        prefixes existed means.
 
         `allow_fallback_on_proxy_miss` becomes a direct entry in the list. The scraper
         dropped its own fallback-to-direct switch — silently leaving the proxy is how a
@@ -78,7 +80,18 @@ class ScraperService:
             entry = entry.strip()
             if not entry:
                 continue
-            if entry.startswith("torpool;"):
+            kind_name, sep, rest = entry.partition(";")
+            if sep and kind_name.strip().lower() in PROXY_EXIT_KINDS and "://" in rest:
+                # <kind>;<url> or <kind>;<url>;<label>
+                url, _, label = rest.partition(";")
+                exits.append(
+                    ExitSpec(
+                        url=url.strip(),
+                        kind=ExitKind(kind_name.strip().lower()),
+                        label=label.strip(),
+                    )
+                )
+            elif entry.startswith("torpool;"):
                 # torpool;<api_url>;<socks_url>;<token>
                 parts = entry.split(";")
                 socks = parts[2] if len(parts) > 2 and parts[2] else "socks5h://127.0.0.1:9250"
@@ -409,6 +422,31 @@ class ScraperService:
             if not known:
                 self.memory.forget(url)
             self._close(scraper)
+
+    def exit_status(self) -> List[Dict[str, Any]]:
+        """What each configured exit is doing right now.
+
+        The address half of `explain()`, and the only view of it there is: which exits
+        the pool has retired and when they come back is otherwise visible only in debug
+        logs, so an operator whose scrape has slowed has nothing to look at.
+
+        Reported by name rather than by URL because a proxy URL carries its credential.
+        `clears_reputation` is derived rather than stored, since it is the one thing the
+        kind is *for* and the reason declaring the kind correctly matters.
+        """
+        from scraper import Layer
+
+        return [
+            {
+                "name": item.name,
+                "kind": item.kind.value,
+                "clears_reputation": Layer.IP_REPUTATION in item.kind.reach,
+                "retired": item.retired,
+                "returns_in": item.returns_in,
+                "origins": item.origins,
+            }
+            for item in self.state.exits.status()
+        ]
 
     def knows(self, url: str) -> Optional["OriginProfile"]:
         """What has been learned about *url*'s origin, or None if nothing has.

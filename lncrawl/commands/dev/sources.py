@@ -33,6 +33,7 @@ LEGACY_SURFACE: Tuple[str, ...] = (
     "post_json",
     "post_response",
     "post_soup",
+    "render_soup",
     "submit_form",
     "submit_task",
 )

@@ -199,6 +199,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   it. A search that ends early also says how many sources did not answer, instead of
   reporting a total failure over the results it did collect.
 
+- **A proxy can say what kind of address it is.** Reputation databases score the range an
+  address belongs to, and only ISP, residential and mobile addresses get past a site that
+  blocks on reputation — but every plain entry in `proxy_urls` was read as a datacenter
+  address, so a residential proxy bought for exactly that purpose was never used for it.
+  The crawler would give up on a reputation block it could have cleared, then advise
+  configuring a proxy the user had already configured. An entry may now be written
+  `residential;<url>`, `mobile;<url>`, `isp;<url>` or `datacenter;<url>`, with an optional
+  trailing label that names the exit in logs and in the new status view. Unprefixed
+  entries still mean datacenter, so nothing already configured changes, and an
+  unrecognised kind is refused when you save it rather than silently misread later.
+
+- **New admin endpoint, `GET /api/admin/exits`.** Which proxies are in use, which the pool
+  has retired after a failure, when those come back, and how many sites are pinned to
+  each. Previously visible only in debug logs. Exits are named, never printed as URLs,
+  because a proxy URL carries its credential.
+
+- **A page that would not finish rendering is no longer reported as a crash.** A source
+  can ask for a page to be rendered in a browser and wait for a specific element; when
+  that element never appeared, the job said an unexpected error had occurred and showed a
+  stack trace, which reads as a bug in the app. It is not — it means the selector does not
+  match the finished page, or the page needs longer. Both that and a browser that runs a
+  challenge without earning a clearance now come back as ordinary diagnoses with a remedy,
+  and both count toward source health.
+
 - **The server no longer leaks memory on every failed request.** Each API error was one
   shared exception object, created when the module loaded and raised over and over.
   Raising an exception *appends* to the traceback already on it, and a shared object is

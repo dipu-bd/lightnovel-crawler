@@ -114,6 +114,9 @@ class LegacyCrawler(CrawlerTemplate):
     def post_soup(self, *args: Any, **kwargs: Any):
         return self.scraper.post_soup(*args, **kwargs)
 
+    def render_soup(self, *args: Any, **kwargs: Any):
+        return self.scraper.render_soup(*args, **kwargs)
+
     # ------------------------------------------------------------------------- #
     # Crawler
     # ------------------------------------------------------------------------- #

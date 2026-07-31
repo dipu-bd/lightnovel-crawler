@@ -6,6 +6,7 @@ from ...context import ctx
 from ..models import (
     ConfigSection,
     ConfigUpdateRequest,
+    ExitStatusItem,
 )
 from ..models.activity import (
     DailyActiveUsers,
@@ -34,6 +35,11 @@ def soft_restart() -> None:
 @router.get("/runner/status", summary="Get runner status")
 def status() -> bool:
     return bool(ctx.scheduler.running)
+
+
+@router.get("/exits", summary="Get the status of every configured exit")
+def exit_status() -> List[ExitStatusItem]:
+    return [ExitStatusItem(**item) for item in ctx.scraper.exit_status()]
 
 
 @router.post("/runner/start", summary="Start the runner")

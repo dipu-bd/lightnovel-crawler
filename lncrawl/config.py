@@ -110,6 +110,35 @@ def _at_least(name: str, value: _N, minimum: _N) -> _N:
     return value
 
 
+# Exit kinds an operator may put in front of a `proxy_urls` entry. `tor` is absent
+# because `tor;` already means the legacy host/port form, and `direct` because a direct
+# exit carries no URL and is asked for with `allow_fallback_on_proxy_miss` instead.
+PROXY_EXIT_KINDS = ("datacenter", "isp", "residential", "mobile")
+
+
+def _check_proxy_urls(value: str) -> str:
+    """Reject an unrecognised exit-kind prefix at the setter.
+
+    A typo would otherwise be stored, then parsed as though the whole entry were a proxy
+    URL — leaving a working-looking configuration that routes nowhere. The kinds decide
+    which detection layers an address is credited with reaching, so getting one wrong is
+    not cosmetic.
+    """
+    for entry in (value or "").split(","):
+        entry = entry.strip()
+        if not entry or entry.startswith(("tor;", "torpool;")):
+            continue
+        head, sep, rest = entry.partition(";")
+        if not sep or "://" not in rest:
+            continue  # a plain proxy URL, which stays a datacenter address
+        if head.strip().lower() not in PROXY_EXIT_KINDS:
+            raise ValueError(
+                f"unknown exit kind {head.strip()!r} in proxy_urls;"
+                f" use one of {', '.join(PROXY_EXIT_KINDS)}"
+            )
+    return value
+
+
 def _update(target: dict, source: dict) -> dict:
     """Update target with source, returning deprecated values."""
     deprecated = {}
@@ -770,9 +799,17 @@ class CrawlerConfig(_Section):
         Comma-separated list of proxy URLs. Can also be set via the PROXY_URLS
         environment variable. Each entry is one of:
 
-        - A plain proxy URL (e.g. http://host:port or socks5://host:port/). Treated as
-          a datacenter address, which is the conservative reading: a datacenter range
-          is published, so it is never credited with reach it may not have.
+        - A plain proxy URL (e.g. http://host:port or socks5://host:port/), read as a
+          datacenter address.
+        - A kind-prefixed URL, <kind>;<url> or <kind>;<url>;<label>, where <kind> is
+          datacenter, isp, residential or mobile. Say what you actually have.
+          Reputation databases score the range an address belongs to, and only isp,
+          residential and mobile addresses get past a site that blocks on reputation —
+          so calling a residential proxy a datacenter one throws away the exit you are
+          paying for, and the crawler will report that it has no way past a block it
+          could in fact clear. Claiming the reverse is no better: it does not change
+          what the database thinks, it only hides the real reason nothing works. The
+          optional <label> names the exit in logs and in the proxy status view.
         - A tor-pool entry, torpool;<api_url>;<socks_url>;<token> — many Tor instances
           behind one sticky port, reassigned on demand. This is the form that can
           actually rotate. <socks_url> may be blank for socks5h://127.0.0.1:9250, and
@@ -782,6 +819,9 @@ class CrawlerConfig(_Section):
           say in which exit comes next, so it could land on the same relay. Use the
           torpool form if you need rotation.
 
+        Tor exit addresses are published, so neither Tor form clears a reputation
+        block; they are the right tool for a site that does not score addresses.
+
         Blank entries are ignored. With more than one entry, an address is leased per
         origin and held — rotation happens on evidence, never on a timer.
         """
@@ -789,7 +829,7 @@ class CrawlerConfig(_Section):
 
     @proxy_urls.setter
     def proxy_urls(self, v: str) -> None:
-        self._set("proxy_urls", v)
+        self._set("proxy_urls", _check_proxy_urls(v))
 
     @property
     def enable_proxy(self) -> bool:
