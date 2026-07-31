@@ -11,7 +11,7 @@ if TYPE_CHECKING:
     from .activity import UserActivityStats
     from .announcement import AnnouncementCreateRequest, AnnouncementUpdateRequest
     from .config import ConfigProperty, ConfigSection, ConfigUpdateRequest
-    from .crawler import ExitStatusItem, LoginData
+    from .crawler import LoginData, ProxyItem
     from .feedback import (
         Feedback,
         FeedbackCreateRequest,
@@ -80,8 +80,8 @@ __all__ = [
     "PRCreateRequest",
     "PRResponse",
     # crawler
-    "ExitStatusItem",
     "LoginData",
+    "ProxyItem",
     # job
     "FetchNovelsRequest",
     "FetchVolumesRequest",
@@ -133,8 +133,8 @@ _LAZY: dict[str, str] = {
     "ConfigProperty": ".config",
     "ConfigSection": ".config",
     "ConfigUpdateRequest": ".config",
-    "ExitStatusItem": ".crawler",
     "LoginData": ".crawler",
+    "ProxyItem": ".crawler",
     "Feedback": ".feedback",
     "FeedbackCreateRequest": ".feedback",
     "FeedbackRespondRequest": ".feedback",

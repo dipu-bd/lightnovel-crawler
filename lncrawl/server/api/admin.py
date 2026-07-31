@@ -3,10 +3,11 @@ from typing import List, Literal, Union
 from fastapi import APIRouter, Body, Query
 
 from ...context import ctx
+from ...utils.proxy_tools import ProxyExit
 from ..models import (
     ConfigSection,
     ConfigUpdateRequest,
-    ExitStatusItem,
+    ProxyItem,
 )
 from ..models.activity import (
     DailyActiveUsers,
@@ -37,9 +38,14 @@ def status() -> bool:
     return bool(ctx.scheduler.running)
 
 
-@router.get("/exits", summary="Get the status of every configured exit")
-def exit_status() -> List[ExitStatusItem]:
-    return [ExitStatusItem(**item) for item in ctx.scraper.exit_status()]
+@router.get("/proxies", summary="List configured proxies and what each is doing")
+def list_proxies() -> List[ProxyItem]:
+    return [ProxyItem(**item) for item in ctx.scraper.proxies()]
+
+
+@router.put("/proxies", summary="Replace the configured proxies")
+def set_proxies(body: List[ProxyExit] = Body()) -> List[ProxyItem]:
+    return [ProxyItem(**item) for item in ctx.scraper.set_proxies(body)]
 
 
 @router.post("/runner/start", summary="Start the runner")

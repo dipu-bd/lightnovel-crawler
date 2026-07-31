@@ -5,8 +5,10 @@ import logging
 import threading
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from ..config import APP_DIR, PROXY_EXIT_KINDS
+from ..config import APP_DIR
 from ..context import ctx
+from ..utils import proxy_tools
+from ..utils.proxy_tools import ProxyExit, ProxyKind
 from ..utils.url_tools import extract_base
 
 if TYPE_CHECKING:
@@ -54,66 +56,33 @@ class ScraperService:
     # ------------------------------------------------------------------------- #
 
     def _exits(self) -> List["ExitSpec"]:
-        """Translate `crawler.proxy_urls` into the scraper's exit list.
-
-        The scraper describes an address by *kind* rather than by URL, because what a
-        detector reads is the reputation of the range it belongs to — a datacenter proxy
-        and a residential one are not interchangeable however similar the URL looks. Only
-        an operator knows which they bought, so an entry may say, and an unprefixed URL
-        stays a datacenter address: that is the reading that never claims reach the
-        address does not have, and it is what every configuration written before the
-        prefixes existed means.
-
-        `allow_fallback_on_proxy_miss` becomes a direct entry in the list. The scraper
-        dropped its own fallback-to-direct switch — silently leaving the proxy is how a
-        scrape leaks the host's real address mid-session — but an operator who asked for
-        that behaviour is asking for direct to be *an option*, and an exit list is exactly
-        how you say so.
-        """
+        """Hand `crawler.proxies` to the scraper as its exit list."""
         from scraper import ExitKind, ExitSpec, TorPoolSpec
 
         if not ctx.config.crawler.enable_proxy:
             return []
 
         exits: List[ExitSpec] = []
-        for entry in ctx.config.crawler.proxy_urls.split(","):
-            entry = entry.strip()
-            if not entry:
+        for proxy in ctx.config.crawler.proxies:
+            if not proxy.enabled:
                 continue
-            kind_name, sep, rest = entry.partition(";")
-            if sep and kind_name.strip().lower() in PROXY_EXIT_KINDS and "://" in rest:
-                # <kind>;<url> or <kind>;<url>;<label>
-                url, _, label = rest.partition(";")
-                exits.append(
-                    ExitSpec(
-                        url=url.strip(),
-                        kind=ExitKind(kind_name.strip().lower()),
-                        label=label.strip(),
-                    )
-                )
-            elif entry.startswith("torpool;"):
-                # torpool;<api_url>;<socks_url>;<token>
-                parts = entry.split(";")
-                socks = parts[2] if len(parts) > 2 and parts[2] else "socks5h://127.0.0.1:9250"
+            if proxy.kind is ProxyKind.torpool:
                 exits.append(
                     TorPoolSpec(
-                        url=socks,
-                        api_url=parts[1],
-                        token=parts[3] if len(parts) > 3 else "",
+                        url=proxy.url,
+                        api_url=proxy.api_url,
+                        token=proxy.token,
+                        label=proxy.label,
                     )
                 )
-            elif entry.startswith("tor;"):
-                # Legacy form: tor;<host>;<port>;<control_port>;<control_password>.
-                # The control port is accepted and ignored. Rotation by NEWNYM is gone —
-                # it has a ~10s cooldown and gives no say in which exit comes next, so a
-                # rotation could land on the same relay. tor-pool reassigns instead, which
-                # is what `torpool;` is for.
-                parts = entry.split(";")
-                host = parts[1] if len(parts) > 1 else "127.0.0.1"
-                port = parts[2] if len(parts) > 2 else "9050"
-                exits.append(ExitSpec(url=f"socks5h://{host}:{port}", kind=ExitKind.TOR))
             else:
-                exits.append(ExitSpec(url=entry, kind=ExitKind.DATACENTER))
+                exits.append(
+                    ExitSpec(
+                        url=proxy.url,
+                        kind=ExitKind(proxy.kind.value),
+                        label=proxy.label,
+                    )
+                )
 
         if exits and ctx.config.crawler.allow_fallback_on_proxy_miss:
             exits.append(ExitSpec(url="", kind=ExitKind.DIRECT, label="direct"))
@@ -423,30 +392,48 @@ class ScraperService:
                 self.memory.forget(url)
             self._close(scraper)
 
-    def exit_status(self) -> List[Dict[str, Any]]:
-        """What each configured exit is doing right now.
+    def proxies(self) -> List[Dict[str, Any]]:
+        """Every configured proxy, with what it is doing right now.
 
         The address half of `explain()`, and the only view of it there is: which exits
         the pool has retired and when they come back is otherwise visible only in debug
         logs, so an operator whose scrape has slowed has nothing to look at.
 
-        Reported by name rather than by URL because a proxy URL carries its credential.
-        `clears_reputation` is derived rather than stored, since it is the one thing the
-        kind is *for* and the reason declaring the kind correctly matters.
-        """
-        from scraper import Layer
+        Status is joined onto the configuration rather than served beside it, because a
+        proxy and its health are one thing to whoever is looking. A disabled entry is
+        listed and simply has no status — it is not in the pool.
 
-        return [
-            {
-                "name": item.name,
-                "kind": item.kind.value,
-                "clears_reputation": Layer.IP_REPUTATION in item.kind.reach,
-                "retired": item.retired,
-                "returns_in": item.returns_in,
-                "origins": item.origins,
-            }
-            for item in self.state.exits.status()
-        ]
+        `clears_reputation` is derived rather than stored: it is the one thing the kind
+        is *for*, and the reason declaring it correctly matters.
+        """
+        from scraper import ExitKind, Layer
+
+        configured = ctx.config.crawler.proxies
+        live = {item.name: item for item in self.state.exits.status()}
+
+        out: List[Dict[str, Any]] = []
+        for proxy in configured:
+            row = proxy_tools.public(proxy)
+            kind = ExitKind.TOR if proxy.kind is ProxyKind.torpool else ExitKind(proxy.kind.value)
+            row["clears_reputation"] = Layer.IP_REPUTATION in kind.reach
+            status = live.get(proxy.name)
+            row["retired"] = bool(status and status.retired)
+            row["returns_in"] = status.returns_in if status else 0.0
+            row["origins"] = status.origins if status else 0
+            out.append(row)
+        return out
+
+    def set_proxies(self, submitted: List["ProxyExit"]) -> List[Dict[str, Any]]:
+        """Replace the configured proxies, keeping any secret that was not re-sent.
+
+        Rebuilds the shared state, because the exit list is read once when the pool is
+        built — an operator who just added an address expects the next request to use it.
+        """
+        merged = proxy_tools.merge_secrets(submitted, ctx.config.crawler.proxies)
+        ctx.config.crawler.proxies = merged
+        ctx.config.save()
+        self.invalidate()
+        return self.proxies()
 
     def knows(self, url: str) -> Optional["OriginProfile"]:
         """What has been learned about *url*'s origin, or None if nothing has.

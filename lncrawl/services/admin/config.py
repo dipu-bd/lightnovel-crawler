@@ -17,7 +17,7 @@ from typing import (
     get_type_hints,
 )
 
-from ...config import Sensitive, _deserialize, _Section, _serialize
+from ...config import Hidden, Sensitive, _deserialize, _Section, _serialize
 from ...context import ctx
 from ...exceptions import ServerErrors
 from ...server.models import ConfigProperty, ConfigSection
@@ -36,12 +36,13 @@ def _unwrap_return_type(annotation: Any) -> Any:
     return annotation
 
 
-def _strip_annotated_sensitive(annotation: Any) -> Tuple[Any, bool]:
-    """Remove all ``Annotated`` wrappers and detect :class:`Sensitive` markers."""
+def _strip_annotated_sensitive(annotation: Any) -> Tuple[Any, bool, bool]:
+    """Remove all ``Annotated`` wrappers and detect the marker classes."""
     sensitive = False
+    hidden = False
 
     def peel(a: Any) -> Any:
-        nonlocal sensitive
+        nonlocal sensitive, hidden
         while a is not None and get_origin(a) is Annotated:
             args = get_args(a)
             if not args:
@@ -49,13 +50,15 @@ def _strip_annotated_sensitive(annotation: Any) -> Tuple[Any, bool]:
             for meta in args[1:]:
                 if meta is Sensitive:
                     sensitive = True
+                elif meta is Hidden:
+                    hidden = True
             a = args[0]
         return a
 
     ann = peel(annotation)
     ann = _unwrap_return_type(ann)
     ann = peel(ann)
-    return ann, sensitive
+    return ann, sensitive, hidden
 
 
 def _value_kind_for_annotation(annotation: Any) -> str:
@@ -85,14 +88,14 @@ def _parse_property_doc(doc: Optional[str], attr_name: str) -> Tuple[str, str]:
     return display or _humanize_key(attr_name), description
 
 
-def _get_value_kind(attr: property) -> Tuple[str, bool]:
+def _get_value_kind(attr: property) -> Tuple[str, bool, bool]:
     anns = get_type_hints(attr.fget, include_extras=True)
     return_type = anns.get("return")
     if return_type is None:
-        return "any", False
-    bare_return, is_sensitive = _strip_annotated_sensitive(return_type)
+        return "any", False, False
+    bare_return, is_sensitive, is_hidden = _strip_annotated_sensitive(return_type)
     value_kind = _value_kind_for_annotation(bare_return)
-    return value_kind, is_sensitive
+    return value_kind, is_sensitive, is_hidden
 
 
 def _get_masked_value(value: Any) -> Any:
@@ -112,8 +115,10 @@ def _get_properties(section: _Section) -> Iterable[ConfigProperty]:
             continue
         attr = getattr(type(section), name, None)
         if isinstance(attr, property) and attr.fset:
+            value_kind, is_sensitive, is_hidden = _get_value_kind(attr)
+            if is_hidden:
+                continue
             value = _serialize(getattr(section, name))
-            value_kind, is_sensitive = _get_value_kind(attr)
             display, description = _parse_property_doc(attr.fget.__doc__, name)
             if is_sensitive:
                 value = _get_masked_value(value)

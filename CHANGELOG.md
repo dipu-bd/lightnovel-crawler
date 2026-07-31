@@ -199,21 +199,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   it. A search that ends early also says how many sources did not answer, instead of
   reporting a total failure over the results it did collect.
 
-- **A proxy can say what kind of address it is.** Reputation databases score the range an
-  address belongs to, and only ISP, residential and mobile addresses get past a site that
-  blocks on reputation — but every plain entry in `proxy_urls` was read as a datacenter
-  address, so a residential proxy bought for exactly that purpose was never used for it.
-  The crawler would give up on a reputation block it could have cleared, then advise
-  configuring a proxy the user had already configured. An entry may now be written
-  `residential;<url>`, `mobile;<url>`, `isp;<url>` or `datacenter;<url>`, with an optional
-  trailing label that names the exit in logs and in the new status view. Unprefixed
-  entries still mean datacenter, so nothing already configured changes, and an
-  unrecognised kind is refused when you save it rather than silently misread later.
+- **Proxies have their own screen, and each one can say what kind of address it is.**
+  Reputation databases score the range an address belongs to, and only ISP, residential
+  and mobile addresses get past a site that blocks on reputation — but every proxy was
+  read as a datacenter address, so a residential proxy bought for exactly that purpose was
+  never used for it. The crawler would give up on a block it could have cleared, then
+  advise configuring a proxy that was already configured.
 
-- **New admin endpoint, `GET /api/admin/exits`.** Which proxies are in use, which the pool
-  has retired after a failure, when those come back, and how many sites are pinned to
-  each. Previously visible only in debug logs. Exits are named, never printed as URLs,
-  because a proxy URL carries its credential.
+  Proxies were also a single line of comma-separated text holding four different
+  semicolon-delimited formats, one of which nobody could be expected to remember. They are
+  now a list of records — kind, address, label, on/off, and the tor-pool fields where they
+  apply — edited on a Proxies screen under Settings that shows, beside each entry, whether
+  it is in use, resting after a failure and for how long, and whether its kind can get past
+  a reputation block at all.
+
+  Existing configuration is imported automatically, including `PROXY_URLS` from the
+  environment, and nothing needs rewriting by hand. Credentials no longer come back out of
+  the API: a proxy URL's password and a tor-pool token are withheld, and leaving them
+  untouched keeps what is stored.
 
 - **A page that would not finish rendering is no longer reported as a crash.** A source
   can ask for a page to be rendered in a browser and wait for a specific element; when

@@ -8,11 +8,14 @@ import logging
 import os
 from pathlib import Path
 import time
-from typing import Annotated, Any, Callable, Type, TypeVar, cast
+from typing import Annotated, Any, Callable, List, Type, TypeVar, cast
 import uuid
 
 import dotenv
 import typer
+
+from .utils import proxy_tools
+from .utils.proxy_tools import ProxyExit
 
 T = TypeVar("T")
 
@@ -34,6 +37,15 @@ class Sensitive:
     """Use with `typing.Annotated` on config property return types.
 
     Properties marked this way are listed in the admin API with `sensitive=True`.
+    """
+
+
+class Hidden:
+    """Use with `typing.Annotated` on config property return types.
+
+    Properties marked this way are left out of the admin settings list. For a value the
+    generic widgets cannot edit — anything structured — which would otherwise be offered
+    as a JSON text area and needs a screen of its own instead.
     """
 
 
@@ -107,35 +119,6 @@ def _at_least(name: str, value: _N, minimum: _N) -> _N:
     """
     if value is None or value < minimum:
         raise ValueError(f"{name} must be at least {minimum}")
-    return value
-
-
-# Exit kinds an operator may put in front of a `proxy_urls` entry. `tor` is absent
-# because `tor;` already means the legacy host/port form, and `direct` because a direct
-# exit carries no URL and is asked for with `allow_fallback_on_proxy_miss` instead.
-PROXY_EXIT_KINDS = ("datacenter", "isp", "residential", "mobile")
-
-
-def _check_proxy_urls(value: str) -> str:
-    """Reject an unrecognised exit-kind prefix at the setter.
-
-    A typo would otherwise be stored, then parsed as though the whole entry were a proxy
-    URL — leaving a working-looking configuration that routes nowhere. The kinds decide
-    which detection layers an address is credited with reaching, so getting one wrong is
-    not cosmetic.
-    """
-    for entry in (value or "").split(","):
-        entry = entry.strip()
-        if not entry or entry.startswith(("tor;", "torpool;")):
-            continue
-        head, sep, rest = entry.partition(";")
-        if not sep or "://" not in rest:
-            continue  # a plain proxy URL, which stays a datacenter address
-        if head.strip().lower() not in PROXY_EXIT_KINDS:
-            raise ValueError(
-                f"unknown exit kind {head.strip()!r} in proxy_urls;"
-                f" use one of {', '.join(PROXY_EXIT_KINDS)}"
-            )
     return value
 
 
@@ -793,51 +776,31 @@ class CrawlerConfig(_Section):
         self._set("runner_reset_interval", v)
 
     @property
-    def proxy_urls(self) -> str:
-        """Proxy URLs to route crawler requests through.
+    def proxies(self) -> Annotated[List[ProxyExit], Hidden]:
+        """The addresses crawler requests may leave from.
 
-        Comma-separated list of proxy URLs. Can also be set via the PROXY_URLS
-        environment variable. Each entry is one of:
-
-        - A plain proxy URL (e.g. http://host:port or socks5://host:port/), read as a
-          datacenter address.
-        - A kind-prefixed URL, <kind>;<url> or <kind>;<url>;<label>, where <kind> is
-          datacenter, isp, residential or mobile. Say what you actually have.
-          Reputation databases score the range an address belongs to, and only isp,
-          residential and mobile addresses get past a site that blocks on reputation —
-          so calling a residential proxy a datacenter one throws away the exit you are
-          paying for, and the crawler will report that it has no way past a block it
-          could in fact clear. Claiming the reverse is no better: it does not change
-          what the database thinks, it only hides the real reason nothing works. The
-          optional <label> names the exit in logs and in the proxy status view.
-        - A tor-pool entry, torpool;<api_url>;<socks_url>;<token> — many Tor instances
-          behind one sticky port, reassigned on demand. This is the form that can
-          actually rotate. <socks_url> may be blank for socks5h://127.0.0.1:9250, and
-          <token> is a proxy-scoped token from the pool.
-        - A Tor entry, tor;<host>;<port>;<control_port>;<control_password>. The control
-          port is accepted and ignored: rotating by NEWNYM has a ~10s cooldown and no
-          say in which exit comes next, so it could land on the same relay. Use the
-          torpool form if you need rotation.
-
-        Tor exit addresses are published, so neither Tor form clears a reputation
-        block; they are the right tool for a site that does not score addresses.
-
-        Blank entries are ignored. With more than one entry, an address is leased per
-        origin and held — rotation happens on evidence, never on a timer.
+        Edited on its own screen rather than in this list, because each entry is a
+        record. Falls back to the legacy `proxy_urls` string, or `PROXY_URLS` in the
+        environment, when nothing structured has been saved yet.
         """
-        return self._get("proxy_urls", os.getenv("PROXY_URLS") or "")
+        legacy = self._get("proxy_urls", "") or os.getenv("PROXY_URLS") or ""
+        # An empty stored list reads as "nothing saved here yet", so the legacy string
+        # still imports: every property is round-tripped through its setter at startup,
+        # which would otherwise write `[]` before the import ever ran.
+        return proxy_tools.load(self._get("proxies", []) or None, legacy)
 
-    @proxy_urls.setter
-    def proxy_urls(self, v: str) -> None:
-        self._set("proxy_urls", _check_proxy_urls(v))
+    @proxies.setter
+    def proxies(self, v: Any) -> None:
+        self._set("proxies", proxy_tools.dump(v))
+        self._set("proxy_urls", "")
 
     @property
     def enable_proxy(self) -> bool:
         """Enable Proxy.
 
-        When enabled, crawler requests are routed through the URLs listed in
-        `proxy_urls`. Disable to pass all traffic through a direct connection,
-        even if proxy URLs are configured. Enabled by default.
+        When enabled, crawler requests leave through the addresses on the Proxies
+        screen. Disable to send everything direct without having to remove them.
+        Enabled by default.
         """
         return self._get("enable_proxy", True)
 
