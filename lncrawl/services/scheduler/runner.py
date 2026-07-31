@@ -95,8 +95,8 @@ class JobRunner:
 
     @staticmethod
     def _saturated_domains() -> set:
-        """Domains that already run as many jobs as their source allows
-        concurrent requests. Caller must hold _lock."""
+        """Domains already running as many jobs as their source allows.
+        Caller must hold _lock."""
         counts: Dict[str, int] = {}
         for claim in _queue.values():
             if claim.domain:
@@ -104,7 +104,7 @@ class JobRunner:
         saturated = set()
         for domain, count in counts.items():
             try:
-                limit = ctx.sources.get_crawler(domain).max_concurrency()
+                limit = ctx.sources.get_crawler(domain).max_jobs()
             except Exception:
                 limit = 1
             if count >= max(1, limit):

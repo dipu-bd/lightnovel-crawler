@@ -40,12 +40,43 @@ class Crawler(ABC):
     version = 0
 
     @classmethod
-    def max_concurrency(cls) -> int:
+    def max_jobs(cls) -> int:
+        """Jobs allowed to run against this source at once.
+
+        A fairness bound rather than a throughput one. Measured, throughput keeps
+        rising as this grows — a job is far more than its requests, and only the HTTP
+        is capped by the scraper's per-address gate, so parsing, cleaning and storing
+        overlap freely. What the cap protects is every *other* domain, because one
+        source is otherwise free to occupy the whole runner pool.
+        """
         if not cls.request_rate_limit:
             return 1
         rate = math.ceil(cls.request_rate_limit)
-        n = ctx.config.crawler.runner_concurrency
-        return max(1, min(rate, n))
+        return max(1, min(rate, ctx.config.crawler.runner_concurrency))
+
+    @classmethod
+    def max_workers(cls) -> int:
+        """Threads this crawler's task manager runs.
+
+        One more than the scraper's per-address gate admits, which is not arbitrary:
+        measured against a live source, throughput rises to gate+1 and is flat above
+        it. The extra thread parses and stores a finished chapter while the others
+        hold the permits, so the gate stays fed instead of idling through every parse.
+
+        Deliberately not derived from `request_rate_limit`, which is an interval and
+        says nothing about how many threads can be busy at once. Reading it as both is
+        what left ten sources single-threaded for declaring no rate limit.
+        """
+        return max(1, ctx.config.crawler.max_sessions_per_exit) + 1
+
+    @classmethod
+    def max_concurrency(cls) -> int:
+        """Deprecated alias for `max_workers`.
+
+        Kept because sources are downloaded to disk at runtime, so a user's copy may
+        still call it; removing it would make that source fail rather than age.
+        """
+        return cls.max_workers()
 
     # ------------------------------------------------------------------------- #
     # Constructor & Destructors
@@ -78,7 +109,7 @@ class Crawler(ABC):
         from .taskman import TaskManager
 
         self.cleaner = TextCleaner()
-        self.taskman = TaskManager(workers=self.max_concurrency())
+        self.taskman = TaskManager(workers=self.max_workers())
 
         self.scraper = scraper or ctx.scraper.open(
             origin,

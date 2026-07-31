@@ -165,6 +165,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   not the transport, so it only ever sat under the fallback path. Removed; 2.x resolves
   cleanly with no other package moving.
 
+- **Ten sources downloaded one chapter at a time for no reason.** How many threads a
+  crawler runs was derived from its requests-per-second, which is an interval and says
+  nothing about how many things can be in flight — so a source that declared no rate
+  limit was read as "no parallelism" and ran single-file. Thread count now comes from
+  the per-site request limit instead, measured to be fastest at one thread above it:
+  the spare thread stores a finished chapter while the others are fetching. Ten sources
+  go from one worker to three, thirty from two, and eight drop from four or five to
+  three, which measured no slower. How many jobs may run against one source at a time
+  is untouched.
+
 - **`chireads` search results had no titles.** The site moved the title out of the
   attribute the source read; it now reads the one the site actually emits.
   `totallytranslations` replaced its own HTTP session on startup, which broke every
