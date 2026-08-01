@@ -1,5 +1,5 @@
 {
-  "v": 1785613953,
+  "v": 1785615737,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -500,7 +500,7 @@
     "https://www.novels.pl/": "5e962751f7928b75a7bbfd7a777fd629",
     "https://www.novelupdates.cc/": "ab5e6692cab4784c74023daa7036bc79",
     "https://www.novelupdates.com/": "2c529108c1fd6d790a05e51c02f9bb9c",
-    "https://www.oppatranslations.com/": "f57d2a47e8dbf9ad7d1cf03daf0c0947",
+    "https://www.oppatranslations.com/": "e3dde6b1f9d156edfc0239db6215d05b",
     "https://www.pandamanga.xyz/": "930238810d342d233fb3e2fcfb33088d",
     "https://www.piaotia.com/": "e2a0a1f66eec221866f52e14af342c50",
     "https://www.piaotian.com/": "e2a0a1f66eec221866f52e14af342c50",
@@ -698,16 +698,16 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/f/fsapk.py"
     },
     "05cbdda5fe5c1293af37b873e973fb35": {
-      "version": 1665419259,
+      "version": 1785615708,
       "md5": "7918d5ab3d275a02201db242b6e208d7",
       "file_path": "sources/fr/lightnovelfr.py",
       "language": "fr",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 9,
+      "total_commits": 10,
       "contributors": [
         "dipu-bd",
         "idMysteries"
@@ -742,18 +742,19 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/f/freewebnovel.py"
     },
     "062af6d3ce28b480656e083165054ab6": {
-      "version": 1721760215,
+      "version": 1785615708,
       "md5": "e8f031651afb48fc0dd1f475c52e509e",
       "file_path": "sources/en/c/ckandawrites.online.py",
       "language": "en",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 2,
+      "total_commits": 3,
       "contributors": [
-        "Dark6ness"
+        "Dark6ness",
+        "dipu-bd"
       ],
       "id": "062af6d3ce28b480656e083165054ab6",
       "base_urls": [
@@ -1669,16 +1670,16 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/ltnovel.py"
     },
     "1a5bed228319e32fe1f9ba769c722ace": {
-      "version": 1785613888,
+      "version": 1785615708,
       "md5": "bbe624a5b620d6d6cb68571578147705",
       "file_path": "sources/en/h/hyacinthbloom.py",
       "language": "en",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 10,
+      "total_commits": 11,
       "contributors": [
         "dipu-bd",
         "idMysteries"
@@ -3059,16 +3060,16 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/i/innread.py"
     },
     "4421d09dd09403f84372882e8ae91513": {
-      "version": 1754668331,
+      "version": 1785615708,
       "md5": "af1201c9e3f60fb3e800cff2382b8ec2",
       "file_path": "sources/en/d/dobytranslations.py",
       "language": "en",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 2,
+      "total_commits": 3,
       "contributors": [
         "Dark6ness",
         "dipu-bd"
@@ -4890,16 +4891,16 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/myoniyonitrans.py"
     },
     "73c06281b1cf247bfb1c23fd539b99dd": {
-      "version": 1785613888,
+      "version": 1785615708,
       "md5": "74088d7c04d23ee46b3eb63025f479a9",
       "file_path": "sources/pt/tsundoku.py",
       "language": "pt",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 11,
+      "total_commits": 12,
       "contributors": [
         "dipu-bd",
         "idMysteries"
@@ -4932,16 +4933,16 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelmultiverse.py"
     },
     "751db4e2d29b79ff035621db04345288": {
-      "version": 1785613888,
+      "version": 1785615708,
       "md5": "3ea80e157af680148b710c4bfff6649f",
       "file_path": "sources/id/fuyunovel.py",
       "language": "id",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 11,
+      "total_commits": 12,
       "contributors": [
         "dipu-bd",
         "idMysteries"
