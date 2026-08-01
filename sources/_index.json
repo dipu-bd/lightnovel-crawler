@@ -1,5 +1,5 @@
 {
-  "v": 1785583991,
+  "v": 1785584734,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -86,7 +86,6 @@
     "https://mangachill.love/": "Site is down",
     "https://mangarockteam.com/": "Site is down",
     "https://mangastic.net/": "Site is down",
-    "https://mangatoto.com/": "Domain now hosts an unrelated Thai manga site",
     "https://mangatoto.net/": "Redirects to a gambling site",
     "https://mangatoto.org/": "Domain now serves a gambling site",
     "https://mangaweebs.in/": "Domain is parked and for sale",
@@ -340,6 +339,7 @@
     "https://mangarosie.love/": "c041d339e40c0ddbb55b7247b67650d8",
     "https://mangarosie.me/": "c041d339e40c0ddbb55b7247b67650d8",
     "https://mangatoon.mobi/": "415856eedaf947167f0a965f23b74288",
+    "https://mangatoto.com/": "5955ede148817d13e8ef04255da4237d",
     "https://mangatx.com/": "06d8f1f9c8cb559895614b05d00f4b0b",
     "https://manhuaplus.online/": "f2ee2cffc9ccdc5ca2b830c98f3ce174",
     "https://meionovel.id/": "f74bd0aac01ea4c4dfe8dfd34ff9c562",
@@ -6314,7 +6314,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/newsnovel.py"
     },
     "a36f44760b527424ecb888af646cad51": {
-      "version": 1785583966,
+      "version": 1785584642,
       "md5": "22cc71027b668f010e4c644a1e8d8aa7",
       "file_path": "sources/en/f/faqwiki.py",
       "language": "en",
