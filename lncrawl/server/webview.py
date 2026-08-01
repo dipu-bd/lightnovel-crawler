@@ -7,9 +7,10 @@ import time
 from typing import Optional
 from urllib.request import urlopen
 
+from scraper import pick_chromium
+
 from ..context import ctx
 from ..enums import UserRole
-from ..utils.browser_detect import pick_executable
 from ..utils.platforms import Screen
 from ..utils.sockets import free_port
 
@@ -195,7 +196,7 @@ def _build_url(host: str, port: int) -> str:
 
 
 def _launch_app_window(url: str, manage_console: bool) -> None:
-    binary = pick_executable()
+    binary = pick_chromium()
     if not binary:
         raise FallbackException("No Chromium-based browser found")
 

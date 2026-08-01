@@ -5,7 +5,7 @@ import logging
 import threading
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from scraper import extract_base
+from scraper import extract_base, pick_chromium, pick_firefox
 
 from ..config import APP_DIR
 from ..context import ctx
@@ -115,26 +115,37 @@ class ScraperService:
             logger.info("Browser crawling is disabled in the configuration")
             return None
 
-        from ..utils.browser_detect import pick_executable
-
-        executable = pick_executable()
-        if not executable:
-            logger.info("No browser executable found; challenges will not be solved")
-            return None
-
-        # The solver talks CDP over a WebSocket and reaches for it only when asked to
-        # solve, so it imports fine with nothing installed. Offering one anyway would
-        # put a rung on the ladder that fails every time it is climbed.
+        # Both solvers talk their protocol over a WebSocket
         if not util.find_spec("websockets"):
             logger.info("The websockets package is missing; challenges will not be solved")
             return None
 
-        from scraper import CdpSolver
+        # Normalised: an unrecognised value here would silently mean "chrome"
+        wanted = (ctx.config.crawler.browser_driver or "").strip().lower()
+        if wanted not in ("auto", "firefox", "chrome"):
+            logger.warning("Unknown browser_driver %r; using auto", wanted)
+            wanted = "auto"
+        headless = ctx.config.crawler.use_headless_mode
 
-        return CdpSolver(
-            executable=executable,
-            headless=ctx.config.crawler.use_headless_mode,
-        )
+        # Firefox first as that reaches the most sites
+        if wanted in ("auto", "firefox"):
+            firefox = pick_firefox()
+            if firefox:
+                from scraper import BidiSolver
+
+                return BidiSolver(executable=firefox, headless=headless)
+            if wanted == "firefox":
+                logger.info("No Firefox executable found; challenges will not be solved")
+                return None
+
+        chromium = pick_chromium()
+        if chromium:
+            from scraper import CdpSolver
+
+            return CdpSolver(executable=chromium, headless=headless)
+
+        logger.info("No browser executable found; challenges will not be solved")
+        return None
 
     def _crawl_settings(self) -> Dict[str, Any]:
         """The settings that describe crawl traffic, shared state included."""

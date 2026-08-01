@@ -8,7 +8,7 @@ import logging
 import os
 from pathlib import Path
 import time
-from typing import Annotated, Any, Callable, List, Type, TypeVar, cast
+from typing import Annotated, Any, Callable, List, Tuple, Type, TypeVar, cast
 import uuid
 
 import dotenv
@@ -120,6 +120,18 @@ def _at_least(name: str, value: _N, minimum: _N) -> _N:
     if value is None or value < minimum:
         raise ValueError(f"{name} must be at least {minimum}")
     return value
+
+
+def _one_of(name: str, value: str, allowed: Tuple[str, ...]) -> str:
+    """Reject a string outside *allowed* at the setter.
+
+    Same reason as `_at_least`: the admin UI renders a free text field from a `str`
+    annotation, so a typo is only caught wherever the value is finally read.
+    """
+    chosen = (value or "").strip().lower()
+    if chosen not in allowed:
+        raise ValueError(f"{name} must be one of: {', '.join(allowed)}")
+    return chosen
 
 
 def _update(target: dict, source: dict) -> dict:
@@ -592,13 +604,33 @@ class CrawlerConfig(_Section):
         self._set("use_headless_mode", v)
 
     @property
+    def browser_driver(self) -> str:
+        """Challenge Solver Browser.
+
+        Which browser answers a challenge: `firefox`, `chrome`, or `auto` to use whichever one
+        is installed, preferring Firefox. Default is `auto`.
+
+        Firefox is preferred because whichever browser solves also decides what every later
+        request has to look like — a clearance is only valid for the fingerprint it was earned
+        under — and Firefox is the fingerprint that gets through the most sites. The two clear
+        about equally well but disagree on which sites, so if one particular site refuses you,
+        naming the other browser here is worth trying.
+        """
+        return self._get("browser_driver", "auto")
+
+    @browser_driver.setter
+    def browser_driver(self, v: str) -> None:
+        self._set("browser_driver", _one_of("browser_driver", v, ("auto", "firefox", "chrome")))
+
+    @property
     def impersonate(self) -> str:
         """Browser Fingerprint.
 
         Which browser every request should present itself as, for example `chrome` or `firefox`.
-        Leave blank to let the scraper choose. Enabling browser crawling forces `chrome`, because
-        a challenge solved in Chrome is only valid for requests that still look like Chrome —
-        set this if you would rather keep a different fingerprint everywhere.
+        Leave blank to let the scraper choose. Enabling browser crawling pins this to whichever
+        browser solves challenges, because a challenge solved in one is only valid for requests
+        that still look like it. Set this if you would rather keep a different fingerprint
+        everywhere.
         """
         return self._get("impersonate", "")
 

@@ -68,7 +68,7 @@ keywords = ["lightnovel", "webnovel", "crawler", "scraper", "downloader", "novel
 license = "GPL-3.0-or-later"
 name = "lightnovel-crawler"
 readme = "README.rst"
-requires-python = ">=3.9.0"
+requires-python = ">=3.9"
 
 [project.optional-dependencies]
 build = [
