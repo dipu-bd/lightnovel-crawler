@@ -10,6 +10,7 @@ services:
       - LNCRAWL_DATA_PATH=/data
       - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl
       - PROXY_URLS=torpool;http://tor-pool:8080;socks5h://tor-pool:9250;tp_auth_disabled
+      - TZ=${TZ:-UTC}
     volumes:
       - ./appdata:/data
     labels:

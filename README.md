@@ -30,8 +30,6 @@
 
 Once it's running: open **http://localhost:8181**, sign in with `admin` / `admin`, and paste a novel URL to download it.
 
----
-
 ## Installation
 
 <a href="https://github.com/lncrawl/lightnovel-crawler"><img src="res/lncrawl-icon.png" width="128px" align="right"/></a>
@@ -90,10 +88,11 @@ lncrawl -h
 _If `lncrawl` is not found, use `python -m lncrawl -h` instead._
 
 <!-- auto generated command line output -->
+
 ```text
 $ lncrawl -h
-Usage: lncrawl [OPTIONS] COMMAND [ARGS]...                                     
-                                                                                
+Usage: lncrawl [OPTIONS] COMMAND [ARGS]...
+
 ╭─ Options ────────────────────────────────────────────────────────────────────╮
 │ --verbose             -l              Log levels: -l = warn, -ll = info,     │
 │                                       -lll = debug                           │
@@ -116,6 +115,7 @@ Usage: lncrawl [OPTIONS] COMMAND [ARGS]...
 │ server   Run web server.                                                     │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ```
+
 <!-- auto generated command line output -->
 
 ### 🐳 Docker
@@ -125,8 +125,11 @@ Requires [Docker](https://www.docker.com/get-started/).
 ```bash
 mkdir -p lncrawl-data
 docker pull ghcr.io/lncrawl/lightnovel-crawler
-docker run -v ./lncrawl-data:/data -it -p 8181:8181 --name lncrawl-server ghcr.io/lncrawl/lightnovel-crawler -ll server
+docker run -v ./lncrawl-data:/data -it -p 8181:8181 -e TZ=Europe/London \
+  --name lncrawl-server ghcr.io/lncrawl/lightnovel-crawler -ll server
 ```
+
+Set `TZ` to the zone your internet address looks like it is in — see [above](#when-a-site-says-no) for why it matters more than it sounds.
 
 Then open **http://localhost:8181** and sign in with `admin` / `admin`.
 
@@ -290,6 +293,40 @@ make version          # Print current version
 
 </details>
 
+---
+
+## When a site says no
+
+Most of these sites sit behind bot detection, and a downloader that answers a block by retrying harder is a downloader that quietly stops working. This one reads _what_ is blocking before it reacts.
+
+- **It escalates only as far as it has to.** A plain request first, a different address when the block is about where you came from, a real browser only when a challenge genuinely needs one. Rotating the proxy at a rate limit is the reflex that makes things worse — the new address gets throttled just the same, because the pacing was the problem.
+- **Challenges are solved in a browser you already have.** Firefox for preference, Chrome as the fallback, hidden by default. The clearance is reused, so one solve covers a whole book instead of one page.
+- **An empty page is a failure, not a success.** A challenge screen and a page of adverts both answer `200`. Parsed as a chapter they produce a download that reports success and contains nothing, which is the most common way a source breaks.
+
+Ask what it knows about any site:
+
+```console
+$ lncrawl dev explain https://aquareader.org/
+aquareader.org
+  binding layer : L9 Managed JavaScript challenge — reads a hybrid property, solve
+  tier          : direct (unproven)
+  pacing        : 3.0s mean interval
+  requests      : 0 ok / 5 failed
+  clearance     : none
+  ladder        : archive(0) direct(10)
+  exits         : direct
+```
+
+When a download fails you get that, not `403 after 3 retries` — which layer is blocking, what it reads, and whether anything you can configure would move it. A block on your address is answered by adding a proxy. A block that wants an account cannot be talked around, and it says so rather than retrying for an hour.
+
+The engine is [`lncrawl-scraper`](https://github.com/lncrawl/scraper), built and measured against a corpus of ~300 real source hosts.
+
+> **Running in Docker? Set `TZ`.** A container's clock is UTC, and a browser whose timezone disagrees with where its address geolocates reads as a robot. Measured in this image: **1 of 3 challenged sites cleared on the default clock, 3 of 3 with `TZ` set** to the zone your address looks like it is in.
+
+**What it will not do:** log into a site for you, pay a captcha-solving service, or pretend a site is reachable when it is not.
+
+---
+
 ### Adding a new source
 
 Copy one of the example file from [sources/\_examples/](sources/_examples) into `sources/{lang}/` and implement the required methods.
@@ -411,7 +448,6 @@ We are supporting 302 sources and 395 crawlers.
 </tbody>
 </table>
 
-
 ### `ar` Arabic
 
 <table>
@@ -433,7 +469,6 @@ We are supporting 302 sources and 395 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -1532,7 +1567,6 @@ We are supporting 302 sources and 395 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish; Castilian
 
 <table>
@@ -1559,7 +1593,6 @@ We are supporting 302 sources and 395 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `fr` French
 
@@ -1597,7 +1630,6 @@ We are supporting 302 sources and 395 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -1676,7 +1708,6 @@ We are supporting 302 sources and 395 crawlers.
 </tbody>
 </table>
 
-
 ### `ja` Japanese
 
 <table>
@@ -1698,7 +1729,6 @@ We are supporting 302 sources and 395 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `pt` Portuguese
 
@@ -1736,7 +1766,6 @@ We are supporting 302 sources and 395 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `ru` Russian
 
@@ -1805,7 +1834,6 @@ We are supporting 302 sources and 395 crawlers.
 </tbody>
 </table>
 
-
 ### `tr` Turkish
 
 <table>
@@ -1822,7 +1850,6 @@ We are supporting 302 sources and 395 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -1855,7 +1882,6 @@ We are supporting 302 sources and 395 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 

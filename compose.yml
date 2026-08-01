@@ -10,11 +10,8 @@ services:
     environment:
       - LNCRAWL_DATA_PATH=/data
       - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl
-      # torpool;<api_url>;<socks_url>;<token>. The pool runs with AUTH_DISABLED, so the
-      # token is ignored — but it must stay non-empty: it becomes the password on
-      # socks5h://<session>:<token>@tor-pool:9250, and urllib3 drops userinfo with no
-      # colon in it, which would drop the session key the pool pins the exit by.
       - PROXY_URLS=torpool;http://tor-pool:8080;socks5h://tor-pool:9250;tp_auth_disabled
+      - TZ=${TZ:-UTC}
     volumes:
       - appdata:/data
     depends_on:
