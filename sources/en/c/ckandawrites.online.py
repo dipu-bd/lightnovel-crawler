@@ -8,4 +8,5 @@ logger = logging.getLogger(__name__)
 class CkandawritesOnline(MangaStreamTemplate):
     has_mtl = False
     has_manga = False
+    can_search = True
     base_url = ["https://ckandawrites.online/"]

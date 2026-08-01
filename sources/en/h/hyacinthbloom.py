@@ -8,3 +8,4 @@ logger = logging.getLogger(__name__)
 
 class HyacinthBloomCrawler(MangaStreamTemplate):
     base_url = ["https://hyacinthbloom.com/"]
+    can_search = True

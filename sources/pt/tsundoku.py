@@ -8,3 +8,4 @@ logger = logging.getLogger(__name__)
 
 class TsundokuCrawler(MangaStreamTemplate):
     base_url = ["https://tsundoku.com.br/"]
+    can_search = True

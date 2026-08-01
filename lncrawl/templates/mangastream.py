@@ -7,9 +7,9 @@ from ..core import Novel, PageSoup, SoupTemplate, Volume
 class MangaStreamTemplate(SoupTemplate):
     is_template = True
 
-    search_item_list_selector = ".listupd > article"
-    search_item_url_selector = "a.tip"
-    search_item_title_selector = "a.tip, span.ntitle"
+    search_item_list_selector = ".listupd > article, .listupd .bsx"
+    search_item_url_selector = "a.tip, a[href]"
+    search_item_title_selector = "h2, span.ntitle, .tt, a.tip"
     search_item_info_selector = "span.nchapter"
 
     novel_title_selector = "h1.entry-title"
@@ -26,6 +26,14 @@ class MangaStreamTemplate(SoupTemplate):
 
     def build_search_url(self, query: str) -> str:
         return f"{self.scraper.origin}?{urlencode({'s': query})}"
+
+    def parse_search_item_title(self, soup: PageSoup) -> str:
+        for tag in soup.select(self.search_item_title_selector):
+            title = tag.text.strip()
+            if title:
+                return title
+        link = soup.select_one("a[title]")
+        return str(link.get("title") or "").strip() if link else ""
 
     def select_chapter_tags(
         self,
