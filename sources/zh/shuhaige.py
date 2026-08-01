@@ -1,184 +1,61 @@
 # -*- coding: utf-8 -*-
 import logging
 import re
+from typing import Iterable, Optional
 
-from lncrawl.core import Chapter, LegacyCrawler, Volume
+from lncrawl.core import Novel, PageSoup, SoupTemplate, Volume
 
 logger = logging.getLogger(__name__)
 
+BOOK_ID = re.compile(r"(?:shu_(\d+)\.html|/(\d+)(?:_\d+)?/?$)")
+CHAPTER_PATH = re.compile(r"/\d+/(\d+)\.html")
+AUTHOR_LABEL = re.compile(r"^作\s*者[:：]\s*", re.U)
 
-class ShuhaigeCrawler(LegacyCrawler):
-    base_url = "https://m.shuhaige.net/"
 
-    def read_novel_info(self):
-        logger.debug("Visiting %s", self.novel_url)
-        soup = self.get_soup(self.novel_url)
+class ShuhaigeCrawler(SoupTemplate):
+    base_url = [
+        "https://www.shuhaige.net/",
+        "https://m.shuhaige.net/",
+    ]
 
-        # Extract novel title from the detail section
-        possible_title = soup.select_one(".detail .name strong")
-        assert possible_title, "No novel title"
-        self.novel_title = possible_title.text.strip()
-        logger.info("Novel title: %s", self.novel_title)
+    novel_title_selector = "#info h1, h1"
+    novel_cover_selector = "#fmimg img"
+    novel_synopsis_selector = "#intro"
+    chapter_body_selector = "#content"
 
-        # Extract novel cover
-        possible_novel_cover = soup.select_one(".detail img")
-        if possible_novel_cover:
-            self.novel_cover = self.absolute_url(possible_novel_cover["src"])
-        logger.info("Novel cover: %s", self.novel_cover)
+    def initialize(self) -> None:
+        self.cleaner.bad_css.update({"div.bottem", "div.bottem1", "div.bottem2"})
 
-        # Extract author
-        possible_novel_author = soup.select_one(".detail .author a")
-        if possible_novel_author:
-            self.novel_author = possible_novel_author.text.strip()
-        logger.info("Novel author: %s", self.novel_author)
+    def build_novel_url(self, novel: Novel) -> str:
+        # The mobile site paginates its chapter list a page at a time; the desktop page
+        # for the same book carries every chapter at once, so both forms are normalised
+        # to the desktop one and the id is the only thing carried across.
+        url = self.absolute_url(novel.url)
+        match = BOOK_ID.search(url)
+        if not match:
+            return url
+        book_id = match.group(1) or match.group(2)
+        return f"https://www.shuhaige.net/{book_id}/"
 
-        # Extract synopsis from the intro section
-        possible_synopsis = soup.select_one(".intro p")
-        if possible_synopsis:
-            # Clean up the synopsis text
-            synopsis_text = possible_synopsis.get_text(strip=True)
-            # Remove author info and book links at the end
-            synopsis_lines = synopsis_text.split("\n")
-            clean_synopsis = []
-            for line in synopsis_lines:
-                line = line.strip()
-                if (
-                    line
-                    and not line.startswith("是一名出色的小说作者")
-                    and not line.startswith("最新章节")
-                ):
-                    clean_synopsis.append(line)
-            self.novel_synopsis = "\n".join(clean_synopsis)
-        logger.info("Novel synopsis: %s", self.novel_synopsis)
+    def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
+        meta = soup.select_one('meta[property="og:novel:author"]')
+        if meta and meta.get("content"):
+            novel.author = str(meta.get("content")).strip()
+            return
+        for line in soup.select("#info p"):
+            text = (line.text or "").replace("\xa0", "").strip()
+            if AUTHOR_LABEL.match(text):
+                novel.author = AUTHOR_LABEL.sub("", text)
+                return
 
-        # Get the book ID from the URL - handle both formats
-        book_id_match = re.search(r"shu_(\d+)\.html", self.novel_url)
-        if not book_id_match:
-            # Try the chapter list URL format
-            book_id_match = re.search(r"/(\d+)/?", self.novel_url)
-            if book_id_match:
-                book_id = book_id_match.group(1)
-                # If we got the chapter list URL, we need to get novel info from the main page
-                main_novel_url = f"https://m.shuhaige.net/shu_{book_id}.html"
-                logger.debug("Converting chapter list URL to novel URL: %s", main_novel_url)
-                soup = self.get_soup(main_novel_url)
-
-                # Re-extract novel info from the proper novel page
-                possible_title = soup.select_one(".detail .name strong")
-                if possible_title:
-                    self.novel_title = possible_title.text.strip()
-                    logger.info("Novel title: %s", self.novel_title)
-
-                possible_novel_cover = soup.select_one(".detail img")
-                if possible_novel_cover:
-                    self.novel_cover = self.absolute_url(possible_novel_cover["src"])
-                logger.info("Novel cover: %s", self.novel_cover)
-
-                possible_novel_author = soup.select_one(".detail .author a")
-                if possible_novel_author:
-                    self.novel_author = possible_novel_author.text.strip()
-                logger.info("Novel author: %s", self.novel_author)
-
-                possible_synopsis = soup.select_one(".intro p")
-                if possible_synopsis:
-                    synopsis_text = possible_synopsis.get_text(strip=True)
-                    synopsis_lines = synopsis_text.split("\n")
-                    clean_synopsis = []
-                    for line in synopsis_lines:
-                        line = line.strip()
-                        if (
-                            line
-                            and not line.startswith("是一名出色的小说作者")
-                            and not line.startswith("最新章节")
-                        ):
-                            clean_synopsis.append(line)
-                    self.novel_synopsis = "\n".join(clean_synopsis)
-                logger.info("Novel synopsis: %s", self.novel_synopsis)
-            else:
-                raise Exception("Could not extract book ID from URL")
-        else:
-            book_id = book_id_match.group(1)
-
-        # Get all chapters from all pages
-        all_chapter_links = []
-        page_num = 1
-
-        while True:
-            if page_num == 1:
-                chapter_list_url = f"https://m.shuhaige.net/{book_id}/"
-            else:
-                chapter_list_url = f"https://m.shuhaige.net/{book_id}_{page_num}/"
-
-            logger.debug("Visiting chapter list page %d: %s", page_num, chapter_list_url)
-            chapter_soup = self.get_soup(chapter_list_url)
-
-            # Extract chapters from current page
-            chapter_links = chapter_soup.select(".read li a")
-
-            if not chapter_links:
-                # No more chapters, break the loop
-                break
-
-            all_chapter_links.extend(chapter_links)
-
-            # Check if there's a next page by looking at pagination
-            next_page_links = chapter_soup.select(".pagelist a")
-            has_next_page = False
-
-            for link in next_page_links:
-                if "下一页" in link.get_text(strip=True):
-                    # Make sure it's not disabled or pointing to current page
-                    href = link.get("href", "")
-                    if href and not href.endswith(f"_{page_num}/"):
-                        has_next_page = True
-                        break
-
-            if not has_next_page:
-                break
-
-            page_num += 1
-
-        volumes = set([])
-
-        for a in all_chapter_links:
-            ch_id = len(self.chapters) + 1
-            vol_id = 1 + len(self.chapters) // 100
-            volumes.add(vol_id)
-
-            chapter_title = a.get_text(strip=True)
-            chapter_url = self.absolute_url(a["href"])
-
-            self.chapters.append(
-                Chapter(id=ch_id, volume=vol_id, title=chapter_title, url=chapter_url)
-            )
-
-        self.volumes = [Volume(id=x, title=f"Volume {x}") for x in sorted(volumes)]
-        logger.info("Found %d chapters in %d volumes", len(self.chapters), len(self.volumes))
-
-    def download_chapter_body(self, chapter):
-        logger.debug("Downloading chapter: %s", chapter["url"])
-        soup = self.get_soup(chapter["url"])
-
-        # Extract content from the content div
-        contents = soup.select_one(".content")
-        if not contents:
-            # Fallback to other possible content containers
-            contents = soup.select_one("#content") or soup.select_one(".chapter_content")
-
-        if not contents:
-            logger.warning("Could not find content for chapter: %s", chapter["title"])
-            return ""
-
-        # Clean up the content
-        # Remove promotional text at the end
-        for p in contents.find_all("p"):
-            text = p.get_text(strip=True)
-            if (
-                "这章没有结束" in text
-                or "无错的章节将持续" in text
-                or "喜欢【崩坏世界】我能预知未来请大家收藏" in text
-                or "书海阁小说网更新速度全网最快" in text
-            ):
-                p.decompose()
-
-        return self.cleaner.extract_contents(contents)
+    def select_chapter_tags(
+        self, tag: PageSoup, novel: Novel, volume: Optional[Volume] = None
+    ) -> Iterable[PageSoup]:
+        # The newest handful are repeated above the full list, so the same chapter appears
+        # twice; keying by its numeric id collapses those and orders the rest.
+        rows = {}
+        for anchor in tag.select("a[href]"):
+            match = CHAPTER_PATH.search(str(anchor.get("href") or ""))
+            if match:
+                rows[int(match.group(1))] = anchor
+        return [rows[key] for key in sorted(rows)]
