@@ -10,6 +10,12 @@ network).
 Run from repo root:
   uv run python scripts/check_sources.py
 
+Pass --include-rejected to also probe the disabled sources. Anything on `_rejected.json`
+that answers again is reported separately: a site comes back, and nothing else notices,
+because a rejected domain is never probed on an ordinary run. Those are listed rather
+than removed — reachability is not the same as the crawler still parsing the page, and a
+lapsed domain that a parking service picked up answers perfectly well.
+
 Formatted summary (Rich) is written to stderr; stdout is one down URL per line for scripting.
 """
 
@@ -189,6 +195,7 @@ def _print_final_report(
     ok_count: int,
     down_rows: List[Tuple[str, str]],
     err_rows: List[Tuple[str, str]],
+    revived_rows: Optional[List[Tuple[str, str]]] = None,
 ) -> None:
     err_console.print()
     err_console.rule("[bold cyan]Source availability report[/]", align="left")
@@ -204,7 +211,26 @@ def _print_final_report(
     stats.add_row("[green]Reachable[/]", f"{ok_count} (HTTP from at least one probe node)")
     stats.add_row("[red]Down everywhere[/]", f"{len(down_rows)} (no HTTP from any probe node)")
     stats.add_row("[yellow]Errors[/]", f"{len(err_rows)} (request or parse failure)")
+    if revived_rows is not None:
+        stats.add_row("[magenta]Rejected but up[/]", f"{len(revived_rows)} (needs review)")
     err_console.print(Panel(stats, title="[bold]Summary[/]", border_style="dim", box=box.ROUNDED))
+
+    if revived_rows:
+        rt = Table(
+            box=box.ROUNDED,
+            show_header=True,
+            header_style="bold magenta",
+            border_style="magenta",
+            title="[bold]On the rejected list, but answering again[/]",
+            caption="Reachability only. Confirm the crawler still parses before removing an entry.",
+            expand=True,
+        )
+        rt.add_column("#", style="dim", justify="right", width=3)
+        rt.add_column("URL", overflow="ellipsis", no_wrap=True, ratio=2)
+        rt.add_column("Rejected because", overflow="ellipsis", style="dim", ratio=1)
+        for i, (url, why) in enumerate(revived_rows, start=1):
+            rt.add_row(str(i), url, why)
+        err_console.print(rt)
 
     if down_rows:
         dt = Table(
@@ -261,17 +287,33 @@ def _check_one_url(
         return url, "err", repr(e)
 
 
+def _rejected_file() -> Optional[Path]:
+    local_file = ctx.config.crawler.local_index_file
+    rejected_file = local_file.parent / "_rejected.json"
+    return rejected_file if rejected_file.is_file() else None
+
+
+def _load_rejected() -> Dict[str, str]:
+    rejected_file = _rejected_file()
+    if rejected_file is None:
+        return {}
+    return json.loads(rejected_file.read_text(encoding="utf-8"))
+
+
 def _update_rejected(url: str):
     with _lock:
-        local_file = ctx.config.crawler.local_index_file
-        rejected_file = local_file.parent / "_rejected.json"
-        if not rejected_file.is_file():
+        rejected_file = _rejected_file()
+        if rejected_file is None:
             return
-        json_str = rejected_file.read_text(encoding="utf-8")
-        rejected = json.loads(json_str)
-        rejected.update({url: "Site is down"})
+        rejected = json.loads(rejected_file.read_text(encoding="utf-8"))
+        # Never overwrite a reason someone wrote by hand. "Site is down" is what this
+        # probe can prove and nothing more, so it would flatten "Redirects to a gambling
+        # site" into something that reads as recoverable.
+        if url in rejected:
+            return
+        rejected[url] = "Site is down"
         json_str = json.dumps(rejected, indent=2, sort_keys=True)
-        rejected_file.write_text(json_str, encoding="utf-8")
+        rejected_file.write_text(json_str + "\n", encoding="utf-8")
 
 
 @app.command()
@@ -321,8 +363,13 @@ def main(
     if limit is not None:
         urls = urls[:limit]
 
+    # Read once up front: a URL that is on the list and answering anyway is the one
+    # finding this script could never report, because it only ever adds.
+    already_rejected = _load_rejected() if include_rejected else {}
+
     down_rows: List[Tuple[str, str]] = []
     err_rows: List[Tuple[str, str]] = []
+    revived_rows: List[Tuple[str, str]] = []
     ok_count = 0
     n = len(urls)
     if n == 0:
@@ -369,10 +416,21 @@ def main(
                         _update_rejected(url)
                     else:
                         ok_count += 1
+                        why = already_rejected.get(url)
+                        if why is not None:
+                            revived_rows.append((url, why))
+                            line = _render_tqdm_line(
+                                err_console,
+                                ("BACK", "bold magenta"),
+                                (url, "magenta"),
+                                (f"listed as: {why}", "dim"),
+                            )
+                            tqdm.write(line, file=sys.stderr)
 
     order = {u: i for i, u in enumerate(urls)}
     down_rows.sort(key=lambda row: order.get(row[0], 0))
     err_rows.sort(key=lambda row: order.get(row[0], 0))
+    revived_rows.sort(key=lambda row: order.get(row[0], 0))
 
     _print_final_report(
         err_console,
@@ -380,6 +438,7 @@ def main(
         ok_count=ok_count,
         down_rows=down_rows,
         err_rows=err_rows,
+        revived_rows=revived_rows if include_rejected else None,
     )
 
 

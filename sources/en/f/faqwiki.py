@@ -8,8 +8,6 @@ logger = logging.getLogger(__name__)
 
 class FaqWiki(LegacyCrawler):
     base_url = [
-        "https://faqwiki.us/",
-        "https://www.faqwiki.us/",
         "https://faqwiki.xyz",
     ]
     has_manga = False
@@ -115,7 +113,7 @@ class FaqWiki(LegacyCrawler):
         novel_selector = "article > div > header > h3.entry-title > a"
         next_selector = "div.nav-links > a.next"
 
-        soup = self.get_soup(f"https://faqwiki.us/?s={query.replace(' ', '+')}&post_type=page")
+        soup = self.get_soup(f"https://faqwiki.xyz/?s={query.replace(' ', '+')}&post_type=page")
         empty = "nothing found" in soup.select_one("h1.page-title").text.strip().lower()
         if empty:
             return []
