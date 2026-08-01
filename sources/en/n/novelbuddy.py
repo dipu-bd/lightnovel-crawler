@@ -1,61 +1,78 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
-from typing import Iterable, Optional
-from urllib.parse import urlencode
+from typing import Any, Dict, Iterable
+from urllib.parse import urlparse
 
-from lncrawl.core import Chapter, Novel, PageSoup, SoupTemplate, Volume
+from lncrawl.core import Novel, PageSoup, SearchResult, SoupTemplate
 
 logger = logging.getLogger(__name__)
 
+API_URL = "https://api.novelbuddy.me"
+
 
 class NovelbuddyCrawler(SoupTemplate):
-    base_url = ["https://novelbuddy.io/"]
+    base_url = [
+        "https://novelbuddy.me/",
+        "https://novelbuddy.io/",
+        "https://novelbuddy.com/",
+    ]
 
     has_mtl = True
+    can_search = True
 
-    search_item_list_selector = "div.book-item"
-    search_item_title_selector = "div.title h3 a[href]"
-    search_item_url_selector = search_item_title_selector
+    chapter_body_selector = "article"
 
-    novel_title_selector = "div.name.box h1"
-    novel_cover_selector = "div.img-cover img[data-src]"
-    novel_summary_selector = "div.section-body.summary span"
-    chapter_body_selector = "div.chapter__content div.content-inner"
+    def initialize(self) -> None:
+        self.title_data: Dict[str, Any] = {}
 
-    def build_search_url(self, query: str) -> str:
-        return f"{self.scraper.origin}search?{urlencode({'q': query})}"
+    def search(self, query: str) -> Iterable[SearchResult]:
+        data = self.scraper.get_json(f"{API_URL}/titles/search", params={"q": query})
+        for item in (data.get("data") or {}).get("items") or []:
+            yield SearchResult(
+                title=item.get("name") or "",
+                url=self.absolute_url(item.get("url") or ""),
+                info=item.get("status") or "",
+            )
 
-    def parse_author(self, soup: PageSoup, novel: Novel) -> None:
-        for p in soup.select("div.meta.box.mt-1.p-10"):
-            if p.select_one("strong").text.strip("Author"):
-                authors = [a.text for a in p.select("a")]
-                novel.author = ", ".join(authors)
+    def get_novel_soup(self, novel: Novel) -> PageSoup:
+        # Only the newest fifty chapters are ever rendered, and a novel with no genre or
+        # author links falls through to the site-wide meta tags, which name NovelBuddy
+        # itself and a list of SEO keywords. The API answers both properly, so the page is
+        # fetched for the chapter text alone.
+        slug = urlparse(self.absolute_url(novel.url)).path.strip("/").split("/")[0]
+        lookup = self.scraper.get_json(f"{API_URL}/titles/by-slug/{slug}")
+        title_id = lookup["data"]["new_url"].rsplit("/", 1)[-1].split("-", 1)[0]
+        detail = self.scraper.get_json(f"{API_URL}/titles/{title_id}")
+        self.title_data = (detail.get("data") or {}).get("title") or {}
+        self.title_data["id"] = title_id
+        return self.scraper.get_soup(self.build_novel_url(novel))
+
+    def parse_title(self, soup: PageSoup, novel: Novel) -> None:
+        novel.title = self.title_data.get("name") or ""
+
+    def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
+        cover = self.title_data.get("cover")
+        if cover:
+            novel.cover_url = self.absolute_url(cover)
+
+    def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
+        names = [a.get("name") for a in self.title_data.get("authors") or []]
+        novel.author = ", ".join(name for name in names if name)
 
     def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
-        for p in soup.select("div.meta.box.mt-1.p-10 p"):
-            if p.select_one("strong").text.strip("Genre"):
-                novel.tags = [a.text.strip() for a in p.select("a")]
+        novel.tags = [
+            genre["name"] for genre in self.title_data.get("genres") or [] if genre.get("name")
+        ]
 
-    def select_chapter_tags(
-        self, tag: PageSoup, novel: Novel, volume: Optional[Volume] = None
-    ) -> Iterable[PageSoup]:
-        script = tag.select_one("div.layout script").text
-        pattern = r"(var|let|const)\s+(\w+)\s*=\s*(.*?);"
-        matches = re.findall(pattern, script)
-
-        variables = {}
-        for _, name, value in matches:
-            variables[name] = value.strip()
-
-        soup = self.scraper.get_soup(
-            f"https://novelbuddy.io/api/manga/{variables['bookId']}/chapters?source=detail"
+    def parse_summary(self, soup: PageSoup, novel: Novel) -> None:
+        novel.synopsis = self.cleaner.extract_contents(
+            PageSoup.create(self.title_data.get("summary") or "")
         )
-        return soup.select("ul li")[::-1]
 
-    def parse_chapter_item(self, soup: PageSoup, chapter_id: int) -> Chapter:
-        return Chapter(
-            id=chapter_id,
-            title=soup.select_one("strong").text,
-            url=f"{self.scraper.origin}{soup.select_one('a')['href']}",
-        )
+    def parse_toc(self, soup: PageSoup, novel: Novel) -> None:
+        chapters = self.scraper.get_json(f"{API_URL}/titles/{self.title_data['id']}/chapters")
+        for item in reversed((chapters.get("data") or {}).get("chapters") or []):
+            novel.add_chapter(
+                title=item.get("name") or "",
+                url=self.absolute_url(item.get("url") or ""),
+            )
