@@ -1,75 +1,26 @@
 # -*- coding: utf-8 -*-
 import logging
-import re
+from urllib.parse import quote_plus
 
-from lncrawl.core import Chapter, LegacyCrawler
+from lncrawl.core import SoupTemplate
 
 logger = logging.getLogger(__name__)
 
-cover_image_url = "https://cdn.gravitytales.com/images/covers/%s.jpg"
-novel_toc_url = "http://gravitytales.com/novel/%s"
-chapter_list_url = "http://gravitytales.com/novel/%s/chapters"
 
+class GravityTalesCrawler(SoupTemplate):
+    base_url = "https://gravitytales.com/"
+    has_mtl = True
+    can_search = True
 
-class GravityTalesCrawler(LegacyCrawler):
-    base_url = "http://gravitytales.com/"
+    search_item_list_selector = "li.card._story"
+    search_item_title_selector = "h3.card__title"
+    search_item_url_selector = "h3.card__title a"
 
-    def read_novel_info(self):
-        self.novel_id = re.split(r"\/(novel|post)\/", self.novel_url)[2]
-        self.novel_id = self.novel_id.split("/")[0]
-        logger.info("Novel id: %s" % self.novel_id)
+    novel_title_selector = "article h1"
+    novel_author_selector = ".author"
 
-        self.novel_url = novel_toc_url % self.novel_id
-        logger.debug("Visiting %s" % self.novel_url)
-        soup = self.get_soup(self.novel_url)
+    chapter_list_selector = "#chapter-sections-wrapper li.chapter-group__list-item a"
+    chapter_body_selector = ".chapter__content"
 
-        for tag in soup.select(".main-content h3 > *"):
-            tag.extract()
-        possible_title = soup.select_one(".main-content h3")
-        assert possible_title, "No novel title"
-        self.novel_title = possible_title.text.strip()
-        logger.info("Novel title: %s" % self.novel_title)
-
-        self.novel_cover = cover_image_url % self.novel_id
-        logger.info("Novel cover: %s" % self.novel_cover)
-
-        self.novel_author = soup.select_one(".main-content h4").text.strip()
-        logger.info(self.novel_author)
-
-        self.get_chapter_list()
-
-    def get_chapter_list(self):
-        url = chapter_list_url % self.novel_id
-        logger.info("Visiting %s" % url)
-        soup = self.get_soup(url)
-
-        # For each tabs...
-        for a in soup.select("#chaptergroups li a"):
-            vol_id = len(self.volumes) + 1
-            self.volumes.append(
-                {
-                    "id": vol_id,
-                    "title": a.text.strip(),
-                    "_tid": (a["href"]),
-                }
-            )
-
-            # ...get every chapters
-            for a in soup.select_one(a["href"]).select("table td a"):
-                chap_id = len(self.chapters) + 1
-                self.chapters.append(
-                    Chapter(
-                        id=chap_id,
-                        volume=vol_id,
-                        title=a.text.strip(),
-                        url=self.absolute_url(a["href"]),
-                    )
-                )
-
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        body = soup.select_one("#chapterContent")
-        for tag in body.contents:
-            if hasattr(tag, "attrs"):
-                setattr(tag, "attrs", {})  # clear attributesef
-        return str(body)
+    def build_search_url(self, query: str) -> str:
+        return f"https://gravitytales.com/?s={quote_plus(query)}"
