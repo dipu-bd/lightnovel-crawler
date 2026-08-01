@@ -5,7 +5,7 @@ import logging
 import threading
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-from scraper import extract_base, pick_chromium, pick_firefox
+from scraper import BROWSER_MODES, extract_base, pick_chromium, pick_firefox
 
 from ..config import APP_DIR
 from ..context import ctx
@@ -125,7 +125,12 @@ class ScraperService:
         if wanted not in ("auto", "firefox", "chrome"):
             logger.warning("Unknown browser_driver %r; using auto", wanted)
             wanted = "auto"
-        headless = ctx.config.crawler.use_headless_mode
+        # Normalised for the same reason: the scraper rejects an unknown mode outright,
+        # and a value written straight into config.json never passed the setter
+        mode = (ctx.config.crawler.browser_mode or "").strip().lower()
+        if mode not in BROWSER_MODES:
+            logger.warning("Unknown browser_mode %r; using auto", mode)
+            mode = "auto"
 
         # Firefox first as that reaches the most sites
         if wanted in ("auto", "firefox"):
@@ -133,7 +138,7 @@ class ScraperService:
             if firefox:
                 from scraper import BidiSolver
 
-                return BidiSolver(executable=firefox, headless=headless)
+                return BidiSolver(executable=firefox, mode=mode)
             if wanted == "firefox":
                 logger.info("No Firefox executable found; challenges will not be solved")
                 return None
@@ -142,7 +147,7 @@ class ScraperService:
         if chromium:
             from scraper import CdpSolver
 
-            return CdpSolver(executable=chromium, headless=headless)
+            return CdpSolver(executable=chromium, mode=mode)
 
         logger.info("No browser executable found; challenges will not be solved")
         return None

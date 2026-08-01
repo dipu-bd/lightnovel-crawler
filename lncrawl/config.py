@@ -586,22 +586,27 @@ class CrawlerConfig(_Section):
         self._set("can_use_browser", v)
 
     @property
-    def use_headless_mode(self) -> bool:
-        """Browser Headless Mode.
+    def browser_mode(self) -> str:
+        """Challenge Solver Window.
 
-        Run the browser without a visible window when solving a challenge. On by default, and
-        it costs nothing: measured across 46 challenged sites, a hidden browser gets past
-        every one a visible browser gets past, just as fast.
+        Whether the browser shows a window while it answers a challenge: `auto`, `headless`,
+        or `headed`. Default is `auto`.
 
-        Turn this off to watch the window and finish a challenge by hand when one appears —
-        which also gives it longer to wait, since somebody is there. Needs a display, so
-        leave it on for a server or a container.
+        `auto` starts hidden and opens a window only if that fails, so a challenge nothing can
+        answer on its own arrives in front of you instead of failing quietly — and it waits
+        longer once it is visible, because somebody is there to finish it. Hiding costs
+        nothing on its own: measured across 46 challenged sites, a hidden browser gets past
+        every one a visible browser gets past, just as fast. `auto` also stays hidden wherever
+        no window could be seen, such as a server or a container, so it is safe to leave set.
+
+        `headless` never opens a window, and a challenge that needs one simply fails. `headed`
+        opens one every time, including for the challenges that would have cleared hidden.
         """
-        return self._get("use_headless_mode", True)
+        return self._get("browser_mode", "auto")
 
-    @use_headless_mode.setter
-    def use_headless_mode(self, v: bool) -> None:
-        self._set("use_headless_mode", v)
+    @browser_mode.setter
+    def browser_mode(self, v: str) -> None:
+        self._set("browser_mode", _one_of("browser_mode", v, ("auto", "headed", "headless")))
 
     @property
     def browser_driver(self) -> str:

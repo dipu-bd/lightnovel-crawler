@@ -3,8 +3,10 @@ from functools import cached_property
 from threading import Event
 from typing import Any, Callable, List, Optional
 
+from scraper import failure_kind
+
 from ....context import ctx
-from ....core.diagnosis import describe, diagnosis_extra, kind
+from ....core.diagnosis import describe, diagnosis_extra
 from ....dao import Job, JobStatus
 from ....exceptions import AbortedException, ScraperErrorGroup
 from ....utils.error_tools import full_traceback, unexpected_message
@@ -132,7 +134,7 @@ class BaseHandler(ABC):
         that reached it. The stack is still kept, in `extra` like every other failure —
         it is only the message it is no longer part of.
         """
-        reason = kind(error)
+        reason = failure_kind(error)
         ctx.logger.warn(
             f"[yellow]{reason}[/yellow] [b]{self.job.id}[/b] | {self.job.job_title}",
             exc_info=ctx.logger.is_debug,

@@ -15,7 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - **A rewritten HTTP layer, built around how sites detect crawlers.** Across 150 real source hosts it retrieves more of them, and a challenge is answered by a real browser whose clearance is then reused.
   - **Firefox solves by default, Chrome as the fallback**, with a **Challenge Solver Browser** setting to name one. Whichever browser solves decides what every later request has to look like, and Firefox reaches the most sites.
-  - **The browser stays hidden by default** — it gets past every site a visible one does. Turn it off to finish a challenge by hand, which also gives it five minutes instead of ninety seconds.
+  - **The browser stays hidden, and shows itself only when hiding fails.** A hidden browser gets past every site a visible one does, so the window is worth opening only for the challenge nothing can answer alone — and once it is open it waits five minutes instead of ninety seconds, because somebody is there to finish it. A new **Challenge Solver Window** setting pins it to always hidden or always visible; on a server it stays hidden whatever you pick, since nobody could see it. Replaces the old headless switch.
   - **The Docker image ships Firefox on `arm64` as well**, so an `arm64` image can solve for the first time. **Set `TZ`** to the timezone your address looks like it is in: with the container clock left wrong it cleared one challenged site of six, and with it right, all six.
   - New `impersonate` setting; `selenium_grid` is gone.
 - **18 source domains are flagged as rejected** — parked, redirecting into an ad network, or resold. None reported an error: a page full of adverts answers `200`, so the crawl succeeded and produced an empty book.

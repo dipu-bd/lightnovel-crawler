@@ -2482,7 +2482,7 @@ requires-dist = [
     { name = "httpx", extras = ["brotli", "http2"], specifier = ">=0.27.0" },
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
-    { name = "lncrawl-scraper", extras = ["botauth", "cdp", "image"], specifier = "~=1.5.0" },
+    { name = "lncrawl-scraper", extras = ["botauth", "cdp", "image"], specifier = "~=1.6.0" },
     { name = "lncrawl-translator", specifier = ">=0.2.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "passlib", extras = ["argon2"], specifier = ">=1.7.0" },
@@ -2536,7 +2536,7 @@ dev = [
 
 [[package]]
 name = "lncrawl-scraper"
-version = "1.5.0"
+version = "1.6.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -2546,9 +2546,9 @@ dependencies = [
     { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version < '3.10'" },
     { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/68/fd/796a59a05b814d74eb1e37138f7918141263cba49bbda800b427a9c9437f/lncrawl_scraper-1.5.0.tar.gz", hash = "sha256:a63f977d3b2659f2052094904b9b5c4142b8186330ad396e3327a7cc4da25c94", size = 1649107, upload-time = "2026-08-01T05:36:52.341Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/10/7b3cbcd0074c77fad0974329278cc1ae2a013f6664593483aa253c549474/lncrawl_scraper-1.6.0.tar.gz", hash = "sha256:de0abdc3962c5f5a26dcb2bab0a99a2edc042bbdf428d3d66cd323d3878153b0", size = 1670407, upload-time = "2026-08-01T23:48:05.501Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/49/90/310d14a50890b8b1dade62531a69daf12a3079921ccab57a93b70212f16c/lncrawl_scraper-1.5.0-py3-none-any.whl", hash = "sha256:76e4ed303aeae13219ba27755f1ae3fac31ece5656d9ae6048254e863fbadf9c", size = 145236, upload-time = "2026-08-01T05:36:50.776Z" },
+    { url = "https://files.pythonhosted.org/packages/32/50/f806954aa3b5acbb7b63599574199f423fe16547ae16669f1a2ba411302e/lncrawl_scraper-1.6.0-py3-none-any.whl", hash = "sha256:4997684c1748ef644e3fd3947dce6ea655e58f62a95a69c86326297200bbfb57", size = 156469, upload-time = "2026-08-01T23:48:03.763Z" },
 ]
 
 [package.optional-dependencies]
