@@ -1,5 +1,5 @@
 {
-  "v": 1785615737,
+  "v": 1785617949,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -500,7 +500,7 @@
     "https://www.novels.pl/": "5e962751f7928b75a7bbfd7a777fd629",
     "https://www.novelupdates.cc/": "ab5e6692cab4784c74023daa7036bc79",
     "https://www.novelupdates.com/": "2c529108c1fd6d790a05e51c02f9bb9c",
-    "https://www.oppatranslations.com/": "e3dde6b1f9d156edfc0239db6215d05b",
+    "https://www.oppatranslations.com/": "f57d2a47e8dbf9ad7d1cf03daf0c0947",
     "https://www.pandamanga.xyz/": "930238810d342d233fb3e2fcfb33088d",
     "https://www.piaotia.com/": "e2a0a1f66eec221866f52e14af342c50",
     "https://www.piaotian.com/": "e2a0a1f66eec221866f52e14af342c50",
@@ -9863,7 +9863,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4558
+      "contributions": 4562
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
