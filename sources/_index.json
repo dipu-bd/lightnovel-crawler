@@ -1,5 +1,5 @@
 {
-  "v": 1785588420,
+  "v": 1785600885,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -34,6 +34,7 @@
     "https://bato.to/": "Site is down",
     "https://batocc.com/": "Site is down",
     "https://batotoo.com/": "Site is down",
+    "https://beautymanga.com/": "Domain now hosts an anime blog with no readable manga",
     "https://bestlightnovel.com/": "Redirects to an affiliate link",
     "https://bestmanga.club/": "Site is down",
     "https://bestoflightnovels.com/": "This site can not be reached",
@@ -165,6 +166,8 @@
     "https://wuxiaworld.live/": "The domain has expired",
     "https://wuxiaworldsite.co/": "No longer provides lightnovels",
     "https://www.27k.net/": "Domain registration has expired",
+    "https://www.69shu.pro/": "Domain is parked and for sale",
+    "https://www.69shuba.pro/": "Domain is parked and for sale",
     "https://www.69xinshu.com/": "Site is down",
     "https://www.blackbox-tl.com/": "Site is down",
     "https://www.box-novel.com/": "Site is down",
@@ -251,7 +254,6 @@
     "https://bakapervert.wordpress.com/": "18cd7cf33acc65c931104ea3703e6fb4",
     "https://batotwo.com/": "5955ede148817d13e8ef04255da4237d",
     "https://battwo.com/": "5955ede148817d13e8ef04255da4237d",
-    "https://beautymanga.com/": "cae098f1ccac37a75d27a51478fce26d",
     "https://bednovel.com/": "8fa5bb4014a0aaab31786ac2dbbc333c",
     "https://blnovels.net/": "2b62a91a8d4d9497364bfecf4530c2a1",
     "https://bookhamster.ru/": "56cf47825b16189855ee706f2762d59a",
@@ -277,6 +279,7 @@
     "https://dragontea.ink/": "3d15a901fb32bf0124860e42e534a6d9",
     "https://dto.to/": "5955ede148817d13e8ef04255da4237d",
     "https://dummynovels.com/": "035cd89ff16448e5a694739e66f2c262",
+    "https://duskblossoms.com/": "da3872cd062de1c1c998915ebeebca47",
     "https://ebotnovel.com/": "cb75b2cee07a4ccc1d3997b7491551a0",
     "https://es.mtlnovel.com/": "560dfc4e6b4f4026553927f23eb1a9dd",
     "https://es.mtlnovels.com/": "560dfc4e6b4f4026553927f23eb1a9dd",
@@ -441,9 +444,7 @@
     "https://wuxiaworld.online/": "af8d29fdb4caf2b8d63fff14902bbfa1",
     "https://wuxiaworld.site/": "f5b924c12a351d1e0d992031c1d1c4e3",
     "https://www.69shu.com/": "3d2d575996fc57d75742cfc78a8c4ae3",
-    "https://www.69shu.pro/": "3d2d575996fc57d75742cfc78a8c4ae3",
     "https://www.69shuba.com/": "3d2d575996fc57d75742cfc78a8c4ae3",
-    "https://www.69shuba.pro/": "3d2d575996fc57d75742cfc78a8c4ae3",
     "https://www.aixdzs.com/": "cbb7a70d622bdffa28b6c9c7fd6275f5",
     "https://www.allnovel.org/": "c01e2d3a692e03ac63be97afe04f7a85",
     "https://www.asianhobbyist.com/": "2fb215ad4e4e258d2b44707b67199b96",
@@ -2808,7 +2809,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/d/dragon_tea.py"
     },
     "3d2d575996fc57d75742cfc78a8c4ae3": {
-      "version": 1784829411,
+      "version": 1785600849,
       "md5": "565b31358099d958846844d8e6f20203",
       "file_path": "sources/zh/69shuba.py",
       "language": "zh",
@@ -2817,7 +2818,7 @@
       "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 20.0,
-      "total_commits": 28,
+      "total_commits": 29,
       "contributors": [
         "Aeterno8",
         "dipu-bd",
@@ -3787,16 +3788,16 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/mysticalmerries.py"
     },
     "5955ede148817d13e8ef04255da4237d": {
-      "version": 1778672454,
+      "version": 1785600849,
       "md5": "3ee81e9785508f6f2e3bb1790141e3fd",
       "file_path": "sources/en/b/bato.py",
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 13,
+      "total_commits": 14,
       "contributors": [
         "CryZFix",
         "dipu-bd",
@@ -8060,6 +8061,31 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/trxs.py"
     },
+    "da3872cd062de1c1c998915ebeebca47": {
+      "version": 1785600849,
+      "md5": "649281b643a186686cc07166eb249261",
+      "file_path": "sources/en/d/duskblossoms.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 77,
+      "contributors": [
+        "SirGryphin",
+        "dipu-bd",
+        "idMysteries",
+        "kuwoyuki",
+        "mchubby",
+        "yudilee"
+      ],
+      "id": "da3872cd062de1c1c998915ebeebca47",
+      "base_urls": [
+        "https://duskblossoms.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/d/duskblossoms.py"
+    },
     "da94a4e97f45ce849e72509864f105fb": {
       "version": 1775456139,
       "md5": "a80f7687182f306fcef0c88cf7393356",
@@ -9620,7 +9646,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4553
+      "contributions": 4556
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
