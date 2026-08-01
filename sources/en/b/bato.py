@@ -4,14 +4,77 @@ from hashlib import md5
 import json
 import logging
 import re
+from typing import Iterable
 
 from Crypto.Cipher import AES
 
-from lncrawl.core import Chapter, LegacyCrawler, Volume
+from lncrawl.core import Chapter, Novel, PageSoup, SearchResult, SoupTemplate
 
 logger = logging.getLogger(__name__)
 BLOCK_SIZE = 16
-search_url = "https://bato.to/search?word=%s"
+search_url = "https://wto.to/search?word=%s"
+
+
+class BatoCrawler(SoupTemplate):
+    has_manga = True
+    can_search = True
+    base_url = [
+        "https://bato.to/",
+        "https://battwo.com/",
+        "https://mto.to/",
+        "https://mangatoto.net/",
+        "https://dto.to/",
+        "https://batocc.com/",
+        "https://batotoo.com/",
+        "https://wto.to/",
+        "https://mangatoto.com/",
+        "https://comiko.net/",
+        "https://batotwo.com/",
+        "https://mangatoto.org/",
+        "https://hto.to/",
+    ]
+
+    novel_title_selector = "h3.item-title"
+    novel_cover_selector = ".attr-cover img"
+    chapter_list_selector = ".main a.chapt"
+    chapter_list_reverse = True
+
+    def select_search_item_list(self, query: str) -> Iterable[PageSoup]:
+        soup = self.scraper.get_soup(search_url % query.lower().replace(" ", "+"))
+        return soup.select("#series-list > div")
+
+    def parse_search_item(self, soup: PageSoup) -> SearchResult:
+        a = soup.select_one("a.item-title")
+        return SearchResult(title=a.text.strip(), url=self.absolute_url(a["href"]))
+
+    def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
+        tag = soup.find("b", string="Authors:")
+        if tag and tag.parent and tag.parent.span:
+            novel.author = tag.parent.span.text.strip()
+
+    def download_chapter(self, chapter: Chapter) -> None:
+        soup = self.scraper.get_soup(self.build_chapter_url(chapter))
+        script = soup.find("script", string=re.compile(r"const imgHttps = \["))
+
+        match = re.search(r"const imgHttps = (.*);", script.text)
+        img_list = json.loads(match.group(1)) if match else []
+
+        match = re.search(r"const batoPass = (.*);", script.text)
+        bato_pass = decode_pass(match.group(1)) if match else ""
+
+        match = re.search(r"const batoWord = (.*);", script.text)
+        bato_word = match.group(1).strip('"') if match else ""
+
+        # looks like some kind of "access" GET args that may be necessary, not always though
+        query_args = json.loads(decrypt(bato_word, bato_pass).decode())
+
+        # so if it ends up empty or mismatches, just ignore it and return the img list instead
+        if len(query_args) != len(img_list):
+            image_urls = [f'<img src="{img}" alt="img">' for img in img_list]
+        else:
+            image_urls = [f'<img src="{img}?{args}">' for img, args in zip(img_list, query_args)]
+
+        chapter.body = "<p>" + "</p><p>".join(image_urls) + "</p>"
 
 
 def decode_pass(code):
@@ -27,11 +90,6 @@ def decode_pass(code):
         res += "."
 
     return res.strip(".")
-
-
-def _pad(data):
-    length = BLOCK_SIZE - (len(data) % BLOCK_SIZE)
-    return data + (chr(length) * length).encode()
 
 
 def _unpad(data):
@@ -60,100 +118,3 @@ def decrypt(encrypted, passphrase):
     iv = key_iv[32:]
     aes = AES.new(key, AES.MODE_CBC, iv)
     return _unpad(aes.decrypt(encrypted[16:]))
-
-
-class BatoCrawler(LegacyCrawler):
-    has_manga = True
-    base_url = [
-        "https://bato.to/",
-        "https://battwo.com/",
-        "https://mto.to/",
-        "https://mangatoto.net/",
-        "https://dto.to/",
-        "https://batocc.com/",
-        "https://batotoo.com/",
-        "https://wto.to/",
-        "https://mangatoto.com/",
-        "https://comiko.net/",
-        "https://batotwo.com/",
-        "https://mangatoto.org/",
-        "https://hto.to/",
-        "https://mangatoto.net/",
-    ]
-
-    def search_novel(self, query):
-        query = query.lower().replace(" ", "+")
-        soup = self.get_soup(search_url % query)
-
-        results = []
-        for div in soup.select("#series-list > div"):
-            a = div.select_one("a.item-title")
-
-            results.append(
-                {
-                    "title": a.text.strip(),
-                    "url": self.absolute_url(a["href"]),
-                }
-            )
-
-        return results
-
-    def read_novel_info(self):
-        soup = self.get_soup(self.novel_url)
-
-        possible_title = soup.select_one("h3.item-title")
-        assert possible_title, "Could not find title"
-
-        self.novel_title = possible_title.text.strip()
-
-        possible_image = soup.select_one(".attr-cover img")
-        if possible_image:
-            self.novel_cover = self.absolute_url(possible_image["src"])
-
-        logger.info("Novel cover: %s", self.novel_cover)
-
-        author_b = soup.find("b", string="Authors:")
-
-        if author_b and author_b.parent and author_b.parent.span:
-            self.novel_author = author_b.parent.span.text.strip()
-
-        logger.info("Author: %s", self.novel_author)
-
-        for a in reversed(soup.select(".main a.chapt")):
-            chap_id = 1 + len(self.chapters)
-            vol_id = 1 + len(self.chapters) // 100
-            if len(self.volumes) < vol_id:
-                self.volumes.append(Volume(id=vol_id))
-
-            self.chapters.append(
-                Chapter(
-                    id=chap_id,
-                    volume=vol_id,
-                    title=a.text,
-                    url=self.absolute_url(a["href"]),
-                )
-            )
-
-    def download_chapter_body(self, chapter):
-        soup = self.get_soup(chapter["url"])
-        soup = soup.find("script", string=re.compile(r"const imgHttps = \["))
-
-        match = re.search(r"const imgHttps = (.*);", soup.text)
-        img_list = json.loads(match.group(1)) if match else []
-
-        match = re.search(r"const batoPass = (.*);", soup.text)
-        bato_pass = decode_pass(match.group(1)) if match else ""
-
-        match = re.search(r"const batoWord = (.*);", soup.text)
-        bato_word = match.group(1).strip('"') if match else ""
-
-        # looks like some kind of "access" GET args that may be necessary, not always though
-        query_args = json.loads(decrypt(bato_word, bato_pass).decode())
-
-        # so if it ends up empty or mismatches, just ignore it and return the img list instead
-        if len(query_args) != len(img_list):
-            image_urls = [f'<img src="{img}" alt="img">' for img in img_list]
-        else:
-            image_urls = [f'<img src="{img}?{args}">' for img, args in zip(img_list, query_args)]
-
-        return "<p>" + "</p><p>".join(image_urls) + "</p>"
