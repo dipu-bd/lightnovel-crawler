@@ -1,5 +1,5 @@
 {
-  "v": 1785584734,
+  "v": 1785588420,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -10,7 +10,6 @@
   "rejected": {
     "http://boxnovel.org/": "No longer operational",
     "http://fullnovel.live/": "This site can not be reached",
-    "http://gravitytales.com/": "Domain is expired",
     "http://lightnovels.me/": "Site is down",
     "http://wnmtl.org/": "Site is down",
     "http://wspadancewichita.com/": "Site closed and moved to https://readnovelfull.com/",
@@ -86,6 +85,7 @@
     "https://mangachill.love/": "Site is down",
     "https://mangarockteam.com/": "Site is down",
     "https://mangastic.net/": "Site is down",
+    "https://mangatoto.com/": "Domain no longer hosts manga or novels",
     "https://mangatoto.net/": "Redirects to a gambling site",
     "https://mangatoto.org/": "Domain now serves a gambling site",
     "https://mangaweebs.in/": "Domain is parked and for sale",
@@ -293,6 +293,7 @@
     "https://funbook.su/": "56cf47825b16189855ee706f2762d59a",
     "https://genesistls.com/": "42802a18ec158aca5ef5545fd27c435f",
     "https://global.foxaholic.com/": "4a7f2dd3ebdb72eb35b9aa50cdebe390",
+    "https://gravitytales.com/": "63513425d38bb46e1eb7ec7104ee700a",
     "https://grensia.blogspot.com/": "ab772d57ba6a0bb3f7944a324c92f547",
     "https://home.novel-gate.com/": "4882a44c662d96dcda14c3fe33ce4c6b",
     "https://hostednovel.com/": "b307464543bf11b8218d23fd1a90acc1",
@@ -339,7 +340,6 @@
     "https://mangarosie.love/": "c041d339e40c0ddbb55b7247b67650d8",
     "https://mangarosie.me/": "c041d339e40c0ddbb55b7247b67650d8",
     "https://mangatoon.mobi/": "415856eedaf947167f0a965f23b74288",
-    "https://mangatoto.com/": "5955ede148817d13e8ef04255da4237d",
     "https://mangatx.com/": "06d8f1f9c8cb559895614b05d00f4b0b",
     "https://manhuaplus.online/": "f2ee2cffc9ccdc5ca2b830c98f3ce174",
     "https://meionovel.id/": "f74bd0aac01ea4c4dfe8dfd34ff9c562",
@@ -4194,22 +4194,22 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/k/kitenovel.py"
     },
     "63513425d38bb46e1eb7ec7104ee700a": {
-      "version": 1775456139,
+      "version": 1785588379,
       "md5": "31691e3ef6e0184184e0d2e1c16a153c",
       "file_path": "sources/en/g/gravitytales.py",
       "language": "en",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
-      "has_mtl": false,
+      "can_search": true,
+      "has_mtl": true,
       "request_rate_limit": 3.0,
-      "total_commits": 21,
+      "total_commits": 22,
       "contributors": [
         "dipu-bd"
       ],
       "id": "63513425d38bb46e1eb7ec7104ee700a",
       "base_urls": [
-        "http://gravitytales.com/"
+        "https://gravitytales.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/g/gravitytales.py"
     },
@@ -9620,7 +9620,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4552
+      "contributions": 4553
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
