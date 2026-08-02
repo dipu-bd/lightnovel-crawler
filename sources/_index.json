@@ -1,5 +1,5 @@
 {
-  "v": 1785655021,
+  "v": 1785657946,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -79,7 +79,6 @@
     "https://luminarynovels.com/": "Site is down",
     "https://lunarletters.com/": "Site is down",
     "https://m.27k.net/": "Site is down",
-    "https://m.webnovel.com/": "Site is down",
     "https://m.wuxiaworld.co/": "Site is down",
     "https://manga-tx.com/": "Site is down",
     "https://mangachill.io/": "Site is down",
@@ -348,6 +347,7 @@
     "https://lnreader.org/": "d62869404e4b5dd6b19addc645f7fd81",
     "https://m.readlightnovel.cc/": "96b9a9c6b35c6960eb5c06ff20918555",
     "https://m.shuhaige.net/": "dac7b1af29c3a7ab5b9247e895eea3a2",
+    "https://m.webnovel.com/": "0b826eeed91f9b60eb5a7802ac9fad2d",
     "https://mangabuddy.com/": "3c1b4c63be8ad7052dd5d9dffc8dff9f",
     "https://mangarosie.love/": "c041d339e40c0ddbb55b7247b67650d8",
     "https://mangarosie.me/": "c041d339e40c0ddbb55b7247b67650d8",
@@ -10166,7 +10166,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4571
+      "contributions": 4576
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
