@@ -23,7 +23,7 @@ def recover_empty_chapters(
     """
     ctx.setup(sync_remote_index=False)
 
-    found = ctx.chapters.find_stored_empty(untried_only=not include_tried)
+    found = list(ctx.chapters.find_stored_empty(untried_only=not include_tried))
     if not found:
         print("[green]No chapter is stored with an empty body.[/green]")
         return

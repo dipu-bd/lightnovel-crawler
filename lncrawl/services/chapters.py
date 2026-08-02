@@ -1,5 +1,7 @@
-from typing import Any, Dict, Iterable, List, NamedTuple, Optional, Sequence
+from itertools import islice
+from typing import Any, Dict, Iterable, List, NamedTuple, Optional
 
+from sqlalchemy.dialects.postgresql import JSONB
 import sqlmodel as sq
 
 from ..context import ctx
@@ -156,43 +158,49 @@ class ChapterService:
             sess.delete(chapter)
             sess.commit()
 
-    def find_stored_empty(self, *, untried_only: bool = False) -> List[EmptyChapter]:
-        """Finds chapters marked finished over stored content that holds no text."""
-        stmt = sq.select(Chapter.id, Chapter.novel_id, Chapter.serial).where(
-            sq.col(Chapter.is_done).is_(True)
+    def find_stored_empty(self, *, untried_only: bool = False) -> Iterable[EmptyChapter]:
+        """Find chapters marked finished over stored content that holds no text."""
+        stmt = sq.select(
+            Chapter.id,
+            Chapter.novel_id,
+            Chapter.serial,
+        ).where(
+            sq.col(Chapter.is_done).is_(True),
         )
         if untried_only:
-            stmt = stmt.where(Chapter.extra["empty_attempts"].as_string().is_(None))
+            stmt = stmt.where(
+                Chapter.extra["empty_attempts"].as_string().is_(None),
+            )
 
-        found: List[EmptyChapter] = []
         with ctx.db.session() as sess:
             rows = sess.exec(stmt.execution_options(yield_per=_SCAN_CHUNK))
             for chapter_id, novel_id, serial in rows:
                 if self._is_stored_empty(novel_id, serial):
-                    found.append(EmptyChapter(chapter_id, novel_id, serial))
-        return found
+                    yield EmptyChapter(chapter_id, novel_id, serial)
 
-    def reopen_empty(self, chapter_ids: Sequence[str], *, reset_attempts: bool = False) -> int:
+    def reopen_empty(self, chapter_ids: Iterable[str], *, reset_attempts: bool = False) -> int:
         """Clear `is_done` so these chapters are downloaded again."""
+        extra_col = sq.col(Chapter.extra)
+        if ctx.db.engine.dialect.name == "postgresql":
+            extra_updates = sq.cast(sq.cast(extra_col, JSONB).op("-")(Chapter.extra), sq.JSON)
+        else:
+            extra_updates = sq.func.json_remove(extra_col, f'$."{Chapter.extra}"')
+
         total = 0
         with ctx.db.session() as sess:
-            for batch in self._chunked(chapter_ids, _ID_CHUNK):
-                stmt = sq.select(Chapter).where(sq.col(Chapter.id).in_(batch))
-                for chapter in sess.exec(stmt).all():
-                    chapter.is_done = False
-                    if reset_attempts and "empty_attempts" in chapter.extra:
-                        extra = dict(**chapter.extra)
-                        extra.pop("empty_attempts", None)
-                        chapter.extra = extra
-                    sess.add(chapter)
-                    total += 1
+            iterator = iter(chapter_ids)
+            while batch := list(islice(iterator, _ID_CHUNK)):
+                result = sess.exec(
+                    sq.update(Chapter)
+                    .where(sq.col(Chapter.id).in_(batch))
+                    .values(
+                        is_done=False,
+                        extra=extra_updates,
+                    )
+                )
+                total += result.rowcount or 0
             sess.commit()
         return total
-
-    @staticmethod
-    def _chunked(items: Sequence[str], size: int) -> Iterable[Sequence[str]]:
-        for start in range(0, len(items), size):
-            yield items[start : start + size]
 
     @staticmethod
     def _is_stored_empty(novel_id: str, serial: int) -> bool:

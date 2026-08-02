@@ -1,4 +1,3 @@
-import inspect
 import logging
 import os
 import sys
@@ -61,11 +60,15 @@ class Logger:
         self.progress_bar = not self.is_info
 
     def log(self, level: int, *args, **kwargs) -> None:
+        if level < self._level:
+            return
         stacklevel = kwargs.pop("stacklevel", 0) + 2
-        frame = inspect.stack()[stacklevel]
         kwargs["stacklevel"] = stacklevel
-        logger = logging.getLogger(frame.filename)
-        logger.log(level, *args, **kwargs)
+        try:
+            name = sys._getframe(stacklevel).f_code.co_filename
+        except ValueError:
+            name = __name__
+        logging.getLogger(name).log(level, *args, **kwargs)
 
     def error(self, *args, **kwargs) -> None:
         self.log(logging.ERROR, *args, **kwargs, stacklevel=1)

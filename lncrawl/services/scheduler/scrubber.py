@@ -195,13 +195,6 @@ class Scrubber:
             sess.commit()
 
     def recover_empty_chapters(self):
-        if ctx.config.crawler.empty_chapters_recovered:
-            return
-
         found = ctx.chapters.find_stored_empty(untried_only=True)
-        if found:
-            logger.info(f"Reopening {len(found)} chapter(s) stored with an empty body")
-            ctx.chapters.reopen_empty([item.id for item in found])
-
-        ctx.config.crawler.empty_chapters_recovered = True
-        ctx.config.save()
+        total = ctx.chapters.reopen_empty((item.id for item in found))
+        logger.info(f"Reopened {total} chapter(s) stored with an empty body")

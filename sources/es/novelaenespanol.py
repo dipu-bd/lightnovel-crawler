@@ -9,11 +9,17 @@ from lncrawl.core import Novel, PageSoup, SearchResult, SoupTemplate, Volume
 logger = logging.getLogger(__name__)
 
 NOVEL_PATH = re.compile(r"/novela-ligera/([^/?#]+)")
-CHAPTER_NUMBER = re.compile(r"cap[ií]tulo[\s\-]*(\d+)", re.I)
 PER_PAGE = 100
 
 
 class NovelaEnEspanolCrawler(SoupTemplate):
+    """Each novel is a WordPress category and each chapter an ordinary post in it.
+
+    The theme renders only the thirty newest chapters and offers no pager, so the list is
+    taken from the REST feed, which reports its own page count and is therefore walked to a
+    known length rather than until something looks empty.
+    """
+
     base_url = ["https://novelaenespanol.com/"]
     language = "es"
 
@@ -27,14 +33,13 @@ class NovelaEnEspanolCrawler(SoupTemplate):
     def _api(self, path: str) -> Any:
         return self.scraper.get_json(f"{self.scraper.origin}wp-json/wp/v2/{path}")
 
-    def _novel_categories(self, query: str) -> List[Dict[str, Any]]:
+    def search(self, query: str) -> Iterable[SearchResult]:
         rows = self._api(
             f"categories?search={query}&per_page=20&_fields=id,name,slug,count,parent,link"
         )
-        return [r for r in rows if not r.get("parent") and r.get("count")]
-
-    def search(self, query: str) -> Iterable[SearchResult]:
-        for row in self._novel_categories(query):
+        for row in rows:
+            if row.get("parent") or not row.get("count"):
+                continue
             yield SearchResult(
                 title=html.unescape(str(row.get("name") or "")),
                 url=str(row.get("link") or ""),
@@ -45,9 +50,7 @@ class NovelaEnEspanolCrawler(SoupTemplate):
         found = NOVEL_PATH.search(self.absolute_url(novel.url))
         if not found:
             raise ValueError(f"Not a novel url: {novel.url}")
-        rows = self._api(
-            f"categories?slug={found.group(1)}&_fields=id,name,slug,count,description"
-        )
+        rows = self._api(f"categories?slug={found.group(1)}&_fields=id,name,slug,count,description")
         if not rows:
             raise ValueError(f"No novel found for {novel.url}")
         self._category = rows[0]
@@ -79,13 +82,17 @@ class NovelaEnEspanolCrawler(SoupTemplate):
     def select_chapter_tags(
         self, tag: PageSoup, novel: Novel, volume: Optional[Volume] = None
     ) -> Iterable[PageSoup]:
+        # Publication order is the only ordering this site supports. Chapter numbers are
+        # not usable: one novel numbers nothing but its volumes ("Volumen 1. Capítulo
+        # 1.1."), another carries a typo six digits long, and a third writes "Capítulos"
+        # for a single chapter.
         rows: List[Dict[str, Any]] = []
         page = 1
         while True:
             response = self.scraper.get(
                 f"{self.scraper.origin}wp-json/wp/v2/posts"
                 f"?categories={self._category['id']}&per_page={PER_PAGE}&page={page}"
-                "&orderby=date&order=asc&_fields=link,title,date"
+                "&orderby=date&order=asc&_fields=link,title"
             )
             rows.extend(response.json())
             total = int(response.headers.get("X-WP-TotalPages") or 1)
@@ -93,26 +100,21 @@ class NovelaEnEspanolCrawler(SoupTemplate):
                 break
             page += 1
 
-        chapters = []
-        for row in rows:
-            title = html.unescape(str(row.get("title", {}).get("rendered") or "")).strip()
-            found = CHAPTER_NUMBER.search(title)
-            if found:
-                chapters.append((int(found.group(1)), str(row.get("date") or ""), title, row))
+        # Every category holds one post that is the novel's own info page. Its position in
+        # the feed varies, and its title does not distinguish it — dropping posts whose
+        # title lacks a chapter number instead cost seventeen real chapters of Martial Peak.
+        # The novel page links it as the "read" button, so the site names it for us.
+        landing = tag.select_one("a.btn[href]")
+        skip = self.absolute_url(str(landing.get("href"))).rstrip("/") if landing else ""
 
-        # Every category carries one post that is the novel's own landing page rather than a
-        # chapter, and it is the only one without a number in its title — measured against
-        # the count the site prints, which is the post count minus exactly one.
-        dropped = len(rows) - len(chapters)
-        if dropped != 1:
-            logger.warning("Dropped %d non-chapter posts from %s", dropped, novel.url)
-
-        chapters.sort(key=lambda row: (row[0], row[1]))
         prefix = str(self._category.get("name") or "").strip()
-        return [self._anchor(tag, row, prefix) for row in chapters]
-
-    def _anchor(self, soup: PageSoup, row: tuple, prefix: str) -> PageSoup:
-        title = row[2]
-        if prefix and title.lower().startswith(prefix.lower()):
-            title = title[len(prefix) :].strip(" -–:")
-        return soup.new_tag("a", attrs={"href": str(row[3].get("link"))}, string=title)
+        anchors = []
+        for row in rows:
+            link = str(row.get("link") or "")
+            if skip and link.rstrip("/") == skip:
+                continue
+            title = html.unescape(str(row.get("title", {}).get("rendered") or "")).strip()
+            if prefix and title.lower().startswith(prefix.lower()):
+                title = title[len(prefix) :].strip(" -–:.")
+            anchors.append(tag.new_tag("a", attrs={"href": link}, string=title))
+        return anchors
