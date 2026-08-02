@@ -43,8 +43,8 @@ make lint-fix   # auto-fix ruff issues and reformat
 
 Rules to keep in mind:
 
-- Line length: 100, double quotes, target Python 3.9
-- `lncrawl/cloudscraper/` is a vendored fork — patch rather than refactor
+- Line length: 100, double quotes, target Python 3.9 — `pyproject.toml` is the source of truth
+- HTTP goes through the external [`lncrawl-scraper`](https://github.com/lncrawl/scraper) package. It owns the headers and the User-Agent, and it decides on its own evidence when a page needs a browser — never set those from a source or drive a browser yourself
 
 Run `make lint` before opening a PR and fix any errors it reports.
 
@@ -56,7 +56,7 @@ This is the most common contribution. Each source is a single Python file.
 
 ### 1. Find the right directory
 
-Sources are organized by language and first letter of the domain:
+Sources are organized by language; English is further bucketed by the first letter of the file name:
 
 ```text
 sources/
@@ -66,11 +66,11 @@ sources/
   ...
 ```
 
-Create your file at `sources/<lang>/<letter>/sitename.py`.
+Create your file at `sources/en/<letter>/sitename.py`, or `sources/<lang>/sitename.py` for every other language. There is no scaffold command — copy a similar existing source. A file whose name starts with `_` is skipped by the loader.
 
 ### 2. Pick a base class
 
-Check `lncrawl/templates/` first — if the site uses a common CMS (WordPress/Madara, NovelFull, etc.) there may already be a template that gives you the crawling logic for free:
+Check `lncrawl/templates/` first — if the site runs a known engine (WordPress/Madara, NovelFull, NovelMTL, MangaStream, FreeWebNovel, NovelPub, Blogger) the matching template already knows how to crawl it, and your source is about ten lines:
 
 ```python
 from lncrawl.templates.madara import MadaraTemplate
@@ -79,43 +79,48 @@ class MySiteCrawler(MadaraTemplate):
     base_url = ["https://mysite.com/"]
 ```
 
-For sites without a matching template, subclass `Crawler` directly:
+Otherwise subclass **`SoupTemplate`** and declare selectors. This is the base class for all new sources:
 
 ```python
-from lncrawl.core.crawler import Crawler
+from lncrawl.core import SoupTemplate
 
-class MySiteCrawler(Crawler):
+class MySiteCrawler(SoupTemplate):
     base_url = ["https://mysite.com/"]
     language = "en"
     has_mtl = False
     has_manga = False
     can_search = False
 
-    def read_novel_info(self) -> None:
-        ...
-
-    def read_chapters(self) -> None:
-        ...
-
-    def read_chapter_content(self, chapter) -> None:
-        ...
+    novel_title_selector = "h1.entry-title"
+    chapter_list_selector = ".chapter-list a"
+    chapter_body_selector = ".chapter-content"
 ```
+
+The title, cover, author, tags and synopsis fall back to OpenGraph and meta tags, so a site that publishes those needs only the chapter selectors. When a selector cannot express something, override the hook for it (`select_chapter_tags`, `parse_chapter_body`, `build_search_url`, …) rather than reaching for a different base class.
+
+`LegacyCrawler` (`read_novel_info` / `download_chapter_body`) is what most existing sources still use. Match it when you are fixing one of those; do not start a new source with it.
 
 ### 3. Validate
 
 ```bash
-make check-sources   # validates all source files including yours
+uv run python -m lncrawl dev check-sources
 ```
 
-Fix any errors reported, then do a quick manual crawl:
+That imports and instantiates every crawler offline and fails on anything that no longer loads. (`make check-sources` is a different thing — an HTTP probe of source base URLs, not a code check.)
+
+Then do a real crawl:
 
 ```bash
 uv run python -m lncrawl crawl "https://mysite.com/some-novel" --first 3 -f epub
 ```
 
+Open the EPUB and read a chapter. A crawl that "succeeds" with empty or advert-filled chapters is the usual failure — a challenge page and an ad page both answer `200`.
+
 ### 4. Open a PR
 
 One source per PR. Include the site URL in the PR title, e.g. `Add mysite.com`.
+
+Do not commit `sources/_index.json`, `sources/_index.zip` or `SOURCES.md` — CI regenerates all three after your PR lands.
 
 ---
 
