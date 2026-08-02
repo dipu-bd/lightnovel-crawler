@@ -1,5 +1,5 @@
 {
-  "v": 1785674068,
+  "v": 1785677705,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -282,6 +282,7 @@
     "https://dto.to/": "5955ede148817d13e8ef04255da4237d",
     "https://dummynovels.com/": "035cd89ff16448e5a694739e66f2c262",
     "https://duskblossoms.com/": "da3872cd062de1c1c998915ebeebca47",
+    "https://eatapplepies.com/": "b2b590d7868489f995d41d16042caaab",
     "https://ebotnovel.com/": "cb75b2cee07a4ccc1d3997b7491551a0",
     "https://es.mtlnovel.com/": "560dfc4e6b4f4026553927f23eb1a9dd",
     "https://es.mtlnovels.com/": "560dfc4e6b4f4026553927f23eb1a9dd",
@@ -436,6 +437,7 @@
     "https://rpgnoob.wordpress.com/": "d37ecb5158dd9515c7150ee270ae2807",
     "https://rpgnovels.com/": "d37ecb5158dd9515c7150ee270ae2807",
     "https://rubymaybetranslations.com/": "c8a1283684bf0ab5c28179d1067ca086",
+    "https://sammyandpassion.com/": "84323c23803baa07f4db8c24b8e2152d",
     "https://secondlifetranslations.com/": "e9b31ec6675b3c7aa40e5de602be4ccf",
     "https://shalvationtranslations.wordpress.com/": "6b98f85858ddf421d121cadf7658e89b",
     "https://shanghaifantasy.com/": "4d76ceebea4dc7c655cf625c49729f72",
@@ -1764,7 +1766,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/ltnovel.py"
     },
     "1a5bed228319e32fe1f9ba769c722ace": {
-      "version": 1785615708,
+      "version": 1785677509,
       "md5": "bbe624a5b620d6d6cb68571578147705",
       "file_path": "sources/en/h/hyacinthbloom.py",
       "language": "en",
@@ -1773,7 +1775,7 @@
       "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 11,
+      "total_commits": 12,
       "contributors": [
         "dipu-bd",
         "idMysteries"
@@ -5168,7 +5170,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/myoniyonitrans.py"
     },
     "73c06281b1cf247bfb1c23fd539b99dd": {
-      "version": 1785615708,
+      "version": 1785677509,
       "md5": "74088d7c04d23ee46b3eb63025f479a9",
       "file_path": "sources/pt/tsundoku.py",
       "language": "pt",
@@ -5177,7 +5179,7 @@
       "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 12,
+      "total_commits": 13,
       "contributors": [
         "dipu-bd",
         "idMysteries"
@@ -5750,6 +5752,26 @@
         "https://libread.org/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/libread_org.py"
+    },
+    "84323c23803baa07f4db8c24b8e2152d": {
+      "version": 1785677509,
+      "md5": "bf8593466002ddb1b1c1433aeb8215e8",
+      "file_path": "sources/en/s/sammyandpassion.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "84323c23803baa07f4db8c24b8e2152d",
+      "base_urls": [
+        "https://sammyandpassion.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/s/sammyandpassion.py"
     },
     "859ba0ecf8a658d82d0c9d04369fb949": {
       "version": 1664116263,
@@ -7333,6 +7355,26 @@
         "https://lunarletters.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/lunarletters.py"
+    },
+    "b2b590d7868489f995d41d16042caaab": {
+      "version": 1785677509,
+      "md5": "f7ada675cf02ada420ad6e0ff773e8ee",
+      "file_path": "sources/en/e/eatapplepies.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "b2b590d7868489f995d41d16042caaab",
+      "base_urls": [
+        "https://eatapplepies.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/e/eatapplepies.py"
     },
     "b2c77d2e9de9270e05fd80bc6fafc8f4": {
       "version": 1664887435,
@@ -10462,7 +10504,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4593
+      "contributions": 4595
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
