@@ -1,5 +1,5 @@
 {
-  "v": 1785661168,
+  "v": 1785662562,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -319,6 +319,7 @@
     "https://jaomix.ru/": "5d63949375d455e155e999523f16c7a3",
     "https://jobnib.com/": "bc00301e5eb503dc76dd5640fea79546",
     "https://jpmtl.com/": "ce3782b8e74529d40ceac950e17fcc4d",
+    "https://jrnovels.com/": "25e92f9949277e28e8845817a1160ad2",
     "https://justatranslatortranslations.com/": "f41ce64aa5b7bc4b1a1a8d7e5c97f3ae",
     "https://katreadingcafe.com/": "d138992787c95ecbbcb37bf2aada1379",
     "https://kinkytranslations.com/": "79900af5de9177d2f8d951aede0507ce",
@@ -354,6 +355,8 @@
     "https://mangatoon.mobi/": "415856eedaf947167f0a965f23b74288",
     "https://mangatx.com/": "06d8f1f9c8cb559895614b05d00f4b0b",
     "https://manhuaplus.online/": "f2ee2cffc9ccdc5ca2b830c98f3ce174",
+    "https://maplesan9.wordpress.com/": "12b5d27e7b6485f2f43285066fd6e339",
+    "https://maplesantl.com/": "12b5d27e7b6485f2f43285066fd6e339",
     "https://meionovel.id/": "f74bd0aac01ea4c4dfe8dfd34ff9c562",
     "https://meionovels.com/": "f74bd0aac01ea4c4dfe8dfd34ff9c562",
     "https://miraslation.net/": "9fa4170570f50eaa67f3deb2f6628b48",
@@ -1412,6 +1415,27 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/ar/kolnovel.py"
     },
+    "12b5d27e7b6485f2f43285066fd6e339": {
+      "version": 1785662529,
+      "md5": "f983d28a12cb481697df74f664d55dce",
+      "file_path": "sources/en/m/maplesantl.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 3,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "12b5d27e7b6485f2f43285066fd6e339",
+      "base_urls": [
+        "https://maplesantl.com/",
+        "https://maplesan9.wordpress.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/maplesantl.py"
+    },
     "13731ad27f3abb8a72932375df633b1f": {
       "version": 1775063705,
       "md5": "1d4e3b5c6be7ad3836d3f5881f1fcace",
@@ -2141,6 +2165,26 @@
         "https://steambunlightnovel.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/s/steambun.py"
+    },
+    "25e92f9949277e28e8845817a1160ad2": {
+      "version": 1785662529,
+      "md5": "c1fd58884b012954f4043a4aa620d230",
+      "file_path": "sources/en/j/jrnovels.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "25e92f9949277e28e8845817a1160ad2",
+      "base_urls": [
+        "https://jrnovels.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/j/jrnovels.py"
     },
     "26129b361f9abec717ac6e7d9ec45f0f": {
       "version": 1775456139,
@@ -10187,7 +10231,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4576
+      "contributions": 4580
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
