@@ -1,5 +1,5 @@
 {
-  "v": 1785704376,
+  "v": 1785706047,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -330,6 +330,7 @@
     "https://kissmanga.in/": "64612e236c9fd0c847da4eaa43f9dc4a",
     "https://knoxt.space/": "c88801bc55f58e5d2c88474fe124ce6c",
     "https://kolnovel.com/": "1281a8d5ee66428276b90a2dd26962bf",
+    "https://konkon.ink/": "948407fba332335652a7a733bc7204c8",
     "https://labnovel.ru/": "4c21c9e4166df23ce152c054821564b4",
     "https://ladasblmtl.blogspot.com/": "f2d244d167f7c62e0a889f330c84dd37",
     "https://lazybirdtranslations.wordpress.com/": "eda51d913d2c02b130b30b58d89db274",
@@ -419,6 +420,7 @@
     "https://otakutl.blogspot.com/": "36fffc8377909bd4fd2390c7d8672894",
     "https://pandanovel.co/": "c98577fef91275679f4c42584c906d4a",
     "https://peachpitting.com/": "7dfb1e3bdddd378665d14af31192d83a",
+    "https://penguin-squad.com/": "32623d94a44b47efc7d00c8521bb7972",
     "https://phoenixnovels.com.br/": "5179aa1214f9342752a50eb1fb9b882a",
     "https://pianmanga.com/": "f6e1b35b51110846f6c081d6d26c1576",
     "https://puretl.com/": "0a06d2a98cda9b3cb76bced19753fa18",
@@ -2744,6 +2746,26 @@
         "https://darktranslation.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/id/darktrans.py"
+    },
+    "32623d94a44b47efc7d00c8521bb7972": {
+      "version": 1785706015,
+      "md5": "719b84667d6d2efd18f8bbff7a204e21",
+      "file_path": "sources/en/p/penguinsquad.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "32623d94a44b47efc7d00c8521bb7972",
+      "base_urls": [
+        "https://penguin-squad.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/p/penguinsquad.py"
     },
     "3473a8c6b7d9c2848a99d74916bb603f": {
       "version": 1775148284,
@@ -6335,6 +6357,26 @@
         "https://freefullnovel.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/f/freefullnovel.py"
+    },
+    "948407fba332335652a7a733bc7204c8": {
+      "version": 1785706015,
+      "md5": "d617106b5cbec311011f95ee931d54f7",
+      "file_path": "sources/en/k/konkon.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "948407fba332335652a7a733bc7204c8",
+      "base_urls": [
+        "https://konkon.ink/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/k/konkon.py"
     },
     "948db6c03f5b64b95936291975ad0a44": {
       "version": 1736179731,
