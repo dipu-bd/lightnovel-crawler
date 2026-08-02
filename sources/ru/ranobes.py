@@ -56,7 +56,4 @@ class RanobesCrawler(SoupTemplate):
         for number in range(2, last_page + 1):
             collect(self.scraper.get_soup(f"{toc_url.rstrip('/')}/page/{number}/"))
 
-        # The list runs newest first and is split across pages, so neither page order nor
-        # within-page order is reading order. The numeric id in each chapter URL increases
-        # with publication, which restores it across the whole set at once.
         return [rows[key] for key in sorted(rows)]
