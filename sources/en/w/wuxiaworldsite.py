@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
-from lncrawl.templates.wordpress import WordpressTemplate
+import logging
+
+from lncrawl.templates.madara import MadaraTemplate
+
+logger = logging.getLogger(__name__)
 
 
-class WuxiaSiteCrawler(WordpressTemplate):
-    base_url = "https://wuxiaworld.site/"
-    chapter_body_selector = ".text-left"
+class WuxiaWorldSiteCrawler(MadaraTemplate):
+    base_url = ["https://wuxiaworld.site/"]

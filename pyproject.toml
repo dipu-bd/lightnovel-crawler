@@ -67,7 +67,7 @@ dynamic = ["version"]
 keywords = ["lightnovel", "webnovel", "crawler", "scraper", "downloader", "novel", "ebook", "epub", "mobi", "pdf"]
 license = "GPL-3.0-or-later"
 name = "lightnovel-crawler"
-readme = "README.rst"
+readme = "README.md"
 requires-python = ">=3.9"
 
 [project.optional-dependencies]

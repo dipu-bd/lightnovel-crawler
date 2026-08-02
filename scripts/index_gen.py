@@ -44,8 +44,10 @@ INDEX_ZIP_FILE = SOURCES_FOLDER / "_index.zip"
 CONTRIB_CACHE_FILE = WORKDIR / ".github" / "contribs.json"
 
 README_FILE = WORKDIR / "README.md"
+SOURCES_DOC_FILE = WORKDIR / "SOURCES.md"
 SUPPORTED_SOURCE_LIST_QUE = "<!-- auto generated supported sources list -->"
 REJECTED_SOURCE_LIST_QUE = "<!-- auto generated rejected sources list -->"
+SOURCE_COUNT_QUE = "<!-- auto generated source count -->"
 HELP_RESULT_QUE = "<!-- auto generated command line output -->"
 
 REPO_OWNER = "lncrawl"
@@ -275,7 +277,7 @@ username_cache_content = json.dumps(username_cache, indent=2, ensure_ascii=False
 CONTRIB_CACHE_FILE.write_bytes(username_cache_content)
 
 # =========================================================================================== #
-# Update README.md
+# Update SOURCES.md
 # =========================================================================================== #
 
 # Make groups by language codes
@@ -293,12 +295,12 @@ for link, crawler_id in INDEX_DATA["supported"].items():
     grouped_supported.setdefault(ln_code, {})
     grouped_supported[ln_code][link] = crawler_id
 
-logger.info("Rendering supported and rejected source list for README.md")
+logger.info("Rendering supported and rejected source list for SOURCES.md")
 
-with open(README_FILE, encoding="utf8") as fp:
-    readme_text = fp.read()
+with open(SOURCES_DOC_FILE, encoding="utf8") as fp:
+    sources_text = fp.read()
 
-before, supported, after = readme_text.split(SUPPORTED_SOURCE_LIST_QUE)
+before, supported, after = sources_text.split(SUPPORTED_SOURCE_LIST_QUE)
 
 supported = "\n\n"
 supported += f"We are supporting {len(INDEX_DATA['supported'])} sources and {len(INDEX_DATA['crawlers'])} crawlers."
@@ -362,14 +364,14 @@ for ln_code, links in sorted(grouped_supported.items(), key=lambda x: x[0]):
         supported += "</tr>\n"
     supported += "</tbody>\n</table>\n"
 
-readme_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
+sources_text = SUPPORTED_SOURCE_LIST_QUE.join([before, supported, after])
 
 logger.info("Generated supported sources list.")
 
-before, rejected, after = readme_text.split(REJECTED_SOURCE_LIST_QUE)
+before, rejected, after = sources_text.split(REJECTED_SOURCE_LIST_QUE)
 rejected = "\n\n"
 rejected += f"We have rejected {len(INDEX_DATA['rejected'])} sources due to the following reasons."
-rejected = "\n\n"
+rejected += "\n\n"
 rejected += "<table>\n<tbody>\n"
 rejected += "<tr>"
 rejected += "<th>Source URL</th>\n"
@@ -381,9 +383,31 @@ for url, cause in sorted(INDEX_DATA["rejected"].items(), key=lambda x: x[0]):
     rejected += "<td>%s</td>\n" % cause
     rejected += "</tr>\n"
 rejected += "</tbody>\n</table>\n\n"
-readme_text = REJECTED_SOURCE_LIST_QUE.join([before, rejected, after])
+sources_text = REJECTED_SOURCE_LIST_QUE.join([before, rejected, after])
 
 logger.info("Generated rejected sources list.")
+SOURCES_DOC_FILE.write_bytes(sources_text.encode())
+
+# =========================================================================================== #
+# Update README.md
+# =========================================================================================== #
+
+with open(README_FILE, encoding="utf8") as fp:
+    readme_text = fp.read()
+
+language_count = len([code for code in grouped_supported if code])
+
+before, count_text, after = readme_text.split(SOURCE_COUNT_QUE)
+count_text = "\n\n"
+count_text += "Currently **%d sources** across %d languages, served by **%d crawlers**." % (
+    len(INDEX_DATA["supported"]),
+    language_count,
+    len(INDEX_DATA["crawlers"]),
+)
+count_text += "\n\n"
+readme_text = SOURCE_COUNT_QUE.join([before, count_text, after])
+
+logger.info("Generated source count.")
 
 before, help_text, after = readme_text.split(HELP_RESULT_QUE)
 
@@ -393,11 +417,11 @@ output = subprocess.check_output(
 ).decode("utf-8")
 output = re.sub(r"\x1b\[[0-9;\r]*m", "", output.strip())
 
-help_text = "\n"
+help_text = "\n\n"
 help_text += "```text\n"
 help_text += "$ lncrawl -h\n"
 help_text += output
-help_text += "\n```\n"
+help_text += "\n```\n\n"
 
 readme_text = HELP_RESULT_QUE.join([before, help_text, after])
 

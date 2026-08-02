@@ -8,4 +8,4 @@
 | Request a new source         | [New Source Request issue](https://github.com/lncrawl/lightnovel-crawler/issues/new?template=3_new_source.md)   |
 | Report a security issue      | [Security Policy](../SECURITY.md) — do not open a public issue                                                  |
 
-For installation instructions, CLI reference, and the full list of supported sources, see the [README](../README.md).
+For installation instructions and the CLI reference, see the [README](../README.md). The full list of supported sources is in [SOURCES.md](../SOURCES.md).

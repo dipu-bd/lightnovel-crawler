@@ -1,4 +1,4 @@
-# CLAUDE.md
+# AGENTS.md
 
 Guidance for Claude Code working in this repo —
 [Lightnovel Crawler](https://github.com/lncrawl/lightnovel-crawler): a **CLI scraper** that
@@ -18,14 +18,14 @@ constructed.
 Deep, task-scoped knowledge lives in `.claude/skills/`. **Read the matching skill before
 starting work in its area** — they hold the recipes and invariants this file only points to:
 
-| Skill | Use when |
-| --- | --- |
-| `add-source` | Creating/fixing a source crawler; anything in `sources/` or `lncrawl/templates/` |
-| `add-api-endpoint` | Server routes, security, DTOs, pagination, errors (`server/`) |
-| `add-job-type` | Job kinds, handlers, scheduler behavior (`services/scheduler/`, `services/jobs/`) |
-| `db-migration` | DAO model changes and Alembic migrations (`dao/`, `migrations/`) |
-| `output-and-translation` | Output formats (binder) and the translation service |
-| `releasing` | Version bumps, the tag-triggered release pipeline, CI workflows |
+| Skill                    | Use when                                                                          |
+| ------------------------ | --------------------------------------------------------------------------------- |
+| `add-source`             | Creating/fixing a source crawler; anything in `sources/` or `lncrawl/templates/`  |
+| `add-api-endpoint`       | Server routes, security, DTOs, pagination, errors (`server/`)                     |
+| `add-job-type`           | Job kinds, handlers, scheduler behavior (`services/scheduler/`, `services/jobs/`) |
+| `db-migration`           | DAO model changes and Alembic migrations (`dao/`, `migrations/`)                  |
+| `output-and-translation` | Output formats (binder) and the translation service                               |
+| `releasing`              | Version bumps, the tag-triggered release pipeline, CI workflows                   |
 
 ## Build & development commands
 
@@ -37,7 +37,7 @@ make install       # setup + uv sync --all-extras --all-groups
 make start         # run the server (make dev = with auto-reload)
 make lint          # pyright lncrawl + ruff format --check + ruff check — run before finishing
 make lint-fix      # ruff check --fix + ruff format
-make index-gen     # regenerate source index + README source tables
+make index-gen     # regenerate source index + SOURCES.md tables
 make check-sources # HTTP reachability probe of source base URLs (NOT a code validator)
 ```
 
@@ -163,15 +163,17 @@ and `LNCRAWL_CONFIG` override DB and config file; `.env` is auto-loaded.
   truth for line length, quote style, target version, and excluded dirs.
 - **f-strings** for all string interpolation and **type annotations** on function signatures
   and variable declarations — house conventions (not machine-enforced; follow them anyway).
-- **README.md** source tables and CLI help blocks between `<!-- auto generated -->` markers
-  are rewritten by `make index-gen` — don't hand-edit those regions. `CHANGELOG.md` sections
+- **SOURCES.md** source tables and the **README.md** CLI help and source-count blocks between
+  `<!-- auto generated -->` markers are rewritten by `make index-gen` — don't hand-edit those
+  regions, and keep each marker paired. `README.md` is also the PyPI long description, so
+  every link and image in it must be an absolute URL. `CHANGELOG.md` sections
   are curated by hand and become release notes.
 - **`CHANGELOG.md`: one line per paragraph, and keep entries short.** The release workflow
   lifts a version's section out verbatim, and the renderer on the other side turns a single
   newline into a line break — so never hard-wrap, or the paragraph arrives as a ragged
   column with its indentation showing. (Blank lines still separate paragraphs, and a
   continuation paragraph inside a bullet still needs its indent.) An entry is a bold lead
-  sentence plus the shortest *why* that would stop someone undoing it — not the
+  sentence plus the shortest _why_ that would stop someone undoing it — not the
   investigation that produced it. Reasoning at length belongs in the code comment or the
   docstring, where the reader is already looking at the thing it explains.
 - Prefer patching over refactoring in vendored/generated areas; `lncrawl/server/web/` and
