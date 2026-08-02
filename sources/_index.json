@@ -1,5 +1,5 @@
 {
-  "v": 1785703892,
+  "v": 1785704059,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -505,7 +505,7 @@
     "https://www.f-w-o.com/": "553a1e4deba430c68189a6de0f997fa3",
     "https://www.fanfiction.net/": "14aaaf5ffaea6a3d3fb3bf29df292e6b",
     "https://www.fanmtl.com/": "ac58f2f9c01e3a844372f0ab4ff75244",
-    "https://www.fansmtl.com/": "ac58f2f9c01e3a844372f0ab4ff75244",
+    "https://www.fansmtl.com/": "91342afbe191ee00acce8634c299517d",
     "https://www.fictionpress.com/": "ed2e10ed53d06b93305e8a2425f9645d",
     "https://www.flying-lines.com/": "de68310ccc657297706130bb9b29e81f",
     "https://www.foxaholic.com/": "4a7f2dd3ebdb72eb35b9aa50cdebe390",
@@ -8654,7 +8654,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/k/katreadingcafe.py"
     },
     "d24292543093bd95f8e2e3145516946e": {
-      "version": 1784829411,
+      "version": 1785704026,
       "md5": "f56f30c041bb153683f13c4ad4d3d2df",
       "file_path": "sources/en/n/novel-bin.py",
       "language": "en",
@@ -8663,7 +8663,7 @@
       "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 1.0,
-      "total_commits": 5,
+      "total_commits": 6,
       "contributors": [
         "SirGryphin",
         "dipu-bd",
