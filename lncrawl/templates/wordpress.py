@@ -140,6 +140,9 @@ class WordpressMangaTemplate(WordpressTemplate):
     is_template = True
     has_manga = True
 
+    # Disable manga search
+    can_search = False
+
     def download_chapter(self, chapter: Chapter) -> None:
         if self.madara_body_from_paragraphs:
             super().download_chapter(chapter)
