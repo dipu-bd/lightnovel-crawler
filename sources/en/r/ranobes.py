@@ -28,6 +28,7 @@ class RanobeLibCrawler(SoupTemplate):
     novel_author_selector = '.tag_list a[href*="/authors/"]'
     chapter_list_selector = ".cat_line a"
     chapter_title_selector = ".cat_line a"
+    chapter_body_selector = "#arrticle"
 
     def initialize(self) -> None:
         self.cleaner.bad_css.update([".free-support", 'div[id^="adfox_"]'])
@@ -57,7 +58,8 @@ class RanobeLibCrawler(SoupTemplate):
             task = self.taskman.submit_task(self.scraper.get_soup, chapter_page_url)
             futures.append(task)
 
-        page_soups = [tag] + [
+        # Page 1 holds the newest chapters, so it is the last page to read, not the first.
+        page_soups = [
             page
             for page in self.taskman.resolve(
                 futures,
@@ -65,7 +67,7 @@ class RanobeLibCrawler(SoupTemplate):
                 unit="page",
             )
             if page
-        ]
+        ] + [tag]
 
         novel.chapters = []
         for page in page_soups:
