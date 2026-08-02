@@ -816,6 +816,18 @@ class CrawlerConfig(_Section):
         self._set("runner_reset_interval", v)
 
     @property
+    def empty_chapters_recovered(self) -> Annotated[bool, Hidden]:
+        """Whether the one-off pass over chapters stored with an empty body has run.
+
+        Clear it in `config.json` to run the pass again.
+        """
+        return self._get("empty_chapters_recovered", False)
+
+    @empty_chapters_recovered.setter
+    def empty_chapters_recovered(self, v: bool) -> None:
+        self._set("empty_chapters_recovered", v)
+
+    @property
     def proxies(self) -> Annotated[List[ProxyExit], Hidden]:
         """The addresses crawler requests may leave from.
 

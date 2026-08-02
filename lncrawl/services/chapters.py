@@ -18,6 +18,9 @@ EMPTY_CANDIDATE_BYTES = 512
 # 999 of them.
 _ID_CHUNK = 500
 
+# Rows pulled per round trip when streaming a scan over the whole chapter table.
+_SCAN_CHUNK = 1000
+
 
 class EmptyChapter(NamedTuple):
     id: str
@@ -154,39 +157,23 @@ class ChapterService:
             sess.commit()
 
     def find_stored_empty(self, *, untried_only: bool = False) -> List[EmptyChapter]:
-        """Chapters marked finished over stored content that holds no text.
+        """Finds chapters marked finished over stored content that holds no text."""
+        stmt = sq.select(Chapter.id, Chapter.novel_id, Chapter.serial).where(
+            sq.col(Chapter.is_done).is_(True)
+        )
+        if untried_only:
+            stmt = stmt.where(Chapter.extra["empty_attempts"].as_string().is_(None))
 
-        A chapter saved this way is done over an empty file, and the refetch gate skips
-        anything already done, so nothing reaches it again on its own.
-
-        *untried_only* keeps the ones the empty-body path has never counted an attempt
-        for — everything stored before that path existed. The rest were given up on
-        deliberately after `MAX_EMPTY_ATTEMPTS`, and reopening those would restart a
-        retry loop the cap is there to end.
-
-        Columns rather than rows: this walks every finished chapter in the library, and
-        an ORM object per row would hold the whole table in memory to read three fields.
-        """
         found: List[EmptyChapter] = []
         with ctx.db.session() as sess:
-            rows = sess.exec(
-                sq.select(Chapter.id, Chapter.novel_id, Chapter.serial, Chapter.extra).where(
-                    sq.col(Chapter.is_done).is_(True)
-                )
-            )
-            for chapter_id, novel_id, serial, extra in rows:
-                if untried_only and (extra or {}).get("empty_attempts"):
-                    continue
+            rows = sess.exec(stmt.execution_options(yield_per=_SCAN_CHUNK))
+            for chapter_id, novel_id, serial in rows:
                 if self._is_stored_empty(novel_id, serial):
                     found.append(EmptyChapter(chapter_id, novel_id, serial))
         return found
 
     def reopen_empty(self, chapter_ids: Sequence[str], *, reset_attempts: bool = False) -> int:
-        """Clear `is_done` so these chapters are downloaded again.
-
-        *reset_attempts* also drops the empty-body counter, which starts the chapter over
-        with a full budget of retries rather than whatever is left of one.
-        """
+        """Clear `is_done` so these chapters are downloaded again."""
         total = 0
         with ctx.db.session() as sess:
             for batch in self._chunked(chapter_ids, _ID_CHUNK):
