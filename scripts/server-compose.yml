@@ -96,14 +96,14 @@ services:
     image: ghcr.io/lncrawl/tor-pool:latest
     restart: unless-stopped
     environment:
-      POOL_SIZE: "6"
+      POOL_SIZE: "8"
       MIN_READY: "1"
       AUTH_DISABLED: "true"
       PIN_EXIT_RELAY: "true"
     ports:
-      - "127.0.0.1:23458:8080"
+      - "0.0.0.0:23458:8080"
     volumes:
-      - ./tordata:/var/lib/tor
+      - tordata:/var/lib/tor
     labels:
       - autoheal=true
     healthcheck:
@@ -117,3 +117,6 @@ services:
         limits:
           cpus: "1.00"
           memory: "512M"
+
+volumes:
+  tordata:
