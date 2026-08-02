@@ -27,7 +27,7 @@ class Scrubber:
         scrubber.delete_expired_tokens()
         scrubber.delete_inactive_users()
         scrubber.delete_old_activities()
-        scrubber.recover_empty_chapters()
+        # scrubber.recover_empty_chapters()
 
     def __init__(self, signal=Event()) -> None:
         self.signal = signal
