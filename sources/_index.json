@@ -1,5 +1,5 @@
 {
-  "v": 1785669893,
+  "v": 1785671657,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -258,6 +258,7 @@
     "https://blnovels.net/": "2b62a91a8d4d9497364bfecf4530c2a1",
     "https://bookhamster.ru/": "56cf47825b16189855ee706f2762d59a",
     "https://booknet.com/": "c6b2d34f33d246ecbbf40115ffe8725c",
+    "https://cangji.net/": "46b2be63c3cc33cfb57ae4af767b6734",
     "https://cclawtranslations.home.blog/": "669ec4e7ae359ad6e74f2f7e13592f9f",
     "https://centralnovel.com/": "10fcb6cda7d6ad8908224f58984f9398",
     "https://chireads.com/": "ad1884d2ad83aa3b44d7fc40189cca81",
@@ -366,6 +367,7 @@
     "https://mysticalmerries.com/": "5742e8ab63765a9a58d68f884677881f",
     "https://ncode.syosetu.com/": "dd2266389af7f6d706b09c50d28ce4f6",
     "https://noblemtl.com/": "37f85ec088e81f777e2c3c80a9683903",
+    "https://noicetranslations.blogspot.com/": "7be65430de8da87da2ad50e5fd032cdb",
     "https://novel-bin.com/": "d24292543093bd95f8e2e3145516946e",
     "https://novel-bin.net/": "454f36a459a33a236947403a1c325215",
     "https://novel27.com/": "f60aa7c971bb0335d2c33a1c2fdb703b",
@@ -387,6 +389,7 @@
     "https://novelhard.com/": "c49b0bc4dfdbc0a5ba4011796d8c6716",
     "https://novelhi.com/": "a267150da8cc9a8e2d521b8a364e9318",
     "https://novelight.net/": "b9ff1e5f9a4a4fab67f84a7569f426e6",
+    "https://novellatte.blogspot.com/": "5a169ce97e3cdb89e9e7bee6ac280bcb",
     "https://novellive.app/": "2263d10c38de47cb5647649f94f57dfc",
     "https://novellive.org/": "2263d10c38de47cb5647649f94f57dfc",
     "https://novelmania.com.br/": "1217119972255c67094062ca3dc645f6",
@@ -404,6 +407,7 @@
     "https://novlove.com/": "5d23959dc1b4b41d75e4ad11cc057341",
     "https://nyx-translation.com/": "d4dc7d0c2307a840f5092791e22069ad",
     "https://nyxtranslation.home.blog/": "d4dc7d0c2307a840f5092791e22069ad",
+    "https://ontimestory.eu/": "c5dbd0d90bee5b2d6160aa2cf9c558b6",
     "https://pandanovel.co/": "c98577fef91275679f4c42584c906d4a",
     "https://phoenixnovels.com.br/": "5179aa1214f9342752a50eb1fb9b882a",
     "https://pianmanga.com/": "f6e1b35b51110846f6c081d6d26c1576",
@@ -470,6 +474,7 @@
     "https://wuxia.click/": "351ed9a0f61e105b5181061896b65bbb",
     "https://wuxiaworld.name/": "0f7e43385d8525edeec92928c94844d8",
     "https://wuxiaworld.online/": "af8d29fdb4caf2b8d63fff14902bbfa1",
+    "https://wuxiaworld.ru/": "db9904f7427d723de786b1d87cbca891",
     "https://wuxiaworld.site/": "f5b924c12a351d1e0d992031c1d1c4e3",
     "https://www.69shu.com/": "3d2d575996fc57d75742cfc78a8c4ae3",
     "https://www.69shuba.com/": "3d2d575996fc57d75742cfc78a8c4ae3",
@@ -793,7 +798,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 80,
@@ -840,7 +845,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 81,
@@ -1156,7 +1161,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 81,
@@ -1225,7 +1230,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 81,
@@ -1644,7 +1649,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 82,
@@ -1692,7 +1697,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 83,
@@ -2280,7 +2285,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 16,
@@ -3255,7 +3260,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 79,
@@ -3376,6 +3381,26 @@
         "https://truyenfull.today/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/vi/truenfull.py"
+    },
+    "46b2be63c3cc33cfb57ae4af767b6734": {
+      "version": 1785671629,
+      "md5": "27efd63a12d7a998e6466d1ee4c5fe5a",
+      "file_path": "sources/en/c/cangji.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "46b2be63c3cc33cfb57ae4af767b6734",
+      "base_urls": [
+        "https://cangji.net/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/c/cangji.py"
     },
     "471d50a723cadec8b69b9829e09ba7d6": {
       "version": 1775063705,
@@ -4161,6 +4186,26 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/s/scribblehub.py"
     },
+    "5a169ce97e3cdb89e9e7bee6ac280bcb": {
+      "version": 1785671629,
+      "md5": "0f8d45716548e2871f2fe482ffa48dc4",
+      "file_path": "sources/en/n/novellatte.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 1.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "5a169ce97e3cdb89e9e7bee6ac280bcb",
+      "base_urls": [
+        "https://novellatte.blogspot.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novellatte.py"
+    },
     "5c27b44baae1be8b8b1a34d9bb3eed77": {
       "version": 1775456139,
       "md5": "d5e437e6ab6919a1aa4cc8760588f936",
@@ -4296,7 +4341,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 17,
@@ -4533,7 +4578,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 81,
@@ -4653,7 +4698,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 22,
@@ -5455,6 +5500,26 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/ru/authortoday.py"
     },
+    "7be65430de8da87da2ad50e5fd032cdb": {
+      "version": 1785671629,
+      "md5": "769713643df1fbd1695bb5fdc0657cf2",
+      "file_path": "sources/en/n/noicetranslations.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 1.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "7be65430de8da87da2ad50e5fd032cdb",
+      "base_urls": [
+        "https://noicetranslations.blogspot.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/noicetranslations.py"
+    },
     "7d9931c79ad75a601f1b2ca723ea621a": {
       "version": 1775456139,
       "md5": "4498ca940a3f4d2ff63d0fe2168cfd04",
@@ -6147,7 +6212,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 82,
@@ -6355,7 +6420,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 21,
@@ -6845,7 +6910,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 18,
@@ -7259,7 +7324,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 81,
@@ -7610,7 +7675,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 82,
@@ -7683,7 +7748,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 82,
@@ -7814,6 +7879,26 @@
         "https://novelhard.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelhard.py"
+    },
+    "c5dbd0d90bee5b2d6160aa2cf9c558b6": {
+      "version": 1785671629,
+      "md5": "59f542f61ecc378ffd9eca8b4376f39b",
+      "file_path": "sources/en/o/ontimestory.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "c5dbd0d90bee5b2d6160aa2cf9c558b6",
+      "base_urls": [
+        "https://ontimestory.eu/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/o/ontimestory.py"
     },
     "c6b2d34f33d246ecbbf40115ffe8725c": {
       "version": 1785352528,
@@ -8524,7 +8609,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novel35.py"
     },
     "d75850030d88afdbd2501e7d87b82c00": {
-      "version": 1785667153,
+      "version": 1785671629,
       "md5": "2ef799f48b8ff3b2dddf27db781c3139",
       "file_path": "sources/es/novelaenespanol.py",
       "language": "es",
@@ -8533,7 +8618,7 @@
       "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 2,
+      "total_commits": 3,
       "contributors": [
         "dipu-bd"
       ],
@@ -8699,7 +8784,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 80,
@@ -8737,6 +8822,26 @@
         "https://m.shuhaige.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/shuhaige.py"
+    },
+    "db9904f7427d723de786b1d87cbca891": {
+      "version": 1785671629,
+      "md5": "4914a6689e6b59250425c2e54114cd1a",
+      "file_path": "sources/ru/wuxiaworld_ru.py",
+      "language": "ru",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "db9904f7427d723de786b1d87cbca891",
+      "base_urls": [
+        "https://wuxiaworld.ru/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/ru/wuxiaworld_ru.py"
     },
     "dcec8e25f9345d9bb8468a18d22b5c92": {
       "version": 1784829411,
@@ -9005,7 +9110,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 24,
@@ -9067,7 +9172,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 80,
@@ -9478,7 +9583,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 22,
@@ -9632,7 +9737,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 81,
@@ -9723,7 +9828,7 @@
       "language": "en",
       "has_manga": true,
       "can_login": false,
-      "can_search": true,
+      "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
       "total_commits": 80,
