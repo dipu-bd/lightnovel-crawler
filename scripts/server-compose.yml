@@ -99,7 +99,7 @@ services:
     image: ghcr.io/lncrawl/tor-pool:latest
     restart: unless-stopped
     environment:
-      POOL_SIZE: "6"
+      POOL_SIZE: "10"
       MIN_READY: "1"
       AUTH_DISABLED: "true"
       PIN_EXIT_RELAY: "true"
@@ -119,7 +119,7 @@ services:
       resources:
         limits:
           cpus: "1.00"
-          memory: "512M"
+          memory: "768M"
 
 volumes:
   tordata:

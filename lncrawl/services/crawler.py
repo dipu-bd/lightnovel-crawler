@@ -13,6 +13,7 @@ from ..core import Chapter as CrawlerChapter, Crawler, Novel as CrawlerNovel, Se
 from ..dao import Chapter, ChapterImage, Novel
 from ..enums import LanguageCode
 from ..exceptions import ServerErrors
+from .chapters import EMPTY_ATTEMPTS_KEY
 
 logger = logging.getLogger(__name__)
 
@@ -246,7 +247,7 @@ class CrawlerService:
         novel: Novel,
         crawler: Crawler,
     ) -> Chapter:
-        attempts = int(chapter.extra.get("empty_attempts") or 0) + 1
+        attempts = int(chapter.extra.get(EMPTY_ATTEMPTS_KEY) or 0) + 1
         ctx.health.record(
             extract_host(novel.url),
             "empty_body",
@@ -254,7 +255,7 @@ class CrawlerService:
         )
 
         extra = dict(**chapter.extra)
-        extra["empty_attempts"] = attempts
+        extra[EMPTY_ATTEMPTS_KEY] = attempts
         extra["crawler_version"] = crawler.version
         chapter.extra = extra
         chapter.is_done = attempts >= MAX_EMPTY_ATTEMPTS

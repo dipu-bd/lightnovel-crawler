@@ -23,6 +23,11 @@ _ID_CHUNK = 500
 # Rows pulled per round trip when streaming a scan over the whole chapter table.
 _SCAN_CHUNK = 1000
 
+# The `extra` key counting how many times a chapter came back with no text. Named here
+# because both the download path that writes it and the query that clears it have to agree,
+# and they did not: the clear was built from the column object rather than the key.
+EMPTY_ATTEMPTS_KEY = "empty_attempts"
+
 
 class EmptyChapter(NamedTuple):
     id: str
@@ -169,7 +174,7 @@ class ChapterService:
         )
         if untried_only:
             stmt = stmt.where(
-                Chapter.extra["empty_attempts"].as_string().is_(None),
+                Chapter.extra[EMPTY_ATTEMPTS_KEY].as_string().is_(None),
             )
 
         with ctx.db.session() as sess:
@@ -180,11 +185,15 @@ class ChapterService:
 
     def reopen_empty(self, chapter_ids: Iterable[str], *, reset_attempts: bool = False) -> int:
         """Clear `is_done` so these chapters are downloaded again."""
-        extra_col = sq.col(Chapter.extra)
-        if ctx.db.engine.dialect.name == "postgresql":
-            extra_updates = sq.cast(sq.cast(extra_col, JSONB).op("-")(Chapter.extra), sq.JSON)
-        else:
-            extra_updates = sq.func.json_remove(extra_col, f'$."{Chapter.extra}"')
+        sa_extra = Chapter.extra
+        if reset_attempts:
+            extra_col = sq.col(Chapter.extra)
+            if ctx.db.engine.dialect.name == "postgresql":
+                empty_literal = sq.literal(EMPTY_ATTEMPTS_KEY)
+                replaced_json = sq.cast(extra_col, JSONB).op("-")(empty_literal)
+                sa_extra = sq.cast(replaced_json, sq.JSON)
+            else:
+                sa_extra = sq.func.json_remove(extra_col, f'$."{EMPTY_ATTEMPTS_KEY}"')
 
         total = 0
         with ctx.db.session() as sess:
@@ -193,10 +202,7 @@ class ChapterService:
                 result = sess.exec(
                     sq.update(Chapter)
                     .where(sq.col(Chapter.id).in_(batch))
-                    .values(
-                        is_done=False,
-                        extra=extra_updates,
-                    )
+                    .values(is_done=False, extra=sa_extra)
                 )
                 total += result.rowcount or 0
             sess.commit()
@@ -206,7 +212,13 @@ class ChapterService:
     def _is_stored_empty(novel_id: str, serial: int) -> bool:
         content_file = Chapter.content_path(novel_id, serial)
         try:
-            if ctx.files.resolve(content_file).stat().st_size > EMPTY_CANDIDATE_BYTES:
+            path = ctx.files.resolve(content_file)
+        except Exception:
+            return False
+        if not path.exists():
+            return True
+        try:
+            if path.stat().st_size > EMPTY_CANDIDATE_BYTES:
                 return False
             return not ctx.files.load_text(content_file).strip()
         except Exception:
