@@ -1,5 +1,5 @@
 {
-  "v": 1785662562,
+  "v": 1785664848,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -369,6 +369,7 @@
     "https://novel-bin.com/": "d24292543093bd95f8e2e3145516946e",
     "https://novel-bin.net/": "454f36a459a33a236947403a1c325215",
     "https://novel27.com/": "f60aa7c971bb0335d2c33a1c2fdb703b",
+    "https://novelaenespanol.com/": "d75850030d88afdbd2501e7d87b82c00",
     "https://novelarrow.com/": "e339def85464e4e44c530393c72df16f",
     "https://novelasligeras.net/": "d409de359d1171a3d722866fba7f2dfa",
     "https://novelbin.net/": "bafc106a130f54bcb73d600c1e335668",
@@ -8500,6 +8501,26 @@
         "https://novel35.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novel35.py"
+    },
+    "d75850030d88afdbd2501e7d87b82c00": {
+      "version": 1785664305,
+      "md5": "2ef799f48b8ff3b2dddf27db781c3139",
+      "file_path": "sources/es/novelaenespanol.py",
+      "language": "es",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "d75850030d88afdbd2501e7d87b82c00",
+      "base_urls": [
+        "https://novelaenespanol.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/es/novelaenespanol.py"
     },
     "d7fb33906638738ba751a7a3cff1791d": {
       "version": 1775456139,
