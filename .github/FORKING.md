@@ -8,14 +8,15 @@ All workflows are designed to provide full validation on forks, following the pr
 
 ### What Runs on Forks
 
-| Capability         | Main Repo               | Forks                |
-| ------------------ | ----------------------- | -------------------- |
-| Lint/validation    | Yes                     | Yes                  |
-| Build executables  | Yes                     | Yes                  |
-| Download artifacts | Yes                     | Yes                  |
-| GitHub Releases    | Yes                     | No                   |
-| Docker push        | Yes (lncrawl namespace) | Yes (fork namespace) |
-| PyPI publish       | Yes                     | No                   |
+| Capability         | Main Repo               | Forks                  |
+| ------------------ | ----------------------- | ---------------------- |
+| Lint/validation    | Yes                     | Yes                    |
+| Build executables  | Yes                     | Yes                    |
+| Download artifacts | Yes                     | Yes                    |
+| GitHub Releases    | Yes                     | Yes (in your own fork) |
+| Docker push        | Yes (lncrawl namespace) | Yes (fork namespace)   |
+| PyPI publish       | Yes                     | No                     |
+| Short links        | Yes                     | No                     |
 
 ## Workflows Overview
 
@@ -23,25 +24,29 @@ All workflows are designed to provide full validation on forks, following the pr
 
 These workflows run automatically on pushes and pull requests:
 
-| Workflow             | File           | Description                                   |
-| -------------------- | -------------- | --------------------------------------------- |
-| Lint & Test (Python) | `lint.yml`  | Runs ruff, builds wheel, tests installation |
+| Workflow             | File       | Description                                                                                                       |
+| -------------------- | ---------- | ----------------------------------------------------------------------------------------------------------------- |
+| Lint & Test (Python) | `lint.yml` | pyright + ruff on every supported Python version, then builds the wheel, installs it, and checks for schema drift |
 
+The live crawl test is off by default; it runs when the workflow is dispatched manually or a
+caller asks for it.
 
 ### Build and Publish (`release.yml`)
 
 Triggered by version tags (`v*`). On forks, this workflow:
 
-1. **Validates** the build across multiple Python versions
+1. **Validates** the build across every supported Python version
 2. **Builds executables** for Windows, macOS, and Linux
 3. **Uploads artifacts** - downloadable from the Actions tab
-4. **Builds and pushes Docker image** to your fork's GHCR namespace
+4. **Attaches them to a draft release** in your own fork
+5. **Builds and pushes Docker image** to your fork's GHCR namespace
 
-The following steps only run on the main repository:
+The `publish-package` job is guarded by `if: github.repository == 'lncrawl/lightnovel-crawler'`
+and is skipped everywhere else, so a fork never reaches:
 
-- GitHub Release creation
 - PyPI package publishing
 - Short link updates (SHLINK)
+- Flipping the draft release to published
 
 ### Downloading Build Artifacts
 
@@ -72,30 +77,28 @@ This works automatically with the default `GITHUB_TOKEN` - no additional setup r
 
 ### Using Your Fork's Image
 
+The image entrypoint is `lncrawl` itself, so pass it a command directly:
+
 ```bash
 docker pull ghcr.io/<your-username>/lightnovel-crawler:latest
-docker run --rm ghcr.io/<your-username>/lightnovel-crawler lncrawl --version
+docker run --rm ghcr.io/<your-username>/lightnovel-crawler version
 ```
 
 ## Optional: Publishing to PyPI from Your Fork
 
-If you want to publish releases from your fork to PyPI:
+The `publish-package` job is skipped on forks by a repository check. To publish from your own
+fork you would have to:
 
-1. Go to your fork's **Settings** > **Secrets and variables** > **Actions**
-2. Add the following secrets:
-   - `PYPI_API_TOKEN`: Your PyPI API token
-
-Note: You'll need to modify the workflow condition or publish under a different package name on PyPI.
+1. Change or drop that `if:` condition in `release.yml`
+2. Pick a different package name in `pyproject.toml` — `lightnovel-crawler` is taken
+3. Configure PyPI Trusted Publishing for your fork, or switch the publish step to an API token
+   passed under `with:` rather than `env:`
 
 ## Server Deployment
 
-The deploy workflow is designed for the main project's infrastructure. For your own deployment:
-
-1. Modify `scripts/server-compose.yml` with your configuration
-2. Add your deployment secrets:
-   - `SSH_SECRET`: Private SSH key for deployment server
-   - `SSH_HOST`: Hostname of your deployment server
-   - `DEPLOY_SERVER`: SSH connection string (e.g., `user@host`)
+There is no deploy workflow — the main project deploys out of band.
+[`scripts/server-compose.yml`](../scripts/server-compose.yml) is the compose file it uses, and
+it is a reasonable starting point for hosting your own instance.
 
 ## Testing Releases on Your Fork
 
@@ -107,7 +110,7 @@ git tag v0.0.0-test
 git push origin v0.0.0-test
 
 # Verify in GitHub Actions:
-# - All jobs run and pass
+# - Every job passes, except PyPI Publish, which is skipped on forks by design
 # - Artifacts are available for download
 # - Docker image appears in your Packages
 
@@ -126,10 +129,11 @@ git push origin :v0.0.0-test
 
 ### Build Fails on ARM64
 
-ARM64 builds use QEMU emulation and may take longer. If builds timeout:
-
-1. The base image must be built for ARM64 first
-2. Calibre installation on ARM64 may have different dependencies
+Each architecture builds natively on its own runner — `linux/amd64` on `ubuntu-latest` and
+`linux/arm64` on `ubuntu-24.04-arm` — and a manifest is merged from the two digests afterwards.
+If the arm64 leg fails on its own, check that your fork can schedule ARM runners; the image
+also downloads Firefox per architecture at build time, so a Mozilla download failure fails only
+that leg.
 
 ## Questions?
 

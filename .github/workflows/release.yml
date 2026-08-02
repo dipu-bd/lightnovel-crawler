@@ -201,6 +201,7 @@ jobs:
   publish-package:
     name: PyPI Publish
     needs: [build-docker, build-windows, build-mac, build-linux]
+    if: github.repository == 'lncrawl/lightnovel-crawler'
     runs-on: ubuntu-latest
     permissions:
       contents: write

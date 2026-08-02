@@ -8,7 +8,7 @@ assignees: ""
 ---
 
 <!-- Before opening: check that you are on the latest version — the fix may already be out. -->
-<!-- If this source is not in the supported list, open a "New Source Request" instead. -->
+<!-- If this source is not in SOURCES.md, open a "New Source Request" instead. -->
 
 ## Source URL
 
@@ -22,7 +22,7 @@ assignees: ""
 
 ## Error output
 
-<!-- Paste any error message or log output. Run with `-ll debug` for more detail. -->
+<!-- Paste any error message or log output. Run with `-lll` for debug-level detail. -->
 
 ```
 (paste here)
