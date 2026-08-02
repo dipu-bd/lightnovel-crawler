@@ -1,7 +1,7 @@
 import logging
 import re
 from typing import Any, Dict, Iterable, List, Optional
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 
 from ..core import Novel, PageSoup, SearchResult, SoupTemplate, Volume
 
@@ -40,9 +40,14 @@ class BloggerLabelTemplate(SoupTemplate):
 
     # A blog usually carries a few housekeeping labels beside its novels ("Chapter",
     # "Project", "Announcement"), which are not novels and should not be offered as such.
+    # These are worth naming in the blog's own language: the Turkish blogs put nearly every
+    # post under "Bölüm", so leaving it in offers a twelve-thousand-chapter phantom novel
+    # ahead of the real ones.
     non_novel_labels: Iterable[str] = (
         "chapter",
         "chapters",
+        "bölüm",
+        "bolum",
         "project",
         "projects",
         "announcement",
@@ -89,9 +94,10 @@ class BloggerLabelTemplate(SoupTemplate):
         return self.scraper.get_soup(novel.url)
 
     def parse_title(self, soup: PageSoup, novel: Novel) -> None:
-        from urllib.parse import unquote
+        novel.title = self.label_name()
 
-        novel.title = unquote(self._label).replace("+", " ").strip()
+    def label_name(self) -> str:
+        return unquote(self._label).replace("+", " ").strip()
 
     def select_chapter_tags(
         self, tag: PageSoup, novel: Novel, volume: Optional[Volume] = None
@@ -127,8 +133,15 @@ class BloggerLabelTemplate(SoupTemplate):
         return ""
 
     def is_chapter_entry(self, entry: Dict[str, Any], title: str) -> bool:
-        """Decide whether a post under the label is a chapter. Override to exclude more."""
-        return True
+        """Decide whether a post under the label is a chapter. Override to exclude more.
+
+        A post titled exactly the novel's name is the label's info page, and on at least one
+        of these themes it renders no body at all — so it would sit at the top of the list
+        as a chapter that can never download. The match is deliberately exact: a prefix test
+        would also swallow real chapters, which is how a similar filter once cost seventeen
+        of them elsewhere.
+        """
+        return title.strip().casefold() != self.label_name().casefold()
 
     def chapter_title(self, title: str) -> str:
         """Drop the novel name these blogs prefix onto every post title.
@@ -143,8 +156,8 @@ class BloggerLabelTemplate(SoupTemplate):
         return title
 
     def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
-        # Blogger's stock template emits an empty `keywords` meta, which the inherited
-        # default turns into one blank tag.
-        tag = soup.select_one(self.novel_tags_selector)
-        raw = str(tag.get("content") or tag.text) if tag else ""
-        novel.tags = [t.strip() for t in raw.split(",") if t.strip()]
+        # A label archive has no genres of its own. What the inherited default finds is the
+        # blog's `keywords` meta, which describes the blog — one of these sites answers with
+        # its translation groups and another with "Manga, Manhwa" on every novel it hosts.
+        # Blank is the honest answer; a subclass with real genres can override.
+        novel.tags = []
