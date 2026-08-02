@@ -1,5 +1,5 @@
 {
-  "v": 1785630506,
+  "v": 1785653884,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -278,6 +278,7 @@
     "https://docln.net/": "fbce7b836b1292fc48340c46292969f7",
     "https://domentranslations.wordpress.com/": "669ec4e7ae359ad6e74f2f7e13592f9f",
     "https://dragontea.ink/": "3d15a901fb32bf0124860e42e534a6d9",
+    "https://dreamy-translations.com/": "ccf793eaa15070a5cdf667b323daf8dc",
     "https://dto.to/": "5955ede148817d13e8ef04255da4237d",
     "https://dummynovels.com/": "035cd89ff16448e5a694739e66f2c262",
     "https://duskblossoms.com/": "da3872cd062de1c1c998915ebeebca47",
@@ -336,6 +337,7 @@
     "https://lightnovel.world/": "996354623c3a1e57a51b5e665ac6ac0e",
     "https://lightnovelfr.com/": "05cbdda5fe5c1293af37b873e973fb35",
     "https://lightnovelheaven.com/": "ce22e18ff263c06d1ea900c5fba764d9",
+    "https://lightnovelpub.me/": "2263d10c38de47cb5647649f94f57dfc",
     "https://lightnovelpub.org/": "0aac14d9790d3133284ad47865b626b6",
     "https://lightnovelreader.me/": "d62869404e4b5dd6b19addc645f7fd81",
     "https://lightnovels.live/": "91c5206fdb455e0ef8ccfc47afc9e342",
@@ -380,6 +382,8 @@
     "https://novelhard.com/": "c49b0bc4dfdbc0a5ba4011796d8c6716",
     "https://novelhi.com/": "a267150da8cc9a8e2d521b8a364e9318",
     "https://novelight.net/": "b9ff1e5f9a4a4fab67f84a7569f426e6",
+    "https://novellive.app/": "2263d10c38de47cb5647649f94f57dfc",
+    "https://novellive.org/": "2263d10c38de47cb5647649f94f57dfc",
     "https://novelmania.com.br/": "1217119972255c67094062ca3dc645f6",
     "https://novelmao.com/": "96f83af29e2c29a3b4788ef63a85e39b",
     "https://novelnextz.com/": "8908956bdc33f334ba74c9e176a32e77",
@@ -389,6 +393,7 @@
     "https://novels.pl/": "5e962751f7928b75a7bbfd7a777fd629",
     "https://novelsonline.net/": "501a9aa027d2fb448ae39be45a197473",
     "https://noveltoon.mobi/": "d7fb33906638738ba751a7a3cff1791d",
+    "https://noveltrust.com/": "2263d10c38de47cb5647649f94f57dfc",
     "https://novelww.com/": "62774b17e3ec70d4dfbe9882ee9df1d7",
     "https://novgo.net/": "98febb53ce66264b8a06f4f372c71d40",
     "https://novlove.com/": "5d23959dc1b4b41d75e4ad11cc057341",
@@ -427,6 +432,7 @@
     "https://snowycodex.com/": "17abbacdca693c9de4b2f0854b7ecf94",
     "https://sonicmtl.com/": "1923c3044c9bf0f77e7535bf2709bbab",
     "https://stabbingwithasyringe.home.blog/": "cf6ba2cb7d72abe517eb69e50826530c",
+    "https://sunovels.com/": "da550ab05905bfa0589a3235bdf90008",
     "https://syosetu.org/": "6b823650e90e6aded6791efc2cb91f31",
     "https://tigertranslations.org/": "007db4ebaac30099fabd9ed0dd0bc76f",
     "https://tl.rulate.ru/": "471d50a723cadec8b69b9829e09ba7d6",
@@ -2001,6 +2007,29 @@
         "https://latestnovel.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/latestnovel.py"
+    },
+    "2263d10c38de47cb5647649f94f57dfc": {
+      "version": 1785653850,
+      "md5": "67ae6e04ffa4165799a526cde2311b6f",
+      "file_path": "sources/en/n/novellive.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "2263d10c38de47cb5647649f94f57dfc",
+      "base_urls": [
+        "https://novellive.app/",
+        "https://novellive.org/",
+        "https://noveltrust.com/",
+        "https://lightnovelpub.me/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novellive.py"
     },
     "235d2e0cca882ed2f97a63b472f803fd": {
       "version": 1775456139,
@@ -7983,6 +8012,26 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/noveltranslate.py"
     },
+    "ccf793eaa15070a5cdf667b323daf8dc": {
+      "version": 1785653850,
+      "md5": "ad36ab17b84602923a84e8a0624d8aad",
+      "file_path": "sources/en/d/dreamytranslations.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "ccf793eaa15070a5cdf667b323daf8dc",
+      "base_urls": [
+        "https://dreamy-translations.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/d/dreamytranslations.py"
+    },
     "cd0ab4b92c67c58ecd7d369ee100365d": {
       "version": 1775456139,
       "md5": "7115a6b235e54acc2f8bdac02d98ae29",
@@ -8493,6 +8542,26 @@
         "https://duskblossoms.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/d/duskblossoms.py"
+    },
+    "da550ab05905bfa0589a3235bdf90008": {
+      "version": 1785653850,
+      "md5": "dac1c18b32f199d053d57ca8e9ede0a4",
+      "file_path": "sources/ar/sunovels.py",
+      "language": "ar",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "da550ab05905bfa0589a3235bdf90008",
+      "base_urls": [
+        "https://sunovels.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/ar/sunovels.py"
     },
     "da94a4e97f45ce849e72509864f105fb": {
       "version": 1775456139,
@@ -10055,7 +10124,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4568
+      "contributions": 4571
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
