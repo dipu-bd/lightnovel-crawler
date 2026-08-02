@@ -1,5 +1,5 @@
 {
-  "v": 1785704059,
+  "v": 1785704376,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -3413,7 +3413,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/i/innnovel.py"
     },
     "454f36a459a33a236947403a1c325215": {
-      "version": 1784829411,
+      "version": 1785704342,
       "md5": "56c9312e8a7c84ca1fa58ec9d3f21f98",
       "file_path": "sources/en/n/novel-bin.net.py",
       "language": "en",
@@ -3422,7 +3422,7 @@
       "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 1.0,
-      "total_commits": 3,
+      "total_commits": 4,
       "contributors": [
         "SirGryphin",
         "dipu-bd"
@@ -8654,7 +8654,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/k/katreadingcafe.py"
     },
     "d24292543093bd95f8e2e3145516946e": {
-      "version": 1785704026,
+      "version": 1785704342,
       "md5": "f56f30c041bb153683f13c4ad4d3d2df",
       "file_path": "sources/en/n/novel-bin.py",
       "language": "en",
@@ -8663,7 +8663,7 @@
       "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 1.0,
-      "total_commits": 6,
+      "total_commits": 7,
       "contributors": [
         "SirGryphin",
         "dipu-bd",
