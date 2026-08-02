@@ -42,7 +42,7 @@ re-downloads of the stories you follow.
 
 <!-- auto generated source count -->
 
-Currently **352 sources** across 11 languages, served by **435 crawlers**.
+Currently **353 sources** across 11 languages, served by **437 crawlers**.
 
 <!-- auto generated source count -->
 

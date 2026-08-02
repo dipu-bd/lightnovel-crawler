@@ -1,5 +1,5 @@
 {
-  "v": 1785677705,
+  "v": 1785681408,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -398,6 +398,7 @@
     "https://novelmania.com.br/": "1217119972255c67094062ca3dc645f6",
     "https://novelmao.com/": "96f83af29e2c29a3b4788ef63a85e39b",
     "https://novelnextz.com/": "8908956bdc33f334ba74c9e176a32e77",
+    "https://novelokur.com.tr/": "1f815b4a9e3c779e4933e1e85f3201f4",
     "https://novelonlinefree.com/": "140dd9754c94c6fdc4809368764dd336",
     "https://novelrare.com/": "d8ed056fd221ba852f089f6af8ba8082",
     "https://novelringan.com/": "0702742158704f4ab98f2004838e83a0",
@@ -481,7 +482,7 @@
     "https://wuxiaworld.name/": "0f7e43385d8525edeec92928c94844d8",
     "https://wuxiaworld.online/": "af8d29fdb4caf2b8d63fff14902bbfa1",
     "https://wuxiaworld.ru/": "db9904f7427d723de786b1d87cbca891",
-    "https://wuxiaworld.site/": "f5b924c12a351d1e0d992031c1d1c4e3",
+    "https://wuxiaworld.site/": "f6a2ddc4fa58c02b33fd0856a628554c",
     "https://www.69shu.com/": "3d2d575996fc57d75742cfc78a8c4ae3",
     "https://www.69shuba.com/": "3d2d575996fc57d75742cfc78a8c4ae3",
     "https://www.aixdzs.com/": "cbb7a70d622bdffa28b6c9c7fd6275f5",
@@ -498,7 +499,7 @@
     "https://www.f-w-o.com/": "553a1e4deba430c68189a6de0f997fa3",
     "https://www.fanfiction.net/": "14aaaf5ffaea6a3d3fb3bf29df292e6b",
     "https://www.fanmtl.com/": "ac58f2f9c01e3a844372f0ab4ff75244",
-    "https://www.fansmtl.com/": "ac58f2f9c01e3a844372f0ab4ff75244",
+    "https://www.fansmtl.com/": "91342afbe191ee00acce8634c299517d",
     "https://www.fictionpress.com/": "ed2e10ed53d06b93305e8a2425f9645d",
     "https://www.flying-lines.com/": "de68310ccc657297706130bb9b29e81f",
     "https://www.foxaholic.com/": "4a7f2dd3ebdb72eb35b9aa50cdebe390",
@@ -532,7 +533,7 @@
     "https://www.novels.pl/": "5e962751f7928b75a7bbfd7a777fd629",
     "https://www.novelupdates.cc/": "ab5e6692cab4784c74023daa7036bc79",
     "https://www.novelupdates.com/": "2c529108c1fd6d790a05e51c02f9bb9c",
-    "https://www.oppatranslations.com/": "f57d2a47e8dbf9ad7d1cf03daf0c0947",
+    "https://www.oppatranslations.com/": "e3dde6b1f9d156edfc0239db6215d05b",
     "https://www.pandamanga.xyz/": "930238810d342d233fb3e2fcfb33088d",
     "https://www.piaotia.com/": "e2a0a1f66eec221866f52e14af342c50",
     "https://www.piaotian.com/": "e2a0a1f66eec221866f52e14af342c50",
@@ -2020,6 +2021,26 @@
         "https://fenrirtranslations.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/f/fenrirtranslations.py"
+    },
+    "1f815b4a9e3c779e4933e1e85f3201f4": {
+      "version": 1785679571,
+      "md5": "5fa843c98756ca00c409885006113d64",
+      "file_path": "sources/tr/novelokur.py",
+      "language": "tr",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "1f815b4a9e3c779e4933e1e85f3201f4",
+      "base_urls": [
+        "https://novelokur.com.tr/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/tr/novelokur.py"
     },
     "20e282561fbaef71139321304749f9bb": {
       "version": 1781378912,
@@ -6019,6 +6040,28 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/w/wnmtl.py"
     },
+    "91342afbe191ee00acce8634c299517d": {
+      "version": 1785681356,
+      "md5": "523b8330600107a7cfbcddf2b302be13",
+      "file_path": "sources/en/f/fansmtl.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 1.4,
+      "total_commits": 5,
+      "contributors": [
+        "dipu-bd",
+        "idMysteries",
+        "zerty"
+      ],
+      "id": "91342afbe191ee00acce8634c299517d",
+      "base_urls": [
+        "https://www.fansmtl.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/f/fansmtl.py"
+    },
     "91b9ab7d819ca1471a38a6eaff38e7f5": {
       "version": 1775063705,
       "md5": "cf40241054877af1b49e09cd97a84701",
@@ -9813,26 +9856,6 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/o/oppatrans.py"
     },
-    "f5b924c12a351d1e0d992031c1d1c4e3": {
-      "version": 1775456139,
-      "md5": "ade7b2c12da86f2dd93f17af84e5d8c4",
-      "file_path": "sources/en/w/wuxiaworldsite.py",
-      "language": "en",
-      "has_manga": false,
-      "can_login": false,
-      "can_search": true,
-      "has_mtl": false,
-      "request_rate_limit": 3.0,
-      "total_commits": 11,
-      "contributors": [
-        "dipu-bd"
-      ],
-      "id": "f5b924c12a351d1e0d992031c1d1c4e3",
-      "base_urls": [
-        "https://wuxiaworld.site/"
-      ],
-      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/w/wuxiaworldsite.py"
-    },
     "f60aa7c971bb0335d2c33a1c2fdb703b": {
       "version": 1775456139,
       "md5": "7082261d3530f14932d5553f3b77a939",
@@ -9855,6 +9878,26 @@
         "https://novel27.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novel27.py"
+    },
+    "f6a2ddc4fa58c02b33fd0856a628554c": {
+      "version": 1785681356,
+      "md5": "ade7b2c12da86f2dd93f17af84e5d8c4",
+      "file_path": "sources/en/w/wuxiaworldsite.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 12,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "f6a2ddc4fa58c02b33fd0856a628554c",
+      "base_urls": [
+        "https://wuxiaworld.site/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/w/wuxiaworldsite.py"
     },
     "f6e1b35b51110846f6c081d6d26c1576": {
       "version": 1775456139,
@@ -10504,7 +10547,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4595
+      "contributions": 4598
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
