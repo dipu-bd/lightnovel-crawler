@@ -1,5 +1,5 @@
 {
-  "v": 1785671657,
+  "v": 1785674068,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -322,6 +322,7 @@
     "https://jpmtl.com/": "ce3782b8e74529d40ceac950e17fcc4d",
     "https://jrnovels.com/": "25e92f9949277e28e8845817a1160ad2",
     "https://justatranslatortranslations.com/": "f41ce64aa5b7bc4b1a1a8d7e5c97f3ae",
+    "https://kaoritranslation.blogspot.com/": "254e43a78833387c3c0f0f39c55da667",
     "https://katreadingcafe.com/": "d138992787c95ecbbcb37bf2aada1379",
     "https://kinkytranslations.com/": "79900af5de9177d2f8d951aede0507ce",
     "https://kissmanga.in/": "64612e236c9fd0c847da4eaa43f9dc4a",
@@ -345,6 +346,7 @@
     "https://lightnovelstranslations.com/": "492d028ee4507260f0ea8b1703861104",
     "https://litnet.com/": "8207d84ca15ac72c60359c08b02798d4",
     "https://ln.hako.vn/": "fbce7b836b1292fc48340c46292969f7",
+    "https://lnmakineceviri.blogspot.com/": "96e019d542649d3bdce15bb84026a44b",
     "https://lnmtl.com/": "f1d9a2824b7dba4f9206cbff82143999",
     "https://lnreader.org/": "d62869404e4b5dd6b19addc645f7fd81",
     "https://m.readlightnovel.cc/": "96b9a9c6b35c6960eb5c06ff20918555",
@@ -408,6 +410,7 @@
     "https://nyx-translation.com/": "d4dc7d0c2307a840f5092791e22069ad",
     "https://nyxtranslation.home.blog/": "d4dc7d0c2307a840f5092791e22069ad",
     "https://ontimestory.eu/": "c5dbd0d90bee5b2d6160aa2cf9c558b6",
+    "https://otakutl.blogspot.com/": "36fffc8377909bd4fd2390c7d8672894",
     "https://pandanovel.co/": "c98577fef91275679f4c42584c906d4a",
     "https://phoenixnovels.com.br/": "5179aa1214f9342752a50eb1fb9b882a",
     "https://pianmanga.com/": "f6e1b35b51110846f6c081d6d26c1576",
@@ -454,6 +457,7 @@
     "https://truyenfull.vn/": "46a23563b949f9502525b7f95383882d",
     "https://trxs.cc/": "d9638d761228f9620f622cea555a1f8b",
     "https://tsundoku.com.br/": "73c06281b1cf247bfb1c23fd539b99dd",
+    "https://turkcenoveloku.blogspot.com/": "f36bdb347d47d8be9f47b522fb3c271e",
     "https://tw.m.ixdzs.com/": "cbb7a70d622bdffa28b6c9c7fd6275f5",
     "https://vipnovel.com/": "b681bae9d672f066abdfd904b90903b8",
     "https://vistranslations.wordpress.com/": "6ff1fc8b0503c4706cf1c293f01eceb6",
@@ -2130,6 +2134,26 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/id/zhiend.py"
     },
+    "254e43a78833387c3c0f0f39c55da667": {
+      "version": 1785674036,
+      "md5": "e1a0237fe37db61dc241cb6c175cd6fc",
+      "file_path": "sources/en/k/kaoritranslation.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 1.0,
+      "total_commits": 2,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "254e43a78833387c3c0f0f39c55da667",
+      "base_urls": [
+        "https://kaoritranslation.blogspot.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/k/kaoritranslation.py"
+    },
     "258340a1925835bbd2033a38fb658d32": {
       "version": 1780428614,
       "md5": "00713657f2ab2557903f7e5b231cc0b0",
@@ -2800,6 +2824,26 @@
         "https://novelcrush.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelcrush.py"
+    },
+    "36fffc8377909bd4fd2390c7d8672894": {
+      "version": 1785674036,
+      "md5": "61d061c187d8420768f8ae8c8c30befb",
+      "file_path": "sources/en/o/otakutl.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 1.0,
+      "total_commits": 2,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "36fffc8377909bd4fd2390c7d8672894",
+      "base_urls": [
+        "https://otakutl.blogspot.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/o/otakutl.py"
     },
     "379fa903b7a8a3057cc39c221973024c": {
       "version": 1775063705,
@@ -6319,6 +6363,26 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/readlightnovelcc.py"
     },
+    "96e019d542649d3bdce15bb84026a44b": {
+      "version": 1785674036,
+      "md5": "896479690cabb63260baaf5cb507dcc8",
+      "file_path": "sources/tr/lnmakineceviri.py",
+      "language": "tr",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 1.0,
+      "total_commits": 2,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "96e019d542649d3bdce15bb84026a44b",
+      "base_urls": [
+        "https://lnmakineceviri.blogspot.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/tr/lnmakineceviri.py"
+    },
     "96f6e4c0d415af13fe37473231d90cb6": {
       "version": 1775456139,
       "md5": "cd7e8f89ec4ea2379858e12ef6e0c6d5",
@@ -9641,6 +9705,26 @@
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelv.py"
     },
+    "f36bdb347d47d8be9f47b522fb3c271e": {
+      "version": 1785674036,
+      "md5": "7d381f51a5b5e31796828e0de9227a23",
+      "file_path": "sources/tr/turkcenoveloku.py",
+      "language": "tr",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 1.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "f36bdb347d47d8be9f47b522fb3c271e",
+      "base_urls": [
+        "https://turkcenoveloku.blogspot.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/tr/turkcenoveloku.py"
+    },
     "f41ce64aa5b7bc4b1a1a8d7e5c97f3ae": {
       "version": 1775456139,
       "md5": "d4e121ffadeeddf6f55917128c995080",
@@ -10378,7 +10462,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4589
+      "contributions": 4593
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
