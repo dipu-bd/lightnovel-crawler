@@ -1,5 +1,5 @@
 {
-  "v": 1785706047,
+  "v": 1785706420,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -177,6 +177,7 @@
     "https://www.koreanmtl.online/": "Site is down",
     "https://www.lightnovelmeta.com/": "Redirects to an ad network",
     "https://www.lightnovelpub.com/": "Platform has been terminated",
+    "https://www.lightnovelworld.com/": "Platform has been shut down",
     "https://www.lreads.com/": "Site is down",
     "https://www.ltnovel.com/": "Domain is parked and for sale",
     "https://www.machine-translation.org/": "Site is down",
@@ -520,7 +521,6 @@
     "https://www.kitenovel.com/": "6329b14af68285bc3e5152a108fb9e79",
     "https://www.lightnovelpub.org/": "0aac14d9790d3133284ad47865b626b6",
     "https://www.lightnovelreader.me/": "d62869404e4b5dd6b19addc645f7fd81",
-    "https://www.lightnovelworld.com/": "1dd0b748f7d44c826b6278f90a03f89e",
     "https://www.literotica.com/": "dcec8e25f9345d9bb8468a18d22b5c92",
     "https://www.lnreader.org/": "d62869404e4b5dd6b19addc645f7fd81",
     "https://www.machineslicedbread.xyz/": "10e3cf3270c83027d4ab4c8fe21e17af",
