@@ -143,6 +143,11 @@ class WpCategoryTemplate(SoupTemplate):
         # A title often curls the quotes its category name leaves straight, so the two
         # spellings have to be flattened before they can be compared.
         flat = title.translate(_STRAIGHTEN).lower()
-        if flat.startswith(prefix.translate(_STRAIGHTEN).lower()):
-            return title[len(prefix) :].strip(" -–—:.") or title
-        return title
+        if not flat.startswith(prefix.translate(_STRAIGHTEN).lower()):
+            return title
+        rest = title[len(prefix) :].strip(" -–—:.")
+        # A title of "Off Guard 278" reduces to "278", which reads as nothing at all in a
+        # chapter list. Where the name is all that makes the number a chapter, keep it.
+        if not rest or rest.isdigit():
+            return title
+        return rest
