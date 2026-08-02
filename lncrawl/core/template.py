@@ -177,10 +177,15 @@ class SoupTemplate(CrawlerTemplate):
 
     def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel categories/genres/tags"""
-        novel.tags = [tag.text for tag in soup.select(self.novel_tags_selector)]
+        novel.tags = [
+            t for t in (tag.text.strip() for tag in soup.select(self.novel_tags_selector)) if t
+        ]
         if not novel.tags:
             meta_tag = soup.select_one(SoupTemplate.novel_tags_selector)
-            novel.tags = [t.strip() for t in meta_tag.get("content").split(",")]
+            # An empty `keywords` meta is common, and splitting it yields one blank tag —
+            # which reads as a novel that is tagged with nothing at all rather than untagged.
+            content = str(meta_tag.get("content") or "") if meta_tag else ""
+            novel.tags = [t.strip() for t in content.split(",") if t.strip()]
 
     def parse_summary(self, soup: PageSoup, novel: Novel) -> None:
         """Parse and set the novel summary or synopsis"""
