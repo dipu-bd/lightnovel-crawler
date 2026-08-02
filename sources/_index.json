@@ -1,5 +1,5 @@
 {
-  "v": 1785657946,
+  "v": 1785661168,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -424,6 +424,7 @@
     "https://rewayat.club/": "7f45ff7a6bd632aa1059e2d571994f4e",
     "https://rpgnoob.wordpress.com/": "d37ecb5158dd9515c7150ee270ae2807",
     "https://rpgnovels.com/": "d37ecb5158dd9515c7150ee270ae2807",
+    "https://rubymaybetranslations.com/": "c8a1283684bf0ab5c28179d1067ca086",
     "https://secondlifetranslations.com/": "e9b31ec6675b3c7aa40e5de602be4ccf",
     "https://shalvationtranslations.wordpress.com/": "6b98f85858ddf421d121cadf7658e89b",
     "https://shanghaifantasy.com/": "4d76ceebea4dc7c655cf625c49729f72",
@@ -7834,6 +7835,26 @@
         "https://knoxt.space/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/k/knoxt.py"
+    },
+    "c8a1283684bf0ab5c28179d1067ca086": {
+      "version": 1785659994,
+      "md5": "f7e4e5edcba40475a162c62f7e7f04a1",
+      "file_path": "sources/en/r/rubymaybetranslations.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 2,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "c8a1283684bf0ab5c28179d1067ca086",
+      "base_urls": [
+        "https://rubymaybetranslations.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/r/rubymaybetranslations.py"
     },
     "c8b7924e2e4050f50b681ba557d8e6a1": {
       "version": 1784829411,
