@@ -1,5 +1,5 @@
 {
-  "v": 1785700945,
+  "v": 1785703892,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -965,16 +965,16 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/zh/daocaorenshuwu.py"
     },
     "0aac14d9790d3133284ad47865b626b6": {
-      "version": 1781386656,
+      "version": 1785703836,
       "md5": "5d8c8f4948c51c4eb55aaf0fb9e9fd20",
       "file_path": "sources/en/l/lightnovelpuborg.py",
       "language": "en",
       "has_manga": false,
       "can_login": false,
-      "can_search": false,
+      "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 5,
+      "total_commits": 6,
       "contributors": [
         "dipu-bd",
         "dvpagawak"
@@ -2185,7 +2185,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/k/kaoritranslation.py"
     },
     "258340a1925835bbd2033a38fb658d32": {
-      "version": 1780428614,
+      "version": 1785703836,
       "md5": "00713657f2ab2557903f7e5b231cc0b0",
       "file_path": "sources/en/r/ranobes.py",
       "language": "en",
@@ -2194,7 +2194,7 @@
       "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 36,
+      "total_commits": 37,
       "contributors": [
         "dipu-bd",
         "zerty"
@@ -10694,7 +10694,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4603
+      "contributions": 4607
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
