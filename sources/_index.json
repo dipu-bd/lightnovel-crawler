@@ -1,5 +1,5 @@
 {
-  "v": 1785699099,
+  "v": 1785700945,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -331,6 +331,7 @@
     "https://knoxt.space/": "c88801bc55f58e5d2c88474fe124ce6c",
     "https://kolnovel.com/": "1281a8d5ee66428276b90a2dd26962bf",
     "https://labnovel.ru/": "4c21c9e4166df23ce152c054821564b4",
+    "https://ladasblmtl.blogspot.com/": "f2d244d167f7c62e0a889f330c84dd37",
     "https://lazybirdtranslations.wordpress.com/": "eda51d913d2c02b130b30b58d89db274",
     "https://lazygirltranslations.com/": "1f1bdc059c09aa21e88aba9aba3e8546",
     "https://leafstudio.site/": "706f9da60a1b637f51f612266c6b112b",
@@ -413,6 +414,7 @@
     "https://novlove.com/": "5d23959dc1b4b41d75e4ad11cc057341",
     "https://nyx-translation.com/": "d4dc7d0c2307a840f5092791e22069ad",
     "https://nyxtranslation.home.blog/": "d4dc7d0c2307a840f5092791e22069ad",
+    "https://oniichanyamete.moe/": "3890be59af50b4db88afdedbfa728062",
     "https://ontimestory.eu/": "c5dbd0d90bee5b2d6160aa2cf9c558b6",
     "https://otakutl.blogspot.com/": "36fffc8377909bd4fd2390c7d8672894",
     "https://pandanovel.co/": "c98577fef91275679f4c42584c906d4a",
@@ -503,7 +505,7 @@
     "https://www.f-w-o.com/": "553a1e4deba430c68189a6de0f997fa3",
     "https://www.fanfiction.net/": "14aaaf5ffaea6a3d3fb3bf29df292e6b",
     "https://www.fanmtl.com/": "ac58f2f9c01e3a844372f0ab4ff75244",
-    "https://www.fansmtl.com/": "91342afbe191ee00acce8634c299517d",
+    "https://www.fansmtl.com/": "ac58f2f9c01e3a844372f0ab4ff75244",
     "https://www.fictionpress.com/": "ed2e10ed53d06b93305e8a2425f9645d",
     "https://www.flying-lines.com/": "de68310ccc657297706130bb9b29e81f",
     "https://www.foxaholic.com/": "4a7f2dd3ebdb72eb35b9aa50cdebe390",
@@ -2958,6 +2960,26 @@
         "https://noblemtl.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/noblemtl.py"
+    },
+    "3890be59af50b4db88afdedbfa728062": {
+      "version": 1785700914,
+      "md5": "0c24a3b28b0adff5af009b8e69a54a35",
+      "file_path": "sources/en/o/oniichanyamete.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "3890be59af50b4db88afdedbfa728062",
+      "base_urls": [
+        "https://oniichanyamete.moe/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/o/oniichanyamete.py"
     },
     "38c324a6607de140243e6ed1d45b8a5b": {
       "version": 1775456139,
@@ -9829,6 +9851,26 @@
         "https://whitemoonlightnovels.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/w/whitemoonlightnovels.py"
+    },
+    "f2d244d167f7c62e0a889f330c84dd37": {
+      "version": 1785700914,
+      "md5": "3b29c1f91a79695fe3358aeaafd3fd1c",
+      "file_path": "sources/en/l/ladasblmtl.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 1.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "f2d244d167f7c62e0a889f330c84dd37",
+      "base_urls": [
+        "https://ladasblmtl.blogspot.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/l/ladasblmtl.py"
     },
     "f2ee2cffc9ccdc5ca2b830c98f3ce174": {
       "version": 1775456139,
