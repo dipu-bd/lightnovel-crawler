@@ -21,6 +21,7 @@ starting work in its area** — they hold the recipes and invariants this file o
 | Skill                    | Use when                                                                          |
 | ------------------------ | --------------------------------------------------------------------------------- |
 | `add-source`             | Creating/fixing a source crawler; anything in `sources/` or `lncrawl/templates/`  |
+| `triage-source-issues`   | Working the tracker's `source`/`source-issue` backlog; bulk host probing          |
 | `add-api-endpoint`       | Server routes, security, DTOs, pagination, errors (`server/`)                     |
 | `add-job-type`           | Job kinds, handlers, scheduler behavior (`services/scheduler/`, `services/jobs/`) |
 | `db-migration`           | DAO model changes and Alembic migrations (`dao/`, `migrations/`)                  |
@@ -37,9 +38,13 @@ make install       # setup + uv sync --all-extras --all-groups
 make start         # run the server (make dev = with auto-reload)
 make lint          # pyright lncrawl + ruff format --check + ruff check — run before finishing
 make lint-fix      # ruff check --fix + ruff format
-make index-gen     # regenerate source index + SOURCES.md tables
+make index-gen     # regenerate source index + SOURCES.md tables — CI's job, not yours
 make check-sources # HTTP reachability probe of source base URLs (NOT a code validator)
 ```
+
+**Do not run `make index-gen`.** A GitHub workflow regenerates the index and the generated
+README/SOURCES tables after a change lands; running it locally buries the actual change under
+hundreds of unrelated regenerated lines.
 
 Run without make: `uv run python -m lncrawl [args]`.
 
@@ -113,14 +118,17 @@ Full contracts and the add-a-job-type recipe: **`add-job-type` skill**.
 
 Sources live in [sources/](sources/) grouped by language; user sources load from
 `ctx.config.crawler.user_sources`. Base classes in [lncrawl/core/](lncrawl/core/):
-`Crawler` (abstract) → `CrawlerTemplate` → `SoupTemplate` (declarative selectors — preferred
-for new sources) and `LegacyCrawler` (the classic `read_novel_info`/`download_chapter_body`
-API most existing sources use). **A source never drives a browser**: the scraper escalates
-to one on its own evidence, and a page whose HTML is not its content is fetched with
-`self.scraper.render_soup(url, wait_for=…)`. Shared site-engine templates (WordPress/Madara,
-NovelFull, …) live in [lncrawl/templates/](lncrawl/templates/) — subclassing one is usually a
-~10-line source. There is no scaffold command; copy a similar source. After adding/renaming a
-source: `make index-gen`. Everything else: **`add-source` skill**.
+`Crawler` (abstract) → `CrawlerTemplate` → `SoupTemplate` (declarative selectors — **the base
+for all new sources**) and `LegacyCrawler` (the classic `read_novel_info`/`download_chapter_body`
+API most existing sources use — kept so they keep loading, never a base for new work).
+**A source never drives a browser**: the scraper escalates to one on its own evidence, and a
+page whose HTML is not its content is fetched with `self.scraper.render_soup(url, wait_for=…)`
+— preferring an API the site's own front-end calls when one exists, but rendering rather than
+giving up when one does not. Shared site-engine templates (WordPress/Madara, NovelFull, …)
+live in [lncrawl/templates/](lncrawl/templates/) — subclassing one is usually a ~10-line
+source. There is no scaffold command; copy a similar source. `sources/_rejected.json` records
+hosts that stopped serving relevant content — **a rebuilt site belongs in a parser fix, not in
+there**. Everything else: **`add-source` skill**.
 
 ### Persistence
 
@@ -161,6 +169,9 @@ and `LNCRAWL_CONFIG` override DB and config file; `.env` is auto-loaded.
 
 - **ruff** ([pyproject.toml](pyproject.toml)) + **pyright** — the pyproject is the source of
   truth for line length, quote style, target version, and excluded dirs.
+- **Support the lowest Python the package can.** Never raise `requires-python` or a CI
+  interpreter to satisfy a dependency or quiet a type-checker — mark the dependency with an
+  environment marker and ignore at the import site instead. Users run old interpreters.
 - **f-strings** for all string interpolation and **type annotations** on function signatures
   and variable declarations — house conventions (not machine-enforced; follow them anyway).
 - **SOURCES.md** source tables and the **README.md** CLI help and source-count blocks between
