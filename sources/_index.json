@@ -1,5 +1,5 @@
 {
-  "v": 1785653884,
+  "v": 1785655021,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -378,6 +378,7 @@
     "https://novelfull.com/": "0280d2ad55af148cebbcc23b01f76501",
     "https://novelfull.me/": "a21eb73f2e5922898c377acd9a8924dc",
     "https://novelfull.net/": "0280d2ad55af148cebbcc23b01f76501",
+    "https://novelfulll.com/": "fc6b874f756ae5696e493e10159e0b82",
     "https://novelgo.id/": "3b9962ae0ed494f4bac63e82b7c488ec",
     "https://novelhard.com/": "c49b0bc4dfdbc0a5ba4011796d8c6716",
     "https://novelhi.com/": "a267150da8cc9a8e2d521b8a364e9318",
@@ -497,6 +498,7 @@
     "https://www.lightnovelworld.com/": "1dd0b748f7d44c826b6278f90a03f89e",
     "https://www.literotica.com/": "dcec8e25f9345d9bb8468a18d22b5c92",
     "https://www.lnreader.org/": "d62869404e4b5dd6b19addc645f7fd81",
+    "https://www.machineslicedbread.xyz/": "10e3cf3270c83027d4ab4c8fe21e17af",
     "https://www.mangaread.org/": "08397dc360194ddba62e4be04d47de82",
     "https://www.meganovel.com/": "0fbb37ebbef1710adfd7583b599c6fb4",
     "https://www.miraslation.net/": "9fa4170570f50eaa67f3deb2f6628b48",
@@ -1281,6 +1283,26 @@
         "https://hiraethtranslation.com/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/h/hiraethtranslation.py"
+    },
+    "10e3cf3270c83027d4ab4c8fe21e17af": {
+      "version": 1785654988,
+      "md5": "ccba86d030dfcc5b31b5bd8b592f0753",
+      "file_path": "sources/en/m/machineslicedbread.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "10e3cf3270c83027d4ab4c8fe21e17af",
+      "base_urls": [
+        "https://www.machineslicedbread.xyz/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/machineslicedbread.py"
     },
     "10fcb6cda7d6ad8908224f58984f9398": {
       "version": 1784829411,
@@ -9792,6 +9814,26 @@
         "https://docln.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/vi/lnhakone.py"
+    },
+    "fc6b874f756ae5696e493e10159e0b82": {
+      "version": 1785654988,
+      "md5": "41604ce00eff9dc9c9fb1bb00b22ce30",
+      "file_path": "sources/en/n/novelfulll.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": false,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "fc6b874f756ae5696e493e10159e0b82",
+      "base_urls": [
+        "https://novelfulll.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novelfulll.py"
     },
     "ff233d08aaced7d1370805374974d19e": {
       "version": 1666211548,
