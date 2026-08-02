@@ -1,6 +1,58 @@
 {
   "_note": "A confirmed novel page URL per host, found by repeating-path-shape analysis rather than by an English path regex. Use these to test a template against a host without re-deriving where its novels live.",
   "hosts": {
+    "69shuba.com": {
+      "novel_url": "https://69shuba.com/book/24430.htm",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://www.69shuba.com/book/24430.htm",
+        "https://www.69shuba.com/book/24430/"
+      ],
+      "shapes": [
+        [
+          "book/*",
+          45
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "novels/*",
+          9
+        ],
+        [
+          "",
+          5
+        ]
+      ]
+    },
+    "69shuba.cx": {
+      "novel_url": "https://69shuba.cx/book/24430.htm",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://www.69shuba.com/book/24430.htm",
+        "https://www.69shuba.com/book/24430/"
+      ],
+      "shapes": [
+        [
+          "book/*",
+          45
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "novels/*",
+          9
+        ],
+        [
+          "modules/article/*",
+          3
+        ]
+      ]
+    },
     "69shux.com": {
       "novel_url": "https://69shux.com/reviews/show/24303.html",
       "chapter_links": 1,
@@ -44,6 +96,90 @@
         "https://api.w.org"
       ]
     },
+    "allnovel.org": {
+      "novel_url": "https://allnovel.org/affinity-chaos.html",
+      "chapter_links": 62,
+      "chapter_sample": [
+        "/affinity-chaos.html?page=2",
+        "/affinity-chaos.html?page=3"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          140
+        ],
+        [
+          "*",
+          58
+        ],
+        [
+          "",
+          5
+        ],
+        [
+          "hero-of-darkness/*",
+          1
+        ]
+      ]
+    },
+    "allnovelfull.com": {
+      "novel_url": "https://allnovelfull.com/absolute-beast-dominion.html",
+      "chapter_links": 63,
+      "chapter_sample": [
+        "/absolute-beast-dominion.html?page=12&per-page=50",
+        "/absolute-beast-dominion.html?page=2&per-page=50"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          141
+        ],
+        [
+          "*",
+          64
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "absolute-beast-dominion/*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "allnovelfull.net": {
+      "novel_url": "https://allnovelfull.net/absolute-beast-dominion.html",
+      "chapter_links": 63,
+      "chapter_sample": [
+        "/absolute-beast-dominion.html?page=12&per-page=50",
+        "/absolute-beast-dominion.html?page=2&per-page=50"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          141
+        ],
+        [
+          "*",
+          64
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "absolute-beast-dominion/*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
     "alvilda-tl.com": {
       "novel_url": "https://alvilda-tl.com/bastard_of_the_roman_tycoon.php",
       "chapter_links": 0,
@@ -56,6 +192,35 @@
       ],
       "api_hints": [
         "https://ajax.googleapis.com"
+      ]
+    },
+    "americanfaux.com": {
+      "novel_url": "https://americanfaux.com/main-translations/a-thousand-years-of-separationtoday-i-shall-be-the-villainesswn/",
+      "chapter_links": 14,
+      "chapter_sample": [
+        "/main-translations/a-thousand-years-of-separationtoday-i-shall-be-the-villainesswn/#respond",
+        "https://americanfaux.com/main-translations/a-thousand-years-of-separationtoday-i-shall-be-the-villainesswn/"
+      ],
+      "shapes": [
+        [
+          "",
+          92
+        ],
+        [
+          "*",
+          38
+        ],
+        [
+          "main-translations/*",
+          34
+        ],
+        [
+          "completed-translations/*",
+          29
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
       ]
     },
     "app.yoru.world": {
@@ -82,6 +247,108 @@
       "api_hints": [
         "https://api.lumostories.com",
         "https://firestore.googleapis.com"
+      ]
+    },
+    "aquareader.net": {
+      "novel_url": "https://aquareader.net/anime-chat-rooms",
+      "shapes": [
+        [
+          "*",
+          40
+        ],
+        [
+          "",
+          5
+        ],
+        [
+          "communities/*",
+          3
+        ]
+      ]
+    },
+    "arcanetranslations.com": {
+      "novel_url": "https://arcanetranslations.com/series/novel/a-middle-aged-mans-apocalypse-survival-diary",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "/series/novel/a-middle-aged-mans-apocalypse-survival-diary?ref=homepage_new"
+      ],
+      "shapes": [
+        [
+          "series/novel/*",
+          180
+        ],
+        [
+          "*",
+          20
+        ],
+        [
+          "collections/*",
+          8
+        ],
+        [
+          "series/comic/*",
+          8
+        ]
+      ]
+    },
+    "asianhobbyist.com": {
+      "novel_url": "https://asianhobbyist.com/series/after-being-abandoned-i-realized-that-i-had-reincarnated/",
+      "chapter_links": 11,
+      "chapter_sample": [
+        "/series/after-being-abandoned-i-realized-that-i-had-reincarnated/#respond",
+        "https://www.asianhobbyist.com/series/after-being-abandoned-i-realized-that-i-had-reincarnated/#comment-4520"
+      ],
+      "shapes": [
+        [
+          "series/*",
+          28
+        ],
+        [
+          "*",
+          15
+        ],
+        [
+          "announcement/*",
+          4
+        ],
+        [
+          "kuro-no-maou/*",
+          3
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com",
+        "https://storage.googleapis.com"
+      ]
+    },
+    "asianovel.net": {
+      "novel_url": "https://asianovel.net/story/2905/",
+      "chapter_links": 9,
+      "chapter_sample": [
+        "http://www.reddit.com/submit?url=https://www.asianovel.net/story/2905/&title=100+Techniques+to+Conquer+the+Emperor+in+the+Harem",
+        "https://bsky.app/intent/compose?text=https://www.asianovel.net/story/2905/"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          68
+        ],
+        [
+          "story/N",
+          49
+        ],
+        [
+          "*",
+          34
+        ],
+        [
+          "chapter/*",
+          20
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
       ]
     },
     "asuracomic.net": {
@@ -132,6 +399,192 @@
         "https://fonts.googleapis.com"
       ]
     },
+    "asurascans.com": {
+      "novel_url": "https://asurascans.com/comics/30-years-since-the-prologue-059befe1",
+      "chapter_links": 9,
+      "chapter_sample": [
+        "/comics/30-years-since-the-prologue-059befe1/chapter/1",
+        "/comics/30-years-since-the-prologue-059befe1/chapter/2"
+      ],
+      "shapes": [
+        [
+          "comics/*",
+          81
+        ],
+        [
+          "*",
+          42
+        ],
+        [
+          "announcement/*",
+          5
+        ],
+        [
+          "",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api.asurascans.com"
+      ]
+    },
+    "author.today": {
+      "novel_url": "https://author.today/work/178571",
+      "chapter_links": 6,
+      "chapter_sample": [
+        "/work/178571#comments",
+        "/work/178571/collections"
+      ],
+      "shapes": [
+        [
+          "work/N",
+          265
+        ],
+        [
+          "work/genre/*",
+          25
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "pages/*",
+          11
+        ]
+      ]
+    },
+    "automtl.wordpress.com": {
+      "novel_url": "https://automtl.wordpress.com/a-girl-raised-by-shinigami-while-holding-a-jet-black-sword-in-her-chest/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://automtl.wordpress.com/a-girl-raised-by-shinigami-while-holding-a-jet-black-sword-in-her-chest/",
+        "https://wordpress.com/abuse/?report_url=https://automtl.wordpress.com/a-girl-raised-by-shinigami-while-holding-a-jet-black-sword-in-her-chest/"
+      ],
+      "shapes": [
+        [
+          "",
+          15
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "a-girl-raised-by-shinigami-while-holding-a-jet-black-sword-in-her-chest/*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://fonts-api.wp.com",
+        "https://public-api.wordpress.com"
+      ]
+    },
+    "babelnovel.com": {
+      "novel_url": "https://babelnovel.com/books/20230518-test-book-33",
+      "chapter_links": 43,
+      "chapter_sample": [
+        "/books/20230518-test-book-33/chapters",
+        "/books/20230518-test-book-33/chapters/c1"
+      ],
+      "shapes": [
+        [
+          "books/*",
+          78
+        ],
+        [
+          "browse/*",
+          19
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "book-list/*",
+          9
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "bakapervert.wordpress.com": {
+      "novel_url": "https://bakapervert.wordpress.com/arifureta-chapter-564/",
+      "chapter_links": 4,
+      "chapter_sample": [
+        "/arifureta-chapter-564/#respond",
+        "https://bakapervert.wordpress.com/arifureta-chapter-564/?share=facebook"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          35
+        ],
+        [
+          "*",
+          28
+        ],
+        [
+          "",
+          16
+        ],
+        [
+          "author/*",
+          10
+        ]
+      ]
+    },
+    "bednovel.com": {
+      "novel_url": "https://bednovel.com/bednovel/claimed-by-the-mad-lycan-king-23328",
+      "chapter_links": 41,
+      "chapter_sample": [
+        "/bednovel/claimed-by-the-mad-lycan-king-23328/ch1",
+        "/bednovel/claimed-by-the-mad-lycan-king-23328/ch10"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          214
+        ],
+        [
+          "bednovel/*",
+          74
+        ],
+        [
+          "sort/latest-release-novel/*",
+          18
+        ],
+        [
+          "*",
+          12
+        ]
+      ]
+    },
+    "blnovels.net": {
+      "novel_url": "https://blnovels.net/novel-genre/acao/",
+      "shapes": [
+        [
+          "novel/*",
+          74
+        ],
+        [
+          "novel-genre/*",
+          51
+        ],
+        [
+          "",
+          20
+        ],
+        [
+          "*",
+          15
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
     "bloodcoretl.com": {
       "novel_url": "https://bloodcoretl.com/chapter/chapter-1-the-young-captain",
       "chapter_links": 0,
@@ -168,6 +621,90 @@
       ],
       "api_hints": []
     },
+    "bookhamster.ru": {
+      "novel_url": "https://bookhamster.ru/ranobe/boevoe-edinstvo/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://connect.ok.ru/offer?url=https://bookhamster.ru/ranobe/boevoe-edinstvo/",
+        "https://vk.com/share.php?url=https://bookhamster.ru/ranobe/boevoe-edinstvo/"
+      ],
+      "shapes": [
+        [
+          "ranobe/*",
+          40
+        ],
+        [
+          "*",
+          15
+        ],
+        [
+          "",
+          2
+        ],
+        [
+          "universalnaya-superzvezda-voshozhdenie-v-gollivude/*",
+          2
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "booknet.com": {
+      "novel_url": "https://booknet.com/es/tag/accion-t679678",
+      "chapter_links": 7,
+      "chapter_sample": [
+        "/es/tag/accion-t679678?page=1",
+        "/es/tag/accion-t679678?page=11"
+      ],
+      "shapes": [
+        [
+          "es/tag/*",
+          137
+        ],
+        [
+          "es/book/*",
+          84
+        ],
+        [
+          "es/*",
+          51
+        ],
+        [
+          "es/genre/*",
+          25
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "bq99.cc": {
+      "novel_url": "https://bq99.cc/book/10049/",
+      "chapter_links": 6853,
+      "chapter_sample": [
+        "/book/10049/1.html",
+        "/book/10049/10.html"
+      ],
+      "shapes": [
+        [
+          "book/N",
+          137
+        ],
+        [
+          "book/N/*",
+          30
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "",
+          4
+        ]
+      ]
+    },
     "cangji.net": {
       "novel_url": "https://cangji.net/access",
       "chapter_links": 1,
@@ -196,6 +733,188 @@
         "https://api.w.org"
       ]
     },
+    "cclawtranslations.home.blog": {
+      "novel_url": "https://cclawtranslations.home.blog/butsuriteki-ni-koritsu-shiteiru-ore-no-koukou-seikatsu-toc/",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "https://cclawtranslations.home.blog/butsuriteki-ni-koritsu-shiteiru-ore-no-koukou-seikatsu-toc/?share=facebook",
+        "https://cclawtranslations.home.blog/butsuriteki-ni-koritsu-shiteiru-ore-no-koukou-seikatsu-toc/?share=twitter"
+      ],
+      "shapes": [
+        [
+          "*",
+          13
+        ],
+        [
+          "",
+          11
+        ]
+      ],
+      "api_hints": [
+        "https://public-api.wordpress.com"
+      ]
+    },
+    "chereads.com": {
+      "novel_url": "https://chereads.com/novel/11806267105539605",
+      "chapter_links": 11,
+      "chapter_sample": [
+        "/novel/11806267105539605/33158719298660609",
+        "/novel/11806267105539605/33158719835531522"
+      ],
+      "shapes": [
+        [
+          "novel/N",
+          56
+        ],
+        [
+          "*",
+          4
+        ],
+        [
+          "",
+          2
+        ],
+        [
+          "cdn-cgi/l/*",
+          1
+        ]
+      ]
+    },
+    "chickengege.org": {
+      "novel_url": "https://chickengege.org/novels/aria/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://www.chickengege.org/novels/aria/"
+      ],
+      "shapes": [
+        [
+          "novels/*",
+          46
+        ],
+        [
+          "event/*",
+          12
+        ],
+        [
+          "*",
+          11
+        ],
+        [
+          "series/*",
+          9
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "chireads.com": {
+      "novel_url": "https://chireads.com/conference-hangzhou-paris-ville-chinoise-ou-tout-a-commence/",
+      "shapes": [
+        [
+          "category/translatedtales/*",
+          145
+        ],
+        [
+          "category/original/*",
+          17
+        ],
+        [
+          "tag/*",
+          12
+        ],
+        [
+          "*",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "chrysanthemumgarden.com": {
+      "novel_url": "https://chrysanthemumgarden.com/novel-tl/advisor/",
+      "chapter_links": 383,
+      "chapter_sample": [
+        "/novel-tl/advisor/#respond",
+        "https://chrysanthemumgarden.com/novel-tl/advisor/"
+      ],
+      "shapes": [
+        [
+          "novel-tl/*",
+          44
+        ],
+        [
+          "genre/*",
+          39
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "",
+          7
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "ckandawrites.online": {
+      "novel_url": "https://ckandawrites.online/after-marrying-the-wrong-person-i-cant-leave/",
+      "chapter_links": 10,
+      "chapter_sample": [
+        "/after-marrying-the-wrong-person-i-cant-leave/#respond",
+        "https://ckandawrites.online/after-marrying-the-wrong-person-i-cant-leave/"
+      ],
+      "shapes": [
+        [
+          "*",
+          213
+        ],
+        [
+          "genre/*",
+          120
+        ],
+        [
+          "tag/*",
+          45
+        ],
+        [
+          "type/*",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "creativenovels.com": {
+      "novel_url": "https://creativenovels.com/novel/a-story-of-legacy-shattered-oaths/",
+      "shapes": [
+        [
+          "novel/*",
+          60
+        ],
+        [
+          "*",
+          36
+        ],
+        [
+          "main_genre/*",
+          14
+        ],
+        [
+          "N/*",
+          14
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
     "csnovels.com": {
       "novel_url": "https://csnovels.com/book-search/type/action",
       "chapter_links": 0,
@@ -214,6 +933,254 @@
         "https://ajax.googleapis.com",
         "https://firebasestorage.googleapis.com",
         "https://fonts.googleapis.com"
+      ]
+    },
+    "daotranslate.us": {
+      "novel_url": "https://daotranslate.us/domain/daegurace.com",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "/domain/daegurace.com/backlink?hash=37d906"
+      ],
+      "shapes": [
+        [
+          "",
+          21
+        ],
+        [
+          "*",
+          18
+        ],
+        [
+          "domain/*",
+          10
+        ],
+        [
+          "domain/daotranslate.us/*",
+          5
+        ]
+      ]
+    },
+    "darktranslation.com": {
+      "novel_url": "https://darktranslation.com/boku-to-kimi-dake-ni-seiya-wa-konai-bab-1/",
+      "chapter_links": 7,
+      "chapter_sample": [
+        "\n\t\t\t\thttp://twitter.com/intent/tweet?text=Currently%20reading%20Boku%20to%20Kimi%20Dake%20ni%20Seiya%20wa%20Konai%20Bab%201&url=https://darktranslation.com/boku-to-kimi-dake-ni-seiya-wa-konai-bab-1/\t\t",
+        "\n\t\t\t\thttp://www.linkedin.com/shareArticle?mini=true&url=https://darktranslation.com/boku-to-kimi-dake-ni-seiya-wa-konai-bab-1/&title=Boku%20to%20Kimi%20Dake%20ni%20Seiya%20wa%20Konai%20Bab%201&source=Dark%20L%5BE%5Dgiun\t\t"
+      ],
+      "shapes": [
+        [
+          "*",
+          33
+        ],
+        [
+          "author/*",
+          10
+        ],
+        [
+          "",
+          7
+        ],
+        [
+          "page/N",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "ddtxt8.cc": {
+      "novel_url": "https://ddtxt8.cc/book/103335/",
+      "shapes": [
+        [
+          "book/N",
+          137
+        ],
+        [
+          "book/N/*",
+          30
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "",
+          6
+        ]
+      ]
+    },
+    "demontranslations.com": {
+      "novel_url": "https://demontranslations.com/the-gate-of-good-fortune/chapter-1045/",
+      "chapter_links": 5,
+      "chapter_sample": [
+        "/the-gate-of-good-fortune/chapter-1045/#respond",
+        "https://demontranslations.com/the-gate-of-good-fortune/chapter-1045/"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          126
+        ],
+        [
+          "the-gate-of-good-fortune/*",
+          26
+        ],
+        [
+          "author/*",
+          25
+        ],
+        [
+          "category/*",
+          25
+        ]
+      ],
+      "api_hints": [
+        "https://public-api.wordpress.com"
+      ]
+    },
+    "divinedaolibrary.com": {
+      "novel_url": "https://divinedaolibrary.com/story/alchemy-master/",
+      "chapter_links": 1083,
+      "chapter_sample": [
+        "http://www.reddit.com/submit?url=https://www.divinedaolibrary.com/story/alchemy-master/&title=Alchemy+Master",
+        "https://twitter.com/intent/tweet/?text=Alchemy+Master&url=https://www.divinedaolibrary.com/story/alchemy-master/"
+      ],
+      "shapes": [
+        [
+          "story/*",
+          40
+        ],
+        [
+          "*",
+          30
+        ],
+        [
+          "author/*",
+          20
+        ],
+        [
+          "",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "dmtranslationscn.com": {
+      "novel_url": "https://dmtranslationscn.com/apj-chapter-1306-adding-fuel-to-the-turbulent-sea-2x/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "/apj-chapter-1306-adding-fuel-to-the-turbulent-sea-2x/#respond"
+      ],
+      "shapes": [
+        [
+          "*",
+          26
+        ],
+        [
+          "N/N/N/*",
+          25
+        ],
+        [
+          "author/*",
+          10
+        ],
+        [
+          "category/*",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "dobelyuwai.wordpress.com": {
+      "novel_url": "https://dobelyuwai.wordpress.com/2020/12/",
+      "chapter_links": 4,
+      "chapter_sample": [
+        "https://dobelyuwai.wordpress.com/2020/12/",
+        "https://dobelyuwai.wordpress.com/2020/12/28/shikkaku-kara-hajimeru-nariagari-mado-shido-chapter-1/"
+      ],
+      "shapes": [
+        [
+          "N/N",
+          68
+        ],
+        [
+          "*",
+          48
+        ],
+        [
+          "N/N/N/*",
+          44
+        ],
+        [
+          "",
+          18
+        ]
+      ],
+      "api_hints": [
+        "https://fonts-api.wp.com"
+      ]
+    },
+    "dobytranslations.com": {
+      "novel_url": "https://dobytranslations.com/az-lists/",
+      "chapter_links": 31,
+      "chapter_sample": [
+        "https://dobytranslations.com/az-lists/?show=.",
+        "https://dobytranslations.com/az-lists/?show=0-9"
+      ],
+      "shapes": [
+        [
+          "*",
+          119
+        ],
+        [
+          "series/*",
+          100
+        ],
+        [
+          "genre/*",
+          95
+        ],
+        [
+          "",
+          2
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "domentranslations.wordpress.com": {
+      "novel_url": "https://domentranslations.wordpress.com/activas/",
+      "chapter_links": 6,
+      "chapter_sample": [
+        "https://domentranslations.wordpress.com/activas/",
+        "https://domentranslations.wordpress.com/activas/?share=facebook"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          59
+        ],
+        [
+          "category/*",
+          38
+        ],
+        [
+          "tag/*",
+          23
+        ],
+        [
+          "",
+          16
+        ]
+      ],
+      "api_hints": [
+        "https://public-api.wordpress.com"
       ]
     },
     "dragonholictranslations.com": {
@@ -313,6 +1280,36 @@
         "https://fonts.googleapis.com"
       ]
     },
+    "duskblossoms.com": {
+      "novel_url": "https://duskblossoms.com/novel/a-flower-blooming-in-the-tyrants-grasp/",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "/novel/a-flower-blooming-in-the-tyrants-grasp/#respond",
+        "https://duskblossoms.com/novel/a-flower-blooming-in-the-tyrants-grasp/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          139
+        ],
+        [
+          "*",
+          45
+        ],
+        [
+          "",
+          21
+        ],
+        [
+          "novel/my-husband-never-wanted-a-child/*",
+          2
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
     "eatapplepies.com": {
       "novel_url": "https://eatapplepies.com/eap-merchandise-store/",
       "chapter_links": 1,
@@ -380,6 +1377,166 @@
         "https://fonts.googleapis.com"
       ]
     },
+    "exiledrebelsscanlations.com": {
+      "novel_url": "https://exiledrebelsscanlations.com/novels/a-day-in-the-life-of-the-former-prisoner-of-war-and-his-interrogator/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://exiledrebelsscanlations.com/novels/a-day-in-the-life-of-the-former-prisoner-of-war-and-his-interrogator/"
+      ],
+      "shapes": [
+        [
+          "novels/*",
+          152
+        ],
+        [
+          "*",
+          89
+        ],
+        [
+          "category/*",
+          20
+        ],
+        [
+          "",
+          11
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts-api.wp.com"
+      ]
+    },
+    "fanmtl.com": {
+      "novel_url": "https://fanmtl.com/novel/6946332.html",
+      "chapter_links": 106,
+      "chapter_sample": [
+        "/novel/6946332.html?tab=chapters",
+        "/novel/6946332_1.html"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          86
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "list/all/*",
+          5
+        ],
+        [
+          "",
+          1
+        ]
+      ]
+    },
+    "fansmtl.com": {
+      "novel_url": "https://fansmtl.com/novel/6946332.html",
+      "chapter_links": 106,
+      "chapter_sample": [
+        "/novel/6946332.html?tab=chapters",
+        "/novel/6946332_1.html"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          86
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "list/all/*",
+          5
+        ],
+        [
+          "",
+          1
+        ]
+      ]
+    },
+    "faqwiki.xyz": {
+      "novel_url": "https://faqwiki.xyz/a-regressors-tale-of-cultivation/",
+      "chapter_links": 501,
+      "chapter_sample": [
+        "https://faqwiki.xyz/a-regressors-tale-of-cultivation-chapter-0/",
+        "https://faqwiki.xyz/a-regressors-tale-of-cultivation-chapter-1/"
+      ],
+      "shapes": [
+        [
+          "*",
+          92
+        ],
+        [
+          "",
+          45
+        ],
+        [
+          "author/*",
+          3
+        ],
+        [
+          "wp-content/uploads/N/N/*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "fenrirealm.com": {
+      "novel_url": "https://fenrirealm.com/series/absolute-regression",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://www.novelupdates.com/series/absolute-regression/"
+      ],
+      "shapes": [
+        [
+          "series/*",
+          49
+        ],
+        [
+          "*",
+          15
+        ],
+        [
+          "library/*",
+          2
+        ],
+        [
+          "auth/*",
+          2
+        ]
+      ]
+    },
+    "fenrirscans.com": {
+      "novel_url": "https://fenrirscans.com/chapter/3135-bolum-bardagi-tasiran-damla/",
+      "shapes": [
+        [
+          "series/*",
+          204
+        ],
+        [
+          "chapter/*",
+          131
+        ],
+        [
+          "*",
+          29
+        ],
+        [
+          "user/*",
+          25
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://imasdk.googleapis.com"
+      ]
+    },
     "fiction.live": {
       "novel_url": "https://fiction.live/explore",
       "chapter_links": 0,
@@ -406,6 +1563,27 @@
         "https://api2.fictionzone.net"
       ]
     },
+    "flying-lines.com": {
+      "novel_url": "https://flying-lines.com/download",
+      "shapes": [
+        [
+          "*",
+          13
+        ],
+        [
+          "ranking/*",
+          3
+        ],
+        [
+          "article/*",
+          3
+        ],
+        [
+          "",
+          2
+        ]
+      ]
+    },
     "forums.spacebattles.com": {
       "novel_url": "https://forums.spacebattles.com/members/briar-rose.639527/",
       "chapter_links": 0,
@@ -430,6 +1608,63 @@
       ],
       "api_hints": []
     },
+    "freemanga.me": {
+      "novel_url": "https://freemanga.me/girls/blondes",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "/girls/blondes-blowjob",
+        "/girls/blondes-doggy-style"
+      ],
+      "shapes": [
+        [
+          "girls/*",
+          35
+        ],
+        [
+          "*",
+          27
+        ],
+        [
+          "kittyazora/*",
+          10
+        ],
+        [
+          "",
+          3
+        ]
+      ],
+      "api_hints": [
+        "/api/front",
+        "/api/front/support/login",
+        "https://api-sr.amplitude.com"
+      ]
+    },
+    "freewebnovel.com": {
+      "novel_url": "https://freewebnovel.com/novel/a-bug-in-fate",
+      "chapter_links": 46,
+      "chapter_sample": [
+        "/novel/a-bug-in-fate/chapter-1",
+        "/novel/a-bug-in-fate/chapter-10"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          142
+        ],
+        [
+          "novel/*",
+          54
+        ],
+        [
+          "sort/latest-release/*",
+          19
+        ],
+        [
+          "*",
+          17
+        ]
+      ]
+    },
     "freewebnovel.io": {
       "novel_url": "https://freewebnovel.io/browse",
       "chapter_links": 0,
@@ -445,6 +1680,111 @@
         ]
       ],
       "api_hints": []
+    },
+    "fringecapybara.com": {
+      "novel_url": "https://fringecapybara.com/ast",
+      "chapter_links": 22,
+      "chapter_sample": [
+        "/ast-toc",
+        "/ast/ast-065"
+      ],
+      "shapes": [
+        [
+          "*",
+          78
+        ],
+        [
+          "",
+          10
+        ],
+        [
+          "my-blog/*",
+          7
+        ],
+        [
+          "blog/*",
+          2
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com"
+      ]
+    },
+    "funbook.su": {
+      "novel_url": "https://funbook.su/fanfik/aleksandr-krid-magnat-industrii-razvlechenij/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://funbook.su/fanfik/aleksandr-krid-magnat-industrii-razvlechenij/"
+      ],
+      "shapes": [
+        [
+          "fanfik/*",
+          60
+        ],
+        [
+          "*",
+          14
+        ],
+        [
+          "",
+          3
+        ],
+        [
+          "detjonysh-drakona/*",
+          3
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "fuyu-novel.my.id": {
+      "novel_url": "https://fuyu-novel.my.id/az-lists/",
+      "chapter_links": 30,
+      "chapter_sample": [
+        "https://fuyu-novel.my.id/az-lists/",
+        "https://fuyu-novel.my.id/az-lists/?amp=1"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          108
+        ],
+        [
+          "series/*",
+          99
+        ],
+        [
+          "*",
+          83
+        ],
+        [
+          "",
+          7
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "fuyuneko.org": {
+      "novel_url": "https://fuyuneko.org/aacw",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "https://www.fuyuneko.org/blog-1/aacw/ch-001",
+        "https://www.fuyuneko.org/blog-1/aacw/ch-002"
+      ],
+      "shapes": [
+        [
+          "*",
+          24
+        ],
+        [
+          "",
+          3
+        ]
+      ]
     },
     "global.novelpia.com": {
       "novel_url": "https://global.novelpia.com/novel/1209",
@@ -508,6 +1848,123 @@
         "https://public-api.wordpress.com"
       ]
     },
+    "gravitytales.com": {
+      "novel_url": "https://gravitytales.com/story/bus-survival-everyone-is-s-rank-and-still-have-many-children-many-blessings/",
+      "chapter_links": 45,
+      "chapter_sample": [
+        "http://www.reddit.com/submit?url=https://gravitytales.com/story/bus-survival-everyone-is-s-rank-and-still-have-many-children-many-blessings/&title=Bus+Survival%3A+Everyone+is+S-Rank+and+Still+Have+Many+Children%2C+Many+Blessings",
+        "https://bsky.app/intent/compose?text=https://gravitytales.com/story/bus-survival-everyone-is-s-rank-and-still-have-many-children-many-blessings/"
+      ],
+      "shapes": [
+        [
+          "story/*",
+          38
+        ],
+        [
+          "story/mygo-i-really-didnt-want-to-be-a-chaebols-wife/*",
+          10
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "grensia.blogspot.com": {
+      "novel_url": "https://grensia.blogspot.com/2019/10/novel-translate-indonesia.html",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://grensia.blogspot.com/2019/10/novel-translate-indonesia.html"
+      ],
+      "shapes": [
+        [
+          "N/N/*",
+          36
+        ],
+        [
+          "p/*",
+          3
+        ],
+        [
+          "",
+          2
+        ],
+        [
+          "*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com",
+        "https://apis.google.com"
+      ]
+    },
+    "hiraethtranslation.com": {
+      "novel_url": "https://hiraethtranslation.com/novel/absolute-regression/",
+      "chapter_links": 14,
+      "chapter_sample": [
+        "https://hiraethtranslation.com/novel/absolute-regression/",
+        "https://hiraethtranslation.com/novel/absolute-regression/chapter-1/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          116
+        ],
+        [
+          "",
+          27
+        ],
+        [
+          "*",
+          17
+        ],
+        [
+          "novel-genre/*",
+          15
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "hostednovel.com": {
+      "novel_url": "https://hostednovel.com/novel/100000-per-hour-professional-stand-in",
+      "chapter_links": 104,
+      "chapter_sample": [
+        "https://hostednovel.com/novel/100000-per-hour-professional-stand-in/chapter-1.1",
+        "https://hostednovel.com/novel/100000-per-hour-professional-stand-in/chapter-1.2"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          113
+        ],
+        [
+          "novel/apocalypse-gacha/*",
+          13
+        ],
+        [
+          "*",
+          10
+        ],
+        [
+          "novel/the-defeated-saintess-is-on-a-journey-to-tame-the-evil-god/*",
+          7
+        ]
+      ],
+      "api_hints": [
+        "https://api.btloader.com",
+        "https://fonts.googleapis.com"
+      ]
+    },
     "houseofhoeni.com": {
       "novel_url": "https://houseofhoeni.com/novel/cherish/",
       "chapter_links": 0,
@@ -527,6 +1984,66 @@
         ],
         [
           "laca/N",
+          3
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "hui3r.wordpress.com": {
+      "novel_url": "https://hui3r.wordpress.com/gu-man/blazing-sunlight-i-completed/",
+      "chapter_links": 4,
+      "chapter_sample": [
+        "https://hui3r.wordpress.com/gu-man/blazing-sunlight-i-completed/",
+        "https://hui3r.wordpress.com/gu-man/blazing-sunlight-i-completed/?share=facebook"
+      ],
+      "shapes": [
+        [
+          "tag/*",
+          110
+        ],
+        [
+          "N/N/N/*",
+          54
+        ],
+        [
+          "category/books/*",
+          40
+        ],
+        [
+          "",
+          16
+        ]
+      ],
+      "api_hints": [
+        "https://fonts-api.wp.com",
+        "https://public-api.wordpress.com"
+      ]
+    },
+    "hyacinthbloom.com": {
+      "novel_url": "https://hyacinthbloom.com/series/99-percent-love/",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "/series/99-percent-love/#respond",
+        "https://hyacinthbloom.com/series/99-percent-love/"
+      ],
+      "shapes": [
+        [
+          "series/*",
+          103
+        ],
+        [
+          "genre/*",
+          61
+        ],
+        [
+          "*",
+          36
+        ],
+        [
+          "poisonous-peasant-concubine/*",
           3
         ]
       ],
@@ -564,6 +2081,145 @@
         "https://api.w.org"
       ]
     },
+    "ifreedom.su": {
+      "novel_url": "https://ifreedom.su/ranobe/avatar-korolya/",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "https://connect.ok.ru/offer?url=https://ifreedom.su/ranobe/avatar-korolya/",
+        "https://ifreedom.su/ranobe/avatar-korolya/"
+      ],
+      "shapes": [
+        [
+          "ranobe/*",
+          164
+        ],
+        [
+          "*",
+          52
+        ],
+        [
+          "hyuga-kvinsi-zapredelnyj-vystrel/*",
+          4
+        ],
+        [
+          "",
+          3
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "illusia.com.br": {
+      "novel_url": "https://illusia.com.br/story/a-corrupcao-de-um-deus/",
+      "chapter_links": 231,
+      "chapter_sample": [
+        "http://www.reddit.com/submit?url=https://illusia.com.br/story/a-corrupcao-de-um-deus/&title=A+Corrup%C3%A7%C3%A3o+de+Um+Deus",
+        "https://bsky.app/intent/compose?text=https://illusia.com.br/story/a-corrupcao-de-um-deus/"
+      ],
+      "shapes": [
+        [
+          "story/*",
+          121
+        ],
+        [
+          "*",
+          43
+        ],
+        [
+          "author/*",
+          12
+        ],
+        [
+          "genero/*",
+          12
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "indowebnovel.id": {
+      "novel_url": "https://indowebnovel.id/series/a-regressors-tale-of-cultivation/",
+      "shapes": [
+        [
+          "series/*",
+          66
+        ],
+        [
+          "*",
+          36
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "page/N",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "infinitenoveltranslations.net": {
+      "novel_url": "https://infinitenoveltranslations.net/adventures-of-a-runemaster/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://infinitenoveltranslations.net/adventures-of-a-runemaster/",
+        "https://infinitenoveltranslations.net/adventures-of-a-runemaster/volume-1/chapter-1-arachnid-dungeon/"
+      ],
+      "shapes": [
+        [
+          "*",
+          71
+        ],
+        [
+          "",
+          15
+        ],
+        [
+          "category/*",
+          14
+        ],
+        [
+          "N/N",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "inkitt.com": {
+      "novel_url": "https://inkitt.com/AvaReed",
+      "shapes": [
+        [
+          "stories/N",
+          40
+        ],
+        [
+          "*",
+          35
+        ],
+        [
+          "genres/*",
+          34
+        ],
+        [
+          "",
+          13
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com",
+        "https://storage.googleapis.com"
+      ]
+    },
     "inoveltranslation.com": {
       "novel_url": "https://inoveltranslation.com/chapters/08dc4bfb-359b-4210-b77d-0e83a641868a",
       "chapter_links": 0,
@@ -588,6 +2244,71 @@
       ],
       "api_hints": []
     },
+    "isotls.com": {
+      "novel_url": "https://isotls.com/novel-wars/645f870d78750f5b719ba3d9",
+      "shapes": [
+        [
+          "novel/62cb747de619ae0a7ab21755/chapter/N/*",
+          25
+        ],
+        [
+          "novel-wars/*",
+          25
+        ],
+        [
+          "*",
+          8
+        ],
+        [
+          "",
+          5
+        ]
+      ]
+    },
+    "ixdzs8.com": {
+      "novel_url": "https://ixdzs8.com/read/155838/",
+      "chapter_links": 9,
+      "chapter_sample": [
+        "/read/155838/p1.html",
+        "/read/155838/p3374.html"
+      ],
+      "shapes": [
+        [
+          "read/N",
+          105
+        ],
+        [
+          "author/*",
+          60
+        ],
+        [
+          "read/N/*",
+          52
+        ],
+        [
+          "sort/N",
+          24
+        ]
+      ]
+    },
+    "jaomix.ru": {
+      "novel_url": "https://jaomix.ru/absolyutnyj-zheleznyj-chelovek/",
+      "chapter_links": 52,
+      "chapter_sample": [
+        "https://jaomix.ru/absolyutnyj-zheleznyj-chelovek/#anchor-main-page",
+        "https://jaomix.ru/absolyutnyj-zheleznyj-chelovek/absolyutnyj-toni-protiv-absolyutnogo-strazha/"
+      ],
+      "shapes": [
+        [
+          "*",
+          43
+        ],
+        [
+          "",
+          4
+        ]
+      ]
+    },
     "jnovels.com": {
       "novel_url": "https://jnovels.com/download-remonster-light-novel-epub/",
       "chapter_links": 4,
@@ -599,6 +2320,35 @@
         [
           "*",
           21
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "jobnib.com": {
+      "novel_url": "https://jobnib.com/book/alpha-damon",
+      "chapter_links": 351,
+      "chapter_sample": [
+        "/book/alpha-damon#respond",
+        "https://jobnib.com/book/alpha-damon-chapter-1"
+      ],
+      "shapes": [
+        [
+          "book/*",
+          65
+        ],
+        [
+          "genre/*",
+          15
+        ],
+        [
+          "*",
+          4
+        ],
+        [
+          "",
+          3
         ]
       ],
       "api_hints": [
@@ -657,12 +2407,46 @@
       "shapes": [
         [
           "*",
-          21
+          62
+        ],
+        [
+          "",
+          12
+        ],
+        [
+          "N/N/N/*",
+          10
         ]
       ],
       "api_hints": [
         "https://fonts-api.wp.com",
         "https://public-api.wordpress.com"
+      ]
+    },
+    "kitenovel.com": {
+      "novel_url": "https://kitenovel.com/book-tag/chinese-novel",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://kitenovel.com/book-tag/chinese-novel",
+        "https://kitenovel.com/book-tag/chinese-novel/page/2"
+      ],
+      "shapes": [
+        [
+          "*",
+          7
+        ],
+        [
+          "book-tag/*",
+          5
+        ],
+        [
+          "",
+          1
+        ],
+        [
+          "sitemaps/*",
+          1
+        ]
       ]
     },
     "knoxt.space": {
@@ -696,6 +2480,35 @@
         "https://fonts.googleapis.com"
       ]
     },
+    "kolnovel.com": {
+      "novel_url": "https://kolnovel.com/%d8%a8%d8%a7%d8%a8-%d8%a7%d9%84%d9%85%d8%b9%d8%b1%d9%81%d8%a9/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://kolnovel.com/%d8%a8%d8%a7%d8%a8-%d8%a7%d9%84%d9%85%d8%b9%d8%b1%d9%81%d8%a9/"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          155
+        ],
+        [
+          "series/*",
+          126
+        ],
+        [
+          "*",
+          122
+        ],
+        [
+          "type/*",
+          13
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
     "konkon.ink": {
       "novel_url": "https://konkon.ink/read/a-chastity-reversed-world-where-a-mans-worth-is-determined-by-his-penis-size-and-sperm-quality",
       "chapter_links": 0,
@@ -719,6 +2532,27 @@
         "/api/logout",
         "/api/user",
         "https://api-k.konkon.ink"
+      ]
+    },
+    "labnovel.ru": {
+      "novel_url": "https://labnovel.ru/belyj-lunnyj-svet-tirana-amnezii/",
+      "chapter_links": 89,
+      "chapter_sample": [
+        "https://labnovel.ru/belyj-lunnyj-svet-tirana-amnezii/",
+        "https://labnovel.ru/belyj-lunnyj-svet-tirana-amnezii/glava-1-238/"
+      ],
+      "shapes": [
+        [
+          "*",
+          38
+        ],
+        [
+          "",
+          12
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
       ]
     },
     "ladasblmtl.blogspot.com": {
@@ -750,6 +2584,112 @@
         "https://apis.google.com"
       ]
     },
+    "lazygirltranslations.com": {
+      "novel_url": "https://lazygirltranslations.com/a-dog-out-of-nowhere-chapter-65/",
+      "chapter_links": 6,
+      "chapter_sample": [
+        "/a-dog-out-of-nowhere-chapter-65/#respond",
+        "https://pinterest.com/pin/create/button/?url=https://lazygirltranslations.com/a-dog-out-of-nowhere-chapter-65/&media=&description=A Dog Out of Nowhere Chapter 65"
+      ],
+      "shapes": [
+        [
+          "*",
+          54
+        ],
+        [
+          "series/*",
+          35
+        ],
+        [
+          "genre/*",
+          24
+        ],
+        [
+          "",
+          7
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "leafstudio.site": {
+      "novel_url": "https://leafstudio.site/34-years-old-and-still-a-magical-girl",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/34-years-old-and-still-a-magical-girl#respond",
+        "https://www.novelupdates.com/series/34-years-old-and-still-a-magical-girl/"
+      ],
+      "shapes": [
+        [
+          "*",
+          292
+        ],
+        [
+          "",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "libread.com": {
+      "novel_url": "https://libread.com/libread/a-bug-in-fate-290817",
+      "chapter_links": 51,
+      "chapter_sample": [
+        "/libread/a-bug-in-fate-290817/2",
+        "/libread/a-bug-in-fate-290817/chapter-01"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          238
+        ],
+        [
+          "libread/*",
+          98
+        ],
+        [
+          "sort/latest-release/*",
+          30
+        ],
+        [
+          "*",
+          12
+        ]
+      ]
+    },
+    "lightnovelheaven.com": {
+      "novel_url": "https://lightnovelheaven.com/series/becoming-the-villains-family/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/series/becoming-the-villains-family/#respond",
+        "https://lightnovelheaven.com/series/becoming-the-villains-family/"
+      ],
+      "shapes": [
+        [
+          "series/*",
+          52
+        ],
+        [
+          "genre/*",
+          36
+        ],
+        [
+          "*",
+          22
+        ],
+        [
+          "",
+          11
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
     "lightnovelpub.me": {
       "novel_url": "https://lightnovelpub.me/book/30-years-have-passed-since-the-prologue",
       "chapter_links": 49,
@@ -777,6 +2717,146 @@
       ],
       "api_hints": [
         "https://chart.googleapis.com"
+      ]
+    },
+    "lightnovelpub.org": {
+      "novel_url": "https://lightnovelpub.org/novel/30-years-after-reincarnation-it-turns-out-to-be-a-romance-fantasy-novel/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/novel/30-years-after-reincarnation-it-turns-out-to-be-a-romance-fantasy-novel/chapter/1/",
+        "https://lightnovelworld.org/accounts/google/login/?next=https://lightnovelworld.org/oauth/callback/%3Fnext%3Dhttps://lightnovelpub.org/oauth/login/%3Fnext%3Dhttps%3A//lightnovelpub.org/novel/30-years-after-reincarnation-it-turns-out-to-be-a-romance-fantasy-novel/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          188
+        ],
+        [
+          "*",
+          25
+        ],
+        [
+          "",
+          5
+        ],
+        [
+          "novel/so-i-became-a-witch-and-started-doing-daily-quests/chapter/N",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "lightnovelstranslations.com": {
+      "novel_url": "https://lightnovelstranslations.com/novel/a-harem-in-the-fantasy-world-dungeon/",
+      "chapter_links": 801,
+      "chapter_sample": [
+        "/novel/a-harem-in-the-fantasy-world-dungeon/#respond",
+        "https://lightnovelstranslations.com/novel/a-harem-in-the-fantasy-world-dungeon/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          67
+        ],
+        [
+          "",
+          34
+        ],
+        [
+          "*",
+          25
+        ],
+        [
+          "novel/return-of-the-fallen/*",
+          5
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "literotica.com": {
+      "novel_url": "https://literotica.com/s/a-i-a-new-era-2026-coming-soon",
+      "chapter_links": 8,
+      "chapter_sample": [
+        "/s/a-i-a-new-era-2026-coming-soon/comments",
+        "/s/a-i-a-new-era-2026-coming-soon?dialog=log-in"
+      ],
+      "shapes": [
+        [
+          "",
+          27
+        ],
+        [
+          "*",
+          11
+        ],
+        [
+          "s/*",
+          9
+        ],
+        [
+          "resources/*",
+          6
+        ]
+      ]
+    },
+    "litnet.com": {
+      "novel_url": "https://litnet.com/ru/book/bastardy-sibirskoi-imperii-6-b605254",
+      "chapter_links": 4,
+      "chapter_sample": [
+        "/ru/book/bastardy-sibirskoi-imperii-6-b605254?cpage=1",
+        "/ru/book/bastardy-sibirskoi-imperii-6-b605254?cpage=2"
+      ],
+      "shapes": [
+        [
+          "ru/book/*",
+          208
+        ],
+        [
+          "ru/top/*",
+          69
+        ],
+        [
+          "ru/tag/*",
+          40
+        ],
+        [
+          "ru/info/*",
+          13
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "lnmtl.com": {
+      "novel_url": "https://lnmtl.com/novel/ancestor-blessing-i-have-established-a-thousand-year-old-family",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "https://lnmtl.com/rating/novel/ancestor-blessing-i-have-established-a-thousand-year-old-family/negative",
+        "https://lnmtl.com/rating/novel/ancestor-blessing-i-have-established-a-thousand-year-old-family/neutral"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          38
+        ],
+        [
+          "chapter/*",
+          25
+        ],
+        [
+          "*",
+          17
+        ],
+        [
+          "",
+          9
+        ]
       ]
     },
     "lnori.com": {
@@ -833,6 +2913,78 @@
       ],
       "api_hints": []
     },
+    "m.shuhaige.net": {
+      "novel_url": "https://m.shuhaige.net/all/",
+      "shapes": [
+        [
+          "*",
+          71
+        ],
+        [
+          "",
+          5
+        ],
+        [
+          "N",
+          3
+        ],
+        [
+          "author/*",
+          3
+        ]
+      ]
+    },
+    "mangaread.org": {
+      "novel_url": "https://mangaread.org/manga/30-years-have-passed-since-the-prologue/",
+      "chapter_links": 10,
+      "chapter_sample": [
+        "https://www.mangaread.org/manga/30-years-have-passed-since-the-prologue/",
+        "https://www.mangaread.org/manga/30-years-have-passed-since-the-prologue/chapter-1/"
+      ],
+      "shapes": [
+        [
+          "manga/*",
+          104
+        ],
+        [
+          "genres/*",
+          45
+        ],
+        [
+          "*",
+          25
+        ],
+        [
+          "",
+          9
+        ]
+      ]
+    },
+    "mangatoon.mobi": {
+      "novel_url": "https://mangatoon.mobi/en/after-the-bell",
+      "shapes": [
+        [
+          "en/*",
+          53
+        ],
+        [
+          "*",
+          16
+        ],
+        [
+          "en/genre/tags/N",
+          9
+        ],
+        [
+          "en/genre/*",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com",
+        "https://api.itoon.org"
+      ]
+    },
     "maplesantl.com": {
       "novel_url": "https://maplesantl.com/a-guide-from-a-strange-world-list-of-episodes/",
       "chapter_links": 8,
@@ -847,6 +2999,91 @@
         ]
       ],
       "api_hints": []
+    },
+    "meganovel.com": {
+      "novel_url": "https://meganovel.com/story/3-Feet-Tall-but-I-m-the-Dragon-God_31001536384",
+      "chapter_links": 10,
+      "chapter_sample": [
+        "/story/3-Feet-Tall-but-I-m-the-Dragon-God_31001536384/Chapter-1-The-Supreme-Ancestor_56058029",
+        "/story/3-Feet-Tall-but-I-m-the-Dragon-God_31001536384/Chapter-10-The-crazy-Drunk-and-the-black-Jade_56058101"
+      ],
+      "shapes": [
+        [
+          "story/*",
+          45
+        ],
+        [
+          "stories/*",
+          30
+        ],
+        [
+          "tag/*",
+          30
+        ],
+        [
+          "*",
+          26
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "meionovel.id": {
+      "novel_url": "https://meionovel.id/novel-tag/htl/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://meionovel.id/novel-tag/htl/",
+        "https://meionovels.com/novel-tag/htl/page/2/"
+      ],
+      "shapes": [
+        [
+          "*",
+          15
+        ],
+        [
+          "novel-tag/*",
+          10
+        ],
+        [
+          "",
+          2
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "meionovels.com": {
+      "novel_url": "https://meionovels.com/novel/a-monster-who-levels-up/",
+      "chapter_links": 6,
+      "chapter_sample": [
+        "/novel/a-monster-who-levels-up/#respond",
+        "https://meionovels.com/novel/a-monster-who-levels-up/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          48
+        ],
+        [
+          "*",
+          16
+        ],
+        [
+          "",
+          6
+        ],
+        [
+          "novel/panduan-untuk-karakter-latar-belakang-untuk-bertahan-hidup-di-manga/htl/*",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
     },
     "moodylit.com": {
       "novel_url": "https://moodylit.com/index.php/august-2021-update",
@@ -890,6 +3127,119 @@
       ],
       "api_hints": []
     },
+    "mvlempyr.com": {
+      "novel_url": "https://mvlempyr.com/novel/1-lifesteal",
+      "shapes": [
+        [
+          "genre/*",
+          392
+        ],
+        [
+          "novel/*",
+          328
+        ],
+        [
+          "",
+          213
+        ],
+        [
+          "language/*",
+          100
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "mvlempyr.io": {
+      "novel_url": "https://mvlempyr.io/novel/1-lifesteal",
+      "shapes": [
+        [
+          "genre/*",
+          392
+        ],
+        [
+          "novel/*",
+          328
+        ],
+        [
+          "",
+          214
+        ],
+        [
+          "language/*",
+          100
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "mydramanovel.com": {
+      "novel_url": "https://mydramanovel.com/against-the-current/",
+      "chapter_links": 360,
+      "chapter_sample": [
+        "https://mydramanovel.com/against-the-current/",
+        "https://mydramanovel.com/against-the-current/chapter-1-origins/"
+      ],
+      "shapes": [
+        [
+          "*",
+          95
+        ],
+        [
+          "zhe-tian/*",
+          47
+        ],
+        [
+          "",
+          39
+        ],
+        [
+          "in-the-moonlight/*",
+          15
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "ncode.syosetu.com": {
+      "novel_url": "https://ncode.syosetu.com/JavaScript:void(0);",
+      "shapes": [
+        [
+          "*",
+          584
+        ]
+      ],
+      "api_hints": [
+        "https://api.syosetu.com"
+      ]
+    },
+    "nobadnovel.com": {
+      "novel_url": "https://nobadnovel.com/series/after-a-thousand-years-of-death-i-was-revived-by-my-demon-king-wife",
+      "chapter_links": 483,
+      "chapter_sample": [
+        "https://www.nobadnovel.com/series/after-a-thousand-years-of-death-i-was-revived-by-my-demon-king-wife/chapter-1-is-it-normal-for-the-protagonist-to-die",
+        "https://www.nobadnovel.com/series/after-a-thousand-years-of-death-i-was-revived-by-my-demon-king-wife/chapter-10-the-devils-tactics"
+      ],
+      "shapes": [
+        [
+          "series/*",
+          44
+        ],
+        [
+          "",
+          3
+        ],
+        [
+          "*",
+          3
+        ]
+      ]
+    },
     "noicetranslations.blogspot.com": {
       "novel_url": "https://noicetranslations.blogspot.com/2021/07/i-became-rich-second-generation-villain_25.html",
       "chapter_links": 9,
@@ -914,6 +3264,58 @@
       "api_hints": [
         "https://apis.google.com",
         "https://fonts.googleapis.com"
+      ]
+    },
+    "novel-bin.com": {
+      "novel_url": "https://novel-bin.com/novel-bin/100-drop-rate-why-is-my-inventory-always-so-full/",
+      "chapter_links": 680,
+      "chapter_sample": [
+        "/novel-bin/100-drop-rate-why-is-my-inventory-always-so-full/chapter-1",
+        "/novel-bin/100-drop-rate-why-is-my-inventory-always-so-full/chapter-10"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          146
+        ],
+        [
+          "novel-bin/*",
+          55
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "",
+          5
+        ]
+      ]
+    },
+    "novel-bin.net": {
+      "novel_url": "https://novel-bin.net/novel-bin/100-drop-rate-why-is-my-inventory-always-so-full/",
+      "chapter_links": 680,
+      "chapter_sample": [
+        "/novel-bin/100-drop-rate-why-is-my-inventory-always-so-full/chapter-1",
+        "/novel-bin/100-drop-rate-why-is-my-inventory-always-so-full/chapter-10"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          149
+        ],
+        [
+          "novel-bin/*",
+          55
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "",
+          5
+        ]
       ]
     },
     "novel.naver.com": {
@@ -957,6 +3359,32 @@
       ],
       "api_hints": []
     },
+    "novel543.com": {
+      "novel_url": "https://novel543.com/0101699084/",
+      "chapter_links": 14,
+      "chapter_sample": [
+        "/0101699084/8096_1.html",
+        "/0101699084/8096_100.html"
+      ],
+      "shapes": [
+        [
+          "N",
+          101
+        ],
+        [
+          "tags/*",
+          41
+        ],
+        [
+          "*",
+          4
+        ],
+        [
+          "shelf/*",
+          2
+        ]
+      ]
+    },
     "novelaenespanol.com": {
       "novel_url": "https://novelaenespanol.com/novela-ligera/alabado-sea-el-orco/",
       "chapter_links": 2,
@@ -980,6 +3408,126 @@
         [
           "novelas-ligeras/*",
           2
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "novelbuddy.com": {
+      "novel_url": "https://novelbuddy.com/browse",
+      "shapes": [
+        [
+          "*",
+          10
+        ],
+        [
+          "genre/*",
+          5
+        ],
+        [
+          "",
+          1
+        ],
+        [
+          "status/*",
+          1
+        ]
+      ]
+    },
+    "novelbuddy.io": {
+      "novel_url": "https://novelbuddy.io/browse",
+      "shapes": [
+        [
+          "*",
+          10
+        ],
+        [
+          "genre/*",
+          5
+        ],
+        [
+          "",
+          1
+        ],
+        [
+          "status/*",
+          1
+        ]
+      ]
+    },
+    "novelbuddy.me": {
+      "novel_url": "https://novelbuddy.me/browse",
+      "shapes": [
+        [
+          "*",
+          10
+        ],
+        [
+          "genre/*",
+          5
+        ],
+        [
+          "",
+          1
+        ],
+        [
+          "status/*",
+          1
+        ]
+      ]
+    },
+    "novelcool.com": {
+      "novel_url": "https://novelcool.com/novel/A-Mistaken-Marriage-Match-A-Generation-of-Military-Counselor.html",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://www.novelcool.com/novel/A-Mistaken-Marriage-Match-A-Generation-of-Military-Counselor.html"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          190
+        ],
+        [
+          "category/*",
+          20
+        ],
+        [
+          "",
+          19
+        ],
+        [
+          "*",
+          15
+        ]
+      ],
+      "api_hints": [
+        "https://platform-api.sharethis.com"
+      ]
+    },
+    "noveldeglace.com": {
+      "novel_url": "https://noveldeglace.com/roman/100-en-chance-et-une-competence-en-domptage-de-dragons/",
+      "chapter_links": 23,
+      "chapter_sample": [
+        "/roman/100-en-chance-et-une-competence-en-domptage-de-dragons/#respond",
+        "https://noveldeglace.com/roman/100-en-chance-et-une-competence-en-domptage-de-dragons/"
+      ],
+      "shapes": [
+        [
+          "roman/*",
+          143
+        ],
+        [
+          "*",
+          115
+        ],
+        [
+          "volume/*",
+          36
+        ],
+        [
+          "chapitre/*",
+          36
         ]
       ],
       "api_hints": [
@@ -1039,6 +3587,165 @@
       ],
       "api_hints": []
     },
+    "novelfrance.fr": {
+      "novel_url": "https://novelfrance.fr/novel/30-years-have-passed-since-the-prologue",
+      "chapter_links": 44,
+      "chapter_sample": [
+        "/novel/30-years-have-passed-since-the-prologue/chapter-1",
+        "/novel/30-years-have-passed-since-the-prologue/chapter-10"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          83
+        ],
+        [
+          "*",
+          5
+        ],
+        [
+          "novel/stronger-by-killing/*",
+          3
+        ],
+        [
+          "novel/endless-extraction-in-a-game-like-world/*",
+          3
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "novelfull.com": {
+      "novel_url": "https://novelfull.com/affinitychaos.html",
+      "chapter_links": 62,
+      "chapter_sample": [
+        "/affinitychaos.html?page=2",
+        "/affinitychaos.html?page=3"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          116
+        ],
+        [
+          "*",
+          58
+        ],
+        [
+          "",
+          5
+        ],
+        [
+          "immortality-simulator/*",
+          1
+        ]
+      ]
+    },
+    "novelfull.me": {
+      "novel_url": "https://novelfull.me/browse",
+      "shapes": [
+        [
+          "*",
+          10
+        ],
+        [
+          "genre/*",
+          5
+        ],
+        [
+          "",
+          1
+        ],
+        [
+          "status/*",
+          1
+        ]
+      ]
+    },
+    "novelfull.net": {
+      "novel_url": "https://novelfull.net/absolute-beast-dominion.html",
+      "chapter_links": 62,
+      "chapter_sample": [
+        "/absolute-beast-dominion.html?page=12",
+        "/absolute-beast-dominion.html?page=2"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          141
+        ],
+        [
+          "*",
+          64
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "absolute-beast-dominion/*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "novelhi.com": {
+      "novel_url": "https://novelhi.com/novel/action",
+      "shapes": [
+        [
+          "novel/*",
+          44
+        ],
+        [
+          "novel/fantasy/*",
+          14
+        ],
+        [
+          "novel/other/*",
+          12
+        ],
+        [
+          "about/*",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://apis.google.com"
+      ]
+    },
+    "novelight.net": {
+      "novel_url": "https://novelight.net/book/all-over-again",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/user/login/?next=/book/all-over-again",
+        "/user/register/?next=/book/all-over-again"
+      ],
+      "shapes": [
+        [
+          "book/*",
+          54
+        ],
+        [
+          "*",
+          19
+        ],
+        [
+          "forum/topic/N",
+          8
+        ],
+        [
+          "",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com",
+        "https://fonts.googleapis.com"
+      ]
+    },
     "novellatte.blogspot.com": {
       "novel_url": "https://novellatte.blogspot.com/2023/07/",
       "chapter_links": 56,
@@ -1093,6 +3800,47 @@
         "https://chart.googleapis.com"
       ]
     },
+    "novelmania.com.br": {
+      "novel_url": "https://novelmania.com.br/novels/a-bela-senpai-do-clube-de-arquearia-esta-dormindo-no-meu-quarto-com-a-barriga-a-mostra",
+      "shapes": [
+        [
+          "novels/*",
+          28
+        ],
+        [
+          "*",
+          13
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "noticias/*",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "novelmtl.com": {
+      "novel_url": "https://novelmtl.com/novel/american-comics-start-from-xiangjiang-x5s5u52hai",
+      "shapes": [
+        [
+          "novel/*",
+          40
+        ],
+        [
+          "*",
+          4
+        ],
+        [
+          "",
+          1
+        ]
+      ]
+    },
     "novelphoenix.com": {
       "novel_url": "https://novelphoenix.com/novel/a-bartender-sent-my-soul-to-an-occupied-body-and-suddenly-i-am-raising-the-banner-of-supremacy-please-the-other-me",
       "chapter_links": 3,
@@ -1145,6 +3893,30 @@
       ],
       "api_hints": []
     },
+    "noveltoon.mobi": {
+      "novel_url": "https://noveltoon.mobi/en/1980s-beautiful-stepmother-wed-factory-director-raised-child​",
+      "shapes": [
+        [
+          "en/*",
+          71
+        ],
+        [
+          "*",
+          26
+        ],
+        [
+          "en/genre/*",
+          10
+        ],
+        [
+          "en/shortstory/N",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com"
+      ]
+    },
     "noveltrust.com": {
       "novel_url": "https://noveltrust.com/book/30-years-have-passed-since-the-prologue",
       "chapter_links": 49,
@@ -1172,6 +3944,65 @@
       ],
       "api_hints": [
         "https://chart.googleapis.com"
+      ]
+    },
+    "novgo.net": {
+      "novel_url": "https://novgo.net/absolute-beast-dominion.html",
+      "chapter_links": 63,
+      "chapter_sample": [
+        "/absolute-beast-dominion.html?page=12&per-page=50",
+        "/absolute-beast-dominion.html?page=2&per-page=50"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          141
+        ],
+        [
+          "*",
+          64
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "absolute-beast-dominion/*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "nyx-translation.com": {
+      "novel_url": "https://nyx-translation.com/active/",
+      "chapter_links": 4,
+      "chapter_sample": [
+        "https://nyx-translation.com/active/",
+        "https://nyx-translation.com/active/?share=facebook"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          55
+        ],
+        [
+          "tag/*",
+          50
+        ],
+        [
+          "*",
+          28
+        ],
+        [
+          "",
+          13
+        ]
+      ],
+      "api_hints": [
+        "https://fonts-api.wp.com",
+        "https://public-api.wordpress.com"
       ]
     },
     "oniichanyamete.moe": {
@@ -1226,6 +4057,35 @@
         [
           "index.php/page/N",
           4
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "oppatranslations.com": {
+      "novel_url": "https://oppatranslations.com/main-character-hides-his-strength/chapter-299-faith-1/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/main-character-hides-his-strength/chapter-299-faith-1/#respond",
+        "https://oppatranslations.com/main-character-hides-his-strength/chapter-299-faith-1/#comment-11456"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          36
+        ],
+        [
+          "category/*",
+          24
+        ],
+        [
+          "*",
+          21
+        ],
+        [
+          "main-character-hides-his-strength/*",
+          11
         ]
       ],
       "api_hints": [
@@ -1306,6 +4166,118 @@
       ],
       "api_hints": []
     },
+    "phoenixnovels.com.br": {
+      "novel_url": "https://phoenixnovels.com.br/manga/aristocratic-daughters-got-used-to-me-ln-pt-ptbr",
+      "chapter_links": 43,
+      "chapter_sample": [
+        "/manga/aristocratic-daughters-got-used-to-me-ln-pt-ptbr/volume-1/capitulo-1",
+        "/manga/aristocratic-daughters-got-used-to-me-ln-pt-ptbr/volume-1/capitulo-2"
+      ],
+      "shapes": [
+        [
+          "manga/*",
+          68
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "",
+          3
+        ],
+        [
+          "manga/fushi-no-kami/volume-1/*",
+          3
+        ]
+      ]
+    },
+    "piaotia.com": {
+      "novel_url": "https://piaotia.com/bookinfo/0/146.html",
+      "shapes": [
+        [
+          "bookinfo/N/*",
+          165
+        ],
+        [
+          "html/N/N",
+          30
+        ],
+        [
+          "html/N/N/*",
+          30
+        ],
+        [
+          "*",
+          11
+        ]
+      ]
+    },
+    "powanjuan.cc": {
+      "novel_url": "https://powanjuan.cc/dsyq/17388",
+      "chapter_links": 599,
+      "chapter_sample": [
+        "/dsyq/17388/index/1.html",
+        "/dsyq/17388/index/10.html"
+      ],
+      "shapes": [
+        [
+          "dsyq/N",
+          21
+        ],
+        [
+          "*",
+          11
+        ],
+        [
+          "wxxz2/N",
+          9
+        ],
+        [
+          "wxxz/*",
+          9
+        ]
+      ]
+    },
+    "ptwxz.com": {
+      "novel_url": "https://ptwxz.com/bookinfo/3/3259.html",
+      "shapes": [
+        [
+          "*",
+          5
+        ],
+        [
+          "bookinfo/N/*",
+          5
+        ],
+        [
+          "",
+          2
+        ],
+        [
+          "javascript:window.external.addFavorite('http:/*",
+          1
+        ]
+      ]
+    },
+    "puretl.com": {
+      "novel_url": "https://puretl.com/ancient-foodie-survival-guide",
+      "chapter_links": 117,
+      "chapter_sample": [
+        "/ancient-foodie-survival-guide/c1",
+        "/ancient-foodie-survival-guide/c10"
+      ],
+      "shapes": [
+        [
+          "*",
+          37
+        ],
+        [
+          "",
+          8
+        ]
+      ]
+    },
     "r18novel.com": {
       "novel_url": "https://r18novel.com/webnovel/199144/",
       "chapter_links": 1055,
@@ -1315,8 +4287,12 @@
       ],
       "shapes": [
         [
+          "genre/*",
+          146
+        ],
+        [
           "webnovel/N",
-          52
+          55
         ],
         [
           "webnovel/N/*",
@@ -1324,10 +4300,9 @@
         ],
         [
           "*",
-          5
+          12
         ]
-      ],
-      "api_hints": []
+      ]
     },
     "rainofsnow.com": {
       "novel_url": "https://rainofsnow.com/comics/",
@@ -1341,6 +4316,34 @@
       ],
       "api_hints": [
         "https://fonts.googleapis.com"
+      ]
+    },
+    "ranobe-novels.ru": {
+      "novel_url": "https://ranobe-novels.ru/ranobe/boevoj-kontinent-3-legenda-o-korole-drakonov/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://ranobe-novels.ru/ranobe/boevoj-kontinent-3-legenda-o-korole-drakonov/"
+      ],
+      "shapes": [
+        [
+          "ranobe/*",
+          72
+        ],
+        [
+          "novels/*",
+          31
+        ],
+        [
+          "*",
+          23
+        ],
+        [
+          "",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
       ]
     },
     "ranobes.com": {
@@ -1420,11 +4423,56 @@
       ],
       "api_hints": []
     },
+    "readlightnovel.online": {
+      "novel_url": "https://readlightnovel.online/facebook/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://readlightnovel.online/facebook/"
+      ],
+      "shapes": [
+        [
+          "*",
+          21
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "category/*",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
     "readnovel.eu": {
       "novel_url": "https://readnovel.eu/novel/2000-comic-genius-mtl",
       "chapter_links": 0,
       "chapter_sample": [],
       "api_hints": []
+    },
+    "readnovelfull.com": {
+      "novel_url": "https://readnovelfull.com/ancient-godly-monarch-v1.html",
+      "shapes": [
+        [
+          "genres/*",
+          131
+        ],
+        [
+          "*",
+          50
+        ],
+        [
+          "novel-list/*",
+          10
+        ],
+        [
+          "",
+          4
+        ]
+      ]
     },
     "readnovelfull.net": {
       "novel_url": "https://readnovelfull.net/browse",
@@ -1452,15 +4500,103 @@
       "shapes": [
         [
           "series/*",
-          13
+          53
         ],
         [
           "*",
-          4
+          7
+        ],
+        [
+          "",
+          5
         ]
       ],
       "api_hints": [
         "https://fonts.googleapis.com"
+      ]
+    },
+    "rewayat.club": {
+      "novel_url": "https://rewayat.club/novel/an-expensive-candy",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/novel/an-expensive-candy?page=0",
+        "/novel/an-expensive-candy?page=2"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          24
+        ],
+        [
+          "*",
+          5
+        ],
+        [
+          "",
+          2
+        ]
+      ],
+      "api_hints": [
+        "https://api.rewayat.club"
+      ]
+    },
+    "royalroad.com": {
+      "novel_url": "https://royalroad.com/fiction/104434/the-elf-who-would-become-a-dragon-story-complete",
+      "chapter_links": 166,
+      "chapter_sample": [
+        "/fiction/104434/the-elf-who-would-become-a-dragon-story-complete/chapter/2034542/prelude-and-chapter-1-the-frog-and-the-toad",
+        "/fiction/104434/the-elf-who-would-become-a-dragon-story-complete/chapter/2034544/chapter-2-the-world-on-its-edge"
+      ],
+      "shapes": [
+        [
+          "fiction/N/*",
+          104
+        ],
+        [
+          "*",
+          39
+        ],
+        [
+          "fictions/*",
+          17
+        ],
+        [
+          "ps/*",
+          5
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "rpgnovels.com": {
+      "novel_url": "https://rpgnovels.com/active-projects-2/",
+      "chapter_links": 4,
+      "chapter_sample": [
+        "https://rpgnovels.com/active-projects-2/",
+        "https://rpgnovels.com/active-projects-2/?share=facebook"
+      ],
+      "shapes": [
+        [
+          "*",
+          14
+        ],
+        [
+          "",
+          10
+        ],
+        [
+          "N/N/N/*",
+          10
+        ],
+        [
+          "page/N",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://public-api.wordpress.com"
       ]
     },
     "rubymaybetranslations.com": {
@@ -1494,6 +4630,219 @@
         "https://api.w.org"
       ]
     },
+    "secondlifetranslations.com": {
+      "novel_url": "https://secondlifetranslations.com/novel/70s-little-dumpling-nibbling-on-a-pacifier-while-spitting-out-lucky-gold-coins/",
+      "shapes": [
+        [
+          "novel/*",
+          81
+        ],
+        [
+          "*",
+          18
+        ],
+        [
+          "",
+          16
+        ],
+        [
+          "genres/*",
+          8
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "shalvationtranslations.wordpress.com": {
+      "novel_url": "https://shalvationtranslations.wordpress.com/%e2%8c%a9your-and-my-asylum%e2%8c%aa-table-of-contents/",
+      "chapter_links": 4,
+      "chapter_sample": [
+        "https://shalvationtranslations.wordpress.com/%e2%8c%a9your-and-my-asylum%e2%8c%aa-table-of-contents/",
+        "https://shalvationtranslations.wordpress.com/%e2%8c%a9your-and-my-asylum%e2%8c%aa-table-of-contents/?share=facebook"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          45
+        ],
+        [
+          "",
+          17
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "author/*",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://fonts-api.wp.com",
+        "https://public-api.wordpress.com"
+      ]
+    },
+    "shanghaifantasy.com": {
+      "novel_url": "https://shanghaifantasy.com/1960s-pampered-girl-busy-gossiping-charming-tycoon-addicted-to-doting-chapter-43/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "/1960s-pampered-girl-busy-gossiping-charming-tycoon-addicted-to-doting-chapter-43/#respond"
+      ],
+      "shapes": [
+        [
+          "*",
+          28
+        ],
+        [
+          "novel/*",
+          18
+        ],
+        [
+          "",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "shw5.cc": {
+      "novel_url": "https://shw5.cc/book/10045/",
+      "chapter_links": 4114,
+      "chapter_sample": [
+        "/book/10045/1.html",
+        "/book/10045/10.html"
+      ],
+      "shapes": [
+        [
+          "book/N",
+          137
+        ],
+        [
+          "book/N/*",
+          30
+        ],
+        [
+          "*",
+          12
+        ],
+        [
+          "",
+          4
+        ]
+      ]
+    },
+    "skynovels.net": {
+      "novel_url": "https://skynovels.net/aviso-legal",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://www.skynovels.net/aviso-legal"
+      ],
+      "shapes": [
+        [
+          "*",
+          12
+        ],
+        [
+          "",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://api.skynovels.net",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "sleepytranslations.com": {
+      "novel_url": "https://sleepytranslations.com/series/a-contractual-marriage-with-the-best-leading-actor/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://sleepytranslations.com/series/a-contractual-marriage-with-the-best-leading-actor/"
+      ],
+      "shapes": [
+        [
+          "series/*",
+          66
+        ],
+        [
+          "*",
+          21
+        ],
+        [
+          "",
+          12
+        ],
+        [
+          "tag/*",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://blackbox-api.wp.com",
+        "https://public-api.wordpress.com"
+      ]
+    },
+    "snowycodex.com": {
+      "novel_url": "https://snowycodex.com/translations/novels/aes/",
+      "chapter_links": 105,
+      "chapter_sample": [
+        "//snowycodex.com/translations/novels/aes/chapter-1/",
+        "//snowycodex.com/translations/novels/aes/chapter-10/"
+      ],
+      "shapes": [
+        [
+          "*",
+          50
+        ],
+        [
+          "translations/novels/*",
+          19
+        ],
+        [
+          "author/*",
+          10
+        ],
+        [
+          "category/*",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "sonicmtl.com": {
+      "novel_url": "https://sonicmtl.com/novel-genre/action/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://www.sonicmtl.com/novel-genre/action/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          32
+        ],
+        [
+          "novel-genre/*",
+          31
+        ],
+        [
+          "",
+          27
+        ],
+        [
+          "*",
+          16
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
     "stabbingwithasyringe.home.blog": {
       "novel_url": "https://stabbingwithasyringe.home.blog/stabbingwithasyringe-translated-works/a-maid-from-another-world-arrives/",
       "chapter_links": 54,
@@ -1503,12 +4852,20 @@
       ],
       "shapes": [
         [
-          "stabbingwithasyringe-translated-works/*",
-          13
+          "",
+          53
         ],
         [
-          "*",
-          2
+          "N/N/N/*",
+          23
+        ],
+        [
+          "category/*",
+          14
+        ],
+        [
+          "stabbingwithasyringe-translated-works/*",
+          13
         ]
       ],
       "api_hints": [
@@ -1554,6 +4911,32 @@
       ],
       "api_hints": []
     },
+    "teanovel.com": {
+      "novel_url": "https://teanovel.com/novel/a-crowd-of-evil-spirit-lines-up-to-confess-to-me",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/novel/a-crowd-of-evil-spirit-lines-up-to-confess-to-me/1",
+        "/novel/a-crowd-of-evil-spirit-lines-up-to-confess-to-me/chapter-list"
+      ],
+      "shapes": [
+        [
+          "*",
+          13
+        ],
+        [
+          "novel/*",
+          9
+        ],
+        [
+          "",
+          3
+        ],
+        [
+          "account/*",
+          1
+        ]
+      ]
+    },
     "thenoobtranslator.com": {
       "novel_url": "https://thenoobtranslator.com/disclaimer",
       "chapter_links": 0,
@@ -1567,6 +4950,236 @@
       "api_hints": [
         "https://api.w.org",
         "https://fonts.googleapis.com"
+      ]
+    },
+    "tigertranslations.org": {
+      "novel_url": "https://tigertranslations.org/cave-king/",
+      "chapter_links": 275,
+      "chapter_sample": [
+        "https://tigertranslations.org/2020/05/21/cave-king-1/",
+        "https://tigertranslations.org/2020/05/22/cave-king-2/"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          30
+        ],
+        [
+          "*",
+          15
+        ],
+        [
+          "",
+          10
+        ],
+        [
+          "category/*",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "tl.rulate.ru": {
+      "novel_url": "https://tl.rulate.ru/book/101066",
+      "chapter_links": 27,
+      "chapter_sample": [
+        "/book/101066/3519704/ready_new",
+        "/book/101066/3519705/ready_new"
+      ],
+      "shapes": [
+        [
+          "book/N",
+          266
+        ],
+        [
+          "book/N/N/*",
+          143
+        ],
+        [
+          "*",
+          48
+        ],
+        [
+          "site/*",
+          33
+        ]
+      ]
+    },
+    "tomotranslations.com": {
+      "novel_url": "https://tomotranslations.com/2018/12/",
+      "chapter_links": 16,
+      "chapter_sample": [
+        "https://tomotranslations.com/2018/12/13/this-hero-is-invincible-but-too-cautious-volume-1-chapter-0/",
+        "https://tomotranslations.com/2018/12/13/this-hero-is-invincible-but-too-cautious-volume-1-chapter-0/#comments"
+      ],
+      "shapes": [
+        [
+          "N/N",
+          92
+        ],
+        [
+          "N/N/N/*",
+          36
+        ],
+        [
+          "",
+          15
+        ],
+        [
+          "author/*",
+          12
+        ]
+      ],
+      "api_hints": [
+        "https://fonts-api.wp.com",
+        "https://public-api.wordpress.com"
+      ]
+    },
+    "toonily.com": {
+      "novel_url": "https://toonily.com/serie/a-dream-escape-cf90bd70/",
+      "chapter_links": 79,
+      "chapter_sample": [
+        "https://toonily.com/serie/a-dream-escape-cf90bd70/",
+        "https://toonily.com/serie/a-dream-escape-cf90bd70/chapter-1/"
+      ],
+      "shapes": [
+        [
+          "serie/*",
+          53
+        ],
+        [
+          "*",
+          15
+        ],
+        [
+          "",
+          11
+        ],
+        [
+          "page/N",
+          6
+        ]
+      ]
+    },
+    "translatinotaku.net": {
+      "novel_url": "https://translatinotaku.net/novel/dimensions/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://translatinotaku.net/novel/dimensions/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          34
+        ],
+        [
+          "*",
+          24
+        ],
+        [
+          "",
+          5
+        ],
+        [
+          "manga-genre/*",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://api.whatsapp.com"
+      ]
+    },
+    "truyenfull.today": {
+      "novel_url": "https://truyenfull.today/cam-nguyet-nhu-ca-thien-son-tra-khach",
+      "chapter_links": 55,
+      "chapter_sample": [
+        "https://truyenfull.live/cam-nguyet-nhu-ca-thien-son-tra-khach/",
+        "https://truyenfull.live/cam-nguyet-nhu-ca-thien-son-tra-khach/chuong-1/"
+      ],
+      "shapes": [
+        [
+          "*",
+          20
+        ],
+        [
+          "cdn-cgi/l/*",
+          1
+        ]
+      ]
+    },
+    "truyenfull.vn": {
+      "novel_url": "https://truyenfull.vn/cam-nguyet-nhu-ca-thien-son-tra-khach",
+      "chapter_links": 55,
+      "chapter_sample": [
+        "https://truyenfull.live/cam-nguyet-nhu-ca-thien-son-tra-khach/",
+        "https://truyenfull.live/cam-nguyet-nhu-ca-thien-son-tra-khach/chuong-1/"
+      ],
+      "shapes": [
+        [
+          "*",
+          20
+        ],
+        [
+          "cdn-cgi/l/*",
+          1
+        ]
+      ]
+    },
+    "trxs.cc": {
+      "novel_url": "https://trxs.cc/tongren/10006.html",
+      "chapter_links": 780,
+      "chapter_sample": [
+        "/tongren/10006/1.html",
+        "/tongren/10006/10.html"
+      ],
+      "shapes": [
+        [
+          "tongren/*",
+          95
+        ],
+        [
+          "*",
+          10
+        ],
+        [
+          "",
+          1
+        ],
+        [
+          "cdn-cgi/l/*",
+          1
+        ]
+      ]
+    },
+    "tsundoku.com.br": {
+      "novel_url": "https://tsundoku.com.br/86-oitenta-e-seis-vol-12-epilogo-bem-vindo-ao-pesadelo-de-mary-jane-querido-cacador-de-veados/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://tsundoku.com.br/86-oitenta-e-seis-vol-12-epilogo-bem-vindo-ao-pesadelo-de-mary-jane-querido-cacador-de-veados/"
+      ],
+      "shapes": [
+        [
+          "manga/*",
+          129
+        ],
+        [
+          "*",
+          104
+        ],
+        [
+          "blog/*",
+          12
+        ],
+        [
+          "",
+          8
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
       ]
     },
     "twkan.com": {
@@ -1596,11 +5209,257 @@
       ],
       "api_hints": []
     },
+    "vipnovel.com": {
+      "novel_url": "https://vipnovel.com/best-fast-cashout-casino-bank-vs-card/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://vipnovel.com/best-fast-cashout-casino-bank-vs-card/",
+        "https://vipnovel.com/best-fast-cashout-casino-bank-vs-card/#comments"
+      ],
+      "shapes": [
+        [
+          "*",
+          121
+        ],
+        [
+          "category/*",
+          30
+        ],
+        [
+          "author/*",
+          18
+        ],
+        [
+          "",
+          12
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "virlyce.com": {
+      "novel_url": "https://virlyce.com/demons-journey/",
+      "chapter_links": 376,
+      "chapter_sample": [
+        "/demons-journey/#respond",
+        "https://www.virlyce.com/demons-journey/"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          25
+        ],
+        [
+          "*",
+          18
+        ],
+        [
+          "category/web-novels/*",
+          10
+        ],
+        [
+          "author/*",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "vistranslations.wordpress.com": {
+      "novel_url": "https://vistranslations.wordpress.com/blog-feed/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "https://vistranslations.wordpress.com/blog-feed/",
+        "https://vistranslations.wordpress.com/blog-feed/page/2/"
+      ],
+      "shapes": [
+        [
+          "N/N/N/*",
+          60
+        ],
+        [
+          "",
+          52
+        ],
+        [
+          "*",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://fonts-api.wp.com",
+        "https://public-api.wordpress.com"
+      ]
+    },
     "voznovel.com": {
       "novel_url": "https://voznovel.com/chu-than-ngu-hi",
       "chapter_links": 0,
       "chapter_sample": [],
       "api_hints": []
+    },
+    "wanderinginn.com": {
+      "novel_url": "https://wanderinginn.com/blog",
+      "chapter_links": 5,
+      "chapter_sample": [
+        "https://wanderinginn.com/2026/03/14/blog-15-palace-of-fates-retrospective/",
+        "https://wanderinginn.com/2026/03/27/blog-16-10-years-anniversary/"
+      ],
+      "shapes": [
+        [
+          "*",
+          26
+        ],
+        [
+          "",
+          14
+        ],
+        [
+          "announcements/*",
+          9
+        ],
+        [
+          "N/N/N/*",
+          2
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "wattpad.com": {
+      "novel_url": "https://wattpad.com/story/11070537",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://www.wattpad.com/story/11070537/rankings"
+      ],
+      "shapes": [
+        [
+          "stories/*",
+          60
+        ],
+        [
+          "story/N",
+          49
+        ],
+        [
+          "*",
+          11
+        ],
+        [
+          "",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api.wattpad.com"
+      ]
+    },
+    "wbnovel.com": {
+      "novel_url": "https://wbnovel.com/nv/creating-heavenly-laws/",
+      "chapter_links": 71,
+      "chapter_sample": [
+        "https://wbnovel.com/nv/creating-heavenly-laws/",
+        "https://wbnovel.com/nv/creating-heavenly-laws/chapter-1/"
+      ],
+      "shapes": [
+        [
+          "nv/*",
+          60
+        ],
+        [
+          "*",
+          16
+        ],
+        [
+          "",
+          6
+        ],
+        [
+          "nv/nine-star-hegemon-body-art/*",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "webfic.com": {
+      "novel_url": "https://webfic.com/more/completed",
+      "shapes": [
+        [
+          "book_info/N/Romance/*",
+          86
+        ],
+        [
+          "book_info/N/Urban/*",
+          23
+        ],
+        [
+          "book_info/N/all/*",
+          10
+        ],
+        [
+          "*",
+          8
+        ]
+      ]
+    },
+    "webnovel.com": {
+      "novel_url": "https://webnovel.com/book/a-nascent-kaleidoscope._21542016806826305",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "/book/a-nascent-kaleidoscope._21542016806826305/chapter-1_58063244199248022"
+      ],
+      "shapes": [
+        [
+          "book/*",
+          121
+        ],
+        [
+          "stories/*",
+          61
+        ],
+        [
+          "tags/*",
+          34
+        ],
+        [
+          "*",
+          12
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "webtoons.com": {
+      "novel_url": "https://webtoons.com/en/canvas",
+      "chapter_links": 82,
+      "chapter_sample": [
+        "https://www.webtoons.com/en/canvas",
+        "https://www.webtoons.com/en/canvas/adding-you-to-my-cart/list?title_no=780794"
+      ],
+      "shapes": [
+        [
+          "",
+          12
+        ],
+        [
+          "en/*",
+          9
+        ],
+        [
+          "en/ranking/*",
+          2
+        ],
+        [
+          "en/drama/the-price-is-your-everything/*",
+          2
+        ]
+      ]
     },
     "wetriedtls.com": {
       "novel_url": "https://wetriedtls.com/series/30-years-have-passed-since-the-prologue",
@@ -1627,6 +5486,300 @@
         ]
       ],
       "api_hints": []
+    },
+    "whatsawhizzerwebnovels.com": {
+      "novel_url": "https://whatsawhizzerwebnovels.com/novel/automatic-girlfriend/",
+      "chapter_links": 81,
+      "chapter_sample": [
+        "https://whatsawhizzerwebnovels.com/novel/automatic-girlfriend/",
+        "https://whatsawhizzerwebnovels.com/novel/automatic-girlfriend/automatic-girlfriend-chapter-1/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          30
+        ],
+        [
+          "*",
+          20
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "novel/i-reincarnated-into-a-single-celled-organism/volume-5/*",
+          3
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "wondernovels.com": {
+      "novel_url": "https://wondernovels.com/novels/after-transmigrating-into-a-cyberpunk-game-i-killed-the-boss-and-took-its-place/",
+      "chapter_links": 2,
+      "chapter_sample": [
+        "/novels/after-transmigrating-into-a-cyberpunk-game-i-killed-the-boss-and-took-its-place/#respond",
+        "https://wondernovels.com/novels/after-transmigrating-into-a-cyberpunk-game-i-killed-the-boss-and-took-its-place/"
+      ],
+      "shapes": [
+        [
+          "novels/*",
+          48
+        ],
+        [
+          "*",
+          19
+        ],
+        [
+          "",
+          10
+        ],
+        [
+          "genre/*",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "woopread.com": {
+      "novel_url": "https://woopread.com/series/bastian",
+      "chapter_links": 13,
+      "chapter_sample": [
+        "/series/bastian/chapter-0",
+        "/series/bastian/side-story-19"
+      ],
+      "shapes": [
+        [
+          "series/*",
+          69
+        ],
+        [
+          "*",
+          21
+        ],
+        [
+          "",
+          3
+        ],
+        [
+          "announcements/*",
+          3
+        ]
+      ]
+    },
+    "wordrain69.com": {
+      "novel_url": "https://wordrain69.com/manga-genre/action/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://wordrain69.com/manga-genre/action/"
+      ],
+      "shapes": [
+        [
+          "manga/*",
+          50
+        ],
+        [
+          "manga-genre/*",
+          23
+        ],
+        [
+          "*",
+          21
+        ],
+        [
+          "manga-author/*",
+          10
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "wtr-lab.com": {
+      "novel_url": "https://wtr-lab.com/en/about-us",
+      "shapes": [
+        [
+          "en/*",
+          13
+        ],
+        [
+          "*",
+          5
+        ],
+        [
+          "en/ranking/*",
+          1
+        ],
+        [
+          "",
+          1
+        ]
+      ],
+      "api_hints": [
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "wujizun.com": {
+      "novel_url": "https://wujizun.com/almighty/",
+      "chapter_links": 912,
+      "chapter_sample": [
+        "https://wujizun.com/2020/11/02/almighty01/",
+        "https://wujizun.com/2020/11/02/almighty02/"
+      ],
+      "shapes": [
+        [
+          "tag/*",
+          135
+        ],
+        [
+          "N/N/N/*",
+          61
+        ],
+        [
+          "category/*",
+          39
+        ],
+        [
+          "*",
+          11
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "wuxia.city": {
+      "novel_url": "https://wuxia.city/book/a-sword-master-childhood-friend-power-harassed-me-harshly-so-i-broke-off-our-relationship-and-make-a-fresh-start-at-the-frontier-as-a-magic-swordsman",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "/book/a-sword-master-childhood-friend-power-harassed-me-harshly-so-i-broke-off-our-relationship-and-make-a-fresh-start-at-the-frontier-as-a-magic-swordsman/2120321",
+        "/book/a-sword-master-childhood-friend-power-harassed-me-harshly-so-i-broke-off-our-relationship-and-make-a-fresh-start-at-the-frontier-as-a-magic-swordsman/806849"
+      ],
+      "shapes": [
+        [
+          "book/*",
+          87
+        ],
+        [
+          "genre/*",
+          55
+        ],
+        [
+          "",
+          4
+        ],
+        [
+          "list/*",
+          3
+        ]
+      ]
+    },
+    "wuxia.click": {
+      "novel_url": "https://wuxia.click/novel/2000-comic-genius-mtl",
+      "shapes": [
+        [
+          "novel/*",
+          36
+        ],
+        [
+          "category/*",
+          3
+        ],
+        [
+          "",
+          1
+        ],
+        [
+          "user/profile/*",
+          1
+        ]
+      ]
+    },
+    "wuxiabox.com": {
+      "novel_url": "https://wuxiabox.com/novel/a-hundredfold-training-system-instantly-upgrades-999.html",
+      "chapter_links": 107,
+      "chapter_sample": [
+        "/novel/a-hundredfold-training-system-instantly-upgrades-999.html?tab=chapters",
+        "/novel/a-hundredfold-training-system-instantly-upgrades-999_1.html"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          86
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "list/all/*",
+          5
+        ],
+        [
+          "",
+          1
+        ]
+      ]
+    },
+    "wuxiasky.net": {
+      "novel_url": "https://wuxiasky.net/story/iron-blooded-teacher/",
+      "chapter_links": 7,
+      "chapter_sample": [
+        "http://www.reddit.com/submit?url=https://www.wuxiasky.net/story/iron-blooded-teacher/&title=Iron-Blooded+Teacher",
+        "https://bsky.app/intent/compose?text=https://www.wuxiasky.net/story/iron-blooded-teacher/"
+      ],
+      "shapes": [
+        [
+          "genre/*",
+          44
+        ],
+        [
+          "story/*",
+          29
+        ],
+        [
+          "*",
+          22
+        ],
+        [
+          "chapter/*",
+          20
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
+    "wuxiaspot.com": {
+      "novel_url": "https://wuxiaspot.com/novel/fantasy-give-opportunities-and-double-the-rewards.html",
+      "chapter_links": 106,
+      "chapter_sample": [
+        "/novel/fantasy-give-opportunities-and-double-the-rewards.html?tab=chapters",
+        "/novel/fantasy-give-opportunities-and-double-the-rewards_1.html"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          86
+        ],
+        [
+          "*",
+          9
+        ],
+        [
+          "list/all/*",
+          5
+        ],
+        [
+          "",
+          1
+        ]
+      ]
     },
     "wuxiaworld.eu": {
       "novel_url": "https://wuxiaworld.eu/novel/2000-comic-genius-mtl",
@@ -1659,6 +5812,36 @@
       ],
       "api_hints": [
         "https://api.w.org"
+      ]
+    },
+    "wuxiaworld.site": {
+      "novel_url": "https://wuxiaworld.site/novel/a-blessed-wife-at-home/",
+      "chapter_links": 3,
+      "chapter_sample": [
+        "https://wuxiaworld.site/novel/a-blessed-wife-at-home/",
+        "https://wuxiaworld.site/novel/a-blessed-wife-at-home/chapter-1/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          100
+        ],
+        [
+          "genre/*",
+          29
+        ],
+        [
+          "*",
+          21
+        ],
+        [
+          "",
+          11
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
       ]
     },
     "www.17k.com": {
@@ -2211,6 +6394,34 @@
       ],
       "api_hints": []
     },
+    "xiaowaz.fr": {
+      "novel_url": "https://xiaowaz.fr/series-en-cours/a-monster-who-levels-up/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://xiaowaz.fr/series-en-cours/a-monster-who-levels-up/"
+      ],
+      "shapes": [
+        [
+          "articles/*",
+          39
+        ],
+        [
+          "series-en-cours/*",
+          12
+        ],
+        [
+          "",
+          10
+        ],
+        [
+          "series-abandonnees/*",
+          5
+        ]
+      ],
+      "api_hints": [
+        "https://api.w.org"
+      ]
+    },
     "xperimentalhamid.com": {
       "novel_url": "https://xperimentalhamid.com/novels/action/a-man-like-none-other-novel-chapter-6531/",
       "chapter_links": 1,
@@ -2237,6 +6448,68 @@
       ],
       "api_hints": [
         "https://api.w.org"
+      ]
+    },
+    "zetrotranslation.com": {
+      "novel_url": "https://zetrotranslation.com/novel/a-late-bloomers-powerful-restart-my-second-life-starts-at-a-prestigious-school-where-the-gender-ratio-is-totally-off-and-for-some-reason-all-these-talented-girls-get-attached-to-me/",
+      "chapter_links": 1,
+      "chapter_sample": [
+        "https://zetrotranslation.com/novel/a-late-bloomers-powerful-restart-my-second-life-starts-at-a-prestigious-school-where-the-gender-ratio-is-totally-off-and-for-some-reason-all-these-talented-girls-get-attached-to-me/"
+      ],
+      "shapes": [
+        [
+          "novel/*",
+          48
+        ],
+        [
+          "*",
+          28
+        ],
+        [
+          "",
+          16
+        ],
+        [
+          "novel/apocalypse-dark-elf-style-magical-tribes-reincarnated-in-the-modern-world/N/*",
+          4
+        ]
+      ],
+      "api_hints": [
+        "https://api-k.konkon.ink",
+        "https://api-kp.kuupress.com",
+        "https://api.w.org",
+        "https://fonts.googleapis.com"
+      ]
+    },
+    "zhi-end.blogspot.com": {
+      "novel_url": "https://zhi-end.blogspot.com/2016/06/baca-LN-hataraku-maou-Indonesia.html",
+      "chapter_links": 140,
+      "chapter_sample": [
+        "http://www.facebook.com/sharer.php?u=https://zhi-end.blogspot.com/2016/06/baca-LN-hataraku-maou-Indonesia.html&title=Baca Light Novel Hataraku Maou-Sama Bahasa Indonesia",
+        "http://www.linkedin.com/shareArticle?mini=true&url=https://zhi-end.blogspot.com/2016/06/baca-LN-hataraku-maou-Indonesia.html&title=Baca Light Novel Hataraku Maou-Sama Bahasa Indonesia&summary="
+      ],
+      "shapes": [
+        [
+          "N/N/*",
+          49
+        ],
+        [
+          "search/label/*",
+          27
+        ],
+        [
+          "",
+          8
+        ],
+        [
+          "p/*",
+          6
+        ]
+      ],
+      "api_hints": [
+        "https://ajax.googleapis.com",
+        "https://apis.google.com",
+        "https://fonts.googleapis.com"
       ]
     }
   }

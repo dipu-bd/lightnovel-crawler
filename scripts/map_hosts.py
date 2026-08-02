@@ -17,6 +17,12 @@ the next person can test a template against a host without re-deriving where its
 
     uv run python scripts/map_hosts.py --hosts example.com,other.net
     uv run python scripts/map_hosts.py --from-index --limit 50
+    uv run python scripts/map_hosts.py --hosts-file hosts.json --proxy socks5h://127.0.0.1:9250
+
+Prefer `--proxy` over a direct run. An ISP that answers blocked domains with its own page
+returns a `200` rather than an error, so a direct survey reports a live site as redirected
+to somewhere unrelated — which reads as a dead domain and is the one mistake this corpus
+must not make.
 
 Results append as they complete, so a long run can be watched and a kill keeps the work
 already done.
@@ -62,7 +68,7 @@ API_HINT = re.compile(
 )
 
 _lock = Lock()
-_state = {"done": 0, "total": 0, "handle": None}
+_state: Dict[str, Any] = {"done": 0, "total": 0, "handle": None, "proxy": ""}
 
 
 def path_shape(path: str) -> str:
@@ -103,16 +109,17 @@ def pick_novel_path(paths: List[str]) -> Optional[str]:
 
 
 def probe(host: str) -> Dict[str, Any]:
-    from scraper import Scraper, ScraperConfig
+    from scraper import ExitKind, ExitSpec, Scraper, ScraperConfig
 
     row: Dict[str, Any] = {"host": host}
     # Survey timeouts on purpose: with the library defaults a host that accepts a
     # connection and then goes silent costs about eleven minutes of retries, which is
     # enough to make a few hundred hosts look like a hang.
-    scraper = Scraper(
-        f"https://{host}/",
-        ScraperConfig(raise_for_status=False, timeout=(10, 30), max_attempts=2),
-    )
+    settings: Dict[str, Any] = dict(raise_for_status=False, timeout=(10, 30), max_attempts=2)
+    proxy = _state.get("proxy")
+    if proxy:
+        settings["exits"] = [ExitSpec(url=proxy, kind=ExitKind.TOR, label="survey")]
+    scraper = Scraper(f"https://{host}/", ScraperConfig(**settings))
     try:
         home = scraper.get(f"https://{host}/")
     except Exception as exc:  # noqa: BLE001
@@ -188,8 +195,13 @@ def main(
     ),
     out: Path = typer.Option(DEFAULT_OUT, help="Where to write the corpus."),
     jsonl: Path = typer.Option(None, help="Optional incremental JSONL log."),
+    proxy: str = typer.Option(
+        "",
+        help="Send every probe through this proxy, e.g. socks5h://127.0.0.1:9250.",
+    ),
 ) -> None:
     ctx.setup()
+    _state["proxy"] = proxy
 
     targets: List[str] = []
     if hosts:
