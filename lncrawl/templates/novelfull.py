@@ -22,6 +22,10 @@ class NovelFullTemplate(SoupTemplate):
     chapter_list_selector = "ul.list-chapter > li > a[href], select > option[value]"
     chapter_body_selector = "#chr-content, #chapter-content"
 
+    # Some deployments print the whole list on the novel page and stopped emitting the numeric
+    # id the ajax route keys on, so that route answers with nothing. Set by those subclasses.
+    chapter_list_on_novel_page = False
+
     def build_search_url(self, query: str) -> str:
         return f"{self.scraper.origin}search?{urlencode({'keyword': query})}"
 
@@ -45,6 +49,13 @@ class NovelFullTemplate(SoupTemplate):
         novel: Novel,
         volume: Optional[Volume] = None,
     ) -> Iterable[PageSoup]:
+        if self.chapter_list_on_novel_page:
+            # Not `chapter_list_selector`: its `select > option[value]` half also matches the
+            # theme-colour picker, which arrives as forty chapters named "Light gray".
+            anchors = tag.select("ul.list-chapter > li > a[href]")
+            if anchors:
+                return anchors
+
         nl_id = tag.select_one("#rating[data-novel-id]")["data-novel-id"]
         if not nl_id:
             raise LNException("No novel_id found")
