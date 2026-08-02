@@ -1,5 +1,5 @@
 {
-  "v": 1785622958,
+  "v": 1785630506,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -3918,7 +3918,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/m/mysticalmerries.py"
     },
     "58961b37e76cb6d63377db14d37588db": {
-      "version": 1785622925,
+      "version": 1785630471,
       "md5": "00713657f2ab2557903f7e5b231cc0b0",
       "file_path": "sources/ru/ranobes.py",
       "language": "ru",
@@ -3927,7 +3927,7 @@
       "can_search": false,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 1,
+      "total_commits": 2,
       "contributors": [
         "dipu-bd"
       ],
@@ -10055,7 +10055,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4566
+      "contributions": 4568
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
