@@ -193,8 +193,9 @@ class SoupTemplate(CrawlerTemplate):
         novel.synopsis = self.cleaner.extract_contents(tag)
         if not novel.synopsis:
             meta_tag = soup.select_one(SoupTemplate.novel_synopsis_selector)
-            content = PageSoup.create(meta_tag.get("content"))
-            novel.synopsis = self.cleaner.extract_contents(content)
+            content = str(meta_tag.get("content") or "") if meta_tag else ""
+            holder = PageSoup.create(f"<p>{content}</p>").select_one("p")
+            novel.synopsis = self.cleaner.extract_contents(holder)
 
     # ------------------------------------------------------------------------- #
     # Parser methods for Volume list
