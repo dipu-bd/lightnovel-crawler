@@ -1,5 +1,5 @@
 {
-  "v": 1785664848,
+  "v": 1785667180,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -521,7 +521,7 @@
     "https://www.novels.pl/": "5e962751f7928b75a7bbfd7a777fd629",
     "https://www.novelupdates.cc/": "ab5e6692cab4784c74023daa7036bc79",
     "https://www.novelupdates.com/": "2c529108c1fd6d790a05e51c02f9bb9c",
-    "https://www.oppatranslations.com/": "f57d2a47e8dbf9ad7d1cf03daf0c0947",
+    "https://www.oppatranslations.com/": "e3dde6b1f9d156edfc0239db6215d05b",
     "https://www.pandamanga.xyz/": "930238810d342d233fb3e2fcfb33088d",
     "https://www.piaotia.com/": "e2a0a1f66eec221866f52e14af342c50",
     "https://www.piaotian.com/": "e2a0a1f66eec221866f52e14af342c50",
@@ -8503,7 +8503,7 @@
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/n/novel35.py"
     },
     "d75850030d88afdbd2501e7d87b82c00": {
-      "version": 1785664305,
+      "version": 1785667153,
       "md5": "2ef799f48b8ff3b2dddf27db781c3139",
       "file_path": "sources/es/novelaenespanol.py",
       "language": "es",
@@ -8512,7 +8512,7 @@
       "can_search": true,
       "has_mtl": false,
       "request_rate_limit": 3.0,
-      "total_commits": 1,
+      "total_commits": 2,
       "contributors": [
         "dipu-bd"
       ],
@@ -10252,7 +10252,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4580
+      "contributions": 4585
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
