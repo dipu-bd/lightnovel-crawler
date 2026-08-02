@@ -11,6 +11,7 @@ services:
       - DATABASE_URL=postgresql+psycopg://pguser:pgpass@postgres:5432/lncrawl
       - PROXY_URLS=torpool;http://tor-pool:8080;socks5h://tor-pool:9250;tp_auth_disabled
       - TZ=${TZ:-UTC}
+      - MALLOC_ARENA_MAX=2
     volumes:
       - ./appdata:/data
     labels:
@@ -28,6 +29,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 90s
+    cap_add:
+      - SYS_PTRACE
     deploy:
       resources:
         limits:
@@ -96,7 +99,7 @@ services:
     image: ghcr.io/lncrawl/tor-pool:latest
     restart: unless-stopped
     environment:
-      POOL_SIZE: "8"
+      POOL_SIZE: "6"
       MIN_READY: "1"
       AUTH_DISABLED: "true"
       PIN_EXIT_RELAY: "true"
