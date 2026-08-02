@@ -1,5 +1,5 @@
 {
-  "v": 1785667180,
+  "v": 1785669893,
   "app": {
     "windows": "https://go.bitanon.dev/lncrawl-windows",
     "linux": "https://go.bitanon.dev/lncrawl-linux",
@@ -521,7 +521,7 @@
     "https://www.novels.pl/": "5e962751f7928b75a7bbfd7a777fd629",
     "https://www.novelupdates.cc/": "ab5e6692cab4784c74023daa7036bc79",
     "https://www.novelupdates.com/": "2c529108c1fd6d790a05e51c02f9bb9c",
-    "https://www.oppatranslations.com/": "e3dde6b1f9d156edfc0239db6215d05b",
+    "https://www.oppatranslations.com/": "f57d2a47e8dbf9ad7d1cf03daf0c0947",
     "https://www.pandamanga.xyz/": "930238810d342d233fb3e2fcfb33088d",
     "https://www.piaotia.com/": "e2a0a1f66eec221866f52e14af342c50",
     "https://www.piaotian.com/": "e2a0a1f66eec221866f52e14af342c50",
@@ -559,6 +559,7 @@
     "https://www.wuxiaworld.com/": "6ef17917ddbd5d2bbea8b18cb55d5876",
     "https://www.xbanxia.com/": "93bff9ed386d79b0bd94389087c7d838",
     "https://xiaowaz.fr/": "907fbc5731ea50b9f70b298bc9b27626",
+    "https://xperimentalhamid.com/": "5ca9b9f985f2a58f9693b0f6b469ccf6",
     "https://zetrotranslation.com/": "788c1ec8f8f03ce6b9f9d37432fd2f55"
   },
   "crawlers": {
@@ -4180,6 +4181,26 @@
         "https://morenovel.net/"
       ],
       "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/id/morenovel.py"
+    },
+    "5ca9b9f985f2a58f9693b0f6b469ccf6": {
+      "version": 1785669862,
+      "md5": "77d3d345f71270871cd228ed7b26659e",
+      "file_path": "sources/en/x/xperimentalhamid.py",
+      "language": "en",
+      "has_manga": false,
+      "can_login": false,
+      "can_search": true,
+      "has_mtl": false,
+      "request_rate_limit": 3.0,
+      "total_commits": 1,
+      "contributors": [
+        "dipu-bd"
+      ],
+      "id": "5ca9b9f985f2a58f9693b0f6b469ccf6",
+      "base_urls": [
+        "https://xperimentalhamid.com/"
+      ],
+      "github_url": "https://github.com/lncrawl/lightnovel-crawler/blob/dev/sources/en/x/xperimentalhamid.py"
     },
     "5d23959dc1b4b41d75e4ad11cc057341": {
       "version": 1748576569,
@@ -10252,7 +10273,7 @@
       "type": "User",
       "user_view_type": "public",
       "site_admin": false,
-      "contributions": 4585
+      "contributions": 4589
     },
     "divyam-gawde": {
       "login": "divyam-gawde",
