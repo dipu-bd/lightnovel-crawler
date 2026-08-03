@@ -586,6 +586,25 @@ class CrawlerConfig(_Section):
         self._set("can_use_browser", v)
 
     @property
+    def generic_fallback(self) -> bool:
+        """Guess Unsupported Sites.
+
+        When a link belongs to a site with no crawler, try to read it anyway by guessing the
+        page structure. Off by default.
+
+        A guess is not a source. It reads the chapter text reliably, but the chapter *list* is
+        inferred, and a site that hides part of its list behind a button or spreads it over
+        several pages will produce a book that is quietly missing chapters. Results say how
+        much confidence to place in them and what could not be accounted for — read that
+        before trusting the download.
+        """
+        return self._get("generic_fallback", False)
+
+    @generic_fallback.setter
+    def generic_fallback(self, v: bool) -> None:
+        self._set("generic_fallback", v)
+
+    @property
     def browser_mode(self) -> str:
         """Challenge Solver Window.
 

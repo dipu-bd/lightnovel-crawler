@@ -4,12 +4,13 @@ from pathlib import Path
 from threading import Event, Thread
 import traceback
 from typing import Dict, List, Optional, Type
+from urllib.parse import urlsplit
 
 from scraper import LAYERS, extract_host
 
 from ...context import ctx
 from ...core import Crawler
-from ...exceptions import AbortedException, ServerErrors
+from ...exceptions import AbortedException, ServerError, ServerErrors
 from ...server.models import CrawlerIndex, CrawlerInfo, SourceDiagnosis, SourceItem
 from ...utils.event_lock import EventLock
 from ...utils.fts_store import FTSStore
@@ -307,7 +308,13 @@ class Sources:
         probe: bool = False,
     ) -> Crawler:
         domain = self.get_domain(url)
-        source = self.get_source(domain)
+        try:
+            source = self.get_source(domain)
+        except ServerError:
+            if not ctx.config.crawler.generic_fallback:
+                raise
+            return self._init_generic(url, domain, parser, timeout, probe)
+
         cid = source.crawler_id
         constructor = self.crawlers[cid]
 
@@ -328,6 +335,37 @@ class Sources:
         if not crawler.language:
             crawler.language = source.language
 
+        crawler.initialize()
+        return crawler
+
+    def _init_generic(
+        self,
+        url: str,
+        domain: str,
+        parser: Optional[str],
+        timeout: Optional[float],
+        probe: bool,
+    ) -> Crawler:
+        """Read a site nobody has written a crawler for, by guessing its structure.
+
+        Deliberately not registered as a source: it has no `base_url`, answers for any
+        host, and must never be mistaken for one that has been verified against the site.
+        """
+        from ...templates.generic import GenericCrawler
+
+        origin = f"{urlsplit(url).scheme or 'https'}://{urlsplit(url).netloc}/"
+        ctx.logger.warn(f"No crawler for {domain}, guessing the page structure")
+        open_session = ctx.scraper.probe if probe else ctx.scraper.open
+        crawler = GenericCrawler(
+            origin=origin,
+            parser=parser,
+            scraper=open_session(
+                origin,
+                parser=parser,
+                rate_limit=GenericCrawler.request_rate_limit,
+                timeout=timeout,
+            ),
+        )
         crawler.initialize()
         return crawler
 
