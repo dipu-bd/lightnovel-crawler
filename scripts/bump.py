@@ -20,13 +20,13 @@ def main() -> None:
 
     current_version = version_file.read_text().strip()
 
-    major, minor, patch = current_version.split(".")
+    major, minor, patch = (int(p) for p in current_version.split("."))
     if args.type == "major":
-        major = int(major) + 1
+        major, minor, patch = major + 1, 0, 0
     elif args.type == "minor":
-        minor = int(minor) + 1
+        minor, patch = minor + 1, 0
     elif args.type == "patch":
-        patch = int(patch) + 1
+        patch += 1
 
     new_version = f"{major}.{minor}.{patch}"
     version_file.write_text(new_version)

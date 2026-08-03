@@ -4,10 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [4.14.0] - 2026-08-03
 
 ### Added
 
+- **51 new sources**, across English, Spanish, Chinese, Russian and Turkish. Most cost almost nothing to add: two new templates read any site built on WordPress categories or Blogger labels, which is what a large share of translation blogs are.
+- **A link from an unsupported site can now be read by guessing the page structure** — off by default, via **Guess Unsupported Sites**. Chapter text comes out reliably; the chapter *list* is inferred, so every result says how much of the list it could account for. Read that before trusting the download: a site that hides part of its list behind a button produces a book quietly missing chapters.
 - **A Proxies screen, and proxies can now say what kind of address they are.** Only ISP, residential and mobile addresses get past a site that blocks on reputation, and every proxy used to be read as datacenter — so a residential proxy bought for exactly that was never used for it. Existing configuration imports automatically.
 - **Six crawler settings you could not reach before**, including how many requests a site gets at once, and whether pages may be read from the Web Archive. Archive reading can recover a novel from a site that is gone for good; it is off by default because it sends the first visit to *every* site to a snapshot.
 
@@ -18,9 +20,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - **The browser stays hidden, and shows itself only when hiding fails.** A hidden browser gets past every site a visible one does, so the window is worth opening only for the challenge nothing can answer alone — and once it is open it waits five minutes instead of ninety seconds, because somebody is there to finish it. A new **Challenge Solver Window** setting pins it to always hidden or always visible; on a server it stays hidden whatever you pick, since nobody could see it. Replaces the old headless switch.
   - **The Docker image ships Firefox on `arm64` as well**, so an `arm64` image can solve for the first time. **Set `TZ`** to the timezone your address looks like it is in: with the container clock left wrong it cleared one challenged site of six, and with it right, all six.
   - New `impersonate` setting; `selenium_grid` is gone.
-- **18 source domains are flagged as rejected** — parked, redirecting into an ad network, or resold. None reported an error: a page full of adverts answers `200`, so the crawl succeeded and produced an empty book.
+- **50 source domains are flagged as rejected** — parked, redirecting into an ad network, or resold. None reported an error: a page full of adverts answers `200`, so the crawl succeeded and produced an empty book.
 - **`wordexcerpt` and `webnovelonline` rebuilt** against the APIs their sites now use, after both became single-page apps their old selectors read as empty. `webnovelonline` now walks its whole listing — 1305 chapters where the page shows 50.
 - **Forty sources were fetching fewer chapters at once than they could.** Ten go from one worker to three, thirty from two.
+- **The README is rewritten and the site list moved to `SOURCES.md`**, so the front page is about installing and using the app rather than 600 lines of table.
 
 ### Fixed
 
