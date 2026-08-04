@@ -10,7 +10,7 @@ from scraper import LAYERS, extract_host
 
 from ...context import ctx
 from ...core import Crawler
-from ...core.tiers import LEGACY, outranks
+from ...core.tiers import LEGACY, TIERS, describe, outranks
 from ...exceptions import AbortedException, ServerError, ServerErrors
 from ...server.models import CrawlerIndex, CrawlerInfo, SourceDiagnosis, SourceItem
 from ...utils.event_lock import EventLock
@@ -155,6 +155,8 @@ class Sources:
 
                 # load the new specs tier
                 self.load_specs()
+
+                self.log_tier_tally()
         except AbortedException:
             pass
 
@@ -174,6 +176,20 @@ class Sources:
             if self._signal.is_set():
                 return
             self.add_crawler(crawler)
+
+    def log_tier_tally(self):
+        """How many hosts each tier ended up serving.
+
+        A spec tier that failed to load is otherwise indistinguishable from one that was never
+        configured: both simply leave the legacy crawlers in place.
+        """
+        tally = {tier: 0 for tier in TIERS}
+        for item in self.sources.values():
+            tally[item.tier] = tally.get(item.tier, 0) + 1
+        logger.info(
+            "Sources by tier: %s",
+            ", ".join(f"{count} {tier}" for tier, count in tally.items()),
+        )
 
     def add_crawler(self, crawler: Type[Crawler]):
         # add to index if not available
@@ -346,7 +362,9 @@ class Sources:
         constructor = self.crawlers[cid]
 
         # create instance
-        ctx.logger.debug(f"Creating crawler instance for {url}")
+        ctx.logger.debug(
+            f"Creating crawler instance for {url}: {describe(source.tier, source.file_path)}"
+        )
         open_session = ctx.scraper.probe if probe else ctx.scraper.open
         crawler = constructor(
             origin=source.url,

@@ -10,7 +10,7 @@ from scraper import extract_host
 
 from ..context import ctx
 from ..core import Chapter as CrawlerChapter, Crawler, Novel as CrawlerNovel, SearchResult
-from ..core.tiers import is_stale, stamp
+from ..core.tiers import describe, is_stale, stamp
 from ..dao import Chapter, ChapterImage, Novel
 from ..enums import LanguageCode
 from ..exceptions import ServerErrors
@@ -33,6 +33,10 @@ def _normalize_language(lang: Optional[str]) -> Optional[str]:
         return LanguageCode(base).value
     except ValueError:
         return None
+
+
+def _origin_of(crawler: Crawler) -> str:
+    return describe(getattr(crawler, "tier", None), getattr(crawler, "__file__", ""))
 
 
 class CrawlerService:
@@ -90,6 +94,8 @@ class CrawlerService:
         novel_url = str(url)
 
         with self.prepare_crawler(user_id, novel_url, signal, custom) as crawler:
+            logger.info(f"Using {_origin_of(crawler)} to crawl {novel_url}")
+
             # fetch novel metadata
             model = CrawlerNovel(url=novel_url)
             crawler.read_novel(model)
@@ -327,6 +333,7 @@ class CrawlerService:
         # get crawler
         source = ctx.sources.get_source(domain)
         with self.prepare_crawler(user_id, source.url, signal, custom) as crawler:
+            logger.info(f"Using {_origin_of(crawler)} to search {domain}")
             results = list(crawler.search(query))
             results.sort(key=lambda x: -SequenceMatcher(a=x.title, b=query).ratio())
             return list(results)

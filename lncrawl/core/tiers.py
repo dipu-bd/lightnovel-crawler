@@ -13,12 +13,14 @@ without changing the content, and treating that as staleness would make every us
 look stale at once, with nothing about the symptom pointing here.
 """
 
+from pathlib import Path
 from typing import Any, Dict, Mapping, Optional
 
 __all__ = [
     "LEGACY",
     "SPEC",
     "TIERS",
+    "describe",
     "outranks",
     "rank",
     "stamp",
@@ -38,6 +40,19 @@ TIERS = (SPEC, LEGACY)
 #: Where a stamp records what produced some stored content.
 VERSION_KEY = "crawler_version"
 TIER_KEY = "crawler_tier"
+
+
+def describe(tier: Optional[str], path: Any = None) -> str:
+    """Which tier serves a host and from what file, for a log line.
+
+    The file name alone, because the extension already separates the tiers and a full path
+    from the data directory buries the answer the line exists to give.
+    """
+    # Absent means legacy, as everywhere else here: content and crawlers predating tiers.
+    known = tier or LEGACY
+    label = known if known in TIERS else f"unknown tier {tier!r}"
+    name = Path(str(path)).name if path else ""
+    return f"{label} ({name})" if name else label
 
 
 def rank(tier: Optional[str]) -> int:
