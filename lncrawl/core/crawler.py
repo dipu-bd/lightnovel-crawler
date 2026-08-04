@@ -15,6 +15,7 @@ from ..exceptions import LNException
 from ..utils.file_tools import atomic_write
 from ..utils.text_tools import format_title, normalize
 from .models import Chapter, Novel, SearchResult, Volume
+from .tiers import LEGACY
 
 if TYPE_CHECKING:
     from requests import Response
@@ -39,6 +40,14 @@ class Crawler(ABC):
     is_disabled = False
     disable_reason = ""
     version = 0
+
+    # Which tier this crawler came from. A spec-backed crawler sets `spec`, and that decides
+    # precedence when both tiers claim a host. See core/tiers.py.
+    tier = LEGACY
+
+    # The novel being crawled, set before any stage runs. `download_chapter` receives only a
+    # chapter, so without this a source needing the novel's address has to re-fetch its page.
+    novel_url: str = ""
 
     @classmethod
     def max_jobs(cls) -> int:

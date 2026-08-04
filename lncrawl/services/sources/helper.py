@@ -11,6 +11,7 @@ from scraper import extract_host, validate_url
 
 from ...context import ctx
 from ...core import Crawler
+from ...core.tiers import LEGACY
 from ...server.models import CrawlerIndex, CrawlerInfo, SourceItem
 from ...utils.log_sink import replace_logger
 from ...utils.time_utils import current_timestamp
@@ -174,13 +175,14 @@ def create_crawler_info(crawler: Type[Crawler]):
     )
 
 
-def create_source_item(url: str, info: CrawlerInfo, rejected: Dict[str, str]):
+def create_source_item(url: str, info: CrawlerInfo, rejected: Dict[str, str], tier: str = LEGACY):
     domain = extract_host(url)
     is_disabled = domain in rejected
     disable_reason = rejected.get(domain) or "No reason provided"
     return SourceItem(
         url=url,
         domain=domain,
+        tier=tier,
         crawler_id=info.id,
         file_path=info.file_path,
         is_disabled=is_disabled,

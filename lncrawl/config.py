@@ -8,7 +8,7 @@ import logging
 import os
 from pathlib import Path
 import time
-from typing import Annotated, Any, Callable, List, Tuple, Type, TypeVar, cast
+from typing import Annotated, Any, Callable, List, Optional, Tuple, Type, TypeVar, cast
 import uuid
 
 import dotenv
@@ -571,6 +571,26 @@ class CrawlerConfig(_Section):
     @cached_property
     def user_index_file(self) -> Path:
         return self.user_sources / "_index.json"
+
+    @cached_property
+    def spec_sources(self) -> Optional[Path]:
+        """The definitions repository holding declarative specs, or None.
+
+        Synced into the app directory like the Python sources are. A sibling checkout is
+        preferred when present, which is what a contributor working on both has.
+
+        A candidate must hold both `specs/` and `base/`. This repository has a `sources/`
+        directory of its own holding the Python tier, so testing for one subdirectory would let
+        an unrelated folder answer for the definitions repository.
+        """
+        configured = os.getenv("LNCRAWL_SPECS_PATH")
+        candidates = [Path(configured)] if configured else []
+        candidates.append(APP_DIR / "sources-v2")
+        candidates.append(ROOT_DIR.parent.parent / "sources")
+        for candidate in candidates:
+            if (candidate / "specs").is_dir() and (candidate / "base").is_dir():
+                return candidate
+        return None
 
     @property
     def can_use_browser(self) -> bool:

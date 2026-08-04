@@ -10,6 +10,7 @@ from scraper import LAYERS, extract_host
 
 from ...context import ctx
 from ...core import Crawler
+from ...core.tiers import LEGACY, outranks
 from ...exceptions import AbortedException, ServerError, ServerErrors
 from ...server.models import CrawlerIndex, CrawlerInfo, SourceDiagnosis, SourceItem
 from ...utils.event_lock import EventLock
@@ -23,6 +24,7 @@ from .helper import (
     load_offline_source,
     save_source,
 )
+from .spec_tier import load_specs
 from .tester import run_crawler_test
 
 logger = logging.getLogger(__name__)
@@ -142,7 +144,7 @@ class Sources:
                     host = extract_host(url)
                     self.rejected[host] = reason
 
-                # dynamically import all crawlers
+                # import legacy crawlers (TODO: to be discontinued)
                 self.info.clear()
                 self.crawlers.clear()
                 self.sources.clear()
@@ -150,11 +152,25 @@ class Sources:
                     *ctx.config.crawler.local_sources.glob("**/*.py"),
                     *ctx.config.crawler.user_sources.glob("**/*.py"),
                 )
+
+                # load the new specs tier
+                self.load_specs()
         except AbortedException:
             pass
 
     def load_crawlers(self, *files: Path):
         for crawler in batch_import(*files):
+            if self._signal.is_set():
+                return
+            self.add_crawler(crawler)
+
+    def load_specs(self):
+        """Register the spec tier, if there is one.
+
+        Silent when the definitions directory or the interpreter is absent, which is the state
+        every checkout is in until both exist. lncrawl then behaves exactly as it did before.
+        """
+        for crawler in load_specs(ctx.config.crawler.spec_sources).values():
             if self._signal.is_set():
                 return
             self.add_crawler(crawler)
@@ -170,8 +186,13 @@ class Sources:
             info = create_crawler_info(crawler)
             self._index.crawlers[cid] = info
 
-        # skip this crawler if it is not the latest
-        if cid in self.info and info.version < self.info[cid].version:
+        tier = getattr(crawler, "tier", LEGACY)
+
+        # skip this crawler if something already registered outranks it
+        current = self.crawlers.get(cid)
+        if current is not None and not outranks(
+            tier, info.version, getattr(current, "tier", LEGACY), self.info[cid].version
+        ):
             return
         self.info[cid] = info
         self.crawlers[cid] = crawler
@@ -180,12 +201,18 @@ class Sources:
         for url in crawler.base_url:
             if self._signal.is_set():
                 return
-            self.add_source(url, info)
+            self.add_source(url, info, tier)
 
-    def add_source(self, url: str, info: CrawlerInfo):
-        item = create_source_item(url, info, self.rejected)
-        # skip this item if it is not the latest
-        if item.domain in self.sources and item.version < self.sources[item.domain].version:
+    def add_source(self, url: str, info: CrawlerInfo, tier: str = LEGACY):
+        item = create_source_item(url, info, self.rejected, tier)
+
+        # Tier first, version only within a tier. Comparing versions alone would let a legacy
+        # crawler re-downloaded by the sync outrank the spec meant to replace it, because its
+        # version is a timestamp and the download refreshes it.
+        existing = self.sources.get(item.domain)
+        if existing is not None and not outranks(
+            item.tier, item.version, existing.tier, existing.version
+        ):
             return
         self.sources[item.domain] = item
 

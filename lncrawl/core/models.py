@@ -120,7 +120,7 @@ class Chapter(_ModelBox):
         body: Optional[str] = None,
         images: Dict[str, str] = dict(),
         success: bool = False,
-        crawler_version: Optional[int] = None,
+        crawler_version: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         self.id = id
@@ -140,7 +140,7 @@ class Volume(_ModelBox):
         id: int,
         title: str = "",
         chapters: int = 0,
-        crawler_version: Optional[int] = None,
+        crawler_version: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         self.id = id
@@ -165,7 +165,7 @@ class Novel(_ModelBox):
         is_manga: Optional[bool] = None,
         is_mtl: Optional[bool] = None,
         is_rtl: Optional[bool] = None,
-        crawler_version: Optional[int] = None,
+        crawler_version: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         self.crawler_version = crawler_version

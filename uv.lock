@@ -2391,6 +2391,7 @@ dependencies = [
     { name = "humanize", version = "4.16.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "imap-tools" },
     { name = "lncrawl-scraper", extra = ["all"] },
+    { name = "lncrawl-sourcelib", extra = ["fetch"] },
     { name = "lncrawl-translator" },
     { name = "lxml" },
     { name = "passlib", extra = ["argon2"] },
@@ -2483,6 +2484,7 @@ requires-dist = [
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
     { name = "lncrawl-scraper", extras = ["all"], specifier = "~=1.7.0" },
+    { name = "lncrawl-sourcelib", extras = ["fetch"], specifier = "~=0.1.2" },
     { name = "lncrawl-translator", specifier = ">=0.2.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "passlib", extras = ["argon2"], specifier = ">=1.7.0" },
@@ -2559,6 +2561,26 @@ all = [
     { name = "pillow", version = "12.3.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
     { name = "websockets", version = "15.0.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "websockets", version = "16.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+]
+
+[[package]]
+name = "lncrawl-sourcelib"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "beautifulsoup4" },
+    { name = "idna" },
+    { name = "pydantic" },
+    { name = "pyyaml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/96/946b569a985d4137c8903944ba86d3a8f228d4f3b699feff254fe008a00a/lncrawl_sourcelib-0.1.2.tar.gz", hash = "sha256:a8460dd6d3f7605ad993610360a71b782131e8cae75e3f453fe5ac829bddf817", size = 254209, upload-time = "2026-08-04T15:15:42.807Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/99/a3/cfd83ebe5507badd70e1da0f5b4515625b3bbffd782e9ab23ea020f2d4f8/lncrawl_sourcelib-0.1.2-py3-none-any.whl", hash = "sha256:343bd1e7feeafa5bb5f13ad77b0a0fc4c584a4515992049c039a6a8a1aae2bd4", size = 79811, upload-time = "2026-08-04T15:15:41.61Z" },
+]
+
+[package.optional-dependencies]
+fetch = [
+    { name = "lncrawl-scraper" },
 ]
 
 [[package]]
