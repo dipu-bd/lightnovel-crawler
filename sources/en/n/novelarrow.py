@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import time
 from typing import Any, Dict, Iterable, List, Optional
@@ -75,70 +74,27 @@ class NovelArrowCrawler(NovelFullTemplate):
                 time.sleep(0.75 * attempt)
         raise LNException(f"NovelArrow API request failed: {url}") from error
 
-    def _extract_payload(self, soup: PageSoup) -> Dict[str, Any]:
-        for script in soup.select("script"):
-            text = script.get_text()
-            if "initialChapterList" not in text:
-                continue
-
-            try:
-                encoded = text.split("self.__next_f.push([1,", 1)[1].rsplit("])", 1)[0]
-                decoded = json.loads(encoded)
-            except Exception:
-                logger.debug("Failed to decode NovelArrow Next.js payload", exc_info=True)
-                continue
-
-            marker = decoded.find('"initialChapterList"')
-            for start in range(marker, -1, -1):
-                if decoded[start] != "{":
-                    continue
-                try:
-                    payload, _ = json.JSONDecoder().raw_decode(decoded[start:])
-                except json.JSONDecodeError:
-                    continue
-                if isinstance(payload, dict) and "initialChapterList" in payload:
-                    return payload
-
-        return {}
+    def get_novel_soup(self, novel: Novel) -> PageSoup:
+        data = self._get_json(f"novels/{quote(self._get_slug(novel.url))}")
+        self._novel_info = data["item"]["novelInfo"]
+        return super().get_novel_soup(novel)
 
     def parse_title(self, soup: PageSoup, novel: Novel) -> None:
-        payload = self._extract_payload(soup)
-        novel.title = payload.get("title") or self._meta_content(soup, "og:novel:novel_name")
-        if not novel.title:
-            super().parse_title(soup, novel)
+        novel.title = self._novel_info["novel_name"]
 
     def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
-        payload = self._extract_payload(soup)
-        novel.cover_url = payload.get("coverImage") or self._meta_content(soup, "og:image")
+        novel.cover_url = self._meta_content(soup, "og:image")
         if not novel.cover_url:
             super().parse_cover(soup, novel)
 
     def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
-        payload = self._extract_payload(soup)
-        novel.author = payload.get("author") or self._meta_content(soup, "og:novel:author")
-        if not novel.author:
-            super().parse_authors(soup, novel)
+        novel.author = self._novel_info.get("novel_author", "")
 
     def parse_tags(self, soup: PageSoup, novel: Novel) -> None:
-        payload = self._extract_payload(soup)
-        novel.tags = [
-            genre.get("label", "").strip()
-            for genre in payload.get("genres", [])
-            if genre.get("label", "").strip()
-        ]
-        if not novel.tags:
-            content = self._meta_content(soup, "og:novel:genre")
-            novel.tags = [tag.strip() for tag in content.split(",") if tag.strip()]
+        novel.tags = self._novel_info.get("novel_genres", [])
 
     def parse_summary(self, soup: PageSoup, novel: Novel) -> None:
-        payload = self._extract_payload(soup)
-        paragraphs = payload.get("synopsisParagraphs") or []
-        if paragraphs:
-            novel.synopsis = "".join(
-                f"<p>{paragraph.strip()}</p>" for paragraph in paragraphs if paragraph.strip()
-            )
-            return
-        super().parse_summary(soup, novel)
+        novel.synopsis = self._novel_info.get("novel_desc", "")
 
     def select_chapter_tags(
         self,
