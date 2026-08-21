@@ -14,6 +14,7 @@ class NovelHallCrawler(LegacyCrawler):
 
     has_manga = False
     has_mtl = True
+    request_rate_limit = 1
 
     def search_novel(self, query: str):
         url = f"/index.php?s=so&module=book&keyword={quote_plus(query.lower())}"
@@ -72,7 +73,9 @@ class NovelHallCrawler(LegacyCrawler):
                 blue.extract()
             self.novel_synopsis = self.cleaner.extract_contents(synopsis)
 
-        for a in soup.select("#morelist.book-catalog ul li a[href]"):
+        for a in soup.select(
+            "#morelist.book-catalog ul li a[href], #morelist ul li a[href], .book-catalog ul li a[href]"
+        ):
             chap_id = len(self.chapters) + 1
             vol_id = len(self.chapters) // 100 + 1
             if len(self.volumes) < vol_id:
@@ -88,5 +91,9 @@ class NovelHallCrawler(LegacyCrawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        contents = soup.select_one("div#htmlContent.entry-content")
+        contents = soup.select_one(
+            "div#htmlContent.entry-content, div#htmlContent, div.entry-content"
+        )
+        if not contents:
+            return ""
         return self.cleaner.extract_contents(contents)
