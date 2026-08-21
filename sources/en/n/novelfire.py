@@ -1,5 +1,6 @@
 import logging
 import re
+import time
 
 from lncrawl.core import Chapter, LegacyCrawler, Volume
 from lncrawl.core.models import SearchResult
@@ -15,7 +16,7 @@ class NovelFireCrawler(LegacyCrawler):
     has_mtl = False
     has_manga = False
     can_search = True
-    request_rate_limit = 3
+    request_rate_limit = 1
 
     def read_novel_info(self) -> None:
         soup = self.get_soup(self.novel_url)
@@ -30,6 +31,7 @@ class NovelFireCrawler(LegacyCrawler):
         vol_url = self.novel_url + "/chapters"
 
         while vol_url:
+            time.sleep(0.5)
             soup = self.get_soup(self.absolute_url(vol_url))
 
             chapters = soup.select("ul.chapter-list li a")
@@ -56,8 +58,10 @@ class NovelFireCrawler(LegacyCrawler):
 
     def download_chapter_body(self, chapter) -> str:
         soup = self.get_soup(chapter["url"])
-        contents = soup.select_one("div#content")
-        if not contents:
+        contents = soup.select_one(
+            "div#content, div.chapter-content, div.content, div.cha-content, .cha-words"
+        )
+        if not contents or not contents.text.strip():
             return ""
 
         # 1. Look through the very top elements inside the content container

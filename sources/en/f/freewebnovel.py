@@ -38,26 +38,35 @@ class FreewebnovelCrawler(FreewebnovelTemplate):
         clean_url = novel.url.split("?")[0]
         total_page, page_size = self._get_chapter_pagination(tag)
         futures = [
-            self.taskman.submit_task(
-                self.scraper.submit_form,
-                url=clean_url
-                + "?"
-                + urlencode(
-                    {
-                        "ajax": "chapters",
-                        "page": page,
-                        "pageSize": page_size,
-                    }
+            (
+                page,
+                self.taskman.submit_task(
+                    self.scraper.submit_form,
+                    url=clean_url
+                    + "?"
+                    + urlencode(
+                        {
+                            "ajax": "chapters",
+                            "page": page,
+                            "pageSize": page_size,
+                        }
+                    ),
                 ),
             )
             for page in range(1, total_page + 1)
         ]
-        for resp in self.taskman.resolve(
-            futures,
-            desc="Index",
-            unit="page",
-            fail_fast=True,
-        ):
+
+        list(
+            self.taskman.resolve(
+                [f for _, f in futures],
+                desc="Index",
+                unit="page",
+                fail_fast=True,
+            )
+        )
+
+        for page, future in sorted(futures, key=lambda x: x[0]):
+            resp = future.result()
             assert resp, "failed to fetch chapter list"
             data = resp.json()
             assert "html" in data, "invalid chapter list result"
