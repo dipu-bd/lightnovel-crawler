@@ -51,7 +51,7 @@ def build_intro(novel: Novel) -> epub.EpubHtml:
         <h1>{novel.title}</h1>
         <h3>{novel.authors}</h3>
         <div class="synopsis">
-            {novel.synopsis}
+            {"".join(f"<p>{line}</p>" for line in (novel.synopsis or "").splitlines())}
         </div>
         <div class="footer">
             <b>Source:</b> <a href="{novel.url}">{novel.url}</a>
