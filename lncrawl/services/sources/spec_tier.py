@@ -18,7 +18,7 @@ from __future__ import annotations
 import hashlib
 import logging
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Type
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Type
 
 from ...core import Crawler
 from ...core.models import Chapter, Novel, SearchResult, Volume
@@ -26,7 +26,7 @@ from ...core.tiers import SPEC
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["available", "load_specs", "to_novel"]
+__all__ = ["available", "load_specs", "to_novel", "unreadable"]
 
 
 def available() -> bool:
@@ -70,14 +70,32 @@ def to_novel(source: Any, novel: Novel) -> None:
             url=c.url,
             title=c.title,
             volume=c.volume,
-            **(c.extras or {}),
+            **_spreadable(c.extras),
         )
         for c in source.chapters
     ]
 
 
+#: The keyword arguments this module passes by name. An extra of the same name arrives as a second
+#: value for one parameter, which is a TypeError rather than an override — a spec that names a toc
+#: field `id` took the whole source down with
+#: `Chapter() got multiple values for keyword argument 'id'`.
+_SPREAD_RESERVED = ("id", "url", "title", "volume", "info")
+
+
+def _spreadable(extras: Optional[Mapping[str, Any]]) -> Dict[str, Any]:
+    """*extras* minus the names this module already passes.
+
+    Dropping rather than renaming: the field is still on the row the interpreter produced, and a
+    silent rename would put a chapter's `id` somewhere no reader would look for it.
+    """
+    return {k: v for k, v in (extras or {}).items() if k not in _SPREAD_RESERVED}
+
+
 def _search_results(rows: Iterable[Any]) -> List[SearchResult]:
-    return [SearchResult(title=r.title, url=r.url, info=r.info, **(r.extras or {})) for r in rows]
+    return [
+        SearchResult(title=r.title, url=r.url, info=r.info, **_spreadable(r.extras)) for r in rows
+    ]
 
 
 def build_crawler(spec: Any, root: Path, host: str, path: Path) -> Type[Crawler]:
@@ -86,8 +104,10 @@ def build_crawler(spec: Any, root: Path, host: str, path: Path) -> Type[Crawler]
     Every instance builds its own interpreter, because the interpreter holds per-crawl state and
     a crawler class is shared by every crawl of its host.
     """
-    from sourcelib.http import ScraperFetcher  # type: ignore[import-not-found]
-    from sourcelib.runtime import Interpreter  # type: ignore[import-not-found]
+    from sourcelib import Interpreter  # type: ignore[import-not-found]
+    from sourcelib.net.scraper import ScraperFetcher  # type: ignore[import-not-found]
+
+    can = _capabilities(spec)
 
     class SpecCrawler(Crawler):
         base_url = [str(spec.base_url)]
@@ -104,9 +124,11 @@ def build_crawler(spec: Any, root: Path, host: str, path: Path) -> Type[Crawler]
         is_disabled = bool(spec.disabled)
         disable_reason = spec.disabled or ""
 
-        # Derived rather than declared, so a flag cannot drift from what resolves.
-        can_search = spec.search is not None
-        can_login = "login" in (spec.hooks if isinstance(spec.hooks, dict) else {})
+        # Asked of the interpreter rather than recomputed here. This read `spec.search is not
+        # None`, which ignores both an explicit `can_search: false` and a search supplied by a
+        # hook, so a source turned off on purpose still advertised search.
+        can_search = can["can_search"]
+        can_login = can["can_login"]
 
         def __init__(self, *args: Any, **kwargs: Any) -> None:
             super().__init__(*args, **kwargs)
@@ -139,14 +161,32 @@ def build_crawler(spec: Any, root: Path, host: str, path: Path) -> Type[Crawler]
     SpecCrawler.__name__ = f"Spec_{host.replace('.', '_').replace('-', '_')}"
     SpecCrawler.__qualname__ = SpecCrawler.__name__
 
-    # The registry expects what `extract_crawlers` sets on an imported .py crawler. A spec is
-    # not imported, so they are set here rather than discovered.
     setattr(SpecCrawler, "__id__", hashlib.md5(f"spec:{host}".encode()).hexdigest())
     setattr(SpecCrawler, "__file__", str(path))
-    # An integer, because the index casts it. A content digest arrives with the manifest, and
-    # the value stamped on stored content is already normalised to a string in core/tiers.py.
-    setattr(SpecCrawler, "version", _mtime(path))
+    setattr(SpecCrawler, "version", _content_version(path))
+    setattr(SpecCrawler, "updated_at", _mtime(path))
     return SpecCrawler
+
+
+def _capabilities(spec: Any) -> Dict[str, bool]:
+    """What a resolved spec can do, as the interpreter derives it.
+
+    `bound` is the set of hook points actually bound. A spec naming a whole hook file binds
+    whatever that file defines, which only the hook loader knows, so a declared mapping is all
+    this can offer and a bare path is treated as binding nothing here.
+    """
+    from sourcelib.spec.validate import capabilities  # type: ignore[import-not-found]
+
+    declared = spec.hooks if isinstance(spec.hooks, dict) else {}
+    return capabilities(spec, set(declared))
+
+
+def _content_version(path: Path) -> int:
+    try:
+        digest = hashlib.md5(path.read_bytes()).hexdigest()
+    except OSError:  # pragma: no cover - the registry just read this file
+        return 0
+    return int(digest[:8], 16)
 
 
 def _mtime(path: Path) -> int:
@@ -157,13 +197,13 @@ def _mtime(path: Path) -> int:
 
 
 def _as_source_novel(url: str) -> Any:
-    from sourcelib.models import Novel as SourceNovel  # type: ignore[import-not-found]
+    from sourcelib import Novel as SourceNovel  # type: ignore[import-not-found]
 
     return SourceNovel(url=str(url))
 
 
 def _as_source_chapter(chapter: Chapter) -> Any:
-    from sourcelib.models import Chapter as SourceChapter  # type: ignore[import-not-found]
+    from sourcelib import Chapter as SourceChapter  # type: ignore[import-not-found]
 
     known = ("id", "url", "title", "volume", "body", "images", "success")
     return SourceChapter(
@@ -175,23 +215,33 @@ def _as_source_chapter(chapter: Chapter) -> Any:
     )
 
 
+#: How many specs the last load could not read. Reported with the tier tally, because a spec that
+#: fails to load leaves its host on the legacy crawler and is otherwise indistinguishable from a
+#: host that never had a spec — which is how an interpreter one minor version too old hid 36 of
+#: them behind a per-file warning nobody reads.
+unreadable = 0
+
+
 def load_specs(root: Optional[Path]) -> Dict[str, Type[Crawler]]:
     """Every servable spec under *root*, as host -> Crawler subclass.
 
     Returns nothing at all when the interpreter is absent or the directory does not exist, so a
     checkout without either behaves exactly as it does today.
     """
+    global unreadable
+    unreadable = 0
     if root is None or not Path(root).is_dir():
         return {}
     if not available():
         logger.info(_requirement_hint())
         return {}
 
-    from sourcelib.registry import Registry  # type: ignore[import-not-found]
+    from sourcelib import Registry  # type: ignore[import-not-found]
 
     registry = Registry.load(Path(root))
     for path, reason in registry.problems:
         logger.warning(f"\\[{path}] spec could not be read: {reason}")
+    unreadable = len(registry.problems)
 
     built: Dict[str, Type[Crawler]] = {}
     for entry in registry.served:
@@ -199,4 +249,5 @@ def load_specs(root: Optional[Path]) -> Dict[str, Type[Crawler]]:
             built[entry.host] = build_crawler(entry.spec, Path(root), entry.host, entry.path)
         except Exception as error:
             logger.warning(f"\\[{entry.path}] spec could not be loaded: {error!r}")
+            unreadable += 1
     return built

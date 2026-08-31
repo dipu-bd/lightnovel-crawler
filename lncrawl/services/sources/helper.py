@@ -5,7 +5,7 @@ import json
 import logging
 from pathlib import Path
 import types
-from typing import Dict, Generator, Type
+from typing import Dict, Generator, Optional, Type
 
 from scraper import extract_host, validate_url
 
@@ -142,6 +142,7 @@ def extract_crawlers(module: types.ModuleType) -> Generator[Type[Crawler], None,
         setattr(crawler, "__file__", str(file))
         setattr(crawler, "__module_obj__", module)
         setattr(crawler, "version", file_time)
+        setattr(crawler, "updated_at", file_time)
 
         yield crawler
 
@@ -175,7 +176,13 @@ def create_crawler_info(crawler: Type[Crawler]):
     )
 
 
-def create_source_item(url: str, info: CrawlerInfo, rejected: Dict[str, str], tier: str = LEGACY):
+def create_source_item(
+    url: str,
+    info: CrawlerInfo,
+    rejected: Dict[str, str],
+    tier: str = LEGACY,
+    updated_at: Optional[int] = None,
+):
     domain = extract_host(url)
     is_disabled = domain in rejected
     disable_reason = rejected.get(domain) or "No reason provided"
@@ -189,6 +196,7 @@ def create_source_item(url: str, info: CrawlerInfo, rejected: Dict[str, str], ti
         disable_reason=disable_reason if is_disabled else None,
         md5=info.md5,
         version=info.version,
+        updated_at=updated_at,
         language=info.language,
         has_manga=info.has_manga,
         has_mtl=info.has_mtl,

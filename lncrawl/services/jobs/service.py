@@ -1028,7 +1028,7 @@ class JobService:
 
     def cancel_if_dangling(self, job: Job) -> bool:
         root = self.get_root(job.id)
-        if root and not root.is_done:
+        if root and not (root.error or root.is_done):
             return False
 
         self.cancel(job.id)

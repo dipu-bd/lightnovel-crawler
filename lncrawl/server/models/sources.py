@@ -67,12 +67,15 @@ class SourceItem(_CommonSourceInfo):
     total_novels: int = Field(default=0, description="Total number of novels")
     is_disabled: bool = Field(default=False, description="True if the source is disabled")
     disable_reason: Optional[str] = Field(default=None, description="Reason for disabling")
-    # On SourceItem rather than on _CommonSourceInfo, because CrawlerInfo is the published
-    # index's wire format and must stay byte-identical for clients that only know the old one.
     tier: str = Field(
         default=LEGACY,
         description="Which tier serves this host: 'spec' for a declarative definition, "
         "'legacy' for a Python crawler. Decides precedence when both exist.",
+    )
+    updated_at: Optional[int] = Field(
+        default=None,
+        description="When this source last changed, as a Unix timestamp in seconds. "
+        "Absent when unknown.",
     )
 
     def __hash__(self) -> int:

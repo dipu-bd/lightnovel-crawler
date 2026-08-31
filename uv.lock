@@ -2483,8 +2483,8 @@ requires-dist = [
     { name = "httpx", extras = ["brotli", "http2"], specifier = ">=0.27.0" },
     { name = "humanize", specifier = ">=4.0.0" },
     { name = "imap-tools", specifier = ">=1.10.0" },
-    { name = "lncrawl-scraper", extras = ["all"], specifier = "~=1.7.0" },
-    { name = "lncrawl-sourcelib", extras = ["fetch"], specifier = "~=0.1.2" },
+    { name = "lncrawl-scraper", extras = ["all"], specifier = "~=1.8.0" },
+    { name = "lncrawl-sourcelib", extras = ["fetch"], specifier = "~=0.1.9" },
     { name = "lncrawl-translator", specifier = ">=0.2.1" },
     { name = "lxml", specifier = ">=5.4.0,<7.0.0" },
     { name = "passlib", extras = ["argon2"], specifier = ">=1.7.0" },
@@ -2538,7 +2538,7 @@ dev = [
 
 [[package]]
 name = "lncrawl-scraper"
-version = "1.7.0"
+version = "1.8.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
@@ -2548,9 +2548,9 @@ dependencies = [
     { name = "requests", version = "2.32.5", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version < '3.10'" },
     { name = "requests", version = "2.34.2", source = { registry = "https://pypi.org/simple" }, extra = ["socks"], marker = "python_full_version >= '3.10'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a7/9c/cf1ed78950ea414d1f5337180ffd246df6165c5bcea0ec2d0ca43ee2c5a1/lncrawl_scraper-1.7.0.tar.gz", hash = "sha256:69867c035bef49e5ed848fae1b14389954f044689dfafadeefe6b4068f92cab1", size = 1674273, upload-time = "2026-08-03T13:15:53.731Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/53/af/132c1d39cee632aa49e135b54d7833cf71acec6deb1a0a32b44a8f65e86f/lncrawl_scraper-1.8.0.tar.gz", hash = "sha256:65df0b8f23868595cf47b25a09ac1b4db3cc9143f9c7de446829af50bdc9d67f", size = 1675747, upload-time = "2026-08-11T17:49:00.823Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/31/12/9d0ea14fe5c00e25a84fc0b3f6bd5fa8d9cb185fa1f6219ec7a025329c7b/lncrawl_scraper-1.7.0-py3-none-any.whl", hash = "sha256:a7c62f870647dc34302ef58b648b1a5189874efd4237c07b9b6462ccb3081894", size = 158297, upload-time = "2026-08-03T13:15:52.353Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/10/166307128392b684cd547b181862e26c63fec1f268033b28e206ee72528d/lncrawl_scraper-1.8.0-py3-none-any.whl", hash = "sha256:63458aa41b93c17d4f54f621cf8fc3e619325f5120329608e6dfb1649a404f08", size = 159112, upload-time = "2026-08-11T17:48:59.218Z" },
 ]
 
 [package.optional-dependencies]
@@ -2565,17 +2565,18 @@ all = [
 
 [[package]]
 name = "lncrawl-sourcelib"
-version = "0.1.2"
+version = "0.1.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "beautifulsoup4" },
     { name = "idna" },
+    { name = "lxml" },
     { name = "pydantic" },
     { name = "pyyaml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f5/96/946b569a985d4137c8903944ba86d3a8f228d4f3b699feff254fe008a00a/lncrawl_sourcelib-0.1.2.tar.gz", hash = "sha256:a8460dd6d3f7605ad993610360a71b782131e8cae75e3f453fe5ac829bddf817", size = 254209, upload-time = "2026-08-04T15:15:42.807Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/44/700963c4587dc07f3f6bd4b2b20ee6a4f9676fd3b2e7840fb8c13e5aaab0/lncrawl_sourcelib-0.1.9.tar.gz", hash = "sha256:974b2789669b8910769b9a6caa4d588b9ead86c7b417ae6ce805552c0421ad8e", size = 322229, upload-time = "2026-08-11T17:54:51.369Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/99/a3/cfd83ebe5507badd70e1da0f5b4515625b3bbffd782e9ab23ea020f2d4f8/lncrawl_sourcelib-0.1.2-py3-none-any.whl", hash = "sha256:343bd1e7feeafa5bb5f13ad77b0a0fc4c584a4515992049c039a6a8a1aae2bd4", size = 79811, upload-time = "2026-08-04T15:15:41.61Z" },
+    { url = "https://files.pythonhosted.org/packages/7f/df/26002ed6f553097c66d7b28dd6c63203bec0647713f58f7c9b86a43b387b/lncrawl_sourcelib-0.1.9-py3-none-any.whl", hash = "sha256:9952b9ac86c7618772055026fc19ac10667c909ec79552aaa595bcd59b2b41a0", size = 95418, upload-time = "2026-08-11T17:54:49.965Z" },
 ]
 
 [package.optional-dependencies]
