@@ -30,7 +30,7 @@ ENV LNCRAWL_DATA_PATH=/data \
 
 # Firefox, from Mozilla
 RUN apt-get update -yq && \
-    apt-get install -yq --no-install-recommends ca-certificates wget xz-utils \
+    apt-get install -yq --no-install-recommends ca-certificates wget xz-utils tini \
     libgtk-3-0 libdbus-glib-1-2 libasound2t64 libx11-xcb1 libxtst6 libxt6 libpci3 \
     fonts-liberation fonts-dejavu && \
     case "$(dpkg --print-architecture)" in \
@@ -57,4 +57,4 @@ COPY pyproject.toml uv.lock ./
 COPY lncrawl ./lncrawl
 COPY sources ./sources
 
-ENTRYPOINT ["/app/.venv/bin/python", "-m", "lncrawl"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/app/.venv/bin/python", "-m", "lncrawl"]
