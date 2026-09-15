@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class WtrLab(LegacyCrawler):
     base_url = ["https://wtr-lab.com"]
     has_mtl = True
-    request_rate_limit = 1
+    request_rate_limit = 0.125  # ~8s between requests; 1 rps trips Turnstile
 
     def check_response(self, response, body: str):
         if '"requireTurnstile"' not in body:
@@ -72,16 +72,18 @@ class WtrLab(LegacyCrawler):
         series_data = page_props["serie"]["serie_data"]
         clean_url = self.novel_url.split("?")[0].strip("/")
 
-        self.novel_cover = series_data["data"]["image"]
-        self.novel_title = series_data["data"]["raw"]["title"]
-        self.novel_author = series_data["data"]["raw"]["author"]
-        self.novel_synopsis = series_data["data"]["raw"]["description"]
+        payload = series_data["data"]
+        raw = payload.get("raw") or {}
+        # `data` is localized; `raw` is original-language and often incomplete.
+        self.novel_cover = payload.get("image") or raw.get("image")
+        self.novel_title = payload.get("title") or raw.get("title") or ""
+        self.novel_author = payload.get("author") or raw.get("author") or ""
+        self.novel_synopsis = payload.get("description") or raw.get("description") or ""
         if "tags" in page_props:
             self.novel_tags = [tag["title"] for tag in page_props["tags"] if tag.get("title")]
 
-        # self.language = query["locale"] # reports wrong language for raws
-
-        raw_id = query["raw_id"]
+        # self.language = query["locale"]  # reports the UI locale, not the raw
+        raw_id = int(query["raw_id"])
         chapter_count = series_data["chapter_count"]
         batch_size = 250
         batch_count = math.ceil(chapter_count / batch_size)
@@ -119,25 +121,26 @@ class WtrLab(LegacyCrawler):
                         language=self.language,
                         chapter_id=item["id"],
                         serie_id=item["serie_id"],
+                        raw_id=raw_id,
                         url=f"{clean_url}/chapter-{item['order']}",
                     )
                 )
 
     def download_chapter_body(self, chapter):
-        url = f"{self.scraper.origin}/api/reader/get"
-        payload = json.dumps(
-            {
-                "translate": "web",  # note: "ai" requires login
-                "language": chapter.language,
-                "raw_id": chapter.serie_id,
-                "chapter_no": chapter.order,
-                "retry": False,
-                "force_retry": False,
-                "chapter_id": chapter.chapter_id,
-            }
-        )
-        headers = {"Content-Type": "application/json"}
-        jsonData = self.get_json(url, data=payload, headers=headers)
+        url = f"{self.scraper.origin}api/reader/get"
+        payload = {
+            "raw_id": chapter.raw_id,
+            "chapter_no": chapter.order,
+            "retry": False,
+            "force_retry": False,
+            "chapter_id": chapter.chapter_id,
+        }
+        # `translate`/`language` ask WTR-Lab to MTL. Omit both unless a
+        # target language was actually requested; LNCrawl translates itself.
+        if chapter.language:
+            payload["language"] = chapter.language
+            payload["translate"] = "web"  # "ai" requires login
+        jsonData = self.post_json(url, json=payload)
         if not jsonData["success"]:
             # Reached only once the scraper has run out of addresses to try, since
             # `check_response` turns the refusal into a rotation first. Raised as a
