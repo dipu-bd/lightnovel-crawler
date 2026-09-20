@@ -58,6 +58,9 @@ class WattpadCrawler(LegacyCrawler):
         self.novel_author = story_info["user"]["name"]
         logger.info("Novel author: %s", self.novel_author)
 
+        self.novel_synopsis = story_info.get("description", "")
+        logger.info("Novel synopsis: %s", self.novel_synopsis)
+
         for a in story_info["parts"]:
             self.chapters.append(
                 Chapter(
