@@ -7,10 +7,10 @@ logger = logging.getLogger(__name__)
 
 
 class IndowebnovelCrawler(LegacyCrawler):
-    base_url = "https://indowebnovel.id/"
-
-    def initialize(self):
-        self.scraper.origin = "https://indowebnovel.id/"
+    base_url = [
+        "https://indowebnovel.com/",
+        "https://indowebnovel.id/",
+    ]
 
     def read_novel_info(self):
         # url = self.novel_url.replace('https://yukinovel.me', 'https://yukinovel.id')
@@ -51,6 +51,6 @@ class IndowebnovelCrawler(LegacyCrawler):
 
     def download_chapter_body(self, chapter):
         soup = self.get_soup(chapter["url"])
-        contents = soup.select("div.content div.reader p")
+        contents = soup.select("div.content > div.container p")
         body = [str(p) for p in contents if p.text.strip()]
         return "<p>" + "</p><p>".join(body) + "</p>"
