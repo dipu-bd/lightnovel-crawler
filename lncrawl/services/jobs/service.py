@@ -926,6 +926,7 @@ class JobService:
         sa_is_done = sa_done == sa_total
 
         sa_status = sq.case(
+            (sq.and_(sa_is_done, sa_failed > 0), JobStatus.FAILED),
             (sa_is_done, JobStatus.SUCCESS),
             else_=Job.status,
         )
