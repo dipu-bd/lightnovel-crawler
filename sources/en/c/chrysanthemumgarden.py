@@ -45,15 +45,24 @@ class ChrysanthemumGarden(LegacyCrawler):
         logger.info("Novel cover: %s", self.novel_cover)
 
         volumes = set([])
-        for a in soup.select(".chapter-item a"):
+        for a in soup.select("#translated-chapters a.chapter-item"):
             ch_id = len(self.chapters) + 1
             vol_id = 1 + len(self.chapters) // 100
             volumes.add(vol_id)
+
+            chapter_number = a.select_one(".chapter-item-number")
+            chapter_name = a.select_one(".chapter-item-name")
+
+            title_parts = [
+                item.get_text(" ", strip=True) for item in (chapter_number, chapter_name) if item
+            ]
+            title = " ".join(title_parts) or f"Chapter {ch_id}"
+
             self.chapters.append(
                 Chapter(
                     id=ch_id,
                     volume=vol_id,
-                    title=a.text.strip(),
+                    title=title,
                     url=self.absolute_url(a["href"]),
                 )
             )
