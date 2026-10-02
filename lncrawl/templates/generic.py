@@ -189,12 +189,13 @@ class GenericCrawler(SoupTemplate):
         base = self._strip(self.absolute_url(novel_url))
         host = urlsplit(base).netloc
         groups = self._group(soup, base, host)
+
         if not groups:
             return GenericVerdict([], False, ["no chapter-shaped links here"], "low", "document")
 
         best = max(groups, key=lambda c: c.score)
         chapters, ordering = self._order(best)
-        notes, complete = self._completeness(soup, chapters)
+        notes, complete = self._completeness(soup, chapters, ordering)
         return GenericVerdict(
             chapters, complete, notes, self._confidence(best, chapters, complete, groups), ordering
         )
@@ -244,13 +245,18 @@ class GenericCrawler(SoupTemplate):
             out.append(bucket)
         return out
 
+    def _classes(self, node) -> List[str]:
+        """Return CSS classes from PageSoup as individual class names."""
+        value = node.get("class") or ""
+        return str(value).split()
+
     def _signature(self, anchor, depth: int = 3) -> str:
         parts = []
         node = anchor
         for _ in range(depth + 1):
-            if node is None or not hasattr(node, "get"):
+            if not node or not hasattr(node, "get"):
                 break
-            classes = node.get("class") or []
+            classes = self._classes(node)
             parts.append(f"{getattr(node, 'name', '?')}.{classes[0] if classes else ''}")
             node = node.parent
         return "|".join(parts)
@@ -264,7 +270,7 @@ class GenericCrawler(SoupTemplate):
 
         ancestor = self._ancestor(cand.anchors)
         if ancestor is not None:
-            key = id(ancestor)
+            key = id(ancestor.tag)
             if key not in counts:
                 counts[key] = len(ancestor.select("a[href]"))
             total = counts[key] or size
@@ -317,9 +323,9 @@ class GenericCrawler(SoupTemplate):
         out: List[str] = []
         node = tag
         for _ in range(3):
-            if node is None or not hasattr(node, "get"):
+            if not node or not hasattr(node, "get"):
                 break
-            out.extend(str(x) for x in (node.get("class") or []))
+            out.extend(self._classes(node))
             out.append(str(node.get("id") or ""))
             out.append(str(getattr(node, "name", "") or ""))
             node = node.parent
@@ -328,11 +334,11 @@ class GenericCrawler(SoupTemplate):
     def _in_navigation(self, tag) -> bool:
         node = tag
         for _ in range(4):
-            if node is None or not hasattr(node, "get"):
+            if not node or not hasattr(node, "get"):
                 break
             if getattr(node, "name", "") in ("nav", "aside", "footer", "header"):
                 return True
-            blob = " ".join(str(x) for x in (node.get("class") or []))
+            blob = " ".join(self._classes(node))
             blob += " " + str(node.get("id") or "")
             if NAV_CONTAINER.search(blob):
                 return True
@@ -346,14 +352,14 @@ class GenericCrawler(SoupTemplate):
         for anchor in anchors[:40]:
             chain = []
             node = anchor
-            while node is not None:
+            while node:
                 chain.append(node)
-                node = getattr(node, "parent", None)
+                node = node.parent
             chains.append(list(reversed(chain)))
         shortest = min(len(c) for c in chains)
         found = None
         for depth in range(shortest):
-            if len({id(c[depth]) for c in chains}) != 1:
+            if len({id(c[depth].tag) for c in chains}) != 1:
                 break
             found = chains[0][depth]
         return found
@@ -375,11 +381,22 @@ class GenericCrawler(SoupTemplate):
             return list(reversed(pairs)), "document (reversed)"
         return pairs, "document"
 
-    def _completeness(self, soup: PageSoup, chapters) -> Tuple[List[str], bool]:
+    def _completeness(
+        self,
+        soup: PageSoup,
+        chapters: List[Tuple[str, str]],
+        ordering: str,
+    ) -> Tuple[List[str], bool]:
         notes: List[str] = []
         complete = True
 
-        maybe = [_last_number(urlsplit(u).path) for _, u in chapters]
+        if ordering == "href-number":
+            maybe = [_last_number(urlsplit(url).path) for _, url in chapters]
+        elif ordering == "title-number":
+            maybe = [_first_number(title) for title, _ in chapters]
+        else:
+            maybe = []
+
         if maybe and all(n is not None for n in maybe):
             numbers = [n for n in maybe if n is not None]
             highest = max(numbers)
