@@ -32,18 +32,15 @@ class NovelPingCrawler(NovelFullTemplate):
         if not url:
             return url
 
-        return (
-            url.replace("www.novelarrow.com", "novelping.com")
-               .replace("novelarrow.com", "novelping.com")
+        return url.replace("www.novelarrow.com", "novelping.com").replace(
+            "novelarrow.com", "novelping.com"
         )
 
     def initialize(self) -> None:
         if hasattr(self, "url") and self.url:
             self.url = self.normalize_url(self.url)
 
-        self.cleaner.bad_tags.update(
-            ["script", "style", "nav", "button", "iframe"]
-        )
+        self.cleaner.bad_tags.update(["script", "style", "nav", "button", "iframe"])
 
         self.cleaner.bad_css.update(
             [
@@ -99,9 +96,7 @@ class NovelPingCrawler(NovelFullTemplate):
                 if response.ok and response.text.strip():
                     return response.json()
 
-                raise LNException(
-                    f"Empty response ({response.status_code}) from {url}"
-                )
+                raise LNException(f"Empty response ({response.status_code}) from {url}")
 
             except Exception as e:
                 error = e
@@ -115,9 +110,7 @@ class NovelPingCrawler(NovelFullTemplate):
 
                 time.sleep(0.75 * attempt)
 
-        raise LNException(
-            f"NovelPing API request failed: {url}"
-        ) from error
+        raise LNException(f"NovelPing API request failed: {url}") from error
 
     def _extract_payload(self, soup: PageSoup) -> Dict[str, Any]:
         for script in soup.select("script"):
@@ -127,10 +120,7 @@ class NovelPingCrawler(NovelFullTemplate):
                 continue
 
             try:
-                encoded = (
-                    text.split("self.__next_f.push([1,", 1)[1]
-                    .rsplit("])", 1)[0]
-                )
+                encoded = text.split("self.__next_f.push([1,", 1)[1].rsplit("])", 1)[0]
 
                 decoded = json.loads(encoded)
 
@@ -148,17 +138,12 @@ class NovelPingCrawler(NovelFullTemplate):
                     continue
 
                 try:
-                    payload, _ = json.JSONDecoder().raw_decode(
-                        decoded[start:]
-                    )
+                    payload, _ = json.JSONDecoder().raw_decode(decoded[start:])
 
                 except json.JSONDecodeError:
                     continue
 
-                if (
-                    isinstance(payload, dict)
-                    and "initialChapterList" in payload
-                ):
+                if isinstance(payload, dict) and "initialChapterList" in payload:
                     return payload
 
         return {}
@@ -166,10 +151,7 @@ class NovelPingCrawler(NovelFullTemplate):
     def parse_title(self, soup: PageSoup, novel: Novel) -> None:
         payload = self._extract_payload(soup)
 
-        novel.title = (
-            payload.get("title")
-            or self._meta_content(soup, "og:novel:novel_name")
-        )
+        novel.title = payload.get("title") or self._meta_content(soup, "og:novel:novel_name")
 
         if not novel.title:
             super().parse_title(soup, novel)
@@ -177,10 +159,7 @@ class NovelPingCrawler(NovelFullTemplate):
     def parse_cover(self, soup: PageSoup, novel: Novel) -> None:
         payload = self._extract_payload(soup)
 
-        novel.cover_url = (
-            payload.get("coverImage")
-            or self._meta_content(soup, "og:image")
-        )
+        novel.cover_url = payload.get("coverImage") or self._meta_content(soup, "og:image")
 
         if not novel.cover_url:
             super().parse_cover(soup, novel)
@@ -188,10 +167,7 @@ class NovelPingCrawler(NovelFullTemplate):
     def parse_authors(self, soup: PageSoup, novel: Novel) -> None:
         payload = self._extract_payload(soup)
 
-        novel.author = (
-            payload.get("author")
-            or self._meta_content(soup, "og:novel:author")
-        )
+        novel.author = payload.get("author") or self._meta_content(soup, "og:novel:author")
 
         if not novel.author:
             super().parse_authors(soup, novel)
@@ -211,11 +187,7 @@ class NovelPingCrawler(NovelFullTemplate):
                 "og:novel:genre",
             )
 
-            novel.tags = [
-                tag.strip()
-                for tag in content.split(",")
-                if tag.strip()
-            ]
+            novel.tags = [tag.strip() for tag in content.split(",") if tag.strip()]
 
     def parse_summary(self, soup: PageSoup, novel: Novel) -> None:
         payload = self._extract_payload(soup)
@@ -224,9 +196,7 @@ class NovelPingCrawler(NovelFullTemplate):
 
         if paragraphs:
             novel.synopsis = "".join(
-                f"<p>{paragraph.strip()}</p>"
-                for paragraph in paragraphs
-                if paragraph.strip()
+                f"<p>{paragraph.strip()}</p>" for paragraph in paragraphs if paragraph.strip()
             )
             return
 
@@ -247,15 +217,9 @@ class NovelPingCrawler(NovelFullTemplate):
             slug,
         )
 
-        data = self._get_json(
-            f"novels/{quote(slug)}/chapters?sort=asc"
-        )
+        data = self._get_json(f"novels/{quote(slug)}/chapters?sort=asc")
 
-        chapters: List[Dict[str, Any]] = (
-            data
-            if isinstance(data, list)
-            else data.get("items", [])
-        )
+        chapters: List[Dict[str, Any]] = data if isinstance(data, list) else data.get("items", [])
 
         logger.info(
             "NovelPing chapters found: %s",
@@ -275,11 +239,7 @@ class NovelPingCrawler(NovelFullTemplate):
         return Chapter(
             id=chapter_id,
             title=soup.get("chapter_name", "").strip(),
-            url=(
-                f"https://novelping.com/chapter/"
-                f"{quote(novel_slug)}/"
-                f"{quote(chapter_slug)}"
-            ),
+            url=(f"https://novelping.com/chapter/{quote(novel_slug)}/{quote(chapter_slug)}"),
         )
 
     def download_chapter(self, chapter: Chapter) -> None:
@@ -288,9 +248,7 @@ class NovelPingCrawler(NovelFullTemplate):
         novel_slug = self._get_slug(chapter.url)
         chapter_slug = self._get_chapter_id(chapter.url)
 
-        data = self._get_json(
-            f"novels/{quote(novel_slug)}/chapters/{quote(chapter_slug)}"
-        )
+        data = self._get_json(f"novels/{quote(novel_slug)}/chapters/{quote(chapter_slug)}")
 
         item = data.get("item", data)
         info = item.get("chapterInfo", item)
@@ -301,9 +259,7 @@ class NovelPingCrawler(NovelFullTemplate):
         html = info.get("chapter_content", "")
 
         if not html:
-            raise LNException(
-                "NovelPing chapter content is missing"
-            )
+            raise LNException("NovelPing chapter content is missing")
 
         soup = PageSoup.create(html)
 
@@ -314,8 +270,6 @@ class NovelPingCrawler(NovelFullTemplate):
         chapter.body = body.inner_html
 
     def _meta_content(self, soup: PageSoup, name: str) -> str:
-        tag = soup.select_one(
-            f'meta[name="{name}"], meta[property="{name}"]'
-        )
+        tag = soup.select_one(f'meta[name="{name}"], meta[property="{name}"]')
 
         return tag.get("content", "").strip() if tag else ""
