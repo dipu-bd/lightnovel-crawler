@@ -13,7 +13,7 @@ from lncrawl.templates.novelfull import NovelFullTemplate
 logger = logging.getLogger(__name__)
 
 
-class NovelArrowCrawler(NovelFullTemplate):
+class NovelPingCrawler(NovelFullTemplate):
     base_url = [
         "https://novelping.com/",
     ]
