@@ -61,7 +61,7 @@ class NovelPingCrawler(NovelFullTemplate):
 
         if "novel" in parts:
             return parts[parts.index("novel") + 1]
-        
+
         if "book" in parts:
             return parts[parts.index("book") + 1]
 
