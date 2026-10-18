@@ -907,6 +907,29 @@ class CrawlerConfig(_Section):
     def allow_fallback_on_proxy_miss(self, v: bool) -> None:
         self._set("allow_fallback_on_proxy_miss", v)
 
+    @property
+    def spread_across_exits(self) -> bool:
+        """Use Every Proxy.
+
+        Whether each crawl session may leave from a different address. Left on, sessions
+        are handed the configured addresses in turn, so the ten chapters of a book are
+        not all queued behind whichever proxy the first request happened to pick. Turned
+        off, the first session to reach a site pins it for the whole process, which is
+        what the scraper does by itself: one visitor, one address, kept until something
+        refuses it.
+
+        On by default, because a pool of proxies exists to be used and one address is a
+        ceiling of two requests at a time no matter how many are configured. The cost is
+        paid to sites that challenge: a clearance is only valid for the address that
+        earned it, so several addresses means the browser clears the same site several
+        times, and the site sees as many visitors as there are addresses.
+        """
+        return self._get("spread_across_exits", True)
+
+    @spread_across_exits.setter
+    def spread_across_exits(self, v: bool) -> None:
+        self._set("spread_across_exits", v)
+
 
 # ------------------------------------------------------------------ #
 #                           Server Section                           #
