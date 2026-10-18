@@ -143,5 +143,6 @@ class LanguageCode(str, Enum):
     spanish = "es"
     thai = "th"
     turkish = "tr"
+    ukrainian = "uk"
     urdu = "ur"
     vietnamese = "vi"
