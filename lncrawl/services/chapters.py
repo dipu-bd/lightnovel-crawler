@@ -1,12 +1,12 @@
 from itertools import islice
-from typing import Any, Dict, Iterable, List, NamedTuple, Optional
+from typing import Any, Dict, Iterable, List, NamedTuple, Optional, Sequence, Set
 
 from sqlalchemy.dialects.postgresql import JSONB
 import sqlmodel as sq
 
 from ..context import ctx
 from ..core import Chapter as CrawlerChapter, PageSoup
-from ..dao import Chapter, Job, LanguageCode, User, Volume
+from ..dao import Chapter, ChapterImage, Job, LanguageCode, User, Volume
 from ..dao.chapter import ChapterTranslation
 from ..exceptions import ServerErrors
 from ..server.models import Paginated, ReadChapterResponse
@@ -360,6 +360,21 @@ class ChapterService:
             to_delete = ek - wk
             to_update = ek & wk
 
+            # Including previously omitted chapters can shift later chapter numbers.
+            # Only invalidate on positive source-ID evidence, not URL aliases or title edits.
+            to_reset: Set[int] = {
+                s
+                for s in to_update
+                if existing[s].extra.get("chapter_id") is not None
+                and wanted[s].get("chapter_id") is not None
+                and str(existing[s].extra["chapter_id"]) != str(wanted[s].chapter_id)
+            }
+            for serial in to_reset:
+                chapter: Chapter = existing[serial]
+                self._clear_cached_content(sess, chapter)
+                chapter.is_done = False
+                chapter.extra = {}
+
             if to_insert:
                 sess.exec(
                     sq.insert(Chapter),
@@ -405,3 +420,23 @@ class ChapterService:
                     ctx.files.resolve(file).unlink(True)
 
             sess.commit()
+
+    def _clear_cached_content(self, sess: sq.Session, chapter: Chapter) -> None:
+        ctx.files.resolve(chapter.content_file).unlink(missing_ok=True)
+
+        translations: Sequence[ChapterTranslation] = sess.exec(
+            sq.select(ChapterTranslation).where(
+                ChapterTranslation.novel_id == chapter.novel_id,
+                ChapterTranslation.chapter_serial == chapter.serial,
+            )
+        ).all()
+        for translation in translations:
+            ctx.files.resolve(translation.content_file).unlink(missing_ok=True)
+            sess.delete(translation)
+
+        images: Sequence[ChapterImage] = sess.exec(
+            sq.select(ChapterImage).where(ChapterImage.chapter_id == chapter.id)
+        ).all()
+        for image in images:
+            ctx.files.resolve(image.image_file).unlink(missing_ok=True)
+            sess.delete(image)

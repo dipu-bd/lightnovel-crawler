@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from itertools import groupby
 import logging
 from typing import Dict, List, Optional
 
@@ -8,9 +9,28 @@ import typer
 
 from ...context import ctx
 from ...enums import OutputFormat
+from ...exceptions import ChapterLockedError
 from .app import app
 
 logger = logging.getLogger(__name__)
+
+
+def _locked_chapter_summary(errors: List[ChapterLockedError]) -> str:
+    if len(errors) == 1:
+        return str(errors[0])
+
+    numbers: List[int] = sorted(
+        {error.chapter_number for error in errors if error.chapter_number is not None}
+    )
+    ranges: List[str] = []
+    for _, group in groupby(enumerate(numbers), key=lambda pair: pair[1] - pair[0]):
+        values: List[int] = [number for _, number in group]
+        ranges.append(f"{values[0]}" if len(values) == 1 else f"{values[0]}-{values[-1]}")
+    chapter_ranges: str = ", ".join(ranges[:3])
+    if len(ranges) > 3:
+        chapter_ranges = f"{chapter_ranges}, ..."
+    details: str = f" (chapters {chapter_ranges})" if chapter_ranges else ""
+    return f"{len(errors)} locked chapters{details}; previews were not saved."
 
 
 @app.command(help="Crawl from novel page URL.")
@@ -193,14 +213,29 @@ def crawl(
         for chapter_id in sorted(set(chapters))
     }
     chapter_image_ids = []
-    for chapter in crawler.taskman.resolve(chapter_futures, desc="Chapters", unit=" c"):
+    for chapter in crawler.taskman.resolve(
+        chapter_futures,
+        desc="Chapters",
+        unit=" c",
+        quiet_errors=(ChapterLockedError,),
+    ):
         if not chapter:
             continue
         chapter_image_ids += ctx.images.list_ids(chapter_id=chapter.id)
 
-    failed_chapters = [
-        chapter_id for future, chapter_id in chapter_futures.items() if has_failed(future)
-    ]
+    locked_errors: List[ChapterLockedError] = []
+    failed_chapters: List[str] = []
+    for future, chapter_id in chapter_futures.items():
+        if not has_failed(future):
+            continue
+        error = future.exception()
+        if isinstance(error, ChapterLockedError):
+            locked_errors.append(error)
+            logger.debug(f"{error}")
+        else:
+            failed_chapters.append(chapter_id)
+    if locked_errors:
+        console.print(_locked_chapter_summary(locked_errors), style="yellow", markup=False)
     if failed_chapters:
         print(f"[red]{len(failed_chapters)} chapter(s) failed to download[/red]")
         for chapter in ctx.chapters.get_many(failed_chapters[:10]):

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from concurrent.futures import Future, ThreadPoolExecutor, as_completed
 from threading import Event, Semaphore, Thread
-from typing import Any, Callable, Generator, Iterable, List, Optional, Set, TypeVar
+from typing import Any, Callable, Generator, Iterable, List, Optional, Set, Tuple, Type, TypeVar
 
 from tqdm import tqdm
 
@@ -166,6 +166,7 @@ class TaskManager:
         fail_fast: bool = False,
         signal: Optional[Event] = None,
         timeout: Optional[float] = None,
+        quiet_errors: Tuple[Type[Exception], ...] = (),
     ) -> Generator[Optional[T], None, None]:
         """Create a generator output to resolve the futures.
 
@@ -176,6 +177,7 @@ class TaskManager:
             unit: The progress unit name
             fail_fast: Fail on first error
             signal: The abort signal
+            quiet_errors: Exception types to retain on futures without printing individually
         """
         futures = list(futures)
         if not futures:
@@ -205,7 +207,8 @@ class TaskManager:
                     signal.set()
                     raise
                 except Exception as e:
-                    bar.write(repr(e))
+                    if not isinstance(e, quiet_errors):
+                        bar.write(repr(e))
                     yield None
                 finally:
                     bar.update()
@@ -229,6 +232,7 @@ class TaskManager:
         fail_fast: bool = False,
         signal: Optional[Event] = None,
         timeout: Optional[float] = None,
+        quiet_errors: Tuple[Type[Exception], ...] = (),
     ):
         """Wait for the futures to be done.
 
@@ -250,6 +254,7 @@ class TaskManager:
                 fail_fast=fail_fast,
                 signal=signal,
                 timeout=timeout,
+                quiet_errors=quiet_errors,
             )
         )
 
@@ -261,6 +266,7 @@ class TaskManager:
         fail_fast: bool = False,
         signal: Optional[Event] = None,
         timeout: Optional[float] = None,
+        quiet_errors: Tuple[Type[Exception], ...] = (),
     ):
         """Wait for the futures in this task manager to be done.
 
@@ -280,5 +286,6 @@ class TaskManager:
                 fail_fast=fail_fast,
                 signal=signal,
                 timeout=timeout,
+                quiet_errors=quiet_errors,
             )
         )
