@@ -8,7 +8,7 @@ from scraper import failure_kind
 from ....context import ctx
 from ....core.diagnosis import describe, diagnosis_extra
 from ....dao import Job, JobStatus
-from ....exceptions import AbortedException, ScraperErrorGroup
+from ....exceptions import AbortedException, LNException, ScraperErrorGroup
 from ....utils.error_tools import full_traceback, unexpected_message
 from ....utils.time_utils import current_timestamp
 
@@ -120,6 +120,8 @@ class BaseHandler(ABC):
             return False  # ignore error
         except HandlerException as e:
             return self._set_failure(e.message, e)
+        except LNException as e:
+            return self._set_failure(str(e), e)
         except ScraperErrorGroup as e:
             return self._set_diagnosed(e)
         except Exception as e:

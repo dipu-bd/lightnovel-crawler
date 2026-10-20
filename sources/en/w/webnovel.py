@@ -16,7 +16,22 @@ from lncrawl.core import (
 )
 from lncrawl.exceptions import LNException
 
+try:
+    from lncrawl.exceptions import ChapterLockedError
+except ImportError:
+    # Sources update independently, so keep loading on older app versions.
+    from lncrawl.exceptions import LNException as ChapterLockedError
+
 logger = logging.getLogger(__name__)
+
+
+class _LockedChapter(ChapterLockedError):
+    def __init__(self, chapter: Chapter) -> None:
+        self.chapter_number = chapter.id
+        label: str = f"Chapter {chapter.id}"
+        if chapter.title and chapter.title.casefold() != label.casefold():
+            label = f"{label} ({chapter.title})"
+        super().__init__(f"{label} is locked on Webnovel; its preview is not a complete chapter")
 
 
 class WebnovelCrawler(SoupTemplate):
@@ -116,8 +131,7 @@ class WebnovelCrawler(SoupTemplate):
                 cid = a.parent.get("data-report-cid")
                 if not cid:
                     continue  # skip chapter without id
-                if a.select_one("svg._icon"):
-                    continue  # skiplocked chapter
+                # Lock icons describe access, not catalog membership. Keep the full order.
                 chapter = Chapter(
                     id=len(novel.chapters) + 1,
                     title=str(a.get("title") or ""),
@@ -129,6 +143,7 @@ class WebnovelCrawler(SoupTemplate):
                 novel.chapters.append(chapter)
 
     def download_chapter(self, chapter: Chapter) -> None:
+        chapter.body = None
         try:
             params = {
                 "encryptType": 3,
@@ -149,6 +164,10 @@ class WebnovelCrawler(SoupTemplate):
                 raise LNException("Invalid JSON: no chapterInfo")
             chapter_info = data["chapterInfo"]
 
+            # The API returns preview paragraphs even when chapter access is denied.
+            if chapter_info.get("isAuth") in (0, "0"):
+                raise _LockedChapter(chapter)
+
             chapter.title = chapter_info["chapterName"]
             if "content" in chapter_info:
                 chapter.body = self._format_content(chapter_info["content"])
@@ -163,14 +182,23 @@ class WebnovelCrawler(SoupTemplate):
             if not chapter.body:
                 raise LNException("Invalid JSON: no chapter.body")
 
+        except _LockedChapter:
+            # The HTML contains the same preview, not an alternative way to access it.
+            raise
         except Exception:
-            path = urlparse(chapter.url).path.strip("/")
-            soup = self.scraper.get_soup(f"{self.scraper.origin}{path}")
-            contents = soup.select(f".j_chapter_{chapter.chapter_id} .cha-paragraph p")
-            body = [self._format_content(p.text) for p in contents]
-            chapter.body = "".join(filter(None, body))
+            self._download_chapter_html(chapter)
 
-    def _format_content(self, text: str):
+    def _download_chapter_html(self, chapter: Chapter) -> None:
+        path: str = urlparse(chapter.url).path.strip("/")
+        soup: PageSoup = self.scraper.get_soup(f"{self.scraper.origin}{path}")
+        content: PageSoup = soup.select_one(f".j_chapter_{chapter.chapter_id}")
+        if content.get("data-islock") == "1":
+            raise _LockedChapter(chapter)
+        contents: list[PageSoup] = content.select(".cha-paragraph p")
+        body: list[str] = [self._format_content(p.text) for p in contents]
+        chapter.body = "".join(filter(None, body))
+
+    def _format_content(self, text: str) -> str:
         if ("<p>" not in text) or ("</p>" not in text):
             text = "".join(text.split("\r"))
             text = "&lt;".join(text.split("<"))

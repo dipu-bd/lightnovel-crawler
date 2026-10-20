@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
 
 from PIL import UnidentifiedImageError
 from requests.exceptions import RequestException
@@ -23,6 +23,7 @@ if TYPE_CHECKING:
 
 __all__ = [
     "LNException",
+    "ChapterLockedError",
     "ServerError",
     "ServerErrors",
     "WebSocketError",
@@ -35,6 +36,12 @@ __all__ = [
 
 class LNException(Exception):
     pass
+
+
+class ChapterLockedError(LNException):
+    """Chapter access was denied; batch downloads may summarize these failures."""
+
+    chapter_number: Optional[int] = None
 
 
 ScraperErrorGroup = (
