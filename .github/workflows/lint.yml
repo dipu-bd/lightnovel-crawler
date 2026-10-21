@@ -76,4 +76,4 @@ jobs:
 
       - name: 🧪 Test Crawl
         if: ${{ github.event_name == 'workflow_dispatch' || inputs.run_crawl_test == true }}
-        run: lncrawl -ll crawl 'https://novelfull.com/dungeon-defense.html' --first 2 --format epub --noin
+        run: lncrawl -ll crawl 'https://novelping.com/book/eternal-evil-emperor' --first 2 --format epub --noin
