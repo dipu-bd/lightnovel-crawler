@@ -20,7 +20,7 @@ on:
       - ".github/workflows/lint.yml"
   pull_request:
     branches:
-      - dev
+      - new-souces
     paths:
       - "lncrawl/**"
       - "sources/**/*.py"
