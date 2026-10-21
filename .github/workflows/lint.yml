@@ -1,4 +1,4 @@
-name: Lint & Test
+pname: Lint & Test
 
 on:
   workflow_dispatch: {}
@@ -20,7 +20,7 @@ on:
       - ".github/workflows/lint.yml"
   pull_request:
     branches:
-      - new-souces
+      - dev
     paths:
       - "lncrawl/**"
       - "sources/**/*.py"
