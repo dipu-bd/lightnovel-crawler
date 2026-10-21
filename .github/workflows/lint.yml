@@ -1,4 +1,4 @@
-name: Lint & Test
+pname: Lint & Test
 
 on:
   workflow_dispatch: {}
