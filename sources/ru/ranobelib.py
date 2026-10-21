@@ -1,11 +1,24 @@
 # -*- coding: utf-8 -*-
 import logging
 import operator
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlsplit
 
 from lncrawl.core import Chapter, LegacyCrawler
 
 logger = logging.getLogger(__name__)
+
+
+def extract_text(value):
+    if isinstance(value, str):
+        return value
+    if isinstance(value, dict):
+        text = value.get("text")
+        if isinstance(text, str):
+            return text
+        return "\n".join(filter(None, (extract_text(item) for item in value.get("content", []))))
+    if isinstance(value, list):
+        return "\n".join(filter(None, (extract_text(item) for item in value)))
+    return ""
 
 
 class RanobeLibMeCrawler(LegacyCrawler):
@@ -14,27 +27,29 @@ class RanobeLibMeCrawler(LegacyCrawler):
     ]
     request_rate_limit = 0.99
 
-    def initialize(self):
-        clean_url = self.novel_url.split("?")[0].strip("/")
-        self.api_url = f"https://api.cdnlibs.org/api/manga/{clean_url.split('/')[-1]}"
-
     def read_novel_info(self):
+        path_parts = [part for part in urlsplit(self.novel_url).path.split("/") if part]
+        if len(path_parts) < 3 or path_parts[-2] != "book":
+            raise ValueError(f"Invalid RanobeLib novel URL: {self.novel_url}")
+        self.api_url = f"https://api.cdnlibs.org/api/manga/{path_parts[-1]}"
+
         api_requests_params = {
             "fields[]": [
-                "background",
-                "eng_name",
-                "otherNames",
                 "summary",
                 "genres",
-                "chap_count",
-                "status_id",
+                "tags",
+                "teams",
                 "authors",
-                "format",
+                "status_id",
+                "artists",
             ]
         }
 
         logger.debug("Visiting %s", self.novel_url)
-        book_info = self.get_json(f"{self.api_url}?{urlencode(api_requests_params, doseq=True)}")
+        book_info = self.get_json(
+            f"{self.api_url}?{urlencode(api_requests_params, doseq=True)}",
+            headers={"Site-Id": "3", "Referer": "https://ranobelib.me/"},
+        )
 
         self.novel_title = book_info["data"]["rus_name"]
         logger.info("Novel title: %s", self.novel_title)
@@ -48,7 +63,7 @@ class RanobeLibMeCrawler(LegacyCrawler):
         self.novel_author = book_info["data"]["authors"][0]["name"]
         logger.info("Novel author: %s", self.novel_author)
 
-        self.novel_synopsis = book_info["data"]["summary"]
+        self.novel_synopsis = extract_text(book_info["data"]["summary"])
         logger.info("Novel synopsis: %s", self.novel_synopsis)
 
         genres = book_info["data"]["genres"]

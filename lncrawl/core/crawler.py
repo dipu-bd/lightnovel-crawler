@@ -58,10 +58,16 @@ class Crawler(ABC):
         is capped by the scraper's per-address gate, so parsing, cleaning and storing
         overlap freely. What the cap protects is every *other* domain, because one
         source is otherwise free to occupy the whole runner pool.
+
+        Per *address*, then multiplied by the addresses the scraper can hold: the rate
+        limit is what one address may be asked for, and a session holds one address for
+        its whole life, so a cap derived from the rate alone would let five proxies work
+        no harder than one. `ctx.scraper.exit_count()` is 1 whenever there is nothing to
+        spread over, which is the cap this has always been.
         """
         if not cls.request_rate_limit:
             return 1
-        rate = math.ceil(cls.request_rate_limit)
+        rate = math.ceil(cls.request_rate_limit) * ctx.scraper.exit_count()
         return max(1, min(rate, ctx.config.crawler.runner_concurrency))
 
     @classmethod
