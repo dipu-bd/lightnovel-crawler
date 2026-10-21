@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - **Every configured proxy is used, instead of whichever one the first request happened to pick.** The scraper holds one address per site by design, so five proxies meant four of them idle and a fetch of missing chapters queued behind a single address; each address now gets a visitor of its own and sessions take them in turn. The per-source job cap scales with them as well — `RanobeLib` declares 0.99 requests per second, which was one job at a time no matter how many proxies were configured. **Use Every Proxy** turns it off and holds a site to one address.
 
+### Fixed
+
+- **A `socks5://` proxy is upgraded to `socks5h://`.** Resolving the name on this machine let libcurl prefer the IPv6 address, and an exit without IPv6 routing answered SOCKS5 reply 3 — which read as a broken proxy, so a site behind a dual-stack CDN failed on every exit while `curl -4` reached it.
+
 ## [4.14.0] - 2026-08-03
 
 ### Added

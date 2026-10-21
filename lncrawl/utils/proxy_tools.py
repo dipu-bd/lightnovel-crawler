@@ -15,6 +15,11 @@ from pydantic import BaseModel, Field, model_validator
 DEFAULT_TORPOOL_SOCKS = "socks5h://127.0.0.1:9250"
 DEFAULT_TORPOOL_API = "http://127.0.0.1:8080"
 
+# `socks5://` resolves the name here, and libcurl then prefers the AAAA record: an exit
+# without IPv6 routing answers SOCKS5 reply 3, which reads as a broken proxy. The
+# remote-resolving form also keeps the lookup off this machine.
+_SOCKS_REMOTE_DNS = {"socks4": "socks4a", "socks5": "socks5h"}
+
 
 class ProxyKind(str, Enum):
     """What an address looks like to a reputation database.
@@ -56,6 +61,10 @@ class ProxyExit(BaseModel):
             raise ValueError("a proxy entry needs a URL")
         if "://" not in self.url:
             raise ValueError(f"proxy URL needs a scheme: {self.url!r}")
+        scheme, sep, rest = self.url.partition("://")
+        remote = _SOCKS_REMOTE_DNS.get(scheme.lower())
+        if remote:
+            self.url = f"{remote}{sep}{rest}"
         if self.kind is ProxyKind.torpool and not self.api_url.strip():
             raise ValueError("a tor-pool entry needs its API URL")
         return self
